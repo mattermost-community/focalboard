@@ -10,8 +10,6 @@ import (
 	"syscall"
 	"time"
 
-	"../utils"
-
 	"fmt"
 	"log"
 	"net/http"
@@ -263,7 +261,7 @@ func saveFile(w http.ResponseWriter, file multipart.File, handle *multipart.File
 		fileExtension = ".jpg"
 	}
 
-	filename := fmt.Sprintf(`%s%s`, utils.CreateGUID(), fileExtension)
+	filename := fmt.Sprintf(`%s%s`, createGUID(), fileExtension)
 
 	folderPath := config.FilesPath
 	filePath := filepath.Join(folderPath, filename)
@@ -455,7 +453,7 @@ func main() {
 
 	// Start the server, with SSL if the certs exist
 	urlPort := fmt.Sprintf(`:%d`, config.Port)
-	var isSSL = config.UseSSL && utils.FileExists("./cert/cert.pem") && utils.FileExists("./cert/key.pem")
+	var isSSL = config.UseSSL && fileExists("./cert/cert.pem") && fileExists("./cert/key.pem")
 	if isSSL {
 		log.Println("https server started on ", urlPort)
 		err := http.ListenAndServeTLS(urlPort, "./cert/cert.pem", "./cert/key.pem", nil)

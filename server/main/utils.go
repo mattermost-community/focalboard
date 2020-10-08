@@ -1,4 +1,4 @@
-package utils
+package main
 
 import (
 	"crypto/rand"
@@ -8,7 +8,7 @@ import (
 )
 
 // FileExists returns true if a file exists at the path
-func FileExists(path string) bool {
+func fileExists(path string) bool {
 	_, err := os.Stat(path)
 	if os.IsNotExist(err) {
 		return false
@@ -17,7 +17,7 @@ func FileExists(path string) bool {
 }
 
 // CreateGUID returns a random GUID
-func CreateGUID() string {
+func createGUID() string {
 	b := make([]byte, 16)
 	_, err := rand.Read(b)
 	if err != nil {
