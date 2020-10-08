@@ -1,0 +1,30 @@
+{
+	"compilerOptions": {
+		"jsx": "react",
+		"target": "es2019",
+		"module": "commonjs",
+		"esModuleInterop": true,
+		"noImplicitAny": true,
+		"strict": true,
+		"strictNullChecks": false,
+		"forceConsistentCasingInFileNames": true,
+		"sourceMap": true,
+		"allowJs": true,
+		"resolveJsonModule": true,
+		"incremental": false,
+		"outDir": "./dist",
+		"baseUrl": ".",
+		"moduleResolution": "node",
+		"paths": {
+			"*": [
+				"node_modules/*",
+				"src/@custom_types/*"
+			]
+		}
+	},
+	"include": [
+		"./src"
+	],
+	"exclude": [
+	]
+}

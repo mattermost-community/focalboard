@@ -1,0 +1,47 @@
+{
+	"extends": "airbnb",
+	"env": {
+	"node": true,
+	"es6": true,
+	"browser": true
+	},
+	"rules": {
+        "indent": [2, "tab",  {"SwitchCase": 1}],
+		"no-tabs": 0,
+		"comma-dangle": 0,
+		"max-len": ["warn", { "code": 140 }],
+		"operator-linebreak": [2, "after"],
+		"prefer-destructuring": ["warn", {
+			"array": false,
+			"object": true
+		}, {
+			"enforceForRenamedProperties": false
+		}],
+		"no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+		"func-names": [2, "as-needed"],
+
+		"import/prefer-default-export": 0,
+		"import/extensions": [2, "ignorePackages"],
+		"import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+
+		"no-unexpected-multiline": 1,
+		"no-lonely-if": 0,
+		"no-nested-ternary": 0,
+		"class-methods-use-this": 1,
+		"lines-between-class-members": ["warn", { "exceptAfterSingleLine": true }],
+		"no-restricted-syntax": ["error", "ForInStatement", "LabeledStatement", "WithStatement"],
+		"no-console": 0,
+		"no-alert": 2,
+		"object-shorthand": ["error", "properties"],
+		"no-bitwise": ["error", { "int32Hint": true }],
+		"no-param-reassign": [2, { "props": false }],
+		"quotes": [2, "double",  { "allowTemplateLiterals": true }],
+		"brace-style": ["warn", "1tbs", { "allowSingleLine": true }],
+		"object-curly-newline": ["error", {
+			"ObjectExpression": { "consistent": true },
+			"ObjectPattern": { "multiline": true },
+			"ImportDeclaration": "never",
+			"ExportDeclaration": { "multiline": true, "minProperties": 3 }
+		}]
+	}
+}

@@ -1,0 +1,819 @@
+* {
+	box-sizing: border-box;
+	outline: 0;
+	user-select: none;
+}
+
+html, body {
+	height: 100%;
+	color: rgb(55, 53, 47);
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+    /* -webkit-font-smoothing: auto; */
+	font-size: 14px;
+	line-height: 24px;
+	--cursor-color: rgb(55, 53, 47);
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	background-color: rgba(192, 192, 255, 0.2);
+}
+
+hr {
+	width: 100%;
+	height: 1px;
+	border: none;
+	color: rgba(55, 53, 47, 0.09);
+	background-color: rgba(55, 53, 47, 0.09);
+	margin-bottom: 8px;
+}
+
+header {
+	font-size: 18px;
+	font-weight: bold;
+	background-color: #eeeeee;
+	border-bottom: solid 1px #909090;
+	padding: 10px 20px;
+}
+
+header a {
+	color: #505050;
+}
+
+main {
+	padding: 10px 20px;
+}
+
+footer {
+	padding: 10px 20px;
+}
+
+.title, h1 {
+	font-size: 40px;
+	line-height: 40px;
+	margin: 0 0 10px 0;
+	font-weight: 600;
+	display: inline-block;
+}
+
+/* OCTO */
+
+.octo-frame {
+	padding: 10px 50px 50px 50px;
+	min-width: 1000px;
+}
+
+.octo-board {
+	display: flex;
+	flex-direction: column;
+}
+
+.octo-controls {
+	display: flex;
+	flex-direction: row;
+
+	border-bottom: solid 1px #cccccc;
+	margin-bottom: 10px;
+	padding: 10px 10px;
+	color: #909090;
+}
+
+.octo-controls > div {
+	margin-right: 5px;
+	white-space: nowrap
+}
+
+.octo-board-header {
+	display: flex;
+	flex-direction: row;
+
+	min-height: 30px;
+	margin-bottom: 10px;
+	padding: 0px 10px;
+	color: #909090;
+}
+
+.octo-board-header-cell {
+	display: flex;
+	flex-shrink: 0;
+	align-items: center;
+
+	width: 260px;
+	margin-right: 15px;
+	vertical-align: middle;
+}
+
+.octo-board-header-cell > div {
+	margin-right: 5px;
+}
+
+.octo-board-body {
+	display: flex;
+	flex-direction: row;
+	padding: 0 10px;
+}
+
+.octo-board-column {
+	display: flex;
+	flex-direction: column;
+	flex-shrink: 0;
+
+	width: 260px;
+	margin-right: 15px;
+}
+
+.dragover {
+	background-color: rgba(128, 192, 255, 0.4);
+}
+
+.octo-board-column > .octo-button {
+	color: #909090;
+	text-align: left;
+}
+
+.octo-board-card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+
+	border-radius: 3px;
+	margin-bottom: 10px;
+	padding: 7px 10px;
+	box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 2px 4px;
+
+	cursor: pointer;
+	color: rgb(55, 53, 47);
+
+	transition: background 100ms ease-out 0s;
+}
+
+.octo-board-card > div {
+	margin-bottom: 3px;
+}
+
+.octo-board-card > .octo-propertyvalue {
+	font-size: 12px;
+	line-height: 18px;
+}
+
+.octo-board-card:hover {
+	background-color: #eeeeee;
+}
+
+.octo-label {
+	display: inline-block;
+	padding: 0 5px;
+	border-radius: 3px;
+	line-height: 20px;
+	color: rgb(55, 53, 47);
+	white-space: nowrap
+}
+
+.octo-spacer {
+	flex: 1;
+}
+
+.octo-clickable,
+.octo-button {
+	text-align: center;
+	border-radius: 5px;
+	padding: 0 5px;
+	min-width: 20px;
+	cursor: pointer;
+	overflow: hidden;
+
+	transition: background 100ms ease-out 0s;
+}
+
+.octo-clickable,
+.octo-button:hover {
+	background-color: #eeeeee;
+}
+
+.filled {
+	color: #ffffff;
+	background-color: #50aadd;
+	padding: 2px 10px;
+}
+
+.filled:hover {
+	background-color: #507090;
+}
+
+/*-- Modal --*/
+
+.octo-modal-back {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(90, 90, 90, 0.1);
+}
+
+.octo-modal {
+	position: absolute;
+	z-index: 10;
+	min-width: 180px;
+	box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 2px 4px;
+	background-color: #ffffff;
+}
+
+/*-- Filter modal dialog --*/
+
+.octo-filter-dialog {
+	min-width: 420px;
+	padding: 10px;
+}
+
+.octo-filterclause {
+	display: flex;
+	flex-direction: row;
+}
+
+.octo-filterclause > div {
+	display: flex;
+	flex-direction: row;
+}
+
+/*-- Menu --*/
+
+.menu {
+	position: absolute;
+	z-index: 15;
+	min-width: 180px;
+	box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 2px 4px;
+	background-color: #ffffff;
+}
+
+.menu-options {
+	display: flex;
+	flex-direction: column;
+
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.menu-option {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+
+	font-weight: 400;
+	padding: 2px 10px;
+	cursor: pointer;
+	touch-action: none;
+}
+
+.menu-option .menu-name {
+	flex-grow: 1;
+}
+
+.menu-option:hover {
+	background: rgba(90, 90, 90, 0.1);
+}
+
+.menu-separator {
+	border-bottom: solid 1px #cccccc;
+}
+
+.menu-colorbox {
+	display: inline-block;
+	margin-right: 8px;
+	vertical-align: middle;
+	width: 18px;
+	height: 18px;
+	border-radius: 3px;
+	box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
+}
+
+.menu-textbox {
+	font-weight: 400;
+	padding: 2px 10px;
+	cursor: text;
+	touch-action: none;
+	border: solid 1px #909090;
+	border-radius: 3px;
+	margin: 5px 5px;
+}
+
+/*-- Dialog --*/
+
+.dialog-back {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 10;
+
+	background-color: rgba(90, 90, 90, 0.5);
+}
+
+.dialog {
+	display: flex;
+	flex-direction: column;
+
+	background-color: #ffffff;
+	border-radius: 3px;
+	box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 2px 4px;
+	margin: 72px auto;
+	padding: 0;
+	max-width: 975px;
+	height: calc(100% - 144px);
+
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.dialog > .toolbar {
+	display: flex;
+	flex-direction: row;
+	height: 30px;
+	margin: 10px
+}
+
+.dialog > .content {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	padding: 10px 126px 10px 126px;
+}
+
+.dialog > .content.fullwidth {
+	padding: 10px 0 10px 0;
+}
+
+/* Icons */
+
+.octo-hovercontrols {
+    display: flex;
+    flex-direction: column;
+	align-items: flex-start;
+
+	min-height: 30px;
+	width: 100%;
+	color:rgba(55, 53, 47, 0.4);
+}
+
+.octo-icon {
+	font-family: "Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji, "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols;
+	line-height: 1em;
+    align-self: baseline;
+	margin-top: 0.2em;
+}
+
+.octo-icontitle {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.octo-frame > .octo-icontitle > .octo-icon {
+	font-size: 36px;
+	line-height: 36px;
+	margin-right: 15px;
+}
+
+.octo-board-card > .octo-icontitle {
+	font-weight: 500;
+}
+
+.octo-board-card > .octo-icontitle > .octo-icon {
+	font-size: 16px;
+	line-height: 16px;
+	margin-right: 5px;
+}
+
+.octo-table-cell > .octo-icontitle > .octo-icon {
+	min-width: 20px;
+}
+
+.octo-card-icon {
+    height: 78px;
+    min-width: 78px;
+    font-size: 78px;
+    line-height: 1.1;
+    margin-left: 0;
+    color: #000000;
+}
+
+/*-- Comments --*/
+
+.dialog .commentlist {
+	display: flex;
+	flex-direction: column;
+
+	width: 100%;
+}
+
+.commentlist .commentrow {
+	display: flex;
+	flex-direction: row;
+}
+
+.commentlist .comment {
+	display: flex;
+	flex-direction: column;
+	margin: 5px 0;
+}
+
+.comment-header {
+	display: flex;
+	flex-direction: row;
+
+	position: relative;
+}
+
+.comment-avatar {
+	width: 20px;
+	height: 20px;
+	border-radius: 100%;
+	box-shadow: rgba(15, 15, 15, 0.1) 0px 2px 4px;
+}
+
+.comment-username {
+	font-weight: bold;
+	margin: 0 5px;
+}
+
+.comment-date {
+	color: #cccccc;
+	font-size: 12px;
+}
+
+.comment-text {
+	color: rgb(55, 53, 47);
+	width: 100%;
+	padding-left: 25px;
+}
+
+.commentlist .newcomment {
+	color: rgba(55, 53, 47, 0.8);
+	flex-grow: 1;
+	margin-left: 5px;
+}
+
+/*-- Property list --*/
+
+.octo-propertylist {
+	display: flex;
+	flex-direction: column;
+}
+
+.octo-propertyrow {
+	display: flex;
+	flex-direction: row;
+	margin: 8px 0;
+}
+
+.octo-propertyname {
+	text-align: left;
+	width: 150px;
+	margin-right: 5px;
+	color: #909090;
+}
+
+.octo-propertyvalue {
+	color: rgb(55, 53, 47);
+	padding: 0 5px;
+}
+
+.octo-propertyvalue.empty {
+	color: #cccccc;
+}
+
+/*-- Editable --*/
+
+.octo-editable {
+	cursor: text;
+}
+
+.octo-editable.active {
+	min-width: 100px;
+}
+
+.octo-placeholder {
+	color: rgba(55, 53, 47, 0.4);
+}
+
+[contentEditable=true]:empty:before{
+	content: attr(placeholder);
+	display: block;
+	color: rgba(55, 53, 47, 0.4);
+}
+
+.octo-table-cell:focus-within {
+	background-color: rgba(46, 170, 220, 0.15);
+	border: 1px solid rgba(46, 170, 220, 0.6);
+}
+
+.octo-table-cell .octo-editable {
+	padding: 0 5px;
+	display: relative;
+	left: -5px;
+}
+
+.octo-table-cell .octo-editable.octo-editable.active {
+	overflow: hidden;
+}
+
+.octo-propertyvalue.octo-editable.active,
+.octo-table-cell .octo-editable.active {
+	border-radius: 3px;
+	box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+}
+
+/* Table */
+
+.octo-table-body {
+	display: flex;
+	flex-direction: column;
+	padding: 0 10px;
+}
+
+.octo-table-header,
+.octo-table-row,
+.octo-table-footer {
+	display: flex;
+	flex-direction: row;
+
+	border-bottom: solid 1px rgba(55, 53, 47, 0.09);
+}
+
+.octo-table-cell {
+	display: flex;
+	flex-direction: row;
+
+	color: rgba(55, 53, 47);
+	border-right: solid 1px rgba(55, 53, 47, 0.09);
+	box-sizing: border-box;
+	padding: 5px 8px 6px 8px;
+
+	width: 240px;
+	min-height: 32px;
+
+	font-size: 14px;
+	line-height: 21px;
+
+	overflow: hidden;
+	position: relative;
+}
+
+.octo-table-cell .octo-propertyvalue {
+	line-height: 17px;
+}
+
+.octo-table-header .octo-table-cell,
+.octo-table-header .octo-table-cell .octo-label {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+.octo-table-footer .octo-table-cell {
+	color: rgba(55, 53, 47, 0.6);
+	cursor: pointer;
+
+	width: 100%;
+	border-right: none;
+	padding-left: 15px;
+}
+
+.octo-table-footer .octo-table-cell:hover {
+	background-color: rgba(55, 53, 47, 0.08);
+}
+
+.octo-table-cell .octo-button,
+.octo-table-cell .octo-editable,
+.octo-table-cell .octo-propertyvalue
+{
+	text-align: left;
+	white-space: nowrap;
+}
+
+.octo-button.octo-hovercontrol {
+	background: rgb(239, 239, 238);
+}
+
+.octo-button.square {
+	padding: 0;
+}
+
+.octo-button.active {
+	color: rgb(45, 170, 220);
+	font-weight: 500;
+}
+
+.octo-hoverbutton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+	border-radius: 3px;
+
+	position: absolute;
+	right: 6px;
+	top: 4px;
+	cursor: pointer;
+	background: rgb(239, 239, 238);
+	box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 2px 4px;
+	padding: 0 5px;
+}
+
+.octo-hoverbutton.square {
+	height: 24px;
+	width: 24px;
+	padding: 0;
+}
+
+/* Switch */
+
+.octo-switch {
+	display: flex;
+	flex-shrink: 0;
+
+    box-sizing: content-box;
+	height: 14px;
+	width: 26px;
+	border-radius: 44px;
+	padding: 2px;
+	background-color: rgba(135, 131, 120, 0.3);
+	transition: background 200ms ease 0s, box-shadow 200ms ease 0s;
+}
+
+.octo-switch-inner {
+    width: 14px;
+    height: 14px;
+    border-radius: 44px;
+    background: white;
+    transition: transform 200ms ease-out 0s, background 200ms ease-out 0s;
+    transform: translateX(0px) translateY(0px);
+}
+
+.octo-switch.on {
+	background-color: rgba(46, 170, 220);
+}
+
+.octo-switch.on .octo-switch-inner {
+    transform: translateX(12px) translateY(0px);
+}
+
+/* Flash Panel */
+
+.flashPanel {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	position: absolute;
+	bottom: 120px;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	padding: 10px 20px;
+	min-width: 150px;
+	max-width: 420px;
+	min-height: 50px;
+	color: #ffffff;
+	background: rgba(100, 100, 100, 0.8);
+	font-size: 18px;
+	vertical-align: middle;
+	border-radius: 20px;
+	z-index: 12;
+}
+
+.flashIn {
+	visibility: visible;
+	opacity: 1;
+}
+
+.flashOut {
+	visibility: hidden;
+	opacity: 0;
+	transition: visibility 0s linear 200ms, opacity ease-in 200ms;
+}
+
+/* Markdown Editor */
+
+.octo-editor {
+	cursor: text;
+	width: 100%;
+}
+
+/* CodeMirror / SimpleMDE / EasyMDE overrides */
+
+.CodeMirror {
+	padding: 0;
+	min-height: 0;
+}
+
+pre.CodeMirror-line {
+	padding: 0;
+}
+
+.CodeMirror, .CodeMirror-scroll {
+	flex: 1;
+	min-height: 0;
+	line-height: 1.3;
+	border: none;
+}
+
+.CodeMirror-cursor {
+	border-left: 2px solid var(--cursor-color);
+}
+
+.CodeMirror-selected {
+	background: rgba(147, 204, 231, 0.8) !important;
+}
+
+.octo-editor .CodeMirror-scroll {
+    overflow: hidden !important;
+}
+
+/* hide the scrollbars */
+.octo-editor .CodeMirror-vscrollbar, .octo-editor .CodeMirror-hscrollbar {
+    display: none !important;
+}
+
+.octo-editor-preview {
+	min-height: 30px;
+}
+
+/* .dialog .octo-editor-preview {
+	min-height: 100px;
+} */
+
+.octo-editor-activeEditor {
+	overflow: hidden;
+	border: solid 1px #aaccff;
+	border-radius: 5px;
+}
+
+/* Hover panel */
+
+.octo-hoverpanel {
+    display: flex;
+    flex-direction: column;
+	align-items: flex-start;
+
+	min-height: 30px;
+	width: 100%;
+	color:rgba(55, 53, 47, 0.4);
+}
+
+.octo-block img {
+	max-width: 500px;
+	max-height: 500px;
+	margin: 5px 0;
+}
+
+/* This needs to be declared after other co-classes */
+.octo-hover-container {
+	position: relative;
+}
+
+.octo-hover-item {
+	display: none;
+}
+
+.octo-hover-container:hover .octo-hover-item {
+	display: flex;
+}
+
+.octo-content {
+	width: 100%;
+	margin-right: 50px;
+}
+
+.octo-block {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+
+	width: 100%;
+	padding-right: 126px;
+}
+
+.octo-block * {
+	flex-shrink: 0;
+}
+
+.octo-block-margin {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	justify-content: flex-end;
+	padding-top: 10px;
+	padding-right: 10px;
+
+	width: 126px;
+}
