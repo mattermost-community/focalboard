@@ -26,6 +26,7 @@ interface IPageController {
 	showCard(card: IBlock): Promise<void>
 	showView(viewId: string): void
 	showFilter(anchorElement?: HTMLElement): void
+	setSearchText(text?: string): void
 }
 
 export { IProperty, IBlock, IPageController }
