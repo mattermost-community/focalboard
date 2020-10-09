@@ -14,7 +14,7 @@ import { OctoUtils } from "../octoUtils"
 import { Utils } from "../utils"
 import { BoardCard } from "./boardCard"
 import { BoardColumn } from "./boardColumn"
-import { Button } from "./button"
+import Button from "./button"
 import { Editable } from "./editable"
 
 type Props = {

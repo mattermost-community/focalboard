@@ -11,7 +11,7 @@ import { Mutator } from "../mutator"
 import { IBlock, IPageController } from "../octoTypes"
 import { OctoUtils } from "../octoUtils"
 import { Utils } from "../utils"
-import { Button } from "./button"
+import Button from "./button"
 import { Editable } from "./editable"
 import { TableRow } from "./tableRow"
 

@@ -9,7 +9,7 @@ import { IBlock } from "../octoTypes"
 import { OctoUtils } from "../octoUtils"
 import { PropertyMenu } from "../propertyMenu"
 import { Utils } from "../utils"
-import { Button } from "./button"
+import Button from "./button"
 import { Editable } from "./editable"
 import { MarkdownEditor } from "./markdownEditor"
 

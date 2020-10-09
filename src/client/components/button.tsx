@@ -8,7 +8,7 @@ type Props = {
 	title?: string
 }
 
-class Button extends React.Component<Props> {
+export default class Button extends React.Component<Props> {
 	render() {
 		const style = {...this.props.style, backgroundColor: this.props.backgroundColor}
 		return (
@@ -22,5 +22,3 @@ class Button extends React.Component<Props> {
 			</div>)
 	}
 }
-
-export { Button }

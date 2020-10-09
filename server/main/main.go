@@ -404,10 +404,12 @@ func main() {
 
 	// Static files
 	handleStaticFile(r, "/", "index.html", "text/html; charset=utf-8")
-	handleStaticFile(r, "/boards", "boards.html", "text/html; charset=utf-8")
-	handleStaticFile(r, "/board", "board.html", "text/html; charset=utf-8")
+	handleStaticFile(r, "/login", "index.html", "text/html; charset=utf-8")
+	handleStaticFile(r, "/boards", "index.html", "text/html; charset=utf-8")
+	handleStaticFile(r, "/board", "index.html", "text/html; charset=utf-8")
 
-	handleStaticFile(r, "/boardsPage.js", "boardsPage.js", "text/javascript; charset=utf-8")
+	handleStaticFile(r, "/main.js", "main.js", "text/javascript; charset=utf-8")
+	handleStaticFile(r, "/boardPage.js", "boardPage.js", "text/javascript; charset=utf-8")
 	handleStaticFile(r, "/boardPage.js", "boardPage.js", "text/javascript; charset=utf-8")
 
 	handleStaticFile(r, "/favicon.ico", "static/favicon.svg", "image/svg+xml; charset=utf-8")

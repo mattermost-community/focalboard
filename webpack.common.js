@@ -50,28 +50,13 @@ function makeCommonConfig() {
 			new HtmlWebpackPlugin({
 				inject: true,
 				title: "OCTO",
-				chunks: [],
+				chunks: ["main"],
 				template: "html-templates/index.ejs",
 				filename: 'index.html'
 			}),
-			new HtmlWebpackPlugin({
-				inject: true,
-				title: "OCTO - Boards",
-				chunks: ["boardsPage"],
-				template: "html-templates/page.ejs",
-				filename: 'boards.html'
-			}),
-			new HtmlWebpackPlugin({
-				inject: true,
-				title: "OCTO",
-				chunks: ["boardPage"],
-				template: "html-templates/page.ejs",
-				filename: 'board.html'
-			}),
 		],
 		entry: {
-			boardsPage: "./src/client/boardsPage.ts",
-			boardPage: "./src/client/boardPage.tsx"
+			main: "./src/client/main.tsx",
 		},
 		output: {
 			filename: "[name].js",
