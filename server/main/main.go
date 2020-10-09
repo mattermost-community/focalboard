@@ -22,21 +22,6 @@ import (
 var wsServer *WSServer
 var config *Configuration
 
-// WebsocketMsg is send on block changes
-type WebsocketMsg struct {
-	Action  string `json:"action"`
-	BlockID string `json:"blockId"`
-}
-
-// A single session for now
-var session = new(ListenerSession)
-
-var upgrader = websocket.Upgrader{
-	CheckOrigin: func(r *http.Request) bool {
-		return true
-	},
-}
-
 // ----------------------------------------------------------------------------------------------------
 // HTTP handlers
 
