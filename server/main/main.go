@@ -20,7 +20,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var config Configuration
+var config *Configuration
 
 // WebsocketMsg is send on block changes
 type WebsocketMsg struct {
@@ -383,7 +383,12 @@ func monitorPid(pid int) {
 
 func main() {
 	// config.json file
-	config = readConfigFile()
+	var err error
+	config, err = readConfigFile()
+	if err != nil {
+		log.Fatal("Unable to read the config file: ", err)
+		return
+	}
 
 	// Command line args
 	pMonitorPid := flag.Int("monitorpid", -1, "a process ID")
