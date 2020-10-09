@@ -93,30 +93,6 @@ func (s *SQLStore) createTablesIfNotExists() error {
 	return nil
 }
 
-func blockFromMap(m map[string]interface{}) Block {
-	var b Block
-	b.ID = m["id"].(string)
-	// Parent ID can be nil (for now)
-	if m["parentId"] != nil {
-		b.ParentID = m["parentId"].(string)
-	}
-	// Allow nil type for imports
-	if m["type"] != nil {
-		b.Type = m["type"].(string)
-	}
-	if m["createAt"] != nil {
-		b.CreateAt = int64(m["createAt"].(float64))
-	}
-	if m["updateAt"] != nil {
-		b.UpdateAt = int64(m["updateAt"].(float64))
-	}
-	if m["deleteAt"] != nil {
-		b.DeleteAt = int64(m["deleteAt"].(float64))
-	}
-
-	return b
-}
-
 func (s *SQLStore) getBlocksWithParentAndType(parentID string, blockType string) []string {
 	query := `WITH latest AS
 		(
