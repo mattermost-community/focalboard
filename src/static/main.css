@@ -182,23 +182,6 @@ footer {
 	flex: 1;
 }
 
-.octo-clickable,
-.octo-button {
-	text-align: center;
-	border-radius: 5px;
-	padding: 0 5px;
-	min-width: 20px;
-	cursor: pointer;
-	overflow: hidden;
-
-	transition: background 100ms ease-out 0s;
-}
-
-.octo-clickable,
-.octo-button:hover {
-	background-color: #eeeeee;
-}
-
 .filled {
 	color: #ffffff;
 	background-color: #50aadd;
