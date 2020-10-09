@@ -35,10 +35,7 @@ class BoardComponent extends React.Component<Props, State> {
 
 	constructor(props: Props) {
 		super(props)
-		this.state = {
-			isHoverOnCover: false,
-			isSearching: false
-		}
+		this.state = { isHoverOnCover: false, isSearching: !!this.props.boardTree?.getSearchText() }
 	}
 
 	componentDidUpdate(prevPros: Props, prevState: State) {
