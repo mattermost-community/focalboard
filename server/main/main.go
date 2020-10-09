@@ -17,9 +17,9 @@ import (
 	"os/signal"
 
 	"github.com/gorilla/mux"
-	"github.com/gorilla/websocket"
 )
 
+var wsServer *WSServer
 var config *Configuration
 
 // WebsocketMsg is send on block changes
@@ -132,7 +132,7 @@ func handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 		insertBlock(block, string(jsonBytes))
 	}
 
-	broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
+	wsServer.broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
 
 	log.Printf("POST Blocks %d block(s)", len(blockMaps))
 	jsonResponse(w, 200, "{}")
@@ -152,7 +152,7 @@ func handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 
 	deleteBlock(blockID)
 
-	broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
+	wsServer.broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
 
 	log.Printf("DELETE Block %s", blockID)
 	jsonResponse(w, 200, "{}")
@@ -294,66 +294,6 @@ func errorResponse(w http.ResponseWriter, code int, message string) {
 // ----------------------------------------------------------------------------------------------------
 // WebSocket OnChange listener
 
-func handleWebSocketOnChange(w http.ResponseWriter, r *http.Request) {
-	// Upgrade initial GET request to a websocket
-	ws, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// TODO: Auth
-
-	query := r.URL.Query()
-	blockID := query.Get("id")
-	log.Printf("CONNECT WebSocket onChange, blockID: %s, client: %s", blockID, ws.RemoteAddr())
-
-	// Make sure we close the connection when the function returns
-	defer func() {
-		log.Printf("DISCONNECT WebSocket onChange, blockID: %s, client: %s", blockID, ws.RemoteAddr())
-
-		// Remove client from listeners
-		session.RemoveListener(ws)
-
-		ws.Close()
-	}()
-
-	// Register our new client
-	session.AddListener(ws, blockID)
-
-	// TODO: Implement WebSocket message pump
-	// Simple message handling loop
-	for {
-		_, _, err := ws.ReadMessage()
-		if err != nil {
-			log.Printf("ERROR WebSocket onChange, blockID: %s, client: %s, err: %v", blockID, ws.RemoteAddr(), err)
-			session.RemoveListener(ws)
-			break
-		}
-	}
-}
-
-func broadcastBlockChangeToWebsocketClients(blockIDs []string) {
-	for _, blockID := range blockIDs {
-		listeners := session.GetListeners(blockID)
-		log.Printf("%d listener(s) for blockID: %s", len(listeners), blockID)
-
-		if listeners != nil {
-			var message = WebsocketMsg{
-				Action:  "UPDATE_BLOCK",
-				BlockID: blockID,
-			}
-			for _, listener := range listeners {
-				log.Printf("Broadcast change, blockID: %s, remoteAddr: %s", blockID, listener.RemoteAddr())
-				err := listener.WriteJSON(message)
-				if err != nil {
-					log.Printf("broadcast error: %v", err)
-					listener.Close()
-				}
-			}
-		}
-	}
-}
-
 func isProcessRunning(pid int) bool {
 	process, err := os.FindProcess(pid)
 	if err != nil {
@@ -405,6 +345,8 @@ func main() {
 		config.Port = *pPort
 	}
 
+	wsServer = NewWSServer()
+
 	r := mux.NewRouter()
 
 	// Static files
@@ -434,7 +376,7 @@ func main() {
 	r.HandleFunc("/api/v1/blocks/import", handleImport).Methods("POST")
 
 	// WebSocket
-	r.HandleFunc("/ws/onchange", handleWebSocketOnChange)
+	r.HandleFunc("/ws/onchange", wsServer.handleWebSocketOnChange)
 
 	// Files
 	r.HandleFunc("/files/{filename}", handleServeFile).Methods("GET")
