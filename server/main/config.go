@@ -34,7 +34,10 @@ func readConfigFile() (*Configuration, error) {
 	}
 
 	configuration := Configuration{}
-	viper.Unmarshal(&configuration)
+	err = viper.Unmarshal(&configuration)
+	if err != nil {
+		return nil, err
+	}
 
 	log.Println("readConfigFile")
 	log.Printf("%+v", configuration)
