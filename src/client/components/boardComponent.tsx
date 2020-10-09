@@ -102,6 +102,7 @@ class BoardComponent extends React.Component<Props, State> {
 									ref={this.searchFieldRef}
 									text={boardTree.getSearchText()}
 									placeholderText="Search text"
+									style={{ color: "#000000" }}
 									onChanged={(text) => { this.searchChanged(text) }}
 									onKeyDown={(e) => { this.onSearchKeyDown(e) }}></Editable>
 								: <div className="octo-button" onClick={() => { this.setState({ ...this.state, isSearching: true }) }}>Search</div>
