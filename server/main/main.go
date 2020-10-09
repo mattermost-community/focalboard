@@ -21,6 +21,7 @@ import (
 )
 
 var config Configuration
+var store *SQLStore
 
 // WebsocketMsg is send on block changes
 type WebsocketMsg struct {
@@ -64,9 +65,9 @@ func handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 
 	var blocks []string
 	if len(blockType) > 0 {
-		blocks = getBlocksWithParentAndType(parentID, blockType)
+		blocks = store.getBlocksWithParentAndType(parentID, blockType)
 	} else {
-		blocks = getBlocksWithParent(parentID)
+		blocks = store.getBlocksWithParent(parentID)
 	}
 	log.Printf("GetBlocks parentID: %s, %d result(s)", parentID, len(blocks))
 	response := `[` + strings.Join(blocks[:], ",") + `]`
@@ -127,7 +128,7 @@ func handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		insertBlock(block, string(jsonBytes))
+		store.insertBlock(block, string(jsonBytes))
 	}
 
 	broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
@@ -142,13 +143,13 @@ func handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 
 	var blockIDsToNotify = []string{blockID}
 
-	parentID := getParentID(blockID)
+	parentID := store.getParentID(blockID)
 
 	if len(parentID) > 0 {
 		blockIDsToNotify = append(blockIDsToNotify, parentID)
 	}
 
-	deleteBlock(blockID)
+	store.deleteBlock(blockID)
 
 	broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
 
@@ -160,7 +161,7 @@ func handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	blockID := vars["blockID"]
 
-	blocks := getSubTree(blockID)
+	blocks := store.getSubTree(blockID)
 
 	log.Printf("GetSubTree blockID: %s, %d result(s)", blockID, len(blocks))
 	response := `[` + strings.Join(blocks[:], ",") + `]`
@@ -168,7 +169,7 @@ func handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleExport(w http.ResponseWriter, r *http.Request) {
-	blocks := getAllBlocks()
+	blocks := store.getAllBlocks()
 
 	log.Printf("EXPORT Blocks, %d result(s)", len(blocks))
 	response := `[` + strings.Join(blocks[:], ",") + `]`
@@ -191,25 +192,24 @@ func handleImport(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 
-	var blockMaps []map[string]interface{}
-	err = json.Unmarshal([]byte(requestBody), &blockMaps)
+	var blocks []Block
+	err = json.Unmarshal([]byte(requestBody), &blocks)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, ``)
 		return
 	}
 
-	for _, blockMap := range blockMaps {
-		jsonBytes, err := json.Marshal(blockMap)
+	for _, block := range blocks {
+		jsonBytes, err := json.Marshal(block)
 		if err != nil {
 			errorResponse(w, http.StatusInternalServerError, `{}`)
 			return
 		}
 
-		block := blockFromMap(blockMap)
-		insertBlock(block, string(jsonBytes))
+		store.insertBlock(block, string(jsonBytes))
 	}
 
-	log.Printf("IMPORT Blocks %d block(s)", len(blockMaps))
+	log.Printf("IMPORT Blocks %d block(s)", len(blocks))
 	jsonResponse(w, http.StatusOK, "{}")
 }
 
@@ -434,7 +434,12 @@ func main() {
 
 	http.Handle("/", r)
 
-	connectDatabase(config.DBType, config.DBConfigString)
+	var err error
+	store, err = NewSQLStore(config.DBType, config.DBConfigString)
+	if err != nil {
+		log.Fatal("Unable to start the database", err)
+		panic(err)
+	}
 
 	// Ctrl+C handling
 	handler := make(chan os.Signal, 1)
