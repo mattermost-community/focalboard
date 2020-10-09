@@ -101,7 +101,12 @@ class BoardComponent extends React.Component<Props, State> {
 							<div className={hasFilter ? "octo-button active" : "octo-button"} onClick={(e) => { this.filterClicked(e) }}>Filter</div>
 							<div className={hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { this.sortClicked(e) }}>Sort</div>
 							{this.state.isSearching
-								? <Editable ref={this.searchFieldRef} text={boardTree.getSearchText()} placeholderText="Search text" onChanged={(text) => { this.searchChanged(text) }} onKeyDown={(e) => { this.onSearchKeyDown(e) }}></Editable>
+								? <Editable
+									ref={this.searchFieldRef}
+									text={boardTree.getSearchText()}
+									placeholderText="Search text"
+									onChanged={(text) => { this.searchChanged(text) }}
+									onKeyDown={(e) => { this.onSearchKeyDown(e) }}></Editable>
 								: <div className="octo-button" onClick={() => { this.setState({ ...this.state, isSearching: true }) }}>Search</div>
 							}
 							<div className="octo-button" onClick={(e) => { this.optionsClicked(e) }}><div className="imageOptions" /></div>
@@ -398,7 +403,7 @@ class BoardComponent extends React.Component<Props, State> {
 	onSearchKeyDown(e: React.KeyboardEvent) {
 		if (e.keyCode === 27) {		// ESC: Clear search
 			this.searchFieldRef.current.text = ""
-			this.setState({...this.state, isSearching: false})
+			this.setState({ ...this.state, isSearching: false })
 			this.props.pageController.setSearchText(undefined)
 			e.preventDefault()
 		}
