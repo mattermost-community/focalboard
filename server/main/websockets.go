@@ -50,6 +50,7 @@ type WSServer struct {
 
 func NewWSServer() *WSServer {
 	return &WSServer{
+		listeners: make(map[string][]*websocket.Conn),
 		upgrader: websocket.Upgrader{
 			CheckOrigin: func(r *http.Request) bool {
 				return true
