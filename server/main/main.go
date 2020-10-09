@@ -70,13 +70,13 @@ func handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Printf("GetBlocks parentID: %s, %d result(s)", parentID, len(blocks))
 	response := `[` + strings.Join(blocks[:], ",") + `]`
-	jsonResponse(w, 200, response)
+	jsonResponse(w, http.StatusOK, response)
 }
 
 func handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		errorResponse(w, 500, `{}`)
+		errorResponse(w, http.StatusInternalServerError, `{}`)
 		return
 	}
 
@@ -84,41 +84,33 @@ func handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	defer func() {
 		if r := recover(); r != nil {
 			log.Printf(`ERROR: %v`, r)
-			errorResponse(w, 500, `{}`)
+			errorResponse(w, http.StatusInternalServerError, `{}`)
 			return
 		}
 	}()
 
-	var blockMaps []map[string]interface{}
-	err = json.Unmarshal([]byte(requestBody), &blockMaps)
+	var blocks []Block
+	err = json.Unmarshal([]byte(requestBody), &blocks)
 	if err != nil {
-		errorResponse(w, 500, ``)
+		errorResponse(w, http.StatusInternalServerError, ``)
 		return
 	}
 
 	var blockIDsToNotify = []string{}
 	uniqueBlockIDs := make(map[string]bool)
 
-	for _, blockMap := range blockMaps {
-		jsonBytes, err := json.Marshal(blockMap)
-		if err != nil {
-			errorResponse(w, 500, `{}`)
-			return
-		}
-
-		block := blockFromMap(blockMap)
-
+	for _, block := range blocks {
 		// Error checking
 		if len(block.Type) < 1 {
-			errorResponse(w, 500, fmt.Sprintf(`{"description": "missing type", "id": "%s"}`, block.ID))
+			errorResponse(w, http.StatusInternalServerError, fmt.Sprintf(`{"description": "missing type", "id": "%s"}`, block.ID))
 			return
 		}
 		if block.CreateAt < 1 {
-			errorResponse(w, 500, fmt.Sprintf(`{"description": "invalid createAt", "id": "%s"}`, block.ID))
+			errorResponse(w, http.StatusInternalServerError, fmt.Sprintf(`{"description": "invalid createAt", "id": "%s"}`, block.ID))
 			return
 		}
 		if block.UpdateAt < 1 {
-			errorResponse(w, 500, fmt.Sprintf(`{"description": "invalid updateAt", "id": "%s"}`, block.ID))
+			errorResponse(w, http.StatusInternalServerError, fmt.Sprintf(`{"description": "invalid updateAt", "id": "%s"}`, block.ID))
 			return
 		}
 
@@ -129,13 +121,19 @@ func handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 			blockIDsToNotify = append(blockIDsToNotify, block.ParentID)
 		}
 
+		jsonBytes, err := json.Marshal(block)
+		if err != nil {
+			errorResponse(w, http.StatusInternalServerError, `{}`)
+			return
+		}
+
 		insertBlock(block, string(jsonBytes))
 	}
 
 	broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
 
-	log.Printf("POST Blocks %d block(s)", len(blockMaps))
-	jsonResponse(w, 200, "{}")
+	log.Printf("POST Blocks %d block(s)", len(blocks))
+	jsonResponse(w, http.StatusOK, "{}")
 }
 
 func handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
@@ -155,7 +153,7 @@ func handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 	broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
 
 	log.Printf("DELETE Block %s", blockID)
-	jsonResponse(w, 200, "{}")
+	jsonResponse(w, http.StatusOK, "{}")
 }
 
 func handleGetSubTree(w http.ResponseWriter, r *http.Request) {
@@ -166,7 +164,7 @@ func handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("GetSubTree blockID: %s, %d result(s)", blockID, len(blocks))
 	response := `[` + strings.Join(blocks[:], ",") + `]`
-	jsonResponse(w, 200, response)
+	jsonResponse(w, http.StatusOK, response)
 }
 
 func handleExport(w http.ResponseWriter, r *http.Request) {
@@ -174,13 +172,13 @@ func handleExport(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("EXPORT Blocks, %d result(s)", len(blocks))
 	response := `[` + strings.Join(blocks[:], ",") + `]`
-	jsonResponse(w, 200, response)
+	jsonResponse(w, http.StatusOK, response)
 }
 
 func handleImport(w http.ResponseWriter, r *http.Request) {
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		errorResponse(w, 500, `{}`)
+		errorResponse(w, http.StatusInternalServerError, `{}`)
 		return
 	}
 
@@ -188,7 +186,7 @@ func handleImport(w http.ResponseWriter, r *http.Request) {
 	defer func() {
 		if r := recover(); r != nil {
 			log.Printf(`ERROR: %v`, r)
-			errorResponse(w, 500, `{}`)
+			errorResponse(w, http.StatusInternalServerError, `{}`)
 			return
 		}
 	}()
@@ -196,14 +194,14 @@ func handleImport(w http.ResponseWriter, r *http.Request) {
 	var blockMaps []map[string]interface{}
 	err = json.Unmarshal([]byte(requestBody), &blockMaps)
 	if err != nil {
-		errorResponse(w, 500, ``)
+		errorResponse(w, http.StatusInternalServerError, ``)
 		return
 	}
 
 	for _, blockMap := range blockMaps {
 		jsonBytes, err := json.Marshal(blockMap)
 		if err != nil {
-			errorResponse(w, 500, `{}`)
+			errorResponse(w, http.StatusInternalServerError, `{}`)
 			return
 		}
 
@@ -212,7 +210,7 @@ func handleImport(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Printf("IMPORT Blocks %d block(s)", len(blockMaps))
-	jsonResponse(w, 200, "{}")
+	jsonResponse(w, http.StatusOK, "{}")
 }
 
 // File upload
