@@ -3,7 +3,7 @@
 ## Build instructions
 
 ```
-npm i
+make prebuild
 make
 ```
 

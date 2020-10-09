@@ -26,6 +26,11 @@ watch:
 
 prebuild:
 	npm install
+	go get github.com/gorilla/mux
+	go get github.com/gorilla/websocket
+	go get github.com/spf13/viper
+	go get github.com/lib/pq
+	go get github.com/mattn/go-sqlite3
 
 clean:
 	rm -rf bin
