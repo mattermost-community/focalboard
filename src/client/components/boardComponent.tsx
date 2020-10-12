@@ -96,7 +96,7 @@ class BoardComponent extends React.Component<Props, State> {
 								Group by <span style={groupByStyle} id="groupByLabel">{boardTree.groupByProperty?.name}</span>
 							</div>
 							<div className={hasFilter ? "octo-button active" : "octo-button"} onClick={(e) => { this.filterClicked(e) }}>Filter</div>
-							<div className={hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { this.sortClicked(e) }}>Sort</div>
+							<div className={hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { OctoUtils.showSortMenu(e, mutator, boardTree) }}>Sort</div>
 							{this.state.isSearching
 								? <Editable
 									ref={this.searchFieldRef}
@@ -273,38 +273,6 @@ class BoardComponent extends React.Component<Props, State> {
 	private filterClicked(e: React.MouseEvent) {
 		const { pageController } = this.props
 		pageController.showFilter(e.target as HTMLElement)
-	}
-
-	private async sortClicked(e: React.MouseEvent) {
-		const { mutator, boardTree } = this.props
-		const { activeView } = boardTree
-		const { sortOptions } = activeView
-		const sortOption = sortOptions.length > 0 ? sortOptions[0] : undefined
-
-		const propertyTemplates = boardTree.board.cardProperties
-		Menu.shared.options = propertyTemplates.map((o) => {
-			return {
-				id: o.id,
-				name: o.name,
-				icon: (sortOption.propertyId === o.id) ? sortOption.reversed ? "sortUp" : "sortDown" : undefined
-			}
-		})
-		Menu.shared.onMenuClicked = async (propertyId: string) => {
-			let newSortOptions: ISortOption[] = []
-			if (sortOption && sortOption.propertyId === propertyId) {
-				// Already sorting by name, so reverse it
-				newSortOptions = [
-					{ propertyId, reversed: !sortOption.reversed }
-				]
-			} else {
-				newSortOptions = [
-					{ propertyId, reversed: false }
-				]
-			}
-
-			await mutator.changeViewSortOptions(activeView, newSortOptions)
-		}
-		Menu.shared.showAtElement(e.target as HTMLElement)
 	}
 
 	private async optionsClicked(e: React.MouseEvent) {
