@@ -1,10 +1,12 @@
 import React from "react"
 import { Board } from "../board"
 import { Mutator } from "../mutator"
+import { IPageController } from "../octoTypes"
 import { WorkspaceTree } from "../workspaceTree"
 
 type Props = {
 	mutator: Mutator
+	pageController: IPageController
 	workspaceTree: WorkspaceTree
 }
 
@@ -35,7 +37,8 @@ class Sidebar extends React.Component<Props> {
 	}
 
 	private boardClicked(board: Board) {
-		// TODO
+		const { pageController } = this.props
+		pageController.showBoard(board.id)
 	}
 
 	async addBoardClicked() {

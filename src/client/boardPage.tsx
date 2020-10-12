@@ -227,6 +227,16 @@ class BoardPage implements IPageController {
 		this.render()
 	}
 
+	showBoard(boardId: string) {
+		if (this.boardTree.board.id === boardId) { return }
+
+		const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + `?id=${encodeURIComponent(boardId)}`
+		window.history.pushState({ path: newUrl }, "", newUrl)
+
+		this.boardTree = new BoardTree(this.octo, boardId)
+		this.sync()
+	}
+
 	showView(viewId: string) {
 		this.viewId = viewId
 		this.boardTree.setActiveView(this.viewId)
