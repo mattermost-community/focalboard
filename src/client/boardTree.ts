@@ -116,11 +116,11 @@ class BoardTree {
 	}
 
 	private searchFilterCards(cards: IBlock[]) {
-		const { searchText } = this
+		const searchText = this.searchText?.toLocaleLowerCase()
 		if (!searchText) { return cards.slice() }
 
 		return cards.filter(card => {
-			if (card.title?.toLowerCase().indexOf(searchText) !== -1) { return true }
+			if (card.title?.toLocaleLowerCase().indexOf(searchText) !== -1) { return true }
 		})
 	}
 
