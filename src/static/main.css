@@ -60,6 +60,26 @@ hr {
 	display: inline-block;
 }
 
+/* Sidebar */
+
+.octo-workspace {
+	display: flex;
+	flex-direction: row;
+}
+
+.octo-sidebar {
+	display: flex;
+	flex-direction: column;
+
+	padding: 20px;
+	background-color: rgb(247, 246, 243);
+	min-width: 230px;
+}
+
+.octo-sidebar div {
+	font-weight: 500;
+}
+
 /* OCTO */
 
 .octo-frame {

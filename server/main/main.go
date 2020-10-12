@@ -48,12 +48,15 @@ func handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	blockType := query.Get("type")
 
 	var blocks []string
-	if len(blockType) > 0 {
+	if len(blockType) > 0 && len(parentID) > 0 {
 		blocks = getBlocksWithParentAndType(parentID, blockType)
+	} else if len(blockType) > 0 {
+		blocks = getBlocksWithType(blockType)
 	} else {
 		blocks = getBlocksWithParent(parentID)
 	}
-	log.Printf("GetBlocks parentID: %s, %d result(s)", parentID, len(blocks))
+
+	log.Printf("GetBlocks parentID: %s, type: %s, %d result(s)", parentID, blockType, len(blocks))
 	response := `[` + strings.Join(blocks[:], ",") + `]`
 	jsonResponse(w, 200, response)
 }

@@ -3,11 +3,10 @@ import ReactDOM from "react-dom"
 import { BoardTree } from "./boardTree"
 import { BoardView } from "./boardView"
 import { CardTree } from "./cardTree"
-import { BoardComponent } from "./components/boardComponent"
 import { CardDialog } from "./components/cardDialog"
 import { FilterComponent } from "./components/filterComponent"
 import { PageHeader } from "./components/pageHeader"
-import { TableComponent } from "./components/tableComponent"
+import { WorkspaceComponent } from "./components/workspaceComponent"
 import { FlashMessage } from "./flashMessage"
 import { Mutator } from "./mutator"
 import { OctoClient } from "./octoClient"
@@ -15,6 +14,7 @@ import { OctoListener } from "./octoListener"
 import { IBlock, IPageController } from "./octoTypes"
 import { UndoManager } from "./undomanager"
 import { Utils } from "./utils"
+import { WorkspaceTree } from "./workspaceTree"
 
 class BoardPage implements IPageController {
 	boardTitle: HTMLElement
@@ -26,6 +26,7 @@ class BoardPage implements IPageController {
 	boardId: string
 	viewId: string
 
+	workspaceTree: WorkspaceTree
 	boardTree: BoardTree
 	view: BoardView
 
@@ -48,6 +49,8 @@ class BoardPage implements IPageController {
 		}
 
 		this.layoutPage()
+
+		this.workspaceTree = new WorkspaceTree(this.octo)
 
 		this.boardId = queryString.get("id")
 		this.viewId = queryString.get("v")
@@ -114,7 +117,7 @@ class BoardPage implements IPageController {
 		const { board, activeView } = boardTree
 		const mutator = new Mutator(octo)
 
-		const rootElement = Utils.getElementById("main")
+		const mainElement = Utils.getElementById("main")
 
 		ReactDOM.render(
 			<PageHeader />,
@@ -126,7 +129,7 @@ class BoardPage implements IPageController {
 		} else {
 			ReactDOM.render(
 				<div className="page-loading">Loading...</div>,
-				rootElement
+				mainElement
 			)
 			return
 		}
@@ -134,27 +137,10 @@ class BoardPage implements IPageController {
 		if (activeView) {
 			document.title = `OCTO - ${board.title} | ${activeView.title}`
 
-			switch (activeView.viewType) {
-				case "board": {
-					ReactDOM.render(
-						<BoardComponent mutator={mutator} boardTree={this.boardTree} pageController={this} />,
-						rootElement
-					)
-					break
-				}
-
-				case "table": {
-					ReactDOM.render(
-						<TableComponent mutator={mutator} boardTree={this.boardTree} pageController={this} />,
-						rootElement
-					)
-					break
-				}
-
-				default: {
-					Utils.assertFailure(`render() Unhandled viewType: ${activeView.viewType}`)
-				}
-			}
+			ReactDOM.render(
+				<WorkspaceComponent mutator={mutator} workspaceTree={this.workspaceTree} boardTree={this.boardTree} pageController={this} />,
+				mainElement
+			)
 
 			if (boardTree && boardTree.board && this.shownCardTree) {
 				ReactDOM.render(
@@ -170,7 +156,7 @@ class BoardPage implements IPageController {
 		} else {
 			ReactDOM.render(
 				<div>Loading...</div>,
-				rootElement
+				mainElement
 			)
 		}
 
@@ -200,8 +186,9 @@ class BoardPage implements IPageController {
 	}
 
 	async sync() {
-		const { boardTree } = this
+		const { workspaceTree, boardTree } = this
 
+		await workspaceTree.sync()
 		await boardTree.sync()
 
 		// Default to first view
