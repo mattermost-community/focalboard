@@ -4,7 +4,7 @@ type MenuOption = {
 	id: string,
 	name: string,
 	isOn?: boolean,
-	icon?: "checked" | undefined,
+	icon?: "checked" | "sortUp" | "sortDown" | undefined,
 	type?: "separator" | "color" | "submenu" | "switch" | undefined
 }
 
@@ -59,7 +59,9 @@ class Menu {
 					if (option.icon) {
 						let iconName: string
 						switch (option.icon) {
-							case "checked": { iconName = "imageMenuCheck" }
+							case "checked": { iconName = "imageMenuCheck"; break }
+							case "sortUp": { iconName = "imageMenuSortUp"; break }
+							case "sortDown": { iconName = "imageMenuSortDown"; break }
 							default: { Utils.assertFailure(`Unsupported menu icon: ${option.icon}`) }
 						}
 						if (iconName) {
