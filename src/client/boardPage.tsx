@@ -6,6 +6,7 @@ import { CardTree } from "./cardTree"
 import { BoardComponent } from "./components/boardComponent"
 import { CardDialog } from "./components/cardDialog"
 import { FilterComponent } from "./components/filterComponent"
+import { PageHeader } from "./components/pageHeader"
 import { TableComponent } from "./components/tableComponent"
 import { FlashMessage } from "./flashMessage"
 import { Mutator } from "./mutator"
@@ -45,6 +46,8 @@ class BoardPage implements IPageController {
 			window.location.href = "/"
 			return
 		}
+
+		this.layoutPage()
 
 		this.boardId = queryString.get("id")
 		this.viewId = queryString.get("v")
@@ -89,6 +92,23 @@ class BoardPage implements IPageController {
 		this.render()
 	}
 
+	private layoutPage() {
+		const root = Utils.getElementById("octo-tasks-app")
+		root.innerText = ""
+
+		const header = root.appendChild(document.createElement("div"))
+		header.id = "header"
+
+		const main = root.appendChild(document.createElement("div"))
+		main.id = "main"
+
+		const overlay = root.appendChild(document.createElement("div"))
+		overlay.id = "overlay"
+
+		const modal = root.appendChild(document.createElement("div"))
+		modal.id = "modal"
+	}
+
 	render() {
 		const { octo, boardTree } = this
 		const { board, activeView } = boardTree
@@ -96,11 +116,16 @@ class BoardPage implements IPageController {
 
 		const rootElement = Utils.getElementById("main")
 
+		ReactDOM.render(
+			<PageHeader />,
+			Utils.getElementById("header")
+		)
+
 		if (board) {
 			Utils.setFavicon(board.icon)
 		} else {
 			ReactDOM.render(
-				<div>Loading...</div>,
+				<div className="page-loading">Loading...</div>,
 				rootElement
 			)
 			return

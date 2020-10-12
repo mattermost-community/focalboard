@@ -16,7 +16,13 @@ class BoardsPage {
 	constructor() {
 		// This is a placeholder page
 
-		const mainPanel = Utils.getElementById("main")
+		const root = Utils.getElementById("octo-tasks-app")
+		root.innerText = ""
+
+		// Header
+		root.appendChild(Utils.htmlToElement(`<div class="page-header"><a href="/">OCTO</a></div`))
+
+		const mainPanel = root.appendChild(document.createElement("div"))
 
 		this.boardsPanel = mainPanel.appendChild(document.createElement("div"))
 
