@@ -71,13 +71,19 @@ hr {
 	display: flex;
 	flex-direction: column;
 
-	padding: 20px;
 	background-color: rgb(247, 246, 243);
 	min-width: 230px;
+	padding: 20px 0;
 }
 
-.octo-sidebar div {
+.octo-sidebar-item {
 	font-weight: 500;
+	cursor: pointer;
+	padding: 3px 20px;
+}
+
+.octo-sidebar-item:hover {
+	background-color: rgba(0, 0, 0, 0.05);
 }
 
 /* OCTO */
