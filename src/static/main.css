@@ -36,7 +36,7 @@ hr {
 	margin-bottom: 8px;
 }
 
-header {
+.page-header {
 	font-size: 18px;
 	font-weight: bold;
 	background-color: #eeeeee;
@@ -44,16 +44,12 @@ header {
 	padding: 10px 20px;
 }
 
-header a {
+.page-header a {
 	color: #505050;
 }
 
-main {
-	padding: 10px 20px;
-}
-
-footer {
-	padding: 10px 20px;
+.page-loading {
+	margin: 50px auto;
 }
 
 .title, h1 {
@@ -67,7 +63,7 @@ footer {
 /* OCTO */
 
 .octo-frame {
-	padding: 10px 50px 50px 50px;
+	padding: 10px 95px 50px 95px;
 	min-width: 1000px;
 }
 
