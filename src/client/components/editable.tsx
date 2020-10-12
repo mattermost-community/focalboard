@@ -102,7 +102,6 @@ class Editable extends React.Component<Props, State> {
 					this.text = newText
 
 					this.elementRef.current.classList.remove("active")
-
 					if (onBlur) { onBlur() }
 				}}
 

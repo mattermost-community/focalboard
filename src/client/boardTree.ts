@@ -17,6 +17,7 @@ class BoardTree {
 	activeView?: BoardView
 	groupByProperty?: IPropertyTemplate
 
+	private searchText?: string
 	private allCards: IBlock[] = []
 	get allBlocks(): IBlock[] {
 		return [this.board, ...this.views, ...this.allCards]
@@ -93,8 +94,18 @@ class BoardTree {
 		this.applyFilterSortAndGroup()
 	}
 
+	getSearchText(): string | undefined {
+		return this.searchText
+	}
+
+	setSearchText(text?: string) {
+		this.searchText = text
+		this.applyFilterSortAndGroup()
+	}
+
 	applyFilterSortAndGroup() {
 		this.cards = this.filterCards(this.allCards)
+		this.cards = this.searchFilterCards(this.cards)
 		this.cards = this.sortCards(this.cards)
 
 		if (this.activeView.groupById) {
@@ -102,6 +113,15 @@ class BoardTree {
 		} else {
 			Utils.assert(this.activeView.viewType !== "board")
 		}
+	}
+
+	private searchFilterCards(cards: IBlock[]) {
+		const searchText = this.searchText?.toLocaleLowerCase()
+		if (!searchText) { return cards.slice() }
+
+		return cards.filter(card => {
+			if (card.title?.toLocaleLowerCase().indexOf(searchText) !== -1) { return true }
+		})
 	}
 
 	private setGroupByProperty(propertyId: string) {

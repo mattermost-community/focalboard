@@ -25,15 +25,23 @@ type Props = {
 
 type State = {
 	isHoverOnCover: boolean
+	isSearching: boolean
 }
 
 class BoardComponent extends React.Component<Props, State> {
 	private draggedCard: IBlock
 	private draggedHeaderOption: IPropertyOption
+	private searchFieldRef = React.createRef<Editable>()
 
 	constructor(props: Props) {
 		super(props)
-		this.state = { isHoverOnCover: false }
+		this.state = { isHoverOnCover: false, isSearching: !!this.props.boardTree?.getSearchText() }
+	}
+
+	componentDidUpdate(prevPros: Props, prevState: State) {
+		if (this.state.isSearching && !prevState.isSearching) {
+			this.searchFieldRef.current.focus()
+		}
 	}
 
 	render() {
@@ -87,9 +95,18 @@ class BoardComponent extends React.Component<Props, State> {
 							<div className="octo-button" id="groupByButton" onClick={(e) => { this.groupByClicked(e) }}>
 								Group by <span style={groupByStyle} id="groupByLabel">{boardTree.groupByProperty?.name}</span>
 							</div>
-							<div className={ hasFilter ? "octo-button active" : "octo-button"} onClick={(e) => { this.filterClicked(e) }}>Filter</div>
-							<div className={ hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { this.sortClicked(e) }}>Sort</div>
-							<div className="octo-button">Search</div>
+							<div className={hasFilter ? "octo-button active" : "octo-button"} onClick={(e) => { this.filterClicked(e) }}>Filter</div>
+							<div className={hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { this.sortClicked(e) }}>Sort</div>
+							{this.state.isSearching
+								? <Editable
+									ref={this.searchFieldRef}
+									text={boardTree.getSearchText()}
+									placeholderText="Search text"
+									style={{ color: "#000000" }}
+									onChanged={(text) => { this.searchChanged(text) }}
+									onKeyDown={(e) => { this.onSearchKeyDown(e) }}></Editable>
+								: <div className="octo-button" onClick={() => { this.setState({ ...this.state, isSearching: true }) }}>Search</div>
+							}
 							<div className="octo-button" onClick={(e) => { this.optionsClicked(e) }}><div className="imageOptions" /></div>
 							<div className="octo-button filled" onClick={() => { this.addCard(undefined) }}>New</div>
 						</div>
@@ -379,6 +396,19 @@ class BoardComponent extends React.Component<Props, State> {
 
 			await mutator.changePropertyOptionOrder(board, boardTree.groupByProperty, draggedHeaderOption, destIndex)
 		}
+	}
+
+	onSearchKeyDown(e: React.KeyboardEvent) {
+		if (e.keyCode === 27) {		// ESC: Clear search
+			this.searchFieldRef.current.text = ""
+			this.setState({ ...this.state, isSearching: false })
+			this.props.pageController.setSearchText(undefined)
+			e.preventDefault()
+		}
+	}
+
+	searchChanged(text?: string) {
+		this.props.pageController.setSearchText(text)
 	}
 }
 

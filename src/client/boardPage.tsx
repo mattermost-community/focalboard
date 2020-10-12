@@ -227,6 +227,11 @@ class BoardPage implements IPageController {
 		this.filterAnchorElement = ahchorElement
 		this.render()
 	}
+
+	setSearchText(text?: string) {
+		this.boardTree.setSearchText(text)
+		this.render()
+	}
 }
 
 export { BoardPage }
