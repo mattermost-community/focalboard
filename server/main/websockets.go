@@ -42,12 +42,14 @@ func (ws *WSServer) GetListeners(blockID string) []*websocket.Conn {
 	return listeners
 }
 
+// WSServer is a WebSocket server
 type WSServer struct {
 	upgrader  websocket.Upgrader
 	listeners map[string][]*websocket.Conn
 	mu        sync.RWMutex
 }
 
+// NewWSServer creates a new WSServer
 func NewWSServer() *WSServer {
 	return &WSServer{
 		listeners: make(map[string][]*websocket.Conn),
@@ -59,7 +61,7 @@ func NewWSServer() *WSServer {
 	}
 }
 
-// WebsocketMsg is send on block changes
+// WebsocketMsg is sent on block changes
 type WebsocketMsg struct {
 	Action  string `json:"action"`
 	BlockID string `json:"blockId"`
