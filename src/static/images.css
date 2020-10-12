@@ -6,7 +6,7 @@
 }
 
 .imageAdd {
-	background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="stroke:black;stroke-width:4;" stroke-opacity="50%"><polyline points="30,50 70,50" /><polyline points="50,30 50,70" /></svg>');
+	background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="stroke:black;stroke-width:4;" fill="none" stroke-opacity="50%"><polyline points="30,50 70,50" /><polyline points="50,30 50,70" /></svg>');
 	background-size: 100% 100%;
 	min-width: 24px;
 	min-height: 24px;
@@ -21,6 +21,13 @@
 
 .imageSubmenuTriangle {
 	background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,35 75,50 50,65" style="fill:black;stroke:none;" fill-opacity="70%" /></svg>');
+	background-size: 100% 100%;
+	min-width: 24px;
+	min-height: 24px;
+}
+
+.imageMenuCheck {
+	background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="stroke:black;stroke-width:8;" fill="none" stroke-opacity="50%"><polyline points="20,60 40,80 80,40" /></svg>');
 	background-size: 100% 100%;
 	min-width: 24px;
 	min-height: 24px;

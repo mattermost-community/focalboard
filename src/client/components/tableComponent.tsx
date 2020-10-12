@@ -255,7 +255,13 @@ class TableComponent extends React.Component<Props, State> {
 		const sortOption = sortOptions.length > 0 ? sortOptions[0] : undefined
 
 		const propertyTemplates = boardTree.board.cardProperties
-		Menu.shared.options = propertyTemplates.map((o) => { return { id: o.id, name: o.name } })
+		Menu.shared.options = propertyTemplates.map((o) => {
+			return {
+				id: o.id,
+				name: o.name,
+				icon: (sortOption.propertyId === o.id) ? "checked" : undefined
+			}
+		})
 		Menu.shared.onMenuClicked = async (propertyId: string) => {
 			let newSortOptions: ISortOption[] = []
 			if (sortOption && sortOption.propertyId === propertyId) {

@@ -4,6 +4,7 @@ type MenuOption = {
 	id: string,
 	name: string,
 	isOn?: boolean,
+	icon?: "checked" | undefined,
 	type?: "separator" | "color" | "submenu" | "switch" | undefined
 }
 
@@ -54,6 +55,18 @@ class Menu {
 						this.showSubMenu(rect.right - bodyRect.left, rect.top - bodyRect.top, option.id)
 					}
 				} else {
+
+					if (option.icon) {
+						let iconName: string
+						switch (option.icon) {
+							case "checked": { iconName = "imageMenuCheck" }
+							default: { Utils.assertFailure(`Unsupported menu icon: ${option.icon}`) }
+						}
+						if (iconName) {
+							optionElement.appendChild(Utils.htmlToElement(`<div class="${iconName}" style="float: right;"></div>`))
+						}
+					}
+
 					optionElement.onmouseenter = () => {
 						this.hideSubMenu()
 					}
