@@ -155,6 +155,32 @@ func getBlocksWithParent(parentID string) []string {
 	return blocksFromRows(rows)
 }
 
+func getBlocksWithType(blockType string) []string {
+	query := `WITH latest AS
+		(
+			SELECT * FROM
+			(
+				SELECT
+					*,
+					ROW_NUMBER() OVER (PARTITION BY id ORDER BY insert_at DESC) AS rn
+				FROM blocks
+			) a
+			WHERE rn = 1
+		)
+
+		SELECT COALESCE("json", '{}')
+		FROM latest
+		WHERE delete_at = 0 and type = $1`
+
+	rows, err := db.Query(query, blockType)
+	if err != nil {
+		log.Printf(`getBlocksWithParentAndType ERROR: %v`, err)
+		panic(err)
+	}
+
+	return blocksFromRows(rows)
+}
+
 func getSubTree(blockID string) []string {
 	query := `WITH latest AS
 	(

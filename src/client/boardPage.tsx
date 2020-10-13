@@ -3,11 +3,10 @@ import ReactDOM from "react-dom"
 import { BoardTree } from "./boardTree"
 import { BoardView } from "./boardView"
 import { CardTree } from "./cardTree"
-import { BoardComponent } from "./components/boardComponent"
 import { CardDialog } from "./components/cardDialog"
 import { FilterComponent } from "./components/filterComponent"
 import { PageHeader } from "./components/pageHeader"
-import { TableComponent } from "./components/tableComponent"
+import { WorkspaceComponent } from "./components/workspaceComponent"
 import { FlashMessage } from "./flashMessage"
 import { Mutator } from "./mutator"
 import { OctoClient } from "./octoClient"
@@ -15,6 +14,7 @@ import { OctoListener } from "./octoListener"
 import { IBlock, IPageController } from "./octoTypes"
 import { UndoManager } from "./undomanager"
 import { Utils } from "./utils"
+import { WorkspaceTree } from "./workspaceTree"
 
 class BoardPage implements IPageController {
 	boardTitle: HTMLElement
@@ -23,10 +23,11 @@ class BoardPage implements IPageController {
 	groupByButton: HTMLElement
 	groupByLabel: HTMLElement
 
-	boardId: string
-	viewId: string
+	boardId?: string
+	viewId?: string
 
-	boardTree: BoardTree
+	workspaceTree: WorkspaceTree
+	boardTree?: BoardTree
 	view: BoardView
 
 	updateTitleTimeout: number
@@ -41,28 +42,18 @@ class BoardPage implements IPageController {
 
 	constructor() {
 		const queryString = new URLSearchParams(window.location.search)
-		if (!queryString.has("id")) {
-			// No id, redirect to home
-			window.location.href = "/"
-			return
-		}
+		const boardId = queryString.get("id")
+		const viewId = queryString.get("v")
 
 		this.layoutPage()
 
-		this.boardId = queryString.get("id")
-		this.viewId = queryString.get("v")
+		this.workspaceTree = new WorkspaceTree(this.octo)
 
 		console.log(`BoardPage. boardId: ${this.boardId}`)
-		if (this.boardId) {
-			this.boardTree = new BoardTree(this.octo, this.boardId)
-			this.sync()
-
-			this.boardListener.open(this.boardId, (blockId: string) => {
-				console.log(`octoListener.onChanged: ${blockId}`)
-				this.sync()
-			})
+		if (boardId) {
+			this.attachToBoard(boardId, viewId)
 		} else {
-			// Show error
+			this.sync()
 		}
 
 		document.body.addEventListener("keydown", async (e) => {
@@ -111,10 +102,15 @@ class BoardPage implements IPageController {
 
 	render() {
 		const { octo, boardTree } = this
-		const { board, activeView } = boardTree
+		const { board, activeView } = boardTree || {}
 		const mutator = new Mutator(octo)
 
-		const rootElement = Utils.getElementById("main")
+		const mainElement = Utils.getElementById("main")
+
+		ReactDOM.render(
+			<PageHeader />,
+			Utils.getElementById("header")
+		)
 
 		ReactDOM.render(
 			<PageHeader />,
@@ -123,54 +119,23 @@ class BoardPage implements IPageController {
 
 		if (board) {
 			Utils.setFavicon(board.icon)
-		} else {
-			ReactDOM.render(
-				<div className="page-loading">Loading...</div>,
-				rootElement
-			)
-			return
+			document.title = `OCTO - ${board.title} | ${activeView.title}`
 		}
 
-		if (activeView) {
-			document.title = `OCTO - ${board.title} | ${activeView.title}`
+		ReactDOM.render(
+			<WorkspaceComponent mutator={mutator} workspaceTree={this.workspaceTree} boardTree={this.boardTree} pageController={this} />,
+			mainElement
+		)
 
-			switch (activeView.viewType) {
-				case "board": {
-					ReactDOM.render(
-						<BoardComponent mutator={mutator} boardTree={this.boardTree} pageController={this} />,
-						rootElement
-					)
-					break
-				}
-
-				case "table": {
-					ReactDOM.render(
-						<TableComponent mutator={mutator} boardTree={this.boardTree} pageController={this} />,
-						rootElement
-					)
-					break
-				}
-
-				default: {
-					Utils.assertFailure(`render() Unhandled viewType: ${activeView.viewType}`)
-				}
-			}
-
-			if (boardTree && boardTree.board && this.shownCardTree) {
-				ReactDOM.render(
-					<CardDialog mutator={mutator} boardTree={boardTree} cardTree={this.shownCardTree} onClose={() => { this.showCard(undefined) }}></CardDialog>,
-					Utils.getElementById("overlay")
-				)
-			} else {
-				ReactDOM.render(
-					<div />,
-					Utils.getElementById("overlay")
-				)
-			}
+		if (boardTree && boardTree.board && this.shownCardTree) {
+			ReactDOM.render(
+				<CardDialog mutator={mutator} boardTree={boardTree} cardTree={this.shownCardTree} onClose={() => { this.showCard(undefined) }}></CardDialog>,
+				Utils.getElementById("overlay")
+			)
 		} else {
 			ReactDOM.render(
-				<div>Loading...</div>,
-				rootElement
+				<div />,
+				Utils.getElementById("overlay")
 			)
 		}
 
@@ -189,7 +154,7 @@ class BoardPage implements IPageController {
 					boardTree={boardTree}
 					pageX={pageX}
 					pageY={pageY}
-					onClose={() => {this.showFilter(undefined)}}
+					onClose={() => { this.showFilter(undefined) }}
 				>
 				</FilterComponent>,
 				Utils.getElementById("modal")
@@ -199,21 +164,37 @@ class BoardPage implements IPageController {
 		}
 	}
 
+	private attachToBoard(boardId: string, viewId?: string) {
+		this.boardId = boardId
+		this.viewId = viewId
+
+		this.boardTree = new BoardTree(this.octo, boardId)
+
+		this.boardListener.open(boardId, (blockId: string) => {
+			console.log(`octoListener.onChanged: ${blockId}`)
+			this.sync()
+		})
+
+		this.sync()
+	}
+
 	async sync() {
-		const { boardTree } = this
+		const { workspaceTree, boardTree } = this
 
-		await boardTree.sync()
+		await workspaceTree.sync()
+		if (boardTree) {
+			await boardTree.sync()
 
-		// Default to first view
-		if (!this.viewId) {
-			this.viewId = boardTree.views[0].id
+			// Default to first view
+			if (!this.viewId) {
+				this.viewId = boardTree.views[0].id
+			}
+
+			boardTree.setActiveView(this.viewId)
+			// TODO: Handle error (viewId not found)
+			this.viewId = boardTree.activeView.id
+			console.log(`sync complete... title: ${boardTree.board.title}`)
 		}
-
-		boardTree.setActiveView(this.viewId)
-		// TODO: Handle error (viewId not found)
-		this.viewId = boardTree.activeView.id
-
-		console.log(`sync complete... title: ${boardTree.board.title}`)
 
 		this.render()
 	}
@@ -238,6 +219,15 @@ class BoardPage implements IPageController {
 		}
 
 		this.render()
+	}
+
+	showBoard(boardId: string) {
+		if (this.boardTree?.board?.id === boardId) { return }
+
+		const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + `?id=${encodeURIComponent(boardId)}`
+		window.history.pushState({ path: newUrl }, "", newUrl)
+
+		this.attachToBoard(boardId)
 	}
 
 	showView(viewId: string) {

@@ -39,6 +39,13 @@ func handleStaticFile(r *mux.Router, requestPath string, filePath string, conten
 	})
 }
 
+func handleDefault(r *mux.Router, requestPath string) {
+	r.HandleFunc(requestPath, func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("handleDefault")
+		http.Redirect(w, r, "/board", http.StatusFound)
+	})
+}
+
 // ----------------------------------------------------------------------------------------------------
 // REST APIs
 
@@ -48,12 +55,15 @@ func handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	blockType := query.Get("type")
 
 	var blocks []string
-	if len(blockType) > 0 {
+	if len(blockType) > 0 && len(parentID) > 0 {
 		blocks = getBlocksWithParentAndType(parentID, blockType)
+	} else if len(blockType) > 0 {
+		blocks = getBlocksWithType(blockType)
 	} else {
 		blocks = getBlocksWithParent(parentID)
 	}
-	log.Printf("GetBlocks parentID: %s, %d result(s)", parentID, len(blocks))
+
+	log.Printf("GetBlocks parentID: %s, type: %s, %d result(s)", parentID, blockType, len(blocks))
 	response := `[` + strings.Join(blocks[:], ",") + `]`
 	jsonResponse(w, 200, response)
 }
@@ -335,11 +345,9 @@ func main() {
 	r := mux.NewRouter()
 
 	// Static files
-	handleStaticFile(r, "/", "index.html", "text/html; charset=utf-8")
-	handleStaticFile(r, "/boards", "boards.html", "text/html; charset=utf-8")
-	handleStaticFile(r, "/board", "board.html", "text/html; charset=utf-8")
+	handleDefault(r, "/")
 
-	handleStaticFile(r, "/boardsPage.js", "boardsPage.js", "text/javascript; charset=utf-8")
+	handleStaticFile(r, "/board", "board.html", "text/html; charset=utf-8")
 	handleStaticFile(r, "/boardPage.js", "boardPage.js", "text/javascript; charset=utf-8")
 
 	handleStaticFile(r, "/favicon.ico", "static/favicon.svg", "image/svg+xml; charset=utf-8")
