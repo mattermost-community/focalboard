@@ -27,7 +27,7 @@ class BoardPage implements IPageController {
 	viewId?: string
 
 	workspaceTree: WorkspaceTree
-	boardTree: BoardTree
+	boardTree?: BoardTree
 	view: BoardView
 
 	updateTitleTimeout: number
@@ -42,24 +42,18 @@ class BoardPage implements IPageController {
 
 	constructor() {
 		const queryString = new URLSearchParams(window.location.search)
-		if (!queryString.has("id")) {
-			// No id, redirect to home
-			window.location.href = "/"
-			return
-		}
+		const boardId = queryString.get("id")
+		const viewId = queryString.get("v")
 
 		this.layoutPage()
 
 		this.workspaceTree = new WorkspaceTree(this.octo)
 
-		const boardId = queryString.get("id")
-		const viewId = queryString.get("v")
-
 		console.log(`BoardPage. boardId: ${this.boardId}`)
 		if (boardId) {
 			this.attachToBoard(boardId, viewId)
 		} else {
-			// Show error
+			this.sync()
 		}
 
 		document.body.addEventListener("keydown", async (e) => {
@@ -108,7 +102,7 @@ class BoardPage implements IPageController {
 
 	render() {
 		const { octo, boardTree } = this
-		const { board, activeView } = boardTree
+		const { board, activeView } = boardTree || {}
 		const mutator = new Mutator(octo)
 
 		const mainElement = Utils.getElementById("main")
@@ -120,37 +114,23 @@ class BoardPage implements IPageController {
 
 		if (board) {
 			Utils.setFavicon(board.icon)
-		} else {
-			ReactDOM.render(
-				<div className="page-loading">Loading...</div>,
-				mainElement
-			)
-			return
+			document.title = `OCTO - ${board.title} | ${activeView.title}`
 		}
 
-		if (activeView) {
-			document.title = `OCTO - ${board.title} | ${activeView.title}`
+		ReactDOM.render(
+			<WorkspaceComponent mutator={mutator} workspaceTree={this.workspaceTree} boardTree={this.boardTree} pageController={this} />,
+			mainElement
+		)
 
+		if (boardTree && boardTree.board && this.shownCardTree) {
 			ReactDOM.render(
-				<WorkspaceComponent mutator={mutator} workspaceTree={this.workspaceTree} boardTree={this.boardTree} pageController={this} />,
-				mainElement
+				<CardDialog mutator={mutator} boardTree={boardTree} cardTree={this.shownCardTree} onClose={() => { this.showCard(undefined) }}></CardDialog>,
+				Utils.getElementById("overlay")
 			)
-
-			if (boardTree && boardTree.board && this.shownCardTree) {
-				ReactDOM.render(
-					<CardDialog mutator={mutator} boardTree={boardTree} cardTree={this.shownCardTree} onClose={() => { this.showCard(undefined) }}></CardDialog>,
-					Utils.getElementById("overlay")
-				)
-			} else {
-				ReactDOM.render(
-					<div />,
-					Utils.getElementById("overlay")
-				)
-			}
 		} else {
 			ReactDOM.render(
-				<div>Loading...</div>,
-				mainElement
+				<div />,
+				Utils.getElementById("overlay")
 			)
 		}
 
@@ -169,7 +149,7 @@ class BoardPage implements IPageController {
 					boardTree={boardTree}
 					pageX={pageX}
 					pageY={pageY}
-					onClose={() => {this.showFilter(undefined)}}
+					onClose={() => { this.showFilter(undefined) }}
 				>
 				</FilterComponent>,
 				Utils.getElementById("modal")
@@ -197,18 +177,19 @@ class BoardPage implements IPageController {
 		const { workspaceTree, boardTree } = this
 
 		await workspaceTree.sync()
-		await boardTree.sync()
+		if (boardTree) {
+			await boardTree.sync()
 
-		// Default to first view
-		if (!this.viewId) {
-			this.viewId = boardTree.views[0].id
+			// Default to first view
+			if (!this.viewId) {
+				this.viewId = boardTree.views[0].id
+			}
+
+			boardTree.setActiveView(this.viewId)
+			// TODO: Handle error (viewId not found)
+			this.viewId = boardTree.activeView.id
+			console.log(`sync complete... title: ${boardTree.board.title}`)
 		}
-
-		boardTree.setActiveView(this.viewId)
-		// TODO: Handle error (viewId not found)
-		this.viewId = boardTree.activeView.id
-
-		console.log(`sync complete... title: ${boardTree.board.title}`)
 
 		this.render()
 	}

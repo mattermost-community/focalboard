@@ -30,9 +30,13 @@ class WorkspaceComponent extends React.Component<Props> {
 
 	private mainComponent() {
 		const { mutator, boardTree, pageController } = this.props
-		const { activeView } = boardTree
+		const { activeView } = boardTree || {}
 
-		switch (activeView.viewType) {
+		if (!activeView) {
+			return <div></div>
+		}
+
+		switch (activeView?.viewType) {
 			case "board": {
 				return <BoardComponent mutator={mutator} boardTree={boardTree} pageController={pageController} />
 			}

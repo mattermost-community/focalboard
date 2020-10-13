@@ -39,6 +39,13 @@ func handleStaticFile(r *mux.Router, requestPath string, filePath string, conten
 	})
 }
 
+func handleDefault(r *mux.Router, requestPath string) {
+	r.HandleFunc(requestPath, func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("handleDefault")
+		http.Redirect(w, r, "/board", http.StatusFound)
+	})
+}
+
 // ----------------------------------------------------------------------------------------------------
 // REST APIs
 
@@ -338,11 +345,9 @@ func main() {
 	r := mux.NewRouter()
 
 	// Static files
-	handleStaticFile(r, "/", "index.html", "text/html; charset=utf-8")
-	handleStaticFile(r, "/boards", "boards.html", "text/html; charset=utf-8")
-	handleStaticFile(r, "/board", "board.html", "text/html; charset=utf-8")
+	handleDefault(r, "/")
 
-	handleStaticFile(r, "/boardsPage.js", "boardsPage.js", "text/javascript; charset=utf-8")
+	handleStaticFile(r, "/board", "board.html", "text/html; charset=utf-8")
 	handleStaticFile(r, "/boardPage.js", "boardPage.js", "text/javascript; charset=utf-8")
 
 	handleStaticFile(r, "/favicon.ico", "static/favicon.svg", "image/svg+xml; charset=utf-8")
