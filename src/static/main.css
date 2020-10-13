@@ -630,7 +630,7 @@ hr {
 	box-sizing: border-box;
 	padding: 5px 8px 6px 8px;
 
-	width: 240px;
+	width: 150px;
 	min-height: 32px;
 
 	font-size: 14px;
@@ -638,6 +638,10 @@ hr {
 
 	overflow: hidden;
 	position: relative;
+}
+
+.octo-table-cell.title-cell {
+	width: 280px;
 }
 
 .octo-table-cell .octo-propertyvalue {

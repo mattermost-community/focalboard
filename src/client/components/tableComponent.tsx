@@ -111,7 +111,7 @@ class TableComponent extends React.Component<Props, State> {
 							{/* Headers */}
 
 							<div className="octo-table-header" id="mainBoardHeader">
-								<div className="octo-table-cell" id="mainBoardHeader">
+								<div className="octo-table-cell title-cell" id="mainBoardHeader">
 									<div
 										className="octo-label"
 										style={{ cursor: "pointer" }}
