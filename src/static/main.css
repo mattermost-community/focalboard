@@ -63,11 +63,11 @@ hr {
 /* App frame */
 
 #octo-tasks-app {
-	height: 100%;
+	min-height: 100%;
 }
 
 #octo-tasks-app > #main {
-	height: 100%;
+	min-height: 100%;
 }
 
 /* Sidebar */
@@ -76,14 +76,14 @@ hr {
 	display: flex;
 	flex-direction: row;
 
-	height: 100%;
+	min-height: 100%;
 }
 
 .octo-sidebar {
 	display: flex;
 	flex-direction: column;
 
-	height: 100%;
+	min-height: 100%;
 	background-color: rgb(247, 246, 243);
 	min-width: 230px;
 	padding: 20px 0;
