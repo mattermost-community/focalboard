@@ -11,10 +11,10 @@ interface IBlock {
 
 	type: string
 	title?: string
-	url?: string
+	url?: string			// TODO: Move to properties (_url)
 	icon?: string
 	order: number
-	properties: IProperty[]
+	properties: IProperty[]	// TODO: Change to map
 
 	createAt: number
 	updateAt: number
