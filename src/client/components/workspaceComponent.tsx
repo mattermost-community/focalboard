@@ -17,11 +17,11 @@ type Props = {
 
 class WorkspaceComponent extends React.Component<Props> {
 	render() {
-		const { mutator, workspaceTree, pageController } = this.props
+		const { mutator, boardTree, workspaceTree, pageController } = this.props
 
 		const element =
 			<div className="octo-workspace">
-				<Sidebar mutator={mutator} pageController={pageController} workspaceTree={workspaceTree}></Sidebar>
+				<Sidebar mutator={mutator} pageController={pageController} workspaceTree={workspaceTree} boardTree={boardTree}></Sidebar>
 				{this.mainComponent()}
 			</div>
 

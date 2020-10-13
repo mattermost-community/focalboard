@@ -1,5 +1,6 @@
 import React from "react"
 import { Board } from "../board"
+import { BoardTree } from "../boardTree"
 import { Mutator } from "../mutator"
 import { IPageController } from "../octoTypes"
 import { WorkspaceTree } from "../workspaceTree"
@@ -7,7 +8,8 @@ import { WorkspaceTree } from "../workspaceTree"
 type Props = {
 	mutator: Mutator
 	pageController: IPageController
-	workspaceTree: WorkspaceTree
+	workspaceTree: WorkspaceTree,
+	boardTree?: BoardTree
 }
 
 class Sidebar extends React.Component<Props> {
@@ -42,9 +44,16 @@ class Sidebar extends React.Component<Props> {
 	}
 
 	async addBoardClicked() {
-		const { mutator } = this.props
+		const { mutator, boardTree, pageController } = this.props
 
+		const oldBoardId = boardTree?.board?.id
 		const board = new Board()
+		await mutator.insertBlock(
+			board,
+			"add board",
+			async () => { pageController.showBoard(board.id) },
+			async () => { if (oldBoardId) { pageController.showBoard(oldBoardId) } })
+
 		await mutator.insertBlock(board)
 	}
 }
