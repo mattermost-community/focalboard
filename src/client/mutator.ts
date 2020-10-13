@@ -50,7 +50,7 @@ class Mutator {
 		)
 	}
 
-	async deleteBlock(block: IBlock, description?: string) {
+	async deleteBlock(block: IBlock, description?: string, beforeRedo?: () => Promise<void>, afterUndo?: () => Promise<void>) {
 		const { octo, undoManager } = this
 
 		if (!description) {
@@ -59,10 +59,12 @@ class Mutator {
 
 		await undoManager.perform(
 			async () => {
+				await beforeRedo?.()
 				await octo.deleteBlock(block.id)
 			},
 			async () => {
 				await octo.insertBlock(block)
+				await afterUndo?.()
 			},
 			description
 		)

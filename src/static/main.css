@@ -90,6 +90,9 @@ hr {
 }
 
 .octo-sidebar-item {
+	display: flex;
+	flex-direction: row;
+
 	font-weight: 500;
 	cursor: pointer;
 	padding: 3px 20px;
@@ -97,6 +100,10 @@ hr {
 
 .octo-sidebar-item:hover {
 	background-color: rgba(0, 0, 0, 0.05);
+}
+
+.octo-sidebar-item .octo-button:hover {
+	background-color: rgba(0, 0, 0, 0.1);
 }
 
 /* Main app */
