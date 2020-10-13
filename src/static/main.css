@@ -60,17 +60,30 @@ hr {
 	display: inline-block;
 }
 
+/* App frame */
+
+#octo-tasks-app {
+	height: 100%;
+}
+
+#octo-tasks-app > #main {
+	height: 100%;
+}
+
 /* Sidebar */
 
 .octo-workspace {
 	display: flex;
 	flex-direction: row;
+
+	height: 100%;
 }
 
 .octo-sidebar {
 	display: flex;
 	flex-direction: column;
 
+	height: 100%;
 	background-color: rgb(247, 246, 243);
 	min-width: 230px;
 	padding: 20px 0;
@@ -86,7 +99,7 @@ hr {
 	background-color: rgba(0, 0, 0, 0.05);
 }
 
-/* OCTO */
+/* Main app */
 
 .octo-frame {
 	padding: 10px 95px 50px 95px;
