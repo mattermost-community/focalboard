@@ -1,7 +1,7 @@
 import { IPropertyTemplate } from "./board"
 import { FilterClause } from "./filterClause"
 import { FilterGroup } from "./filterGroup"
-import { IBlock, IProperty } from "./octoTypes"
+import { IBlock } from "./octoTypes"
 import { Utils } from "./utils"
 
 class CardFilter {
@@ -39,8 +39,7 @@ class CardFilter {
 	}
 
 	static isClauseMet(filter: FilterClause, templates: IPropertyTemplate[], card: IBlock): boolean {
-		const property = card.properties.find(o => o.id === filter.propertyId)
-		const value = property?.value
+		const value = card.properties[filter.propertyId]
 		switch (filter.condition) {
 			case "includes": {
 				if (filter.values.length < 1) { break }		// No values = ignore clause (always met)
@@ -61,7 +60,7 @@ class CardFilter {
 		return true
 	}
 
-	static propertiesThatMeetFilterGroup(filterGroup: FilterGroup, templates: IPropertyTemplate[]): IProperty[] {
+	static propertiesThatMeetFilterGroup(filterGroup: FilterGroup, templates: IPropertyTemplate[]): Record<string, any> {
 		// TODO: Handle filter groups
 		const filters = filterGroup.filters.filter(o => !FilterGroup.isAnInstanceOf(o))
 		if (filters.length < 1) { return [] }
@@ -75,7 +74,7 @@ class CardFilter {
 		}
 	}
 
-	static propertyThatMeetsFilterClause(filterClause: FilterClause, templates: IPropertyTemplate[]): IProperty {
+	static propertyThatMeetsFilterClause(filterClause: FilterClause, templates: IPropertyTemplate[]): { id: string, value?: string } {
 		const template = templates.find(o => o.id === filterClause.propertyId)
 		switch (filterClause.condition) {
 			case "includes": {

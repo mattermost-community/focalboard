@@ -49,10 +49,10 @@ class CsvExporter {
 		cards.forEach(card => {
 			const row: string[] = []
 			visibleProperties.forEach(template => {
-				const property = card.properties.find(o => o.id === template.id)
-				const displayValue = OctoUtils.propertyDisplayValue(card, property, template) || ""
+				const propertyValue = card.properties[template.id]
+				const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, template) || ""
 				if (template.type === "number") {
-					const numericValue = property?.value ? Number(property?.value).toString() : undefined
+					const numericValue = propertyValue ? Number(propertyValue).toString() : undefined
 					row.push(numericValue)
 				} else {
 					// Export as string

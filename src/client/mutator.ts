@@ -245,9 +245,9 @@ class Mutator {
 			}
 		})
 		cards.forEach(card => {
-			if (card.properties.findIndex(o => o.id === propertyId) !== -1) {
+			if (card.properties[propertyId]) {
 				oldBlocks.push(new Block(card))
-				card.properties = card.properties.filter(o => o.id !== propertyId)
+				delete card.properties[propertyId]
 				changedBlocks.push(card)
 			}
 		})
@@ -366,13 +366,12 @@ class Mutator {
 
 		// Change the value on all cards that have this property too
 		for (const card of cards) {
-			card.properties.forEach(property => {
-				if (property.id === propertyTemplate.id && property.value === oldValue) {
-					oldBlocks.push(new Block(card))
-					property.value = value
-					changedBlocks.push(card)
-				}
-			})
+			const propertyValue = card.properties[propertyTemplate.id]
+			if (propertyValue && propertyValue === oldValue) {
+				oldBlocks.push(new Block(card))
+				card.properties[propertyTemplate.id] = value
+				changedBlocks.push(card)
+			}
 		}
 
 		await undoManager.perform(

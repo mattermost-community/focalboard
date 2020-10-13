@@ -1,9 +1,3 @@
-// A property on a bock
-interface IProperty {
-	id: string
-	value?: string
-}
-
 // A block is the fundamental data type
 interface IBlock {
 	id: string
@@ -14,7 +8,7 @@ interface IBlock {
 	url?: string			// TODO: Move to properties (_url)
 	icon?: string
 	order: number
-	properties: IProperty[]	// TODO: Change to map
+	properties: Record<string, string>
 
 	createAt: number
 	updateAt: number
@@ -30,4 +24,4 @@ interface IPageController {
 	setSearchText(text?: string): void
 }
 
-export { IProperty, IBlock, IPageController }
+export { IBlock, IPageController }
