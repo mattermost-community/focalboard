@@ -25,8 +25,8 @@ class Sidebar extends React.Component<Props> {
 					boards.map(board => {
 						const displayTitle = board.title || "(Untitled Board)"
 						return (
-							<div key={board.id} className="octo-sidebar-item octo-hover-container" onClick={() => { this.boardClicked(board) }}>
-								<div>{board.icon ? `${board.icon} ${displayTitle}` : displayTitle}</div>
+							<div key={board.id} className="octo-sidebar-item octo-hover-container">
+								<div className="octo-sidebar-title" onClick={() => { this.boardClicked(board) }}>{board.icon ? `${board.icon} ${displayTitle}` : displayTitle}</div>
 								<div className="octo-spacer"></div>
 								<div className="octo-button square octo-hover-item" onClick={(e) => { this.showOptions(e, board) }}><div className="imageOptions" /></div>
 							</div>
@@ -67,6 +67,8 @@ class Sidebar extends React.Component<Props> {
 			}
 		}
 		Menu.shared.showAtElement(e.target as HTMLElement)
+
+		e.stopPropagation()
 	}
 
 	private boardClicked(board: Board) {

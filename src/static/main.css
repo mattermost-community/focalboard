@@ -102,8 +102,11 @@ hr {
 	flex-direction: row;
 
 	font-weight: 500;
-	cursor: pointer;
 	padding: 3px 20px;
+}
+
+.octo-sidebar-title {
+	cursor: pointer;
 }
 
 .octo-sidebar-item:hover {
