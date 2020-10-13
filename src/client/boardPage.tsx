@@ -23,8 +23,8 @@ class BoardPage implements IPageController {
 	groupByButton: HTMLElement
 	groupByLabel: HTMLElement
 
-	boardId: string
-	viewId: string
+	boardId?: string
+	viewId?: string
 
 	workspaceTree: WorkspaceTree
 	boardTree: BoardTree
@@ -52,18 +52,12 @@ class BoardPage implements IPageController {
 
 		this.workspaceTree = new WorkspaceTree(this.octo)
 
-		this.boardId = queryString.get("id")
-		this.viewId = queryString.get("v")
+		const boardId = queryString.get("id")
+		const viewId = queryString.get("v")
 
 		console.log(`BoardPage. boardId: ${this.boardId}`)
-		if (this.boardId) {
-			this.boardTree = new BoardTree(this.octo, this.boardId)
-			this.sync()
-
-			this.boardListener.open(this.boardId, (blockId: string) => {
-				console.log(`octoListener.onChanged: ${blockId}`)
-				this.sync()
-			})
+		if (boardId) {
+			this.attachToBoard(boardId, viewId)
 		} else {
 			// Show error
 		}
@@ -185,6 +179,20 @@ class BoardPage implements IPageController {
 		}
 	}
 
+	private attachToBoard(boardId: string, viewId?: string) {
+		this.boardId = boardId
+		this.viewId = viewId
+
+		this.boardTree = new BoardTree(this.octo, boardId)
+
+		this.boardListener.open(boardId, (blockId: string) => {
+			console.log(`octoListener.onChanged: ${blockId}`)
+			this.sync()
+		})
+
+		this.sync()
+	}
+
 	async sync() {
 		const { workspaceTree, boardTree } = this
 
@@ -228,13 +236,12 @@ class BoardPage implements IPageController {
 	}
 
 	showBoard(boardId: string) {
-		if (this.boardTree.board.id === boardId) { return }
+		if (this.boardTree?.board?.id === boardId) { return }
 
 		const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + `?id=${encodeURIComponent(boardId)}`
 		window.history.pushState({ path: newUrl }, "", newUrl)
 
-		this.boardTree = new BoardTree(this.octo, boardId)
-		this.sync()
+		this.attachToBoard(boardId)
 	}
 
 	showView(viewId: string) {
