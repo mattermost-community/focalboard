@@ -140,6 +140,7 @@ hr {
 }
 
 .octo-controls {
+	flex: 0 0 auto;
 	display: flex;
 	flex-direction: row;
 
@@ -205,6 +206,7 @@ hr {
 }
 
 .octo-board-card {
+	flex: 0 0 auto;
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -439,6 +441,7 @@ hr {
 }
 
 .octo-icontitle {
+	flex: 0 0 auto;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -451,6 +454,7 @@ hr {
 }
 
 .octo-board-card > .octo-icontitle {
+	flex: 1 1 auto;
 	font-weight: 500;
 }
 
@@ -617,6 +621,7 @@ hr {
 }
 
 .octo-table-cell {
+	flex: 0 0 auto;
 	display: flex;
 	flex-direction: row;
 
