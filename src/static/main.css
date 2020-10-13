@@ -5,6 +5,8 @@
 }
 
 html, body {
+	display: flex;
+	width: 100%;
 	height: 100%;
 	color: rgb(55, 53, 47);
 }
@@ -63,21 +65,26 @@ hr {
 /* App frame */
 
 #octo-tasks-app {
-	height: 100%;
-	overflow: hidden;
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
+	overflow: auto;
 }
 
 #octo-tasks-app > #main {
-	height: 100%;
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
+	overflow: auto;
 }
 
 /* Sidebar */
 
 .octo-workspace {
+	flex: 1 1 auto;
 	display: flex;
 	flex-direction: row;
-
-	height: 100%;
+	overflow: auto;
 }
 
 .octo-sidebar {
@@ -110,21 +117,24 @@ hr {
 /* Main app */
 
 .octo-app {
+	flex: 1 1 auto;
 	display: flex;
 	flex-direction: column;
-
-	min-width: 1000px;
 	overflow: auto;
 }
 
 .octo-frame {
+	flex: 1 1 auto;
 	display: flex;
 	flex-direction: column;
+	overflow: scroll;
 
 	padding: 10px 95px 50px 95px;
 }
 
 .octo-board {
+	flex: 0 1 auto;
+
 	display: flex;
 	flex-direction: column;
 }
@@ -172,12 +182,14 @@ hr {
 	display: flex;
 	flex-direction: row;
 	padding: 0 10px;
+	flex: 0 1 auto;
 }
 
 .octo-board-column {
+	flex: 0 0 auto;
+
 	display: flex;
 	flex-direction: column;
-	flex-shrink: 0;
 
 	width: 260px;
 	margin-right: 15px;
