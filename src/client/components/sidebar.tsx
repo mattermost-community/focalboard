@@ -1,4 +1,5 @@
 import React from "react"
+import { Archiver } from "../archiver"
 import { Board } from "../board"
 import { BoardTree } from "../boardTree"
 import { Menu, MenuOption } from "../menu"
@@ -37,6 +38,10 @@ class Sidebar extends React.Component<Props> {
 				<br />
 
 				<div className="octo-button" onClick={() => { this.addBoardClicked() }}>+ Add Board</div>
+
+				<div className="octo-spacer"></div>
+
+				<div className="octo-button" onClick={(e) => { this.settingsClicked(e) }}>Settings</div>
 			</div>
 		)
 	}
@@ -67,8 +72,35 @@ class Sidebar extends React.Component<Props> {
 			}
 		}
 		Menu.shared.showAtElement(e.target as HTMLElement)
+	}
 
-		e.stopPropagation()
+	private settingsClicked(e: React.MouseEvent) {
+		const { mutator } = this.props
+
+		Menu.shared.options = [
+			{ id: "import", name: "Import Archive" },
+			{ id: "export", name: "Export Archive" },
+		]
+		Menu.shared.onMenuClicked = (optionId: string, type?: string) => {
+			switch (optionId) {
+				case "import": {
+					Archiver.importFullArchive(mutator, () => {
+						this.forceUpdate()
+					})
+					break
+				}
+				case "export": {
+					Archiver.exportFullArchive(mutator)
+					break
+				}
+			}
+		}
+
+		// HACKHACK: Show menu above (TODO: refactor menu code to do this automatically)
+		const element = e.target as HTMLElement
+		const bodyRect = document.body.getBoundingClientRect()
+		const rect = element.getBoundingClientRect()
+		Menu.shared.showAt(rect.left - bodyRect.left + 20, rect.top - bodyRect.top - 30 * Menu.shared.options.length)
 	}
 
 	private boardClicked(board: Board) {
