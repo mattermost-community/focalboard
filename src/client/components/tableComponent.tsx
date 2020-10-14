@@ -6,6 +6,7 @@ import { IPropertyTemplate } from "../board"
 import { BoardTree } from "../boardTree"
 import { CsvExporter } from "../csvExporter"
 import ViewMenu from "../components/viewMenu"
+import MenuWrapper from "../widgets/menuWrapper"
 import { Menu as OldMenu } from "../menu"
 import { Mutator } from "../mutator"
 import { IBlock } from "../octoTypes"
@@ -90,21 +91,20 @@ class TableComponent extends React.Component<Props, State> {
 					<div className="octo-table">
 						<div className="octo-controls">
 							<Editable style={{ color: "#000000", fontWeight: 600 }} text={activeView.title} placeholderText="Untitled View" onChanged={(text) => { mutator.changeTitle(activeView, text) }} />
-							<div
-								className="octo-button"
-								style={{ color: "#000000", fontWeight: 600 }}
-								onClick={() => this.setState({ viewMenu: true })}
-							>
-								{this.state.viewMenu &&
-									<ViewMenu
-										board={board}
-										onClose={() => this.setState({ viewMenu: false })}
-										mutator={mutator}
-										boardTree={boardTree}
-										showView={showView}
-									/>}
-								<div className="imageDropdown"></div>
-							</div>
+                            <MenuWrapper>
+                                <div
+                                    className="octo-button"
+                                    style={{ color: "#000000", fontWeight: 600 }}
+                                >
+                                    <div className="imageDropdown"></div>
+							    </div>
+                                <ViewMenu
+                                    board={board}
+                                    mutator={mutator}
+                                    boardTree={boardTree}
+                                    showView={showView}
+                                />
+                            </MenuWrapper>
 							<div className="octo-spacer"></div>
 							<div className="octo-button" onClick={(e) => { this.propertiesClicked(e) }}>Properties</div>
 							<div className={hasFilter ? "octo-button active" : "octo-button"} onClick={(e) => { this.filterClicked(e) }}>Filter</div>

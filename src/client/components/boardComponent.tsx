@@ -6,6 +6,7 @@ import { IPropertyOption } from "../board"
 import { BoardTree } from "../boardTree"
 import { CardFilter } from "../cardFilter"
 import ViewMenu from "../components/viewMenu"
+import MenuWrapper from "../widgets/menuWrapper"
 import { Constants } from "../constants"
 import { Menu as OldMenu } from "../menu"
 import { Mutator } from "../mutator"
@@ -29,7 +30,6 @@ type Props = {
 type State = {
 	isHoverOnCover: boolean
 	isSearching: boolean
-	viewMenu: boolean
 }
 
 class BoardComponent extends React.Component<Props, State> {
@@ -39,7 +39,7 @@ class BoardComponent extends React.Component<Props, State> {
 
 	constructor(props: Props) {
 		super(props)
-		this.state = { isHoverOnCover: false, isSearching: !!this.props.boardTree?.getSearchText(), viewMenu: false }
+		this.state = { isHoverOnCover: false, isSearching: !!this.props.boardTree?.getSearchText()}
 	}
 
 	componentDidUpdate(prevPros: Props, prevState: State) {
@@ -93,21 +93,20 @@ class BoardComponent extends React.Component<Props, State> {
 					<div className="octo-board">
 						<div className="octo-controls">
 							<Editable style={{ color: "#000000", fontWeight: 600 }} text={activeView.title} placeholderText="Untitled View" onChanged={(text) => { mutator.changeTitle(activeView, text) }} />
-							<div
-								className="octo-button"
-								style={{ color: "#000000", fontWeight: 600 }}
-								onClick={() => this.setState({ viewMenu: true })}
-							>
-								{this.state.viewMenu &&
-									<ViewMenu
-										board={board}
-										onClose={() => this.setState({ viewMenu: false })}
-										mutator={mutator}
-										boardTree={boardTree}
-										showView={showView}
-									/>}
-								<div className="imageDropdown"></div>
-							</div>
+                            <MenuWrapper>
+                                <div
+                                    className="octo-button"
+                                    style={{ color: "#000000", fontWeight: 600 }}
+                                >
+                                    <div className="imageDropdown"></div>
+							    </div>
+                                <ViewMenu
+                                    board={board}
+                                    mutator={mutator}
+                                    boardTree={boardTree}
+                                    showView={showView}
+                                />
+                            </MenuWrapper>
 							<div className="octo-spacer"></div>
 							<div className="octo-button" onClick={(e) => { this.propertiesClicked(e) }}>Properties</div>
 							<div className="octo-button" id="groupByButton" onClick={(e) => { this.groupByClicked(e) }}>
