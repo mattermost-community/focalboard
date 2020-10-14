@@ -35,4 +35,4 @@ bin
 debug
 __debug_bin
 files
-octo.db
+octo*.db

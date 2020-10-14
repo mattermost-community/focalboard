@@ -4,7 +4,6 @@ import { Block } from "../block"
 import { BlockIcons } from "../blockIcons"
 import { IPropertyOption } from "../board"
 import { BoardTree } from "../boardTree"
-import { ISortOption } from "../boardView"
 import { CardFilter } from "../cardFilter"
 import { Constants } from "../constants"
 import { Menu } from "../menu"
@@ -25,15 +24,23 @@ type Props = {
 
 type State = {
 	isHoverOnCover: boolean
+	isSearching: boolean
 }
 
 class BoardComponent extends React.Component<Props, State> {
 	private draggedCard: IBlock
 	private draggedHeaderOption: IPropertyOption
+	private searchFieldRef = React.createRef<Editable>()
 
 	constructor(props: Props) {
 		super(props)
-		this.state = { isHoverOnCover: false }
+		this.state = { isHoverOnCover: false, isSearching: !!this.props.boardTree?.getSearchText() }
+	}
+
+	componentDidUpdate(prevPros: Props, prevState: State) {
+		if (this.state.isSearching && !prevState.isSearching) {
+			this.searchFieldRef.current.focus()
+		}
 	}
 
 	render() {
@@ -87,9 +94,18 @@ class BoardComponent extends React.Component<Props, State> {
 							<div className="octo-button" id="groupByButton" onClick={(e) => { this.groupByClicked(e) }}>
 								Group by <span style={groupByStyle} id="groupByLabel">{boardTree.groupByProperty?.name}</span>
 							</div>
-							<div className={ hasFilter ? "octo-button active" : "octo-button"} onClick={(e) => { this.filterClicked(e) }}>Filter</div>
-							<div className={ hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { this.sortClicked(e) }}>Sort</div>
-							<div className="octo-button">Search</div>
+							<div className={hasFilter ? "octo-button active" : "octo-button"} onClick={(e) => { this.filterClicked(e) }}>Filter</div>
+							<div className={hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { OctoUtils.showSortMenu(e, mutator, boardTree) }}>Sort</div>
+							{this.state.isSearching
+								? <Editable
+									ref={this.searchFieldRef}
+									text={boardTree.getSearchText()}
+									placeholderText="Search text"
+									style={{ color: "#000000" }}
+									onChanged={(text) => { this.searchChanged(text) }}
+									onKeyDown={(e) => { this.onSearchKeyDown(e) }}></Editable>
+								: <div className="octo-button" onClick={() => { this.setState({ ...this.state, isSearching: true }) }}>Search</div>
+							}
 							<div className="octo-button" onClick={(e) => { this.optionsClicked(e) }}><div className="imageOptions" /></div>
 							<div className="octo-button filled" onClick={() => { this.addCard(undefined) }}>New</div>
 						</div>
@@ -217,7 +233,7 @@ class BoardComponent extends React.Component<Props, State> {
 		const properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
 		const card = new Block({ type: "card", parentId: boardTree.board.id, properties })
 		if (boardTree.groupByProperty) {
-			Block.setProperty(card, boardTree.groupByProperty.id, groupByValue)
+			card.properties[boardTree.groupByProperty.id] = groupByValue
 		}
 		await mutator.insertBlock(card, "add card", async () => { await this.showCard(card) }, async () => { await this.showCard(undefined) })
 	}
@@ -258,37 +274,13 @@ class BoardComponent extends React.Component<Props, State> {
 		pageController.showFilter(e.target as HTMLElement)
 	}
 
-	private async sortClicked(e: React.MouseEvent) {
-		const { mutator, boardTree } = this.props
-		const { activeView } = boardTree
-		const { sortOptions } = activeView
-		const sortOption = sortOptions.length > 0 ? sortOptions[0] : undefined
-
-		const propertyTemplates = boardTree.board.cardProperties
-		Menu.shared.options = propertyTemplates.map((o) => { return { id: o.id, name: o.name } })
-		Menu.shared.onMenuClicked = async (propertyId: string) => {
-			let newSortOptions: ISortOption[] = []
-			if (sortOption && sortOption.propertyId === propertyId) {
-				// Already sorting by name, so reverse it
-				newSortOptions = [
-					{ propertyId, reversed: !sortOption.reversed }
-				]
-			} else {
-				newSortOptions = [
-					{ propertyId, reversed: false }
-				]
-			}
-
-			await mutator.changeViewSortOptions(activeView, newSortOptions)
-		}
-		Menu.shared.showAtElement(e.target as HTMLElement)
-	}
-
 	private async optionsClicked(e: React.MouseEvent) {
 		const { boardTree } = this.props
 
 		Menu.shared.options = [
 			{ id: "exportBoardArchive", name: "Export board archive" },
+			{ id: "testAdd100Cards", name: "TEST: Add 100 cards" },
+			{ id: "testAdd1000Cards", name: "TEST: Add 1,000 cards" },
 		]
 
 		Menu.shared.onMenuClicked = async (id: string) => {
@@ -297,9 +289,35 @@ class BoardComponent extends React.Component<Props, State> {
 					Archiver.exportBoardTree(boardTree)
 					break
 				}
+				case "testAdd100Cards": {
+					this.testAddCards(100)
+				}
+				case "testAdd1000Cards": {
+					this.testAddCards(1000)
+				}
 			}
 		}
 		Menu.shared.showAtElement(e.target as HTMLElement)
+	}
+
+	private async testAddCards(count: number) {
+		const { mutator, boardTree } = this.props
+		const { board, activeView } = boardTree
+
+		let optionIndex = 0
+
+		for (let i = 0; i < count; i++) {
+			const properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
+			const card = new Block({ type: "card", parentId: boardTree.board.id, properties })
+			if (boardTree.groupByProperty && boardTree.groupByProperty.options.length > 0) {
+				// Cycle through options
+				const option = boardTree.groupByProperty.options[optionIndex]
+				optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
+				card.properties[boardTree.groupByProperty.id] = option.value
+				card.title = `Test Card ${i + 1}`
+			}
+			await mutator.insertBlock(card, "test add card")
+		}
 	}
 
 	private async propertiesClicked(e: React.MouseEvent) {
@@ -364,7 +382,7 @@ class BoardComponent extends React.Component<Props, State> {
 
 		if (draggedCard) {
 			Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${propertyValue}`)
-			const oldValue = Block.getPropertyValue(draggedCard, boardTree.groupByProperty.id)
+			const oldValue = draggedCard.properties[boardTree.groupByProperty.id]
 			if (propertyValue !== oldValue) {
 				await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, propertyValue, "drag card")
 			}
@@ -379,6 +397,19 @@ class BoardComponent extends React.Component<Props, State> {
 
 			await mutator.changePropertyOptionOrder(board, boardTree.groupByProperty, draggedHeaderOption, destIndex)
 		}
+	}
+
+	onSearchKeyDown(e: React.KeyboardEvent) {
+		if (e.keyCode === 27) {		// ESC: Clear search
+			this.searchFieldRef.current.text = ""
+			this.setState({ ...this.state, isSearching: false })
+			this.props.pageController.setSearchText(undefined)
+			e.preventDefault()
+		}
+	}
+
+	searchChanged(text?: string) {
+		this.props.pageController.setSearchText(text)
 	}
 }
 

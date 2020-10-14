@@ -1,11 +1,11 @@
 import React from "react"
 import { IPropertyTemplate } from "./board"
 import { BoardTree } from "./boardTree"
-import { BoardView } from "./boardView"
+import { BoardView, ISortOption } from "./boardView"
 import { Editable } from "./components/editable"
 import { Menu, MenuOption } from "./menu"
 import { Mutator } from "./mutator"
-import { IBlock, IPageController, IProperty } from "./octoTypes"
+import { IBlock, IPageController } from "./octoTypes"
 import { Utils } from "./utils"
 
 class OctoUtils {
@@ -78,7 +78,7 @@ class OctoUtils {
 		Menu.shared.showAtElement(e.target as HTMLElement)
 	}
 
-	static propertyDisplayValue(block: IBlock, property: IProperty, propertyTemplate: IPropertyTemplate) {
+	static propertyDisplayValue(block: IBlock, propertyValue: string | undefined, propertyTemplate: IPropertyTemplate) {
 		let displayValue: string
 		switch (propertyTemplate.type) {
 			case "createdTime":
@@ -88,7 +88,7 @@ class OctoUtils {
 				displayValue = Utils.displayDateTime(new Date(block.updateAt))
 				break
 			default:
-				displayValue = property ? property.value : undefined
+				displayValue = propertyValue
 		}
 
 		return displayValue
@@ -103,13 +103,13 @@ class OctoUtils {
 	}
 
 	private static propertyValueElement(mutator: Mutator | undefined, card: IBlock, propertyTemplate: IPropertyTemplate, emptyDisplayValue: string = "Empty"): JSX.Element {
-		const property = card.properties.find(o => o.id === propertyTemplate.id)
-		const displayValue = OctoUtils.propertyDisplayValue(card, property, propertyTemplate)
+		const propertyValue = card.properties[propertyTemplate.id]
+		const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate)
 		const finalDisplayValue = displayValue || emptyDisplayValue
 
 		let propertyColorCssClassName: string
-		if (property && propertyTemplate.type === "select") {
-			const cardPropertyValue = propertyTemplate.options.find(o => o.value === property.value)
+		if (propertyValue && propertyTemplate.type === "select") {
+			const cardPropertyValue = propertyTemplate.options.find(o => o.value === propertyValue)
 			if (cardPropertyValue) {
 				propertyColorCssClassName = cardPropertyValue.color
 			}
@@ -143,7 +143,7 @@ class OctoUtils {
 						showMenu(e.target as HTMLElement)
 					}
 				} : undefined}
-				onFocus={mutator ? () => { Menu.shared.hide() } : undefined }
+				onFocus={mutator ? () => { Menu.shared.hide() } : undefined}
 			>
 				{finalDisplayValue}
 			</div>
@@ -176,7 +176,7 @@ class OctoUtils {
 		if (index === 0) {
 			return block.order / 2
 		}
-		const previousBlock = blocks[index-1]
+		const previousBlock = blocks[index - 1]
 		return (block.order + previousBlock.order) / 2
 	}
 
@@ -185,8 +185,39 @@ class OctoUtils {
 		if (index === blocks.length - 1) {
 			return block.order + 1000
 		}
-		const nextBlock = blocks[index+1]
+		const nextBlock = blocks[index + 1]
 		return (block.order + nextBlock.order) / 2
+	}
+
+	static showSortMenu(e: React.MouseEvent, mutator: Mutator, boardTree: BoardTree) {
+		const { activeView } = boardTree
+		const { sortOptions } = activeView
+		const sortOption = sortOptions.length > 0 ? sortOptions[0] : undefined
+
+		const propertyTemplates = boardTree.board.cardProperties
+		Menu.shared.options = propertyTemplates.map((o) => {
+			return {
+				id: o.id,
+				name: o.name,
+				icon: (sortOption?.propertyId === o.id) ? sortOption.reversed ? "sortUp" : "sortDown" : undefined
+			}
+		})
+		Menu.shared.onMenuClicked = async (propertyId: string) => {
+			let newSortOptions: ISortOption[] = []
+			if (sortOption && sortOption.propertyId === propertyId) {
+				// Already sorting by name, so reverse it
+				newSortOptions = [
+					{ propertyId, reversed: !sortOption.reversed }
+				]
+			} else {
+				newSortOptions = [
+					{ propertyId, reversed: false }
+				]
+			}
+
+			await mutator.changeViewSortOptions(activeView, newSortOptions)
+		}
+		Menu.shared.showAtElement(e.target as HTMLElement)
 	}
 }
 
