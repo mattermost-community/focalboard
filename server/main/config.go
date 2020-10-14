@@ -8,13 +8,13 @@ import (
 
 // Configuration is the app configuration stored in a json file
 type Configuration struct {
-	ServerRoot     string `json:"serverRoot"`
-	Port           int    `json:"port"`
-	DBType         string `json:"dbtype"`
-	DBConfigString string `json:"dbconfig"`
-	UseSSL         bool   `json:"useSSL"`
-	WebPath        string `json:"webpath"`
-	FilesPath      string `json:"filespath"`
+	ServerRoot     string `json:"serverRoot" mapstructure:"serverRoot"`
+	Port           int    `json:"port" mapstructure:"port"`
+	DBType         string `json:"dbtype" mapstructure:"dbtype"`
+	DBConfigString string `json:"dbconfig" mapstructure:"dbconfig"`
+	UseSSL         bool   `json:"useSSL" mapstructure:"useSSL"`
+	WebPath        string `json:"webpath" mapstructure:"webpath"`
+	FilesPath      string `json:"filespath" mapstructure:"filespath"`
 }
 
 func readConfigFile() (*Configuration, error) {
