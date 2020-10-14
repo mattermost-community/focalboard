@@ -199,7 +199,7 @@ class OctoUtils {
 			return {
 				id: o.id,
 				name: o.name,
-				icon: (sortOption.propertyId === o.id) ? sortOption.reversed ? "sortUp" : "sortDown" : undefined
+				icon: (sortOption?.propertyId === o.id) ? sortOption.reversed ? "sortUp" : "sortDown" : undefined
 			}
 		})
 		Menu.shared.onMenuClicked = async (propertyId: string) => {
