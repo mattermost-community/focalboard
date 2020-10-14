@@ -12,17 +12,18 @@ type Props = {
 	mutator: Mutator,
 	workspaceTree: WorkspaceTree
 	boardTree?: BoardTree
-    showBoard: (id: string) => void
-    showView: (id: string) => void
-    showCard: (card: IBlock) => void
-    showFilter: (el: HTMLElement) => void
-    setSearchText: (text: string) => void
+	showBoard: (id: string) => void
+	showView: (id: string) => void
+	showCard: (card: IBlock) => void
+	showFilter: (el: HTMLElement) => void
+	setSearchText: (text: string) => void
 }
 
 class WorkspaceComponent extends React.Component<Props> {
 	render() {
-		const { mutator, boardTree, workspaceTree, showBoard} = this.props
+		const { mutator, boardTree, workspaceTree, showBoard } = this.props
 
+		Utils.assert(workspaceTree)
 		const element =
 			<div className="octo-workspace">
 				<Sidebar mutator={mutator} showBoard={showBoard} workspaceTree={workspaceTree} boardTree={boardTree}></Sidebar>
@@ -42,11 +43,11 @@ class WorkspaceComponent extends React.Component<Props> {
 
 		switch (activeView?.viewType) {
 			case "board": {
-				return <BoardComponent mutator={mutator} boardTree={boardTree} showCard={showCard} showFilter={showFilter} setSearchText={setSearchText} showView={showView}/>
+				return <BoardComponent mutator={mutator} boardTree={boardTree} showCard={showCard} showFilter={showFilter} setSearchText={setSearchText} showView={showView} />
 			}
 
 			case "table": {
-				return <TableComponent mutator={mutator} boardTree={boardTree} showCard={showCard} showFilter={showFilter} setSearchText={setSearchText} showView={showView}/>
+				return <TableComponent mutator={mutator} boardTree={boardTree} showCard={showCard} showFilter={showFilter} setSearchText={setSearchText} showView={showView} />
 			}
 
 			default: {

@@ -73,7 +73,9 @@ hr {
 	overflow: auto;
 }
 
-#octo-tasks-app > #main {
+#octo-tasks-app #frame,
+#octo-tasks-app #main,
+#octo-tasks-app .BoardPage {
 	flex: 1 1 auto;
 	display: flex;
 	flex-direction: column;

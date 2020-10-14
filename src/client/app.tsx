@@ -1,40 +1,37 @@
-import React from "react";
+import React from "react"
 
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+	BrowserRouter as Router,
+	Switch,
+	Route,
+	Link
+} from "react-router-dom"
 
-import LoginPage from './pages/loginPage';
-import BoardPage from './pages/boardPage';
+import LoginPage from './pages/loginPage'
+import BoardPage from './pages/boardPage'
 
 export default function App() {
-  return (
-    <Router>
-      <div>
-        <header id="header">
-            <a href="/">OCTO</a>
-        </header>
+	return (
+		<Router>
+			<div id="frame">
+				<div className="page-header">
+					<a href="/">OCTO</a>
+				</div>
 
-        <main id="main">
-            <Switch>
-              <Route path="/login">
-                <LoginPage />
-              </Route>
-              <Route path="/board">
-                <BoardPage />
-              </Route>
-            </Switch>
-        </main>
+				<div id="main">
+					<Switch>
+						<Route path="/login">
+							<LoginPage />
+						</Route>
+						<Route path="/board">
+							<BoardPage />
+						</Route>
+					</Switch>
+				</div>
 
-        <footer id="footer">
-        </footer>
-
-        <div id="overlay">
-        </div>
-      </div>
-    </Router>
-  );
+				<div id="overlay">
+				</div>
+			</div>
+		</Router>
+	)
 }

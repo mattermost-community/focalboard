@@ -9,7 +9,7 @@ import { WorkspaceTree } from "../workspaceTree"
 
 type Props = {
 	mutator: Mutator
-    showBoard: (id: string) => void
+	showBoard: (id: string) => void
 	workspaceTree: WorkspaceTree,
 	boardTree?: BoardTree
 }
@@ -18,6 +18,10 @@ class Sidebar extends React.Component<Props> {
 
 	render() {
 		const { workspaceTree } = this.props
+		if (!workspaceTree) {
+			return <div></div>
+		}
+
 		const { boards } = workspaceTree
 
 		return (
