@@ -145,16 +145,16 @@ class BoardTree {
 		const groupByPropertyId = this.groupByProperty.id
 
 		this.emptyGroupCards = this.cards.filter(o => {
-			const property = o.properties.find(p => p.id === groupByPropertyId)
-			return !property || !property.value || !this.groupByProperty.options.find(option => option.value === property.value)
+			const propertyValue = o.properties[groupByPropertyId]
+			return !propertyValue || !this.groupByProperty.options.find(option => option.value === propertyValue)
 		})
 
 		const propertyOptions = this.groupByProperty.options || []
 		for (const option of propertyOptions) {
 			const cards = this.cards
 				.filter(o => {
-					const property = o.properties.find(p => p.id === groupByPropertyId)
-					return property && property.value === option.value
+					const propertyValue = o.properties[groupByPropertyId]
+					return propertyValue && propertyValue === option.value
 				})
 
 			const group: Group = {
@@ -220,10 +220,8 @@ class BoardTree {
 						if (b.title && !a.title) { return 1 }
 						if (!a.title && !b.title) { return a.createAt - b.createAt }
 
-						const aProperty = a.properties.find(o => o.id === sortPropertyId)
-						const bProperty = b.properties.find(o => o.id === sortPropertyId)
-						const aValue = aProperty ? aProperty.value : ""
-						const bValue = bProperty ? bProperty.value : ""
+						const aValue = a.properties[sortPropertyId] || ""
+						const bValue = b.properties[sortPropertyId] || ""
 						let result = 0
 						if (template.type === "select") {
 							// Always put empty values at the bottom

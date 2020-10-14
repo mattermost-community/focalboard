@@ -64,9 +64,18 @@ class OctoClient {
 
 	fixBlocks(blocks: IBlock[]) {
 		for (const block of blocks) {
-			if (!block.properties) { block.properties = [] }
+			if (!block.properties) { block.properties = {} }
 
-			block.properties = block.properties.filter(property => property && property.id)
+			if (Array.isArray(block.properties)) {
+				// PORT from old schema
+				const properties: Record<string, string> = {}
+				for (const property of block.properties) {
+					if (property.id) {
+						properties[property.id] = property.value
+					}
+				}
+				block.properties = properties
+			}
 		}
 	}
 

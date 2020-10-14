@@ -5,7 +5,7 @@ import { BoardView, ISortOption } from "./boardView"
 import { Editable } from "./components/editable"
 import { Menu, MenuOption } from "./menu"
 import { Mutator } from "./mutator"
-import { IBlock, IPageController, IProperty } from "./octoTypes"
+import { IBlock, IPageController } from "./octoTypes"
 import { Utils } from "./utils"
 
 class OctoUtils {
@@ -78,7 +78,7 @@ class OctoUtils {
 		Menu.shared.showAtElement(e.target as HTMLElement)
 	}
 
-	static propertyDisplayValue(block: IBlock, property: IProperty, propertyTemplate: IPropertyTemplate) {
+	static propertyDisplayValue(block: IBlock, propertyValue: string | undefined, propertyTemplate: IPropertyTemplate) {
 		let displayValue: string
 		switch (propertyTemplate.type) {
 			case "createdTime":
@@ -88,7 +88,7 @@ class OctoUtils {
 				displayValue = Utils.displayDateTime(new Date(block.updateAt))
 				break
 			default:
-				displayValue = property ? property.value : undefined
+				displayValue = propertyValue
 		}
 
 		return displayValue
@@ -103,13 +103,13 @@ class OctoUtils {
 	}
 
 	private static propertyValueElement(mutator: Mutator | undefined, card: IBlock, propertyTemplate: IPropertyTemplate, emptyDisplayValue: string = "Empty"): JSX.Element {
-		const property = card.properties.find(o => o.id === propertyTemplate.id)
-		const displayValue = OctoUtils.propertyDisplayValue(card, property, propertyTemplate)
+		const propertyValue = card.properties[propertyTemplate.id]
+		const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate)
 		const finalDisplayValue = displayValue || emptyDisplayValue
 
 		let propertyColorCssClassName: string
-		if (property && propertyTemplate.type === "select") {
-			const cardPropertyValue = propertyTemplate.options.find(o => o.value === property.value)
+		if (propertyValue && propertyTemplate.type === "select") {
+			const cardPropertyValue = propertyTemplate.options.find(o => o.value === propertyValue)
 			if (cardPropertyValue) {
 				propertyColorCssClassName = cardPropertyValue.color
 			}

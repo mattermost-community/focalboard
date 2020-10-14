@@ -112,11 +112,6 @@ class BoardPage implements IPageController {
 			Utils.getElementById("header")
 		)
 
-		ReactDOM.render(
-			<PageHeader />,
-			Utils.getElementById("header")
-		)
-
 		if (board) {
 			Utils.setFavicon(board.icon)
 			document.title = `OCTO - ${board.title} | ${activeView.title}`
