@@ -5,11 +5,11 @@ import { BoardView, ISortOption } from "./boardView"
 import { Editable } from "./components/editable"
 import { Menu, MenuOption } from "./menu"
 import { Mutator } from "./mutator"
-import { IBlock, IPageController } from "./octoTypes"
+import { IBlock } from "./octoTypes"
 import { Utils } from "./utils"
 
 class OctoUtils {
-    static async showViewMenu(e: React.MouseEvent, mutator: Mutator, boardTree: BoardTree, showView: (id: string) => void) {
+	static async showViewMenu(e: React.MouseEvent, mutator: Mutator, boardTree: BoardTree, showView: (id: string) => void) {
 		const { board } = boardTree
 
 		const options: MenuOption[] = boardTree.views.map(view => ({ id: view.id, name: view.title || "Untitled View" }))

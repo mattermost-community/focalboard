@@ -1,6 +1,6 @@
 import React from "react"
 
-import './button.scss';
+import './button.scss'
 
 type Props = {
 	onClick?: (e: React.MouseEvent<HTMLDivElement>) => void

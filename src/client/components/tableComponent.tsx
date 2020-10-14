@@ -17,10 +17,10 @@ import { TableRow } from "./tableRow"
 type Props = {
 	mutator: Mutator,
 	boardTree?: BoardTree
-    showView: (id: string) => void
-    showCard: (card: IBlock) => void
-    showFilter: (el: HTMLElement) => void
-    setSearchText: (text: string) => void
+	showView: (id: string) => void
+	showCard: (card: IBlock) => void
+	showFilter: (el: HTMLElement) => void
+	setSearchText: (text: string) => void
 }
 
 type State = {
@@ -91,8 +91,8 @@ class TableComponent extends React.Component<Props, State> {
 							<div className="octo-button" style={{ color: "#000000", fontWeight: 600 }} onClick={(e) => { OctoUtils.showViewMenu(e, mutator, boardTree, showView) }}><div className="imageDropdown"></div></div>
 							<div className="octo-spacer"></div>
 							<div className="octo-button" onClick={(e) => { this.propertiesClicked(e) }}>Properties</div>
-							<div className={ hasFilter ? "octo-button active" : "octo-button"} onClick={(e) => { this.filterClicked(e) }}>Filter</div>
-							<div className={ hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { OctoUtils.showSortMenu(e, mutator, boardTree) }}>Sort</div>
+							<div className={hasFilter ? "octo-button active" : "octo-button"} onClick={(e) => { this.filterClicked(e) }}>Filter</div>
+							<div className={hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { OctoUtils.showSortMenu(e, mutator, boardTree) }}>Sort</div>
 							{this.state.isSearching
 								? <Editable
 									ref={this.searchFieldRef}

@@ -19,10 +19,10 @@ import { Editable } from "./editable"
 type Props = {
 	mutator: Mutator,
 	boardTree?: BoardTree
-    showView: (id: string) => void
-    showCard: (card: IBlock) => void
-    showFilter: (el: HTMLElement) => void
-    setSearchText: (text: string) => void
+	showView: (id: string) => void
+	showCard: (card: IBlock) => void
+	showFilter: (el: HTMLElement) => void
+	setSearchText: (text: string) => void
 }
 
 type State = {
