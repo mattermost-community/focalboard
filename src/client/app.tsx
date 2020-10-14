@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 
 import LoginPage from './pages/loginPage';
-import HomePage from './pages/homePage';
+import BoardPage from './pages/boardPage';
 
 export default function App() {
   return (
@@ -23,8 +23,8 @@ export default function App() {
               <Route path="/login">
                 <LoginPage />
               </Route>
-              <Route path="/">
-                <HomePage />
+              <Route path="/board">
+                <BoardPage />
               </Route>
             </Switch>
         </main>

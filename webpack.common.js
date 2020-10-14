@@ -51,7 +51,7 @@ function makeCommonConfig() {
 				inject: true,
 				title: "OCTO",
 				chunks: ["main"],
-				template: "html-template/page.ejs",
+				template: "html-templates/page.ejs",
 				filename: 'index.html'
 			}),
 		],
