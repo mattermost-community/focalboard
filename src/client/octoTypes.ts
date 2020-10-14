@@ -3,12 +3,14 @@ interface IBlock {
 	id: string
 	parentId: string
 
+	schema: number
 	type: string
 	title?: string
 	url?: string			// TODO: Move to properties (_url)
 	icon?: string
 	order: number
 	properties: Record<string, string>
+	fields: Record<string, any>
 
 	createAt: number
 	updateAt: number

@@ -19,8 +19,9 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var wsServer *WSServer
 var config *Configuration
+var wsServer *WSServer
+var store *SQLStore
 
 // ----------------------------------------------------------------------------------------------------
 // HTTP handlers
@@ -56,22 +57,22 @@ func handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 
 	var blocks []string
 	if len(blockType) > 0 && len(parentID) > 0 {
-		blocks = getBlocksWithParentAndType(parentID, blockType)
+		blocks = store.getBlocksWithParentAndType(parentID, blockType)
 	} else if len(blockType) > 0 {
-		blocks = getBlocksWithType(blockType)
+		blocks = store.getBlocksWithType(blockType)
 	} else {
-		blocks = getBlocksWithParent(parentID)
+		blocks = store.getBlocksWithParent(parentID)
 	}
 
 	log.Printf("GetBlocks parentID: %s, type: %s, %d result(s)", parentID, blockType, len(blocks))
 	response := `[` + strings.Join(blocks[:], ",") + `]`
-	jsonResponse(w, 200, response)
+	jsonResponse(w, http.StatusOK, response)
 }
 
 func handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		errorResponse(w, 500, `{}`)
+		errorResponse(w, http.StatusInternalServerError, `{}`)
 		return
 	}
 
@@ -79,41 +80,33 @@ func handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	defer func() {
 		if r := recover(); r != nil {
 			log.Printf(`ERROR: %v`, r)
-			errorResponse(w, 500, `{}`)
+			errorResponse(w, http.StatusInternalServerError, `{}`)
 			return
 		}
 	}()
 
-	var blockMaps []map[string]interface{}
-	err = json.Unmarshal([]byte(requestBody), &blockMaps)
+	var blocks []Block
+	err = json.Unmarshal([]byte(requestBody), &blocks)
 	if err != nil {
-		errorResponse(w, 500, ``)
+		errorResponse(w, http.StatusInternalServerError, ``)
 		return
 	}
 
 	var blockIDsToNotify = []string{}
 	uniqueBlockIDs := make(map[string]bool)
 
-	for _, blockMap := range blockMaps {
-		jsonBytes, err := json.Marshal(blockMap)
-		if err != nil {
-			errorResponse(w, 500, `{}`)
-			return
-		}
-
-		block := blockFromMap(blockMap)
-
+	for _, block := range blocks {
 		// Error checking
 		if len(block.Type) < 1 {
-			errorResponse(w, 500, fmt.Sprintf(`{"description": "missing type", "id": "%s"}`, block.ID))
+			errorResponse(w, http.StatusInternalServerError, fmt.Sprintf(`{"description": "missing type", "id": "%s"}`, block.ID))
 			return
 		}
 		if block.CreateAt < 1 {
-			errorResponse(w, 500, fmt.Sprintf(`{"description": "invalid createAt", "id": "%s"}`, block.ID))
+			errorResponse(w, http.StatusInternalServerError, fmt.Sprintf(`{"description": "invalid createAt", "id": "%s"}`, block.ID))
 			return
 		}
 		if block.UpdateAt < 1 {
-			errorResponse(w, 500, fmt.Sprintf(`{"description": "invalid updateAt", "id": "%s"}`, block.ID))
+			errorResponse(w, http.StatusInternalServerError, fmt.Sprintf(`{"description": "invalid updateAt", "id": "%s"}`, block.ID))
 			return
 		}
 
@@ -124,13 +117,19 @@ func handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 			blockIDsToNotify = append(blockIDsToNotify, block.ParentID)
 		}
 
-		insertBlock(block, string(jsonBytes))
+		jsonBytes, err := json.Marshal(block)
+		if err != nil {
+			errorResponse(w, http.StatusInternalServerError, `{}`)
+			return
+		}
+
+		store.insertBlock(block, string(jsonBytes))
 	}
 
 	wsServer.broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
 
-	log.Printf("POST Blocks %d block(s)", len(blockMaps))
-	jsonResponse(w, 200, "{}")
+	log.Printf("POST Blocks %d block(s)", len(blocks))
+	jsonResponse(w, http.StatusOK, "{}")
 }
 
 func handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
@@ -139,43 +138,43 @@ func handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 
 	var blockIDsToNotify = []string{blockID}
 
-	parentID := getParentID(blockID)
+	parentID := store.getParentID(blockID)
 
 	if len(parentID) > 0 {
 		blockIDsToNotify = append(blockIDsToNotify, parentID)
 	}
 
-	deleteBlock(blockID)
+	store.deleteBlock(blockID)
 
 	wsServer.broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
 
 	log.Printf("DELETE Block %s", blockID)
-	jsonResponse(w, 200, "{}")
+	jsonResponse(w, http.StatusOK, "{}")
 }
 
 func handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	blockID := vars["blockID"]
 
-	blocks := getSubTree(blockID)
+	blocks := store.getSubTree(blockID)
 
 	log.Printf("GetSubTree blockID: %s, %d result(s)", blockID, len(blocks))
 	response := `[` + strings.Join(blocks[:], ",") + `]`
-	jsonResponse(w, 200, response)
+	jsonResponse(w, http.StatusOK, response)
 }
 
 func handleExport(w http.ResponseWriter, r *http.Request) {
-	blocks := getAllBlocks()
+	blocks := store.getAllBlocks()
 
 	log.Printf("EXPORT Blocks, %d result(s)", len(blocks))
 	response := `[` + strings.Join(blocks[:], ",") + `]`
-	jsonResponse(w, 200, response)
+	jsonResponse(w, http.StatusOK, response)
 }
 
 func handleImport(w http.ResponseWriter, r *http.Request) {
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		errorResponse(w, 500, `{}`)
+		errorResponse(w, http.StatusInternalServerError, `{}`)
 		return
 	}
 
@@ -183,31 +182,30 @@ func handleImport(w http.ResponseWriter, r *http.Request) {
 	defer func() {
 		if r := recover(); r != nil {
 			log.Printf(`ERROR: %v`, r)
-			errorResponse(w, 500, `{}`)
+			errorResponse(w, http.StatusInternalServerError, `{}`)
 			return
 		}
 	}()
 
-	var blockMaps []map[string]interface{}
-	err = json.Unmarshal([]byte(requestBody), &blockMaps)
+	var blocks []Block
+	err = json.Unmarshal([]byte(requestBody), &blocks)
 	if err != nil {
-		errorResponse(w, 500, ``)
+		errorResponse(w, http.StatusInternalServerError, ``)
 		return
 	}
 
-	for _, blockMap := range blockMaps {
-		jsonBytes, err := json.Marshal(blockMap)
+	for _, block := range blocks {
+		jsonBytes, err := json.Marshal(block)
 		if err != nil {
-			errorResponse(w, 500, `{}`)
+			errorResponse(w, http.StatusInternalServerError, `{}`)
 			return
 		}
 
-		block := blockFromMap(blockMap)
-		insertBlock(block, string(jsonBytes))
+		store.insertBlock(block, string(jsonBytes))
 	}
 
-	log.Printf("IMPORT Blocks %d block(s)", len(blockMaps))
-	jsonResponse(w, 200, "{}")
+	log.Printf("IMPORT Blocks %d block(s)", len(blocks))
+	jsonResponse(w, http.StatusOK, "{}")
 }
 
 // File upload
@@ -378,7 +376,11 @@ func main() {
 
 	http.Handle("/", r)
 
-	connectDatabase(config.DBType, config.DBConfigString)
+	store, err = NewSQLStore(config.DBType, config.DBConfigString)
+	if err != nil {
+		log.Fatal("Unable to start the database", err)
+		panic(err)
+	}
 
 	// Ctrl+C handling
 	handler := make(chan os.Signal, 1)

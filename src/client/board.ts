@@ -16,23 +16,36 @@ interface IPropertyTemplate {
 }
 
 class Board extends Block {
-	cardProperties: IPropertyTemplate[] = []
+	get cardProperties(): IPropertyTemplate[] { return this.fields.cardProperties as IPropertyTemplate[] }
+	set cardProperties(value: IPropertyTemplate[]) { this.fields.cardProperties = value }
 
 	constructor(block: any = {}) {
 		super(block)
 		this.type = "board"
-		if (block.cardProperties) {
-			// Deep clone of properties and their options
-			this.cardProperties = block.cardProperties.map((o: IPropertyTemplate) => {
+
+		if (block.fields?.cardProperties) {
+			// Deep clone of card properties and their options
+			this.cardProperties = block.fields?.cardProperties.map((o: IPropertyTemplate) => {
 				return {
 					id: o.id,
 					name: o.name,
 					type: o.type,
-					options: o.options ? o.options.map(option => ({...option})): []
+					options: o.options ? o.options.map(option => ({ ...option })) : []
 				}
 			})
 		} else {
 			this.cardProperties = []
+		}
+
+		if (block.schema !== 1) {
+			this.cardProperties = block.cardProperties?.map((o: IPropertyTemplate) => {
+				return {
+					id: o.id,
+					name: o.name,
+					type: o.type,
+					options: o.options ? o.options.map(option => ({ ...option })) : []
+				}
+			}) || []
 		}
 	}
 }
