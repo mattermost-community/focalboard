@@ -279,6 +279,8 @@ class BoardComponent extends React.Component<Props, State> {
 
 		Menu.shared.options = [
 			{ id: "exportBoardArchive", name: "Export board archive" },
+			{ id: "testAdd100Cards", name: "TEST: Add 100 cards" },
+			{ id: "testAdd1000Cards", name: "TEST: Add 1,000 cards" },
 		]
 
 		Menu.shared.onMenuClicked = async (id: string) => {
@@ -287,9 +289,35 @@ class BoardComponent extends React.Component<Props, State> {
 					Archiver.exportBoardTree(boardTree)
 					break
 				}
+				case "testAdd100Cards": {
+					this.testAddCards(100)
+				}
+				case "testAdd1000Cards": {
+					this.testAddCards(1000)
+				}
 			}
 		}
 		Menu.shared.showAtElement(e.target as HTMLElement)
+	}
+
+	private async testAddCards(count: number) {
+		const { mutator, boardTree } = this.props
+		const { board, activeView } = boardTree
+
+		let optionIndex = 0
+
+		for (let i = 0; i < count; i++) {
+			const properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
+			const card = new Block({ type: "card", parentId: boardTree.board.id, properties })
+			if (boardTree.groupByProperty && boardTree.groupByProperty.options.length > 0) {
+				// Cycle through options
+				const option = boardTree.groupByProperty.options[optionIndex]
+				optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
+				card.properties[boardTree.groupByProperty.id] = option.value
+				card.title = `Test Card ${i + 1}`
+			}
+			await mutator.insertBlock(card, "test add card")
+		}
 	}
 
 	private async propertiesClicked(e: React.MouseEvent) {
