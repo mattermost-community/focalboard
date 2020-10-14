@@ -7,6 +7,7 @@ import { BoardTree } from "../boardTree"
 import { CsvExporter } from "../csvExporter"
 import ViewMenu from "../components/viewMenu"
 import MenuWrapper from "../widgets/menuWrapper"
+import Menu from "../widgets/menu"
 import { Menu as OldMenu } from "../menu"
 import { Mutator } from "../mutator"
 import { IBlock } from "../octoTypes"
@@ -83,7 +84,13 @@ class TableComponent extends React.Component<Props, State> {
 
 					<div className="octo-icontitle">
 						{board.icon ?
-							<div className="octo-button octo-icon" onClick={(e) => { this.iconClicked(e) }}>{board.icon}</div>
+							<MenuWrapper>
+								<div className="octo-button octo-icon">{board.icon}</div>
+								<Menu>
+									<Menu.Text id='random' name='Random' onClick={() => mutator.changeIcon(board, undefined, "remove icon")}/>
+									<Menu.Text id='remove' name='Remove Icon' onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}/>
+								</Menu>
+							</MenuWrapper>
 							: undefined}
 						<Editable className="title" text={board.title} placeholderText="Untitled Board" onChanged={(text) => { mutator.changeTitle(board, text) }} />
 					</div>
@@ -91,20 +98,20 @@ class TableComponent extends React.Component<Props, State> {
 					<div className="octo-table">
 						<div className="octo-controls">
 							<Editable style={{ color: "#000000", fontWeight: 600 }} text={activeView.title} placeholderText="Untitled View" onChanged={(text) => { mutator.changeTitle(activeView, text) }} />
-                            <MenuWrapper>
-                                <div
-                                    className="octo-button"
-                                    style={{ color: "#000000", fontWeight: 600 }}
-                                >
-                                    <div className="imageDropdown"></div>
-							    </div>
-                                <ViewMenu
-                                    board={board}
-                                    mutator={mutator}
-                                    boardTree={boardTree}
-                                    showView={showView}
-                                />
-                            </MenuWrapper>
+							<MenuWrapper>
+								<div
+									className="octo-button"
+									style={{ color: "#000000", fontWeight: 600 }}
+								>
+									<div className="imageDropdown"></div>
+								</div>
+								<ViewMenu
+									board={board}
+									mutator={mutator}
+									boardTree={boardTree}
+									showView={showView}
+								/>
+							</MenuWrapper>
 							<div className="octo-spacer"></div>
 							<div className="octo-button" onClick={(e) => { this.propertiesClicked(e) }}>Properties</div>
 							<div className={hasFilter ? "octo-button active" : "octo-button"} onClick={(e) => { this.filterClicked(e) }}>Filter</div>
@@ -211,28 +218,6 @@ class TableComponent extends React.Component<Props, State> {
 				</div >
 			</div >
 		)
-	}
-
-	private iconClicked(e: React.MouseEvent) {
-		const { mutator, boardTree } = this.props
-		const { board } = boardTree
-
-		OldMenu.shared.options = [
-			{ id: "random", name: "Random" },
-			{ id: "remove", name: "Remove Icon" },
-		]
-		OldMenu.shared.onMenuClicked = (optionId: string, type?: string) => {
-			switch (optionId) {
-				case "remove":
-					mutator.changeIcon(board, undefined, "remove icon")
-					break
-				case "random":
-					const newIcon = BlockIcons.shared.randomIcon()
-					mutator.changeIcon(board, newIcon)
-					break
-			}
-		}
-		OldMenu.shared.showAtElement(e.target as HTMLElement)
 	}
 
 	private async propertiesClicked(e: React.MouseEvent) {

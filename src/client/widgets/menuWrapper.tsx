@@ -86,7 +86,7 @@ export default class MenuWrapper extends React.PureComponent<Props, State> {
                 onClick={this.toggle}
                 ref={this.node}
             >
-                {children && !this.state.open ? Object.values(children)[0] : null}
+                {children ? Object.values(children)[0] : null}
                 {children && this.state.open ? Object.values(children)[1] : null}
             </div>
         );

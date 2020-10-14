@@ -54,13 +54,17 @@ type ColorOptionProps = MenuOptionProps & {
 }
 
 class ColorOption extends React.Component<ColorOptionProps> {
+    handleOnClick = () => {
+        this.props.onClick(this.props.id)
+    }
+
     render() {
-        const {name, icon} = this.props;
+        const {id, name, icon} = this.props;
         return (
-            <div className='MenuOption ColorOption menu-option'>
+            <div className='MenuOption ColorOption menu-option' onClick={this.handleOnClick}>
                 <div className='name'>{name}</div>
                 {icon && <div className={'icon ' + icon}></div>}
-                <div className='menu-colorbox'></div>
+                <div className={`menu-colorbox ${id}`}></div>
             </div>
         )
     }
