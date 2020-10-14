@@ -5,11 +5,11 @@ import { BoardView, ISortOption } from "./boardView"
 import { Editable } from "./components/editable"
 import { Menu, MenuOption } from "./menu"
 import { Mutator } from "./mutator"
-import { IBlock, IPageController } from "./octoTypes"
+import { IBlock } from "./octoTypes"
 import { Utils } from "./utils"
 
 class OctoUtils {
-	static async showViewMenu(e: React.MouseEvent, mutator: Mutator, boardTree: BoardTree, pageController: IPageController) {
+	static async showViewMenu(e: React.MouseEvent, mutator: Mutator, boardTree: BoardTree, showView: (id: string) => void) {
 		const { board } = boardTree
 
 		const options: MenuOption[] = boardTree.views.map(view => ({ id: view.id, name: view.title || "Untitled View" }))
@@ -33,7 +33,7 @@ class OctoUtils {
 					const view = boardTree.activeView
 					const nextView = boardTree.views.find(o => o !== view)
 					await mutator.deleteBlock(view, "delete view")
-					pageController.showView(nextView.id)
+					showView(nextView.id)
 					break
 				}
 				case "__addview-board": {
@@ -48,8 +48,8 @@ class OctoUtils {
 					await mutator.insertBlock(
 						view,
 						"add view",
-						async () => { pageController.showView(view.id) },
-						async () => { pageController.showView(oldViewId) })
+						async () => { showView(view.id) },
+						async () => { showView(oldViewId) })
 					break
 				}
 				case "__addview-table": {
@@ -65,13 +65,13 @@ class OctoUtils {
 					await mutator.insertBlock(
 						view,
 						"add view",
-						async () => { pageController.showView(view.id) },
-						async () => { pageController.showView(oldViewId) })
+						async () => { showView(view.id) },
+						async () => { showView(oldViewId) })
 					break
 				}
 				default: {
 					const view = boardTree.views.find(o => o.id === optionId)
-					pageController.showView(view.id)
+					showView(view.id)
 				}
 			}
 		}

@@ -9,7 +9,7 @@ import { WorkspaceTree } from "../workspaceTree"
 
 type Props = {
 	mutator: Mutator
-	pageController: IPageController
+	showBoard: (id: string) => void
 	workspaceTree: WorkspaceTree,
 	boardTree?: BoardTree
 }
@@ -18,6 +18,10 @@ class Sidebar extends React.Component<Props> {
 
 	render() {
 		const { workspaceTree } = this.props
+		if (!workspaceTree) {
+			return <div></div>
+		}
+
 		const { boards } = workspaceTree
 
 		return (
@@ -47,7 +51,7 @@ class Sidebar extends React.Component<Props> {
 	}
 
 	private showOptions(e: React.MouseEvent, board: Board) {
-		const { mutator, pageController, workspaceTree } = this.props
+		const { mutator, showBoard, workspaceTree } = this.props
 		const { boards } = workspaceTree
 
 		const options: MenuOption[] = []
@@ -64,8 +68,8 @@ class Sidebar extends React.Component<Props> {
 					mutator.deleteBlock(
 						board,
 						"delete block",
-						async () => { pageController.showBoard(nextBoardId!) },
-						async () => { pageController.showBoard(board.id) },
+						async () => { showBoard(nextBoardId!) },
+						async () => { showBoard(board.id) },
 					)
 					break
 				}
@@ -104,20 +108,19 @@ class Sidebar extends React.Component<Props> {
 	}
 
 	private boardClicked(board: Board) {
-		const { pageController } = this.props
-		pageController.showBoard(board.id)
+		this.props.showBoard(board.id)
 	}
 
 	async addBoardClicked() {
-		const { mutator, boardTree, pageController } = this.props
+		const { mutator, boardTree, showBoard } = this.props
 
 		const oldBoardId = boardTree?.board?.id
 		const board = new Board()
 		await mutator.insertBlock(
 			board,
 			"add board",
-			async () => { pageController.showBoard(board.id) },
-			async () => { if (oldBoardId) { pageController.showBoard(oldBoardId) } })
+			async () => { showBoard(board.id) },
+			async () => { if (oldBoardId) { showBoard(oldBoardId) } })
 
 		await mutator.insertBlock(board)
 	}

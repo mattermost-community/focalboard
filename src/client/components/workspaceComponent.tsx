@@ -1,7 +1,7 @@
 import React from "react"
 import { BoardTree } from "../boardTree"
 import { Mutator } from "../mutator"
-import { IPageController } from "../octoTypes"
+import { IBlock } from "../octoTypes"
 import { Utils } from "../utils"
 import { WorkspaceTree } from "../workspaceTree"
 import { BoardComponent } from "./boardComponent"
@@ -12,16 +12,21 @@ type Props = {
 	mutator: Mutator,
 	workspaceTree: WorkspaceTree
 	boardTree?: BoardTree
-	pageController: IPageController
+	showBoard: (id: string) => void
+	showView: (id: string) => void
+	showCard: (card: IBlock) => void
+	showFilter: (el: HTMLElement) => void
+	setSearchText: (text: string) => void
 }
 
 class WorkspaceComponent extends React.Component<Props> {
 	render() {
-		const { mutator, boardTree, workspaceTree, pageController } = this.props
+		const { mutator, boardTree, workspaceTree, showBoard } = this.props
 
+		Utils.assert(workspaceTree)
 		const element =
 			<div className="octo-workspace">
-				<Sidebar mutator={mutator} pageController={pageController} workspaceTree={workspaceTree} boardTree={boardTree}></Sidebar>
+				<Sidebar mutator={mutator} showBoard={showBoard} workspaceTree={workspaceTree} boardTree={boardTree}></Sidebar>
 				{this.mainComponent()}
 			</div>
 
@@ -29,7 +34,7 @@ class WorkspaceComponent extends React.Component<Props> {
 	}
 
 	private mainComponent() {
-		const { mutator, boardTree, pageController } = this.props
+		const { mutator, boardTree, showCard, showFilter, setSearchText, showView } = this.props
 		const { activeView } = boardTree || {}
 
 		if (!activeView) {
@@ -38,11 +43,11 @@ class WorkspaceComponent extends React.Component<Props> {
 
 		switch (activeView?.viewType) {
 			case "board": {
-				return <BoardComponent mutator={mutator} boardTree={boardTree} pageController={pageController} />
+				return <BoardComponent mutator={mutator} boardTree={boardTree} showCard={showCard} showFilter={showFilter} setSearchText={setSearchText} showView={showView} />
 			}
 
 			case "table": {
-				return <TableComponent mutator={mutator} boardTree={boardTree} pageController={pageController} />
+				return <TableComponent mutator={mutator} boardTree={boardTree} showCard={showCard} showFilter={showFilter} setSearchText={setSearchText} showView={showView} />
 			}
 
 			default: {
