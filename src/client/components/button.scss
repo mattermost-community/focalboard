@@ -1,0 +1,17 @@
+.Button {
+	text-align: center;
+	border-radius: 5px;
+	padding: 0 5px;
+	min-width: 20px;
+	cursor: pointer;
+	overflow: hidden;
+
+	transition: background 100ms ease-out 0s;
+
+	&:hover {
+		background-color: #eeeeee;
+	}
+	.octo-hovercontrol {
+		background: rgb(239, 239, 238);
+	}
+}
