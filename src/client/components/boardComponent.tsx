@@ -8,18 +8,21 @@ import { CardFilter } from "../cardFilter"
 import { Constants } from "../constants"
 import { Menu } from "../menu"
 import { Mutator } from "../mutator"
-import { IBlock, IPageController } from "../octoTypes"
+import { IBlock } from "../octoTypes"
 import { OctoUtils } from "../octoUtils"
 import { Utils } from "../utils"
 import { BoardCard } from "./boardCard"
 import { BoardColumn } from "./boardColumn"
-import { Button } from "./button"
+import Button from "./button"
 import { Editable } from "./editable"
 
 type Props = {
 	mutator: Mutator,
 	boardTree?: BoardTree
-	pageController: IPageController
+    showView: (id: string) => void
+    showCard: (card: IBlock) => void
+    showFilter: (el: HTMLElement) => void
+    setSearchText: (text: string) => void
 }
 
 type State = {
@@ -44,7 +47,7 @@ class BoardComponent extends React.Component<Props, State> {
 	}
 
 	render() {
-		const { mutator, boardTree, pageController } = this.props
+		const { mutator, boardTree, showView } = this.props
 
 		if (!boardTree || !boardTree.board) {
 			return (
@@ -88,7 +91,7 @@ class BoardComponent extends React.Component<Props, State> {
 					<div className="octo-board">
 						<div className="octo-controls">
 							<Editable style={{ color: "#000000", fontWeight: 600 }} text={activeView.title} placeholderText="Untitled View" onChanged={(text) => { mutator.changeTitle(activeView, text) }} />
-							<div className="octo-button" style={{ color: "#000000", fontWeight: 600 }} onClick={(e) => { OctoUtils.showViewMenu(e, mutator, boardTree, pageController) }}><div className="imageDropdown"></div></div>
+							<div className="octo-button" style={{ color: "#000000", fontWeight: 600 }} onClick={(e) => { OctoUtils.showViewMenu(e, mutator, boardTree, showView) }}><div className="imageDropdown"></div></div>
 							<div className="octo-spacer"></div>
 							<div className="octo-button" onClick={(e) => { this.propertiesClicked(e) }}>Properties</div>
 							<div className="octo-button" id="groupByButton" onClick={(e) => { this.groupByClicked(e) }}>
@@ -223,7 +226,7 @@ class BoardComponent extends React.Component<Props, State> {
 	async showCard(card?: IBlock) {
 		console.log(`showCard: ${card?.title}`)
 
-		await this.props.pageController.showCard(card)
+		await this.props.showCard(card)
 	}
 
 	async addCard(groupByValue?: string) {
@@ -270,8 +273,7 @@ class BoardComponent extends React.Component<Props, State> {
 	}
 
 	private filterClicked(e: React.MouseEvent) {
-		const { pageController } = this.props
-		pageController.showFilter(e.target as HTMLElement)
+		this.props.showFilter(e.target as HTMLElement)
 	}
 
 	private async optionsClicked(e: React.MouseEvent) {
@@ -403,13 +405,13 @@ class BoardComponent extends React.Component<Props, State> {
 		if (e.keyCode === 27) {		// ESC: Clear search
 			this.searchFieldRef.current.text = ""
 			this.setState({ ...this.state, isSearching: false })
-			this.props.pageController.setSearchText(undefined)
+			this.props.setSearchText(undefined)
 			e.preventDefault()
 		}
 	}
 
 	searchChanged(text?: string) {
-		this.props.pageController.setSearchText(text)
+		this.props.setSearchText(text)
 	}
 }
 
