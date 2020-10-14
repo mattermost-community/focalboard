@@ -408,14 +408,14 @@ class Mutator {
 	async changePropertyValue(block: IBlock, propertyId: string, value?: string, description: string = "change property") {
 		const { octo, undoManager } = this
 
-		const oldValue = Block.getPropertyValue(block, propertyId)
+		const oldValue = block.properties[propertyId]
 		await undoManager.perform(
 			async () => {
-				Block.setProperty(block, propertyId, value)
+				block.properties[propertyId] = value
 				await octo.updateBlock(block)
 			},
 			async () => {
-				Block.setProperty(block, propertyId, oldValue)
+				block.properties[propertyId] = oldValue
 				await octo.updateBlock(block)
 			},
 			description

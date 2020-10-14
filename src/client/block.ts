@@ -41,7 +41,6 @@ class Block implements IBlock {
 		this.updateAt = block.updateAt || now
 		this.deleteAt = block.deleteAt || 0
 
-		// this.properties = block.properties ? block.properties.map((o: IProperty) => ({ ...o })) : []		// Deep clone
 		if (Array.isArray(block.properties)) {
 			// HACKHACK: Port from old schema
 			this.properties = {}
@@ -53,29 +52,6 @@ class Block implements IBlock {
 		} else {
 			this.properties = { ...block.properties || {} }
 		}
-	}
-
-	static getPropertyValue(block: IBlock, id: string): string | undefined {
-		if (!block.properties) { return undefined }
-		return block.properties[id]
-	}
-
-	static setProperty(block: IBlock, id: string, value?: string) {
-		block.properties[id] = value
-		// if (!block.properties) { block.properties = [] }
-		// if (!value) {
-		// 	// Remove property
-		// 	block.properties = block.properties.filter(o => o.id !== id)
-		// 	return
-		// }
-
-		// const property = block.properties.find(o => o.id === id)
-		// if (property) {
-		// 	property.value = value
-		// } else {
-		// 	const newProperty: IProperty = { id, value }
-		// 	block.properties.push(newProperty)
-		// }
 	}
 }
 
