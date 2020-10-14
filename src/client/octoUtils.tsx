@@ -5,7 +5,7 @@ import { BoardView, ISortOption } from "./boardView"
 import { Editable } from "./components/editable"
 import { Menu, MenuOption } from "./menu"
 import { Mutator } from "./mutator"
-import { IBlock, IPageController } from "./octoTypes"
+import { IBlock } from "./octoTypes"
 import { Utils } from "./utils"
 
 class OctoUtils {

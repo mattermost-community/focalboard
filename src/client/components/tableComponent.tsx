@@ -8,17 +8,20 @@ import { CsvExporter } from "../csvExporter"
 import ViewMenu from "../components/viewMenu"
 import { Menu as OldMenu } from "../menu"
 import { Mutator } from "../mutator"
-import { IBlock, IPageController } from "../octoTypes"
+import { IBlock } from "../octoTypes"
 import { OctoUtils } from "../octoUtils"
 import { Utils } from "../utils"
-import { Button } from "./button"
+import Button from "./button"
 import { Editable } from "./editable"
 import { TableRow } from "./tableRow"
 
 type Props = {
 	mutator: Mutator,
 	boardTree?: BoardTree
-	pageController: IPageController
+	showView: (id: string) => void
+	showCard: (card: IBlock) => void
+	showFilter: (el: HTMLElement) => void
+	setSearchText: (text: string) => void
 }
 
 type State = {
@@ -45,7 +48,7 @@ class TableComponent extends React.Component<Props, State> {
 	}
 
 	render() {
-		const { mutator, boardTree, pageController } = this.props
+		const { mutator, boardTree, showView } = this.props
 
 		if (!boardTree || !boardTree.board) {
 			return (
@@ -104,8 +107,8 @@ class TableComponent extends React.Component<Props, State> {
                             </div>
 							<div className="octo-spacer"></div>
 							<div className="octo-button" onClick={(e) => { this.propertiesClicked(e) }}>Properties</div>
-							<div className={ hasFilter ? "octo-button active" : "octo-button"} onClick={(e) => { this.filterClicked(e) }}>Filter</div>
-							<div className={ hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { OctoUtils.showSortMenu(e, mutator, boardTree) }}>Sort</div>
+							<div className={hasFilter ? "octo-button active" : "octo-button"} onClick={(e) => { this.filterClicked(e) }}>Filter</div>
+							<div className={hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { OctoUtils.showSortMenu(e, mutator, boardTree) }}>Sort</div>
 							{this.state.isSearching
 								? <Editable
 									ref={this.searchFieldRef}
@@ -259,8 +262,7 @@ class TableComponent extends React.Component<Props, State> {
 	}
 
 	private filterClicked(e: React.MouseEvent) {
-		const { pageController } = this.props
-		pageController.showFilter(e.target as HTMLElement)
+		this.props.showFilter(e.target as HTMLElement)
 	}
 
 	private async optionsClicked(e: React.MouseEvent) {
@@ -364,7 +366,7 @@ class TableComponent extends React.Component<Props, State> {
 	async showCard(card: IBlock) {
 		console.log(`showCard: ${card.title}`)
 
-		await this.props.pageController.showCard(card)
+		await this.props.showCard(card)
 	}
 
 	focusOnCardTitle(cardId: string) {
@@ -412,13 +414,13 @@ class TableComponent extends React.Component<Props, State> {
 		if (e.keyCode === 27) {		// ESC: Clear search
 			this.searchFieldRef.current.text = ""
 			this.setState({ ...this.state, isSearching: false })
-			this.props.pageController.setSearchText(undefined)
+			this.props.setSearchText(undefined)
 			e.preventDefault()
 		}
 	}
 
 	searchChanged(text?: string) {
-		this.props.pageController.setSearchText(text)
+		this.props.setSearchText(text)
 	}
 }
 
