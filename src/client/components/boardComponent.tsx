@@ -233,7 +233,7 @@ class BoardComponent extends React.Component<Props, State> {
 		const properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
 		const card = new Block({ type: "card", parentId: boardTree.board.id, properties })
 		if (boardTree.groupByProperty) {
-			Block.setProperty(card, boardTree.groupByProperty.id, groupByValue)
+			card.properties[boardTree.groupByProperty.id] = groupByValue
 		}
 		await mutator.insertBlock(card, "add card", async () => { await this.showCard(card) }, async () => { await this.showCard(undefined) })
 	}
@@ -354,7 +354,7 @@ class BoardComponent extends React.Component<Props, State> {
 
 		if (draggedCard) {
 			Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${propertyValue}`)
-			const oldValue = Block.getPropertyValue(draggedCard, boardTree.groupByProperty.id)
+			const oldValue = draggedCard.properties[boardTree.groupByProperty.id]
 			if (propertyValue !== oldValue) {
 				await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, propertyValue, "drag card")
 			}
