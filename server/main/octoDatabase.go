@@ -50,9 +50,11 @@ func NewSQLStore(dbType, connectionString string) (*SQLStore, error) {
 type Block struct {
 	ID         string                 `json:"id"`
 	ParentID   string                 `json:"parentId"`
+	Schema     int64                  `json:"schema"`
 	Type       string                 `json:"type"`
 	Title      string                 `json:"title"`
 	Properties map[string]interface{} `json:"properties"`
+	Fields     map[string]interface{} `json:"fields"`
 	CreateAt   int64                  `json:"createAt"`
 	UpdateAt   int64                  `json:"updateAt"`
 	DeleteAt   int64                  `json:"deleteAt"`
@@ -68,8 +70,7 @@ func (s *SQLStore) createTablesIfNotExists() error {
 			insert_at DATETIME NOT NULL DEFAULT current_timestamp,
 			parent_id VARCHAR(36),
 			type TEXT,
-			title TEXT,
-			properties TEXT,
+			json TEXT,
 			create_at BIGINT,
 			update_at BIGINT,
 			delete_at BIGINT,
@@ -81,8 +82,7 @@ func (s *SQLStore) createTablesIfNotExists() error {
 			insert_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 			parent_id VARCHAR(36),
 			type TEXT,
-			title TEXT,
-			properties TEXT,
+			json TEXT,
 			create_at BIGINT,
 			update_at BIGINT,
 			delete_at BIGINT,
