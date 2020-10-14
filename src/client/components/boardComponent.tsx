@@ -5,16 +5,14 @@ import { BlockIcons } from "../blockIcons"
 import { IPropertyOption } from "../board"
 import { BoardTree } from "../boardTree"
 import { CardFilter } from "../cardFilter"
-import { Constants } from "../constants"
 import ViewMenu from "../components/viewMenu"
+import { Constants } from "../constants"
 import { Menu as OldMenu } from "../menu"
 import { Mutator } from "../mutator"
 import { IBlock } from "../octoTypes"
 import { OctoUtils } from "../octoUtils"
 import { Utils } from "../utils"
 import { BoardCard } from "./boardCard"
-import { Board } from "../board"
-import { BoardView } from "../boardView"
 import { BoardColumn } from "./boardColumn"
 import Button from "./button"
 import { Editable } from "./editable"
@@ -106,7 +104,7 @@ class BoardComponent extends React.Component<Props, State> {
 										onClose={() => this.setState({ viewMenu: false })}
 										mutator={mutator}
 										boardTree={boardTree}
-										pageController={pageController}
+										showView={showView}
 									/>}
 								<div className="imageDropdown"></div>
 							</div>
