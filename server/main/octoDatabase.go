@@ -10,42 +10,61 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-var db *sql.DB
+// SQLStore is a SQL database
+type SQLStore struct {
+	db     *sql.DB
+	dbType string
+}
 
-func connectDatabase(dbType string, connectionString string) {
+// NewSQLStore creates a new SQLStore
+func NewSQLStore(dbType, connectionString string) (*SQLStore, error) {
 	log.Println("connectDatabase")
 	var err error
 
-	db, err = sql.Open(dbType, connectionString)
+	db, err := sql.Open(dbType, connectionString)
 	if err != nil {
 		log.Fatal("connectDatabase: ", err)
-		panic(err)
+		return nil, err
 	}
 
 	err = db.Ping()
 	if err != nil {
 		log.Println(`Database Ping failed`)
-		panic(err)
+		return nil, err
 	}
 
-	createTablesIfNotExists(dbType)
+	store := &SQLStore{
+		db:     db,
+		dbType: dbType,
+	}
+
+	err = store.createTablesIfNotExists()
+	if err != nil {
+		log.Println(`Table creation failed`)
+		return nil, err
+	}
+	return store, nil
 }
 
 // Block is the basic data unit
 type Block struct {
-	ID       string `json:"id"`
-	ParentID string `json:"parentId"`
-	Type     string `json:"type"`
-	CreateAt int64  `json:"createAt"`
-	UpdateAt int64  `json:"updateAt"`
-	DeleteAt int64  `json:"deleteAt"`
+	ID         string                 `json:"id"`
+	ParentID   string                 `json:"parentId"`
+	Schema     int64                  `json:"schema"`
+	Type       string                 `json:"type"`
+	Title      string                 `json:"title"`
+	Properties map[string]interface{} `json:"properties"`
+	Fields     map[string]interface{} `json:"fields"`
+	CreateAt   int64                  `json:"createAt"`
+	UpdateAt   int64                  `json:"updateAt"`
+	DeleteAt   int64                  `json:"deleteAt"`
 }
 
-func createTablesIfNotExists(dbType string) {
+func (s *SQLStore) createTablesIfNotExists() error {
 	// TODO: Add update_by with the user's ID
 	// TODO: Consolidate insert_at and update_at, decide if the server of DB should set it
 	var query string
-	if dbType == "sqlite3" {
+	if s.dbType == "sqlite3" {
 		query = `CREATE TABLE IF NOT EXISTS blocks (
 			id VARCHAR(36),
 			insert_at DATETIME NOT NULL DEFAULT current_timestamp,
@@ -71,39 +90,16 @@ func createTablesIfNotExists(dbType string) {
 		);`
 	}
 
-	_, err := db.Exec(query)
+	_, err := s.db.Exec(query)
 	if err != nil {
 		log.Fatal("createTablesIfNotExists: ", err)
-		panic(err)
+		return err
 	}
-	log.Printf("createTablesIfNotExists(%s)", dbType)
+	log.Printf("createTablesIfNotExists(%s)", s.dbType)
+	return nil
 }
 
-func blockFromMap(m map[string]interface{}) Block {
-	var b Block
-	b.ID = m["id"].(string)
-	// Parent ID can be nil (for now)
-	if m["parentId"] != nil {
-		b.ParentID = m["parentId"].(string)
-	}
-	// Allow nil type for imports
-	if m["type"] != nil {
-		b.Type = m["type"].(string)
-	}
-	if m["createAt"] != nil {
-		b.CreateAt = int64(m["createAt"].(float64))
-	}
-	if m["updateAt"] != nil {
-		b.UpdateAt = int64(m["updateAt"].(float64))
-	}
-	if m["deleteAt"] != nil {
-		b.DeleteAt = int64(m["deleteAt"].(float64))
-	}
-
-	return b
-}
-
-func getBlocksWithParentAndType(parentID string, blockType string) []string {
+func (s *SQLStore) getBlocksWithParentAndType(parentID string, blockType string) []string {
 	query := `WITH latest AS
 		(
 			SELECT * FROM
@@ -120,7 +116,7 @@ func getBlocksWithParentAndType(parentID string, blockType string) []string {
 		FROM latest
 		WHERE delete_at = 0 and parent_id = $1 and type = $2`
 
-	rows, err := db.Query(query, parentID, blockType)
+	rows, err := s.db.Query(query, parentID, blockType)
 	if err != nil {
 		log.Printf(`getBlocksWithParentAndType ERROR: %v`, err)
 		panic(err)
@@ -129,7 +125,7 @@ func getBlocksWithParentAndType(parentID string, blockType string) []string {
 	return blocksFromRows(rows)
 }
 
-func getBlocksWithParent(parentID string) []string {
+func (s *SQLStore) getBlocksWithParent(parentID string) []string {
 	query := `WITH latest AS
 		(
 			SELECT * FROM
@@ -146,7 +142,7 @@ func getBlocksWithParent(parentID string) []string {
 		FROM latest
 		WHERE delete_at = 0 and parent_id = $1`
 
-	rows, err := db.Query(query, parentID)
+	rows, err := s.db.Query(query, parentID)
 	if err != nil {
 		log.Printf(`getBlocksWithParent ERROR: %v`, err)
 		panic(err)
@@ -155,7 +151,7 @@ func getBlocksWithParent(parentID string) []string {
 	return blocksFromRows(rows)
 }
 
-func getBlocksWithType(blockType string) []string {
+func (s *SQLStore) getBlocksWithType(blockType string) []string {
 	query := `WITH latest AS
 		(
 			SELECT * FROM
@@ -172,7 +168,7 @@ func getBlocksWithType(blockType string) []string {
 		FROM latest
 		WHERE delete_at = 0 and type = $1`
 
-	rows, err := db.Query(query, blockType)
+	rows, err := s.db.Query(query, blockType)
 	if err != nil {
 		log.Printf(`getBlocksWithParentAndType ERROR: %v`, err)
 		panic(err)
@@ -181,7 +177,7 @@ func getBlocksWithType(blockType string) []string {
 	return blocksFromRows(rows)
 }
 
-func getSubTree(blockID string) []string {
+func (s *SQLStore) getSubTree(blockID string) []string {
 	query := `WITH latest AS
 	(
 		SELECT * FROM
@@ -200,7 +196,7 @@ func getSubTree(blockID string) []string {
 		AND (id = $1
 			OR parent_id = $1)`
 
-	rows, err := db.Query(query, blockID)
+	rows, err := s.db.Query(query, blockID)
 	if err != nil {
 		log.Printf(`getSubTree ERROR: %v`, err)
 		panic(err)
@@ -209,7 +205,7 @@ func getSubTree(blockID string) []string {
 	return blocksFromRows(rows)
 }
 
-func getAllBlocks() []string {
+func (s *SQLStore) getAllBlocks() []string {
 	query := `WITH latest AS
 	(
 		SELECT * FROM
@@ -226,7 +222,7 @@ func getAllBlocks() []string {
 	FROM latest
 	WHERE delete_at = 0`
 
-	rows, err := db.Query(query)
+	rows, err := s.db.Query(query)
 	if err != nil {
 		log.Printf(`getAllBlocks ERROR: %v`, err)
 		panic(err)
@@ -255,7 +251,7 @@ func blocksFromRows(rows *sql.Rows) []string {
 	return results
 }
 
-func getParentID(blockID string) string {
+func (s *SQLStore) getParentID(blockID string) string {
 	statement :=
 		`WITH latest AS
 		(
@@ -274,7 +270,7 @@ func getParentID(blockID string) string {
 		WHERE delete_at = 0
 			AND id = $1`
 
-	row := db.QueryRow(statement, blockID)
+	row := s.db.QueryRow(statement, blockID)
 
 	var parentID string
 	err := row.Scan(&parentID)
@@ -285,19 +281,19 @@ func getParentID(blockID string) string {
 	return parentID
 }
 
-func insertBlock(block Block, json string) {
+func (s *SQLStore) insertBlock(block Block, json string) {
 	statement := `INSERT INTO blocks(id, parent_id, type, json, create_at, update_at, delete_at) VALUES($1, $2, $3, $4, $5, $6, $7)`
-	_, err := db.Exec(statement, block.ID, block.ParentID, block.Type, json, block.CreateAt, block.UpdateAt, block.DeleteAt)
+	_, err := s.db.Exec(statement, block.ID, block.ParentID, block.Type, json, block.CreateAt, block.UpdateAt, block.DeleteAt)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func deleteBlock(blockID string) {
+func (s *SQLStore) deleteBlock(blockID string) {
 	now := time.Now().Unix()
 	json := fmt.Sprintf(`{"id":"%s","updateAt":%d,"deleteAt":%d}`, blockID, now, now)
 	statement := `INSERT INTO blocks(id, json, update_at, delete_at) VALUES($1, $2, $3, $4)`
-	_, err := db.Exec(statement, blockID, json, now, now)
+	_, err := s.db.Exec(statement, blockID, json, now, now)
 	if err != nil {
 		panic(err)
 	}
