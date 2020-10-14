@@ -110,22 +110,6 @@ export default class BoardPage extends React.Component<Props, State> {
 		const { board, activeView } = this.state.boardTree || {}
 		const mutator = new Mutator(this.octo)
 
-		// TODO Move all this into the root portal component when that is merged
-		if (this.state.boardTree && this.state.boardTree.board && shownCardTree) {
-			ReactDOM.render(
-				<CardDialog mutator={mutator} boardTree={this.state.boardTree} cardTree={shownCardTree} onClose={() => { this.showCard(undefined) }}></CardDialog>,
-				Utils.getElementById("overlay")
-			)
-		} else {
-			const overlay = document.getElementById("overlay")
-			if (overlay) {
-				ReactDOM.render(
-					<div />,
-					overlay
-				)
-			}
-		}
-
 		if (this.filterAnchorElement) {
 			const element = this.filterAnchorElement
 			const bodyRect = document.body.getBoundingClientRect()
@@ -161,7 +145,6 @@ export default class BoardPage extends React.Component<Props, State> {
 					workspaceTree={workspaceTree}
 					boardTree={this.state.boardTree}
 					showView={(id) => { this.showView(id) }}
-					showCard={(card) => { this.showCard(card) }}
 					showBoard={(id) => { this.showBoard(id) }}
 					showFilter={(el) => { this.showFilter(el) }}
 					setSearchText={(text) => { this.setSearchText(text) }} />
@@ -209,25 +192,6 @@ export default class BoardPage extends React.Component<Props, State> {
 	}
 
 	// IPageController
-
-	async showCard(card: IBlock) {
-		this.cardListener.close()
-
-		if (card) {
-			const cardTree = new CardTree(this.octo, card.id)
-			await cardTree.sync()
-			this.setState({...this.state, shownCardTree: cardTree})
-
-			this.cardListener = new OctoListener()
-			this.cardListener.open(card.id, async () => {
-				await cardTree.sync()
-				this.forceUpdate()
-			})
-		} else {
-			this.setState({...this.state, shownCardTree: undefined})
-		}
-	}
-
 	showBoard(boardId: string) {
 		const { boardTree } = this.state
 

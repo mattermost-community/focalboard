@@ -14,7 +14,6 @@ type Props = {
 	boardTree?: BoardTree
 	showBoard: (id: string) => void
 	showView: (id: string) => void
-	showCard: (card: IBlock) => void
 	showFilter: (el: HTMLElement) => void
 	setSearchText: (text: string) => void
 }
@@ -34,7 +33,7 @@ class WorkspaceComponent extends React.Component<Props> {
 	}
 
 	private mainComponent() {
-		const { mutator, boardTree, showCard, showFilter, setSearchText, showView } = this.props
+		const { mutator, boardTree, showFilter, setSearchText, showView } = this.props
 		const { activeView } = boardTree || {}
 
 		if (!activeView) {
@@ -43,11 +42,11 @@ class WorkspaceComponent extends React.Component<Props> {
 
 		switch (activeView?.viewType) {
 			case "board": {
-				return <BoardComponent mutator={mutator} boardTree={boardTree} showCard={showCard} showFilter={showFilter} setSearchText={setSearchText} showView={showView} />
+				return <BoardComponent mutator={mutator} boardTree={boardTree} showFilter={showFilter} setSearchText={setSearchText} showView={showView} />
 			}
 
 			case "table": {
-				return <TableComponent mutator={mutator} boardTree={boardTree} showCard={showCard} showFilter={showFilter} setSearchText={setSearchText} showView={showView} />
+				return <TableComponent mutator={mutator} boardTree={boardTree} showFilter={showFilter} setSearchText={setSearchText} showView={showView} />
 			}
 
 			default: {

@@ -8,6 +8,8 @@ import { Mutator } from "../mutator"
 import { IBlock } from "../octoTypes"
 import { OctoUtils } from "../octoUtils"
 import { PropertyMenu } from "../propertyMenu"
+import { OctoListener } from "../octoListener"
+import { OctoClient } from "../octoClient"
 import { Utils } from "../utils"
 import Button from "./button"
 import { Editable } from "./editable"
@@ -15,35 +17,52 @@ import { MarkdownEditor } from "./markdownEditor"
 
 type Props = {
 	boardTree: BoardTree
-	cardTree: CardTree
+	card: IBlock
 	mutator: Mutator
 	onClose: () => void
 }
 
 type State = {
 	isHoverOnCover: boolean
+	cardTree: CardTree | null
 }
 
 class CardDialog extends React.Component<Props, State> {
 	private titleRef = React.createRef<Editable>()
-	private keydownHandler: any
+	private cardListener: OctoListener
 
 	constructor(props: Props) {
 		super(props)
-		this.state = { isHoverOnCover: false }
+		this.state = { isHoverOnCover: false, cardTree: null }
+	}
+
+	keydownHandler = (e: KeyboardEvent) => {
+		if (e.target !== document.body) { return }
+
+		if (e.keyCode === 27) {
+			this.close()
+			e.stopPropagation()
+		}
 	}
 
 	componentDidMount() {
-		this.titleRef.current.focus()
-		this.keydownHandler = (e: KeyboardEvent) => {
-			if (e.target !== document.body) { return }
+		this.cardListener = new OctoListener()
+		this.cardListener.open(this.props.card.id, async () => {
+			await cardTree.sync()
+			this.setState({cardTree: cardTree})
+		})
+		const cardTree = new CardTree(new OctoClient(), this.props.card.id)
+		cardTree.sync().then(() => {
+			this.setState({cardTree})
+		});
 
-			if (e.keyCode === 27) {
-				this.close()
-				e.stopPropagation()
-			}
-		}
 		document.addEventListener("keydown", this.keydownHandler)
+	}
+
+	componentDidUpdate(prevProps: Props, prevState: State) {
+		if (this.titleRef.current && prevState.cardTree === null && this.state.cardTree !== null) {
+			this.titleRef.current.focus()
+		}
 	}
 
 	componentWillUnmount() {
@@ -51,9 +70,14 @@ class CardDialog extends React.Component<Props, State> {
 	}
 
 	render() {
-		const { boardTree, cardTree, mutator } = this.props
+		const { boardTree, mutator, card } = this.props
+		const { cardTree } = this.state
 		const { board } = boardTree
-		const { card, comments } = cardTree
+		if (cardTree === null) {
+			return null
+		}
+
+		const { comments } = cardTree
 
 		const newCommentPlaceholderText = "Add a comment..."
 
@@ -332,8 +356,7 @@ class CardDialog extends React.Component<Props, State> {
 	}
 
 	async sendComment(text: string) {
-		const { mutator, cardTree } = this.props
-		const { card } = cardTree
+		const { mutator, card } = this.props
 
 		Utils.assertValue(card)
 
@@ -342,8 +365,8 @@ class CardDialog extends React.Component<Props, State> {
 	}
 
 	private showContentBlockMenu(e: React.MouseEvent, block: IBlock) {
-		const { mutator, cardTree } = this.props
-		const { card } = cardTree
+		const { mutator, card } = this.props
+		const { cardTree } = this.state
 		const index = cardTree.contents.indexOf(block)
 
 		const options: MenuOption[] = []
@@ -409,8 +432,7 @@ class CardDialog extends React.Component<Props, State> {
 	}
 
 	private iconClicked(e: React.MouseEvent) {
-		const { mutator, cardTree } = this.props
-		const { card } = cardTree
+		const { mutator, card } = this.props
 
 		Menu.shared.options = [
 			{ id: "random", name: "Random" },

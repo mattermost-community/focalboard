@@ -4,21 +4,26 @@ import { Mutator } from "../mutator"
 import { IBlock } from "../octoTypes"
 import { OctoUtils } from "../octoUtils"
 import { Editable } from "./editable"
+import { CardDialog } from "./cardDialog"
+import RootPortal from "./rootPortal"
 
 type Props = {
 	mutator: Mutator
 	boardTree: BoardTree
 	card: IBlock
 	focusOnMount: boolean
-	showCard: (card: IBlock) => void
 	onKeyDown: (e: React.KeyboardEvent) => void
 }
 
 type State = {
+	showCard: boolean
 }
 
 class TableRow extends React.Component<Props, State> {
 	private titleRef = React.createRef<Editable>()
+	state = {
+		showCard: false
+	}
 
 	componentDidMount() {
 		if (this.props.focusOnMount) {
@@ -27,7 +32,7 @@ class TableRow extends React.Component<Props, State> {
 	}
 
 	render() {
-		const { mutator, boardTree, card, showCard, onKeyDown } = this.props
+		const { mutator, boardTree, card, onKeyDown } = this.props
 		const { board, activeView } = boardTree
 
 		const openButonRef = React.createRef<HTMLDivElement>()
@@ -48,7 +53,11 @@ class TableRow extends React.Component<Props, State> {
 					/>
 				</div>
 
-				<div ref={openButonRef} className="octo-hoverbutton" style={{ display: "none" }} onClick={() => { showCard(card) }}>Open</div>
+				<div ref={openButonRef} className="octo-hoverbutton" style={{ display: "none" }} onClick={() => { this.setState({showCard: true}) }}>Open</div>
+				{this.state.showCard &&
+					<RootPortal>
+						<CardDialog boardTree={boardTree} card={card} mutator={mutator} onClose={() => this.setState({showCard: false})}/>
+					</RootPortal>}
 			</div>
 
 			{/* Columns, one per property */}

@@ -17,7 +17,6 @@ interface IBlock {
 
 // These are methods exposed by the top-level page to components
 interface IPageController {
-	showCard(card: IBlock): Promise<void>
 	showBoard(boardId: string): void
 	showView(viewId: string): void
 	showFilter(anchorElement?: HTMLElement): void
