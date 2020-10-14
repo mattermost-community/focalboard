@@ -1,4 +1,4 @@
-import { IBlock, IProperty } from "./octoTypes"
+import { IBlock } from "./octoTypes"
 import { Utils } from "./utils"
 
 class Block implements IBlock {
@@ -9,7 +9,7 @@ class Block implements IBlock {
 	icon?: string
 	url?: string
 	order: number
-	properties: IProperty[] = []
+	properties: Record<string, string> = {}
 	createAt: number = Date.now()
 	updateAt: number = 0
 	deleteAt: number = 0
@@ -37,33 +37,20 @@ class Block implements IBlock {
 		this.icon = block.icon
 		this.url = block.url
 		this.order = block.order
-		this.properties = block.properties ? block.properties.map((o: IProperty) => ({...o})) : []		// Deep clone
 		this.createAt = block.createAt || now
 		this.updateAt = block.updateAt || now
 		this.deleteAt = block.deleteAt || 0
-	}
 
-	static getPropertyValue(block: IBlock, id: string): string | undefined {
-		if (!block.properties) { return undefined }
-		const property = block.properties.find( o => o.id === id )
-		if (!property) { return undefined }
-		return property.value
-	}
-
-	static setProperty(block: IBlock, id: string, value?: string) {
-		if (!block.properties) { block.properties = [] }
-		if (!value) {
-			// Remove property
-			block.properties = block.properties.filter( o => o.id !== id )
-			return
-		}
-
-		const property = block.properties.find( o => o.id === id )
-		if (property) {
-			property.value = value
+		if (Array.isArray(block.properties)) {
+			// HACKHACK: Port from old schema
+			this.properties = {}
+			for (const property of block.properties) {
+				if (property.id) {
+					this.properties[property.id] = property.value
+				}
+			}
 		} else {
-			const newProperty: IProperty = { id, value }
-			block.properties.push(newProperty)
+			this.properties = { ...block.properties || {} }
 		}
 	}
 }

@@ -50,7 +50,7 @@ class Mutator {
 		)
 	}
 
-	async deleteBlock(block: IBlock, description?: string) {
+	async deleteBlock(block: IBlock, description?: string, beforeRedo?: () => Promise<void>, afterUndo?: () => Promise<void>) {
 		const { octo, undoManager } = this
 
 		if (!description) {
@@ -59,10 +59,12 @@ class Mutator {
 
 		await undoManager.perform(
 			async () => {
+				await beforeRedo?.()
 				await octo.deleteBlock(block.id)
 			},
 			async () => {
 				await octo.insertBlock(block)
+				await afterUndo?.()
 			},
 			description
 		)
@@ -243,9 +245,9 @@ class Mutator {
 			}
 		})
 		cards.forEach(card => {
-			if (card.properties.findIndex(o => o.id === propertyId) !== -1) {
+			if (card.properties[propertyId]) {
 				oldBlocks.push(new Block(card))
-				card.properties = card.properties.filter(o => o.id !== propertyId)
+				delete card.properties[propertyId]
 				changedBlocks.push(card)
 			}
 		})
@@ -364,13 +366,12 @@ class Mutator {
 
 		// Change the value on all cards that have this property too
 		for (const card of cards) {
-			card.properties.forEach(property => {
-				if (property.id === propertyTemplate.id && property.value === oldValue) {
-					oldBlocks.push(new Block(card))
-					property.value = value
-					changedBlocks.push(card)
-				}
-			})
+			const propertyValue = card.properties[propertyTemplate.id]
+			if (propertyValue && propertyValue === oldValue) {
+				oldBlocks.push(new Block(card))
+				card.properties[propertyTemplate.id] = value
+				changedBlocks.push(card)
+			}
 		}
 
 		await undoManager.perform(
@@ -407,14 +408,14 @@ class Mutator {
 	async changePropertyValue(block: IBlock, propertyId: string, value?: string, description: string = "change property") {
 		const { octo, undoManager } = this
 
-		const oldValue = Block.getPropertyValue(block, propertyId)
+		const oldValue = block.properties[propertyId]
 		await undoManager.perform(
 			async () => {
-				Block.setProperty(block, propertyId, value)
+				block.properties[propertyId] = value
 				await octo.updateBlock(block)
 			},
 			async () => {
-				Block.setProperty(block, propertyId, oldValue)
+				block.properties[propertyId] = oldValue
 				await octo.updateBlock(block)
 			},
 			description

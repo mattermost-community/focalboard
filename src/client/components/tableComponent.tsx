@@ -4,7 +4,6 @@ import { Block } from "../block"
 import { BlockIcons } from "../blockIcons"
 import { IPropertyTemplate } from "../board"
 import { BoardTree } from "../boardTree"
-import { ISortOption } from "../boardView"
 import { CsvExporter } from "../csvExporter"
 import { Menu } from "../menu"
 import { Mutator } from "../mutator"
@@ -23,16 +22,24 @@ type Props = {
 
 type State = {
 	isHoverOnCover: boolean
+	isSearching: boolean
 }
 
 class TableComponent extends React.Component<Props, State> {
 	private draggedHeaderTemplate: IPropertyTemplate
 	private cardIdToRowMap = new Map<string, React.RefObject<TableRow>>()
 	private cardIdToFocusOnRender: string
+	private searchFieldRef = React.createRef<Editable>()
 
 	constructor(props: Props) {
 		super(props)
-		this.state = { isHoverOnCover: false }
+		this.state = { isHoverOnCover: false, isSearching: !!this.props.boardTree?.getSearchText() }
+	}
+
+	componentDidUpdate(prevPros: Props, prevState: State) {
+		if (this.state.isSearching && !prevState.isSearching) {
+			this.searchFieldRef.current.focus()
+		}
 	}
 
 	render() {
@@ -82,8 +89,17 @@ class TableComponent extends React.Component<Props, State> {
 							<div className="octo-spacer"></div>
 							<div className="octo-button" onClick={(e) => { this.propertiesClicked(e) }}>Properties</div>
 							<div className={ hasFilter ? "octo-button active" : "octo-button"} onClick={(e) => { this.filterClicked(e) }}>Filter</div>
-							<div className={ hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { this.sortClicked(e) }}>Sort</div>
-							<div className="octo-button">Search</div>
+							<div className={ hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { OctoUtils.showSortMenu(e, mutator, boardTree) }}>Sort</div>
+							{this.state.isSearching
+								? <Editable
+									ref={this.searchFieldRef}
+									text={boardTree.getSearchText()}
+									placeholderText="Search text"
+									style={{ color: "#000000" }}
+									onChanged={(text) => { this.searchChanged(text) }}
+									onKeyDown={(e) => { this.onSearchKeyDown(e) }}></Editable>
+								: <div className="octo-button" onClick={() => { this.setState({ ...this.state, isSearching: true }) }}>Search</div>
+							}
 							<div className="octo-button" onClick={(e) => this.optionsClicked(e)}><div className="imageOptions"></div></div>
 							<div className="octo-button filled" onClick={() => { this.addCard(true) }}>New</div>
 						</div>
@@ -95,7 +111,7 @@ class TableComponent extends React.Component<Props, State> {
 							{/* Headers */}
 
 							<div className="octo-table-header" id="mainBoardHeader">
-								<div className="octo-table-cell" id="mainBoardHeader">
+								<div className="octo-table-cell title-cell" id="mainBoardHeader">
 									<div
 										className="octo-label"
 										style={{ cursor: "pointer" }}
@@ -229,32 +245,6 @@ class TableComponent extends React.Component<Props, State> {
 	private filterClicked(e: React.MouseEvent) {
 		const { pageController } = this.props
 		pageController.showFilter(e.target as HTMLElement)
-	}
-
-	private async sortClicked(e: React.MouseEvent) {
-		const { mutator, boardTree } = this.props
-		const { activeView } = boardTree
-		const { sortOptions } = activeView
-		const sortOption = sortOptions.length > 0 ? sortOptions[0] : undefined
-
-		const propertyTemplates = boardTree.board.cardProperties
-		Menu.shared.options = propertyTemplates.map((o) => { return { id: o.id, name: o.name } })
-		Menu.shared.onMenuClicked = async (propertyId: string) => {
-			let newSortOptions: ISortOption[] = []
-			if (sortOption && sortOption.propertyId === propertyId) {
-				// Already sorting by name, so reverse it
-				newSortOptions = [
-					{ propertyId, reversed: !sortOption.reversed }
-				]
-			} else {
-				newSortOptions = [
-					{ propertyId, reversed: false }
-				]
-			}
-
-			await mutator.changeViewSortOptions(activeView, newSortOptions)
-		}
-		Menu.shared.showAtElement(e.target as HTMLElement)
 	}
 
 	private async optionsClicked(e: React.MouseEvent) {
@@ -400,6 +390,19 @@ class TableComponent extends React.Component<Props, State> {
 		// Move template to new index
 		const destIndex = template ? board.cardProperties.indexOf(template) : 0
 		await mutator.changePropertyTemplateOrder(board, draggedHeaderTemplate, destIndex)
+	}
+
+	onSearchKeyDown(e: React.KeyboardEvent) {
+		if (e.keyCode === 27) {		// ESC: Clear search
+			this.searchFieldRef.current.text = ""
+			this.setState({ ...this.state, isSearching: false })
+			this.props.pageController.setSearchText(undefined)
+			e.preventDefault()
+		}
+	}
+
+	searchChanged(text?: string) {
+		this.props.pageController.setSearchText(text)
 	}
 }
 

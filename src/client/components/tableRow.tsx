@@ -36,7 +36,7 @@ class TableRow extends React.Component<Props, State> {
 
 			{/* Name / title */}
 
-			<div className="octo-table-cell" id="mainBoardHeader" onMouseOver={() => { openButonRef.current.style.display = null }} onMouseLeave={() => { openButonRef.current.style.display = "none" }}>
+			<div className="octo-table-cell title-cell" id="mainBoardHeader" onMouseOver={() => { openButonRef.current.style.display = null }} onMouseLeave={() => { openButonRef.current.style.display = "none" }}>
 				<div className="octo-icontitle">
 					<div className="octo-icon">{card.icon}</div>
 					<Editable

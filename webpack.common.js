@@ -1,9 +1,9 @@
-const webpack = require("webpack");
-const path = require("path");
-const CopyPlugin = require("copy-webpack-plugin");
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require("webpack")
+const path = require("path")
+const CopyPlugin = require("copy-webpack-plugin")
+var HtmlWebpackPlugin = require('html-webpack-plugin')
 
-const outpath = path.resolve(__dirname, "pack");
+const outpath = path.resolve(__dirname, "pack")
 
 function makeCommonConfig() {
 	const commonConfig = {
@@ -58,36 +58,21 @@ function makeCommonConfig() {
 			new HtmlWebpackPlugin({
 				inject: true,
 				title: "OCTO",
-				chunks: [],
-				template: "html-templates/index.ejs",
-				filename: 'index.html'
-			}),
-			new HtmlWebpackPlugin({
-				inject: true,
-				title: "OCTO - Boards",
-				chunks: ["boardsPage"],
-				template: "html-templates/page.ejs",
-				filename: 'boards.html'
-			}),
-			new HtmlWebpackPlugin({
-				inject: true,
-				title: "OCTO",
 				chunks: ["boardPage"],
 				template: "html-templates/page.ejs",
 				filename: 'board.html'
 			}),
 		],
 		entry: {
-			boardsPage: "./src/client/boardsPage.ts",
 			boardPage: "./src/client/boardPage.tsx"
 		},
 		output: {
 			filename: "[name].js",
 			path: outpath
 		}
-	};
+	}
 
-	return commonConfig;
+	return commonConfig
 }
 
-module.exports = makeCommonConfig;
+module.exports = makeCommonConfig

@@ -17,25 +17,10 @@ import (
 	"os/signal"
 
 	"github.com/gorilla/mux"
-	"github.com/gorilla/websocket"
 )
 
-var config Configuration
-
-// WebsocketMsg is send on block changes
-type WebsocketMsg struct {
-	Action  string `json:"action"`
-	BlockID string `json:"blockId"`
-}
-
-// A single session for now
-var session = new(ListenerSession)
-
-var upgrader = websocket.Upgrader{
-	CheckOrigin: func(r *http.Request) bool {
-		return true
-	},
-}
+var wsServer *WSServer
+var config *Configuration
 
 // ----------------------------------------------------------------------------------------------------
 // HTTP handlers
@@ -54,6 +39,13 @@ func handleStaticFile(r *mux.Router, requestPath string, filePath string, conten
 	})
 }
 
+func handleDefault(r *mux.Router, requestPath string) {
+	r.HandleFunc(requestPath, func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("handleDefault")
+		http.Redirect(w, r, "/board", http.StatusFound)
+	})
+}
+
 // ----------------------------------------------------------------------------------------------------
 // REST APIs
 
@@ -63,12 +55,15 @@ func handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	blockType := query.Get("type")
 
 	var blocks []string
-	if len(blockType) > 0 {
+	if len(blockType) > 0 && len(parentID) > 0 {
 		blocks = getBlocksWithParentAndType(parentID, blockType)
+	} else if len(blockType) > 0 {
+		blocks = getBlocksWithType(blockType)
 	} else {
 		blocks = getBlocksWithParent(parentID)
 	}
-	log.Printf("GetBlocks parentID: %s, %d result(s)", parentID, len(blocks))
+
+	log.Printf("GetBlocks parentID: %s, type: %s, %d result(s)", parentID, blockType, len(blocks))
 	response := `[` + strings.Join(blocks[:], ",") + `]`
 	jsonResponse(w, 200, response)
 }
@@ -132,7 +127,7 @@ func handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 		insertBlock(block, string(jsonBytes))
 	}
 
-	broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
+	wsServer.broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
 
 	log.Printf("POST Blocks %d block(s)", len(blockMaps))
 	jsonResponse(w, 200, "{}")
@@ -152,7 +147,7 @@ func handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 
 	deleteBlock(blockID)
 
-	broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
+	wsServer.broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
 
 	log.Printf("DELETE Block %s", blockID)
 	jsonResponse(w, 200, "{}")
@@ -294,66 +289,6 @@ func errorResponse(w http.ResponseWriter, code int, message string) {
 // ----------------------------------------------------------------------------------------------------
 // WebSocket OnChange listener
 
-func handleWebSocketOnChange(w http.ResponseWriter, r *http.Request) {
-	// Upgrade initial GET request to a websocket
-	ws, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// TODO: Auth
-
-	query := r.URL.Query()
-	blockID := query.Get("id")
-	log.Printf("CONNECT WebSocket onChange, blockID: %s, client: %s", blockID, ws.RemoteAddr())
-
-	// Make sure we close the connection when the function returns
-	defer func() {
-		log.Printf("DISCONNECT WebSocket onChange, blockID: %s, client: %s", blockID, ws.RemoteAddr())
-
-		// Remove client from listeners
-		session.RemoveListener(ws)
-
-		ws.Close()
-	}()
-
-	// Register our new client
-	session.AddListener(ws, blockID)
-
-	// TODO: Implement WebSocket message pump
-	// Simple message handling loop
-	for {
-		_, _, err := ws.ReadMessage()
-		if err != nil {
-			log.Printf("ERROR WebSocket onChange, blockID: %s, client: %s, err: %v", blockID, ws.RemoteAddr(), err)
-			session.RemoveListener(ws)
-			break
-		}
-	}
-}
-
-func broadcastBlockChangeToWebsocketClients(blockIDs []string) {
-	for _, blockID := range blockIDs {
-		listeners := session.GetListeners(blockID)
-		log.Printf("%d listener(s) for blockID: %s", len(listeners), blockID)
-
-		if listeners != nil {
-			var message = WebsocketMsg{
-				Action:  "UPDATE_BLOCK",
-				BlockID: blockID,
-			}
-			for _, listener := range listeners {
-				log.Printf("Broadcast change, blockID: %s, remoteAddr: %s", blockID, listener.RemoteAddr())
-				err := listener.WriteJSON(message)
-				if err != nil {
-					log.Printf("broadcast error: %v", err)
-					listener.Close()
-				}
-			}
-		}
-	}
-}
-
 func isProcessRunning(pid int) bool {
 	process, err := os.FindProcess(pid)
 	if err != nil {
@@ -383,7 +318,12 @@ func monitorPid(pid int) {
 
 func main() {
 	// config.json file
-	config = readConfigFile()
+	var err error
+	config, err = readConfigFile()
+	if err != nil {
+		log.Fatal("Unable to read the config file: ", err)
+		return
+	}
 
 	// Command line args
 	pMonitorPid := flag.Int("monitorpid", -1, "a process ID")
@@ -400,14 +340,14 @@ func main() {
 		config.Port = *pPort
 	}
 
+	wsServer = NewWSServer()
+
 	r := mux.NewRouter()
 
 	// Static files
-	handleStaticFile(r, "/", "index.html", "text/html; charset=utf-8")
-	handleStaticFile(r, "/boards", "boards.html", "text/html; charset=utf-8")
-	handleStaticFile(r, "/board", "board.html", "text/html; charset=utf-8")
+	handleDefault(r, "/")
 
-	handleStaticFile(r, "/boardsPage.js", "boardsPage.js", "text/javascript; charset=utf-8")
+	handleStaticFile(r, "/board", "board.html", "text/html; charset=utf-8")
 	handleStaticFile(r, "/boardPage.js", "boardPage.js", "text/javascript; charset=utf-8")
 
 	handleStaticFile(r, "/favicon.ico", "static/favicon.svg", "image/svg+xml; charset=utf-8")
@@ -429,7 +369,7 @@ func main() {
 	r.HandleFunc("/api/v1/blocks/import", handleImport).Methods("POST")
 
 	// WebSocket
-	r.HandleFunc("/ws/onchange", handleWebSocketOnChange)
+	r.HandleFunc("/ws/onchange", wsServer.handleWebSocketOnChange)
 
 	// Files
 	r.HandleFunc("/files/{filename}", handleServeFile).Methods("GET")
