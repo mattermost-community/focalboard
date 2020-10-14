@@ -19,7 +19,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var config Configuration
+var config *Configuration
 var wsServer *WSServer
 var store *SQLStore
 
@@ -376,7 +376,6 @@ func main() {
 
 	http.Handle("/", r)
 
-	var err error
 	store, err = NewSQLStore(config.DBType, config.DBConfigString)
 	if err != nil {
 		log.Fatal("Unable to start the database", err)

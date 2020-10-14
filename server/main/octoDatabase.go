@@ -10,11 +10,13 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+// SQLStore is a SQL database
 type SQLStore struct {
 	db     *sql.DB
 	dbType string
 }
 
+// NewSQLStore creates a new SQLStore
 func NewSQLStore(dbType, connectionString string) (*SQLStore, error) {
 	log.Println("connectDatabase")
 	var err error
@@ -149,7 +151,7 @@ func (s *SQLStore) getBlocksWithParent(parentID string) []string {
 	return blocksFromRows(rows)
 }
 
-func (s *SQLStore) getBlocksWithType(blockID string) []string {
+func (s *SQLStore) getBlocksWithType(blockType string) []string {
 	query := `WITH latest AS
 		(
 			SELECT * FROM
@@ -166,7 +168,7 @@ func (s *SQLStore) getBlocksWithType(blockID string) []string {
 		FROM latest
 		WHERE delete_at = 0 and type = $1`
 
-	rows, err := db.Query(query, blockType)
+	rows, err := s.db.Query(query, blockType)
 	if err != nil {
 		log.Printf(`getBlocksWithParentAndType ERROR: %v`, err)
 		panic(err)
