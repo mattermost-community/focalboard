@@ -36,3 +36,4 @@ debug
 __debug_bin
 files
 octo*.db
+.eslintcache
