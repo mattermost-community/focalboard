@@ -6,15 +6,86 @@ import { IPropertyOption } from "../board"
 import { BoardTree } from "../boardTree"
 import { CardFilter } from "../cardFilter"
 import { Constants } from "../constants"
-import { Menu } from "../menu"
+import Menu from "../widgets/menu"
+import { Menu as OldMenu } from "../menu"
 import { Mutator } from "../mutator"
 import { IBlock, IPageController } from "../octoTypes"
 import { OctoUtils } from "../octoUtils"
 import { Utils } from "../utils"
 import { BoardCard } from "./boardCard"
+import { Board } from "../board"
+import { BoardView } from "../boardView"
 import { BoardColumn } from "./boardColumn"
 import { Button } from "./button"
 import { Editable } from "./editable"
+
+type ViewMenuProps = {
+	mutator: Mutator,
+	boardTree?: BoardTree
+	pageController: IPageController,
+    board: Board,
+    onClose: () => void,
+}
+function ViewMenu({board, onClose, boardTree, mutator, pageController}: ViewMenuProps) {
+    const handleDeleteView = async (id: string) => {
+        Utils.log(`deleteView`)
+        const view = boardTree.activeView
+        const nextView = boardTree.views.find(o => o !== view)
+        await mutator.deleteBlock(view, "delete view")
+        pageController.showView(nextView.id)
+    }
+
+    const handleViewClick = (id: string) => {
+        Utils.log(`view ` + id)
+        const view = boardTree.views.find(o => o.id === id)
+        pageController.showView(view.id)
+    }
+
+    const handleAddViewBoard = async (id: string) => {
+        Utils.log(`addview-board`)
+        const view = new BoardView()
+        view.title = "Board View"
+        view.viewType = "board"
+        view.parentId = board.id
+
+        const oldViewId = boardTree.activeView.id
+
+        await mutator.insertBlock(
+            view,
+            "add view",
+            async () => { pageController.showView(view.id) },
+            async () => { pageController.showView(oldViewId) })
+    }
+
+    const handleAddViewTable = async (id: string) => {
+        Utils.log(`addview-table`)
+        const view = new BoardView()
+        view.title = "Table View"
+        view.viewType = "table"
+        view.parentId = board.id
+        view.visiblePropertyIds = board.cardProperties.map(o => o.id)
+
+        const oldViewId = boardTree.activeView.id
+
+        await mutator.insertBlock(
+            view,
+            "add view",
+            async () => { pageController.showView(view.id) },
+            async () => { pageController.showView(oldViewId) })
+    }
+
+    return (
+        <Menu onClose={onClose}>
+            {boardTree.views.map((view) => (<Menu.Text key={view.id} id={view.id} name={view.title} onClick={handleViewClick}/>))}
+            <Menu.Separator/>
+            {boardTree.views.length > 1 && <Menu.Text id="__deleteView" name="Delete View" onClick={handleDeleteView} />}
+            <Menu.SubMenu id="__addView" name="Add View">
+                <Menu.Text id='board' name='Board' onClick={handleAddViewBoard}/>
+                <Menu.Text id='table' name='Table' onClick={handleAddViewTable}/>
+            </Menu.SubMenu>
+        </Menu>
+    );
+}
 
 type Props = {
 	mutator: Mutator,
@@ -25,6 +96,7 @@ type Props = {
 type State = {
 	isHoverOnCover: boolean
 	isSearching: boolean
+    viewMenu: boolean
 }
 
 class BoardComponent extends React.Component<Props, State> {
@@ -34,7 +106,7 @@ class BoardComponent extends React.Component<Props, State> {
 
 	constructor(props: Props) {
 		super(props)
-		this.state = { isHoverOnCover: false, isSearching: !!this.props.boardTree?.getSearchText() }
+		this.state = { isHoverOnCover: false, isSearching: !!this.props.boardTree?.getSearchText(), viewMenu: false}
 	}
 
 	componentDidUpdate(prevPros: Props, prevState: State) {
@@ -88,7 +160,21 @@ class BoardComponent extends React.Component<Props, State> {
 					<div className="octo-board">
 						<div className="octo-controls">
 							<Editable style={{ color: "#000000", fontWeight: 600 }} text={activeView.title} placeholderText="Untitled View" onChanged={(text) => { mutator.changeTitle(activeView, text) }} />
-							<div className="octo-button" style={{ color: "#000000", fontWeight: 600 }} onClick={(e) => { OctoUtils.showViewMenu(e, mutator, boardTree, pageController) }}><div className="imageDropdown"></div></div>
+                            <div
+                                className="octo-button"
+                                style={{ color: "#000000", fontWeight: 600 }}
+                                onClick={() => this.setState({viewMenu: true})}
+                            >
+                                {this.state.viewMenu &&
+                                    <ViewMenu
+                                        board={board}
+                                        onClose={() => this.setState({viewMenu:false})}
+                                        mutator={mutator}
+                                        boardTree={boardTree}
+                                        pageController={pageController}
+                                    />}
+                                <div className="imageDropdown"></div>
+                            </div>
 							<div className="octo-spacer"></div>
 							<div className="octo-button" onClick={(e) => { this.propertiesClicked(e) }}>Properties</div>
 							<div className="octo-button" id="groupByButton" onClick={(e) => { this.groupByClicked(e) }}>
@@ -202,11 +288,11 @@ class BoardComponent extends React.Component<Props, State> {
 		const { mutator, boardTree } = this.props
 		const { board } = boardTree
 
-		Menu.shared.options = [
+		OldMenu.shared.options = [
 			{ id: "random", name: "Random" },
 			{ id: "remove", name: "Remove Icon" },
 		]
-		Menu.shared.onMenuClicked = (optionId: string, type?: string) => {
+		OldMenu.shared.onMenuClicked = (optionId: string, type?: string) => {
 			switch (optionId) {
 				case "remove":
 					mutator.changeIcon(board, undefined, "remove icon")
@@ -217,7 +303,7 @@ class BoardComponent extends React.Component<Props, State> {
 					break
 			}
 		}
-		Menu.shared.showAtElement(e.target as HTMLElement)
+		OldMenu.shared.showAtElement(e.target as HTMLElement)
 	}
 
 	async showCard(card?: IBlock) {
@@ -247,12 +333,12 @@ class BoardComponent extends React.Component<Props, State> {
 	async valueOptionClicked(e: React.MouseEvent<HTMLElement>, option: IPropertyOption) {
 		const { mutator, boardTree } = this.props
 
-		Menu.shared.options = [
+		OldMenu.shared.options = [
 			{ id: "delete", name: "Delete" },
 			{ id: "", name: "", type: "separator" },
 			...Constants.menuColors
 		]
-		Menu.shared.onMenuClicked = async (optionId: string, type?: string) => {
+		OldMenu.shared.onMenuClicked = async (optionId: string, type?: string) => {
 			switch (optionId) {
 				case "delete":
 					console.log(`Delete property value: ${option.value}`)
@@ -266,7 +352,7 @@ class BoardComponent extends React.Component<Props, State> {
 					}
 			}
 		}
-		Menu.shared.showAtElement(e.target as HTMLElement)
+		OldMenu.shared.showAtElement(e.target as HTMLElement)
 	}
 
 	private filterClicked(e: React.MouseEvent) {
@@ -277,13 +363,13 @@ class BoardComponent extends React.Component<Props, State> {
 	private async optionsClicked(e: React.MouseEvent) {
 		const { boardTree } = this.props
 
-		Menu.shared.options = [
+		OldMenu.shared.options = [
 			{ id: "exportBoardArchive", name: "Export board archive" },
 			{ id: "testAdd100Cards", name: "TEST: Add 100 cards" },
 			{ id: "testAdd1000Cards", name: "TEST: Add 1,000 cards" },
 		]
 
-		Menu.shared.onMenuClicked = async (id: string) => {
+		OldMenu.shared.onMenuClicked = async (id: string) => {
 			switch (id) {
 				case "exportBoardArchive": {
 					Archiver.exportBoardTree(boardTree)
@@ -297,7 +383,7 @@ class BoardComponent extends React.Component<Props, State> {
 				}
 			}
 		}
-		Menu.shared.showAtElement(e.target as HTMLElement)
+		OldMenu.shared.showAtElement(e.target as HTMLElement)
 	}
 
 	private async testAddCards(count: number) {
@@ -325,12 +411,12 @@ class BoardComponent extends React.Component<Props, State> {
 		const { activeView } = boardTree
 
 		const selectProperties = boardTree.board.cardProperties
-		Menu.shared.options = selectProperties.map((o) => {
+		OldMenu.shared.options = selectProperties.map((o) => {
 			const isVisible = activeView.visiblePropertyIds.includes(o.id)
 			return { id: o.id, name: o.name, type: "switch", isOn: isVisible }
 		})
 
-		Menu.shared.onMenuToggled = async (id: string, isOn: boolean) => {
+		OldMenu.shared.onMenuToggled = async (id: string, isOn: boolean) => {
 			const property = selectProperties.find(o => o.id === id)
 			Utils.assertValue(property)
 			Utils.log(`Toggle property ${property.name} ${isOn}`)
@@ -343,20 +429,20 @@ class BoardComponent extends React.Component<Props, State> {
 			}
 			await mutator.changeViewVisibleProperties(activeView, newVisiblePropertyIds)
 		}
-		Menu.shared.showAtElement(e.target as HTMLElement)
+		OldMenu.shared.showAtElement(e.target as HTMLElement)
 	}
 
 	private async groupByClicked(e: React.MouseEvent) {
 		const { mutator, boardTree } = this.props
 
 		const selectProperties = boardTree.board.cardProperties.filter(o => o.type === "select")
-		Menu.shared.options = selectProperties.map((o) => { return { id: o.id, name: o.name } })
-		Menu.shared.onMenuClicked = async (command: string) => {
+		OldMenu.shared.options = selectProperties.map((o) => { return { id: o.id, name: o.name } })
+		OldMenu.shared.onMenuClicked = async (command: string) => {
 			if (boardTree.activeView.groupById === command) { return }
 
 			await mutator.changeViewGroupById(boardTree.activeView, command)
 		}
-		Menu.shared.showAtElement(e.target as HTMLElement)
+		OldMenu.shared.showAtElement(e.target as HTMLElement)
 	}
 
 	async addGroupClicked() {
