@@ -26,6 +26,14 @@ function makeCommonConfig() {
 					loader: "file-loader",
 				},
 				{
+                    test: /\.s[ac]ss$/i,
+                    use: [
+                      'style-loader',
+                      'css-loader',
+                      'sass-loader',
+                    ],
+				},
+				{
 					test: /\.(tsx?|js|jsx|html)$/,
 					use: [
 					],
