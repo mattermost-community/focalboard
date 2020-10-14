@@ -5,7 +5,8 @@ import { BlockIcons } from "../blockIcons"
 import { IPropertyTemplate } from "../board"
 import { BoardTree } from "../boardTree"
 import { CsvExporter } from "../csvExporter"
-import { Menu } from "../menu"
+import ViewMenu from "../components/viewMenu"
+import { Menu as OldMenu } from "../menu"
 import { Mutator } from "../mutator"
 import { IBlock, IPageController } from "../octoTypes"
 import { OctoUtils } from "../octoUtils"
@@ -23,6 +24,7 @@ type Props = {
 type State = {
 	isHoverOnCover: boolean
 	isSearching: boolean
+    viewMenu: boolean
 }
 
 class TableComponent extends React.Component<Props, State> {
@@ -33,7 +35,7 @@ class TableComponent extends React.Component<Props, State> {
 
 	constructor(props: Props) {
 		super(props)
-		this.state = { isHoverOnCover: false, isSearching: !!this.props.boardTree?.getSearchText() }
+		this.state = { isHoverOnCover: false, isSearching: !!this.props.boardTree?.getSearchText(), viewMenu: false}
 	}
 
 	componentDidUpdate(prevPros: Props, prevState: State) {
@@ -85,7 +87,21 @@ class TableComponent extends React.Component<Props, State> {
 					<div className="octo-table">
 						<div className="octo-controls">
 							<Editable style={{ color: "#000000", fontWeight: 600 }} text={activeView.title} placeholderText="Untitled View" onChanged={(text) => { mutator.changeTitle(activeView, text) }} />
-							<div className="octo-button" style={{ color: "#000000", fontWeight: 600 }} onClick={(e) => { OctoUtils.showViewMenu(e, mutator, boardTree, pageController) }}><div className="imageDropdown"></div></div>
+                            <div
+                                className="octo-button"
+                                style={{ color: "#000000", fontWeight: 600 }}
+                                onClick={() => this.setState({viewMenu: true})}
+                            >
+                                {this.state.viewMenu &&
+                                    <ViewMenu
+                                        board={board}
+                                        onClose={() => this.setState({viewMenu:false})}
+                                        mutator={mutator}
+                                        boardTree={boardTree}
+                                        pageController={pageController}
+                                    />}
+                                <div className="imageDropdown"></div>
+                            </div>
 							<div className="octo-spacer"></div>
 							<div className="octo-button" onClick={(e) => { this.propertiesClicked(e) }}>Properties</div>
 							<div className={ hasFilter ? "octo-button active" : "octo-button"} onClick={(e) => { this.filterClicked(e) }}>Filter</div>
@@ -198,11 +214,11 @@ class TableComponent extends React.Component<Props, State> {
 		const { mutator, boardTree } = this.props
 		const { board } = boardTree
 
-		Menu.shared.options = [
+		OldMenu.shared.options = [
 			{ id: "random", name: "Random" },
 			{ id: "remove", name: "Remove Icon" },
 		]
-		Menu.shared.onMenuClicked = (optionId: string, type?: string) => {
+		OldMenu.shared.onMenuClicked = (optionId: string, type?: string) => {
 			switch (optionId) {
 				case "remove":
 					mutator.changeIcon(board, undefined, "remove icon")
@@ -213,7 +229,7 @@ class TableComponent extends React.Component<Props, State> {
 					break
 			}
 		}
-		Menu.shared.showAtElement(e.target as HTMLElement)
+		OldMenu.shared.showAtElement(e.target as HTMLElement)
 	}
 
 	private async propertiesClicked(e: React.MouseEvent) {
@@ -221,12 +237,12 @@ class TableComponent extends React.Component<Props, State> {
 		const { activeView } = boardTree
 
 		const selectProperties = boardTree.board.cardProperties
-		Menu.shared.options = selectProperties.map((o) => {
+		OldMenu.shared.options = selectProperties.map((o) => {
 			const isVisible = activeView.visiblePropertyIds.includes(o.id)
 			return { id: o.id, name: o.name, type: "switch", isOn: isVisible }
 		})
 
-		Menu.shared.onMenuToggled = async (id: string, isOn: boolean) => {
+		OldMenu.shared.onMenuToggled = async (id: string, isOn: boolean) => {
 			const property = selectProperties.find(o => o.id === id)
 			Utils.assertValue(property)
 			Utils.log(`Toggle property ${property.name} ${isOn}`)
@@ -239,7 +255,7 @@ class TableComponent extends React.Component<Props, State> {
 			}
 			await mutator.changeViewVisibleProperties(activeView, newVisiblePropertyIds)
 		}
-		Menu.shared.showAtElement(e.target as HTMLElement)
+		OldMenu.shared.showAtElement(e.target as HTMLElement)
 	}
 
 	private filterClicked(e: React.MouseEvent) {
@@ -250,12 +266,12 @@ class TableComponent extends React.Component<Props, State> {
 	private async optionsClicked(e: React.MouseEvent) {
 		const { boardTree } = this.props
 
-		Menu.shared.options = [
+		OldMenu.shared.options = [
 			{ id: "exportCsv", name: "Export to CSV" },
 			{ id: "exportBoardArchive", name: "Export board archive" },
 		]
 
-		Menu.shared.onMenuClicked = async (id: string) => {
+		OldMenu.shared.onMenuClicked = async (id: string) => {
 			switch (id) {
 				case "exportCsv": {
 					CsvExporter.exportTableCsv(boardTree)
@@ -267,7 +283,7 @@ class TableComponent extends React.Component<Props, State> {
 				}
 			}
 		}
-		Menu.shared.showAtElement(e.target as HTMLElement)
+		OldMenu.shared.showAtElement(e.target as HTMLElement)
 	}
 
 	private async headerClicked(e: React.MouseEvent<HTMLDivElement>, templateId: string) {
@@ -288,8 +304,8 @@ class TableComponent extends React.Component<Props, State> {
 			options.push({ id: "delete", name: "Delete" })
 		}
 
-		Menu.shared.options = options
-		Menu.shared.onMenuClicked = async (optionId: string, type?: string) => {
+		OldMenu.shared.options = options
+		OldMenu.shared.onMenuClicked = async (optionId: string, type?: string) => {
 			switch (optionId) {
 				case "sortAscending": {
 					const newSortOptions = [
@@ -342,7 +358,7 @@ class TableComponent extends React.Component<Props, State> {
 				}
 			}
 		}
-		Menu.shared.showAtElement(e.target as HTMLElement)
+		OldMenu.shared.showAtElement(e.target as HTMLElement)
 	}
 
 	async showCard(card: IBlock) {
