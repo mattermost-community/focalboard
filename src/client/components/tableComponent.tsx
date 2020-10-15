@@ -29,7 +29,7 @@ type Props = {
 type State = {
 	isHoverOnCover: boolean
 	isSearching: boolean
-	shownCard: Card | null
+	shownCard?: Card
 	viewMenu: boolean
 }
 
@@ -41,7 +41,7 @@ class TableComponent extends React.Component<Props, State> {
 
 	constructor(props: Props) {
 		super(props)
-		this.state = { isHoverOnCover: false, isSearching: !!this.props.boardTree?.getSearchText(), viewMenu: false, shownCard: null }
+		this.state = { isHoverOnCover: false, isSearching: !!this.props.boardTree?.getSearchText(), viewMenu: false }
 	}
 
 	componentDidUpdate(prevPros: Props, prevState: State) {
@@ -70,7 +70,7 @@ class TableComponent extends React.Component<Props, State> {
 			<div className="octo-app">
 				{this.state.shownCard &&
 					<RootPortal>
-						<CardDialog boardTree={boardTree} card={this.state.shownCard} mutator={mutator} onClose={() => this.setState({shownCard: null})}/>
+						<CardDialog boardTree={boardTree} card={this.state.shownCard} onClose={() => this.setState({shownCard: undefined})}/>
 					</RootPortal>}
 				<div className="octo-frame">
 					<div

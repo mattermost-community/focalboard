@@ -30,7 +30,7 @@ type Props = {
 
 type State = {
 	isSearching: boolean
-	shownCard: Card | null
+	shownCard?: Card
 	viewMenu: boolean
     isHoverOnCover: boolean
 }
@@ -42,7 +42,7 @@ class BoardComponent extends React.Component<Props, State> {
 
 	constructor(props: Props) {
 		super(props)
-		this.state = { isHoverOnCover: false, isSearching: !!this.props.boardTree?.getSearchText(), viewMenu: false, shownCard: null }
+		this.state = { isHoverOnCover: false, isSearching: !!this.props.boardTree?.getSearchText(), viewMenu: false }
 	}
 
 	componentDidUpdate(prevPros: Props, prevState: State) {
@@ -73,7 +73,7 @@ class BoardComponent extends React.Component<Props, State> {
 			<div className="octo-app">
 				{this.state.shownCard &&
 					<RootPortal>
-						<CardDialog boardTree={boardTree} card={this.state.shownCard} mutator={mutator} onClose={() => this.setState({shownCard: null})}/>
+						<CardDialog boardTree={boardTree} card={this.state.shownCard} onClose={() => this.setState({shownCard: undefined})}/>
 					</RootPortal>}
 
 				<div className="octo-frame">
@@ -246,7 +246,7 @@ class BoardComponent extends React.Component<Props, State> {
 		if (boardTree.groupByProperty) {
 			card.properties[boardTree.groupByProperty.id] = groupByValue
 		}
-		await mutator.insertBlock(card, "add card", async () => { await this.setState({shownCard: card}) }, async () => { await this.setState({shownCard: null}) })
+		await mutator.insertBlock(card, "add card", async () => { await this.setState({shownCard: card}) }, async () => { await this.setState({shownCard: undefined}) })
 	}
 
 	async propertyNameChanged(option: IPropertyOption, text: string) {

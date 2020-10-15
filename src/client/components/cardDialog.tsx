@@ -23,7 +23,7 @@ type Props = {
 
 type State = {
 	isHoverOnCover: boolean
-	cardTree: CardTree | null
+	cardTree?: CardTree
 }
 
 class CardDialog extends React.Component<Props, State> {
@@ -32,7 +32,7 @@ class CardDialog extends React.Component<Props, State> {
 
 	constructor(props: Props) {
 		super(props)
-		this.state = { isHoverOnCover: false, cardTree: null }
+		this.state = { isHoverOnCover: false }
 	}
 
 	keydownHandler = (e: KeyboardEvent) => {
@@ -59,7 +59,7 @@ class CardDialog extends React.Component<Props, State> {
 	}
 
 	componentDidUpdate(prevProps: Props, prevState: State) {
-		if (this.titleRef.current && prevState.cardTree === null && this.state.cardTree !== null) {
+		if (this.titleRef.current && prevState.cardTree === undefined && this.state.cardTree !== undefined) {
 			this.titleRef.current.focus()
 		}
 	}
@@ -72,7 +72,7 @@ class CardDialog extends React.Component<Props, State> {
 		const { boardTree, card } = this.props
 		const { cardTree } = this.state
 		const { board } = boardTree
-		if (cardTree === null) {
+		if (cardTree === undefined) {
 			return null
 		}
 
