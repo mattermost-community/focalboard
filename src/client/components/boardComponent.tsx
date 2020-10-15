@@ -149,7 +149,7 @@ class BoardComponent extends React.Component<Props, State> {
 
 							<div className="octo-board-header-cell">
 								<div className="octo-label" title={`Items with an empty ${boardTree.groupByProperty?.name} property will go here. This column cannot be removed.`}>{`No ${boardTree.groupByProperty?.name}`}</div>
-								<Button text={`${boardTree.emptyGroupCards.length}`} />
+                                <Button>{`${boardTree.emptyGroupCards.length}`}</Button>
 								<div className="octo-spacer" />
 								<Button><div className="imageOptions" /></Button>
 								<Button onClick={() => { this.addCard(undefined) }}><div className="imageAdd" /></Button>
@@ -173,7 +173,7 @@ class BoardComponent extends React.Component<Props, State> {
 										className={`octo-label ${group.option.color}`}
 										text={group.option.value}
 										onChanged={(text) => { this.propertyNameChanged(group.option, text) }} />
-									<Button text={`${group.cards.length}`} />
+                                    <Button>{`${group.cards.length}`}</Button>
 									<div className="octo-spacer" />
 									<MenuWrapper>
 										<Button><div className="imageOptions" /></Button>
@@ -190,7 +190,7 @@ class BoardComponent extends React.Component<Props, State> {
 							)}
 
 							<div className="octo-board-header-cell">
-								<Button text="+ Add a group" onClick={(e) => { this.addGroupClicked() }} />
+                                <Button onClick={(e) => { this.addGroupClicked() }}>+ Add a group</Button>
 							</div>
 						</div>
 
@@ -210,7 +210,7 @@ class BoardComponent extends React.Component<Props, State> {
 										onDragStart={() => { this.draggedCard = card }}
 										onDragEnd={() => { this.draggedCard = undefined }} />
 								)}
-								<Button text="+ New" onClick={() => { this.addCard(undefined) }} />
+                                <Button onClick={() => { this.addCard(undefined) }} >+ New</Button>
 							</BoardColumn>
 
 							{/* Columns */}
@@ -226,7 +226,7 @@ class BoardComponent extends React.Component<Props, State> {
 											onDragStart={() => { this.draggedCard = card }}
 											onDragEnd={() => { this.draggedCard = undefined }} />
 									)}
-									<Button text="+ New" onClick={() => { this.addCard(group.option.value) }} />
+                                    <Button onClick={() => { this.addCard(group.option.value) }} >+ New</Button>
 								</BoardColumn>
 							)}
 						</div>
