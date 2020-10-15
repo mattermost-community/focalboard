@@ -40,7 +40,7 @@ class SubMenuOption extends React.Component<SubMenuOptionProps, SubMenuState> {
                 <div className='name menu-name'>{this.props.name}</div>
                 <div className="imageSubmenuTriangle" style={{float: 'right'}}></div>
                 {this.state.isOpen &&
-                    <Menu onClose={this.close}>
+                    <Menu>
                         {this.props.children}
                     </Menu>
                 }
@@ -54,13 +54,17 @@ type ColorOptionProps = MenuOptionProps & {
 }
 
 class ColorOption extends React.Component<ColorOptionProps> {
+    handleOnClick = () => {
+        this.props.onClick(this.props.id)
+    }
+
     render() {
-        const {name, icon} = this.props;
+        const {id, name, icon} = this.props;
         return (
-            <div className='MenuOption ColorOption menu-option'>
+            <div className='MenuOption ColorOption menu-option' onClick={this.handleOnClick}>
                 <div className='name'>{name}</div>
                 {icon && <div className={'icon ' + icon}></div>}
-                <div className='menu-colorbox'></div>
+                <div className={`menu-colorbox ${id}`}></div>
             </div>
         )
     }
@@ -113,7 +117,6 @@ class TextOption extends React.Component<TextOptionProps> {
 
 type MenuProps = {
     children: React.ReactNode
-    onClose: () => void
 }
 
 export default class Menu extends React.Component<MenuProps> {
@@ -122,30 +125,6 @@ export default class Menu extends React.Component<MenuProps> {
     static Switch = SwitchOption
     static Separator = SeparatorOption
     static Text = TextOption
-
-    onBodyClick = (e: MouseEvent) => {
-        this.props.onClose()
-    }
-
-    onBodyKeyDown = (e: KeyboardEvent) => {
-        // Ignore keydown events on other elements
-        if (e.target !== document.body) { return }
-        if (e.keyCode === 27) {
-            // ESC
-            this.props.onClose()
-            e.stopPropagation()
-        }
-    }
-
-    componentDidMount() {
-        document.addEventListener("click", this.onBodyClick)
-        document.addEventListener("keydown", this.onBodyKeyDown)
-    }
-
-    componentWillUnmount() {
-        document.removeEventListener("click", this.onBodyClick)
-        document.removeEventListener("keydown", this.onBodyKeyDown)
-    }
 
     render() {
         return (

@@ -10,7 +10,6 @@ type Props = {
 	boardTree?: BoardTree
 	board: Board,
 	showView: (id: string) => void
-	onClose: () => void,
 }
 
 export default class ViewMenu extends React.Component<Props> {
@@ -67,9 +66,9 @@ export default class ViewMenu extends React.Component<Props> {
 	}
 
 	render() {
-		const { onClose, boardTree } = this.props
+		const { boardTree } = this.props
 		return (
-			<Menu onClose={onClose}>
+			<Menu>
 				{boardTree.views.map((view) => (<Menu.Text key={view.id} id={view.id} name={view.title} onClick={this.handleViewClick} />))}
 				<Menu.Separator />
 				{boardTree.views.length > 1 && <Menu.Text id="__deleteView" name="Delete View" onClick={this.handleDeleteView} />}
