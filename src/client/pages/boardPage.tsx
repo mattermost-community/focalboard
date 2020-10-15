@@ -252,5 +252,6 @@ export default class BoardPage extends React.Component<Props, State> {
 
 	setSearchText(text?: string) {
 		this.state.boardTree?.setSearchText(text)
+		this.setState({...this.state, boardTree: this.state.boardTree})
 	}
 }
