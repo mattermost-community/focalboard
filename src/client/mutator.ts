@@ -2,6 +2,7 @@ import { Block } from "./block"
 import { Board, IPropertyOption, IPropertyTemplate, PropertyType } from "./board"
 import { BoardTree } from "./boardTree"
 import { BoardView, ISortOption } from "./boardView"
+import { Card } from "./card"
 import { FilterGroup } from "./filterGroup"
 import { OctoClient } from "./octoClient"
 import { IBlock } from "./octoTypes"
@@ -87,7 +88,7 @@ class Mutator {
 		)
 	}
 
-	async changeIcon(block: IBlock, icon: string, description: string = "change icon") {
+	async changeIcon(block: Card | Board, icon: string, description: string = "change icon") {
 		const { octo, undoManager } = this
 
 		const oldValue = block.icon
@@ -291,6 +292,8 @@ class Mutator {
 		const { octo, undoManager } = this
 		const { board } = boardTree
 
+		Utils.assert(board.cardProperties.includes(template))
+
 		const oldValue = template.options
 		const newValue = template.options.slice()
 		newValue.push(option)
@@ -405,18 +408,18 @@ class Mutator {
 		)
 	}
 
-	async changePropertyValue(block: IBlock, propertyId: string, value?: string, description: string = "change property") {
+	async changePropertyValue(card: Card, propertyId: string, value?: string, description: string = "change property") {
 		const { octo, undoManager } = this
 
-		const oldValue = block.properties[propertyId]
+		const oldValue = card.properties[propertyId]
 		await undoManager.perform(
 			async () => {
-				block.properties[propertyId] = value
-				await octo.updateBlock(block)
+				card.properties[propertyId] = value
+				await octo.updateBlock(card)
 			},
 			async () => {
-				block.properties[propertyId] = oldValue
-				await octo.updateBlock(block)
+				card.properties[propertyId] = oldValue
+				await octo.updateBlock(card)
 			},
 			description
 		)
@@ -531,7 +534,8 @@ class Mutator {
 			return undefined
 		}
 
-		const block = new Block({ type: "image", parentId, url, order })
+		const block = new Block({ type: "image", parentId, order })
+		block.fields.url = url
 
 		await undoManager.perform(
 			async () => {

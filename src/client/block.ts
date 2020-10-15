@@ -7,10 +7,7 @@ class Block implements IBlock {
 	parentId: string
 	type: string
 	title: string
-	icon?: string
-	url?: string
 	order: number
-	properties: Record<string, string> = {}
 	fields: Record<string, any> = {}
 	createAt: number = Date.now()
 	updateAt: number = 0
@@ -37,32 +34,15 @@ class Block implements IBlock {
 		this.parentId = block.parentId
 		this.type = block.type
 
+		// Shallow copy here. Derived classes must make deep copies of their known properties in their constructors.
 		this.fields = block.fields ? { ...block.fields } : {}
 
 		this.title = block.title
-		this.icon = block.icon
-		this.url = block.url
 		this.order = block.order
 
 		this.createAt = block.createAt || now
 		this.updateAt = block.updateAt || now
 		this.deleteAt = block.deleteAt || 0
-
-		if (block.schema !== 1) {
-			if (Array.isArray(block.properties)) {
-				// HACKHACK: Port from old schema
-				this.properties = {}
-				for (const property of block.properties) {
-					if (property.id) {
-						this.properties[property.id] = property.value
-					}
-				}
-			} else {
-				this.properties = { ...block.properties || {} }
-			}
-		} else {
-			this.properties = { ...block.properties }	// Shallow copy here. Derived classes must make deep copies of their known properties in their constructors.
-		}
 	}
 }
 

@@ -16,6 +16,9 @@ interface IPropertyTemplate {
 }
 
 class Board extends Block {
+	get icon(): string { return this.fields.icon as string }
+	set icon(value: string) { this.fields.icon = value }
+
 	get cardProperties(): IPropertyTemplate[] { return this.fields.cardProperties as IPropertyTemplate[] }
 	set cardProperties(value: IPropertyTemplate[]) { this.fields.cardProperties = value }
 
@@ -25,7 +28,7 @@ class Board extends Block {
 
 		if (block.fields?.cardProperties) {
 			// Deep clone of card properties and their options
-			this.cardProperties = block.fields?.cardProperties.map((o: IPropertyTemplate) => {
+			this.cardProperties = block.fields.cardProperties.map((o: IPropertyTemplate) => {
 				return {
 					id: o.id,
 					name: o.name,
@@ -35,17 +38,6 @@ class Board extends Block {
 			})
 		} else {
 			this.cardProperties = []
-		}
-
-		if (block.schema !== 1) {
-			this.cardProperties = block.cardProperties?.map((o: IPropertyTemplate) => {
-				return {
-					id: o.id,
-					name: o.name,
-					type: o.type,
-					options: o.options ? o.options.map(option => ({ ...option })) : []
-				}
-			}) || []
 		}
 	}
 }

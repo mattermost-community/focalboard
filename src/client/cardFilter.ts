@@ -1,15 +1,15 @@
 import { IPropertyTemplate } from "./board"
+import { Card } from "./card"
 import { FilterClause } from "./filterClause"
 import { FilterGroup } from "./filterGroup"
-import { IBlock } from "./octoTypes"
 import { Utils } from "./utils"
 
 class CardFilter {
-	static applyFilterGroup(filterGroup: FilterGroup, templates: IPropertyTemplate[], cards: IBlock[]): IBlock[] {
+	static applyFilterGroup(filterGroup: FilterGroup, templates: IPropertyTemplate[], cards: Card[]): Card[] {
 		return cards.filter(card => this.isFilterGroupMet(filterGroup, templates, card))
 	}
 
-	static isFilterGroupMet(filterGroup: FilterGroup, templates: IPropertyTemplate[], card: IBlock): boolean {
+	static isFilterGroupMet(filterGroup: FilterGroup, templates: IPropertyTemplate[], card: Card): boolean {
 		const { filters } = filterGroup
 
 		if (filterGroup.filters.length < 1) {
@@ -38,7 +38,7 @@ class CardFilter {
 		}
 	}
 
-	static isClauseMet(filter: FilterClause, templates: IPropertyTemplate[], card: IBlock): boolean {
+	static isClauseMet(filter: FilterClause, templates: IPropertyTemplate[], card: Card): boolean {
 		const value = card.properties[filter.propertyId]
 		switch (filter.condition) {
 			case "includes": {
@@ -55,22 +55,31 @@ class CardFilter {
 			case "isNotEmpty": {
 				return !!value
 			}
+			default: {
+				Utils.assertFailure(`Invalid filter condition ${filter.condition}`)
+			}
 		}
-		Utils.assertFailure(`Invalid filter condition ${filter.condition}`)
 		return true
 	}
 
-	static propertiesThatMeetFilterGroup(filterGroup: FilterGroup, templates: IPropertyTemplate[]): Record<string, any> {
+	static propertiesThatMeetFilterGroup(filterGroup: FilterGroup, templates: IPropertyTemplate[]): Record<string, string> {
 		// TODO: Handle filter groups
 		const filters = filterGroup.filters.filter(o => !FilterGroup.isAnInstanceOf(o))
-		if (filters.length < 1) { return [] }
+		if (filters.length < 1) { return {} }
 
 		if (filterGroup.operation === "or") {
 			// Just need to meet the first clause
 			const property = this.propertyThatMeetsFilterClause(filters[0] as FilterClause, templates)
-			return [property]
+			const result: Record<string, string> = {}
+			result[property.id] = property.value
+			return result
 		} else {
-			return filters.map(filterClause => this.propertyThatMeetsFilterClause(filterClause as FilterClause, templates))
+			const result: Record<string, string> = {}
+			filters.forEach(filterClause => {
+				const p = this.propertyThatMeetsFilterClause(filterClause as FilterClause, templates)
+				result[p.id] = p.value
+			})
+			return result
 		}
 	}
 

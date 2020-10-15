@@ -79,7 +79,7 @@ class CardDialog extends React.Component<Props, State> {
 								}} />
 							</div>
 						} else if (block.type === "image") {
-							const url = block.url
+							const url = block.fields.url
 							return <div key={block.id} className="octo-block octo-hover-container">
 								<div className="octo-block-margin">
 									<div className="octo-button octo-hovercontrol square octo-hover-item" onClick={(e) => { this.showContentBlockMenu(e, block) }}>

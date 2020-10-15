@@ -1,15 +1,15 @@
 import React from "react"
 import { Block } from "../block"
 import { IPropertyTemplate } from "../board"
+import { Card } from "../card"
 import { Menu } from "../menu"
 import { Mutator } from "../mutator"
-import { IBlock } from "../octoTypes"
 import { OctoUtils } from "../octoUtils"
 import { Utils } from "../utils"
 
 type BoardCardProps = {
 	mutator: Mutator
-	card: IBlock
+	card: Card
 	visiblePropertyTemplates: IPropertyTemplate[]
 	onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
 	onDragStart?: (e: React.DragEvent<HTMLDivElement>) => void

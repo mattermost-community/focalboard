@@ -4,13 +4,13 @@ import { Block } from "../block"
 import { BlockIcons } from "../blockIcons"
 import { IPropertyTemplate } from "../board"
 import { BoardTree } from "../boardTree"
-import { CsvExporter } from "../csvExporter"
+import { Card } from "../card"
 import ViewMenu from "../components/viewMenu"
 import MenuWrapper from "../widgets/menuWrapper"
 import Menu from "../widgets/menu"
+import { CsvExporter } from "../csvExporter"
 import { Menu as OldMenu } from "../menu"
 import { Mutator } from "../mutator"
-import { IBlock } from "../octoTypes"
 import { OctoUtils } from "../octoUtils"
 import { Utils } from "../utils"
 import Button from "./button"
@@ -21,7 +21,7 @@ type Props = {
 	mutator: Mutator,
 	boardTree?: BoardTree
 	showView: (id: string) => void
-	showCard: (card: IBlock) => void
+	showCard: (card: Card) => void
 	showFilter: (el: HTMLElement) => void
 	setSearchText: (text: string) => void
 }
@@ -348,7 +348,7 @@ class TableComponent extends React.Component<Props, State> {
 		OldMenu.shared.showAtElement(e.target as HTMLElement)
 	}
 
-	async showCard(card: IBlock) {
+	async showCard(card: Card) {
 		console.log(`showCard: ${card.title}`)
 
 		await this.props.showCard(card)
@@ -363,7 +363,8 @@ class TableComponent extends React.Component<Props, State> {
 	async addCard(show: boolean = false) {
 		const { mutator, boardTree } = this.props
 
-		const card = new Block({ type: "card", parentId: boardTree.board.id })
+		const card = new Card()
+		card.parentId = boardTree.board.id
 		await mutator.insertBlock(
 			card,
 			"add card",
