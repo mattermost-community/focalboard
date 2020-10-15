@@ -1,6 +1,6 @@
 import React from "react"
 import { BoardTree } from "../boardTree"
-import { CardTree } from "../cardTree"
+import { Card } from "../card"
 import Menu from "../widgets/menu"
 import Dialog from "./dialog"
 import CardDetail from "./cardDetail"
@@ -8,7 +8,7 @@ import mutator from "../mutator"
 
 type Props = {
 	boardTree: BoardTree
-	cardTree: CardTree
+	card: Card
 	onClose: () => void
 }
 
@@ -17,14 +17,14 @@ class CardDialog extends React.Component<Props> {
         const menu = (
             <Menu>
                 <Menu.Text id="delete" name="Delete" onClick={async () => {
-                    await mutator.deleteBlock(this.props.cardTree.card, "delete card")
+                    await mutator.deleteBlock(this.props.card, "delete card")
                     this.props.onClose()
                 }}/>
             </Menu>
         )
         return (
             <Dialog onClose={this.props.onClose} toolsMenu={menu}>
-                <CardDetail boardTree={this.props.boardTree} cardTree={this.props.cardTree} />
+                <CardDetail boardTree={this.props.boardTree} card={this.props.card} />
             </Dialog>
         )
 	}

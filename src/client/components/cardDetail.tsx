@@ -1,5 +1,6 @@
 import React from "react"
 import { Block } from "../block"
+import { Card } from "../card"
 import { BlockIcons } from "../blockIcons"
 import { BoardTree } from "../boardTree"
 import { CardTree } from "../cardTree"
@@ -14,19 +15,22 @@ import { Utils } from "../utils"
 import Button from "./button"
 import { Editable } from "./editable"
 import { MarkdownEditor } from "./markdownEditor"
+import { OctoListener } from "../octoListener"
 
 type Props = {
 	boardTree: BoardTree
-	cardTree: CardTree
+	card: Card
 }
 
 type State = {
 	isHoverOnCover: boolean
+	cardTree?: CardTree
 }
 
 export default class CardDetail extends React.Component<Props, State> {
 	private titleRef = React.createRef<Editable>()
 	private keydownHandler: any
+	private cardListener: OctoListener
 
 	constructor(props: Props) {
 		super(props)
@@ -35,12 +39,23 @@ export default class CardDetail extends React.Component<Props, State> {
 
 	componentDidMount() {
 		this.titleRef.current.focus()
+		this.cardListener = new OctoListener()
+		this.cardListener.open(this.props.card.id, async () => {
+			await cardTree.sync()
+			this.setState({ cardTree })
+		})
+		const cardTree = new CardTree(this.props.card.id)
+		cardTree.sync().then(() => {
+			this.setState({cardTree})
+		})
+
 	}
 
 	render() {
-		const { boardTree, cardTree } = this.props
+		const { boardTree, card } = this.props
+        const { cardTree } = this.state
 		const { board } = boardTree
-		const { card, comments } = cardTree
+		const { comments } = cardTree
 
 		const newCommentPlaceholderText = "Add a comment..."
 
@@ -291,8 +306,7 @@ export default class CardDetail extends React.Component<Props, State> {
 	}
 
 	async sendComment(text: string) {
-		const { cardTree } = this.props
-		const { card } = cardTree
+		const { card } = this.props
 
 		Utils.assertValue(card)
 
@@ -301,8 +315,8 @@ export default class CardDetail extends React.Component<Props, State> {
 	}
 
 	private showContentBlockMenu(e: React.MouseEvent, block: IBlock) {
-		const { cardTree } = this.props
-		const { card } = cardTree
+		const { cardTree } = this.state
+		const { card } = this.props
 		const index = cardTree.contents.indexOf(block)
 
 		const options: MenuOption[] = []
@@ -368,8 +382,7 @@ export default class CardDetail extends React.Component<Props, State> {
 	}
 
 	private iconClicked(e: React.MouseEvent) {
-		const { cardTree } = this.props
-		const { card } = cardTree
+		const { card } = this.props
 
 		OldMenu.shared.options = [
 			{ id: "random", name: "Random" },
