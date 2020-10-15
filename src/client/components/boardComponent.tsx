@@ -9,7 +9,7 @@ import ViewMenu from "../components/viewMenu"
 import { Constants } from "../constants"
 import { randomEmojiList } from "../emojiList"
 import { Menu as OldMenu } from "../menu"
-import { Mutator } from "../mutator"
+import mutator from "../mutator"
 import { OctoUtils } from "../octoUtils"
 import { Utils } from "../utils"
 import { BoardCard } from "./boardCard"
@@ -18,7 +18,6 @@ import Button from "./button"
 import { Editable } from "./editable"
 
 type Props = {
-	mutator: Mutator,
 	boardTree?: BoardTree
 	showView: (id: string) => void
 	showCard: (card: Card) => void
@@ -27,7 +26,6 @@ type Props = {
 }
 
 type State = {
-	isHoverOnCover: boolean
 	isSearching: boolean
 	viewMenu: boolean
 }
@@ -49,7 +47,7 @@ class BoardComponent extends React.Component<Props, State> {
 	}
 
 	render() {
-		const { mutator, boardTree, showView } = this.props
+		const { boardTree, showView } = this.props
 
 		if (!boardTree || !boardTree.board) {
 			return (
@@ -102,7 +100,6 @@ class BoardComponent extends React.Component<Props, State> {
 									<ViewMenu
 										board={board}
 										onClose={() => this.setState({ viewMenu: false })}
-										mutator={mutator}
 										boardTree={boardTree}
 										showView={showView}
 									/>}
@@ -182,7 +179,6 @@ class BoardComponent extends React.Component<Props, State> {
 							<BoardColumn onDrop={(e) => { this.onDropToColumn(undefined) }}>
 								{boardTree.emptyGroupCards.map(card =>
 									<BoardCard
-										mutator={mutator}
 										card={card}
 										visiblePropertyTemplates={visiblePropertyTemplates}
 										key={card.id}
@@ -199,7 +195,6 @@ class BoardComponent extends React.Component<Props, State> {
 								<BoardColumn onDrop={(e) => { this.onDropToColumn(group.option) }} key={group.option.value}>
 									{group.cards.map(card =>
 										<BoardCard
-											mutator={mutator}
 											card={card}
 											visiblePropertyTemplates={visiblePropertyTemplates}
 											key={card.id}
@@ -218,7 +213,7 @@ class BoardComponent extends React.Component<Props, State> {
 	}
 
 	private iconClicked(e: React.MouseEvent) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 		const { board } = boardTree
 
 		OldMenu.shared.options = [
@@ -246,7 +241,7 @@ class BoardComponent extends React.Component<Props, State> {
 	}
 
 	async addCard(groupByValue?: string) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 		const { activeView, board } = boardTree
 
 		const card = new Card()
@@ -259,13 +254,13 @@ class BoardComponent extends React.Component<Props, State> {
 	}
 
 	async propertyNameChanged(option: IPropertyOption, text: string) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 
 		await mutator.changePropertyOptionValue(boardTree, boardTree.groupByProperty, option, text)
 	}
 
 	async valueOptionClicked(e: React.MouseEvent<HTMLElement>, option: IPropertyOption) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 
 		OldMenu.shared.options = [
 			{ id: "delete", name: "Delete" },
@@ -322,7 +317,7 @@ class BoardComponent extends React.Component<Props, State> {
 	}
 
 	private async testAddCards(count: number) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 		const { board, activeView } = boardTree
 
 		const startCount = boardTree?.cards?.length
@@ -345,7 +340,7 @@ class BoardComponent extends React.Component<Props, State> {
 	}
 
 	private async propertiesClicked(e: React.MouseEvent) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 		const { activeView } = boardTree
 
 		const selectProperties = boardTree.board.cardProperties
@@ -371,7 +366,7 @@ class BoardComponent extends React.Component<Props, State> {
 	}
 
 	private async groupByClicked(e: React.MouseEvent) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 
 		const selectProperties = boardTree.board.cardProperties.filter(o => o.type === "select")
 		OldMenu.shared.options = selectProperties.map((o) => { return { id: o.id, name: o.name } })
@@ -386,7 +381,7 @@ class BoardComponent extends React.Component<Props, State> {
 	async addGroupClicked() {
 		console.log(`onAddGroupClicked`)
 
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 
 		const option: IPropertyOption = {
 			value: "New group",
@@ -398,7 +393,7 @@ class BoardComponent extends React.Component<Props, State> {
 	}
 
 	async onDropToColumn(option: IPropertyOption) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 		const { draggedCard, draggedHeaderOption } = this
 		const propertyValue = option ? option.value : undefined
 

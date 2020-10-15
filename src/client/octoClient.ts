@@ -152,4 +152,6 @@ class OctoClient {
 	}
 }
 
-export { OctoClient }
+const client = new OctoClient()
+
+export default client

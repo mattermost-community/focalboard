@@ -1,5 +1,5 @@
 import { Card } from "./card"
-import { OctoClient } from "./octoClient"
+import octoClient from "./octoClient"
 import { IBlock } from "./octoTypes"
 
 class CardTree {
@@ -8,13 +8,11 @@ class CardTree {
 	contents: IBlock[]
 	isSynched: boolean
 
-	constructor(
-		private octo: OctoClient,
-		private cardId: string) {
+	constructor(private cardId: string) {
 	}
 
 	async sync() {
-		const blocks = await this.octo.getSubtree(this.cardId)
+		const blocks = await octoClient.getSubtree(this.cardId)
 		this.rebuild(blocks)
 	}
 

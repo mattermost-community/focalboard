@@ -4,7 +4,7 @@ import { BlockIcons } from "../blockIcons"
 import { BoardTree } from "../boardTree"
 import { CardTree } from "../cardTree"
 import { Menu, MenuOption } from "../menu"
-import { Mutator } from "../mutator"
+import mutator from "../mutator"
 import { IBlock } from "../octoTypes"
 import { OctoUtils } from "../octoUtils"
 import { PropertyMenu } from "../propertyMenu"
@@ -16,7 +16,6 @@ import { MarkdownEditor } from "./markdownEditor"
 type Props = {
 	boardTree: BoardTree
 	cardTree: CardTree
-	mutator: Mutator
 	onClose: () => void
 }
 
@@ -51,7 +50,7 @@ class CardDialog extends React.Component<Props, State> {
 	}
 
 	render() {
-		const { boardTree, cardTree, mutator } = this.props
+		const { boardTree, cardTree } = this.props
 		const { board } = boardTree
 		const { card, comments } = cardTree
 
@@ -203,7 +202,7 @@ class CardDialog extends React.Component<Props, State> {
 											}
 											menu.showAtElement(e.target as HTMLElement)
 										}}>{propertyTemplate.name}</div>
-										{OctoUtils.propertyValueEditableElement(mutator, card, propertyTemplate)}
+										{OctoUtils.propertyValueEditableElement(card, propertyTemplate)}
 									</div>
 								)
 							})}
@@ -332,7 +331,7 @@ class CardDialog extends React.Component<Props, State> {
 	}
 
 	async sendComment(text: string) {
-		const { mutator, cardTree } = this.props
+		const { cardTree } = this.props
 		const { card } = cardTree
 
 		Utils.assertValue(card)
@@ -342,7 +341,7 @@ class CardDialog extends React.Component<Props, State> {
 	}
 
 	private showContentBlockMenu(e: React.MouseEvent, block: IBlock) {
-		const { mutator, cardTree } = this.props
+		const { cardTree } = this.props
 		const { card } = cardTree
 		const index = cardTree.contents.indexOf(block)
 
@@ -409,7 +408,7 @@ class CardDialog extends React.Component<Props, State> {
 	}
 
 	private iconClicked(e: React.MouseEvent) {
-		const { mutator, cardTree } = this.props
+		const { cardTree } = this.props
 		const { card } = cardTree
 
 		Menu.shared.options = [

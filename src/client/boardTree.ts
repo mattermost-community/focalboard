@@ -2,7 +2,7 @@ import { Board, IPropertyOption, IPropertyTemplate } from "./board"
 import { BoardView } from "./boardView"
 import { Card } from "./card"
 import { CardFilter } from "./cardFilter"
-import { OctoClient } from "./octoClient"
+import octoClient from "./octoClient"
 import { IBlock } from "./octoTypes"
 import { Utils } from "./utils"
 
@@ -24,13 +24,11 @@ class BoardTree {
 		return [this.board, ...this.views, ...this.allCards]
 	}
 
-	constructor(
-		private octo: OctoClient,
-		private boardId: string) {
+	constructor(private boardId: string) {
 	}
 
 	async sync() {
-		const blocks = await this.octo.getSubtree(this.boardId)
+		const blocks = await octoClient.getSubtree(this.boardId)
 		this.rebuild(blocks)
 	}
 
