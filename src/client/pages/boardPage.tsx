@@ -24,6 +24,7 @@ type State = {
 	workspaceTree: WorkspaceTree
 	boardTree?: BoardTree
 	shownCardTree?: CardTree
+	filterAnchorElement?: HTMLElement
 }
 
 export default class BoardPage extends React.Component<Props, State> {
@@ -32,7 +33,6 @@ export default class BoardPage extends React.Component<Props, State> {
 	updateTitleTimeout: number
 	updatePropertyLabelTimeout: number
 
-	private filterAnchorElement?: HTMLElement
 	private octo = new OctoClient()
 	private boardListener = new OctoListener()
 	private cardListener = new OctoListener()
@@ -126,8 +126,8 @@ export default class BoardPage extends React.Component<Props, State> {
 			}
 		}
 
-		if (this.filterAnchorElement) {
-			const element = this.filterAnchorElement
+		if (this.state.filterAnchorElement) {
+			const element = this.state.filterAnchorElement
 			const bodyRect = document.body.getBoundingClientRect()
 			const rect = element.getBoundingClientRect()
 			// Show at bottom-left of element
@@ -246,8 +246,8 @@ export default class BoardPage extends React.Component<Props, State> {
 		window.history.pushState({ path: newUrl }, "", newUrl)
 	}
 
-	showFilter(ahchorElement?: HTMLElement) {
-		this.filterAnchorElement = ahchorElement
+	showFilter(anchorElement?: HTMLElement) {
+		this.setState({...this.state, filterAnchorElement: anchorElement})
 	}
 
 	setSearchText(text?: string) {

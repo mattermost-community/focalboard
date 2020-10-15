@@ -52,7 +52,7 @@ class Switch extends React.Component<Props, State> {
 
 	private async onClicked() {
 		const newIsOn = !this.state.isOn
-		await this.setState({ isOn: newIsOn })
+		this.setState({ isOn: newIsOn })
 
 		const { onChanged } = this.props
 
