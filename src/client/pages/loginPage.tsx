@@ -1,5 +1,9 @@
 import React from "react"
 
+import Button from '../components/button'
+
+import './loginPage.scss'
+
 type Props = {}
 
 type State = {
@@ -20,17 +24,24 @@ export default class LoginPage extends React.Component<Props, State> {
     public render(): React.ReactNode {
         return (
             <div className='LoginPage'>
-                <label htmlFor='login-username'>Username</label>
-                <input
-                    id='login-username'
-                    value={this.state.username}
-                    onChange={(e) => this.setState({username: e.target.value})}
-                />
-                <label htmlFor='login-username'>Password</label>
-                <input
-                    id='login-password'
-                />
-                <button onClick={this.handleLogin}>Login</button>
+                <div className='username'>
+                    <label htmlFor='login-username'>Username</label>
+                    <input
+                        id='login-username'
+                        value={this.state.username}
+                        onChange={(e) => this.setState({username: e.target.value})}
+                    />
+                </div>
+                <div className='password'>
+                    <label htmlFor='login-username'>Password</label>
+                    <input
+                        id='login-password'
+                        type='password'
+                        value={this.state.password}
+                        onChange={(e) => this.setState({password: e.target.value})}
+                    />
+                </div>
+                <Button onClick={this.handleLogin}>Login</Button>
             </div>
         )
     }

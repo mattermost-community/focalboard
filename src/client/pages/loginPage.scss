@@ -1,0 +1,27 @@
+.LoginPage {
+    border: 1px solid #cccccc;
+    border-radius: 15px;
+    width: 450px;
+    height: 400px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    .username, .password {
+        margin-bottom: 5px;
+        label {
+            display: inline-block;
+            width: 140px;
+        }
+        input {
+            display: inline-block;
+            width: 250px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+        }
+    }
+    .Button {
+        margin-top: 10px;
+    }
+}
