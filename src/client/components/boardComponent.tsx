@@ -28,6 +28,7 @@ type Props = {
 type State = {
 	isSearching: boolean
 	viewMenu: boolean
+    isHoverOnCover: boolean
 }
 
 class BoardComponent extends React.Component<Props, State> {
@@ -111,7 +112,7 @@ class BoardComponent extends React.Component<Props, State> {
 								Group by <span style={groupByStyle} id="groupByLabel">{boardTree.groupByProperty?.name}</span>
 							</div>
 							<div className={hasFilter ? "octo-button active" : "octo-button"} onClick={(e) => { this.filterClicked(e) }}>Filter</div>
-							<div className={hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { OctoUtils.showSortMenu(e, mutator, boardTree) }}>Sort</div>
+							<div className={hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { OctoUtils.showSortMenu(e, boardTree) }}>Sort</div>
 							{this.state.isSearching
 								? <Editable
 									ref={this.searchFieldRef}
