@@ -125,7 +125,7 @@ class CardDialog extends React.Component<Props, State> {
 				<div className="dialog" >
 					<div className="toolbar">
 						<div className="octo-spacer"></div>
-						<Button text="..." onClick={(e) => {
+						<Button onClick={(e) => {
 							Menu.shared.options = [
 								{ id: "delete", name: "Delete" },
 							]
@@ -139,7 +139,7 @@ class CardDialog extends React.Component<Props, State> {
 								}
 							}
 							Menu.shared.showAtElement(e.target as HTMLElement)
-						}}></Button>
+						}}>...</Button>
 					</div>
 					<div className="content">
 						{icon ?
