@@ -38,7 +38,6 @@ export default class CardDetail extends React.Component<Props, State> {
 	}
 
 	componentDidMount() {
-		this.titleRef.current.focus()
 		this.cardListener = new OctoListener()
 		this.cardListener.open(this.props.card.id, async () => {
 			await cardTree.sync()
@@ -47,14 +46,22 @@ export default class CardDetail extends React.Component<Props, State> {
 		const cardTree = new CardTree(this.props.card.id)
 		cardTree.sync().then(() => {
 			this.setState({cardTree})
+			setTimeout(() => {
+				if (this.titleRef.current) {
+					this.titleRef.current.focus()
+				}
+			}, 0);
 		})
 
 	}
 
 	render() {
 		const { boardTree, card } = this.props
-        const { cardTree } = this.state
+		const { cardTree } = this.state
 		const { board } = boardTree
+		if (!cardTree) {
+			return null
+		}
 		const { comments } = cardTree
 
 		const newCommentPlaceholderText = "Add a comment..."
@@ -117,192 +124,192 @@ export default class CardDetail extends React.Component<Props, State> {
 		const username = "John Smith"
 		const userImageUrl = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="fill: rgb(192, 192, 192);"><rect width="100" height="100" /></svg>`
 
-        return (
-            <>
-                <div className="content">
-                    {icon ?
-                        <div className="octo-button octo-icon octo-card-icon" onClick={(e) => { this.iconClicked(e) }}>{icon}</div>
-                        : undefined
-                    }
-                    <div
-                        className="octo-hovercontrols"
-                        onMouseOver={() => { this.setState({ ...this.state, isHoverOnCover: true }) }}
-                        onMouseLeave={() => { this.setState({ ...this.state, isHoverOnCover: false }) }}
-                    >
-                        <Button
-                            style={{ display: (!icon && this.state.isHoverOnCover) ? null : "none" }}
-                            onClick={() => {
-                                const newIcon = BlockIcons.shared.randomIcon()
-                                mutator.changeIcon(card, newIcon)
-                            }}
-                        >Add Icon</Button>
-                    </div>
+		return (
+			<>
+				<div className="content">
+					{icon ?
+						<div className="octo-button octo-icon octo-card-icon" onClick={(e) => { this.iconClicked(e) }}>{icon}</div>
+						: undefined
+					}
+					<div
+						className="octo-hovercontrols"
+						onMouseOver={() => { this.setState({ ...this.state, isHoverOnCover: true }) }}
+						onMouseLeave={() => { this.setState({ ...this.state, isHoverOnCover: false }) }}
+					>
+						<Button
+							style={{ display: (!icon && this.state.isHoverOnCover) ? null : "none" }}
+							onClick={() => {
+								const newIcon = BlockIcons.shared.randomIcon()
+								mutator.changeIcon(card, newIcon)
+							}}
+						>Add Icon</Button>
+					</div>
 
-                    <Editable ref={this.titleRef} className="title" text={card.title} placeholderText="Untitled" onChanged={(text) => { mutator.changeTitle(card, text) }} />
+					<Editable ref={this.titleRef} className="title" text={card.title} placeholderText="Untitled" onChanged={(text) => { mutator.changeTitle(card, text) }} />
 
-                    {/* Property list */}
+					{/* Property list */}
 
-                    <div className="octo-propertylist">
-                        {board.cardProperties.map(propertyTemplate => {
-                            return (
-                                <div key={propertyTemplate.id} className="octo-propertyrow">
-                                    <div className="octo-button octo-propertyname" onClick={(e) => {
-                                        const menu = PropertyMenu.shared
-                                        menu.property = propertyTemplate
-                                        menu.onNameChanged = (propertyName) => {
-                                            Utils.log(`menu.onNameChanged`)
-                                            mutator.renameProperty(board, propertyTemplate.id, propertyName)
-                                        }
+					<div className="octo-propertylist">
+						{board.cardProperties.map(propertyTemplate => {
+							return (
+								<div key={propertyTemplate.id} className="octo-propertyrow">
+									<div className="octo-button octo-propertyname" onClick={(e) => {
+										const menu = PropertyMenu.shared
+										menu.property = propertyTemplate
+										menu.onNameChanged = (propertyName) => {
+											Utils.log(`menu.onNameChanged`)
+											mutator.renameProperty(board, propertyTemplate.id, propertyName)
+										}
 
-                                        menu.onMenuClicked = async (command) => {
-                                            switch (command) {
-                                                case "type-text":
-                                                    await mutator.changePropertyType(board, propertyTemplate, "text")
-                                                    break
-                                                case "type-number":
-                                                    await mutator.changePropertyType(board, propertyTemplate, "number")
-                                                    break
-                                                case "type-createdTime":
-                                                    await mutator.changePropertyType(board, propertyTemplate, "createdTime")
-                                                    break
-                                                case "type-updatedTime":
-                                                    await mutator.changePropertyType(board, propertyTemplate, "updatedTime")
-                                                    break
-                                                case "type-select":
-                                                    await mutator.changePropertyType(board, propertyTemplate, "select")
-                                                    break
-                                                case "delete":
-                                                    await mutator.deleteProperty(boardTree, propertyTemplate.id)
-                                                    break
-                                                default:
-                                                    Utils.assertFailure(`Unhandled menu id: ${command}`)
-                                            }
-                                        }
-                                        menu.showAtElement(e.target as HTMLElement)
-                                    }}>{propertyTemplate.name}</div>
-                                    {OctoUtils.propertyValueEditableElement(card, propertyTemplate)}
-                                </div>
-                            )
-                        })}
+										menu.onMenuClicked = async (command) => {
+											switch (command) {
+												case "type-text":
+													await mutator.changePropertyType(board, propertyTemplate, "text")
+													break
+												case "type-number":
+													await mutator.changePropertyType(board, propertyTemplate, "number")
+													break
+												case "type-createdTime":
+													await mutator.changePropertyType(board, propertyTemplate, "createdTime")
+													break
+												case "type-updatedTime":
+													await mutator.changePropertyType(board, propertyTemplate, "updatedTime")
+													break
+												case "type-select":
+													await mutator.changePropertyType(board, propertyTemplate, "select")
+													break
+												case "delete":
+													await mutator.deleteProperty(boardTree, propertyTemplate.id)
+													break
+												default:
+													Utils.assertFailure(`Unhandled menu id: ${command}`)
+											}
+										}
+										menu.showAtElement(e.target as HTMLElement)
+									}}>{propertyTemplate.name}</div>
+									{OctoUtils.propertyValueEditableElement(card, propertyTemplate)}
+								</div>
+							)
+						})}
 
-                        <div
-                            className="octo-button octo-propertyname"
-                            style={{ textAlign: "left", width: "150px", color: "rgba(55, 53, 37, 0.4)" }}
-                            onClick={async () => {
-                                // TODO: Show UI
-                                await mutator.insertPropertyTemplate(boardTree)
-                            }}>+ Add a property</div>
-                    </div>
+						<div
+							className="octo-button octo-propertyname"
+							style={{ textAlign: "left", width: "150px", color: "rgba(55, 53, 37, 0.4)" }}
+							onClick={async () => {
+								// TODO: Show UI
+								await mutator.insertPropertyTemplate(boardTree)
+							}}>+ Add a property</div>
+					</div>
 
-                    {/* Comments */}
+					{/* Comments */}
 
-                    <hr />
-                    <div className="commentlist">
-                        {comments.map(comment => {
-                            const optionsButtonRef = React.createRef<HTMLDivElement>()
-                            const showCommentMenu = (e: React.MouseEvent, activeComment: IBlock) => {
-                                OldMenu.shared.options = [
-                                    { id: "delete", name: "Delete" }
-                                ]
-                                OldMenu.shared.onMenuClicked = (id) => {
-                                    switch (id) {
-                                        case "delete": {
-                                            mutator.deleteBlock(activeComment)
-                                            break
-                                        }
-                                    }
-                                }
-                                OldMenu.shared.showAtElement(e.target as HTMLElement)
-                            }
+					<hr />
+					<div className="commentlist">
+						{comments.map(comment => {
+							const optionsButtonRef = React.createRef<HTMLDivElement>()
+							const showCommentMenu = (e: React.MouseEvent, activeComment: IBlock) => {
+								OldMenu.shared.options = [
+									{ id: "delete", name: "Delete" }
+								]
+								OldMenu.shared.onMenuClicked = (id) => {
+									switch (id) {
+										case "delete": {
+											mutator.deleteBlock(activeComment)
+											break
+										}
+									}
+								}
+								OldMenu.shared.showAtElement(e.target as HTMLElement)
+							}
 
-                            return <div key={comment.id} className="comment" onMouseOver={() => { optionsButtonRef.current.style.display = null }} onMouseLeave={() => { optionsButtonRef.current.style.display = "none" }}>
-                                <div className="comment-header">
-                                    <img className="comment-avatar" src={userImageUrl} />
-                                    <div className="comment-username">{username}</div>
-                                    <div className="comment-date">{(new Date(comment.createAt)).toLocaleTimeString()}</div>
-                                    <div ref={optionsButtonRef} className="octo-hoverbutton square" style={{ display: "none" }} onClick={(e) => { showCommentMenu(e, comment) }}>...</div>
-                                </div>
-                                <div className="comment-text">{comment.title}</div>
-                            </div>
-                        })}
+							return <div key={comment.id} className="comment" onMouseOver={() => { optionsButtonRef.current.style.display = null }} onMouseLeave={() => { optionsButtonRef.current.style.display = "none" }}>
+								<div className="comment-header">
+									<img className="comment-avatar" src={userImageUrl} />
+									<div className="comment-username">{username}</div>
+									<div className="comment-date">{(new Date(comment.createAt)).toLocaleTimeString()}</div>
+									<div ref={optionsButtonRef} className="octo-hoverbutton square" style={{ display: "none" }} onClick={(e) => { showCommentMenu(e, comment) }}>...</div>
+								</div>
+								<div className="comment-text">{comment.title}</div>
+							</div>
+						})}
 
-                        {/* New comment */}
+						{/* New comment */}
 
-                        <div className="commentrow">
-                            <img className="comment-avatar" src={userImageUrl} />
-                            <Editable
-                                ref={newCommentRef}
-                                className="newcomment"
-                                placeholderText={newCommentPlaceholderText}
-                                onChanged={(text) => { return }}
-                                onFocus={() => {
-                                    sendCommentButtonRef.current.style.display = null
-                                }}
-                                onBlur={() => {
-                                    if (!newCommentRef.current.text) {
-                                        sendCommentButtonRef.current.style.display = "none"
-                                    }
-                                }}
-                                onKeyDown={(e) => {
-                                    if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) {
-                                        sendCommentButtonRef.current.click()
-                                    }
-                                }}
-                            ></Editable>
+						<div className="commentrow">
+							<img className="comment-avatar" src={userImageUrl} />
+							<Editable
+								ref={newCommentRef}
+								className="newcomment"
+								placeholderText={newCommentPlaceholderText}
+								onChanged={(text) => { return }}
+								onFocus={() => {
+									sendCommentButtonRef.current.style.display = null
+								}}
+								onBlur={() => {
+									if (!newCommentRef.current.text) {
+										sendCommentButtonRef.current.style.display = "none"
+									}
+								}}
+								onKeyDown={(e) => {
+									if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) {
+										sendCommentButtonRef.current.click()
+									}
+								}}
+							></Editable>
 
-                            <div ref={sendCommentButtonRef} className="octo-button filled" style={{ display: "none" }}
-                                onClick={(e) => {
-                                    const text = newCommentRef.current.text
-                                    console.log(`Send comment: ${newCommentRef.current.text}`)
-                                    this.sendComment(text)
-                                    newCommentRef.current.text = undefined
-                                    newCommentRef.current.blur()
-                                }}
-                            >Send</div>
-                        </div>
-                    </div>
+							<div ref={sendCommentButtonRef} className="octo-button filled" style={{ display: "none" }}
+								onClick={(e) => {
+									const text = newCommentRef.current.text
+									console.log(`Send comment: ${newCommentRef.current.text}`)
+									this.sendComment(text)
+									newCommentRef.current.text = undefined
+									newCommentRef.current.blur()
+								}}
+							>Send</div>
+						</div>
+					</div>
 
-                    <hr />
-                </div>
+					<hr />
+				</div>
 
-                {/* Content blocks */}
+				{/* Content blocks */}
 
-                <div className="content fullwidth">
-                    {contentElements}
-                </div>
+				<div className="content fullwidth">
+					{contentElements}
+				</div>
 
-                <div className="content">
-                    <div className="octo-hoverpanel octo-hover-container">
-                        <div
-                            className="octo-button octo-hovercontrol octo-hover-item"
-                            onClick={(e) => {
-                                OldMenu.shared.options = [
-                                    { id: "text", name: "Text" },
-                                    { id: "image", name: "Image" },
-                                ]
-                                OldMenu.shared.onMenuClicked = async (optionId: string, type?: string) => {
-                                    switch (optionId) {
-                                        case "text":
-                                            const order = cardTree.contents.length * 1000
-                                            const block = new Block({ type: "text", parentId: card.id, order })
-                                            await mutator.insertBlock(block, "add text")
-                                            break
-                                        case "image":
-                                            Utils.selectLocalFile(
-                                                (file) => {
-                                                    mutator.createImageBlock(card.id, file, cardTree.contents.length * 1000)
-                                                },
-                                                ".jpg,.jpeg,.png")
-                                            break
-                                    }
-                                }
-                                OldMenu.shared.showAtElement(e.target as HTMLElement)
-                            }}
-                        >Add content</div>
-                    </div>
-                </div>
-            </>
-        )
+				<div className="content">
+					<div className="octo-hoverpanel octo-hover-container">
+						<div
+							className="octo-button octo-hovercontrol octo-hover-item"
+							onClick={(e) => {
+								OldMenu.shared.options = [
+									{ id: "text", name: "Text" },
+									{ id: "image", name: "Image" },
+								]
+								OldMenu.shared.onMenuClicked = async (optionId: string, type?: string) => {
+									switch (optionId) {
+										case "text":
+											const order = cardTree.contents.length * 1000
+											const block = new Block({ type: "text", parentId: card.id, order })
+											await mutator.insertBlock(block, "add text")
+											break
+										case "image":
+											Utils.selectLocalFile(
+												(file) => {
+													mutator.createImageBlock(card.id, file, cardTree.contents.length * 1000)
+												},
+												".jpg,.jpeg,.png")
+											break
+									}
+								}
+								OldMenu.shared.showAtElement(e.target as HTMLElement)
+							}}
+						>Add content</div>
+					</div>
+				</div>
+			</>
+		)
 	}
 
 	async sendComment(text: string) {
