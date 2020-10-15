@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
 	"time"
@@ -53,7 +54,6 @@ type Block struct {
 	Schema   int64                  `json:"schema"`
 	Type     string                 `json:"type"`
 	Title    string                 `json:"title"`
-	Order    int64                  `json:"order"`
 	Fields   map[string]interface{} `json:"fields"`
 	CreateAt int64                  `json:"createAt"`
 	UpdateAt int64                  `json:"updateAt"`
@@ -69,8 +69,10 @@ func (s *SQLStore) createTablesIfNotExists() error {
 			id VARCHAR(36),
 			insert_at DATETIME NOT NULL DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),
 			parent_id VARCHAR(36),
+			schema BIGINT,
 			type TEXT,
-			json TEXT,
+			title TEXT,
+			fields TEXT,
 			create_at BIGINT,
 			update_at BIGINT,
 			delete_at BIGINT,
@@ -81,8 +83,10 @@ func (s *SQLStore) createTablesIfNotExists() error {
 			id VARCHAR(36),
 			insert_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 			parent_id VARCHAR(36),
+			schema BIGINT,
 			type TEXT,
-			json TEXT,
+			title TEXT,
+			fields TEXT,
 			create_at BIGINT,
 			update_at BIGINT,
 			delete_at BIGINT,
@@ -99,7 +103,7 @@ func (s *SQLStore) createTablesIfNotExists() error {
 	return nil
 }
 
-func (s *SQLStore) getBlocksWithParentAndType(parentID string, blockType string) []string {
+func (s *SQLStore) getBlocksWithParentAndType(parentID string, blockType string) []Block {
 	query := `WITH latest AS
 		(
 			SELECT * FROM
@@ -112,7 +116,7 @@ func (s *SQLStore) getBlocksWithParentAndType(parentID string, blockType string)
 			WHERE rn = 1
 		)
 
-		SELECT COALESCE("json", '{}')
+		SELECT id, parent_id, schema, type, title, COALESCE("fields", '{}'), create_at, update_at, delete_at
 		FROM latest
 		WHERE delete_at = 0 and parent_id = $1 and type = $2`
 
@@ -125,7 +129,7 @@ func (s *SQLStore) getBlocksWithParentAndType(parentID string, blockType string)
 	return blocksFromRows(rows)
 }
 
-func (s *SQLStore) getBlocksWithParent(parentID string) []string {
+func (s *SQLStore) getBlocksWithParent(parentID string) []Block {
 	query := `WITH latest AS
 		(
 			SELECT * FROM
@@ -138,7 +142,7 @@ func (s *SQLStore) getBlocksWithParent(parentID string) []string {
 			WHERE rn = 1
 		)
 
-		SELECT COALESCE("json", '{}')
+		SELECT id, parent_id, schema, type, title, COALESCE("fields", '{}'), create_at, update_at, delete_at
 		FROM latest
 		WHERE delete_at = 0 and parent_id = $1`
 
@@ -151,7 +155,7 @@ func (s *SQLStore) getBlocksWithParent(parentID string) []string {
 	return blocksFromRows(rows)
 }
 
-func (s *SQLStore) getBlocksWithType(blockType string) []string {
+func (s *SQLStore) getBlocksWithType(blockType string) []Block {
 	query := `WITH latest AS
 		(
 			SELECT * FROM
@@ -164,7 +168,7 @@ func (s *SQLStore) getBlocksWithType(blockType string) []string {
 			WHERE rn = 1
 		)
 
-		SELECT COALESCE("json", '{}')
+		SELECT id, parent_id, schema, type, title, COALESCE("fields", '{}'), create_at, update_at, delete_at
 		FROM latest
 		WHERE delete_at = 0 and type = $1`
 
@@ -177,7 +181,7 @@ func (s *SQLStore) getBlocksWithType(blockType string) []string {
 	return blocksFromRows(rows)
 }
 
-func (s *SQLStore) getSubTree(blockID string) []string {
+func (s *SQLStore) getSubTree(blockID string) []Block {
 	query := `WITH latest AS
 	(
 		SELECT * FROM
@@ -190,7 +194,7 @@ func (s *SQLStore) getSubTree(blockID string) []string {
 		WHERE rn = 1
 	)
 
-	SELECT COALESCE("json", '{}')
+	SELECT id, parent_id, schema, type, title, COALESCE("fields", '{}'), create_at, update_at, delete_at
 	FROM latest
 	WHERE delete_at = 0
 		AND (id = $1
@@ -205,7 +209,7 @@ func (s *SQLStore) getSubTree(blockID string) []string {
 	return blocksFromRows(rows)
 }
 
-func (s *SQLStore) getAllBlocks() []string {
+func (s *SQLStore) getAllBlocks() []Block {
 	query := `WITH latest AS
 	(
 		SELECT * FROM
@@ -218,7 +222,7 @@ func (s *SQLStore) getAllBlocks() []string {
 		WHERE rn = 1
 	)
 
-	SELECT COALESCE("json", '{}')
+	SELECT id, parent_id, schema, type, title, COALESCE("fields", '{}'), create_at, update_at, delete_at
 	FROM latest
 	WHERE delete_at = 0`
 
@@ -231,21 +235,38 @@ func (s *SQLStore) getAllBlocks() []string {
 	return blocksFromRows(rows)
 }
 
-func blocksFromRows(rows *sql.Rows) []string {
+func blocksFromRows(rows *sql.Rows) []Block {
 	defer rows.Close()
 
-	var results []string
+	var results []Block
 
 	for rows.Next() {
-		var json string
-		err := rows.Scan(&json)
+		var block Block
+		var fieldsJSON string
+		err := rows.Scan(
+			&block.ID,
+			&block.ParentID,
+			&block.Schema,
+			&block.Type,
+			&block.Title,
+			&fieldsJSON,
+			&block.CreateAt,
+			&block.UpdateAt,
+			&block.DeleteAt)
 		if err != nil {
 			// handle this error
-			log.Printf(`blocksFromRows ERROR: %v`, err)
+			log.Printf(`ERROR blocksFromRows: %v`, err)
 			panic(err)
 		}
 
-		results = append(results, json)
+		err = json.Unmarshal([]byte(fieldsJSON), &block.Fields)
+		if err != nil {
+			// handle this error
+			log.Printf(`ERROR blocksFromRows fields: %v`, err)
+			panic(err)
+		}
+
+		results = append(results, block)
 	}
 
 	return results
@@ -281,9 +302,35 @@ func (s *SQLStore) getParentID(blockID string) string {
 	return parentID
 }
 
-func (s *SQLStore) insertBlock(block Block, json string) {
-	statement := `INSERT INTO blocks(id, parent_id, type, json, create_at, update_at, delete_at) VALUES($1, $2, $3, $4, $5, $6, $7)`
-	_, err := s.db.Exec(statement, block.ID, block.ParentID, block.Type, json, block.CreateAt, block.UpdateAt, block.DeleteAt)
+func (s *SQLStore) insertBlock(block Block) {
+	fieldsJSON, err := json.Marshal(block.Fields)
+	if err != nil {
+		panic(err)
+	}
+
+	statement := `INSERT INTO blocks(
+		id,
+		parent_id,
+		schema,
+		type,
+		title,
+		fields,
+		create_at,
+		update_at,
+		delete_at
+	)
+	VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)`
+	_, err = s.db.Exec(
+		statement,
+		block.ID,
+		block.ParentID,
+		block.Schema,
+		block.Type,
+		block.Title,
+		fieldsJSON,
+		block.CreateAt,
+		block.UpdateAt,
+		block.DeleteAt)
 	if err != nil {
 		panic(err)
 	}

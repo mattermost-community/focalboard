@@ -55,7 +55,7 @@ func handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	parentID := query.Get("parent_id")
 	blockType := query.Get("type")
 
-	var blocks []string
+	var blocks []Block
 	if len(blockType) > 0 && len(parentID) > 0 {
 		blocks = store.getBlocksWithParentAndType(parentID, blockType)
 	} else if len(blockType) > 0 {
@@ -65,8 +65,14 @@ func handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Printf("GetBlocks parentID: %s, type: %s, %d result(s)", parentID, blockType, len(blocks))
-	response := `[` + strings.Join(blocks[:], ",") + `]`
-	jsonResponse(w, http.StatusOK, response)
+	json, err := json.Marshal(blocks)
+	if err != nil {
+		log.Printf(`ERROR json.Marshal: %v`, r)
+		errorResponse(w, http.StatusInternalServerError, `{}`)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, json)
 }
 
 func handlePostBlocks(w http.ResponseWriter, r *http.Request) {
@@ -117,19 +123,13 @@ func handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 			blockIDsToNotify = append(blockIDsToNotify, block.ParentID)
 		}
 
-		jsonBytes, err := json.Marshal(block)
-		if err != nil {
-			errorResponse(w, http.StatusInternalServerError, `{}`)
-			return
-		}
-
-		store.insertBlock(block, string(jsonBytes))
+		store.insertBlock(block)
 	}
 
 	wsServer.broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
 
 	log.Printf("POST Blocks %d block(s)", len(blocks))
-	jsonResponse(w, http.StatusOK, "{}")
+	jsonStringResponse(w, http.StatusOK, "{}")
 }
 
 func handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
@@ -149,7 +149,7 @@ func handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 	wsServer.broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
 
 	log.Printf("DELETE Block %s", blockID)
-	jsonResponse(w, http.StatusOK, "{}")
+	jsonStringResponse(w, http.StatusOK, "{}")
 }
 
 func handleGetSubTree(w http.ResponseWriter, r *http.Request) {
@@ -159,16 +159,28 @@ func handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	blocks := store.getSubTree(blockID)
 
 	log.Printf("GetSubTree blockID: %s, %d result(s)", blockID, len(blocks))
-	response := `[` + strings.Join(blocks[:], ",") + `]`
-	jsonResponse(w, http.StatusOK, response)
+	json, err := json.Marshal(blocks)
+	if err != nil {
+		log.Printf(`ERROR json.Marshal: %v`, r)
+		errorResponse(w, http.StatusInternalServerError, `{}`)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, json)
 }
 
 func handleExport(w http.ResponseWriter, r *http.Request) {
 	blocks := store.getAllBlocks()
 
 	log.Printf("EXPORT Blocks, %d result(s)", len(blocks))
-	response := `[` + strings.Join(blocks[:], ",") + `]`
-	jsonResponse(w, http.StatusOK, response)
+	json, err := json.Marshal(blocks)
+	if err != nil {
+		log.Printf(`ERROR json.Marshal: %v`, r)
+		errorResponse(w, http.StatusInternalServerError, `{}`)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, json)
 }
 
 func handleImport(w http.ResponseWriter, r *http.Request) {
@@ -195,17 +207,11 @@ func handleImport(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, block := range blocks {
-		jsonBytes, err := json.Marshal(block)
-		if err != nil {
-			errorResponse(w, http.StatusInternalServerError, `{}`)
-			return
-		}
-
-		store.insertBlock(block, string(jsonBytes))
+		store.insertBlock(block)
 	}
 
 	log.Printf("IMPORT Blocks %d block(s)", len(blocks))
-	jsonResponse(w, http.StatusOK, "{}")
+	jsonStringResponse(w, http.StatusOK, "{}")
 }
 
 // File upload
@@ -261,21 +267,27 @@ func saveFile(w http.ResponseWriter, file multipart.File, handle *multipart.File
 	os.MkdirAll(folderPath, os.ModePerm)
 	err = ioutil.WriteFile(filePath, data, 0666)
 	if err != nil {
-		jsonResponse(w, http.StatusInternalServerError, `{}`)
+		jsonStringResponse(w, http.StatusInternalServerError, `{}`)
 		return
 	}
 	url := fmt.Sprintf(`%s/files/%s`, config.ServerRoot, filename)
 	log.Printf(`saveFile, url: %s`, url)
 	json := fmt.Sprintf(`{ "url": "%s" }`, url)
-	jsonResponse(w, http.StatusOK, json)
+	jsonStringResponse(w, http.StatusOK, json)
 }
 
 // Response helpers
 
-func jsonResponse(w http.ResponseWriter, code int, message string) {
+func jsonStringResponse(w http.ResponseWriter, code int, message string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	fmt.Fprint(w, message)
+}
+
+func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+	w.Write(json)
 }
 
 func errorResponse(w http.ResponseWriter, code int, message string) {
