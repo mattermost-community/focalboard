@@ -18,17 +18,20 @@ import { BoardCard } from "./boardCard"
 import { BoardColumn } from "./boardColumn"
 import Button from "./button"
 import { Editable } from "./editable"
+import { CardDialog } from "./cardDialog"
+import RootPortal from "./rootPortal"
 
 type Props = {
 	boardTree?: BoardTree
 	showView: (id: string) => void
-	showCard: (card: Card) => void
 	showFilter: (el: HTMLElement) => void
 	setSearchText: (text: string) => void
 }
 
 type State = {
 	isSearching: boolean
+	shownCard?: Card
+	viewMenu: boolean
     isHoverOnCover: boolean
 }
 
@@ -39,7 +42,7 @@ class BoardComponent extends React.Component<Props, State> {
 
 	constructor(props: Props) {
 		super(props)
-		this.state = { isHoverOnCover: false, isSearching: !!this.props.boardTree?.getSearchText()}
+		this.state = { isHoverOnCover: false, isSearching: !!this.props.boardTree?.getSearchText(), viewMenu: false }
 	}
 
 	componentDidUpdate(prevPros: Props, prevState: State) {
@@ -68,6 +71,11 @@ class BoardComponent extends React.Component<Props, State> {
 
 		return (
 			<div className="octo-app">
+				{this.state.shownCard &&
+					<RootPortal>
+						<CardDialog boardTree={boardTree} card={this.state.shownCard} onClose={() => this.setState({shownCard: undefined})}/>
+					</RootPortal>}
+
 				<div className="octo-frame">
 					<div
 						className="octo-hovercontrols"
@@ -198,7 +206,7 @@ class BoardComponent extends React.Component<Props, State> {
 										card={card}
 										visiblePropertyTemplates={visiblePropertyTemplates}
 										key={card.id}
-										onClick={() => { this.showCard(card) }}
+										onClick={() => { this.setState({shownCard: card}) }}
 										onDragStart={() => { this.draggedCard = card }}
 										onDragEnd={() => { this.draggedCard = undefined }} />
 								)}
@@ -214,7 +222,7 @@ class BoardComponent extends React.Component<Props, State> {
 											card={card}
 											visiblePropertyTemplates={visiblePropertyTemplates}
 											key={card.id}
-											onClick={() => { this.showCard(card) }}
+											onClick={() => { this.setState({shownCard: card}) }}
 											onDragStart={() => { this.draggedCard = card }}
 											onDragEnd={() => { this.draggedCard = undefined }} />
 									)}
@@ -228,12 +236,6 @@ class BoardComponent extends React.Component<Props, State> {
 		)
 	}
 
-	async showCard(card?: Card) {
-		console.log(`showCard: ${card?.title}`)
-
-		await this.props.showCard(card)
-	}
-
 	async addCard(groupByValue?: string) {
 		const { boardTree } = this.props
 		const { activeView, board } = boardTree
@@ -244,7 +246,7 @@ class BoardComponent extends React.Component<Props, State> {
 		if (boardTree.groupByProperty) {
 			card.properties[boardTree.groupByProperty.id] = groupByValue
 		}
-		await mutator.insertBlock(card, "add card", async () => { await this.showCard(card) }, async () => { await this.showCard(undefined) })
+		await mutator.insertBlock(card, "add card", async () => { await this.setState({shownCard: card}) }, async () => { await this.setState({shownCard: undefined}) })
 	}
 
 	async propertyNameChanged(option: IPropertyOption, text: string) {

@@ -102,15 +102,6 @@ export default class CardDetail extends React.Component<Props, State> {
 		const username = "John Smith"
 		const userImageUrl = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="fill: rgb(192, 192, 192);"><rect width="100" height="100" /></svg>`
 
-        const menu = (
-            <Menu>
-                <Menu.Text id="delete" name="Delete" onClick={async () => {
-                    await mutator.deleteBlock(card, "delete card")
-                    this.close()
-                }}/>
-            </Menu>
-        )
-
         return (
             <>
                 <div className="content">
@@ -257,7 +248,6 @@ export default class CardDetail extends React.Component<Props, State> {
                     </div>
 
                     <hr />
-
                 </div>
 
                 {/* Content blocks */}

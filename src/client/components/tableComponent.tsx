@@ -16,11 +16,12 @@ import { Utils } from "../utils"
 import Button from "./button"
 import { Editable } from "./editable"
 import { TableRow } from "./tableRow"
+import { CardDialog } from "./cardDialog"
+import RootPortal from "./rootPortal"
 
 type Props = {
 	boardTree?: BoardTree
 	showView: (id: string) => void
-	showCard: (card: Card) => void
 	showFilter: (el: HTMLElement) => void
 	setSearchText: (text: string) => void
 }
@@ -28,6 +29,7 @@ type Props = {
 type State = {
 	isHoverOnCover: boolean
 	isSearching: boolean
+	shownCard?: Card
 	viewMenu: boolean
 }
 
@@ -66,6 +68,10 @@ class TableComponent extends React.Component<Props, State> {
 
 		return (
 			<div className="octo-app">
+				{this.state.shownCard &&
+					<RootPortal>
+						<CardDialog boardTree={boardTree} card={this.state.shownCard} onClose={() => this.setState({shownCard: undefined})}/>
+					</RootPortal>}
 				<div className="octo-frame">
 					<div
 						className="octo-hovercontrols"
@@ -187,7 +193,6 @@ class TableComponent extends React.Component<Props, State> {
 									boardTree={boardTree}
 									card={card}
 									focusOnMount={focusOnMount}
-									showCard={(c) => { this.showCard(c) }}
 									onKeyDown={(e) => {
 										if (e.keyCode === 13) {
 											// Enter: Insert new card if on last row
@@ -345,12 +350,6 @@ class TableComponent extends React.Component<Props, State> {
 		OldMenu.shared.showAtElement(e.target as HTMLElement)
 	}
 
-	async showCard(card: Card) {
-		console.log(`showCard: ${card.title}`)
-
-		await this.props.showCard(card)
-	}
-
 	focusOnCardTitle(cardId: string) {
 		const tableRowRef = this.cardIdToRowMap.get(cardId)
 		Utils.log(`focusOnCardTitle, ${tableRowRef?.current ?? "undefined"}`)
@@ -367,7 +366,7 @@ class TableComponent extends React.Component<Props, State> {
 			"add card",
 			async () => {
 				if (show) {
-					this.showCard(card)
+					this.setState({shownCard: card})
 				} else {
 					// Focus on this card's title inline on next render
 					this.cardIdToFocusOnRender = card.id
