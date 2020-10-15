@@ -1,15 +1,15 @@
 import React from "react"
 import { Block } from "../block"
+import { Card } from "../card"
 import { BlockIcons } from "../blockIcons"
 import { BoardTree } from "../boardTree"
 import { CardTree } from "../cardTree"
 import { Menu, MenuOption } from "../menu"
-import { Mutator } from "../mutator"
+import mutator from "../mutator"
 import { IBlock } from "../octoTypes"
 import { OctoUtils } from "../octoUtils"
 import { PropertyMenu } from "../propertyMenu"
 import { OctoListener } from "../octoListener"
-import { OctoClient } from "../octoClient"
 import { Utils } from "../utils"
 import Button from "./button"
 import { Editable } from "./editable"
@@ -17,8 +17,7 @@ import { MarkdownEditor } from "./markdownEditor"
 
 type Props = {
 	boardTree: BoardTree
-	card: IBlock
-	mutator: Mutator
+	card: Card
 	onClose: () => void
 }
 
@@ -51,7 +50,7 @@ class CardDialog extends React.Component<Props, State> {
 			await cardTree.sync()
 			this.setState({cardTree: cardTree})
 		})
-		const cardTree = new CardTree(new OctoClient(), this.props.card.id)
+		const cardTree = new CardTree(this.props.card.id)
 		cardTree.sync().then(() => {
 			this.setState({cardTree})
 		});
@@ -70,7 +69,7 @@ class CardDialog extends React.Component<Props, State> {
 	}
 
 	render() {
-		const { boardTree, mutator, card } = this.props
+		const { boardTree, card } = this.props
 		const { cardTree } = this.state
 		const { board } = boardTree
 		if (cardTree === null) {
@@ -227,7 +226,7 @@ class CardDialog extends React.Component<Props, State> {
 											}
 											menu.showAtElement(e.target as HTMLElement)
 										}}>{propertyTemplate.name}</div>
-										{OctoUtils.propertyValueEditableElement(mutator, card, propertyTemplate)}
+										{OctoUtils.propertyValueEditableElement(card, propertyTemplate)}
 									</div>
 								)
 							})}
@@ -356,7 +355,7 @@ class CardDialog extends React.Component<Props, State> {
 	}
 
 	async sendComment(text: string) {
-		const { mutator, card } = this.props
+		const { card } = this.props
 
 		Utils.assertValue(card)
 
@@ -365,7 +364,7 @@ class CardDialog extends React.Component<Props, State> {
 	}
 
 	private showContentBlockMenu(e: React.MouseEvent, block: IBlock) {
-		const { mutator, card } = this.props
+		const { card } = this.props
 		const { cardTree } = this.state
 		const index = cardTree.contents.indexOf(block)
 
@@ -432,7 +431,7 @@ class CardDialog extends React.Component<Props, State> {
 	}
 
 	private iconClicked(e: React.MouseEvent) {
-		const { mutator, card } = this.props
+		const { card } = this.props
 
 		Menu.shared.options = [
 			{ id: "random", name: "Random" },

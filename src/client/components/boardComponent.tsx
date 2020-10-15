@@ -6,10 +6,12 @@ import { BoardTree } from "../boardTree"
 import { Card } from "../card"
 import { CardFilter } from "../cardFilter"
 import ViewMenu from "../components/viewMenu"
+import MenuWrapper from "../widgets/menuWrapper"
+import Menu from "../widgets/menu"
 import { Constants } from "../constants"
 import { randomEmojiList } from "../emojiList"
 import { Menu as OldMenu } from "../menu"
-import { Mutator } from "../mutator"
+import mutator from "../mutator"
 import { OctoUtils } from "../octoUtils"
 import { Utils } from "../utils"
 import { BoardCard } from "./boardCard"
@@ -20,7 +22,6 @@ import { CardDialog } from "./cardDialog"
 import RootPortal from "./rootPortal"
 
 type Props = {
-	mutator: Mutator,
 	boardTree?: BoardTree
 	showView: (id: string) => void
 	showFilter: (el: HTMLElement) => void
@@ -28,10 +29,10 @@ type Props = {
 }
 
 type State = {
-	isHoverOnCover: boolean
 	isSearching: boolean
-	shownCard: IBlock | null
+	shownCard: Card | null
 	viewMenu: boolean
+    isHoverOnCover: boolean
 }
 
 class BoardComponent extends React.Component<Props, State> {
@@ -51,7 +52,7 @@ class BoardComponent extends React.Component<Props, State> {
 	}
 
 	render() {
-		const { mutator, boardTree, showView } = this.props
+		const { boardTree, showView } = this.props
 
 		if (!boardTree || !boardTree.board) {
 			return (
@@ -92,7 +93,13 @@ class BoardComponent extends React.Component<Props, State> {
 
 					<div className="octo-icontitle">
 						{board.icon ?
-							<div className="octo-button octo-icon" onClick={(e) => { this.iconClicked(e) }}>{board.icon}</div>
+							<MenuWrapper>
+								<div className="octo-button octo-icon">{board.icon}</div>
+								<Menu>
+									<Menu.Text id='random' name='Random' onClick={() => mutator.changeIcon(board, undefined, "remove icon")}/>
+									<Menu.Text id='remove' name='Remove Icon' onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}/>
+								</Menu>
+							</MenuWrapper>
 							: undefined}
 						<Editable className="title" text={board.title} placeholderText="Untitled Board" onChanged={(text) => { mutator.changeTitle(board, text) }} />
 					</div>
@@ -100,28 +107,26 @@ class BoardComponent extends React.Component<Props, State> {
 					<div className="octo-board">
 						<div className="octo-controls">
 							<Editable style={{ color: "#000000", fontWeight: 600 }} text={activeView.title} placeholderText="Untitled View" onChanged={(text) => { mutator.changeTitle(activeView, text) }} />
-							<div
-								className="octo-button"
-								style={{ color: "#000000", fontWeight: 600 }}
-								onClick={() => this.setState({ viewMenu: true })}
-							>
-								{this.state.viewMenu &&
-									<ViewMenu
-										board={board}
-										onClose={() => this.setState({ viewMenu: false })}
-										mutator={mutator}
-										boardTree={boardTree}
-										showView={showView}
-									/>}
-								<div className="imageDropdown"></div>
-							</div>
+							<MenuWrapper>
+								<div
+									className="octo-button"
+									style={{ color: "#000000", fontWeight: 600 }}
+								>
+									<div className="imageDropdown"></div>
+								</div>
+								<ViewMenu
+									board={board}
+									boardTree={boardTree}
+									showView={showView}
+								/>
+							</MenuWrapper>
 							<div className="octo-spacer"></div>
 							<div className="octo-button" onClick={(e) => { this.propertiesClicked(e) }}>Properties</div>
 							<div className="octo-button" id="groupByButton" onClick={(e) => { this.groupByClicked(e) }}>
 								Group by <span style={groupByStyle} id="groupByLabel">{boardTree.groupByProperty?.name}</span>
 							</div>
 							<div className={hasFilter ? "octo-button active" : "octo-button"} onClick={(e) => { this.filterClicked(e) }}>Filter</div>
-							<div className={hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { OctoUtils.showSortMenu(e, mutator, boardTree) }}>Sort</div>
+							<div className={hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { OctoUtils.showSortMenu(e, boardTree) }}>Sort</div>
 							{this.state.isSearching
 								? <Editable
 									ref={this.searchFieldRef}
@@ -170,7 +175,16 @@ class BoardComponent extends React.Component<Props, State> {
 										onChanged={(text) => { this.propertyNameChanged(group.option, text) }} />
 									<Button text={`${group.cards.length}`} />
 									<div className="octo-spacer" />
-									<Button onClick={(e) => { this.valueOptionClicked(e, group.option) }}><div className="imageOptions" /></Button>
+									<MenuWrapper>
+										<Button><div className="imageOptions" /></Button>
+										<Menu>
+											<Menu.Text id='delete' name='Delete' onClick={() => mutator.deletePropertyOption(boardTree, boardTree.groupByProperty, group.option)}/>
+											<Menu.Separator/>
+											{Constants.menuColors.map((color) =>
+												<Menu.Color key={color.id} id={color.id} name={color.name} onClick={() => mutator.changePropertyOptionColor(boardTree.board, group.option, color.id)} />
+											)}
+										</Menu>
+									</MenuWrapper>
 									<Button onClick={() => { this.addCard(group.option.value) }}><div className="imageAdd" /></Button>
 								</div>
 							)}
@@ -189,7 +203,6 @@ class BoardComponent extends React.Component<Props, State> {
 							<BoardColumn onDrop={(e) => { this.onDropToColumn(undefined) }}>
 								{boardTree.emptyGroupCards.map(card =>
 									<BoardCard
-										mutator={mutator}
 										card={card}
 										visiblePropertyTemplates={visiblePropertyTemplates}
 										key={card.id}
@@ -206,7 +219,6 @@ class BoardComponent extends React.Component<Props, State> {
 								<BoardColumn onDrop={(e) => { this.onDropToColumn(group.option) }} key={group.option.value}>
 									{group.cards.map(card =>
 										<BoardCard
-											mutator={mutator}
 											card={card}
 											visiblePropertyTemplates={visiblePropertyTemplates}
 											key={card.id}
@@ -224,30 +236,8 @@ class BoardComponent extends React.Component<Props, State> {
 		)
 	}
 
-	private iconClicked(e: React.MouseEvent) {
-		const { mutator, boardTree } = this.props
-		const { board } = boardTree
-
-		OldMenu.shared.options = [
-			{ id: "random", name: "Random" },
-			{ id: "remove", name: "Remove Icon" },
-		]
-		OldMenu.shared.onMenuClicked = (optionId: string, type?: string) => {
-			switch (optionId) {
-				case "remove":
-					mutator.changeIcon(board, undefined, "remove icon")
-					break
-				case "random":
-					const newIcon = BlockIcons.shared.randomIcon()
-					mutator.changeIcon(board, newIcon)
-					break
-			}
-		}
-		OldMenu.shared.showAtElement(e.target as HTMLElement)
-	}
-
 	async addCard(groupByValue?: string) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 		const { activeView, board } = boardTree
 
 		const card = new Card()
@@ -260,34 +250,9 @@ class BoardComponent extends React.Component<Props, State> {
 	}
 
 	async propertyNameChanged(option: IPropertyOption, text: string) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 
 		await mutator.changePropertyOptionValue(boardTree, boardTree.groupByProperty, option, text)
-	}
-
-	async valueOptionClicked(e: React.MouseEvent<HTMLElement>, option: IPropertyOption) {
-		const { mutator, boardTree } = this.props
-
-		OldMenu.shared.options = [
-			{ id: "delete", name: "Delete" },
-			{ id: "", name: "", type: "separator" },
-			...Constants.menuColors
-		]
-		OldMenu.shared.onMenuClicked = async (optionId: string, type?: string) => {
-			switch (optionId) {
-				case "delete":
-					console.log(`Delete property value: ${option.value}`)
-					await mutator.deletePropertyOption(boardTree, boardTree.groupByProperty, option)
-					break
-				default:
-					if (type === "color") {
-						// id is the color
-						await mutator.changePropertyOptionColor(boardTree.board, option, optionId)
-						break
-					}
-			}
-		}
-		OldMenu.shared.showAtElement(e.target as HTMLElement)
 	}
 
 	private filterClicked(e: React.MouseEvent) {
@@ -323,7 +288,7 @@ class BoardComponent extends React.Component<Props, State> {
 	}
 
 	private async testAddCards(count: number) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 		const { board, activeView } = boardTree
 
 		const startCount = boardTree?.cards?.length
@@ -346,7 +311,7 @@ class BoardComponent extends React.Component<Props, State> {
 	}
 
 	private async propertiesClicked(e: React.MouseEvent) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 		const { activeView } = boardTree
 
 		const selectProperties = boardTree.board.cardProperties
@@ -372,7 +337,7 @@ class BoardComponent extends React.Component<Props, State> {
 	}
 
 	private async groupByClicked(e: React.MouseEvent) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 
 		const selectProperties = boardTree.board.cardProperties.filter(o => o.type === "select")
 		OldMenu.shared.options = selectProperties.map((o) => { return { id: o.id, name: o.name } })
@@ -387,7 +352,7 @@ class BoardComponent extends React.Component<Props, State> {
 	async addGroupClicked() {
 		console.log(`onAddGroupClicked`)
 
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 
 		const option: IPropertyOption = {
 			value: "New group",
@@ -399,7 +364,7 @@ class BoardComponent extends React.Component<Props, State> {
 	}
 
 	async onDropToColumn(option: IPropertyOption) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 		const { draggedCard, draggedHeaderOption } = this
 		const propertyValue = option ? option.value : undefined
 

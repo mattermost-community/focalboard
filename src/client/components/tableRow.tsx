@@ -1,14 +1,13 @@
 import React from "react"
 import { BoardTree } from "../boardTree"
 import { Card } from "../card"
-import { Mutator } from "../mutator"
+import mutator from "../mutator"
 import { OctoUtils } from "../octoUtils"
 import { Editable } from "./editable"
 import { CardDialog } from "./cardDialog"
 import RootPortal from "./rootPortal"
 
 type Props = {
-	mutator: Mutator
 	boardTree: BoardTree
 	card: Card
 	focusOnMount: boolean
@@ -32,7 +31,7 @@ class TableRow extends React.Component<Props, State> {
 	}
 
 	render() {
-		const { mutator, boardTree, card, onKeyDown } = this.props
+		const { boardTree, card, onKeyDown } = this.props
 		const { board, activeView } = boardTree
 
 		const openButonRef = React.createRef<HTMLDivElement>()
@@ -56,7 +55,7 @@ class TableRow extends React.Component<Props, State> {
 				<div ref={openButonRef} className="octo-hoverbutton" style={{ display: "none" }} onClick={() => { this.setState({showCard: true}) }}>Open</div>
 				{this.state.showCard &&
 					<RootPortal>
-						<CardDialog boardTree={boardTree} card={card} mutator={mutator} onClose={() => this.setState({showCard: false})}/>
+						<CardDialog boardTree={boardTree} card={card} onClose={() => this.setState({showCard: false})}/>
 					</RootPortal>}
 			</div>
 
@@ -66,7 +65,7 @@ class TableRow extends React.Component<Props, State> {
 				.filter(template => activeView.visiblePropertyIds.includes(template.id))
 				.map(template => {
 					return <div className="octo-table-cell" key={template.id}>
-						{OctoUtils.propertyValueEditableElement(mutator, card, template)}
+						{OctoUtils.propertyValueEditableElement(card, template)}
 					</div>
 				})}
 		</div>

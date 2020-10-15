@@ -2,10 +2,9 @@ import React from 'react'
 import { Archiver } from "../archiver"
 import { Board } from "../board"
 import Button from '../components/button'
-import { Mutator } from "../mutator"
-import { OctoClient } from "../octoClient"
+import mutator from '../mutator'
+import octoClient from "../octoClient"
 import { IBlock } from "../octoTypes"
-import { UndoManager } from "../undomanager"
 import { Utils } from "../utils"
 
 type Props = {}
@@ -27,29 +26,23 @@ export default class HomePage extends React.Component<Props, State> {
 	}
 
 	loadBoards = async () => {
-		const octo = new OctoClient()
-		const boards = await octo.getBlocks(null, "board")
+		const boards = await octoClient.getBlocks(null, "board")
 		this.setState({ boards })
 	}
 
 	importClicked = async () => {
-		const octo = new OctoClient()
-		const mutator = new Mutator(octo, UndoManager.shared)
-		Archiver.importFullArchive(mutator, () => {
+		Archiver.importFullArchive(() => {
 			this.loadBoards()
 		})
 	}
 
 	exportClicked = async () => {
-		const octo = new OctoClient()
-		const mutator = new Mutator(octo, UndoManager.shared)
-		Archiver.exportFullArchive(mutator)
+		Archiver.exportFullArchive()
 	}
 
 	addClicked = async () => {
-		const octo = new OctoClient()
 		const board = new Board()
-		await octo.insertBlock(board)
+		await octoClient.insertBlock(board)
 	}
 
 	render(): React.ReactNode {

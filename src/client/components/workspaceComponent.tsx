@@ -1,7 +1,6 @@
 import React from "react"
 import { BoardTree } from "../boardTree"
 import { Card } from "../card"
-import { Mutator } from "../mutator"
 import { Utils } from "../utils"
 import { WorkspaceTree } from "../workspaceTree"
 import { BoardComponent } from "./boardComponent"
@@ -9,7 +8,6 @@ import { Sidebar } from "./sidebar"
 import { TableComponent } from "./tableComponent"
 
 type Props = {
-	mutator: Mutator,
 	workspaceTree: WorkspaceTree
 	boardTree?: BoardTree
 	showBoard: (id: string) => void
@@ -20,12 +18,12 @@ type Props = {
 
 class WorkspaceComponent extends React.Component<Props> {
 	render() {
-		const { mutator, boardTree, workspaceTree, showBoard } = this.props
+		const { boardTree, workspaceTree, showBoard } = this.props
 
 		Utils.assert(workspaceTree)
 		const element =
 			<div className="octo-workspace">
-				<Sidebar mutator={mutator} showBoard={showBoard} workspaceTree={workspaceTree} boardTree={boardTree}></Sidebar>
+				<Sidebar showBoard={showBoard} workspaceTree={workspaceTree} boardTree={boardTree}></Sidebar>
 				{this.mainComponent()}
 			</div>
 
@@ -33,7 +31,7 @@ class WorkspaceComponent extends React.Component<Props> {
 	}
 
 	private mainComponent() {
-		const { mutator, boardTree, showFilter, setSearchText, showView } = this.props
+		const { boardTree, showFilter, setSearchText, showView } = this.props
 		const { activeView } = boardTree || {}
 
 		if (!activeView) {
@@ -42,11 +40,11 @@ class WorkspaceComponent extends React.Component<Props> {
 
 		switch (activeView?.viewType) {
 			case "board": {
-				return <BoardComponent mutator={mutator} boardTree={boardTree} showFilter={showFilter} setSearchText={setSearchText} showView={showView} />
+				return <BoardComponent boardTree={boardTree} showFilter={showFilter} setSearchText={setSearchText} showView={showView} />
 			}
 
 			case "table": {
-				return <TableComponent mutator={mutator} boardTree={boardTree} showFilter={showFilter} setSearchText={setSearchText} showView={showView} />
+				return <TableComponent boardTree={boardTree} showFilter={showFilter} setSearchText={setSearchText} showView={showView} />
 			}
 
 			default: {

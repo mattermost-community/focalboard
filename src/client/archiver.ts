@@ -1,5 +1,5 @@
 import { BoardTree } from "./boardTree"
-import { Mutator } from "./mutator"
+import mutator from "./mutator"
 import { IBlock } from "./octoTypes"
 import { Utils } from "./utils"
 
@@ -21,7 +21,7 @@ class Archiver {
 		this.exportArchive(archive)
 	}
 
-	static async exportFullArchive(mutator: Mutator) {
+	static async exportFullArchive() {
 		const blocks = await mutator.exportFullArchive()
 		const archive: Archive = {
 			version: 1,
@@ -50,7 +50,7 @@ class Archiver {
 		// TODO: Remove or reuse link
 	}
 
-	static importFullArchive(mutator: Mutator, onImported?: () => void): void {
+	static importFullArchive(onImported?: () => void): void {
 		const input = document.createElement("input")
 		input.type = "file"
 		input.accept = ".octo"

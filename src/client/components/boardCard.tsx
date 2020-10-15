@@ -3,12 +3,11 @@ import { Block } from "../block"
 import { IPropertyTemplate } from "../board"
 import { Card } from "../card"
 import { Menu } from "../menu"
-import { Mutator } from "../mutator"
+import mutator from "../mutator"
 import { OctoUtils } from "../octoUtils"
 import { Utils } from "../utils"
 
 type BoardCardProps = {
-	mutator: Mutator
 	card: Card
 	visiblePropertyTemplates: IPropertyTemplate[]
 	onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
@@ -58,7 +57,7 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
 	}
 
 	private showOptionsMenu(e: React.MouseEvent) {
-		const { mutator, card } = this.props
+		const { card } = this.props
 
 		e.stopPropagation()
 

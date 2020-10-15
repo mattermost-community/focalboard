@@ -349,7 +349,7 @@ hr {
 	touch-action: none;
 }
 
-.menu-option .menu-name {
+.menu-option .name {
 	flex-grow: 1;
 }
 
@@ -454,24 +454,24 @@ hr {
 	align-items: center;
 }
 
-.octo-frame > .octo-icontitle > .octo-icon {
+.octo-frame .octo-icontitle .octo-icon {
 	font-size: 36px;
 	line-height: 36px;
 	margin-right: 15px;
 }
 
-.octo-board-card > .octo-icontitle {
+.octo-board-card .octo-icontitle {
 	flex: 1 1 auto;
 	font-weight: 500;
 }
 
-.octo-board-card > .octo-icontitle > .octo-icon {
+.octo-board-card .octo-icontitle .octo-icon {
 	font-size: 16px;
 	line-height: 16px;
 	margin-right: 5px;
 }
 
-.octo-table-cell > .octo-icontitle > .octo-icon {
+.octo-table-cell .octo-icontitle .octo-icon {
 	min-width: 20px;
 }
 

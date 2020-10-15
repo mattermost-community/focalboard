@@ -9,8 +9,6 @@ interface UndoCommand {
 // General-purpose undo manager
 //
 class UndoManager {
-	static shared = new UndoManager()
-
 	onStateDidChange?: () => void
 
 	private commands: UndoCommand[] = []
@@ -164,4 +162,5 @@ class UndoManager {
 	}
 }
 
-export { UndoManager }
+const undoManager = new UndoManager()
+export default undoManager

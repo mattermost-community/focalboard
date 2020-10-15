@@ -6,9 +6,11 @@ import { IPropertyTemplate } from "../board"
 import { BoardTree } from "../boardTree"
 import { Card } from "../card"
 import ViewMenu from "../components/viewMenu"
+import MenuWrapper from "../widgets/menuWrapper"
+import Menu from "../widgets/menu"
 import { CsvExporter } from "../csvExporter"
 import { Menu as OldMenu } from "../menu"
-import { Mutator } from "../mutator"
+import mutator from "../mutator"
 import { OctoUtils } from "../octoUtils"
 import { Utils } from "../utils"
 import Button from "./button"
@@ -18,7 +20,6 @@ import { CardDialog } from "./cardDialog"
 import RootPortal from "./rootPortal"
 
 type Props = {
-	mutator: Mutator,
 	boardTree?: BoardTree
 	showView: (id: string) => void
 	showFilter: (el: HTMLElement) => void
@@ -50,7 +51,7 @@ class TableComponent extends React.Component<Props, State> {
 	}
 
 	render() {
-		const { mutator, boardTree, showView } = this.props
+		const { boardTree, showView } = this.props
 
 		if (!boardTree || !boardTree.board) {
 			return (
@@ -88,7 +89,13 @@ class TableComponent extends React.Component<Props, State> {
 
 					<div className="octo-icontitle">
 						{board.icon ?
-							<div className="octo-button octo-icon" onClick={(e) => { this.iconClicked(e) }}>{board.icon}</div>
+							<MenuWrapper>
+								<div className="octo-button octo-icon">{board.icon}</div>
+								<Menu>
+									<Menu.Text id='random' name='Random' onClick={() => mutator.changeIcon(board, undefined, "remove icon")}/>
+									<Menu.Text id='remove' name='Remove Icon' onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}/>
+								</Menu>
+							</MenuWrapper>
 							: undefined}
 						<Editable className="title" text={board.title} placeholderText="Untitled Board" onChanged={(text) => { mutator.changeTitle(board, text) }} />
 					</div>
@@ -96,25 +103,23 @@ class TableComponent extends React.Component<Props, State> {
 					<div className="octo-table">
 						<div className="octo-controls">
 							<Editable style={{ color: "#000000", fontWeight: 600 }} text={activeView.title} placeholderText="Untitled View" onChanged={(text) => { mutator.changeTitle(activeView, text) }} />
-							<div
-								className="octo-button"
-								style={{ color: "#000000", fontWeight: 600 }}
-								onClick={() => this.setState({ viewMenu: true })}
-							>
-								{this.state.viewMenu &&
-									<ViewMenu
-										board={board}
-										onClose={() => this.setState({ viewMenu: false })}
-										mutator={mutator}
-										boardTree={boardTree}
-										showView={showView}
-									/>}
-								<div className="imageDropdown"></div>
-							</div>
+							<MenuWrapper>
+								<div
+									className="octo-button"
+									style={{ color: "#000000", fontWeight: 600 }}
+								>
+									<div className="imageDropdown"></div>
+								</div>
+								<ViewMenu
+									board={board}
+									boardTree={boardTree}
+									showView={showView}
+								/>
+							</MenuWrapper>
 							<div className="octo-spacer"></div>
 							<div className="octo-button" onClick={(e) => { this.propertiesClicked(e) }}>Properties</div>
 							<div className={hasFilter ? "octo-button active" : "octo-button"} onClick={(e) => { this.filterClicked(e) }}>Filter</div>
-							<div className={hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { OctoUtils.showSortMenu(e, mutator, boardTree) }}>Sort</div>
+							<div className={hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { OctoUtils.showSortMenu(e, boardTree) }}>Sort</div>
 							{this.state.isSearching
 								? <Editable
 									ref={this.searchFieldRef}
@@ -185,7 +190,6 @@ class TableComponent extends React.Component<Props, State> {
 								const tableRow = <TableRow
 									key={card.id}
 									ref={tableRowRef}
-									mutator={mutator}
 									boardTree={boardTree}
 									card={card}
 									focusOnMount={focusOnMount}
@@ -218,30 +222,8 @@ class TableComponent extends React.Component<Props, State> {
 		)
 	}
 
-	private iconClicked(e: React.MouseEvent) {
-		const { mutator, boardTree } = this.props
-		const { board } = boardTree
-
-		OldMenu.shared.options = [
-			{ id: "random", name: "Random" },
-			{ id: "remove", name: "Remove Icon" },
-		]
-		OldMenu.shared.onMenuClicked = (optionId: string, type?: string) => {
-			switch (optionId) {
-				case "remove":
-					mutator.changeIcon(board, undefined, "remove icon")
-					break
-				case "random":
-					const newIcon = BlockIcons.shared.randomIcon()
-					mutator.changeIcon(board, newIcon)
-					break
-			}
-		}
-		OldMenu.shared.showAtElement(e.target as HTMLElement)
-	}
-
 	private async propertiesClicked(e: React.MouseEvent) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 		const { activeView } = boardTree
 
 		const selectProperties = boardTree.board.cardProperties
@@ -294,7 +276,7 @@ class TableComponent extends React.Component<Props, State> {
 	}
 
 	private async headerClicked(e: React.MouseEvent<HTMLDivElement>, templateId: string) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 		const { board } = boardTree
 		const { activeView } = boardTree
 
@@ -375,7 +357,7 @@ class TableComponent extends React.Component<Props, State> {
 	}
 
 	async addCard(show: boolean = false) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 
 		const card = new Card()
 		card.parentId = boardTree.board.id
@@ -397,7 +379,7 @@ class TableComponent extends React.Component<Props, State> {
 		const { draggedHeaderTemplate } = this
 		if (!draggedHeaderTemplate) { return }
 
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 		const { board } = boardTree
 
 		Utils.assertValue(mutator)

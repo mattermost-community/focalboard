@@ -3,11 +3,10 @@ import { BoardTree } from "../boardTree"
 import { FilterClause, FilterCondition } from "../filterClause"
 import { FilterGroup } from "../filterGroup"
 import { Menu } from "../menu"
-import { Mutator } from "../mutator"
+import mutator from "../mutator"
 import { Utils } from "../utils"
 
 type Props = {
-	mutator: Mutator
 	boardTree: BoardTree
 	pageX: number
 	pageY: number
@@ -67,7 +66,7 @@ class FilterComponent extends React.Component<Props> {
 	}
 
 	private propertyClicked(e: React.MouseEvent, filter: FilterClause) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 		const { board, activeView: view } = boardTree
 
 		const filterIndex = view.filter.filters.indexOf(filter)
@@ -90,7 +89,7 @@ class FilterComponent extends React.Component<Props> {
 	}
 
 	private conditionClicked(e: React.MouseEvent, filter: FilterClause) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 		const { activeView: view } = boardTree
 
 		const filterIndex = view.filter.filters.indexOf(filter)
@@ -115,7 +114,7 @@ class FilterComponent extends React.Component<Props> {
 	}
 
 	private valuesClicked(e: React.MouseEvent, filter: FilterClause) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 		const { board, activeView: view } = boardTree
 
 		const template = board.cardProperties.find(o => o.id === filter.propertyId)
@@ -143,7 +142,7 @@ class FilterComponent extends React.Component<Props> {
 	}
 
 	private deleteClicked(filter: FilterClause) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 		const { activeView: view } = boardTree
 
 		const filterGroup = new FilterGroup(view.filter)
@@ -153,7 +152,7 @@ class FilterComponent extends React.Component<Props> {
 	}
 
 	private addFilterClicked() {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 		const { board, activeView: view } = boardTree
 
 		const filters = view.filter?.filters.filter(o => !FilterGroup.isAnInstanceOf(o)) as FilterClause[] || []

@@ -1,16 +1,12 @@
 import { Board } from "./board"
-import { OctoClient } from "./octoClient"
+import octoClient from "./octoClient"
 import { IBlock } from "./octoTypes"
 
 class WorkspaceTree {
 	boards: Board[] = []
 
-	constructor(
-		private octo: OctoClient) {
-	}
-
 	async sync() {
-		const blocks = await this.octo.getBlocks(undefined, "board")
+		const blocks = await octoClient.getBlocks(undefined, "board")
 		this.rebuild(blocks)
 	}
 
