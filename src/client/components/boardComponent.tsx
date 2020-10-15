@@ -7,6 +7,7 @@ import { Card } from "../card"
 import { CardFilter } from "../cardFilter"
 import ViewMenu from "../components/viewMenu"
 import { Constants } from "../constants"
+import { randomEmojiList } from "../emojiList"
 import { Menu as OldMenu } from "../menu"
 import { Mutator } from "../mutator"
 import { OctoUtils } from "../octoUtils"
@@ -309,9 +310,11 @@ class BoardComponent extends React.Component<Props, State> {
 				}
 				case "testAdd100Cards": {
 					this.testAddCards(100)
+					break
 				}
 				case "testAdd1000Cards": {
 					this.testAddCards(1000)
+					break
 				}
 			}
 		}
@@ -322,6 +325,7 @@ class BoardComponent extends React.Component<Props, State> {
 		const { mutator, boardTree } = this.props
 		const { board, activeView } = boardTree
 
+		const startCount = boardTree?.cards?.length
 		let optionIndex = 0
 
 		for (let i = 0; i < count; i++) {
@@ -333,7 +337,8 @@ class BoardComponent extends React.Component<Props, State> {
 				const option = boardTree.groupByProperty.options[optionIndex]
 				optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
 				card.properties[boardTree.groupByProperty.id] = option.value
-				card.title = `Test Card ${i + 1}`
+				card.title = `Test Card ${startCount + i + 1}`
+				card.icon = BlockIcons.shared.randomIcon()
 			}
 			await mutator.insertBlock(card, "test add card")
 		}
