@@ -67,7 +67,7 @@ func (s *SQLStore) createTablesIfNotExists() error {
 	if s.dbType == "sqlite3" {
 		query = `CREATE TABLE IF NOT EXISTS blocks (
 			id VARCHAR(36),
-			insert_at DATETIME NOT NULL DEFAULT current_timestamp,
+			insert_at DATETIME NOT NULL DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),
 			parent_id VARCHAR(36),
 			type TEXT,
 			json TEXT,
