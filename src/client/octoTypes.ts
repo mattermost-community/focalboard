@@ -6,12 +6,15 @@ interface IBlock {
 	schema: number
 	type: string
 	title?: string
-	order: number
 	fields: Record<string, any>
 
 	createAt: number
 	updateAt: number
 	deleteAt: number
+}
+
+interface IOrderedBlock extends IBlock {
+	order: number
 }
 
 // These are methods exposed by the top-level page to components
@@ -22,4 +25,4 @@ interface IPageController {
 	setSearchText(text?: string): void
 }
 
-export { IBlock, IPageController }
+export { IBlock, IOrderedBlock, IPageController }

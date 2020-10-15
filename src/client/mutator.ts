@@ -2,10 +2,11 @@ import { Block } from "./blocks/block"
 import { Board, IPropertyOption, IPropertyTemplate, PropertyType } from "./blocks/board"
 import { BoardView, ISortOption } from "./blocks/boardView"
 import { Card } from "./blocks/card"
+import { ImageBlock } from "./blocks/imageBlock"
 import { BoardTree } from "./boardTree"
 import { FilterGroup } from "./filterGroup"
 import octoClient from "./octoClient"
-import { IBlock } from "./octoTypes"
+import { IBlock, IOrderedBlock } from "./octoTypes"
 import undoManager from "./undomanager"
 import { Utils } from "./utils"
 
@@ -92,7 +93,7 @@ class Mutator {
 		)
 	}
 
-	async changeOrder(block: IBlock, order: number, description: string = "change order") {
+	async changeOrder(block: IOrderedBlock, order: number, description: string = "change order") {
 		const oldValue = block.order
 		await undoManager.perform(
 			async () => {
@@ -491,8 +492,9 @@ class Mutator {
 			return undefined
 		}
 
-		const block = new Block({ type: "image", parentId, order })
-		block.fields.url = url
+		const block = new ImageBlock({ parentId })
+		block.order = order
+		block.url = url
 
 		await undoManager.perform(
 			async () => {

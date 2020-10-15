@@ -6,7 +6,7 @@ import { BoardTree } from "../boardTree"
 import { CardTree } from "../cardTree"
 import { Menu, MenuOption } from "../menu"
 import mutator from "../mutator"
-import { IBlock } from "../octoTypes"
+import { IBlock, IOrderedBlock } from "../octoTypes"
 import { OctoUtils } from "../octoUtils"
 import { PropertyMenu } from "../propertyMenu"
 import { OctoListener } from "../octoListener"
@@ -14,6 +14,8 @@ import { Utils } from "../utils"
 import Button from "./button"
 import { Editable } from "./editable"
 import { MarkdownEditor } from "./markdownEditor"
+import { TextBlock } from "../blocks/textBlock"
+import { CommentBlock } from "../blocks/commentBlock"
 
 type Props = {
 	boardTree: BoardTree
@@ -125,8 +127,8 @@ class CardDialog extends React.Component<Props, State> {
 						text=""
 						placeholderText="Add a description..."
 						onChanged={(text) => {
-							const order = cardTree.contents.length * 1000
-							const block = new Block({ type: "text", parentId: card.id, title: text, order })
+							const block = new TextBlock({ parentId: card.id, title: text })
+							block.order = cardTree.contents.length * 1000
 							mutator.insertBlock(block, "add card text")
 						}} />
 				</div>
@@ -329,8 +331,8 @@ class CardDialog extends React.Component<Props, State> {
 									Menu.shared.onMenuClicked = async (optionId: string, type?: string) => {
 										switch (optionId) {
 											case "text":
-												const order = cardTree.contents.length * 1000
-												const block = new Block({ type: "text", parentId: card.id, order })
+												const block = new TextBlock({ parentId: card.id })
+												block.order = cardTree.contents.length * 1000
 												await mutator.insertBlock(block, "add text")
 												break
 											case "image":
@@ -359,11 +361,11 @@ class CardDialog extends React.Component<Props, State> {
 
 		Utils.assertValue(card)
 
-		const block = new Block({ type: "comment", parentId: card.id, title: text })
+		const block = new CommentBlock({ parentId: card.id, title: text })
 		await mutator.insertBlock(block, "add comment")
 	}
 
-	private showContentBlockMenu(e: React.MouseEvent, block: IBlock) {
+	private showContentBlockMenu(e: React.MouseEvent, block: IOrderedBlock) {
 		const { card } = this.props
 		const { cardTree } = this.state
 		const index = cardTree.contents.indexOf(block)
@@ -405,10 +407,10 @@ class CardDialog extends React.Component<Props, State> {
 					break
 				}
 				case "insertAbove-text": {
-					const newBlock = new Block({ type: "text", parentId: card.id })
-					// TODO: Handle need to reorder all blocks
+					const newBlock = new TextBlock({ parentId: card.id })
 					newBlock.order = OctoUtils.getOrderBefore(block, cardTree.contents)
-					Utils.log(`insert block ${block.id}, order: ${block.order}`)
+					// TODO: Handle need to reorder all blocks
+					Utils.log(`insert block ${newBlock.id}, order: ${newBlock.order}`)
 					mutator.insertBlock(newBlock, "insert card text")
 					break
 				}
