@@ -1,24 +1,25 @@
 import { Board, IPropertyOption, IPropertyTemplate } from "./board"
 import { BoardView } from "./boardView"
+import { Card } from "./card"
 import { CardFilter } from "./cardFilter"
 import { OctoClient } from "./octoClient"
 import { IBlock } from "./octoTypes"
 import { Utils } from "./utils"
 
-type Group = { option: IPropertyOption, cards: IBlock[] }
+type Group = { option: IPropertyOption, cards: Card[] }
 
 class BoardTree {
 	board!: Board
 	views: BoardView[] = []
-	cards: IBlock[] = []
-	emptyGroupCards: IBlock[] = []
+	cards: Card[] = []
+	emptyGroupCards: Card[] = []
 	groups: Group[] = []
 
 	activeView?: BoardView
 	groupByProperty?: IPropertyTemplate
 
 	private searchText?: string
-	private allCards: IBlock[] = []
+	private allCards: Card[] = []
 	get allBlocks(): IBlock[] {
 		return [this.board, ...this.views, ...this.allCards]
 	}
@@ -44,7 +45,7 @@ class BoardTree {
 		this.views = viewBlocks.map(o => new BoardView(o))
 
 		const cardBlocks = blocks.filter(block => block.type === "card")
-		this.allCards = cardBlocks
+		this.allCards = cardBlocks.map(o => new Card(o))
 		this.cards = []
 
 		this.ensureMinimumSchema()
@@ -104,18 +105,25 @@ class BoardTree {
 	}
 
 	applyFilterSortAndGroup() {
+		Utils.assert(this.allCards !== undefined)
+
 		this.cards = this.filterCards(this.allCards)
+		Utils.assert(this.cards !== undefined)
 		this.cards = this.searchFilterCards(this.cards)
+		Utils.assert(this.cards !== undefined)
 		this.cards = this.sortCards(this.cards)
+		Utils.assert(this.cards !== undefined)
 
 		if (this.activeView.groupById) {
 			this.setGroupByProperty(this.activeView.groupById)
 		} else {
 			Utils.assert(this.activeView.viewType !== "board")
 		}
+
+		Utils.assert(this.cards !== undefined)
 	}
 
-	private searchFilterCards(cards: IBlock[]) {
+	private searchFilterCards(cards: Card[]): Card[] {
 		const searchText = this.searchText?.toLocaleLowerCase()
 		if (!searchText) { return cards.slice() }
 
@@ -166,7 +174,7 @@ class BoardTree {
 		}
 	}
 
-	private filterCards(cards: IBlock[]): IBlock[] {
+	private filterCards(cards: Card[]): Card[] {
 		const { board } = this
 		const filterGroup = this.activeView?.filter
 		if (!filterGroup) { return cards.slice() }
@@ -174,11 +182,11 @@ class BoardTree {
 		return CardFilter.applyFilterGroup(filterGroup, board.cardProperties, cards)
 	}
 
-	private sortCards(cards: IBlock[]): IBlock[] {
+	private sortCards(cards: Card[]): Card[] {
 		if (!this.activeView) { Utils.assertFailure(); return cards }
 		const { board } = this
 		const { sortOptions } = this.activeView
-		let sortedCards: IBlock[]
+		let sortedCards: Card[] = []
 
 		if (sortOptions.length < 1) {
 			Utils.log(`Default sort`)
@@ -213,7 +221,11 @@ class BoardTree {
 				} else {
 					const sortPropertyId = sortOption.propertyId
 					const template = board.cardProperties.find(o => o.id === sortPropertyId)
-					Utils.log(`Sort by ${template.name}`)
+					if (!template) {
+						Utils.logError(`Missing template for property id: ${sortPropertyId}`)
+						return cards.slice()
+					}
+					Utils.log(`Sort by ${template?.name}`)
 					sortedCards = cards.sort((a, b) => {
 						// Always put cards with no titles at the bottom
 						if (a.title && !b.title) { return -1 }

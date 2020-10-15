@@ -1,9 +1,10 @@
 import React from "react"
 import { IPropertyTemplate } from "./board"
 import { BoardTree } from "./boardTree"
-import { BoardView, ISortOption } from "./boardView"
+import { ISortOption } from "./boardView"
+import { Card } from "./card"
 import { Editable } from "./components/editable"
-import { Menu, MenuOption } from "./menu"
+import { Menu } from "./menu"
 import { Mutator } from "./mutator"
 import { IBlock } from "./octoTypes"
 import { Utils } from "./utils"
@@ -25,15 +26,15 @@ class OctoUtils {
 		return displayValue
 	}
 
-	static propertyValueReadonlyElement(card: IBlock, propertyTemplate: IPropertyTemplate, emptyDisplayValue: string = "Empty"): JSX.Element {
+	static propertyValueReadonlyElement(card: Card, propertyTemplate: IPropertyTemplate, emptyDisplayValue: string = "Empty"): JSX.Element {
 		return this.propertyValueElement(undefined, card, propertyTemplate, emptyDisplayValue)
 	}
 
-	static propertyValueEditableElement(mutator: Mutator, card: IBlock, propertyTemplate: IPropertyTemplate, emptyDisplayValue?: string): JSX.Element {
+	static propertyValueEditableElement(mutator: Mutator, card: Card, propertyTemplate: IPropertyTemplate, emptyDisplayValue?: string): JSX.Element {
 		return this.propertyValueElement(mutator, card, propertyTemplate, emptyDisplayValue)
 	}
 
-	private static propertyValueElement(mutator: Mutator | undefined, card: IBlock, propertyTemplate: IPropertyTemplate, emptyDisplayValue: string = "Empty"): JSX.Element {
+	private static propertyValueElement(mutator: Mutator | undefined, card: Card, propertyTemplate: IPropertyTemplate, emptyDisplayValue: string = "Empty"): JSX.Element {
 		const propertyValue = card.properties[propertyTemplate.id]
 		const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate)
 		const finalDisplayValue = displayValue || emptyDisplayValue

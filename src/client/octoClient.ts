@@ -57,25 +57,20 @@ class OctoClient {
 		}
 
 		const response = await fetch(this.serverUrl + path)
-		const blocks = await response.json() as IBlock[]
+		const blocks = (await response.json() || []) as IBlock[]
 		this.fixBlocks(blocks)
 		return blocks
 	}
 
-	fixBlocks(blocks: IBlock[]) {
+	fixBlocks(blocks: IBlock[]): void {
+		// TODO
 		for (const block of blocks) {
-			if (!block.properties) { block.properties = {} }
-
-			if (Array.isArray(block.properties)) {
-				// PORT from old schema
-				const properties: Record<string, string> = {}
-				for (const property of block.properties) {
-					if (property.id) {
-						properties[property.id] = property.value
-					}
-				}
-				block.properties = properties
-			}
+			if (!block.fields) { block.fields = {} }
+			const o = block as any
+			if (o.cardProperties) { block.fields.cardProperties = o.cardProperties; delete o.cardProperties }
+			if (o.properties) { block.fields.properties = o.properties; delete o.properties }
+			if (o.icon) { block.fields.icon = o.icon; delete o.icon }
+			if (o.url) { block.fields.url = o.url; delete o.url }
 		}
 	}
 

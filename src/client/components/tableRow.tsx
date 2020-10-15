@@ -1,7 +1,7 @@
 import React from "react"
 import { BoardTree } from "../boardTree"
+import { Card } from "../card"
 import { Mutator } from "../mutator"
-import { IBlock } from "../octoTypes"
 import { OctoUtils } from "../octoUtils"
 import { Editable } from "./editable"
 import { CardDialog } from "./cardDialog"
@@ -10,7 +10,7 @@ import RootPortal from "./rootPortal"
 type Props = {
 	mutator: Mutator
 	boardTree: BoardTree
-	card: IBlock
+	card: Card
 	focusOnMount: boolean
 	onKeyDown: (e: React.KeyboardEvent) => void
 }

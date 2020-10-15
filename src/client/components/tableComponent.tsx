@@ -4,11 +4,11 @@ import { Block } from "../block"
 import { BlockIcons } from "../blockIcons"
 import { IPropertyTemplate } from "../board"
 import { BoardTree } from "../boardTree"
-import { CsvExporter } from "../csvExporter"
+import { Card } from "../card"
 import ViewMenu from "../components/viewMenu"
+import { CsvExporter } from "../csvExporter"
 import { Menu as OldMenu } from "../menu"
 import { Mutator } from "../mutator"
-import { IBlock } from "../octoTypes"
 import { OctoUtils } from "../octoUtils"
 import { Utils } from "../utils"
 import Button from "./button"
@@ -28,7 +28,7 @@ type Props = {
 type State = {
 	isHoverOnCover: boolean
 	isSearching: boolean
-	shownCard: IBlock | null
+	shownCard: Card | null
 	viewMenu: boolean
 }
 
@@ -377,7 +377,8 @@ class TableComponent extends React.Component<Props, State> {
 	async addCard(show: boolean = false) {
 		const { mutator, boardTree } = this.props
 
-		const card = new Block({ type: "card", parentId: boardTree.board.id })
+		const card = new Card()
+		card.parentId = boardTree.board.id
 		await mutator.insertBlock(
 			card,
 			"add card",

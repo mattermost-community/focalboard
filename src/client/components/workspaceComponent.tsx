@@ -1,7 +1,7 @@
 import React from "react"
 import { BoardTree } from "../boardTree"
+import { Card } from "../card"
 import { Mutator } from "../mutator"
-import { IBlock } from "../octoTypes"
 import { Utils } from "../utils"
 import { WorkspaceTree } from "../workspaceTree"
 import { BoardComponent } from "./boardComponent"

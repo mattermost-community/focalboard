@@ -1,3 +1,5 @@
+import { Card } from "./card"
+
 // A block is the fundamental data type
 interface IBlock {
 	id: string
@@ -6,10 +8,7 @@ interface IBlock {
 	schema: number
 	type: string
 	title?: string
-	url?: string			// TODO: Move to properties (_url)
-	icon?: string
 	order: number
-	properties: Record<string, string>
 	fields: Record<string, any>
 
 	createAt: number

@@ -2,6 +2,7 @@ import React from "react"
 import ReactDOM from "react-dom"
 import { BoardTree } from "../boardTree"
 import { BoardView } from "../boardView"
+import { Card } from "../card"
 import { CardTree } from "../cardTree"
 import { CardDialog } from "../components/cardDialog"
 import { FilterComponent } from "../components/filterComponent"
@@ -10,7 +11,6 @@ import { FlashMessage } from "../flashMessage"
 import { Mutator } from "../mutator"
 import { OctoClient } from "../octoClient"
 import { OctoListener } from "../octoListener"
-import { IBlock } from "../octoTypes"
 import { UndoManager } from "../undomanager"
 import { Utils } from "../utils"
 import { WorkspaceTree } from "../workspaceTree"
@@ -24,6 +24,7 @@ type State = {
 	workspaceTree: WorkspaceTree
 	boardTree?: BoardTree
 	shownCardTree?: CardTree
+	filterAnchorElement?: HTMLElement
 }
 
 export default class BoardPage extends React.Component<Props, State> {
@@ -32,7 +33,6 @@ export default class BoardPage extends React.Component<Props, State> {
 	updateTitleTimeout: number
 	updatePropertyLabelTimeout: number
 
-	private filterAnchorElement?: HTMLElement
 	private octo = new OctoClient()
 	private boardListener = new OctoListener()
 	private cardListener = new OctoListener()
@@ -110,8 +110,8 @@ export default class BoardPage extends React.Component<Props, State> {
 		const { board, activeView } = this.state.boardTree || {}
 		const mutator = new Mutator(this.octo)
 
-		if (this.filterAnchorElement) {
-			const element = this.filterAnchorElement
+		if (this.state.filterAnchorElement) {
+			const element = this.state.filterAnchorElement
 			const bodyRect = document.body.getBoundingClientRect()
 			const rect = element.getBoundingClientRect()
 			// Show at bottom-left of element
@@ -210,11 +210,12 @@ export default class BoardPage extends React.Component<Props, State> {
 		window.history.pushState({ path: newUrl }, "", newUrl)
 	}
 
-	showFilter(ahchorElement?: HTMLElement) {
-		this.filterAnchorElement = ahchorElement
+	showFilter(anchorElement?: HTMLElement) {
+		this.setState({...this.state, filterAnchorElement: anchorElement})
 	}
 
 	setSearchText(text?: string) {
 		this.state.boardTree?.setSearchText(text)
+		this.setState({...this.state, boardTree: this.state.boardTree})
 	}
 }
