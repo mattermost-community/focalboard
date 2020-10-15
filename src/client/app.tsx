@@ -31,6 +31,9 @@ export default function App() {
 
 				<div id="overlay">
 				</div>
+
+				<div id="modal">
+				</div>
 			</div>
 		</Router>
 	)

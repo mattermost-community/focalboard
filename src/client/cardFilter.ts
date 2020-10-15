@@ -1,15 +1,15 @@
 import { IPropertyTemplate } from "./board"
+import { Card } from "./card"
 import { FilterClause } from "./filterClause"
 import { FilterGroup } from "./filterGroup"
-import { IBlock } from "./octoTypes"
 import { Utils } from "./utils"
 
 class CardFilter {
-	static applyFilterGroup(filterGroup: FilterGroup, templates: IPropertyTemplate[], cards: IBlock[]): IBlock[] {
+	static applyFilterGroup(filterGroup: FilterGroup, templates: IPropertyTemplate[], cards: Card[]): Card[] {
 		return cards.filter(card => this.isFilterGroupMet(filterGroup, templates, card))
 	}
 
-	static isFilterGroupMet(filterGroup: FilterGroup, templates: IPropertyTemplate[], card: IBlock): boolean {
+	static isFilterGroupMet(filterGroup: FilterGroup, templates: IPropertyTemplate[], card: Card): boolean {
 		const { filters } = filterGroup
 
 		if (filterGroup.filters.length < 1) {
@@ -38,7 +38,7 @@ class CardFilter {
 		}
 	}
 
-	static isClauseMet(filter: FilterClause, templates: IPropertyTemplate[], card: IBlock): boolean {
+	static isClauseMet(filter: FilterClause, templates: IPropertyTemplate[], card: Card): boolean {
 		const value = card.properties[filter.propertyId]
 		switch (filter.condition) {
 			case "includes": {

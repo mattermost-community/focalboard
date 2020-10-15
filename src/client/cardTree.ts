@@ -1,8 +1,9 @@
+import { Card } from "./card"
 import { OctoClient } from "./octoClient"
 import { IBlock } from "./octoTypes"
 
 class CardTree {
-	card: IBlock
+	card: Card
 	comments: IBlock[]
 	contents: IBlock[]
 	isSynched: boolean
@@ -18,7 +19,7 @@ class CardTree {
 	}
 
 	private rebuild(blocks: IBlock[]) {
-		this.card = blocks.find(o => o.id === this.cardId)
+		this.card = new Card(blocks.find(o => o.id === this.cardId))
 
 		this.comments = blocks
 			.filter(block => block.type === "comment")

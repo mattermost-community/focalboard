@@ -25,9 +25,9 @@ class BoardView extends Block {
 
 		this.type = "view"
 
-		this.sortOptions = block.properties?.sortOptions?.map((o: ISortOption) => ({ ...o })) || []		// Deep clone
-		this.visiblePropertyIds = block.properties?.visiblePropertyIds?.slice() || []
-		this.filter = new FilterGroup(block.properties?.filter)
+		this.sortOptions = block.fields?.sortOptions?.map((o: ISortOption) => ({ ...o })) || []		// Deep clone
+		this.visiblePropertyIds = block.fields?.visiblePropertyIds?.slice() || []
+		this.filter = new FilterGroup(block.fields?.filter)
 
 		// TODO: Remove this fixup code
 		if (block.schema !== 1) {

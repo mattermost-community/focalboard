@@ -2,6 +2,7 @@ import React from "react"
 import ReactDOM from "react-dom"
 import { BoardTree } from "../boardTree"
 import { BoardView } from "../boardView"
+import { Card } from "../card"
 import { CardTree } from "../cardTree"
 import { CardDialog } from "../components/cardDialog"
 import { FilterComponent } from "../components/filterComponent"
@@ -10,7 +11,6 @@ import { FlashMessage } from "../flashMessage"
 import { Mutator } from "../mutator"
 import { OctoClient } from "../octoClient"
 import { OctoListener } from "../octoListener"
-import { IBlock } from "../octoTypes"
 import { UndoManager } from "../undomanager"
 import { Utils } from "../utils"
 import { WorkspaceTree } from "../workspaceTree"
@@ -210,7 +210,7 @@ export default class BoardPage extends React.Component<Props, State> {
 
 	// IPageController
 
-	async showCard(card: IBlock) {
+	async showCard(card: Card) {
 		this.cardListener.close()
 
 		if (card) {

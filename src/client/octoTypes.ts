@@ -1,3 +1,5 @@
+import { Card } from "./card"
+
 // A block is the fundamental data type
 interface IBlock {
 	id: string
@@ -6,10 +8,7 @@ interface IBlock {
 	schema: number
 	type: string
 	title?: string
-	url?: string			// TODO: Move to properties (_url)
-	icon?: string
 	order: number
-	properties: Record<string, string>
 	fields: Record<string, any>
 
 	createAt: number
@@ -19,7 +18,7 @@ interface IBlock {
 
 // These are methods exposed by the top-level page to components
 interface IPageController {
-	showCard(card: IBlock): Promise<void>
+	showCard(card: Card): Promise<void>
 	showBoard(boardId: string): void
 	showView(viewId: string): void
 	showFilter(anchorElement?: HTMLElement): void

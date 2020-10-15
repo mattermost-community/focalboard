@@ -1,7 +1,7 @@
 import React from "react"
 import { BoardTree } from "../boardTree"
+import { Card } from "../card"
 import { Mutator } from "../mutator"
-import { IBlock } from "../octoTypes"
 import { Utils } from "../utils"
 import { WorkspaceTree } from "../workspaceTree"
 import { BoardComponent } from "./boardComponent"
@@ -14,7 +14,7 @@ type Props = {
 	boardTree?: BoardTree
 	showBoard: (id: string) => void
 	showView: (id: string) => void
-	showCard: (card: IBlock) => void
+	showCard: (card: Card) => void
 	showFilter: (el: HTMLElement) => void
 	setSearchText: (text: string) => void
 }

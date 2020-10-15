@@ -1,15 +1,14 @@
 import React from "react"
 import { Archiver } from "../archiver"
-import { Block } from "../block"
 import { BlockIcons } from "../blockIcons"
 import { IPropertyOption } from "../board"
 import { BoardTree } from "../boardTree"
+import { Card } from "../card"
 import { CardFilter } from "../cardFilter"
 import ViewMenu from "../components/viewMenu"
 import { Constants } from "../constants"
 import { Menu as OldMenu } from "../menu"
 import { Mutator } from "../mutator"
-import { IBlock } from "../octoTypes"
 import { OctoUtils } from "../octoUtils"
 import { Utils } from "../utils"
 import { BoardCard } from "./boardCard"
@@ -21,7 +20,7 @@ type Props = {
 	mutator: Mutator,
 	boardTree?: BoardTree
 	showView: (id: string) => void
-	showCard: (card: IBlock) => void
+	showCard: (card: Card) => void
 	showFilter: (el: HTMLElement) => void
 	setSearchText: (text: string) => void
 }
@@ -33,7 +32,7 @@ type State = {
 }
 
 class BoardComponent extends React.Component<Props, State> {
-	private draggedCard: IBlock
+	private draggedCard: Card
 	private draggedHeaderOption: IPropertyOption
 	private searchFieldRef = React.createRef<Editable>()
 
@@ -239,7 +238,7 @@ class BoardComponent extends React.Component<Props, State> {
 		OldMenu.shared.showAtElement(e.target as HTMLElement)
 	}
 
-	async showCard(card?: IBlock) {
+	async showCard(card?: Card) {
 		console.log(`showCard: ${card?.title}`)
 
 		await this.props.showCard(card)
@@ -249,8 +248,9 @@ class BoardComponent extends React.Component<Props, State> {
 		const { mutator, boardTree } = this.props
 		const { activeView, board } = boardTree
 
-		const properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
-		const card = new Block({ type: "card", parentId: boardTree.board.id, properties })
+		const card = new Card()
+		card.parentId = boardTree.board.id
+		card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
 		if (boardTree.groupByProperty) {
 			card.properties[boardTree.groupByProperty.id] = groupByValue
 		}
@@ -325,8 +325,9 @@ class BoardComponent extends React.Component<Props, State> {
 		let optionIndex = 0
 
 		for (let i = 0; i < count; i++) {
-			const properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
-			const card = new Block({ type: "card", parentId: boardTree.board.id, properties })
+			const card = new Card()
+			card.parentId = boardTree.board.id
+			card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
 			if (boardTree.groupByProperty && boardTree.groupByProperty.options.length > 0) {
 				// Cycle through options
 				const option = boardTree.groupByProperty.options[optionIndex]
@@ -387,6 +388,7 @@ class BoardComponent extends React.Component<Props, State> {
 			color: "#cccccc"
 		}
 
+		Utils.assert(boardTree.groupByProperty)
 		await mutator.insertPropertyOption(boardTree, boardTree.groupByProperty, option, "add group")
 	}
 
