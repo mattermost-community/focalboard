@@ -32,19 +32,19 @@ class Sidebar extends React.Component<Props> {
 							<div key={board.id} className="octo-sidebar-item octo-hover-container">
 								<div className="octo-sidebar-title" onClick={() => { this.boardClicked(board) }}>{board.icon ? `${board.icon} ${displayTitle}` : displayTitle}</div>
 								<div className="octo-spacer"></div>
-                                <MenuWrapper>
-								    <div className="octo-button square octo-hover-item"><div className="imageOptions" /></div>
-                                    <Menu>
-                                        <Menu.Text id="delete" name="Delete board" onClick={async () => {
-		                                    const nextBoardId = boards.length > 1 ? boards.find(o => o.id !== board.id).id : undefined
-                                            mutator.deleteBlock(
-                                                board,
-                                                "delete block",
-                                                async () => { nextBoardId && this.props.showBoard(nextBoardId!) },
-                                                async () => { this.props.showBoard(board.id) },
-                                            )}} />
-                                    </Menu>
-                                </MenuWrapper>
+								<MenuWrapper>
+									<div className="octo-button square octo-hover-item"><div className="imageOptions" /></div>
+									<Menu>
+										<Menu.Text id="delete" name="Delete board" onClick={async () => {
+											const nextBoardId = boards.length > 1 ? boards.find(o => o.id !== board.id).id : undefined
+											mutator.deleteBlock(
+												board,
+												"delete block",
+												async () => { nextBoardId && this.props.showBoard(nextBoardId!) },
+												async () => { this.props.showBoard(board.id) },
+											)}} />
+									</Menu>
+								</MenuWrapper>
 							</div>
 						)
 					})
@@ -56,13 +56,13 @@ class Sidebar extends React.Component<Props> {
 
 				<div className="octo-spacer"></div>
 
-                <MenuWrapper>
-                    <div className="octo-button">Settings</div>
-                    <Menu position="top">
-                        <Menu.Text id="import" name="Import Archive" onClick={async () => Archiver.importFullArchive(() => { this.forceUpdate() })} />
-                        <Menu.Text id="export" name="Export Archive" onClick={async () => Archiver.exportFullArchive()} />
-                    </Menu>
-                </MenuWrapper>
+				<MenuWrapper>
+					<div className="octo-button">Settings</div>
+					<Menu position="top">
+						<Menu.Text id="import" name="Import Archive" onClick={async () => Archiver.importFullArchive(() => { this.forceUpdate() })} />
+						<Menu.Text id="export" name="Export Archive" onClick={async () => Archiver.exportFullArchive()} />
+					</Menu>
+				</MenuWrapper>
 			</div>
 		)
 	}
