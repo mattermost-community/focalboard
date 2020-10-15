@@ -1,5 +1,3 @@
-import { Card } from "./card"
-
 // A block is the fundamental data type
 interface IBlock {
 	id: string

@@ -18,10 +18,10 @@ export default class LoginPage extends React.Component<Props, State> {
     }
 
     handleLogin = () => {
-        console.log("Logging in");
+        console.log("Logging in")
     }
 
-    public render(): React.ReactNode {
+    render(): React.ReactNode {
         return (
             <div className='LoginPage'>
                 <div className='username'>

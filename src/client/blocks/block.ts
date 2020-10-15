@@ -1,5 +1,5 @@
-import { IBlock } from "./octoTypes"
-import { Utils } from "./utils"
+import { IBlock } from "../octoTypes"
+import { Utils } from "../utils"
 
 class Block implements IBlock {
 	id: string = Utils.createGuid()

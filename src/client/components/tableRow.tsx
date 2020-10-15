@@ -1,6 +1,6 @@
 import React from "react"
 import { BoardTree } from "../boardTree"
-import { Card } from "../card"
+import { Card } from "../blocks/card"
 import mutator from "../mutator"
 import { OctoUtils } from "../octoUtils"
 import { Editable } from "./editable"

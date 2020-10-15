@@ -1,4 +1,4 @@
-import { Board } from "./board"
+import { Board } from "./blocks/board"
 import octoClient from "./octoClient"
 import { IBlock } from "./octoTypes"
 

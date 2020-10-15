@@ -1,6 +1,6 @@
 import React from "react"
-import { Block } from "../block"
-import { Card } from "../card"
+import { Block } from "../blocks/block"
+import { Card } from "../blocks/card"
 import { BlockIcons } from "../blockIcons"
 import { BoardTree } from "../boardTree"
 import { CardTree } from "../cardTree"

@@ -1,4 +1,4 @@
-import { IPropertyTemplate, PropertyType } from "./board"
+import { IPropertyTemplate, PropertyType } from "./blocks/board"
 import { Menu } from "./menu"
 import { Utils } from "./utils"
 
