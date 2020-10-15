@@ -329,6 +329,14 @@ hr {
 	background-color: #ffffff;
 }
 
+.menu.top {
+    bottom: 100%;
+}
+
+.menu-wrapper {
+    position: relative;
+}
+
 .menu-options {
 	display: flex;
 	flex-direction: column;

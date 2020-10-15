@@ -117,6 +117,7 @@ class TextOption extends React.Component<TextOptionProps> {
 
 type MenuProps = {
     children: React.ReactNode
+    position?: 'top'|'bottom'
 }
 
 export default class Menu extends React.Component<MenuProps> {
@@ -127,10 +128,11 @@ export default class Menu extends React.Component<MenuProps> {
     static Text = TextOption
 
     render() {
+        const {position, children} = this.props
         return (
-            <div className="Menu menu noselect">
+            <div className={"Menu menu noselect " + (position ? position : "bottom")}>
                 <div className="menu-options">
-                    {this.props.children}
+                    {children}
                 </div>
             </div>
         )

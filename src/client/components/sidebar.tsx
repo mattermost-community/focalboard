@@ -2,9 +2,9 @@ import React from "react"
 import { Archiver } from "../archiver"
 import { Board } from "../board"
 import { BoardTree } from "../boardTree"
-import { Menu, MenuOption } from "../menu"
+import Menu from '../widgets/menu'
+import MenuWrapper from '../widgets/menuWrapper'
 import mutator from "../mutator"
-import { IPageController } from "../octoTypes"
 import { WorkspaceTree } from "../workspaceTree"
 
 type Props = {
@@ -32,7 +32,19 @@ class Sidebar extends React.Component<Props> {
 							<div key={board.id} className="octo-sidebar-item octo-hover-container">
 								<div className="octo-sidebar-title" onClick={() => { this.boardClicked(board) }}>{board.icon ? `${board.icon} ${displayTitle}` : displayTitle}</div>
 								<div className="octo-spacer"></div>
-								<div className="octo-button square octo-hover-item" onClick={(e) => { this.showOptions(e, board) }}><div className="imageOptions" /></div>
+                                <MenuWrapper>
+								    <div className="octo-button square octo-hover-item"><div className="imageOptions" /></div>
+                                    <Menu>
+                                        <Menu.Text id="delete" name="Delete board" onClick={async () => {
+		                                    const nextBoardId = boards.length > 1 ? boards.find(o => o.id !== board.id).id : undefined
+                                            mutator.deleteBlock(
+                                                board,
+                                                "delete block",
+                                                async () => { nextBoardId && this.props.showBoard(nextBoardId!) },
+                                                async () => { this.props.showBoard(board.id) },
+                                            )}} />
+                                    </Menu>
+                                </MenuWrapper>
 							</div>
 						)
 					})
@@ -44,64 +56,15 @@ class Sidebar extends React.Component<Props> {
 
 				<div className="octo-spacer"></div>
 
-				<div className="octo-button" onClick={(e) => { this.settingsClicked(e) }}>Settings</div>
+                <MenuWrapper>
+                    <div className="octo-button">Settings</div>
+                    <Menu position="top">
+                        <Menu.Text id="import" name="Import Archive" onClick={async () => Archiver.importFullArchive(() => { this.forceUpdate() })} />
+                        <Menu.Text id="export" name="Export Archive" onClick={async () => Archiver.exportFullArchive()} />
+                    </Menu>
+                </MenuWrapper>
 			</div>
 		)
-	}
-
-	private showOptions(e: React.MouseEvent, board: Board) {
-		const { showBoard, workspaceTree } = this.props
-		const { boards } = workspaceTree
-
-		const options: MenuOption[] = []
-
-		const nextBoardId = boards.length > 1 ? boards.find(o => o.id !== board.id).id : undefined
-		if (nextBoardId) {
-			options.push({ id: "delete", name: "Delete board" })
-		}
-
-		Menu.shared.options = options
-		Menu.shared.onMenuClicked = (optionId: string, type?: string) => {
-			switch (optionId) {
-				case "delete": {
-					mutator.deleteBlock(
-						board,
-						"delete block",
-						async () => { showBoard(nextBoardId!) },
-						async () => { showBoard(board.id) },
-					)
-					break
-				}
-			}
-		}
-		Menu.shared.showAtElement(e.target as HTMLElement)
-	}
-
-	private settingsClicked(e: React.MouseEvent) {
-		Menu.shared.options = [
-			{ id: "import", name: "Import Archive" },
-			{ id: "export", name: "Export Archive" },
-		]
-		Menu.shared.onMenuClicked = (optionId: string, type?: string) => {
-			switch (optionId) {
-				case "import": {
-					Archiver.importFullArchive(() => {
-						this.forceUpdate()
-					})
-					break
-				}
-				case "export": {
-					Archiver.exportFullArchive()
-					break
-				}
-			}
-		}
-
-		// HACKHACK: Show menu above (TODO: refactor menu code to do this automatically)
-		const element = e.target as HTMLElement
-		const bodyRect = document.body.getBoundingClientRect()
-		const rect = element.getBoundingClientRect()
-		Menu.shared.showAt(rect.left - bodyRect.left + 20, rect.top - bodyRect.top - 30 * Menu.shared.options.length)
 	}
 
 	private boardClicked(board: Board) {
