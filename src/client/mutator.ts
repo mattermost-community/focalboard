@@ -14,9 +14,6 @@ import { Utils } from "./utils"
 // It also ensures that the Undo-manager is called for each action
 //
 class Mutator {
-	constructor() {
-	}
-
 	async insertBlock(block: IBlock, description: string = "add", afterRedo?: () => Promise<void>, beforeUndo?: () => Promise<void>) {
 		await undoManager.perform(
 			async () => {
@@ -510,21 +507,21 @@ class Mutator {
 		return block
 	}
 
-    async undo() {
-        await undoManager.undo()
-    }
+	async undo() {
+		await undoManager.undo()
+	}
 
-    undoDescription(): string | undefined {
-        return undoManager.undoDescription
-    }
+	undoDescription(): string | undefined {
+		return undoManager.undoDescription
+	}
 
-    async redo() {
-        await undoManager.redo()
-    }
+	async redo() {
+		await undoManager.redo()
+	}
 
-    redoDescription(): string | undefined {
-        return undoManager.redoDescription
-    }
+	redoDescription(): string | undefined {
+		return undoManager.redoDescription
+	}
 }
 
 const mutator = new Mutator()

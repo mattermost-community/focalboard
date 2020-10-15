@@ -48,12 +48,12 @@ class CardDialog extends React.Component<Props, State> {
 		this.cardListener = new OctoListener()
 		this.cardListener.open(this.props.card.id, async () => {
 			await cardTree.sync()
-			this.setState({cardTree: cardTree})
+			this.setState({ cardTree })
 		})
 		const cardTree = new CardTree(this.props.card.id)
 		cardTree.sync().then(() => {
 			this.setState({cardTree})
-		});
+		})
 
 		document.addEventListener("keydown", this.keydownHandler)
 	}

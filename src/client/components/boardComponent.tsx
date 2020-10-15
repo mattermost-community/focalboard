@@ -246,7 +246,7 @@ class BoardComponent extends React.Component<Props, State> {
 		if (boardTree.groupByProperty) {
 			card.properties[boardTree.groupByProperty.id] = groupByValue
 		}
-		await mutator.insertBlock(card, "add card", async () => { await this.setState({shownCard: card}) }, async () => { await this.setState({shownCard: undefined}) })
+		await mutator.insertBlock(card, "add card", async () => { this.setState({shownCard: card}) }, async () => { this.setState({shownCard: undefined}) })
 	}
 
 	async propertyNameChanged(option: IPropertyOption, text: string) {

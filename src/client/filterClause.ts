@@ -13,9 +13,11 @@ class FilterClause {
 			case "notIncludes": return "doesn't include"
 			case "isEmpty": return "is empty"
 			case "isNotEmpty": return "is not empty"
+			default: {
+				Utils.assertFailure()
+				return "(unknown)"
+			}
 		}
-		Utils.assertFailure()
-		return "(unknown)"
 	}
 
 	constructor(o: any = {}) {
