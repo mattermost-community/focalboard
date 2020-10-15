@@ -5,7 +5,7 @@ import { ISortOption } from "./boardView"
 import { Card } from "./card"
 import { Editable } from "./components/editable"
 import { Menu } from "./menu"
-import { Mutator } from "./mutator"
+import mutator from "./mutator"
 import { IBlock } from "./octoTypes"
 import { Utils } from "./utils"
 
@@ -27,14 +27,14 @@ class OctoUtils {
 	}
 
 	static propertyValueReadonlyElement(card: Card, propertyTemplate: IPropertyTemplate, emptyDisplayValue: string = "Empty"): JSX.Element {
-		return this.propertyValueElement(undefined, card, propertyTemplate, emptyDisplayValue)
+		return this.propertyValueElement(true, card, propertyTemplate, emptyDisplayValue)
 	}
 
-	static propertyValueEditableElement(mutator: Mutator, card: Card, propertyTemplate: IPropertyTemplate, emptyDisplayValue?: string): JSX.Element {
-		return this.propertyValueElement(mutator, card, propertyTemplate, emptyDisplayValue)
+	static propertyValueEditableElement(card: Card, propertyTemplate: IPropertyTemplate, emptyDisplayValue?: string): JSX.Element {
+		return this.propertyValueElement(false, card, propertyTemplate, emptyDisplayValue)
 	}
 
-	private static propertyValueElement(mutator: Mutator | undefined, card: Card, propertyTemplate: IPropertyTemplate, emptyDisplayValue: string = "Empty"): JSX.Element {
+	private static propertyValueElement(readOnly: boolean, card: Card, propertyTemplate: IPropertyTemplate, emptyDisplayValue: string = "Empty"): JSX.Element {
 		const propertyValue = card.properties[propertyTemplate.id]
 		const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate)
 		const finalDisplayValue = displayValue || emptyDisplayValue
@@ -69,18 +69,18 @@ class OctoUtils {
 				key={propertyTemplate.id}
 				className={`${className} ${propertyColorCssClassName}`}
 				tabIndex={0}
-				onClick={mutator ? (e) => { showMenu(e.target as HTMLElement) } : undefined}
-				onKeyDown={mutator ? (e) => {
+				onClick={!readOnly ? (e) => { showMenu(e.target as HTMLElement) } : undefined}
+				onKeyDown={!readOnly ? (e) => {
 					if (e.keyCode === 13) {
 						showMenu(e.target as HTMLElement)
 					}
 				} : undefined}
-				onFocus={mutator ? () => { Menu.shared.hide() } : undefined}
+				onFocus={!readOnly ? () => { Menu.shared.hide() } : undefined}
 			>
 				{finalDisplayValue}
 			</div>
 		} else if (propertyTemplate.type === "text" || propertyTemplate.type === "number") {
-			if (mutator) {
+			if (!readOnly) {
 				element = <Editable
 					key={propertyTemplate.id}
 					className="octo-propertyvalue"
@@ -121,7 +121,7 @@ class OctoUtils {
 		return (block.order + nextBlock.order) / 2
 	}
 
-	static showSortMenu(e: React.MouseEvent, mutator: Mutator, boardTree: BoardTree) {
+	static showSortMenu(e: React.MouseEvent, boardTree: BoardTree) {
 		const { activeView } = boardTree
 		const { sortOptions } = activeView
 		const sortOption = sortOptions.length > 0 ? sortOptions[0] : undefined

@@ -3,12 +3,11 @@ import { Archiver } from "../archiver"
 import { Board } from "../board"
 import { BoardTree } from "../boardTree"
 import { Menu, MenuOption } from "../menu"
-import { Mutator } from "../mutator"
+import mutator from "../mutator"
 import { IPageController } from "../octoTypes"
 import { WorkspaceTree } from "../workspaceTree"
 
 type Props = {
-	mutator: Mutator
 	showBoard: (id: string) => void
 	workspaceTree: WorkspaceTree,
 	boardTree?: BoardTree
@@ -51,7 +50,7 @@ class Sidebar extends React.Component<Props> {
 	}
 
 	private showOptions(e: React.MouseEvent, board: Board) {
-		const { mutator, showBoard, workspaceTree } = this.props
+		const { showBoard, workspaceTree } = this.props
 		const { boards } = workspaceTree
 
 		const options: MenuOption[] = []
@@ -79,8 +78,6 @@ class Sidebar extends React.Component<Props> {
 	}
 
 	private settingsClicked(e: React.MouseEvent) {
-		const { mutator } = this.props
-
 		Menu.shared.options = [
 			{ id: "import", name: "Import Archive" },
 			{ id: "export", name: "Export Archive" },
@@ -88,13 +85,13 @@ class Sidebar extends React.Component<Props> {
 		Menu.shared.onMenuClicked = (optionId: string, type?: string) => {
 			switch (optionId) {
 				case "import": {
-					Archiver.importFullArchive(mutator, () => {
+					Archiver.importFullArchive(() => {
 						this.forceUpdate()
 					})
 					break
 				}
 				case "export": {
-					Archiver.exportFullArchive(mutator)
+					Archiver.exportFullArchive()
 					break
 				}
 			}
@@ -112,7 +109,7 @@ class Sidebar extends React.Component<Props> {
 	}
 
 	async addBoardClicked() {
-		const { mutator, boardTree, showBoard } = this.props
+		const { boardTree, showBoard } = this.props
 
 		const oldBoardId = boardTree?.board?.id
 		const board = new Board()

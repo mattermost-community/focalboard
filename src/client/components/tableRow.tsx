@@ -1,12 +1,11 @@
 import React from "react"
 import { BoardTree } from "../boardTree"
 import { Card } from "../card"
-import { Mutator } from "../mutator"
+import mutator from "../mutator"
 import { OctoUtils } from "../octoUtils"
 import { Editable } from "./editable"
 
 type Props = {
-	mutator: Mutator
 	boardTree: BoardTree
 	card: Card
 	focusOnMount: boolean
@@ -27,7 +26,7 @@ class TableRow extends React.Component<Props, State> {
 	}
 
 	render() {
-		const { mutator, boardTree, card, showCard, onKeyDown } = this.props
+		const { boardTree, card, showCard, onKeyDown } = this.props
 		const { board, activeView } = boardTree
 
 		const openButonRef = React.createRef<HTMLDivElement>()
@@ -57,7 +56,7 @@ class TableRow extends React.Component<Props, State> {
 				.filter(template => activeView.visiblePropertyIds.includes(template.id))
 				.map(template => {
 					return <div className="octo-table-cell" key={template.id}>
-						{OctoUtils.propertyValueEditableElement(mutator, card, template)}
+						{OctoUtils.propertyValueEditableElement(card, template)}
 					</div>
 				})}
 		</div>

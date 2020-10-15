@@ -10,7 +10,7 @@ import MenuWrapper from "../widgets/menuWrapper"
 import Menu from "../widgets/menu"
 import { CsvExporter } from "../csvExporter"
 import { Menu as OldMenu } from "../menu"
-import { Mutator } from "../mutator"
+import mutator from "../mutator"
 import { OctoUtils } from "../octoUtils"
 import { Utils } from "../utils"
 import Button from "./button"
@@ -18,7 +18,6 @@ import { Editable } from "./editable"
 import { TableRow } from "./tableRow"
 
 type Props = {
-	mutator: Mutator,
 	boardTree?: BoardTree
 	showView: (id: string) => void
 	showCard: (card: Card) => void
@@ -50,7 +49,7 @@ class TableComponent extends React.Component<Props, State> {
 	}
 
 	render() {
-		const { mutator, boardTree, showView } = this.props
+		const { boardTree, showView } = this.props
 
 		if (!boardTree || !boardTree.board) {
 			return (
@@ -107,7 +106,6 @@ class TableComponent extends React.Component<Props, State> {
 								</div>
 								<ViewMenu
 									board={board}
-									mutator={mutator}
 									boardTree={boardTree}
 									showView={showView}
 								/>
@@ -115,7 +113,7 @@ class TableComponent extends React.Component<Props, State> {
 							<div className="octo-spacer"></div>
 							<div className="octo-button" onClick={(e) => { this.propertiesClicked(e) }}>Properties</div>
 							<div className={hasFilter ? "octo-button active" : "octo-button"} onClick={(e) => { this.filterClicked(e) }}>Filter</div>
-							<div className={hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { OctoUtils.showSortMenu(e, mutator, boardTree) }}>Sort</div>
+							<div className={hasSort ? "octo-button active" : "octo-button"} onClick={(e) => { OctoUtils.showSortMenu(e, boardTree) }}>Sort</div>
 							{this.state.isSearching
 								? <Editable
 									ref={this.searchFieldRef}
@@ -186,7 +184,6 @@ class TableComponent extends React.Component<Props, State> {
 								const tableRow = <TableRow
 									key={card.id}
 									ref={tableRowRef}
-									mutator={mutator}
 									boardTree={boardTree}
 									card={card}
 									focusOnMount={focusOnMount}
@@ -221,7 +218,7 @@ class TableComponent extends React.Component<Props, State> {
 	}
 
 	private async propertiesClicked(e: React.MouseEvent) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 		const { activeView } = boardTree
 
 		const selectProperties = boardTree.board.cardProperties
@@ -274,7 +271,7 @@ class TableComponent extends React.Component<Props, State> {
 	}
 
 	private async headerClicked(e: React.MouseEvent<HTMLDivElement>, templateId: string) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 		const { board } = boardTree
 		const { activeView } = boardTree
 
@@ -361,7 +358,7 @@ class TableComponent extends React.Component<Props, State> {
 	}
 
 	async addCard(show: boolean = false) {
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 
 		const card = new Card()
 		card.parentId = boardTree.board.id
@@ -383,7 +380,7 @@ class TableComponent extends React.Component<Props, State> {
 		const { draggedHeaderTemplate } = this
 		if (!draggedHeaderTemplate) { return }
 
-		const { mutator, boardTree } = this.props
+		const { boardTree } = this.props
 		const { board } = boardTree
 
 		Utils.assertValue(mutator)

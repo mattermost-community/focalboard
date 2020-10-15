@@ -2,12 +2,11 @@ import React from "react"
 import { Board } from "../board"
 import { BoardTree } from "../boardTree"
 import { BoardView } from "../boardView"
-import { Mutator } from "../mutator"
+import mutator from "../mutator"
 import { Utils } from "../utils"
 import Menu from "../widgets/menu"
 
 type Props = {
-	mutator: Mutator,
 	boardTree?: BoardTree
 	board: Board,
 	showView: (id: string) => void
@@ -15,7 +14,7 @@ type Props = {
 
 export default class ViewMenu extends React.Component<Props> {
 	handleDeleteView = async (id: string) => {
-		const { board, boardTree, mutator, showView } = this.props
+		const { board, boardTree, showView } = this.props
 		Utils.log(`deleteView`)
 		const view = boardTree.activeView
 		const nextView = boardTree.views.find(o => o !== view)
@@ -31,7 +30,7 @@ export default class ViewMenu extends React.Component<Props> {
 	}
 
 	handleAddViewBoard = async (id: string) => {
-		const { board, boardTree, mutator, showView } = this.props
+		const { board, boardTree, showView } = this.props
 		Utils.log(`addview-board`)
 		const view = new BoardView()
 		view.title = "Board View"
@@ -48,7 +47,7 @@ export default class ViewMenu extends React.Component<Props> {
 	}
 
 	handleAddViewTable = async (id: string) => {
-		const { board, boardTree, mutator, showView } = this.props
+		const { board, boardTree, showView } = this.props
 
 		Utils.log(`addview-table`)
 		const view = new BoardView()

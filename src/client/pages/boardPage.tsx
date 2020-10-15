@@ -8,10 +8,9 @@ import { CardDialog } from "../components/cardDialog"
 import { FilterComponent } from "../components/filterComponent"
 import { WorkspaceComponent } from "../components/workspaceComponent"
 import { FlashMessage } from "../flashMessage"
-import { Mutator } from "../mutator"
-import { OctoClient } from "../octoClient"
+import mutator from "../mutator"
+import octoClient from "../octoClient"
 import { OctoListener } from "../octoListener"
-import { UndoManager } from "../undomanager"
 import { Utils } from "../utils"
 import { WorkspaceTree } from "../workspaceTree"
 
@@ -33,7 +32,6 @@ export default class BoardPage extends React.Component<Props, State> {
 	updateTitleTimeout: number
 	updatePropertyLabelTimeout: number
 
-	private octo = new OctoClient()
 	private boardListener = new OctoListener()
 	private cardListener = new OctoListener()
 
@@ -46,7 +44,7 @@ export default class BoardPage extends React.Component<Props, State> {
 		this.state = {
 			boardId,
 			viewId,
-			workspaceTree: new WorkspaceTree(this.octo),
+			workspaceTree: new WorkspaceTree(),
 		}
 
 		Utils.log(`BoardPage. boardId: ${boardId}`)
@@ -73,8 +71,8 @@ export default class BoardPage extends React.Component<Props, State> {
 
 		if (e.keyCode === 90 && !e.shiftKey && (e.ctrlKey || e.metaKey) && !e.altKey) {		// Cmd+Z
 			Utils.log(`Undo`)
-			const description = UndoManager.shared.undoDescription
-			await UndoManager.shared.undo()
+			const description = mutator.undoDescription()
+			await mutator.undo()
 			if (description) {
 				FlashMessage.show(`Undo ${description}`)
 			} else {
@@ -82,8 +80,8 @@ export default class BoardPage extends React.Component<Props, State> {
 			}
 		} else if (e.keyCode === 90 && e.shiftKey && (e.ctrlKey || e.metaKey) && !e.altKey) {		// Shift+Cmd+Z
 			Utils.log(`Redo`)
-			const description = UndoManager.shared.redoDescription
-			await UndoManager.shared.redo()
+			const description = mutator.redoDescription()
+			await mutator.redo()
 			if (description) {
 				FlashMessage.show(`Redo ${description}`)
 			} else {
@@ -108,12 +106,11 @@ export default class BoardPage extends React.Component<Props, State> {
 	render() {
 		const { workspaceTree, shownCardTree } = this.state
 		const { board, activeView } = this.state.boardTree || {}
-		const mutator = new Mutator(this.octo)
 
 		// TODO Move all this into the root portal component when that is merged
 		if (this.state.boardTree && this.state.boardTree.board && shownCardTree) {
 			ReactDOM.render(
-				<CardDialog mutator={mutator} boardTree={this.state.boardTree} cardTree={shownCardTree} onClose={() => { this.showCard(undefined) }}></CardDialog>,
+				<CardDialog boardTree={this.state.boardTree} cardTree={shownCardTree} onClose={() => { this.showCard(undefined) }}></CardDialog>,
 				Utils.getElementById("overlay")
 			)
 		} else {
@@ -137,7 +134,6 @@ export default class BoardPage extends React.Component<Props, State> {
 
 			ReactDOM.render(
 				<FilterComponent
-					mutator={mutator}
 					boardTree={this.state.boardTree}
 					pageX={pageX}
 					pageY={pageY}
@@ -157,7 +153,6 @@ export default class BoardPage extends React.Component<Props, State> {
 		return (
 			<div className='BoardPage'>
 				<WorkspaceComponent
-					mutator={mutator}
 					workspaceTree={workspaceTree}
 					boardTree={this.state.boardTree}
 					showView={(id) => { this.showView(id) }}
@@ -187,7 +182,7 @@ export default class BoardPage extends React.Component<Props, State> {
 		await workspaceTree.sync()
 
 		if (boardId) {
-			const boardTree = new BoardTree(this.octo, boardId)
+			const boardTree = new BoardTree(boardId)
 			await boardTree.sync()
 
 			// Default to first view
@@ -214,7 +209,7 @@ export default class BoardPage extends React.Component<Props, State> {
 		this.cardListener.close()
 
 		if (card) {
-			const cardTree = new CardTree(this.octo, card.id)
+			const cardTree = new CardTree(card.id)
 			await cardTree.sync()
 			this.setState({...this.state, shownCardTree: cardTree})
 
