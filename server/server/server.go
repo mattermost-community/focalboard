@@ -26,7 +26,7 @@ type Server struct {
 }
 
 func New(config *config.Configuration) (*Server, error) {
-	store, err := sqlstore.NewSQLStore(config.DBType, config.DBConfigString)
+	store, err := sqlstore.New(config.DBType, config.DBConfigString)
 	if err != nil {
 		log.Fatal("Unable to start the database", err)
 		return nil, err
@@ -76,4 +76,8 @@ func (s *Server) Start() error {
 		return err
 	}
 	return nil
+}
+
+func (s *Server) Shutdown() error {
+	return s.store.Shutdown()
 }

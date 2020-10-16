@@ -12,4 +12,5 @@ type Store interface {
 	GetParentID(blockID string) (string, error)
 	InsertBlock(block model.Block) error
 	DeleteBlock(blockID string) error
+	Shutdown() error
 }
