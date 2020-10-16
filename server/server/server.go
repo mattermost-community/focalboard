@@ -1,6 +1,7 @@
 package server
 
 import (
+	"errors"
 	"log"
 	"os"
 	"os/signal"
@@ -12,13 +13,16 @@ import (
 	"github.com/mattermost/mattermost-octo-tasks/server/services/store/sqlstore"
 	"github.com/mattermost/mattermost-octo-tasks/server/web"
 	"github.com/mattermost/mattermost-octo-tasks/server/ws"
+	"github.com/mattermost/mattermost-server/v5/model"
+	"github.com/mattermost/mattermost-server/v5/services/filesstore"
 )
 
 type Server struct {
-	config    *config.Configuration
-	wsServer  *ws.WSServer
-	webServer *web.WebServer
-	store     store.Store
+	config       *config.Configuration
+	wsServer     *ws.WSServer
+	webServer    *web.WebServer
+	store        store.Store
+	filesBackend filesstore.FileBackend
 }
 
 func New(config *config.Configuration) (*Server, error) {
@@ -30,7 +34,16 @@ func New(config *config.Configuration) (*Server, error) {
 
 	wsServer := ws.NewWSServer()
 
-	appBuilder := func() *app.App { return app.New(config, store, wsServer) }
+	filesBackendSettings := model.FileSettings{}
+	filesBackendSettings.SetDefaults(false)
+	filesBackendSettings.Directory = &config.FilesPath
+	filesBackend, appErr := filesstore.NewFileBackend(&filesBackendSettings, false)
+	if appErr != nil {
+		log.Fatal("Unable to initialize the files storage")
+		return nil, errors.New("unable to initialize the files storage")
+	}
+
+	appBuilder := func() *app.App { return app.New(config, store, wsServer, filesBackend) }
 
 	webServer := web.NewWebServer(config.WebPath, config.Port, config.UseSSL)
 	api := api.NewAPI(appBuilder)

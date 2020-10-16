@@ -23,9 +23,10 @@ require (
 	github.com/lib/pq v1.8.0
 	github.com/mattermost/gorp v2.0.0+incompatible // indirect
 	github.com/mattermost/mattermost-server v5.11.1+incompatible
+	github.com/mattermost/mattermost-server/v5 v5.28.0
 	github.com/mattermost/rsc v0.0.0-20160330161541-bbaefb05eaa0 // indirect
 	github.com/mattermost/viper v1.0.4 // indirect
-	github.com/mattn/go-sqlite3 v1.14.4
+	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/minio/minio-go v6.0.14+incompatible // indirect
 	github.com/nicksnyder/go-i18n v1.10.1 // indirect
 	github.com/olekukonko/tablewriter v0.0.4 // indirect
@@ -33,6 +34,7 @@ require (
 	github.com/rs/cors v1.7.0 // indirect
 	github.com/segmentio/analytics-go v3.1.0+incompatible // indirect
 	github.com/segmentio/backo-go v0.0.0-20200129164019-23eae7c10bd3 // indirect
+	github.com/spf13/cobra v1.1.0
 	github.com/spf13/viper v1.7.1
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
 	github.com/throttled/throttled v2.2.5+incompatible // indirect

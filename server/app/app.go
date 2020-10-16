@@ -2,11 +2,10 @@ package app
 
 import (
 	"crypto/rand"
+	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -14,16 +13,18 @@ import (
 	"github.com/mattermost/mattermost-octo-tasks/server/services/config"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/store"
 	"github.com/mattermost/mattermost-octo-tasks/server/ws"
+	"github.com/mattermost/mattermost-server/v5/services/filesstore"
 )
 
 type App struct {
-	config   *config.Configuration
-	store    store.Store
-	wsServer *ws.WSServer
+	config       *config.Configuration
+	store        store.Store
+	wsServer     *ws.WSServer
+	filesBackend filesstore.FileBackend
 }
 
-func New(config *config.Configuration, store store.Store, wsServer *ws.WSServer) *App {
-	return &App{config: config, store: store, wsServer: wsServer}
+func New(config *config.Configuration, store store.Store, wsServer *ws.WSServer, filesBackend filesstore.FileBackend) *App {
+	return &App{config: config, store: store, wsServer: wsServer, filesBackend: filesBackend}
 }
 
 func (a *App) GetBlocks(parentID string, blockType string) ([]model.Block, error) {
@@ -95,11 +96,6 @@ func (a *App) DeleteBlock(blockID string) error {
 }
 
 func (a *App) SaveFile(reader io.Reader, filename string) (string, error) {
-	data, err := ioutil.ReadAll(reader)
-	if err != nil {
-		return "", err
-	}
-
 	// NOTE: File extension includes the dot
 	fileExtension := strings.ToLower(filepath.Ext(filename))
 	if fileExtension == ".jpeg" {
@@ -108,12 +104,9 @@ func (a *App) SaveFile(reader io.Reader, filename string) (string, error) {
 
 	createdFilename := fmt.Sprintf(`%s%s`, createGUID(), fileExtension)
 
-	folderPath := a.config.FilesPath
-	filePath := filepath.Join(folderPath, createdFilename)
-	os.MkdirAll(folderPath, os.ModePerm)
-	err = ioutil.WriteFile(filePath, data, 0666)
-	if err != nil {
-		return "", err
+	_, appErr := a.filesBackend.WriteFile(reader, createdFilename)
+	if appErr != nil {
+		return "", errors.New("unable to store the file in the files storage")
 	}
 	return fmt.Sprintf(`%s/files/%s`, a.config.ServerRoot, createdFilename), nil
 }
