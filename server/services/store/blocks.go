@@ -1,4 +1,4 @@
-package main
+package store
 
 import (
 	"database/sql"
@@ -7,6 +7,7 @@ import (
 	"time"
 
 	_ "github.com/lib/pq"
+	"github.com/mattermost/mattermost-octo-tasks/server/model"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -44,19 +45,6 @@ func NewSQLStore(dbType, connectionString string) (*SQLStore, error) {
 		return nil, err
 	}
 	return store, nil
-}
-
-// Block is the basic data unit
-type Block struct {
-	ID       string                 `json:"id"`
-	ParentID string                 `json:"parentId"`
-	Schema   int64                  `json:"schema"`
-	Type     string                 `json:"type"`
-	Title    string                 `json:"title"`
-	Fields   map[string]interface{} `json:"fields"`
-	CreateAt int64                  `json:"createAt"`
-	UpdateAt int64                  `json:"updateAt"`
-	DeleteAt int64                  `json:"deleteAt"`
 }
 
 func (s *SQLStore) createTablesIfNotExists() error {
@@ -102,7 +90,7 @@ func (s *SQLStore) createTablesIfNotExists() error {
 	return nil
 }
 
-func (s *SQLStore) getBlocksWithParentAndType(parentID string, blockType string) ([]Block, error) {
+func (s *SQLStore) GetBlocksWithParentAndType(parentID string, blockType string) ([]model.Block, error) {
 	query := `WITH latest AS
 		(
 			SELECT * FROM
@@ -128,7 +116,7 @@ func (s *SQLStore) getBlocksWithParentAndType(parentID string, blockType string)
 	return blocksFromRows(rows)
 }
 
-func (s *SQLStore) getBlocksWithParent(parentID string) ([]Block, error) {
+func (s *SQLStore) GetBlocksWithParent(parentID string) ([]model.Block, error) {
 	query := `WITH latest AS
 		(
 			SELECT * FROM
@@ -154,7 +142,7 @@ func (s *SQLStore) getBlocksWithParent(parentID string) ([]Block, error) {
 	return blocksFromRows(rows)
 }
 
-func (s *SQLStore) getBlocksWithType(blockType string) ([]Block, error) {
+func (s *SQLStore) GetBlocksWithType(blockType string) ([]model.Block, error) {
 	query := `WITH latest AS
 		(
 			SELECT * FROM
@@ -180,7 +168,7 @@ func (s *SQLStore) getBlocksWithType(blockType string) ([]Block, error) {
 	return blocksFromRows(rows)
 }
 
-func (s *SQLStore) getSubTree(blockID string) ([]Block, error) {
+func (s *SQLStore) GetSubTree(blockID string) ([]model.Block, error) {
 	query := `WITH latest AS
 	(
 		SELECT * FROM
@@ -208,7 +196,7 @@ func (s *SQLStore) getSubTree(blockID string) ([]Block, error) {
 	return blocksFromRows(rows)
 }
 
-func (s *SQLStore) getAllBlocks() ([]Block, error) {
+func (s *SQLStore) GetAllBlocks() ([]model.Block, error) {
 	query := `WITH latest AS
 	(
 		SELECT * FROM
@@ -234,13 +222,13 @@ func (s *SQLStore) getAllBlocks() ([]Block, error) {
 	return blocksFromRows(rows)
 }
 
-func blocksFromRows(rows *sql.Rows) ([]Block, error) {
+func blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 	defer rows.Close()
 
-	var results []Block
+	var results []model.Block
 
 	for rows.Next() {
-		var block Block
+		var block model.Block
 		var fieldsJSON string
 		err := rows.Scan(
 			&block.ID,
@@ -271,7 +259,7 @@ func blocksFromRows(rows *sql.Rows) ([]Block, error) {
 	return results, nil
 }
 
-func (s *SQLStore) getParentID(blockID string) (string, error) {
+func (s *SQLStore) GetParentID(blockID string) (string, error) {
 	statement :=
 		`WITH latest AS
 		(
@@ -301,7 +289,7 @@ func (s *SQLStore) getParentID(blockID string) (string, error) {
 	return parentID, nil
 }
 
-func (s *SQLStore) insertBlock(block Block) error {
+func (s *SQLStore) InsertBlock(block model.Block) error {
 	fieldsJSON, err := json.Marshal(block.Fields)
 	if err != nil {
 		return err
@@ -336,7 +324,7 @@ func (s *SQLStore) insertBlock(block Block) error {
 	return nil
 }
 
-func (s *SQLStore) deleteBlock(blockID string) error {
+func (s *SQLStore) DeleteBlock(blockID string) error {
 	now := time.Now().Unix()
 	statement := `INSERT INTO blocks(id, update_at, delete_at) VALUES($1, $2, $3)`
 	_, err := s.db.Exec(statement, blockID, now, now)

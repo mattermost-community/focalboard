@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"context"
@@ -11,20 +11,22 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
+	"github.com/mattermost/mattermost-octo-tasks/server/app"
+	"github.com/mattermost/mattermost-octo-tasks/server/model"
 )
 
 // ----------------------------------------------------------------------------------------------------
 // REST APIs
 
 type API struct {
-	appBuilder func() *App
+	appBuilder func() *app.App
 }
 
-func NewAPI(appBuilder func() *App) *API {
+func NewAPI(appBuilder func() *app.App) *API {
 	return &API{appBuilder: appBuilder}
 }
 
-func (a *API) app() *App {
+func (a *API) app() *app.App {
 	return a.appBuilder()
 }
 
@@ -80,7 +82,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 
-	var blocks []Block
+	var blocks []model.Block
 	err = json.Unmarshal([]byte(requestBody), &blocks)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, ``)
@@ -187,7 +189,7 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 
-	var blocks []Block
+	var blocks []model.Block
 	err = json.Unmarshal([]byte(requestBody), &blocks)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, ``)

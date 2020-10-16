@@ -1,9 +1,10 @@
-package main
+package web
 
 import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 
 	"github.com/gorilla/mux"
@@ -91,4 +92,13 @@ func (ws *WebServer) handleDefault(r *mux.Router, requestPath string) {
 		log.Printf("handleDefault")
 		http.Redirect(w, r, "/board", http.StatusFound)
 	})
+}
+
+// FileExists returns true if a file exists at the path
+func fileExists(path string) bool {
+	_, err := os.Stat(path)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return err == nil
 }

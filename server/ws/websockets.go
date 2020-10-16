@@ -1,4 +1,4 @@
-package main
+package ws
 
 import (
 	"log"
@@ -110,7 +110,7 @@ func (ws *WSServer) handleWebSocketOnChange(w http.ResponseWriter, r *http.Reque
 	}
 }
 
-func (ws *WSServer) broadcastBlockChangeToWebsocketClients(blockIDs []string) {
+func (ws *WSServer) BroadcastBlockChangeToWebsocketClients(blockIDs []string) {
 	for _, blockID := range blockIDs {
 		listeners := ws.GetListeners(blockID)
 		log.Printf("%d listener(s) for blockID: %s", len(listeners), blockID)

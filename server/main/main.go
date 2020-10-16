@@ -7,6 +7,9 @@ import (
 
 	"log"
 	"os"
+
+	"github.com/mattermost/mattermost-octo-tasks/server/server"
+	"github.com/mattermost/mattermost-octo-tasks/server/services/config"
 )
 
 // ----------------------------------------------------------------------------------------------------
@@ -41,7 +44,7 @@ func monitorPid(pid int) {
 
 func main() {
 	// config.json file
-	config, err := readConfigFile()
+	config, err := config.ReadConfigFile()
 	if err != nil {
 		log.Fatal("Unable to read the config file: ", err)
 		return
@@ -62,7 +65,7 @@ func main() {
 		config.Port = *pPort
 	}
 
-	server, err := NewServer(config)
+	server, err := server.New(config)
 	if err != nil {
 		log.Fatal("ListenAndServeTLS: ", err)
 	}
