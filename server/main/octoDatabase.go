@@ -102,7 +102,7 @@ func (s *SQLStore) createTablesIfNotExists() error {
 	return nil
 }
 
-func (s *SQLStore) getBlocksWithParentAndType(parentID string, blockType string) []Block {
+func (s *SQLStore) getBlocksWithParentAndType(parentID string, blockType string) ([]Block, error) {
 	query := `WITH latest AS
 		(
 			SELECT * FROM
@@ -122,13 +122,13 @@ func (s *SQLStore) getBlocksWithParentAndType(parentID string, blockType string)
 	rows, err := s.db.Query(query, parentID, blockType)
 	if err != nil {
 		log.Printf(`getBlocksWithParentAndType ERROR: %v`, err)
-		panic(err)
+		return nil, err
 	}
 
 	return blocksFromRows(rows)
 }
 
-func (s *SQLStore) getBlocksWithParent(parentID string) []Block {
+func (s *SQLStore) getBlocksWithParent(parentID string) ([]Block, error) {
 	query := `WITH latest AS
 		(
 			SELECT * FROM
@@ -148,13 +148,13 @@ func (s *SQLStore) getBlocksWithParent(parentID string) []Block {
 	rows, err := s.db.Query(query, parentID)
 	if err != nil {
 		log.Printf(`getBlocksWithParent ERROR: %v`, err)
-		panic(err)
+		return nil, err
 	}
 
 	return blocksFromRows(rows)
 }
 
-func (s *SQLStore) getBlocksWithType(blockType string) []Block {
+func (s *SQLStore) getBlocksWithType(blockType string) ([]Block, error) {
 	query := `WITH latest AS
 		(
 			SELECT * FROM
@@ -174,13 +174,13 @@ func (s *SQLStore) getBlocksWithType(blockType string) []Block {
 	rows, err := s.db.Query(query, blockType)
 	if err != nil {
 		log.Printf(`getBlocksWithParentAndType ERROR: %v`, err)
-		panic(err)
+		return nil, err
 	}
 
 	return blocksFromRows(rows)
 }
 
-func (s *SQLStore) getSubTree(blockID string) []Block {
+func (s *SQLStore) getSubTree(blockID string) ([]Block, error) {
 	query := `WITH latest AS
 	(
 		SELECT * FROM
@@ -202,13 +202,13 @@ func (s *SQLStore) getSubTree(blockID string) []Block {
 	rows, err := s.db.Query(query, blockID)
 	if err != nil {
 		log.Printf(`getSubTree ERROR: %v`, err)
-		panic(err)
+		return nil, err
 	}
 
 	return blocksFromRows(rows)
 }
 
-func (s *SQLStore) getAllBlocks() []Block {
+func (s *SQLStore) getAllBlocks() ([]Block, error) {
 	query := `WITH latest AS
 	(
 		SELECT * FROM
@@ -228,13 +228,13 @@ func (s *SQLStore) getAllBlocks() []Block {
 	rows, err := s.db.Query(query)
 	if err != nil {
 		log.Printf(`getAllBlocks ERROR: %v`, err)
-		panic(err)
+		return nil, err
 	}
 
 	return blocksFromRows(rows)
 }
 
-func blocksFromRows(rows *sql.Rows) []Block {
+func blocksFromRows(rows *sql.Rows) ([]Block, error) {
 	defer rows.Close()
 
 	var results []Block
@@ -255,23 +255,23 @@ func blocksFromRows(rows *sql.Rows) []Block {
 		if err != nil {
 			// handle this error
 			log.Printf(`ERROR blocksFromRows: %v`, err)
-			panic(err)
+			return nil, err
 		}
 
 		err = json.Unmarshal([]byte(fieldsJSON), &block.Fields)
 		if err != nil {
 			// handle this error
 			log.Printf(`ERROR blocksFromRows fields: %v`, err)
-			panic(err)
+			return nil, err
 		}
 
 		results = append(results, block)
 	}
 
-	return results
+	return results, nil
 }
 
-func (s *SQLStore) getParentID(blockID string) string {
+func (s *SQLStore) getParentID(blockID string) (string, error) {
 	statement :=
 		`WITH latest AS
 		(
@@ -295,16 +295,16 @@ func (s *SQLStore) getParentID(blockID string) string {
 	var parentID string
 	err := row.Scan(&parentID)
 	if err != nil {
-		return ""
+		return "", err
 	}
 
-	return parentID
+	return parentID, nil
 }
 
-func (s *SQLStore) insertBlock(block Block) {
+func (s *SQLStore) insertBlock(block Block) error {
 	fieldsJSON, err := json.Marshal(block.Fields)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	statement := `INSERT INTO blocks(
@@ -331,15 +331,17 @@ func (s *SQLStore) insertBlock(block Block) {
 		block.UpdateAt,
 		block.DeleteAt)
 	if err != nil {
-		panic(err)
+		return err
 	}
+	return nil
 }
 
-func (s *SQLStore) deleteBlock(blockID string) {
+func (s *SQLStore) deleteBlock(blockID string) error {
 	now := time.Now().Unix()
 	statement := `INSERT INTO blocks(id, update_at, delete_at) VALUES($1, $2, $3)`
 	_, err := s.db.Exec(statement, blockID, now, now)
 	if err != nil {
-		panic(err)
+		return err
 	}
+	return nil
 }

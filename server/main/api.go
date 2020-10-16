@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -17,10 +18,16 @@ import (
 // ----------------------------------------------------------------------------------------------------
 // REST APIs
 
-type API struct{}
+type API struct {
+	appBuilder func() *App
+}
 
-func NewAPI() *API {
-	return &API{}
+func NewAPI(appBuilder func() *App) *API {
+	return &API{appBuilder: appBuilder}
+}
+
+func (a *API) app() *App {
+	return a.appBuilder()
 }
 
 func (a *API) RegisterRoutes(r *mux.Router) {
@@ -41,13 +48,11 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	parentID := query.Get("parent_id")
 	blockType := query.Get("type")
 
-	var blocks []Block
-	if len(blockType) > 0 && len(parentID) > 0 {
-		blocks = store.getBlocksWithParentAndType(parentID, blockType)
-	} else if len(blockType) > 0 {
-		blocks = store.getBlocksWithType(blockType)
-	} else {
-		blocks = store.getBlocksWithParent(parentID)
+	blocks, err := a.app().GetBlocks(parentID, blockType)
+	if err != nil {
+		log.Printf(`ERROR GetBlocks: %v`, r)
+		errorResponse(w, http.StatusInternalServerError, `{}`)
+		return
 	}
 
 	log.Printf("GetBlocks parentID: %s, type: %s, %d result(s)", parentID, blockType, len(blocks))
@@ -84,9 +89,6 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var blockIDsToNotify = []string{}
-	uniqueBlockIDs := make(map[string]bool)
-
 	for _, block := range blocks {
 		// Error checking
 		if len(block.Type) < 1 {
@@ -102,17 +104,14 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if !uniqueBlockIDs[block.ID] {
-			blockIDsToNotify = append(blockIDsToNotify, block.ID)
-		}
-		if len(block.ParentID) > 0 && !uniqueBlockIDs[block.ParentID] {
-			blockIDsToNotify = append(blockIDsToNotify, block.ParentID)
-		}
-
-		store.insertBlock(block)
 	}
 
-	wsServer.broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
+	err = a.app().InsertBlocks(blocks)
+	if err != nil {
+		log.Printf(`ERROR: %v`, r)
+		errorResponse(w, http.StatusInternalServerError, `{}`)
+		return
+	}
 
 	log.Printf("POST Blocks %d block(s)", len(blocks))
 	jsonStringResponse(w, http.StatusOK, "{}")
@@ -122,17 +121,12 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	blockID := vars["blockID"]
 
-	var blockIDsToNotify = []string{blockID}
-
-	parentID := store.getParentID(blockID)
-
-	if len(parentID) > 0 {
-		blockIDsToNotify = append(blockIDsToNotify, parentID)
+	err := a.app().DeleteBlock(blockID)
+	if err != nil {
+		log.Printf(`ERROR: %v`, r)
+		errorResponse(w, http.StatusInternalServerError, `{}`)
+		return
 	}
-
-	store.deleteBlock(blockID)
-
-	wsServer.broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
 
 	log.Printf("DELETE Block %s", blockID)
 	jsonStringResponse(w, http.StatusOK, "{}")
@@ -142,7 +136,12 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	blockID := vars["blockID"]
 
-	blocks := store.getSubTree(blockID)
+	blocks, err := a.app().GetSubTree(blockID)
+	if err != nil {
+		log.Printf(`ERROR: %v`, r)
+		errorResponse(w, http.StatusInternalServerError, `{}`)
+		return
+	}
 
 	log.Printf("GetSubTree blockID: %s, %d result(s)", blockID, len(blocks))
 	json, err := json.Marshal(blocks)
@@ -156,7 +155,12 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
-	blocks := store.getAllBlocks()
+	blocks, err := a.app().GetAllBlocks()
+	if err != nil {
+		log.Printf(`ERROR: %v`, r)
+		errorResponse(w, http.StatusInternalServerError, `{}`)
+		return
+	}
 
 	log.Printf("EXPORT Blocks, %d result(s)", len(blocks))
 	json, err := json.Marshal(blocks)
@@ -193,7 +197,12 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, block := range blocks {
-		store.insertBlock(block)
+		err := a.app().InsertBlock(block)
+		if err != nil {
+			log.Printf(`ERROR: %v`, r)
+			errorResponse(w, http.StatusInternalServerError, `{}`)
+			return
+		}
 	}
 
 	log.Printf("IMPORT Blocks %d block(s)", len(blocks))
@@ -280,4 +289,10 @@ func errorResponse(w http.ResponseWriter, code int, message string) {
 	log.Printf("%d ERROR", code)
 	w.WriteHeader(code)
 	fmt.Fprint(w, message)
+}
+
+func addUserID(rw http.ResponseWriter, req *http.Request, next http.Handler) {
+	ctx := context.WithValue(req.Context(), "userid", req.Header.Get("userid"))
+	req = req.WithContext(ctx)
+	next.ServeHTTP(rw, req)
 }

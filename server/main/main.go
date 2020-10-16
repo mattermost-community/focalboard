@@ -7,7 +7,6 @@ import (
 
 	"log"
 	"os"
-	"os/signal"
 )
 
 var config *Configuration
@@ -70,32 +69,12 @@ func main() {
 		config.Port = *pPort
 	}
 
-	wsServer = NewWSServer()
-	webServer = NewWebServer(config.Port, config.UseSSL)
-	api = NewAPI()
-	webServer.AddRoutes(api)
-	webServer.AddRoutes(wsServer)
-
-	store, err = NewSQLStore(config.DBType, config.DBConfigString)
+	server, err := NewServer(config)
 	if err != nil {
-		log.Fatal("Unable to start the database", err)
-		panic(err)
+		log.Fatal("ListenAndServeTLS: ", err)
 	}
 
-	// Ctrl+C handling
-	handler := make(chan os.Signal, 1)
-	signal.Notify(handler, os.Interrupt)
-	go func() {
-		for sig := range handler {
-			// sig is a ^C, handle it
-			if sig == os.Interrupt {
-				os.Exit(1)
-				break
-			}
-		}
-	}()
-
-	if err := webServer.Start(); err != nil {
+	if err := server.Start(); err != nil {
 		log.Fatal("ListenAndServeTLS: ", err)
 	}
 }

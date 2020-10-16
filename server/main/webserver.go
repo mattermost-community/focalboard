@@ -14,30 +14,34 @@ type RoutedService interface {
 }
 
 type WebServer struct {
-	router *mux.Router
-	port   int
-	ssl    bool
+	router   *mux.Router
+	rootPath string
+	port     int
+	ssl      bool
 }
 
-func NewWebServer(port int, ssl bool) *WebServer {
+func NewWebServer(rootPath string, port int, ssl bool) *WebServer {
 	r := mux.NewRouter()
 
-	// Static files
-	handleDefault(r, "/")
-	handleStaticFile(r, "/login", "index.html", "text/html; charset=utf-8")
-	handleStaticFile(r, "/board", "index.html", "text/html; charset=utf-8")
-	handleStaticFile(r, "/main.js", "main.js", "text/javascript; charset=utf-8")
-	handleStaticFile(r, "/boardPage.js", "boardPage.js", "text/javascript; charset=utf-8")
-	handleStaticFile(r, "/favicon.ico", "static/favicon.svg", "image/svg+xml; charset=utf-8")
-	handleStaticFile(r, "/easymde.min.css", "static/easymde.min.css", "text/css")
-	handleStaticFile(r, "/main.css", "static/main.css", "text/css")
-	handleStaticFile(r, "/colors.css", "static/colors.css", "text/css")
-	handleStaticFile(r, "/images.css", "static/images.css", "text/css")
-	return &WebServer{
-		router: r,
-		port:   port,
-		ssl:    ssl,
+	ws := &WebServer{
+		router:   r,
+		rootPath: rootPath,
+		port:     port,
+		ssl:      ssl,
 	}
+
+	// Static files
+	ws.handleDefault(r, "/")
+	ws.handleStaticFile(r, "/login", "index.html", "text/html; charset=utf-8")
+	ws.handleStaticFile(r, "/board", "index.html", "text/html; charset=utf-8")
+	ws.handleStaticFile(r, "/main.js", "main.js", "text/javascript; charset=utf-8")
+	ws.handleStaticFile(r, "/boardPage.js", "boardPage.js", "text/javascript; charset=utf-8")
+	ws.handleStaticFile(r, "/favicon.ico", "static/favicon.svg", "image/svg+xml; charset=utf-8")
+	ws.handleStaticFile(r, "/easymde.min.css", "static/easymde.min.css", "text/css")
+	ws.handleStaticFile(r, "/main.css", "static/main.css", "text/css")
+	ws.handleStaticFile(r, "/colors.css", "static/colors.css", "text/css")
+	ws.handleStaticFile(r, "/images.css", "static/images.css", "text/css")
+	return ws
 }
 
 func (ws *WebServer) AddRoutes(rs RoutedService) {
@@ -68,21 +72,21 @@ func (ws *WebServer) Start() error {
 // ----------------------------------------------------------------------------------------------------
 // HTTP handlers
 
-func serveWebFile(w http.ResponseWriter, r *http.Request, relativeFilePath string) {
-	folderPath := config.WebPath
+func (ws *WebServer) serveWebFile(w http.ResponseWriter, r *http.Request, relativeFilePath string) {
+	folderPath := ws.rootPath
 	filePath := filepath.Join(folderPath, relativeFilePath)
 	http.ServeFile(w, r, filePath)
 }
 
-func handleStaticFile(r *mux.Router, requestPath string, filePath string, contentType string) {
+func (ws *WebServer) handleStaticFile(r *mux.Router, requestPath string, filePath string, contentType string) {
 	r.HandleFunc(requestPath, func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("handleStaticFile: %s", requestPath)
 		w.Header().Set("Content-Type", contentType)
-		serveWebFile(w, r, filePath)
+		ws.serveWebFile(w, r, filePath)
 	})
 }
 
-func handleDefault(r *mux.Router, requestPath string) {
+func (ws *WebServer) handleDefault(r *mux.Router, requestPath string) {
 	r.HandleFunc(requestPath, func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("handleDefault")
 		http.Redirect(w, r, "/board", http.StatusFound)
