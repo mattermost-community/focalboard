@@ -462,7 +462,7 @@ hr {
 	align-items: center;
 }
 
-.octo-frame .octo-icontitle .octo-icon {
+.octo-frame > .octo-icontitle .octo-icon {
 	font-size: 36px;
 	line-height: 36px;
 	margin-right: 15px;

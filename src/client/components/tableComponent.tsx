@@ -91,8 +91,8 @@ class TableComponent extends React.Component<Props, State> {
 							<MenuWrapper>
 								<div className="octo-button octo-icon">{board.icon}</div>
 								<Menu>
-									<Menu.Text id='random' name='Random' onClick={() => mutator.changeIcon(board, undefined, "remove icon")}/>
-									<Menu.Text id='remove' name='Remove Icon' onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}/>
+									<Menu.Text id='random' name='Random' onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}/>
+									<Menu.Text id='remove' name='Remove Icon' onClick={() => mutator.changeIcon(board, undefined, "remove icon")}/>
 								</Menu>
 							</MenuWrapper>
 							: undefined}
