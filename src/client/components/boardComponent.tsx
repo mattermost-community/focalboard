@@ -265,6 +265,7 @@ class BoardComponent extends React.Component<Props, State> {
 			{ id: "exportBoardArchive", name: "Export board archive" },
 			{ id: "testAdd100Cards", name: "TEST: Add 100 cards" },
 			{ id: "testAdd1000Cards", name: "TEST: Add 1,000 cards" },
+			{ id: "testRandomizeIcons", name: "TEST: Randomize icons" },
 		]
 
 		OldMenu.shared.onMenuClicked = async (id: string) => {
@@ -279,6 +280,10 @@ class BoardComponent extends React.Component<Props, State> {
 				}
 				case "testAdd1000Cards": {
 					this.testAddCards(1000)
+					break
+				}
+				case "testRandomizeIcons": {
+					this.testRandomizeIcons()
 					break
 				}
 			}
@@ -306,6 +311,14 @@ class BoardComponent extends React.Component<Props, State> {
 				card.icon = BlockIcons.shared.randomIcon()
 			}
 			await mutator.insertBlock(card, "test add card")
+		}
+	}
+
+	private async testRandomizeIcons() {
+		const { boardTree } = this.props
+
+		for (const card of boardTree.cards) {
+			mutator.changeIcon(card, BlockIcons.shared.randomIcon(), "randomize icon")
 		}
 	}
 
