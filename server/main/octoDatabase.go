@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"log"
 	"time"
 
@@ -338,9 +337,8 @@ func (s *SQLStore) insertBlock(block Block) {
 
 func (s *SQLStore) deleteBlock(blockID string) {
 	now := time.Now().Unix()
-	json := fmt.Sprintf(`{"id":"%s","updateAt":%d,"deleteAt":%d}`, blockID, now, now)
-	statement := `INSERT INTO blocks(id, json, update_at, delete_at) VALUES($1, $2, $3, $4)`
-	_, err := s.db.Exec(statement, blockID, json, now, now)
+	statement := `INSERT INTO blocks(id, update_at, delete_at) VALUES($1, $2, $3)`
+	_, err := s.db.Exec(statement, blockID, now, now)
 	if err != nil {
 		panic(err)
 	}
