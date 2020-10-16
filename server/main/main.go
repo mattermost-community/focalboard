@@ -9,12 +9,6 @@ import (
 	"os"
 )
 
-var config *Configuration
-var wsServer *WSServer
-var webServer *WebServer
-var api *API
-var store *SQLStore
-
 // ----------------------------------------------------------------------------------------------------
 // WebSocket OnChange listener
 
@@ -47,8 +41,7 @@ func monitorPid(pid int) {
 
 func main() {
 	// config.json file
-	var err error
-	config, err = readConfigFile()
+	config, err := readConfigFile()
 	if err != nil {
 		log.Fatal("Unable to read the config file: ", err)
 		return

@@ -6,9 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"mime/multipart"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -223,8 +221,7 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", contentType)
 
-	folderPath := config.FilesPath
-	filePath := filepath.Join(folderPath, filename)
+	filePath := a.app().GetFilePath(filename)
 	http.ServeFile(w, r, filePath)
 }
 
@@ -239,33 +236,11 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf(`handleUploadFile, filename: %s`, handle.Filename)
 
-	saveFile(w, file, handle)
-}
-
-func saveFile(w http.ResponseWriter, file multipart.File, handle *multipart.FileHeader) {
-	data, err := ioutil.ReadAll(file)
-	if err != nil {
-		fmt.Fprintf(w, "%v", err)
-		return
-	}
-
-	// NOTE: File extension includes the dot
-	fileExtension := strings.ToLower(filepath.Ext(handle.Filename))
-	if fileExtension == ".jpeg" {
-		fileExtension = ".jpg"
-	}
-
-	filename := fmt.Sprintf(`%s%s`, createGUID(), fileExtension)
-
-	folderPath := config.FilesPath
-	filePath := filepath.Join(folderPath, filename)
-	os.MkdirAll(folderPath, os.ModePerm)
-	err = ioutil.WriteFile(filePath, data, 0666)
+	url, err := a.app().SaveFile(file, handle.Filename)
 	if err != nil {
 		jsonStringResponse(w, http.StatusInternalServerError, `{}`)
 		return
 	}
-	url := fmt.Sprintf(`%s/files/%s`, config.ServerRoot, filename)
 	log.Printf(`saveFile, url: %s`, url)
 	json := fmt.Sprintf(`{ "url": "%s" }`, url)
 	jsonStringResponse(w, http.StatusOK, json)

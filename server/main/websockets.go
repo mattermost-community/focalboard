@@ -10,7 +10,7 @@ import (
 )
 
 func (ws *WSServer) RegisterRoutes(r *mux.Router) {
-	r.HandleFunc("/ws/onchange", wsServer.handleWebSocketOnChange)
+	r.HandleFunc("/ws/onchange", ws.handleWebSocketOnChange)
 }
 
 // AddListener adds a listener for a blockID's change

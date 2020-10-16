@@ -1,6 +1,16 @@
 package main
 
+import (
+	"fmt"
+	"io"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+	"strings"
+)
+
 type App struct {
+	config   *Configuration
 	store    *SQLStore
 	wsServer *WSServer
 }
@@ -41,7 +51,7 @@ func (a *App) InsertBlocks(blocks []Block) error {
 		}
 	}
 
-	wsServer.broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
+	a.wsServer.broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
 	return nil
 }
 
@@ -71,4 +81,33 @@ func (a *App) DeleteBlock(blockID string) error {
 
 	a.wsServer.broadcastBlockChangeToWebsocketClients(blockIDsToNotify)
 	return nil
+}
+
+func (a *App) SaveFile(reader io.Reader, filename string) (string, error) {
+	data, err := ioutil.ReadAll(reader)
+	if err != nil {
+		return "", err
+	}
+
+	// NOTE: File extension includes the dot
+	fileExtension := strings.ToLower(filepath.Ext(filename))
+	if fileExtension == ".jpeg" {
+		fileExtension = ".jpg"
+	}
+
+	createdFilename := fmt.Sprintf(`%s%s`, createGUID(), fileExtension)
+
+	folderPath := a.config.FilesPath
+	filePath := filepath.Join(folderPath, createdFilename)
+	os.MkdirAll(folderPath, os.ModePerm)
+	err = ioutil.WriteFile(filePath, data, 0666)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf(`%s/files/%s`, a.config.ServerRoot, createdFilename), nil
+}
+
+func (a *App) GetFilePath(filename string) string {
+	folderPath := a.config.FilesPath
+	return filepath.Join(folderPath, filename)
 }

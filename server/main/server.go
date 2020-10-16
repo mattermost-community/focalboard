@@ -20,12 +20,12 @@ func NewServer(config *Configuration) (*Server, error) {
 		return nil, err
 	}
 
-	wsServer = NewWSServer()
+	wsServer := NewWSServer()
 
-	appBuilder := func() *App { return &App{store: store, wsServer: wsServer} }
+	appBuilder := func() *App { return &App{config: config, store: store, wsServer: wsServer} }
 
-	webServer = NewWebServer(config.WebPath, config.Port, config.UseSSL)
-	api = NewAPI(appBuilder)
+	webServer := NewWebServer(config.WebPath, config.Port, config.UseSSL)
+	api := NewAPI(appBuilder)
 	webServer.AddRoutes(wsServer)
 	webServer.AddRoutes(api)
 
@@ -51,7 +51,7 @@ func NewServer(config *Configuration) (*Server, error) {
 }
 
 func (s *Server) Start() error {
-	if err := webServer.Start(); err != nil {
+	if err := s.webServer.Start(); err != nil {
 		return err
 	}
 	return nil
