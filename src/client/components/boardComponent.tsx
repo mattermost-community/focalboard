@@ -242,6 +242,7 @@ class BoardComponent extends React.Component<Props, State> {
 		const card = new Card()
 		card.parentId = boardTree.board.id
 		card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
+		card.icon = BlockIcons.shared.randomIcon()
 		if (boardTree.groupByProperty) {
 			card.properties[boardTree.groupByProperty.id] = groupByValue
 		}

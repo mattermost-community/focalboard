@@ -360,6 +360,7 @@ class TableComponent extends React.Component<Props, State> {
 
 		const card = new Card()
 		card.parentId = boardTree.board.id
+		card.icon = BlockIcons.shared.randomIcon()
 		await mutator.insertBlock(
 			card,
 			"add card",
