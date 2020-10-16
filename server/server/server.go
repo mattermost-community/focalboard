@@ -9,6 +9,7 @@ import (
 	"github.com/mattermost/mattermost-octo-tasks/server/app"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/config"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/store"
+	"github.com/mattermost/mattermost-octo-tasks/server/services/store/sqlstore"
 	"github.com/mattermost/mattermost-octo-tasks/server/web"
 	"github.com/mattermost/mattermost-octo-tasks/server/ws"
 )
@@ -17,11 +18,11 @@ type Server struct {
 	config    *config.Configuration
 	wsServer  *ws.WSServer
 	webServer *web.WebServer
-	store     *store.SQLStore
+	store     store.Store
 }
 
 func New(config *config.Configuration) (*Server, error) {
-	store, err := store.NewSQLStore(config.DBType, config.DBConfigString)
+	store, err := sqlstore.NewSQLStore(config.DBType, config.DBConfigString)
 	if err != nil {
 		log.Fatal("Unable to start the database", err)
 		return nil, err

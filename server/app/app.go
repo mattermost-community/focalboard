@@ -18,11 +18,11 @@ import (
 
 type App struct {
 	config   *config.Configuration
-	store    *store.SQLStore
+	store    store.Store
 	wsServer *ws.WSServer
 }
 
-func New(config *config.Configuration, store *store.SQLStore, wsServer *ws.WSServer) *App {
+func New(config *config.Configuration, store store.Store, wsServer *ws.WSServer) *App {
 	return &App{config: config, store: store, wsServer: wsServer}
 }
 
