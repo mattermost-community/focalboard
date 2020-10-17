@@ -11,6 +11,9 @@ packdev:
 go:
 	cd server; go build -o ../bin/octoserver ./main
 
+generate:
+	cd server; go generate ./...
+
 watch-server:
 	cd server; modd
 
