@@ -2,9 +2,6 @@
 
 all: build
 
-GOMAIN = ./server/main
-GOBIN = ./bin/octoserver
-
 pack:
 	npm run pack
 
@@ -12,13 +9,13 @@ packdev:
 	npm run packdev
 
 go:
-	go build -o $(GOBIN) $(GOMAIN)
+	cd server; go build -o ../bin/octoserver ./main
 
 watch-server:
 	cd server; modd
 
 goUbuntu:
-	env GOOS=linux GOARCH=amd64 go build -o $(GOBIN) $(GOMAIN)
+	cd server; env GOOS=linux GOARCH=amd64 go build -o ../bin/octoserver ./main
 
 builddev: packdev go
 
