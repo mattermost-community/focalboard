@@ -33,7 +33,6 @@ func New(dbType, connectionString string) (*SQLStore, error) {
 		dbType: dbType,
 	}
 
-	// err = store.createTablesIfNotExists()
 	err = store.Migrate()
 	if err != nil {
 		log.Println(`Table creation failed`)
