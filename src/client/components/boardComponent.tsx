@@ -1,7 +1,7 @@
 import React from "react"
 import { Archiver } from "../archiver"
 import { BlockIcons } from "../blockIcons"
-import { IPropertyOption } from "../blocks/board"
+import { Board, IPropertyOption } from "../blocks/board"
 import { Card } from "../blocks/card"
 import { BoardTree } from "../boardTree"
 import { CardFilter } from "../cardFilter"
@@ -95,8 +95,8 @@ class BoardComponent extends React.Component<Props, State> {
 							<MenuWrapper>
 								<div className="octo-button octo-icon">{board.icon}</div>
 								<Menu>
-									<Menu.Text id='random' name='Random' onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}/>
-									<Menu.Text id='remove' name='Remove Icon' onClick={() => mutator.changeIcon(board, undefined, "remove icon")}/>
+									<Menu.Text id='random' name='Random' onClick={() => mutator.changeIcon(board, undefined, "remove icon")}/>
+									<Menu.Text id='remove' name='Remove Icon' onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}/>
 								</Menu>
 							</MenuWrapper>
 							: undefined}
@@ -242,7 +242,6 @@ class BoardComponent extends React.Component<Props, State> {
 		const card = new Card()
 		card.parentId = boardTree.board.id
 		card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
-		card.icon = BlockIcons.shared.randomIcon()
 		if (boardTree.groupByProperty) {
 			card.properties[boardTree.groupByProperty.id] = groupByValue
 		}
@@ -266,7 +265,6 @@ class BoardComponent extends React.Component<Props, State> {
 			{ id: "exportBoardArchive", name: "Export board archive" },
 			{ id: "testAdd100Cards", name: "TEST: Add 100 cards" },
 			{ id: "testAdd1000Cards", name: "TEST: Add 1,000 cards" },
-			{ id: "testRandomizeIcons", name: "TEST: Randomize icons" },
 		]
 
 		OldMenu.shared.onMenuClicked = async (id: string) => {
@@ -281,10 +279,6 @@ class BoardComponent extends React.Component<Props, State> {
 				}
 				case "testAdd1000Cards": {
 					this.testAddCards(1000)
-					break
-				}
-				case "testRandomizeIcons": {
-					this.testRandomizeIcons()
 					break
 				}
 			}
@@ -312,14 +306,6 @@ class BoardComponent extends React.Component<Props, State> {
 				card.icon = BlockIcons.shared.randomIcon()
 			}
 			await mutator.insertBlock(card, "test add card")
-		}
-	}
-
-	private async testRandomizeIcons() {
-		const { boardTree } = this.props
-
-		for (const card of boardTree.cards) {
-			mutator.changeIcon(card, BlockIcons.shared.randomIcon(), "randomize icon")
 		}
 	}
 

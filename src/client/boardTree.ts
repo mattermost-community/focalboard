@@ -10,7 +10,21 @@ import { Utils } from "./utils"
 
 type Group = { option: IPropertyOption, cards: Card[] }
 
-class BoardTree {
+interface BoardTree {
+	readonly board: Board
+	readonly views: readonly BoardView[]
+	readonly cards: readonly Card[]
+	readonly emptyGroupCards: readonly Card[]
+	readonly groups: readonly Group[]
+	readonly allBlocks: readonly IBlock[]
+
+	readonly activeView?: BoardView
+	readonly groupByProperty?: IPropertyTemplate
+
+	getSearchText(): string | undefined
+}
+
+class MutableBoardTree implements BoardTree {
 	board!: Board
 	views: BoardView[] = []
 	cards: Card[] = []
@@ -271,4 +285,4 @@ class BoardTree {
 	}
 }
 
-export { BoardTree }
+export { MutableBoardTree, BoardTree }

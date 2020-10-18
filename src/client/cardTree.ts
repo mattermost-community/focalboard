@@ -4,11 +4,16 @@ import octoClient from "./octoClient"
 import { IBlock, IOrderedBlock } from "./octoTypes"
 import { OctoUtils } from "./octoUtils"
 
-class CardTree {
+interface CardTree {
+	readonly card: Card
+	readonly comments: readonly IBlock[]
+	readonly contents: readonly IOrderedBlock[]
+}
+
+class MutableCardTree implements CardTree {
 	card: Card
 	comments: IBlock[]
 	contents: IOrderedBlock[]
-	isSynched: boolean
 
 	constructor(private cardId: string) {
 	}
@@ -27,9 +32,7 @@ class CardTree {
 
 		const contentBlocks = blocks.filter(block => block.type === "text" || block.type === "image") as IOrderedBlock[]
 		this.contents = contentBlocks.sort((a, b) => a.order - b.order)
-
-		this.isSynched = true
 	}
 }
 
-export { CardTree }
+export { MutableCardTree, CardTree }

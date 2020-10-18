@@ -3,7 +3,11 @@ import { Board } from "./blocks/board"
 import octoClient from "./octoClient"
 import { OctoUtils } from "./octoUtils"
 
-class WorkspaceTree {
+interface WorkspaceTree {
+	readonly boards: readonly Board[]
+}
+
+class MutableWorkspaceTree {
 	boards: Board[] = []
 
 	async sync() {
@@ -16,4 +20,6 @@ class WorkspaceTree {
 	}
 }
 
-export { WorkspaceTree }
+// type WorkspaceTree = Readonly<MutableWorkspaceTree>
+
+export { MutableWorkspaceTree, WorkspaceTree }
