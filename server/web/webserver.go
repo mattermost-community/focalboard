@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path"
 	"path/filepath"
 
 	"github.com/gorilla/mux"
@@ -31,17 +32,6 @@ func NewWebServer(rootPath string, port int, ssl bool) *WebServer {
 		ssl:      ssl,
 	}
 
-	// Static files
-	ws.handleDefault(r, "/")
-	ws.handleStaticFile(r, "/login", "index.html", "text/html; charset=utf-8")
-	ws.handleStaticFile(r, "/board", "index.html", "text/html; charset=utf-8")
-	ws.handleStaticFile(r, "/main.js", "main.js", "text/javascript; charset=utf-8")
-	ws.handleStaticFile(r, "/boardPage.js", "boardPage.js", "text/javascript; charset=utf-8")
-	ws.handleStaticFile(r, "/favicon.ico", "static/favicon.svg", "image/svg+xml; charset=utf-8")
-	ws.handleStaticFile(r, "/easymde.min.css", "static/easymde.min.css", "text/css")
-	ws.handleStaticFile(r, "/main.css", "static/main.css", "text/css")
-	ws.handleStaticFile(r, "/colors.css", "static/colors.css", "text/css")
-	ws.handleStaticFile(r, "/images.css", "static/images.css", "text/css")
 	return ws
 }
 
@@ -49,7 +39,16 @@ func (ws *WebServer) AddRoutes(rs RoutedService) {
 	rs.RegisterRoutes(ws.router)
 }
 
+func (ws *WebServer) registerRoutes() {
+	ws.router.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(filepath.Join(ws.rootPath, "static")))))
+	ws.router.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		http.ServeFile(w, r, path.Join(ws.rootPath, "index.html"))
+	})
+}
+
 func (ws *WebServer) Start() error {
+	ws.registerRoutes()
 	http.Handle("/", ws.router)
 
 	urlPort := fmt.Sprintf(`:%d`, ws.port)
@@ -68,30 +67,6 @@ func (ws *WebServer) Start() error {
 		return err
 	}
 	return nil
-}
-
-// ----------------------------------------------------------------------------------------------------
-// HTTP handlers
-
-func (ws *WebServer) serveWebFile(w http.ResponseWriter, r *http.Request, relativeFilePath string) {
-	folderPath := ws.rootPath
-	filePath := filepath.Join(folderPath, relativeFilePath)
-	http.ServeFile(w, r, filePath)
-}
-
-func (ws *WebServer) handleStaticFile(r *mux.Router, requestPath string, filePath string, contentType string) {
-	r.HandleFunc(requestPath, func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("handleStaticFile: %s", requestPath)
-		w.Header().Set("Content-Type", contentType)
-		ws.serveWebFile(w, r, filePath)
-	})
-}
-
-func (ws *WebServer) handleDefault(r *mux.Router, requestPath string) {
-	r.HandleFunc(requestPath, func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("handleDefault")
-		http.Redirect(w, r, "/board", http.StatusFound)
-	})
 }
 
 // FileExists returns true if a file exists at the path

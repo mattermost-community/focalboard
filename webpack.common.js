@@ -26,12 +26,12 @@ function makeCommonConfig() {
 					loader: "file-loader",
 				},
 				{
-                    test: /\.s[ac]ss$/i,
-                    use: [
-                      'style-loader',
-                      'css-loader',
-                      'sass-loader',
-                    ],
+					test: /\.s[ac]ss$/i,
+					use: [
+					  'style-loader',
+					  'css-loader',
+					  'sass-loader',
+					],
 				},
 				{
 					test: /\.(tsx?|js|jsx|html)$/,
@@ -60,14 +60,15 @@ function makeCommonConfig() {
 				title: "OCTO",
 				chunks: ["main"],
 				template: "html-templates/page.ejs",
-				filename: 'index.html'
+				filename: 'index.html',
+				publicPath: '/'
 			}),
 		],
 		entry: {
 			main: "./src/client/main.tsx",
 		},
 		output: {
-			filename: "[name].js",
+			filename: "static/[name].js",
 			path: outpath
 		}
 	}
