@@ -21,7 +21,8 @@ func SetupTests(t *testing.T) (*SQLStore, func()) {
 	require.Nil(t, err)
 
 	tearDown := func() {
-		store.Shutdown()
+		err = store.Shutdown()
+		require.Nil(t, err)
 	}
 	return store, tearDown
 }

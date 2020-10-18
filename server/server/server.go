@@ -64,10 +64,11 @@ func New(config *config.Configuration) (*Server, error) {
 	}()
 
 	return &Server{
-		config:    config,
-		wsServer:  wsServer,
-		webServer: webServer,
-		store:     store,
+		config:       config,
+		wsServer:     wsServer,
+		webServer:    webServer,
+		store:        store,
+		filesBackend: filesBackend,
 	}, nil
 }
 

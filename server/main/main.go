@@ -22,11 +22,7 @@ func isProcessRunning(pid int) bool {
 	}
 
 	err = process.Signal(syscall.Signal(0))
-	if err != nil {
-		return false
-	}
-
-	return true
+	return err == nil
 }
 
 func monitorPid(pid int) {

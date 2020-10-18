@@ -21,7 +21,9 @@ func (s *SQLStore) Migrate() error {
 	var bresource *bindata.AssetSource
 	if s.dbType == "sqlite3" {
 		driver, err = sqlite3.WithInstance(s.db, &sqlite3.Config{})
-		fmt.Println(pgmigrations.AssetNames())
+		if err != nil {
+			return err
+		}
 		bresource = bindata.Resource(sqlite.AssetNames(),
 			func(name string) ([]byte, error) {
 				return sqlite.Asset(name)
@@ -29,6 +31,9 @@ func (s *SQLStore) Migrate() error {
 	}
 	if s.dbType == "postgres" {
 		driver, err = postgres.WithInstance(s.db, &postgres.Config{})
+		if err != nil {
+			return err
+		}
 		bresource = bindata.Resource(pgmigrations.AssetNames(),
 			func(name string) ([]byte, error) {
 				return pgmigrations.Asset(name)
