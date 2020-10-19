@@ -37,7 +37,7 @@ class SubMenuOption extends React.Component<SubMenuOptionProps, SubMenuState> {
                 onMouseEnter={this.handleMouseEnter}
                 onMouseLeave={this.close}
             >
-                <div className='name menu-name'>{this.props.name}</div>
+                <div className='menu-name'>{this.props.name}</div>
                 <div className="imageSubmenuTriangle" style={{float: 'right'}}></div>
                 {this.state.isOpen &&
                     <Menu>

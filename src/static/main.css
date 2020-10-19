@@ -359,7 +359,7 @@ hr {
 	touch-action: none;
 }
 
-.menu-option .name {
+.menu-option .menu-name {
 	flex-grow: 1;
 }
 
