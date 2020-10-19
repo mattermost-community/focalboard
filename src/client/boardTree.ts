@@ -1,9 +1,11 @@
-import { Board, IPropertyOption, IPropertyTemplate } from "./board"
-import { BoardView } from "./boardView"
-import { Card } from "./card"
+import { Block } from "./blocks/block"
+import { Board, IPropertyOption, IPropertyTemplate } from "./blocks/board"
+import { BoardView } from "./blocks/boardView"
+import { Card } from "./blocks/card"
 import { CardFilter } from "./cardFilter"
 import octoClient from "./octoClient"
 import { IBlock } from "./octoTypes"
+import { OctoUtils } from "./octoUtils"
 import { Utils } from "./utils"
 
 type Group = { option: IPropertyOption, cards: Card[] }
@@ -29,21 +31,13 @@ class BoardTree {
 
 	async sync() {
 		const blocks = await octoClient.getSubtree(this.boardId)
-		this.rebuild(blocks)
+		this.rebuild(OctoUtils.hydrateBlocks(blocks))
 	}
 
-	private rebuild(blocks: IBlock[]) {
-		const boardBlock = blocks.find(block => block.type === "board")
-
-		if (boardBlock) {
-			this.board = new Board(boardBlock)
-		}
-
-		const viewBlocks = blocks.filter(block => block.type === "view")
-		this.views = viewBlocks.map(o => new BoardView(o))
-
-		const cardBlocks = blocks.filter(block => block.type === "card")
-		this.allCards = cardBlocks.map(o => new Card(o))
+	private rebuild(blocks: Block[]) {
+		this.board = blocks.find(block => block.type === "board") as Board
+		this.views = blocks.filter(block => block.type === "view") as BoardView[]
+		this.allCards = blocks.filter(block => block.type === "card") as Card[]
 		this.cards = []
 
 		this.ensureMinimumSchema()

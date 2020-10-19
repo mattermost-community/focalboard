@@ -1,5 +1,5 @@
-import { IBlock } from "./octoTypes"
-import { Utils } from "./utils"
+import { IBlock } from "../octoTypes"
+import { Utils } from "../utils"
 
 class Block implements IBlock {
 	id: string = Utils.createGuid()
@@ -7,7 +7,6 @@ class Block implements IBlock {
 	parentId: string
 	type: string
 	title: string
-	order: number
 	fields: Record<string, any> = {}
 	createAt: number = Date.now()
 	updateAt: number = 0
@@ -38,7 +37,6 @@ class Block implements IBlock {
 		this.fields = block.fields ? { ...block.fields } : {}
 
 		this.title = block.title
-		this.order = block.order
 
 		this.createAt = block.createAt || now
 		this.updateAt = block.updateAt || now

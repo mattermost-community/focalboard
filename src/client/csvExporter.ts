@@ -1,5 +1,5 @@
+import { BoardView } from "./blocks/boardView"
 import { BoardTree } from "./boardTree"
-import { BoardView } from "./boardView"
 import { OctoUtils } from "./octoUtils"
 import { Utils } from "./utils"
 

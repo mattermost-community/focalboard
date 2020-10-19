@@ -1,23 +1,22 @@
 import React from "react"
 import { Archiver } from "../archiver"
-import { Block } from "../block"
 import { BlockIcons } from "../blockIcons"
-import { IPropertyTemplate } from "../board"
+import { IPropertyTemplate } from "../blocks/board"
+import { Card } from "../blocks/card"
 import { BoardTree } from "../boardTree"
-import { Card } from "../card"
 import ViewMenu from "../components/viewMenu"
-import MenuWrapper from "../widgets/menuWrapper"
-import Menu from "../widgets/menu"
 import { CsvExporter } from "../csvExporter"
 import { Menu as OldMenu } from "../menu"
 import mutator from "../mutator"
 import { OctoUtils } from "../octoUtils"
 import { Utils } from "../utils"
+import Menu from "../widgets/menu"
+import MenuWrapper from "../widgets/menuWrapper"
 import Button from "./button"
-import { Editable } from "./editable"
-import { TableRow } from "./tableRow"
 import { CardDialog } from "./cardDialog"
+import { Editable } from "./editable"
 import RootPortal from "./rootPortal"
+import { TableRow } from "./tableRow"
 
 type Props = {
 	boardTree?: BoardTree
@@ -92,8 +91,8 @@ class TableComponent extends React.Component<Props, State> {
 							<MenuWrapper>
 								<div className="octo-button octo-icon">{board.icon}</div>
 								<Menu>
-									<Menu.Text id='random' name='Random' onClick={() => mutator.changeIcon(board, undefined, "remove icon")}/>
-									<Menu.Text id='remove' name='Remove Icon' onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}/>
+									<Menu.Text id='random' name='Random' onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}/>
+									<Menu.Text id='remove' name='Remove Icon' onClick={() => mutator.changeIcon(board, undefined, "remove icon")}/>
 								</Menu>
 							</MenuWrapper>
 							: undefined}
@@ -361,6 +360,7 @@ class TableComponent extends React.Component<Props, State> {
 
 		const card = new Card()
 		card.parentId = boardTree.board.id
+		card.icon = BlockIcons.shared.randomIcon()
 		await mutator.insertBlock(
 			card,
 			"add card",

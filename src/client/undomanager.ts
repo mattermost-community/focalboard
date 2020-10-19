@@ -1,7 +1,7 @@
 interface UndoCommand {
 	checkpoint: number
-	undo: () => void
-	redo: () => void
+	undo: () => Promise<void>
+	redo: () => Promise<void>
 	description?: string
 }
 
@@ -54,8 +54,8 @@ class UndoManager {
 	}
 
 	async perform(
-		redo: () => void,
-		undo: () => void,
+		redo: () => Promise<void>,
+		undo: () => Promise<void>,
 		description?: string,
 		isDiscardable = false
 	): Promise<UndoManager> {
@@ -64,7 +64,10 @@ class UndoManager {
 	}
 
 	registerUndo(
-		command: { undo: () => void; redo: () => void },
+		command: {
+			undo: () => Promise<void>,
+			redo: () => Promise<void>
+		},
 		description?: string,
 		isDiscardable = false
 	): UndoManager {

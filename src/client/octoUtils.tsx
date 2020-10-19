@@ -1,12 +1,16 @@
 import React from "react"
-import { IPropertyTemplate } from "./board"
+import { Block } from "./blocks/block"
+import { Board, IPropertyTemplate } from "./blocks/board"
+import { BoardView, ISortOption } from "./blocks/boardView"
+import { Card } from "./blocks/card"
+import { CommentBlock } from "./blocks/commentBlock"
+import { ImageBlock } from "./blocks/imageBlock"
+import { TextBlock } from "./blocks/textBlock"
 import { BoardTree } from "./boardTree"
-import { ISortOption } from "./boardView"
-import { Card } from "./card"
 import { Editable } from "./components/editable"
 import { Menu } from "./menu"
 import mutator from "./mutator"
-import { IBlock } from "./octoTypes"
+import { IBlock, IOrderedBlock } from "./octoTypes"
 import { Utils } from "./utils"
 
 class OctoUtils {
@@ -103,7 +107,7 @@ class OctoUtils {
 		return element
 	}
 
-	static getOrderBefore(block: IBlock, blocks: IBlock[]): number {
+	static getOrderBefore(block: IOrderedBlock, blocks: IOrderedBlock[]): number {
 		const index = blocks.indexOf(block)
 		if (index === 0) {
 			return block.order / 2
@@ -112,7 +116,7 @@ class OctoUtils {
 		return (block.order + previousBlock.order) / 2
 	}
 
-	static getOrderAfter(block: IBlock, blocks: IBlock[]): number {
+	static getOrderAfter(block: IOrderedBlock, blocks: IOrderedBlock[]): number {
 		const index = blocks.indexOf(block)
 		if (index === blocks.length - 1) {
 			return block.order + 1000
@@ -150,6 +154,24 @@ class OctoUtils {
 			await mutator.changeViewSortOptions(activeView, newSortOptions)
 		}
 		Menu.shared.showAtElement(e.target as HTMLElement)
+	}
+
+	static hydrateBlock(block: IBlock): Block {
+			switch (block.type) {
+				case "board": { return new Board(block) }
+				case "view": { return new BoardView(block) }
+				case "card": { return new Card(block) }
+				case "text": { return new TextBlock(block) }
+				case "image": { return new ImageBlock(block) }
+				case "comment": { return new CommentBlock(block) }
+				default: {
+					Utils.assertFailure(`Can't hydrate unknown block type: ${block.type}`)
+				}
+			}
+	}
+
+	static hydrateBlocks(blocks: IBlock[]): Block[] {
+		return blocks.map( block => this.hydrateBlock(block) )
 	}
 }
 

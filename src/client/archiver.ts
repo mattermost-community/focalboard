@@ -50,7 +50,7 @@ class Archiver {
 		// TODO: Remove or reuse link
 	}
 
-	static importFullArchive(onImported?: () => void): void {
+	static importFullArchive(onComplete?: () => void): void {
 		const input = document.createElement("input")
 		input.type = "file"
 		input.accept = ".octo"
@@ -73,7 +73,7 @@ class Archiver {
 
 			await mutator.importFullArchive(filteredBlocks)
 			Utils.log(`Import completed`)
-			onImported?.()
+			onComplete?.()
 		}
 
 		input.style.display = "none"

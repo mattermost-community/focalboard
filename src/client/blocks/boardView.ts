@@ -1,5 +1,5 @@
+import { FilterGroup } from "../filterGroup"
 import { Block } from "./block"
-import { FilterGroup } from "./filterGroup"
 
 type IViewType = "board" | "table" | "calendar" | "list" | "gallery"
 type ISortOption = { propertyId: "__name" | string, reversed: boolean }

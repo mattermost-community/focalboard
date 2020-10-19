@@ -1,12 +1,17 @@
-package main
+package ws
 
 import (
 	"log"
 	"net/http"
 	"sync"
 
+	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 )
+
+func (ws *WSServer) RegisterRoutes(r *mux.Router) {
+	r.HandleFunc("/ws/onchange", ws.handleWebSocketOnChange)
+}
 
 // AddListener adds a listener for a blockID's change
 func (ws *WSServer) AddListener(client *websocket.Conn, blockID string) {
@@ -105,7 +110,7 @@ func (ws *WSServer) handleWebSocketOnChange(w http.ResponseWriter, r *http.Reque
 	}
 }
 
-func (ws *WSServer) broadcastBlockChangeToWebsocketClients(blockIDs []string) {
+func (ws *WSServer) BroadcastBlockChangeToWebsocketClients(blockIDs []string) {
 	for _, blockID := range blockIDs {
 		listeners := ws.GetListeners(blockID)
 		log.Printf("%d listener(s) for blockID: %s", len(listeners), blockID)

@@ -1,8 +1,7 @@
 import React from 'react'
 import { Archiver } from "../archiver"
-import { Board } from "../board"
+import { Board } from "../blocks/board"
 import Button from '../components/button'
-import mutator from '../mutator'
 import octoClient from "../octoClient"
 import { IBlock } from "../octoTypes"
 import { Utils } from "../utils"

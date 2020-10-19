@@ -1,5 +1,5 @@
-import { IPropertyTemplate } from "./board"
-import { Card } from "./card"
+import { IPropertyTemplate } from "./blocks/board"
+import { Card } from "./blocks/card"
 import { FilterClause } from "./filterClause"
 import { FilterGroup } from "./filterGroup"
 import { Utils } from "./utils"

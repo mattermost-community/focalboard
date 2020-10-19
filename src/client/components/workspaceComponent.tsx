@@ -1,6 +1,5 @@
 import React from "react"
 import { BoardTree } from "../boardTree"
-import { Card } from "../card"
 import { Utils } from "../utils"
 import { WorkspaceTree } from "../workspaceTree"
 import { BoardComponent } from "./boardComponent"

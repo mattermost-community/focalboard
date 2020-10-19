@@ -1,11 +1,12 @@
-import { Block } from "./block"
-import { Board, IPropertyOption, IPropertyTemplate, PropertyType } from "./board"
+import { Block } from "./blocks/block"
+import { Board, IPropertyOption, IPropertyTemplate, PropertyType } from "./blocks/board"
+import { BoardView, ISortOption } from "./blocks/boardView"
+import { Card } from "./blocks/card"
+import { ImageBlock } from "./blocks/imageBlock"
 import { BoardTree } from "./boardTree"
-import { BoardView, ISortOption } from "./boardView"
-import { Card } from "./card"
 import { FilterGroup } from "./filterGroup"
 import octoClient from "./octoClient"
-import { IBlock } from "./octoTypes"
+import { IBlock, IOrderedBlock } from "./octoTypes"
 import undoManager from "./undomanager"
 import { Utils } from "./utils"
 
@@ -14,9 +15,6 @@ import { Utils } from "./utils"
 // It also ensures that the Undo-manager is called for each action
 //
 class Mutator {
-	constructor() {
-	}
-
 	async insertBlock(block: IBlock, description: string = "add", afterRedo?: () => Promise<void>, beforeUndo?: () => Promise<void>) {
 		await undoManager.perform(
 			async () => {
@@ -95,7 +93,7 @@ class Mutator {
 		)
 	}
 
-	async changeOrder(block: IBlock, order: number, description: string = "change order") {
+	async changeOrder(block: IOrderedBlock, order: number, description: string = "change order") {
 		const oldValue = block.order
 		await undoManager.perform(
 			async () => {
@@ -494,8 +492,9 @@ class Mutator {
 			return undefined
 		}
 
-		const block = new Block({ type: "image", parentId, order })
-		block.fields.url = url
+		const block = new ImageBlock({ parentId })
+		block.order = order
+		block.url = url
 
 		await undoManager.perform(
 			async () => {
@@ -510,21 +509,21 @@ class Mutator {
 		return block
 	}
 
-    async undo() {
-        await undoManager.undo()
-    }
+	async undo() {
+		await undoManager.undo()
+	}
 
-    undoDescription(): string | undefined {
-        return undoManager.undoDescription
-    }
+	undoDescription(): string | undefined {
+		return undoManager.undoDescription
+	}
 
-    async redo() {
-        await undoManager.redo()
-    }
+	async redo() {
+		await undoManager.redo()
+	}
 
-    redoDescription(): string | undefined {
-        return undoManager.redoDescription
-    }
+	redoDescription(): string | undefined {
+		return undoManager.redoDescription
+	}
 }
 
 const mutator = new Mutator()

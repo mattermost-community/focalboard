@@ -1,10 +1,10 @@
 import React from "react"
+import { Card } from "../blocks/card"
 import { BoardTree } from "../boardTree"
-import { Card } from "../card"
-import Menu from "../widgets/menu"
-import Dialog from "./dialog"
-import CardDetail from "./cardDetail"
 import mutator from "../mutator"
+import Menu from "../widgets/menu"
+import CardDetail from "./cardDetail"
+import Dialog from "./dialog"
 
 type Props = {
 	boardTree: BoardTree

@@ -23,6 +23,9 @@ export default function App() {
 						<Route path="/login">
 							<LoginPage />
 						</Route>
+						<Route path="/">
+							<BoardPage />
+						</Route>
 						<Route path="/board">
 							<BoardPage />
 						</Route>

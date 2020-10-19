@@ -82,7 +82,7 @@ export default class MenuWrapper extends React.PureComponent<Props, State> {
 
         return (
             <div
-                className={'MenuWrapper'}
+                className={'MenuWrapper menu-wrapper'}
                 onClick={this.toggle}
                 ref={this.node}
             >

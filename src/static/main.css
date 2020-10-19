@@ -329,6 +329,14 @@ hr {
 	background-color: #ffffff;
 }
 
+.menu.top {
+    bottom: 100%;
+}
+
+.menu-wrapper {
+    position: relative;
+}
+
 .menu-options {
 	display: flex;
 	flex-direction: column;
@@ -336,6 +344,8 @@ hr {
 	list-style: none;
 	padding: 0;
 	margin: 0;
+
+	color: rgb(55, 53, 47);
 }
 
 .menu-option {
@@ -454,7 +464,7 @@ hr {
 	align-items: center;
 }
 
-.octo-frame .octo-icontitle .octo-icon {
+.octo-frame > .octo-icontitle .octo-icon {
 	font-size: 36px;
 	line-height: 36px;
 	margin-right: 15px;

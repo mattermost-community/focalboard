@@ -6,7 +6,7 @@ type Props = {
 	onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
 	style?: React.CSSProperties
 	backgroundColor?: string
-	text?: string
+	children?: React.ReactNode
 	title?: string
 }
 
@@ -20,7 +20,6 @@ export default class Button extends React.Component<Props> {
 				style={style}
 				title={this.props.title}>
 				{this.props.children}
-				{this.props.text}
 			</div>)
 	}
 }

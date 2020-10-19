@@ -1,24 +1,23 @@
 import React from "react"
 import { Archiver } from "../archiver"
 import { BlockIcons } from "../blockIcons"
-import { IPropertyOption } from "../board"
+import { IPropertyOption } from "../blocks/board"
+import { Card } from "../blocks/card"
 import { BoardTree } from "../boardTree"
-import { Card } from "../card"
 import { CardFilter } from "../cardFilter"
 import ViewMenu from "../components/viewMenu"
-import MenuWrapper from "../widgets/menuWrapper"
-import Menu from "../widgets/menu"
 import { Constants } from "../constants"
-import { randomEmojiList } from "../emojiList"
 import { Menu as OldMenu } from "../menu"
 import mutator from "../mutator"
 import { OctoUtils } from "../octoUtils"
 import { Utils } from "../utils"
+import Menu from "../widgets/menu"
+import MenuWrapper from "../widgets/menuWrapper"
 import { BoardCard } from "./boardCard"
 import { BoardColumn } from "./boardColumn"
 import Button from "./button"
-import { Editable } from "./editable"
 import { CardDialog } from "./cardDialog"
+import { Editable } from "./editable"
 import RootPortal from "./rootPortal"
 
 type Props = {
@@ -96,8 +95,8 @@ class BoardComponent extends React.Component<Props, State> {
 							<MenuWrapper>
 								<div className="octo-button octo-icon">{board.icon}</div>
 								<Menu>
-									<Menu.Text id='random' name='Random' onClick={() => mutator.changeIcon(board, undefined, "remove icon")}/>
-									<Menu.Text id='remove' name='Remove Icon' onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}/>
+									<Menu.Text id='random' name='Random' onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}/>
+									<Menu.Text id='remove' name='Remove Icon' onClick={() => mutator.changeIcon(board, undefined, "remove icon")}/>
 								</Menu>
 							</MenuWrapper>
 							: undefined}
@@ -149,7 +148,7 @@ class BoardComponent extends React.Component<Props, State> {
 
 							<div className="octo-board-header-cell">
 								<div className="octo-label" title={`Items with an empty ${boardTree.groupByProperty?.name} property will go here. This column cannot be removed.`}>{`No ${boardTree.groupByProperty?.name}`}</div>
-								<Button text={`${boardTree.emptyGroupCards.length}`} />
+                                <Button>{`${boardTree.emptyGroupCards.length}`}</Button>
 								<div className="octo-spacer" />
 								<Button><div className="imageOptions" /></Button>
 								<Button onClick={() => { this.addCard(undefined) }}><div className="imageAdd" /></Button>
@@ -173,7 +172,7 @@ class BoardComponent extends React.Component<Props, State> {
 										className={`octo-label ${group.option.color}`}
 										text={group.option.value}
 										onChanged={(text) => { this.propertyNameChanged(group.option, text) }} />
-									<Button text={`${group.cards.length}`} />
+                                    <Button>{`${group.cards.length}`}</Button>
 									<div className="octo-spacer" />
 									<MenuWrapper>
 										<Button><div className="imageOptions" /></Button>
@@ -190,7 +189,7 @@ class BoardComponent extends React.Component<Props, State> {
 							)}
 
 							<div className="octo-board-header-cell">
-								<Button text="+ Add a group" onClick={(e) => { this.addGroupClicked() }} />
+                                <Button onClick={(e) => { this.addGroupClicked() }}>+ Add a group</Button>
 							</div>
 						</div>
 
@@ -210,7 +209,7 @@ class BoardComponent extends React.Component<Props, State> {
 										onDragStart={() => { this.draggedCard = card }}
 										onDragEnd={() => { this.draggedCard = undefined }} />
 								)}
-								<Button text="+ New" onClick={() => { this.addCard(undefined) }} />
+                                <Button onClick={() => { this.addCard(undefined) }} >+ New</Button>
 							</BoardColumn>
 
 							{/* Columns */}
@@ -226,7 +225,7 @@ class BoardComponent extends React.Component<Props, State> {
 											onDragStart={() => { this.draggedCard = card }}
 											onDragEnd={() => { this.draggedCard = undefined }} />
 									)}
-									<Button text="+ New" onClick={() => { this.addCard(group.option.value) }} />
+                                    <Button onClick={() => { this.addCard(group.option.value) }} >+ New</Button>
 								</BoardColumn>
 							)}
 						</div>
@@ -243,10 +242,11 @@ class BoardComponent extends React.Component<Props, State> {
 		const card = new Card()
 		card.parentId = boardTree.board.id
 		card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
+		card.icon = BlockIcons.shared.randomIcon()
 		if (boardTree.groupByProperty) {
 			card.properties[boardTree.groupByProperty.id] = groupByValue
 		}
-		await mutator.insertBlock(card, "add card", async () => { await this.setState({shownCard: card}) }, async () => { await this.setState({shownCard: undefined}) })
+		await mutator.insertBlock(card, "add card", async () => { this.setState({shownCard: card}) }, async () => { this.setState({shownCard: undefined}) })
 	}
 
 	async propertyNameChanged(option: IPropertyOption, text: string) {
@@ -266,6 +266,7 @@ class BoardComponent extends React.Component<Props, State> {
 			{ id: "exportBoardArchive", name: "Export board archive" },
 			{ id: "testAdd100Cards", name: "TEST: Add 100 cards" },
 			{ id: "testAdd1000Cards", name: "TEST: Add 1,000 cards" },
+			{ id: "testRandomizeIcons", name: "TEST: Randomize icons" },
 		]
 
 		OldMenu.shared.onMenuClicked = async (id: string) => {
@@ -280,6 +281,10 @@ class BoardComponent extends React.Component<Props, State> {
 				}
 				case "testAdd1000Cards": {
 					this.testAddCards(1000)
+					break
+				}
+				case "testRandomizeIcons": {
+					this.testRandomizeIcons()
 					break
 				}
 			}
@@ -307,6 +312,14 @@ class BoardComponent extends React.Component<Props, State> {
 				card.icon = BlockIcons.shared.randomIcon()
 			}
 			await mutator.insertBlock(card, "test add card")
+		}
+	}
+
+	private async testRandomizeIcons() {
+		const { boardTree } = this.props
+
+		for (const card of boardTree.cards) {
+			mutator.changeIcon(card, BlockIcons.shared.randomIcon(), "randomize icon")
 		}
 	}
 
