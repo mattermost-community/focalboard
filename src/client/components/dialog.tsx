@@ -1,7 +1,5 @@
 import React from "react"
-import Menu from "../widgets/menu"
 import MenuWrapper from "../widgets/menuWrapper"
-import mutator from "../mutator"
 import Button from "./button"
 
 type Props = {
@@ -41,7 +39,7 @@ export default class Dialog extends React.Component<Props> {
                         <div className="toolbar">
                             <div className="octo-spacer"></div>
                             <MenuWrapper>
-                                <Button text="..."></Button>
+                                <Button>...</Button>
                                 {toolsMenu}
                             </MenuWrapper>
                         </div>}

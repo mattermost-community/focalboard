@@ -1,21 +1,20 @@
 import React from "react"
-import { Block } from "../block"
-import { Card } from "../card"
 import { BlockIcons } from "../blockIcons"
+import { Block } from "../blocks/block"
+import { Card } from "../blocks/card"
+import { TextBlock } from "../blocks/textBlock"
 import { BoardTree } from "../boardTree"
 import { CardTree } from "../cardTree"
-import Menu from "../widgets/menu"
-import Dialog from "./dialog"
+import { Menu as OldMenu, MenuOption } from "../menu"
 import mutator from "../mutator"
-import {Menu as OldMenu, MenuOption} from "../menu"
-import { IBlock } from "../octoTypes"
+import { OctoListener } from "../octoListener"
+import { IBlock, IOrderedBlock } from "../octoTypes"
 import { OctoUtils } from "../octoUtils"
 import { PropertyMenu } from "../propertyMenu"
 import { Utils } from "../utils"
 import Button from "./button"
 import { Editable } from "./editable"
 import { MarkdownEditor } from "./markdownEditor"
-import { OctoListener } from "../octoListener"
 
 type Props = {
 	boardTree: BoardTree
@@ -50,7 +49,7 @@ export default class CardDetail extends React.Component<Props, State> {
 				if (this.titleRef.current) {
 					this.titleRef.current.focus()
 				}
-			}, 0);
+			}, 0)
 		})
 
 	}
@@ -321,7 +320,7 @@ export default class CardDetail extends React.Component<Props, State> {
 		await mutator.insertBlock(block, "add comment")
 	}
 
-	private showContentBlockMenu(e: React.MouseEvent, block: IBlock) {
+	private showContentBlockMenu(e: React.MouseEvent, block: IOrderedBlock) {
 		const { cardTree } = this.state
 		const { card } = this.props
 		const index = cardTree.contents.indexOf(block)
@@ -363,7 +362,7 @@ export default class CardDetail extends React.Component<Props, State> {
 					break
 				}
 				case "insertAbove-text": {
-					const newBlock = new Block({ type: "text", parentId: card.id })
+					const newBlock = new TextBlock({ parentId: card.id })
 					// TODO: Handle need to reorder all blocks
 					newBlock.order = OctoUtils.getOrderBefore(block, cardTree.contents)
 					Utils.log(`insert block ${block.id}, order: ${block.order}`)
