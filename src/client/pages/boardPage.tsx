@@ -175,6 +175,7 @@ export default class BoardPage extends React.Component<Props, State> {
 			this.setState({
 				...this.state,
 				boardTree,
+				boardId,
 				viewId: boardTree.activeView.id
 			})
 			Utils.log(`sync complete: ${boardTree.board.id} (${boardTree.board.title})`)
@@ -197,7 +198,7 @@ export default class BoardPage extends React.Component<Props, State> {
 
 	showView(viewId: string) {
 		this.state.boardTree.setActiveView(viewId)
-		this.setState({ viewId, boardTree: this.state.boardTree })
+		this.setState({...this.state, viewId })
 		const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + `?id=${encodeURIComponent(this.state.boardId)}&v=${encodeURIComponent(viewId)}`
 		window.history.pushState({ path: newUrl }, "", newUrl)
 	}
