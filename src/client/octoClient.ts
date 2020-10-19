@@ -15,7 +15,7 @@ class OctoClient {
 	async getSubtree(rootId?: string): Promise<IBlock[]> {
 		const path = `/api/v1/blocks/${rootId}/subtree`
 		const response = await fetch(this.serverUrl + path)
-		const blocks = await response.json() as IBlock[]
+		const blocks = (await response.json() || []) as IBlock[]
 		this.fixBlocks(blocks)
 		return blocks
 	}
@@ -23,7 +23,7 @@ class OctoClient {
 	async exportFullArchive(): Promise<IBlock[]> {
 		const path = `/api/v1/blocks/export`
 		const response = await fetch(this.serverUrl + path)
-		const blocks = await response.json() as IBlock[]
+		const blocks = (await response.json() || []) as IBlock[]
 		this.fixBlocks(blocks)
 		return blocks
 	}
@@ -63,6 +63,8 @@ class OctoClient {
 	}
 
 	fixBlocks(blocks: IBlock[]): void {
+		if (!blocks) { return }
+
 		// TODO
 		for (const block of blocks) {
 			if (!block.fields) { block.fields = {} }
