@@ -43,6 +43,24 @@ func _000001_init_up_sql() ([]byte, error) {
 	)
 }
 
+var __000002_system_settings_table_down_sql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\x09\xf2\x0f\x50\x08\x71\x74\xf2\x71\x55\x28\xae\x2c\x2e\x49\xcd\x8d\x2f\x4e\x2d\x29\xc9\xcc\x4b\x2f\xb6\xe6\x02\x04\x00\x00\xff\xff\x8b\x60\xbf\x1e\x1c\x00\x00\x00")
+
+func _000002_system_settings_table_down_sql() ([]byte, error) {
+	return bindata_read(
+		__000002_system_settings_table_down_sql,
+		"000002_system_settings_table.down.sql",
+	)
+}
+
+var __000002_system_settings_table_up_sql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\x0e\x72\x75\x0c\x71\x55\x08\x71\x74\xf2\x71\x55\xf0\x74\x53\xf0\xf3\x0f\x51\x70\x8d\xf0\x0c\x0e\x09\x56\x28\xae\x2c\x2e\x49\xcd\x8d\x2f\x4e\x2d\x29\xc9\xcc\x4b\x2f\x56\xd0\xe0\xe2\xcc\x4c\x51\x08\x73\x0c\x72\xf6\x70\x0c\xd2\x30\x34\x30\xd0\xd4\xe1\xe2\x2c\x4b\xcc\x29\x4d\x55\x08\x71\x8d\x08\xd1\xe1\xe2\x0c\x08\xf2\xf4\x75\x0c\x8a\x54\xf0\x76\x8d\x54\xd0\xc8\x4c\xd1\xe4\xd2\xb4\xe6\x02\x04\x00\x00\xff\xff\x17\x95\xca\x5b\x61\x00\x00\x00")
+
+func _000002_system_settings_table_up_sql() ([]byte, error) {
+	return bindata_read(
+		__000002_system_settings_table_up_sql,
+		"000002_system_settings_table.up.sql",
+	)
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -67,6 +85,8 @@ func AssetNames() []string {
 var _bindata = map[string]func() ([]byte, error){
 	"000001_init.down.sql": _000001_init_down_sql,
 	"000001_init.up.sql": _000001_init_up_sql,
+	"000002_system_settings_table.down.sql": _000002_system_settings_table_down_sql,
+	"000002_system_settings_table.up.sql": _000002_system_settings_table_up_sql,
 }
 // AssetDir returns the file names below a certain
 // directory embedded in the file by go-bindata.
@@ -111,5 +131,9 @@ var _bintree = &_bintree_t{nil, map[string]*_bintree_t{
 	"000001_init.down.sql": &_bintree_t{_000001_init_down_sql, map[string]*_bintree_t{
 	}},
 	"000001_init.up.sql": &_bintree_t{_000001_init_up_sql, map[string]*_bintree_t{
+	}},
+	"000002_system_settings_table.down.sql": &_bintree_t{_000002_system_settings_table_down_sql, map[string]*_bintree_t{
+	}},
+	"000002_system_settings_table.up.sql": &_bintree_t{_000002_system_settings_table_up_sql, map[string]*_bintree_t{
 	}},
 }}

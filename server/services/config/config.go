@@ -6,6 +6,11 @@ import (
 	"github.com/spf13/viper"
 )
 
+const (
+	DefaultServerRoot = "http://localhost:8000"
+	DefaultPort       = 8000
+)
+
 // Configuration is the app configuration stored in a json file
 type Configuration struct {
 	ServerRoot     string `json:"serverRoot" mapstructure:"serverRoot"`
@@ -15,14 +20,15 @@ type Configuration struct {
 	UseSSL         bool   `json:"useSSL" mapstructure:"useSSL"`
 	WebPath        string `json:"webpath" mapstructure:"webpath"`
 	FilesPath      string `json:"filespath" mapstructure:"filespath"`
+	Telemetry      bool   `json:"telemetry" mapstructure:"telemetry"`
 }
 
 func ReadConfigFile() (*Configuration, error) {
 	viper.SetConfigName("config") // name of config file (without extension)
 	viper.SetConfigType("json")   // REQUIRED if the config file does not have the extension in the name
 	viper.AddConfigPath(".")      // optionally look for config in the working directory
-	viper.SetDefault("ServerRoot", "http://localhost:8000")
-	viper.SetDefault("Port", 8000)
+	viper.SetDefault("ServerRoot", DefaultServerRoot)
+	viper.SetDefault("Port", DefaultPort)
 	viper.SetDefault("DBType", "sqlite3")
 	viper.SetDefault("DBConfigString", "./octo.db")
 	viper.SetDefault("WebPath", "./pack")

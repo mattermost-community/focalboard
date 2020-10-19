@@ -13,4 +13,6 @@ type Store interface {
 	InsertBlock(block model.Block) error
 	DeleteBlock(blockID string) error
 	Shutdown() error
+	GetSystemSettings() (map[string]string, error)
+	SetSystemSetting(key string, value string) error
 }

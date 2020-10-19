@@ -5,17 +5,24 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"runtime"
+
+	"github.com/google/uuid"
+	"go.uber.org/zap"
 
 	"github.com/mattermost/mattermost-octo-tasks/server/api"
 	"github.com/mattermost/mattermost-octo-tasks/server/app"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/config"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/store"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/store/sqlstore"
+	"github.com/mattermost/mattermost-octo-tasks/server/services/telemetry"
 	"github.com/mattermost/mattermost-octo-tasks/server/web"
 	"github.com/mattermost/mattermost-octo-tasks/server/ws"
 	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/services/filesstore"
 )
+
+const CurrentVersion = "0.0.1"
 
 type Server struct {
 	config       *config.Configuration
@@ -23,10 +30,17 @@ type Server struct {
 	webServer    *web.WebServer
 	store        store.Store
 	filesBackend filesstore.FileBackend
+	telemetry    *telemetry.TelemetryService
+	logger       *zap.Logger
 }
 
-func New(config *config.Configuration) (*Server, error) {
-	store, err := sqlstore.New(config.DBType, config.DBConfigString)
+func New(cfg *config.Configuration) (*Server, error) {
+	logger, err := zap.NewProduction()
+	if err != nil {
+		return nil, err
+	}
+
+	store, err := sqlstore.New(cfg.DBType, cfg.DBConfigString)
 	if err != nil {
 		log.Fatal("Unable to start the database", err)
 		return nil, err
@@ -36,16 +50,16 @@ func New(config *config.Configuration) (*Server, error) {
 
 	filesBackendSettings := model.FileSettings{}
 	filesBackendSettings.SetDefaults(false)
-	filesBackendSettings.Directory = &config.FilesPath
+	filesBackendSettings.Directory = &cfg.FilesPath
 	filesBackend, appErr := filesstore.NewFileBackend(&filesBackendSettings, false)
 	if appErr != nil {
 		log.Fatal("Unable to initialize the files storage")
 		return nil, errors.New("unable to initialize the files storage")
 	}
 
-	appBuilder := func() *app.App { return app.New(config, store, wsServer, filesBackend) }
+	appBuilder := func() *app.App { return app.New(cfg, store, wsServer, filesBackend) }
 
-	webServer := web.NewWebServer(config.WebPath, config.Port, config.UseSSL)
+	webServer := web.NewWebServer(cfg.WebPath, cfg.Port, cfg.UseSSL)
 	api := api.NewAPI(appBuilder)
 	webServer.AddRoutes(wsServer)
 	webServer.AddRoutes(api)
@@ -63,13 +77,47 @@ func New(config *config.Configuration) (*Server, error) {
 		}
 	}()
 
-	return &Server{
-		config:       config,
+	// Init telemetry
+	settings, err := store.GetSystemSettings()
+	if err != nil {
+		return nil, err
+	}
+
+	telemetryID := settings["TelemetryID"]
+	if len(telemetryID) == 0 {
+		telemetryID = uuid.New().String()
+		err := store.SetSystemSetting("TelemetryID", uuid.New().String())
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	telemetryService := telemetry.New(telemetryID, zap.NewStdLog(logger))
+	srv := &Server{
+		config:       cfg,
 		wsServer:     wsServer,
 		webServer:    webServer,
 		store:        store,
 		filesBackend: filesBackend,
-	}, nil
+		telemetry:    telemetryService,
+		logger:       logger,
+	}
+	telemetryService.RegisterTracker("server", func() map[string]interface{} {
+		return map[string]interface{}{
+			"version":          CurrentVersion,
+			"operating_system": runtime.GOOS,
+		}
+	})
+	telemetryService.RegisterTracker("config", func() map[string]interface{} {
+		return map[string]interface{}{
+			"serverRoot": srv.config.ServerRoot == config.DefaultServerRoot,
+			"port":       srv.config.Port == config.DefaultPort,
+			"useSSL":     srv.config.UseSSL,
+			"dbType":     srv.config.DBType,
+		}
+	})
+
+	return srv, nil
 }
 
 func (s *Server) Start() error {
