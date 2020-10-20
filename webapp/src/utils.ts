@@ -9,7 +9,7 @@ declare global {
 }
 
 class Utils {
-    static createGuid() {
+    static createGuid(): string {
         const crypto = window.crypto || window.msCrypto
         function randomDigit() {
             if (crypto && crypto.getRandomValues) {
@@ -25,8 +25,7 @@ class Utils {
 
     static htmlToElement(html: string): HTMLElement {
         const template = document.createElement('template')
-        html = html.trim()
-        template.innerHTML = html
+        template.innerHTML = html.trim()
         return template.content.firstChild as HTMLElement
     }
 
@@ -36,11 +35,11 @@ class Utils {
         return element!
     }
 
-    static htmlEncode(text: string) {
+    static htmlEncode(text: string): string {
         return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
     }
 
-    static htmlDecode(text: string) {
+    static htmlDecode(text: string): string {
         return String(text).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
     }
 
@@ -77,7 +76,7 @@ class Utils {
 
     // Errors
 
-    static assertValue(valueObject: any) {
+    static assertValue(valueObject: any): void {
         const name = Object.keys(valueObject)[0]
         const value = valueObject[name]
         if (!value) {
@@ -85,7 +84,7 @@ class Utils {
         }
     }
 
-    static assert(condition: any, tag = '') {
+    static assert(condition: any, tag = ''): void {
         /// #!if ENV !== "production"
         if (!condition) {
             Utils.logError(`ASSERT [${tag ?? new Error().stack}]`)
@@ -94,24 +93,26 @@ class Utils {
         /// #!endif
     }
 
-    static assertFailure(tag = '') {
+    static assertFailure(tag = ''): void {
         /// #!if ENV !== "production"
         Utils.assert(false, tag)
 
         /// #!endif
     }
 
-    static log(message: string) {
+    static log(message: string): void {
         /// #!if ENV !== "production"
         const timestamp = (Date.now() / 1000).toFixed(2)
+        // eslint-disable-next-line no-console
         console.log(`[${timestamp}] ${message}`)
 
         /// #!endif
     }
 
-    static logError(message: any) {
+    static logError(message: string): void {
         /// #!if ENV !== "production"
         const timestamp = (Date.now() / 1000).toFixed(2)
+        // eslint-disable-next-line no-console
         console.error(`[${timestamp}] ${message}`)
 
         /// #!endif
@@ -119,7 +120,7 @@ class Utils {
 
     // favicon
 
-    static setFavicon(icon?: string) {
+    static setFavicon(icon?: string): void {
         const href = icon ?
             `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${icon}</text></svg>` :
             ''
@@ -132,7 +133,7 @@ class Utils {
 
     // File names
 
-    static sanitizeFilename(filename: string) {
+    static sanitizeFilename(filename: string): string {
         // TODO: Use an industrial-strength sanitizer
         let sanitizedFilename = filename
         const illegalCharacters = ['\\', '/', '?', ':', '<', '>', '*', '|', '"', '.']
@@ -162,7 +163,7 @@ class Utils {
 
     // Arrays
 
-    static arraysEqual(a: any[], b: any[]) {
+    static arraysEqual(a: any[], b: any[]): boolean {
         if (a === b) {
             return true
         }

@@ -4,7 +4,7 @@ class FlashMessage {
     //
     // Show a temporary status message
     //
-    static show(text: string, delay = 800) {
+    static show(text: string, delay = 800): void {
         const flashPanel = document.createElement('div')
         flashPanel.innerText = text
         flashPanel.classList.add('flashPanel')

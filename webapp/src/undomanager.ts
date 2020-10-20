@@ -83,9 +83,7 @@ class UndoManager {
         let checkpoint: number
         if (isDiscardable) {
             checkpoint =
-                this.commands.length > 1 ?
-                    this.commands[this.commands.length - 1].checkpoint :
-                    0
+                this.commands.length > 1 ? this.commands[this.commands.length - 1].checkpoint : 0
         } else {
             checkpoint = Date.now()
         }

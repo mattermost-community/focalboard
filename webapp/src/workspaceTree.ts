@@ -8,12 +8,12 @@ import {OctoUtils} from './octoUtils'
 class WorkspaceTree {
     boards: Board[] = []
 
-    async sync() {
+    async sync(): Promise<void> {
         const blocks = await octoClient.getBlocks(undefined, 'board')
-	    this.rebuild(OctoUtils.hydrateBlocks(blocks))
+        this.rebuild(OctoUtils.hydrateBlocks(blocks))
     }
 
-    private rebuild(blocks: Block[]) {
+    private rebuild(blocks: Block[]): void {
         this.boards = blocks.filter((block) => block.type === 'board') as Board[]
     }
 }

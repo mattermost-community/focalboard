@@ -14,84 +14,88 @@ class PropertyMenu extends Menu {
 
     constructor() {
         super()
-	    const typeMenuOptions = [
+        const typeMenuOptions = [
             {id: 'text', name: 'Text'},
-	        {id: 'number', name: 'Number'},
+            {id: 'number', name: 'Number'},
             {id: 'select', name: 'Select'},
             {id: 'createdTime', name: 'Created Time'},
             {id: 'updatedTime', name: 'Updated Time'},
-	    ]
-	    this.subMenuOptions.set('type', typeMenuOptions)
+        ]
+        this.subMenuOptions.set('type', typeMenuOptions)
     }
 
-    createMenuElement() {
+    createMenuElement(): HTMLElement {
         const menu = Utils.htmlToElement('<div class="menu noselect" style="min-width: 200px;"></div>')
 
         const ul = menu.appendChild(Utils.htmlToElement('<ul class="menu-options"></ul>'))
 
         const nameTextbox = ul.appendChild(Utils.htmlToElement('<li class="menu-textbox"></li>'))
-	    this.nameTextbox = nameTextbox
+        this.nameTextbox = nameTextbox
         let propertyValue = this.property ? this.property.name : ''
-	    nameTextbox.innerText = propertyValue
+        nameTextbox.innerText = propertyValue
         nameTextbox.contentEditable = 'true'
-	    nameTextbox.onclick = (e) => {
-	        e.stopPropagation()
-	    }
-	    nameTextbox.onblur = () => {
-	        if (nameTextbox.innerText !== propertyValue) {
-	            propertyValue = nameTextbox.innerText
+        nameTextbox.onclick = (e) => {
+            e.stopPropagation()
+        }
+        nameTextbox.onblur = () => {
+            if (nameTextbox.innerText !== propertyValue) {
+                propertyValue = nameTextbox.innerText
                 if (this.onNameChanged) {
                     this.onNameChanged(nameTextbox.innerText)
                 }
             }
-	    }
+        }
         nameTextbox.onmouseenter = () => {
             this.hideSubMenu()
-	    }
-	    nameTextbox.onkeydown = (e) => {
+        }
+        nameTextbox.onkeydown = (e) => {
             if (e.keyCode === 13 || e.keyCode === 27) {
-                nameTextbox.blur(); e.stopPropagation()
+                nameTextbox.blur()
+                e.stopPropagation()
             }
         }
 
-	    ul.appendChild(Utils.htmlToElement('<li class="menu-separator"></li>'))
+        ul.appendChild(Utils.htmlToElement('<li class="menu-separator"></li>'))
 
-	    this.appendMenuOptions(ul)
+        this.appendMenuOptions(ul)
 
-	    return menu
+        return menu
     }
 
-    showAt(left: number, top: number) {
+    showAt(left: number, top: number): void {
         this.options = [
             {id: 'type', name: this.typeDisplayName(this.property.type), type: 'submenu'},
             {id: 'delete', name: 'Delete'},
-	    ]
+        ]
 
-	    super.showAt(left, top)
+        super.showAt(left, top)
         setTimeout(() => {
             this.nameTextbox.focus()
-	        document.execCommand('selectAll', false, null)
+            document.execCommand('selectAll', false, null)
         }, 20)
     }
 
     private typeDisplayName(type: PropertyType): string {
         switch (type) {
-	    case 'text': return 'Text'
-	    case 'number': return 'Number'
-	    case 'select': return 'Select'
-	    case 'multiSelect': return 'Multi Select'
-	    case 'person': return 'Person'
+        case 'text': return 'Text'
+        case 'number': return 'Number'
+        case 'select': return 'Select'
+        case 'multiSelect': return 'Multi Select'
+        case 'person': return 'Person'
         case 'file': return 'File or Media'
         case 'checkbox': return 'Checkbox'
         case 'url': return 'URL'
-	    case 'email': return 'Email'
+        case 'email': return 'Email'
         case 'phone': return 'Phone'
-	    case 'createdTime': return 'Created Time'
+        case 'createdTime': return 'Created Time'
         case 'createdBy': return 'Created By'
         case 'updatedTime': return 'Updated Time'
-	    case 'updatedBy': return 'Updated By'
+        case 'updatedBy': return 'Updated By'
+        default: {
+            Utils.assertFailure(`typeDisplayName, unhandled type: ${type}`)
+            return type
         }
-        Utils.assertFailure(`typeDisplayName, unhandled type: ${type}`)
+        }
     }
 }
 
