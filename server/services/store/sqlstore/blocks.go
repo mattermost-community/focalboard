@@ -6,29 +6,23 @@ import (
 	"log"
 	"time"
 
+	sq "github.com/Masterminds/squirrel"
 	_ "github.com/lib/pq"
 	"github.com/mattermost/mattermost-octo-tasks/server/model"
 	_ "github.com/mattn/go-sqlite3"
 )
 
+func (s *SQLStore) latestsBlocksSubquery() sq.SelectBuilder {
+	return sq.Select("*").FromSelect(sq.Select("*", "ROW_NUMBER() OVER (PARTITION BY id ORDER BY insert_at DESC) AS rn").From("blocks"), "a").Where(sq.Eq{"rn": 1})
+}
+
 func (s *SQLStore) GetBlocksWithParentAndType(parentID string, blockType string) ([]model.Block, error) {
-	query := `WITH latest AS
-		(
-			SELECT * FROM
-			(
-				SELECT
-					*,
-					ROW_NUMBER() OVER (PARTITION BY id ORDER BY insert_at DESC) AS rn
-				FROM blocks
-			) a
-			WHERE rn = 1
-		)
-
-		SELECT id, parent_id, schema, type, title, COALESCE("fields", '{}'), create_at, update_at, delete_at
-		FROM latest
-		WHERE delete_at = 0 and parent_id = $1 and type = $2`
-
-	rows, err := s.db.Query(query, parentID, blockType)
+	query := s.getQueryBuilder().Select("id", "parent_id", "schema", "type", "title", "COALESCE(\"fields\", '{}')", "create_at", "update_at", "delete_at").
+		FromSelect(s.latestsBlocksSubquery(), "latest").
+		Where(sq.Eq{"delete_at": 0}).
+		Where(sq.Eq{"parent_id": parentID}).
+		Where(sq.Eq{"type": blockType})
+	rows, err := query.Query()
 	if err != nil {
 		log.Printf(`getBlocksWithParentAndType ERROR: %v`, err)
 		return nil, err
@@ -38,23 +32,12 @@ func (s *SQLStore) GetBlocksWithParentAndType(parentID string, blockType string)
 }
 
 func (s *SQLStore) GetBlocksWithParent(parentID string) ([]model.Block, error) {
-	query := `WITH latest AS
-		(
-			SELECT * FROM
-			(
-				SELECT
-					*,
-					ROW_NUMBER() OVER (PARTITION BY id ORDER BY insert_at DESC) AS rn
-				FROM blocks
-			) a
-			WHERE rn = 1
-		)
+	query := s.getQueryBuilder().Select("id", "parent_id", "schema", "type", "title", "COALESCE(\"fields\", '{}')", "create_at", "update_at", "delete_at").
+		FromSelect(s.latestsBlocksSubquery(), "latest").
+		Where(sq.Eq{"delete_at": 0}).
+		Where(sq.Eq{"parent_id": parentID})
 
-		SELECT id, parent_id, schema, type, title, COALESCE("fields", '{}'), create_at, update_at, delete_at
-		FROM latest
-		WHERE delete_at = 0 and parent_id = $1`
-
-	rows, err := s.db.Query(query, parentID)
+	rows, err := query.Query()
 	if err != nil {
 		log.Printf(`getBlocksWithParent ERROR: %v`, err)
 		return nil, err
@@ -64,23 +47,11 @@ func (s *SQLStore) GetBlocksWithParent(parentID string) ([]model.Block, error) {
 }
 
 func (s *SQLStore) GetBlocksWithType(blockType string) ([]model.Block, error) {
-	query := `WITH latest AS
-		(
-			SELECT * FROM
-			(
-				SELECT
-					*,
-					ROW_NUMBER() OVER (PARTITION BY id ORDER BY insert_at DESC) AS rn
-				FROM blocks
-			) a
-			WHERE rn = 1
-		)
-
-		SELECT id, parent_id, schema, type, title, COALESCE("fields", '{}'), create_at, update_at, delete_at
-		FROM latest
-		WHERE delete_at = 0 and type = $1`
-
-	rows, err := s.db.Query(query, blockType)
+	query := s.getQueryBuilder().Select("id", "parent_id", "schema", "type", "title", "COALESCE(\"fields\", '{}')", "create_at", "update_at", "delete_at").
+		FromSelect(s.latestsBlocksSubquery(), "latest").
+		Where(sq.Eq{"delete_at": 0}).
+		Where(sq.Eq{"type": blockType})
+	rows, err := query.Query()
 	if err != nil {
 		log.Printf(`getBlocksWithParentAndType ERROR: %v`, err)
 		return nil, err
@@ -90,25 +61,12 @@ func (s *SQLStore) GetBlocksWithType(blockType string) ([]model.Block, error) {
 }
 
 func (s *SQLStore) GetSubTree(blockID string) ([]model.Block, error) {
-	query := `WITH latest AS
-	(
-		SELECT * FROM
-		(
-			SELECT
-				*,
-				ROW_NUMBER() OVER (PARTITION BY id ORDER BY insert_at DESC) AS rn
-			FROM blocks
-		) a
-		WHERE rn = 1
-	)
+	query := s.getQueryBuilder().Select("id", "parent_id", "schema", "type", "title", "COALESCE(\"fields\", '{}')", "create_at", "update_at", "delete_at").
+		FromSelect(s.latestsBlocksSubquery(), "latest").
+		Where(sq.Eq{"delete_at": 0}).
+		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}})
 
-	SELECT id, parent_id, schema, type, title, COALESCE("fields", '{}'), create_at, update_at, delete_at
-	FROM latest
-	WHERE delete_at = 0
-		AND (id = $1
-			OR parent_id = $1)`
-
-	rows, err := s.db.Query(query, blockID)
+	rows, err := query.Query()
 	if err != nil {
 		log.Printf(`getSubTree ERROR: %v`, err)
 		return nil, err
@@ -118,23 +76,11 @@ func (s *SQLStore) GetSubTree(blockID string) ([]model.Block, error) {
 }
 
 func (s *SQLStore) GetAllBlocks() ([]model.Block, error) {
-	query := `WITH latest AS
-	(
-		SELECT * FROM
-		(
-			SELECT
-				*,
-				ROW_NUMBER() OVER (PARTITION BY id ORDER BY insert_at DESC) AS rn
-			FROM blocks
-		) a
-		WHERE rn = 1
-	)
+	query := s.getQueryBuilder().Select("id", "parent_id", "schema", "type", "title", "COALESCE(\"fields\", '{}')", "create_at", "update_at", "delete_at").
+		FromSelect(s.latestsBlocksSubquery(), "latest").
+		Where(sq.Eq{"delete_at": 0})
 
-	SELECT id, parent_id, schema, type, title, COALESCE("fields", '{}'), create_at, update_at, delete_at
-	FROM latest
-	WHERE delete_at = 0`
-
-	rows, err := s.db.Query(query)
+	rows, err := query.Query()
 	if err != nil {
 		log.Printf(`getAllBlocks ERROR: %v`, err)
 		return nil, err
@@ -181,25 +127,12 @@ func blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 }
 
 func (s *SQLStore) GetParentID(blockID string) (string, error) {
-	statement :=
-		`WITH latest AS
-		(
-			SELECT * FROM
-			(
-				SELECT
-					*,
-					ROW_NUMBER() OVER (PARTITION BY id ORDER BY insert_at DESC) AS rn
-				FROM blocks
-			) a
-			WHERE rn = 1
-		)
+	query := s.getQueryBuilder().Select("parent_id").
+		FromSelect(s.latestsBlocksSubquery(), "latest").
+		Where(sq.Eq{"delete_at": 0}).
+		Where(sq.Eq{"id": blockID})
 
-		SELECT parent_id
-		FROM latest
-		WHERE delete_at = 0
-			AND id = $1`
-
-	row := s.db.QueryRow(statement, blockID)
+	row := query.QueryRow()
 
 	var parentID string
 	err := row.Scan(&parentID)
@@ -216,29 +149,10 @@ func (s *SQLStore) InsertBlock(block model.Block) error {
 		return err
 	}
 
-	statement := `INSERT INTO blocks(
-		id,
-		parent_id,
-		schema,
-		type,
-		title,
-		fields,
-		create_at,
-		update_at,
-		delete_at
-	)
-	VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)`
-	_, err = s.db.Exec(
-		statement,
-		block.ID,
-		block.ParentID,
-		block.Schema,
-		block.Type,
-		block.Title,
-		fieldsJSON,
-		block.CreateAt,
-		block.UpdateAt,
-		block.DeleteAt)
+	query := s.getQueryBuilder().Insert("blocks").
+		Columns("id", "parent_id", "schema", "type", "title", "fields", "create_at", "update_at", "delete_at").
+		Values(block.ID, block.ParentID, block.Schema, block.Type, block.Title, fieldsJSON, block.CreateAt, block.UpdateAt, block.DeleteAt)
+	_, err = query.Exec()
 	if err != nil {
 		return err
 	}
@@ -247,8 +161,8 @@ func (s *SQLStore) InsertBlock(block model.Block) error {
 
 func (s *SQLStore) DeleteBlock(blockID string) error {
 	now := time.Now().Unix()
-	statement := `INSERT INTO blocks(id, update_at, delete_at) VALUES($1, $2, $3)`
-	_, err := s.db.Exec(statement, blockID, now, now)
+	query := s.getQueryBuilder().Insert("blocks").Columns("id", "update_at", "delete_at").Values(blockID, now, now)
+	_, err := query.Exec()
 	if err != nil {
 		return err
 	}
