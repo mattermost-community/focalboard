@@ -9,7 +9,7 @@ function makeCommonConfig() {
 	const commonConfig = {
 		target: "web",
 		mode: "development",
-		entry: "./src/index.js",
+		entry: "./webapp/index.js",
 		node: {
 			__dirname: false,
 			__filename: false
@@ -28,9 +28,9 @@ function makeCommonConfig() {
 				{
 					test: /\.s[ac]ss$/i,
 					use: [
-					  'style-loader',
-					  'css-loader',
-					  'sass-loader',
+						'style-loader',
+						'css-loader',
+						'sass-loader',
 					],
 				},
 				{
@@ -51,7 +51,7 @@ function makeCommonConfig() {
 		plugins: [
 			new CopyPlugin({
 				patterns: [
-					{ from: path.resolve(__dirname, "src/static"), to: "static" },
+					{ from: path.resolve(__dirname, "webapp/static"), to: "static" },
 					{ from: path.resolve(__dirname, "node_modules/easymde/dist/easymde.min.css"), to: "static" },
 				],
 			}),
@@ -65,7 +65,7 @@ function makeCommonConfig() {
 			}),
 		],
 		entry: {
-			main: "./src/client/main.tsx",
+			main: "./webapp/src/main.tsx",
 		},
 		output: {
 			filename: "static/[name].js",
