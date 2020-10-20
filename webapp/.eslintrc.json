@@ -69,6 +69,7 @@
       "rules": {
         "import/no-unresolved": 0, // ts handles this better
 		"camelcase": 0,
+		"semi": "off",
         "@typescript-eslint/naming-convention": [
           2,
           {

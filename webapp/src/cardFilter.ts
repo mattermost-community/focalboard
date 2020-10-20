@@ -1,10 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IPropertyTemplate} from './blocks/board';
-import {Card} from './blocks/card';
-import {FilterClause} from './filterClause';
-import {FilterGroup} from './filterGroup';
-import {Utils} from './utils';
+import {IPropertyTemplate} from './blocks/board'
+import {Card} from './blocks/card'
+import {FilterClause} from './filterClause'
+import {FilterGroup} from './filterGroup'
+import {Utils} from './utils'
 
 class CardFilter {
     static applyFilterGroup(filterGroup: FilterGroup, templates: IPropertyTemplate[], cards: Card[]): Card[] {
@@ -89,7 +89,7 @@ class CardFilter {
         filters.forEach((filterClause) => {
             const p = this.propertyThatMeetsFilterClause(filterClause as FilterClause, templates)
             result[p.id] = p.value
-        });
+        })
         return result
     }
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Utils} from './utils';
+import {Utils} from './utils'
 
 type MenuOption = {
     id: string,
@@ -56,7 +56,7 @@ class Menu {
 	                    const bodyRect = document.body.getBoundingClientRect()
                         const rect = optionElement.getBoundingClientRect()
                         this.showSubMenu(rect.right - bodyRect.left, rect.top - bodyRect.top, option.id)
-                    };
+                    }
 	            } else {
                     if (option.icon) {
                         let iconName: string
@@ -73,7 +73,7 @@ class Menu {
 
 	                optionElement.onmouseenter = () => {
 	                    this.hideSubMenu()
-                    };
+                    }
                     optionElement.onclick = (e) => {
 	                    if (this.onMenuClicked) {
 	                        this.onMenuClicked(option.id, option.type)
@@ -81,14 +81,14 @@ class Menu {
                         this.hide()
 	                    e.stopPropagation()
                         return false
-                    };
+                    }
                 }
 
                 if (option.type === 'color') {
                     const colorbox = optionElement.insertBefore(Utils.htmlToElement('<div class="menu-colorbox"></div>'), optionElement.firstChild)
                     colorbox.classList.add(option.id)			// id is the css class name for the color
                 } else if (option.type === 'switch') {
-	                const className = option.isOn ? 'octo-switch on' : 'octo-switch';
+	                const className = option.isOn ? 'octo-switch on' : 'octo-switch'
 	                const switchElement = optionElement.appendChild(Utils.htmlToElement(`<div class="${className}"></div>`))
 	                switchElement.appendChild(Utils.htmlToElement('<div class="octo-switch-inner"></div>'))
 	                switchElement.onclick = (e) => {
@@ -104,7 +104,7 @@ class Menu {
 	                    }
 	                    e.stopPropagation()
                         return false
-	                };
+	                }
                     optionElement.onclick = null
                 }
 	        }
@@ -132,7 +132,7 @@ class Menu {
 	    this.onBodyClick = (e: MouseEvent) => {
 	        console.log('onBodyClick')
 	        this.hide()
-	    };
+	    }
 
         this.onBodyKeyDown = (e: KeyboardEvent) => {
             console.log(`onBodyKeyDown, target: ${e.target}`)
@@ -199,7 +199,7 @@ class Menu {
                 this.onMenuClicked(subMenuId, type)
             }
             this.hide()
-        };
+        }
 
         this.subMenu.options = options
         this.subMenu.showAt(pageX, pageY)

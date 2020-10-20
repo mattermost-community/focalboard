@@ -1,24 +1,24 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react';
+import React from 'react'
 
-import {BlockIcons} from '../blockIcons';
-import {Block} from '../blocks/block';
-import {Card} from '../blocks/card';
-import {TextBlock} from '../blocks/textBlock';
-import {BoardTree} from '../boardTree';
-import {CardTree} from '../cardTree';
-import {Menu as OldMenu, MenuOption} from '../menu';
-import mutator from '../mutator';
-import {OctoListener} from '../octoListener';
-import {IBlock, IOrderedBlock} from '../octoTypes';
-import {OctoUtils} from '../octoUtils';
-import {PropertyMenu} from '../propertyMenu';
-import {Utils} from '../utils';
+import {BlockIcons} from '../blockIcons'
+import {Block} from '../blocks/block'
+import {Card} from '../blocks/card'
+import {TextBlock} from '../blocks/textBlock'
+import {BoardTree} from '../boardTree'
+import {CardTree} from '../cardTree'
+import {Menu as OldMenu, MenuOption} from '../menu'
+import mutator from '../mutator'
+import {OctoListener} from '../octoListener'
+import {IBlock, IOrderedBlock} from '../octoTypes'
+import {OctoUtils} from '../octoUtils'
+import {PropertyMenu} from '../propertyMenu'
+import {Utils} from '../utils'
 
-import Button from './button';
-import {Editable} from './editable';
-import {MarkdownEditor} from './markdownEditor';
+import Button from './button'
+import {Editable} from './editable'
+import {MarkdownEditor} from './markdownEditor'
 
 type Props = {
     boardTree: BoardTree
@@ -45,7 +45,7 @@ export default class CardDetail extends React.Component<Props, State> {
 	    this.cardListener.open(this.props.card.id, async () => {
             await cardTree.sync()
 	        this.setState({cardTree})
-        });
+        })
 	    const cardTree = new CardTree(this.props.card.id)
         cardTree.sync().then(() => {
 	        this.setState({cardTree})
@@ -54,7 +54,7 @@ export default class CardDetail extends React.Component<Props, State> {
                     this.titleRef.current.focus()
                 }
 	        }, 0)
-        });
+        })
     }
 
     render() {
@@ -66,7 +66,7 @@ export default class CardDetail extends React.Component<Props, State> {
         }
         const {comments} = cardTree
 
-        const newCommentPlaceholderText = 'Add a comment...';
+        const newCommentPlaceholderText = 'Add a comment...'
 
 	    const backgroundRef = React.createRef<HTMLDivElement>()
         const newCommentRef = React.createRef<Editable>()
@@ -145,8 +145,8 @@ export default class CardDetail extends React.Component<Props, State> {
         const icon = card.icon
 
 	    // TODO: Replace this placeholder
-        const username = 'John Smith';
-        const userImageUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="fill: rgb(192, 192, 192);"><rect width="100" height="100" /></svg>';
+        const username = 'John Smith'
+        const userImageUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="fill: rgb(192, 192, 192);"><rect width="100" height="100" /></svg>'
 
 	    return (
             <>
@@ -205,28 +205,28 @@ export default class CardDetail extends React.Component<Props, State> {
                                             menu.onNameChanged = (propertyName) => {
 	                                        Utils.log('menu.onNameChanged')
 	                                        mutator.renameProperty(board, propertyTemplate.id, propertyName)
-                                            };
+                                            }
 
                                             menu.onMenuClicked = async (command) => {
                                                 switch (command) {
 	                                        case 'type-text':
 	                                            await mutator.changePropertyType(board, propertyTemplate, 'text')
-	                                            break;
+	                                            break
 	                                        case 'type-number':
                                                     await mutator.changePropertyType(board, propertyTemplate, 'number')
-	                                            break;
+	                                            break
                                                 case 'type-createdTime':
 	                                            await mutator.changePropertyType(board, propertyTemplate, 'createdTime')
-                                                    break;
+                                                    break
 	                                        case 'type-updatedTime':
                                                     await mutator.changePropertyType(board, propertyTemplate, 'updatedTime')
-                                                    break;
+                                                    break
 	                                        case 'type-select':
                                                     await mutator.changePropertyType(board, propertyTemplate, 'select')
-                                                    break;
+                                                    break
                                                 case 'delete':
                                                     await mutator.deleteProperty(boardTree, propertyTemplate.id)
-                                                    break;
+                                                    break
 	                                        default:
                                                     Utils.assertFailure(`Unhandled menu id: ${command}`)
 	                                        }
@@ -263,12 +263,12 @@ export default class CardDetail extends React.Component<Props, State> {
                                     switch (id) {
 	                                case 'delete': {
 	                                    mutator.deleteBlock(activeComment)
-                                        break;
+                                        break
                                     }
 	                                }
 	                            }
                                 OldMenu.shared.showAtElement(e.target as HTMLElement)
-                            };
+                            }
 
                             return (<div
                                 key={comment.id}
@@ -277,7 +277,7 @@ export default class CardDetail extends React.Component<Props, State> {
                                     optionsButtonRef.current.style.display = null
                                 }}
                                 onMouseLeave={() => {
-                                    optionsButtonRef.current.style.display = 'none';
+                                    optionsButtonRef.current.style.display = 'none'
                                 }}
                             >
                                 <div className='comment-header'>
@@ -317,7 +317,7 @@ export default class CardDetail extends React.Component<Props, State> {
                                 }}
                         onBlur={() => {
 	                                if (!newCommentRef.current.text) {
-                                        sendCommentButtonRef.current.style.display = 'none';
+                                        sendCommentButtonRef.current.style.display = 'none'
 	                                }
 	                            }}
                         onKeyDown={(e) => {
@@ -366,14 +366,14 @@ export default class CardDetail extends React.Component<Props, State> {
 	                                    const order = cardTree.contents.length * 1000
                                         const block = new Block({type: 'text', parentId: card.id, order})
                                         await mutator.insertBlock(block, 'add text')
-	                                    break;
+	                                    break
 	                                case 'image':
                                         Utils.selectLocalFile(
                                             (file) => {
 	                                            mutator.createImageBlock(card.id, file, cardTree.contents.length * 1000)
                                             },
 	                                        '.jpg,.jpeg,.png')
-	                                    break;
+	                                    break
                                     }
                                 }
 	                            OldMenu.shared.showAtElement(e.target as HTMLElement)
@@ -427,7 +427,7 @@ export default class CardDetail extends React.Component<Props, State> {
 	            const newOrder = OctoUtils.getOrderBefore(previousBlock, cardTree.contents)
                 Utils.log(`moveUp ${newOrder}`)
 	            mutator.changeOrder(block, newOrder, 'move up')
-                break;
+                break
             }
 	        case 'moveDown': {
                 if (index >= cardTree.contents.length - 1) {
@@ -437,7 +437,7 @@ export default class CardDetail extends React.Component<Props, State> {
 	            const newOrder = OctoUtils.getOrderAfter(nextBlock, cardTree.contents)
                 Utils.log(`moveDown ${newOrder}`)
                 mutator.changeOrder(block, newOrder, 'move down')
-                break;
+                break
             }
 	        case 'insertAbove-text': {
                 const newBlock = new TextBlock({parentId: card.id})
@@ -446,7 +446,7 @@ export default class CardDetail extends React.Component<Props, State> {
                 newBlock.order = OctoUtils.getOrderBefore(block, cardTree.contents)
                 Utils.log(`insert block ${block.id}, order: ${block.order}`)
                 mutator.insertBlock(newBlock, 'insert card text')
-	            break;
+	            break
             }
 	        case 'insertAbove-image': {
 	            Utils.selectLocalFile(
@@ -455,11 +455,11 @@ export default class CardDetail extends React.Component<Props, State> {
                     },
                     '.jpg,.jpeg,.png')
 
-	            break;
+	            break
 	        }
             case 'delete': {
                 mutator.deleteBlock(block)
-                break;
+                break
 	        }
             }
 	    }
@@ -477,11 +477,11 @@ export default class CardDetail extends React.Component<Props, State> {
 	        switch (optionId) {
             case 'remove':
                 mutator.changeIcon(card, undefined, 'remove icon')
-	            break;
+	            break
 	        case 'random':
                 const newIcon = BlockIcons.shared.randomIcon()
                 mutator.changeIcon(card, newIcon)
-	            break;
+	            break
 	        }
         }
         OldMenu.shared.showAtElement(e.target as HTMLElement)

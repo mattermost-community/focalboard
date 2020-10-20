@@ -1,16 +1,16 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Block} from './blocks/block';
-import {Board, IPropertyOption, IPropertyTemplate, PropertyType} from './blocks/board';
-import {BoardView, ISortOption} from './blocks/boardView';
-import {Card} from './blocks/card';
-import {ImageBlock} from './blocks/imageBlock';
-import {BoardTree} from './boardTree';
-import {FilterGroup} from './filterGroup';
-import octoClient from './octoClient';
-import {IBlock, IOrderedBlock} from './octoTypes';
-import undoManager from './undomanager';
-import {Utils} from './utils';
+import {Block} from './blocks/block'
+import {Board, IPropertyOption, IPropertyTemplate, PropertyType} from './blocks/board'
+import {BoardView, ISortOption} from './blocks/boardView'
+import {Card} from './blocks/card'
+import {ImageBlock} from './blocks/imageBlock'
+import {BoardTree} from './boardTree'
+import {FilterGroup} from './filterGroup'
+import octoClient from './octoClient'
+import {IBlock, IOrderedBlock} from './octoTypes'
+import undoManager from './undomanager'
+import {Utils} from './utils'
 
 //
 // The Mutator is used to make all changes to server state
@@ -133,14 +133,14 @@ class Mutator {
         const changedBlocks: IBlock[] = [board]
         board.cardProperties.splice(index, 0, template)
 
-        let description = 'add property';
+        let description = 'add property'
 
         if (activeView.viewType === 'table') {
             oldBlocks.push(new BoardView(activeView))
             activeView.visiblePropertyIds.push(template.id)
             changedBlocks.push(activeView)
 
-            description = 'add column';
+            description = 'add column'
         }
 
         await undoManager.perform(
@@ -173,13 +173,13 @@ class Mutator {
         }
         board.cardProperties.splice(index + 1, 0, newTemplate)
 
-        let description = 'duplicate property';
+        let description = 'duplicate property'
         if (activeView.viewType === 'table') {
             oldBlocks.push(new BoardView(activeView))
             activeView.visiblePropertyIds.push(newTemplate.id)
             changedBlocks.push(activeView)
 
-            description = 'duplicate column';
+            description = 'duplicate column'
         }
 
         await undoManager.perform(

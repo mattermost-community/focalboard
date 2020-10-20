@@ -1,9 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {BoardView} from './blocks/boardView';
-import {BoardTree} from './boardTree';
-import {OctoUtils} from './octoUtils';
-import {Utils} from './utils';
+import {BoardView} from './blocks/boardView'
+import {BoardTree} from './boardTree'
+import {OctoUtils} from './octoUtils'
+import {Utils} from './utils'
 
 class CsvExporter {
     static exportTableCsv(boardTree: BoardTree, view?: BoardView) {
@@ -12,17 +12,17 @@ class CsvExporter {
 
         const rows = CsvExporter.generateTableArray(boardTree, view)
 
-        let csvContent = 'data:text/csv;charset=utf-8,';
+        let csvContent = 'data:text/csv;charset=utf-8,'
 
         rows.forEach((row) => {
             const encodedRow = row.join(',')
-            csvContent += encodedRow + '\r\n';
+            csvContent += encodedRow + '\r\n'
         })
 
         const filename = `${Utils.sanitizeFilename(viewToExport.title)}.csv`
         const encodedUri = encodeURI(csvContent)
         const link = document.createElement('a')
-        link.style.display = 'none';
+        link.style.display = 'none'
         link.setAttribute('href', encodedUri)
         link.setAttribute('download', filename)
         document.body.appendChild(link)						// FireFox support
@@ -44,7 +44,7 @@ class CsvExporter {
             const row: string[] = []
             visibleProperties.forEach((template) => {
                 row.push(template.name)
-            });
+            })
             rows.push(row)
         }
 
@@ -52,7 +52,7 @@ class CsvExporter {
             const row: string[] = []
             visibleProperties.forEach((template) => {
                 const propertyValue = card.properties[template.id]
-                const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, template) || '';
+                const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, template) || ''
                 if (template.type === 'number') {
                     const numericValue = propertyValue ? Number(propertyValue).toString() : undefined
                     row.push(numericValue)
@@ -62,7 +62,7 @@ class CsvExporter {
                 }
             })
             rows.push(row)
-        });
+        })
 
         return rows
     }

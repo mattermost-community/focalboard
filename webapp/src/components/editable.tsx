@@ -1,8 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react';
+import React from 'react'
 
-import {Utils} from '../utils';
+import {Utils} from '../utils'
 
 type Props = {
     onChanged: (text: string) => void
@@ -36,23 +36,23 @@ class Editable extends React.Component<Props, State> {
         const {isMarkdown} = this.props
 
         if (!value) {
-	        this.elementRef.current.innerText = '';
+	        this.elementRef.current.innerText = ''
 	    } else {
 	        this.elementRef.current.innerHTML = isMarkdown ? Utils.htmlFromMarkdown(value) : Utils.htmlEncode(value)
 	    }
 
-	    this._text = value || '';
+	    this._text = value || ''
     }
 
     private elementRef = React.createRef<HTMLDivElement>()
 
     constructor(props: Props) {
         super(props)
-	    this._text = props.text || '';
+	    this._text = props.text || ''
     }
 
     componentDidUpdate(prevPros: Props, prevState: State) {
-        this._text = this.props.text || '';
+        this._text = this.props.text || ''
     }
 
     focus() {
@@ -76,7 +76,7 @@ class Editable extends React.Component<Props, State> {
         if (text) {
             html = isMarkdown ? Utils.htmlFromMarkdown(text) : Utils.htmlEncode(text)
 	    } else {
-	        html = '';
+	        html = ''
         }
 
         const element =
@@ -102,7 +102,7 @@ class Editable extends React.Component<Props, State> {
 
                 onBlur={async () => {
 			        const newText = this.elementRef.current.innerText
-			        const oldText = this.props.text || '';
+			        const oldText = this.props.text || ''
 			        if (newText !== oldText && onChanged) {
 			            onChanged(newText)
 			        }

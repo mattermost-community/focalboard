@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {FilterClause} from './filterClause';
+import {FilterClause} from './filterClause'
 
 type FilterGroupOperation = 'and' | 'or'
 
@@ -14,7 +14,7 @@ class FilterGroup {
     }
 
     constructor(o: any = {}) {
-        this.operation = o.operation || 'and';
+        this.operation = o.operation || 'and'
 	    this.filters = o.filters ?
             o.filters.map((p: any) => {
                 if (FilterGroup.isAnInstanceOf(p)) {

@@ -1,10 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import EasyMDE from 'easymde';
-import React from 'react';
-import SimpleMDE from 'react-simplemde-editor';
+import EasyMDE from 'easymde'
+import React from 'react'
+import SimpleMDE from 'react-simplemde-editor'
 
-import {Utils} from '../utils';
+import {Utils} from '../utils'
 
 type Props = {
     onChanged: (text: string) => void
@@ -43,7 +43,7 @@ class MarkdownEditor extends React.Component<Props, State> {
     }
 
     componentDidUpdate(prevPros: Props, prevState: State) {
-	    this.text = this.props.text || '';
+	    this.text = this.props.text || ''
     }
 
     showEditor() {
@@ -123,7 +123,7 @@ class MarkdownEditor extends React.Component<Props, State> {
                     events={{
 			            blur: () => {
 			                const newText = this.elementRef.current.state.value
-			                const oldText = this.props.text || '';
+			                const oldText = this.props.text || ''
 			                if (newText !== oldText && onChanged) {
 			                    const newHtml = newText ? Utils.htmlFromMarkdown(newText) : Utils.htmlFromMarkdown(placeholderText || '')
 			                    this.previewRef.current.innerHTML = newHtml

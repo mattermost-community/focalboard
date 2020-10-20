@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IBlock} from '../octoTypes';
-import {Utils} from '../utils';
+import {IBlock} from '../octoTypes'
+import {Utils} from '../utils'
 
 class Block implements IBlock {
     id: string = Utils.createGuid()

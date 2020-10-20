@@ -1,9 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {BoardTree} from './boardTree';
-import mutator from './mutator';
-import {IBlock} from './octoTypes';
-import {Utils} from './utils';
+import {BoardTree} from './boardTree'
+import mutator from './mutator'
+import {IBlock} from './octoTypes'
+import {Utils} from './utils'
 
 interface Archive {
     version: number
@@ -40,7 +40,7 @@ class Archiver {
         const date = new Date()
         const filename = `archive-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.octo`
         const link = document.createElement('a')
-        link.style.display = 'none';
+        link.style.display = 'none'
 
         // const file = new Blob([content], { type: "text/json" })
         // link.href = URL.createObjectURL(file)
@@ -55,8 +55,8 @@ class Archiver {
 
     static importFullArchive(onComplete?: () => void): void {
         const input = document.createElement('input')
-        input.type = 'file';
-        input.accept = '.octo';
+        input.type = 'file'
+        input.accept = '.octo'
         input.onchange = async () => {
             const file = input.files[0]
             const contents = await (new Response(file)).text()
@@ -72,16 +72,16 @@ class Archiver {
                     return false
                 }
                 return true
-            });
+            })
 
             Utils.log(`Import ${filteredBlocks.length} filtered blocks.`)
 
             await mutator.importFullArchive(filteredBlocks)
             Utils.log('Import completed')
             onComplete?.()
-        };
+        }
 
-        input.style.display = 'none';
+        input.style.display = 'none'
         document.body.appendChild(input)
         input.click()
 

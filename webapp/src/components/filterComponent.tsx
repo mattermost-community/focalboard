@@ -1,13 +1,13 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react';
+import React from 'react'
 
-import {BoardTree} from '../boardTree';
-import {FilterClause, FilterCondition} from '../filterClause';
-import {FilterGroup} from '../filterGroup';
-import {Menu} from '../menu';
-import mutator from '../mutator';
-import {Utils} from '../utils';
+import {BoardTree} from '../boardTree'
+import {FilterClause, FilterCondition} from '../filterClause'
+import {FilterGroup} from '../filterGroup'
+import {Menu} from '../menu'
+import mutator from '../mutator'
+import {Utils} from '../utils'
 
 type Props = {
     boardTree: BoardTree
@@ -42,7 +42,7 @@ class FilterComponent extends React.Component<Props> {
                 >
                     {filters.map((filter) => {
                         const template = board.cardProperties.find((o) => o.id === filter.propertyId)
-                        const propertyName = template ? template.name : '(unknown)';		// TODO: Handle error
+                        const propertyName = template ? template.name : '(unknown)'		// TODO: Handle error
                         const key = `${filter.propertyId}-${filter.condition}-${filter.values.join(',')}`
                         Utils.log(`FilterClause key: ${key}`)
                         return (<div

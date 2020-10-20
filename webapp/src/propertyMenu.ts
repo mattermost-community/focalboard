@@ -1,8 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IPropertyTemplate, PropertyType} from './blocks/board';
-import {Menu} from './menu';
-import {Utils} from './utils';
+import {IPropertyTemplate, PropertyType} from './blocks/board'
+import {Menu} from './menu'
+import {Utils} from './utils'
 
 class PropertyMenu extends Menu {
     static shared = new PropertyMenu()
@@ -31,12 +31,12 @@ class PropertyMenu extends Menu {
 
         const nameTextbox = ul.appendChild(Utils.htmlToElement('<li class="menu-textbox"></li>'))
 	    this.nameTextbox = nameTextbox
-        let propertyValue = this.property ? this.property.name : '';
+        let propertyValue = this.property ? this.property.name : ''
 	    nameTextbox.innerText = propertyValue
-        nameTextbox.contentEditable = 'true';
+        nameTextbox.contentEditable = 'true'
 	    nameTextbox.onclick = (e) => {
 	        e.stopPropagation()
-	    };
+	    }
 	    nameTextbox.onblur = () => {
 	        if (nameTextbox.innerText !== propertyValue) {
 	            propertyValue = nameTextbox.innerText
@@ -47,7 +47,7 @@ class PropertyMenu extends Menu {
 	    }
         nameTextbox.onmouseenter = () => {
             this.hideSubMenu()
-	    };
+	    }
 	    nameTextbox.onkeydown = (e) => {
             if (e.keyCode === 13 || e.keyCode === 27) {
                 nameTextbox.blur(); e.stopPropagation()
@@ -76,20 +76,20 @@ class PropertyMenu extends Menu {
 
     private typeDisplayName(type: PropertyType): string {
         switch (type) {
-	    case 'text': return 'Text';
-	    case 'number': return 'Number';
-	    case 'select': return 'Select';
-	    case 'multiSelect': return 'Multi Select';
-	    case 'person': return 'Person';
-        case 'file': return 'File or Media';
-        case 'checkbox': return 'Checkbox';
-        case 'url': return 'URL';
-	    case 'email': return 'Email';
-        case 'phone': return 'Phone';
-	    case 'createdTime': return 'Created Time';
-        case 'createdBy': return 'Created By';
-        case 'updatedTime': return 'Updated Time';
-	    case 'updatedBy': return 'Updated By';
+	    case 'text': return 'Text'
+	    case 'number': return 'Number'
+	    case 'select': return 'Select'
+	    case 'multiSelect': return 'Multi Select'
+	    case 'person': return 'Person'
+        case 'file': return 'File or Media'
+        case 'checkbox': return 'Checkbox'
+        case 'url': return 'URL'
+	    case 'email': return 'Email'
+        case 'phone': return 'Phone'
+	    case 'createdTime': return 'Created Time'
+        case 'createdBy': return 'Created By'
+        case 'updatedTime': return 'Updated Time'
+	    case 'updatedBy': return 'Updated By'
         }
         Utils.assertFailure(`typeDisplayName, unhandled type: ${type}`)
     }

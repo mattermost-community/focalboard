@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import marked from 'marked';
+import marked from 'marked'
 
 declare global {
     interface Window {
@@ -122,10 +122,10 @@ class Utils {
     static setFavicon(icon?: string) {
         const href = icon ?
             `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${icon}</text></svg>` :
-            '';
+            ''
         const link = (document.querySelector("link[rel*='icon']") || document.createElement('link')) as HTMLLinkElement
-        link.type = 'image/x-icon';
-        link.rel = 'shortcut icon';
+        link.type = 'image/x-icon'
+        link.rel = 'shortcut icon'
         link.href = href
         document.getElementsByTagName('head')[0].appendChild(link)
     }
@@ -138,7 +138,7 @@ class Utils {
         const illegalCharacters = ['\\', '/', '?', ':', '<', '>', '*', '|', '"', '.']
         illegalCharacters.forEach((character) => {
             sanitizedFilename = sanitizedFilename.replace(character, '')
-        });
+        })
         return sanitizedFilename
     }
 
@@ -146,14 +146,14 @@ class Utils {
 
     static selectLocalFile(onSelect?: (file: File) => void, accept = '.jpg,.jpeg,.png'): void {
         const input = document.createElement('input')
-        input.type = 'file';
+        input.type = 'file'
         input.accept = accept
         input.onchange = async () => {
             const file = input.files![0]
             onSelect?.(file)
-        };
+        }
 
-        input.style.display = 'none';
+        input.style.display = 'none'
         document.body.appendChild(input)
         input.click()
 

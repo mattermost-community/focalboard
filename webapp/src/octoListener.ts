@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Utils} from './utils';
+import {Utils} from './utils'
 
 //
 // OctoListener calls a handler when a block or any of its children changes
@@ -36,11 +36,11 @@ class OctoListener {
 	    ws.onopen = () => {
 	        Utils.log('OctoListener webSocket opened.')
 	        ws.send('{}')
-	    };
+	    }
 
 	    ws.onerror = (e) => {
             Utils.logError(`OctoListener websocket onerror. data: ${e}`)
-	    };
+	    }
 
 	    ws.onclose = (e) => {
             Utils.log(`OctoListener websocket onclose, code: ${e.code}, reason: ${e.reason}`)
@@ -64,7 +64,7 @@ class OctoListener {
 	                    timeoutId = undefined
 	                    onChange(message.blockId)
                     }, this.notificationDelay)
-                    break;
+                    break
                 default:
                     Utils.logError(`Unexpected action: ${message.action}`)
                 }

@@ -1,10 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Block} from './blocks/block';
-import {Card} from './blocks/card';
-import octoClient from './octoClient';
-import {IBlock, IOrderedBlock} from './octoTypes';
-import {OctoUtils} from './octoUtils';
+import {Block} from './blocks/block'
+import {Card} from './blocks/card'
+import octoClient from './octoClient'
+import {IBlock, IOrderedBlock} from './octoTypes'
+import {OctoUtils} from './octoUtils'
 
 class CardTree {
     card: Card

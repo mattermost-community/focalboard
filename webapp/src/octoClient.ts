@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IBlock} from './octoTypes';
-import {Utils} from './utils';
+import {IBlock} from './octoTypes'
+import {Utils} from './utils'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -23,7 +23,7 @@ class OctoClient {
     }
 
     async exportFullArchive(): Promise<IBlock[]> {
-        const path = '/api/v1/blocks/export';
+        const path = '/api/v1/blocks/export'
 	    const response = await fetch(this.serverUrl + path)
 	    const blocks = (await response.json() || []) as IBlock[]
 	    this.fixBlocks(blocks)
@@ -34,7 +34,7 @@ class OctoClient {
         Utils.log(`importFullArchive: ${blocks.length} blocks(s)`)
         blocks.forEach((block) => {
             Utils.log(`\t ${block.type}, ${block.id}`)
-	    });
+	    })
         const body = JSON.stringify(blocks)
         return await fetch(this.serverUrl + '/api/v1/blocks/import', {
 	        method: 'POST',
@@ -55,7 +55,7 @@ class OctoClient {
         } else if (type) {
             path = `/api/v1/blocks?type=${encodeURIComponent(type)}`
         } else {
-	        path = '/api/v1/blocks';
+	        path = '/api/v1/blocks'
         }
 
 	    const response = await fetch(this.serverUrl + path)
@@ -99,7 +99,7 @@ class OctoClient {
         const now = Date.now()
         blocks.forEach((block) => {
             block.updateAt = now
-        });
+        })
 	    return await this.insertBlocks(blocks)
     }
 
@@ -122,7 +122,7 @@ class OctoClient {
 	    Utils.log(`insertBlocks: ${blocks.length} blocks(s)`)
 	    blocks.forEach((block) => {
 	        Utils.log(`\t ${block.type}, ${block.id}`)
-	    });
+	    })
 	    const body = JSON.stringify(blocks)
 	    return await fetch(this.serverUrl + '/api/v1/blocks', {
             method: 'POST',

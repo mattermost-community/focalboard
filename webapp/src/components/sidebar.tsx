@@ -1,14 +1,14 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react';
+import React from 'react'
 
-import {Archiver} from '../archiver';
-import {Board} from '../blocks/board';
-import {BoardTree} from '../boardTree';
-import Menu from '../widgets/menu';
-import MenuWrapper from '../widgets/menuWrapper';
-import mutator from '../mutator';
-import {WorkspaceTree} from '../workspaceTree';
+import {Archiver} from '../archiver'
+import {Board} from '../blocks/board'
+import {BoardTree} from '../boardTree'
+import Menu from '../widgets/menu'
+import MenuWrapper from '../widgets/menuWrapper'
+import mutator from '../mutator'
+import {WorkspaceTree} from '../workspaceTree'
 
 type Props = {
     showBoard: (id: string) => void
@@ -29,7 +29,7 @@ class Sidebar extends React.Component<Props> {
             <div className='octo-sidebar'>
                 {
                     boards.map((board) => {
-                        const displayTitle = board.title || '(Untitled Board)';
+                        const displayTitle = board.title || '(Untitled Board)'
                         return (
                             <div
                                 key={board.id}

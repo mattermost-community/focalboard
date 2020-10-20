@@ -1,28 +1,28 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react';
+import React from 'react'
 
-import {Archiver} from '../archiver';
-import {BlockIcons} from '../blockIcons';
-import {IPropertyOption} from '../blocks/board';
-import {Card} from '../blocks/card';
-import {BoardTree} from '../boardTree';
-import {CardFilter} from '../cardFilter';
-import ViewMenu from '../components/viewMenu';
-import {Constants} from '../constants';
-import {Menu as OldMenu} from '../menu';
-import mutator from '../mutator';
-import {OctoUtils} from '../octoUtils';
-import {Utils} from '../utils';
-import Menu from '../widgets/menu';
-import MenuWrapper from '../widgets/menuWrapper';
+import {Archiver} from '../archiver'
+import {BlockIcons} from '../blockIcons'
+import {IPropertyOption} from '../blocks/board'
+import {Card} from '../blocks/card'
+import {BoardTree} from '../boardTree'
+import {CardFilter} from '../cardFilter'
+import ViewMenu from '../components/viewMenu'
+import {Constants} from '../constants'
+import {Menu as OldMenu} from '../menu'
+import mutator from '../mutator'
+import {OctoUtils} from '../octoUtils'
+import {Utils} from '../utils'
+import Menu from '../widgets/menu'
+import MenuWrapper from '../widgets/menuWrapper'
 
-import {BoardCard} from './boardCard';
-import {BoardColumn} from './boardColumn';
-import Button from './button';
-import {CardDialog} from './cardDialog';
-import {Editable} from './editable';
-import RootPortal from './rootPortal';
+import {BoardCard} from './boardCard'
+import {BoardColumn} from './boardColumn'
+import Button from './button'
+import {CardDialog} from './cardDialog'
+import {Editable} from './editable'
+import RootPortal from './rootPortal'
 
 type Props = {
     boardTree?: BoardTree
@@ -404,7 +404,7 @@ class BoardComponent extends React.Component<Props, State> {
             this.setState({shownCard: card})
         }, async () => {
             this.setState({shownCard: undefined})
-        });
+        })
     }
 
     async propertyNameChanged(option: IPropertyOption, text: string) {
@@ -431,19 +431,19 @@ class BoardComponent extends React.Component<Props, State> {
 	        switch (id) {
 	        case 'exportBoardArchive': {
                 Archiver.exportBoardTree(boardTree)
-                break;
+                break
             }
             case 'testAdd100Cards': {
                 this.testAddCards(100)
-                break;
+                break
             }
 	        case 'testAdd1000Cards': {
                 this.testAddCards(1000)
-	            break;
+	            break
 	        }
 	        case 'testRandomizeIcons': {
 	            this.testRandomizeIcons()
-                break;
+                break
 	        }
             }
 	    }
@@ -489,7 +489,7 @@ class BoardComponent extends React.Component<Props, State> {
         OldMenu.shared.options = selectProperties.map((o) => {
 	        const isVisible = activeView.visiblePropertyIds.includes(o.id)
             return {id: o.id, name: o.name, type: 'switch', isOn: isVisible}
-	    });
+	    })
 
 	    OldMenu.shared.onMenuToggled = async (id: string, isOn: boolean) => {
 	        const property = selectProperties.find((o) => o.id === id)
@@ -503,7 +503,7 @@ class BoardComponent extends React.Component<Props, State> {
                 newVisiblePropertyIds = [...activeView.visiblePropertyIds, id]
 	        }
             await mutator.changeViewVisibleProperties(activeView, newVisiblePropertyIds)
-	    };
+	    }
 	    OldMenu.shared.showAtElement(e.target as HTMLElement)
     }
 
@@ -513,14 +513,14 @@ class BoardComponent extends React.Component<Props, State> {
 	    const selectProperties = boardTree.board.cardProperties.filter((o) => o.type === 'select')
 	    OldMenu.shared.options = selectProperties.map((o) => {
             return {id: o.id, name: o.name}
-        });
+        })
 	    OldMenu.shared.onMenuClicked = async (command: string) => {
             if (boardTree.activeView.groupById === command) {
                 return
             }
 
             await mutator.changeViewGroupById(boardTree.activeView, command)
-        };
+        }
 	    OldMenu.shared.showAtElement(e.target as HTMLElement)
     }
 
@@ -567,7 +567,7 @@ class BoardComponent extends React.Component<Props, State> {
 
     onSearchKeyDown(e: React.KeyboardEvent) {
 	    if (e.keyCode === 27) {		// ESC: Clear search
-            this.searchFieldRef.current.text = '';
+            this.searchFieldRef.current.text = ''
             this.setState({...this.state, isSearching: false})
             this.props.setSearchText(undefined)
             e.preventDefault()

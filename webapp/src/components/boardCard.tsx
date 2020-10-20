@@ -1,14 +1,14 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react';
+import React from 'react'
 
-import {Block} from '../blocks/block';
-import {IPropertyTemplate} from '../blocks/board';
-import {Card} from '../blocks/card';
-import {Menu} from '../menu';
-import mutator from '../mutator';
-import {OctoUtils} from '../octoUtils';
-import {Utils} from '../utils';
+import {Block} from '../blocks/block'
+import {IPropertyTemplate} from '../blocks/board'
+import {Card} from '../blocks/card'
+import {Menu} from '../menu'
+import mutator from '../mutator'
+import {OctoUtils} from '../octoUtils'
+import {Utils} from '../utils'
 
 type BoardCardProps = {
     card: Card
@@ -49,7 +49,7 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
                     optionsButtonRef.current.style.display = null
                 }}
                 onMouseLeave={() => {
-                    optionsButtonRef.current.style.display = 'none';
+                    optionsButtonRef.current.style.display = 'none'
                 }}
             >
                 <div
@@ -86,12 +86,12 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
             switch (id) {
             case 'delete': {
                 mutator.deleteBlock(card, 'delete card')
-                break;
+                break
             }
             case 'duplicate': {
                 const newCard = Block.duplicate(card)
                 mutator.insertBlock(newCard, 'duplicate card')
-                break;
+                break
             }
             default: {
                 Utils.assertFailure(`Unhandled menu id: ${id}`)

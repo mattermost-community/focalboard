@@ -1,14 +1,14 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Block} from './blocks/block';
-import {Board, IPropertyOption, IPropertyTemplate} from './blocks/board';
-import {BoardView} from './blocks/boardView';
-import {Card} from './blocks/card';
-import {CardFilter} from './cardFilter';
-import octoClient from './octoClient';
-import {IBlock} from './octoTypes';
-import {OctoUtils} from './octoUtils';
-import {Utils} from './utils';
+import {Block} from './blocks/block'
+import {Board, IPropertyOption, IPropertyTemplate} from './blocks/board'
+import {BoardView} from './blocks/boardView'
+import {Card} from './blocks/card'
+import {CardFilter} from './cardFilter'
+import octoClient from './octoClient'
+import {IBlock} from './octoTypes'
+import {OctoUtils} from './octoUtils'
+import {Utils} from './utils'
 
 type Group = { option: IPropertyOption, cards: Card[] }
 
@@ -154,7 +154,7 @@ class BoardTree {
         this.emptyGroupCards = this.cards.filter((o) => {
             const propertyValue = o.properties[groupByPropertyId]
 	        return !propertyValue || !this.groupByProperty.options.find((option) => option.value === propertyValue)
-        });
+        })
 
         const propertyOptions = this.groupByProperty.options || []
         for (const option of propertyOptions) {
@@ -162,7 +162,7 @@ class BoardTree {
                 filter((o) => {
 	                const propertyValue = o.properties[groupByPropertyId]
 	                return propertyValue && propertyValue === option.value
-	            });
+	            })
 
             const group: Group = {
                 option,
@@ -194,8 +194,8 @@ class BoardTree {
         if (sortOptions.length < 1) {
             Utils.log('Default sort')
             sortedCards = cards.sort((a, b) => {
-	            const aValue = a.title || '';
-	            const bValue = b.title || '';
+	            const aValue = a.title || ''
+	            const bValue = b.title || ''
 
 	            // Always put empty values at the bottom
                 if (aValue && !bValue) {
@@ -209,14 +209,14 @@ class BoardTree {
                 }
 
                 return a.createAt - b.createAt
-            });
+            })
 	    } else {
             sortOptions.forEach((sortOption) => {
 	            if (sortOption.propertyId === '__name') {
 	                Utils.log('Sort by name')
 	                sortedCards = cards.sort((a, b) => {
-	                    const aValue = a.title || '';
-	                    const bValue = b.title || '';
+	                    const aValue = a.title || ''
+	                    const bValue = b.title || ''
 
 	                    // Always put empty values at the bottom, newest last
                         if (aValue && !bValue) {
@@ -234,7 +234,7 @@ class BoardTree {
                             result = -result
                         }
 	                    return result
-                    });
+                    })
 	            } else {
 	                const sortPropertyId = sortOption.propertyId
                     const template = board.cardProperties.find((o) => o.id === sortPropertyId)
@@ -255,8 +255,8 @@ class BoardTree {
                             return a.createAt - b.createAt
                         }
 
-                        const aValue = a.properties[sortPropertyId] || '';
-	                    const bValue = b.properties[sortPropertyId] || '';
+                        const aValue = a.properties[sortPropertyId] || ''
+	                    const bValue = b.properties[sortPropertyId] || ''
 	                    let result = 0
                         if (template.type === 'select') {
 	                        // Always put empty values at the bottom
@@ -313,7 +313,7 @@ class BoardTree {
                             result = -result
                         }
                         return result
-                    });
+                    })
                 }
             })
         }

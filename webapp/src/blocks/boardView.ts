@@ -1,8 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {FilterGroup} from '../filterGroup';
+import {FilterGroup} from '../filterGroup'
 
-import {Block} from './block';
+import {Block} from './block'
 
 type IViewType = 'board' | 'table' | 'calendar' | 'list' | 'gallery'
 type ISortOption = { propertyId: '__name' | string, reversed: boolean }
@@ -46,7 +46,7 @@ class BoardView extends Block {
     constructor(block: any = {}) {
         super(block)
 
-        this.type = 'view';
+        this.type = 'view'
 
         this.sortOptions = block.fields?.sortOptions?.map((o: ISortOption) => ({...o})) || []		// Deep clone
         this.visiblePropertyIds = block.fields?.visiblePropertyIds?.slice() || []
@@ -54,7 +54,7 @@ class BoardView extends Block {
 
         // TODO: Remove this fixup code
         if (block.schema !== 1) {
-            this.viewType = block.viewType || 'board';
+            this.viewType = block.viewType || 'board'
             this.groupById = block.groupById
             this.sortOptions = block.sortOptions ? block.sortOptions.map((o: ISortOption) => ({...o})) : [] 		// Deep clone
             this.visiblePropertyIds = block.visiblePropertyIds ? block.visiblePropertyIds.slice() : []
@@ -62,7 +62,7 @@ class BoardView extends Block {
         }
 
         if (!this.viewType) {
-            this.viewType = 'board';
+            this.viewType = 'board'
         }
     }
 }

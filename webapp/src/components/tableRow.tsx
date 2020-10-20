@@ -1,15 +1,15 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react';
+import React from 'react'
 
-import {BoardTree} from '../boardTree';
-import {Card} from '../blocks/card';
-import mutator from '../mutator';
-import {OctoUtils} from '../octoUtils';
+import {BoardTree} from '../boardTree'
+import {Card} from '../blocks/card'
+import mutator from '../mutator'
+import {OctoUtils} from '../octoUtils'
 
-import {Editable} from './editable';
-import {CardDialog} from './cardDialog';
-import RootPortal from './rootPortal';
+import {Editable} from './editable'
+import {CardDialog} from './cardDialog'
+import RootPortal from './rootPortal'
 
 type Props = {
     boardTree: BoardTree
@@ -54,7 +54,7 @@ class TableRow extends React.Component<Props, State> {
                     openButonRef.current.style.display = null
                 }}
                 onMouseLeave={() => {
-                    openButonRef.current.style.display = 'none';
+                    openButonRef.current.style.display = 'none'
                 }}
             >
                 <div className='octo-icontitle'>

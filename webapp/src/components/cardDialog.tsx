@@ -1,14 +1,14 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react';
+import React from 'react'
 
-import {Card} from '../blocks/card';
-import {BoardTree} from '../boardTree';
-import mutator from '../mutator';
-import Menu from '../widgets/menu';
+import {Card} from '../blocks/card'
+import {BoardTree} from '../boardTree'
+import mutator from '../mutator'
+import Menu from '../widgets/menu'
 
-import CardDetail from './cardDetail';
-import Dialog from './dialog';
+import CardDetail from './cardDetail'
+import Dialog from './dialog'
 
 type Props = {
     boardTree: BoardTree

@@ -1,8 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IOrderedBlock} from '../octoTypes';
+import {IOrderedBlock} from '../octoTypes'
 
-import {Block} from './block';
+import {Block} from './block'
 
 class TextBlock extends Block implements IOrderedBlock {
     get order(): number {
@@ -14,7 +14,7 @@ class TextBlock extends Block implements IOrderedBlock {
 
     constructor(block: any = {}) {
         super(block)
-        this.type = 'text';
+        this.type = 'text'
     }
 }
 

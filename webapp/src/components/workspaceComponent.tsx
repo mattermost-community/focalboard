@@ -1,14 +1,14 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react';
+import React from 'react'
 
-import {BoardTree} from '../boardTree';
-import {Utils} from '../utils';
-import {WorkspaceTree} from '../workspaceTree';
+import {BoardTree} from '../boardTree'
+import {Utils} from '../utils'
+import {WorkspaceTree} from '../workspaceTree'
 
-import {BoardComponent} from './boardComponent';
-import {Sidebar} from './sidebar';
-import {TableComponent} from './tableComponent';
+import {BoardComponent} from './boardComponent'
+import {Sidebar} from './sidebar'
+import {TableComponent} from './tableComponent'
 
 type Props = {
     workspaceTree: WorkspaceTree
@@ -52,7 +52,7 @@ class WorkspaceComponent extends React.Component<Props> {
                 showFilter={showFilter}
                 setSearchText={setSearchText}
                 showView={showView}
-                    />);
+                    />)
         }
 
         case 'table': {
@@ -61,7 +61,7 @@ class WorkspaceComponent extends React.Component<Props> {
                 showFilter={showFilter}
                 setSearchText={setSearchText}
                 showView={showView}
-                    />);
+                    />)
         }
 
         default: {

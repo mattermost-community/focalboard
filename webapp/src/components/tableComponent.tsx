@@ -1,26 +1,26 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react';
+import React from 'react'
 
-import {Archiver} from '../archiver';
-import {BlockIcons} from '../blockIcons';
-import {IPropertyTemplate} from '../blocks/board';
-import {Card} from '../blocks/card';
-import {BoardTree} from '../boardTree';
-import ViewMenu from '../components/viewMenu';
-import {CsvExporter} from '../csvExporter';
-import {Menu as OldMenu} from '../menu';
-import mutator from '../mutator';
-import {OctoUtils} from '../octoUtils';
-import {Utils} from '../utils';
-import Menu from '../widgets/menu';
-import MenuWrapper from '../widgets/menuWrapper';
+import {Archiver} from '../archiver'
+import {BlockIcons} from '../blockIcons'
+import {IPropertyTemplate} from '../blocks/board'
+import {Card} from '../blocks/card'
+import {BoardTree} from '../boardTree'
+import ViewMenu from '../components/viewMenu'
+import {CsvExporter} from '../csvExporter'
+import {Menu as OldMenu} from '../menu'
+import mutator from '../mutator'
+import {OctoUtils} from '../octoUtils'
+import {Utils} from '../utils'
+import Menu from '../widgets/menu'
+import MenuWrapper from '../widgets/menuWrapper'
 
-import Button from './button';
-import {CardDialog} from './cardDialog';
-import {Editable} from './editable';
-import RootPortal from './rootPortal';
-import {TableRow} from './tableRow';
+import Button from './button'
+import {CardDialog} from './cardDialog'
+import {Editable} from './editable'
+import RootPortal from './rootPortal'
+import {TableRow} from './tableRow'
 
 type Props = {
     boardTree?: BoardTree
@@ -322,7 +322,7 @@ class TableComponent extends React.Component<Props, State> {
 	    OldMenu.shared.options = selectProperties.map((o) => {
             const isVisible = activeView.visiblePropertyIds.includes(o.id)
 	        return {id: o.id, name: o.name, type: 'switch', isOn: isVisible}
-        });
+        })
 
 	    OldMenu.shared.onMenuToggled = async (id: string, isOn: boolean) => {
             const property = selectProperties.find((o) => o.id === id)
@@ -336,7 +336,7 @@ class TableComponent extends React.Component<Props, State> {
                 newVisiblePropertyIds = [...activeView.visiblePropertyIds, id]
             }
             await mutator.changeViewVisibleProperties(activeView, newVisiblePropertyIds)
-        };
+        }
 	    OldMenu.shared.showAtElement(e.target as HTMLElement)
     }
 
@@ -356,11 +356,11 @@ class TableComponent extends React.Component<Props, State> {
             switch (id) {
             case 'exportCsv': {
 	            CsvExporter.exportTableCsv(boardTree)
-                break;
+                break
             }
 	        case 'exportBoardArchive': {
 	            Archiver.exportBoardTree(boardTree)
-                break;
+                break
 	        }
             }
         }
@@ -393,14 +393,14 @@ class TableComponent extends React.Component<Props, State> {
                     {propertyId: templateId, reversed: false},
 	            ]
 	            await mutator.changeViewSortOptions(activeView, newSortOptions)
-	            break;
+	            break
 	        }
 	        case 'sortDescending': {
 	            const newSortOptions = [
 	                {propertyId: templateId, reversed: true},
 	            ]
 	            await mutator.changeViewSortOptions(activeView, newSortOptions)
-                break;
+                break
             }
 	        case 'insertLeft': {
                 if (templateId !== '__name') {
@@ -422,20 +422,20 @@ class TableComponent extends React.Component<Props, State> {
             }
             case 'duplicate': {
                 await mutator.duplicatePropertyTemplate(boardTree, templateId)
-	            break;
+	            break
 	        }
             case 'hide': {
                 const newVisiblePropertyIds = activeView.visiblePropertyIds.filter((o) => o !== templateId)
                 await mutator.changeViewVisibleProperties(activeView, newVisiblePropertyIds)
-                break;
+                break
             }
             case 'delete': {
                 await mutator.deleteProperty(boardTree, templateId)
-	            break;
+	            break
             }
             default: {
                 Utils.assertFailure(`Unexpected menu option: ${optionId}`)
-                break;
+                break
             }
             }
 	    }
@@ -489,7 +489,7 @@ class TableComponent extends React.Component<Props, State> {
 
     onSearchKeyDown(e: React.KeyboardEvent) {
         if (e.keyCode === 27) {		// ESC: Clear search
-            this.searchFieldRef.current.text = '';
+            this.searchFieldRef.current.text = ''
             this.setState({...this.state, isSearching: false})
             this.props.setSearchText(undefined)
             e.preventDefault()

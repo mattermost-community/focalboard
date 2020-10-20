@@ -1,16 +1,16 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react';
+import React from 'react'
 
 import {
     BrowserRouter as Router,
     Switch,
     Route,
     Link,
-} from 'react-router-dom';
+} from 'react-router-dom'
 
-import LoginPage from './pages/loginPage';
-import BoardPage from './pages/boardPage';
+import LoginPage from './pages/loginPage'
+import BoardPage from './pages/boardPage'
 
 export default function App() {
     return (

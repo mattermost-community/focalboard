@@ -1,18 +1,18 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react'
+import ReactDOM from 'react-dom'
 
-import {BoardView} from '../blocks/boardView';
-import {BoardTree} from '../boardTree';
-import {CardTree} from '../cardTree';
-import {FilterComponent} from '../components/filterComponent';
-import {WorkspaceComponent} from '../components/workspaceComponent';
-import {FlashMessage} from '../flashMessage';
-import mutator from '../mutator';
-import {OctoListener} from '../octoListener';
-import {Utils} from '../utils';
-import {WorkspaceTree} from '../workspaceTree';
+import {BoardView} from '../blocks/boardView'
+import {BoardTree} from '../boardTree'
+import {CardTree} from '../cardTree'
+import {FilterComponent} from '../components/filterComponent'
+import {WorkspaceComponent} from '../components/workspaceComponent'
+import {FlashMessage} from '../flashMessage'
+import mutator from '../mutator'
+import {OctoListener} from '../octoListener'
+import {Utils} from '../utils'
+import {WorkspaceTree} from '../workspaceTree'
 
 type Props = {
 }
@@ -166,7 +166,7 @@ export default class BoardPage extends React.Component<Props, State> {
 	    this.boardListener.open(boardId, (blockId: string) => {
             console.log(`octoListener.onChanged: ${blockId}`)
             this.sync(boardId)
-        });
+        })
 
 	    this.sync(boardId, viewId)
     }

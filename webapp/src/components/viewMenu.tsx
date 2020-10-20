@@ -1,13 +1,13 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react';
+import React from 'react'
 
-import {Board} from '../blocks/board';
-import {BoardView} from '../blocks/boardView';
-import {BoardTree} from '../boardTree';
-import mutator from '../mutator';
-import {Utils} from '../utils';
-import Menu from '../widgets/menu';
+import {Board} from '../blocks/board'
+import {BoardView} from '../blocks/boardView'
+import {BoardTree} from '../boardTree'
+import mutator from '../mutator'
+import {Utils} from '../utils'
+import Menu from '../widgets/menu'
 
 type Props = {
     boardTree?: BoardTree
@@ -36,8 +36,8 @@ export default class ViewMenu extends React.Component<Props> {
         const {board, boardTree, showView} = this.props
         Utils.log('addview-board')
 	    const view = new BoardView()
-	    view.title = 'Board View';
-        view.viewType = 'board';
+	    view.title = 'Board View'
+        view.viewType = 'board'
         view.parentId = board.id
 
         const oldViewId = boardTree.activeView.id
@@ -50,7 +50,7 @@ export default class ViewMenu extends React.Component<Props> {
             },
 	        async () => {
                 showView(oldViewId)
-            });
+            })
     }
 
     handleAddViewTable = async (id: string) => {
@@ -58,8 +58,8 @@ export default class ViewMenu extends React.Component<Props> {
 
 	    Utils.log('addview-table')
 	    const view = new BoardView()
-        view.title = 'Table View';
-	    view.viewType = 'table';
+        view.title = 'Table View'
+	    view.viewType = 'table'
 	    view.parentId = board.id
         view.visiblePropertyIds = board.cardProperties.map((o) => o.id)
 
@@ -73,7 +73,7 @@ export default class ViewMenu extends React.Component<Props> {
             },
             async () => {
                 showView(oldViewId)
-            });
+            })
     }
 
     render() {

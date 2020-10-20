@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Block} from './block';
+import {Block} from './block'
 
 class Card extends Block {
     get icon(): string {
@@ -19,7 +19,7 @@ class Card extends Block {
 
     constructor(block: any = {}) {
         super(block)
-        this.type = 'card';
+        this.type = 'card'
 
         this.properties = {...(block.fields?.properties || {})}
     }

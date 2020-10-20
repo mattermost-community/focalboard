@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Block} from './block';
+import {Block} from './block'
 
 type PropertyType = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy'
 
@@ -34,7 +34,7 @@ class Board extends Block {
 
     constructor(block: any = {}) {
         super(block)
-        this.type = 'board';
+        this.type = 'board'
 
         if (block.fields?.cardProperties) {
             // Deep clone of card properties and their options
@@ -45,7 +45,7 @@ class Board extends Block {
                     type: o.type,
                     options: o.options ? o.options.map((option) => ({...option})) : [],
                 }
-            });
+            })
         } else {
             this.cardProperties = []
         }

@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react';
+import React from 'react'
 
 type Props = {
     onChanged: (isOn: boolean) => void
@@ -39,7 +39,7 @@ class Switch extends React.Component<Props, State> {
         const {style} = this.props
 	    const {isOn} = this.state
 
-        const className = isOn ? 'octo-switch on' : 'octo-switch';
+        const className = isOn ? 'octo-switch on' : 'octo-switch'
 	    const element =
     (<div
         ref={this.elementRef}

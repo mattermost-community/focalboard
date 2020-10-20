@@ -1,20 +1,20 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react';
+import React from 'react'
 
-import {Block} from './blocks/block';
-import {Board, IPropertyTemplate} from './blocks/board';
-import {BoardView, ISortOption} from './blocks/boardView';
-import {Card} from './blocks/card';
-import {CommentBlock} from './blocks/commentBlock';
-import {ImageBlock} from './blocks/imageBlock';
-import {TextBlock} from './blocks/textBlock';
-import {BoardTree} from './boardTree';
-import {Editable} from './components/editable';
-import {Menu} from './menu';
-import mutator from './mutator';
-import {IBlock, IOrderedBlock} from './octoTypes';
-import {Utils} from './utils';
+import {Block} from './blocks/block'
+import {Board, IPropertyTemplate} from './blocks/board'
+import {BoardView, ISortOption} from './blocks/boardView'
+import {Card} from './blocks/card'
+import {CommentBlock} from './blocks/commentBlock'
+import {ImageBlock} from './blocks/imageBlock'
+import {TextBlock} from './blocks/textBlock'
+import {BoardTree} from './boardTree'
+import {Editable} from './components/editable'
+import {Menu} from './menu'
+import mutator from './mutator'
+import {IBlock, IOrderedBlock} from './octoTypes'
+import {Utils} from './utils'
 
 class OctoUtils {
     static propertyDisplayValue(block: IBlock, propertyValue: string | undefined, propertyTemplate: IPropertyTemplate) {
@@ -22,10 +22,10 @@ class OctoUtils {
         switch (propertyTemplate.type) {
         case 'createdTime':
             displayValue = Utils.displayDateTime(new Date(block.createAt))
-            break;
+            break
         case 'updatedTime':
             displayValue = Utils.displayDateTime(new Date(block.updateAt))
-            break;
+            break
         default:
             displayValue = propertyValue
         }
@@ -57,9 +57,9 @@ class OctoUtils {
         let element: JSX.Element
 
         if (propertyTemplate.type === 'select') {
-            let className = 'octo-button octo-propertyvalue';
+            let className = 'octo-button octo-propertyvalue'
             if (!displayValue) {
-                className += ' empty';
+                className += ' empty'
             }
 
             const showMenu = (clickedElement: HTMLElement) => {
@@ -72,9 +72,9 @@ class OctoUtils {
                 menu.options.push(...propertyTemplate.options.map((o) => ({id: o.value, name: o.value})))
                 menu.onMenuClicked = (optionId) => {
                     mutator.changePropertyValue(card, propertyTemplate.id, optionId)
-                };
+                }
                 menu.showAtElement(clickedElement)
-            };
+            }
 
             element = (<div
                 key={propertyTemplate.id}
@@ -151,7 +151,7 @@ class OctoUtils {
                 name: o.name,
                 icon: (sortOption?.propertyId === o.id) ? sortOption.reversed ? 'sortUp' : 'sortDown' : undefined,
             }
-        });
+        })
         Menu.shared.onMenuClicked = async (propertyId: string) => {
             let newSortOptions: ISortOption[] = []
             if (sortOption && sortOption.propertyId === propertyId) {
@@ -166,7 +166,7 @@ class OctoUtils {
             }
 
             await mutator.changeViewSortOptions(activeView, newSortOptions)
-        };
+        }
         Menu.shared.showAtElement(e.target as HTMLElement)
     }
 
