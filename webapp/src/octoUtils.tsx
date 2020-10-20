@@ -121,7 +121,7 @@ class OctoUtils {
         return element
     }
 
-    static getOrderBefore(block: IOrderedBlock, blocks: IOrderedBlock[]): number {
+    static getOrderBefore(block: IOrderedBlock, blocks: readonly IOrderedBlock[]): number {
         const index = blocks.indexOf(block)
         if (index === 0) {
             return block.order / 2
@@ -130,7 +130,7 @@ class OctoUtils {
         return (block.order + previousBlock.order) / 2
     }
 
-    static getOrderAfter(block: IOrderedBlock, blocks: IOrderedBlock[]): number {
+    static getOrderAfter(block: IOrderedBlock, blocks: readonly IOrderedBlock[]): number {
         const index = blocks.indexOf(block)
         if (index === blocks.length - 1) {
             return block.order + 1000

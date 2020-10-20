@@ -4,7 +4,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import {BoardView} from '../blocks/boardView'
-import {BoardTree} from '../boardTree'
+import {BoardTree, MutableBoardTree} from '../boardTree'
 import {CardTree} from '../cardTree'
 import {FilterComponent} from '../components/filterComponent'
 import {WorkspaceComponent} from '../components/workspaceComponent'
@@ -12,7 +12,7 @@ import {FlashMessage} from '../flashMessage'
 import mutator from '../mutator'
 import {OctoListener} from '../octoListener'
 import {Utils} from '../utils'
-import {WorkspaceTree} from '../workspaceTree'
+import {MutableWorkspaceTree, WorkspaceTree} from '../workspaceTree'
 
 type Props = {
 }
@@ -20,9 +20,8 @@ type Props = {
 type State = {
     boardId: string
     viewId: string
-    workspaceTree: WorkspaceTree
-    boardTree?: BoardTree
-    shownCardTree?: CardTree
+    workspaceTree: MutableWorkspaceTree
+    boardTree?: MutableBoardTree
     filterAnchorElement?: HTMLElement
 }
 
@@ -44,7 +43,7 @@ export default class BoardPage extends React.Component<Props, State> {
 	    this.state = {
 	        boardId,
             viewId,
-            workspaceTree: new WorkspaceTree(),
+            workspaceTree: new MutableWorkspaceTree(),
         }
 
 	    Utils.log(`BoardPage. boardId: ${boardId}`)
@@ -106,8 +105,7 @@ export default class BoardPage extends React.Component<Props, State> {
     }
 
     render() {
-        const {workspaceTree, shownCardTree} = this.state
-        const {board, activeView} = this.state.boardTree || {}
+        const {workspaceTree} = this.state
 
 	    if (this.state.filterAnchorElement) {
 	        const element = this.state.filterAnchorElement
@@ -178,7 +176,7 @@ export default class BoardPage extends React.Component<Props, State> {
 	    await workspaceTree.sync()
 
 	    if (boardId) {
-	        const boardTree = new BoardTree(boardId)
+	        const boardTree = new MutableBoardTree(boardId)
             await boardTree.sync()
 
 	        // Default to first view

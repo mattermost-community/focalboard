@@ -7,7 +7,7 @@ import {Block} from '../blocks/block'
 import {Card} from '../blocks/card'
 import {TextBlock} from '../blocks/textBlock'
 import {BoardTree} from '../boardTree'
-import {CardTree} from '../cardTree'
+import {CardTree, MutableCardTree} from '../cardTree'
 import {Menu as OldMenu, MenuOption} from '../menu'
 import mutator from '../mutator'
 import {OctoListener} from '../octoListener'
@@ -46,7 +46,7 @@ export default class CardDetail extends React.Component<Props, State> {
             await cardTree.sync()
 	        this.setState({cardTree})
         })
-	    const cardTree = new CardTree(this.props.card.id)
+	    const cardTree = new MutableCardTree(this.props.card.id)
         cardTree.sync().then(() => {
 	        this.setState({cardTree})
 	        setTimeout(() => {

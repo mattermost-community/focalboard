@@ -6,32 +6,35 @@ import octoClient from './octoClient'
 import {IBlock, IOrderedBlock} from './octoTypes'
 import {OctoUtils} from './octoUtils'
 
-class CardTree {
-    card: Card
-    comments: IBlock[]
-    contents: IOrderedBlock[]
-    isSynched: boolean
-
-    constructor(private cardId: string) {
-    }
-
-    async sync(): Promise<void> {
-        const blocks = await octoClient.getSubtree(this.cardId)
-        this.rebuild(OctoUtils.hydrateBlocks(blocks))
-    }
-
-    private rebuild(blocks: Block[]): void {
-        this.card = blocks.find((o) => o.id === this.cardId) as Card
-
-        this.comments = blocks.
-            filter((block) => block.type === 'comment').
-            sort((a, b) => a.createAt - b.createAt)
-
-        const contentBlocks = blocks.filter((block) => block.type === 'text' || block.type === 'image') as IOrderedBlock[]
-        this.contents = contentBlocks.sort((a, b) => a.order - b.order)
-
-        this.isSynched = true
-    }
+interface CardTree {
+	readonly card: Card
+	readonly comments: readonly IBlock[]
+	readonly contents: readonly IOrderedBlock[]
 }
 
-export {CardTree}
+class MutableCardTree implements CardTree {
+	card: Card
+	comments: IBlock[]
+	contents: IOrderedBlock[]
+
+	constructor(private cardId: string) {
+	}
+
+	async sync() {
+		const blocks = await octoClient.getSubtree(this.cardId)
+		this.rebuild(OctoUtils.hydrateBlocks(blocks))
+	}
+
+	private rebuild(blocks: Block[]) {
+		this.card = blocks.find(o => o.id === this.cardId) as Card
+
+		this.comments = blocks
+			.filter(block => block.type === "comment")
+			.sort((a, b) => a.createAt - b.createAt)
+
+		const contentBlocks = blocks.filter(block => block.type === "text" || block.type === "image") as IOrderedBlock[]
+		this.contents = contentBlocks.sort((a, b) => a.order - b.order)
+	}
+}
+
+export { MutableCardTree, CardTree }

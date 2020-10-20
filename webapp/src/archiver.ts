@@ -8,7 +8,7 @@ import {Utils} from './utils'
 interface Archive {
     version: number
     date: number
-    blocks: IBlock[]
+    blocks: readonly IBlock[]
 }
 
 class Archiver {
