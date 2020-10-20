@@ -1,13 +1,15 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import React from 'react';
 
 type MenuOptionProps = {
-	id: string,
-	name: string,
+    id: string,
+    name: string,
     onClick?: (id: string) => void,
 }
 
 function SeparatorOption() {
-    return (<div className="MenuOption MenuSeparator menu-separator"></div>)
+    return (<div className='MenuOption MenuSeparator menu-separator'/>)
 }
 
 type SubMenuOptionProps = MenuOptionProps & {
@@ -19,15 +21,15 @@ type SubMenuState = {
 
 class SubMenuOption extends React.Component<SubMenuOptionProps, SubMenuState> {
     state = {
-        isOpen: false
+        isOpen: false,
     }
 
     handleMouseEnter = () => {
-        this.setState({isOpen: true});
+        this.setState({isOpen: true})
     }
 
     close = () => {
-        this.setState({isOpen: false});
+        this.setState({isOpen: false})
     }
 
     render() {
@@ -38,7 +40,10 @@ class SubMenuOption extends React.Component<SubMenuOptionProps, SubMenuState> {
                 onMouseLeave={this.close}
             >
                 <div className='menu-name'>{this.props.name}</div>
-                <div className="imageSubmenuTriangle" style={{float: 'right'}}></div>
+                <div
+                    className='imageSubmenuTriangle'
+                    style={{float: 'right'}}
+                />
                 {this.state.isOpen &&
                     <Menu>
                         {this.props.children}
@@ -50,7 +55,7 @@ class SubMenuOption extends React.Component<SubMenuOptionProps, SubMenuState> {
 }
 
 type ColorOptionProps = MenuOptionProps & {
-	icon?: "checked" | "sortUp" | "sortDown" | undefined,
+    icon?: 'checked' | 'sortUp' | 'sortDown' | undefined,
 }
 
 class ColorOption extends React.Component<ColorOptionProps> {
@@ -59,20 +64,23 @@ class ColorOption extends React.Component<ColorOptionProps> {
     }
 
     render() {
-        const {id, name, icon} = this.props;
+        const {id, name, icon} = this.props
         return (
-            <div className='MenuOption ColorOption menu-option' onClick={this.handleOnClick}>
+            <div
+                className='MenuOption ColorOption menu-option'
+                onClick={this.handleOnClick}
+            >
                 <div className='name'>{name}</div>
-                {icon && <div className={'icon ' + icon}></div>}
-                <div className={`menu-colorbox ${id}`}></div>
+                {icon && <div className={'icon ' + icon}/>}
+                <div className={`menu-colorbox ${id}`}/>
             </div>
         )
     }
 }
 
 type SwitchOptionProps = MenuOptionProps & {
-	isOn: boolean,
-	icon?: "checked" | "sortUp" | "sortDown" | undefined,
+    isOn: boolean,
+    icon?: 'checked' | 'sortUp' | 'sortDown' | undefined,
 }
 
 class SwitchOption extends React.Component<SwitchOptionProps> {
@@ -80,24 +88,24 @@ class SwitchOption extends React.Component<SwitchOptionProps> {
         this.props.onClick(this.props.id)
     }
     render() {
-        const {name, icon, isOn} = this.props;
+        const {name, icon, isOn} = this.props
         return (
             <div className='MenuOption SwitchOption menu-option'>
                 <div className='name'>{name}</div>
-                {icon && <div className={`icon ${icon}`}></div>}
-                <div className={isOn ? "octo-switch on" : "octo-switch"}>
+                {icon && <div className={`icon ${icon}`}/>}
+                <div className={isOn ? 'octo-switch on' : 'octo-switch'}>
                     <div
-                        className="octo-switch-inner"
+                        className='octo-switch-inner'
                         onClick={this.handleOnClick}
-                    ></div>
+                    />
                 </div>
             </div>
-        );
+        )
     }
 }
 
 type TextOptionProps = MenuOptionProps & {
-	icon?: "checked" | "sortUp" | "sortDown" | undefined,
+    icon?: 'checked' | 'sortUp' | 'sortDown' | undefined,
 }
 class TextOption extends React.Component<TextOptionProps> {
     handleOnClick = () => {
@@ -105,13 +113,16 @@ class TextOption extends React.Component<TextOptionProps> {
     }
 
     render() {
-        const {name, icon} = this.props;
+        const {name, icon} = this.props
         return (
-            <div className='MenuOption TextOption menu-option' onClick={this.handleOnClick}>
+            <div
+                className='MenuOption TextOption menu-option'
+                onClick={this.handleOnClick}
+            >
                 <div className='name'>{name}</div>
-                {icon && <div className={`icon ${icon}`}></div>}
+                {icon && <div className={`icon ${icon}`}/>}
             </div>
-        );
+        )
     }
 }
 
@@ -130,8 +141,8 @@ export default class Menu extends React.Component<MenuProps> {
     render() {
         const {position, children} = this.props
         return (
-            <div className={"Menu menu noselect " + (position ? position : "bottom")}>
-                <div className="menu-options">
+            <div className={'Menu menu noselect ' + (position || 'bottom')}>
+                <div className='menu-options'>
                     {children}
                 </div>
             </div>

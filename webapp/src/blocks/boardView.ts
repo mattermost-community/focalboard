@@ -1,45 +1,70 @@
-import { FilterGroup } from "../filterGroup"
-import { Block } from "./block"
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+import {FilterGroup} from '../filterGroup';
 
-type IViewType = "board" | "table" | "calendar" | "list" | "gallery"
-type ISortOption = { propertyId: "__name" | string, reversed: boolean }
+import {Block} from './block';
+
+type IViewType = 'board' | 'table' | 'calendar' | 'list' | 'gallery'
+type ISortOption = { propertyId: '__name' | string, reversed: boolean }
 
 class BoardView extends Block {
-	get viewType(): IViewType { return this.fields.viewType }
-	set viewType(value: IViewType) { this.fields.viewType = value }
+    get viewType(): IViewType {
+        return this.fields.viewType
+    }
+    set viewType(value: IViewType) {
+        this.fields.viewType = value
+    }
 
-	get groupById(): string | undefined { return this.fields.groupById }
-	set groupById(value: string | undefined) { this.fields.groupById = value }
+    get groupById(): string | undefined {
+        return this.fields.groupById
+    }
+    set groupById(value: string | undefined) {
+        this.fields.groupById = value
+    }
 
-	get sortOptions(): ISortOption[] { return this.fields.sortOptions }
-	set sortOptions(value: ISortOption[]) { this.fields.sortOptions = value }
+    get sortOptions(): ISortOption[] {
+        return this.fields.sortOptions
+    }
+    set sortOptions(value: ISortOption[]) {
+        this.fields.sortOptions = value
+    }
 
-	get visiblePropertyIds(): string[] { return this.fields.visiblePropertyIds }
-	set visiblePropertyIds(value: string[]) { this.fields.visiblePropertyIds = value }
+    get visiblePropertyIds(): string[] {
+        return this.fields.visiblePropertyIds
+    }
+    set visiblePropertyIds(value: string[]) {
+        this.fields.visiblePropertyIds = value
+    }
 
-	get filter(): FilterGroup | undefined { return this.fields.filter }
-	set filter(value: FilterGroup | undefined) { this.fields.filter = value }
+    get filter(): FilterGroup | undefined {
+        return this.fields.filter
+    }
+    set filter(value: FilterGroup | undefined) {
+        this.fields.filter = value
+    }
 
-	constructor(block: any = {}) {
-		super(block)
+    constructor(block: any = {}) {
+        super(block)
 
-		this.type = "view"
+        this.type = 'view';
 
-		this.sortOptions = block.fields?.sortOptions?.map((o: ISortOption) => ({ ...o })) || []		// Deep clone
-		this.visiblePropertyIds = block.fields?.visiblePropertyIds?.slice() || []
-		this.filter = new FilterGroup(block.fields?.filter)
+        this.sortOptions = block.fields?.sortOptions?.map((o: ISortOption) => ({...o})) || []		// Deep clone
+        this.visiblePropertyIds = block.fields?.visiblePropertyIds?.slice() || []
+        this.filter = new FilterGroup(block.fields?.filter)
 
-		// TODO: Remove this fixup code
-		if (block.schema !== 1) {
-			this.viewType = block.viewType || "board"
-			this.groupById = block.groupById
-			this.sortOptions = block.sortOptions ? block.sortOptions.map((o: ISortOption) => ({ ...o })) : [] 		// Deep clone
-			this.visiblePropertyIds = block.visiblePropertyIds ? block.visiblePropertyIds.slice() : []
-			this.filter = new FilterGroup(block.filter)
-		}
+        // TODO: Remove this fixup code
+        if (block.schema !== 1) {
+            this.viewType = block.viewType || 'board';
+            this.groupById = block.groupById
+            this.sortOptions = block.sortOptions ? block.sortOptions.map((o: ISortOption) => ({...o})) : [] 		// Deep clone
+            this.visiblePropertyIds = block.visiblePropertyIds ? block.visiblePropertyIds.slice() : []
+            this.filter = new FilterGroup(block.filter)
+        }
 
-		if (!this.viewType) { this.viewType = "board" }
-	}
+        if (!this.viewType) {
+            this.viewType = 'board';
+        }
+    }
 }
 
-export { BoardView, IViewType, ISortOption }
+export {BoardView, IViewType, ISortOption}

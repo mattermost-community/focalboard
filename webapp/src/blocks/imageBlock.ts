@@ -1,17 +1,28 @@
-import { IOrderedBlock } from "../octoTypes"
-import { Block } from "./block"
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+import {IOrderedBlock} from '../octoTypes';
+
+import {Block} from './block';
 
 class ImageBlock extends Block implements IOrderedBlock {
-	get order(): number { return this.fields.order as number }
-	set order(value: number) { this.fields.order = value }
+    get order(): number {
+        return this.fields.order as number
+    }
+    set order(value: number) {
+        this.fields.order = value
+    }
 
-	get url(): string { return this.fields.url as string }
-	set url(value: string) { this.fields.url = value }
+    get url(): string {
+        return this.fields.url as string
+    }
+    set url(value: string) {
+        this.fields.url = value
+    }
 
-	constructor(block: any = {}) {
-		super(block)
-		this.type = "image"
-	}
+    constructor(block: any = {}) {
+        super(block)
+        this.type = 'image';
+    }
 }
 
-export { ImageBlock }
+export {ImageBlock}

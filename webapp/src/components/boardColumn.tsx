@@ -1,33 +1,43 @@
-import React from "react"
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+import React from 'react';
 
 type Props = {
-	onDrop?: (e: React.DragEvent<HTMLDivElement>) => void
+    onDrop?: (e: React.DragEvent<HTMLDivElement>) => void
 }
 
 type State = {
-	isDragOver?: boolean
+    isDragOver?: boolean
 }
 
 class BoardColumn extends React.Component<Props, State> {
-	constructor(props: Props) {
-		super(props)
-		this.state = {}
-	}
+    constructor(props: Props) {
+        super(props)
+        this.state = {}
+    }
 
-	render() {
-		const element =
-			<div
-				className={this.state.isDragOver ? "octo-board-column dragover" : "octo-board-column"}
-				onDragOver={(e) => { e.preventDefault(); this.setState({ isDragOver: true }) }}
-				onDragEnter={(e) => { e.preventDefault(); this.setState({ isDragOver: true }) }}
-				onDragLeave={(e) => { e.preventDefault(); this.setState({ isDragOver: false }) }}
-				onDrop={(e) => { this.setState({ isDragOver: false }); this.props.onDrop(e) }}
-			>
-				{this.props.children}
-			</div>
+    render() {
+        const element =
+            (<div
+                className={this.state.isDragOver ? 'octo-board-column dragover' : 'octo-board-column'}
+                onDragOver={(e) => {
+                    e.preventDefault(); this.setState({isDragOver: true})
+                }}
+                onDragEnter={(e) => {
+                    e.preventDefault(); this.setState({isDragOver: true})
+                }}
+                onDragLeave={(e) => {
+                    e.preventDefault(); this.setState({isDragOver: false})
+                }}
+                onDrop={(e) => {
+                    this.setState({isDragOver: false}); this.props.onDrop(e)
+                }}
+            >
+                {this.props.children}
+            </div>)
 
-		return element
-	}
+        return element
+    }
 }
 
-export { BoardColumn }
+export {BoardColumn}

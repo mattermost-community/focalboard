@@ -1,8 +1,10 @@
-import React from "react"
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+import React from 'react';
 
-import Button from '../components/button'
+import Button from '../components/button';
 
-import './loginPage.scss'
+import './loginPage.scss';
 
 type Props = {}
 
@@ -18,7 +20,7 @@ export default class LoginPage extends React.Component<Props, State> {
     }
 
     handleLogin = () => {
-        console.log("Logging in")
+        console.log('Logging in')
     }
 
     render(): React.ReactNode {

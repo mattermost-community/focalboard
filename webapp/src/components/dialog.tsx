@@ -1,16 +1,22 @@
-import React from "react"
-import MenuWrapper from "../widgets/menuWrapper"
-import Button from "./button"
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+import React from 'react';
+
+import MenuWrapper from '../widgets/menuWrapper';
+
+import Button from './button';
 
 type Props = {
     children: React.ReactNode
     toolsMenu: React.ReactNode
-	onClose: () => void
+    onClose: () => void
 }
 
 export default class Dialog extends React.Component<Props> {
     keydownHandler = (e: KeyboardEvent) => {
-        if (e.target !== document.body) { return }
+        if (e.target !== document.body) {
+            return
+        }
 
         if (e.keyCode === 27) {
             this.close()
@@ -18,38 +24,42 @@ export default class Dialog extends React.Component<Props> {
         }
     }
 
-	componentDidMount() {
-		document.addEventListener("keydown", this.keydownHandler)
-	}
+    componentDidMount() {
+        document.addEventListener('keydown', this.keydownHandler)
+    }
 
-	componentWillUnmount() {
-		document.removeEventListener("keydown", this.keydownHandler)
-	}
+    componentWillUnmount() {
+        document.removeEventListener('keydown', this.keydownHandler)
+    }
 
-	render() {
+    render() {
         const {toolsMenu} = this.props
 
-		return (
-			<div
-				className="dialog-back"
-                onMouseDown={(e) => { if (e.target === e.currentTarget) { this.close() } }}
+        return (
+            <div
+                className='dialog-back'
+                onMouseDown={(e) => {
+                    if (e.target === e.currentTarget) {
+                        this.close()
+                    }
+                }}
             >
-				<div className="dialog" >
+                <div className='dialog' >
                     {toolsMenu &&
-                        <div className="toolbar">
-                            <div className="octo-spacer"></div>
-                            <MenuWrapper>
-                                <Button>...</Button>
-                                {toolsMenu}
-                            </MenuWrapper>
-                        </div>}
+                    <div className='toolbar'>
+                        <div className='octo-spacer'/>
+                        <MenuWrapper>
+                            <Button>...</Button>
+                            {toolsMenu}
+                        </MenuWrapper>
+                    </div>}
                     {this.props.children}
-				</div >
-			</div >
+                </div >
+            </div >
         )
-	}
+    }
 
-	close() {
-		this.props.onClose()
-	}
+    close() {
+        this.props.onClose()
+    }
 }

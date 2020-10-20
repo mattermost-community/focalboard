@@ -15,50 +15,50 @@ type State = {
 }
 
 export default class MenuWrapper extends React.PureComponent<Props, State> {
-    private node: React.RefObject<HTMLDivElement>;
+    private node: React.RefObject<HTMLDivElement>
 
     public constructor(props: Props) {
-        super(props);
+        super(props)
         if (!Array.isArray(props.children) || props.children.length !== 2) {
-            throw new Error('MenuWrapper needs exactly 2 children');
+            throw new Error('MenuWrapper needs exactly 2 children')
         }
         this.state = {
             open: false,
-        };
-        this.node = React.createRef();
+        }
+        this.node = React.createRef()
     }
 
     public componentDidMount() {
-        document.addEventListener('click', this.closeOnBlur, true);
-        document.addEventListener('keyup', this.keyboardClose, true);
+        document.addEventListener('click', this.closeOnBlur, true)
+        document.addEventListener('keyup', this.keyboardClose, true)
     }
 
     public componentWillUnmount() {
-        document.removeEventListener('click', this.closeOnBlur, true);
-        document.removeEventListener('keyup', this.keyboardClose, true);
+        document.removeEventListener('click', this.closeOnBlur, true)
+        document.removeEventListener('keyup', this.keyboardClose, true)
     }
 
     private keyboardClose = (e: KeyboardEvent) => {
         if (e.key === 'Escape') {
-            this.close();
+            this.close()
         }
 
         if (e.key === 'Tab') {
-            this.closeOnBlur(e);
+            this.closeOnBlur(e)
         }
     }
 
     private closeOnBlur = (e: Event) => {
         if (this.node && this.node.current && e.target && this.node.current.contains(e.target as Node)) {
-            return;
+            return
         }
 
-        this.close();
+        this.close()
     }
 
     public close = () => {
         if (this.state.open) {
-            this.setState({open: false});
+            this.setState({open: false})
         }
     }
 
@@ -70,15 +70,15 @@ export default class MenuWrapper extends React.PureComponent<Props, State> {
          * so as to not break other things
         **/
         if (this.props.stopPropagationOnToggle) {
-            e.preventDefault();
-            e.stopPropagation();
+            e.preventDefault()
+            e.stopPropagation()
         }
-        const newState = !this.state.open;
-        this.setState({open: newState});
+        const newState = !this.state.open
+        this.setState({open: newState})
     }
 
     public render() {
-        const {children} = this.props;
+        const {children} = this.props
 
         return (
             <div
@@ -89,6 +89,6 @@ export default class MenuWrapper extends React.PureComponent<Props, State> {
                 {children ? Object.values(children)[0] : null}
                 {children && this.state.open ? Object.values(children)[1] : null}
             </div>
-        );
+        )
     }
 }

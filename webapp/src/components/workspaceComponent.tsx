@@ -1,58 +1,75 @@
-import React from "react"
-import { BoardTree } from "../boardTree"
-import { Utils } from "../utils"
-import { WorkspaceTree } from "../workspaceTree"
-import { BoardComponent } from "./boardComponent"
-import { Sidebar } from "./sidebar"
-import { TableComponent } from "./tableComponent"
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+import React from 'react';
+
+import {BoardTree} from '../boardTree';
+import {Utils} from '../utils';
+import {WorkspaceTree} from '../workspaceTree';
+
+import {BoardComponent} from './boardComponent';
+import {Sidebar} from './sidebar';
+import {TableComponent} from './tableComponent';
 
 type Props = {
-	workspaceTree: WorkspaceTree
-	boardTree?: BoardTree
-	showBoard: (id: string) => void
-	showView: (id: string) => void
-	showFilter: (el: HTMLElement) => void
-	setSearchText: (text: string) => void
+    workspaceTree: WorkspaceTree
+    boardTree?: BoardTree
+    showBoard: (id: string) => void
+    showView: (id: string) => void
+    showFilter: (el: HTMLElement) => void
+    setSearchText: (text: string) => void
 }
 
 class WorkspaceComponent extends React.Component<Props> {
-	render() {
-		const { boardTree, workspaceTree, showBoard } = this.props
+    render() {
+        const {boardTree, workspaceTree, showBoard} = this.props
 
-		Utils.assert(workspaceTree)
-		const element =
-			<div className="octo-workspace">
-				<Sidebar showBoard={showBoard} workspaceTree={workspaceTree} boardTree={boardTree}></Sidebar>
-				{this.mainComponent()}
-			</div>
+        Utils.assert(workspaceTree)
+        const element =
+            (<div className='octo-workspace'>
+                <Sidebar
+                    showBoard={showBoard}
+                    workspaceTree={workspaceTree}
+                    boardTree={boardTree}
+                />
+                {this.mainComponent()}
+            </div>)
 
-		return element
-	}
+        return element
+    }
 
-	private mainComponent() {
-		const { boardTree, showFilter, setSearchText, showView } = this.props
-		const { activeView } = boardTree || {}
+    private mainComponent() {
+        const {boardTree, showFilter, setSearchText, showView} = this.props
+        const {activeView} = boardTree || {}
 
-		if (!activeView) {
-			return <div></div>
-		}
+        if (!activeView) {
+            return <div/>
+        }
 
-		switch (activeView?.viewType) {
-			case "board": {
-				return <BoardComponent boardTree={boardTree} showFilter={showFilter} setSearchText={setSearchText} showView={showView} />
-			}
+        switch (activeView?.viewType) {
+        case 'board': {
+            return (<BoardComponent
+                boardTree={boardTree}
+                showFilter={showFilter}
+                setSearchText={setSearchText}
+                showView={showView}
+                    />);
+        }
 
-			case "table": {
-				return <TableComponent boardTree={boardTree} showFilter={showFilter} setSearchText={setSearchText} showView={showView} />
-			}
+        case 'table': {
+            return (<TableComponent
+                boardTree={boardTree}
+                showFilter={showFilter}
+                setSearchText={setSearchText}
+                showView={showView}
+                    />);
+        }
 
-			default: {
-				Utils.assertFailure(`render() Unhandled viewType: ${activeView.viewType}`)
-				return <div></div>
-			}
-		}
-
-	}
+        default: {
+            Utils.assertFailure(`render() Unhandled viewType: ${activeView.viewType}`)
+            return <div/>
+        }
+        }
+    }
 }
 
-export { WorkspaceComponent }
+export {WorkspaceComponent}

@@ -1,4 +1,4 @@
-// Copyright (c) 2020-present Mattermost, Inc. All Rights Reserved.
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
 import React from 'react';
@@ -10,11 +10,11 @@ import RootPortal from './rootPortal';
 describe('components/RootPortal', () => {
     beforeEach(() => {
         // Quick fix to disregard console error when unmounting a component
-        console.error = jest.fn();
+        console.error = jest.fn()
     });
 
     test('should match snapshot', () => {
-        const rootPortalDiv = document.createElement('div');
+        const rootPortalDiv = document.createElement('div')
         rootPortalDiv.id = 'root-portal';
 
         const {getByText, container} = render(
@@ -22,9 +22,9 @@ describe('components/RootPortal', () => {
                 <div>{'Testing Portal'}</div>
             </RootPortal>,
             {container: document.body.appendChild(rootPortalDiv)},
-        );
+        )
 
-        expect(getByText('Testing Portal')).toBeVisible();
-        expect(container).toMatchSnapshot();
+        expect(getByText('Testing Portal')).toBeVisible()
+        expect(container).toMatchSnapshot()
     });
-});
+})

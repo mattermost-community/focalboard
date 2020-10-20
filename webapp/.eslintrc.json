@@ -68,7 +68,7 @@
       ],
       "rules": {
         "import/no-unresolved": 0, // ts handles this better
-        "camelcase": 0,
+		"camelcase": 0,
         "@typescript-eslint/naming-convention": [
           2,
           {
@@ -101,7 +101,8 @@
         "@typescript-eslint/no-empty-function": 0,
         "@typescript-eslint/prefer-interface": 0,
         "@typescript-eslint/explicit-function-return-type": 0,
-        "@typescript-eslint/indent": [
+        "@typescript-eslint/semi": [2, "never"],
+		"@typescript-eslint/indent": [
           2,
           4,
           {

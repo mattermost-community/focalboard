@@ -1,63 +1,71 @@
-import React from "react"
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+import React from 'react';
 
 type Props = {
-	onChanged: (isOn: boolean) => void
-	isOn: boolean
-	style?: React.CSSProperties
+    onChanged: (isOn: boolean) => void
+    isOn: boolean
+    style?: React.CSSProperties
 }
 
 type State = {
-	isOn: boolean
+    isOn: boolean
 }
 
 // Switch is an on-off style switch / checkbox
 class Switch extends React.Component<Props, State> {
-	static defaultProps = {
-		isMarkdown: false,
-		isMultiline: false
-	}
+    static defaultProps = {
+        isMarkdown: false,
+        isMultiline: false,
+    }
 
-	elementRef = React.createRef<HTMLDivElement>()
-	innerElementRef = React.createRef<HTMLDivElement>()
+    elementRef = React.createRef<HTMLDivElement>()
+    innerElementRef = React.createRef<HTMLDivElement>()
 
-	constructor(props: Props) {
-		super(props)
-		this.state = { isOn: props.isOn }
-	}
+    constructor(props: Props) {
+        super(props)
+	    this.state = {isOn: props.isOn}
+    }
 
-	focus() {
-		this.elementRef.current.focus()
-		// Put cursor at end
-		document.execCommand("selectAll", false, null)
-		document.getSelection().collapseToEnd()
-	}
+    focus() {
+	    this.elementRef.current.focus()
 
-	render() {
-		const { style } = this.props
-		const { isOn } = this.state
+        // Put cursor at end
+        document.execCommand('selectAll', false, null)
+	    document.getSelection().collapseToEnd()
+    }
 
-		const className = isOn ? "octo-switch on" : "octo-switch"
-		const element =
-			<div
-				ref={this.elementRef}
-				className={className}
-				style={style}
-				onClick={() => { this.onClicked() }}
-			>
-				<div ref={this.innerElementRef} className="octo-switch-inner"></div>
-			</div>
+    render() {
+        const {style} = this.props
+	    const {isOn} = this.state
 
-		return element
-	}
+        const className = isOn ? 'octo-switch on' : 'octo-switch';
+	    const element =
+    (<div
+        ref={this.elementRef}
+        className={className}
+        style={style}
+        onClick={() => {
+            this.onClicked()
+        }}
+    >
+        <div
+            ref={this.innerElementRef}
+            className='octo-switch-inner'
+        />
+    </div>)
 
-	private async onClicked() {
-		const newIsOn = !this.state.isOn
-		this.setState({ isOn: newIsOn })
+        return element
+    }
 
-		const { onChanged } = this.props
+    private async onClicked() {
+	    const newIsOn = !this.state.isOn
+	    this.setState({isOn: newIsOn})
 
-		onChanged(newIsOn)
-	}
+	    const {onChanged} = this.props
+
+	    onChanged(newIsOn)
+    }
 }
 
-export { Switch }
+export {Switch}
