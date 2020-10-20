@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS blocks (
 	schema BIGINT,
 	type TEXT,
 	title TEXT,
-	fields TEXT,
+	fields JSON,
 	create_at BIGINT,
 	update_at BIGINT,
 	delete_at BIGINT,
