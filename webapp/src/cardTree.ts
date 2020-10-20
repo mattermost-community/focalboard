@@ -15,19 +15,19 @@ class CardTree {
     constructor(private cardId: string) {
     }
 
-    async sync() {
-	    const blocks = await octoClient.getSubtree(this.cardId)
+    async sync(): Promise<void> {
+        const blocks = await octoClient.getSubtree(this.cardId)
         this.rebuild(OctoUtils.hydrateBlocks(blocks))
     }
 
-    private rebuild(blocks: Block[]) {
-	    this.card = blocks.find((o) => o.id === this.cardId) as Card
+    private rebuild(blocks: Block[]): void {
+        this.card = blocks.find((o) => o.id === this.cardId) as Card
 
         this.comments = blocks.
             filter((block) => block.type === 'comment').
             sort((a, b) => a.createAt - b.createAt)
 
-	    const contentBlocks = blocks.filter((block) => block.type === 'text' || block.type === 'image') as IOrderedBlock[]
+        const contentBlocks = blocks.filter((block) => block.type === 'text' || block.type === 'image') as IOrderedBlock[]
         this.contents = contentBlocks.sort((a, b) => a.order - b.order)
 
         this.isSynched = true

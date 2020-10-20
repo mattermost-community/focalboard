@@ -31,21 +31,21 @@ class BoardTree {
     constructor(private boardId: string) {
     }
 
-    async sync() {
+    async sync(): Promise<void> {
         const blocks = await octoClient.getSubtree(this.boardId)
         this.rebuild(OctoUtils.hydrateBlocks(blocks))
     }
 
-    private rebuild(blocks: Block[]) {
-	    this.board = blocks.find((block) => block.type === 'board') as Board
+    private rebuild(blocks: Block[]): void {
+        this.board = blocks.find((block) => block.type === 'board') as Board
         this.views = blocks.filter((block) => block.type === 'view') as BoardView[]
         this.allCards = blocks.filter((block) => block.type === 'card') as Card[]
-	    this.cards = []
+        this.cards = []
 
         this.ensureMinimumSchema()
     }
 
-    private async ensureMinimumSchema() {
+    private async ensureMinimumSchema(): Promise<boolean> {
         const {board} = this
 
         let didChange = false
@@ -56,17 +56,17 @@ class BoardTree {
             const property: IPropertyTemplate = {
                 id: Utils.createGuid(),
                 name: 'Status',
-	            type: 'select',
-	            options: [],
+                type: 'select',
+                options: [],
             }
             board.cardProperties.push(property)
             didChange = true
-	    }
+        }
 
         // At least one view
         if (this.views.length < 1) {
             const view = new BoardView()
-	        view.parentId = board.id
+            view.parentId = board.id
             view.groupById = board.cardProperties.find((o) => o.type === 'select')?.id
             this.views.push(view)
             didChange = true
@@ -75,36 +75,36 @@ class BoardTree {
         return didChange
     }
 
-    setActiveView(viewId: string) {
-	    this.activeView = this.views.find((o) => o.id === viewId)
-	    if (!this.activeView) {
+    setActiveView(viewId: string): void {
+        this.activeView = this.views.find((o) => o.id === viewId)
+        if (!this.activeView) {
             Utils.logError(`Cannot find BoardView: ${viewId}`)
-	        this.activeView = this.views[0]
+            this.activeView = this.views[0]
         }
 
-	    // Fix missing group by (e.g. for new views)
-	    if (this.activeView.viewType === 'board' && !this.activeView.groupById) {
-	        this.activeView.groupById = this.board.cardProperties.find((o) => o.type === 'select')?.id
+        // Fix missing group by (e.g. for new views)
+        if (this.activeView.viewType === 'board' && !this.activeView.groupById) {
+            this.activeView.groupById = this.board.cardProperties.find((o) => o.type === 'select')?.id
         }
-	    this.applyFilterSortAndGroup()
-    }
-
-    getSearchText(): string | undefined {
-	    return this.searchText
-    }
-
-    setSearchText(text?: string) {
-	    this.searchText = text
         this.applyFilterSortAndGroup()
     }
 
-    applyFilterSortAndGroup() {
+    getSearchText(): string | undefined {
+        return this.searchText
+    }
+
+    setSearchText(text?: string): void {
+        this.searchText = text
+        this.applyFilterSortAndGroup()
+    }
+
+    applyFilterSortAndGroup(): void {
         Utils.assert(this.allCards !== undefined)
 
         this.cards = this.filterCards(this.allCards)
         Utils.assert(this.cards !== undefined)
         this.cards = this.searchFilterCards(this.cards)
-	    Utils.assert(this.cards !== undefined)
+        Utils.assert(this.cards !== undefined)
         this.cards = this.sortCards(this.cards)
         Utils.assert(this.cards !== undefined)
 
@@ -114,7 +114,7 @@ class BoardTree {
             Utils.assert(this.activeView.viewType !== 'board')
         }
 
-	    Utils.assert(this.cards !== undefined)
+        Utils.assert(this.cards !== undefined)
     }
 
     private searchFilterCards(cards: Card[]): Card[] {
@@ -123,27 +123,25 @@ class BoardTree {
             return cards.slice()
         }
 
-	    return cards.filter((card) => {
-            if (card.title?.toLocaleLowerCase().indexOf(searchText) !== -1) {
-                return true
-            }
-	    })
+        return cards.filter((card) => {
+            return (card.title?.toLocaleLowerCase().indexOf(searchText) !== -1)
+        })
     }
 
     private setGroupByProperty(propertyId: string) {
-	    const {board} = this
+        const {board} = this
 
-	    let property = board.cardProperties.find((o) => o.id === propertyId)
+        let property = board.cardProperties.find((o) => o.id === propertyId)
 
         // TODO: Handle multi-select
         if (!property || property.type !== 'select') {
-	        Utils.logError(`this.view.groupById card property not found: ${propertyId}`)
-	        property = board.cardProperties.find((o) => o.type === 'select')
-	        Utils.assertValue(property)
+            Utils.logError(`this.view.groupById card property not found: ${propertyId}`)
+            property = board.cardProperties.find((o) => o.type === 'select')
+            Utils.assertValue(property)
         }
         this.groupByProperty = property
 
-	    this.groupCards()
+        this.groupCards()
     }
 
     private groupCards() {
@@ -153,51 +151,52 @@ class BoardTree {
 
         this.emptyGroupCards = this.cards.filter((o) => {
             const propertyValue = o.properties[groupByPropertyId]
-	        return !propertyValue || !this.groupByProperty.options.find((option) => option.value === propertyValue)
+            return !propertyValue || !this.groupByProperty.options.find((option) => option.value === propertyValue)
         })
 
         const propertyOptions = this.groupByProperty.options || []
         for (const option of propertyOptions) {
-	        const cards = this.cards.
+            const cards = this.cards.
                 filter((o) => {
-	                const propertyValue = o.properties[groupByPropertyId]
-	                return propertyValue && propertyValue === option.value
-	            })
+                    const propertyValue = o.properties[groupByPropertyId]
+                    return propertyValue && propertyValue === option.value
+                })
 
             const group: Group = {
                 option,
-	            cards,
-	        }
+                cards,
+            }
 
-	        this.groups.push(group)
+            this.groups.push(group)
         }
     }
 
     private filterCards(cards: Card[]): Card[] {
         const {board} = this
-	    const filterGroup = this.activeView?.filter
+        const filterGroup = this.activeView?.filter
         if (!filterGroup) {
             return cards.slice()
         }
 
-	    return CardFilter.applyFilterGroup(filterGroup, board.cardProperties, cards)
+        return CardFilter.applyFilterGroup(filterGroup, board.cardProperties, cards)
     }
 
     private sortCards(cards: Card[]): Card[] {
-	    if (!this.activeView) {
-            Utils.assertFailure(); return cards
+        if (!this.activeView) {
+            Utils.assertFailure()
+            return cards
         }
         const {board} = this
-	    const {sortOptions} = this.activeView
-	    let sortedCards: Card[] = []
+        const {sortOptions} = this.activeView
+        let sortedCards: Card[] = []
 
         if (sortOptions.length < 1) {
             Utils.log('Default sort')
             sortedCards = cards.sort((a, b) => {
-	            const aValue = a.title || ''
-	            const bValue = b.title || ''
+                const aValue = a.title || ''
+                const bValue = b.title || ''
 
-	            // Always put empty values at the bottom
+                // Always put empty values at the bottom
                 if (aValue && !bValue) {
                     return -1
                 }
@@ -210,15 +209,15 @@ class BoardTree {
 
                 return a.createAt - b.createAt
             })
-	    } else {
-            sortOptions.forEach((sortOption) => {
-	            if (sortOption.propertyId === '__name') {
-	                Utils.log('Sort by name')
-	                sortedCards = cards.sort((a, b) => {
-	                    const aValue = a.title || ''
-	                    const bValue = b.title || ''
+        } else {
+            for (const sortOption of sortOptions) {
+                if (sortOption.propertyId === '__name') {
+                    Utils.log('Sort by name')
+                    sortedCards = cards.sort((a, b) => {
+                        const aValue = a.title || ''
+                        const bValue = b.title || ''
 
-	                    // Always put empty values at the bottom, newest last
+                        // Always put empty values at the bottom, newest last
                         if (aValue && !bValue) {
                             return -1
                         }
@@ -229,26 +228,26 @@ class BoardTree {
                             return a.createAt - b.createAt
                         }
 
-	                    let result = aValue.localeCompare(bValue)
+                        let result = aValue.localeCompare(bValue)
                         if (sortOption.reversed) {
                             result = -result
                         }
-	                    return result
+                        return result
                     })
-	            } else {
-	                const sortPropertyId = sortOption.propertyId
+                } else {
+                    const sortPropertyId = sortOption.propertyId
                     const template = board.cardProperties.find((o) => o.id === sortPropertyId)
-	                if (!template) {
-	                    Utils.logError(`Missing template for property id: ${sortPropertyId}`)
+                    if (!template) {
+                        Utils.logError(`Missing template for property id: ${sortPropertyId}`)
                         return cards.slice()
-	                }
-	                Utils.log(`Sort by ${template?.name}`)
-	                sortedCards = cards.sort((a, b) => {
+                    }
+                    Utils.log(`Sort by ${template?.name}`)
+                    sortedCards = cards.sort((a, b) => {
                         // Always put cards with no titles at the bottom
-	                    if (a.title && !b.title) {
+                        if (a.title && !b.title) {
                             return -1
                         }
-	                    if (b.title && !a.title) {
+                        if (b.title && !a.title) {
                             return 1
                         }
                         if (!a.title && !b.title) {
@@ -256,14 +255,14 @@ class BoardTree {
                         }
 
                         const aValue = a.properties[sortPropertyId] || ''
-	                    const bValue = b.properties[sortPropertyId] || ''
-	                    let result = 0
+                        const bValue = b.properties[sortPropertyId] || ''
+                        let result = 0
                         if (template.type === 'select') {
-	                        // Always put empty values at the bottom
+                            // Always put empty values at the bottom
                             if (aValue && !bValue) {
                                 return -1
                             }
-	                        if (bValue && !aValue) {
+                            if (bValue && !aValue) {
                                 return 1
                             }
                             if (!aValue && !bValue) {
@@ -271,51 +270,51 @@ class BoardTree {
                             }
 
                             // Sort by the option order (not alphabetically by value)
-	                        const aOrder = template.options.findIndex((o) => o.value === aValue)
-	                        const bOrder = template.options.findIndex((o) => o.value === bValue)
+                            const aOrder = template.options.findIndex((o) => o.value === aValue)
+                            const bOrder = template.options.findIndex((o) => o.value === bValue)
 
-	                        result = aOrder - bOrder
+                            result = aOrder - bOrder
                         } else if (template.type === 'number' || template.type === 'date') {
                             // Always put empty values at the bottom
-	                        if (aValue && !bValue) {
+                            if (aValue && !bValue) {
                                 return -1
                             }
-	                        if (bValue && !aValue) {
+                            if (bValue && !aValue) {
                                 return 1
                             }
-	                        if (!aValue && !bValue) {
+                            if (!aValue && !bValue) {
                                 return a.createAt - b.createAt
                             }
 
-	                        result = Number(aValue) - Number(bValue)
+                            result = Number(aValue) - Number(bValue)
                         } else if (template.type === 'createdTime') {
                             result = a.createAt - b.createAt
-	                    } else if (template.type === 'updatedTime') {
-	                        result = a.updateAt - b.updateAt
+                        } else if (template.type === 'updatedTime') {
+                            result = a.updateAt - b.updateAt
                         } else {
                             // Text-based sort
 
                             // Always put empty values at the bottom
-	                        if (aValue && !bValue) {
+                            if (aValue && !bValue) {
                                 return -1
                             }
-	                        if (bValue && !aValue) {
+                            if (bValue && !aValue) {
                                 return 1
                             }
-	                        if (!aValue && !bValue) {
+                            if (!aValue && !bValue) {
                                 return a.createAt - b.createAt
                             }
 
-	                        result = aValue.localeCompare(bValue)
-	                    }
+                            result = aValue.localeCompare(bValue)
+                        }
 
-	                    if (sortOption.reversed) {
+                        if (sortOption.reversed) {
                             result = -result
                         }
                         return result
                     })
                 }
-            })
+            }
         }
 
         return sortedCards

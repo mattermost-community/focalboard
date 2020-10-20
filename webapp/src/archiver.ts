@@ -12,7 +12,7 @@ interface Archive {
 }
 
 class Archiver {
-    static async exportBoardTree(boardTree: BoardTree) {
+    static async exportBoardTree(boardTree: BoardTree): Promise<void> {
         const blocks = boardTree.allBlocks
         const archive: Archive = {
             version: 1,
@@ -23,7 +23,7 @@ class Archiver {
         this.exportArchive(archive)
     }
 
-    static async exportFullArchive() {
+    static async exportFullArchive(): Promise<void> {
         const blocks = await mutator.exportFullArchive()
         const archive: Archive = {
             version: 1,
@@ -34,7 +34,7 @@ class Archiver {
         this.exportArchive(archive)
     }
 
-    private static exportArchive(archive: Archive) {
+    private static exportArchive(archive: Archive): void {
         const content = JSON.stringify(archive)
 
         const date = new Date()

@@ -129,6 +129,10 @@ class CardFilter {
             // TODO: Handle non-select types
             return {id: filterClause.propertyId}
         }
+        default: {
+            Utils.assertFailure(`Unexpected filter condition: ${filterClause.condition}`)
+            return {id: filterClause.propertyId}
+        }
         }
     }
 }
