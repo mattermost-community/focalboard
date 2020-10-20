@@ -1,15 +1,19 @@
-.PHONY: prebuild clean cleanall pack packdev builddev build watch go goUbuntu
+.PHONY: prebuild clean cleanall server server-linux generate watch-server
 
-all: build
+all: server
 
-pack:
-	npm run pack
+prebuild:
+	go get github.com/gorilla/mux
+	go get github.com/gorilla/websocket
+	go get github.com/spf13/viper
+	go get github.com/lib/pq
+	go get github.com/mattn/go-sqlite3
 
-packdev:
-	npm run packdev
-
-go:
+server:
 	cd server; go build -o ../bin/octoserver ./main
+
+server-linux:
+	cd server; env GOOS=linux GOARCH=amd64 go build -o ../bin/octoserver ./main
 
 generate:
 	cd server; go generate ./...
@@ -17,28 +21,10 @@ generate:
 watch-server:
 	cd server; modd
 
-goUbuntu:
-	cd server; env GOOS=linux GOARCH=amd64 go build -o ../bin/octoserver ./main
-
-builddev: packdev go
-
-build: pack go
-
-watch:
-	npm run watchdev
-
-prebuild:
-	npm install
-	go get github.com/gorilla/mux
-	go get github.com/gorilla/websocket
-	go get github.com/spf13/viper
-	go get github.com/lib/pq
-	go get github.com/mattn/go-sqlite3
-
 clean:
 	rm -rf bin
 	rm -rf dist
-	rm -rf pack
+	rm -rf webapp/pack
 
 cleanall: clean
-	rm -rf node_modules
+	rm -rf webapp/node_modules

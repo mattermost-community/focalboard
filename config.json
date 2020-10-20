@@ -5,7 +5,7 @@
 	"dbconfig": "./octo.db",
 	"postgres_dbconfig": "dbname=octo sslmode=disable",
 	"useSSL": false,
-	"webpath": "./pack",
+	"webpath": "./webapp/pack",
 	"filespath": "./files",
 	"telemetry": true
 }

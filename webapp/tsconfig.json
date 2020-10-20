@@ -18,12 +18,12 @@
 		"paths": {
 			"*": [
 				"node_modules/*",
-				"webapp/@custom_types/*"
+				"@custom_types/*"
 			]
 		}
 	},
 	"include": [
-		"./webapp"
+		"."
 	],
 	"exclude": [
 	]

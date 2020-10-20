@@ -3,6 +3,10 @@
 ## Build instructions
 
 ```
+cd webapp
+npm install
+npm run packdev
+cd ..
 make prebuild
 make
 ```
