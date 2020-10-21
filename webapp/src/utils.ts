@@ -48,8 +48,8 @@ class Utils {
     static htmlFromMarkdown(text: string): string {
         // HACKHACK: Somehow, marked doesn't encode angle brackets
         const renderer = new marked.Renderer()
-        renderer.link = ( href, title, text ) => `<a target="_blank" href="${ href }" title="${ title || '' }">${ text }</a>`
-        const html = marked(text.replace(/</g, '&lt;'), { renderer })
+        renderer.link = (href, title, contents) => `<a target="_blank" href="${href}" title="${title || ''}" onclick="event.stopPropagation();">${contents}</a>`
+        const html = marked(text.replace(/</g, '&lt;'), {renderer})
         return html
     }
 
