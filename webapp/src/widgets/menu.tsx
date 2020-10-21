@@ -70,7 +70,7 @@ class ColorOption extends React.Component<ColorOptionProps> {
                 className='MenuOption ColorOption menu-option'
                 onClick={this.handleOnClick}
             >
-                <div className='name'>{name}</div>
+                <div className='menu-name'>{name}</div>
                 {icon && <div className={'icon ' + icon}/>}
                 <div className={`menu-colorbox ${id}`}/>
             </div>
@@ -91,7 +91,7 @@ class SwitchOption extends React.Component<SwitchOptionProps> {
         const {name, icon, isOn} = this.props
         return (
             <div className='MenuOption SwitchOption menu-option'>
-                <div className='name'>{name}</div>
+                <div className='menu-name'>{name}</div>
                 {icon && <div className={`icon ${icon}`}/>}
                 <div className={isOn ? 'octo-switch on' : 'octo-switch'}>
                     <div
@@ -119,7 +119,7 @@ class TextOption extends React.Component<TextOptionProps> {
                 className='MenuOption TextOption menu-option'
                 onClick={this.handleOnClick}
             >
-                <div className='name'>{name}</div>
+                <div className='menu-name'>{name}</div>
                 {icon && <div className={`icon ${icon}`}/>}
             </div>
         )
