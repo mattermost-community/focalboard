@@ -24,7 +24,7 @@ type State = {
 class Editable extends React.Component<Props, State> {
     static defaultProps = {
         text: '',
-	    isMarkdown: false,
+        isMarkdown: false,
         isMultiline: false,
     }
 
@@ -36,30 +36,30 @@ class Editable extends React.Component<Props, State> {
         const {isMarkdown} = this.props
 
         if (!value) {
-	        this.elementRef.current.innerText = ''
-	    } else {
-	        this.elementRef.current.innerHTML = isMarkdown ? Utils.htmlFromMarkdown(value) : Utils.htmlEncode(value)
-	    }
+            this.elementRef.current.innerText = ''
+        } else {
+            this.elementRef.current.innerHTML = isMarkdown ? Utils.htmlFromMarkdown(value) : Utils.htmlEncode(value)
+        }
 
-	    this._text = value || ''
+        this._text = value || ''
     }
 
     private elementRef = React.createRef<HTMLDivElement>()
 
     constructor(props: Props) {
         super(props)
-	    this._text = props.text || ''
+        this._text = props.text || ''
     }
 
-    componentDidUpdate(prevPros: Props, prevState: State) {
+    componentDidUpdate() {
         this._text = this.props.text || ''
     }
 
     focus() {
-	    this.elementRef.current.focus()
+        this.elementRef.current.focus()
 
         // Put cursor at end
-	    document.execCommand('selectAll', false, null)
+        document.execCommand('selectAll', false, null)
         document.getSelection().collapseToEnd()
     }
 
@@ -68,15 +68,15 @@ class Editable extends React.Component<Props, State> {
     }
 
     render() {
-	    const {text, className, style, placeholderText, isMarkdown, isMultiline, onFocus, onBlur, onKeyDown, onChanged} = this.props
+        const {text, className, style, placeholderText, isMarkdown, isMultiline, onFocus, onBlur, onKeyDown, onChanged} = this.props
 
-	    const initialStyle = {...this.props.style}
+        const initialStyle = {...this.props.style}
 
         let html: string
         if (text) {
             html = isMarkdown ? Utils.htmlFromMarkdown(text) : Utils.htmlEncode(text)
-	    } else {
-	        html = ''
+        } else {
+            html = ''
         }
 
         const element =
@@ -91,43 +91,43 @@ class Editable extends React.Component<Props, State> {
                 dangerouslySetInnerHTML={{__html: html}}
 
                 onFocus={() => {
-			        this.elementRef.current.innerText = this.text
-			        this.elementRef.current.style.color = style?.color || null
-			        this.elementRef.current.classList.add('active')
+                    this.elementRef.current.innerText = this.text
+                    this.elementRef.current.style.color = style?.color || null
+                    this.elementRef.current.classList.add('active')
 
-			        if (onFocus) {
+                    if (onFocus) {
                         onFocus()
                     }
-			    }}
+                }}
 
                 onBlur={async () => {
-			        const newText = this.elementRef.current.innerText
-			        const oldText = this.props.text || ''
-			        if (newText !== oldText && onChanged) {
-			            onChanged(newText)
-			        }
+                    const newText = this.elementRef.current.innerText
+                    const oldText = this.props.text || ''
+                    if (newText !== oldText && onChanged) {
+                        onChanged(newText)
+                    }
 
-			        this.text = newText
+                    this.text = newText
 
-			        this.elementRef.current.classList.remove('active')
-			        if (onBlur) {
+                    this.elementRef.current.classList.remove('active')
+                    if (onBlur) {
                         onBlur()
                     }
-			    }}
+                }}
 
                 onKeyDown={(e) => {
-			        if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
-			            e.stopPropagation()
-			            this.elementRef.current.blur()
-			        } else if (!isMultiline && e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) {	// Return
-			            e.stopPropagation()
-			            this.elementRef.current.blur()
-			        }
+                    if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
+                        e.stopPropagation()
+                        this.elementRef.current.blur()
+                    } else if (!isMultiline && e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // Return
+                        e.stopPropagation()
+                        this.elementRef.current.blur()
+                    }
 
-			        if (onKeyDown) {
+                    if (onKeyDown) {
                         onKeyDown(e)
                     }
-			    }}
+                }}
             />);
 
         return element

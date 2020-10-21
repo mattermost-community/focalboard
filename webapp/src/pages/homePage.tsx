@@ -1,13 +1,13 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import { Archiver } from '../archiver'
-import { MutableBoard } from '../blocks/board'
+
+import {Archiver} from '../archiver'
+import {MutableBoard} from '../blocks/board'
 import Button from '../components/button'
 import octoClient from '../octoClient'
-import { IBlock } from '../blocks/block'
-import { Utils } from '../utils'
-
+import {IBlock} from '../blocks/block'
+import {Utils} from '../utils'
 
 type Props = {}
 
@@ -28,39 +28,39 @@ export default class HomePage extends React.Component<Props, State> {
     }
 
     loadBoards = async () => {
-	    const boards = await octoClient.getBlocksWithType('board')
+        const boards = await octoClient.getBlocksWithType('board')
         this.setState({boards})
     }
 
     importClicked = async () => {
-	    Archiver.importFullArchive(() => {
-	        this.loadBoards()
-	    })
+        Archiver.importFullArchive(() => {
+            this.loadBoards()
+        })
     }
 
     exportClicked = async () => {
-	    Archiver.exportFullArchive()
+        Archiver.exportFullArchive()
     }
 
     addClicked = async () => {
-	    const board = new MutableBoard()
-	    await octoClient.insertBlock(board)
+        const board = new MutableBoard()
+        await octoClient.insertBlock(board)
     }
 
     render(): React.ReactNode {
-	    return (
-    <div>
+        return (
+            <div>
                 <Button onClick={this.addClicked}>+ Add Board</Button>
                 <br/>
                 <Button onClick={this.addClicked}>Import Archive</Button>
                 <br/>
                 <Button onClick={this.addClicked}>Export Archive</Button>
                 {this.state.boards.map((board) => (
-            <p>
+                    <p>
                         <a href={`/board/${board.id}`}>
-                    <span>{board.title}</span>
-                    <span>{Utils.displayDate(new Date(board.updateAt))}</span>
-                </a>
+                            <span>{board.title}</span>
+                            <span>{Utils.displayDate(new Date(board.updateAt))}</span>
+                        </a>
                     </p>
                 ))}
             </div>

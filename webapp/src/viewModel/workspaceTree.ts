@@ -7,29 +7,29 @@ import {OctoUtils} from '../octoUtils'
 import {BoardView} from '../blocks/boardView'
 
 interface WorkspaceTree {
-	readonly boards: readonly Board[]
-	readonly views: readonly BoardView[]
+    readonly boards: readonly Board[]
+    readonly views: readonly BoardView[]
 }
 
 class MutableWorkspaceTree {
-	boards: Board[] = []
-	views: BoardView[] = []
+    boards: Board[] = []
+    views: BoardView[] = []
 
-	async sync() {
-		const boards = await octoClient.getBlocksWithType("board")
-		const views = await octoClient.getBlocksWithType("view")
-		this.rebuild(
+    async sync() {
+        const boards = await octoClient.getBlocksWithType('board')
+        const views = await octoClient.getBlocksWithType('view')
+        this.rebuild(
             OctoUtils.hydrateBlocks(boards),
-            OctoUtils.hydrateBlocks(views)
+            OctoUtils.hydrateBlocks(views),
         )
-	}
+    }
 
-	private rebuild(boards: IBlock[], views: IBlock[]) {
-		this.boards = boards.filter(block => block.type === "board") as Board[]
-		this.views = views.filter(block => block.type === "view") as BoardView[]
-	}
+    private rebuild(boards: IBlock[], views: IBlock[]) {
+        this.boards = boards.filter((block) => block.type === 'board') as Board[]
+        this.views = views.filter((block) => block.type === 'view') as BoardView[]
+    }
 }
 
 // type WorkspaceTree = Readonly<MutableWorkspaceTree>
 
-export { MutableWorkspaceTree, WorkspaceTree }
+export {MutableWorkspaceTree, WorkspaceTree}

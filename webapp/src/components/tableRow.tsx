@@ -30,12 +30,12 @@ class TableRow extends React.Component<Props, State> {
 
     componentDidMount() {
         if (this.props.focusOnMount) {
-	        this.titleRef.current.focus()
-	    }
+            this.titleRef.current.focus()
+        }
     }
 
     render() {
-	    const {boardTree, card, onKeyDown} = this.props
+        const {boardTree, card, onKeyDown} = this.props
         const {board, activeView} = boardTree
 
         const openButonRef = React.createRef<HTMLDivElement>()
@@ -104,7 +104,7 @@ class TableRow extends React.Component<Props, State> {
                 })}
         </div>)
 
-	    return element
+        return element
     }
 
     focusOnTitle() {

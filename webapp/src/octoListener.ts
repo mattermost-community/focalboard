@@ -36,64 +36,64 @@ class OctoListener {
     }
 
     open(blockIds: string[], onChange: (blockId: string) => void) {
-	    let timeoutId: NodeJS.Timeout
+        let timeoutId: NodeJS.Timeout
 
         if (this.ws) {
-	        this.close()
+            this.close()
         }
 
         const url = new URL(this.serverUrl)
-	    const wsServerUrl = `ws://${url.host}${url.pathname}ws/onchange`
+        const wsServerUrl = `ws://${url.host}${url.pathname}ws/onchange`
         Utils.log(`OctoListener open: ${wsServerUrl}`)
-	    const ws = new WebSocket(wsServerUrl)
+        const ws = new WebSocket(wsServerUrl)
         this.ws = ws
 
-	    ws.onopen = () => {
-            Utils.log(`OctoListener webSocket opened.`)
+        ws.onopen = () => {
+            Utils.log('OctoListener webSocket opened.')
             this.addBlocks(blockIds)
             this.isInitialized = true
-	    }
+        }
 
-	    ws.onerror = (e) => {
+        ws.onerror = (e) => {
             Utils.logError(`OctoListener websocket onerror. data: ${e}`)
-	    }
+        }
 
-	    ws.onclose = (e) => {
+        ws.onclose = (e) => {
             Utils.log(`OctoListener websocket onclose, code: ${e.code}, reason: ${e.reason}`)
-	        if (ws === this.ws) {
+            if (ws === this.ws) {
                 // Unexpected close, re-open
                 const reopenBlockIds = this.isInitialized ? this.blockIds.slice() : blockIds.slice()
                 Utils.logError(`Unexpected close, re-opening with ${reopenBlockIds.length} blocks...`)
                 setTimeout(() => {
                     this.open(reopenBlockIds, onChange)
                 }, this.reopenDelay)
-	        }
-	    }
+            }
+        }
 
-	    ws.onmessage = (e) => {
+        ws.onmessage = (e) => {
             Utils.log(`OctoListener websocket onmessage. data: ${e.data}`)
-	        if (ws !== this.ws) {
-                Utils.log(`Ignoring closed ws`)
+            if (ws !== this.ws) {
+                Utils.log('Ignoring closed ws')
                 return
             }
 
             try {
-	            const message = JSON.parse(e.data) as WSMessage
-	            switch (message.action) {
+                const message = JSON.parse(e.data) as WSMessage
+                switch (message.action) {
                 case 'UPDATE_BLOCK':
-	                if (timeoutId) {
+                    if (timeoutId) {
                         clearTimeout(timeoutId)
                     }
-	                timeoutId = setTimeout(() => {
-	                    timeoutId = undefined
-	                    onChange(message.blockId)
+                    timeoutId = setTimeout(() => {
+                        timeoutId = undefined
+                        onChange(message.blockId)
                     }, this.notificationDelay)
                     break
                 default:
                     Utils.logError(`Unexpected action: ${message.action}`)
                 }
             } catch (e) {
-	            Utils.log('message is not an object')
+                Utils.log('message is not an object')
             }
         }
     }
@@ -115,13 +115,13 @@ class OctoListener {
 
     addBlocks(blockIds: string[]): void {
         if (!this.isOpen) {
-            Utils.assertFailure(`OctoListener.addBlocks: ws is not open`)
+            Utils.assertFailure('OctoListener.addBlocks: ws is not open')
             return
         }
 
         const command: WSCommand = {
             action: 'ADD',
-            blockIds
+            blockIds,
         }
 
         this.ws.send(JSON.stringify(command))
@@ -130,20 +130,20 @@ class OctoListener {
 
     removeBlocks(blockIds: string[]): void {
         if (!this.isOpen) {
-            Utils.assertFailure(`OctoListener.removeBlocks: ws is not open`)
+            Utils.assertFailure('OctoListener.removeBlocks: ws is not open')
             return
         }
 
         const command: WSCommand = {
             action: 'REMOVE',
-            blockIds
+            blockIds,
         }
 
         this.ws.send(JSON.stringify(command))
 
         // Remove registered blockIds, maintinging multiple copies (simple ref-counting)
-        for (let i=0; i<this.blockIds.length; i++) {
-            for (let j=0; j<blockIds.length; j++) {
+        for (let i = 0; i < this.blockIds.length; i++) {
+            for (let j = 0; j < blockIds.length; j++) {
                 if (this.blockIds[i] === blockIds[j]) {
                     this.blockIds.splice(i, 1)
                     blockIds.splice(j, 1)

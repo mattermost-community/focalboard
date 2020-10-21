@@ -1,24 +1,24 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import { BlockIcons } from '../blockIcons'
-import { MutableCommentBlock } from '../blocks/commentBlock'
-import { IOrderedBlock } from '../blocks/orderedBlock'
-import { MutableTextBlock } from '../blocks/textBlock'
-import { BoardTree } from '../viewModel/boardTree'
-import { CardTree, MutableCardTree } from '../viewModel/cardTree'
-import { Menu as OldMenu, MenuOption } from '../menu'
+
+import {BlockIcons} from '../blockIcons'
+import {MutableCommentBlock} from '../blocks/commentBlock'
+import {IOrderedBlock} from '../blocks/orderedBlock'
+import {MutableTextBlock} from '../blocks/textBlock'
+import {BoardTree} from '../viewModel/boardTree'
+import {CardTree, MutableCardTree} from '../viewModel/cardTree'
+import {Menu as OldMenu, MenuOption} from '../menu'
 import mutator from '../mutator'
-import { OctoListener } from '../octoListener'
-import { IBlock } from '../blocks/block'
-import { OctoUtils } from '../octoUtils'
-import { PropertyMenu } from '../propertyMenu'
-import { Utils } from '../utils'
+import {OctoListener} from '../octoListener'
+import {IBlock} from '../blocks/block'
+import {OctoUtils} from '../octoUtils'
+import {PropertyMenu} from '../propertyMenu'
+import {Utils} from '../utils'
+
 import Button from './button'
-import { Editable } from './editable'
-import { MarkdownEditor } from './markdownEditor'
-
-
+import {Editable} from './editable'
+import {MarkdownEditor} from './markdownEditor'
 
 type Props = {
     boardTree: BoardTree
@@ -35,25 +35,25 @@ export default class CardDetail extends React.Component<Props, State> {
     private cardListener?: OctoListener
 
     constructor(props: Props) {
-	    super(props)
+        super(props)
         this.state = {isHoverOnCover: false}
     }
 
     componentDidMount() {
         this.cardListener = new OctoListener()
-	    this.cardListener.open([this.props.cardId], async (blockId) => {
+        this.cardListener.open([this.props.cardId], async (blockId) => {
             Utils.log(`cardListener.onChanged: ${blockId}`)
             await cardTree.sync()
-	        this.setState({...this.state, cardTree})
+            this.setState({...this.state, cardTree})
         })
-	    const cardTree = new MutableCardTree(this.props.cardId)
+        const cardTree = new MutableCardTree(this.props.cardId)
         cardTree.sync().then(() => {
-	        this.setState({...this.state, cardTree})
-	        setTimeout(() => {
+            this.setState({...this.state, cardTree})
+            setTimeout(() => {
                 if (this.titleRef.current) {
                     this.titleRef.current.focus()
                 }
-	        }, 0)
+            }, 0)
         })
     }
 
@@ -63,17 +63,17 @@ export default class CardDetail extends React.Component<Props, State> {
     }
 
     render() {
-	    const {boardTree} = this.props
+        const {boardTree} = this.props
         const {cardTree} = this.state
         const {board} = boardTree
-	    if (!cardTree) {
-	        return null
+        if (!cardTree) {
+            return null
         }
         const {card, comments} = cardTree
 
         const newCommentPlaceholderText = 'Add a comment...'
 
-	    const backgroundRef = React.createRef<HTMLDivElement>()
+        const backgroundRef = React.createRef<HTMLDivElement>()
         const newCommentRef = React.createRef<Editable>()
         const sendCommentButtonRef = React.createRef<HTMLDivElement>()
         let contentElements
@@ -81,14 +81,14 @@ export default class CardDetail extends React.Component<Props, State> {
             contentElements =
                 (<div className='octo-content'>
                     {cardTree.contents.map((block) => {
-				        if (block.type === 'text') {
-				            const cardText = block.title
-				            return (<div
+                        if (block.type === 'text') {
+                            const cardText = block.title
+                            return (<div
                                 key={block.id}
                                 className='octo-block octo-hover-container'
-				                    >
+                            >
                                 <div className='octo-block-margin'>
-        <div
+                                    <div
                                         className='octo-button octo-hovercontrol square octo-hover-item'
                                         onClick={(e) => {
                                             this.showContentBlockMenu(e, block)
@@ -96,22 +96,24 @@ export default class CardDetail extends React.Component<Props, State> {
                                     >
                                         <div className='imageOptions'/>
                                     </div>
-    </div>
+                                </div>
                                 <MarkdownEditor
-        text={cardText} placeholderText='Edit text...' onChanged={(text) => {
+                                    text={cardText}
+                                    placeholderText='Edit text...'
+                                    onChanged={(text) => {
                                         Utils.log(`change text ${block.id}, ${text}`)
                                         mutator.changeTitle(block, text, 'edit card text')
                                     }}
-    />
+                                />
                             </div>)
-				        } else if (block.type === 'image') {
-				            const url = block.fields.url
-				            return (<div
+                        } else if (block.type === 'image') {
+                            const url = block.fields.url
+                            return (<div
                                 key={block.id}
                                 className='octo-block octo-hover-container'
-				                    >
+                                    >
                                 <div className='octo-block-margin'>
-        <div
+                                    <div
                                         className='octo-button octo-hovercontrol square octo-hover-item'
                                         onClick={(e) => {
                                             this.showContentBlockMenu(e, block)
@@ -119,18 +121,18 @@ export default class CardDetail extends React.Component<Props, State> {
                                     >
                                         <div className='imageOptions'/>
                                     </div>
-    </div>
-    <img
+                                </div>
+                                <img
                                     src={url}
                                     alt={block.title}
-                                ></img>
+                                />
                             </div>)
-				        }
+                        }
 
-				        return <div/>
-				    })}
+                        return <div/>
+                    })}
                 </div>)
-	    } else {
+        } else {
             contentElements = (<div className='octo-content'>
                 <div className='octo-block octo-hover-container'>
                     <div className='octo-block-margin'/>
@@ -147,58 +149,58 @@ export default class CardDetail extends React.Component<Props, State> {
                     />
                 </div>
             </div>)
-	    }
+        }
 
         const icon = card.icon
 
-	    // TODO: Replace this placeholder
+        // TODO: Replace this placeholder
         const username = 'John Smith'
         const userImageUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="fill: rgb(192, 192, 192);"><rect width="100" height="100" /></svg>'
 
-	    return (
+        return (
             <>
-        <div className='content'>
+                <div className='content'>
                     {icon ?
-                <div
+                        <div
                             className='octo-button octo-icon octo-card-icon'
                             onClick={(e) => {
                                 this.iconClicked(e)
                             }}
                         >{icon}</div> :
                         undefined
-	                }
+                    }
                     <div
-                className='octo-hovercontrols'
-                onMouseOver={() => {
+                        className='octo-hovercontrols'
+                        onMouseOver={() => {
                             this.setState({...this.state, isHoverOnCover: true})
                         }}
-                onMouseLeave={() => {
+                        onMouseLeave={() => {
                             this.setState({...this.state, isHoverOnCover: false})
                         }}
-            >
-                <Button
+                    >
+                        <Button
                             style={{display: (!icon && this.state.isHoverOnCover) ? null : 'none'}}
                             onClick={() => {
-	                            const newIcon = BlockIcons.shared.randomIcon()
+                                const newIcon = BlockIcons.shared.randomIcon()
                                 mutator.changeIcon(card, newIcon)
                             }}
                         >Add Icon</Button>
-            </div>
+                    </div>
 
                     <Editable
-                ref={this.titleRef}
-                className='title'
-                text={card.title}
-                placeholderText='Untitled'
-                onChanged={(text) => {
+                        ref={this.titleRef}
+                        className='title'
+                        text={card.title}
+                        placeholderText='Untitled'
+                        onChanged={(text) => {
                             mutator.changeTitle(card, text)
                         }}
-            />
+                    />
 
                     {/* Property list */}
 
                     <div className='octo-propertylist'>
-                {board.cardProperties.map((propertyTemplate) => {
+                        {board.cardProperties.map((propertyTemplate) => {
                             return (
                                 <div
                                     key={propertyTemplate.id}
@@ -208,72 +210,72 @@ export default class CardDetail extends React.Component<Props, State> {
                                         className='octo-button octo-propertyname'
                                         onClick={(e) => {
                                             const menu = PropertyMenu.shared
-	                                    menu.property = propertyTemplate
+                                            menu.property = propertyTemplate
                                             menu.onNameChanged = (propertyName) => {
-	                                        Utils.log('menu.onNameChanged')
-	                                        mutator.renameProperty(board, propertyTemplate.id, propertyName)
+                                                Utils.log('menu.onNameChanged')
+                                                mutator.renameProperty(board, propertyTemplate.id, propertyName)
                                             }
 
                                             menu.onMenuClicked = async (command) => {
                                                 switch (command) {
-	                                        case 'type-text':
-	                                            await mutator.changePropertyType(board, propertyTemplate, 'text')
-	                                            break
-	                                        case 'type-number':
-                                                    await mutator.changePropertyType(board, propertyTemplate, 'number')
-	                                            break
-                                                case 'type-createdTime':
-	                                            await mutator.changePropertyType(board, propertyTemplate, 'createdTime')
+                                                case 'type-text':
+                                                    await mutator.changePropertyType(board, propertyTemplate, 'text')
                                                     break
-	                                        case 'type-updatedTime':
+                                                case 'type-number':
+                                                    await mutator.changePropertyType(board, propertyTemplate, 'number')
+                                                    break
+                                                case 'type-createdTime':
+                                                    await mutator.changePropertyType(board, propertyTemplate, 'createdTime')
+                                                    break
+                                                case 'type-updatedTime':
                                                     await mutator.changePropertyType(board, propertyTemplate, 'updatedTime')
                                                     break
-	                                        case 'type-select':
+                                                case 'type-select':
                                                     await mutator.changePropertyType(board, propertyTemplate, 'select')
                                                     break
                                                 case 'delete':
                                                     await mutator.deleteProperty(boardTree, propertyTemplate.id)
                                                     break
-	                                        default:
+                                                default:
                                                     Utils.assertFailure(`Unhandled menu id: ${command}`)
-	                                        }
-	                                    }
+                                                }
+                                            }
                                             menu.showAtElement(e.target as HTMLElement)
-	                                }}
+                                        }}
                                     >{propertyTemplate.name}</div>
                                     {OctoUtils.propertyValueEditableElement(card, propertyTemplate)}
                                 </div>
-	                        )
+                            )
                         })}
 
-                <div
+                        <div
                             className='octo-button octo-propertyname'
                             style={{textAlign: 'left', width: '150px', color: 'rgba(55, 53, 37, 0.4)'}}
                             onClick={async () => {
                                 // TODO: Show UI
-	                            await mutator.insertPropertyTemplate(boardTree)
-	                        }}
+                                await mutator.insertPropertyTemplate(boardTree)
+                            }}
                         >+ Add a property</div>
-            </div>
+                    </div>
 
                     {/* Comments */}
 
                     <hr/>
                     <div className='commentlist'>
-                {comments.map((comment) => {
+                        {comments.map((comment) => {
                             const optionsButtonRef = React.createRef<HTMLDivElement>()
                             const showCommentMenu = (e: React.MouseEvent, activeComment: IBlock) => {
-	                            OldMenu.shared.options = [
-	                                {id: 'delete', name: 'Delete'},
+                                OldMenu.shared.options = [
+                                    {id: 'delete', name: 'Delete'},
                                 ]
-	                            OldMenu.shared.onMenuClicked = (id) => {
+                                OldMenu.shared.onMenuClicked = (id) => {
                                     switch (id) {
-	                                case 'delete': {
-	                                    mutator.deleteBlock(activeComment)
+                                    case 'delete': {
+                                        mutator.deleteBlock(activeComment)
                                         break
                                     }
-	                                }
-	                            }
+                                    }
+                                }
                                 OldMenu.shared.showAtElement(e.target as HTMLElement)
                             }
 
@@ -305,91 +307,91 @@ export default class CardDetail extends React.Component<Props, State> {
                                 </div>
                                 <div className='comment-text'>{comment.title}</div>
                             </div>)
-	                    })}
+                        })}
 
-                {/* New comment */}
+                        {/* New comment */}
 
-                <div className='commentrow'>
+                        <div className='commentrow'>
                             <img
-                        className='comment-avatar'
-                        src={userImageUrl}
-                    />
+                                className='comment-avatar'
+                                src={userImageUrl}
+                            />
                             <Editable
-                        ref={newCommentRef}
-                        className='newcomment'
-                        placeholderText={newCommentPlaceholderText}
-                        onChanged={(text) => { }}
-                        onFocus={() => {
+                                ref={newCommentRef}
+                                className='newcomment'
+                                placeholderText={newCommentPlaceholderText}
+                                onChanged={(text) => { }}
+                                onFocus={() => {
                                     sendCommentButtonRef.current.style.display = null
                                 }}
-                        onBlur={() => {
-	                                if (!newCommentRef.current.text) {
+                                onBlur={() => {
+                                    if (!newCommentRef.current.text) {
                                         sendCommentButtonRef.current.style.display = 'none'
-	                                }
-	                            }}
-                        onKeyDown={(e) => {
-                                    if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) {
-	                                    sendCommentButtonRef.current.click()
                                     }
-	                            }}
-                    />
+                                }}
+                                onKeyDown={(e) => {
+                                    if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) {
+                                        sendCommentButtonRef.current.click()
+                                    }
+                                }}
+                            />
 
                             <div
-                        ref={sendCommentButtonRef}
-                        className='octo-button filled'
-                        style={{display: 'none'}}
-                        onClick={(e) => {
-	                                const text = newCommentRef.current.text
+                                ref={sendCommentButtonRef}
+                                className='octo-button filled'
+                                style={{display: 'none'}}
+                                onClick={(e) => {
+                                    const text = newCommentRef.current.text
                                     console.log(`Send comment: ${newCommentRef.current.text}`)
-	                                this.sendComment(text)
-	                                newCommentRef.current.text = undefined
+                                    this.sendComment(text)
+                                    newCommentRef.current.text = undefined
                                     newCommentRef.current.blur()
                                 }}
-                    >Send</div>
+                            >Send</div>
                         </div>
-            </div>
+                    </div>
 
                     <hr/>
                 </div>
 
-        {/* Content blocks */}
+                {/* Content blocks */}
 
-        <div className='content fullwidth'>
+                <div className='content fullwidth'>
                     {contentElements}
                 </div>
 
-        <div className='content'>
+                <div className='content'>
                     <div className='octo-hoverpanel octo-hover-container'>
-                <div
+                        <div
                             className='octo-button octo-hovercontrol octo-hover-item'
                             onClick={(e) => {
-	                            OldMenu.shared.options = [
-	                                {id: 'text', name: 'Text'},
+                                OldMenu.shared.options = [
+                                    {id: 'text', name: 'Text'},
                                     {id: 'image', name: 'Image'},
-	                            ]
+                                ]
                                 OldMenu.shared.onMenuClicked = async (optionId: string, type?: string) => {
-	                                switch (optionId) {
+                                    switch (optionId) {
                                     case 'text':
                                         const block = new MutableTextBlock()
                                         block.parentId = card.id
                                         block.order = cardTree.contents.length * 1000
                                         await mutator.insertBlock(block, 'add text')
-	                                    break
-	                                case 'image':
+                                        break
+                                    case 'image':
                                         Utils.selectLocalFile(
                                             (file) => {
-	                                            mutator.createImageBlock(card.id, file, cardTree.contents.length * 1000)
+                                                mutator.createImageBlock(card.id, file, cardTree.contents.length * 1000)
                                             },
-	                                        '.jpg,.jpeg,.png')
-	                                    break
+                                            '.jpg,.jpeg,.png')
+                                        break
                                     }
                                 }
-	                            OldMenu.shared.showAtElement(e.target as HTMLElement)
+                                OldMenu.shared.showAtElement(e.target as HTMLElement)
                             }}
                         >Add content</div>
-            </div>
+                    </div>
                 </div>
-    </>
+            </>
         )
     }
 
@@ -398,56 +400,56 @@ export default class CardDetail extends React.Component<Props, State> {
 
         Utils.assertValue(cardId)
 
-	    const block = new MutableCommentBlock({parentId: cardId, title: text})
+        const block = new MutableCommentBlock({parentId: cardId, title: text})
         await mutator.insertBlock(block, 'add comment')
     }
 
     private showContentBlockMenu(e: React.MouseEvent, block: IOrderedBlock) {
         const {cardTree} = this.state
-	    const {cardId} = this.props
-	    const index = cardTree.contents.indexOf(block)
+        const {cardId} = this.props
+        const index = cardTree.contents.indexOf(block)
 
-	    const options: MenuOption[] = []
-	    if (index > 0) {
+        const options: MenuOption[] = []
+        if (index > 0) {
             options.push({id: 'moveUp', name: 'Move up'})
-	    }
-	    if (index < cardTree.contents.length - 1) {
+        }
+        if (index < cardTree.contents.length - 1) {
             options.push({id: 'moveDown', name: 'Move down'})
         }
 
-	    options.push(
+        options.push(
             {id: 'insertAbove', name: 'Insert above', type: 'submenu'},
-	        {id: 'delete', name: 'Delete'},
+            {id: 'delete', name: 'Delete'},
         )
 
-	    OldMenu.shared.options = options
-	    OldMenu.shared.subMenuOptions.set('insertAbove', [
+        OldMenu.shared.options = options
+        OldMenu.shared.subMenuOptions.set('insertAbove', [
             {id: 'text', name: 'Text'},
-	        {id: 'image', name: 'Image'},
+            {id: 'image', name: 'Image'},
         ])
         OldMenu.shared.onMenuClicked = (optionId: string, type?: string) => {
-	        switch (optionId) {
+            switch (optionId) {
             case 'moveUp': {
                 if (index < 1) {
                     Utils.logError(`Unexpected index ${index}`); return
                 }
-	            const previousBlock = cardTree.contents[index - 1]
-	            const newOrder = OctoUtils.getOrderBefore(previousBlock, cardTree.contents)
+                const previousBlock = cardTree.contents[index - 1]
+                const newOrder = OctoUtils.getOrderBefore(previousBlock, cardTree.contents)
                 Utils.log(`moveUp ${newOrder}`)
-	            mutator.changeOrder(block, newOrder, 'move up')
+                mutator.changeOrder(block, newOrder, 'move up')
                 break
             }
-	        case 'moveDown': {
+            case 'moveDown': {
                 if (index >= cardTree.contents.length - 1) {
                     Utils.logError(`Unexpected index ${index}`); return
                 }
-	            const nextBlock = cardTree.contents[index + 1]
-	            const newOrder = OctoUtils.getOrderAfter(nextBlock, cardTree.contents)
+                const nextBlock = cardTree.contents[index + 1]
+                const newOrder = OctoUtils.getOrderAfter(nextBlock, cardTree.contents)
                 Utils.log(`moveDown ${newOrder}`)
                 mutator.changeOrder(block, newOrder, 'move down')
                 break
             }
-	        case 'insertAbove-text': {
+            case 'insertAbove-text': {
                 const newBlock = new MutableTextBlock()
                 newBlock.parentId = cardId
 
@@ -455,24 +457,24 @@ export default class CardDetail extends React.Component<Props, State> {
                 newBlock.order = OctoUtils.getOrderBefore(block, cardTree.contents)
                 Utils.log(`insert block ${block.id}, order: ${block.order}`)
                 mutator.insertBlock(newBlock, 'insert card text')
-	            break
+                break
             }
-	        case 'insertAbove-image': {
-	            Utils.selectLocalFile(
-	                (file) => {
-	                    mutator.createImageBlock(cardId, file, OctoUtils.getOrderBefore(block, cardTree.contents))
+            case 'insertAbove-image': {
+                Utils.selectLocalFile(
+                    (file) => {
+                        mutator.createImageBlock(cardId, file, OctoUtils.getOrderBefore(block, cardTree.contents))
                     },
                     '.jpg,.jpeg,.png')
 
-	            break
-	        }
+                break
+            }
             case 'delete': {
                 mutator.deleteBlock(block)
                 break
-	        }
             }
-	    }
-	    OldMenu.shared.showAtElement(e.target as HTMLElement)
+            }
+        }
+        OldMenu.shared.showAtElement(e.target as HTMLElement)
     }
 
     private iconClicked(e: React.MouseEvent) {
@@ -481,18 +483,18 @@ export default class CardDetail extends React.Component<Props, State> {
 
         OldMenu.shared.options = [
             {id: 'random', name: 'Random'},
-	        {id: 'remove', name: 'Remove Icon'},
+            {id: 'remove', name: 'Remove Icon'},
         ]
         OldMenu.shared.onMenuClicked = (optionId: string, type?: string) => {
-	        switch (optionId) {
+            switch (optionId) {
             case 'remove':
                 mutator.changeIcon(card, undefined, 'remove icon')
-	            break
-	        case 'random':
+                break
+            case 'random':
                 const newIcon = BlockIcons.shared.randomIcon()
                 mutator.changeIcon(card, newIcon)
-	            break
-	        }
+                break
+            }
         }
         OldMenu.shared.showAtElement(e.target as HTMLElement)
     }

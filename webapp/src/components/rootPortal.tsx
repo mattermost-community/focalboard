@@ -13,11 +13,11 @@ export default class RootPortal extends React.PureComponent<Props> {
     el: HTMLDivElement
 
     static propTypes = {
-	    children: PropTypes.node,
+        children: PropTypes.node,
     }
 
     constructor(props: Props) {
-	    super(props)
+        super(props)
         this.el = document.createElement('div')
     }
 
@@ -25,20 +25,20 @@ export default class RootPortal extends React.PureComponent<Props> {
         const rootPortal = document.getElementById('root-portal')
         if (rootPortal) {
             rootPortal.appendChild(this.el)
-	    }
+        }
     }
 
     componentWillUnmount() {
-	    const rootPortal = document.getElementById('root-portal')
-	    if (rootPortal) {
+        const rootPortal = document.getElementById('root-portal')
+        if (rootPortal) {
             rootPortal.removeChild(this.el)
         }
     }
 
     render() {
         return ReactDOM.createPortal(
-	        this.props.children,
+            this.props.children,
             this.el,
-	    )
+        )
     }
 }

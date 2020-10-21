@@ -1,15 +1,15 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import { Archiver } from '../archiver'
-import { Board, MutableBoard } from '../blocks/board'
-import { BoardTree } from '../viewModel/boardTree'
+
+import {Archiver} from '../archiver'
+import {Board, MutableBoard} from '../blocks/board'
+import {BoardTree} from '../viewModel/boardTree'
 import mutator from '../mutator'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
-import { WorkspaceTree } from '../viewModel/workspaceTree'
-import { BoardView } from '../blocks/boardView'
-
+import {WorkspaceTree} from '../viewModel/workspaceTree'
+import {BoardView} from '../blocks/boardView'
 
 type Props = {
     showBoard: (id: string) => void
@@ -32,11 +32,16 @@ class Sidebar extends React.Component<Props> {
                 {
                     boards.map((board) => {
                         const displayTitle = board.title || '(Untitled Board)'
-                        const boardViews = views.filter(view => view.parentId === board.id)
+                        const boardViews = views.filter((view) => view.parentId === board.id)
                         return (
                             <div key={board.id}>
                                 <div className='octo-sidebar-item octo-hover-container'>
-                                    <div className='octo-sidebar-title' onClick={() => { this.boardClicked(board) }}>
+                                    <div
+                                        className='octo-sidebar-title'
+                                        onClick={() => {
+                                            this.boardClicked(board)
+                                        }}
+                                    >
                                         {board.icon ? `${board.icon} ${displayTitle}` : displayTitle}
                                     </div>
                                     <div className='octo-spacer'/>
@@ -63,12 +68,20 @@ class Sidebar extends React.Component<Props> {
                                         </Menu>
                                     </MenuWrapper>
                                 </div>
-                                {boardViews.map(view => {
-                                    return <div key={view.id} className='octo-sidebar-item subitem octo-hover-container'>
-                                        <div className='octo-sidebar-title' onClick={() => { this.viewClicked(board, view) }}>
+                                {boardViews.map((view) => {
+                                    return (<div
+                                        key={view.id}
+                                        className='octo-sidebar-item subitem octo-hover-container'
+                                    >
+                                        <div
+                                            className='octo-sidebar-title'
+                                            onClick={() => {
+                                                this.viewClicked(board, view)
+                                            }}
+                                        >
                                             {view.title || '(Untitled View)'}
                                         </div>
-                                    </div>
+                                    </div>)
                                 })}
                             </div>
                         )
@@ -136,4 +149,4 @@ class Sidebar extends React.Component<Props> {
     }
 }
 
-export { Sidebar }
+export {Sidebar}

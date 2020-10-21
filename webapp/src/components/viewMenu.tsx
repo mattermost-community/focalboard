@@ -17,38 +17,38 @@ type Props = {
 
 export default class ViewMenu extends React.Component<Props> {
     handleDeleteView = async (id: string) => {
-	    const {board, boardTree, showView} = this.props
+        const {board, boardTree, showView} = this.props
         Utils.log('deleteView')
-	    const view = boardTree.activeView
-	    const nextView = boardTree.views.find((o) => o !== view)
+        const view = boardTree.activeView
+        const nextView = boardTree.views.find((o) => o !== view)
         await mutator.deleteBlock(view, 'delete view')
-	    showView(nextView.id)
+        showView(nextView.id)
     }
 
     handleViewClick = (id: string) => {
         const {boardTree, showView} = this.props
         Utils.log('view ' + id)
-	    const view = boardTree.views.find((o) => o.id === id)
-	    showView(view.id)
+        const view = boardTree.views.find((o) => o.id === id)
+        showView(view.id)
     }
 
     handleAddViewBoard = async (id: string) => {
         const {board, boardTree, showView} = this.props
         Utils.log('addview-board')
-	    const view = new MutableBoardView()
-	    view.title = 'Board View'
+        const view = new MutableBoardView()
+        view.title = 'Board View'
         view.viewType = 'board'
         view.parentId = board.id
 
         const oldViewId = boardTree.activeView.id
 
         await mutator.insertBlock(
-	        view,
-	        'add view',
-	        async () => {
+            view,
+            'add view',
+            async () => {
                 showView(view.id)
             },
-	        async () => {
+            async () => {
                 showView(oldViewId)
             })
     }
@@ -56,19 +56,19 @@ export default class ViewMenu extends React.Component<Props> {
     handleAddViewTable = async (id: string) => {
         const {board, boardTree, showView} = this.props
 
-	    Utils.log('addview-table')
-	    const view = new MutableBoardView()
+        Utils.log('addview-table')
+        const view = new MutableBoardView()
         view.title = 'Table View'
-	    view.viewType = 'table'
-	    view.parentId = board.id
+        view.viewType = 'table'
+        view.parentId = board.id
         view.visiblePropertyIds = board.cardProperties.map((o) => o.id)
 
-	    const oldViewId = boardTree.activeView.id
+        const oldViewId = boardTree.activeView.id
 
         await mutator.insertBlock(
             view,
-	        'add view',
-	        async () => {
+            'add view',
+            async () => {
                 showView(view.id)
             },
             async () => {
@@ -77,7 +77,7 @@ export default class ViewMenu extends React.Component<Props> {
     }
 
     render() {
-	    const {boardTree} = this.props
+        const {boardTree} = this.props
         return (
             <Menu>
                 {boardTree.views.map((view) => (<Menu.Text

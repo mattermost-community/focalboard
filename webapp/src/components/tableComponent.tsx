@@ -48,26 +48,26 @@ class TableComponent extends React.Component<Props, State> {
     }
 
     componentDidUpdate(prevPros: Props, prevState: State) {
-	    if (this.state.isSearching && !prevState.isSearching) {
+        if (this.state.isSearching && !prevState.isSearching) {
             this.searchFieldRef.current.focus()
         }
     }
 
     render() {
-	    const {boardTree, showView} = this.props
+        const {boardTree, showView} = this.props
 
-	    if (!boardTree || !boardTree.board) {
+        if (!boardTree || !boardTree.board) {
             return (
                 <div>Loading...</div>
-	        )
-	    }
+            )
+        }
 
-	    const {board, cards, activeView} = boardTree
+        const {board, cards, activeView} = boardTree
 
         const hasFilter = activeView.filter && activeView.filter.filters?.length > 0
-	    const hasSort = activeView.sortOptions.length > 0
+        const hasSort = activeView.sortOptions.length > 0
 
-	    this.cardIdToRowMap.clear()
+        this.cardIdToRowMap.clear()
 
         return (
             <div className='octo-app'>
@@ -92,7 +92,7 @@ class TableComponent extends React.Component<Props, State> {
                         <Button
                             style={{display: (!board.icon && this.state.isHoverOnCover) ? null : 'none'}}
                             onClick={() => {
-	                            const newIcon = BlockIcons.shared.randomIcon()
+                                const newIcon = BlockIcons.shared.randomIcon()
                                 mutator.changeIcon(board, newIcon)
                             }}
                         >Add Icon</Button>
@@ -268,19 +268,19 @@ class TableComponent extends React.Component<Props, State> {
                                 const openButonRef = React.createRef<HTMLDivElement>()
                                 const tableRowRef = React.createRef<TableRow>()
 
-	                            let focusOnMount = false
+                                let focusOnMount = false
                                 if (this.cardIdToFocusOnRender && this.cardIdToFocusOnRender === card.id) {
-	                                this.cardIdToFocusOnRender = undefined
+                                    this.cardIdToFocusOnRender = undefined
                                     focusOnMount = true
-	                            }
+                                }
 
-	                            const tableRow = (<TableRow
-    key={card.id}
-    ref={tableRowRef}
-    boardTree={boardTree}
-    card={card}
-    focusOnMount={focusOnMount}
-    onKeyDown={(e) => {
+                                const tableRow = (<TableRow
+                                    key={card.id}
+                                    ref={tableRowRef}
+                                    boardTree={boardTree}
+                                    card={card}
+                                    focusOnMount={focusOnMount}
+                                    onKeyDown={(e) => {
                                         if (e.keyCode === 13) {
                                             // Enter: Insert new card if on last row
                                             if (cards.length > 0 && cards[cards.length - 1] === card) {
@@ -288,7 +288,7 @@ class TableComponent extends React.Component<Props, State> {
                                             }
                                         }
                                     }}
-	                                              />)
+                                                  />)
 
                                 this.cardIdToRowMap.set(card.id, tableRowRef)
 
@@ -311,7 +311,7 @@ class TableComponent extends React.Component<Props, State> {
                     </div>
                 </div >
             </div >
-	    )
+        )
     }
 
     private async propertiesClicked(e: React.MouseEvent) {
@@ -319,25 +319,25 @@ class TableComponent extends React.Component<Props, State> {
         const {activeView} = boardTree
 
         const selectProperties = boardTree.board.cardProperties
-	    OldMenu.shared.options = selectProperties.map((o) => {
+        OldMenu.shared.options = selectProperties.map((o) => {
             const isVisible = activeView.visiblePropertyIds.includes(o.id)
-	        return {id: o.id, name: o.name, type: 'switch', isOn: isVisible}
+            return {id: o.id, name: o.name, type: 'switch', isOn: isVisible}
         })
 
-	    OldMenu.shared.onMenuToggled = async (id: string, isOn: boolean) => {
+        OldMenu.shared.onMenuToggled = async (id: string, isOn: boolean) => {
             const property = selectProperties.find((o) => o.id === id)
             Utils.assertValue(property)
-	        Utils.log(`Toggle property ${property.name} ${isOn}`)
+            Utils.log(`Toggle property ${property.name} ${isOn}`)
 
             let newVisiblePropertyIds = []
-	        if (activeView.visiblePropertyIds.includes(id)) {
-	            newVisiblePropertyIds = activeView.visiblePropertyIds.filter((o) => o !== id)
-	        } else {
+            if (activeView.visiblePropertyIds.includes(id)) {
+                newVisiblePropertyIds = activeView.visiblePropertyIds.filter((o) => o !== id)
+            } else {
                 newVisiblePropertyIds = [...activeView.visiblePropertyIds, id]
             }
             await mutator.changeViewVisibleProperties(activeView, newVisiblePropertyIds)
         }
-	    OldMenu.shared.showAtElement(e.target as HTMLElement)
+        OldMenu.shared.showAtElement(e.target as HTMLElement)
     }
 
     private filterClicked(e: React.MouseEvent) {
@@ -347,21 +347,21 @@ class TableComponent extends React.Component<Props, State> {
     private async optionsClicked(e: React.MouseEvent) {
         const {boardTree} = this.props
 
-	    OldMenu.shared.options = [
+        OldMenu.shared.options = [
             {id: 'exportCsv', name: 'Export to CSV'},
             {id: 'exportBoardArchive', name: 'Export board archive'},
-	    ]
+        ]
 
         OldMenu.shared.onMenuClicked = async (id: string) => {
             switch (id) {
             case 'exportCsv': {
-	            CsvExporter.exportTableCsv(boardTree)
+                CsvExporter.exportTableCsv(boardTree)
                 break
             }
-	        case 'exportBoardArchive': {
-	            Archiver.exportBoardTree(boardTree)
+            case 'exportBoardArchive': {
+                Archiver.exportBoardTree(boardTree)
                 break
-	        }
+            }
             }
         }
         OldMenu.shared.showAtElement(e.target as HTMLElement)
@@ -369,61 +369,61 @@ class TableComponent extends React.Component<Props, State> {
 
     private async headerClicked(e: React.MouseEvent<HTMLDivElement>, templateId: string) {
         const {boardTree} = this.props
-	    const {board} = boardTree
+        const {board} = boardTree
         const {activeView} = boardTree
 
-	    const options = [
+        const options = [
             {id: 'sortAscending', name: 'Sort ascending'},
             {id: 'sortDescending', name: 'Sort descending'},
             {id: 'insertLeft', name: 'Insert left'},
             {id: 'insertRight', name: 'Insert right'},
         ]
 
-	    if (templateId !== '__name') {
+        if (templateId !== '__name') {
             options.push({id: 'hide', name: 'Hide'})
-	        options.push({id: 'duplicate', name: 'Duplicate'})
-	        options.push({id: 'delete', name: 'Delete'})
+            options.push({id: 'duplicate', name: 'Duplicate'})
+            options.push({id: 'delete', name: 'Delete'})
         }
 
         OldMenu.shared.options = options
         OldMenu.shared.onMenuClicked = async (optionId: string, type?: string) => {
-	        switch (optionId) {
-	        case 'sortAscending': {
-	            const newSortOptions = [
+            switch (optionId) {
+            case 'sortAscending': {
+                const newSortOptions = [
                     {propertyId: templateId, reversed: false},
-	            ]
-	            await mutator.changeViewSortOptions(activeView, newSortOptions)
-	            break
-	        }
-	        case 'sortDescending': {
-	            const newSortOptions = [
-	                {propertyId: templateId, reversed: true},
-	            ]
-	            await mutator.changeViewSortOptions(activeView, newSortOptions)
+                ]
+                await mutator.changeViewSortOptions(activeView, newSortOptions)
                 break
             }
-	        case 'insertLeft': {
+            case 'sortDescending': {
+                const newSortOptions = [
+                    {propertyId: templateId, reversed: true},
+                ]
+                await mutator.changeViewSortOptions(activeView, newSortOptions)
+                break
+            }
+            case 'insertLeft': {
                 if (templateId !== '__name') {
-	                const index = board.cardProperties.findIndex((o) => o.id === templateId)
-	                await mutator.insertPropertyTemplate(boardTree, index)
+                    const index = board.cardProperties.findIndex((o) => o.id === templateId)
+                    await mutator.insertPropertyTemplate(boardTree, index)
                 } else {
-	                // TODO: Handle name column
-	            }
+                    // TODO: Handle name column
+                }
                 break
             }
             case 'insertRight': {
                 if (templateId !== '__name') {
                     const index = board.cardProperties.findIndex((o) => o.id === templateId) + 1
-	                await mutator.insertPropertyTemplate(boardTree, index)
-	            } else {
-	                // TODO: Handle name column
+                    await mutator.insertPropertyTemplate(boardTree, index)
+                } else {
+                    // TODO: Handle name column
                 }
-	            break
+                break
             }
             case 'duplicate': {
                 await mutator.duplicatePropertyTemplate(boardTree, templateId)
-	            break
-	        }
+                break
+            }
             case 'hide': {
                 const newVisiblePropertyIds = activeView.visiblePropertyIds.filter((o) => o !== templateId)
                 await mutator.changeViewVisibleProperties(activeView, newVisiblePropertyIds)
@@ -431,64 +431,64 @@ class TableComponent extends React.Component<Props, State> {
             }
             case 'delete': {
                 await mutator.deleteProperty(boardTree, templateId)
-	            break
+                break
             }
             default: {
                 Utils.assertFailure(`Unexpected menu option: ${optionId}`)
                 break
             }
             }
-	    }
+        }
         OldMenu.shared.showAtElement(e.target as HTMLElement)
     }
 
     focusOnCardTitle(cardId: string) {
         const tableRowRef = this.cardIdToRowMap.get(cardId)
         Utils.log(`focusOnCardTitle, ${tableRowRef?.current ?? 'undefined'}`)
-	    tableRowRef?.current.focusOnTitle()
+        tableRowRef?.current.focusOnTitle()
     }
 
     async addCard(show = false) {
         const {boardTree} = this.props
 
-	    const card = new MutableCard()
-	    card.parentId = boardTree.board.id
-	    card.icon = BlockIcons.shared.randomIcon()
-	    await mutator.insertBlock(
-	        card,
+        const card = new MutableCard()
+        card.parentId = boardTree.board.id
+        card.icon = BlockIcons.shared.randomIcon()
+        await mutator.insertBlock(
+            card,
             'add card',
             async () => {
                 if (show) {
                     this.setState({shownCard: card})
-	            } else {
-	                // Focus on this card's title inline on next render
+                } else {
+                    // Focus on this card's title inline on next render
                     this.cardIdToFocusOnRender = card.id
-	            }
-	        },
-	    )
+                }
+            },
+        )
     }
 
     private async onDropToColumn(template: IPropertyTemplate) {
-	    const {draggedHeaderTemplate} = this
+        const {draggedHeaderTemplate} = this
         if (!draggedHeaderTemplate) {
             return
         }
 
-	    const {boardTree} = this.props
+        const {boardTree} = this.props
         const {board} = boardTree
 
-	    Utils.assertValue(mutator)
+        Utils.assertValue(mutator)
         Utils.assertValue(boardTree)
 
         Utils.log(`ondrop. Source column: ${draggedHeaderTemplate.name}, dest column: ${template.name}`)
 
-	    // Move template to new index
-	    const destIndex = template ? board.cardProperties.indexOf(template) : 0
+        // Move template to new index
+        const destIndex = template ? board.cardProperties.indexOf(template) : 0
         await mutator.changePropertyTemplateOrder(board, draggedHeaderTemplate, destIndex)
     }
 
     onSearchKeyDown(e: React.KeyboardEvent) {
-        if (e.keyCode === 27) {		// ESC: Clear search
+        if (e.keyCode === 27) { // ESC: Clear search
             this.searchFieldRef.current.text = ''
             this.setState({...this.state, isSearching: false})
             this.props.setSearchText(undefined)
@@ -497,7 +497,7 @@ class TableComponent extends React.Component<Props, State> {
     }
 
     searchChanged(text?: string) {
-	    this.props.setSearchText(text)
+        this.props.setSearchText(text)
     }
 }
 

@@ -24,23 +24,23 @@ class Switch extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
-	    this.state = {isOn: props.isOn}
+        this.state = {isOn: props.isOn}
     }
 
     focus() {
-	    this.elementRef.current.focus()
+        this.elementRef.current.focus()
 
         // Put cursor at end
         document.execCommand('selectAll', false, null)
-	    document.getSelection().collapseToEnd()
+        document.getSelection().collapseToEnd()
     }
 
     render() {
         const {style} = this.props
-	    const {isOn} = this.state
+        const {isOn} = this.state
 
         const className = isOn ? 'octo-switch on' : 'octo-switch'
-	    const element =
+        const element =
     (<div
         ref={this.elementRef}
         className={className}
@@ -59,12 +59,12 @@ class Switch extends React.Component<Props, State> {
     }
 
     private async onClicked() {
-	    const newIsOn = !this.state.isOn
-	    this.setState({isOn: newIsOn})
+        const newIsOn = !this.state.isOn
+        this.setState({isOn: newIsOn})
 
-	    const {onChanged} = this.props
+        const {onChanged} = this.props
 
-	    onChanged(newIsOn)
+        onChanged(newIsOn)
     }
 }
 

@@ -10,12 +10,12 @@ class FilterGroup {
     filters: (FilterClause | FilterGroup)[] = []
 
     static isAnInstanceOf(object: any): object is FilterGroup {
-	    return 'innerOperation' in object && 'filters' in object
+        return 'innerOperation' in object && 'filters' in object
     }
 
     constructor(o: any = {}) {
         this.operation = o.operation || 'and'
-	    this.filters = o.filters ?
+        this.filters = o.filters ?
             o.filters.map((p: any) => {
                 if (FilterGroup.isAnInstanceOf(p)) {
                     return new FilterGroup(p)

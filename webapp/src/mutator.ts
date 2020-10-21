@@ -97,20 +97,20 @@ class Mutator {
     }
 
     async changeIcon(block: Card | Board, icon: string, description = 'change icon') {
-        var newBlock: IBlock
+        let newBlock: IBlock
         switch (block.type) {
-            case 'card': {
-                const card = new MutableCard(block)
-                card.icon = icon
-                newBlock = card
-                break
-            }
-            case 'board': {
-                const board = new MutableBoard(block)
-                board.icon = icon
-                newBlock = board
-                break
-            }
+        case 'card': {
+            const card = new MutableCard(block)
+            card.icon = icon
+            newBlock = card
+            break
+        }
+        case 'board': {
+            const board = new MutableBoard(block)
+            board.icon = icon
+            newBlock = board
+            break
+        }
         }
 
         await this.updateBlock(newBlock, block, description)
@@ -265,7 +265,7 @@ class Mutator {
         Utils.assert(board.cardProperties.includes(template))
 
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find(o => o.id === template.id)
+        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)
         newTemplate.options.push(option)
 
         await this.updateBlock(newBoard, board, description)
@@ -275,8 +275,8 @@ class Mutator {
         const {board} = boardTree
 
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find(o => o.id === template.id)
-        newTemplate.options = newTemplate.options.filter(o => o.value !== option.value)
+        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)
+        newTemplate.options = newTemplate.options.filter((o) => o.value !== option.value)
 
         await this.updateBlock(newBoard, board, 'delete option')
     }
@@ -286,7 +286,7 @@ class Mutator {
         Utils.log(`srcIndex: ${srcIndex}, destIndex: ${destIndex}`)
 
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find(o => o.id === template.id)
+        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)
         newTemplate.options.splice(destIndex, 0, newTemplate.options.splice(srcIndex, 1)[0])
 
         await this.updateBlock(newBoard, board, 'reorder options')
@@ -299,8 +299,8 @@ class Mutator {
         const oldBlocks: IBlock[] = [board]
 
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find(o => o.id === propertyTemplate.id)
-        const newOption = newTemplate.options.find(o => o.value === oldValue)
+        const newTemplate = newBoard.cardProperties.find((o) => o.id === propertyTemplate.id)
+        const newOption = newTemplate.options.find((o) => o.value === oldValue)
         newOption.value = value
         const changedBlocks: IBlock[] = [newBoard]
 
@@ -323,8 +323,8 @@ class Mutator {
 
     async changePropertyOptionColor(board: Board, template: IPropertyTemplate, option: IPropertyOption, color: string) {
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find(o => o.id === template.id)
-        const newOption = newTemplate.options.find(o => o.value === option.value)
+        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)
+        const newOption = newTemplate.options.find((o) => o.value === option.value)
         newOption.color = color
         await this.updateBlock(newBoard, board, 'change option color')
     }
@@ -337,7 +337,7 @@ class Mutator {
 
     async changePropertyType(board: Board, propertyTemplate: IPropertyTemplate, type: PropertyType) {
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find(o => o.id === propertyTemplate.id)
+        const newTemplate = newBoard.cardProperties.find((o) => o.id === propertyTemplate.id)
         newTemplate.type = type
         await this.updateBlock(newBoard, board, 'change property type')
     }
@@ -356,7 +356,7 @@ class Mutator {
         await this.updateBlock(newView, view, 'filter')
     }
 
-    async changeViewVisibleProperties(view: BoardView, visiblePropertyIds: string[], description: string = 'show / hide property') {
+    async changeViewVisibleProperties(view: BoardView, visiblePropertyIds: string[], description = 'show / hide property') {
         const newView = new MutableBoardView(view)
         newView.visiblePropertyIds = visiblePropertyIds
         await this.updateBlock(newView, view, description)

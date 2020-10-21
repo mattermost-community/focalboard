@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import { IOrderedBlock, MutableOrderedBlock } from './orderedBlock'
+import {IOrderedBlock, MutableOrderedBlock} from './orderedBlock'
 
 interface ImageBlock extends IOrderedBlock {
     readonly url: string

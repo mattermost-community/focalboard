@@ -1,7 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import { MutableBlock } from '../blocks/block'
+
+import {MutableBlock} from '../blocks/block'
 
 import {IPropertyTemplate} from '../blocks/board'
 import {Card} from '../blocks/card'
@@ -66,8 +67,8 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
                     <div key='__title'>{card.title || 'Untitled'}</div>
                 </div>
                 {visiblePropertyTemplates.map((template) => {
-			        return OctoUtils.propertyValueReadonlyElement(card, template, '')
-			    })}
+                    return OctoUtils.propertyValueReadonlyElement(card, template, '')
+                })}
             </div>)
 
         return element
