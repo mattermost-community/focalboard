@@ -47,18 +47,22 @@ class OctoClient {
 	    })
     }
 
-    async getBlocks(parentId?: string, type?: string): Promise<IBlock[]> {
+    async getBlocksWithParent(parentId: string, type?: string): Promise<IBlock[]> {
         let path: string
-        if (parentId && type) {
+        if (type) {
 	        path = `/api/v1/blocks?parent_id=${encodeURIComponent(parentId)}&type=${encodeURIComponent(type)}`
-	    } else if (parentId) {
-	        path = `/api/v1/blocks?parent_id=${encodeURIComponent(parentId)}`
-        } else if (type) {
-            path = `/api/v1/blocks?type=${encodeURIComponent(type)}`
         } else {
-	        path = '/api/v1/blocks'
+	        path = `/api/v1/blocks?parent_id=${encodeURIComponent(parentId)}`
         }
+        return this.getBlocksWithPath(path)
+    }
 
+    async getBlocksWithType(type: string): Promise<IBlock[]> {
+        const path = `/api/v1/blocks?type=${encodeURIComponent(type)}`
+        return this.getBlocksWithPath(path)
+    }
+
+    private async getBlocksWithPath(path: string): Promise<IBlock[]> {
 	    const response = await fetch(this.serverUrl + path)
         const blocks = (await response.json() || []) as IMutableBlock[]
         this.fixBlocks(blocks)

@@ -141,8 +141,8 @@ export default class BoardPage extends React.Component<Props, State> {
                 <WorkspaceComponent
             workspaceTree={workspaceTree}
             boardTree={this.state.boardTree}
-            showView={(id) => {
-                        this.showView(id)
+            showView={(id, boardId) => {
+                        this.showView(id, boardId)
                     }}
             showBoard={(id) => {
                         this.showBoard(id)
@@ -218,10 +218,15 @@ export default class BoardPage extends React.Component<Props, State> {
         this.attachToBoard(boardId)
     }
 
-    showView(viewId: string) {
-        this.state.boardTree.setActiveView(viewId)
-        this.setState({...this.state, viewId})
-        const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + `?id=${encodeURIComponent(this.state.boardId)}&v=${encodeURIComponent(viewId)}`
+    showView(viewId: string, boardId: string = this.state.boardId) {
+        if (this.state.boardId !== boardId) {
+            this.attachToBoard(boardId, viewId)
+        } else {
+            this.state.boardTree.setActiveView(viewId)
+            this.setState({...this.state, viewId})
+        }
+
+        const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + `?id=${encodeURIComponent(boardId)}&v=${encodeURIComponent(viewId)}`
 	    window.history.pushState({path: newUrl}, '', newUrl)
     }
 

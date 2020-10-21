@@ -8,10 +8,12 @@ import mutator from '../mutator'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 import { WorkspaceTree } from '../viewModel/workspaceTree'
+import { BoardView } from '../blocks/boardView'
 
 
 type Props = {
     showBoard: (id: string) => void
+    showView: (id: string, boardId?: string) => void
     workspaceTree: WorkspaceTree,
     boardTree?: BoardTree
 }
@@ -23,47 +25,51 @@ class Sidebar extends React.Component<Props> {
             return <div/>
         }
 
-        const {boards} = workspaceTree
+        const {boards, views} = workspaceTree
 
         return (
             <div className='octo-sidebar'>
                 {
                     boards.map((board) => {
                         const displayTitle = board.title || '(Untitled Board)'
+                        const boardViews = views.filter(view => view.parentId === board.id)
                         return (
-                            <div
-                                key={board.id}
-                                className='octo-sidebar-item octo-hover-container'
-                            >
-                                <div
-                                    className='octo-sidebar-title'
-                                    onClick={() => {
-                                        this.boardClicked(board)
-                                    }}
-                                >{board.icon ? `${board.icon} ${displayTitle}` : displayTitle}</div>
-                                <div className='octo-spacer'/>
-                                <MenuWrapper>
-                                    <div className='octo-button square octo-hover-item'><div className='imageOptions'/></div>
-                                    <Menu>
-                                        <Menu.Text
-                                            id='delete'
-                                            name='Delete board'
-                                            onClick={async () => {
-                                                const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id).id : undefined
-                                                mutator.deleteBlock(
-                                                    board,
-                                                    'delete block',
-                                                    async () => {
-                                                        nextBoardId && this.props.showBoard(nextBoardId!)
-                                                    },
-                                                    async () => {
-                                                        this.props.showBoard(board.id)
-                                                    },
-                                                )
-                                            }}
-                                        />
-                                    </Menu>
-                                </MenuWrapper>
+                            <div key={board.id}>
+                                <div className='octo-sidebar-item octo-hover-container'>
+                                    <div className='octo-sidebar-title' onClick={() => { this.boardClicked(board) }}>
+                                        {board.icon ? `${board.icon} ${displayTitle}` : displayTitle}
+                                    </div>
+                                    <div className='octo-spacer'/>
+                                    <MenuWrapper>
+                                        <div className='octo-button square octo-hover-item'><div className='imageOptions'/></div>
+                                        <Menu>
+                                            <Menu.Text
+                                                id='delete'
+                                                name='Delete board'
+                                                onClick={async () => {
+                                                    const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id).id : undefined
+                                                    mutator.deleteBlock(
+                                                        board,
+                                                        'delete block',
+                                                        async () => {
+                                                            nextBoardId && this.props.showBoard(nextBoardId!)
+                                                        },
+                                                        async () => {
+                                                            this.props.showBoard(board.id)
+                                                        },
+                                                    )
+                                                }}
+                                            />
+                                        </Menu>
+                                    </MenuWrapper>
+                                </div>
+                                {boardViews.map(view => {
+                                    return <div key={view.id} className='octo-sidebar-item subitem octo-hover-container'>
+                                        <div className='octo-sidebar-title' onClick={() => { this.viewClicked(board, view) }}>
+                                            {view.title || '(Untitled View)'}
+                                        </div>
+                                    </div>
+                                })}
                             </div>
                         )
                     })
@@ -105,6 +111,10 @@ class Sidebar extends React.Component<Props> {
         this.props.showBoard(board.id)
     }
 
+    private viewClicked(board: Board, view: BoardView) {
+        this.props.showView(view.id, board.id)
+    }
+
     async addBoardClicked() {
         const {boardTree, showBoard} = this.props
 
@@ -127,4 +137,3 @@ class Sidebar extends React.Component<Props> {
 }
 
 export { Sidebar }
-

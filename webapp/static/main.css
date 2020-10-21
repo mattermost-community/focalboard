@@ -92,12 +92,13 @@ hr {
 }
 
 .octo-sidebar {
+    flex: 0 0 230px;
+
 	display: flex;
 	flex-direction: column;
 
 	min-height: 100%;
 	background-color: rgb(247, 246, 243);
-	min-width: 230px;
 	padding: 20px 0;
 }
 
@@ -107,6 +108,12 @@ hr {
 
 	font-weight: 500;
 	padding: 3px 20px;
+}
+
+.octo-sidebar-item.subitem {
+    color: rgba(25, 23, 18, 0.6);
+	font-weight: 400;
+    margin-left: 20px;
 }
 
 .octo-sidebar-title {

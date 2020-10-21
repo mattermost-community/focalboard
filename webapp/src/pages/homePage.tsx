@@ -28,7 +28,7 @@ export default class HomePage extends React.Component<Props, State> {
     }
 
     loadBoards = async () => {
-	    const boards = await octoClient.getBlocks(null, 'board')
+	    const boards = await octoClient.getBlocksWithType('board')
         this.setState({boards})
     }
 

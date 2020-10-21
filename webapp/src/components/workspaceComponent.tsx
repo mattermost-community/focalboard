@@ -14,20 +14,21 @@ type Props = {
     workspaceTree: WorkspaceTree
     boardTree?: BoardTree
     showBoard: (id: string) => void
-    showView: (id: string) => void
+    showView: (id: string, boardId?: string) => void
     showFilter: (el: HTMLElement) => void
     setSearchText: (text: string) => void
 }
 
 class WorkspaceComponent extends React.Component<Props> {
     render() {
-        const {boardTree, workspaceTree, showBoard} = this.props
+        const {boardTree, workspaceTree, showBoard, showView} = this.props
 
         Utils.assert(workspaceTree)
         const element =
             (<div className='octo-workspace'>
                 <Sidebar
                     showBoard={showBoard}
+                    showView={showView}
                     workspaceTree={workspaceTree}
                     boardTree={boardTree}
                 />
