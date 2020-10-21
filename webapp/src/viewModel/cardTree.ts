@@ -1,10 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Card} from './blocks/card'
-import { IOrderedBlock } from './blocks/orderedBlock'
-import octoClient from './octoClient'
-import {IBlock} from './octoTypes'
-import {OctoUtils} from './octoUtils'
+import {Card} from '../blocks/card'
+import { IOrderedBlock } from '../blocks/orderedBlock'
+import octoClient from '../octoClient'
+import {IBlock} from '../octoTypes'
+import {OctoUtils} from '../octoUtils'
 
 interface CardTree {
 	readonly card: Card

@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {BoardTree} from '../boardTree'
+import {BoardTree} from '../viewModel/boardTree'
 import {FilterClause, FilterCondition} from '../filterClause'
 import {FilterGroup} from '../filterGroup'
 import {Menu} from '../menu'

@@ -2,9 +2,9 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {BoardTree} from '../boardTree'
+import {BoardTree} from '../viewModel/boardTree'
 import {Utils} from '../utils'
-import {WorkspaceTree} from '../workspaceTree'
+import {WorkspaceTree} from '../viewModel/workspaceTree'
 
 import {BoardComponent} from './boardComponent'
 import {Sidebar} from './sidebar'

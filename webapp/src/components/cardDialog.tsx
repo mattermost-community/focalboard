@@ -3,7 +3,7 @@
 import React from 'react'
 
 import {Card} from '../blocks/card'
-import {BoardTree} from '../boardTree'
+import {BoardTree} from '../viewModel/boardTree'
 import mutator from '../mutator'
 import Menu from '../widgets/menu'
 

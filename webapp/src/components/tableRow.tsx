@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {BoardTree} from '../boardTree'
+import {BoardTree} from '../viewModel/boardTree'
 import {Card} from '../blocks/card'
 import mutator from '../mutator'
 import {OctoUtils} from '../octoUtils'

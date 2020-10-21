@@ -4,7 +4,7 @@ import React from 'react'
 
 import {Board} from '../blocks/board'
 import {BoardView, MutableBoardView} from '../blocks/boardView'
-import {BoardTree} from '../boardTree'
+import {BoardTree} from '../viewModel/boardTree'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import Menu from '../widgets/menu'

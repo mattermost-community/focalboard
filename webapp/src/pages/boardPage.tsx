@@ -4,15 +4,14 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import {BoardView} from '../blocks/boardView'
-import {BoardTree, MutableBoardTree} from '../boardTree'
-import {CardTree} from '../cardTree'
+import {MutableBoardTree} from '../viewModel/boardTree'
 import {FilterComponent} from '../components/filterComponent'
 import {WorkspaceComponent} from '../components/workspaceComponent'
 import {FlashMessage} from '../flashMessage'
 import mutator from '../mutator'
 import {OctoListener} from '../octoListener'
 import {Utils} from '../utils'
-import {MutableWorkspaceTree, WorkspaceTree} from '../workspaceTree'
+import {MutableWorkspaceTree} from '../viewModel/workspaceTree'
 
 type Props = {
 }

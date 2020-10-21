@@ -1,14 +1,13 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {MutableBlock} from './blocks/block'
-import {Board, IPropertyOption, IPropertyTemplate, MutableBoard} from './blocks/board'
-import {BoardView, MutableBoardView} from './blocks/boardView'
-import {Card} from './blocks/card'
-import {CardFilter} from './cardFilter'
-import octoClient from './octoClient'
-import {IBlock} from './octoTypes'
-import {OctoUtils} from './octoUtils'
-import {Utils} from './utils'
+import {Board, IPropertyOption, IPropertyTemplate, MutableBoard} from '../blocks/board'
+import {BoardView, MutableBoardView} from '../blocks/boardView'
+import {Card} from '../blocks/card'
+import {CardFilter} from '../cardFilter'
+import octoClient from '../octoClient'
+import {IBlock} from '../octoTypes'
+import {OctoUtils} from '../octoUtils'
+import {Utils} from '../utils'
 
 type Group = { option: IPropertyOption, cards: Card[] }
 

@@ -3,11 +3,11 @@
 import React from 'react'
 import { Archiver } from '../archiver'
 import { Board, MutableBoard } from '../blocks/board'
-import { BoardTree } from '../boardTree'
+import { BoardTree } from '../viewModel/boardTree'
 import mutator from '../mutator'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
-import { WorkspaceTree } from '../workspaceTree'
+import { WorkspaceTree } from '../viewModel/workspaceTree'
 
 
 type Props = {

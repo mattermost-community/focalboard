@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {BoardView} from './blocks/boardView'
-import {BoardTree} from './boardTree'
+import {BoardTree} from './viewModel/boardTree'
 import {OctoUtils} from './octoUtils'
 import {Utils} from './utils'
 
