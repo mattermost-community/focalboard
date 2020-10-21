@@ -3,6 +3,7 @@ module github.com/mattermost/mattermost-octo-tasks/server
 go 1.15
 
 require (
+	github.com/Masterminds/squirrel v1.4.0
 	github.com/go-ldap/ldap v3.0.3+incompatible // indirect
 	github.com/golang-migrate/migrate v3.5.4+incompatible
 	github.com/golang-migrate/migrate/v4 v4.13.0

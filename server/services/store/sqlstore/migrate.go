@@ -1,8 +1,6 @@
 package sqlstore
 
 import (
-	"fmt"
-
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
@@ -15,7 +13,6 @@ import (
 )
 
 func (s *SQLStore) Migrate() error {
-	fmt.Println("HOLA")
 	var driver database.Driver
 	var err error
 	var bresource *bindata.AssetSource
