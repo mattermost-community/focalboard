@@ -92,7 +92,7 @@ class OctoListener {
                 default:
                     Utils.logError(`Unexpected action: ${message.action}`)
                 }
-            } catch (e) {
+            } catch (err) {
                 Utils.log('message is not an object')
             }
         }

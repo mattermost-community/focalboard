@@ -3,7 +3,7 @@
 import React from 'react'
 
 import {Board} from '../blocks/board'
-import {BoardView, MutableBoardView} from '../blocks/boardView'
+import {MutableBoardView} from '../blocks/boardView'
 import {BoardTree} from '../viewModel/boardTree'
 import mutator from '../mutator'
 import {Utils} from '../utils'
@@ -16,8 +16,8 @@ type Props = {
 }
 
 export default class ViewMenu extends React.Component<Props> {
-    handleDeleteView = async (id: string) => {
-        const {board, boardTree, showView} = this.props
+    handleDeleteView = async () => {
+        const {boardTree, showView} = this.props
         Utils.log('deleteView')
         const view = boardTree.activeView
         const nextView = boardTree.views.find((o) => o !== view)
@@ -32,7 +32,7 @@ export default class ViewMenu extends React.Component<Props> {
         showView(view.id)
     }
 
-    handleAddViewBoard = async (id: string) => {
+    handleAddViewBoard = async () => {
         const {board, boardTree, showView} = this.props
         Utils.log('addview-board')
         const view = new MutableBoardView()
@@ -53,7 +53,7 @@ export default class ViewMenu extends React.Component<Props> {
             })
     }
 
-    handleAddViewTable = async (id: string) => {
+    handleAddViewTable = async () => {
         const {board, boardTree, showView} = this.props
 
         Utils.log('addview-table')
@@ -80,12 +80,13 @@ export default class ViewMenu extends React.Component<Props> {
         const {boardTree} = this.props
         return (
             <Menu>
-                {boardTree.views.map((view) => (<Menu.Text
-                    key={view.id}
-                    id={view.id}
-                    name={view.title}
-                    onClick={this.handleViewClick}
-                />))}
+                {boardTree.views.map((view) => (
+                    <Menu.Text
+                        key={view.id}
+                        id={view.id}
+                        name={view.title}
+                        onClick={this.handleViewClick}
+                    />))}
                 <Menu.Separator/>
                 {boardTree.views.length > 1 && <Menu.Text
                     id='__deleteView'
