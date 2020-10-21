@@ -27,6 +27,9 @@ server-lint:
     fi; \
     cd server; golangci-lint run ./...
 
+server-test:
+	cd server; go test ./...
+
 watch-server:
 	cd server; modd
 
