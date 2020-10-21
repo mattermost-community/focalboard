@@ -30,7 +30,7 @@ export default class BoardPage extends React.Component<Props, State> {
     updateTitleTimeout: number
     updatePropertyLabelTimeout: number
 
-    private boardListener = new OctoListener()
+    private workspaceListener = new OctoListener()
 
     constructor(props: Props) {
         super(props)
@@ -90,7 +90,7 @@ export default class BoardPage extends React.Component<Props, State> {
     }
 
     componentDidMount() {
-	    document.addEventListener('keydown', this.undoRedoHandler)
+        document.addEventListener('keydown', this.undoRedoHandler)
 	    if (this.state.boardId) {
             this.attachToBoard(this.state.boardId, this.state.viewId)
 	    } else {
@@ -100,7 +100,7 @@ export default class BoardPage extends React.Component<Props, State> {
 
     componentWillUnmount() {
         Utils.log(`boardPage.componentWillUnmount: ${this.state.boardId}`)
-        this.boardListener.close()
+        this.workspaceListener.close()
 	    document.removeEventListener('keydown', this.undoRedoHandler)
     }
 
@@ -160,17 +160,6 @@ export default class BoardPage extends React.Component<Props, State> {
 
     private async attachToBoard(boardId: string, viewId?: string) {
 	    Utils.log(`attachToBoard: ${boardId}`)
-
-        if (!this.boardListener.isOpen) {
-            this.boardListener.open([boardId], (blockId: string) => {
-                Utils.log(`boardListener.onChanged: ${blockId}`)
-                this.sync()
-            })
-        } else {
-            this.boardListener.removeBlocks([this.state.boardId])
-            this.boardListener.addBlocks([boardId])
-        }
-
 	    this.sync(boardId, viewId)
     }
 
@@ -178,7 +167,12 @@ export default class BoardPage extends React.Component<Props, State> {
 	    const {workspaceTree} = this.state
         Utils.log(`sync start: ${boardId}`)
 
-	    await workspaceTree.sync()
+        await workspaceTree.sync()
+        const boardIds = workspaceTree.boards.map(o => o.id)
+	    this.workspaceListener.open(boardIds, async (blockId) => {
+            Utils.log(`workspaceListener.onChanged: ${blockId}`)
+            this.sync()
+        })
 
 	    if (boardId) {
 	        const boardTree = new MutableBoardTree(boardId)
