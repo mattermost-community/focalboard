@@ -1,7 +1,20 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IBlock} from '../octoTypes'
 import {Utils} from '../utils'
+
+interface IBlock {
+    readonly id: string
+    readonly parentId: string
+
+    readonly schema: number
+    readonly type: string
+    readonly title?: string
+    readonly fields: Readonly<Record<string, any>>
+
+    readonly createAt: number
+    readonly updateAt: number
+    readonly deleteAt: number
+}
 
 interface IMutableBlock extends IBlock {
     id: string
@@ -60,4 +73,4 @@ class MutableBlock implements IMutableBlock {
     }
 }
 
-export {IMutableBlock, MutableBlock}
+export {IBlock, IMutableBlock, MutableBlock}

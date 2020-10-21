@@ -14,7 +14,7 @@ import {BoardTree} from './viewModel/boardTree'
 import {Editable} from './components/editable'
 import {Menu} from './menu'
 import mutator from './mutator'
-import {IBlock} from './octoTypes'
+import {IBlock} from './blocks/block'
 import {Utils} from './utils'
 
 class OctoUtils {

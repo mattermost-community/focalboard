@@ -5,7 +5,7 @@ import {BoardView, MutableBoardView} from '../blocks/boardView'
 import {Card} from '../blocks/card'
 import {CardFilter} from '../cardFilter'
 import octoClient from '../octoClient'
-import {IBlock} from '../octoTypes'
+import {IBlock} from '../blocks/block'
 import {OctoUtils} from '../octoUtils'
 import {Utils} from '../utils'
 

@@ -9,7 +9,7 @@ import {IOrderedBlock, MutableOrderedBlock} from './blocks/orderedBlock'
 import {BoardTree} from './viewModel/boardTree'
 import {FilterGroup} from './filterGroup'
 import octoClient from './octoClient'
-import {IBlock} from './octoTypes'
+import {IBlock} from './blocks/block'
 import undoManager from './undomanager'
 import {Utils} from './utils'
 

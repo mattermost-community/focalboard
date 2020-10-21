@@ -3,7 +3,7 @@
 import {Card} from '../blocks/card'
 import { IOrderedBlock } from '../blocks/orderedBlock'
 import octoClient from '../octoClient'
-import {IBlock} from '../octoTypes'
+import {IBlock} from '../blocks/block'
 import {OctoUtils} from '../octoUtils'
 
 interface CardTree {

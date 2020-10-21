@@ -5,7 +5,7 @@ import { Archiver } from '../archiver'
 import { MutableBoard } from '../blocks/board'
 import Button from '../components/button'
 import octoClient from '../octoClient'
-import { IBlock } from '../octoTypes'
+import { IBlock } from '../blocks/block'
 import { Utils } from '../utils'
 
 

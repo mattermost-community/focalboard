@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import { IMutableBlock } from './blocks/block'
-import {IBlock} from './octoTypes'
+import {IBlock} from './blocks/block'
 import {Utils} from './utils'
 
 //

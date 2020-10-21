@@ -1,4 +1,4 @@
-import { IBlock } from "../octoTypes"
+import { IBlock } from "../blocks/block"
 import { MutableBlock } from "./block"
 
 interface IOrderedBlock extends IBlock {

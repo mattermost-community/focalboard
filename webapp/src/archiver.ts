@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import {BoardTree} from './viewModel/boardTree'
 import mutator from './mutator'
-import {IBlock} from './octoTypes'
+import {IBlock} from './blocks/block'
 import {Utils} from './utils'
 
 interface Archive {
