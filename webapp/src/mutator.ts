@@ -67,8 +67,6 @@ class Mutator {
     }
 
     async changeTitle(block: IBlock, title: string, description = 'change title') {
-        const oldValue = block.title
-
         const newBlock = new MutableBlock(block)
         newBlock.title = title
 
@@ -220,7 +218,6 @@ class Mutator {
 
     async changePropertyTemplateOrder(board: Board, template: IPropertyTemplate, destIndex: number) {
         const templates = board.cardProperties
-        const oldValue = templates
         const newValue = templates.slice()
 
         const srcIndex = templates.indexOf(template)
@@ -281,9 +278,7 @@ class Mutator {
     }
 
     async renameProperty(board: Board, propertyId: string, name: string) {
-        const oldBlocks: IBlock[] = [board]
         const newBoard = new MutableBoard(board)
-        const changedBlocks: IBlock[] = [newBoard]
 
         const template = newBoard.cardProperties.find((o) => o.id === propertyId)
         if (!template) {
@@ -295,10 +290,10 @@ class Mutator {
 
         await undoManager.perform(
             async () => {
-                await octoClient.updateBlocks(changedBlocks)
+                await octoClient.updateBlock(newBoard)
             },
             async () => {
-                await octoClient.updateBlocks(oldBlocks)
+                await octoClient.updateBlock(board)
             },
             'rename property',
         )
@@ -404,8 +399,6 @@ class Mutator {
     }
 
     async changePropertyOptionColor(board: Board, template: IPropertyTemplate, option: IPropertyOption, color: string) {
-        const oldValue = option.color
-
         const newBoard = new MutableBoard(board)
         const newTemplate = newBoard.cardProperties.find(o => o.id === template.id)
         const newOption = newTemplate.options.find(o => o.value === option.value)
@@ -423,8 +416,6 @@ class Mutator {
     }
 
     async changePropertyValue(card: Card, propertyId: string, value?: string, description = 'change property') {
-        const oldValue = card.properties[propertyId]
-
         const newCard = new MutableCard(card)
         newCard.properties[propertyId] = value
 
@@ -440,8 +431,6 @@ class Mutator {
     }
 
     async changePropertyType(board: Board, propertyTemplate: IPropertyTemplate, type: PropertyType) {
-        const oldValue = propertyTemplate.type
-
         const newBoard = new MutableBoard(board)
         const newTemplate = newBoard.cardProperties.find(o => o.id === propertyTemplate.id)
         newTemplate.type = type
@@ -460,8 +449,6 @@ class Mutator {
     // Views
 
     async changeViewSortOptions(view: BoardView, sortOptions: ISortOption[]) {
-        const oldValue = view.sortOptions
-
         const newView = new MutableBoardView(view)
         newView.sortOptions = sortOptions
 
@@ -477,8 +464,6 @@ class Mutator {
     }
 
     async changeViewFilter(view: BoardView, filter?: FilterGroup) {
-        const oldValue = view.filter
-
         const newView = new MutableBoardView(view)
         newView.filter = filter
 
@@ -494,8 +479,6 @@ class Mutator {
     }
 
     async changeViewVisibleProperties(view: BoardView, visiblePropertyIds: string[]) {
-        const oldValue = view.visiblePropertyIds
-
         const newView = new MutableBoardView(view)
         newView.visiblePropertyIds = visiblePropertyIds
 
@@ -511,8 +494,6 @@ class Mutator {
     }
 
     async changeViewGroupById(view: BoardView, groupById: string) {
-        const oldValue = view.groupById
-
         const newView = new MutableBoardView(view)
         newView.groupById = groupById
 
