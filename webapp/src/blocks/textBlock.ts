@@ -7,13 +7,6 @@ interface TextBlock extends IOrderedBlock {
 }
 
 class MutableTextBlock extends MutableOrderedBlock {
-    get order(): number {
-        return this.fields.order as number
-    }
-    set order(value: number) {
-        this.fields.order = value
-    }
-
     constructor(block: any = {}) {
         super(block)
         this.type = 'text'

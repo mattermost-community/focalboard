@@ -3,17 +3,10 @@
 import { IOrderedBlock, MutableOrderedBlock } from './orderedBlock'
 
 interface ImageBlock extends IOrderedBlock {
-
+    readonly url: string
 }
 
 class MutableImageBlock extends MutableOrderedBlock implements IOrderedBlock {
-    get order(): number {
-        return this.fields.order as number
-    }
-    set order(value: number) {
-        this.fields.order = value
-    }
-
     get url(): string {
         return this.fields.url as string
     }
