@@ -53,6 +53,11 @@ class OctoListener {
 
 	    ws.onmessage = (e) => {
             Utils.log(`OctoListener websocket onmessage. blockId: ${blockId}, data: ${e.data}`)
+	        if (ws !== this.ws) {
+                Utils.log(`Ignoring closed ws`)
+                return
+            }
+
             try {
 	            const message = JSON.parse(e.data)
 	            switch (message.action) {
