@@ -31,7 +31,6 @@ export default class BoardPage extends React.Component<Props, State> {
     updatePropertyLabelTimeout: number
 
     private boardListener = new OctoListener()
-    private cardListener = new OctoListener()
 
     constructor(props: Props) {
         super(props)
@@ -100,6 +99,8 @@ export default class BoardPage extends React.Component<Props, State> {
     }
 
     componentWillUnmount() {
+        Utils.log(`boardPage.componentWillUnmount: ${this.state.boardId}`)
+        this.boardListener.close()
 	    document.removeEventListener('keydown', this.undoRedoHandler)
     }
 
@@ -160,9 +161,11 @@ export default class BoardPage extends React.Component<Props, State> {
     private async attachToBoard(boardId: string, viewId?: string) {
 	    Utils.log(`attachToBoard: ${boardId}`)
 
+        // this.boardListener.close()
+        // this.boardListener = new OctoListener()
 	    this.boardListener.open(boardId, (blockId: string) => {
             Utils.log(`boardListener.onChanged: ${blockId}`)
-            this.sync(boardId)
+            this.sync()
         })
 
 	    this.sync(boardId, viewId)

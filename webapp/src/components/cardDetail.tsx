@@ -32,8 +32,7 @@ type State = {
 
 export default class CardDetail extends React.Component<Props, State> {
     private titleRef = React.createRef<Editable>()
-    private keydownHandler: any
-    private cardListener: OctoListener
+    private cardListener?: OctoListener
 
     constructor(props: Props) {
 	    super(props)
@@ -56,6 +55,11 @@ export default class CardDetail extends React.Component<Props, State> {
                 }
 	        }, 0)
         })
+    }
+
+    componentWillUnmount() {
+        this.cardListener?.close()
+        this.cardListener = undefined
     }
 
     render() {

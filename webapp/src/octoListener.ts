@@ -11,13 +11,13 @@ class OctoListener {
     }
 
     readonly serverUrl: string
-    private ws: WebSocket
+    private ws?: WebSocket
 
     notificationDelay = 200
 
     constructor(serverUrl?: string) {
         this.serverUrl = serverUrl || window.location.origin
-        console.log(`OctoListener serverUrl: ${this.serverUrl}`)
+        Utils.log(`OctoListener serverUrl: ${this.serverUrl}`)
     }
 
     open(blockId: string, onChange: (blockId: string) => void) {
@@ -29,22 +29,22 @@ class OctoListener {
 
         const url = new URL(this.serverUrl)
 	    const wsServerUrl = `ws://${url.host}${url.pathname}ws/onchange?id=${encodeURIComponent(blockId)}`
-        console.log(`OctoListener initWebSocket wsServerUrl: ${wsServerUrl}`)
+        Utils.log(`OctoListener open: ${wsServerUrl}`)
 	    const ws = new WebSocket(wsServerUrl)
         this.ws = ws
 
 	    ws.onopen = () => {
-	        Utils.log('OctoListener webSocket opened.')
+	        Utils.log(`OctoListener webSocket opened. blockId: ${blockId}`)
 	        ws.send('{}')
 	    }
 
 	    ws.onerror = (e) => {
-            Utils.logError(`OctoListener websocket onerror. data: ${e}`)
+            Utils.logError(`OctoListener websocket onerror. blockId: ${blockId}, data: ${e}`)
 	    }
 
 	    ws.onclose = (e) => {
-            Utils.log(`OctoListener websocket onclose, code: ${e.code}, reason: ${e.reason}`)
-	        if (this.isOpen) {
+            Utils.log(`OctoListener websocket onclose, blockId: ${blockId}, code: ${e.code}, reason: ${e.reason}`)
+	        if (ws === this.ws) {
                 // Unexpected close, re-open
                 Utils.logError('Unexpected close, re-opening...')
                 this.open(blockId, onChange)
@@ -52,7 +52,7 @@ class OctoListener {
 	    }
 
 	    ws.onmessage = (e) => {
-            Utils.log(`OctoListener websocket onmessage. data: ${e.data}`)
+            Utils.log(`OctoListener websocket onmessage. blockId: ${blockId}, data: ${e.data}`)
             try {
 	            const message = JSON.parse(e.data)
 	            switch (message.action) {
@@ -79,8 +79,12 @@ class OctoListener {
             return
         }
 
-        this.ws.close()
+        Utils.log(`OctoListener close: ${this.ws.url}`)
+
+        // Use this sequence so the onclose method doesn't try to re-open
+        const ws = this.ws
         this.ws = undefined
+        ws.close()
     }
 }
 
