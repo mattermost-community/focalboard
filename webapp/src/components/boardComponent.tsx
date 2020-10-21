@@ -36,16 +36,44 @@ type State = {
     shownCard?: Card
     viewMenu: boolean
     isHoverOnCover: boolean
+    selectedCards: Card[]
 }
 
 class BoardComponent extends React.Component<Props, State> {
-    private draggedCard: Card
+    private draggedCards: Card[] = []
     private draggedHeaderOption: IPropertyOption
+    private backgroundRef = React.createRef<HTMLDivElement>()
     private searchFieldRef = React.createRef<Editable>()
+
+    private keydownHandler = (e: KeyboardEvent) => {
+        if (e.target !== document.body) {
+            return
+        }
+
+        if (e.keyCode === 27) {
+            if (this.state.selectedCards.length > 0) {
+                this.setState({selectedCards: []})
+                e.stopPropagation()
+            }
+        }
+    }
+
+    componentDidMount() {
+        document.addEventListener('keydown', this.keydownHandler)
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('keydown', this.keydownHandler)
+    }
 
     constructor(props: Props) {
         super(props)
-        this.state = {isHoverOnCover: false, isSearching: Boolean(this.props.boardTree?.getSearchText()), viewMenu: false}
+        this.state = {
+            isHoverOnCover: false,
+            isSearching: Boolean(this.props.boardTree?.getSearchText()),
+            viewMenu: false,
+            selectedCards: [],
+        }
     }
 
     componentDidUpdate(prevPros: Props, prevState: State) {
@@ -73,7 +101,13 @@ class BoardComponent extends React.Component<Props, State> {
         const hasSort = activeView.sortOptions.length > 0
 
         return (
-            <div className='octo-app'>
+            <div
+                className='octo-app'
+                ref={this.backgroundRef}
+                onClick={(e) => {
+                    this.backgroundClicked(e)
+                }}
+            >
                 {this.state.shownCard &&
                 <RootPortal>
                     <CardDialog
@@ -332,14 +366,15 @@ class BoardComponent extends React.Component<Props, State> {
                                         card={card}
                                         visiblePropertyTemplates={visiblePropertyTemplates}
                                         key={card.id}
-                                        onClick={() => {
-                                            this.setState({shownCard: card})
+                                        isSelected={this.state.selectedCards.includes(card)}
+                                        onClick={(e) => {
+                                            this.cardClicked(e, card)
                                         }}
                                         onDragStart={() => {
-                                            this.draggedCard = card
+                                            this.draggedCards = this.state.selectedCards.includes(card) ? this.state.selectedCards : [card]
                                         }}
                                         onDragEnd={() => {
-                                            this.draggedCard = undefined
+                                            this.draggedCards = []
                                         }}
                                     />),
                                 )}
@@ -364,14 +399,15 @@ class BoardComponent extends React.Component<Props, State> {
                                             card={card}
                                             visiblePropertyTemplates={visiblePropertyTemplates}
                                             key={card.id}
-                                            onClick={() => {
-                                                this.setState({shownCard: card})
+                                            isSelected={this.state.selectedCards.includes(card)}
+                                            onClick={(e) => {
+                                                this.cardClicked(e, card)
                                             }}
                                             onDragStart={() => {
-                                                this.draggedCard = card
+                                                this.draggedCards = this.state.selectedCards.includes(card) ? this.state.selectedCards : [card]
                                             }}
                                             onDragEnd={() => {
-                                                this.draggedCard = undefined
+                                                this.draggedCards = []
                                             }}
                                         />),
                                     )}
@@ -387,6 +423,13 @@ class BoardComponent extends React.Component<Props, State> {
                 </div>
             </div>
         )
+    }
+
+    private backgroundClicked(e: React.MouseEvent) {
+        if (this.state.selectedCards.length > 0) {
+            this.setState({selectedCards: []})
+            e.stopPropagation()
+        }
     }
 
     async addCard(groupByValue?: string) {
@@ -524,6 +567,22 @@ class BoardComponent extends React.Component<Props, State> {
         OldMenu.shared.showAtElement(e.target as HTMLElement)
     }
 
+    private cardClicked(e: React.MouseEvent, card: Card) {
+        if (e.shiftKey) {
+            let selectedCards = this.state.selectedCards.slice()
+            if (selectedCards.includes(card)) {
+                selectedCards = selectedCards.filter((o) => o != card)
+            } else {
+                selectedCards.push(card)
+            }
+            this.setState({selectedCards})
+        } else {
+            this.setState({selectedCards: [], shownCard: card})
+        }
+
+        e.stopPropagation()
+    }
+
     async addGroupClicked() {
         console.log('onAddGroupClicked')
 
@@ -540,17 +599,19 @@ class BoardComponent extends React.Component<Props, State> {
 
     async onDropToColumn(option: IPropertyOption) {
         const {boardTree} = this.props
-        const {draggedCard, draggedHeaderOption} = this
+        const {draggedCards, draggedHeaderOption} = this
         const propertyValue = option ? option.value : undefined
 
         Utils.assertValue(mutator)
         Utils.assertValue(boardTree)
 
-        if (draggedCard) {
-            Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${propertyValue}`)
-            const oldValue = draggedCard.properties[boardTree.groupByProperty.id]
-            if (propertyValue !== oldValue) {
-                await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, propertyValue, 'drag card')
+        if (draggedCards.length > 0) {
+            for (const draggedCard of draggedCards) {
+                Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${propertyValue}`)
+                const oldValue = draggedCard.properties[boardTree.groupByProperty.id]
+                if (propertyValue !== oldValue) {
+                    await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, propertyValue, 'drag card')
+                }
             }
         } else if (draggedHeaderOption) {
             Utils.log(`ondrop. Header option: ${draggedHeaderOption.value}, column: ${propertyValue}`)
@@ -568,7 +629,7 @@ class BoardComponent extends React.Component<Props, State> {
     onSearchKeyDown(e: React.KeyboardEvent) {
         if (e.keyCode === 27) { // ESC: Clear search
             this.searchFieldRef.current.text = ''
-            this.setState({...this.state, isSearching: false})
+            this.setState({isSearching: false})
             this.props.setSearchText(undefined)
             e.preventDefault()
         }

@@ -237,6 +237,10 @@ hr {
 	transition: background 100ms ease-out 0s;
 }
 
+.octo-board-card.selected {
+    background-color: rgba(90, 200, 255, 0.2);
+}
+
 .octo-board-card > div {
 	margin-bottom: 3px;
 }

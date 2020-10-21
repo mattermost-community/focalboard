@@ -14,6 +14,7 @@ import {Utils} from '../utils'
 type BoardCardProps = {
     card: Card
     visiblePropertyTemplates: IPropertyTemplate[]
+    isSelected: boolean
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
     onDragStart?: (e: React.DragEvent<HTMLDivElement>) => void
     onDragEnd?: (e: React.DragEvent<HTMLDivElement>) => void
@@ -33,9 +34,11 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
         const {card} = this.props
         const optionsButtonRef = React.createRef<HTMLDivElement>()
         const visiblePropertyTemplates = this.props.visiblePropertyTemplates || []
+        const className = this.props.isSelected ? 'octo-board-card selected' : 'octo-board-card'
+
         const element =
             (<div
-                className='octo-board-card'
+                className={className}
                 draggable={true}
                 style={{opacity: this.state.isDragged ? 0.5 : 1}}
                 onClick={this.props.onClick}
