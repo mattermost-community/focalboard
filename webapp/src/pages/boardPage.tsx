@@ -161,12 +161,15 @@ export default class BoardPage extends React.Component<Props, State> {
     private async attachToBoard(boardId: string, viewId?: string) {
 	    Utils.log(`attachToBoard: ${boardId}`)
 
-        // this.boardListener.close()
-        // this.boardListener = new OctoListener()
-	    this.boardListener.open(boardId, (blockId: string) => {
-            Utils.log(`boardListener.onChanged: ${blockId}`)
-            this.sync()
-        })
+        if (!this.boardListener.isOpen) {
+            this.boardListener.open([boardId], (blockId: string) => {
+                Utils.log(`boardListener.onChanged: ${blockId}`)
+                this.sync()
+            })
+        } else {
+            this.boardListener.removeBlocks([this.state.boardId])
+            this.boardListener.addBlocks([boardId])
+        }
 
 	    this.sync(boardId, viewId)
     }

@@ -41,7 +41,7 @@ export default class CardDetail extends React.Component<Props, State> {
 
     componentDidMount() {
         this.cardListener = new OctoListener()
-	    this.cardListener.open(this.props.cardId, async (blockId) => {
+	    this.cardListener.open([this.props.cardId], async (blockId) => {
             Utils.log(`cardListener.onChanged: ${blockId}`)
             await cardTree.sync()
 	        this.setState({...this.state, cardTree})

@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 	"sync"
@@ -9,21 +10,24 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+// RegisterRoutes registeres routes
 func (ws *WSServer) RegisterRoutes(r *mux.Router) {
 	r.HandleFunc("/ws/onchange", ws.handleWebSocketOnChange)
 }
 
-// AddListener adds a listener for a blockID's change
-func (ws *WSServer) AddListener(client *websocket.Conn, blockID string) {
+// AddListener adds a listener for a block's change
+func (ws *WSServer) AddListener(client *websocket.Conn, blockIDs []string) {
 	ws.mu.Lock()
-	if ws.listeners[blockID] == nil {
-		ws.listeners[blockID] = []*websocket.Conn{}
+	for _, blockID := range blockIDs {
+		if ws.listeners[blockID] == nil {
+			ws.listeners[blockID] = []*websocket.Conn{}
+		}
+		ws.listeners[blockID] = append(ws.listeners[blockID], client)
 	}
-	ws.listeners[blockID] = append(ws.listeners[blockID], client)
 	ws.mu.Unlock()
 }
 
-// RemoveListener removes a webSocket listener
+// RemoveListener removes a webSocket listener from all blocks
 func (ws *WSServer) RemoveListener(client *websocket.Conn) {
 	ws.mu.Lock()
 	for key, clients := range ws.listeners {
@@ -35,6 +39,30 @@ func (ws *WSServer) RemoveListener(client *websocket.Conn) {
 		}
 		ws.listeners[key] = listeners
 	}
+	ws.mu.Unlock()
+}
+
+// RemoveListenerFromBlocks removes a webSocket listener from a set of block
+func (ws *WSServer) RemoveListenerFromBlocks(client *websocket.Conn, blockIDs []string) {
+	ws.mu.Lock()
+
+	for _, blockID := range blockIDs {
+		listeners := ws.listeners[blockID]
+		if listeners == nil {
+			return
+		}
+
+		// Remove the first instance of this client that's listening to this block
+		// Note: A client can listen multiple times to the same block
+		for index, listener := range listeners {
+			if client == listener {
+				newListeners := append(listeners[:index], listeners[index+1:]...)
+				ws.listeners[blockID] = newListeners
+				break
+			}
+		}
+	}
+
 	ws.mu.Unlock()
 }
 
@@ -72,6 +100,12 @@ type WebsocketMsg struct {
 	BlockID string `json:"blockId"`
 }
 
+// WebsocketCommand is an incoming command from the client
+type WebsocketCommand struct {
+	Action   string   `json:"action"`
+	BlockIDs []string `json:"blockIds"`
+}
+
 func (ws *WSServer) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request) {
 	// Upgrade initial GET request to a websocket
 	client, err := ws.upgrader.Upgrade(w, r, nil)
@@ -81,13 +115,11 @@ func (ws *WSServer) handleWebSocketOnChange(w http.ResponseWriter, r *http.Reque
 
 	// TODO: Auth
 
-	query := r.URL.Query()
-	blockID := query.Get("id")
-	log.Printf("CONNECT WebSocket onChange, blockID: %s, client: %s", blockID, client.RemoteAddr())
+	log.Printf("CONNECT WebSocket onChange, client: %s", client.RemoteAddr())
 
 	// Make sure we close the connection when the function returns
 	defer func() {
-		log.Printf("DISCONNECT WebSocket onChange, blockID: %s, client: %s", blockID, client.RemoteAddr())
+		log.Printf("DISCONNECT WebSocket onChange, client: %s", client.RemoteAddr())
 
 		// Remove client from listeners
 		ws.RemoveListener(client)
@@ -95,21 +127,37 @@ func (ws *WSServer) handleWebSocketOnChange(w http.ResponseWriter, r *http.Reque
 		client.Close()
 	}()
 
-	// Register our new client
-	ws.AddListener(client, blockID)
-
-	// TODO: Implement WebSocket message pump
 	// Simple message handling loop
 	for {
-		_, _, err := client.ReadMessage()
+		_, p, err := client.ReadMessage()
 		if err != nil {
-			log.Printf("ERROR WebSocket onChange, blockID: %s, client: %s, err: %v", blockID, client.RemoteAddr(), err)
+			log.Printf("ERROR WebSocket onChange, client: %s, err: %v", client.RemoteAddr(), err)
 			ws.RemoveListener(client)
 			break
+		}
+
+		var command WebsocketCommand
+		err = json.Unmarshal(p, &command)
+		if err != nil {
+			// handle this error
+			log.Printf(`ERROR webSocket parsing command JSON: %v`, string(p))
+			continue
+		}
+
+		switch command.Action {
+		case "ADD":
+			log.Printf(`Command: Add blockID: %v, client: %s`, command.BlockIDs, client.RemoteAddr())
+			ws.AddListener(client, command.BlockIDs)
+		case "REMOVE":
+			log.Printf(`Command: Remove blockID: %v, client: %s`, command.BlockIDs, client.RemoteAddr())
+			ws.RemoveListenerFromBlocks(client, command.BlockIDs)
+		default:
+			log.Printf(`ERROR webSocket command, invalid action: %v`, command.Action)
 		}
 	}
 }
 
+// BroadcastBlockChangeToWebsocketClients broadcasts change to clients
 func (ws *WSServer) BroadcastBlockChangeToWebsocketClients(blockIDs []string) {
 	for _, blockID := range blockIDs {
 		listeners := ws.GetListeners(blockID)
