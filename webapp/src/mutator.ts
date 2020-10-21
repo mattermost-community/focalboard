@@ -18,6 +18,30 @@ import {Utils} from './utils'
 // It also ensures that the Undo-manager is called for each action
 //
 class Mutator {
+    private async updateBlock(newBlock: IBlock, oldBlock: IBlock, description: string): Promise<void> {
+        await undoManager.perform(
+            async () => {
+                await octoClient.updateBlock(newBlock)
+            },
+            async () => {
+                await octoClient.updateBlock(oldBlock)
+            },
+            description,
+        )
+    }
+
+    private async updateBlocks(newBlocks: IBlock[], oldBlocks: IBlock[], description: string): Promise<void> {
+        await undoManager.perform(
+            async () => {
+                await octoClient.updateBlocks(newBlocks)
+            },
+            async () => {
+                await octoClient.updateBlocks(oldBlocks)
+            },
+            description,
+        )
+    }
+
     async insertBlock(block: IBlock, description = 'add', afterRedo?: () => Promise<void>, beforeUndo?: () => Promise<void>) {
         await undoManager.perform(
             async () => {
@@ -69,16 +93,7 @@ class Mutator {
     async changeTitle(block: IBlock, title: string, description = 'change title') {
         const newBlock = new MutableBlock(block)
         newBlock.title = title
-
-        await undoManager.perform(
-            async () => {
-                await octoClient.updateBlock(newBlock)
-            },
-            async () => {
-                await octoClient.updateBlock(block)
-            },
-            description,
-        )
+        await this.updateBlock(newBlock, block, description)
     }
 
     async changeIcon(block: Card | Board, icon: string, description = 'change icon') {
@@ -98,30 +113,13 @@ class Mutator {
             }
         }
 
-        await undoManager.perform(
-            async () => {
-                await octoClient.updateBlock(newBlock)
-            },
-            async () => {
-                await octoClient.updateBlock(block)
-            },
-            description,
-        )
+        await this.updateBlock(newBlock, block, description)
     }
 
     async changeOrder(block: IOrderedBlock, order: number, description = 'change order') {
         const newBlock = new MutableOrderedBlock(block)
         newBlock.order = order
-
-        await undoManager.perform(
-            async () => {
-                await octoClient.updateBlock(newBlock)
-            },
-            async () => {
-                await octoClient.updateBlock(block)
-            },
-            description,
-        )
+        await this.updateBlock(newBlock, block, description)
     }
 
     // Property Templates
@@ -160,15 +158,7 @@ class Mutator {
             description = 'add column'
         }
 
-        await undoManager.perform(
-            async () => {
-                await octoClient.updateBlocks(changedBlocks)
-            },
-            async () => {
-                await octoClient.updateBlocks(oldBlocks)
-            },
-            description,
-        )
+        await this.updateBlocks(changedBlocks, oldBlocks, description)
     }
 
     async duplicatePropertyTemplate(boardTree: BoardTree, propertyId: string): Promise<IBlock[]> {
@@ -203,15 +193,7 @@ class Mutator {
             description = 'duplicate column'
         }
 
-        await undoManager.perform(
-            async () => {
-                await octoClient.updateBlocks(changedBlocks)
-            },
-            async () => {
-                await octoClient.updateBlocks(oldBlocks)
-            },
-            description,
-        )
+        await this.updateBlocks(changedBlocks, oldBlocks, description)
 
         return changedBlocks
     }
@@ -227,15 +209,7 @@ class Mutator {
         const newBoard = new MutableBoard(board)
         newBoard.cardProperties = newValue
 
-        await undoManager.perform(
-            async () => {
-                await octoClient.updateBlock(newBoard)
-            },
-            async () => {
-                await octoClient.updateBlock(board)
-            },
-            'reorder properties',
-        )
+        await this.updateBlock(newBoard, board, 'reorder properties')
     }
 
     async deleteProperty(boardTree: BoardTree, propertyId: string) {
@@ -266,15 +240,7 @@ class Mutator {
             }
         })
 
-        await undoManager.perform(
-            async () => {
-                await octoClient.updateBlocks(changedBlocks)
-            },
-            async () => {
-                await octoClient.updateBlocks(oldBlocks)
-            },
-            'delete property',
-        )
+        await this.updateBlocks(changedBlocks, oldBlocks, 'delete property')
     }
 
     async renameProperty(board: Board, propertyId: string, name: string) {
@@ -288,15 +254,7 @@ class Mutator {
         Utils.log(`renameProperty from ${template.name} to ${name}`)
         template.name = name
 
-        await undoManager.perform(
-            async () => {
-                await octoClient.updateBlock(newBoard)
-            },
-            async () => {
-                await octoClient.updateBlock(board)
-            },
-            'rename property',
-        )
+        await this.updateBlock(newBoard, board, 'rename property')
     }
 
     // Properties
@@ -310,16 +268,7 @@ class Mutator {
         const newTemplate = newBoard.cardProperties.find(o => o.id === template.id)
         newTemplate.options.push(option)
 
-        await undoManager.perform(
-            async () => {
-                await octoClient.updateBlock(newBoard)
-            },
-            async () => {
-                // TODO: Also remove property on cards
-                await octoClient.updateBlock(board)
-            },
-            description,
-        )
+        await this.updateBlock(newBoard, board, description)
     }
 
     async deletePropertyOption(boardTree: BoardTree, template: IPropertyTemplate, option: IPropertyOption) {
@@ -329,17 +278,7 @@ class Mutator {
         const newTemplate = newBoard.cardProperties.find(o => o.id === template.id)
         newTemplate.options = newTemplate.options.filter(o => o.value !== option.value)
 
-        // TODO: Also remove property on cards
-
-        await undoManager.perform(
-            async () => {
-                await octoClient.updateBlock(newBoard)
-            },
-            async () => {
-                await octoClient.updateBlock(board)
-            },
-            'delete option',
-        )
+        await this.updateBlock(newBoard, board, 'delete option')
     }
 
     async changePropertyOptionOrder(board: Board, template: IPropertyTemplate, option: IPropertyOption, destIndex: number) {
@@ -350,15 +289,7 @@ class Mutator {
         const newTemplate = newBoard.cardProperties.find(o => o.id === template.id)
         newTemplate.options.splice(destIndex, 0, newTemplate.options.splice(srcIndex, 1)[0])
 
-        await undoManager.perform(
-            async () => {
-                await octoClient.updateBlock(newBoard)
-            },
-            async () => {
-                await octoClient.updateBlock(board)
-            },
-            'reorder options',
-        )
+        await this.updateBlock(newBoard, board, 'reorder options')
     }
 
     async changePropertyOptionValue(boardTree: BoardTree, propertyTemplate: IPropertyTemplate, option: IPropertyOption, value: string) {
@@ -385,15 +316,7 @@ class Mutator {
             }
         }
 
-        await undoManager.perform(
-            async () => {
-                await octoClient.updateBlocks(changedBlocks)
-            },
-            async () => {
-                await octoClient.updateBlocks(oldBlocks)
-            },
-            'rename option',
-        )
+        await this.updateBlocks(changedBlocks, oldBlocks, 'rename option')
 
         return changedBlocks
     }
@@ -403,47 +326,20 @@ class Mutator {
         const newTemplate = newBoard.cardProperties.find(o => o.id === template.id)
         const newOption = newTemplate.options.find(o => o.value === option.value)
         newOption.color = color
-
-        undoManager.perform(
-            async () => {
-                await octoClient.updateBlock(newBoard)
-            },
-            async () => {
-                await octoClient.updateBlock(board)
-            },
-            'change option color',
-        )
+        await this.updateBlock(newBoard, board, 'change option color')
     }
 
     async changePropertyValue(card: Card, propertyId: string, value?: string, description = 'change property') {
         const newCard = new MutableCard(card)
         newCard.properties[propertyId] = value
-
-        await undoManager.perform(
-            async () => {
-                await octoClient.updateBlock(newCard)
-            },
-            async () => {
-                await octoClient.updateBlock(card)
-            },
-            description,
-        )
+        await this.updateBlock(newCard, card, description)
     }
 
     async changePropertyType(board: Board, propertyTemplate: IPropertyTemplate, type: PropertyType) {
         const newBoard = new MutableBoard(board)
         const newTemplate = newBoard.cardProperties.find(o => o.id === propertyTemplate.id)
         newTemplate.type = type
-
-        await undoManager.perform(
-            async () => {
-                await octoClient.updateBlock(newBoard)
-            },
-            async () => {
-                await octoClient.updateBlock(board)
-            },
-            'change property type',
-        )
+        await this.updateBlock(newBoard, board, 'change property type')
     }
 
     // Views
@@ -451,61 +347,25 @@ class Mutator {
     async changeViewSortOptions(view: BoardView, sortOptions: ISortOption[]) {
         const newView = new MutableBoardView(view)
         newView.sortOptions = sortOptions
-
-        await undoManager.perform(
-            async () => {
-                await octoClient.updateBlock(newView)
-            },
-            async () => {
-                await octoClient.updateBlock(view)
-            },
-            'sort',
-        )
+        await this.updateBlock(newView, view, 'sort')
     }
 
     async changeViewFilter(view: BoardView, filter?: FilterGroup) {
         const newView = new MutableBoardView(view)
         newView.filter = filter
-
-        await undoManager.perform(
-            async () => {
-                await octoClient.updateBlock(newView)
-            },
-            async () => {
-                await octoClient.updateBlock(view)
-            },
-            'filter',
-        )
+        await this.updateBlock(newView, view, 'filter')
     }
 
-    async changeViewVisibleProperties(view: BoardView, visiblePropertyIds: string[]) {
+    async changeViewVisibleProperties(view: BoardView, visiblePropertyIds: string[], description: string = 'show / hide property') {
         const newView = new MutableBoardView(view)
         newView.visiblePropertyIds = visiblePropertyIds
-
-        await undoManager.perform(
-            async () => {
-                await octoClient.updateBlock(newView)
-            },
-            async () => {
-                await octoClient.updateBlock(view)
-            },
-            'hide / show property',
-        )
+        await this.updateBlock(newView, view, description)
     }
 
     async changeViewGroupById(view: BoardView, groupById: string) {
         const newView = new MutableBoardView(view)
         newView.groupById = groupById
-
-        await undoManager.perform(
-            async () => {
-                await octoClient.updateBlock(newView)
-            },
-            async () => {
-                await octoClient.updateBlock(view)
-            },
-            'group by',
-        )
+        await this.updateBlock(newView, view, 'group by')
     }
 
     // Not a mutator, but convenient to put here since Mutator wraps OctoClient
@@ -536,7 +396,7 @@ class Mutator {
             async () => {
                 await octoClient.deleteBlock(block.id)
             },
-            'group by',
+            'add image',
         )
 
         return block
