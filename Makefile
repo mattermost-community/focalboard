@@ -16,6 +16,8 @@ server-linux:
 	cd server; env GOOS=linux GOARCH=amd64 go build -o ../bin/octoserver ./main
 
 generate:
+	cd server; go get -modfile=go.tools.mod github.com/golang/mock/mockgen
+	cd server; go get -modfile=go.tools.mod github.com/jteeuwen/go-bindata
 	cd server; go generate ./...
 
 watch-server:

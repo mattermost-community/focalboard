@@ -1,3 +1,4 @@
+//go:generate mockgen -destination=mockstore/mockstore.go -package mockstore . Store
 package store
 
 import "github.com/mattermost/mattermost-octo-tasks/server/model"
