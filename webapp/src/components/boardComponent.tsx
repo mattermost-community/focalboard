@@ -5,7 +5,7 @@ import React from 'react'
 import {Archiver} from '../archiver'
 import {BlockIcons} from '../blockIcons'
 import {IPropertyOption} from '../blocks/board'
-import {Card} from '../blocks/card'
+import {Card, MutableCard} from '../blocks/card'
 import {BoardTree} from '../boardTree'
 import {CardFilter} from '../cardFilter'
 import ViewMenu from '../components/viewMenu'
@@ -49,8 +49,8 @@ class BoardComponent extends React.Component<Props, State> {
     }
 
     componentDidUpdate(prevPros: Props, prevState: State) {
-	    if (this.state.isSearching && !prevState.isSearching) {
-	        this.searchFieldRef.current.focus()
+        if (this.state.isSearching && !prevState.isSearching) {
+            this.searchFieldRef.current.focus()
         }
     }
 
@@ -63,14 +63,14 @@ class BoardComponent extends React.Component<Props, State> {
             )
         }
 
-	    const propertyValues = boardTree.groupByProperty?.options || []
+        const propertyValues = boardTree.groupByProperty?.options || []
         console.log(`${propertyValues.length} propertyValues`)
 
-	    const groupByStyle = {color: '#000000'}
-	    const {board, activeView} = boardTree
+        const groupByStyle = {color: '#000000'}
+        const {board, activeView} = boardTree
         const visiblePropertyTemplates = board.cardProperties.filter((template) => activeView.visiblePropertyIds.includes(template.id))
         const hasFilter = activeView.filter && activeView.filter.filters?.length > 0
-	    const hasSort = activeView.sortOptions.length > 0
+        const hasSort = activeView.sortOptions.length > 0
 
         return (
             <div className='octo-app'>
@@ -96,7 +96,7 @@ class BoardComponent extends React.Component<Props, State> {
                         <Button
                             style={{display: (!board.icon && this.state.isHoverOnCover) ? null : 'none'}}
                             onClick={() => {
-	                            const newIcon = BlockIcons.shared.randomIcon()
+                                const newIcon = BlockIcons.shared.randomIcon()
                                 mutator.changeIcon(board, newIcon)
                             }}
                         >Add Icon</Button>
@@ -203,7 +203,7 @@ class BoardComponent extends React.Component<Props, State> {
                                         this.setState({...this.state, isSearching: true})
                                     }}
                                 >Search</div>
-	                        }
+                            }
                             <div
                                 className='octo-button'
                                 onClick={(e) => {
@@ -291,9 +291,9 @@ class BoardComponent extends React.Component<Props, State> {
                                                     key={color.id}
                                                     id={color.id}
                                                     name={color.name}
-                                                    onClick={() => mutator.changePropertyOptionColor(boardTree.board, group.option, color.id)}
+                                                    onClick={() => mutator.changePropertyOptionColor(boardTree.board, boardTree.groupByProperty, group.option, color.id)}
                                                 />),
-	                                        )}
+                                            )}
                                         </Menu>
                                     </MenuWrapper>
                                     <Button
@@ -302,7 +302,7 @@ class BoardComponent extends React.Component<Props, State> {
                                         }}
                                     ><div className='imageAdd'/></Button>
                                 </div>),
-	                        )}
+                            )}
 
                             <div className='octo-board-header-cell'>
                                 <Button
@@ -390,13 +390,13 @@ class BoardComponent extends React.Component<Props, State> {
     }
 
     async addCard(groupByValue?: string) {
-	    const {boardTree} = this.props
+        const {boardTree} = this.props
         const {activeView, board} = boardTree
 
-	    const card = new Card()
+        const card = new MutableCard()
         card.parentId = boardTree.board.id
-	    card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
-	    card.icon = BlockIcons.shared.randomIcon()
+        card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
+        card.icon = BlockIcons.shared.randomIcon()
         if (boardTree.groupByProperty) {
             card.properties[boardTree.groupByProperty.id] = groupByValue
         }
@@ -423,13 +423,13 @@ class BoardComponent extends React.Component<Props, State> {
         OldMenu.shared.options = [
             {id: 'exportBoardArchive', name: 'Export board archive'},
             {id: 'testAdd100Cards', name: 'TEST: Add 100 cards'},
-	        {id: 'testAdd1000Cards', name: 'TEST: Add 1,000 cards'},
+            {id: 'testAdd1000Cards', name: 'TEST: Add 1,000 cards'},
             {id: 'testRandomizeIcons', name: 'TEST: Randomize icons'},
         ]
 
-	    OldMenu.shared.onMenuClicked = async (id: string) => {
-	        switch (id) {
-	        case 'exportBoardArchive': {
+        OldMenu.shared.onMenuClicked = async (id: string) => {
+            switch (id) {
+            case 'exportBoardArchive': {
                 Archiver.exportBoardTree(boardTree)
                 break
             }
@@ -437,102 +437,102 @@ class BoardComponent extends React.Component<Props, State> {
                 this.testAddCards(100)
                 break
             }
-	        case 'testAdd1000Cards': {
+            case 'testAdd1000Cards': {
                 this.testAddCards(1000)
-	            break
-	        }
-	        case 'testRandomizeIcons': {
-	            this.testRandomizeIcons()
                 break
-	        }
             }
-	    }
+            case 'testRandomizeIcons': {
+                this.testRandomizeIcons()
+                break
+            }
+            }
+        }
         OldMenu.shared.showAtElement(e.target as HTMLElement)
     }
 
     private async testAddCards(count: number) {
-	    const {boardTree} = this.props
-	    const {board, activeView} = boardTree
+        const {boardTree} = this.props
+        const {board, activeView} = boardTree
 
         const startCount = boardTree?.cards?.length
-	    let optionIndex = 0
+        let optionIndex = 0
 
-	    for (let i = 0; i < count; i++) {
-	        const card = new Card()
-	        card.parentId = boardTree.board.id
-	        card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
+        for (let i = 0; i < count; i++) {
+            const card = new MutableCard()
+            card.parentId = boardTree.board.id
+            card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
             if (boardTree.groupByProperty && boardTree.groupByProperty.options.length > 0) {
                 // Cycle through options
-	            const option = boardTree.groupByProperty.options[optionIndex]
-	            optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
-	            card.properties[boardTree.groupByProperty.id] = option.value
+                const option = boardTree.groupByProperty.options[optionIndex]
+                optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
+                card.properties[boardTree.groupByProperty.id] = option.value
                 card.title = `Test Card ${startCount + i + 1}`
                 card.icon = BlockIcons.shared.randomIcon()
             }
-	        await mutator.insertBlock(card, 'test add card')
+            await mutator.insertBlock(card, 'test add card')
         }
     }
 
     private async testRandomizeIcons() {
-	    const {boardTree} = this.props
+        const {boardTree} = this.props
 
         for (const card of boardTree.cards) {
-	        mutator.changeIcon(card, BlockIcons.shared.randomIcon(), 'randomize icon')
+            mutator.changeIcon(card, BlockIcons.shared.randomIcon(), 'randomize icon')
         }
     }
 
     private async propertiesClicked(e: React.MouseEvent) {
-	    const {boardTree} = this.props
+        const {boardTree} = this.props
         const {activeView} = boardTree
 
         const selectProperties = boardTree.board.cardProperties
         OldMenu.shared.options = selectProperties.map((o) => {
-	        const isVisible = activeView.visiblePropertyIds.includes(o.id)
+            const isVisible = activeView.visiblePropertyIds.includes(o.id)
             return {id: o.id, name: o.name, type: 'switch', isOn: isVisible}
-	    })
+        })
 
-	    OldMenu.shared.onMenuToggled = async (id: string, isOn: boolean) => {
-	        const property = selectProperties.find((o) => o.id === id)
-	        Utils.assertValue(property)
-	        Utils.log(`Toggle property ${property.name} ${isOn}`)
+        OldMenu.shared.onMenuToggled = async (id: string, isOn: boolean) => {
+            const property = selectProperties.find((o) => o.id === id)
+            Utils.assertValue(property)
+            Utils.log(`Toggle property ${property.name} ${isOn}`)
 
             let newVisiblePropertyIds = []
             if (activeView.visiblePropertyIds.includes(id)) {
-	            newVisiblePropertyIds = activeView.visiblePropertyIds.filter((o) => o !== id)
-	        } else {
+                newVisiblePropertyIds = activeView.visiblePropertyIds.filter((o) => o !== id)
+            } else {
                 newVisiblePropertyIds = [...activeView.visiblePropertyIds, id]
-	        }
+            }
             await mutator.changeViewVisibleProperties(activeView, newVisiblePropertyIds)
-	    }
-	    OldMenu.shared.showAtElement(e.target as HTMLElement)
+        }
+        OldMenu.shared.showAtElement(e.target as HTMLElement)
     }
 
     private async groupByClicked(e: React.MouseEvent) {
-	    const {boardTree} = this.props
+        const {boardTree} = this.props
 
-	    const selectProperties = boardTree.board.cardProperties.filter((o) => o.type === 'select')
-	    OldMenu.shared.options = selectProperties.map((o) => {
+        const selectProperties = boardTree.board.cardProperties.filter((o) => o.type === 'select')
+        OldMenu.shared.options = selectProperties.map((o) => {
             return {id: o.id, name: o.name}
         })
-	    OldMenu.shared.onMenuClicked = async (command: string) => {
+        OldMenu.shared.onMenuClicked = async (command: string) => {
             if (boardTree.activeView.groupById === command) {
                 return
             }
 
             await mutator.changeViewGroupById(boardTree.activeView, command)
         }
-	    OldMenu.shared.showAtElement(e.target as HTMLElement)
+        OldMenu.shared.showAtElement(e.target as HTMLElement)
     }
 
     async addGroupClicked() {
         console.log('onAddGroupClicked')
 
-	    const {boardTree} = this.props
+        const {boardTree} = this.props
 
         const option: IPropertyOption = {
             value: 'New group',
             color: '#cccccc',
-	    }
+        }
 
         Utils.assert(boardTree.groupByProperty)
         await mutator.insertPropertyOption(boardTree, boardTree.groupByProperty, option, 'add group')
@@ -540,7 +540,7 @@ class BoardComponent extends React.Component<Props, State> {
 
     async onDropToColumn(option: IPropertyOption) {
         const {boardTree} = this.props
-	    const {draggedCard, draggedHeaderOption} = this
+        const {draggedCard, draggedHeaderOption} = this
         const propertyValue = option ? option.value : undefined
 
         Utils.assertValue(mutator)
@@ -551,27 +551,27 @@ class BoardComponent extends React.Component<Props, State> {
             const oldValue = draggedCard.properties[boardTree.groupByProperty.id]
             if (propertyValue !== oldValue) {
                 await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, propertyValue, 'drag card')
-	        }
-	    } else if (draggedHeaderOption) {
-	        Utils.log(`ondrop. Header option: ${draggedHeaderOption.value}, column: ${propertyValue}`)
-	        Utils.assertValue(boardTree.groupByProperty)
+            }
+        } else if (draggedHeaderOption) {
+            Utils.log(`ondrop. Header option: ${draggedHeaderOption.value}, column: ${propertyValue}`)
+            Utils.assertValue(boardTree.groupByProperty)
 
-	        // Move option to new index
-	        const {board} = boardTree
-	        const options = boardTree.groupByProperty.options
-	        const destIndex = option ? options.indexOf(option) : 0
+            // Move option to new index
+            const {board} = boardTree
+            const options = boardTree.groupByProperty.options
+            const destIndex = option ? options.indexOf(option) : 0
 
             await mutator.changePropertyOptionOrder(board, boardTree.groupByProperty, draggedHeaderOption, destIndex)
         }
     }
 
     onSearchKeyDown(e: React.KeyboardEvent) {
-	    if (e.keyCode === 27) {		// ESC: Clear search
+        if (e.keyCode === 27) { // ESC: Clear search
             this.searchFieldRef.current.text = ''
             this.setState({...this.state, isSearching: false})
             this.props.setSearchText(undefined)
             e.preventDefault()
-	    }
+        }
     }
 
     searchChanged(text?: string) {

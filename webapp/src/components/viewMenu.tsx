@@ -3,7 +3,7 @@
 import React from 'react'
 
 import {Board} from '../blocks/board'
-import {BoardView} from '../blocks/boardView'
+import {BoardView, MutableBoardView} from '../blocks/boardView'
 import {BoardTree} from '../boardTree'
 import mutator from '../mutator'
 import {Utils} from '../utils'
@@ -35,7 +35,7 @@ export default class ViewMenu extends React.Component<Props> {
     handleAddViewBoard = async (id: string) => {
         const {board, boardTree, showView} = this.props
         Utils.log('addview-board')
-	    const view = new BoardView()
+	    const view = new MutableBoardView()
 	    view.title = 'Board View'
         view.viewType = 'board'
         view.parentId = board.id
@@ -57,7 +57,7 @@ export default class ViewMenu extends React.Component<Props> {
         const {board, boardTree, showView} = this.props
 
 	    Utils.log('addview-table')
-	    const view = new BoardView()
+	    const view = new MutableBoardView()
         view.title = 'Table View'
 	    view.viewType = 'table'
 	    view.parentId = board.id

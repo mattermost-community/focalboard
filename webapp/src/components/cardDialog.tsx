@@ -37,7 +37,7 @@ class CardDialog extends React.Component<Props> {
             >
                 <CardDetail
                     boardTree={this.props.boardTree}
-                    card={this.props.card}
+                    cardId={this.props.card.id}
                 />
             </Dialog>
         )

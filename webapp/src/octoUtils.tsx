@@ -2,18 +2,19 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {Block} from './blocks/block'
-import {Board, IPropertyTemplate} from './blocks/board'
-import {BoardView, ISortOption} from './blocks/boardView'
-import {Card} from './blocks/card'
-import {CommentBlock} from './blocks/commentBlock'
-import {ImageBlock} from './blocks/imageBlock'
-import {TextBlock} from './blocks/textBlock'
+import {MutableBlock} from './blocks/block'
+import {Board, IPropertyTemplate, MutableBoard} from './blocks/board'
+import {BoardView, ISortOption, MutableBoardView} from './blocks/boardView'
+import {Card, MutableCard} from './blocks/card'
+import {CommentBlock, MutableCommentBlock} from './blocks/commentBlock'
+import {ImageBlock, MutableImageBlock} from './blocks/imageBlock'
+import { IOrderedBlock } from './blocks/orderedBlock'
+import {MutableTextBlock, TextBlock} from './blocks/textBlock'
 import {BoardTree} from './boardTree'
 import {Editable} from './components/editable'
 import {Menu} from './menu'
 import mutator from './mutator'
-import {IBlock, IOrderedBlock} from './octoTypes'
+import {IBlock} from './octoTypes'
 import {Utils} from './utils'
 
 class OctoUtils {
@@ -76,24 +77,25 @@ class OctoUtils {
                 menu.showAtElement(clickedElement)
             }
 
-            element = (<div
-                key={propertyTemplate.id}
-                className={`${className} ${propertyColorCssClassName}`}
-                tabIndex={0}
-                onClick={!readOnly ? (e) => {
-                    showMenu(e.target as HTMLElement)
-                } : undefined}
-                onKeyDown={!readOnly ? (e) => {
-                    if (e.keyCode === 13) {
+            element = (
+                <div
+                    key={propertyTemplate.id}
+                    className={`${className} ${propertyColorCssClassName}`}
+                    tabIndex={0}
+                    onClick={!readOnly ? (e) => {
                         showMenu(e.target as HTMLElement)
-                    }
-                } : undefined}
-                onFocus={!readOnly ? () => {
-                    Menu.shared.hide()
-                } : undefined}
-                       >
-                {finalDisplayValue}
-            </div>)
+                    } : undefined}
+                    onKeyDown={!readOnly ? (e) => {
+                        if (e.keyCode === 13) {
+                            showMenu(e.target as HTMLElement)
+                        }
+                    } : undefined}
+                    onFocus={!readOnly ? () => {
+                        Menu.shared.hide()
+                    } : undefined}
+                >
+                    {finalDisplayValue}
+                </div>)
         } else if (propertyTemplate.type === 'text' || propertyTemplate.type === 'number') {
             if (!readOnly) {
                 element = (<Editable
@@ -104,7 +106,7 @@ class OctoUtils {
                     onChanged={(text) => {
                         mutator.changePropertyValue(card, propertyTemplate.id, text)
                     }}
-                           ></Editable>)
+                           />)
             } else {
                 element = (<div
                     key={propertyTemplate.id}
@@ -170,21 +172,22 @@ class OctoUtils {
         Menu.shared.showAtElement(e.target as HTMLElement)
     }
 
-    static hydrateBlock(block: IBlock): Block {
+    static hydrateBlock(block: IBlock): MutableBlock {
         switch (block.type) {
-        case 'board': { return new Board(block) }
-        case 'view': { return new BoardView(block) }
-        case 'card': { return new Card(block) }
-        case 'text': { return new TextBlock(block) }
-        case 'image': { return new ImageBlock(block) }
-        case 'comment': { return new CommentBlock(block) }
+        case 'board': { return new MutableBoard(block) }
+        case 'view': { return new MutableBoardView(block) }
+        case 'card': { return new MutableCard(block) }
+        case 'text': { return new MutableTextBlock(block) }
+        case 'image': { return new MutableImageBlock(block) }
+        case 'comment': { return new MutableCommentBlock(block) }
         default: {
             Utils.assertFailure(`Can't hydrate unknown block type: ${block.type}`)
+            return new MutableBlock(block)
         }
         }
     }
 
-    static hydrateBlocks(blocks: IBlock[]): Block[] {
+    static hydrateBlocks(blocks: IBlock[]): MutableBlock[] {
         return blocks.map((block) => this.hydrateBlock(block))
     }
 }

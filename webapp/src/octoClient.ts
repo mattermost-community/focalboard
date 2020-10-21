@@ -1,5 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+import { IMutableBlock } from './blocks/block'
 import {IBlock} from './octoTypes'
 import {Utils} from './utils'
 
@@ -17,7 +18,7 @@ class OctoClient {
     async getSubtree(rootId?: string): Promise<IBlock[]> {
 	    const path = `/api/v1/blocks/${rootId}/subtree`
 	    const response = await fetch(this.serverUrl + path)
-	    const blocks = (await response.json() || []) as IBlock[]
+	    const blocks = (await response.json() || []) as IMutableBlock[]
 	    this.fixBlocks(blocks)
 	    return blocks
     }
@@ -25,7 +26,7 @@ class OctoClient {
     async exportFullArchive(): Promise<IBlock[]> {
         const path = '/api/v1/blocks/export'
 	    const response = await fetch(this.serverUrl + path)
-	    const blocks = (await response.json() || []) as IBlock[]
+	    const blocks = (await response.json() || []) as IMutableBlock[]
 	    this.fixBlocks(blocks)
 	    return blocks
     }
@@ -59,12 +60,12 @@ class OctoClient {
         }
 
 	    const response = await fetch(this.serverUrl + path)
-        const blocks = (await response.json() || []) as IBlock[]
+        const blocks = (await response.json() || []) as IMutableBlock[]
         this.fixBlocks(blocks)
 	    return blocks
     }
 
-    fixBlocks(blocks: IBlock[]): void {
+    fixBlocks(blocks: IMutableBlock[]): void {
 	    if (!blocks) {
             return
         }
@@ -90,12 +91,12 @@ class OctoClient {
         }
     }
 
-    async updateBlock(block: IBlock): Promise<Response> {
+    async updateBlock(block: IMutableBlock): Promise<Response> {
         block.updateAt = Date.now()
         return await this.insertBlocks([block])
     }
 
-    async updateBlocks(blocks: IBlock[]): Promise<Response> {
+    async updateBlocks(blocks: IMutableBlock[]): Promise<Response> {
         const now = Date.now()
         blocks.forEach((block) => {
             block.updateAt = now

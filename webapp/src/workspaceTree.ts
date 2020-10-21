@@ -1,8 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Block} from './blocks/block'
 import {Board} from './blocks/board'
 import octoClient from './octoClient'
+import { IBlock } from './octoTypes'
 import {OctoUtils} from './octoUtils'
 
 interface WorkspaceTree {
@@ -17,7 +17,7 @@ class MutableWorkspaceTree {
 		this.rebuild(OctoUtils.hydrateBlocks(blocks))
 	}
 
-	private rebuild(blocks: Block[]) {
+	private rebuild(blocks: IBlock[]) {
 		this.boards = blocks.filter(block => block.type === "board") as Board[]
 	}
 }

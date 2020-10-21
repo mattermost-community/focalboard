@@ -5,7 +5,7 @@ import React from 'react'
 import {Archiver} from '../archiver'
 import {BlockIcons} from '../blockIcons'
 import {IPropertyTemplate} from '../blocks/board'
-import {Card} from '../blocks/card'
+import {Card, MutableCard} from '../blocks/card'
 import {BoardTree} from '../boardTree'
 import ViewMenu from '../components/viewMenu'
 import {CsvExporter} from '../csvExporter'
@@ -275,12 +275,12 @@ class TableComponent extends React.Component<Props, State> {
 	                            }
 
 	                            const tableRow = (<TableRow
-                                    key={card.id}
-                                    ref={tableRowRef}
-                                    boardTree={boardTree}
-                                    card={card}
-                                    focusOnMount={focusOnMount}
-                                    onKeyDown={(e) => {
+    key={card.id}
+    ref={tableRowRef}
+    boardTree={boardTree}
+    card={card}
+    focusOnMount={focusOnMount}
+    onKeyDown={(e) => {
                                         if (e.keyCode === 13) {
                                             // Enter: Insert new card if on last row
                                             if (cards.length > 0 && cards[cards.length - 1] === card) {
@@ -451,7 +451,7 @@ class TableComponent extends React.Component<Props, State> {
     async addCard(show = false) {
         const {boardTree} = this.props
 
-	    const card = new Card()
+	    const card = new MutableCard()
 	    card.parentId = boardTree.board.id
 	    card.icon = BlockIcons.shared.randomIcon()
 	    await mutator.insertBlock(

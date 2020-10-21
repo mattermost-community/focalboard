@@ -1,14 +1,14 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-
-import {Archiver} from '../archiver'
-import {Board} from '../blocks/board'
-import {BoardTree} from '../boardTree'
+import { Archiver } from '../archiver'
+import { Board, MutableBoard } from '../blocks/board'
+import { BoardTree } from '../boardTree'
+import mutator from '../mutator'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
-import mutator from '../mutator'
-import {WorkspaceTree} from '../workspaceTree'
+import { WorkspaceTree } from '../workspaceTree'
+
 
 type Props = {
     showBoard: (id: string) => void
@@ -109,7 +109,7 @@ class Sidebar extends React.Component<Props> {
         const {boardTree, showBoard} = this.props
 
         const oldBoardId = boardTree?.board?.id
-        const board = new Board()
+        const board = new MutableBoard()
         await mutator.insertBlock(
             board,
             'add board',
@@ -126,4 +126,5 @@ class Sidebar extends React.Component<Props> {
     }
 }
 
-export {Sidebar}
+export { Sidebar }
+

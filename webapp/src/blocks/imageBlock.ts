@@ -1,10 +1,12 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IOrderedBlock} from '../octoTypes'
+import { IOrderedBlock, MutableOrderedBlock } from './orderedBlock'
 
-import {Block} from './block'
+interface ImageBlock extends IOrderedBlock {
 
-class ImageBlock extends Block implements IOrderedBlock {
+}
+
+class MutableImageBlock extends MutableOrderedBlock implements IOrderedBlock {
     get order(): number {
         return this.fields.order as number
     }
@@ -25,4 +27,4 @@ class ImageBlock extends Block implements IOrderedBlock {
     }
 }
 
-export {ImageBlock}
+export {ImageBlock, MutableImageBlock}

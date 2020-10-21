@@ -1,23 +1,41 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Block} from './block'
+import { IBlock } from '../octoTypes'
+import {MutableBlock} from './block'
 
 type PropertyType = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy'
 
 interface IPropertyOption {
+    readonly value: string,
+    readonly color: string
+}
+
+interface IMutablePropertyOption {
     value: string,
     color: string
 }
 
 // A template for card properties attached to a board
 interface IPropertyTemplate {
+    readonly id: string
+    readonly name: string
+    readonly type: PropertyType
+    readonly options: IPropertyOption[]
+}
+
+interface IMutablePropertyTemplate extends IPropertyTemplate {
     id: string
     name: string
     type: PropertyType
-    options: IPropertyOption[]
+    options: IMutablePropertyOption[]
 }
 
-class Board extends Block {
+interface Board extends IBlock {
+    readonly icon: string
+    readonly cardProperties: readonly IPropertyTemplate[]
+}
+
+class MutableBoard extends MutableBlock {
     get icon(): string {
         return this.fields.icon as string
     }
@@ -25,10 +43,10 @@ class Board extends Block {
         this.fields.icon = value
     }
 
-    get cardProperties(): IPropertyTemplate[] {
+    get cardProperties(): IMutablePropertyTemplate[] {
         return this.fields.cardProperties as IPropertyTemplate[]
     }
-    set cardProperties(value: IPropertyTemplate[]) {
+    set cardProperties(value: IMutablePropertyTemplate[]) {
         this.fields.cardProperties = value
     }
 
@@ -52,4 +70,4 @@ class Board extends Block {
     }
 }
 
-export {Board, PropertyType, IPropertyOption, IPropertyTemplate}
+export {Board, MutableBoard, PropertyType, IPropertyOption, IPropertyTemplate}

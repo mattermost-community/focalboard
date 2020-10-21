@@ -1,8 +1,15 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Block} from './block'
+import {IBlock} from '../octoTypes'
 
-class Card extends Block {
+import {MutableBlock} from './block'
+
+interface Card extends IBlock {
+    readonly icon: string
+    readonly properties: Readonly<Record<string, string>>
+}
+
+class MutableCard extends MutableBlock {
     get icon(): string {
         return this.fields.icon as string
     }
@@ -25,4 +32,4 @@ class Card extends Block {
     }
 }
 
-export {Card}
+export {MutableCard, Card}

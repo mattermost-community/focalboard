@@ -1,8 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
+import { MutableBlock } from '../blocks/block'
 
-import {Block} from '../blocks/block'
 import {IPropertyTemplate} from '../blocks/board'
 import {Card} from '../blocks/card'
 import {Menu} from '../menu'
@@ -89,7 +89,7 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
                 break
             }
             case 'duplicate': {
-                const newCard = Block.duplicate(card)
+                const newCard = MutableBlock.duplicate(card)
                 mutator.insertBlock(newCard, 'duplicate card')
                 break
             }

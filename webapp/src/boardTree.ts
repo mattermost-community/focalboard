@@ -1,8 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Block} from './blocks/block'
-import {Board, IPropertyOption, IPropertyTemplate} from './blocks/board'
-import {BoardView} from './blocks/boardView'
+import {MutableBlock} from './blocks/block'
+import {Board, IPropertyOption, IPropertyTemplate, MutableBoard} from './blocks/board'
+import {BoardView, MutableBoardView} from './blocks/boardView'
 import {Card} from './blocks/card'
 import {CardFilter} from './cardFilter'
 import octoClient from './octoClient'
@@ -28,12 +28,12 @@ interface BoardTree {
 
 class MutableBoardTree implements BoardTree {
 	board!: Board
-	views: BoardView[] = []
+	views: MutableBoardView[] = []
 	cards: Card[] = []
 	emptyGroupCards: Card[] = []
 	groups: Group[] = []
 
-	activeView?: BoardView
+	activeView?: MutableBoardView
 	groupByProperty?: IPropertyTemplate
 
 	private searchText?: string
@@ -50,9 +50,9 @@ class MutableBoardTree implements BoardTree {
 		this.rebuild(OctoUtils.hydrateBlocks(blocks))
 	}
 
-	private rebuild(blocks: Block[]) {
+	private rebuild(blocks: IBlock[]) {
 		this.board = blocks.find(block => block.type === "board") as Board
-		this.views = blocks.filter(block => block.type === "view") as BoardView[]
+		this.views = blocks.filter(block => block.type === "view") as MutableBoardView[]
 		this.allCards = blocks.filter(block => block.type === "card") as Card[]
 		this.cards = []
 
@@ -67,19 +67,21 @@ class MutableBoardTree implements BoardTree {
 		// At least one select property
 		const selectProperties = board.cardProperties.find(o => o.type === "select")
 		if (!selectProperties) {
+            const newBoard = new MutableBoard(board)
 			const property: IPropertyTemplate = {
 				id: Utils.createGuid(),
 				name: "Status",
 				type: "select",
 				options: []
 			}
-			board.cardProperties.push(property)
+            newBoard.cardProperties.push(property)
+            this.board = newBoard
 			didChange = true
 		}
 
 		// At least one view
 		if (this.views.length < 1) {
-			const view = new BoardView()
+			const view = new MutableBoardView()
 			view.parentId = board.id
 			view.groupById = board.cardProperties.find(o => o.type === "select")?.id
 			this.views.push(view)

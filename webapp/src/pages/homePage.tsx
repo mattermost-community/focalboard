@@ -1,13 +1,13 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-
-import {Archiver} from '../archiver'
-import {Board} from '../blocks/board'
+import { Archiver } from '../archiver'
+import { MutableBoard } from '../blocks/board'
 import Button from '../components/button'
 import octoClient from '../octoClient'
-import {IBlock} from '../octoTypes'
-import {Utils} from '../utils'
+import { IBlock } from '../octoTypes'
+import { Utils } from '../utils'
+
 
 type Props = {}
 
@@ -43,7 +43,7 @@ export default class HomePage extends React.Component<Props, State> {
     }
 
     addClicked = async () => {
-	    const board = new Board()
+	    const board = new MutableBoard()
 	    await octoClient.insertBlock(board)
     }
 

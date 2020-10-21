@@ -162,7 +162,7 @@ export default class BoardPage extends React.Component<Props, State> {
 	    Utils.log(`attachToBoard: ${boardId}`)
 
 	    this.boardListener.open(boardId, (blockId: string) => {
-            console.log(`octoListener.onChanged: ${blockId}`)
+            Utils.log(`boardListener.onChanged: ${blockId}`)
             this.sync(boardId)
         })
 

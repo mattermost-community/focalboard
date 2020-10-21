@@ -1,9 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Block} from './blocks/block'
 import {Card} from './blocks/card'
+import { IOrderedBlock } from './blocks/orderedBlock'
 import octoClient from './octoClient'
-import {IBlock, IOrderedBlock} from './octoTypes'
+import {IBlock} from './octoTypes'
 import {OctoUtils} from './octoUtils'
 
 interface CardTree {
@@ -25,7 +25,7 @@ class MutableCardTree implements CardTree {
 		this.rebuild(OctoUtils.hydrateBlocks(blocks))
 	}
 
-	private rebuild(blocks: Block[]) {
+	private rebuild(blocks: IBlock[]) {
 		this.card = blocks.find(o => o.id === this.cardId) as Card
 
 		this.comments = blocks

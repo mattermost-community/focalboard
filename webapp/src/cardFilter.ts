@@ -7,11 +7,11 @@ import {FilterGroup} from './filterGroup'
 import {Utils} from './utils'
 
 class CardFilter {
-    static applyFilterGroup(filterGroup: FilterGroup, templates: IPropertyTemplate[], cards: Card[]): Card[] {
+    static applyFilterGroup(filterGroup: FilterGroup, templates: readonly IPropertyTemplate[], cards: Card[]): Card[] {
         return cards.filter((card) => this.isFilterGroupMet(filterGroup, templates, card))
     }
 
-    static isFilterGroupMet(filterGroup: FilterGroup, templates: IPropertyTemplate[], card: Card): boolean {
+    static isFilterGroupMet(filterGroup: FilterGroup, templates: readonly IPropertyTemplate[], card: Card): boolean {
         const {filters} = filterGroup
 
         if (filterGroup.filters.length < 1) {
@@ -43,7 +43,7 @@ class CardFilter {
         return true
     }
 
-    static isClauseMet(filter: FilterClause, templates: IPropertyTemplate[], card: Card): boolean {
+    static isClauseMet(filter: FilterClause, templates: readonly IPropertyTemplate[], card: Card): boolean {
         const value = card.properties[filter.propertyId]
         switch (filter.condition) {
         case 'includes': {
@@ -71,7 +71,7 @@ class CardFilter {
         return true
     }
 
-    static propertiesThatMeetFilterGroup(filterGroup: FilterGroup, templates: IPropertyTemplate[]): Record<string, string> {
+    static propertiesThatMeetFilterGroup(filterGroup: FilterGroup, templates: readonly IPropertyTemplate[]): Record<string, string> {
         // TODO: Handle filter groups
         const filters = filterGroup.filters.filter((o) => !FilterGroup.isAnInstanceOf(o))
         if (filters.length < 1) {
@@ -93,7 +93,7 @@ class CardFilter {
         return result
     }
 
-    static propertyThatMeetsFilterClause(filterClause: FilterClause, templates: IPropertyTemplate[]): { id: string, value?: string } {
+    static propertyThatMeetsFilterClause(filterClause: FilterClause, templates: readonly IPropertyTemplate[]): { id: string, value?: string } {
         const template = templates.find((o) => o.id === filterClause.propertyId)
         switch (filterClause.condition) {
         case 'includes': {

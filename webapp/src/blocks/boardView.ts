@@ -1,13 +1,22 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+import { IBlock } from '../octoTypes'
 import {FilterGroup} from '../filterGroup'
 
-import {Block} from './block'
+import {MutableBlock} from './block'
 
 type IViewType = 'board' | 'table' | 'calendar' | 'list' | 'gallery'
 type ISortOption = { propertyId: '__name' | string, reversed: boolean }
 
-class BoardView extends Block {
+interface BoardView extends IBlock {
+    readonly viewType: IViewType
+    readonly groupById: string
+    readonly sortOptions: readonly ISortOption[]
+    readonly visiblePropertyIds: readonly string[]
+    readonly filter: FilterGroup | undefined
+}
+
+class MutableBoardView extends MutableBlock {
     get viewType(): IViewType {
         return this.fields.viewType
     }
@@ -67,4 +76,4 @@ class BoardView extends Block {
     }
 }
 
-export {BoardView, IViewType, ISortOption}
+export {BoardView, MutableBoardView, IViewType, ISortOption}

@@ -1,28 +1,28 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-
-import {BlockIcons} from '../blockIcons'
-import {Block} from '../blocks/block'
-import {Card} from '../blocks/card'
-import {TextBlock} from '../blocks/textBlock'
-import {BoardTree} from '../boardTree'
-import {CardTree, MutableCardTree} from '../cardTree'
-import {Menu as OldMenu, MenuOption} from '../menu'
+import { BlockIcons } from '../blockIcons'
+import { MutableCommentBlock } from '../blocks/commentBlock'
+import { IOrderedBlock } from '../blocks/orderedBlock'
+import { MutableTextBlock } from '../blocks/textBlock'
+import { BoardTree } from '../boardTree'
+import { CardTree, MutableCardTree } from '../cardTree'
+import { Menu as OldMenu, MenuOption } from '../menu'
 import mutator from '../mutator'
-import {OctoListener} from '../octoListener'
-import {IBlock, IOrderedBlock} from '../octoTypes'
-import {OctoUtils} from '../octoUtils'
-import {PropertyMenu} from '../propertyMenu'
-import {Utils} from '../utils'
-
+import { OctoListener } from '../octoListener'
+import { IBlock } from '../octoTypes'
+import { OctoUtils } from '../octoUtils'
+import { PropertyMenu } from '../propertyMenu'
+import { Utils } from '../utils'
 import Button from './button'
-import {Editable} from './editable'
-import {MarkdownEditor} from './markdownEditor'
+import { Editable } from './editable'
+import { MarkdownEditor } from './markdownEditor'
+
+
 
 type Props = {
     boardTree: BoardTree
-    card: Card
+    cardId: string
 }
 
 type State = {
@@ -42,13 +42,14 @@ export default class CardDetail extends React.Component<Props, State> {
 
     componentDidMount() {
         this.cardListener = new OctoListener()
-	    this.cardListener.open(this.props.card.id, async () => {
+	    this.cardListener.open(this.props.cardId, async (blockId) => {
+            Utils.log(`cardListener.onChanged: ${blockId}`)
             await cardTree.sync()
-	        this.setState({cardTree})
+	        this.setState({...this.state, cardTree})
         })
-	    const cardTree = new MutableCardTree(this.props.card.id)
+	    const cardTree = new MutableCardTree(this.props.cardId)
         cardTree.sync().then(() => {
-	        this.setState({cardTree})
+	        this.setState({...this.state, cardTree})
 	        setTimeout(() => {
                 if (this.titleRef.current) {
                     this.titleRef.current.focus()
@@ -58,13 +59,13 @@ export default class CardDetail extends React.Component<Props, State> {
     }
 
     render() {
-	    const {boardTree, card} = this.props
-	    const {cardTree} = this.state
+	    const {boardTree} = this.props
+        const {cardTree} = this.state
         const {board} = boardTree
 	    if (!cardTree) {
 	        return null
         }
-        const {comments} = cardTree
+        const {card, comments} = cardTree
 
         const newCommentPlaceholderText = 'Add a comment...'
 
@@ -133,8 +134,10 @@ export default class CardDetail extends React.Component<Props, State> {
                         text=''
                         placeholderText='Add a description...'
                         onChanged={(text) => {
-                            const order = cardTree.contents.length * 1000
-                            const block = new Block({type: 'text', parentId: card.id, title: text, order})
+                            const block = new MutableTextBlock()
+                            block.parentId = card.id
+                            block.title = text
+                            block.order = cardTree.contents.length * 1000
                             mutator.insertBlock(block, 'add card text')
                         }}
                     />
@@ -363,8 +366,9 @@ export default class CardDetail extends React.Component<Props, State> {
                                 OldMenu.shared.onMenuClicked = async (optionId: string, type?: string) => {
 	                                switch (optionId) {
                                     case 'text':
-	                                    const order = cardTree.contents.length * 1000
-                                        const block = new Block({type: 'text', parentId: card.id, order})
+                                        const block = new MutableTextBlock()
+                                        block.parentId = card.id
+                                        block.order = cardTree.contents.length * 1000
                                         await mutator.insertBlock(block, 'add text')
 	                                    break
 	                                case 'image':
@@ -386,17 +390,17 @@ export default class CardDetail extends React.Component<Props, State> {
     }
 
     async sendComment(text: string) {
-        const {card} = this.props
+        const {cardId} = this.props
 
-        Utils.assertValue(card)
+        Utils.assertValue(cardId)
 
-	    const block = new Block({type: 'comment', parentId: card.id, title: text})
+	    const block = new MutableCommentBlock({parentId: cardId, title: text})
         await mutator.insertBlock(block, 'add comment')
     }
 
     private showContentBlockMenu(e: React.MouseEvent, block: IOrderedBlock) {
         const {cardTree} = this.state
-	    const {card} = this.props
+	    const {cardId} = this.props
 	    const index = cardTree.contents.indexOf(block)
 
 	    const options: MenuOption[] = []
@@ -440,7 +444,8 @@ export default class CardDetail extends React.Component<Props, State> {
                 break
             }
 	        case 'insertAbove-text': {
-                const newBlock = new TextBlock({parentId: card.id})
+                const newBlock = new MutableTextBlock()
+                newBlock.parentId = cardId
 
                 // TODO: Handle need to reorder all blocks
                 newBlock.order = OctoUtils.getOrderBefore(block, cardTree.contents)
@@ -451,7 +456,7 @@ export default class CardDetail extends React.Component<Props, State> {
 	        case 'insertAbove-image': {
 	            Utils.selectLocalFile(
 	                (file) => {
-	                    mutator.createImageBlock(card.id, file, OctoUtils.getOrderBefore(block, cardTree.contents))
+	                    mutator.createImageBlock(cardId, file, OctoUtils.getOrderBefore(block, cardTree.contents))
                     },
                     '.jpg,.jpeg,.png')
 
@@ -467,7 +472,8 @@ export default class CardDetail extends React.Component<Props, State> {
     }
 
     private iconClicked(e: React.MouseEvent) {
-        const {card} = this.props
+        const {cardTree} = this.state
+        const {card} = cardTree
 
         OldMenu.shared.options = [
             {id: 'random', name: 'Random'},
