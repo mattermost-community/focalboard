@@ -20,6 +20,13 @@ generate:
 	cd server; go get -modfile=go.tools.mod github.com/jteeuwen/go-bindata
 	cd server; go generate ./...
 
+server-lint:
+	@if ! [ -x "$$(command -v golangci-lint)" ]; then \
+        echo "golangci-lint is not installed. Please see https://github.com/golangci/golangci-lint#install for installation instructions."; \
+        exit 1; \
+    fi; \
+    cd server; golangci-lint run ./...
+
 watch-server:
 	cd server; modd
 
