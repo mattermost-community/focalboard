@@ -32,5 +32,4 @@ func TestGetParentID(t *testing.T) {
 		require.Error(t, err)
 		require.Equal(t, "block-not-found", err.Error())
 	})
-
 }

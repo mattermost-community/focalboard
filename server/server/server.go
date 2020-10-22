@@ -22,12 +22,12 @@ import (
 	"github.com/mattermost/mattermost-server/v5/services/filesstore"
 )
 
-const CurrentVersion = "0.0.1"
+const currentVersion = "0.0.1"
 
 type Server struct {
 	config       *config.Configuration
 	wsServer     *ws.Server
-	webServer    *web.WebServer
+	webServer    *web.Server
 	store        store.Store
 	filesBackend filesstore.FileBackend
 	telemetry    *telemetry.Service
@@ -43,6 +43,7 @@ func New(cfg *config.Configuration) (*Server, error) {
 	store, err := sqlstore.New(cfg.DBType, cfg.DBConfigString)
 	if err != nil {
 		log.Fatal("Unable to start the database", err)
+
 		return nil, err
 	}
 
@@ -54,13 +55,14 @@ func New(cfg *config.Configuration) (*Server, error) {
 	filesBackend, appErr := filesstore.NewFileBackend(&filesBackendSettings, false)
 	if appErr != nil {
 		log.Fatal("Unable to initialize the files storage")
+
 		return nil, errors.New("unable to initialize the files storage")
 	}
 
 	appBuilder := func() *app.App { return app.New(cfg, store, wsServer, filesBackend) }
-
-	webServer := web.NewWebServer(cfg.WebPath, cfg.Port, cfg.UseSSL)
 	api := api.NewAPI(appBuilder)
+
+	webServer := web.NewServer(cfg.WebPath, cfg.Port, cfg.UseSSL)
 	webServer.AddRoutes(wsServer)
 	webServer.AddRoutes(api)
 
@@ -95,7 +97,22 @@ func New(cfg *config.Configuration) (*Server, error) {
 	}
 
 	telemetryService := telemetry.New(telemetryID, zap.NewStdLog(logger))
-	srv := &Server{
+	telemetryService.RegisterTracker("server", func() map[string]interface{} {
+		return map[string]interface{}{
+			"version":          currentVersion,
+			"operating_system": runtime.GOOS,
+		}
+	})
+	telemetryService.RegisterTracker("config", func() map[string]interface{} {
+		return map[string]interface{}{
+			"serverRoot": cfg.ServerRoot == config.DefaultServerRoot,
+			"port":       cfg.Port == config.DefaultPort,
+			"useSSL":     cfg.UseSSL,
+			"dbType":     cfg.DBType,
+		}
+	})
+
+	return &Server{
 		config:       cfg,
 		wsServer:     wsServer,
 		webServer:    webServer,
@@ -103,29 +120,14 @@ func New(cfg *config.Configuration) (*Server, error) {
 		filesBackend: filesBackend,
 		telemetry:    telemetryService,
 		logger:       logger,
-	}
-	telemetryService.RegisterTracker("server", func() map[string]interface{} {
-		return map[string]interface{}{
-			"version":          CurrentVersion,
-			"operating_system": runtime.GOOS,
-		}
-	})
-	telemetryService.RegisterTracker("config", func() map[string]interface{} {
-		return map[string]interface{}{
-			"serverRoot": srv.config.ServerRoot == config.DefaultServerRoot,
-			"port":       srv.config.Port == config.DefaultPort,
-			"useSSL":     srv.config.UseSSL,
-			"dbType":     srv.config.DBType,
-		}
-	})
-
-	return srv, nil
+	}, nil
 }
 
 func (s *Server) Start() error {
 	if err := s.webServer.Start(); err != nil {
 		return err
 	}
+
 	return nil
 }
 

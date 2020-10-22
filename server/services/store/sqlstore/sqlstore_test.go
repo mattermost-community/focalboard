@@ -12,6 +12,7 @@ func SetupTests(t *testing.T) (*SQLStore, func()) {
 	if dbType == "" {
 		dbType = "sqlite3"
 	}
+
 	connectionString := os.Getenv("OT_STORE_TEST_CONN_STRING")
 	if connectionString == "" {
 		connectionString = ":memory:"
@@ -24,5 +25,6 @@ func SetupTests(t *testing.T) (*SQLStore, func()) {
 		err = store.Shutdown()
 		require.Nil(t, err)
 	}
+
 	return store, tearDown
 }

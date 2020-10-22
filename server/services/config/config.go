@@ -11,7 +11,7 @@ const (
 	DefaultPort       = 8000
 )
 
-// Configuration is the app configuration stored in a json file
+// Configuration is the app configuration stored in a json file.
 type Configuration struct {
 	ServerRoot     string `json:"serverRoot" mapstructure:"serverRoot"`
 	Port           int    `json:"port" mapstructure:"port"`
@@ -23,6 +23,7 @@ type Configuration struct {
 	Telemetry      bool   `json:"telemetry" mapstructure:"telemetry"`
 }
 
+// ReadConfigFile read the configuration from the filesystem.
 func ReadConfigFile() (*Configuration, error) {
 	viper.SetConfigName("config") // name of config file (without extension)
 	viper.SetConfigType("json")   // REQUIRED if the config file does not have the extension in the name
@@ -40,6 +41,7 @@ func ReadConfigFile() (*Configuration, error) {
 	}
 
 	configuration := Configuration{}
+
 	err = viper.Unmarshal(&configuration)
 	if err != nil {
 		return nil, err

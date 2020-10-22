@@ -40,6 +40,7 @@ func New(telemetryID string, log *log.Logger) *Service {
 		telemetryID: telemetryID,
 		trackers:    map[string]Tracker{},
 	}
+
 	return service
 }
 
@@ -93,6 +94,7 @@ func (ts *Service) initRudder(endpoint string, rudderKey string) {
 		client, err := rudder.NewWithConfig(rudderKey, endpoint, config)
 		if err != nil {
 			ts.log.Fatal("Failed to create Rudder instance")
+
 			return
 		}
 		client.Enqueue(rudder.Identify{
@@ -135,5 +137,6 @@ func (ts *Service) Shutdown() error {
 	if ts.rudderClient != nil {
 		return ts.rudderClient.Close()
 	}
+
 	return nil
 }

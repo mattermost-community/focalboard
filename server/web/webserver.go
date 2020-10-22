@@ -11,21 +11,26 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// RoutedService defines the interface that is needed for any service to
+// register themself in the web server to provide new endpoints. (see
+// AddRoutes).
 type RoutedService interface {
 	RegisterRoutes(*mux.Router)
 }
 
-type WebServer struct {
+// Server is the structure responsible for managing our http web server.
+type Server struct {
 	router   *mux.Router
 	rootPath string
 	port     int
 	ssl      bool
 }
 
-func NewWebServer(rootPath string, port int, ssl bool) *WebServer {
+// NewServer creates a new instance of the webserver.
+func NewServer(rootPath string, port int, ssl bool) *Server {
 	r := mux.NewRouter()
 
-	ws := &WebServer{
+	ws := &Server{
 		router:   r,
 		rootPath: rootPath,
 		port:     port,
@@ -35,11 +40,12 @@ func NewWebServer(rootPath string, port int, ssl bool) *WebServer {
 	return ws
 }
 
-func (ws *WebServer) AddRoutes(rs RoutedService) {
+// AddRoutes allows services to register themself in the webserver router and provide new endpoints.
+func (ws *Server) AddRoutes(rs RoutedService) {
 	rs.RegisterRoutes(ws.router)
 }
 
-func (ws *WebServer) registerRoutes() {
+func (ws *Server) registerRoutes() {
 	ws.router.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(filepath.Join(ws.rootPath, "static")))))
 	ws.router.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -47,12 +53,13 @@ func (ws *WebServer) registerRoutes() {
 	})
 }
 
-func (ws *WebServer) Start() error {
+// Start runs the web server and start listening for charsetnnections.
+func (ws *Server) Start() error {
 	ws.registerRoutes()
 	http.Handle("/", ws.router)
 
 	urlPort := fmt.Sprintf(`:%d`, ws.port)
-	var isSSL = ws.ssl && fileExists("./cert/cert.pem") && fileExists("./cert/key.pem")
+	isSSL := ws.ssl && fileExists("./cert/cert.pem") && fileExists("./cert/key.pem")
 
 	if isSSL {
 		log.Println("https server started on ", urlPort)
@@ -73,7 +80,7 @@ func (ws *WebServer) Start() error {
 	return nil
 }
 
-// FileExists returns true if a file exists at the path
+// fileExists returns true if a file exists at the path.
 func fileExists(path string) bool {
 	_, err := os.Stat(path)
 	if os.IsNotExist(err) {

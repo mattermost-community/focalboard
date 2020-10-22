@@ -8,9 +8,11 @@ func (a *App) GetBlocks(parentID string, blockType string) ([]model.Block, error
 	if len(blockType) > 0 && len(parentID) > 0 {
 		return a.store.GetBlocksWithParentAndType(parentID, blockType)
 	}
+
 	if len(blockType) > 0 {
 		return a.store.GetBlocksWithType(blockType)
 	}
+
 	return a.store.GetBlocksWithParent(parentID)
 }
 
@@ -23,7 +25,7 @@ func (a *App) InsertBlock(block model.Block) error {
 }
 
 func (a *App) InsertBlocks(blocks []model.Block) error {
-	var blockIDsToNotify = []string{}
+	blockIDsToNotify := []string{}
 
 	uniqueBlockIDs := make(map[string]bool)
 
@@ -43,6 +45,7 @@ func (a *App) InsertBlocks(blocks []model.Block) error {
 	}
 
 	a.wsServer.BroadcastBlockChangeToWebsocketClients(blockIDsToNotify)
+
 	return nil
 }
 
@@ -55,7 +58,7 @@ func (a *App) GetAllBlocks() ([]model.Block, error) {
 }
 
 func (a *App) DeleteBlock(blockID string) error {
-	var blockIDsToNotify = []string{blockID}
+	blockIDsToNotify := []string{blockID}
 	parentID, err := a.GetParentID(blockID)
 	if err != nil {
 		return err
@@ -71,5 +74,6 @@ func (a *App) DeleteBlock(blockID string) error {
 	}
 
 	a.wsServer.BroadcastBlockChangeToWebsocketClients(blockIDsToNotify)
+
 	return nil
 }

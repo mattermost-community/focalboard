@@ -2,11 +2,10 @@ package main
 
 import (
 	"flag"
-	"syscall"
-	"time"
-
 	"log"
 	"os"
+	"syscall"
+	"time"
 
 	"github.com/mattermost/mattermost-octo-tasks/server/server"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/config"
@@ -26,6 +25,7 @@ func isProcessRunning(pid int) bool {
 	}
 
 	err = process.Signal(syscall.Signal(0))
+
 	return err == nil
 }
 
@@ -49,6 +49,7 @@ func main() {
 	config, err := config.ReadConfigFile()
 	if err != nil {
 		log.Fatal("Unable to read the config file: ", err)
+
 		return
 	}
 

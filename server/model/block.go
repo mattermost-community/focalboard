@@ -1,6 +1,6 @@
 package model
 
-// Block is the basic data unit
+// Block is the basic data unit.
 type Block struct {
 	ID       string                 `json:"id"`
 	ParentID string                 `json:"parentId"`

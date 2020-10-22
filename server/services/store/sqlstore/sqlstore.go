@@ -7,13 +7,13 @@ import (
 	sq "github.com/Masterminds/squirrel"
 )
 
-// SQLStore is a SQL database
+// SQLStore is a SQL database.
 type SQLStore struct {
 	db     *sql.DB
 	dbType string
 }
 
-// New creates a new SQL implementation of the store
+// New creates a new SQL implementation of the store.
 func New(dbType, connectionString string) (*SQLStore, error) {
 	log.Println("connectDatabase")
 	var err error
@@ -21,12 +21,14 @@ func New(dbType, connectionString string) (*SQLStore, error) {
 	db, err := sql.Open(dbType, connectionString)
 	if err != nil {
 		log.Fatal("connectDatabase: ", err)
+
 		return nil, err
 	}
 
 	err = db.Ping()
 	if err != nil {
 		log.Println(`Database Ping failed`)
+
 		return nil, err
 	}
 
@@ -38,16 +40,20 @@ func New(dbType, connectionString string) (*SQLStore, error) {
 	err = store.Migrate()
 	if err != nil {
 		log.Println(`Table creation failed`)
+
 		return nil, err
 	}
+
 	return store, nil
 }
 
+// Shutdown close the connection with the store.
 func (s *SQLStore) Shutdown() error {
 	return s.db.Close()
 }
 
 func (s *SQLStore) getQueryBuilder() sq.StatementBuilderType {
 	builder := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+
 	return builder.RunWith(s.db)
 }

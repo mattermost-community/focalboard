@@ -3,7 +3,7 @@ package store
 
 import "github.com/mattermost/mattermost-octo-tasks/server/model"
 
-// Store represents the abstraction of the data storage
+// Store represents the abstraction of the data storage.
 type Store interface {
 	GetBlocksWithParentAndType(parentID string, blockType string) ([]model.Block, error)
 	GetBlocksWithParent(parentID string) ([]model.Block, error)

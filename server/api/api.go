@@ -51,15 +51,18 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	blocks, err := a.app().GetBlocks(parentID, blockType)
 	if err != nil {
 		log.Printf(`ERROR GetBlocks: %v`, r)
-		errorResponse(w, http.StatusInternalServerError, `{}`)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
 		return
 	}
 
 	log.Printf("GetBlocks parentID: %s, type: %s, %d result(s)", parentID, blockType, len(blocks))
+
 	json, err := json.Marshal(blocks)
 	if err != nil {
 		log.Printf(`ERROR json.Marshal: %v`, r)
-		errorResponse(w, http.StatusInternalServerError, `{}`)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
 		return
 	}
 
@@ -69,7 +72,8 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		errorResponse(w, http.StatusInternalServerError, `{}`)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
 		return
 	}
 
@@ -77,32 +81,41 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	defer func() {
 		if r := recover(); r != nil {
 			log.Printf(`ERROR: %v`, r)
-			errorResponse(w, http.StatusInternalServerError, `{}`)
+			errorResponse(w, http.StatusInternalServerError, nil)
+
 			return
 		}
 	}()
 
 	var blocks []model.Block
+
 	err = json.Unmarshal(requestBody, &blocks)
 	if err != nil {
-		errorResponse(w, http.StatusInternalServerError, ``)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
 		return
 	}
 
 	for _, block := range blocks {
 		// Error checking
 		if len(block.Type) < 1 {
-			errorResponse(w, http.StatusInternalServerError, fmt.Sprintf(`{"description": "missing type", "id": "%s"}`, block.ID))
+			errorData := map[string]string{"description": "missing type", "id": block.ID}
+			errorResponse(w, http.StatusBadRequest, errorData)
+
 			return
 		}
 
 		if block.CreateAt < 1 {
-			errorResponse(w, http.StatusInternalServerError, fmt.Sprintf(`{"description": "invalid createAt", "id": "%s"}`, block.ID))
+			errorData := map[string]string{"description": "invalid createAt", "id": block.ID}
+			errorResponse(w, http.StatusBadRequest, errorData)
+
 			return
 		}
 
 		if block.UpdateAt < 1 {
-			errorResponse(w, http.StatusInternalServerError, fmt.Sprintf(`{"description": "invalid updateAt", "id": "%s"}`, block.ID))
+			errorData := map[string]string{"description": "invalid UpdateAt", "id": block.ID}
+			errorResponse(w, http.StatusBadRequest, errorData)
+
 			return
 		}
 	}
@@ -110,7 +123,8 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	err = a.app().InsertBlocks(blocks)
 	if err != nil {
 		log.Printf(`ERROR: %v`, r)
-		errorResponse(w, http.StatusInternalServerError, `{}`)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
 		return
 	}
 
@@ -125,7 +139,8 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 	err := a.app().DeleteBlock(blockID)
 	if err != nil {
 		log.Printf(`ERROR: %v`, r)
-		errorResponse(w, http.StatusInternalServerError, `{}`)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
 		return
 	}
 
@@ -140,7 +155,8 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	blocks, err := a.app().GetSubTree(blockID)
 	if err != nil {
 		log.Printf(`ERROR: %v`, r)
-		errorResponse(w, http.StatusInternalServerError, `{}`)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
 		return
 	}
 
@@ -148,7 +164,8 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	json, err := json.Marshal(blocks)
 	if err != nil {
 		log.Printf(`ERROR json.Marshal: %v`, r)
-		errorResponse(w, http.StatusInternalServerError, `{}`)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
 		return
 	}
 
@@ -159,15 +176,18 @@ func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
 	blocks, err := a.app().GetAllBlocks()
 	if err != nil {
 		log.Printf(`ERROR: %v`, r)
-		errorResponse(w, http.StatusInternalServerError, `{}`)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
 		return
 	}
 
 	log.Printf("EXPORT Blocks, %d result(s)", len(blocks))
+
 	json, err := json.Marshal(blocks)
 	if err != nil {
 		log.Printf(`ERROR json.Marshal: %v`, r)
-		errorResponse(w, http.StatusInternalServerError, `{}`)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
 		return
 	}
 
@@ -177,7 +197,8 @@ func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
 func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		errorResponse(w, http.StatusInternalServerError, `{}`)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
 		return
 	}
 
@@ -185,15 +206,18 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 	defer func() {
 		if r := recover(); r != nil {
 			log.Printf(`ERROR: %v`, r)
-			errorResponse(w, http.StatusInternalServerError, `{}`)
+			errorResponse(w, http.StatusInternalServerError, nil)
+
 			return
 		}
 	}()
 
 	var blocks []model.Block
+
 	err = json.Unmarshal(requestBody, &blocks)
 	if err != nil {
-		errorResponse(w, http.StatusInternalServerError, ``)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
 		return
 	}
 
@@ -201,7 +225,8 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 		err := a.app().InsertBlock(block)
 		if err != nil {
 			log.Printf(`ERROR: %v`, r)
-			errorResponse(w, http.StatusInternalServerError, `{}`)
+			errorResponse(w, http.StatusInternalServerError, nil)
+
 			return
 		}
 	}
@@ -217,6 +242,7 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	filename := vars["filename"]
 
 	contentType := "image/jpg"
+
 	fileExtension := strings.ToLower(filepath.Ext(filename))
 	if fileExtension == "png" {
 		contentType = "image/png"
@@ -234,6 +260,7 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	file, handle, err := r.FormFile("file")
 	if err != nil {
 		fmt.Fprintf(w, "%v", err)
+
 		return
 	}
 	defer file.Close()
@@ -243,6 +270,7 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	url, err := a.app().SaveFile(file, handle.Filename)
 	if err != nil {
 		jsonStringResponse(w, http.StatusInternalServerError, `{}`)
+
 		return
 	}
 
@@ -265,10 +293,14 @@ func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) {
 	w.Write(json)
 }
 
-func errorResponse(w http.ResponseWriter, code int, message string) {
+func errorResponse(w http.ResponseWriter, code int, message map[string]string) {
 	log.Printf("%d ERROR", code)
+	data, err := json.Marshal(message)
+	if err != nil {
+		data = []byte("{}")
+	}
 	w.WriteHeader(code)
-	fmt.Fprint(w, message)
+	fmt.Fprint(w, data)
 }
 
 func addUserID(rw http.ResponseWriter, req *http.Request, next http.Handler) {

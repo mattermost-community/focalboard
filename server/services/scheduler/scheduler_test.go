@@ -22,6 +22,7 @@ func TestCreateTask(t *testing.T) {
 	}
 
 	task := CreateTask(taskName, testFunc, taskTime)
+
 	assert.EqualValues(t, 0, atomic.LoadInt32(executionCount))
 
 	time.Sleep(taskTime + taskWait)
@@ -43,6 +44,7 @@ func TestCreateRecurringTask(t *testing.T) {
 	}
 
 	task := CreateRecurringTask(taskName, testFunc, taskTime)
+
 	assert.EqualValues(t, 0, atomic.LoadInt32(executionCount))
 
 	time.Sleep(taskTime + taskWait)
@@ -70,6 +72,7 @@ func TestCancelTask(t *testing.T) {
 	}
 
 	task := CreateTask(taskName, testFunc, taskTime)
+
 	assert.EqualValues(t, 0, atomic.LoadInt32(executionCount))
 	task.Cancel()
 

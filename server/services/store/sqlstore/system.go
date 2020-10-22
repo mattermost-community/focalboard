@@ -14,10 +14,12 @@ func (s *SQLStore) GetSystemSettings() (map[string]string, error) {
 	for rows.Next() {
 		var id string
 		var value string
+
 		err := rows.Scan(&id, &value)
 		if err != nil {
 			return nil, err
 		}
+
 		results[id] = value
 	}
 
@@ -31,5 +33,6 @@ func (s *SQLStore) SetSystemSetting(id string, value string) error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
