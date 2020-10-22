@@ -47,13 +47,17 @@ class TableComponent extends React.Component<Props, State> {
         this.state = {isHoverOnCover: false, isSearching: Boolean(this.props.boardTree?.getSearchText()), viewMenu: false}
     }
 
-    componentDidUpdate(prevPros: Props, prevState: State) {
+    shouldComponentUpdate(): boolean {
+        return true
+    }
+
+    componentDidUpdate(prevPros: Props, prevState: State): void {
         if (this.state.isSearching && !prevState.isSearching) {
             this.searchFieldRef.current.focus()
         }
     }
 
-    render() {
+    render(): JSX.Element {
         const {boardTree, showView} = this.props
 
         if (!boardTree || !boardTree.board) {
@@ -288,7 +292,7 @@ class TableComponent extends React.Component<Props, State> {
                                             }
                                         }
                                     }}
-                                                  />)
+                                />)
 
                                 this.cardIdToRowMap.set(card.id, tableRowRef)
 
@@ -442,13 +446,13 @@ class TableComponent extends React.Component<Props, State> {
         OldMenu.shared.showAtElement(e.target as HTMLElement)
     }
 
-    focusOnCardTitle(cardId: string) {
+    private focusOnCardTitle(cardId: string): void {
         const tableRowRef = this.cardIdToRowMap.get(cardId)
         Utils.log(`focusOnCardTitle, ${tableRowRef?.current ?? 'undefined'}`)
         tableRowRef?.current.focusOnTitle()
     }
 
-    async addCard(show = false) {
+    private async addCard(show = false) {
         const {boardTree} = this.props
 
         const card = new MutableCard()
@@ -487,7 +491,7 @@ class TableComponent extends React.Component<Props, State> {
         await mutator.changePropertyTemplateOrder(board, draggedHeaderTemplate, destIndex)
     }
 
-    onSearchKeyDown(e: React.KeyboardEvent) {
+    private onSearchKeyDown(e: React.KeyboardEvent) {
         if (e.keyCode === 27) { // ESC: Clear search
             this.searchFieldRef.current.text = ''
             this.setState({...this.state, isSearching: false})
@@ -496,7 +500,7 @@ class TableComponent extends React.Component<Props, State> {
         }
     }
 
-    searchChanged(text?: string) {
+    private searchChanged(text?: string) {
         this.props.setSearchText(text)
     }
 }

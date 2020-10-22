@@ -209,7 +209,7 @@ class BoardComponent extends React.Component<Props, State> {
                                 Group by <span
                                     style={groupByStyle}
                                     id='groupByLabel'
-                                         >{boardTree.groupByProperty?.name}</span>
+                                >{boardTree.groupByProperty?.name}</span>
                             </div>
                             <div
                                 className={hasFilter ? 'octo-button active' : 'octo-button'}
@@ -437,7 +437,7 @@ class BoardComponent extends React.Component<Props, State> {
         }
     }
 
-    async addCard(groupByValue?: string): Promise<void> {
+    private async addCard(groupByValue?: string): Promise<void> {
         const {boardTree} = this.props
         const {activeView, board} = boardTree
 
@@ -455,7 +455,7 @@ class BoardComponent extends React.Component<Props, State> {
         })
     }
 
-    async propertyNameChanged(option: IPropertyOption, text: string): Promise<void> {
+    private async propertyNameChanged(option: IPropertyOption, text: string): Promise<void> {
         const {boardTree} = this.props
 
         await mutator.changePropertyOptionValue(boardTree, boardTree.groupByProperty, option, text)
@@ -589,7 +589,7 @@ class BoardComponent extends React.Component<Props, State> {
         e.stopPropagation()
     }
 
-    async addGroupClicked() {
+    private async addGroupClicked() {
         Utils.log('onAddGroupClicked')
 
         const {boardTree} = this.props
@@ -603,7 +603,7 @@ class BoardComponent extends React.Component<Props, State> {
         await mutator.insertPropertyOption(boardTree, boardTree.groupByProperty, option, 'add group')
     }
 
-    async onDropToColumn(option: IPropertyOption) {
+    private async onDropToColumn(option: IPropertyOption) {
         const {boardTree} = this.props
         const {draggedCards, draggedHeaderOption} = this
         const propertyValue = option ? option.value : undefined
@@ -632,7 +632,7 @@ class BoardComponent extends React.Component<Props, State> {
         }
     }
 
-    onSearchKeyDown(e: React.KeyboardEvent) {
+    private onSearchKeyDown(e: React.KeyboardEvent) {
         if (e.keyCode === 27) { // ESC: Clear search
             this.searchFieldRef.current.text = ''
             this.setState({isSearching: false})
@@ -641,7 +641,7 @@ class BoardComponent extends React.Component<Props, State> {
         }
     }
 
-    searchChanged(text?: string) {
+    private searchChanged(text?: string) {
         this.props.setSearchText(text)
     }
 }

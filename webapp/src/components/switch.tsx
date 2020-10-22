@@ -27,7 +27,11 @@ class Switch extends React.Component<Props, State> {
         this.state = {isOn: props.isOn}
     }
 
-    focus() {
+    shouldComponentUpdate(): boolean {
+        return true
+    }
+
+    focus(): void {
         this.elementRef.current.focus()
 
         // Put cursor at end
@@ -35,7 +39,7 @@ class Switch extends React.Component<Props, State> {
         document.getSelection().collapseToEnd()
     }
 
-    render() {
+    render(): JSX.Element {
         const {style} = this.props
         const {isOn} = this.state
 

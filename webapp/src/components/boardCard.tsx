@@ -30,23 +30,29 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
         this.state = {}
     }
 
-    render() {
+    shouldComponentUpdate(): boolean {
+        return true
+    }
+
+    render(): JSX.Element {
         const {card} = this.props
         const optionsButtonRef = React.createRef<HTMLDivElement>()
         const visiblePropertyTemplates = this.props.visiblePropertyTemplates || []
         const className = this.props.isSelected ? 'octo-board-card selected' : 'octo-board-card'
 
-        const element =
-            (<div
+        const element = (
+            <div
                 className={className}
                 draggable={true}
                 style={{opacity: this.state.isDragged ? 0.5 : 1}}
                 onClick={this.props.onClick}
                 onDragStart={(e) => {
-                    this.setState({isDragged: true}); this.props.onDragStart(e)
+                    this.setState({isDragged: true})
+                    this.props.onDragStart(e)
                 }}
                 onDragEnd={(e) => {
-                    this.setState({isDragged: false}); this.props.onDragEnd(e)
+                    this.setState({isDragged: false})
+                    this.props.onDragEnd(e)
                 }}
 
                 onMouseOver={() => {
@@ -72,7 +78,8 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
                 {visiblePropertyTemplates.map((template) => {
                     return OctoUtils.propertyValueReadonlyElement(card, template, '')
                 })}
-            </div>)
+            </div>
+        )
 
         return element
     }

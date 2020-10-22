@@ -28,86 +28,92 @@ class TableRow extends React.Component<Props, State> {
         showCard: false,
     }
 
-    componentDidMount() {
+    shouldComponentUpdate(): boolean {
+        return true
+    }
+
+    componentDidMount(): void {
         if (this.props.focusOnMount) {
             this.titleRef.current.focus()
         }
     }
 
-    render() {
+    render(): JSX.Element {
         const {boardTree, card, onKeyDown} = this.props
         const {board, activeView} = boardTree
 
         const openButonRef = React.createRef<HTMLDivElement>()
 
-        const element = (<div
-            className='octo-table-row'
-            key={card.id}
-        >
-
-            {/* Name / title */}
-
+        const element = (
             <div
-                className='octo-table-cell title-cell'
-                id='mainBoardHeader'
-                onMouseOver={() => {
-                    openButonRef.current.style.display = null
-                }}
-                onMouseLeave={() => {
-                    openButonRef.current.style.display = 'none'
-                }}
+                className='octo-table-row'
+                key={card.id}
             >
-                <div className='octo-icontitle'>
-                    <div className='octo-icon'>{card.icon}</div>
-                    <Editable
-                        ref={this.titleRef}
-                        text={card.title}
-                        placeholderText='Untitled'
-                        onChanged={(text) => {
-                            mutator.changeTitle(card, text)
-                        }}
-                        onKeyDown={(e) => {
-                            onKeyDown(e)
-                        }}
-                    />
-                </div>
+
+                {/* Name / title */}
 
                 <div
-                    ref={openButonRef}
-                    className='octo-hoverbutton'
-                    style={{display: 'none'}}
-                    onClick={() => {
-                        this.setState({showCard: true})
+                    className='octo-table-cell title-cell'
+                    id='mainBoardHeader'
+                    onMouseOver={() => {
+                        openButonRef.current.style.display = null
                     }}
-                >Open</div>
-                {this.state.showCard &&
-                <RootPortal>
-                    <CardDialog
-                        boardTree={boardTree}
-                        card={card}
-                        onClose={() => this.setState({showCard: false})}
-                    />
-                </RootPortal>}
-            </div>
+                    onMouseLeave={() => {
+                        openButonRef.current.style.display = 'none'
+                    }}
+                >
+                    <div className='octo-icontitle'>
+                        <div className='octo-icon'>{card.icon}</div>
+                        <Editable
+                            ref={this.titleRef}
+                            text={card.title}
+                            placeholderText='Untitled'
+                            onChanged={(text) => {
+                                mutator.changeTitle(card, text)
+                            }}
+                            onKeyDown={(e) => {
+                                onKeyDown(e)
+                            }}
+                        />
+                    </div>
 
-            {/* Columns, one per property */}
+                    <div
+                        ref={openButonRef}
+                        className='octo-hoverbutton'
+                        style={{display: 'none'}}
+                        onClick={() => {
+                            this.setState({showCard: true})
+                        }}
+                    >Open</div>
+                    {this.state.showCard &&
+                    <RootPortal>
+                        <CardDialog
+                            boardTree={boardTree}
+                            card={card}
+                            onClose={() => this.setState({showCard: false})}
+                        />
+                    </RootPortal>}
+                </div>
 
-            {board.cardProperties.
-                filter((template) => activeView.visiblePropertyIds.includes(template.id)).
-                map((template) => {
-                    return (<div
-                        className='octo-table-cell'
-                        key={template.id}
+                {/* Columns, one per property */}
+
+                {board.cardProperties.
+                    filter((template) => activeView.visiblePropertyIds.includes(template.id)).
+                    map((template) => {
+                        return (
+                            <div
+                                className='octo-table-cell'
+                                key={template.id}
                             >
-                        {OctoUtils.propertyValueEditableElement(card, template)}
-                    </div>)
-                })}
-        </div>)
+                                {OctoUtils.propertyValueEditableElement(card, template)}
+                            </div>)
+                    })}
+            </div>)
 
         return element
     }
 
-    focusOnTitle() {
+    focusOnTitle(): void {
         this.titleRef.current?.focus()
     }
 }
