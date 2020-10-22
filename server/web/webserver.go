@@ -53,19 +53,23 @@ func (ws *WebServer) Start() error {
 
 	urlPort := fmt.Sprintf(`:%d`, ws.port)
 	var isSSL = ws.ssl && fileExists("./cert/cert.pem") && fileExists("./cert/key.pem")
+
 	if isSSL {
 		log.Println("https server started on ", urlPort)
 		err := http.ListenAndServeTLS(urlPort, "./cert/cert.pem", "./cert/key.pem", nil)
 		if err != nil {
 			return err
 		}
+
 		return nil
 	}
+
 	log.Println("http server started on ", urlPort)
 	err := http.ListenAndServe(urlPort, nil)
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -75,5 +79,6 @@ func fileExists(path string) bool {
 	if os.IsNotExist(err) {
 		return false
 	}
+
 	return err == nil
 }

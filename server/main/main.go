@@ -15,6 +15,10 @@ import (
 // ----------------------------------------------------------------------------------------------------
 // WebSocket OnChange listener
 
+const (
+	timeBetweenPidMonitoringChecks = 2 * time.Second
+)
+
 func isProcessRunning(pid int) bool {
 	process, err := os.FindProcess(pid)
 	if err != nil {
@@ -27,13 +31,15 @@ func isProcessRunning(pid int) bool {
 
 func monitorPid(pid int) {
 	log.Printf("Monitoring PID: %d", pid)
+
 	go func() {
 		for {
 			if !isProcessRunning(pid) {
 				log.Printf("Monitored process not found, exiting.")
 				os.Exit(1)
 			}
-			time.Sleep(2 * time.Second)
+
+			time.Sleep(timeBetweenPidMonitoringChecks)
 		}
 	}()
 }

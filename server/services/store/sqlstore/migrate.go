@@ -1,6 +1,8 @@
 package sqlstore
 
 import (
+	"errors"
+
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
@@ -13,28 +15,24 @@ import (
 )
 
 func (s *SQLStore) Migrate() error {
+	var bresource *bindata.AssetSource
 	var driver database.Driver
 	var err error
-	var bresource *bindata.AssetSource
+
 	if s.dbType == "sqlite3" {
 		driver, err = sqlite3.WithInstance(s.db, &sqlite3.Config{})
 		if err != nil {
 			return err
 		}
-		bresource = bindata.Resource(sqlite.AssetNames(),
-			func(name string) ([]byte, error) {
-				return sqlite.Asset(name)
-			})
+		bresource = bindata.Resource(sqlite.AssetNames(), sqlite.Asset)
 	}
+
 	if s.dbType == "postgres" {
 		driver, err = postgres.WithInstance(s.db, &postgres.Config{})
 		if err != nil {
 			return err
 		}
-		bresource = bindata.Resource(pgmigrations.AssetNames(),
-			func(name string) ([]byte, error) {
-				return pgmigrations.Asset(name)
-			})
+		bresource = bindata.Resource(pgmigrations.AssetNames(), pgmigrations.Asset)
 	}
 
 	d, err := bindata.WithInstance(bresource)
@@ -48,8 +46,9 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	err = m.Up()
-	if err != nil && err != migrate.ErrNoChange {
+	if err != nil && errors.Is(err, migrate.ErrNoChange) {
 		return err
 	}
+
 	return nil
 }

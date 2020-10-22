@@ -16,14 +16,16 @@ func TestGetParentID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	store := mockstore.NewMockStore(ctrl)
-	wsserver := ws.NewWSServer()
+	wsserver := ws.NewServer()
 	app := New(&config.Configuration{}, store, wsserver, &mocks.FileBackend{})
+
 	t.Run("success query", func(t *testing.T) {
 		store.EXPECT().GetParentID(gomock.Eq("test-id")).Return("test-parent-id", nil)
 		result, err := app.GetParentID("test-id")
 		require.NoError(t, err)
 		require.Equal(t, "test-parent-id", result)
 	})
+
 	t.Run("fail query", func(t *testing.T) {
 		store.EXPECT().GetParentID(gomock.Eq("test-id")).Return("", errors.New("block-not-found"))
 		_, err := app.GetParentID("test-id")

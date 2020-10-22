@@ -26,11 +26,11 @@ const CurrentVersion = "0.0.1"
 
 type Server struct {
 	config       *config.Configuration
-	wsServer     *ws.WSServer
+	wsServer     *ws.Server
 	webServer    *web.WebServer
 	store        store.Store
 	filesBackend filesstore.FileBackend
-	telemetry    *telemetry.TelemetryService
+	telemetry    *telemetry.Service
 	logger       *zap.Logger
 }
 
@@ -46,7 +46,7 @@ func New(cfg *config.Configuration) (*Server, error) {
 		return nil, err
 	}
 
-	wsServer := ws.NewWSServer()
+	wsServer := ws.NewServer()
 
 	filesBackendSettings := model.FileSettings{}
 	filesBackendSettings.SetDefaults(false)
@@ -67,11 +67,13 @@ func New(cfg *config.Configuration) (*Server, error) {
 	// Ctrl+C handling
 	handler := make(chan os.Signal, 1)
 	signal.Notify(handler, os.Interrupt)
+
 	go func() {
 		for sig := range handler {
 			// sig is a ^C, handle it
 			if sig == os.Interrupt {
 				os.Exit(1)
+
 				break
 			}
 		}

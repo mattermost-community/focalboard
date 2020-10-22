@@ -17,7 +17,8 @@ func (s *SQLStore) latestsBlocksSubquery() sq.SelectBuilder {
 }
 
 func (s *SQLStore) GetBlocksWithParentAndType(parentID string, blockType string) ([]model.Block, error) {
-	query := s.getQueryBuilder().Select("id", "parent_id", "schema", "type", "title", "COALESCE(\"fields\", '{}')", "create_at", "update_at", "delete_at").
+	query := s.getQueryBuilder().
+		Select("id", "parent_id", "schema", "type", "title", "COALESCE(\"fields\", '{}')", "create_at", "update_at", "delete_at").
 		FromSelect(s.latestsBlocksSubquery(), "latest").
 		Where(sq.Eq{"delete_at": 0}).
 		Where(sq.Eq{"parent_id": parentID}).
@@ -25,6 +26,7 @@ func (s *SQLStore) GetBlocksWithParentAndType(parentID string, blockType string)
 	rows, err := query.Query()
 	if err != nil {
 		log.Printf(`getBlocksWithParentAndType ERROR: %v`, err)
+
 		return nil, err
 	}
 
@@ -32,7 +34,8 @@ func (s *SQLStore) GetBlocksWithParentAndType(parentID string, blockType string)
 }
 
 func (s *SQLStore) GetBlocksWithParent(parentID string) ([]model.Block, error) {
-	query := s.getQueryBuilder().Select("id", "parent_id", "schema", "type", "title", "COALESCE(\"fields\", '{}')", "create_at", "update_at", "delete_at").
+	query := s.getQueryBuilder().
+		Select("id", "parent_id", "schema", "type", "title", "COALESCE(\"fields\", '{}')", "create_at", "update_at", "delete_at").
 		FromSelect(s.latestsBlocksSubquery(), "latest").
 		Where(sq.Eq{"delete_at": 0}).
 		Where(sq.Eq{"parent_id": parentID})
@@ -47,7 +50,8 @@ func (s *SQLStore) GetBlocksWithParent(parentID string) ([]model.Block, error) {
 }
 
 func (s *SQLStore) GetBlocksWithType(blockType string) ([]model.Block, error) {
-	query := s.getQueryBuilder().Select("id", "parent_id", "schema", "type", "title", "COALESCE(\"fields\", '{}')", "create_at", "update_at", "delete_at").
+	query := s.getQueryBuilder().
+		Select("id", "parent_id", "schema", "type", "title", "COALESCE(\"fields\", '{}')", "create_at", "update_at", "delete_at").
 		FromSelect(s.latestsBlocksSubquery(), "latest").
 		Where(sq.Eq{"delete_at": 0}).
 		Where(sq.Eq{"type": blockType})
@@ -61,7 +65,8 @@ func (s *SQLStore) GetBlocksWithType(blockType string) ([]model.Block, error) {
 }
 
 func (s *SQLStore) GetSubTree(blockID string) ([]model.Block, error) {
-	query := s.getQueryBuilder().Select("id", "parent_id", "schema", "type", "title", "COALESCE(\"fields\", '{}')", "create_at", "update_at", "delete_at").
+	query := s.getQueryBuilder().
+		Select("id", "parent_id", "schema", "type", "title", "COALESCE(\"fields\", '{}')", "create_at", "update_at", "delete_at").
 		FromSelect(s.latestsBlocksSubquery(), "latest").
 		Where(sq.Eq{"delete_at": 0}).
 		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}})
@@ -76,7 +81,8 @@ func (s *SQLStore) GetSubTree(blockID string) ([]model.Block, error) {
 }
 
 func (s *SQLStore) GetAllBlocks() ([]model.Block, error) {
-	query := s.getQueryBuilder().Select("id", "parent_id", "schema", "type", "title", "COALESCE(\"fields\", '{}')", "create_at", "update_at", "delete_at").
+	query := s.getQueryBuilder().
+		Select("id", "parent_id", "schema", "type", "title", "COALESCE(\"fields\", '{}')", "create_at", "update_at", "delete_at").
 		FromSelect(s.latestsBlocksSubquery(), "latest").
 		Where(sq.Eq{"delete_at": 0})
 
@@ -97,6 +103,7 @@ func blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 	for rows.Next() {
 		var block model.Block
 		var fieldsJSON string
+
 		err := rows.Scan(
 			&block.ID,
 			&block.ParentID,

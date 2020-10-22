@@ -14,19 +14,15 @@ import (
 )
 
 const (
-	DAY_MILLISECONDS   = 24 * 60 * 60 * 1000
-	MONTH_MILLISECONDS = 31 * DAY_MILLISECONDS
-
-	RUDDER_KEY           = "placeholder_rudder_key"
-	RUDDER_DATAPLANE_URL = "placeholder_rudder_dataplane_url"
-
-	TRACK_CONFIG = "config"
+	rudderKey                  = "placeholder_rudder_key"
+	rudderDataplaneURL         = "placeholder_rudder_dataplane_url"
+	timeBetweenTelemetryChecks = 10 * time.Minute
 )
 
-type telemetryTracker func() map[string]interface{}
+type Tracker func() map[string]interface{}
 
-type TelemetryService struct {
-	trackers                   map[string]telemetryTracker
+type Service struct {
+	trackers                   map[string]Tracker
 	log                        *log.Logger
 	rudderClient               rudder.Client
 	telemetryID                string
@@ -35,25 +31,25 @@ type TelemetryService struct {
 
 type RudderConfig struct {
 	RudderKey    string
-	DataplaneUrl string
+	DataplaneURL string
 }
 
-func New(telemetryID string, log *log.Logger) *TelemetryService {
-	service := &TelemetryService{
+func New(telemetryID string, log *log.Logger) *Service {
+	service := &Service{
 		log:         log,
 		telemetryID: telemetryID,
-		trackers:    map[string]telemetryTracker{},
+		trackers:    map[string]Tracker{},
 	}
 	return service
 }
 
-func (ts *TelemetryService) RegisterTracker(name string, tracker telemetryTracker) {
+func (ts *Service) RegisterTracker(name string, tracker Tracker) {
 	ts.trackers[name] = tracker
 }
 
-func (ts *TelemetryService) getRudderConfig() RudderConfig {
-	if !strings.Contains(RUDDER_KEY, "placeholder") && !strings.Contains(RUDDER_DATAPLANE_URL, "placeholder") {
-		return RudderConfig{RUDDER_KEY, RUDDER_DATAPLANE_URL}
+func (ts *Service) getRudderConfig() RudderConfig {
+	if !strings.Contains(rudderKey, "placeholder") && !strings.Contains(rudderDataplaneURL, "placeholder") {
+		return RudderConfig{rudderKey, rudderDataplaneURL}
 	} else if os.Getenv("RUDDER_KEY") != "" && os.Getenv("RUDDER_DATAPLANE_URL") != "" {
 		return RudderConfig{os.Getenv("RUDDER_KEY"), os.Getenv("RUDDER_DATAPLANE_URL")}
 	} else {
@@ -61,17 +57,18 @@ func (ts *TelemetryService) getRudderConfig() RudderConfig {
 	}
 }
 
-func (ts *TelemetryService) sendDailyTelemetry(override bool) {
+func (ts *Service) sendDailyTelemetry(override bool) {
 	config := ts.getRudderConfig()
-	if (config.DataplaneUrl != "" && config.RudderKey != "") || override {
-		ts.initRudder(config.DataplaneUrl, config.RudderKey)
+	if (config.DataplaneURL != "" && config.RudderKey != "") || override {
+		ts.initRudder(config.DataplaneURL, config.RudderKey)
+
 		for name, tracker := range ts.trackers {
 			ts.sendTelemetry(name, tracker())
 		}
 	}
 }
 
-func (ts *TelemetryService) sendTelemetry(event string, properties map[string]interface{}) {
+func (ts *Service) sendTelemetry(event string, properties map[string]interface{}) {
 	if ts.rudderClient != nil {
 		var context *rudder.Context
 		ts.rudderClient.Enqueue(rudder.Track{
@@ -83,13 +80,13 @@ func (ts *TelemetryService) sendTelemetry(event string, properties map[string]in
 	}
 }
 
-func (ts *TelemetryService) initRudder(endpoint string, rudderKey string) {
+func (ts *Service) initRudder(endpoint string, rudderKey string) {
 	if ts.rudderClient == nil {
 		config := rudder.Config{}
 		config.Logger = rudder.StdLogger(ts.log)
 		config.Endpoint = endpoint
 		// For testing
-		if endpoint != RUDDER_DATAPLANE_URL {
+		if endpoint != rudderDataplaneURL {
 			config.Verbose = true
 			config.BatchSize = 1
 		}
@@ -106,7 +103,7 @@ func (ts *TelemetryService) initRudder(endpoint string, rudderKey string) {
 	}
 }
 
-func (ts *TelemetryService) doTelemetryIfNeeded(firstRun time.Time) {
+func (ts *Service) doTelemetryIfNeeded(firstRun time.Time) {
 	hoursSinceFirstServerRun := time.Since(firstRun).Hours()
 	// Send once every 10 minutes for the first hour
 	// Send once every hour thereafter for the first 12 hours
@@ -120,21 +117,21 @@ func (ts *TelemetryService) doTelemetryIfNeeded(firstRun time.Time) {
 	}
 }
 
-func (ts *TelemetryService) RunTelemetryJob(firstRun int64) {
+func (ts *Service) RunTelemetryJob(firstRun int64) {
 	// Send on boot
 	ts.doTelemetry()
 	scheduler.CreateRecurringTask("Telemetry", func() {
 		ts.doTelemetryIfNeeded(time.Unix(0, firstRun*int64(time.Millisecond)))
-	}, time.Minute*10)
+	}, timeBetweenTelemetryChecks)
 }
 
-func (ts *TelemetryService) doTelemetry() {
+func (ts *Service) doTelemetry() {
 	ts.timestampLastTelemetrySent = time.Now()
 	ts.sendDailyTelemetry(false)
 }
 
 // Shutdown closes the telemetry client.
-func (ts *TelemetryService) Shutdown() error {
+func (ts *Service) Shutdown() error {
 	if ts.rudderClient != nil {
 		return ts.rudderClient.Close()
 	}

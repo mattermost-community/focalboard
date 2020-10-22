@@ -83,7 +83,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	var blocks []model.Block
-	err = json.Unmarshal([]byte(requestBody), &blocks)
+	err = json.Unmarshal(requestBody, &blocks)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, ``)
 		return
@@ -95,15 +95,16 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 			errorResponse(w, http.StatusInternalServerError, fmt.Sprintf(`{"description": "missing type", "id": "%s"}`, block.ID))
 			return
 		}
+
 		if block.CreateAt < 1 {
 			errorResponse(w, http.StatusInternalServerError, fmt.Sprintf(`{"description": "invalid createAt", "id": "%s"}`, block.ID))
 			return
 		}
+
 		if block.UpdateAt < 1 {
 			errorResponse(w, http.StatusInternalServerError, fmt.Sprintf(`{"description": "invalid updateAt", "id": "%s"}`, block.ID))
 			return
 		}
-
 	}
 
 	err = a.app().InsertBlocks(blocks)
@@ -190,7 +191,7 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	var blocks []model.Block
-	err = json.Unmarshal([]byte(requestBody), &blocks)
+	err = json.Unmarshal(requestBody, &blocks)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, ``)
 		return
@@ -229,6 +230,7 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 
 func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(`handleUploadFile`)
+
 	file, handle, err := r.FormFile("file")
 	if err != nil {
 		fmt.Fprintf(w, "%v", err)
@@ -243,6 +245,7 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 		jsonStringResponse(w, http.StatusInternalServerError, `{}`)
 		return
 	}
+
 	log.Printf(`saveFile, url: %s`, url)
 	json := fmt.Sprintf(`{ "url": "%s" }`, url)
 	jsonStringResponse(w, http.StatusOK, json)

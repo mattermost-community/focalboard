@@ -41,9 +41,7 @@ func createTask(name string, function TaskFunc, interval time.Duration, recurrin
 		defer close(task.cancelled)
 
 		ticker := time.NewTicker(interval)
-		defer func() {
-			ticker.Stop()
-		}()
+		defer ticker.Stop()
 
 		for {
 			select {

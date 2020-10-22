@@ -11,27 +11,29 @@ import (
 )
 
 // RegisterRoutes registeres routes
-func (ws *WSServer) RegisterRoutes(r *mux.Router) {
+func (ws *Server) RegisterRoutes(r *mux.Router) {
 	r.HandleFunc("/ws/onchange", ws.handleWebSocketOnChange)
 }
 
 // AddListener adds a listener for a block's change
-func (ws *WSServer) AddListener(client *websocket.Conn, blockIDs []string) {
+func (ws *Server) AddListener(client *websocket.Conn, blockIDs []string) {
 	ws.mu.Lock()
 	for _, blockID := range blockIDs {
 		if ws.listeners[blockID] == nil {
 			ws.listeners[blockID] = []*websocket.Conn{}
 		}
+
 		ws.listeners[blockID] = append(ws.listeners[blockID], client)
 	}
 	ws.mu.Unlock()
 }
 
 // RemoveListener removes a webSocket listener from all blocks
-func (ws *WSServer) RemoveListener(client *websocket.Conn) {
+func (ws *Server) RemoveListener(client *websocket.Conn) {
 	ws.mu.Lock()
 	for key, clients := range ws.listeners {
 		var listeners = []*websocket.Conn{}
+
 		for _, existingClient := range clients {
 			if client != existingClient {
 				listeners = append(listeners, existingClient)
@@ -43,7 +45,7 @@ func (ws *WSServer) RemoveListener(client *websocket.Conn) {
 }
 
 // RemoveListenerFromBlocks removes a webSocket listener from a set of block
-func (ws *WSServer) RemoveListenerFromBlocks(client *websocket.Conn, blockIDs []string) {
+func (ws *Server) RemoveListenerFromBlocks(client *websocket.Conn, blockIDs []string) {
 	ws.mu.Lock()
 
 	for _, blockID := range blockIDs {
@@ -58,6 +60,7 @@ func (ws *WSServer) RemoveListenerFromBlocks(client *websocket.Conn, blockIDs []
 			if client == listener {
 				newListeners := append(listeners[:index], listeners[index+1:]...)
 				ws.listeners[blockID] = newListeners
+
 				break
 			}
 		}
@@ -67,7 +70,7 @@ func (ws *WSServer) RemoveListenerFromBlocks(client *websocket.Conn, blockIDs []
 }
 
 // GetListeners returns the listeners to a blockID's changes
-func (ws *WSServer) GetListeners(blockID string) []*websocket.Conn {
+func (ws *Server) GetListeners(blockID string) []*websocket.Conn {
 	ws.mu.Lock()
 	listeners := ws.listeners[blockID]
 	ws.mu.Unlock()
@@ -75,16 +78,16 @@ func (ws *WSServer) GetListeners(blockID string) []*websocket.Conn {
 	return listeners
 }
 
-// WSServer is a WebSocket server
-type WSServer struct {
+// Server is a WebSocket server
+type Server struct {
 	upgrader  websocket.Upgrader
 	listeners map[string][]*websocket.Conn
 	mu        sync.RWMutex
 }
 
-// NewWSServer creates a new WSServer
-func NewWSServer() *WSServer {
-	return &WSServer{
+// NewServer creates a new Server
+func NewServer() *Server {
+	return &Server{
 		listeners: make(map[string][]*websocket.Conn),
 		upgrader: websocket.Upgrader{
 			CheckOrigin: func(r *http.Request) bool {
@@ -106,7 +109,7 @@ type WebsocketCommand struct {
 	BlockIDs []string `json:"blockIds"`
 }
 
-func (ws *WSServer) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request) {
+func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request) {
 	// Upgrade initial GET request to a websocket
 	client, err := ws.upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -133,6 +136,7 @@ func (ws *WSServer) handleWebSocketOnChange(w http.ResponseWriter, r *http.Reque
 		if err != nil {
 			log.Printf("ERROR WebSocket onChange, client: %s, err: %v", client.RemoteAddr(), err)
 			ws.RemoveListener(client)
+
 			break
 		}
 
@@ -141,6 +145,7 @@ func (ws *WSServer) handleWebSocketOnChange(w http.ResponseWriter, r *http.Reque
 		if err != nil {
 			// handle this error
 			log.Printf(`ERROR webSocket parsing command JSON: %v`, string(p))
+
 			continue
 		}
 
@@ -148,9 +153,11 @@ func (ws *WSServer) handleWebSocketOnChange(w http.ResponseWriter, r *http.Reque
 		case "ADD":
 			log.Printf(`Command: Add blockID: %v, client: %s`, command.BlockIDs, client.RemoteAddr())
 			ws.AddListener(client, command.BlockIDs)
+
 		case "REMOVE":
 			log.Printf(`Command: Remove blockID: %v, client: %s`, command.BlockIDs, client.RemoteAddr())
 			ws.RemoveListenerFromBlocks(client, command.BlockIDs)
+
 		default:
 			log.Printf(`ERROR webSocket command, invalid action: %v`, command.Action)
 		}
@@ -158,7 +165,7 @@ func (ws *WSServer) handleWebSocketOnChange(w http.ResponseWriter, r *http.Reque
 }
 
 // BroadcastBlockChangeToWebsocketClients broadcasts change to clients
-func (ws *WSServer) BroadcastBlockChangeToWebsocketClients(blockIDs []string) {
+func (ws *Server) BroadcastBlockChangeToWebsocketClients(blockIDs []string) {
 	for _, blockID := range blockIDs {
 		listeners := ws.GetListeners(blockID)
 		log.Printf("%d listener(s) for blockID: %s", len(listeners), blockID)
@@ -168,6 +175,7 @@ func (ws *WSServer) BroadcastBlockChangeToWebsocketClients(blockIDs []string) {
 				Action:  "UPDATE_BLOCK",
 				BlockID: blockID,
 			}
+
 			for _, listener := range listeners {
 				log.Printf("Broadcast change, blockID: %s, remoteAddr: %s", blockID, listener.RemoteAddr())
 				err := listener.WriteJSON(message)

@@ -24,12 +24,14 @@ func (a *App) InsertBlock(block model.Block) error {
 
 func (a *App) InsertBlocks(blocks []model.Block) error {
 	var blockIDsToNotify = []string{}
+
 	uniqueBlockIDs := make(map[string]bool)
 
 	for _, block := range blocks {
 		if !uniqueBlockIDs[block.ID] {
 			blockIDsToNotify = append(blockIDsToNotify, block.ID)
 		}
+
 		if len(block.ParentID) > 0 && !uniqueBlockIDs[block.ParentID] {
 			blockIDsToNotify = append(blockIDsToNotify, block.ParentID)
 		}
