@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {MutableBlock} from './blocks/block'
+import {IBlock, MutableBlock} from './blocks/block'
 import {Board, IPropertyOption, IPropertyTemplate, MutableBoard, PropertyType} from './blocks/board'
 import {BoardView, ISortOption, MutableBoardView} from './blocks/boardView'
 import {Card, MutableCard} from './blocks/card'
@@ -9,7 +9,6 @@ import {IOrderedBlock, MutableOrderedBlock} from './blocks/orderedBlock'
 import {BoardTree} from './viewModel/boardTree'
 import {FilterGroup} from './filterGroup'
 import octoClient from './octoClient'
-import {IBlock} from './blocks/block'
 import undoManager from './undomanager'
 import {Utils} from './utils'
 
@@ -161,7 +160,7 @@ class Mutator {
         await this.updateBlocks(changedBlocks, oldBlocks, description)
     }
 
-    async duplicatePropertyTemplate(boardTree: BoardTree, propertyId: string): Promise<IBlock[]> {
+    async duplicatePropertyTemplate(boardTree: BoardTree, propertyId: string) {
         const {board, activeView} = boardTree
 
         const oldBlocks: IBlock[] = [board]
@@ -194,8 +193,6 @@ class Mutator {
         }
 
         await this.updateBlocks(changedBlocks, oldBlocks, description)
-
-        return changedBlocks
     }
 
     async changePropertyTemplateOrder(board: Board, template: IPropertyTemplate, destIndex: number) {

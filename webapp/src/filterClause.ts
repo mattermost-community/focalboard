@@ -9,7 +9,7 @@ class FilterClause {
     condition: FilterCondition
     values: string[]
 
-    static filterConditionDisplayString(filterCondition: FilterCondition) {
+    static filterConditionDisplayString(filterCondition: FilterCondition): string {
         switch (filterCondition) {
         case 'includes': return 'includes'
         case 'notIncludes': return "doesn't include"
@@ -28,7 +28,7 @@ class FilterClause {
         this.values = o.values?.slice() || []
     }
 
-    isEqual(o: FilterClause) {
+    isEqual(o: FilterClause): boolean {
         return (
             this.propertyId === o.propertyId &&
             this.condition === o.condition &&

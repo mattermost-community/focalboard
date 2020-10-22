@@ -6,7 +6,7 @@ import {OctoUtils} from './octoUtils'
 import {Utils} from './utils'
 
 class CsvExporter {
-    static exportTableCsv(boardTree: BoardTree, view?: BoardView) {
+    static exportTableCsv(boardTree: BoardTree, view?: BoardView): void {
         const {activeView} = boardTree
         const viewToExport = view ?? activeView
 

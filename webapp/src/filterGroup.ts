@@ -15,14 +15,16 @@ class FilterGroup {
 
     constructor(o: any = {}) {
         this.operation = o.operation || 'and'
-        this.filters = o.filters ?
-            o.filters.map((p: any) => {
+        if (o.filters) {
+            this.filters = o.filters.map((p: any) => {
                 if (FilterGroup.isAnInstanceOf(p)) {
                     return new FilterGroup(p)
                 }
                 return new FilterClause(p)
-            }) :
-            []
+            })
+        } else {
+            this.filters = []
+        }
     }
 }
 
