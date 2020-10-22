@@ -46,7 +46,7 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	err = m.Up()
-	if err != nil && errors.Is(err, migrate.ErrNoChange) {
+	if err != nil && !errors.Is(err, migrate.ErrNoChange) {
 		return err
 	}
 

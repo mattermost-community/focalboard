@@ -27,7 +27,7 @@ func New(dbType, connectionString string) (*SQLStore, error) {
 
 	err = db.Ping()
 	if err != nil {
-		log.Println(`Database Ping failed`)
+		log.Printf(`Database Ping failed: %v`, err)
 
 		return nil, err
 	}
@@ -39,7 +39,7 @@ func New(dbType, connectionString string) (*SQLStore, error) {
 
 	err = store.Migrate()
 	if err != nil {
-		log.Println(`Table creation failed`)
+		log.Printf(`Table creation / migration failed: %v`, err)
 
 		return nil, err
 	}
