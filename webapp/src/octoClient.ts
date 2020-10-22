@@ -1,7 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IMutableBlock} from './blocks/block'
-import {IBlock} from './blocks/block'
+import {IBlock, IMutableBlock} from './blocks/block'
 import {Utils} from './utils'
 
 //
@@ -12,7 +11,7 @@ class OctoClient {
 
     constructor(serverUrl?: string) {
         this.serverUrl = serverUrl || window.location.origin
-        console.log(`OctoClient serverUrl: ${this.serverUrl}`)
+        Utils.log(`OctoClient serverUrl: ${this.serverUrl}`)
     }
 
     async getSubtree(rootId?: string): Promise<IBlock[]> {
@@ -109,7 +108,7 @@ class OctoClient {
     }
 
     async deleteBlock(blockId: string): Promise<Response> {
-        console.log(`deleteBlock: ${blockId}`)
+        Utils.log(`deleteBlock: ${blockId}`)
         return await fetch(this.serverUrl + `/api/v1/blocks/${encodeURIComponent(blockId)}`, {
             method: 'DELETE',
             headers: {

@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {ReactNode} from 'react'
+import React from 'react'
 
 import {Archiver} from '../archiver'
 import {Board, MutableBoard} from '../blocks/board'
@@ -32,7 +32,7 @@ class Sidebar extends React.Component<Props, State> {
         return true
     }
 
-    render(): ReactNode {
+    render(): JSX.Element {
         const {workspaceTree} = this.props
         if (!workspaceTree) {
             return <div/>
@@ -118,7 +118,7 @@ class Sidebar extends React.Component<Props, State> {
                                     return (<div
                                         key={view.id}
                                         className='octo-sidebar-item subitem octo-hover-container'
-                                            >
+                                    >
                                         <div
                                             className='octo-sidebar-title'
                                             onClick={() => {

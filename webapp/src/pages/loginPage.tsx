@@ -2,6 +2,8 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
+import {Utils} from '../utils'
+
 import Button from '../components/button'
 
 import './loginPage.scss'
@@ -20,7 +22,7 @@ export default class LoginPage extends React.Component<Props, State> {
     }
 
     handleLogin = () => {
-        console.log('Logging in')
+        Utils.log('Logging in')
     }
 
     render(): React.ReactNode {

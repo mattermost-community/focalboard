@@ -1,5 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+/* eslint-disable max-lines */
 import React from 'react'
 
 import {Archiver} from '../archiver'
@@ -58,11 +59,11 @@ class BoardComponent extends React.Component<Props, State> {
         }
     }
 
-    componentDidMount() {
+    componentDidMount(): void {
         document.addEventListener('keydown', this.keydownHandler)
     }
 
-    componentWillUnmount() {
+    componentWillUnmount(): void {
         document.removeEventListener('keydown', this.keydownHandler)
     }
 
@@ -76,13 +77,17 @@ class BoardComponent extends React.Component<Props, State> {
         }
     }
 
-    componentDidUpdate(prevPros: Props, prevState: State) {
+    shouldComponentUpdate(): boolean {
+        return true
+    }
+
+    componentDidUpdate(prevPros: Props, prevState: State): void {
         if (this.state.isSearching && !prevState.isSearching) {
             this.searchFieldRef.current.focus()
         }
     }
 
-    render() {
+    render(): JSX.Element {
         const {boardTree, showView} = this.props
 
         if (!boardTree || !boardTree.board) {
@@ -92,7 +97,7 @@ class BoardComponent extends React.Component<Props, State> {
         }
 
         const propertyValues = boardTree.groupByProperty?.options || []
-        console.log(`${propertyValues.length} propertyValues`)
+        Utils.log(`${propertyValues.length} propertyValues`)
 
         const groupByStyle = {color: '#000000'}
         const {board, activeView} = boardTree
@@ -204,7 +209,7 @@ class BoardComponent extends React.Component<Props, State> {
                                 Group by <span
                                     style={groupByStyle}
                                     id='groupByLabel'
-                                >{boardTree.groupByProperty?.name}</span>
+                                         >{boardTree.groupByProperty?.name}</span>
                             </div>
                             <div
                                 className={hasFilter ? 'octo-button active' : 'octo-button'}
@@ -432,7 +437,7 @@ class BoardComponent extends React.Component<Props, State> {
         }
     }
 
-    async addCard(groupByValue?: string) {
+    async addCard(groupByValue?: string): Promise<void> {
         const {boardTree} = this.props
         const {activeView, board} = boardTree
 
@@ -450,7 +455,7 @@ class BoardComponent extends React.Component<Props, State> {
         })
     }
 
-    async propertyNameChanged(option: IPropertyOption, text: string) {
+    async propertyNameChanged(option: IPropertyOption, text: string): Promise<void> {
         const {boardTree} = this.props
 
         await mutator.changePropertyOptionValue(boardTree, boardTree.groupByProperty, option, text)
@@ -567,8 +572,9 @@ class BoardComponent extends React.Component<Props, State> {
         OldMenu.shared.showAtElement(e.target as HTMLElement)
     }
 
-    private cardClicked(e: React.MouseEvent, card: Card) {
+    private cardClicked(e: React.MouseEvent, card: Card): void {
         if (e.shiftKey) {
+            // Shift+Click = add to selection
             let selectedCards = this.state.selectedCards.slice()
             if (selectedCards.includes(card)) {
                 selectedCards = selectedCards.filter((o) => o != card)
@@ -584,7 +590,7 @@ class BoardComponent extends React.Component<Props, State> {
     }
 
     async addGroupClicked() {
-        console.log('onAddGroupClicked')
+        Utils.log('onAddGroupClicked')
 
         const {boardTree} = this.props
 

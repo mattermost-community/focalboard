@@ -123,9 +123,7 @@ class Utils {
     // favicon
 
     static setFavicon(icon?: string): void {
-        const href = icon ?
-            `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${icon}</text></svg>` :
-            ''
+        const href = icon ? `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${icon}</text></svg>` : ''
         const link = (document.querySelector("link[rel*='icon']") || document.createElement('link')) as HTMLLinkElement
         link.type = 'image/x-icon'
         link.rel = 'shortcut icon'

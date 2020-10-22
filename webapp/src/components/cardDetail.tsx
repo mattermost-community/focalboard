@@ -86,7 +86,7 @@ export default class CardDetail extends React.Component<Props, State> {
                             return (<div
                                 key={block.id}
                                 className='octo-block octo-hover-container'
-                            >
+                                    >
                                 <div className='octo-block-margin'>
                                     <div
                                         className='octo-button octo-hovercontrol square octo-hover-item'
@@ -111,7 +111,7 @@ export default class CardDetail extends React.Component<Props, State> {
                             return (<div
                                 key={block.id}
                                 className='octo-block octo-hover-container'
-                                    >
+                            >
                                 <div className='octo-block-margin'>
                                     <div
                                         className='octo-button octo-hovercontrol square octo-hover-item'
@@ -288,7 +288,7 @@ export default class CardDetail extends React.Component<Props, State> {
                                 onMouseLeave={() => {
                                     optionsButtonRef.current.style.display = 'none'
                                 }}
-                            >
+                                    >
                                 <div className='comment-header'>
                                     <img
                                         className='comment-avatar'
@@ -342,7 +342,7 @@ export default class CardDetail extends React.Component<Props, State> {
                                 style={{display: 'none'}}
                                 onClick={(e) => {
                                     const text = newCommentRef.current.text
-                                    console.log(`Send comment: ${newCommentRef.current.text}`)
+                                    Utils.log(`Send comment: ${newCommentRef.current.text}`)
                                     this.sendComment(text)
                                     newCommentRef.current.text = undefined
                                     newCommentRef.current.blur()
