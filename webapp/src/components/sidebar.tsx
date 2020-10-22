@@ -90,7 +90,6 @@ class Sidebar extends React.Component<Props, State> {
                                     >
                                         {board.icon ? `${board.icon} ${displayTitle}` : displayTitle}
                                     </div>
-                                    <div className='octo-spacer'/>
                                     <MenuWrapper>
                                         <div className='octo-button square octo-hover-item'><div className='imageOptions'/></div>
                                         <Menu>
@@ -118,7 +117,7 @@ class Sidebar extends React.Component<Props, State> {
                                     return (<div
                                         key={view.id}
                                         className='octo-sidebar-item subitem octo-hover-container'
-                                    >
+                                            >
                                         <div
                                             className='octo-sidebar-title'
                                             onClick={() => {

@@ -131,7 +131,8 @@ hr {
 }
 
 .octo-sidebar-title {
-	cursor: pointer;
+    cursor: pointer;
+    flex-grow: 1;
 }
 
 .octo-sidebar-item:hover {
