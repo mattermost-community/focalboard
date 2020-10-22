@@ -40,18 +40,6 @@ hr {
 	margin-bottom: 8px;
 }
 
-.page-header {
-	font-size: 18px;
-	font-weight: bold;
-	background-color: #eeeeee;
-	border-bottom: solid 1px #909090;
-	padding: 10px 20px;
-}
-
-.page-header a {
-	color: #505050;
-}
-
 .page-loading {
 	margin: 50px auto;
 }
@@ -99,7 +87,33 @@ hr {
 
 	min-height: 100%;
 	background-color: rgb(247, 246, 243);
-	padding: 20px 0;
+	padding: 10px 0;
+}
+
+.octo-sidebar.hidden {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 15;
+    min-height: 0;
+    height: 50px;
+    width: 50px;
+    background: none;
+    padding: 0;
+}
+
+.octo-sidebar.hidden > div {
+    padding: 0;
+    margin: auto;
+}
+
+.octo-sidebar-header {
+	display: flex;
+	flex-direction: row;
+
+	font-weight: 600;
+    padding: 3px 20px;
+    margin-bottom: 5px;
 }
 
 .octo-sidebar-item {

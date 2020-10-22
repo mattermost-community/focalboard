@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {ReactNode} from 'react'
 
 import {Archiver} from '../archiver'
 import {Board, MutableBoard} from '../blocks/board'
@@ -18,8 +18,21 @@ type Props = {
     boardTree?: BoardTree
 }
 
-class Sidebar extends React.Component<Props> {
-    render() {
+type State = {
+    isHidden: boolean
+}
+
+class Sidebar extends React.Component<Props, State> {
+    constructor(props: Props) {
+        super(props)
+        this.state = {isHidden: false}
+    }
+
+    shouldComponentUpdate(): boolean {
+        return true
+    }
+
+    render(): ReactNode {
         const {workspaceTree} = this.props
         if (!workspaceTree) {
             return <div/>
@@ -27,8 +40,41 @@ class Sidebar extends React.Component<Props> {
 
         const {boards, views} = workspaceTree
 
+        if (this.state.isHidden) {
+            const hamburgerRef = React.createRef<HTMLDivElement>()
+            return (
+                <div className='octo-sidebar hidden'>
+                    <div className='octo-sidebar-header'>
+                        <div
+                            className='octo-button square'
+                            onClick={() => this.showClicked()}
+                        >
+                            <div
+                                ref={hamburgerRef}
+                                className='imageHamburger'
+                                onMouseOver={() => {
+                                    hamburgerRef.current.className = 'imageShowSidebar'
+                                }}
+                                onMouseOut={() => {
+                                    hamburgerRef.current.className = 'imageHamburger'
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+
         return (
             <div className='octo-sidebar'>
+                <div className='octo-sidebar-header octo-hover-container'>
+                    {'OCTO'}
+                    <div className='octo-spacer'/>
+                    <div
+                        className='octo-button square octo-hover-item'
+                        onClick={() => this.hideClicked()}
+                    ><div className='imageHideSidebar'/></div>
+                </div>
                 {
                     boards.map((board) => {
                         const displayTitle = board.title || '(Untitled Board)'
@@ -72,7 +118,7 @@ class Sidebar extends React.Component<Props> {
                                     return (<div
                                         key={view.id}
                                         className='octo-sidebar-item subitem octo-hover-container'
-                                    >
+                                            >
                                         <div
                                             className='octo-sidebar-title'
                                             onClick={() => {
@@ -120,15 +166,15 @@ class Sidebar extends React.Component<Props> {
         )
     }
 
-    private boardClicked(board: Board) {
+    private boardClicked(board: Board): void {
         this.props.showBoard(board.id)
     }
 
-    private viewClicked(board: Board, view: BoardView) {
+    private viewClicked(board: Board, view: BoardView): void {
         this.props.showView(view.id, board.id)
     }
 
-    async addBoardClicked() {
+    async addBoardClicked(): Promise<void> {
         const {boardTree, showBoard} = this.props
 
         const oldBoardId = boardTree?.board?.id
@@ -146,6 +192,14 @@ class Sidebar extends React.Component<Props> {
             })
 
         await mutator.insertBlock(board)
+    }
+
+    private hideClicked() {
+        this.setState({isHidden: true})
+    }
+
+    private showClicked() {
+        this.setState({isHidden: false})
     }
 }
 

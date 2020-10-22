@@ -48,3 +48,24 @@
 	min-width: 24px;
 	min-height: 24px;
 }
+
+.imageHideSidebar {
+	background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="stroke:black;stroke-width:6;" fill="none" stroke-opacity="50%"><polyline points="80,20 50,50 80,80" /><polyline points="50,20 20,50, 50,80" /></svg>');
+	background-size: 100% 100%;
+	min-width: 24px;
+	min-height: 24px;
+}
+
+.imageShowSidebar {
+	background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="stroke:black;stroke-width:6;" fill="none" stroke-opacity="50%"><polyline points="20,20 50,50 20,80" /><polyline points="50,20 80,50, 50,80" /></svg>');
+	background-size: 100% 100%;
+	min-width: 24px;
+	min-height: 24px;
+}
+
+.imageHamburger {
+	background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="stroke:black;stroke-width:6;" fill="none" stroke-opacity="50%"><polyline points="20,25 80,25" /><polyline points="20,50 80,50" /><polyline points="20,75 80,75" /></svg>');
+	background-size: 100% 100%;
+	min-width: 24px;
+	min-height: 24px;
+}

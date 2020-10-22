@@ -12,14 +12,10 @@ import {
 import LoginPage from './pages/loginPage'
 import BoardPage from './pages/boardPage'
 
-export default function App() {
+export default function App(): JSX.Element {
     return (
         <Router>
             <div id='frame'>
-                <div className='page-header'>
-                    <a href='/'>OCTO</a>
-                </div>
-
                 <div id='main'>
                     <Switch>
                         <Route path='/login'>
