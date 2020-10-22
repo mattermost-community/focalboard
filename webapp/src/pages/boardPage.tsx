@@ -47,7 +47,11 @@ export default class BoardPage extends React.Component<Props, State> {
         Utils.log(`BoardPage. boardId: ${boardId}`)
     }
 
-    componentDidUpdate(prevProps: Props, prevState: State) {
+    shouldComponentUpdate(): boolean {
+        return true
+    }
+
+    componentDidUpdate(prevProps: Props, prevState: State): void {
         Utils.log('componentDidUpdate')
         const board = this.state.boardTree?.board
         const prevBoard = prevState.boardTree?.board
@@ -59,7 +63,7 @@ export default class BoardPage extends React.Component<Props, State> {
             Utils.setFavicon(board?.icon)
         }
         if (board?.title !== prevBoard?.title || activeView?.title !== prevActiveView?.title) {
-            document.title = `OCTO - ${board?.title} | ${activeView?.title}`
+            document.title = `${board?.title} | ${activeView?.title}`
         }
     }
 
@@ -89,7 +93,7 @@ export default class BoardPage extends React.Component<Props, State> {
         }
     }
 
-    componentDidMount() {
+    componentDidMount(): void {
         document.addEventListener('keydown', this.undoRedoHandler)
         if (this.state.boardId) {
             this.attachToBoard(this.state.boardId, this.state.viewId)
@@ -98,13 +102,13 @@ export default class BoardPage extends React.Component<Props, State> {
         }
     }
 
-    componentWillUnmount() {
+    componentWillUnmount(): void {
         Utils.log(`boardPage.componentWillUnmount: ${this.state.boardId}`)
         this.workspaceListener.close()
         document.removeEventListener('keydown', this.undoRedoHandler)
     }
 
-    render() {
+    render(): JSX.Element {
         const {workspaceTree} = this.state
 
         if (this.state.filterAnchorElement) {
@@ -163,7 +167,7 @@ export default class BoardPage extends React.Component<Props, State> {
         this.sync(boardId, viewId)
     }
 
-    async sync(boardId: string = this.state.boardId, viewId: string | undefined = this.state.viewId) {
+    private async sync(boardId: string = this.state.boardId, viewId: string | undefined = this.state.viewId) {
         const {workspaceTree} = this.state
         Utils.log(`sync start: ${boardId}`)
 
@@ -199,7 +203,7 @@ export default class BoardPage extends React.Component<Props, State> {
     }
 
     // IPageController
-    showBoard(boardId: string) {
+    showBoard(boardId: string): void {
         const {boardTree} = this.state
 
         if (boardTree?.board?.id === boardId) {
@@ -212,23 +216,23 @@ export default class BoardPage extends React.Component<Props, State> {
         this.attachToBoard(boardId)
     }
 
-    showView(viewId: string, boardId: string = this.state.boardId) {
-        if (this.state.boardId !== boardId) {
-            this.attachToBoard(boardId, viewId)
-        } else {
+    showView(viewId: string, boardId: string = this.state.boardId): void {
+        if (this.state.boardId === boardId) {
             this.state.boardTree.setActiveView(viewId)
             this.setState({...this.state, viewId})
+        } else {
+            this.attachToBoard(boardId, viewId)
         }
 
         const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + `?id=${encodeURIComponent(boardId)}&v=${encodeURIComponent(viewId)}`
         window.history.pushState({path: newUrl}, '', newUrl)
     }
 
-    showFilter(anchorElement?: HTMLElement) {
+    showFilter(anchorElement?: HTMLElement): void {
         this.setState({...this.state, filterAnchorElement: anchorElement})
     }
 
-    setSearchText(text?: string) {
+    setSearchText(text?: string): void {
         this.state.boardTree?.setSearchText(text)
         this.setState({...this.state, boardTree: this.state.boardTree})
     }
