@@ -463,9 +463,9 @@ hr {
 
 .octo-icon {
 	font-family: "Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji, "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols;
-	line-height: 1em;
+	line-height: 1.5em;
     align-self: baseline;
-	margin-top: 0.2em;
+    overflow: visible;
 }
 
 .octo-icontitle {
@@ -477,7 +477,6 @@ hr {
 
 .octo-frame > .octo-icontitle .octo-icon {
 	font-size: 36px;
-	line-height: 36px;
 	margin-right: 15px;
 }
 
@@ -488,7 +487,6 @@ hr {
 
 .octo-board-card .octo-icontitle .octo-icon {
 	font-size: 16px;
-	line-height: 16px;
 	margin-right: 5px;
 }
 
