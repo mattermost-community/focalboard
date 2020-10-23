@@ -107,8 +107,8 @@ class CardFilter {
                 return {id: filterClause.propertyId}
             }
             if (template.type === 'select') {
-                const option = template.options.find((o) => !filterClause.values.includes(o.value))
-                return {id: filterClause.propertyId, value: option.value}
+                const option = template.options.find((o) => !filterClause.values.includes(o.id))
+                return {id: filterClause.propertyId, value: option.id}
             }
 
             // TODO: Handle non-select types
@@ -121,7 +121,7 @@ class CardFilter {
             if (template.type === 'select') {
                 if (template.options.length > 0) {
                     const option = template.options[0]
-                    return {id: filterClause.propertyId, value: option.value}
+                    return {id: filterClause.propertyId, value: option.id}
                 }
                 return {id: filterClause.propertyId}
             }

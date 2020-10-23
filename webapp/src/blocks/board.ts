@@ -7,12 +7,14 @@ import {MutableBlock} from './block'
 type PropertyType = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy'
 
 interface IPropertyOption {
-    readonly value: string,
+    readonly id: string
+    readonly value: string
     readonly color: string
 }
 
 interface IMutablePropertyOption {
-    value: string,
+    id: string
+    value: string
     color: string
 }
 

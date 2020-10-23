@@ -273,7 +273,7 @@ class Mutator {
 
         const newBoard = new MutableBoard(board)
         const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)
-        newTemplate.options = newTemplate.options.filter((o) => o.value !== option.value)
+        newTemplate.options = newTemplate.options.filter((o) => o.id !== option.id)
 
         await this.updateBlock(newBoard, board, 'delete option')
     }
@@ -292,26 +292,13 @@ class Mutator {
     async changePropertyOptionValue(boardTree: BoardTree, propertyTemplate: IPropertyTemplate, option: IPropertyOption, value: string) {
         const {board, cards} = boardTree
 
-        const oldValue = option.value
         const oldBlocks: IBlock[] = [board]
 
         const newBoard = new MutableBoard(board)
         const newTemplate = newBoard.cardProperties.find((o) => o.id === propertyTemplate.id)
-        const newOption = newTemplate.options.find((o) => o.value === oldValue)
+        const newOption = newTemplate.options.find((o) => o.id === option.id)
         newOption.value = value
         const changedBlocks: IBlock[] = [newBoard]
-
-        // Change the value on all cards that have this property too
-        for (const card of cards) {
-            const propertyValue = card.properties[propertyTemplate.id]
-            if (propertyValue && propertyValue === oldValue) {
-                oldBlocks.push(card)
-
-                const newCard = new MutableCard(card)
-                newCard.properties[propertyTemplate.id] = value
-                changedBlocks.push(newCard)
-            }
-        }
 
         await this.updateBlocks(changedBlocks, oldBlocks, 'rename option')
 
@@ -321,7 +308,7 @@ class Mutator {
     async changePropertyOptionColor(board: Board, template: IPropertyTemplate, option: IPropertyOption, color: string) {
         const newBoard = new MutableBoard(board)
         const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)
-        const newOption = newTemplate.options.find((o) => o.value === option.value)
+        const newOption = newTemplate.options.find((o) => o.id === option.id)
         newOption.color = color
         await this.updateBlock(newBoard, board, 'change option color')
     }
@@ -341,37 +328,57 @@ class Mutator {
 
     // Views
 
-    async changeViewSortOptions(view: BoardView, sortOptions: ISortOption[]) {
+    async changeViewSortOptions(view: BoardView, sortOptions: ISortOption[]): Promise<void> {
         const newView = new MutableBoardView(view)
         newView.sortOptions = sortOptions
         await this.updateBlock(newView, view, 'sort')
     }
 
-    async changeViewFilter(view: BoardView, filter?: FilterGroup) {
+    async changeViewFilter(view: BoardView, filter?: FilterGroup): Promise<void> {
         const newView = new MutableBoardView(view)
         newView.filter = filter
         await this.updateBlock(newView, view, 'filter')
     }
 
-    async changeViewVisibleProperties(view: BoardView, visiblePropertyIds: string[], description = 'show / hide property') {
+    async changeViewVisibleProperties(view: BoardView, visiblePropertyIds: string[], description = 'show / hide property'): Promise<void> {
         const newView = new MutableBoardView(view)
         newView.visiblePropertyIds = visiblePropertyIds
         await this.updateBlock(newView, view, description)
     }
 
-    async changeViewGroupById(view: BoardView, groupById: string) {
+    async changeViewGroupById(view: BoardView, groupById: string): Promise<void> {
         const newView = new MutableBoardView(view)
         newView.groupById = groupById
         await this.updateBlock(newView, view, 'group by')
     }
 
+    async hideViewColumn(view: BoardView, columnOptionId: string): Promise<void> {
+        if (view.hiddenColumnIds.includes(columnOptionId)) {
+            return
+        }
+
+        const newView = new MutableBoardView(view)
+        newView.hiddenColumnIds.push(columnOptionId)
+        await this.updateBlock(newView, view, 'hide column')
+    }
+
+    async unhideViewColumn(view: BoardView, columnOptionId: string): Promise<void> {
+        if (!view.hiddenColumnIds.includes(columnOptionId)) {
+            return
+        }
+
+        const newView = new MutableBoardView(view)
+        newView.hiddenColumnIds = newView.hiddenColumnIds.filter((o) => o !== columnOptionId)
+        await this.updateBlock(newView, view, 'show column')
+    }
+
     // Not a mutator, but convenient to put here since Mutator wraps OctoClient
-    async exportFullArchive() {
+    async exportFullArchive(): Promise<IBlock[]> {
         return octoClient.exportFullArchive()
     }
 
     // Not a mutator, but convenient to put here since Mutator wraps OctoClient
-    async importFullArchive(blocks: IBlock[]) {
+    async importFullArchive(blocks: IBlock[]): Promise<Response> {
         return octoClient.importFullArchive(blocks)
     }
 

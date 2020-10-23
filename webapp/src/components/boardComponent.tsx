@@ -209,7 +209,7 @@ class BoardComponent extends React.Component<Props, State> {
                                 Group by <span
                                     style={groupByStyle}
                                     id='groupByLabel'
-                                >{boardTree.groupByProperty?.name}</span>
+                                         >{boardTree.groupByProperty?.name}</span>
                             </div>
                             <div
                                 className={hasFilter ? 'octo-button active' : 'octo-button'}
@@ -283,7 +283,7 @@ class BoardComponent extends React.Component<Props, State> {
 
                             {boardTree.groups.map((group) =>
                                 (<div
-                                    key={group.option.value}
+                                    key={group.option.id}
                                     className='octo-board-header-cell'
 
                                     draggable={true}
@@ -319,6 +319,11 @@ class BoardComponent extends React.Component<Props, State> {
                                     <MenuWrapper>
                                         <Button><div className='imageOptions'/></Button>
                                         <Menu>
+                                            {/* <Menu.Text
+                                                id='hide'
+                                                name='Hide'
+                                                onClick={() => mutator.hideViewColumn(activeView, group.option.id)}
+                                            /> */}
                                             <Menu.Text
                                                 id='delete'
                                                 name='Delete'
@@ -337,7 +342,7 @@ class BoardComponent extends React.Component<Props, State> {
                                     </MenuWrapper>
                                     <Button
                                         onClick={() => {
-                                            this.addCard(group.option.value)
+                                            this.addCard(group.option.id)
                                         }}
                                     ><div className='imageAdd'/></Button>
                                 </div>),
@@ -397,7 +402,7 @@ class BoardComponent extends React.Component<Props, State> {
                                     onDrop={(e) => {
                                         this.onDropToColumn(group.option)
                                     }}
-                                    key={group.option.value}
+                                    key={group.option.id}
                                 >
                                     {group.cards.map((card) =>
                                         (<BoardCard
@@ -418,7 +423,7 @@ class BoardComponent extends React.Component<Props, State> {
                                     )}
                                     <Button
                                         onClick={() => {
-                                            this.addCard(group.option.value)
+                                            this.addCard(group.option.id)
                                         }}
                                     >+ New</Button>
                                 </BoardColumn>),
@@ -437,7 +442,7 @@ class BoardComponent extends React.Component<Props, State> {
         }
     }
 
-    private async addCard(groupByValue?: string): Promise<void> {
+    private async addCard(groupByOptionId?: string): Promise<void> {
         const {boardTree} = this.props
         const {activeView, board} = boardTree
 
@@ -446,7 +451,7 @@ class BoardComponent extends React.Component<Props, State> {
         card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
         card.icon = BlockIcons.shared.randomIcon()
         if (boardTree.groupByProperty) {
-            card.properties[boardTree.groupByProperty.id] = groupByValue
+            card.properties[boardTree.groupByProperty.id] = groupByOptionId
         }
         await mutator.insertBlock(card, 'add card', async () => {
             this.setState({shownCard: card})
@@ -513,7 +518,7 @@ class BoardComponent extends React.Component<Props, State> {
                 // Cycle through options
                 const option = boardTree.groupByProperty.options[optionIndex]
                 optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
-                card.properties[boardTree.groupByProperty.id] = option.value
+                card.properties[boardTree.groupByProperty.id] = option.id
                 card.title = `Test Card ${startCount + i + 1}`
                 card.icon = BlockIcons.shared.randomIcon()
             }
@@ -595,8 +600,9 @@ class BoardComponent extends React.Component<Props, State> {
         const {boardTree} = this.props
 
         const option: IPropertyOption = {
+            id: Utils.createGuid(),
             value: 'New group',
-            color: '#cccccc',
+            color: 'propColorDefault',
         }
 
         Utils.assert(boardTree.groupByProperty)
@@ -606,21 +612,21 @@ class BoardComponent extends React.Component<Props, State> {
     private async onDropToColumn(option: IPropertyOption) {
         const {boardTree} = this.props
         const {draggedCards, draggedHeaderOption} = this
-        const propertyValue = option ? option.value : undefined
+        const optionId = option ? option.id : undefined
 
         Utils.assertValue(mutator)
         Utils.assertValue(boardTree)
 
         if (draggedCards.length > 0) {
             for (const draggedCard of draggedCards) {
-                Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${propertyValue}`)
+                Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${optionId}`)
                 const oldValue = draggedCard.properties[boardTree.groupByProperty.id]
-                if (propertyValue !== oldValue) {
-                    await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, propertyValue, 'drag card')
+                if (optionId !== oldValue) {
+                    await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, optionId, 'drag card')
                 }
             }
         } else if (draggedHeaderOption) {
-            Utils.log(`ondrop. Header option: ${draggedHeaderOption.value}, column: ${propertyValue}`)
+            Utils.log(`ondrop. Header option: ${draggedHeaderOption.value}, column: ${option?.value}`)
             Utils.assertValue(boardTree.groupByProperty)
 
             // Move option to new index

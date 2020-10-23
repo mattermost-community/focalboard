@@ -2,10 +2,10 @@
 // See LICENSE.txt for license information.
 import {Board, IPropertyOption, IPropertyTemplate, MutableBoard} from '../blocks/board'
 import {BoardView, MutableBoardView} from '../blocks/boardView'
-import {Card} from '../blocks/card'
+import {Card, MutableCard} from '../blocks/card'
 import {CardFilter} from '../cardFilter'
 import octoClient from '../octoClient'
-import {IBlock} from '../blocks/block'
+import {IBlock, IMutableBlock} from '../blocks/block'
 import {OctoUtils} from '../octoUtils'
 import {Utils} from '../utils'
 
@@ -26,17 +26,17 @@ interface BoardTree {
 }
 
 class MutableBoardTree implements BoardTree {
-    board!: Board
+    board!: MutableBoard
     views: MutableBoardView[] = []
-    cards: Card[] = []
-    emptyGroupCards: Card[] = []
+    cards: MutableCard[] = []
+    emptyGroupCards: MutableCard[] = []
     groups: Group[] = []
 
     activeView?: MutableBoardView
     groupByProperty?: IPropertyTemplate
 
     private searchText?: string
-    private allCards: Card[] = []
+    private allCards: MutableCard[] = []
     get allBlocks(): IBlock[] {
         return [this.board, ...this.views, ...this.allCards]
     }
@@ -49,10 +49,10 @@ class MutableBoardTree implements BoardTree {
         this.rebuild(OctoUtils.hydrateBlocks(blocks))
     }
 
-    private rebuild(blocks: IBlock[]) {
-        this.board = blocks.find((block) => block.type === 'board') as Board
+    private rebuild(blocks: IMutableBlock[]) {
+        this.board = blocks.find((block) => block.type === 'board') as MutableBoard
         this.views = blocks.filter((block) => block.type === 'view') as MutableBoardView[]
-        this.allCards = blocks.filter((block) => block.type === 'card') as Card[]
+        this.allCards = blocks.filter((block) => block.type === 'card') as MutableCard[]
         this.cards = []
 
         this.ensureMinimumSchema()
@@ -86,7 +86,46 @@ class MutableBoardTree implements BoardTree {
             this.views.push(view)
             didChange = true
         }
+/*
+        // TODO: Remove fixup code. Fix board cardProperties schema
+        for (const template of this.board.cardProperties) {
+            if (template.type === 'select') {
+                for (const option of template.options) {
+                    if (!option.id) {
+                        option.id = Utils.createGuid()
+                        Utils.log(`FIXUP template ${template.name}, option: ${option.value}, guid: ${option.id}`)
+                    }
+                }
+            }
+        }
 
+        // TODO: Remove fixup code. Fix card schema
+        for (const card of this.allCards) {
+            if (card.schema < 2) {
+                card.schema = 2
+                for (const propertyId in card.properties) {
+                    if (!Object.prototype.hasOwnProperty.call(card.properties, propertyId)) {
+                        continue
+                    }
+                    const template = board.cardProperties.find((o) => o.id === propertyId)
+                    if (!template) {
+                        Utils.log(`No template with id: ${propertyId}`)
+                    }
+                    if (template?.type === 'select') {
+                        const value = card.properties[propertyId]
+                        const option = template.options.find((o) => o.value === value)
+                        if (!option) {
+                            Utils.assertFailure(`No option for template: ${template.name} with option value: ${value}`)
+                        }
+                        if (option) {
+                            card.properties[propertyId] = option?.id
+                        }
+                        Utils.log(`FIXUP card ${template.name}, option: ${option?.value}, guid: ${option?.id}`)
+                    }
+                }
+            }
+        }
+*/
         return didChange
     }
 
@@ -116,11 +155,11 @@ class MutableBoardTree implements BoardTree {
     applyFilterSortAndGroup() {
         Utils.assert(this.allCards !== undefined)
 
-        this.cards = this.filterCards(this.allCards)
+        this.cards = this.filterCards(this.allCards) as MutableCard[]
         Utils.assert(this.cards !== undefined)
-        this.cards = this.searchFilterCards(this.cards)
+        this.cards = this.searchFilterCards(this.cards) as MutableCard[]
         Utils.assert(this.cards !== undefined)
-        this.cards = this.sortCards(this.cards)
+        this.cards = this.sortCards(this.cards) as MutableCard[]
         Utils.assert(this.cards !== undefined)
 
         if (this.activeView.groupById) {
@@ -167,16 +206,16 @@ class MutableBoardTree implements BoardTree {
         const groupByPropertyId = this.groupByProperty.id
 
         this.emptyGroupCards = this.cards.filter((o) => {
-            const propertyValue = o.properties[groupByPropertyId]
-            return !propertyValue || !this.groupByProperty.options.find((option) => option.value === propertyValue)
+            const optionId = o.properties[groupByPropertyId]
+            return !optionId || !this.groupByProperty.options.find((option) => option.id === optionId)
         })
 
         const propertyOptions = this.groupByProperty.options || []
         for (const option of propertyOptions) {
             const cards = this.cards.
                 filter((o) => {
-                    const propertyValue = o.properties[groupByPropertyId]
-                    return propertyValue && propertyValue === option.value
+                    const optionId = o.properties[groupByPropertyId]
+                    return optionId && optionId === option.id
                 })
 
             const group: Group = {
@@ -188,7 +227,7 @@ class MutableBoardTree implements BoardTree {
         }
     }
 
-    private filterCards(cards: Card[]): Card[] {
+    private filterCards(cards: MutableCard[]): Card[] {
         const {board} = this
         const filterGroup = this.activeView?.filter
         if (!filterGroup) {
@@ -200,7 +239,8 @@ class MutableBoardTree implements BoardTree {
 
     private sortCards(cards: Card[]): Card[] {
         if (!this.activeView) {
-            Utils.assertFailure(); return cards
+            Utils.assertFailure()
+            return cards
         }
         const {board} = this
         const {sortOptions} = this.activeView
@@ -286,8 +326,8 @@ class MutableBoardTree implements BoardTree {
                             }
 
                             // Sort by the option order (not alphabetically by value)
-                            const aOrder = template.options.findIndex((o) => o.value === aValue)
-                            const bOrder = template.options.findIndex((o) => o.value === bValue)
+                            const aOrder = template.options.findIndex((o) => o.id === aValue)
+                            const bOrder = template.options.findIndex((o) => o.id === bValue)
 
                             result = aOrder - bOrder
                         } else if (template.type === 'number' || template.type === 'date') {

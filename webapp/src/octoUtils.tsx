@@ -18,15 +18,28 @@ import {IBlock} from './blocks/block'
 import {Utils} from './utils'
 
 class OctoUtils {
-    static propertyDisplayValue(block: IBlock, propertyValue: string | undefined, propertyTemplate: IPropertyTemplate) {
+    static propertyDisplayValue(block: IBlock, propertyValue: string | undefined, propertyTemplate: IPropertyTemplate): string | undefined {
         let displayValue: string
         switch (propertyTemplate.type) {
-        case 'createdTime':
+        case 'select': {
+            // The property value is the id of the template
+            if (propertyValue) {
+                const option = propertyTemplate.options.find((o) => o.id === propertyValue)
+                if (!option) {
+                    Utils.assertFailure()
+                }
+                displayValue = option?.value || '(Unknown)'
+            }
+            break
+        }
+        case 'createdTime': {
             displayValue = Utils.displayDateTime(new Date(block.createAt))
             break
-        case 'updatedTime':
+        }
+        case 'updatedTime': {
             displayValue = Utils.displayDateTime(new Date(block.updateAt))
             break
+        }
         default:
             displayValue = propertyValue
         }
@@ -49,7 +62,7 @@ class OctoUtils {
 
         let propertyColorCssClassName: string
         if (propertyValue && propertyTemplate.type === 'select') {
-            const cardPropertyValue = propertyTemplate.options.find((o) => o.value === propertyValue)
+            const cardPropertyValue = propertyTemplate.options.find((o) => o.id === propertyValue)
             if (cardPropertyValue) {
                 propertyColorCssClassName = cardPropertyValue.color
             }
@@ -70,7 +83,7 @@ class OctoUtils {
 
                 const menu = Menu.shared
                 menu.options = [{id: '', name: '<Empty>'}]
-                menu.options.push(...propertyTemplate.options.map((o) => ({id: o.value, name: o.value})))
+                menu.options.push(...propertyTemplate.options.map((o) => ({id: o.id, name: o.value})))
                 menu.onMenuClicked = (optionId) => {
                     mutator.changePropertyValue(card, propertyTemplate.id, optionId)
                 }
@@ -106,18 +119,18 @@ class OctoUtils {
                     onChanged={(text) => {
                         mutator.changePropertyValue(card, propertyTemplate.id, text)
                     }}
-                           />)
+                />)
             } else {
                 element = (<div
                     key={propertyTemplate.id}
                     className='octo-propertyvalue'
-                           >{displayValue}</div>)
+                >{displayValue}</div>)
             }
         } else {
             element = (<div
                 key={propertyTemplate.id}
                 className='octo-propertyvalue'
-            >{finalDisplayValue}</div>)
+                       >{finalDisplayValue}</div>)
         }
 
         return element

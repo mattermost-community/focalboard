@@ -5,7 +5,7 @@ import {FilterGroup} from '../filterGroup'
 
 import {MutableBlock} from './block'
 
-type IViewType = 'board' | 'table' | 'calendar' | 'list' | 'gallery'
+type IViewType = 'board' | 'table' // | 'calendar' | 'list' | 'gallery'
 type ISortOption = { propertyId: '__name' | string, reversed: boolean }
 
 interface BoardView extends IBlock {
@@ -13,6 +13,7 @@ interface BoardView extends IBlock {
     readonly groupById: string
     readonly sortOptions: readonly ISortOption[]
     readonly visiblePropertyIds: readonly string[]
+    readonly hiddenColumnIds: readonly string[]
     readonly filter: FilterGroup | undefined
 }
 
@@ -45,6 +46,13 @@ class MutableBoardView extends MutableBlock {
         this.fields.visiblePropertyIds = value
     }
 
+    get hiddenColumnIds(): string[] {
+        return this.fields.hiddenColumnIds
+    }
+    set hiddenColumnIds(value: string[]) {
+        this.fields.hiddenColumnIds = value
+    }
+
     get filter(): FilterGroup | undefined {
         return this.fields.filter
     }
@@ -59,16 +67,8 @@ class MutableBoardView extends MutableBlock {
 
         this.sortOptions = block.fields?.sortOptions?.map((o: ISortOption) => ({...o})) || []		// Deep clone
         this.visiblePropertyIds = block.fields?.visiblePropertyIds?.slice() || []
+        this.hiddenColumnIds = block.fields?.hiddenColumnIds?.slice() || []
         this.filter = new FilterGroup(block.fields?.filter)
-
-        // TODO: Remove this fixup code
-        if (block.schema !== 1) {
-            this.viewType = block.viewType || 'board'
-            this.groupById = block.groupById
-            this.sortOptions = block.sortOptions ? block.sortOptions.map((o: ISortOption) => ({...o})) : [] 		// Deep clone
-            this.visiblePropertyIds = block.visiblePropertyIds ? block.visiblePropertyIds.slice() : []
-            this.filter = new FilterGroup(block.filter)
-        }
 
         if (!this.viewType) {
             this.viewType = 'board'

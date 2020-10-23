@@ -2,6 +2,8 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
+import {IPropertyTemplate} from '../blocks/board'
+
 import {BoardTree} from '../viewModel/boardTree'
 import {FilterClause, FilterCondition} from '../filterClause'
 import {FilterGroup} from '../filterGroup'
@@ -17,7 +19,11 @@ type Props = {
 }
 
 class FilterComponent extends React.Component<Props> {
-    render() {
+    shouldComponentUpdate(): boolean {
+        return true
+    }
+
+    render(): JSX.Element {
         const {boardTree} = this.props
         const {board, activeView} = boardTree
 
@@ -48,7 +54,7 @@ class FilterComponent extends React.Component<Props> {
                         return (<div
                             className='octo-filterclause'
                             key={key}
-                        >
+                                >
                             <div
                                 className='octo-button'
                                 onClick={(e) => this.propertyClicked(e, filter)}
@@ -58,18 +64,7 @@ class FilterComponent extends React.Component<Props> {
                                 onClick={(e) => this.conditionClicked(e, filter)}
                             >{FilterClause.filterConditionDisplayString(filter.condition)}</div>
                             {
-                                filter.condition === 'includes' || filter.condition === 'notIncludes' ?
-                                    <div
-                                        className='octo-button'
-                                        onClick={(e) => this.valuesClicked(e, filter)}
-                                    >
-                                        {
-                                            filter.values.length > 0 ?
-                                                filter.values.join(', ') :
-                                                <div>(empty)</div>
-                                        }
-                                    </div> :
-                                    undefined
+                                this.filterValue(filter, template)
                             }
                             <div className='octo-spacer'/>
                             <div
@@ -88,6 +83,31 @@ class FilterComponent extends React.Component<Props> {
                 </div>
             </div>
         )
+    }
+
+    private filterValue(filter: FilterClause, template: IPropertyTemplate): JSX.Element {
+        if (filter.condition === 'includes' || filter.condition === 'notIncludes') {
+            let displayValue: string
+            if (filter.values.length > 0) {
+                displayValue = filter.values.map((id) => {
+                    const option = template.options.find((o) => o.id === id)
+                    return option?.value || '(Unknown)'
+                }).join(', ')
+            } else {
+                displayValue = '(empty)'
+            }
+
+            return (
+                <div
+                    className='octo-button'
+                    onClick={(e) => this.valuesClicked(e, filter)}
+                >
+                    {displayValue}
+                </div>
+            )
+        }
+
+        return undefined
     }
 
     private propertyClicked(e: React.MouseEvent, filter: FilterClause) {
@@ -151,7 +171,7 @@ class FilterComponent extends React.Component<Props> {
         const filterIndex = view.filter.filters.indexOf(filter)
         Utils.assert(filterIndex >= 0, "Can't find filter")
 
-        Menu.shared.options = template.options.map((o) => ({id: o.value, name: o.value, type: 'switch', isOn: filter.values.includes(o.value)}))
+        Menu.shared.options = template.options.map((o) => ({id: o.id, name: o.value, type: 'switch', isOn: filter.values.includes(o.id)}))
         Menu.shared.onMenuToggled = async (optionId: string, isOn: boolean) => {
             // const index = view.filter.filters.indexOf(filter)
             const filterGroup = new FilterGroup(view.filter)
