@@ -14,6 +14,7 @@ import {Utils} from '../utils'
 import {MutableWorkspaceTree} from '../viewModel/workspaceTree'
 
 type Props = {
+    setLanguage: (lang: string) => void
 }
 
 type State = {
@@ -157,6 +158,7 @@ export default class BoardPage extends React.Component<Props, State> {
                     setSearchText={(text) => {
                         this.setSearchText(text)
                     }}
+                    setLanguage={this.props.setLanguage}
                 />
             </div>
         )

@@ -17,11 +17,12 @@ type Props = {
     showView: (id: string, boardId?: string) => void
     showFilter: (el: HTMLElement) => void
     setSearchText: (text: string) => void
+    setLanguage: (lang: string) => void
 }
 
 class WorkspaceComponent extends React.Component<Props> {
     render() {
-        const {boardTree, workspaceTree, showBoard, showView} = this.props
+        const {boardTree, workspaceTree, showBoard, showView, setLanguage} = this.props
 
         Utils.assert(workspaceTree)
         const element =
@@ -31,6 +32,7 @@ class WorkspaceComponent extends React.Component<Props> {
                     showView={showView}
                     workspaceTree={workspaceTree}
                     boardTree={boardTree}
+                    setLanguage={setLanguage}
                 />
                 {this.mainComponent()}
             </div>)

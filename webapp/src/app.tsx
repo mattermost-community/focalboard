@@ -1,39 +1,51 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useState} from 'react'
+import {IntlProvider} from 'react-intl'
 
 import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link,
 } from 'react-router-dom'
+
+import {getCurrentLanguage, getMessages, storeLanguage} from './i18n'
 
 import LoginPage from './pages/loginPage'
 import BoardPage from './pages/boardPage'
 
 export default function App(): JSX.Element {
+    const [language, setLanguage] = useState(getCurrentLanguage())
+    const setAndStoreLanguage = (lang: string) => {
+        storeLanguage(lang)
+        setLanguage(lang)
+    }
     return (
-        <Router>
-            <div id='frame'>
-                <div id='main'>
-                    <Switch>
-                        <Route path='/login'>
-                            <LoginPage/>
-                        </Route>
-                        <Route path='/'>
-                            <BoardPage/>
-                        </Route>
-                        <Route path='/board'>
-                            <BoardPage/>
-                        </Route>
-                    </Switch>
+        <IntlProvider
+            locale={language}
+            messages={getMessages(language)}
+        >
+            <Router>
+                <div id='frame'>
+                    <div id='main'>
+                        <Switch>
+                            <Route path='/login'>
+                                <LoginPage/>
+                            </Route>
+                            <Route path='/'>
+                                <BoardPage setLanguage={setAndStoreLanguage}/>
+                            </Route>
+                            <Route path='/board'>
+                                <BoardPage setLanguage={setAndStoreLanguage}/>
+                            </Route>
+                        </Switch>
+                    </div>
+
+                    <div id='overlay'/>
+
+                    <div id='modal'/>
                 </div>
-
-                <div id='overlay'/>
-
-                <div id='modal'/>
-            </div>
-        </Router>
+            </Router>
+        </IntlProvider>
     )
 }

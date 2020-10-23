@@ -1,5 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+const tsTransformer = require('@formatjs/ts-transformer');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -18,8 +19,21 @@ function makeCommonConfig() {
             rules: [
                 {
                     test: /\.tsx?$/,
-                    use: 'ts-loader',
+                    use: {
+                        loader: 'ts-loader',
+                        options: {
+                            getCustomTransformers: {
+                                before: [
+                                    tsTransformer.transform({
+                                        overrideIdFn: '[sha512:contenthash:base64:6]',
+                                        ast: true,
+                                    }),
+                                ],
+                            },
+                        },
+                    },
                     exclude: [/node_modules/],
+
                 },
                 {
                     test: /\.html$/,

@@ -9,12 +9,14 @@
 		"watchdev": "NODE_ENV=dev webpack --watch --config webpack.dev.js",
 		"test": "jest",
 		"check": "eslint --ext .tsx,.ts . --quiet --cache",
-		"fix": "eslint --ext .tsx,.ts . --quiet --fix --cache"
+		"fix": "eslint --ext .tsx,.ts . --quiet --fix --cache",
+		"i18n-extract": "formatjs extract src/**/*.tsx src/**/*.ts --out-file i18n/tmp.json; formatjs compile i18n/tmp.json --out-file i18n/en.json; rm i18n/tmp.json"
 	},
 	"dependencies": {
 		"marked": "^1.1.1",
 		"react": "^16.13.1",
 		"react-dom": "^16.13.1",
+		"react-intl": "^5.8.6",
 		"react-router-dom": "^5.2.0",
 		"react-simplemde-editor": "^4.1.3"
 	},
@@ -24,6 +26,8 @@
 		}
 	},
 	"devDependencies": {
+		"@formatjs/cli": "^2.13.2",
+		"@formatjs/ts-transformer": "^2.11.3",
 		"@testing-library/jest-dom": "^5.11.4",
 		"@testing-library/react": "^11.0.4",
 		"@types/jest": "^26.0.14",

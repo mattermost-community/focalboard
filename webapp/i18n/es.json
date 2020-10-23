@@ -1,0 +1,11 @@
+{
+  "Sidebar.add-board": "+ Añadir Panel",
+  "Sidebar.delete-board": "Borrar Panel",
+  "Sidebar.export-archive": "Exportar Archivo",
+  "Sidebar.import-archive": "Importar Archivo",
+  "Sidebar.set-english-language": "Usar idioma Inglés",
+  "Sidebar.set-spanish-language": "Usar idioma Español",
+  "Sidebar.settings": "Configuración",
+  "Sidebar.untitled-board": "(Panel sin titulo)",
+  "Sidebar.untitled-view": "(Vista sin titulo)"
+}

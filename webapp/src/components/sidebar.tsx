@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
+import {FormattedMessage} from 'react-intl'
 
 import {Archiver} from '../archiver'
 import {Board, MutableBoard} from '../blocks/board'
@@ -15,7 +16,8 @@ type Props = {
     showBoard: (id: string) => void
     showView: (id: string, boardId?: string) => void
     workspaceTree: WorkspaceTree,
-    boardTree?: BoardTree
+    boardTree?: BoardTree,
+    setLanguage: (lang: string) => void,
 }
 
 type State = {
@@ -77,7 +79,12 @@ class Sidebar extends React.Component<Props, State> {
                 </div>
                 {
                     boards.map((board) => {
-                        const displayTitle = board.title || '(Untitled Board)'
+                        const displayTitle = board.title || (
+                            <FormattedMessage
+                                id='Sidebar.untitled-board'
+                                defaultMessage='(Untitled Board)'
+                            />
+                        )
                         const boardViews = views.filter((view) => view.parentId === board.id)
                         return (
                             <div key={board.id}>
@@ -93,23 +100,30 @@ class Sidebar extends React.Component<Props, State> {
                                     <MenuWrapper>
                                         <div className='octo-button square octo-hover-item'><div className='imageOptions'/></div>
                                         <Menu>
-                                            <Menu.Text
-                                                id='delete'
-                                                name='Delete board'
-                                                onClick={async () => {
-                                                    const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id).id : undefined
-                                                    mutator.deleteBlock(
-                                                        board,
-                                                        'delete block',
-                                                        async () => {
-                                                            nextBoardId && this.props.showBoard(nextBoardId!)
-                                                        },
-                                                        async () => {
-                                                            this.props.showBoard(board.id)
-                                                        },
-                                                    )
-                                                }}
-                                            />
+                                            <FormattedMessage
+                                                id='Sidebar.delete-board'
+                                                defaultMessage='Delete Board'
+                                            >
+                                                {(text: string) => (
+                                                    <Menu.Text
+                                                        id='delete'
+                                                        name={text}
+                                                        onClick={async () => {
+                                                            const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id).id : undefined
+                                                            mutator.deleteBlock(
+                                                                board,
+                                                                'delete block',
+                                                                async () => {
+                                                                    nextBoardId && this.props.showBoard(nextBoardId!)
+                                                                },
+                                                                async () => {
+                                                                    this.props.showBoard(board.id)
+                                                                },
+                                                            )
+                                                        }}
+                                                    />
+                                                )}
+                                            </FormattedMessage>
                                         </Menu>
                                     </MenuWrapper>
                                 </div>
@@ -124,7 +138,12 @@ class Sidebar extends React.Component<Props, State> {
                                                 this.viewClicked(board, view)
                                             }}
                                         >
-                                            {view.title || '(Untitled View)'}
+                                            {view.title || (
+                                                <FormattedMessage
+                                                    id='Sidebar.untitled-view'
+                                                    defaultMessage='(Untitled View)'
+                                                />
+                                            )}
                                         </div>
                                     </div>)
                                 })}
@@ -140,25 +159,73 @@ class Sidebar extends React.Component<Props, State> {
                     onClick={() => {
                         this.addBoardClicked()
                     }}
-                >+ Add Board</div>
+                >
+                    <FormattedMessage
+                        id='Sidebar.add-board'
+                        defaultMessage='+ Add Board'
+                    />
+                </div>
 
                 <div className='octo-spacer'/>
 
                 <MenuWrapper>
-                    <div className='octo-button'>Settings</div>
+                    <div className='octo-button'>
+                        <FormattedMessage
+                            id='Sidebar.settings'
+                            defaultMessage='Settings'
+                        />
+                    </div>
                     <Menu position='top'>
-                        <Menu.Text
-                            id='import'
-                            name='Import Archive'
-                            onClick={async () => Archiver.importFullArchive(() => {
-                                this.forceUpdate()
-                            })}
-                        />
-                        <Menu.Text
-                            id='export'
-                            name='Export Archive'
-                            onClick={async () => Archiver.exportFullArchive()}
-                        />
+                        <FormattedMessage
+                            id='Sidebar.import-archive'
+                            defaultMessage='Import Archive'
+                        >
+                            {(text: string) => (
+                                <Menu.Text
+                                    id='import'
+                                    name={text}
+                                    onClick={async () => Archiver.importFullArchive(() => {
+                                        this.forceUpdate()
+                                    })}
+                                />
+                            )}
+                        </FormattedMessage>
+                        <FormattedMessage
+                            id='Sidebar.export-archive'
+                            defaultMessage='Export Archive'
+                        >
+                            {(text: string) => (
+                                <Menu.Text
+                                    id='export'
+                                    name={text}
+                                    onClick={async () => Archiver.exportFullArchive()}
+                                />
+                            )}
+                        </FormattedMessage>
+                        <FormattedMessage
+                            id='Sidebar.set-english-language'
+                            defaultMessage='Set English Language'
+                        >
+                            {(text: string) => (
+                                <Menu.Text
+                                    id='english-lang'
+                                    name={text}
+                                    onClick={async () => this.props.setLanguage('en')}
+                                />
+                            )}
+                        </FormattedMessage>
+                        <FormattedMessage
+                            id='Sidebar.set-spanish-language'
+                            defaultMessage='Set Spanish Language'
+                        >
+                            {(text: string) => (
+                                <Menu.Text
+                                    id='spanish-lang'
+                                    name={text}
+                                    onClick={async () => this.props.setLanguage('es')}
+                                />
+                            )}
+                        </FormattedMessage>
                     </Menu>
                 </MenuWrapper>
             </div>
