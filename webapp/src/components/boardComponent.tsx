@@ -448,6 +448,7 @@ class BoardComponent extends React.Component<Props, State> {
                                     return(
                                         <div className='octo-board-column narrow'>
                                             {hiddenGroups.map((group) =>
+                                            <div className='octo-board-hidden-item'>
                                                 <MenuWrapper key={group.option.id}>
                                                     <div
                                                         key={group.option.id}
@@ -455,14 +456,16 @@ class BoardComponent extends React.Component<Props, State> {
                                                     >
                                                         {group.option.value}
                                                     </div>
-                                                <Menu>
-                                                    <Menu.Text
-                                                        id='show'
-                                                        name='Show'
-                                                        onClick={() => mutator.unhideViewColumn(activeView, group.option.id)}
-                                                    />
-                                                </Menu>
-                                            </MenuWrapper>
+                                                    <Menu>
+                                                        <Menu.Text
+                                                            id='show'
+                                                            name='Show'
+                                                            onClick={() => mutator.unhideViewColumn(activeView, group.option.id)}
+                                                        />
+                                                    </Menu>
+                                                </MenuWrapper>
+                                                <Button>{`${group.cards.length}`}</Button>
+                                            </div>
                                             )}
                                         </div>
                                     )

@@ -233,6 +233,15 @@ hr {
     width: 220px;
 }
 
+.octo-board-hidden-item {
+    display: flex;
+    flex-direction: row;
+}
+
+.octo-board-hidden-item > div {
+    margin-right: 5px;
+}
+
 .dragover {
 	background-color: rgba(128, 192, 255, 0.4);
 }
