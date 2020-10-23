@@ -7,5 +7,17 @@
   "Sidebar.set-spanish-language": "Set Spanish Language",
   "Sidebar.settings": "Settings",
   "Sidebar.untitled-board": "(Untitled Board)",
-  "Sidebar.untitled-view": "(Untitled View)"
+  "Sidebar.untitled-view": "(Untitled View)",
+  "TableComponent.add-icon": "Add Icon",
+  "TableComponent.filter": "Filter",
+  "TableComponent.loading": "Loading...",
+  "TableComponent.name": "Name",
+  "TableComponent.new": "New",
+  "TableComponent.plus-new": "+ New",
+  "TableComponent.properties": "Properties",
+  "TableComponent.random-icon": "Random",
+  "TableComponent.remove-icon": "Remove Icon",
+  "TableComponent.search": "Search",
+  "TableComponent.search-text": "Search text",
+  "TableComponent.sort": "Sort"
 }
