@@ -7,5 +7,17 @@
   "Sidebar.set-spanish-language": "Usar idioma Español",
   "Sidebar.settings": "Configuración",
   "Sidebar.untitled-board": "(Panel sin titulo)",
-  "Sidebar.untitled-view": "(Vista sin titulo)"
+  "Sidebar.untitled-view": "(Vista sin titulo)",
+  "TableComponent.add-icon": "Añadir Icono",
+  "TableComponent.filter": "Filtrar",
+  "TableComponent.loading": "Cargando...",
+  "TableComponent.name": "Nombre",
+  "TableComponent.new": "Nueva",
+  "TableComponent.plus-new": "+ Nueva",
+  "TableComponent.properties": "Propiedades",
+  "TableComponent.random-icon": "Aleatorio",
+  "TableComponent.remove-icon": "Quitar Icono",
+  "TableComponent.search": "Buscar",
+  "TableComponent.search-text": "Texto de búsqueda",
+  "TableComponent.sort": "Ordenar"
 }

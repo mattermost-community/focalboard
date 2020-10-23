@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
+import {FormattedMessage} from 'react-intl'
 
 import {Archiver} from '../archiver'
 import {BlockIcons} from '../blockIcons'
@@ -62,7 +63,12 @@ class TableComponent extends React.Component<Props, State> {
 
         if (!boardTree || !boardTree.board) {
             return (
-                <div>Loading...</div>
+                <div>
+                    <FormattedMessage
+                        id='TableComponent.loading'
+                        defaultMessage='Loading...'
+                    />
+                </div>
             )
         }
 
@@ -99,35 +105,60 @@ class TableComponent extends React.Component<Props, State> {
                                 const newIcon = BlockIcons.shared.randomIcon()
                                 mutator.changeIcon(board, newIcon)
                             }}
-                        >Add Icon</Button>
+                        >
+                            <FormattedMessage
+                                id='TableComponent.add-icon'
+                                defaultMessage='Add Icon'
+                            />
+                        </Button>
                     </div>
 
                     <div className='octo-icontitle'>
-                        {board.icon ?
+                        {board.icon &&
                             <MenuWrapper>
                                 <div className='octo-button octo-icon'>{board.icon}</div>
                                 <Menu>
-                                    <Menu.Text
-                                        id='random'
-                                        name='Random'
-                                        onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}
-                                    />
-                                    <Menu.Text
-                                        id='remove'
-                                        name='Remove Icon'
-                                        onClick={() => mutator.changeIcon(board, undefined, 'remove icon')}
-                                    />
+                                    <FormattedMessage
+                                        id='TableComponent.random-icon'
+                                        defaultMessage='Random'
+                                    >
+                                        {(text: string) => (
+                                            <Menu.Text
+                                                id='random'
+                                                name={text}
+                                                onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}
+                                            />
+                                        )}
+                                    </FormattedMessage>
+                                    <FormattedMessage
+                                        id='TableComponent.remove-icon'
+                                        defaultMessage='Remove Icon'
+                                    >
+                                        {(text: string) => (
+                                            <Menu.Text
+                                                id='remove'
+                                                name={text}
+                                                onClick={() => mutator.changeIcon(board, undefined, 'remove icon')}
+                                            />
+                                        )}
+                                    </FormattedMessage>
                                 </Menu>
-                            </MenuWrapper> :
-                            undefined}
-                        <Editable
-                            className='title'
-                            text={board.title}
-                            placeholderText='Untitled Board'
-                            onChanged={(text) => {
-                                mutator.changeTitle(board, text)
-                            }}
-                        />
+                            </MenuWrapper>}
+                        <FormattedMessage
+                            id='TableComponent.remove-icon'
+                            defaultMessage='Remove Icon'
+                        >
+                            {(placeholder: string) => (
+                                <Editable
+                                    className='title'
+                                    text={board.title}
+                                    placeholderText={placeholder}
+                                    onChanged={(text) => {
+                                        mutator.changeTitle(board, text)
+                                    }}
+                                />
+                            )}
+                        </FormattedMessage>
                     </div>
 
                     <div className='octo-table'>
@@ -159,39 +190,66 @@ class TableComponent extends React.Component<Props, State> {
                                 onClick={(e) => {
                                     this.propertiesClicked(e)
                                 }}
-                            >Properties</div>
+                            >
+                                <FormattedMessage
+                                    id='TableComponent.properties'
+                                    defaultMessage='Properties'
+                                />
+                            </div>
                             <div
                                 className={hasFilter ? 'octo-button active' : 'octo-button'}
                                 onClick={(e) => {
                                     this.filterClicked(e)
                                 }}
-                            >Filter</div>
+                            >
+                                <FormattedMessage
+                                    id='TableComponent.filter'
+                                    defaultMessage='Filter'
+                                />
+                            </div>
                             <div
                                 className={hasSort ? 'octo-button active' : 'octo-button'}
                                 onClick={(e) => {
                                     OctoUtils.showSortMenu(e, boardTree)
                                 }}
-                            >Sort</div>
-                            {this.state.isSearching ?
-                                <Editable
-                                    ref={this.searchFieldRef}
-                                    text={boardTree.getSearchText()}
-                                    placeholderText='Search text'
-                                    style={{color: '#000000'}}
-                                    onChanged={(text) => {
-                                        this.searchChanged(text)
-                                    }}
-                                    onKeyDown={(e) => {
-                                        this.onSearchKeyDown(e)
-                                    }}
-                                /> :
+                            >
+                                <FormattedMessage
+                                    id='TableComponent.sort'
+                                    defaultMessage='Sort'
+                                />
+                            </div>
+                            {this.state.isSearching &&
+                                <FormattedMessage
+                                    id='TableComponent.search-text'
+                                    defaultMessage='Search text'
+                                >
+                                    {(placeholder: string) => (
+                                        <Editable
+                                            ref={this.searchFieldRef}
+                                            text={boardTree.getSearchText()}
+                                            placeholderText={placeholder}
+                                            style={{color: '#000000'}}
+                                            onChanged={(text) => {
+                                                this.searchChanged(text)
+                                            }}
+                                            onKeyDown={(e) => {
+                                                this.onSearchKeyDown(e)
+                                            }}
+                                        />
+                                    )}
+                                </FormattedMessage>}
+                            {!this.state.isSearching &&
                                 <div
                                     className='octo-button'
                                     onClick={() => {
                                         this.setState({...this.state, isSearching: true})
                                     }}
-                                >Search</div>
-                            }
+                                >
+                                    <FormattedMessage
+                                        id='TableComponent.search'
+                                        defaultMessage='Search'
+                                    />
+                                </div>}
                             <div
                                 className='octo-button'
                                 onClick={(e) => this.optionsClicked(e)}
@@ -201,7 +259,12 @@ class TableComponent extends React.Component<Props, State> {
                                 onClick={() => {
                                     this.addCard(true)
                                 }}
-                            >New</div>
+                            >
+                                <FormattedMessage
+                                    id='TableComponent.new'
+                                    defaultMessage='New'
+                                />
+                            </div>
                         </div>
 
                         {/* Main content */}
@@ -224,7 +287,12 @@ class TableComponent extends React.Component<Props, State> {
                                         onClick={(e) => {
                                             this.headerClicked(e, '__name')
                                         }}
-                                    >Name</div>
+                                    >
+                                        <FormattedMessage
+                                            id='TableComponent.name'
+                                            defaultMessage='Name'
+                                        />
+                                    </div>
                                 </div>
 
                                 {board.cardProperties.
@@ -308,7 +376,10 @@ class TableComponent extends React.Component<Props, State> {
                                         this.addCard()
                                     }}
                                 >
-                                    + New
+                                    <FormattedMessage
+                                        id='TableComponent.plus-new'
+                                        defaultMessage='+ New'
+                                    />
                                 </div>
                             </div>
                         </div>
