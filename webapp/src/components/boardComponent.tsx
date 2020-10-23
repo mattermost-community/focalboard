@@ -2,8 +2,10 @@
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
 import React from 'react'
+import {FormattedMessage} from 'react-intl'
 
 import {Archiver} from '../archiver'
+import {ISortOption} from '../blocks/boardView'
 import {BlockIcons} from '../blockIcons'
 import {IPropertyOption} from '../blocks/board'
 import {Card, MutableCard} from '../blocks/card'
@@ -13,7 +15,6 @@ import ViewMenu from '../components/viewMenu'
 import {Constants} from '../constants'
 import {Menu as OldMenu} from '../menu'
 import mutator from '../mutator'
-import {OctoUtils} from '../octoUtils'
 import {Utils} from '../utils'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
@@ -219,12 +220,37 @@ class BoardComponent extends React.Component<Props, State> {
                                     this.filterClicked(e)
                                 }}
                             >Filter</div>
-                            <div
-                                className={hasSort ? 'octo-button active' : 'octo-button'}
-                                onClick={(e) => {
-                                    OctoUtils.showSortMenu(e, boardTree)
-                                }}
-                            >Sort</div>
+                            <MenuWrapper>
+                                <div className={hasSort ? 'octo-button active' : 'octo-button'}>
+                                    <FormattedMessage
+                                        id='TableComponent.sort'
+                                        defaultMessage='Sort'
+                                    />
+                                </div>
+                                <Menu>
+                                    {boardTree.board.cardProperties.map((option) => (
+                                        <Menu.Text
+                                            id={option.id}
+                                            name={option.name}
+                                            icon={(activeView.sortOptions[0]?.propertyId === option.id) ? activeView.sortOptions[0].reversed ? 'sortUp' : 'sortDown' : undefined}
+                                            onClick={(propertyId: string) => {
+                                                let newSortOptions: ISortOption[] = []
+                                                if (activeView.sortOptions[0] && activeView.sortOptions[0].propertyId === propertyId) {
+                                                    // Already sorting by name, so reverse it
+                                                    newSortOptions = [
+                                                        {propertyId, reversed: !activeView.sortOptions[0].reversed},
+                                                    ]
+                                                } else {
+                                                    newSortOptions = [
+                                                        {propertyId, reversed: false},
+                                                    ]
+                                                }
+                                                mutator.changeViewSortOptions(activeView, newSortOptions)
+                                            }}
+                                        />
+                                    ))}
+                                </Menu>
+                            </MenuWrapper>
                             {this.state.isSearching ?
                                 <Editable
                                     ref={this.searchFieldRef}
