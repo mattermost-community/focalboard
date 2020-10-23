@@ -9,7 +9,11 @@ import {IBlock, IMutableBlock} from '../blocks/block'
 import {OctoUtils} from '../octoUtils'
 import {Utils} from '../utils'
 
-type Group = { option: IPropertyOption, cards: Card[] }
+type Group = {
+    option: IPropertyOption
+    cards: Card[]
+    isHidden: boolean
+}
 
 interface BoardTree {
     readonly board: Board
@@ -58,13 +62,13 @@ class MutableBoardTree implements BoardTree {
         this.ensureMinimumSchema()
     }
 
-    private async ensureMinimumSchema() {
+    private ensureMinimumSchema(): boolean {
         const {board} = this
 
         let didChange = false
 
         // At least one select property
-        const selectProperties = board.cardProperties.find((o) => o.type === 'select')
+        const selectProperties = board?.cardProperties.find((o) => o.type === 'select')
         if (!selectProperties) {
             const newBoard = new MutableBoard(board)
             const property: IPropertyTemplate = {
@@ -81,8 +85,8 @@ class MutableBoardTree implements BoardTree {
         // At least one view
         if (this.views.length < 1) {
             const view = new MutableBoardView()
-            view.parentId = board.id
-            view.groupById = board.cardProperties.find((o) => o.type === 'select')?.id
+            view.parentId = board?.id
+            view.groupById = board?.cardProperties.find((o) => o.type === 'select')?.id
             this.views.push(view)
             didChange = true
         }
@@ -218,9 +222,11 @@ class MutableBoardTree implements BoardTree {
                     return optionId && optionId === option.id
                 })
 
+            const isHidden = this.activeView.hiddenColumnIds.includes(option.id)
             const group: Group = {
                 option,
                 cards,
+                isHidden
             }
 
             this.groups.push(group)

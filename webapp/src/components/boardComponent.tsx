@@ -104,6 +104,8 @@ class BoardComponent extends React.Component<Props, State> {
         const visiblePropertyTemplates = board.cardProperties.filter((template) => activeView.visiblePropertyIds.includes(template.id))
         const hasFilter = activeView.filter && activeView.filter.filters?.length > 0
         const hasSort = activeView.sortOptions.length > 0
+        const visibleGroups = boardTree.groups.filter(group => !group.isHidden)
+        const hiddenGroups = boardTree.groups.filter(group => group.isHidden)
 
         return (
             <div
@@ -281,7 +283,9 @@ class BoardComponent extends React.Component<Props, State> {
                                 ><div className='imageAdd'/></Button>
                             </div>
 
-                            {boardTree.groups.map((group) =>
+                            {/* Visible column headers */}
+
+                            {visibleGroups.map((group) =>
                                 (<div
                                     key={group.option.id}
                                     className='octo-board-header-cell'
@@ -319,11 +323,11 @@ class BoardComponent extends React.Component<Props, State> {
                                     <MenuWrapper>
                                         <Button><div className='imageOptions'/></Button>
                                         <Menu>
-                                            {/* <Menu.Text
+                                            <Menu.Text
                                                 id='hide'
                                                 name='Hide'
                                                 onClick={() => mutator.hideViewColumn(activeView, group.option.id)}
-                                            /> */}
+                                            />
                                             <Menu.Text
                                                 id='delete'
                                                 name='Delete'
@@ -348,7 +352,15 @@ class BoardComponent extends React.Component<Props, State> {
                                 </div>),
                             )}
 
-                            <div className='octo-board-header-cell'>
+                            {/* Hidden column header */}
+
+                            {(() => {
+                                if (hiddenGroups.length > 0) {
+                                    return <div className='octo-board-header-cell narrow'>Hidden columns</div>
+                                }
+                            })()}
+
+                            <div className='octo-board-header-cell narrow'>
                                 <Button
                                     onClick={(e) => {
                                         this.addGroupClicked()
@@ -397,7 +409,7 @@ class BoardComponent extends React.Component<Props, State> {
 
                             {/* Columns */}
 
-                            {boardTree.groups.map((group) =>
+                            {visibleGroups.map((group) =>
                                 (<BoardColumn
                                     onDrop={(e) => {
                                         this.onDropToColumn(group.option)
@@ -428,6 +440,35 @@ class BoardComponent extends React.Component<Props, State> {
                                     >+ New</Button>
                                 </BoardColumn>),
                             )}
+
+                            {/* Hidden columns */}
+
+                            {(() => {
+                                if (hiddenGroups.length > 0) {
+                                    return(
+                                        <div className='octo-board-column narrow'>
+                                            {hiddenGroups.map((group) =>
+                                                <MenuWrapper key={group.option.id}>
+                                                    <div
+                                                        key={group.option.id}
+                                                        className={`octo-label ${group.option.color}`}
+                                                    >
+                                                        {group.option.value}
+                                                    </div>
+                                                <Menu>
+                                                    <Menu.Text
+                                                        id='show'
+                                                        name='Show'
+                                                        onClick={() => mutator.unhideViewColumn(activeView, group.option.id)}
+                                                    />
+                                                </Menu>
+                                            </MenuWrapper>
+                                            )}
+                                        </div>
+                                    )
+                                }
+                            })()}
+
                         </div>
                     </div>
                 </div>

@@ -3,6 +3,8 @@
 
 import React from 'react'
 
+import './menuWrapper.scss'
+
 type Props = {
     children?: React.ReactNode;
     onToggle?: (open: boolean) => void;
