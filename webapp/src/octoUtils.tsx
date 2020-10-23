@@ -2,19 +2,17 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {MutableBlock} from './blocks/block'
+import {IBlock, MutableBlock} from './blocks/block'
 import {IPropertyTemplate, MutableBoard} from './blocks/board'
-import {ISortOption, MutableBoardView} from './blocks/boardView'
+import {MutableBoardView} from './blocks/boardView'
 import {Card, MutableCard} from './blocks/card'
 import {MutableCommentBlock} from './blocks/commentBlock'
 import {MutableImageBlock} from './blocks/imageBlock'
 import {IOrderedBlock} from './blocks/orderedBlock'
 import {MutableTextBlock} from './blocks/textBlock'
-import {BoardTree} from './viewModel/boardTree'
 import {Editable} from './components/editable'
 import {Menu} from './menu'
 import mutator from './mutator'
-import {IBlock} from './blocks/block'
 import {Utils} from './utils'
 
 class OctoUtils {
@@ -152,37 +150,6 @@ class OctoUtils {
         }
         const nextBlock = blocks[index + 1]
         return (block.order + nextBlock.order) / 2
-    }
-
-    static showSortMenu(e: React.MouseEvent, boardTree: BoardTree) {
-        const {activeView} = boardTree
-        const {sortOptions} = activeView
-        const sortOption = sortOptions.length > 0 ? sortOptions[0] : undefined
-
-        const propertyTemplates = boardTree.board.cardProperties
-        Menu.shared.options = propertyTemplates.map((o) => {
-            return {
-                id: o.id,
-                name: o.name,
-                icon: (sortOption?.propertyId === o.id) ? sortOption.reversed ? 'sortUp' : 'sortDown' : undefined,
-            }
-        })
-        Menu.shared.onMenuClicked = async (propertyId: string) => {
-            let newSortOptions: ISortOption[] = []
-            if (sortOption && sortOption.propertyId === propertyId) {
-                // Already sorting by name, so reverse it
-                newSortOptions = [
-                    {propertyId, reversed: !sortOption.reversed},
-                ]
-            } else {
-                newSortOptions = [
-                    {propertyId, reversed: false},
-                ]
-            }
-
-            await mutator.changeViewSortOptions(activeView, newSortOptions)
-        }
-        Menu.shared.showAtElement(e.target as HTMLElement)
     }
 
     static hydrateBlock(block: IBlock): MutableBlock {
