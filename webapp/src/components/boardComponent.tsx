@@ -456,7 +456,7 @@ class BoardComponent extends React.Component<Props, State> {
         e.stopPropagation()
     }
 
-    private async addGroupClicked() {
+    private addGroupClicked = async () => {
         Utils.log('onAddGroupClicked')
 
         const {boardTree} = this.props
