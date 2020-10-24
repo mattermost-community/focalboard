@@ -196,12 +196,36 @@ class BoardComponent extends React.Component<Props, State> {
                                 />
                             </MenuWrapper>
                             <div className='octo-spacer'/>
-                            <div
-                                className='octo-button'
-                                onClick={(e) => {
-                                    this.propertiesClicked(e)
-                                }}
-                            >Properties</div>
+                            <MenuWrapper>
+                                <div className={'octo-button'}>
+                                    <FormattedMessage
+                                        id='TableComponent.properties'
+                                        defaultMessage='Properties'
+                                    />
+                                </div>
+                                <Menu>
+                                    {boardTree.board.cardProperties.map((option) => (
+                                        <Menu.Switch
+                                            id={option.id}
+                                            name={option.name}
+                                            isOn={activeView.visiblePropertyIds.includes(option.id)}
+                                            onClick={(propertyId: string) => {
+                                                const property = boardTree.board.cardProperties.find((o) => o.id === propertyId)
+                                                Utils.assertValue(property)
+                                                Utils.log(`Toggle property ${property.name}`)
+
+                                                let newVisiblePropertyIds = []
+                                                if (activeView.visiblePropertyIds.includes(propertyId)) {
+                                                    newVisiblePropertyIds = activeView.visiblePropertyIds.filter((o) => o !== propertyId)
+                                                } else {
+                                                    newVisiblePropertyIds = [...activeView.visiblePropertyIds, propertyId]
+                                                }
+                                                mutator.changeViewVisibleProperties(activeView, newVisiblePropertyIds)
+                                            }}
+                                        />
+                                    ))}
+                                </Menu>
+                            </MenuWrapper>
                             <div
                                 className='octo-button'
                                 id='groupByButton'

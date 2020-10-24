@@ -185,17 +185,36 @@ class TableComponent extends React.Component<Props, State> {
                                 />
                             </MenuWrapper>
                             <div className='octo-spacer'/>
-                            <div
-                                className='octo-button'
-                                onClick={(e) => {
-                                    this.propertiesClicked(e)
-                                }}
-                            >
-                                <FormattedMessage
-                                    id='TableComponent.properties'
-                                    defaultMessage='Properties'
-                                />
-                            </div>
+                            <MenuWrapper>
+                                <div className={'octo-button'}>
+                                    <FormattedMessage
+                                        id='TableComponent.properties'
+                                        defaultMessage='Properties'
+                                    />
+                                </div>
+                                <Menu>
+                                    {boardTree.board.cardProperties.map((option) => (
+                                        <Menu.Switch
+                                            id={option.id}
+                                            name={option.name}
+                                            isOn={activeView.visiblePropertyIds.includes(option.id)}
+                                            onClick={(propertyId: string) => {
+                                                const property = boardTree.board.cardProperties.find((o) => o.id === propertyId)
+                                                Utils.assertValue(property)
+                                                Utils.log(`Toggle property ${property.name}`)
+
+                                                let newVisiblePropertyIds = []
+                                                if (activeView.visiblePropertyIds.includes(propertyId)) {
+                                                    newVisiblePropertyIds = activeView.visiblePropertyIds.filter((o) => o !== propertyId)
+                                                } else {
+                                                    newVisiblePropertyIds = [...activeView.visiblePropertyIds, propertyId]
+                                                }
+                                                mutator.changeViewVisibleProperties(activeView, newVisiblePropertyIds)
+                                            }}
+                                        />
+                                    ))}
+                                </Menu>
+                            </MenuWrapper>
                             <div
                                 className={hasFilter ? 'octo-button active' : 'octo-button'}
                                 onClick={(e) => {
@@ -407,32 +426,6 @@ class TableComponent extends React.Component<Props, State> {
                 </div >
             </div >
         )
-    }
-
-    private async propertiesClicked(e: React.MouseEvent) {
-        const {boardTree} = this.props
-        const {activeView} = boardTree
-
-        const selectProperties = boardTree.board.cardProperties
-        OldMenu.shared.options = selectProperties.map((o) => {
-            const isVisible = activeView.visiblePropertyIds.includes(o.id)
-            return {id: o.id, name: o.name, type: 'switch', isOn: isVisible}
-        })
-
-        OldMenu.shared.onMenuToggled = async (id: string, isOn: boolean) => {
-            const property = selectProperties.find((o) => o.id === id)
-            Utils.assertValue(property)
-            Utils.log(`Toggle property ${property.name} ${isOn}`)
-
-            let newVisiblePropertyIds = []
-            if (activeView.visiblePropertyIds.includes(id)) {
-                newVisiblePropertyIds = activeView.visiblePropertyIds.filter((o) => o !== id)
-            } else {
-                newVisiblePropertyIds = [...activeView.visiblePropertyIds, id]
-            }
-            await mutator.changeViewVisibleProperties(activeView, newVisiblePropertyIds)
-        }
-        OldMenu.shared.showAtElement(e.target as HTMLElement)
     }
 
     private filterClicked(e: React.MouseEvent) {

@@ -90,13 +90,15 @@ class SwitchOption extends React.Component<SwitchOptionProps> {
     render() {
         const {name, icon, isOn} = this.props
         return (
-            <div className='MenuOption SwitchOption menu-option'>
+            <div
+                className='MenuOption SwitchOption menu-option'
+                onClick={this.handleOnClick}
+            >
                 <div className='menu-name'>{name}</div>
                 {icon && <div className={`icon ${icon}`}/>}
                 <div className={isOn ? 'octo-switch on' : 'octo-switch'}>
                     <div
                         className='octo-switch-inner'
-                        onClick={this.handleOnClick}
                     />
                 </div>
             </div>
