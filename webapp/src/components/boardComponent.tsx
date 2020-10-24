@@ -2,17 +2,12 @@
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
 import React from 'react'
-import {FormattedMessage} from 'react-intl'
 
-import {Archiver} from '../archiver'
-import {ISortOption} from '../blocks/boardView'
 import {BlockIcons} from '../blockIcons'
 import {IPropertyOption, IPropertyTemplate} from '../blocks/board'
 import {Card, MutableCard} from '../blocks/card'
 import {BoardTree, BoardTreeGroup} from '../viewModel/boardTree'
-import {CsvExporter} from '../csvExporter'
 import {CardFilter} from '../cardFilter'
-import ViewMenu from '../components/viewMenu'
 import {Constants} from '../constants'
 import mutator from '../mutator'
 import {Utils} from '../utils'
@@ -25,7 +20,7 @@ import Button from './button'
 import {CardDialog} from './cardDialog'
 import {Editable} from './editable'
 import RootPortal from './rootPortal'
-import {FilterComponent} from './filterComponent'
+import ViewHeader from './viewHeader'
 
 type Props = {
     boardTree?: BoardTree
@@ -102,11 +97,8 @@ class BoardComponent extends React.Component<Props, State> {
         const propertyValues = boardTree.groupByProperty?.options || []
         Utils.log(`${propertyValues.length} propertyValues`)
 
-        const groupByStyle = {color: '#000000'}
         const {board, activeView} = boardTree
         const visiblePropertyTemplates = board.cardProperties.filter((template) => activeView.visiblePropertyIds.includes(template.id))
-        const hasFilter = activeView.filter && activeView.filter.filters?.length > 0
-        const hasSort = activeView.sortOptions.length > 0
         const visibleGroups = boardTree.groups.filter((group) => !group.isHidden)
         const hiddenGroups = boardTree.groups.filter((group) => group.isHidden)
 
@@ -175,194 +167,13 @@ class BoardComponent extends React.Component<Props, State> {
                     </div>
 
                     <div className='octo-board'>
-                        <div className='octo-controls'>
-                            <Editable
-                                style={{color: '#000000', fontWeight: 600}}
-                                text={activeView.title}
-                                placeholderText='Untitled View'
-                                onChanged={(text) => {
-                                    mutator.changeTitle(activeView, text)
-                                }}
-                            />
-                            <MenuWrapper>
-                                <div
-                                    className='octo-button'
-                                    style={{color: '#000000', fontWeight: 600}}
-                                >
-                                    <div className='imageDropdown'/>
-                                </div>
-                                <ViewMenu
-                                    board={board}
-                                    boardTree={boardTree}
-                                    showView={showView}
-                                />
-                            </MenuWrapper>
-                            <div className='octo-spacer'/>
-                            <MenuWrapper>
-                                <div className={'octo-button'}>
-                                    <FormattedMessage
-                                        id='TableComponent.properties'
-                                        defaultMessage='Properties'
-                                    />
-                                </div>
-                                <Menu>
-                                    {boardTree.board.cardProperties.map((option) => (
-                                        <Menu.Switch
-                                            key={option.id}
-                                            id={option.id}
-                                            name={option.name}
-                                            isOn={activeView.visiblePropertyIds.includes(option.id)}
-                                            onClick={(propertyId: string) => {
-                                                const property = boardTree.board.cardProperties.find((o) => o.id === propertyId)
-                                                Utils.assertValue(property)
-                                                Utils.log(`Toggle property ${property.name}`)
-
-                                                let newVisiblePropertyIds = []
-                                                if (activeView.visiblePropertyIds.includes(propertyId)) {
-                                                    newVisiblePropertyIds = activeView.visiblePropertyIds.filter((o) => o !== propertyId)
-                                                } else {
-                                                    newVisiblePropertyIds = [...activeView.visiblePropertyIds, propertyId]
-                                                }
-                                                mutator.changeViewVisibleProperties(activeView, newVisiblePropertyIds)
-                                            }}
-                                        />
-                                    ))}
-                                </Menu>
-                            </MenuWrapper>
-                            <MenuWrapper>
-                                <div
-                                    className='octo-button'
-                                    id='groupByButton'
-                                >
-                                    Group by <span
-                                        style={groupByStyle}
-                                        id='groupByLabel'
-                                             >{boardTree.groupByProperty?.name}</span>
-                                </div>
-                                <Menu>
-                                    {boardTree.board.cardProperties.filter((o) => o.type === 'select').map((option) => (
-                                        <Menu.Text
-                                            key={option.id}
-                                            id={option.id}
-                                            name={option.name}
-                                            onClick={(id) => {
-                                                if (boardTree.activeView.groupById === id) {
-                                                    return
-                                                }
-
-                                                mutator.changeViewGroupById(boardTree.activeView, id)
-                                            }}
-                                        />
-                                    ))}
-                                </Menu>
-                            </MenuWrapper>
-                            <div
-                                className={hasFilter ? 'octo-button active' : 'octo-button'}
-                                style={{position: 'relative', overflow: 'unset'}}
-                                onClick={this.filterClicked}
-                            >
-                                <FormattedMessage
-                                    id='TableComponent.filter'
-                                    defaultMessage='Filter'
-                                />
-                                {this.state.showFilter &&
-                                    <FilterComponent
-                                        boardTree={boardTree}
-                                        onClose={this.hideFilter}
-                                    />}
-                            </div>
-                            <MenuWrapper>
-                                <div className={hasSort ? 'octo-button active' : 'octo-button'}>
-                                    <FormattedMessage
-                                        id='TableComponent.sort'
-                                        defaultMessage='Sort'
-                                    />
-                                </div>
-                                <Menu>
-                                    {boardTree.board.cardProperties.map((option) => (
-                                        <Menu.Text
-                                            key={option.id}
-                                            id={option.id}
-                                            name={option.name}
-                                            icon={(activeView.sortOptions[0]?.propertyId === option.id) ? activeView.sortOptions[0].reversed ? 'sortUp' : 'sortDown' : undefined}
-                                            onClick={(propertyId: string) => {
-                                                let newSortOptions: ISortOption[] = []
-                                                if (activeView.sortOptions[0] && activeView.sortOptions[0].propertyId === propertyId) {
-                                                    // Already sorting by name, so reverse it
-                                                    newSortOptions = [
-                                                        {propertyId, reversed: !activeView.sortOptions[0].reversed},
-                                                    ]
-                                                } else {
-                                                    newSortOptions = [
-                                                        {propertyId, reversed: false},
-                                                    ]
-                                                }
-                                                mutator.changeViewSortOptions(activeView, newSortOptions)
-                                            }}
-                                        />
-                                    ))}
-                                </Menu>
-                            </MenuWrapper>
-                            {this.state.isSearching ?
-                                <Editable
-                                    ref={this.searchFieldRef}
-                                    text={boardTree.getSearchText()}
-                                    placeholderText='Search text'
-                                    style={{color: '#000000'}}
-                                    onChanged={(text) => {
-                                        this.searchChanged(text)
-                                    }}
-                                    onKeyDown={(e) => {
-                                        this.onSearchKeyDown(e)
-                                    }}
-                                /> :
-                                <div
-                                    className='octo-button'
-                                    onClick={() => {
-                                        this.setState({...this.state, isSearching: true})
-                                    }}
-                                >Search</div>
-                            }
-                            <MenuWrapper>
-                                <div className='imageOptions'/>
-                                <Menu>
-                                    <Menu.Text
-                                        id='exportCsv'
-                                        name='Export to CSV'
-                                        onClick={() => CsvExporter.exportTableCsv(boardTree)}
-                                    />
-                                    <Menu.Text
-                                        id='exportBoardArchive'
-                                        name='Export board archive'
-                                        onClick={() => Archiver.exportBoardTree(boardTree)}
-                                    />
-                                    <Menu.Text
-                                        id='testAdd100Cards'
-                                        name='TEST: Add 100 cards'
-                                        onClick={() => this.testAddCards(100)}
-                                    />
-                                    <Menu.Text
-                                        id='testAdd1000Cards'
-                                        name='TEST: Add 1,000 cards'
-                                        onClick={() => this.testAddCards(1000)}
-                                    />
-                                    <Menu.Text
-                                        id='testRandomizeIcons'
-                                        name='TEST: Randomize icons'
-                                        onClick={() => this.testRandomizeIcons()}
-                                    />
-                                </Menu>
-                            </MenuWrapper>
-                            <div
-                                className='octo-button filled'
-                                onClick={() => {
-                                    this.addCard(undefined)
-                                }}
-                            >New</div>
-                        </div>
-
-                        {/* Headers */}
-
+                        <ViewHeader
+                            boardTree={boardTree}
+                            showView={showView}
+                            setSearchText={this.props.setSearchText}
+                            addCard={() => this.addCard()}
+                            withGroupBy={true}
+                        />
                         <div
                             className='octo-board-header'
                             id='mainBoardHeader'
@@ -655,45 +466,6 @@ class BoardComponent extends React.Component<Props, State> {
         await mutator.changePropertyOptionValue(boardTree, boardTree.groupByProperty, option, text)
     }
 
-    private filterClicked = () => {
-        this.setState({showFilter: true})
-    }
-
-    private hideFilter = () => {
-        this.setState({showFilter: false})
-    }
-
-    private async testAddCards(count: number) {
-        const {boardTree} = this.props
-        const {board, activeView} = boardTree
-
-        const startCount = boardTree?.cards?.length
-        let optionIndex = 0
-
-        for (let i = 0; i < count; i++) {
-            const card = new MutableCard()
-            card.parentId = boardTree.board.id
-            card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
-            if (boardTree.groupByProperty && boardTree.groupByProperty.options.length > 0) {
-                // Cycle through options
-                const option = boardTree.groupByProperty.options[optionIndex]
-                optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
-                card.properties[boardTree.groupByProperty.id] = option.id
-                card.title = `Test Card ${startCount + i + 1}`
-                card.icon = BlockIcons.shared.randomIcon()
-            }
-            await mutator.insertBlock(card, 'test add card')
-        }
-    }
-
-    private async testRandomizeIcons() {
-        const {boardTree} = this.props
-
-        for (const card of boardTree.cards) {
-            mutator.changeIcon(card, BlockIcons.shared.randomIcon(), 'randomize icon')
-        }
-    }
-
     private cardClicked(e: React.MouseEvent, card: Card): void {
         if (e.shiftKey) {
             // Shift+Click = add to selection
@@ -753,19 +525,6 @@ class BoardComponent extends React.Component<Props, State> {
 
             await mutator.changePropertyOptionOrder(board, boardTree.groupByProperty, draggedHeaderOption, destIndex)
         }
-    }
-
-    private onSearchKeyDown(e: React.KeyboardEvent) {
-        if (e.keyCode === 27) { // ESC: Clear search
-            this.searchFieldRef.current.text = ''
-            this.setState({isSearching: false})
-            this.props.setSearchText(undefined)
-            e.preventDefault()
-        }
-    }
-
-    private searchChanged(text?: string) {
-        this.props.setSearchText(text)
     }
 }
 
