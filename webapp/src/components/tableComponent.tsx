@@ -10,15 +10,13 @@ import {BoardTree} from '../viewModel/boardTree'
 import {Menu as OldMenu} from '../menu'
 import mutator from '../mutator'
 import {Utils} from '../utils'
-import Menu from '../widgets/menu'
-import MenuWrapper from '../widgets/menuWrapper'
 
-import Button from './button'
 import {CardDialog} from './cardDialog'
 import {Editable} from './editable'
 import RootPortal from './rootPortal'
 import {TableRow} from './tableRow'
 import ViewHeader from './viewHeader'
+import ViewTitle from './viewTitle'
 
 type Props = {
     boardTree?: BoardTree
@@ -27,7 +25,6 @@ type Props = {
 }
 
 type State = {
-    isHoverOnCover: boolean
     isSearching: boolean
     shownCard?: Card
     viewMenu: boolean
@@ -42,7 +39,7 @@ class TableComponent extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
-        this.state = {isHoverOnCover: false, isSearching: Boolean(this.props.boardTree?.getSearchText()), viewMenu: false, showFilter: false}
+        this.state = {isSearching: Boolean(this.props.boardTree?.getSearchText()), viewMenu: false, showFilter: false}
     }
 
     shouldComponentUpdate(): boolean {
@@ -84,76 +81,7 @@ class TableComponent extends React.Component<Props, State> {
                     />
                 </RootPortal>}
                 <div className='octo-frame'>
-                    <div
-                        className='octo-hovercontrols'
-                        onMouseOver={() => {
-                            this.setState({...this.state, isHoverOnCover: true})
-                        }}
-                        onMouseLeave={() => {
-                            this.setState({...this.state, isHoverOnCover: false})
-                        }}
-                    >
-                        <Button
-                            style={{display: (!board.icon && this.state.isHoverOnCover) ? null : 'none'}}
-                            onClick={() => {
-                                const newIcon = BlockIcons.shared.randomIcon()
-                                mutator.changeIcon(board, newIcon)
-                            }}
-                        >
-                            <FormattedMessage
-                                id='TableComponent.add-icon'
-                                defaultMessage='Add Icon'
-                            />
-                        </Button>
-                    </div>
-
-                    <div className='octo-icontitle'>
-                        {board.icon &&
-                            <MenuWrapper>
-                                <div className='octo-button octo-icon'>{board.icon}</div>
-                                <Menu>
-                                    <FormattedMessage
-                                        id='TableComponent.random-icon'
-                                        defaultMessage='Random'
-                                    >
-                                        {(text: string) => (
-                                            <Menu.Text
-                                                id='random'
-                                                name={text}
-                                                onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}
-                                            />
-                                        )}
-                                    </FormattedMessage>
-                                    <FormattedMessage
-                                        id='TableComponent.remove-icon'
-                                        defaultMessage='Remove Icon'
-                                    >
-                                        {(text: string) => (
-                                            <Menu.Text
-                                                id='remove'
-                                                name={text}
-                                                onClick={() => mutator.changeIcon(board, undefined, 'remove icon')}
-                                            />
-                                        )}
-                                    </FormattedMessage>
-                                </Menu>
-                            </MenuWrapper>}
-                        <FormattedMessage
-                            id='TableComponent.remove-icon'
-                            defaultMessage='Remove Icon'
-                        >
-                            {(placeholder: string) => (
-                                <Editable
-                                    className='title'
-                                    text={board.title}
-                                    placeholderText={placeholder}
-                                    onChanged={(text) => {
-                                        mutator.changeTitle(board, text)
-                                    }}
-                                />
-                            )}
-                        </FormattedMessage>
-                    </div>
+                    <ViewTitle board={board}/>
 
                     <div className='octo-table'>
                         <ViewHeader

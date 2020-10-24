@@ -21,6 +21,7 @@ import {CardDialog} from './cardDialog'
 import {Editable} from './editable'
 import RootPortal from './rootPortal'
 import ViewHeader from './viewHeader'
+import ViewTitle from './viewTitle'
 
 type Props = {
     boardTree?: BoardTree
@@ -32,7 +33,6 @@ type State = {
     isSearching: boolean
     shownCard?: Card
     viewMenu: boolean
-    isHoverOnCover: boolean
     selectedCards: Card[]
     showFilter: boolean
 }
@@ -67,7 +67,6 @@ class BoardComponent extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props)
         this.state = {
-            isHoverOnCover: false,
             isSearching: Boolean(this.props.boardTree?.getSearchText()),
             viewMenu: false,
             selectedCards: [],
@@ -120,51 +119,7 @@ class BoardComponent extends React.Component<Props, State> {
                 </RootPortal>}
 
                 <div className='octo-frame'>
-                    <div
-                        className='octo-hovercontrols'
-                        onMouseOver={() => {
-                            this.setState({...this.state, isHoverOnCover: true})
-                        }}
-                        onMouseLeave={() => {
-                            this.setState({...this.state, isHoverOnCover: false})
-                        }}
-                    >
-                        <Button
-                            style={{display: (!board.icon && this.state.isHoverOnCover) ? null : 'none'}}
-                            onClick={() => {
-                                const newIcon = BlockIcons.shared.randomIcon()
-                                mutator.changeIcon(board, newIcon)
-                            }}
-                        >Add Icon</Button>
-                    </div>
-
-                    <div className='octo-icontitle'>
-                        {board.icon ?
-                            <MenuWrapper>
-                                <div className='octo-button octo-icon'>{board.icon}</div>
-                                <Menu>
-                                    <Menu.Text
-                                        id='random'
-                                        name='Random'
-                                        onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}
-                                    />
-                                    <Menu.Text
-                                        id='remove'
-                                        name='Remove Icon'
-                                        onClick={() => mutator.changeIcon(board, undefined, 'remove icon')}
-                                    />
-                                </Menu>
-                            </MenuWrapper> :
-                            undefined}
-                        <Editable
-                            className='title'
-                            text={board.title}
-                            placeholderText='Untitled Board'
-                            onChanged={(text) => {
-                                mutator.changeTitle(board, text)
-                            }}
-                        />
-                    </div>
+                    <ViewTitle board={board}/>
 
                     <div className='octo-board'>
                         <ViewHeader
