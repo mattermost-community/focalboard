@@ -7,9 +7,10 @@ import {BlockIcons} from '../blockIcons'
 import {IPropertyTemplate} from '../blocks/board'
 import {Card, MutableCard} from '../blocks/card'
 import {BoardTree} from '../viewModel/boardTree'
-import {Menu as OldMenu} from '../menu'
 import mutator from '../mutator'
 import {Utils} from '../utils'
+
+import MenuWrapper from '../widgets/menuWrapper'
 
 import {CardDialog} from './cardDialog'
 import {Editable} from './editable'
@@ -17,6 +18,7 @@ import RootPortal from './rootPortal'
 import {TableRow} from './tableRow'
 import ViewHeader from './viewHeader'
 import ViewTitle from './viewTitle'
+import TableHeaderMenu from './tableHeaderMenu'
 
 type Props = {
     boardTree?: BoardTree
@@ -103,20 +105,24 @@ class TableComponent extends React.Component<Props, State> {
                             >
                                 <div
                                     className='octo-table-cell title-cell'
+                                    style={{overflow: 'unset'}}
                                     id='mainBoardHeader'
                                 >
-                                    <div
-                                        className='octo-label'
-                                        style={{cursor: 'pointer'}}
-                                        onClick={(e) => {
-                                            this.headerClicked(e, '__name')
-                                        }}
-                                    >
-                                        <FormattedMessage
-                                            id='TableComponent.name'
-                                            defaultMessage='Name'
+                                    <MenuWrapper>
+                                        <div
+                                            className='octo-label'
+                                            style={{cursor: 'pointer'}}
+                                        >
+                                            <FormattedMessage
+                                                id='TableComponent.name'
+                                                defaultMessage='Name'
+                                            />
+                                        </div>
+                                        <TableHeaderMenu
+                                            boardTree={boardTree}
+                                            templateId='__name'
                                         />
-                                    </div>
+                                    </MenuWrapper>
                                 </div>
 
                                 {board.cardProperties.
@@ -124,6 +130,7 @@ class TableComponent extends React.Component<Props, State> {
                                     map((template) =>
                                         (<div
                                             key={template.id}
+                                            style={{overflow: 'unset'}}
                                             className='octo-table-cell'
 
                                             draggable={true}
@@ -147,13 +154,16 @@ class TableComponent extends React.Component<Props, State> {
                                                 e.preventDefault(); (e.target as HTMLElement).classList.remove('dragover'); this.onDropToColumn(template)
                                             }}
                                         >
-                                            <div
-                                                className='octo-label'
-                                                style={{cursor: 'pointer'}}
-                                                onClick={(e) => {
-                                                    this.headerClicked(e, template.id)
-                                                }}
-                                            >{template.name}</div>
+                                            <MenuWrapper>
+                                                <div
+                                                    className='octo-label'
+                                                    style={{cursor: 'pointer'}}
+                                                >{template.name}</div>
+                                                <TableHeaderMenu
+                                                    boardTree={boardTree}
+                                                    templateId={template.id}
+                                                />
+                                            </MenuWrapper>
                                         </div>),
                                     )}
                             </div>
@@ -211,81 +221,6 @@ class TableComponent extends React.Component<Props, State> {
                 </div >
             </div >
         )
-    }
-
-    private async headerClicked(e: React.MouseEvent<HTMLDivElement>, templateId: string) {
-        const {boardTree} = this.props
-        const {board} = boardTree
-        const {activeView} = boardTree
-
-        const options = [
-            {id: 'sortAscending', name: 'Sort ascending'},
-            {id: 'sortDescending', name: 'Sort descending'},
-            {id: 'insertLeft', name: 'Insert left'},
-            {id: 'insertRight', name: 'Insert right'},
-        ]
-
-        if (templateId !== '__name') {
-            options.push({id: 'hide', name: 'Hide'})
-            options.push({id: 'duplicate', name: 'Duplicate'})
-            options.push({id: 'delete', name: 'Delete'})
-        }
-
-        OldMenu.shared.options = options
-        OldMenu.shared.onMenuClicked = async (optionId: string, type?: string) => {
-            switch (optionId) {
-            case 'sortAscending': {
-                const newSortOptions = [
-                    {propertyId: templateId, reversed: false},
-                ]
-                await mutator.changeViewSortOptions(activeView, newSortOptions)
-                break
-            }
-            case 'sortDescending': {
-                const newSortOptions = [
-                    {propertyId: templateId, reversed: true},
-                ]
-                await mutator.changeViewSortOptions(activeView, newSortOptions)
-                break
-            }
-            case 'insertLeft': {
-                if (templateId !== '__name') {
-                    const index = board.cardProperties.findIndex((o) => o.id === templateId)
-                    await mutator.insertPropertyTemplate(boardTree, index)
-                } else {
-                    // TODO: Handle name column
-                }
-                break
-            }
-            case 'insertRight': {
-                if (templateId !== '__name') {
-                    const index = board.cardProperties.findIndex((o) => o.id === templateId) + 1
-                    await mutator.insertPropertyTemplate(boardTree, index)
-                } else {
-                    // TODO: Handle name column
-                }
-                break
-            }
-            case 'duplicate': {
-                await mutator.duplicatePropertyTemplate(boardTree, templateId)
-                break
-            }
-            case 'hide': {
-                const newVisiblePropertyIds = activeView.visiblePropertyIds.filter((o) => o !== templateId)
-                await mutator.changeViewVisibleProperties(activeView, newVisiblePropertyIds)
-                break
-            }
-            case 'delete': {
-                await mutator.deleteProperty(boardTree, templateId)
-                break
-            }
-            default: {
-                Utils.assertFailure(`Unexpected menu option: ${optionId}`)
-                break
-            }
-            }
-        }
-        OldMenu.shared.showAtElement(e.target as HTMLElement)
     }
 
     private focusOnCardTitle(cardId: string): void {
