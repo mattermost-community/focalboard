@@ -25,11 +25,11 @@ import Button from './button'
 import {CardDialog} from './cardDialog'
 import {Editable} from './editable'
 import RootPortal from './rootPortal'
+import {FilterComponent} from './filterComponent'
 
 type Props = {
     boardTree?: BoardTree
     showView: (id: string) => void
-    showFilter: (el: HTMLElement) => void
     setSearchText: (text: string) => void
 }
 
@@ -39,6 +39,7 @@ type State = {
     viewMenu: boolean
     isHoverOnCover: boolean
     selectedCards: Card[]
+    showFilter: boolean
 }
 
 class BoardComponent extends React.Component<Props, State> {
@@ -75,6 +76,7 @@ class BoardComponent extends React.Component<Props, State> {
             isSearching: Boolean(this.props.boardTree?.getSearchText()),
             viewMenu: false,
             selectedCards: [],
+            showFilter: false,
         }
     }
 
@@ -256,10 +258,19 @@ class BoardComponent extends React.Component<Props, State> {
                             </MenuWrapper>
                             <div
                                 className={hasFilter ? 'octo-button active' : 'octo-button'}
-                                onClick={(e) => {
-                                    this.filterClicked(e)
-                                }}
-                            >Filter</div>
+                                style={{position: 'relative', overflow: 'unset'}}
+                                onClick={this.filterClicked}
+                            >
+                                <FormattedMessage
+                                    id='TableComponent.filter'
+                                    defaultMessage='Filter'
+                                />
+                                {this.state.showFilter &&
+                                    <FilterComponent
+                                        boardTree={boardTree}
+                                        onClose={this.hideFilter}
+                                    />}
+                            </div>
                             <MenuWrapper>
                                 <div className={hasSort ? 'octo-button active' : 'octo-button'}>
                                     <FormattedMessage
@@ -644,8 +655,12 @@ class BoardComponent extends React.Component<Props, State> {
         await mutator.changePropertyOptionValue(boardTree, boardTree.groupByProperty, option, text)
     }
 
-    private filterClicked(e: React.MouseEvent) {
-        this.props.showFilter(e.target as HTMLElement)
+    private filterClicked = () => {
+        this.setState({showFilter: true})
+    }
+
+    private hideFilter = () => {
+        this.setState({showFilter: false})
     }
 
     private async testAddCards(count: number) {

@@ -22,7 +22,6 @@ type State = {
     viewId: string
     workspaceTree: MutableWorkspaceTree
     boardTree?: MutableBoardTree
-    filterAnchorElement?: HTMLElement
 }
 
 export default class BoardPage extends React.Component<Props, State> {
@@ -112,34 +111,6 @@ export default class BoardPage extends React.Component<Props, State> {
     render(): JSX.Element {
         const {workspaceTree} = this.state
 
-        if (this.state.filterAnchorElement) {
-            const element = this.state.filterAnchorElement
-            const bodyRect = document.body.getBoundingClientRect()
-            const rect = element.getBoundingClientRect()
-
-            // Show at bottom-left of element
-            const maxX = bodyRect.right - 420 - 100
-            const pageX = Math.min(maxX, rect.left - bodyRect.left)
-            const pageY = rect.bottom - bodyRect.top
-
-            ReactDOM.render(
-                <FilterComponent
-                    boardTree={this.state.boardTree}
-                    pageX={pageX}
-                    pageY={pageY}
-                    onClose={() => {
-                        this.showFilter(undefined)
-                    }}
-                />,
-                Utils.getElementById('modal'),
-            )
-        } else {
-            const modal = document.getElementById('modal')
-            if (modal) {
-                ReactDOM.render(<div/>, modal)
-            }
-        }
-
         Utils.log(`BoardPage.render ${this.state.boardTree?.board?.title}`)
         return (
             <div className='BoardPage'>
@@ -151,9 +122,6 @@ export default class BoardPage extends React.Component<Props, State> {
                     }}
                     showBoard={(id) => {
                         this.showBoard(id)
-                    }}
-                    showFilter={(el) => {
-                        this.showFilter(el)
                     }}
                     setSearchText={(text) => {
                         this.setSearchText(text)
@@ -228,10 +196,6 @@ export default class BoardPage extends React.Component<Props, State> {
 
         const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + `?id=${encodeURIComponent(boardId)}&v=${encodeURIComponent(viewId)}`
         window.history.pushState({path: newUrl}, '', newUrl)
-    }
-
-    showFilter(anchorElement?: HTMLElement): void {
-        this.setState({...this.state, filterAnchorElement: anchorElement})
     }
 
     setSearchText(text?: string): void {

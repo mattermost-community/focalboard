@@ -13,74 +13,80 @@ import {Utils} from '../utils'
 
 type Props = {
     boardTree: BoardTree
-    pageX: number
-    pageY: number
     onClose: () => void
 }
 
 class FilterComponent extends React.Component<Props> {
-    shouldComponentUpdate(): boolean {
-        return true
+    private node: React.RefObject<HTMLDivElement>
+
+    public constructor(props: Props) {
+        super(props)
+        this.node = React.createRef()
+    }
+
+    public componentDidMount() {
+        document.addEventListener('click', this.closeOnBlur, true)
+    }
+
+    public componentWillUnmount() {
+        document.removeEventListener('click', this.closeOnBlur, true)
+    }
+
+    private closeOnBlur = (e: Event) => {
+        if (this.node && this.node.current && e.target && this.node.current.contains(e.target as Node)) {
+            return
+        }
+
+        this.props.onClose()
     }
 
     render(): JSX.Element {
         const {boardTree} = this.props
         const {board, activeView} = boardTree
 
-        const backgroundRef = React.createRef<HTMLDivElement>()
-
         // TODO: Handle FilterGroups (compound filter statements)
         const filters: FilterClause[] = activeView.filter?.filters.filter((o) => !FilterGroup.isAnInstanceOf(o)) as FilterClause[] || []
 
         return (
             <div
-                className='octo-modal-back'
-                ref={backgroundRef}
-                onClick={(e) => {
-                    if (e.target === backgroundRef.current) {
-                        this.props.onClose()
-                    }
-                }}
+                className='octo-modal octo-filter-dialog'
+                style={{position: 'absolute', top: 25, left: -200}}
+                ref={this.node}
             >
+                {filters.map((filter) => {
+                    const template = board.cardProperties.find((o) => o.id === filter.propertyId)
+                    const propertyName = template ? template.name : '(unknown)'		// TODO: Handle error
+                    const key = `${filter.propertyId}-${filter.condition}-${filter.values.join(',')}`
+                    Utils.log(`FilterClause key: ${key}`)
+                    return (<div
+                        className='octo-filterclause'
+                        key={key}
+                            >
+                        <div
+                            className='octo-button'
+                            onClick={(e) => this.propertyClicked(e, filter)}
+                        >{propertyName}</div>
+                        <div
+                            className='octo-button'
+                            onClick={(e) => this.conditionClicked(e, filter)}
+                        >{FilterClause.filterConditionDisplayString(filter.condition)}</div>
+                        {
+                            this.filterValue(filter, template)
+                        }
+                        <div className='octo-spacer'/>
+                        <div
+                            className='octo-button'
+                            onClick={() => this.deleteClicked(filter)}
+                        >Delete</div>
+                    </div>)
+                })}
+
+                <br/>
+
                 <div
-                    className='octo-modal octo-filter-dialog'
-                    style={{position: 'absolute', left: this.props.pageX, top: this.props.pageY}}
-                >
-                    {filters.map((filter) => {
-                        const template = board.cardProperties.find((o) => o.id === filter.propertyId)
-                        const propertyName = template ? template.name : '(unknown)'		// TODO: Handle error
-                        const key = `${filter.propertyId}-${filter.condition}-${filter.values.join(',')}`
-                        Utils.log(`FilterClause key: ${key}`)
-                        return (<div
-                            className='octo-filterclause'
-                            key={key}
-                                >
-                            <div
-                                className='octo-button'
-                                onClick={(e) => this.propertyClicked(e, filter)}
-                            >{propertyName}</div>
-                            <div
-                                className='octo-button'
-                                onClick={(e) => this.conditionClicked(e, filter)}
-                            >{FilterClause.filterConditionDisplayString(filter.condition)}</div>
-                            {
-                                this.filterValue(filter, template)
-                            }
-                            <div className='octo-spacer'/>
-                            <div
-                                className='octo-button'
-                                onClick={() => this.deleteClicked(filter)}
-                            >Delete</div>
-                        </div>)
-                    })}
-
-                    <br/>
-
-                    <div
-                        className='octo-button'
-                        onClick={() => this.addFilterClicked()}
-                    >+ Add Filter</div>
-                </div>
+                    className='octo-button'
+                    onClick={() => this.addFilterClicked()}
+                >+ Add Filter</div>
             </div>
         )
     }

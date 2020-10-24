@@ -23,11 +23,11 @@ import {CardDialog} from './cardDialog'
 import {Editable} from './editable'
 import RootPortal from './rootPortal'
 import {TableRow} from './tableRow'
+import {FilterComponent} from './filterComponent'
 
 type Props = {
     boardTree?: BoardTree
     showView: (id: string) => void
-    showFilter: (el: HTMLElement) => void
     setSearchText: (text: string) => void
 }
 
@@ -36,6 +36,7 @@ type State = {
     isSearching: boolean
     shownCard?: Card
     viewMenu: boolean
+    showFilter: boolean
 }
 
 class TableComponent extends React.Component<Props, State> {
@@ -46,7 +47,7 @@ class TableComponent extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
-        this.state = {isHoverOnCover: false, isSearching: Boolean(this.props.boardTree?.getSearchText()), viewMenu: false}
+        this.state = {isHoverOnCover: false, isSearching: Boolean(this.props.boardTree?.getSearchText()), viewMenu: false, showFilter: false}
     }
 
     shouldComponentUpdate(): boolean {
@@ -219,14 +220,18 @@ class TableComponent extends React.Component<Props, State> {
                             </MenuWrapper>
                             <div
                                 className={hasFilter ? 'octo-button active' : 'octo-button'}
-                                onClick={(e) => {
-                                    this.filterClicked(e)
-                                }}
+                                style={{position: 'relative', overflow: 'unset'}}
+                                onClick={this.filterClicked}
                             >
                                 <FormattedMessage
                                     id='TableComponent.filter'
                                     defaultMessage='Filter'
                                 />
+                                {this.state.showFilter &&
+                                    <FilterComponent
+                                        boardTree={boardTree}
+                                        onClose={this.hideFilter}
+                                    />}
                             </div>
                             <MenuWrapper>
                                 <div className={hasSort ? 'octo-button active' : 'octo-button'}>
@@ -457,8 +462,12 @@ class TableComponent extends React.Component<Props, State> {
         )
     }
 
-    private filterClicked(e: React.MouseEvent) {
-        this.props.showFilter(e.target as HTMLElement)
+    private filterClicked = () => {
+        this.setState({showFilter: true})
+    }
+
+    private hideFilter = () => {
+        this.setState({showFilter: false})
     }
 
     private async headerClicked(e: React.MouseEvent<HTMLDivElement>, templateId: string) {

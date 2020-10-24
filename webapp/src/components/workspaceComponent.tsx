@@ -15,7 +15,6 @@ type Props = {
     boardTree?: BoardTree
     showBoard: (id: string) => void
     showView: (id: string, boardId?: string) => void
-    showFilter: (el: HTMLElement) => void
     setSearchText: (text: string) => void
     setLanguage: (lang: string) => void
 }
@@ -41,7 +40,7 @@ class WorkspaceComponent extends React.Component<Props> {
     }
 
     private mainComponent() {
-        const {boardTree, showFilter, setSearchText, showView} = this.props
+        const {boardTree, setSearchText, showView} = this.props
         const {activeView} = boardTree || {}
 
         if (!activeView) {
@@ -52,19 +51,17 @@ class WorkspaceComponent extends React.Component<Props> {
         case 'board': {
             return (<BoardComponent
                 boardTree={boardTree}
-                showFilter={showFilter}
                 setSearchText={setSearchText}
                 showView={showView}
-                    />)
+            />)
         }
 
         case 'table': {
             return (<TableComponent
                 boardTree={boardTree}
-                showFilter={showFilter}
                 setSearchText={setSearchText}
                 showView={showView}
-                    />)
+            />)
         }
 
         default: {
