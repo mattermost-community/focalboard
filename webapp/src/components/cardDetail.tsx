@@ -16,9 +16,12 @@ import {OctoUtils} from '../octoUtils'
 import {PropertyMenu} from '../propertyMenu'
 import {Utils} from '../utils'
 
+import Menu from '../widgets/menu'
+import MenuWrapper from '../widgets/menuWrapper'
 import Button from './button'
 import {Editable} from './editable'
 import {MarkdownEditor} from './markdownEditor'
+import Comment from './comment'
 
 type Props = {
     boardTree: BoardTree
@@ -262,52 +265,14 @@ export default class CardDetail extends React.Component<Props, State> {
 
                     <hr/>
                     <div className='commentlist'>
-                        {comments.map((comment) => {
-                            const optionsButtonRef = React.createRef<HTMLDivElement>()
-                            const showCommentMenu = (e: React.MouseEvent, activeComment: IBlock) => {
-                                OldMenu.shared.options = [
-                                    {id: 'delete', name: 'Delete'},
-                                ]
-                                OldMenu.shared.onMenuClicked = (id) => {
-                                    switch (id) {
-                                    case 'delete': {
-                                        mutator.deleteBlock(activeComment)
-                                        break
-                                    }
-                                    }
-                                }
-                                OldMenu.shared.showAtElement(e.target as HTMLElement)
-                            }
-
-                            return (<div
+                        {comments.map((comment) => (
+                            <Comment
                                 key={comment.id}
-                                className='comment'
-                                onMouseOver={() => {
-                                    optionsButtonRef.current.style.display = null
-                                }}
-                                onMouseLeave={() => {
-                                    optionsButtonRef.current.style.display = 'none'
-                                }}
-                                    >
-                                <div className='comment-header'>
-                                    <img
-                                        className='comment-avatar'
-                                        src={userImageUrl}
-                                    />
-                                    <div className='comment-username'>{username}</div>
-                                    <div className='comment-date'>{(new Date(comment.createAt)).toLocaleTimeString()}</div>
-                                    <div
-                                        ref={optionsButtonRef}
-                                        className='octo-hoverbutton square'
-                                        style={{display: 'none'}}
-                                        onClick={(e) => {
-                                            showCommentMenu(e, comment)
-                                        }}
-                                    >...</div>
-                                </div>
-                                <div className='comment-text'>{comment.title}</div>
-                            </div>)
-                        })}
+                                comment={comment}
+                                userImageUrl={userImageUrl}
+                                username={username}
+                            />
+                        ))}
 
                         {/* New comment */}
 
