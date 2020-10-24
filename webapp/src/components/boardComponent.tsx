@@ -309,6 +309,8 @@ class BoardComponent extends React.Component<Props, State> {
                 <Editable
                     className={`octo-label ${group.option.color}`}
                     text={group.option.value}
+                    placeholderText='New Select'
+                    allowEmpty={false}
                     onChanged={(text) => {
                         this.propertyNameChanged(group.option, text)
                     }}

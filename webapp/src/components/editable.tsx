@@ -12,6 +12,7 @@ type Props = {
     style?: React.CSSProperties
     isMarkdown: boolean
     isMultiline: boolean
+    allowEmpty: boolean
 
     onFocus?: () => void
     onBlur?: () => void
@@ -26,6 +27,7 @@ class Editable extends React.Component<Props, State> {
         text: '',
         isMarkdown: false,
         isMultiline: false,
+        allowEmpty: true,
     }
 
     private _text = ''
@@ -103,11 +105,15 @@ class Editable extends React.Component<Props, State> {
                 onBlur={async () => {
                     const newText = this.elementRef.current.innerText
                     const oldText = this.props.text || ''
-                    if (newText !== oldText && onChanged) {
-                        onChanged(newText)
-                    }
+                    if (this.props.allowEmpty || newText) {
+                        if (newText !== oldText && onChanged) {
+                            onChanged(newText)
+                        }
 
-                    this.text = newText
+                        this.text = newText
+                    } else {
+                        this.text = oldText     // Reset text
+                    }
 
                     this.elementRef.current.classList.remove('active')
                     if (onBlur) {
