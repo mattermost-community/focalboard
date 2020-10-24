@@ -206,6 +206,7 @@ class BoardComponent extends React.Component<Props, State> {
                                 <Menu>
                                     {boardTree.board.cardProperties.map((option) => (
                                         <Menu.Switch
+                                            key={option.id}
                                             id={option.id}
                                             name={option.name}
                                             isOn={activeView.visiblePropertyIds.includes(option.id)}
@@ -226,18 +227,33 @@ class BoardComponent extends React.Component<Props, State> {
                                     ))}
                                 </Menu>
                             </MenuWrapper>
-                            <div
-                                className='octo-button'
-                                id='groupByButton'
-                                onClick={(e) => {
-                                    this.groupByClicked(e)
-                                }}
-                            >
-                                Group by <span
-                                    style={groupByStyle}
-                                    id='groupByLabel'
-                                         >{boardTree.groupByProperty?.name}</span>
-                            </div>
+                            <MenuWrapper>
+                                <div
+                                    className='octo-button'
+                                    id='groupByButton'
+                                >
+                                    Group by <span
+                                        style={groupByStyle}
+                                        id='groupByLabel'
+                                             >{boardTree.groupByProperty?.name}</span>
+                                </div>
+                                <Menu>
+                                    {boardTree.board.cardProperties.filter((o) => o.type === 'select').map((option) => (
+                                        <Menu.Text
+                                            key={option.id}
+                                            id={option.id}
+                                            name={option.name}
+                                            onClick={(id) => {
+                                                if (boardTree.activeView.groupById === id) {
+                                                    return
+                                                }
+
+                                                mutator.changeViewGroupById(boardTree.activeView, id)
+                                            }}
+                                        />
+                                    ))}
+                                </Menu>
+                            </MenuWrapper>
                             <div
                                 className={hasFilter ? 'octo-button active' : 'octo-button'}
                                 onClick={(e) => {
@@ -670,49 +686,6 @@ class BoardComponent extends React.Component<Props, State> {
         for (const card of boardTree.cards) {
             mutator.changeIcon(card, BlockIcons.shared.randomIcon(), 'randomize icon')
         }
-    }
-
-    private async propertiesClicked(e: React.MouseEvent) {
-        const {boardTree} = this.props
-        const {activeView} = boardTree
-
-        const selectProperties = boardTree.board.cardProperties
-        OldMenu.shared.options = selectProperties.map((o) => {
-            const isVisible = activeView.visiblePropertyIds.includes(o.id)
-            return {id: o.id, name: o.name, type: 'switch', isOn: isVisible}
-        })
-
-        OldMenu.shared.onMenuToggled = async (id: string, isOn: boolean) => {
-            const property = selectProperties.find((o) => o.id === id)
-            Utils.assertValue(property)
-            Utils.log(`Toggle property ${property.name} ${isOn}`)
-
-            let newVisiblePropertyIds = []
-            if (activeView.visiblePropertyIds.includes(id)) {
-                newVisiblePropertyIds = activeView.visiblePropertyIds.filter((o) => o !== id)
-            } else {
-                newVisiblePropertyIds = [...activeView.visiblePropertyIds, id]
-            }
-            await mutator.changeViewVisibleProperties(activeView, newVisiblePropertyIds)
-        }
-        OldMenu.shared.showAtElement(e.target as HTMLElement)
-    }
-
-    private async groupByClicked(e: React.MouseEvent) {
-        const {boardTree} = this.props
-
-        const selectProperties = boardTree.board.cardProperties.filter((o) => o.type === 'select')
-        OldMenu.shared.options = selectProperties.map((o) => {
-            return {id: o.id, name: o.name}
-        })
-        OldMenu.shared.onMenuClicked = async (command: string) => {
-            if (boardTree.activeView.groupById === command) {
-                return
-            }
-
-            await mutator.changeViewGroupById(boardTree.activeView, command)
-        }
-        OldMenu.shared.showAtElement(e.target as HTMLElement)
     }
 
     private cardClicked(e: React.MouseEvent, card: Card): void {

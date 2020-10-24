@@ -195,6 +195,7 @@ class TableComponent extends React.Component<Props, State> {
                                 <Menu>
                                     {boardTree.board.cardProperties.map((option) => (
                                         <Menu.Switch
+                                            key={option.id}
                                             id={option.id}
                                             name={option.name}
                                             isOn={activeView.visiblePropertyIds.includes(option.id)}
@@ -236,6 +237,7 @@ class TableComponent extends React.Component<Props, State> {
                                 <Menu>
                                     {boardTree.board.cardProperties.map((option) => (
                                         <Menu.Text
+                                            key={option.id}
                                             id={option.id}
                                             name={option.name}
                                             icon={(activeView.sortOptions[0]?.propertyId === option.id) ? activeView.sortOptions[0].reversed ? 'sortUp' : 'sortDown' : undefined}
