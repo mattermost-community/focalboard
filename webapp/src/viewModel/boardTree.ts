@@ -90,7 +90,8 @@ class MutableBoardTree implements BoardTree {
             this.views.push(view)
             didChange = true
         }
-/*
+
+        /*
         // TODO: Remove fixup code. Fix board cardProperties schema
         for (const template of this.board.cardProperties) {
             if (template.type === 'select') {
@@ -226,7 +227,7 @@ class MutableBoardTree implements BoardTree {
             const group: Group = {
                 option,
                 cards,
-                isHidden
+                isHidden,
             }
 
             this.groups.push(group)
@@ -383,4 +384,4 @@ class MutableBoardTree implements BoardTree {
     }
 }
 
-export {MutableBoardTree, BoardTree}
+export {MutableBoardTree, BoardTree, Group as BoardTreeGroup}

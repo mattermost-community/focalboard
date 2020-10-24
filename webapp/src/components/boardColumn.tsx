@@ -21,16 +21,20 @@ class BoardColumn extends React.Component<Props, State> {
             (<div
                 className={this.state.isDragOver ? 'octo-board-column dragover' : 'octo-board-column'}
                 onDragOver={(e) => {
-                    e.preventDefault(); this.setState({isDragOver: true})
+                    e.preventDefault()
+                    this.setState({isDragOver: true})
                 }}
                 onDragEnter={(e) => {
-                    e.preventDefault(); this.setState({isDragOver: true})
+                    e.preventDefault()
+                    this.setState({isDragOver: true})
                 }}
                 onDragLeave={(e) => {
-                    e.preventDefault(); this.setState({isDragOver: false})
+                    e.preventDefault()
+                    this.setState({isDragOver: false})
                 }}
                 onDrop={(e) => {
-                    this.setState({isDragOver: false}); this.props.onDrop(e)
+                    this.setState({isDragOver: false})
+                    this.props.onDrop(e)
                 }}
             >
                 {this.props.children}

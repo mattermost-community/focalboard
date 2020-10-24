@@ -7,9 +7,9 @@ import {FormattedMessage} from 'react-intl'
 import {Archiver} from '../archiver'
 import {ISortOption} from '../blocks/boardView'
 import {BlockIcons} from '../blockIcons'
-import {IPropertyOption} from '../blocks/board'
+import {IPropertyOption, IPropertyTemplate} from '../blocks/board'
 import {Card, MutableCard} from '../blocks/card'
-import {BoardTree} from '../viewModel/boardTree'
+import {BoardTree, BoardTreeGroup} from '../viewModel/boardTree'
 import {CardFilter} from '../cardFilter'
 import ViewMenu from '../components/viewMenu'
 import {Constants} from '../constants'
@@ -105,8 +105,8 @@ class BoardComponent extends React.Component<Props, State> {
         const visiblePropertyTemplates = board.cardProperties.filter((template) => activeView.visiblePropertyIds.includes(template.id))
         const hasFilter = activeView.filter && activeView.filter.filters?.length > 0
         const hasSort = activeView.sortOptions.length > 0
-        const visibleGroups = boardTree.groups.filter(group => !group.isHidden)
-        const hiddenGroups = boardTree.groups.filter(group => group.isHidden)
+        const visibleGroups = boardTree.groups.filter((group) => !group.isHidden)
+        const hiddenGroups = boardTree.groups.filter((group) => group.isHidden)
 
         return (
             <div
@@ -230,6 +230,7 @@ class BoardComponent extends React.Component<Props, State> {
                                 <Menu>
                                     {boardTree.board.cardProperties.map((option) => (
                                         <Menu.Text
+                                            key={option.id}
                                             id={option.id}
                                             name={option.name}
                                             icon={(activeView.sortOptions[0]?.propertyId === option.id) ? activeView.sortOptions[0].reversed ? 'sortUp' : 'sortDown' : undefined}
@@ -311,72 +312,7 @@ class BoardComponent extends React.Component<Props, State> {
 
                             {/* Visible column headers */}
 
-                            {visibleGroups.map((group) =>
-                                (<div
-                                    key={group.option.id}
-                                    className='octo-board-header-cell'
-
-                                    draggable={true}
-                                    onDragStart={() => {
-                                        this.draggedHeaderOption = group.option
-                                    }}
-                                    onDragEnd={() => {
-                                        this.draggedHeaderOption = undefined
-                                    }}
-
-                                    onDragOver={(e) => {
-                                        e.preventDefault(); (e.target as HTMLElement).classList.add('dragover')
-                                    }}
-                                    onDragEnter={(e) => {
-                                        e.preventDefault(); (e.target as HTMLElement).classList.add('dragover')
-                                    }}
-                                    onDragLeave={(e) => {
-                                        e.preventDefault(); (e.target as HTMLElement).classList.remove('dragover')
-                                    }}
-                                    onDrop={(e) => {
-                                        e.preventDefault(); (e.target as HTMLElement).classList.remove('dragover'); this.onDropToColumn(group.option)
-                                    }}
-                                >
-                                    <Editable
-                                        className={`octo-label ${group.option.color}`}
-                                        text={group.option.value}
-                                        onChanged={(text) => {
-                                            this.propertyNameChanged(group.option, text)
-                                        }}
-                                    />
-                                    <Button>{`${group.cards.length}`}</Button>
-                                    <div className='octo-spacer'/>
-                                    <MenuWrapper>
-                                        <Button><div className='imageOptions'/></Button>
-                                        <Menu>
-                                            <Menu.Text
-                                                id='hide'
-                                                name='Hide'
-                                                onClick={() => mutator.hideViewColumn(activeView, group.option.id)}
-                                            />
-                                            <Menu.Text
-                                                id='delete'
-                                                name='Delete'
-                                                onClick={() => mutator.deletePropertyOption(boardTree, boardTree.groupByProperty, group.option)}
-                                            />
-                                            <Menu.Separator/>
-                                            {Constants.menuColors.map((color) =>
-                                                (<Menu.Color
-                                                    key={color.id}
-                                                    id={color.id}
-                                                    name={color.name}
-                                                    onClick={() => mutator.changePropertyOptionColor(boardTree.board, boardTree.groupByProperty, group.option, color.id)}
-                                                />),
-                                            )}
-                                        </Menu>
-                                    </MenuWrapper>
-                                    <Button
-                                        onClick={() => {
-                                            this.addCard(group.option.id)
-                                        }}
-                                    ><div className='imageAdd'/></Button>
-                                </div>),
-                            )}
+                            {visibleGroups.map((group) => this.renderColumnHeader(group))}
 
                             {/* Hidden column header */}
 
@@ -409,23 +345,7 @@ class BoardComponent extends React.Component<Props, State> {
                                     this.onDropToColumn(undefined)
                                 }}
                             >
-                                {boardTree.emptyGroupCards.map((card) =>
-                                    (<BoardCard
-                                        card={card}
-                                        visiblePropertyTemplates={visiblePropertyTemplates}
-                                        key={card.id}
-                                        isSelected={this.state.selectedCards.includes(card)}
-                                        onClick={(e) => {
-                                            this.cardClicked(e, card)
-                                        }}
-                                        onDragStart={() => {
-                                            this.draggedCards = this.state.selectedCards.includes(card) ? this.state.selectedCards : [card]
-                                        }}
-                                        onDragEnd={() => {
-                                            this.draggedCards = []
-                                        }}
-                                    />),
-                                )}
+                                {boardTree.emptyGroupCards.map((card) => this.renderCard(card, visiblePropertyTemplates))}
                                 <Button
                                     onClick={() => {
                                         this.addCard(undefined)
@@ -435,64 +355,29 @@ class BoardComponent extends React.Component<Props, State> {
 
                             {/* Columns */}
 
-                            {visibleGroups.map((group) =>
-                                (<BoardColumn
+                            {visibleGroups.map((group) => (
+                                <BoardColumn
+                                    key={group.option.id}
                                     onDrop={(e) => {
                                         this.onDropToColumn(group.option)
                                     }}
-                                    key={group.option.id}
                                 >
-                                    {group.cards.map((card) =>
-                                        (<BoardCard
-                                            card={card}
-                                            visiblePropertyTemplates={visiblePropertyTemplates}
-                                            key={card.id}
-                                            isSelected={this.state.selectedCards.includes(card)}
-                                            onClick={(e) => {
-                                                this.cardClicked(e, card)
-                                            }}
-                                            onDragStart={() => {
-                                                this.draggedCards = this.state.selectedCards.includes(card) ? this.state.selectedCards : [card]
-                                            }}
-                                            onDragEnd={() => {
-                                                this.draggedCards = []
-                                            }}
-                                        />),
-                                    )}
+                                    {group.cards.map((card) => this.renderCard(card, visiblePropertyTemplates))}
                                     <Button
                                         onClick={() => {
                                             this.addCard(group.option.id)
                                         }}
                                     >+ New</Button>
-                                </BoardColumn>),
-                            )}
+                                </BoardColumn>
+                            ))}
 
                             {/* Hidden columns */}
 
                             {(() => {
                                 if (hiddenGroups.length > 0) {
-                                    return(
+                                    return (
                                         <div className='octo-board-column narrow'>
-                                            {hiddenGroups.map((group) =>
-                                            <div className='octo-board-hidden-item'>
-                                                <MenuWrapper key={group.option.id}>
-                                                    <div
-                                                        key={group.option.id}
-                                                        className={`octo-label ${group.option.color}`}
-                                                    >
-                                                        {group.option.value}
-                                                    </div>
-                                                    <Menu>
-                                                        <Menu.Text
-                                                            id='show'
-                                                            name='Show'
-                                                            onClick={() => mutator.unhideViewColumn(activeView, group.option.id)}
-                                                        />
-                                                    </Menu>
-                                                </MenuWrapper>
-                                                <Button>{`${group.cards.length}`}</Button>
-                                            </div>
-                                            )}
+                                            {hiddenGroups.map((group) => this.renderHiddenColumnItem(group))}
                                         </div>
                                     )
                                 }
@@ -501,6 +386,165 @@ class BoardComponent extends React.Component<Props, State> {
                         </div>
                     </div>
                 </div>
+            </div>
+        )
+    }
+
+    private renderCard(card: Card, visiblePropertyTemplates: IPropertyTemplate[]) {
+        return (
+            <BoardCard
+                card={card}
+                visiblePropertyTemplates={visiblePropertyTemplates}
+                key={card.id}
+                isSelected={this.state.selectedCards.includes(card)}
+                onClick={(e) => {
+                    this.cardClicked(e, card)
+                }}
+                onDragStart={() => {
+                    this.draggedCards = this.state.selectedCards.includes(card) ? this.state.selectedCards : [card]
+                }}
+                onDragEnd={() => {
+                    this.draggedCards = []
+                }}
+            />
+        )
+    }
+
+    private renderColumnHeader(group: BoardTreeGroup) {
+        const {boardTree} = this.props
+        const {activeView} = boardTree
+
+        const ref = React.createRef<HTMLDivElement>()
+        return (
+            <div
+                key={group.option.id}
+                ref={ref}
+                className='octo-board-header-cell'
+
+                draggable={true}
+                onDragStart={() => {
+                    this.draggedHeaderOption = group.option
+                }}
+                onDragEnd={() => {
+                    this.draggedHeaderOption = undefined
+                }}
+
+                onDragOver={(e) => {
+                    ref.current.classList.add('dragover')
+                    e.preventDefault()
+                }}
+                onDragEnter={(e) => {
+                    ref.current.classList.add('dragover')
+                    e.preventDefault()
+                }}
+                onDragLeave={(e) => {
+                    ref.current.classList.remove('dragover')
+                    e.preventDefault()
+                }}
+                onDrop={(e) => {
+                    ref.current.classList.remove('dragover')
+                    e.preventDefault()
+                    this.onDropToColumn(group.option)
+                }}
+            >
+                <Editable
+                    className={`octo-label ${group.option.color}`}
+                    text={group.option.value}
+                    onChanged={(text) => {
+                        this.propertyNameChanged(group.option, text)
+                    }}
+                />
+                <Button>{`${group.cards.length}`}</Button>
+                <div className='octo-spacer'/>
+                <MenuWrapper>
+                    <Button><div className='imageOptions'/></Button>
+                    <Menu>
+                        <Menu.Text
+                            id='hide'
+                            name='Hide'
+                            onClick={() => mutator.hideViewColumn(activeView, group.option.id)}
+                        />
+                        <Menu.Text
+                            id='delete'
+                            name='Delete'
+                            onClick={() => mutator.deletePropertyOption(boardTree, boardTree.groupByProperty, group.option)}
+                        />
+                        <Menu.Separator/>
+                        {Constants.menuColors.map((color) =>
+                            (<Menu.Color
+                                key={color.id}
+                                id={color.id}
+                                name={color.name}
+                                onClick={() => mutator.changePropertyOptionColor(boardTree.board, boardTree.groupByProperty, group.option, color.id)}
+                            />),
+                        )}
+                    </Menu>
+                </MenuWrapper>
+                <Button
+                    onClick={() => {
+                        this.addCard(group.option.id)
+                    }}
+                ><div className='imageAdd'/></Button>
+            </div>
+        )
+    }
+
+    private renderHiddenColumnItem(group: BoardTreeGroup) {
+        const {boardTree} = this.props
+        const {activeView} = boardTree
+
+        const ref = React.createRef<HTMLDivElement>()
+        return (
+            <div
+                ref={ref}
+                key={group.option.id}
+                className='octo-board-hidden-item'
+                onDragOver={(e) => {
+                    if (this.draggedCards?.length < 1) {
+                        return
+                    }
+                    ref.current.classList.add('dragover')
+                    e.preventDefault()
+                }}
+                onDragEnter={(e) => {
+                    if (this.draggedCards?.length < 1) {
+                        return
+                    }
+                    ref.current.classList.add('dragover')
+                    e.preventDefault()
+                }}
+                onDragLeave={(e) => {
+                    if (this.draggedCards?.length < 1) {
+                        return
+                    }
+                    ref.current.classList.remove('dragover')
+                    e.preventDefault()
+                }}
+                onDrop={(e) => {
+                    (e.target as HTMLElement).classList.remove('dragover')
+                    e.preventDefault()
+                    if (this.draggedCards?.length < 1) {
+                        return
+                    }
+                    this.onDropToColumn(group.option)
+                }}
+            >
+                <MenuWrapper>
+                    <div
+                        key={group.option.id}
+                        className={`octo-label ${group.option.color}`}
+                    >
+                        {group.option.value}
+                    </div>
+                    <Menu>
+                        <Menu.Text
+                            id='show'
+                            name='Show'
+                            onClick={() => mutator.unhideViewColumn(activeView, group.option.id)}
+                        />
+                    </Menu>
+                </MenuWrapper>
+                <Button>{`${group.cards.length}`}</Button>
             </div>
         )
     }
