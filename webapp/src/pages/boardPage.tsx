@@ -74,21 +74,29 @@ export default class BoardPage extends React.Component<Props, State> {
 
         if (e.keyCode === 90 && !e.shiftKey && (e.ctrlKey || e.metaKey) && !e.altKey) { // Cmd+Z
             Utils.log('Undo')
-            const description = mutator.undoDescription()
-            await mutator.undo()
-            if (description) {
-                FlashMessage.show(`Undo ${description}`)
+            if (mutator.canUndo) {
+                const description = mutator.undoDescription
+                await mutator.undo()
+                if (description) {
+                    FlashMessage.show(`Undo ${description}`)
+                } else {
+                    FlashMessage.show('Undo')
+                }
             } else {
-                FlashMessage.show('Undo')
+                FlashMessage.show('Nothing to Undo', 800, 'background-color: #909050;')
             }
         } else if (e.keyCode === 90 && e.shiftKey && (e.ctrlKey || e.metaKey) && !e.altKey) { // Shift+Cmd+Z
             Utils.log('Redo')
-            const description = mutator.redoDescription()
-            await mutator.redo()
-            if (description) {
-                FlashMessage.show(`Redo ${description}`)
+            if (mutator.canRedo) {
+                const description = mutator.redoDescription
+                await mutator.redo()
+                if (description) {
+                    FlashMessage.show(`Redo ${description}`)
+                } else {
+                    FlashMessage.show('Redo')
+                }
             } else {
-                FlashMessage.show('Redo')
+                FlashMessage.show('Nothing to Redo', 800, 'background-color: #909050;')
             }
         }
     }

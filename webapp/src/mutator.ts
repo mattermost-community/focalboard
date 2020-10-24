@@ -406,20 +406,28 @@ class Mutator {
         return block
     }
 
+    get canUndo(): boolean {
+        return undoManager.canUndo
+    }
+
+    get canRedo(): boolean {
+        return undoManager.canRedo
+    }
+
+    get undoDescription(): string | undefined {
+        return undoManager.undoDescription
+    }
+
+    get redoDescription(): string | undefined {
+        return undoManager.redoDescription
+    }
+
     async undo() {
         await undoManager.undo()
     }
 
-    undoDescription(): string | undefined {
-        return undoManager.undoDescription
-    }
-
     async redo() {
         await undoManager.redo()
-    }
-
-    redoDescription(): string | undefined {
-        return undoManager.redoDescription
     }
 }
 
