@@ -136,7 +136,7 @@ export default class ViewHeader extends React.Component<Props, State> {
                 <MenuWrapper>
                     <div className={'octo-button'}>
                         <FormattedMessage
-                            id='TableComponent.properties'
+                            id='ViewHeader.properties'
                             defaultMessage='Properties'
                         />
                     </div>
@@ -170,10 +170,20 @@ export default class ViewHeader extends React.Component<Props, State> {
                             className='octo-button'
                             id='groupByButton'
                         >
-                            Group by <span
-                                style={{color: '#000000'}}
-                                id='groupByLabel'
-                                     >{boardTree.groupByProperty?.name}</span>
+                            <FormattedMessage
+                                id='ViewHeader.group-by'
+                                defaultMessage='Group by {property}'
+                                values={{
+                                    property: (
+                                        <span
+                                            style={{color: '#000000'}}
+                                            id='groupByLabel'
+                                        >
+                                            {boardTree.groupByProperty?.name}
+                                        </span>
+                                    ),
+                                }}
+                            />
                         </div>
                         <Menu>
                             {boardTree.board.cardProperties.filter((o) => o.type === 'select').map((option) => (
@@ -198,7 +208,7 @@ export default class ViewHeader extends React.Component<Props, State> {
                     onClick={this.filterClicked}
                 >
                     <FormattedMessage
-                        id='TableComponent.filter'
+                        id='ViewHeader.filter'
                         defaultMessage='Filter'
                     />
                     {this.state.showFilter &&
@@ -210,7 +220,7 @@ export default class ViewHeader extends React.Component<Props, State> {
                 <MenuWrapper>
                     <div className={hasSort ? 'octo-button active' : 'octo-button'}>
                         <FormattedMessage
-                            id='TableComponent.sort'
+                            id='ViewHeader.sort'
                             defaultMessage='Sort'
                         />
                     </div>
@@ -241,7 +251,7 @@ export default class ViewHeader extends React.Component<Props, State> {
                 </MenuWrapper>
                 {this.state.isSearching &&
                     <FormattedMessage
-                        id='TableComponent.search-text'
+                        id='ViewHeader.search-text'
                         defaultMessage='Search text'
                     >
                         {(placeholder: string) => (
@@ -267,7 +277,7 @@ export default class ViewHeader extends React.Component<Props, State> {
                         }}
                     >
                         <FormattedMessage
-                            id='TableComponent.search'
+                            id='ViewHeader.search'
                             defaultMessage='Search'
                         />
                     </div>}
@@ -308,7 +318,7 @@ export default class ViewHeader extends React.Component<Props, State> {
                     }}
                 >
                     <FormattedMessage
-                        id='TableComponent.new'
+                        id='ViewHeader.new'
                         defaultMessage='New'
                     />
                 </div>
