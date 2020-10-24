@@ -14,11 +14,16 @@
   "TableComponent.plus-new": "+ Nueva",
   "TableComponent.random-icon": "Aleatorio",
   "TableComponent.remove-icon": "Quitar Icono",
+  "ViewHeader.export-board-archive": "Exportar Archivo del Panel",
+  "ViewHeader.export-csv": "Exportar a CSV",
   "ViewHeader.filter": "Filtrar",
   "ViewHeader.group-by": "Agrupar por {property}",
   "ViewHeader.new": "Nueva",
   "ViewHeader.properties": "Propiedades",
   "ViewHeader.search": "Buscar",
   "ViewHeader.search-text": "Texto de búsqueda",
-  "ViewHeader.sort": "Ordenar"
+  "ViewHeader.sort": "Ordenar",
+  "ViewHeader.test-add-100-cards": "TEST: Añadir 100 tarjetas",
+  "ViewHeader.test-add-1000-cards": "TEST: Añadir 1,000 tarjetas",
+  "ViewHeader.test-randomize-icons": "TEST: Iconos aleatorios"
 }

@@ -1,12 +1,13 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {FormattedMessage} from 'react-intl'
+import {injectIntl, IntlShape, FormattedMessage} from 'react-intl'
 
 import {Archiver} from '../archiver'
 import {ISortOption} from '../blocks/boardView'
 import {BlockIcons} from '../blockIcons'
 import {MutableCard} from '../blocks/card'
+import {IPropertyTemplate} from '../blocks/board'
 import {BoardTree} from '../viewModel/boardTree'
 import ViewMenu from '../components/viewMenu'
 import {CsvExporter} from '../csvExporter'
@@ -25,6 +26,7 @@ type Props = {
     setSearchText: (text: string) => void
     addCard: (show: boolean) => void
     withGroupBy?: boolean
+    intl: IntlShape
 }
 
 type State = {
@@ -32,7 +34,7 @@ type State = {
     showFilter: boolean
 }
 
-export default class ViewHeader extends React.Component<Props, State> {
+class ViewHeader extends React.Component<Props, State> {
     private searchFieldRef = React.createRef<Editable>()
 
     shouldComponentUpdate(): boolean {
@@ -103,7 +105,7 @@ export default class ViewHeader extends React.Component<Props, State> {
     }
 
     render(): JSX.Element {
-        const {boardTree, showView, withGroupBy} = this.props
+        const {boardTree, showView, withGroupBy, intl} = this.props
         const {board, activeView} = boardTree
 
         const hasFilter = activeView.filter && activeView.filter.filters?.length > 0
@@ -141,20 +143,20 @@ export default class ViewHeader extends React.Component<Props, State> {
                         />
                     </div>
                     <Menu>
-                        {boardTree.board.cardProperties.map((option) => (
+                        {boardTree.board.cardProperties.map((option: IPropertyTemplate) => (
                             <Menu.Switch
                                 key={option.id}
                                 id={option.id}
                                 name={option.name}
                                 isOn={activeView.visiblePropertyIds.includes(option.id)}
                                 onClick={(propertyId: string) => {
-                                    const property = boardTree.board.cardProperties.find((o) => o.id === propertyId)
+                                    const property = boardTree.board.cardProperties.find((o: IPropertyTemplate) => o.id === propertyId)
                                     Utils.assertValue(property)
                                     Utils.log(`Toggle property ${property.name}`)
 
                                     let newVisiblePropertyIds = []
                                     if (activeView.visiblePropertyIds.includes(propertyId)) {
-                                        newVisiblePropertyIds = activeView.visiblePropertyIds.filter((o) => o !== propertyId)
+                                        newVisiblePropertyIds = activeView.visiblePropertyIds.filter((o: string) => o !== propertyId)
                                     } else {
                                         newVisiblePropertyIds = [...activeView.visiblePropertyIds, propertyId]
                                     }
@@ -186,7 +188,7 @@ export default class ViewHeader extends React.Component<Props, State> {
                             />
                         </div>
                         <Menu>
-                            {boardTree.board.cardProperties.filter((o) => o.type === 'select').map((option) => (
+                            {boardTree.board.cardProperties.filter((o: IPropertyTemplate) => o.type === 'select').map((option: IPropertyTemplate) => (
                                 <Menu.Text
                                     key={option.id}
                                     id={option.id}
@@ -225,7 +227,7 @@ export default class ViewHeader extends React.Component<Props, State> {
                         />
                     </div>
                     <Menu>
-                        {boardTree.board.cardProperties.map((option) => (
+                        {boardTree.board.cardProperties.map((option: IPropertyTemplate) => (
                             <Menu.Text
                                 key={option.id}
                                 id={option.id}
@@ -250,25 +252,18 @@ export default class ViewHeader extends React.Component<Props, State> {
                     </Menu>
                 </MenuWrapper>
                 {this.state.isSearching &&
-                    <FormattedMessage
-                        id='ViewHeader.search-text'
-                        defaultMessage='Search text'
-                    >
-                        {(placeholder: string) => (
-                            <Editable
-                                ref={this.searchFieldRef}
-                                text={boardTree.getSearchText()}
-                                placeholderText={placeholder}
-                                style={{color: '#000000'}}
-                                onChanged={(text) => {
-                                    this.searchChanged(text)
-                                }}
-                                onKeyDown={(e) => {
-                                    this.onSearchKeyDown(e)
-                                }}
-                            />
-                        )}
-                    </FormattedMessage>}
+                    <Editable
+                        ref={this.searchFieldRef}
+                        text={boardTree.getSearchText()}
+                        placeholderText={intl.formatMessage({id: 'ViewHeader.search-text', defaultMessage: 'Search text'})}
+                        style={{color: '#000000'}}
+                        onChanged={(text) => {
+                            this.searchChanged(text)
+                        }}
+                        onKeyDown={(e) => {
+                            this.onSearchKeyDown(e)
+                        }}
+                    />}
                 {!this.state.isSearching &&
                     <div
                         className='octo-button'
@@ -286,27 +281,27 @@ export default class ViewHeader extends React.Component<Props, State> {
                     <Menu>
                         <Menu.Text
                             id='exportCsv'
-                            name='Export to CSV'
+                            name={intl.formatMessage({id: 'ViewHeader.export-csv', defaultMessage: 'Export to CSV'})}
                             onClick={() => CsvExporter.exportTableCsv(boardTree)}
                         />
                         <Menu.Text
                             id='exportBoardArchive'
-                            name='Export board archive'
+                            name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export Board Archive'})}
                             onClick={() => Archiver.exportBoardTree(boardTree)}
                         />
                         <Menu.Text
                             id='testAdd100Cards'
-                            name='TEST: Add 100 cards'
+                            name={intl.formatMessage({id: 'ViewHeader.test-add-100-cards', defaultMessage: 'TEST: Add 100 cards'})}
                             onClick={() => this.testAddCards(100)}
                         />
                         <Menu.Text
                             id='testAdd1000Cards'
-                            name='TEST: Add 1,000 cards'
+                            name={intl.formatMessage({id: 'ViewHeader.test-add-1000-cards', defaultMessage: 'TEST: Add 1,000 cards'})}
                             onClick={() => this.testAddCards(1000)}
                         />
                         <Menu.Text
                             id='testRandomizeIcons'
-                            name='TEST: Randomize icons'
+                            name={intl.formatMessage({id: 'ViewHeader.test-randomize-icons', defaultMessage: 'TEST: Randomize icons'})}
                             onClick={() => this.testRandomizeIcons()}
                         />
                     </Menu>
@@ -326,3 +321,5 @@ export default class ViewHeader extends React.Component<Props, State> {
         )
     }
 }
+
+export default injectIntl(ViewHeader)
