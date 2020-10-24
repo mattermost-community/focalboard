@@ -6,7 +6,7 @@ import {BoardTree} from '../viewModel/boardTree'
 import {Utils} from '../utils'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
 
-import {BoardComponent} from './boardComponent'
+import BoardComponent from './boardComponent'
 import {Sidebar} from './sidebar'
 import {TableComponent} from './tableComponent'
 

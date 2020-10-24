@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
 import React from 'react'
+import {injectIntl, IntlShape, FormattedMessage} from 'react-intl'
 
 import {BlockIcons} from '../blockIcons'
 import {IPropertyOption, IPropertyTemplate} from '../blocks/board'
@@ -27,6 +28,7 @@ type Props = {
     boardTree?: BoardTree
     showView: (id: string) => void
     setSearchText: (text: string) => void
+    intl: IntlShape
 }
 
 type State = {
@@ -85,7 +87,7 @@ class BoardComponent extends React.Component<Props, State> {
     }
 
     render(): JSX.Element {
-        const {boardTree, showView} = this.props
+        const {boardTree, showView, intl} = this.props
 
         if (!boardTree || !boardTree.board) {
             return (
@@ -139,8 +141,19 @@ class BoardComponent extends React.Component<Props, State> {
                             <div className='octo-board-header-cell'>
                                 <div
                                     className='octo-label'
-                                    title={`Items with an empty ${boardTree.groupByProperty?.name} property will go here. This column cannot be removed.`}
-                                >{`No ${boardTree.groupByProperty?.name}`}</div>
+                                    title={intl.formatMessage({
+                                        id: 'BoardComponent.no-property-title',
+                                        defaultMessage: 'Items with an empty {property} property will go here. This column cannot be removed.',
+                                    }, {property: boardTree.groupByProperty?.name})}
+                                >
+                                    <FormattedMessage
+                                        id='BoardComponent.no-property'
+                                        defaultMessage='No {property}'
+                                        values={{
+                                            property: boardTree.groupByProperty?.name,
+                                        }}
+                                    />
+                                </div>
                                 <Button>{`${boardTree.emptyGroupCards.length}`}</Button>
                                 <div className='octo-spacer'/>
                                 <Button><div className='imageOptions'/></Button>
@@ -157,18 +170,23 @@ class BoardComponent extends React.Component<Props, State> {
 
                             {/* Hidden column header */}
 
-                            {(() => {
-                                if (hiddenGroups.length > 0) {
-                                    return <div className='octo-board-header-cell narrow'>Hidden columns</div>
-                                }
-                            })()}
+                            {hiddenGroups.length > 0 &&
+                                <div className='octo-board-header-cell narrow'>
+                                    <FormattedMessage
+                                        id='BoardComponent.hidden-columns'
+                                        defaultMessage='Hidden Columns'
+                                    />
+                                </div>}
 
                             <div className='octo-board-header-cell narrow'>
                                 <Button
-                                    onClick={(e) => {
-                                        this.addGroupClicked()
-                                    }}
-                                >+ Add a group</Button>
+                                    onClick={this.addGroupClicked}
+                                >
+                                    <FormattedMessage
+                                        id='BoardComponent.add-a-group'
+                                        defaultMessage='+ Add a group'
+                                    />
+                                </Button>
                             </div>
                         </div>
 
@@ -182,16 +200,19 @@ class BoardComponent extends React.Component<Props, State> {
                             {/* No value column */}
 
                             <BoardColumn
-                                onDrop={(e) => {
-                                    this.onDropToColumn(undefined)
-                                }}
+                                onDrop={() => this.onDropToColumn(undefined)}
                             >
                                 {boardTree.emptyGroupCards.map((card) => this.renderCard(card, visiblePropertyTemplates))}
                                 <Button
                                     onClick={() => {
                                         this.addCard(undefined)
                                     }}
-                                >+ New</Button>
+                                >
+                                    <FormattedMessage
+                                        id='BoardComponent.neww'
+                                        defaultMessage='+ New'
+                                    />
+                                </Button>
                             </BoardColumn>
 
                             {/* Columns */}
@@ -199,31 +220,28 @@ class BoardComponent extends React.Component<Props, State> {
                             {visibleGroups.map((group) => (
                                 <BoardColumn
                                     key={group.option.id}
-                                    onDrop={(e) => {
-                                        this.onDropToColumn(group.option)
-                                    }}
+                                    onDrop={() => this.onDropToColumn(group.option)}
                                 >
                                     {group.cards.map((card) => this.renderCard(card, visiblePropertyTemplates))}
                                     <Button
                                         onClick={() => {
                                             this.addCard(group.option.id)
                                         }}
-                                    >+ New</Button>
+                                    >
+                                        <FormattedMessage
+                                            id='BoardComponent.neww'
+                                            defaultMessage='+ New'
+                                        />
+                                    </Button>
                                 </BoardColumn>
                             ))}
 
                             {/* Hidden columns */}
 
-                            {(() => {
-                                if (hiddenGroups.length > 0) {
-                                    return (
-                                        <div className='octo-board-column narrow'>
-                                            {hiddenGroups.map((group) => this.renderHiddenColumnItem(group))}
-                                        </div>
-                                    )
-                                }
-                            })()}
-
+                            {hiddenGroups.length > 0 &&
+                                <div className='octo-board-column narrow'>
+                                    {hiddenGroups.map((group) => this.renderHiddenColumnItem(group))}
+                                </div>}
                         </div>
                     </div>
                 </div>
@@ -252,7 +270,7 @@ class BoardComponent extends React.Component<Props, State> {
     }
 
     private renderColumnHeader(group: BoardTreeGroup) {
-        const {boardTree} = this.props
+        const {boardTree, intl} = this.props
         const {activeView} = boardTree
 
         const ref = React.createRef<HTMLDivElement>()
@@ -302,12 +320,12 @@ class BoardComponent extends React.Component<Props, State> {
                     <Menu>
                         <Menu.Text
                             id='hide'
-                            name='Hide'
+                            name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
                             onClick={() => mutator.hideViewColumn(activeView, group.option.id)}
                         />
                         <Menu.Text
                             id='delete'
-                            name='Delete'
+                            name={intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
                             onClick={() => mutator.deletePropertyOption(boardTree, boardTree.groupByProperty, group.option)}
                         />
                         <Menu.Separator/>
@@ -331,7 +349,7 @@ class BoardComponent extends React.Component<Props, State> {
     }
 
     private renderHiddenColumnItem(group: BoardTreeGroup) {
-        const {boardTree} = this.props
+        const {boardTree, intl} = this.props
         const {activeView} = boardTree
 
         const ref = React.createRef<HTMLDivElement>()
@@ -380,7 +398,7 @@ class BoardComponent extends React.Component<Props, State> {
                     <Menu>
                         <Menu.Text
                             id='show'
-                            name='Show'
+                            name={intl.formatMessage({id: 'BoardComponent.show', defaultMessage: 'Show'})}
                             onClick={() => mutator.unhideViewColumn(activeView, group.option.id)}
                         />
                     </Menu>
@@ -483,4 +501,4 @@ class BoardComponent extends React.Component<Props, State> {
     }
 }
 
-export {BoardComponent}
+export default injectIntl(BoardComponent)
