@@ -12,8 +12,6 @@
   "TableComponent.loading": "Loading...",
   "TableComponent.name": "Name",
   "TableComponent.plus-new": "+ New",
-  "TableComponent.random-icon": "Random",
-  "TableComponent.remove-icon": "Remove Icon",
   "ViewHeader.export-board-archive": "Export Board Archive",
   "ViewHeader.export-csv": "Export to CSV",
   "ViewHeader.filter": "Filter",
@@ -25,5 +23,8 @@
   "ViewHeader.sort": "Sort",
   "ViewHeader.test-add-100-cards": "TEST: Add 100 cards",
   "ViewHeader.test-add-1000-cards": "TEST: Add 1,000 cards",
-  "ViewHeader.test-randomize-icons": "TEST: Randomize icons"
+  "ViewHeader.test-randomize-icons": "TEST: Randomize icons",
+  "ViewTitle.random-icon": "Random",
+  "ViewTitle.remove-icon": "Remove Icon",
+  "ViewTitle.untitled-board": "Untitled Board"
 }

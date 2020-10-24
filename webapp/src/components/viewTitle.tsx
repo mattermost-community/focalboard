@@ -32,7 +32,7 @@ class ViewTitle extends React.Component<Props, State> {
     }
 
     render(): JSX.Element {
-        const {board} = this.props
+        const {board, intl} = this.props
 
         return (
             <>
@@ -64,47 +64,26 @@ class ViewTitle extends React.Component<Props, State> {
                         <MenuWrapper>
                             <div className='octo-button octo-icon'>{board.icon}</div>
                             <Menu>
-                                <FormattedMessage
-                                    id='TableComponent.random-icon'
-                                    defaultMessage='Random'
-                                >
-                                    {(text: string) => (
-                                        <Menu.Text
-                                            id='random'
-                                            name={text}
-                                            onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}
-                                        />
-                                    )}
-                                </FormattedMessage>
-                                <FormattedMessage
-                                    id='TableComponent.remove-icon'
-                                    defaultMessage='Remove Icon'
-                                >
-                                    {(text: string) => (
-                                        <Menu.Text
-                                            id='remove'
-                                            name={text}
-                                            onClick={() => mutator.changeIcon(board, undefined, 'remove icon')}
-                                        />
-                                    )}
-                                </FormattedMessage>
+                                <Menu.Text
+                                    id='random'
+                                    name={intl.formatMessage({id: 'ViewTitle.random-icon', defaultMessage: 'Random'})}
+                                    onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}
+                                />
+                                <Menu.Text
+                                    id='remove'
+                                    name={intl.formatMessage({id: 'ViewTitle.remove-icon', defaultMessage: 'Remove Icon'})}
+                                    onClick={() => mutator.changeIcon(board, undefined, 'remove icon')}
+                                />
                             </Menu>
                         </MenuWrapper>}
-                    <FormattedMessage
-                        id='TableComponent.remove-icon'
-                        defaultMessage='Remove Icon'
-                    >
-                        {(placeholder: string) => (
-                            <Editable
-                                className='title'
-                                text={board.title}
-                                placeholderText={placeholder}
-                                onChanged={(text) => {
-                                    mutator.changeTitle(board, text)
-                                }}
-                            />
-                        )}
-                    </FormattedMessage>
+                    <Editable
+                        className='title'
+                        text={board.title}
+                        placeholderText={intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})}
+                        onChanged={(text) => {
+                            mutator.changeTitle(board, text)
+                        }}
+                    />
                 </div>
             </>
         )
