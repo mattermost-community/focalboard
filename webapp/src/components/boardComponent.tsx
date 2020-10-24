@@ -10,10 +10,10 @@ import {BlockIcons} from '../blockIcons'
 import {IPropertyOption, IPropertyTemplate} from '../blocks/board'
 import {Card, MutableCard} from '../blocks/card'
 import {BoardTree, BoardTreeGroup} from '../viewModel/boardTree'
+import {CsvExporter} from '../csvExporter'
 import {CardFilter} from '../cardFilter'
 import ViewMenu from '../components/viewMenu'
 import {Constants} from '../constants'
-import {Menu as OldMenu} from '../menu'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import Menu from '../widgets/menu'
@@ -312,12 +312,36 @@ class BoardComponent extends React.Component<Props, State> {
                                     }}
                                 >Search</div>
                             }
-                            <div
-                                className='octo-button'
-                                onClick={(e) => {
-                                    this.optionsClicked(e)
-                                }}
-                            ><div className='imageOptions'/></div>
+                            <MenuWrapper>
+                                <div className='imageOptions'/>
+                                <Menu>
+                                    <Menu.Text
+                                        id='exportCsv'
+                                        name='Export to CSV'
+                                        onClick={() => CsvExporter.exportTableCsv(boardTree)}
+                                    />
+                                    <Menu.Text
+                                        id='exportBoardArchive'
+                                        name='Export board archive'
+                                        onClick={() => Archiver.exportBoardTree(boardTree)}
+                                    />
+                                    <Menu.Text
+                                        id='testAdd100Cards'
+                                        name='TEST: Add 100 cards'
+                                        onClick={() => this.testAddCards(100)}
+                                    />
+                                    <Menu.Text
+                                        id='testAdd1000Cards'
+                                        name='TEST: Add 1,000 cards'
+                                        onClick={() => this.testAddCards(1000)}
+                                    />
+                                    <Menu.Text
+                                        id='testRandomizeIcons'
+                                        name='TEST: Randomize icons'
+                                        onClick={() => this.testRandomizeIcons()}
+                                    />
+                                </Menu>
+                            </MenuWrapper>
                             <div
                                 className='octo-button filled'
                                 onClick={() => {
@@ -622,39 +646,6 @@ class BoardComponent extends React.Component<Props, State> {
 
     private filterClicked(e: React.MouseEvent) {
         this.props.showFilter(e.target as HTMLElement)
-    }
-
-    private async optionsClicked(e: React.MouseEvent) {
-        const {boardTree} = this.props
-
-        OldMenu.shared.options = [
-            {id: 'exportBoardArchive', name: 'Export board archive'},
-            {id: 'testAdd100Cards', name: 'TEST: Add 100 cards'},
-            {id: 'testAdd1000Cards', name: 'TEST: Add 1,000 cards'},
-            {id: 'testRandomizeIcons', name: 'TEST: Randomize icons'},
-        ]
-
-        OldMenu.shared.onMenuClicked = async (id: string) => {
-            switch (id) {
-            case 'exportBoardArchive': {
-                Archiver.exportBoardTree(boardTree)
-                break
-            }
-            case 'testAdd100Cards': {
-                this.testAddCards(100)
-                break
-            }
-            case 'testAdd1000Cards': {
-                this.testAddCards(1000)
-                break
-            }
-            case 'testRandomizeIcons': {
-                this.testRandomizeIcons()
-                break
-            }
-            }
-        }
-        OldMenu.shared.showAtElement(e.target as HTMLElement)
     }
 
     private async testAddCards(count: number) {

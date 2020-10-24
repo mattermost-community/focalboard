@@ -11,6 +11,7 @@ import {Card, MutableCard} from '../blocks/card'
 import {BoardTree} from '../viewModel/boardTree'
 import ViewMenu from '../components/viewMenu'
 import {CsvExporter} from '../csvExporter'
+import {CardFilter} from '../cardFilter'
 import {Menu as OldMenu} from '../menu'
 import mutator from '../mutator'
 import {Utils} from '../utils'
@@ -291,10 +292,36 @@ class TableComponent extends React.Component<Props, State> {
                                         defaultMessage='Search'
                                     />
                                 </div>}
-                            <div
-                                className='octo-button'
-                                onClick={(e) => this.optionsClicked(e)}
-                            ><div className='imageOptions'/></div>
+                            <MenuWrapper>
+                                <div className='imageOptions'/>
+                                <Menu>
+                                    <Menu.Text
+                                        id='exportCsv'
+                                        name='Export to CSV'
+                                        onClick={() => CsvExporter.exportTableCsv(boardTree)}
+                                    />
+                                    <Menu.Text
+                                        id='exportBoardArchive'
+                                        name='Export board archive'
+                                        onClick={() => Archiver.exportBoardTree(boardTree)}
+                                    />
+                                    <Menu.Text
+                                        id='testAdd100Cards'
+                                        name='TEST: Add 100 cards'
+                                        onClick={() => this.testAddCards(100)}
+                                    />
+                                    <Menu.Text
+                                        id='testAdd1000Cards'
+                                        name='TEST: Add 1,000 cards'
+                                        onClick={() => this.testAddCards(1000)}
+                                    />
+                                    <Menu.Text
+                                        id='testRandomizeIcons'
+                                        name='TEST: Randomize icons'
+                                        onClick={() => this.testRandomizeIcons()}
+                                    />
+                                </Menu>
+                            </MenuWrapper>
                             <div
                                 className='octo-button filled'
                                 onClick={() => {
@@ -434,29 +461,6 @@ class TableComponent extends React.Component<Props, State> {
         this.props.showFilter(e.target as HTMLElement)
     }
 
-    private async optionsClicked(e: React.MouseEvent) {
-        const {boardTree} = this.props
-
-        OldMenu.shared.options = [
-            {id: 'exportCsv', name: 'Export to CSV'},
-            {id: 'exportBoardArchive', name: 'Export board archive'},
-        ]
-
-        OldMenu.shared.onMenuClicked = async (id: string) => {
-            switch (id) {
-            case 'exportCsv': {
-                CsvExporter.exportTableCsv(boardTree)
-                break
-            }
-            case 'exportBoardArchive': {
-                Archiver.exportBoardTree(boardTree)
-                break
-            }
-            }
-        }
-        OldMenu.shared.showAtElement(e.target as HTMLElement)
-    }
-
     private async headerClicked(e: React.MouseEvent<HTMLDivElement>, templateId: string) {
         const {boardTree} = this.props
         const {board} = boardTree
@@ -588,6 +592,37 @@ class TableComponent extends React.Component<Props, State> {
 
     private searchChanged(text?: string) {
         this.props.setSearchText(text)
+    }
+
+    private async testAddCards(count: number) {
+        const {boardTree} = this.props
+        const {board, activeView} = boardTree
+
+        const startCount = boardTree?.cards?.length
+        let optionIndex = 0
+
+        for (let i = 0; i < count; i++) {
+            const card = new MutableCard()
+            card.parentId = boardTree.board.id
+            card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
+            if (boardTree.groupByProperty && boardTree.groupByProperty.options.length > 0) {
+                // Cycle through options
+                const option = boardTree.groupByProperty.options[optionIndex]
+                optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
+                card.properties[boardTree.groupByProperty.id] = option.id
+                card.title = `Test Card ${startCount + i + 1}`
+                card.icon = BlockIcons.shared.randomIcon()
+            }
+            await mutator.insertBlock(card, 'test add card')
+        }
+    }
+
+    private async testRandomizeIcons() {
+        const {boardTree} = this.props
+
+        for (const card of boardTree.cards) {
+            mutator.changeIcon(card, BlockIcons.shared.randomIcon(), 'randomize icon')
+        }
     }
 }
 
