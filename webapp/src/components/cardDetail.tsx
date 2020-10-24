@@ -11,13 +11,10 @@ import {CardTree, MutableCardTree} from '../viewModel/cardTree'
 import {Menu as OldMenu, MenuOption} from '../menu'
 import mutator from '../mutator'
 import {OctoListener} from '../octoListener'
-import {IBlock} from '../blocks/block'
 import {OctoUtils} from '../octoUtils'
 import {PropertyMenu} from '../propertyMenu'
 import {Utils} from '../utils'
 
-import Menu from '../widgets/menu'
-import MenuWrapper from '../widgets/menuWrapper'
 import Button from './button'
 import {Editable} from './editable'
 import {MarkdownEditor} from './markdownEditor'
@@ -76,7 +73,6 @@ export default class CardDetail extends React.Component<Props, State> {
 
         const newCommentPlaceholderText = 'Add a comment...'
 
-        const backgroundRef = React.createRef<HTMLDivElement>()
         const newCommentRef = React.createRef<Editable>()
         const sendCommentButtonRef = React.createRef<HTMLDivElement>()
         let contentElements
