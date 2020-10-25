@@ -1,0 +1,12 @@
+.BoardCard {
+    .MenuWrapper {
+        display: none;
+        position: absolute;
+        right: 0;
+    }
+    &:hover {
+        .MenuWrapper {
+            display: block;
+        }
+    }
+}

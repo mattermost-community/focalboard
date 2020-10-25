@@ -1,15 +1,18 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
+import {injectIntl, IntlShape} from 'react-intl'
 
 import {MutableBlock} from '../blocks/block'
 
 import {IPropertyTemplate} from '../blocks/board'
 import {Card} from '../blocks/card'
-import {Menu} from '../menu'
 import mutator from '../mutator'
 import {OctoUtils} from '../octoUtils'
-import {Utils} from '../utils'
+import MenuWrapper from '../widgets/menuWrapper'
+import Menu from '../widgets/menu'
+
+import './boardCard.scss'
 
 type BoardCardProps = {
     card: Card
@@ -18,6 +21,7 @@ type BoardCardProps = {
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
     onDragStart?: (e: React.DragEvent<HTMLDivElement>) => void
     onDragEnd?: (e: React.DragEvent<HTMLDivElement>) => void
+    intl: IntlShape
 }
 
 type BoardCardState = {
@@ -35,10 +39,9 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
     }
 
     render(): JSX.Element {
-        const {card} = this.props
-        const optionsButtonRef = React.createRef<HTMLDivElement>()
+        const {card, intl} = this.props
         const visiblePropertyTemplates = this.props.visiblePropertyTemplates || []
-        const className = this.props.isSelected ? 'octo-board-card selected' : 'octo-board-card'
+        const className = this.props.isSelected ? 'BoardCard octo-board-card selected' : 'BoardCard octo-board-card'
 
         const element = (
             <div
@@ -54,26 +57,26 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
                     this.setState({isDragged: false})
                     this.props.onDragEnd(e)
                 }}
-
-                onMouseOver={() => {
-                    optionsButtonRef.current.style.display = null
-                }}
-                onMouseLeave={() => {
-                    optionsButtonRef.current.style.display = 'none'
-                }}
             >
-                <div
-                    ref={optionsButtonRef}
-                    className='octo-hoverbutton square'
-                    style={{display: 'none'}}
-                    onClick={(e) => {
-                        this.showOptionsMenu(e)
-                    }}
-                ><div className='imageOptions'/></div>
+                <MenuWrapper stopPropagationOnToggle={true}>
+                    <div className='octo-hoverbutton square'><div className='imageOptions'/></div>
+                    <Menu>
+                        <Menu.Text
+                            id='delete'
+                            name={intl.formatMessage({id: 'BoardCard.delete', defaultMessage: 'Delete'})}
+                            onClick={() => mutator.deleteBlock(card, 'delete card')}
+                        />
+                        <Menu.Text
+                            id='duplicate'
+                            name={intl.formatMessage({id: 'BoardCard.duplicate', defaultMessage: 'Duplicate'})}
+                            onClick={() => mutator.insertBlock(MutableBlock.duplicate(card), 'duplicate card')}
+                        />
+                    </Menu>
+                </MenuWrapper>
 
                 <div className='octo-icontitle'>
                     { card.icon ? <div className='octo-icon'>{card.icon}</div> : undefined }
-                    <div key='__title'>{card.title || 'Untitled'}</div>
+                    <div key='__title'>{card.title || intl.formatMessage({id: 'BoardCard.untitled', defaultMessage: 'Untitled'})}</div>
                 </div>
                 {visiblePropertyTemplates.map((template) => {
                     return OctoUtils.propertyValueReadonlyElement(card, template, '')
@@ -83,34 +86,6 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
 
         return element
     }
-
-    private showOptionsMenu(e: React.MouseEvent) {
-        const {card} = this.props
-
-        e.stopPropagation()
-
-        Menu.shared.options = [
-            {id: 'delete', name: 'Delete'},
-            {id: 'duplicate', name: 'Duplicate'},
-        ]
-        Menu.shared.onMenuClicked = (id) => {
-            switch (id) {
-            case 'delete': {
-                mutator.deleteBlock(card, 'delete card')
-                break
-            }
-            case 'duplicate': {
-                const newCard = MutableBlock.duplicate(card)
-                mutator.insertBlock(newCard, 'duplicate card')
-                break
-            }
-            default: {
-                Utils.assertFailure(`Unhandled menu id: ${id}`)
-            }
-            }
-        }
-        Menu.shared.showAtElement(e.target as HTMLElement)
-    }
 }
 
-export {BoardCard}
+export default injectIntl(BoardCard)

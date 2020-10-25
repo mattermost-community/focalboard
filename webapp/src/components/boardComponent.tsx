@@ -15,7 +15,7 @@ import {Utils} from '../utils'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 
-import {BoardCard} from './boardCard'
+import BoardCard from './boardCard'
 import {BoardColumn} from './boardColumn'
 import Button from './button'
 import {CardDialog} from './cardDialog'
