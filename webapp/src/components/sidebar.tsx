@@ -12,6 +12,8 @@ import MenuWrapper from '../widgets/menuWrapper'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
 import {BoardView} from '../blocks/boardView'
 
+import './sidebar.scss'
+
 type Props = {
     showBoard: (id: string) => void
     showView: (id: string, boardId?: string) => void
@@ -45,7 +47,7 @@ class Sidebar extends React.Component<Props, State> {
         if (this.state.isHidden) {
             const hamburgerRef = React.createRef<HTMLDivElement>()
             return (
-                <div className='octo-sidebar hidden'>
+                <div className='Sidebar octo-sidebar hidden'>
                     <div className='octo-sidebar-header'>
                         <div
                             className='octo-button square'
@@ -68,7 +70,7 @@ class Sidebar extends React.Component<Props, State> {
         }
 
         return (
-            <div className='octo-sidebar'>
+            <div className='Sidebar octo-sidebar'>
                 <div className='octo-sidebar-header octo-hover-container'>
                     {'OCTO'}
                     <div className='octo-spacer'/>

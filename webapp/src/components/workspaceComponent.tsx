@@ -10,6 +10,8 @@ import BoardComponent from './boardComponent'
 import {Sidebar} from './sidebar'
 import {TableComponent} from './tableComponent'
 
+import './workspaceComponent.scss'
+
 type Props = {
     workspaceTree: WorkspaceTree
     boardTree?: BoardTree
@@ -25,7 +27,7 @@ class WorkspaceComponent extends React.Component<Props> {
 
         Utils.assert(workspaceTree)
         const element =
-            (<div className='octo-workspace'>
+            (<div className='WorkspaceComponent'>
                 <Sidebar
                     showBoard={showBoard}
                     showView={showView}
