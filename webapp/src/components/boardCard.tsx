@@ -41,7 +41,7 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
     render(): JSX.Element {
         const {card, intl} = this.props
         const visiblePropertyTemplates = this.props.visiblePropertyTemplates || []
-        const className = this.props.isSelected ? 'BoardCard octo-board-card selected' : 'BoardCard octo-board-card'
+        const className = this.props.isSelected ? 'BoardCard selected' : 'BoardCard'
 
         const element = (
             <div

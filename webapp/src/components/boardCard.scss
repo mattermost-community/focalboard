@@ -1,12 +1,53 @@
 .BoardCard {
+	flex: 0 0 auto;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+
+	border-radius: 3px;
+	margin-bottom: 10px;
+	padding: 7px 10px;
+	box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 2px 4px;
+
+	cursor: pointer;
+	color: rgb(55, 53, 47);
+
+	transition: background 100ms ease-out 0s;
+
+    &:hover {
+        background-color: #eeeeee;
+        .MenuWrapper {
+            display: block;
+        }
+    }
+
+    &.selected {
+        background-color: rgba(90, 200, 255, 0.2);
+    }
+
     .MenuWrapper {
         display: none;
         position: absolute;
         right: 0;
     }
-    &:hover {
-        .MenuWrapper {
-            display: block;
+
+    > div {
+        margin-bottom: 3px;
+    }
+
+    > .octo-propertyvalue {
+        font-size: 12px;
+        line-height: 18px;
+    }
+
+    .octo-icontitle {
+        flex: 1 1 auto;
+        font-weight: 500;
+
+        .octo-icon {
+            font-size: 16px;
+            margin-right: 5px;
         }
     }
 }
