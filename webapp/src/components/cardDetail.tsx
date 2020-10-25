@@ -40,6 +40,10 @@ class CardDetail extends React.Component<Props, State> {
     private titleRef = React.createRef<Editable>()
     private cardListener?: OctoListener
 
+    shouldComponentUpdate() {
+        return true
+    }
+
     constructor(props: Props) {
         super(props)
         this.state = {}
@@ -330,33 +334,35 @@ class CardDetail extends React.Component<Props, State> {
 
                 <div className='CardDetail content'>
                     <div className='octo-hoverpanel octo-hover-container'>
-                        <div
-                            className='octo-button octo-hovercontrol octo-hover-item'
-                            onClick={(e) => {
-                                OldMenu.shared.options = [
-                                    {id: 'text', name: 'Text'},
-                                    {id: 'image', name: 'Image'},
-                                ]
-                                OldMenu.shared.onMenuClicked = async (optionId: string, type?: string) => {
-                                    switch (optionId) {
-                                    case 'text':
+                        <MenuWrapper>
+                            <div className='octo-button octo-hovercontrol octo-hover-item'>
+                                <FormattedMessage
+                                    id='CardDetail.add-content'
+                                    defaultMessage='Add content'
+                                />
+                            </div>
+                            <Menu>
+                                <Menu.Text
+                                    id='text'
+                                    name={intl.formatMessage({id: 'CardDetail.text', defaultMessage: 'Text'})}
+                                    onClick={() => {
                                         const block = new MutableTextBlock()
                                         block.parentId = card.id
                                         block.order = cardTree.contents.length * 1000
-                                        await mutator.insertBlock(block, 'add text')
-                                        break
-                                    case 'image':
-                                        Utils.selectLocalFile(
-                                            (file) => {
-                                                mutator.createImageBlock(card.id, file, cardTree.contents.length * 1000)
-                                            },
-                                            '.jpg,.jpeg,.png')
-                                        break
-                                    }
-                                }
-                                OldMenu.shared.showAtElement(e.target as HTMLElement)
-                            }}
-                        >Add content</div>
+                                        mutator.insertBlock(block, 'add text')
+                                    }}
+                                />
+                                <Menu.Text
+                                    id='image'
+                                    name={intl.formatMessage({id: 'CardDetail.image', defaultMessage: 'Image'})}
+                                    onClick={() => Utils.selectLocalFile(
+                                        (file) => mutator.createImageBlock(card.id, file, cardTree.contents.length * 1000),
+                                        '.jpg,.jpeg,.png',
+                                    )}
+                                />
+
+                            </Menu>
+                        </MenuWrapper>
                     </div>
                 </div>
             </>
