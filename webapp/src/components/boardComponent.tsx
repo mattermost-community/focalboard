@@ -91,7 +91,12 @@ class BoardComponent extends React.Component<Props, State> {
 
         if (!boardTree || !boardTree.board) {
             return (
-                <div>Loading...</div>
+                <div>
+                    <FormattedMessage
+                        id='BoardComponent.loading'
+                        defaultMessage='Loading...'
+                    />
+                </div>
             )
         }
 
