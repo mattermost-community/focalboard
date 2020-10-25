@@ -5,11 +5,9 @@ import {FormattedMessage, IntlShape, injectIntl} from 'react-intl'
 
 import {BlockIcons} from '../blockIcons'
 import {MutableCommentBlock} from '../blocks/commentBlock'
-import {IOrderedBlock} from '../blocks/orderedBlock'
 import {MutableTextBlock} from '../blocks/textBlock'
 import {BoardTree} from '../viewModel/boardTree'
 import {CardTree, MutableCardTree} from '../viewModel/cardTree'
-import {Menu as OldMenu, MenuOption} from '../menu'
 import mutator from '../mutator'
 import {OctoListener} from '../octoListener'
 import {OctoUtils} from '../octoUtils'
@@ -22,6 +20,7 @@ import Menu from '../widgets/menu'
 import Button from './button'
 import {Editable} from './editable'
 import {MarkdownEditor} from './markdownEditor'
+import ContentBlock from './contentBlock'
 import Comment from './comment'
 
 import './cardDetail.scss'
@@ -87,57 +86,14 @@ class CardDetail extends React.Component<Props, State> {
         if (cardTree.contents.length > 0) {
             contentElements =
                 (<div className='octo-content'>
-                    {cardTree.contents.map((block) => {
-                        if (block.type === 'text') {
-                            const cardText = block.title
-                            return (<div
-                                key={block.id}
-                                className='octo-block octo-hover-container'
-                                    >
-                                <div className='octo-block-margin'>
-                                    <div
-                                        className='octo-button octo-hovercontrol square octo-hover-item'
-                                        onClick={(e) => {
-                                            this.showContentBlockMenu(e, block)
-                                        }}
-                                    >
-                                        <div className='imageOptions'/>
-                                    </div>
-                                </div>
-                                <MarkdownEditor
-                                    text={cardText}
-                                    placeholderText='Edit text...'
-                                    onChanged={(text) => {
-                                        Utils.log(`change text ${block.id}, ${text}`)
-                                        mutator.changeTitle(block, text, 'edit card text')
-                                    }}
-                                />
-                            </div>)
-                        } else if (block.type === 'image') {
-                            const url = block.fields.url
-                            return (<div
-                                key={block.id}
-                                className='octo-block octo-hover-container'
-                            >
-                                <div className='octo-block-margin'>
-                                    <div
-                                        className='octo-button octo-hovercontrol square octo-hover-item'
-                                        onClick={(e) => {
-                                            this.showContentBlockMenu(e, block)
-                                        }}
-                                    >
-                                        <div className='imageOptions'/>
-                                    </div>
-                                </div>
-                                <img
-                                    src={url}
-                                    alt={block.title}
-                                />
-                            </div>)
-                        }
-
-                        return <div/>
-                    })}
+                    {cardTree.contents.map((block) => (
+                        <ContentBlock
+                            key={block.id}
+                            block={block}
+                            cardId={card.id}
+                            cardTree={cardTree}
+                        />
+                    ))}
                 </div>)
         } else {
             contentElements = (<div className='octo-content'>
@@ -378,81 +334,7 @@ class CardDetail extends React.Component<Props, State> {
         await mutator.insertBlock(block, 'add comment')
     }
 
-    private showContentBlockMenu(e: React.MouseEvent, block: IOrderedBlock) {
-        const {cardTree} = this.state
-        const {cardId} = this.props
-        const index = cardTree.contents.indexOf(block)
-
-        const options: MenuOption[] = []
-        if (index > 0) {
-            options.push({id: 'moveUp', name: 'Move up'})
-        }
-        if (index < cardTree.contents.length - 1) {
-            options.push({id: 'moveDown', name: 'Move down'})
-        }
-
-        options.push(
-            {id: 'insertAbove', name: 'Insert above', type: 'submenu'},
-            {id: 'delete', name: 'Delete'},
-        )
-
-        OldMenu.shared.options = options
-        OldMenu.shared.subMenuOptions.set('insertAbove', [
-            {id: 'text', name: 'Text'},
-            {id: 'image', name: 'Image'},
-        ])
-        OldMenu.shared.onMenuClicked = (optionId: string, type?: string) => {
-            switch (optionId) {
-            case 'moveUp': {
-                if (index < 1) {
-                    Utils.logError(`Unexpected index ${index}`); return
-                }
-                const previousBlock = cardTree.contents[index - 1]
-                const newOrder = OctoUtils.getOrderBefore(previousBlock, cardTree.contents)
-                Utils.log(`moveUp ${newOrder}`)
-                mutator.changeOrder(block, newOrder, 'move up')
-                break
-            }
-            case 'moveDown': {
-                if (index >= cardTree.contents.length - 1) {
-                    Utils.logError(`Unexpected index ${index}`); return
-                }
-                const nextBlock = cardTree.contents[index + 1]
-                const newOrder = OctoUtils.getOrderAfter(nextBlock, cardTree.contents)
-                Utils.log(`moveDown ${newOrder}`)
-                mutator.changeOrder(block, newOrder, 'move down')
-                break
-            }
-            case 'insertAbove-text': {
-                const newBlock = new MutableTextBlock()
-                newBlock.parentId = cardId
-
-                // TODO: Handle need to reorder all blocks
-                newBlock.order = OctoUtils.getOrderBefore(block, cardTree.contents)
-                Utils.log(`insert block ${block.id}, order: ${block.order}`)
-                mutator.insertBlock(newBlock, 'insert card text')
-                break
-            }
-            case 'insertAbove-image': {
-                Utils.selectLocalFile(
-                    (file) => {
-                        mutator.createImageBlock(cardId, file, OctoUtils.getOrderBefore(block, cardTree.contents))
-                    },
-                    '.jpg,.jpeg,.png')
-
-                break
-            }
-            case 'delete': {
-                mutator.deleteBlock(block)
-                break
-            }
-            }
-        }
-        OldMenu.shared.showAtElement(e.target as HTMLElement)
-    }
-
     close() {
-        OldMenu.shared.hide()
         PropertyMenu.shared.hide()
     }
 }
