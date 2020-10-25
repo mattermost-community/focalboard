@@ -36,6 +36,8 @@ class CommentsList extends React.Component<Props> {
 
     public render(): JSX.Element {
         const {comments, intl} = this.props
+
+        // TODO: Replace this placeholder
         const username = 'John Smith'
         const userImageUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="fill: rgb(192, 192, 192);"><rect width="100" height="100" /></svg>'
 

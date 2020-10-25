@@ -116,8 +116,6 @@ class CardDetail extends React.Component<Props, State> {
 
         const icon = card.icon
 
-        // TODO: Replace this placeholder
-
         return (
             <>
                 <div className='CardDetail content'>
