@@ -733,61 +733,6 @@ hr {
 	transition: visibility 0s linear 200ms, opacity ease-in 200ms;
 }
 
-/* Markdown Editor */
-
-.octo-editor {
-	cursor: text;
-	width: 100%;
-}
-
-/* CodeMirror / SimpleMDE / EasyMDE overrides */
-
-.CodeMirror {
-	padding: 0;
-	min-height: 0;
-}
-
-pre.CodeMirror-line {
-	padding: 0;
-}
-
-.CodeMirror, .CodeMirror-scroll {
-	flex: 1;
-	min-height: 0;
-	line-height: 1.3;
-	border: none;
-}
-
-.CodeMirror-cursor {
-	border-left: 2px solid var(--cursor-color);
-}
-
-.CodeMirror-selected {
-	background: rgba(147, 204, 231, 0.8) !important;
-}
-
-.octo-editor .CodeMirror-scroll {
-    overflow: hidden !important;
-}
-
-/* hide the scrollbars */
-.octo-editor .CodeMirror-vscrollbar, .octo-editor .CodeMirror-hscrollbar {
-    display: none !important;
-}
-
-.octo-editor-preview {
-	min-height: 30px;
-}
-
-/* .dialog .octo-editor-preview {
-	min-height: 100px;
-} */
-
-.octo-editor-activeEditor {
-	overflow: hidden;
-	border: solid 1px #aaccff;
-	border-radius: 5px;
-}
 
 /* Hover panel */
 

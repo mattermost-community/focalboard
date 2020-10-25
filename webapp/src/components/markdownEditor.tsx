@@ -4,6 +4,8 @@ import EasyMDE from 'easymde'
 import React from 'react'
 import SimpleMDE from 'react-simplemde-editor'
 
+import './markdownEditor.scss'
+
 import {Utils} from '../utils'
 
 type Props = {
@@ -171,7 +173,7 @@ class MarkdownEditor extends React.Component<Props, State> {
         const element =
             (<div
                 ref={this.frameRef}
-                className='octo-editor'
+                className='MarkdownEditor octo-editor'
             >
                 {previewElement}
                 {editorElement}
