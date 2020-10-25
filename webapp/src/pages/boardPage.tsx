@@ -1,11 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import ReactDOM from 'react-dom'
 
 import {BoardView} from '../blocks/boardView'
 import {MutableBoardTree} from '../viewModel/boardTree'
-import {FilterComponent} from '../components/filterComponent'
 import {WorkspaceComponent} from '../components/workspaceComponent'
 import {FlashMessage} from '../flashMessage'
 import mutator from '../mutator'

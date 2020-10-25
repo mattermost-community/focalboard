@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
+import {FormattedMessage, IntlShape, injectIntl} from 'react-intl'
 
 import {IPropertyTemplate} from '../blocks/board'
 
@@ -17,6 +18,7 @@ import Menu from '../widgets/menu'
 type Props = {
     boardTree: BoardTree
     onClose: () => void
+    intl: IntlShape
 }
 
 class FilterComponent extends React.Component<Props> {
@@ -47,8 +49,25 @@ class FilterComponent extends React.Component<Props> {
         this.props.onClose()
     }
 
-    render(): JSX.Element {
+    private conditionClicked = (optionId: string, filter: FilterClause): void => {
         const {boardTree} = this.props
+        const {activeView: view} = boardTree
+
+        const filterIndex = view.filter.filters.indexOf(filter)
+        Utils.assert(filterIndex >= 0, "Can't find filter")
+
+        const filterGroup = new FilterGroup(view.filter)
+        const newFilter = filterGroup.filters[filterIndex] as FilterClause
+
+        Utils.assert(newFilter, `No filter at index ${filterIndex}`)
+        if (newFilter.condition !== optionId) {
+            newFilter.condition = optionId as FilterCondition
+            mutator.changeViewFilter(view, filterGroup)
+        }
+    }
+
+    render(): JSX.Element {
+        const {boardTree, intl} = this.props
         const {board, activeView} = boardTree
 
         // TODO: Handle FilterGroups (compound filter statements)
@@ -92,10 +111,31 @@ class FilterComponent extends React.Component<Props> {
                                     />))}
                             </Menu>
                         </MenuWrapper>
-                        <div
-                            className='octo-button'
-                            onClick={(e) => this.conditionClicked(e, filter)}
-                        >{FilterClause.filterConditionDisplayString(filter.condition)}</div>
+                        <MenuWrapper>
+                            <div className='octo-button'>{FilterClause.filterConditionDisplayString(filter.condition)}</div>
+                            <Menu>
+                                <Menu.Text
+                                    id='includes'
+                                    name={intl.formatMessage({id: 'FilterComponent.includes', defaultMessage: 'includes'})}
+                                    onClick={(id) => this.conditionClicked(id, filter)}
+                                />
+                                <Menu.Text
+                                    id='notIncludes'
+                                    name={intl.formatMessage({id: 'FilterComponent.not-includes', defaultMessage: 'doesn\'t include'})}
+                                    onClick={(id) => this.conditionClicked(id, filter)}
+                                />
+                                <Menu.Text
+                                    id='isEmpty'
+                                    name={intl.formatMessage({id: 'FilterComponent.is-empty', defaultMessage: 'is empty'})}
+                                    onClick={(id) => this.conditionClicked(id, filter)}
+                                />
+                                <Menu.Text
+                                    id='isNotEmpty'
+                                    name={intl.formatMessage({id: 'FilterComponent.is-not-empty', defaultMessage: 'is not empty'})}
+                                    onClick={(id) => this.conditionClicked(id, filter)}
+                                />
+                            </Menu>
+                        </MenuWrapper>
                         {
                             this.filterValue(filter, template)
                         }
@@ -103,7 +143,12 @@ class FilterComponent extends React.Component<Props> {
                         <div
                             className='octo-button'
                             onClick={() => this.deleteClicked(filter)}
-                        >Delete</div>
+                        >
+                            <FormattedMessage
+                                id='FilterComponent.delete'
+                                defaultMessage='Delete'
+                            />
+                        </div>
                     </div>)
                 })}
 
@@ -112,7 +157,12 @@ class FilterComponent extends React.Component<Props> {
                 <div
                     className='octo-button'
                     onClick={() => this.addFilterClicked()}
-                >+ Add Filter</div>
+                >
+                    <FormattedMessage
+                        id='FilterComponent.add-filter'
+                        defaultMessage='+ Add Filter'
+                    />
+                </div>
             </div>
         )
     }
@@ -140,31 +190,6 @@ class FilterComponent extends React.Component<Props> {
         }
 
         return undefined
-    }
-
-    private conditionClicked(e: React.MouseEvent, filter: FilterClause) {
-        const {boardTree} = this.props
-        const {activeView: view} = boardTree
-
-        const filterIndex = view.filter.filters.indexOf(filter)
-        Utils.assert(filterIndex >= 0, "Can't find filter")
-
-        OldMenu.shared.options = [
-            {id: 'includes', name: 'includes'},
-            {id: 'notIncludes', name: "doesn't include"},
-            {id: 'isEmpty', name: 'is empty'},
-            {id: 'isNotEmpty', name: 'is not empty'},
-        ]
-        OldMenu.shared.onMenuClicked = (optionId: string, type?: string) => {
-            const filterGroup = new FilterGroup(view.filter)
-            const newFilter = filterGroup.filters[filterIndex] as FilterClause
-            Utils.assert(newFilter, `No filter at index ${filterIndex}`)
-            if (newFilter.condition !== optionId) {
-                newFilter.condition = optionId as FilterCondition
-                mutator.changeViewFilter(view, filterGroup)
-            }
-        }
-        OldMenu.shared.showAtElement(e.target as HTMLElement)
     }
 
     private valuesClicked(e: React.MouseEvent, filter: FilterClause) {
@@ -228,4 +253,4 @@ class FilterComponent extends React.Component<Props> {
     }
 }
 
-export {FilterComponent}
+export default injectIntl(FilterComponent)

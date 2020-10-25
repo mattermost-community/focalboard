@@ -18,7 +18,7 @@ import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 
 import {Editable} from './editable'
-import {FilterComponent} from './filterComponent'
+import FilterComponent from './filterComponent'
 
 type Props = {
     boardTree?: BoardTree
