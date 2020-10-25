@@ -21,7 +21,7 @@ import Button from './button'
 import {Editable} from './editable'
 import {MarkdownEditor} from './markdownEditor'
 import ContentBlock from './contentBlock'
-import Comment from './comment'
+import CommentsList from './commentsList'
 
 import './cardDetail.scss'
 
@@ -117,8 +117,6 @@ class CardDetail extends React.Component<Props, State> {
         const icon = card.icon
 
         // TODO: Replace this placeholder
-        const username = 'John Smith'
-        const userImageUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="fill: rgb(192, 192, 192);"><rect width="100" height="100" /></svg>'
 
         return (
             <>
@@ -227,58 +225,10 @@ class CardDetail extends React.Component<Props, State> {
                     {/* Comments */}
 
                     <hr/>
-                    <div className='commentlist'>
-                        {comments.map((comment) => (
-                            <Comment
-                                key={comment.id}
-                                comment={comment}
-                                userImageUrl={userImageUrl}
-                                username={username}
-                            />
-                        ))}
-
-                        {/* New comment */}
-
-                        <div className='commentrow'>
-                            <img
-                                className='comment-avatar'
-                                src={userImageUrl}
-                            />
-                            <Editable
-                                ref={newCommentRef}
-                                className='newcomment'
-                                placeholderText={intl.formatMessage({id: 'CardDetail.new-comment-placeholder', defaultMessage: 'Add a comment...'})}
-                                onChanged={(text) => { }}
-                                onFocus={() => {
-                                    sendCommentButtonRef.current.style.display = null
-                                }}
-                                onBlur={() => {
-                                    if (!newCommentRef.current.text) {
-                                        sendCommentButtonRef.current.style.display = 'none'
-                                    }
-                                }}
-                                onKeyDown={(e) => {
-                                    if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) {
-                                        sendCommentButtonRef.current.click()
-                                    }
-                                }}
-                            />
-
-                            <div
-                                ref={sendCommentButtonRef}
-                                className='octo-button filled'
-                                style={{display: 'none'}}
-                                onClick={(e) => {
-                                    const text = newCommentRef.current.text
-                                    Utils.log(`Send comment: ${newCommentRef.current.text}`)
-                                    this.sendComment(text)
-                                    newCommentRef.current.text = undefined
-                                    newCommentRef.current.blur()
-                                }}
-                            >Send</div>
-                        </div>
-                    </div>
-
+                        <CommentsList
+                            comments={comments}
+                            cardId={card.id}
+                        />
                     <hr/>
                 </div>
 
@@ -323,15 +273,6 @@ class CardDetail extends React.Component<Props, State> {
                 </div>
             </>
         )
-    }
-
-    async sendComment(text: string) {
-        const {cardId} = this.props
-
-        Utils.assertValue(cardId)
-
-        const block = new MutableCommentBlock({parentId: cardId, title: text})
-        await mutator.insertBlock(block, 'add comment')
     }
 
     close() {
