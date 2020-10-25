@@ -2,10 +2,11 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
+import './switch.scss'
+
 type Props = {
     onChanged: (isOn: boolean) => void
     isOn: boolean
-    style?: React.CSSProperties
 }
 
 type State = {
@@ -13,14 +14,11 @@ type State = {
 }
 
 // Switch is an on-off style switch / checkbox
-class Switch extends React.Component<Props, State> {
+export default class Switch extends React.Component<Props, State> {
     static defaultProps = {
         isMarkdown: false,
         isMultiline: false,
     }
-
-    elementRef = React.createRef<HTMLDivElement>()
-    innerElementRef = React.createRef<HTMLDivElement>()
 
     constructor(props: Props) {
         super(props)
@@ -31,35 +29,20 @@ class Switch extends React.Component<Props, State> {
         return true
     }
 
-    focus(): void {
-        this.elementRef.current.focus()
-
-        // Put cursor at end
-        document.execCommand('selectAll', false, null)
-        document.getSelection().collapseToEnd()
-    }
-
     render(): JSX.Element {
-        const {style} = this.props
         const {isOn} = this.state
 
-        const className = isOn ? 'octo-switch on' : 'octo-switch'
-        const element =
-    (<div
-        ref={this.elementRef}
-        className={className}
-        style={style}
-        onClick={() => {
-            this.onClicked()
-        }}
-    >
-        <div
-            ref={this.innerElementRef}
-            className='octo-switch-inner'
-        />
-    </div>)
-
-        return element
+        const className = isOn ? 'Switch on' : 'Switch'
+        return (
+            <div
+                className={className}
+                onClick={() => {
+                    this.onClicked()
+                }}
+            >
+                <div className='octo-switch-inner'/>
+            </div>
+        )
     }
 
     private async onClicked() {

@@ -1,0 +1,19 @@
+.FilterComponent {
+    position: absolute;
+    top: 25px;
+    left: -200px;
+	min-width: 420px;
+	box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 2px 4px;
+	background-color: #ffffff;
+	padding: 10px;
+
+
+    .octo-filterclause {
+        display: flex;
+        flex-direction: row;
+        > div {
+            display: flex;
+            flex-direction: row;
+        }
+    }
+}

@@ -14,6 +14,8 @@ import {Utils} from '../utils'
 import MenuWrapper from '../widgets/menuWrapper'
 import Menu from '../widgets/menu'
 
+import './filterComponent.scss'
+
 type Props = {
     boardTree: BoardTree
     onClose: () => void
@@ -74,8 +76,7 @@ class FilterComponent extends React.Component<Props> {
 
         return (
             <div
-                className='octo-modal octo-filter-dialog'
-                style={{position: 'absolute', top: 25, left: -200}}
+                className='FilterComponent'
                 ref={this.node}
             >
                 {filters.map((filter) => {

@@ -1,0 +1,30 @@
+.Switch {
+	display: flex;
+	flex-shrink: 0;
+
+    box-sizing: content-box;
+	height: 14px;
+	width: 26px;
+	border-radius: 44px;
+	padding: 2px;
+	background-color: rgba(135, 131, 120, 0.3);
+	transition: background 200ms ease 0s, box-shadow 200ms ease 0s;
+
+    &.on {
+        background-color: rgba(46, 170, 220);
+        .octo-switch-inner {
+            transform: translateX(12px) translateY(0px);
+        }
+    }
+
+    .octo-switch-inner {
+        width: 14px;
+        height: 14px;
+        border-radius: 44px;
+        background: white;
+        transition: transform 200ms ease-out 0s, background 200ms ease-out 0s;
+        transform: translateX(0px) translateY(0px);
+    }
+}
+
+

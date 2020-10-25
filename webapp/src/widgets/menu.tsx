@@ -2,6 +2,8 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
+import Switch from './switch'
+
 type MenuOptionProps = {
     id: string,
     name: string,
@@ -96,11 +98,10 @@ class SwitchOption extends React.Component<SwitchOptionProps> {
             >
                 <div className='menu-name'>{name}</div>
                 {icon && <div className={`icon ${icon}`}/>}
-                <div className={isOn ? 'octo-switch on' : 'octo-switch'}>
-                    <div
-                        className='octo-switch-inner'
-                    />
-                </div>
+                <Switch
+                    isOn={isOn}
+                    onChanged={() => {}}
+                />
             </div>
         )
     }
