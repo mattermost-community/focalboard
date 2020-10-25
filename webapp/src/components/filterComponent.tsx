@@ -8,7 +8,6 @@ import {IPropertyTemplate} from '../blocks/board'
 import {BoardTree} from '../viewModel/boardTree'
 import {FilterClause, FilterCondition} from '../filterClause'
 import {FilterGroup} from '../filterGroup'
-import {Menu as OldMenu} from '../menu'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 
@@ -168,6 +167,9 @@ class FilterComponent extends React.Component<Props> {
     }
 
     private filterValue(filter: FilterClause, template: IPropertyTemplate): JSX.Element {
+        const {boardTree} = this.props
+        const {board, activeView: view} = boardTree
+
         if (filter.condition === 'includes' || filter.condition === 'notIncludes') {
             let displayValue: string
             if (filter.values.length > 0) {
@@ -179,47 +181,43 @@ class FilterComponent extends React.Component<Props> {
                 displayValue = '(empty)'
             }
 
+            if (!template) {
+                return null
+            }
+
             return (
-                <div
-                    className='octo-button'
-                    onClick={(e) => this.valuesClicked(e, filter)}
-                >
-                    {displayValue}
-                </div>
+                <MenuWrapper>
+                    <div className='octo-button'>{displayValue}</div>
+                    <Menu>
+                        {template.options.map((o) => (
+                            <Menu.Switch
+                                key={o.id}
+                                id={o.id}
+                                name={o.value}
+                                isOn={filter.values.includes(o.id)}
+                                onClick={(optionId) => {
+                                    const filterIndex = view.filter.filters.indexOf(filter)
+                                    Utils.assert(filterIndex >= 0, "Can't find filter")
+
+                                    const filterGroup = new FilterGroup(view.filter)
+                                    const newFilter = filterGroup.filters[filterIndex] as FilterClause
+                                    Utils.assert(newFilter, `No filter at index ${filterIndex}`)
+                                    if (filter.values.includes(o.id)) {
+                                        newFilter.values = newFilter.values.filter((id) => id !== optionId)
+                                        mutator.changeViewFilter(view, filterGroup)
+                                    } else {
+                                        newFilter.values.push(optionId)
+                                        mutator.changeViewFilter(view, filterGroup)
+                                    }
+                                }}
+                            />
+                        ))}
+                    </Menu>
+                </MenuWrapper>
             )
         }
 
         return undefined
-    }
-
-    private valuesClicked(e: React.MouseEvent, filter: FilterClause) {
-        const {boardTree} = this.props
-        const {board, activeView: view} = boardTree
-
-        const template = board.cardProperties.find((o) => o.id === filter.propertyId)
-        if (!template) {
-            return
-        }
-
-        // BUGBUG: This index will be wrong if someone else changes the filter array after a change. Solution is to make Menu a React component.
-        const filterIndex = view.filter.filters.indexOf(filter)
-        Utils.assert(filterIndex >= 0, "Can't find filter")
-
-        OldMenu.shared.options = template.options.map((o) => ({id: o.id, name: o.value, type: 'switch', isOn: filter.values.includes(o.id)}))
-        OldMenu.shared.onMenuToggled = async (optionId: string, isOn: boolean) => {
-            // const index = view.filter.filters.indexOf(filter)
-            const filterGroup = new FilterGroup(view.filter)
-            const newFilter = filterGroup.filters[filterIndex] as FilterClause
-            Utils.assert(newFilter, `No filter at index ${filterIndex}`)
-            if (isOn) {
-                newFilter.values.push(optionId)
-                mutator.changeViewFilter(view, filterGroup)
-            } else {
-                newFilter.values = newFilter.values.filter((o) => o !== optionId)
-                mutator.changeViewFilter(view, filterGroup)
-            }
-        }
-        OldMenu.shared.showAtElement(e.target as HTMLElement)
     }
 
     private deleteClicked(filter: FilterClause) {
