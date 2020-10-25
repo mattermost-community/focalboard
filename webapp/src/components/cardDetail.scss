@@ -1,0 +1,12 @@
+.CardDetail {
+    .octo-hovercontrols {
+        .Button {
+            display: none;
+        }
+        &:hover {
+            .Button {
+                display: block;
+            }
+        }
+    }
+}

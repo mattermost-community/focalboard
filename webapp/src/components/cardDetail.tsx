@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
+import {FormattedMessage, IntlShape, injectIntl} from 'react-intl'
 
 import {BlockIcons} from '../blockIcons'
 import {MutableCommentBlock} from '../blocks/commentBlock'
@@ -15,28 +16,33 @@ import {OctoUtils} from '../octoUtils'
 import {PropertyMenu} from '../propertyMenu'
 import {Utils} from '../utils'
 
+import MenuWrapper from '../widgets/menuWrapper'
+import Menu from '../widgets/menu'
+
 import Button from './button'
 import {Editable} from './editable'
 import {MarkdownEditor} from './markdownEditor'
 import Comment from './comment'
 
+import './cardDetail.scss'
+
 type Props = {
     boardTree: BoardTree
     cardId: string
+    intl: IntlShape
 }
 
 type State = {
-    isHoverOnCover: boolean
     cardTree?: CardTree
 }
 
-export default class CardDetail extends React.Component<Props, State> {
+class CardDetail extends React.Component<Props, State> {
     private titleRef = React.createRef<Editable>()
     private cardListener?: OctoListener
 
     constructor(props: Props) {
         super(props)
-        this.state = {isHoverOnCover: false}
+        this.state = {}
     }
 
     componentDidMount() {
@@ -63,15 +69,13 @@ export default class CardDetail extends React.Component<Props, State> {
     }
 
     render() {
-        const {boardTree} = this.props
+        const {boardTree, intl} = this.props
         const {cardTree} = this.state
         const {board} = boardTree
         if (!cardTree) {
             return null
         }
         const {card, comments} = cardTree
-
-        const newCommentPlaceholderText = 'Add a comment...'
 
         const newCommentRef = React.createRef<Editable>()
         const sendCommentButtonRef = React.createRef<HTMLDivElement>()
@@ -158,33 +162,36 @@ export default class CardDetail extends React.Component<Props, State> {
 
         return (
             <>
-                <div className='content'>
-                    {icon ?
-                        <div
-                            className='octo-button octo-icon octo-card-icon'
-                            onClick={(e) => {
-                                this.iconClicked(e)
-                            }}
-                        >{icon}</div> :
-                        undefined
-                    }
-                    <div
-                        className='octo-hovercontrols'
-                        onMouseOver={() => {
-                            this.setState({...this.state, isHoverOnCover: true})
-                        }}
-                        onMouseLeave={() => {
-                            this.setState({...this.state, isHoverOnCover: false})
-                        }}
-                    >
-                        <Button
-                            style={{display: (!icon && this.state.isHoverOnCover) ? null : 'none'}}
-                            onClick={() => {
-                                const newIcon = BlockIcons.shared.randomIcon()
-                                mutator.changeIcon(card, newIcon)
-                            }}
-                        >Add Icon</Button>
-                    </div>
+                <div className='CardDetail content'>
+                    {icon &&
+                        <MenuWrapper>
+                            <div className='octo-button octo-icon octo-card-icon'>{icon}</div>
+                            <Menu>
+                                <Menu.Text
+                                    id='random'
+                                    name={intl.formatMessage({id: 'CardDetail.random-icon', defaultMessage: 'Random'})}
+                                    onClick={() => mutator.changeIcon(card, BlockIcons.shared.randomIcon())}
+                                />
+                                <Menu.Text
+                                    id='remove'
+                                    name={intl.formatMessage({id: 'CardDetail.remove-icon', defaultMessage: 'Remove Icon'})}
+                                    onClick={() => mutator.changeIcon(card, undefined, 'remove icon')}
+                                />
+                            </Menu>
+                        </MenuWrapper>}
+                    {!icon &&
+                        <div className='octo-hovercontrols'>
+                            <Button
+                                onClick={() => {
+                                    const newIcon = BlockIcons.shared.randomIcon()
+                                    mutator.changeIcon(card, newIcon)
+                            }}>
+                                <FormattedMessage
+                                    id='CardDetail.add-icon'
+                                    defaultMessage='Add Icon'
+                                />
+                            </Button>
+                        </div>}
 
                     <Editable
                         ref={this.titleRef}
@@ -280,7 +287,7 @@ export default class CardDetail extends React.Component<Props, State> {
                             <Editable
                                 ref={newCommentRef}
                                 className='newcomment'
-                                placeholderText={newCommentPlaceholderText}
+                                placeholderText={intl.formatMessage({id: 'CardDetail.new-comment-placeholder', defaultMessage: 'Add a comment...'})}
                                 onChanged={(text) => { }}
                                 onFocus={() => {
                                     sendCommentButtonRef.current.style.display = null
@@ -317,11 +324,11 @@ export default class CardDetail extends React.Component<Props, State> {
 
                 {/* Content blocks */}
 
-                <div className='content fullwidth'>
+                <div className='CardDetail content fullwidth'>
                     {contentElements}
                 </div>
 
-                <div className='content'>
+                <div className='CardDetail content'>
                     <div className='octo-hoverpanel octo-hover-container'>
                         <div
                             className='octo-button octo-hovercontrol octo-hover-item'
@@ -438,30 +445,10 @@ export default class CardDetail extends React.Component<Props, State> {
         OldMenu.shared.showAtElement(e.target as HTMLElement)
     }
 
-    private iconClicked(e: React.MouseEvent) {
-        const {cardTree} = this.state
-        const {card} = cardTree
-
-        OldMenu.shared.options = [
-            {id: 'random', name: 'Random'},
-            {id: 'remove', name: 'Remove Icon'},
-        ]
-        OldMenu.shared.onMenuClicked = (optionId: string, type?: string) => {
-            switch (optionId) {
-            case 'remove':
-                mutator.changeIcon(card, undefined, 'remove icon')
-                break
-            case 'random':
-                const newIcon = BlockIcons.shared.randomIcon()
-                mutator.changeIcon(card, newIcon)
-                break
-            }
-        }
-        OldMenu.shared.showAtElement(e.target as HTMLElement)
-    }
-
     close() {
         OldMenu.shared.hide()
         PropertyMenu.shared.hide()
     }
 }
+
+export default injectIntl(CardDetail)
