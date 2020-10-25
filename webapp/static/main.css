@@ -88,22 +88,6 @@ hr {
 	padding: 10px 95px 50px 95px;
 }
 
-.octo-controls {
-	flex: 0 0 auto;
-	display: flex;
-	flex-direction: row;
-
-	border-bottom: solid 1px #cccccc;
-	margin-bottom: 10px;
-	padding: 10px 10px;
-	color: #909090;
-}
-
-.octo-controls > div {
-	margin-right: 5px;
-	white-space: nowrap
-}
-
 .dragover {
 	background-color: rgba(128, 192, 255, 0.4);
 }

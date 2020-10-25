@@ -1,0 +1,15 @@
+.ViewHeader {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: row;
+
+    border-bottom: solid 1px #cccccc;
+    margin-bottom: 10px;
+    padding: 10px 10px;
+    color: #909090;
+
+    > div {
+        margin-right: 5px;
+        white-space: nowrap
+    }
+}

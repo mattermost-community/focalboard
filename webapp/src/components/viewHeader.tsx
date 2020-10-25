@@ -20,6 +20,8 @@ import MenuWrapper from '../widgets/menuWrapper'
 import {Editable} from './editable'
 import FilterComponent from './filterComponent'
 
+import './viewHeader.scss'
+
 type Props = {
     boardTree?: BoardTree
     showView: (id: string) => void
@@ -112,7 +114,7 @@ class ViewHeader extends React.Component<Props, State> {
         const hasSort = activeView.sortOptions.length > 0
 
         return (
-            <div className='octo-controls'>
+            <div className='ViewHeader'>
                 <Editable
                     style={{color: '#000000', fontWeight: 600}}
                     text={activeView.title}
