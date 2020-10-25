@@ -229,7 +229,7 @@ class TableComponent extends React.Component<Props, State> {
         tableRowRef?.current.focusOnTitle()
     }
 
-    private async addCard(show = false) {
+    private addCard = async (show = false) => {
         const {boardTree} = this.props
 
         const card = new MutableCard()
