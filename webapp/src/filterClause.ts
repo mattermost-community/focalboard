@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {Utils} from './utils'
+import {IntlShape} from 'react-intl'
 
 type FilterCondition = 'includes' | 'notIncludes' | 'isEmpty' | 'isNotEmpty'
 
@@ -9,12 +10,12 @@ class FilterClause {
     condition: FilterCondition
     values: string[]
 
-    static filterConditionDisplayString(filterCondition: FilterCondition): string {
+    static filterConditionDisplayString(filterCondition: FilterCondition, intl: IntlShape): string {
         switch (filterCondition) {
-        case 'includes': return 'includes'
-        case 'notIncludes': return "doesn't include"
-        case 'isEmpty': return 'is empty'
-        case 'isNotEmpty': return 'is not empty'
+        case 'includes': return intl.formatMessage({id: 'Filter.includes', defaultMessage: 'includes'})
+        case 'notIncludes': return intl.formatMessage({id: 'Filter.not-includes', defaultMessage: 'doesn\'t include'})
+        case 'isEmpty': return intl.formatMessage({id: 'Filter.is-empty', defaultMessage: 'is empty'})
+        case 'isNotEmpty': return intl.formatMessage({id: 'Filter.is-not-empty', defaultMessage: 'is not empty'})
         default: {
             Utils.assertFailure()
             return '(unknown)'

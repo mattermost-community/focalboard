@@ -112,26 +112,26 @@ class FilterComponent extends React.Component<Props> {
                             </Menu>
                         </MenuWrapper>
                         <MenuWrapper>
-                            <div className='octo-button'>{FilterClause.filterConditionDisplayString(filter.condition)}</div>
+                            <div className='octo-button'>{FilterClause.filterConditionDisplayString(filter.condition, intl)}</div>
                             <Menu>
                                 <Menu.Text
                                     id='includes'
-                                    name={intl.formatMessage({id: 'FilterComponent.includes', defaultMessage: 'includes'})}
+                                    name={intl.formatMessage({id: 'Filter.includes', defaultMessage: 'includes'})}
                                     onClick={(id) => this.conditionClicked(id, filter)}
                                 />
                                 <Menu.Text
                                     id='notIncludes'
-                                    name={intl.formatMessage({id: 'FilterComponent.not-includes', defaultMessage: 'doesn\'t include'})}
+                                    name={intl.formatMessage({id: 'Filter.not-includes', defaultMessage: 'doesn\'t include'})}
                                     onClick={(id) => this.conditionClicked(id, filter)}
                                 />
                                 <Menu.Text
                                     id='isEmpty'
-                                    name={intl.formatMessage({id: 'FilterComponent.is-empty', defaultMessage: 'is empty'})}
+                                    name={intl.formatMessage({id: 'Filter.is-empty', defaultMessage: 'is empty'})}
                                     onClick={(id) => this.conditionClicked(id, filter)}
                                 />
                                 <Menu.Text
                                     id='isNotEmpty'
-                                    name={intl.formatMessage({id: 'FilterComponent.is-not-empty', defaultMessage: 'is not empty'})}
+                                    name={intl.formatMessage({id: 'Filter.is-not-empty', defaultMessage: 'is not empty'})}
                                     onClick={(id) => this.conditionClicked(id, filter)}
                                 />
                             </Menu>
