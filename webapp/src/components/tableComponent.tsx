@@ -20,6 +20,8 @@ import ViewHeader from './viewHeader'
 import ViewTitle from './viewTitle'
 import TableHeaderMenu from './tableHeaderMenu'
 
+import './tableComponent.scss'
+
 type Props = {
     boardTree?: BoardTree
     showView: (id: string) => void
@@ -73,7 +75,7 @@ class TableComponent extends React.Component<Props, State> {
         this.cardIdToRowMap.clear()
 
         return (
-            <div className='octo-app'>
+            <div className='TableComponent octo-app'>
                 {this.state.shownCard &&
                 <RootPortal>
                     <CardDialog

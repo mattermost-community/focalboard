@@ -396,11 +396,6 @@ hr {
 	margin-right: 15px;
 }
 
-
-.octo-table-cell .octo-icontitle .octo-icon {
-	min-width: 20px;
-}
-
 /*-- Property list --*/
 
 .octo-propertyvalue {
@@ -432,96 +427,11 @@ hr {
 	color: rgba(55, 53, 47, 0.4);
 }
 
-.octo-table-cell:focus-within {
-	background-color: rgba(46, 170, 220, 0.15);
-	border: 1px solid rgba(46, 170, 220, 0.6);
-}
-
-.octo-table-cell .octo-editable {
-	padding: 0 5px;
-	display: relative;
-	left: -5px;
-}
-
-.octo-table-cell .octo-editable.octo-editable.active {
-	overflow: hidden;
-}
 
 .octo-propertyvalue.octo-editable.active,
 .octo-table-cell .octo-editable.active {
 	border-radius: 3px;
 	box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
-}
-
-/* Table */
-
-.octo-table-body {
-	display: flex;
-	flex-direction: column;
-	padding: 0 10px;
-}
-
-.octo-table-header,
-.octo-table-row,
-.octo-table-footer {
-	display: flex;
-	flex-direction: row;
-
-	border-bottom: solid 1px rgba(55, 53, 47, 0.09);
-}
-
-.octo-table-cell {
-	flex: 0 0 auto;
-	display: flex;
-	flex-direction: row;
-
-	color: rgba(55, 53, 47);
-	border-right: solid 1px rgba(55, 53, 47, 0.09);
-	box-sizing: border-box;
-	padding: 5px 8px 6px 8px;
-
-	width: 150px;
-	min-height: 32px;
-
-	font-size: 14px;
-	line-height: 21px;
-
-	overflow: hidden;
-	position: relative;
-}
-
-.octo-table-cell.title-cell {
-	width: 280px;
-}
-
-.octo-table-cell .octo-propertyvalue {
-	line-height: 17px;
-}
-
-.octo-table-header .octo-table-cell,
-.octo-table-header .octo-table-cell .octo-label {
-	color: rgba(55, 53, 47, 0.6);
-}
-
-.octo-table-footer .octo-table-cell {
-	color: rgba(55, 53, 47, 0.6);
-	cursor: pointer;
-
-	width: 100%;
-	border-right: none;
-	padding-left: 15px;
-}
-
-.octo-table-footer .octo-table-cell:hover {
-	background-color: rgba(55, 53, 47, 0.08);
-}
-
-.octo-table-cell .octo-button,
-.octo-table-cell .octo-editable,
-.octo-table-cell .octo-propertyvalue
-{
-	text-align: left;
-	white-space: nowrap;
 }
 
 .octo-button.octo-hovercontrol {
