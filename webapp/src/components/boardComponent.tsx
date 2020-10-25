@@ -24,6 +24,8 @@ import RootPortal from './rootPortal'
 import ViewHeader from './viewHeader'
 import ViewTitle from './viewTitle'
 
+import './boardComponent.scss'
+
 type Props = {
     boardTree?: BoardTree
     showView: (id: string) => void
@@ -110,7 +112,7 @@ class BoardComponent extends React.Component<Props, State> {
 
         return (
             <div
-                className='octo-app'
+                className='BoardComponent octo-app'
                 ref={this.backgroundRef}
                 onClick={(e) => {
                     this.backgroundClicked(e)

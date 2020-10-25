@@ -161,13 +161,6 @@ hr {
 	padding: 10px 95px 50px 95px;
 }
 
-.octo-board {
-	flex: 0 1 auto;
-
-	display: flex;
-	flex-direction: column;
-}
-
 .octo-controls {
 	flex: 0 0 auto;
 	display: flex;
@@ -184,71 +177,8 @@ hr {
 	white-space: nowrap
 }
 
-.octo-board-header {
-	display: flex;
-	flex-direction: row;
-
-	min-height: 30px;
-	margin-bottom: 10px;
-	padding: 0px 10px;
-	color: #909090;
-}
-
-.octo-board-header-cell {
-	display: flex;
-	flex-shrink: 0;
-	align-items: center;
-
-	width: 260px;
-	margin-right: 15px;
-	vertical-align: middle;
-}
-
-.octo-board-header-cell.narrow {
-	width: 220px;
-}
-
-.octo-board-header-cell > div {
-	margin-right: 5px;
-}
-
-.octo-board-body {
-	display: flex;
-	flex-direction: row;
-	padding: 0 10px;
-	flex: 0 1 auto;
-}
-
-.octo-board-column {
-	flex: 0 0 auto;
-
-	display: flex;
-	flex-direction: column;
-
-	width: 260px;
-	margin-right: 15px;
-}
-
-.octo-board-column.narrow {
-    width: 220px;
-}
-
-.octo-board-hidden-item {
-    display: flex;
-    flex-direction: row;
-}
-
-.octo-board-hidden-item > div {
-    margin-right: 5px;
-}
-
 .dragover {
 	background-color: rgba(128, 192, 255, 0.4);
-}
-
-.octo-board-column > .octo-button {
-	color: #909090;
-	text-align: left;
 }
 
 .octo-label {
