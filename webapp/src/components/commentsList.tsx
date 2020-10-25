@@ -11,6 +11,8 @@ import mutator from '../mutator'
 import {Editable} from './editable'
 import Comment from './comment'
 
+import './commentsList.scss'
+
 type Props = {
     comments: readonly IBlock[]
     cardId: string
@@ -42,7 +44,7 @@ class CommentsList extends React.Component<Props> {
         const userImageUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="fill: rgb(192, 192, 192);"><rect width="100" height="100" /></svg>'
 
         return (
-            <div className='commentlist'>
+            <div className='CommentsList'>
                 {comments.map((comment) => (
                     <Comment
                         key={comment.id}

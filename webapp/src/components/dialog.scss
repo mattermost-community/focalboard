@@ -1,0 +1,43 @@
+.Dialog {
+    &.dialog-back {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 10;
+
+        background-color: rgba(90, 90, 90, 0.5);
+    }
+
+    .dialog {
+        display: flex;
+        flex-direction: column;
+
+        background-color: #ffffff;
+        border-radius: 3px;
+        box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 2px 4px;
+        margin: 72px auto;
+        padding: 0;
+        max-width: 975px;
+        height: calc(100% - 144px);
+
+        overflow-x: hidden;
+        overflow-y: auto;
+        > .toolbar {
+            display: flex;
+            flex-direction: row;
+            height: 30px;
+            margin: 10px
+        }
+        > .content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 10px 126px 10px 126px;
+        }
+        > .content.fullwidth {
+            padding: 10px 0 10px 0;
+        }
+    }
+}

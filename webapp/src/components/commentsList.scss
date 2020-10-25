@@ -1,0 +1,25 @@
+.CommentsList {
+	display: flex;
+	flex-direction: column;
+
+	width: 100%;
+
+    .comment-avatar {
+        width: 20px;
+        height: 20px;
+        border-radius: 100%;
+        box-shadow: rgba(15, 15, 15, 0.1) 0px 2px 4px;
+    }
+
+    .commentrow {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .newcomment {
+        color: rgba(55, 53, 47, 0.8);
+        flex-grow: 1;
+        margin-left: 5px;
+    }
+}
+

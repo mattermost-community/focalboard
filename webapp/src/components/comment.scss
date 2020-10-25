@@ -1,12 +1,47 @@
 .Comment {
+    display: flex;
+    flex-direction: column;
+    margin: 5px 0;
+
+    &:hover {
+        .MenuWrapper {
+            display: block;
+        }
+    }
+
     .MenuWrapper {
         display: none;
         position: absolute;
         right: 0;
     }
-    &:hover {
-        .MenuWrapper {
-            display: block;
-        }
+
+    .comment-header {
+        display: flex;
+        flex-direction: row;
+
+        position: relative;
+    }
+
+    .comment-avatar {
+        width: 20px;
+        height: 20px;
+        border-radius: 100%;
+        box-shadow: rgba(15, 15, 15, 0.1) 0px 2px 4px;
+    }
+
+    .comment-username {
+        font-weight: bold;
+        margin: 0 5px;
+    }
+
+    .comment-date {
+        color: #cccccc;
+        font-size: 12px;
+    }
+
+    .comment-text {
+        color: rgb(55, 53, 47);
+        width: 100%;
+        padding-left: 25px;
     }
 }

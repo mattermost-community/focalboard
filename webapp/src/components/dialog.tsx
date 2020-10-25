@@ -6,14 +6,28 @@ import MenuWrapper from '../widgets/menuWrapper'
 
 import Button from './button'
 
+import './dialog.scss'
+
 type Props = {
     children: React.ReactNode
     toolsMenu: React.ReactNode
     onClose: () => void
 }
 
-export default class Dialog extends React.Component<Props> {
-    keydownHandler = (e: KeyboardEvent) => {
+export default class Dialog extends React.PureComponent<Props> {
+    public componentDidMount(): void {
+        document.addEventListener('keydown', this.keydownHandler)
+    }
+
+    public componentWillUnmount(): void {
+        document.removeEventListener('keydown', this.keydownHandler)
+    }
+
+    private close(): void {
+        this.props.onClose()
+    }
+
+    private keydownHandler = (e: KeyboardEvent): void => {
         if (e.target !== document.body) {
             return
         }
@@ -24,20 +38,12 @@ export default class Dialog extends React.Component<Props> {
         }
     }
 
-    componentDidMount() {
-        document.addEventListener('keydown', this.keydownHandler)
-    }
-
-    componentWillUnmount() {
-        document.removeEventListener('keydown', this.keydownHandler)
-    }
-
-    render() {
+    public render(): JSX.Element {
         const {toolsMenu} = this.props
 
         return (
             <div
-                className='dialog-back'
+                className='Dialog dialog-back'
                 onMouseDown={(e) => {
                     if (e.target === e.currentTarget) {
                         this.close()
@@ -49,17 +55,13 @@ export default class Dialog extends React.Component<Props> {
                     <div className='toolbar'>
                         <div className='octo-spacer'/>
                         <MenuWrapper>
-                            <Button>...</Button>
+                            <Button>{'...'}</Button>
                             {toolsMenu}
                         </MenuWrapper>
                     </div>}
                     {this.props.children}
-                </div >
-            </div >
+                </div>
+            </div>
         )
-    }
-
-    close() {
-        this.props.onClose()
     }
 }

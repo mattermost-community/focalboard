@@ -436,53 +436,6 @@ hr {
 	margin: 5px 5px;
 }
 
-/*-- Dialog --*/
-
-.dialog-back {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	z-index: 10;
-
-	background-color: rgba(90, 90, 90, 0.5);
-}
-
-.dialog {
-	display: flex;
-	flex-direction: column;
-
-	background-color: #ffffff;
-	border-radius: 3px;
-	box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 2px 4px;
-	margin: 72px auto;
-	padding: 0;
-	max-width: 975px;
-	height: calc(100% - 144px);
-
-	overflow-x: hidden;
-	overflow-y: auto;
-}
-
-.dialog > .toolbar {
-	display: flex;
-	flex-direction: row;
-	height: 30px;
-	margin: 10px
-}
-
-.dialog > .content {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	padding: 10px 126px 10px 126px;
-}
-
-.dialog > .content.fullwidth {
-	padding: 10px 0 10px 0;
-}
-
 /* Icons */
 
 .octo-hovercontrols {
@@ -535,62 +488,6 @@ hr {
     line-height: 1.1;
     margin-left: 0;
     color: #000000;
-}
-
-/*-- Comments --*/
-
-.dialog .commentlist {
-	display: flex;
-	flex-direction: column;
-
-	width: 100%;
-}
-
-.commentlist .commentrow {
-	display: flex;
-	flex-direction: row;
-}
-
-.commentlist .comment {
-	display: flex;
-	flex-direction: column;
-	margin: 5px 0;
-}
-
-.comment-header {
-	display: flex;
-	flex-direction: row;
-
-	position: relative;
-}
-
-.comment-avatar {
-	width: 20px;
-	height: 20px;
-	border-radius: 100%;
-	box-shadow: rgba(15, 15, 15, 0.1) 0px 2px 4px;
-}
-
-.comment-username {
-	font-weight: bold;
-	margin: 0 5px;
-}
-
-.comment-date {
-	color: #cccccc;
-	font-size: 12px;
-}
-
-.comment-text {
-	color: rgb(55, 53, 47);
-	width: 100%;
-	padding-left: 25px;
-}
-
-.commentlist .newcomment {
-	color: rgba(55, 53, 47, 0.8);
-	flex-grow: 1;
-	margin-left: 5px;
 }
 
 /*-- Property list --*/
