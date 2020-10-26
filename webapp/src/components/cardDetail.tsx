@@ -211,13 +211,17 @@ class CardDetail extends React.Component<Props, State> {
                         })}
 
                         <div
-                            className='octo-button octo-propertyname'
-                            style={{textAlign: 'left', width: '150px', color: 'rgba(55, 53, 37, 0.4)'}}
+                            className='octo-button octo-propertyname add-property'
                             onClick={async () => {
                                 // TODO: Show UI
                                 await mutator.insertPropertyTemplate(boardTree)
                             }}
-                        >+ Add a property</div>
+                        >
+                            <FormattedMessage
+                                id='CardDetail.add-property'
+                                defaultMessage='+ Add a property'
+                            />
+                        </div>
                     </div>
 
                     {/* Comments */}

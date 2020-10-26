@@ -35,5 +35,8 @@
         width: 150px;
         margin-right: 5px;
         color: #909090;
+        &.add-property {
+            color: rgba(55, 53, 37, 0.4);
+        }
     }
 }
