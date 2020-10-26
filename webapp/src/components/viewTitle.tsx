@@ -8,8 +8,8 @@ import {Board} from '../blocks/board'
 import mutator from '../mutator'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
+import Editable from '../widgets/editable'
 
-import {Editable} from './editable'
 import Button from './button'
 
 type Props = {
@@ -19,16 +19,18 @@ type Props = {
 
 type State = {
     isHoverOnCover: boolean
+    title: string
 }
 
 class ViewTitle extends React.Component<Props, State> {
+    private titleEditor = React.createRef<Editable>()
     shouldComponentUpdate(): boolean {
         return true
     }
 
     constructor(props: Props) {
         super(props)
-        this.state = {isHoverOnCover: false}
+        this.state = {isHoverOnCover: false, title: props.board.title}
     }
 
     render(): JSX.Element {
@@ -77,11 +79,23 @@ class ViewTitle extends React.Component<Props, State> {
                             </Menu>
                         </MenuWrapper>}
                     <Editable
+                        ref={this.titleEditor}
                         className='title'
-                        text={board.title}
+                        value={this.state.title}
                         placeholderText={intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})}
-                        onChanged={(text) => {
-                            mutator.changeTitle(board, text)
+                        onChange={(title) => this.setState({title})}
+                        onBlur={() => mutator.changeTitle(board, this.state.title)}
+                        onFocus={() => this.titleEditor.current.focus()}
+                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>): void => {
+                            if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
+                                e.stopPropagation()
+                                this.setState({title: this.props.board.title})
+                                setTimeout(() => this.titleEditor.current.blur(), 0)
+                            } else if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // Return
+                                e.stopPropagation()
+                                mutator.changeTitle(board, this.state.title)
+                                this.titleEditor.current.blur()
+                            }
                         }}
                     />
                 </div>

@@ -1,0 +1,10 @@
+.ViewTitle {
+    .Button {
+        display: none;
+    }
+    &:hover {
+        .Button {
+            display: block;
+        }
+    }
+}
