@@ -24,7 +24,6 @@ type State = {
 }
 
 export default class PropertyValueElement extends React.Component<Props, State> {
-    private valueEditor = React.createRef<Editable>()
 
     constructor(props: Props) {
         super(props)
@@ -89,24 +88,12 @@ export default class PropertyValueElement extends React.Component<Props, State> 
             if (!readOnly) {
                 return (
                     <Editable
-                        ref={this.valueEditor}
                         className='octo-propertyvalue'
                         placeholderText='Empty'
                         value={this.state.value}
                         onChange={(value) => this.setState({value})}
-                        onBlur={() => mutator.changePropertyValue(card, propertyTemplate.id, this.state.value)}
-                        onFocus={() => this.valueEditor.current.focus()}
-                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>): void => {
-                            if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
-                                e.stopPropagation()
-                                this.setState({value: propertyValue})
-                                setTimeout(() => this.valueEditor.current.blur(), 0)
-                            } else if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // Return
-                                e.stopPropagation()
-                                mutator.changePropertyValue(card, propertyTemplate.id, this.state.value)
-                                this.valueEditor.current.blur()
-                            }
-                        }}
+                        onSave={() => mutator.changePropertyValue(card, propertyTemplate.id, this.state.value)}
+                        onCancel={() => this.setState({value: propertyValue})}
                     />
                 )
             }

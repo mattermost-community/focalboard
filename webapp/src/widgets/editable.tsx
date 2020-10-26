@@ -10,13 +10,13 @@ type Props = {
     placeholderText?: string
     className?: string
 
-    onFocus?: () => void
-    onBlur?: () => void
-    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
+    onCancel?: () => void
+    onSave?: (saveType: 'onEnter'|'onBlur') => void
 }
 
 export default class Editable extends React.Component<Props> {
     private elementRef = React.createRef<HTMLInputElement>()
+    private saveOnBlur = true
 
     shouldComponentUpdate(): boolean {
         return true
@@ -26,16 +26,18 @@ export default class Editable extends React.Component<Props> {
         this.elementRef.current.focus()
 
         // Put cursor at end
-        // document.execCommand('selectAll', false, null)
-        // document.getSelection().collapseToEnd()
+        document.execCommand('selectAll', false, null)
+        document.getSelection().collapseToEnd()
     }
 
-    public blur(): void {
+    public blur = (): void => {
+        this.saveOnBlur = false
         this.elementRef.current.blur()
+        this.saveOnBlur = true
     }
 
     public render(): JSX.Element {
-        const {value, onChange, className, placeholderText, onFocus, onBlur, onKeyDown} = this.props
+        const {value, onChange, className, placeholderText} = this.props
 
         return (
             <input
@@ -46,9 +48,22 @@ export default class Editable extends React.Component<Props> {
                     onChange(e.target.value)
                 }}
                 value={value}
-                onFocus={onFocus}
-                onBlur={onBlur}
-                onKeyDown={onKeyDown}
+                onBlur={() => this.saveOnBlur && this.props.onSave && this.props.onSave('onBlur')}
+                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>): void => {
+                    if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
+                        e.stopPropagation()
+                        if (this.props.onCancel) {
+                            this.props.onCancel()
+                        }
+                        this.blur()
+                    } else if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // Return
+                        e.stopPropagation()
+                        if (this.props.onSave) {
+                            this.props.onSave('onEnter')
+                        }
+                        this.blur()
+                    }
+                }}
             />
         )
     }

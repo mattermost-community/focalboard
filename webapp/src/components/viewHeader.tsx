@@ -65,7 +65,7 @@ class ViewHeader extends React.Component<Props, State> {
     private onSearchKeyDown = (e: React.KeyboardEvent) => {
         if (e.keyCode === 27) { // ESC: Clear search
             this.searchFieldRef.current.text = ''
-            this.setState({...this.state, isSearching: false})
+            this.setState({isSearching: false})
             this.props.setSearchText(undefined)
             e.preventDefault()
         }
@@ -280,7 +280,7 @@ class ViewHeader extends React.Component<Props, State> {
                     <div
                         className='octo-button'
                         onClick={() => {
-                            this.setState({...this.state, isSearching: true})
+                            this.setState({isSearching: true})
                         }}
                     >
                         <FormattedMessage

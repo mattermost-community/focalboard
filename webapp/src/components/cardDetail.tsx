@@ -155,19 +155,8 @@ class CardDetail extends React.Component<Props, State> {
                         value={this.state.title}
                         placeholderText='Untitled'
                         onChange={(title: string) => this.setState({title})}
-                        onBlur={() => mutator.changeTitle(card, this.state.title)}
-                        onFocus={() => this.titleRef.current.focus()}
-                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>): void => {
-                            if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
-                                e.stopPropagation()
-                                this.setState({title: this.state.cardTree.card.title})
-                                setTimeout(() => this.titleRef.current.blur(), 0)
-                            } else if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // Return
-                                e.stopPropagation()
-                                mutator.changeTitle(card, this.state.title)
-                                this.titleRef.current.blur()
-                            }
-                        }}
+                        onSave={() => mutator.changeTitle(card, this.state.title)}
+                        onCancel={() => this.setState({title: this.state.cardTree.card.title})}
                     />
 
                     {/* Property list */}

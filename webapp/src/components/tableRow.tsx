@@ -16,12 +16,12 @@ type Props = {
     boardTree: BoardTree
     card: Card
     focusOnMount: boolean
-    onKeyDown: (e: React.KeyboardEvent) => void
+    onSaveWithEnter: () => void
 }
 
 type State = {
     showCard: boolean
-    title: string 
+    title: string
 }
 
 class TableRow extends React.Component<Props, State> {
@@ -40,12 +40,12 @@ class TableRow extends React.Component<Props, State> {
 
     componentDidMount(): void {
         if (this.props.focusOnMount) {
-            this.titleRef.current.focus()
+            setTimeout(() => this.titleRef.current.focus(), 10)
         }
     }
 
     render(): JSX.Element {
-        const {boardTree, card, onKeyDown} = this.props
+        const {boardTree, card, onSaveWithEnter} = this.props
         const {board, activeView} = boardTree
 
         const openButonRef = React.createRef<HTMLDivElement>()
@@ -75,20 +75,13 @@ class TableRow extends React.Component<Props, State> {
                             value={this.state.title}
                             placeholderText='Untitled'
                             onChange={(title: string) => this.setState({title})}
-                            onBlur={() => mutator.changeTitle(card, this.state.title)}
-                            onFocus={() => this.titleRef.current.focus()}
-                            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>): void => {
-                                if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
-                                    e.stopPropagation()
-                                    this.setState({title: card.title})
-                                    setTimeout(() => this.titleRef.current.blur(), 0)
-                                } else if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // Return
-                                    e.stopPropagation()
-                                    mutator.changeTitle(card, this.state.title)
-                                    this.titleRef.current.blur()
+                            onSave={(saveType) => {
+                                mutator.changeTitle(card, this.state.title)
+                                if (saveType === 'onEnter') {
+                                    onSaveWithEnter()
                                 }
-                                onKeyDown(e)
                             }}
+                            onCancel={() => this.setState({title: card.title})}
                         />
                     </div>
 
