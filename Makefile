@@ -1,4 +1,4 @@
-.PHONY: prebuild clean cleanall server server-linux generate watch-server
+.PHONY: prebuild clean cleanall server server-linux generate watch-server mac
 
 all: server
 
@@ -36,10 +36,22 @@ server-doc:
 watch-server:
 	cd server; modd
 
+mac:
+	rm -rf mac/resources/bin
+	rm -rf mac/resources/pack
+	mkdir -p mac/resources
+	cp -R bin mac/resources/bin
+	cp -R webapp/pack mac/resources/pack
+	mkdir -p mac/temp
+	xcodebuild archive -workspace mac/Tasks.xcworkspace -scheme Tasks -archivePath mac/temp/tasks.xcarchive
+	xcodebuild -exportArchive -archivePath mac/temp/tasks.xcarchive -exportPath mac/dist -exportOptionsPlist mac/export.plist
+
 clean:
 	rm -rf bin
 	rm -rf dist
 	rm -rf webapp/pack
+	rm -rf mac/temp
+	rm -rf mac/dist
 
 cleanall: clean
 	rm -rf webapp/node_modules

@@ -39,3 +39,5 @@ octo*.db
 .eslintcache
 .vscode/settings.json
 .prettierrc.json
+mac/temp
+mac/dist
