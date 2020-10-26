@@ -8,6 +8,8 @@ import TextOption from './textOption'
 import ColorOption from './colorOption'
 import SubMenuOption from './subMenuOption'
 
+import './menu.scss'
+
 type MenuProps = {
     children: React.ReactNode
     position?: 'top'|'bottom'
@@ -23,7 +25,7 @@ export default class Menu extends React.PureComponent<MenuProps> {
     public render(): JSX.Element {
         const {position, children} = this.props
         return (
-            <div className={'Menu menu noselect ' + (position || 'bottom')}>
+            <div className={'Menu noselect ' + (position || 'bottom')}>
                 <div className='menu-options'>
                     {children}
                 </div>

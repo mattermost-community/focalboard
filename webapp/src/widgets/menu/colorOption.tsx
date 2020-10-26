@@ -4,6 +4,8 @@ import React from 'react'
 
 import {MenuOptionProps} from './menuItem'
 
+import './colorOption.scss'
+
 type ColorOptionProps = MenuOptionProps & {
     icon?: 'checked' | 'sortUp' | 'sortDown' | undefined,
 }

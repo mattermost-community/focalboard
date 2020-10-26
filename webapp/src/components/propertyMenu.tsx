@@ -9,6 +9,8 @@ import mutator from '../mutator'
 
 import Menu from '../widgets/menu'
 
+import './propertyMenu.scss'
+
 type Props = {
     property: IPropertyTemplate
     boardTree: BoardTree
@@ -75,7 +77,7 @@ export default class PropertyMenu extends React.Component<Props, State> {
                 <input
                     ref={this.nameTextbox}
                     type='text'
-                    className='menu-textbox'
+                    className='PropertyMenu menu-textbox'
                     onClick={(e) => e.stopPropagation()}
                     onChange={(e) => this.setState({name: e.target.value})}
                     value={this.state.name}
