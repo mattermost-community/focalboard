@@ -13,9 +13,9 @@ import {Utils} from '../utils'
 
 import MenuWrapper from '../widgets/menuWrapper'
 import Menu from '../widgets/menu'
+import Editable from '../widgets/editable'
 
 import Button from './button'
-import {Editable} from './editable'
 import {MarkdownEditor} from './markdownEditor'
 import ContentBlock from './contentBlock'
 import CommentsList from './commentsList'
@@ -32,6 +32,7 @@ type Props = {
 
 type State = {
     cardTree?: CardTree
+    title: string
 }
 
 class CardDetail extends React.Component<Props, State> {
@@ -44,7 +45,9 @@ class CardDetail extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
-        this.state = {}
+        this.state = {
+            title: '',
+        }
     }
 
     componentDidMount() {
@@ -52,11 +55,11 @@ class CardDetail extends React.Component<Props, State> {
         this.cardListener.open([this.props.cardId], async (blockId) => {
             Utils.log(`cardListener.onChanged: ${blockId}`)
             await cardTree.sync()
-            this.setState({...this.state, cardTree})
+            this.setState({cardTree})
         })
         const cardTree = new MutableCardTree(this.props.cardId)
         cardTree.sync().then(() => {
-            this.setState({...this.state, cardTree})
+            this.setState({cardTree, title: cardTree.card.title})
             setTimeout(() => {
                 if (this.titleRef.current) {
                     this.titleRef.current.focus()
@@ -79,8 +82,6 @@ class CardDetail extends React.Component<Props, State> {
         }
         const {card, comments} = cardTree
 
-        const newCommentRef = React.createRef<Editable>()
-        const sendCommentButtonRef = React.createRef<HTMLDivElement>()
         let contentElements
         if (cardTree.contents.length > 0) {
             contentElements =
@@ -151,10 +152,21 @@ class CardDetail extends React.Component<Props, State> {
                     <Editable
                         ref={this.titleRef}
                         className='title'
-                        text={card.title}
+                        value={this.state.title}
                         placeholderText='Untitled'
-                        onChanged={(text) => {
-                            mutator.changeTitle(card, text)
+                        onChange={(title: string) => this.setState({title})}
+                        onBlur={() => mutator.changeTitle(card, this.state.title)}
+                        onFocus={() => this.titleRef.current.focus()}
+                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>): void => {
+                            if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
+                                e.stopPropagation()
+                                this.setState({title: this.state.cardTree.card.title})
+                                setTimeout(() => this.titleRef.current.blur(), 0)
+                            } else if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // Return
+                                e.stopPropagation()
+                                mutator.changeTitle(card, this.state.title)
+                                this.titleRef.current.blur()
+                            }
                         }}
                     />
 
