@@ -186,9 +186,7 @@ class Sidebar extends React.Component<Props, State> {
                                 <Menu.Text
                                     id='import'
                                     name={text}
-                                    onClick={async () => Archiver.importFullArchive(() => {
-                                        this.forceUpdate()
-                                    })}
+                                    onClick={async () => Archiver.importFullArchive()}
                                 />
                             )}
                         </FormattedMessage>

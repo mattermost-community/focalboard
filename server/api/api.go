@@ -221,14 +221,12 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for _, block := range blocks {
-		err := a.app().InsertBlock(block)
-		if err != nil {
-			log.Printf(`ERROR: %v`, r)
-			errorResponse(w, http.StatusInternalServerError, nil)
+	err = a.app().InsertBlocks(blocks)
+	if err != nil {
+		log.Printf(`ERROR: %v`, r)
+		errorResponse(w, http.StatusInternalServerError, nil)
 
-			return
-		}
+		return
 	}
 
 	log.Printf("IMPORT Blocks %d block(s)", len(blocks))

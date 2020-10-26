@@ -34,7 +34,8 @@ func (a *App) InsertBlocks(blocks []model.Block) error {
 			blockIDsToNotify = append(blockIDsToNotify, block.ID)
 		}
 
-		if len(block.ParentID) > 0 && !uniqueBlockIDs[block.ParentID] {
+		// ParentID as empty string denotes a block at the root
+		if !uniqueBlockIDs[block.ParentID] {
 			blockIDsToNotify = append(blockIDsToNotify, block.ParentID)
 		}
 
