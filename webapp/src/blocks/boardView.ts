@@ -13,7 +13,8 @@ interface BoardView extends IBlock {
     readonly groupById: string
     readonly sortOptions: readonly ISortOption[]
     readonly visiblePropertyIds: readonly string[]
-    readonly hiddenColumnIds: readonly string[]
+    readonly visibleOptionIds: readonly string[]
+    readonly hiddenOptionIds: readonly string[]
     readonly filter: FilterGroup | undefined
 }
 
@@ -46,11 +47,18 @@ class MutableBoardView extends MutableBlock {
         this.fields.visiblePropertyIds = value
     }
 
-    get hiddenColumnIds(): string[] {
-        return this.fields.hiddenColumnIds
+    get visibleOptionIds(): string[] {
+        return this.fields.visibleOptionIds
     }
-    set hiddenColumnIds(value: string[]) {
-        this.fields.hiddenColumnIds = value
+    set visibleOptionIds(value: string[]) {
+        this.fields.visibleOptionIds = value
+    }
+
+    get hiddenOptionIds(): string[] {
+        return this.fields.hiddenOptionIds
+    }
+    set hiddenOptionIds(value: string[]) {
+        this.fields.hiddenOptionIds = value
     }
 
     get filter(): FilterGroup | undefined {
@@ -67,7 +75,8 @@ class MutableBoardView extends MutableBlock {
 
         this.sortOptions = block.fields?.sortOptions?.map((o: ISortOption) => ({...o})) || []		// Deep clone
         this.visiblePropertyIds = block.fields?.visiblePropertyIds?.slice() || []
-        this.hiddenColumnIds = block.fields?.hiddenColumnIds?.slice() || []
+        this.visibleOptionIds = block.fields?.visibleOptionIds?.slice() || []
+        this.hiddenOptionIds = block.fields?.hiddenOptionIds?.slice() || []
         this.filter = new FilterGroup(block.fields?.filter)
 
         if (!this.viewType) {

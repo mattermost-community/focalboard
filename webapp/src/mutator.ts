@@ -384,22 +384,22 @@ class Mutator {
     }
 
     async hideViewColumn(view: BoardView, columnOptionId: string): Promise<void> {
-        if (view.hiddenColumnIds.includes(columnOptionId)) {
+        if (view.hiddenOptionIds.includes(columnOptionId)) {
             return
         }
 
         const newView = new MutableBoardView(view)
-        newView.hiddenColumnIds.push(columnOptionId)
+        newView.hiddenOptionIds.push(columnOptionId)
         await this.updateBlock(newView, view, 'hide column')
     }
 
     async unhideViewColumn(view: BoardView, columnOptionId: string): Promise<void> {
-        if (!view.hiddenColumnIds.includes(columnOptionId)) {
+        if (!view.hiddenOptionIds.includes(columnOptionId)) {
             return
         }
 
         const newView = new MutableBoardView(view)
-        newView.hiddenColumnIds = newView.hiddenColumnIds.filter((o) => o !== columnOptionId)
+        newView.hiddenOptionIds = newView.hiddenOptionIds.filter((o) => o !== columnOptionId)
         await this.updateBlock(newView, view, 'show column')
     }
 

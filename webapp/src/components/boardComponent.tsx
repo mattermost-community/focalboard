@@ -105,10 +105,8 @@ class BoardComponent extends React.Component<Props, State> {
         const propertyValues = boardTree.groupByProperty?.options || []
         Utils.log(`${propertyValues.length} propertyValues`)
 
-        const {board, activeView} = boardTree
+        const {board, activeView, visibleGroups, hiddenGroups} = boardTree
         const visiblePropertyTemplates = board.cardProperties.filter((template) => activeView.visiblePropertyIds.includes(template.id))
-        const visibleGroups = boardTree.groups.filter((group) => !group.isHidden)
-        const hiddenGroups = boardTree.groups.filter((group) => group.isHidden)
 
         return (
             <div
@@ -142,36 +140,7 @@ class BoardComponent extends React.Component<Props, State> {
                             className='octo-board-header'
                             id='mainBoardHeader'
                         >
-
-                            {/* No value */}
-
-                            <div className='octo-board-header-cell'>
-                                <div
-                                    className='octo-label'
-                                    title={intl.formatMessage({
-                                        id: 'BoardComponent.no-property-title',
-                                        defaultMessage: 'Items with an empty {property} property will go here. This column cannot be removed.',
-                                    }, {property: boardTree.groupByProperty?.name})}
-                                >
-                                    <FormattedMessage
-                                        id='BoardComponent.no-property'
-                                        defaultMessage='No {property}'
-                                        values={{
-                                            property: boardTree.groupByProperty?.name,
-                                        }}
-                                    />
-                                </div>
-                                <Button>{`${boardTree.emptyGroupCards.length}`}</Button>
-                                <div className='octo-spacer'/>
-                                <Button><div className='imageOptions'/></Button>
-                                <Button
-                                    onClick={() => {
-                                        this.addCard(undefined)
-                                    }}
-                                ><div className='imageAdd'/></Button>
-                            </div>
-
-                            {/* Visible column headers */}
+                            {/* Column headers */}
 
                             {visibleGroups.map((group) => this.renderColumnHeader(group))}
 
@@ -203,30 +172,11 @@ class BoardComponent extends React.Component<Props, State> {
                             className='octo-board-body'
                             id='mainBoardBody'
                         >
-
-                            {/* No value column */}
-
-                            <BoardColumn
-                                onDrop={() => this.onDropToColumn(undefined)}
-                            >
-                                {boardTree.emptyGroupCards.map((card) => this.renderCard(card, visiblePropertyTemplates))}
-                                <Button
-                                    onClick={() => {
-                                        this.addCard(undefined)
-                                    }}
-                                >
-                                    <FormattedMessage
-                                        id='BoardComponent.neww'
-                                        defaultMessage='+ New'
-                                    />
-                                </Button>
-                            </BoardColumn>
-
                             {/* Columns */}
 
                             {visibleGroups.map((group) => (
                                 <BoardColumn
-                                    key={group.option.id}
+                                    key={group.option.id || 'empty'}
                                     onDrop={() => this.onDropToColumn(group.option)}
                                 >
                                     {group.cards.map((card) => this.renderCard(card, visiblePropertyTemplates))}
@@ -279,6 +229,49 @@ class BoardComponent extends React.Component<Props, State> {
     private renderColumnHeader(group: BoardTreeGroup) {
         const {boardTree, intl} = this.props
         const {activeView} = boardTree
+
+        if (!group.option.id) {
+            // Empty group
+            return (
+                <div
+                    key='empty'
+                    className='octo-board-header-cell'
+                >
+                    <div
+                        className='octo-label'
+                        title={intl.formatMessage({
+                            id: 'BoardComponent.no-property-title',
+                            defaultMessage: 'Items with an empty {property} property will go here. This column cannot be removed.',
+                        }, {property: boardTree.groupByProperty?.name})}
+                    >
+                        <FormattedMessage
+                            id='BoardComponent.no-property'
+                            defaultMessage='No {property}'
+                            values={{
+                                property: boardTree.groupByProperty?.name,
+                            }}
+                        />
+                    </div>
+                    <Button>{`${group.cards.length}`}</Button>
+                    <div className='octo-spacer'/>
+                    <MenuWrapper>
+                        <Button><div className='imageOptions'/></Button>
+                        <Menu>
+                            <Menu.Text
+                                id='hide'
+                                name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
+                                onClick={() => mutator.hideViewColumn(activeView, '')}
+                            />
+                        </Menu>
+                    </MenuWrapper>
+                    <Button
+                        onClick={() => {
+                            this.addCard(undefined)
+                        }}
+                    ><div className='imageAdd'/></Button>
+                </div>
+            )
+        }
 
         const ref = React.createRef<HTMLDivElement>()
         return (
@@ -365,7 +358,7 @@ class BoardComponent extends React.Component<Props, State> {
         return (
             <div
                 ref={ref}
-                key={group.option.id}
+                key={group.option.id || 'empty'}
                 className='octo-board-hidden-item'
                 onDragOver={(e) => {
                     if (this.draggedCards?.length < 1) {
@@ -399,7 +392,7 @@ class BoardComponent extends React.Component<Props, State> {
             >
                 <MenuWrapper>
                     <div
-                        key={group.option.id}
+                        key={group.option.id || 'empty'}
                         className={`octo-label ${group.option.color}`}
                     >
                         {group.option.value}
@@ -433,7 +426,11 @@ class BoardComponent extends React.Component<Props, State> {
         card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
         card.icon = BlockIcons.shared.randomIcon()
         if (boardTree.groupByProperty) {
-            card.properties[boardTree.groupByProperty.id] = groupByOptionId
+            if (groupByOptionId) {
+                card.properties[boardTree.groupByProperty.id] = groupByOptionId
+            } else {
+                delete card.properties[boardTree.groupByProperty.id]
+            }
         }
         await mutator.insertBlock(card, 'add card', async () => {
             this.setState({shownCard: card})

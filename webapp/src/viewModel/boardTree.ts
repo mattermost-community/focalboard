@@ -12,7 +12,6 @@ import {Utils} from '../utils'
 type Group = {
     option: IPropertyOption
     cards: Card[]
-    isHidden: boolean
 }
 
 interface BoardTree {
@@ -20,8 +19,8 @@ interface BoardTree {
     readonly views: readonly BoardView[]
     readonly cards: readonly Card[]
     readonly allCards: readonly Card[]
-    readonly emptyGroupCards: readonly Card[]
-    readonly groups: readonly Group[]
+    readonly visibleGroups: readonly Group[]
+    readonly hiddenGroups: readonly Group[]
     readonly allBlocks: readonly IBlock[]
 
     readonly activeView?: BoardView
@@ -34,8 +33,8 @@ class MutableBoardTree implements BoardTree {
     board!: MutableBoard
     views: MutableBoardView[] = []
     cards: MutableCard[] = []
-    emptyGroupCards: MutableCard[] = []
-    groups: Group[] = []
+    visibleGroups: Group[] = []
+    hiddenGroups: Group[] = []
 
     activeView?: MutableBoardView
     groupByProperty?: IPropertyTemplate
@@ -92,46 +91,6 @@ class MutableBoardTree implements BoardTree {
             didChange = true
         }
 
-        /*
-        // TODO: Remove fixup code. Fix board cardProperties schema
-        for (const template of this.board.cardProperties) {
-            if (template.type === 'select') {
-                for (const option of template.options) {
-                    if (!option.id) {
-                        option.id = Utils.createGuid()
-                        Utils.log(`FIXUP template ${template.name}, option: ${option.value}, guid: ${option.id}`)
-                    }
-                }
-            }
-        }
-
-        // TODO: Remove fixup code. Fix card schema
-        for (const card of this.allCards) {
-            if (card.schema < 2) {
-                card.schema = 2
-                for (const propertyId in card.properties) {
-                    if (!Object.prototype.hasOwnProperty.call(card.properties, propertyId)) {
-                        continue
-                    }
-                    const template = board.cardProperties.find((o) => o.id === propertyId)
-                    if (!template) {
-                        Utils.log(`No template with id: ${propertyId}`)
-                    }
-                    if (template?.type === 'select') {
-                        const value = card.properties[propertyId]
-                        const option = template.options.find((o) => o.value === value)
-                        if (!option) {
-                            Utils.assertFailure(`No option for template: ${template.name} with option value: ${value}`)
-                        }
-                        if (option) {
-                            card.properties[propertyId] = option?.id
-                        }
-                        Utils.log(`FIXUP card ${template.name}, option: ${option?.value}, guid: ${option?.id}`)
-                    }
-                }
-            }
-        }
-*/
         return didChange
     }
 
@@ -146,6 +105,7 @@ class MutableBoardTree implements BoardTree {
         if (this.activeView.viewType === 'board' && !this.activeView.groupById) {
             this.activeView.groupById = this.board.cardProperties.find((o) => o.type === 'select')?.id
         }
+
         this.applyFilterSortAndGroup()
     }
 
@@ -207,32 +167,49 @@ class MutableBoardTree implements BoardTree {
     }
 
     private groupCards() {
-        this.groups = []
+        const {activeView, groupByProperty} = this
 
-        const groupByPropertyId = this.groupByProperty.id
+        const unassignedOptionIds = groupByProperty.options
+            .filter(o => !activeView.visibleOptionIds.includes(o.id) && !activeView.hiddenOptionIds.includes(o.id))
+            .map(o => o.id)
+        const visibleOptionIds = [...activeView.visibleOptionIds, ...unassignedOptionIds]
+        const {hiddenOptionIds} = activeView
 
-        this.emptyGroupCards = this.cards.filter((o) => {
-            const optionId = o.properties[groupByPropertyId]
-            return !optionId || !this.groupByProperty.options.find((option) => option.id === optionId)
-        })
-
-        const propertyOptions = this.groupByProperty.options || []
-        for (const option of propertyOptions) {
-            const cards = this.cards.
-                filter((o) => {
-                    const optionId = o.properties[groupByPropertyId]
-                    return optionId && optionId === option.id
-                })
-
-            const isHidden = this.activeView.hiddenColumnIds.includes(option.id)
-            const group: Group = {
-                option,
-                cards,
-                isHidden,
-            }
-
-            this.groups.push(group)
+        // If the empty group positon is not explicitly specified, make it the first visible column
+        if (!activeView.visibleOptionIds.includes('') && !activeView.hiddenOptionIds.includes('')) {
+            visibleOptionIds.unshift('')
         }
+
+        this.visibleGroups = this.groupCardsByOptions(visibleOptionIds, groupByProperty)
+        this.hiddenGroups = this.groupCardsByOptions(hiddenOptionIds, groupByProperty)
+    }
+
+    private groupCardsByOptions(optionIds: string[], groupByProperty: IPropertyTemplate) {
+        const groups = []
+        for (const optionId of optionIds) {
+            if (optionId) {
+                const option = groupByProperty.options.find(o => o.id === optionId)
+                const cards = this.cards.filter((o) => optionId === o.properties[groupByProperty.id])
+                const group: Group = {
+                    option,
+                    cards
+                }
+                groups.push(group)
+            } else {
+                // Empty group
+                const emptyGroupCards = this.cards.filter((o) => {
+                    const optionId = o.properties[groupByProperty.id]
+                    return !optionId || !this.groupByProperty.options.find((option) => option.id === optionId)
+                })
+                const group: Group = {
+                    option: {id: '', value: `No ${groupByProperty.name}`, color: ''},
+                    cards: emptyGroupCards
+                }
+                groups.push(group)
+            }
+        }
+
+        return groups
     }
 
     private filterCards(cards: MutableCard[]): Card[] {
