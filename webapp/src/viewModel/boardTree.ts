@@ -19,6 +19,7 @@ interface BoardTree {
     readonly board: Board
     readonly views: readonly BoardView[]
     readonly cards: readonly Card[]
+    readonly allCards: readonly Card[]
     readonly emptyGroupCards: readonly Card[]
     readonly groups: readonly Group[]
     readonly allBlocks: readonly IBlock[]
@@ -40,7 +41,7 @@ class MutableBoardTree implements BoardTree {
     groupByProperty?: IPropertyTemplate
 
     private searchText?: string
-    private allCards: MutableCard[] = []
+    allCards: MutableCard[] = []
     get allBlocks(): IBlock[] {
         return [this.board, ...this.views, ...this.allCards]
     }

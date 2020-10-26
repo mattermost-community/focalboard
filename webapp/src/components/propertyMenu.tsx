@@ -96,27 +96,27 @@ export default class PropertyMenu extends React.Component<Props, State> {
                     <Menu.Text
                         id='text'
                         name='Text'
-                        onClick={() => mutator.changePropertyType(board, property, 'text')}
+                        onClick={() => mutator.changePropertyType(boardTree, property, 'text')}
                     />
                     <Menu.Text
                         id='number'
                         name='Number'
-                        onClick={() => mutator.changePropertyType(board, property, 'number')}
+                        onClick={() => mutator.changePropertyType(boardTree, property, 'number')}
                     />
                     <Menu.Text
                         id='select'
                         name='Select'
-                        onClick={() => mutator.changePropertyType(board, property, 'select')}
+                        onClick={() => mutator.changePropertyType(boardTree, property, 'select')}
                     />
                     <Menu.Text
                         id='createdTime'
                         name='Created Time'
-                        onClick={() => mutator.changePropertyType(board, property, 'createdTime')}
+                        onClick={() => mutator.changePropertyType(boardTree, property, 'createdTime')}
                     />
                     <Menu.Text
                         id='updatedTime'
                         name='Updated Time'
-                        onClick={() => mutator.changePropertyType(board, property, 'updatedTime')}
+                        onClick={() => mutator.changePropertyType(boardTree, property, 'updatedTime')}
                     />
                 </Menu.SubMenu>
                 <Menu.Text

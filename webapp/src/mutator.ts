@@ -319,11 +319,42 @@ class Mutator {
         await this.updateBlock(newCard, card, description)
     }
 
-    async changePropertyType(board: Board, propertyTemplate: IPropertyTemplate, type: PropertyType) {
+    async changePropertyType(boardTree: BoardTree, propertyTemplate: IPropertyTemplate, type: PropertyType) {
+        const { board } = boardTree
+
         const newBoard = new MutableBoard(board)
         const newTemplate = newBoard.cardProperties.find((o) => o.id === propertyTemplate.id)
         newTemplate.type = type
-        await this.updateBlock(newBoard, board, 'change property type')
+
+        const oldBlocks: IBlock[] = [board]
+        const newBlocks: IBlock[] = [newBoard]
+        if (propertyTemplate.type === 'select') {
+            // Map select to their values
+            for (const card of boardTree.allCards) {
+                const oldValue = card.properties[propertyTemplate.id]
+                if (oldValue) {
+                    const newValue = propertyTemplate.options.find(o => o.id === oldValue)?.value
+                    const newCard = new MutableCard(card)
+                    newCard.properties[propertyTemplate.id] = newValue
+                    newBlocks.push(newCard)
+                    oldBlocks.push(card)
+                }
+            }
+        } else if (type === 'select') {
+            // Map values to template option IDs
+            for (const card of boardTree.allCards) {
+                const oldValue = card.properties[propertyTemplate.id]
+                if (oldValue) {
+                    const newValue = propertyTemplate.options.find(o => o.value === oldValue)?.id
+                    const newCard = new MutableCard(card)
+                    newCard.properties[propertyTemplate.id] = newValue
+                    newBlocks.push(newCard)
+                    oldBlocks.push(card)
+                }
+            }
+        }
+
+        await this.updateBlocks(newBlocks, oldBlocks, 'change property type')
     }
 
     // Views
