@@ -1,0 +1,7 @@
+.Editable {
+	cursor: text;
+    border: 0;
+    &.active {
+	    min-width: 100px;
+    }
+}
