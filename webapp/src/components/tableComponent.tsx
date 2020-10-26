@@ -29,31 +29,17 @@ type Props = {
 }
 
 type State = {
-    isSearching: boolean
     shownCard?: Card
-    viewMenu: boolean
-    showFilter: boolean
 }
 
 class TableComponent extends React.Component<Props, State> {
     private draggedHeaderTemplate: IPropertyTemplate
     private cardIdToRowMap = new Map<string, React.RefObject<TableRow>>()
     private cardIdToFocusOnRender: string
-    private searchFieldRef = React.createRef<Editable>()
-
-    constructor(props: Props) {
-        super(props)
-        this.state = {isSearching: Boolean(this.props.boardTree?.getSearchText()), viewMenu: false, showFilter: false}
-    }
+    state: State = {}
 
     shouldComponentUpdate(): boolean {
         return true
-    }
-
-    componentDidUpdate(prevPros: Props, prevState: State): void {
-        if (this.state.isSearching && !prevState.isSearching) {
-            this.searchFieldRef.current.focus()
-        }
     }
 
     render(): JSX.Element {
@@ -223,12 +209,6 @@ class TableComponent extends React.Component<Props, State> {
                 </div >
             </div >
         )
-    }
-
-    private focusOnCardTitle(cardId: string): void {
-        const tableRowRef = this.cardIdToRowMap.get(cardId)
-        Utils.log(`focusOnCardTitle, ${tableRowRef?.current ?? 'undefined'}`)
-        tableRowRef?.current.focusOnTitle()
     }
 
     private addCard = async (show = false) => {
