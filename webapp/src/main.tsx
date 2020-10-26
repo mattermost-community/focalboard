@@ -5,4 +5,8 @@ import ReactDOM from 'react-dom'
 
 import App from './app'
 
+import './styles/main.scss'
+import './styles/colors.scss'
+import './styles/images.scss'
+
 ReactDOM.render(<App/>, document.getElementById('octo-tasks-app'))
