@@ -59,7 +59,7 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
                     this.props.onDragEnd(e)
                 }}
             >
-                <MenuWrapper stopPropagationOnToggle={true}>
+                <MenuWrapper className='optionsMenu' stopPropagationOnToggle={true}>
                     <div className='octo-hoverbutton square'><div className='imageOptions'/></div>
                     <Menu>
                         <Menu.Text

@@ -10,6 +10,7 @@ type Props = {
     onToggle?: (open: boolean) => void;
     isDisabled?: boolean;
     stopPropagationOnToggle?: boolean;
+    className?: string
 }
 
 type State = {
@@ -84,7 +85,7 @@ export default class MenuWrapper extends React.PureComponent<Props, State> {
 
         return (
             <div
-                className='MenuWrapper'
+                className={`MenuWrapper ${this.props.className || ''}`}
                 onClick={this.toggle}
                 ref={this.node}
             >
