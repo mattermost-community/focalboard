@@ -4,4 +4,8 @@
     &.active {
 	    min-width: 100px;
     }
+    &::placeholder{
+        color: rgba(55, 53, 47, 0.4);
+        opacity: 1;
+    }
 }
