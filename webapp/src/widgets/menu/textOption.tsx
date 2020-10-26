@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
+import { Utils } from '../../utils'
 
 import {MenuOptionProps} from './menuItem'
 
@@ -21,8 +22,17 @@ export default class TextOption extends React.PureComponent<TextOptionProps> {
                 onClick={this.handleOnClick}
             >
                 <div className='menu-name'>{name}</div>
-                {icon && <div className={`icon ${icon}`}/>}
+                {icon && <div className={`icon ${this.iconCssClass(icon)}`}/>}
             </div>
         )
+    }
+
+    private iconCssClass(name: 'checked' | 'sortUp' | 'sortDown') {
+        switch (name) {
+            case 'checked': return 'imageMenuCheck'
+            case 'sortUp': return 'imageMenuSortUp'
+            case 'sortDown': return 'imageMenuSortDown'
+            default: Utils.assertFailure(`Invalid menu icon: ${name}`)
+        }
     }
 }

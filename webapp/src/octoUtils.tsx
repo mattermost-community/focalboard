@@ -21,7 +21,7 @@ class OctoUtils {
             if (propertyValue) {
                 const option = propertyTemplate.options.find((o) => o.id === propertyValue)
                 if (!option) {
-                    Utils.assertFailure()
+                    Utils.assertFailure(`Invalid select option ID ${propertyValue}, block.title: ${block.title}`)
                 }
                 displayValue = option?.value || '(Unknown)'
             }
