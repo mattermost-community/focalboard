@@ -371,16 +371,28 @@ class Mutator {
         await this.updateBlock(newView, view, 'filter')
     }
 
+    async changeViewGroupById(view: BoardView, groupById: string): Promise<void> {
+        const newView = new MutableBoardView(view)
+        newView.groupById = groupById
+        await this.updateBlock(newView, view, 'group by')
+    }
+
     async changeViewVisibleProperties(view: BoardView, visiblePropertyIds: string[], description = 'show / hide property'): Promise<void> {
         const newView = new MutableBoardView(view)
         newView.visiblePropertyIds = visiblePropertyIds
         await this.updateBlock(newView, view, description)
     }
 
-    async changeViewGroupById(view: BoardView, groupById: string): Promise<void> {
+    async changeViewVisibleOptionIds(view: BoardView, visibleOptionIds: string[], description = 'reorder'): Promise<void> {
         const newView = new MutableBoardView(view)
-        newView.groupById = groupById
-        await this.updateBlock(newView, view, 'group by')
+        newView.visibleOptionIds = visibleOptionIds
+        await this.updateBlock(newView, view, description)
+    }
+
+    async changeViewHiddenOptionIds(view: BoardView, hiddenOptionIds: string[], description = 'reorder'): Promise<void> {
+        const newView = new MutableBoardView(view)
+        newView.hiddenOptionIds = hiddenOptionIds
+        await this.updateBlock(newView, view, description)
     }
 
     async hideViewColumn(view: BoardView, columnOptionId: string): Promise<void> {
@@ -389,6 +401,7 @@ class Mutator {
         }
 
         const newView = new MutableBoardView(view)
+        newView.visibleOptionIds = newView.visibleOptionIds.filter(o => o !== columnOptionId)
         newView.hiddenOptionIds.push(columnOptionId)
         await this.updateBlock(newView, view, 'hide column')
     }
@@ -400,6 +413,9 @@ class Mutator {
 
         const newView = new MutableBoardView(view)
         newView.hiddenOptionIds = newView.hiddenOptionIds.filter((o) => o !== columnOptionId)
+        // Put the column at the end of the visible list
+        newView.visibleOptionIds = newView.visibleOptionIds.filter(o => o !== columnOptionId)
+        newView.visibleOptionIds.push(columnOptionId)
         await this.updateBlock(newView, view, 'show column')
     }
 

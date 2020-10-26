@@ -230,12 +230,41 @@ class BoardComponent extends React.Component<Props, State> {
         const {boardTree, intl} = this.props
         const {activeView} = boardTree
 
+        // TODO: Refactor this as a component
         if (!group.option.id) {
             // Empty group
+            const ref = React.createRef<HTMLDivElement>()
             return (
                 <div
                     key='empty'
+                    ref={ref}
                     className='octo-board-header-cell'
+
+                    draggable={true}
+                    onDragStart={() => {
+                        this.draggedHeaderOption = group.option
+                    }}
+                    onDragEnd={() => {
+                        this.draggedHeaderOption = undefined
+                    }}
+
+                    onDragOver={(e) => {
+                        ref.current.classList.add('dragover')
+                        e.preventDefault()
+                    }}
+                    onDragEnter={(e) => {
+                        ref.current.classList.add('dragover')
+                        e.preventDefault()
+                    }}
+                    onDragLeave={(e) => {
+                        ref.current.classList.remove('dragover')
+                        e.preventDefault()
+                    }}
+                    onDrop={(e) => {
+                        ref.current.classList.remove('dragover')
+                        e.preventDefault()
+                        this.onDropToColumn(group.option)
+                    }}
                 >
                     <div
                         className='octo-label'
@@ -498,11 +527,15 @@ class BoardComponent extends React.Component<Props, State> {
             Utils.assertValue(boardTree.groupByProperty)
 
             // Move option to new index
-            const {board} = boardTree
-            const options = boardTree.groupByProperty.options
-            const destIndex = option ? options.indexOf(option) : 0
+            const visibleOptionIds = boardTree.visibleGroups.map(o => o.option.id)
 
-            await mutator.changePropertyOptionOrder(board, boardTree.groupByProperty, draggedHeaderOption, destIndex)
+            const {activeView} = boardTree
+            const srcIndex = visibleOptionIds.indexOf(draggedHeaderOption.id)
+            const destIndex = visibleOptionIds.indexOf(option.id)
+
+            visibleOptionIds.splice(destIndex, 0, visibleOptionIds.splice(srcIndex, 1)[0])
+
+            await mutator.changeViewVisibleOptionIds(activeView, visibleOptionIds)
         }
     }
 }
