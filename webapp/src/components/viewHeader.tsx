@@ -229,6 +229,16 @@ class ViewHeader extends React.Component<Props, State> {
                         />
                     </div>
                     <Menu>
+                        <Menu.Text
+                            id='none'
+                            name='None'
+                            onClick={() => {
+                                mutator.changeViewSortOptions(activeView, [])
+                            }}
+                        />
+
+                        <Menu.Separator />
+
                         {boardTree.board.cardProperties.map((option: IPropertyTemplate) => (
                             <Menu.Text
                                 key={option.id}
