@@ -6,8 +6,9 @@ import {BoardTree} from '../viewModel/boardTree'
 import {Card} from '../blocks/card'
 import mutator from '../mutator'
 
+import Editable from '../widgets/editable'
+
 import PropertyValueElement from './propertyValueElement'
-import {Editable} from './editable'
 import {CardDialog} from './cardDialog'
 import RootPortal from './rootPortal'
 
@@ -20,12 +21,17 @@ type Props = {
 
 type State = {
     showCard: boolean
+    title: string 
 }
 
 class TableRow extends React.Component<Props, State> {
     private titleRef = React.createRef<Editable>()
-    state = {
-        showCard: false,
+    constructor(props: Props) {
+        super(props)
+        this.state = {
+            showCard: false,
+            title: props.card.title,
+        }
     }
 
     shouldComponentUpdate(): boolean {
@@ -44,7 +50,7 @@ class TableRow extends React.Component<Props, State> {
 
         const openButonRef = React.createRef<HTMLDivElement>()
 
-        const element = (
+        return (
             <div
                 className='octo-table-row'
                 key={card.id}
@@ -66,12 +72,21 @@ class TableRow extends React.Component<Props, State> {
                         <div className='octo-icon'>{card.icon}</div>
                         <Editable
                             ref={this.titleRef}
-                            text={card.title}
+                            value={this.state.title}
                             placeholderText='Untitled'
-                            onChanged={(text) => {
-                                mutator.changeTitle(card, text)
-                            }}
-                            onKeyDown={(e) => {
+                            onChange={(title: string) => this.setState({title})}
+                            onBlur={() => mutator.changeTitle(card, this.state.title)}
+                            onFocus={() => this.titleRef.current.focus()}
+                            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>): void => {
+                                if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
+                                    e.stopPropagation()
+                                    this.setState({title: card.title})
+                                    setTimeout(() => this.titleRef.current.blur(), 0)
+                                } else if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // Return
+                                    e.stopPropagation()
+                                    mutator.changeTitle(card, this.state.title)
+                                    this.titleRef.current.blur()
+                                }
                                 onKeyDown(e)
                             }}
                         />
@@ -113,9 +128,8 @@ class TableRow extends React.Component<Props, State> {
                                 />
                             </div>)
                     })}
-            </div>)
-
-        return element
+            </div>
+        )
     }
 
     focusOnTitle(): void {
