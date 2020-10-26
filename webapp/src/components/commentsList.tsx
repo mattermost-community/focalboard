@@ -8,7 +8,8 @@ import {IBlock} from '../blocks/block'
 import {Utils} from '../utils'
 import mutator from '../mutator'
 
-import {Editable} from './editable'
+import Editable from '../widgets/editable'
+
 import Comment from './comment'
 
 import './commentsList.scss'
@@ -19,21 +20,32 @@ type Props = {
     intl: IntlShape
 }
 
-class CommentsList extends React.Component<Props> {
-    newCommentRef = React.createRef<Editable>()
-    sendCommentButtonRef = React.createRef<HTMLDivElement>()
+type State = {
+    newComment: string
+    inputFocused: boolean
+}
+
+class CommentsList extends React.Component<Props, State> {
+    public constructor(props: Props) {
+        super(props)
+        this.state = {
+            newComment: '',
+            inputFocused: false,
+        }
+    }
 
     public shouldComponentUpdate() {
         return true
     }
 
-    private sendComment = (text: string) => {
+    private sendComment = () => {
         const {cardId} = this.props
 
         Utils.assertValue(cardId)
 
-        const block = new MutableCommentBlock({parentId: cardId, title: text})
+        const block = new MutableCommentBlock({parentId: cardId, title: this.state.newComment})
         mutator.insertBlock(block, 'add comment')
+        this.setState({newComment: ''})
     }
 
     public render(): JSX.Element {
@@ -62,42 +74,33 @@ class CommentsList extends React.Component<Props> {
                         src={userImageUrl}
                     />
                     <Editable
-                        ref={this.newCommentRef}
                         className='newcomment'
                         placeholderText={intl.formatMessage({id: 'CardDetail.new-comment-placeholder', defaultMessage: 'Add a comment...'})}
-                        onChanged={() => { }}
-                        onFocus={() => {
-                            this.sendCommentButtonRef.current.style.display = null
-                        }}
-                        onBlur={() => {
-                            if (!this.newCommentRef.current?.text) {
-                                this.sendCommentButtonRef.current.style.display = 'none'
-                            }
-                        }}
-                        onKeyDown={(e: React.KeyboardEvent) => {
+                        onChange={(value: string) => this.setState({newComment: value})}
+                        value={this.state.newComment}
+                        onFocus={() => this.setState({inputFocused: true})}
+                        onBlur={() => this.setState({inputFocused: false})}
+                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                             if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) {
-                                this.sendCommentButtonRef.current.click()
+                                this.sendComment()
                             }
                         }}
                     />
 
-                    <div
-                        ref={this.sendCommentButtonRef}
-                        className='octo-button filled'
-                        style={{display: 'none'}}
-                        onClick={() => {
-                            const text = this.newCommentRef.current.text
-                            Utils.log(`Send comment: ${this.newCommentRef.current.text}`)
-                            this.sendComment(text)
-                            this.newCommentRef.current.text = undefined
-                            this.newCommentRef.current.blur()
-                        }}
-                    >
-                        <FormattedMessage
-                            id='CommentsList.send'
-                            defaultMessage='Send'
-                        />
-                    </div>
+                    {this.state.newComment && this.state.inputFocused &&
+                        <div
+                            className='octo-button filled'
+                            onClick={() => {
+                                Utils.log(`Send comment: ${this.state.newComment}`)
+                                this.sendComment()
+                                this.setState({inputFocused: false, newComment: ''})
+                            }}
+                        >
+                            <FormattedMessage
+                                id='CommentsList.send'
+                                defaultMessage='Send'
+                            />
+                        </div>}
                 </div>
             </div>
         )
