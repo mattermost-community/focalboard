@@ -40,10 +40,6 @@ export default function App(): JSX.Element {
                             </Route>
                         </Switch>
                     </div>
-
-                    <div id='overlay'/>
-
-                    <div id='modal'/>
                 </div>
             </Router>
         </IntlProvider>
