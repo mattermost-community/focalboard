@@ -78,16 +78,12 @@ class CommentsList extends React.Component<Props, State> {
                         placeholderText={intl.formatMessage({id: 'CardDetail.new-comment-placeholder', defaultMessage: 'Add a comment...'})}
                         onChange={(value: string) => this.setState({newComment: value})}
                         value={this.state.newComment}
-                        onFocus={() => this.setState({inputFocused: true})}
-                        onBlur={() => this.setState({inputFocused: false})}
-                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                            if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) {
-                                this.sendComment()
-                            }
+                        onSave={() => {
+                            this.sendComment()
                         }}
                     />
 
-                    {this.state.newComment && this.state.inputFocused &&
+                    {this.state.newComment &&
                         <div
                             className='octo-button filled'
                             onClick={() => {

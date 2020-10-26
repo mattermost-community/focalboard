@@ -84,19 +84,8 @@ class ViewTitle extends React.Component<Props, State> {
                         value={this.state.title}
                         placeholderText={intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})}
                         onChange={(title) => this.setState({title})}
-                        onBlur={() => mutator.changeTitle(board, this.state.title)}
-                        onFocus={() => this.titleEditor.current.focus()}
-                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>): void => {
-                            if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
-                                e.stopPropagation()
-                                this.setState({title: this.props.board.title})
-                                setTimeout(() => this.titleEditor.current.blur(), 0)
-                            } else if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // Return
-                                e.stopPropagation()
-                                mutator.changeTitle(board, this.state.title)
-                                this.titleEditor.current.blur()
-                            }
-                        }}
+                        onSave={() => mutator.changeTitle(board, this.state.title)}
+                        onCancel={() => this.setState({title: this.props.board.title})}
                     />
                 </div>
             </>
