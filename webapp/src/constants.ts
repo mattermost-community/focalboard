@@ -1,9 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {MenuOption} from './menu'
 
 class Constants {
-    static menuColors: MenuOption[] = [
+    static menuColors = [
         {id: 'propColorDefault', name: 'Default', type: 'color'},
         {id: 'propColorGray', name: 'Gray', type: 'color'},
         {id: 'propColorBrown', name: 'Brown', type: 'color'},
