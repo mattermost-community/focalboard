@@ -8,8 +8,7 @@ import {IPropertyTemplate, IPropertyOption} from '../blocks/board'
 import {OctoUtils} from '../octoUtils'
 import mutator from '../mutator'
 
-import {Editable} from './editable'
-
+import Editable from '../widgets/editable'
 import MenuWrapper from '../widgets/menuWrapper'
 import Menu from '../widgets/menu'
 
@@ -20,7 +19,19 @@ type Props = {
     emptyDisplayValue: string
 }
 
-export default class PropertyValueElement extends React.Component<Props> {
+type State = {
+    value: string
+}
+
+export default class PropertyValueElement extends React.Component<Props, State> {
+    private valueEditor = React.createRef<Editable>()
+
+    constructor(props: Props) {
+        super(props)
+        const propertyValue = props.card.properties[props.propertyTemplate.id]
+        this.state = {value: propertyValue}
+    }
+
     shouldComponentUpdate(): boolean {
         return true
     }
@@ -78,12 +89,23 @@ export default class PropertyValueElement extends React.Component<Props> {
             if (!readOnly) {
                 return (
                     <Editable
-                        key={propertyTemplate.id}
+                        ref={this.valueEditor}
                         className='octo-propertyvalue'
                         placeholderText='Empty'
-                        text={displayValue}
-                        onChanged={(text) => {
-                            mutator.changePropertyValue(card, propertyTemplate.id, text)
+                        value={this.state.value}
+                        onChange={(value) => this.setState({value})}
+                        onBlur={() => mutator.changePropertyValue(card, propertyTemplate.id, this.state.value)}
+                        onFocus={() => this.valueEditor.current.focus()}
+                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>): void => {
+                            if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
+                                e.stopPropagation()
+                                this.setState({value: propertyValue})
+                                setTimeout(() => this.valueEditor.current.blur(), 0)
+                            } else if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // Return
+                                e.stopPropagation()
+                                mutator.changePropertyValue(card, propertyTemplate.id, this.state.value)
+                                this.valueEditor.current.blur()
+                            }
                         }}
                     />
                 )
