@@ -5,8 +5,8 @@ import React from 'react'
 import {BoardTree} from '../viewModel/boardTree'
 import {Card} from '../blocks/card'
 import mutator from '../mutator'
-import {OctoUtils} from '../octoUtils'
 
+import PropertyValueElement from './propertyValueElement'
 import {Editable} from './editable'
 import {CardDialog} from './cardDialog'
 import RootPortal from './rootPortal'
@@ -105,7 +105,12 @@ class TableRow extends React.Component<Props, State> {
                                 className='octo-table-cell'
                                 key={template.id}
                             >
-                                {OctoUtils.propertyValueEditableElement(card, template)}
+                                <PropertyValueElement
+                                    readOnly={false}
+                                    card={card}
+                                    propertyTemplate={template}
+                                    emptyDisplayValue='Empty'
+                                />
                             </div>)
                     })}
             </div>)

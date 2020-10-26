@@ -9,7 +9,6 @@ import {BoardTree} from '../viewModel/boardTree'
 import {CardTree, MutableCardTree} from '../viewModel/cardTree'
 import mutator from '../mutator'
 import {OctoListener} from '../octoListener'
-import {OctoUtils} from '../octoUtils'
 import {Utils} from '../utils'
 
 import MenuWrapper from '../widgets/menuWrapper'
@@ -21,6 +20,7 @@ import {MarkdownEditor} from './markdownEditor'
 import ContentBlock from './contentBlock'
 import CommentsList from './commentsList'
 import PropertyMenu from './propertyMenu'
+import PropertyValueElement from './propertyValueElement'
 
 import './cardDetail.scss'
 
@@ -174,7 +174,12 @@ class CardDetail extends React.Component<Props, State> {
                                             boardTree={boardTree}
                                         />
                                     </MenuWrapper>
-                                    {OctoUtils.propertyValueEditableElement(card, propertyTemplate)}
+                                    <PropertyValueElement
+                                        readOnly={false}
+                                        card={card}
+                                        propertyTemplate={propertyTemplate}
+                                        emptyDisplayValue='Empty'
+                                    />
                                 </div>
                             )
                         })}

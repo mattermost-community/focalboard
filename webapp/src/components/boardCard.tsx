@@ -8,9 +8,10 @@ import {MutableBlock} from '../blocks/block'
 import {IPropertyTemplate} from '../blocks/board'
 import {Card} from '../blocks/card'
 import mutator from '../mutator'
-import {OctoUtils} from '../octoUtils'
 import MenuWrapper from '../widgets/menuWrapper'
 import Menu from '../widgets/menu'
+
+import PropertyValueElement from './propertyValueElement'
 
 import './boardCard.scss'
 
@@ -78,9 +79,15 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
                     { card.icon ? <div className='octo-icon'>{card.icon}</div> : undefined }
                     <div key='__title'>{card.title || intl.formatMessage({id: 'BoardCard.untitled', defaultMessage: 'Untitled'})}</div>
                 </div>
-                {visiblePropertyTemplates.map((template) => {
-                    return OctoUtils.propertyValueReadonlyElement(card, template, '')
-                })}
+                {visiblePropertyTemplates.map((template) => (
+                    <PropertyValueElement
+                        key={template.id}
+                        readOnly={true}
+                        card={card}
+                        propertyTemplate={template}
+                        emptyDisplayValue=''
+                    />
+                ))}
             </div>
         )
 
