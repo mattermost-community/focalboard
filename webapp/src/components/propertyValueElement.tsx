@@ -24,7 +24,6 @@ type State = {
 }
 
 export default class PropertyValueElement extends React.Component<Props, State> {
-    private valueEditor = React.createRef<Editable>()
 
     constructor(props: Props) {
         super(props)
@@ -89,7 +88,6 @@ export default class PropertyValueElement extends React.Component<Props, State> 
             if (!readOnly) {
                 return (
                     <Editable
-                        ref={this.valueEditor}
                         className='octo-propertyvalue'
                         placeholderText='Empty'
                         value={this.state.value}

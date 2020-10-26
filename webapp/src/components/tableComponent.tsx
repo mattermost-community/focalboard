@@ -174,13 +174,12 @@ class TableComponent extends React.Component<Props, State> {
                                     boardTree={boardTree}
                                     card={card}
                                     focusOnMount={focusOnMount}
-                                    onKeyDown={(e) => {
-                                        if (e.keyCode === 13) {
-                                            // Enter: Insert new card if on last row
-                                            if (cards.length > 0 && cards[cards.length - 1] === card) {
-                                                this.addCard(false)
-                                            }
+                                    onSaveWithEnter={() => {
+                                        console.log("WORKING")
+                                        if (cards.length > 0 && cards[cards.length - 1] === card) {
+                                            this.addCard(false)
                                         }
+                                        console.log("STILL WORKING")
                                     }}
                                 />)
 

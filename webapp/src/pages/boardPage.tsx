@@ -168,7 +168,6 @@ export default class BoardPage extends React.Component<Props, State> {
 
             // TODO: Handle error (viewId not found)
             this.setState({
-                ...this.state,
                 boardTree,
                 boardId,
                 viewId: boardTree.activeView.id,

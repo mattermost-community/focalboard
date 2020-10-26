@@ -16,12 +16,12 @@ type Props = {
     boardTree: BoardTree
     card: Card
     focusOnMount: boolean
-    onKeyDown: (e: React.KeyboardEvent) => void
+    onSaveWithEnter: () => void
 }
 
 type State = {
     showCard: boolean
-    title: string 
+    title: string
 }
 
 class TableRow extends React.Component<Props, State> {
@@ -40,12 +40,12 @@ class TableRow extends React.Component<Props, State> {
 
     componentDidMount(): void {
         if (this.props.focusOnMount) {
-            this.titleRef.current.focus()
+            setTimeout(() => this.titleRef.current.focus(), 10)
         }
     }
 
     render(): JSX.Element {
-        const {boardTree, card, onKeyDown} = this.props
+        const {boardTree, card, onSaveWithEnter} = this.props
         const {board, activeView} = boardTree
 
         const openButonRef = React.createRef<HTMLDivElement>()
@@ -75,7 +75,12 @@ class TableRow extends React.Component<Props, State> {
                             value={this.state.title}
                             placeholderText='Untitled'
                             onChange={(title: string) => this.setState({title})}
-                            onSave={() => mutator.changeTitle(card, this.state.title)}
+                            onSave={(saveType) => {
+                                mutator.changeTitle(card, this.state.title)
+                                if (saveType === 'onEnter') {
+                                    onSaveWithEnter()
+                                }
+                            }}
                             onCancel={() => this.setState({title: card.title})}
                         />
                     </div>

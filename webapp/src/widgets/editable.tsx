@@ -11,7 +11,7 @@ type Props = {
     className?: string
 
     onCancel?: () => void
-    onSave?: () => void
+    onSave?: (saveType: 'onEnter'|'onBlur') => void
 }
 
 export default class Editable extends React.Component<Props> {
@@ -48,7 +48,7 @@ export default class Editable extends React.Component<Props> {
                     onChange(e.target.value)
                 }}
                 value={value}
-                onBlur={() => this.saveOnBlur && this.props.onSave && this.props.onSave()}
+                onBlur={() => this.saveOnBlur && this.props.onSave && this.props.onSave('onBlur')}
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>): void => {
                     if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
                         e.stopPropagation()
@@ -59,7 +59,7 @@ export default class Editable extends React.Component<Props> {
                     } else if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // Return
                         e.stopPropagation()
                         if (this.props.onSave) {
-                            this.props.onSave()
+                            this.props.onSave('onEnter')
                         }
                         this.blur()
                     }
