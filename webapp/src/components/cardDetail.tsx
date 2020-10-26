@@ -4,14 +4,12 @@ import React from 'react'
 import {FormattedMessage, IntlShape, injectIntl} from 'react-intl'
 
 import {BlockIcons} from '../blockIcons'
-import {MutableCommentBlock} from '../blocks/commentBlock'
 import {MutableTextBlock} from '../blocks/textBlock'
 import {BoardTree} from '../viewModel/boardTree'
 import {CardTree, MutableCardTree} from '../viewModel/cardTree'
 import mutator from '../mutator'
 import {OctoListener} from '../octoListener'
 import {OctoUtils} from '../octoUtils'
-import {PropertyMenu} from '../propertyMenu'
 import {Utils} from '../utils'
 
 import MenuWrapper from '../widgets/menuWrapper'
@@ -22,6 +20,7 @@ import {Editable} from './editable'
 import {MarkdownEditor} from './markdownEditor'
 import ContentBlock from './contentBlock'
 import CommentsList from './commentsList'
+import PropertyMenu from './propertyMenu'
 
 import './cardDetail.scss'
 
@@ -168,43 +167,13 @@ class CardDetail extends React.Component<Props, State> {
                                     key={propertyTemplate.id}
                                     className='octo-propertyrow'
                                 >
-                                    <div
-                                        className='octo-button octo-propertyname'
-                                        onClick={(e) => {
-                                            const menu = PropertyMenu.shared
-                                            menu.property = propertyTemplate
-                                            menu.onNameChanged = (propertyName) => {
-                                                Utils.log('menu.onNameChanged')
-                                                mutator.renameProperty(board, propertyTemplate.id, propertyName)
-                                            }
-
-                                            menu.onMenuClicked = async (command) => {
-                                                switch (command) {
-                                                case 'type-text':
-                                                    await mutator.changePropertyType(board, propertyTemplate, 'text')
-                                                    break
-                                                case 'type-number':
-                                                    await mutator.changePropertyType(board, propertyTemplate, 'number')
-                                                    break
-                                                case 'type-createdTime':
-                                                    await mutator.changePropertyType(board, propertyTemplate, 'createdTime')
-                                                    break
-                                                case 'type-updatedTime':
-                                                    await mutator.changePropertyType(board, propertyTemplate, 'updatedTime')
-                                                    break
-                                                case 'type-select':
-                                                    await mutator.changePropertyType(board, propertyTemplate, 'select')
-                                                    break
-                                                case 'delete':
-                                                    await mutator.deleteProperty(boardTree, propertyTemplate.id)
-                                                    break
-                                                default:
-                                                    Utils.assertFailure(`Unhandled menu id: ${command}`)
-                                                }
-                                            }
-                                            menu.showAtElement(e.target as HTMLElement)
-                                        }}
-                                    >{propertyTemplate.name}</div>
+                                    <MenuWrapper>
+                                        <div className='octo-button octo-propertyname'>{propertyTemplate.name}</div>
+                                        <PropertyMenu
+                                            property={propertyTemplate}
+                                            boardTree={boardTree}
+                                        />
+                                    </MenuWrapper>
                                     {OctoUtils.propertyValueEditableElement(card, propertyTemplate)}
                                 </div>
                             )
@@ -275,10 +244,6 @@ class CardDetail extends React.Component<Props, State> {
                 </div>
             </>
         )
-    }
-
-    close() {
-        PropertyMenu.shared.hide()
     }
 }
 
