@@ -10,6 +10,7 @@ import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 
 import './comment.scss'
+import { Utils } from '../utils'
 
 type Props = {
     comment: IBlock
@@ -20,6 +21,7 @@ type Props = {
 
 const Comment: FC<Props> = (props: Props) => {
     const {comment, username, userImageUrl, intl} = props
+    const html = Utils.htmlFromMarkdown(comment.title)
     return (
         <div
             key={comment.id}
@@ -43,7 +45,10 @@ const Comment: FC<Props> = (props: Props) => {
                     </Menu>
                 </MenuWrapper>
             </div>
-            <div className='comment-text'>{comment.title}</div>
+            <div
+                className='comment-text'
+                dangerouslySetInnerHTML={{__html: html}}
+            />
         </div>
     )
 }

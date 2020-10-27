@@ -9,13 +9,14 @@ import './markdownEditor.scss'
 import {Utils} from '../utils'
 
 type Props = {
-    onChanged: (text: string) => void
     text?: string
     placeholderText?: string
     uniqueId?: string
+    className?: string
 
+    onChange?: (text: string) => void
     onFocus?: () => void
-    onBlur?: () => void
+    onBlur?: (text: string) => void
 }
 
 type State = {
@@ -44,8 +45,11 @@ class MarkdownEditor extends React.Component<Props, State> {
         this.state = {isEditing: false}
     }
 
-    componentDidUpdate(prevPros: Props, prevState: State) {
-        this.text = this.props.text || ''
+    componentDidUpdate(prevProps: Props, prevState: State) {
+        const newText = this.props.text || ''
+        if (!this.state.isEditing && this.text !== newText) {
+            this.text = newText
+        }
     }
 
     showEditor() {
@@ -68,8 +72,7 @@ class MarkdownEditor extends React.Component<Props, State> {
     }
 
     render() {
-        const {text, placeholderText, uniqueId, onFocus, onBlur, onChanged} = this.props
-        const {isEditing} = this.state
+        const {text, placeholderText, uniqueId, onFocus, onBlur, onChange} = this.props
 
         let html: string
         if (text) {
@@ -82,10 +85,10 @@ class MarkdownEditor extends React.Component<Props, State> {
     (<div
         ref={this.previewRef}
         className={text ? 'octo-editor-preview' : 'octo-editor-preview octo-placeholder'}
-        style={{display: isEditing ? 'none' : null}}
+        style={{display: this.state.isEditing ? 'none' : null}}
         dangerouslySetInnerHTML={{__html: html}}
         onClick={() => {
-            if (!isEditing) {
+            if (!this.state.isEditing) {
                 this.showEditor()
             }
         }}
@@ -96,7 +99,7 @@ class MarkdownEditor extends React.Component<Props, State> {
                 className='octo-editor-activeEditor'
 
                 // Use visibility instead of display here so the editor is pre-rendered, avoiding a flash on showEditor
-                style={isEditing ? {} : {visibility: 'hidden', position: 'absolute', top: 0, left: 0}}
+                style={this.state.isEditing ? {} : {visibility: 'hidden', position: 'absolute', top: 0, left: 0}}
                 onKeyDown={(e) => {
                     // HACKHACK: Need to handle here instad of in CodeMirror because that breaks auto-lists
                     if (e.keyCode === 27 && !e.shiftKey && !(e.ctrlKey || e.metaKey) && !e.altKey) { // Esc
@@ -119,17 +122,20 @@ class MarkdownEditor extends React.Component<Props, State> {
                     }}
                     value={text}
 
-                    // onChange={() => {
-                    //     // We register a change onBlur, consider implementing "auto-save" later
-                    // }}
                     events={{
+                        change: () => {
+                            if (this.state.isEditing) {
+                                const newText = this.elementRef.current.state.value
+                                onChange?.(newText)
+                            }
+                        },
                         blur: () => {
                             const newText = this.elementRef.current.state.value
                             const oldText = this.props.text || ''
-                            if (newText !== oldText && onChanged) {
+                            if (newText !== oldText && onChange) {
                                 const newHtml = newText ? Utils.htmlFromMarkdown(newText) : Utils.htmlFromMarkdown(placeholderText || '')
                                 this.previewRef.current.innerHTML = newHtml
-                                onChanged(newText)
+                                onChange(newText)
                             }
 
                             this.text = newText
@@ -137,7 +143,7 @@ class MarkdownEditor extends React.Component<Props, State> {
                             this.frameRef.current.classList.remove('active')
 
                             if (onBlur) {
-                                onBlur()
+                                onBlur(newText)
                             }
 
                             this.hideEditor()
@@ -173,7 +179,7 @@ class MarkdownEditor extends React.Component<Props, State> {
         const element =
             (<div
                 ref={this.frameRef}
-                className='MarkdownEditor octo-editor'
+                className={`MarkdownEditor octo-editor ${this.props.className}`}
             >
                 {previewElement}
                 {editorElement}

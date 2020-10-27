@@ -44,4 +44,8 @@
         width: 100%;
         padding-left: 25px;
     }
+
+    .comment-text * {
+        user-select: text;
+    }
 }

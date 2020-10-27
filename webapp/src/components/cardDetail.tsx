@@ -102,7 +102,7 @@ class CardDetail extends React.Component<Props, State> {
                     <MarkdownEditor
                         text=''
                         placeholderText='Add a description...'
-                        onChanged={(text) => {
+                        onBlur={(text) => {
                             const block = new MutableTextBlock()
                             block.parentId = card.id
                             block.title = text

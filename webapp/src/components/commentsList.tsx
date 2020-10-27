@@ -8,11 +8,10 @@ import {IBlock} from '../blocks/block'
 import {Utils} from '../utils'
 import mutator from '../mutator'
 
-import Editable from '../widgets/editable'
-
 import Comment from './comment'
 
 import './commentsList.scss'
+import { MarkdownEditor } from './markdownEditor'
 
 type Props = {
     comments: readonly IBlock[]
@@ -73,13 +72,14 @@ class CommentsList extends React.Component<Props, State> {
                         className='comment-avatar'
                         src={userImageUrl}
                     />
-                    <Editable
+                    <MarkdownEditor
                         className='newcomment'
+                        text={this.state.newComment}
                         placeholderText={intl.formatMessage({id: 'CardDetail.new-comment-placeholder', defaultMessage: 'Add a comment...'})}
-                        onChange={(value: string) => this.setState({newComment: value})}
-                        value={this.state.newComment}
-                        onSave={() => {
-                            this.sendComment()
+                        onChange={(value: string) => {
+                            if (this.state.newComment != value) {
+                                this.setState({newComment: value})
+                            }
                         }}
                     />
 
@@ -87,16 +87,19 @@ class CommentsList extends React.Component<Props, State> {
                         <div
                             className='octo-button filled'
                             onClick={() => {
-                                Utils.log(`Send comment: ${this.state.newComment}`)
-                                this.sendComment()
-                                this.setState({inputFocused: false, newComment: ''})
+                                if (this.state.newComment) {
+                                    Utils.log(`Send comment: ${this.state.newComment}`)
+                                    this.sendComment()
+                                    this.setState({inputFocused: false, newComment: ''})
+                                }
                             }}
                         >
                             <FormattedMessage
                                 id='CommentsList.send'
                                 defaultMessage='Send'
                             />
-                        </div>}
+                        </div>
+                    }
                 </div>
             </div>
         )

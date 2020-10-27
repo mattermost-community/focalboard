@@ -102,7 +102,7 @@ class ContentBlock extends React.Component<Props> {
                     <MarkdownEditor
                         text={block.title}
                         placeholderText='Edit text...'
-                        onChanged={(text) => {
+                        onBlur={(text) => {
                             Utils.log(`change text ${block.id}, ${text}`)
                             mutator.changeTitle(block, text, 'edit card text')
                         }}
