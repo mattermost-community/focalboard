@@ -121,6 +121,8 @@ hr {
 
 .octo-clickable,
 .octo-button {
+    display: flex;
+    justify-content: center;
 	text-align: center;
 	border-radius: 5px;
 	padding: 0 5px;

@@ -10,6 +10,7 @@ import {Card} from '../blocks/card'
 import mutator from '../mutator'
 import MenuWrapper from '../widgets/menuWrapper'
 import Menu from '../widgets/menu'
+import OptionsIcon from '../widgets/icons/options'
 
 import PropertyValueElement from './propertyValueElement'
 
@@ -60,7 +61,7 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
                 }}
             >
                 <MenuWrapper className='optionsMenu' stopPropagationOnToggle={true}>
-                    <div className='octo-hoverbutton square'><div className='imageOptions'/></div>
+                    <div className='octo-hoverbutton square'><OptionsIcon/></div>
                     <Menu>
                         <Menu.Text
                             id='delete'

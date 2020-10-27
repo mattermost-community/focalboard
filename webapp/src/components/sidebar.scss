@@ -32,6 +32,22 @@
         font-weight: 600;
         padding: 3px 20px;
         margin-bottom: 5px;
+        .show-button {
+            .HamburgerIcon {
+                display: block;
+            }
+            .ShowSidebarIcon {
+                display: none;
+            }
+            &:hover {
+                .HamburgerIcon {
+                    display: none;
+                }
+                .ShowSidebarIcon {
+                    display: block;
+                }
+            }
+        }
     }
 
     .octo-sidebar-item {

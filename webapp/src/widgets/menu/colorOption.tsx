@@ -7,7 +7,7 @@ import {MenuOptionProps} from './menuItem'
 import './colorOption.scss'
 
 type ColorOptionProps = MenuOptionProps & {
-    icon?: 'checked' | 'sortUp' | 'sortDown' | undefined,
+    icon?: React.ReactNode
 }
 
 export default class ColorOption extends React.PureComponent<ColorOptionProps> {
@@ -23,7 +23,7 @@ export default class ColorOption extends React.PureComponent<ColorOptionProps> {
                 onClick={this.handleOnClick}
             >
                 <div className='menu-name'>{name}</div>
-                {icon && <div className={'icon ' + icon}/>}
+                {icon}
                 <div className={`menu-colorbox ${id}`}/>
             </div>
         )

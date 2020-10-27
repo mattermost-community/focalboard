@@ -16,6 +16,10 @@ import mutator from '../mutator'
 import {Utils} from '../utils'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
+import DropdownIcon from '../widgets/icons/dropdown'
+import OptionsIcon from '../widgets/icons/options'
+import SortUpIcon from '../widgets/icons/sortUp'
+import SortDownIcon from '../widgets/icons/sortDown'
 
 import {Editable} from './editable'
 import FilterComponent from './filterComponent'
@@ -128,7 +132,7 @@ class ViewHeader extends React.Component<Props, State> {
                         className='octo-button'
                         style={{color: 'rgb(var(--main-fg))', fontWeight: 600}}
                     >
-                        <div className='imageDropdown'/>
+                        <DropdownIcon/>
                     </div>
                     <ViewMenu
                         board={board}
@@ -244,7 +248,7 @@ class ViewHeader extends React.Component<Props, State> {
                                 key={option.id}
                                 id={option.id}
                                 name={option.name}
-                                icon={(activeView.sortOptions[0]?.propertyId === option.id) ? activeView.sortOptions[0].reversed ? 'sortUp' : 'sortDown' : undefined}
+                                icon={(activeView.sortOptions[0]?.propertyId === option.id) ? activeView.sortOptions[0].reversed ? <SortUpIcon/> : <SortDownIcon/> : undefined}
                                 onClick={(propertyId: string) => {
                                     let newSortOptions: ISortOption[] = []
                                     if (activeView.sortOptions[0] && activeView.sortOptions[0].propertyId === propertyId) {
@@ -289,7 +293,7 @@ class ViewHeader extends React.Component<Props, State> {
                         />
                     </div>}
                 <MenuWrapper>
-                    <div className='imageOptions'/>
+                    <OptionsIcon/>
                     <Menu>
                         <Menu.Text
                             id='exportCsv'

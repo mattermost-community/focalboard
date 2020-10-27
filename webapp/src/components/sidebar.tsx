@@ -10,6 +10,10 @@ import {BoardTree} from '../viewModel/boardTree'
 import mutator from '../mutator'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
+import OptionsIcon from '../widgets/icons/options'
+import ShowSidebarIcon from '../widgets/icons/showSidebar'
+import HideSidebarIcon from '../widgets/icons/hideSidebar'
+import HamburgerIcon from '../widgets/icons/hamburger'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
 import {BoardView} from '../blocks/boardView'
 
@@ -46,24 +50,15 @@ class Sidebar extends React.Component<Props, State> {
         const {boards, views} = workspaceTree
 
         if (this.state.isHidden) {
-            const hamburgerRef = React.createRef<HTMLDivElement>()
             return (
                 <div className='Sidebar octo-sidebar hidden'>
                     <div className='octo-sidebar-header'>
                         <div
-                            className='octo-button square'
+                            className='octo-button square show-button'
                             onClick={() => this.showClicked()}
                         >
-                            <div
-                                ref={hamburgerRef}
-                                className='imageHamburger'
-                                onMouseOver={() => {
-                                    hamburgerRef.current.className = 'imageShowSidebar'
-                                }}
-                                onMouseOut={() => {
-                                    hamburgerRef.current.className = 'imageHamburger'
-                                }}
-                            />
+                            <HamburgerIcon/>
+                            <ShowSidebarIcon/>
                         </div>
                     </div>
                 </div>
@@ -78,7 +73,7 @@ class Sidebar extends React.Component<Props, State> {
                     <div
                         className='octo-button square octo-hover-item'
                         onClick={() => this.hideClicked()}
-                    ><div className='imageHideSidebar'/></div>
+                    ><HideSidebarIcon/></div>
                 </div>
                 {
                     boards.map((board) => {
@@ -101,7 +96,7 @@ class Sidebar extends React.Component<Props, State> {
                                         {board.icon ? `${board.icon} ${displayTitle}` : displayTitle}
                                     </div>
                                     <MenuWrapper>
-                                        <div className='octo-button square octo-hover-item'><div className='imageOptions'/></div>
+                                        <div className='octo-button square octo-hover-item'><OptionsIcon/></div>
                                         <Menu>
                                             <FormattedMessage
                                                 id='Sidebar.delete-board'

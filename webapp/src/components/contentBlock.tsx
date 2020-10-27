@@ -12,6 +12,7 @@ import {MutableTextBlock} from '../blocks/textBlock'
 
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
+import OptionsIcon from '../widgets/icons/options'
 
 import {MarkdownEditor} from './markdownEditor'
 
@@ -36,7 +37,7 @@ class ContentBlock extends React.Component<Props> {
             <div className='octo-block octo-hover-container'>
                 <div className='octo-block-margin'>
                     <MenuWrapper>
-                        <div className='octo-button octo-hovercontrol square octo-hover-item'><div className='imageOptions'/></div>
+                        <div className='octo-button octo-hovercontrol square octo-hover-item'><OptionsIcon/></div>
                         <Menu>
                             {index > 0 &&
                                 <Menu.Text

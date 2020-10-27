@@ -14,6 +14,8 @@ import mutator from '../mutator'
 import {Utils} from '../utils'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
+import OptionsIcon from '../widgets/icons/options'
+import AddIcon from '../widgets/icons/add'
 
 import BoardCard from './boardCard'
 import {BoardColumn} from './boardColumn'
@@ -284,7 +286,7 @@ class BoardComponent extends React.Component<Props, State> {
                     <Button>{`${group.cards.length}`}</Button>
                     <div className='octo-spacer'/>
                     <MenuWrapper>
-                        <Button><div className='imageOptions'/></Button>
+                        <Button><OptionsIcon/></Button>
                         <Menu>
                             <Menu.Text
                                 id='hide'
@@ -297,7 +299,7 @@ class BoardComponent extends React.Component<Props, State> {
                         onClick={() => {
                             this.addCard(undefined)
                         }}
-                    ><div className='imageAdd'/></Button>
+                    ><AddIcon/></Button>
                 </div>
             )
         }
@@ -347,7 +349,7 @@ class BoardComponent extends React.Component<Props, State> {
                 <Button>{`${group.cards.length}`}</Button>
                 <div className='octo-spacer'/>
                 <MenuWrapper>
-                    <Button><div className='imageOptions'/></Button>
+                    <Button><OptionsIcon/></Button>
                     <Menu>
                         <Menu.Text
                             id='hide'
@@ -374,7 +376,7 @@ class BoardComponent extends React.Component<Props, State> {
                     onClick={() => {
                         this.addCard(group.option.id)
                     }}
-                ><div className='imageAdd'/></Button>
+                ><AddIcon/></Button>
             </div>
         )
     }

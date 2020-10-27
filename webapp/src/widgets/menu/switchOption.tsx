@@ -8,7 +8,7 @@ import {MenuOptionProps} from './menuItem'
 
 type SwitchOptionProps = MenuOptionProps & {
     isOn: boolean,
-    icon?: 'checked' | 'sortUp' | 'sortDown' | undefined,
+    icon?: React.ReactNode,
 }
 
 export default class SwitchOption extends React.PureComponent<SwitchOptionProps> {
@@ -24,7 +24,7 @@ export default class SwitchOption extends React.PureComponent<SwitchOptionProps>
                 onClick={this.handleOnClick}
             >
                 <div className='menu-name'>{name}</div>
-                {icon && <div className={`icon ${icon}`}/>}
+                {icon}
                 <Switch
                     isOn={isOn}
                     onChanged={() => {}}

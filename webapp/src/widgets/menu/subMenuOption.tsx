@@ -3,6 +3,9 @@
 import React from 'react'
 
 import {MenuOptionProps} from './menuItem'
+import SubmenuTriangleIcon from '../icons/submenuTriangle'
+
+import './subMenuOption.scss'
 
 type SubMenuOptionProps = MenuOptionProps & {
     position?: 'bottom | top'
@@ -33,10 +36,7 @@ export default class SubMenuOption extends React.PureComponent<SubMenuOptionProp
                 onMouseLeave={this.close}
             >
                 <div className='menu-name'>{this.props.name}</div>
-                <div
-                    className='imageSubmenuTriangle'
-                    style={{float: 'right'}}
-                />
+                <SubmenuTriangleIcon/>
                 {this.state.isOpen &&
                     <div className={'SubMenu menu noselect ' + (this.props.position || 'bottom')}>
                         <div className='menu-options'>
