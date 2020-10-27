@@ -44,4 +44,19 @@ export function setTheme(theme: Theme): void {
     document.documentElement.style.setProperty('--button-fg', theme.buttonFg)
     document.documentElement.style.setProperty('--sidebar-bg', theme.sidebarBg)
     document.documentElement.style.setProperty('--sidebar-fg', theme.sidebarFg)
+    localStorage.setItem('theme', JSON.stringify(theme))
+}
+
+export function loadTheme(): void {
+    const themeStr = localStorage.getItem('theme')
+    if (themeStr) {
+        try {
+            const theme = JSON.parse(themeStr)
+            setTheme(theme)
+        } catch (e) {
+            setTheme(lightTheme)
+        }
+    } else {
+        setTheme(lightTheme)
+    }
 }
