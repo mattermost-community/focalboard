@@ -8,7 +8,6 @@ import {setTheme, lightTheme} from './theme'
 
 import './styles/main.scss'
 import './styles/colors.scss'
-import './styles/images.scss'
 
 setTheme(lightTheme)
 ReactDOM.render(<App/>, document.getElementById('octo-tasks-app'))
