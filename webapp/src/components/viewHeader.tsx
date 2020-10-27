@@ -293,7 +293,9 @@ class ViewHeader extends React.Component<Props, State> {
                         />
                     </div>}
                 <MenuWrapper>
-                    <OptionsIcon/>
+                    <div className='octo-button'>
+                        <OptionsIcon/>
+                    </div>
                     <Menu>
                         <Menu.Text
                             id='exportCsv'
