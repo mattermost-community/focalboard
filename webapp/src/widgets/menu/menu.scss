@@ -11,6 +11,9 @@
     &.top {
         bottom: 100%;
     }
+    &.left {
+        right: 0;
+    }
 
     .menu-options {
         display: flex;

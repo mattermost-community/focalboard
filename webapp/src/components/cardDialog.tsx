@@ -19,7 +19,7 @@ type Props = {
 class CardDialog extends React.Component<Props> {
     render() {
         const menu = (
-            <Menu>
+            <Menu position='left'>
                 <Menu.Text
                     id='delete'
                     name='Delete'
