@@ -3,8 +3,7 @@
 import React from 'react'
 
 import MenuWrapper from '../widgets/menuWrapper'
-
-import Button from './button'
+import Button from '../widgets/buttons/button'
 
 import './dialog.scss'
 
