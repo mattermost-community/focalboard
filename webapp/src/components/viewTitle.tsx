@@ -28,16 +28,6 @@ class ViewTitle extends React.Component<Props, State> {
         return true
     }
 
-    static getDerivedStateFromProps(nextProps: Props, prevState: State) {
-        if (prevState.title !== nextProps.board.title) {
-            return {
-                title: nextProps.board.title,
-            }
-        }
-
-        return null
-    }
-
     constructor(props: Props) {
         super(props)
         this.state = {title: props.board.title}

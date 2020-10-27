@@ -71,7 +71,10 @@ class TableComponent extends React.Component<Props, State> {
                     />
                 </RootPortal>}
                 <div className='octo-frame'>
-                    <ViewTitle board={board}/>
+                    <ViewTitle
+                        key={board.id + board.title}
+                        board={board}
+                    />
 
                     <div className='octo-table'>
                         <ViewHeader
