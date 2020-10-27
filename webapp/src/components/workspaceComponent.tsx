@@ -7,7 +7,7 @@ import {Utils} from '../utils'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
 
 import BoardComponent from './boardComponent'
-import {Sidebar} from './sidebar'
+import Sidebar from './sidebar'
 import {TableComponent} from './tableComponent'
 
 import './workspaceComponent.scss'
