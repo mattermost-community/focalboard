@@ -1,0 +1,10 @@
+.TableRow {
+    .open-button {
+        display: none;
+    }
+    &:hover {
+        .open-button {
+            display: block;
+        }
+    }
+}

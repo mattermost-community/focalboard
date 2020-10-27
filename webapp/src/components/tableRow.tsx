@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
+import {FormattedMessage} from 'react-intl'
 
 import {BoardTree} from '../viewModel/boardTree'
 import {Card} from '../blocks/card'
@@ -11,6 +12,8 @@ import Editable from '../widgets/editable'
 import PropertyValueElement from './propertyValueElement'
 import {CardDialog} from './cardDialog'
 import RootPortal from './rootPortal'
+
+import './tableRow.scss'
 
 type Props = {
     boardTree: BoardTree
@@ -48,11 +51,9 @@ class TableRow extends React.Component<Props, State> {
         const {boardTree, card, onSaveWithEnter} = this.props
         const {board, activeView} = boardTree
 
-        const openButonRef = React.createRef<HTMLDivElement>()
-
         return (
             <div
-                className='octo-table-row'
+                className='TableRow octo-table-row'
                 key={card.id}
             >
 
@@ -61,12 +62,6 @@ class TableRow extends React.Component<Props, State> {
                 <div
                     className='octo-table-cell title-cell'
                     id='mainBoardHeader'
-                    onMouseOver={() => {
-                        openButonRef.current.style.display = null
-                    }}
-                    onMouseLeave={() => {
-                        openButonRef.current.style.display = 'none'
-                    }}
                 >
                     <div className='octo-icontitle'>
                         <div className='octo-icon'>{card.icon}</div>
@@ -86,13 +81,16 @@ class TableRow extends React.Component<Props, State> {
                     </div>
 
                     <div
-                        ref={openButonRef}
-                        className='octo-hoverbutton'
-                        style={{display: 'none'}}
+                        className='octo-hoverbutton open-button'
                         onClick={() => {
                             this.setState({showCard: true})
                         }}
-                    >Open</div>
+                    >
+                        <FormattedMessage
+                            id='TableRow.open'
+                            defaultMessage='Open'
+                        />
+                    </div>
                     {this.state.showCard &&
                     <RootPortal>
                         <CardDialog

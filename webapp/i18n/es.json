@@ -50,6 +50,7 @@
   "TableHeaderMenu.insert-right": "Insertar a la derecha",
   "TableHeaderMenu.sort-ascending": "Orden ascendente",
   "TableHeaderMenu.sort-descending": "Orden descendente",
+  "TableRow.open": "Abrir",
   "ViewHeader.export-board-archive": "Exportar Archivo del Panel",
   "ViewHeader.export-csv": "Exportar a CSV",
   "ViewHeader.filter": "Filtrar",
