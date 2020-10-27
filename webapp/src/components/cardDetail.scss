@@ -39,8 +39,9 @@
         width: 150px;
         margin-right: 5px;
         color: #909090;
+        color: rgba(var(--main-fg), 0.6);
         &.add-property {
-            color: rgba(55, 53, 37, 0.4);
+            color: rgba(var(--main-fg), 0.4);
         }
     }
 }

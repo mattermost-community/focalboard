@@ -1,3 +1,12 @@
+:root {
+    --main-bg: 255, 255, 255;
+    --main-fg: 55, 53, 47;
+    --button-bg: 80, 170, 221;
+    --button-fg: 255, 255, 255;
+    --sidebar-bg: '247, 246, 243';
+    --sidebar-fg: '55, 53, 47';
+}
+
 * {
 	box-sizing: border-box;
 	outline: 0;
@@ -10,7 +19,13 @@ html, body {
 
 	width: 100%;
 	height: 100%;
-	color: rgb(55, 53, 47);
+	color: rgb(var(--main-fg));
+    background: rgb(var(--main-bg));
+}
+
+input {
+    background: rgb(var(--main-bg));
+	color: rgb(var(--main-fg));
 }
 
 body {
@@ -20,7 +35,7 @@ body {
     /* -webkit-font-smoothing: auto; */
 	font-size: 14px;
 	line-height: 24px;
-	--cursor-color: rgb(55, 53, 47);
+	--cursor-color: rgb(var(--main-fg));
 }
 
 a {
@@ -34,8 +49,8 @@ hr {
 	width: 100%;
 	height: 1px;
 	border: none;
-	color: rgba(55, 53, 47, 0.09);
-	background-color: rgba(55, 53, 47, 0.09);
+	color: rgba(var(--main-fg), 0.09);
+	background-color: rgba(var(--main-fg), 0.09);
 	margin-bottom: 8px;
 }
 
@@ -96,7 +111,7 @@ hr {
 	padding: 0 5px;
 	border-radius: 3px;
 	line-height: 20px;
-	color: rgb(55, 53, 47);
+	color: rgb(var(--main-fg));
 	white-space: nowrap
 }
 
@@ -116,17 +131,17 @@ hr {
 	transition: background 100ms ease-out 0s;
 
     &:hover {
-        background-color: #eeeeee;
+        background-color: rgba(var(--main-fg), 0.1);
     }
 }
 
 .filled {
 	color: #ffffff;
-	background-color: #50aadd;
+	background-color: rgb(var(--button-bg));
 	padding: 2px 10px;
 
     &:hover {
-        background-color: #507090;
+        background-color:  rgb(var(--button-bg), 0.8);
     }
 }
 
@@ -139,7 +154,7 @@ hr {
 
 	min-height: 30px;
 	width: 100%;
-	color:rgba(55, 53, 47, 0.4);
+	color:rgba(var(--main-fg), 0.4);
 }
 
 .octo-icon {
@@ -164,10 +179,10 @@ hr {
 /*-- Property list --*/
 
 .octo-propertyvalue {
-	color: rgb(55, 53, 47);
+	color: rgb(var(--main-fg));
 	padding: 0 5px;
     &.empty {
-	    color: rgba(55, 53, 47, 0.4);
+	    color: rgba(var(--main-fg), 0.4);
     }
 }
 
@@ -182,13 +197,13 @@ hr {
 }
 
 .octo-placeholder {
-	color: rgba(55, 53, 47, 0.4);
+	color: rgba(var(--main-fg), 0.4);
 }
 
 [contentEditable=true]:empty:before{
 	content: attr(placeholder);
 	display: block;
-	color: rgba(55, 53, 47, 0.4);
+	color: rgba(var(--main-fg), 0.4);
 }
 
 
@@ -200,7 +215,7 @@ hr {
 
 .octo-button {
     &.octo-hovercontrol {
-        background: rgb(239, 239, 238);
+        background: rgba(var(--main-fg), 0.1);
     }
 
     &.square {
@@ -225,8 +240,8 @@ hr {
 	right: 6px;
 	top: 4px;
 	cursor: pointer;
-	background: rgb(239, 239, 238);
-	box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 2px 4px;
+	background: rgb(var(--main-fg), 0.1);
+	box-shadow: rgba(var(--main-fg), 0.1) 0px 0px 0px 1px, rgba(var(--main-fg), 0.1) 0px 2px 4px;
 	padding: 0 5px;
 
     &.square {
@@ -280,7 +295,7 @@ hr {
 
 	min-height: 30px;
 	width: 100%;
-	color:rgba(55, 53, 47, 0.4);
+	color:rgba(var(--main-fg), 0.4);
 }
 
 .octo-block img {

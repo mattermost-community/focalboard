@@ -4,6 +4,7 @@ import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {Archiver} from '../archiver'
+import {mattermostTheme, darkTheme, lightTheme, setTheme} from '../theme'
 import {Board, MutableBoard} from '../blocks/board'
 import {BoardTree} from '../viewModel/boardTree'
 import mutator from '../mutator'
@@ -223,6 +224,42 @@ class Sidebar extends React.Component<Props, State> {
                                     id='spanish-lang'
                                     name={text}
                                     onClick={async () => this.props.setLanguage('es')}
+                                />
+                            )}
+                        </FormattedMessage>
+                        <FormattedMessage
+                            id='Sidebar.set-dark-theme'
+                            defaultMessage='Set Dark Theme'
+                        >
+                            {(text: string) => (
+                                <Menu.Text
+                                    id='dark-theme'
+                                    name={text}
+                                    onClick={async () => setTheme(darkTheme)}
+                                />
+                            )}
+                        </FormattedMessage>
+                        <FormattedMessage
+                            id='Sidebar.set-light-theme'
+                            defaultMessage='Set Light Theme'
+                        >
+                            {(text: string) => (
+                                <Menu.Text
+                                    id='light-theme'
+                                    name={text}
+                                    onClick={async () => setTheme(lightTheme)}
+                                />
+                            )}
+                        </FormattedMessage>
+                        <FormattedMessage
+                            id='Sidebar.set-mattermost-theme'
+                            defaultMessage='Set Mattermost Theme'
+                        >
+                            {(text: string) => (
+                                <Menu.Text
+                                    id='mattermost-theme'
+                                    name={text}
+                                    onClick={async () => setTheme(mattermostTheme)}
                                 />
                             )}
                         </FormattedMessage>

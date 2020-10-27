@@ -4,9 +4,11 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import App from './app'
+import {setTheme, lightTheme} from './theme'
 
 import './styles/main.scss'
 import './styles/colors.scss'
 import './styles/images.scss'
 
+setTheme(lightTheme)
 ReactDOM.render(<App/>, document.getElementById('octo-tasks-app'))

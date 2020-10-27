@@ -17,7 +17,7 @@
     }
 
     .newcomment {
-        color: rgba(55, 53, 47, 0.8);
+        color: rgba(var(--main-fg), 0.8);
         flex-grow: 1;
         margin-left: 5px;
         .octo-button {

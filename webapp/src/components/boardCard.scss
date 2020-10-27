@@ -8,15 +8,15 @@
 	border-radius: 3px;
 	margin-bottom: 10px;
 	padding: 7px 10px;
-	box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 2px 4px;
+	box-shadow: rgba(var(--main-fg), 0.1) 0px 0px 0px 1px, rgba(var(--main-fg), 0.1) 0px 2px 4px;
 
 	cursor: pointer;
-	color: rgb(55, 53, 47);
+	color: rgb(var(--main-fg));
 
 	transition: background 100ms ease-out 0s;
 
     &:hover {
-        background-color: #eeeeee;
+        background-color: rgba(var(--main-fg), 0.1);
         .optionsMenu {
             display: block;
         }

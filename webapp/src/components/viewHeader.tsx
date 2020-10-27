@@ -116,7 +116,7 @@ class ViewHeader extends React.Component<Props, State> {
         return (
             <div className='ViewHeader'>
                 <Editable
-                    style={{color: '#000000', fontWeight: 600}}
+                    style={{color: 'rgb(var(--main-fg))', fontWeight: 600}}
                     text={activeView.title}
                     placeholderText='Untitled View'
                     onChanged={(text) => {
@@ -126,7 +126,7 @@ class ViewHeader extends React.Component<Props, State> {
                 <MenuWrapper>
                     <div
                         className='octo-button'
-                        style={{color: '#000000', fontWeight: 600}}
+                        style={{color: 'rgb(var(--main-fg))', fontWeight: 600}}
                     >
                         <div className='imageDropdown'/>
                     </div>
@@ -180,7 +180,7 @@ class ViewHeader extends React.Component<Props, State> {
                                 values={{
                                     property: (
                                         <span
-                                            style={{color: '#000000'}}
+                                            style={{color: 'rgb(var(--main-fg))'}}
                                             id='groupByLabel'
                                         >
                                             {boardTree.groupByProperty?.name}
@@ -268,7 +268,7 @@ class ViewHeader extends React.Component<Props, State> {
                         ref={this.searchFieldRef}
                         text={boardTree.getSearchText()}
                         placeholderText={intl.formatMessage({id: 'ViewHeader.search-text', defaultMessage: 'Search text'})}
-                        style={{color: '#000000'}}
+                        style={{color: 'rgb(var(--main-fg))'}}
                         onChanged={(text) => {
                             this.searchChanged(text)
                         }}

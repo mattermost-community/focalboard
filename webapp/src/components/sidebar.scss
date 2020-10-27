@@ -5,7 +5,8 @@
 	flex-direction: column;
 
 	min-height: 100%;
-	background-color: rgb(247, 246, 243);
+	color: rgb(var(--sidebar-fg));
+	background-color: rgb(var(--sidebar-bg));
 	padding: 10px 0;
 
     &.hidden {
@@ -40,7 +41,7 @@
         font-weight: 500;
         padding: 3px 20px;
         &.subitem {
-            color: rgba(25, 23, 18, 0.6);
+            color: rgba(var(--sidebar-fg), 0.6);
             font-weight: 400;
             margin-left: 20px;
         }
@@ -53,11 +54,11 @@
 
     .octo-sidebar-item {
         &:hover {
-            background-color: rgba(0, 0, 0, 0.05);
+            background-color: rgba(var(--sidebar-fg), 0.05);
         }
         .octo-button {
             &:hover {
-                background-color: rgba(0, 0, 0, 0.1);
+                background-color: rgba(var(--sidebar-fg), 0.1);
             }
         }
     }

@@ -40,7 +40,7 @@
     }
 
     .comment-text {
-        color: rgb(55, 53, 47);
+        color: rgb(var(--main-fg));
         width: 100%;
         padding-left: 25px;
     }
