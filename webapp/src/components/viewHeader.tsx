@@ -241,7 +241,7 @@ class ViewHeader extends React.Component<Props, State> {
                             }}
                         />
 
-                        <Menu.Separator />
+                        <Menu.Separator/>
 
                         {boardTree.board.cardProperties.map((option: IPropertyTemplate) => (
                             <Menu.Text

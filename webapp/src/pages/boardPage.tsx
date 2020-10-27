@@ -149,6 +149,7 @@ export default class BoardPage extends React.Component<Props, State> {
 
         await workspaceTree.sync()
         const boardIds = workspaceTree.boards.map((o) => o.id)
+
         // Listen to boards plus all blocks at root (Empty string for parentId)
         this.workspaceListener.open(['', ...boardIds], async (blockId) => {
             Utils.log(`workspaceListener.onChanged: ${blockId}`)

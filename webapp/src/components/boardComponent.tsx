@@ -529,7 +529,7 @@ class BoardComponent extends React.Component<Props, State> {
             Utils.assertValue(boardTree.groupByProperty)
 
             // Move option to new index
-            const visibleOptionIds = boardTree.visibleGroups.map(o => o.option.id)
+            const visibleOptionIds = boardTree.visibleGroups.map((o) => o.option.id)
 
             const {activeView} = boardTree
             const srcIndex = visibleOptionIds.indexOf(draggedHeaderOption.id)

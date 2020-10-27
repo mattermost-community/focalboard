@@ -112,7 +112,7 @@ class Editable extends React.Component<Props, State> {
 
                         this.text = newText
                     } else {
-                        this.text = oldText     // Reset text
+                        this.text = oldText // Reset text
                     }
 
                     this.elementRef.current.classList.remove('active')

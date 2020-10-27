@@ -141,7 +141,8 @@ class CardDetail extends React.Component<Props, State> {
                                 onClick={() => {
                                     const newIcon = BlockIcons.shared.randomIcon()
                                     mutator.changeIcon(card, newIcon)
-                            }}>
+                                }}
+                            >
                                 <FormattedMessage
                                     id='CardDetail.add-icon'
                                     defaultMessage='Add Icon'
@@ -202,10 +203,10 @@ class CardDetail extends React.Component<Props, State> {
                     {/* Comments */}
 
                     <hr/>
-                        <CommentsList
-                            comments={comments}
-                            cardId={card.id}
-                        />
+                    <CommentsList
+                        comments={comments}
+                        cardId={card.id}
+                    />
                     <hr/>
                 </div>
 

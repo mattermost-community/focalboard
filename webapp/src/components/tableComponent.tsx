@@ -175,11 +175,11 @@ class TableComponent extends React.Component<Props, State> {
                                     card={card}
                                     focusOnMount={focusOnMount}
                                     onSaveWithEnter={() => {
-                                        console.log("WORKING")
+                                        console.log('WORKING')
                                         if (cards.length > 0 && cards[cards.length - 1] === card) {
                                             this.addCard(false)
                                         }
-                                        console.log("STILL WORKING")
+                                        console.log('STILL WORKING')
                                     }}
                                 />)
 

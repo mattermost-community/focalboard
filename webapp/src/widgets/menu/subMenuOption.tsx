@@ -2,8 +2,9 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {MenuOptionProps} from './menuItem'
 import SubmenuTriangleIcon from '../icons/submenuTriangle'
+
+import {MenuOptionProps} from './menuItem'
 
 import './subMenuOption.scss'
 

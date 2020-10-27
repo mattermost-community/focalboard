@@ -169,9 +169,9 @@ class MutableBoardTree implements BoardTree {
     private groupCards() {
         const {activeView, groupByProperty} = this
 
-        const unassignedOptionIds = groupByProperty.options
-            .filter(o => !activeView.visibleOptionIds.includes(o.id) && !activeView.hiddenOptionIds.includes(o.id))
-            .map(o => o.id)
+        const unassignedOptionIds = groupByProperty.options.
+            filter((o) => !activeView.visibleOptionIds.includes(o.id) && !activeView.hiddenOptionIds.includes(o.id)).
+            map((o) => o.id)
         const visibleOptionIds = [...activeView.visibleOptionIds, ...unassignedOptionIds]
         const {hiddenOptionIds} = activeView
 
@@ -188,12 +188,12 @@ class MutableBoardTree implements BoardTree {
         const groups = []
         for (const optionId of optionIds) {
             if (optionId) {
-                const option = groupByProperty.options.find(o => o.id === optionId)
+                const option = groupByProperty.options.find((o) => o.id === optionId)
                 if (option) {
                     const cards = this.cards.filter((o) => optionId === o.properties[groupByProperty.id])
                     const group: Group = {
                         option,
-                        cards
+                        cards,
                     }
                     groups.push(group)
                 } else {
@@ -207,7 +207,7 @@ class MutableBoardTree implements BoardTree {
                 })
                 const group: Group = {
                     option: {id: '', value: `No ${groupByProperty.name}`, color: ''},
-                    cards: emptyGroupCards
+                    cards: emptyGroupCards,
                 }
                 groups.push(group)
             }

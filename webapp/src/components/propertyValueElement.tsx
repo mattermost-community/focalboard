@@ -24,7 +24,6 @@ type State = {
 }
 
 export default class PropertyValueElement extends React.Component<Props, State> {
-
     constructor(props: Props) {
         super(props)
         const propertyValue = props.card.properties[props.propertyTemplate.id]
