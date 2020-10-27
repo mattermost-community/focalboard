@@ -1,10 +1,12 @@
 .ViewTitle {
-    .Button {
-        display: none;
-    }
-    &:hover {
+    &.octo-hovercontrols {
         .Button {
-            display: block;
+            display: none;
+        }
+        &.add-visible:hover {
+            .Button {
+                display: block;
+            }
         }
     }
 }

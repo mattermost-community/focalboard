@@ -12,13 +12,14 @@ import Editable from '../widgets/editable'
 
 import Button from './button'
 
+import './viewTitle.scss'
+
 type Props = {
     board: Board
     intl: IntlShape
 }
 
 type State = {
-    isHoverOnCover: boolean
     title: string
 }
 
@@ -30,7 +31,7 @@ class ViewTitle extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
-        this.state = {isHoverOnCover: false, title: props.board.title}
+        this.state = {title: props.board.title}
     }
 
     render(): JSX.Element {
@@ -38,17 +39,8 @@ class ViewTitle extends React.Component<Props, State> {
 
         return (
             <>
-                <div
-                    className='octo-hovercontrols'
-                    onMouseOver={() => {
-                        this.setState({isHoverOnCover: true})
-                    }}
-                    onMouseLeave={() => {
-                        this.setState({isHoverOnCover: false})
-                    }}
-                >
+                <div className={'ViewTitle octo-hovercontrols ' + (board.icon ? '' : 'add-visible')}>
                     <Button
-                        style={{display: (!board.icon && this.state.isHoverOnCover) ? null : 'none'}}
                         onClick={() => {
                             const newIcon = BlockIcons.shared.randomIcon()
                             mutator.changeIcon(board, newIcon)
@@ -61,7 +53,7 @@ class ViewTitle extends React.Component<Props, State> {
                     </Button>
                 </div>
 
-                <div className='octo-icontitle'>
+                <div className='ViewTitle octo-icontitle'>
                     {board.icon &&
                         <MenuWrapper>
                             <div className='octo-button octo-icon'>{board.icon}</div>
