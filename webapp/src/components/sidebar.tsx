@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {FormattedMessage} from 'react-intl'
+import {injectIntl, IntlShape, FormattedMessage} from 'react-intl'
 
 import {Archiver} from '../archiver'
 import {mattermostTheme, darkTheme, lightTheme, setTheme} from '../theme'
@@ -25,6 +25,7 @@ type Props = {
     workspaceTree: WorkspaceTree,
     boardTree?: BoardTree,
     setLanguage: (lang: string) => void,
+    intl: IntlShape
 }
 
 type State = {
@@ -42,7 +43,7 @@ class Sidebar extends React.Component<Props, State> {
     }
 
     render(): JSX.Element {
-        const {workspaceTree} = this.props
+        const {workspaceTree, intl} = this.props
         if (!workspaceTree) {
             return <div/>
         }
@@ -98,30 +99,23 @@ class Sidebar extends React.Component<Props, State> {
                                     <MenuWrapper>
                                         <div className='octo-button square octo-hover-item'><OptionsIcon/></div>
                                         <Menu>
-                                            <FormattedMessage
-                                                id='Sidebar.delete-board'
-                                                defaultMessage='Delete Board'
-                                            >
-                                                {(text: string) => (
-                                                    <Menu.Text
-                                                        id='delete'
-                                                        name={text}
-                                                        onClick={async () => {
-                                                            const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id).id : undefined
-                                                            mutator.deleteBlock(
-                                                                board,
-                                                                'delete block',
-                                                                async () => {
-                                                                    nextBoardId && this.props.showBoard(nextBoardId!)
-                                                                },
-                                                                async () => {
-                                                                    this.props.showBoard(board.id)
-                                                                },
-                                                            )
-                                                        }}
-                                                    />
-                                                )}
-                                            </FormattedMessage>
+                                            <Menu.Text
+                                                id='delete'
+                                                name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete Board'})}
+                                                onClick={async () => {
+                                                    const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id).id : undefined
+                                                    mutator.deleteBlock(
+                                                        board,
+                                                        'delete block',
+                                                        async () => {
+                                                            nextBoardId && this.props.showBoard(nextBoardId!)
+                                                        },
+                                                        async () => {
+                                                            this.props.showBoard(board.id)
+                                                        },
+                                                    )
+                                                }}
+                                            />
                                         </Menu>
                                     </MenuWrapper>
                                 </div>
@@ -174,90 +168,51 @@ class Sidebar extends React.Component<Props, State> {
                         />
                     </div>
                     <Menu position='top'>
-                        <FormattedMessage
-                            id='Sidebar.import-archive'
-                            defaultMessage='Import Archive'
+                        <Menu.Text
+                            id='import'
+                            name={intl.formatMessage({id: 'Sidebar.import-archive', defaultMessage: 'Import Archive'})}
+                            onClick={async () => Archiver.importFullArchive()}
+                        />
+                        <Menu.Text
+                            id='export'
+                            name={intl.formatMessage({id: 'Sidebar.export-archive', defaultMessage: 'Export Archive'})}
+                            onClick={async () => Archiver.exportFullArchive()}
+                        />
+                        <Menu.SubMenu
+                            id='lang'
+                            name={intl.formatMessage({id: 'Sidebar.set-language', defaultMessage: 'Set Language'})}
                         >
-                            {(text: string) => (
-                                <Menu.Text
-                                    id='import'
-                                    name={text}
-                                    onClick={async () => Archiver.importFullArchive()}
-                                />
-                            )}
-                        </FormattedMessage>
-                        <FormattedMessage
-                            id='Sidebar.export-archive'
-                            defaultMessage='Export Archive'
+                            <Menu.Text
+                                id='english-lang'
+                                name={intl.formatMessage({id: 'Sidebar.english', defaultMessage: 'English'})}
+                                onClick={async () => this.props.setLanguage('en')}
+                            />
+                            <Menu.Text
+                                id='spanish-lang'
+                                name={intl.formatMessage({id: 'Sidebar.spanish', defaultMessage: 'Spanish'})}
+                                onClick={async () => this.props.setLanguage('es')}
+                            />
+                        </Menu.SubMenu>
+                        <Menu.SubMenu
+                            id='theme'
+                            name={intl.formatMessage({id: 'Sidebar.set-theme', defaultMessage: 'Set Theme'})}
                         >
-                            {(text: string) => (
-                                <Menu.Text
-                                    id='export'
-                                    name={text}
-                                    onClick={async () => Archiver.exportFullArchive()}
-                                />
-                            )}
-                        </FormattedMessage>
-                        <FormattedMessage
-                            id='Sidebar.set-english-language'
-                            defaultMessage='Set English Language'
-                        >
-                            {(text: string) => (
-                                <Menu.Text
-                                    id='english-lang'
-                                    name={text}
-                                    onClick={async () => this.props.setLanguage('en')}
-                                />
-                            )}
-                        </FormattedMessage>
-                        <FormattedMessage
-                            id='Sidebar.set-spanish-language'
-                            defaultMessage='Set Spanish Language'
-                        >
-                            {(text: string) => (
-                                <Menu.Text
-                                    id='spanish-lang'
-                                    name={text}
-                                    onClick={async () => this.props.setLanguage('es')}
-                                />
-                            )}
-                        </FormattedMessage>
-                        <FormattedMessage
-                            id='Sidebar.set-dark-theme'
-                            defaultMessage='Set Dark Theme'
-                        >
-                            {(text: string) => (
-                                <Menu.Text
-                                    id='dark-theme'
-                                    name={text}
-                                    onClick={async () => setTheme(darkTheme)}
-                                />
-                            )}
-                        </FormattedMessage>
-                        <FormattedMessage
-                            id='Sidebar.set-light-theme'
-                            defaultMessage='Set Light Theme'
-                        >
-                            {(text: string) => (
-                                <Menu.Text
-                                    id='light-theme'
-                                    name={text}
-                                    onClick={async () => setTheme(lightTheme)}
-                                />
-                            )}
-                        </FormattedMessage>
-                        <FormattedMessage
-                            id='Sidebar.set-mattermost-theme'
-                            defaultMessage='Set Mattermost Theme'
-                        >
-                            {(text: string) => (
-                                <Menu.Text
-                                    id='mattermost-theme'
-                                    name={text}
-                                    onClick={async () => setTheme(mattermostTheme)}
-                                />
-                            )}
-                        </FormattedMessage>
+                            <Menu.Text
+                                id='dark-theme'
+                                name={intl.formatMessage({id: 'Sidebar.dark-theme', defaultMessage: 'Dark Theme'})}
+                                onClick={async () => setTheme(darkTheme)}
+                            />
+                            <Menu.Text
+                                id='light-theme'
+                                name={intl.formatMessage({id: 'Sidebar.light-theme', defaultMessage: 'Light Theme'})}
+                                onClick={async () => setTheme(lightTheme)}
+                            />
+                            <Menu.Text
+                                id='mattermost-theme'
+                                name={intl.formatMessage({id: 'Sidebar.mattermost-theme', defaultMessage: 'Mattermost Theme'})}
+                                onClick={async () => setTheme(mattermostTheme)}
+                            />
+                        </Menu.SubMenu>
                     </Menu>
                 </MenuWrapper>
             </div>
@@ -301,4 +256,4 @@ class Sidebar extends React.Component<Props, State> {
     }
 }
 
-export {Sidebar}
+export default injectIntl(Sidebar)
