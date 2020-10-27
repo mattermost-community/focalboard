@@ -9,8 +9,7 @@ import mutator from '../mutator'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 import Editable from '../widgets/editable'
-
-import Button from './button'
+import Button from '../widgets/buttons/button'
 
 import './viewTitle.scss'
 
