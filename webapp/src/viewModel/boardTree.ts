@@ -189,12 +189,16 @@ class MutableBoardTree implements BoardTree {
         for (const optionId of optionIds) {
             if (optionId) {
                 const option = groupByProperty.options.find(o => o.id === optionId)
-                const cards = this.cards.filter((o) => optionId === o.properties[groupByProperty.id])
-                const group: Group = {
-                    option,
-                    cards
+                if (option) {
+                    const cards = this.cards.filter((o) => optionId === o.properties[groupByProperty.id])
+                    const group: Group = {
+                        option,
+                        cards
+                    }
+                    groups.push(group)
+                } else {
+                    Utils.logError(`groupCardsByOptions: Missing option with id: ${optionId}`)
                 }
-                groups.push(group)
             } else {
                 // Empty group
                 const emptyGroupCards = this.cards.filter((o) => {
