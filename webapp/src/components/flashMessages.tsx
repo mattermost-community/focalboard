@@ -21,7 +21,7 @@ type Props = {
 }
 
 type State = {
-    messages: FlashMessage[]
+    message?: FlashMessage
     fadeOut: boolean
 }
 
@@ -30,18 +30,15 @@ export class FlashMessages extends React.PureComponent<Props, State> {
 
     constructor(props: Props) {
         super(props)
-        this.state = {
-            messages: [],
-            fadeOut: false,
-        }
-        this.timeout = setTimeout(this.handleFadeOut, this.props.milliseconds - 200)
+        this.state = {fadeOut: false}
+
         emitter.on('message', (message: FlashMessage) => {
-            const newMessages = [...this.state.messages]
-            newMessages.push(message)
-            if (this.state.messages.length === 0) {
-                this.timeout = setTimeout(this.handleFadeOut, this.props.milliseconds - 200)
+            if (this.timeout) {
+                clearTimeout(this.timeout)
+                this.timeout = null
             }
-            this.setState({messages: newMessages})
+            this.timeout = setTimeout(this.handleFadeOut, this.props.milliseconds - 200)
+            this.setState({message})
         })
     }
 
@@ -51,31 +48,25 @@ export class FlashMessages extends React.PureComponent<Props, State> {
     }
 
     handleTimeout = (): void => {
-        const newMessages = [...this.state.messages]
-        newMessages.shift()
-        if (newMessages.length > 0) {
-            this.timeout = setTimeout(this.handleFadeOut, this.props.milliseconds - 200)
-        } else {
-            this.timeout = null
-        }
-        this.setState({messages: newMessages, fadeOut: false})
+        this.setState({message: null, fadeOut: false})
     }
 
     handleClick = (): void => {
         clearTimeout(this.timeout)
-        this.handleTimeout()
+        this.timeout = null
+        this.handleFadeOut()
     }
 
     public render(): JSX.Element {
-        if (this.state.messages.length === 0) {
+        if (!this.state.message) {
             return null
         }
 
-        const message = this.state.messages[0]
+        const {message, fadeOut} = this.state
 
         return (
             <div
-                className={'FlashMessages ' + message.severity + (this.state.fadeOut ? ' flashOut' : ' flashIn')}
+                className={'FlashMessages ' + message.severity + (fadeOut ? ' flashOut' : ' flashIn')}
                 onClick={this.handleClick}
             >
                 {message.content}
