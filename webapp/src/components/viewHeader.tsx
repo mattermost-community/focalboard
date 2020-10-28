@@ -16,6 +16,7 @@ import mutator from '../mutator'
 import {Utils} from '../utils'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
+import CheckIcon from '../widgets/icons/check'
 import DropdownIcon from '../widgets/icons/dropdown'
 import OptionsIcon from '../widgets/icons/options'
 import SortUpIcon from '../widgets/icons/sortUp'
@@ -199,6 +200,7 @@ class ViewHeader extends React.Component<Props, State> {
                                     key={option.id}
                                     id={option.id}
                                     name={option.name}
+                                    icon={boardTree.activeView.groupById === option.id ? <CheckIcon /> : undefined}
                                     onClick={(id) => {
                                         if (boardTree.activeView.groupById === id) {
                                             return
