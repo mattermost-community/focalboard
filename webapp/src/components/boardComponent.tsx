@@ -586,37 +586,38 @@ class BoardComponent extends React.Component<Props, State> {
         const {draggedCards} = this
         const optionId = card.properties[activeView.groupById]
 
-        if (draggedCards.length < 1) {
+        if (draggedCards.length < 1 || draggedCards.includes(card)) {
             return
         }
 
+        const description = draggedCards.length > 1 ? `drag ${draggedCards.length} cards` : 'drag card'
+
+        // Update card order
+        let cardOrder = boardTree.orderedCards().map((o) => o.id)
+        const draggedCardIds = draggedCards.map((o) => o.id)
+        const firstDraggedCard = draggedCards[0]
+        const isDraggingDown = cardOrder.indexOf(firstDraggedCard.id) <= cardOrder.indexOf(card.id)
+        cardOrder = cardOrder.filter((id) => !draggedCardIds.includes(id))
+        let destIndex = cardOrder.indexOf(card.id)
+        if (firstDraggedCard.properties[boardTree.groupByProperty.id] === optionId && isDraggingDown) {
+            // If the cards are in the same column and dragging down, drop after the target card
+            destIndex += 1
+        }
+        cardOrder.splice(destIndex, 0, ...draggedCardIds)
+
         mutator.beginUndoGroup()
 
-        const description = draggedCards.length > 1 ? `drag ${draggedCards.length} cards` : 'drag card'
-        const cardOrder = boardTree.orderedCards().map((o) => o.id)
+        // Update properties of dragged cards
         for (const draggedCard of draggedCards) {
-            if (draggedCard.id === card.id) {
-                continue
-            }
-
             Utils.log(`draggedCard: ${draggedCard.title}, column: ${optionId}`)
             const oldOptionId = draggedCard.properties[boardTree.groupByProperty.id]
             if (optionId !== oldOptionId) {
                 await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, optionId, description)
             }
-
-            // Change sort position of card
-            const srcIndex = cardOrder.indexOf(draggedCard.id)
-            cardOrder.splice(srcIndex, 1)
-            let destIndex = cardOrder.indexOf(card.id)
-            if (oldOptionId === optionId && srcIndex <= destIndex) {
-                // If the cards are in the same column and dragging down, drop the card after the target card
-                destIndex += 1
-            }
-            cardOrder.splice(destIndex, 0, draggedCard.id)
         }
 
         await mutator.changeViewCardOrder(activeView, cardOrder, description)
+
         mutator.endUndoGroup()
     }
 
