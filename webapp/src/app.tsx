@@ -11,6 +11,8 @@ import {
 
 import {getCurrentLanguage, getMessages, storeLanguage} from './i18n'
 
+import {FlashMessages} from './components/flashMessages'
+
 import LoginPage from './pages/loginPage'
 import BoardPage from './pages/boardPage'
 
@@ -25,6 +27,7 @@ export default function App(): JSX.Element {
             locale={language}
             messages={getMessages(language)}
         >
+            <FlashMessages milliseconds={2000}/>
             <Router>
                 <div id='frame'>
                     <div id='main'>

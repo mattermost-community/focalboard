@@ -253,41 +253,6 @@ hr {
     }
 }
 
-/* Flash Panel */
-
-.flashPanel {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	position: absolute;
-	bottom: 120px;
-	left: 0;
-	right: 0;
-	margin: 0 auto;
-	padding: 10px 20px;
-	min-width: 150px;
-	max-width: 420px;
-	min-height: 50px;
-	color: #ffffff;
-	background: rgba(100, 100, 100, 0.8);
-	font-size: 18px;
-	vertical-align: middle;
-	border-radius: 20px;
-	z-index: 12;
-
-    &.flashIn {
-        visibility: visible;
-        opacity: 1;
-    }
-
-    &.flashOut {
-        visibility: hidden;
-        opacity: 0;
-        transition: visibility 0s linear 200ms, opacity ease-in 200ms;
-    }
-}
-
 /* Hover panel */
 
 .octo-hoverpanel {
