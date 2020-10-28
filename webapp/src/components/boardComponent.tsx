@@ -570,16 +570,20 @@ class BoardComponent extends React.Component<Props, State> {
                 continue
             }
 
-            Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${optionId}`)
-            const oldValue = draggedCard.properties[boardTree.groupByProperty.id]
-            if (optionId !== oldValue) {
+            Utils.log(`draggedCard: ${draggedCard.title}, column: ${optionId}`)
+            const oldOptionId = draggedCard.properties[boardTree.groupByProperty.id]
+            if (optionId !== oldOptionId) {
                 await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, optionId, 'drag card')
             }
 
             // Change sort position of card
             const srcIndex = cardOrder.indexOf(draggedCard.id)
             cardOrder.splice(srcIndex, 1)
-            const destIndex = cardOrder.indexOf(card.id)
+            let destIndex = cardOrder.indexOf(card.id)
+            if (oldOptionId === optionId && srcIndex <= destIndex) {
+                // If the cards are in the same column and dragging down, drop the card after the target card
+                destIndex += 1
+            }
             cardOrder.splice(destIndex, 0, draggedCard.id)
         }
 
