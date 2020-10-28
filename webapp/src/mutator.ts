@@ -17,6 +17,16 @@ import {Utils} from './utils'
 // It also ensures that the Undo-manager is called for each action
 //
 class Mutator {
+    private undoGroupId?: string
+
+    beginUndoGroup() {
+        this.undoGroupId = Utils.createGuid()
+    }
+
+    endUndoGroup() {
+        this.undoGroupId = undefined
+    }
+
     async updateBlock(newBlock: IBlock, oldBlock: IBlock, description: string): Promise<void> {
         await undoManager.perform(
             async () => {
@@ -26,6 +36,7 @@ class Mutator {
                 await octoClient.updateBlock(oldBlock)
             },
             description,
+            this.undoGroupId
         )
     }
 
@@ -38,6 +49,7 @@ class Mutator {
                 await octoClient.updateBlocks(oldBlocks)
             },
             description,
+            this.undoGroupId
         )
     }
 
@@ -52,6 +64,7 @@ class Mutator {
                 await octoClient.deleteBlock(block.id)
             },
             description,
+            this.undoGroupId
         )
     }
 
@@ -68,6 +81,7 @@ class Mutator {
                 }
             },
             description,
+            this.undoGroupId
         )
     }
 
@@ -86,6 +100,7 @@ class Mutator {
                 await afterUndo?.()
             },
             description,
+            this.undoGroupId
         )
     }
 
@@ -457,6 +472,7 @@ class Mutator {
                 await octoClient.deleteBlock(block.id)
             },
             'add image',
+            this.undoGroupId
         )
 
         return block

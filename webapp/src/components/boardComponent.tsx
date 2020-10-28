@@ -545,6 +545,7 @@ class BoardComponent extends React.Component<Props, State> {
         Utils.assertValue(boardTree)
 
         if (draggedCards.length > 0) {
+            mutator.beginUndoGroup()
             for (const draggedCard of draggedCards) {
                 Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${optionId}`)
                 const oldValue = draggedCard.properties[boardTree.groupByProperty.id]
@@ -552,6 +553,7 @@ class BoardComponent extends React.Component<Props, State> {
                     await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, optionId, 'drag card')
                 }
             }
+            mutator.endUndoGroup()
         } else if (draggedHeaderOption) {
             Utils.log(`ondrop. Header option: ${draggedHeaderOption.value}, column: ${option?.value}`)
             Utils.assertValue(boardTree.groupByProperty)
@@ -573,12 +575,14 @@ class BoardComponent extends React.Component<Props, State> {
         Utils.log(`onDropToCard: ${card.title}`)
         const {boardTree} = this.props
         const {activeView} = boardTree
-        const {draggedCards, draggedHeaderOption} = this
+        const {draggedCards} = this
         const optionId = card.properties[activeView.groupById]
 
         if (draggedCards.length < 1) {
             return
         }
+
+        mutator.beginUndoGroup()
 
         const cardOrder = boardTree.orderedCards().map((o) => o.id)
         for (const draggedCard of draggedCards) {
@@ -604,6 +608,7 @@ class BoardComponent extends React.Component<Props, State> {
         }
 
         await mutator.changeViewCardOrder(activeView, cardOrder)
+        mutator.endUndoGroup()
     }
 }
 
