@@ -14,6 +14,8 @@ import OptionsIcon from '../widgets/icons/options'
 import ShowSidebarIcon from '../widgets/icons/showSidebar'
 import HideSidebarIcon from '../widgets/icons/hideSidebar'
 import HamburgerIcon from '../widgets/icons/hamburger'
+import SubmenuTriangleIcon from '../widgets/icons/submenuTriangle'
+import DotIcon from '../widgets/icons/dot'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
 import {BoardView} from '../blocks/boardView'
 
@@ -30,12 +32,13 @@ type Props = {
 
 type State = {
     isHidden: boolean
+    collapsedBoards: {[key: string]: boolean}
 }
 
 class Sidebar extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props)
-        this.state = {isHidden: false}
+        this.state = {isHidden: false, collapsedBoards: {}}
     }
 
     shouldComponentUpdate(): boolean {
@@ -49,6 +52,7 @@ class Sidebar extends React.Component<Props, State> {
         }
 
         const {boards, views} = workspaceTree
+        const {collapsedBoards} = this.state
 
         if (this.state.isHidden) {
             return (
@@ -89,6 +93,16 @@ class Sidebar extends React.Component<Props, State> {
                             <div key={board.id}>
                                 <div className='octo-sidebar-item octo-hover-container'>
                                     <div
+                                        className={'octo-button square ' + (collapsedBoards[board.id] ? 'collapsed' : 'expanded')}
+                                        onClick={() => {
+                                            const newCollapsedBoards = {...this.state.collapsedBoards}
+                                            newCollapsedBoards[board.id] = !newCollapsedBoards[board.id]
+                                            this.setState({collapsedBoards: newCollapsedBoards})
+                                        }}
+                                    >
+                                        <SubmenuTriangleIcon/>
+                                    </div>
+                                    <div
                                         className='octo-sidebar-title'
                                         onClick={() => {
                                             this.boardClicked(board)
@@ -119,11 +133,19 @@ class Sidebar extends React.Component<Props, State> {
                                         </Menu>
                                     </MenuWrapper>
                                 </div>
-                                {boardViews.map((view) => {
-                                    return (<div
+                                {!collapsedBoards[board.id] && boardViews.length === 0 &&
+                                    <div className='octo-sidebar-item subitem no-views'>
+                                        <FormattedMessage
+                                            id='Sidebar.no-views-in-board'
+                                            defaultMessage='No pages inside'
+                                        />
+                                    </div>}
+                                {!collapsedBoards[board.id] && boardViews.map((view) => (
+                                    <div
                                         key={view.id}
                                         className='octo-sidebar-item subitem octo-hover-container'
-                                            >
+                                    >
+                                        <DotIcon/>
                                         <div
                                             className='octo-sidebar-title'
                                             onClick={() => {
@@ -137,8 +159,8 @@ class Sidebar extends React.Component<Props, State> {
                                                 />
                                             )}
                                         </div>
-                                    </div>)
-                                })}
+                                    </div>
+                                ))}
                             </div>
                         )
                     })

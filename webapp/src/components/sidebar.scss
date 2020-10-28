@@ -56,26 +56,38 @@
 
         font-weight: 500;
         padding: 3px 20px;
+        &:hover {
+            background-color: rgba(var(--sidebar-fg), 0.05);
+        }
         &.subitem {
             color: rgba(var(--sidebar-fg), 0.6);
             font-weight: 400;
             margin-left: 20px;
+        }
+        &.no-views {
+            color: rgba(var(--sidebar-fg), 0.4);
+            &:hover {
+                background-color: rgba(var(--sidebar-bg));
+            }
+        }
+        .octo-button {
+            &:hover {
+                background-color: rgba(var(--sidebar-fg), 0.1);
+            }
+            &.expanded {
+                .SubmenuTriangleIcon {
+                    transform: rotate(90deg);
+                }
+            }
+            .SubmenuTriangleIcon {
+                transition: 200ms ease-in-out;
+                transform: rotate(0deg);
+            }
         }
     }
 
     .octo-sidebar-title {
         cursor: pointer;
         flex-grow: 1;
-    }
-
-    .octo-sidebar-item {
-        &:hover {
-            background-color: rgba(var(--sidebar-fg), 0.05);
-        }
-        .octo-button {
-            &:hover {
-                background-color: rgba(var(--sidebar-fg), 0.1);
-            }
-        }
     }
 }
