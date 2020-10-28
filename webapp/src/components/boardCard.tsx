@@ -20,14 +20,17 @@ type BoardCardProps = {
     card: Card
     visiblePropertyTemplates: IPropertyTemplate[]
     isSelected: boolean
+    isDropZone?: boolean
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
     onDragStart?: (e: React.DragEvent<HTMLDivElement>) => void
     onDragEnd?: (e: React.DragEvent<HTMLDivElement>) => void
+    onDrop?: (e: React.DragEvent<HTMLDivElement>) => void
     intl: IntlShape
 }
 
 type BoardCardState = {
     isDragged?: boolean
+    isDragOver?: boolean
 }
 
 class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
@@ -43,7 +46,10 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
     render(): JSX.Element {
         const {card, intl} = this.props
         const visiblePropertyTemplates = this.props.visiblePropertyTemplates || []
-        const className = this.props.isSelected ? 'BoardCard selected' : 'BoardCard'
+        let className = this.props.isSelected ? 'BoardCard selected' : 'BoardCard'
+        if (this.props.isDropZone && this.state.isDragOver) {
+            className += ' dragover'
+        }
 
         const element = (
             <div
@@ -58,6 +64,22 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
                 onDragEnd={(e) => {
                     this.setState({isDragged: false})
                     this.props.onDragEnd(e)
+                }}
+
+                onDragOver={(e) => {
+                    this.setState({isDragOver: true})
+                }}
+                onDragEnter={(e) => {
+                    this.setState({isDragOver: true})
+                }}
+                onDragLeave={(e) => {
+                    this.setState({isDragOver: false})
+                }}
+                onDrop={(e) => {
+                    this.setState({isDragOver: false})
+                    if (this.props.isDropZone) {
+                        this.props.onDrop(e)
+                    }
                 }}
             >
                 <MenuWrapper

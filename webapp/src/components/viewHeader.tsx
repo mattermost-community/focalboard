@@ -4,7 +4,7 @@ import React from 'react'
 import {injectIntl, IntlShape, FormattedMessage} from 'react-intl'
 
 import {Archiver} from '../archiver'
-import {ISortOption} from '../blocks/boardView'
+import {ISortOption, MutableBoardView} from '../blocks/boardView'
 import {BlockIcons} from '../blockIcons'
 import {MutableCard} from '../blocks/card'
 import {IPropertyTemplate} from '../blocks/board'
@@ -200,7 +200,7 @@ class ViewHeader extends React.Component<Props, State> {
                                     key={option.id}
                                     id={option.id}
                                     name={option.name}
-                                    icon={boardTree.activeView.groupById === option.id ? <CheckIcon /> : undefined}
+                                    icon={boardTree.activeView.groupById === option.id ? <CheckIcon/> : undefined}
                                     onClick={(id) => {
                                         if (boardTree.activeView.groupById === id) {
                                             return
@@ -235,15 +235,32 @@ class ViewHeader extends React.Component<Props, State> {
                         />
                     </div>
                     <Menu>
-                        <Menu.Text
-                            id='none'
-                            name='None'
-                            onClick={() => {
-                                mutator.changeViewSortOptions(activeView, [])
-                            }}
-                        />
+                        {(activeView.sortOptions.length > 0) &&
+                            <>
+                                <Menu.Text
+                                    id='manual'
+                                    name='Manual'
+                                    onClick={() => {
+                                        // This sets the manual card order to the currently displayed order
+                                        // Note: Perform this as a single update to change both properties correctly
+                                        const newView = new MutableBoardView(activeView)
+                                        newView.cardOrder = boardTree.currentCardOrder()
+                                        newView.sortOptions = []
+                                        mutator.updateBlock(newView, activeView, 'reorder')
+                                    }}
+                                />
 
-                        <Menu.Separator/>
+                                <Menu.Text
+                                    id='revert'
+                                    name='Revert'
+                                    onClick={() => {
+                                        mutator.changeViewSortOptions(activeView, [])
+                                    }}
+                                />
+
+                                <Menu.Separator/>
+                            </>
+                        }
 
                         {boardTree.board.cardProperties.map((option: IPropertyTemplate) => (
                             <Menu.Text

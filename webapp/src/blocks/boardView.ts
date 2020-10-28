@@ -16,6 +16,7 @@ interface BoardView extends IBlock {
     readonly visibleOptionIds: readonly string[]
     readonly hiddenOptionIds: readonly string[]
     readonly filter: FilterGroup | undefined
+    readonly cardOrder: readonly string[]
 }
 
 class MutableBoardView extends MutableBlock {
@@ -68,6 +69,13 @@ class MutableBoardView extends MutableBlock {
         this.fields.filter = value
     }
 
+    get cardOrder(): string[] {
+        return this.fields.cardOrder
+    }
+    set cardOrder(value: string[]) {
+        this.fields.cardOrder = value
+    }
+
     constructor(block: any = {}) {
         super(block)
 
@@ -78,6 +86,7 @@ class MutableBoardView extends MutableBlock {
         this.visibleOptionIds = block.fields?.visibleOptionIds?.slice() || []
         this.hiddenOptionIds = block.fields?.hiddenOptionIds?.slice() || []
         this.filter = new FilterGroup(block.fields?.filter)
+        this.cardOrder = block.fields?.cardOrder?.slice() || []
 
         if (!this.viewType) {
             this.viewType = 'board'

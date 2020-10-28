@@ -109,6 +109,7 @@ class BoardComponent extends React.Component<Props, State> {
 
         const {board, activeView, visibleGroups, hiddenGroups} = boardTree
         const visiblePropertyTemplates = board.cardProperties.filter((template) => activeView.visiblePropertyIds.includes(template.id))
+        const isManualSort = activeView.sortOptions.length < 1
 
         return (
             <div
@@ -182,6 +183,7 @@ class BoardComponent extends React.Component<Props, State> {
                             {visibleGroups.map((group) => (
                                 <BoardColumn
                                     key={group.option.id || 'empty'}
+                                    isDropZone={!isManualSort || group.cards.length < 1}
                                     onDrop={() => this.onDropToColumn(group.option)}
                                 >
                                     {group.cards.map((card) => this.renderCard(card, visiblePropertyTemplates))}
@@ -212,6 +214,8 @@ class BoardComponent extends React.Component<Props, State> {
     }
 
     private renderCard(card: Card, visiblePropertyTemplates: IPropertyTemplate[]) {
+        const {activeView} = this.props.boardTree
+        const isManualSort = activeView.sortOptions.length < 1
         return (
             <BoardCard
                 card={card}
@@ -226,6 +230,11 @@ class BoardComponent extends React.Component<Props, State> {
                 }}
                 onDragEnd={() => {
                     this.draggedCards = []
+                }}
+
+                isDropZone={isManualSort}
+                onDrop={() => {
+                    this.onDropToCard(card)
                 }}
             />
         )
@@ -542,6 +551,39 @@ class BoardComponent extends React.Component<Props, State> {
 
             await mutator.changeViewVisibleOptionIds(activeView, visibleOptionIds)
         }
+    }
+
+    private async onDropToCard(card: Card) {
+        Utils.log(`onDropToCard: ${card.title}`)
+        const {boardTree} = this.props
+        const {activeView} = boardTree
+        const {draggedCards, draggedHeaderOption} = this
+        const optionId = card.properties[activeView.groupById]
+
+        if (draggedCards.length < 1) {
+            return
+        }
+
+        const cardOrder = boardTree.currentCardOrder()
+        for (const draggedCard of draggedCards) {
+            if (draggedCard.id === card.id) {
+                continue
+            }
+
+            Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${optionId}`)
+            const oldValue = draggedCard.properties[boardTree.groupByProperty.id]
+            if (optionId !== oldValue) {
+                await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, optionId, 'drag card')
+            }
+
+            // Change sort position of card
+            const srcIndex = cardOrder.indexOf(draggedCard.id)
+            cardOrder.splice(srcIndex, 1)
+            const destIndex = cardOrder.indexOf(card.id)
+            cardOrder.splice(destIndex, 0, draggedCard.id)
+        }
+
+        await mutator.changeViewCardOrder(activeView, cardOrder)
     }
 }
 

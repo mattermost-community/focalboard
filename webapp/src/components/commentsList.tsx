@@ -11,7 +11,7 @@ import mutator from '../mutator'
 import Comment from './comment'
 
 import './commentsList.scss'
-import { MarkdownEditor } from './markdownEditor'
+import {MarkdownEditor} from './markdownEditor'
 
 type Props = {
     comments: readonly IBlock[]

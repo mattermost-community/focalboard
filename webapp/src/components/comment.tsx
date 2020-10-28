@@ -10,7 +10,7 @@ import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 
 import './comment.scss'
-import { Utils } from '../utils'
+import {Utils} from '../utils'
 
 type Props = {
     comment: IBlock

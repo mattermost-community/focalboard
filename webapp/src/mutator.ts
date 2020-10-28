@@ -17,7 +17,7 @@ import {Utils} from './utils'
 // It also ensures that the Undo-manager is called for each action
 //
 class Mutator {
-    private async updateBlock(newBlock: IBlock, oldBlock: IBlock, description: string): Promise<void> {
+    async updateBlock(newBlock: IBlock, oldBlock: IBlock, description: string): Promise<void> {
         await undoManager.perform(
             async () => {
                 await octoClient.updateBlock(newBlock)
@@ -419,6 +419,14 @@ class Mutator {
         newView.visibleOptionIds.push(columnOptionId)
         await this.updateBlock(newView, view, 'show column')
     }
+
+    async changeViewCardOrder(view: BoardView, cardOrder: string[], description = 'reorder'): Promise<void> {
+        const newView = new MutableBoardView(view)
+        newView.cardOrder = cardOrder
+        await this.updateBlock(newView, view, description)
+    }
+
+    // Other methods
 
     // Not a mutator, but convenient to put here since Mutator wraps OctoClient
     async exportFullArchive(): Promise<IBlock[]> {
