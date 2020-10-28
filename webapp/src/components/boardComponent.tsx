@@ -39,7 +39,7 @@ type State = {
     isSearching: boolean
     shownCard?: Card
     viewMenu: boolean
-    selectedCards: Card[]
+    selectedCardIds: string[]
     showFilter: boolean
 }
 
@@ -55,10 +55,16 @@ class BoardComponent extends React.Component<Props, State> {
         }
 
         if (e.keyCode === 27) {
-            if (this.state.selectedCards.length > 0) {
-                this.setState({selectedCards: []})
+            if (this.state.selectedCardIds.length > 0) {
+                this.setState({selectedCardIds: []})
                 e.stopPropagation()
             }
+        }
+
+        if (e.keyCode === 8 || e.keyCode === 46) {
+            // Backspace or Del: Delete selected cards
+            this.deleteSelectedCards()
+            e.stopPropagation()
         }
     }
 
@@ -75,7 +81,7 @@ class BoardComponent extends React.Component<Props, State> {
         this.state = {
             isSearching: Boolean(this.props.boardTree?.getSearchText()),
             viewMenu: false,
-            selectedCards: [],
+            selectedCardIds: [],
             showFilter: false,
         }
     }
@@ -214,19 +220,20 @@ class BoardComponent extends React.Component<Props, State> {
     }
 
     private renderCard(card: Card, visiblePropertyTemplates: IPropertyTemplate[]) {
-        const {activeView} = this.props.boardTree
+        const {boardTree} = this.props
+        const {activeView} = boardTree
         const isManualSort = activeView.sortOptions.length < 1
         return (
             <BoardCard
                 card={card}
                 visiblePropertyTemplates={visiblePropertyTemplates}
                 key={card.id}
-                isSelected={this.state.selectedCards.includes(card)}
+                isSelected={this.state.selectedCardIds.includes(card.id)}
                 onClick={(e) => {
                     this.cardClicked(e, card)
                 }}
                 onDragStart={() => {
-                    this.draggedCards = this.state.selectedCards.includes(card) ? this.state.selectedCards : [card]
+                    this.draggedCards = this.state.selectedCardIds.includes(card.id) ? this.state.selectedCardIds.map((id) => boardTree.allCards.find(o => o.id === id)) : [card]
                 }}
                 onDragEnd={() => {
                     this.draggedCards = []
@@ -454,8 +461,8 @@ class BoardComponent extends React.Component<Props, State> {
     }
 
     private backgroundClicked(e: React.MouseEvent) {
-        if (this.state.selectedCards.length > 0) {
-            this.setState({selectedCards: []})
+        if (this.state.selectedCardIds.length > 0) {
+            this.setState({selectedCardIds: []})
             e.stopPropagation()
         }
     }
@@ -490,32 +497,32 @@ class BoardComponent extends React.Component<Props, State> {
 
     private cardClicked(e: React.MouseEvent, card: Card): void {
         if (e.shiftKey) {
-            let selectedCards = this.state.selectedCards.slice()
-            if (selectedCards.length > 0 && (e.metaKey || e.ctrlKey)) {
+            let selectedCardIds = this.state.selectedCardIds.slice()
+            if (selectedCardIds.length > 0 && (e.metaKey || e.ctrlKey)) {
                 // Cmd+Shift+Click: Extend the selection
                 const {boardTree} = this.props
-                const orderedCards = boardTree.orderedCards()
-                const lastCard = selectedCards[selectedCards.length-1]
-                const srcIndex = orderedCards.indexOf(lastCard)
-                const destIndex = orderedCards.indexOf(card)
-                const newCards = (srcIndex < destIndex) ? orderedCards.slice(srcIndex, destIndex+1) : orderedCards.slice(destIndex, srcIndex+1)
-                for (const newCard of newCards) {
-                    if (!selectedCards.includes(newCard)) {
-                        selectedCards.push(newCard)
+                const orderedCardIds = boardTree.orderedCards().map((o) => o.id)
+                const lastCardId = selectedCardIds[selectedCardIds.length-1]
+                const srcIndex = orderedCardIds.indexOf(lastCardId)
+                const destIndex = orderedCardIds.indexOf(card.id)
+                const newCardIds = (srcIndex < destIndex) ? orderedCardIds.slice(srcIndex, destIndex+1) : orderedCardIds.slice(destIndex, srcIndex+1)
+                for (const newCardId of newCardIds) {
+                    if (!selectedCardIds.includes(newCardId)) {
+                        selectedCardIds.push(newCardId)
                     }
                 }
-                this.setState({selectedCards})
+                this.setState({selectedCardIds})
             } else {
                 // Shift+Click: add to selection
-                if (selectedCards.includes(card)) {
-                    selectedCards = selectedCards.filter((o) => o != card)
+                if (selectedCardIds.includes(card.id)) {
+                    selectedCardIds = selectedCardIds.filter((o) => o != card.id)
                 } else {
-                    selectedCards.push(card)
+                    selectedCardIds.push(card.id)
                 }
-                this.setState({selectedCards})
+                this.setState({selectedCardIds})
             }
         } else {
-            this.setState({selectedCards: [], shownCard: card})
+            this.setState({selectedCardIds: [], shownCard: card})
         }
 
         e.stopPropagation()
@@ -546,11 +553,12 @@ class BoardComponent extends React.Component<Props, State> {
 
         if (draggedCards.length > 0) {
             mutator.beginUndoGroup()
+            const description = draggedCards.length > 1 ? `drag ${draggedCards.length} cards` : 'drag card'
             for (const draggedCard of draggedCards) {
                 Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${optionId}`)
                 const oldValue = draggedCard.properties[boardTree.groupByProperty.id]
                 if (optionId !== oldValue) {
-                    await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, optionId, 'drag card')
+                    await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, optionId, description)
                 }
             }
             mutator.endUndoGroup()
@@ -584,6 +592,7 @@ class BoardComponent extends React.Component<Props, State> {
 
         mutator.beginUndoGroup()
 
+        const description = draggedCards.length > 1 ? `drag ${draggedCards.length} cards` : 'drag card'
         const cardOrder = boardTree.orderedCards().map((o) => o.id)
         for (const draggedCard of draggedCards) {
             if (draggedCard.id === card.id) {
@@ -593,7 +602,7 @@ class BoardComponent extends React.Component<Props, State> {
             Utils.log(`draggedCard: ${draggedCard.title}, column: ${optionId}`)
             const oldOptionId = draggedCard.properties[boardTree.groupByProperty.id]
             if (optionId !== oldOptionId) {
-                await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, optionId, 'drag card')
+                await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, optionId, description)
             }
 
             // Change sort position of card
@@ -607,8 +616,24 @@ class BoardComponent extends React.Component<Props, State> {
             cardOrder.splice(destIndex, 0, draggedCard.id)
         }
 
-        await mutator.changeViewCardOrder(activeView, cardOrder)
+        await mutator.changeViewCardOrder(activeView, cardOrder, description)
         mutator.endUndoGroup()
+    }
+
+    private async deleteSelectedCards() {
+        const {selectedCardIds} = this.state
+        if (selectedCardIds.length < 1) {
+            return
+        }
+
+        mutator.beginUndoGroup()
+        for (const cardId of selectedCardIds) {
+            const card = this.props.boardTree.allCards.find((o) => o.id === cardId)
+            mutator.deleteBlock(card, selectedCardIds.length > 1 ? `delete ${selectedCardIds.length} cards` : 'delete card')
+        }
+        mutator.endUndoGroup()
+
+        this.setState({selectedCardIds: []})
     }
 }
 
