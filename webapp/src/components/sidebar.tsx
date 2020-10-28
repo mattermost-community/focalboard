@@ -203,6 +203,7 @@ class Sidebar extends React.Component<Props, State> {
                         <Menu.SubMenu
                             id='lang'
                             name={intl.formatMessage({id: 'Sidebar.set-language', defaultMessage: 'Set Language'})}
+                            position='top'
                         >
                             <Menu.Text
                                 id='english-lang'
@@ -218,6 +219,7 @@ class Sidebar extends React.Component<Props, State> {
                         <Menu.SubMenu
                             id='theme'
                             name={intl.formatMessage({id: 'Sidebar.set-theme', defaultMessage: 'Set Theme'})}
+                            position='top'
                         >
                             <Menu.Text
                                 id='dark-theme'

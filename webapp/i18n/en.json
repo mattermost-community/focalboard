@@ -16,6 +16,7 @@
   "CardDetail.add-property": "+ Add a property",
   "CardDetail.image": "Image",
   "CardDetail.new-comment-placeholder": "Add a comment...",
+  "CardDetail.pick-icon": "Pick Icon",
   "CardDetail.random-icon": "Random",
   "CardDetail.remove-icon": "Remove Icon",
   "CardDetail.text": "Text",
@@ -66,6 +67,7 @@
   "ViewHeader.test-add-100-cards": "TEST: Add 100 cards",
   "ViewHeader.test-add-1000-cards": "TEST: Add 1,000 cards",
   "ViewHeader.test-randomize-icons": "TEST: Randomize icons",
+  "ViewTitle.pick-icon": "Pick Icon",
   "ViewTitle.random-icon": "Random",
   "ViewTitle.remove-icon": "Remove Icon",
   "ViewTitle.untitled-board": "Untitled Board"

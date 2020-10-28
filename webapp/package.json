@@ -13,6 +13,7 @@
 		"i18n-extract": "formatjs extract src/**/*.tsx src/**/*.ts --out-file i18n/tmp.json; formatjs compile i18n/tmp.json --out-file i18n/en.json; rm i18n/tmp.json"
 	},
 	"dependencies": {
+		"emoji-mart": "^3.0.0",
 		"marked": "^1.1.1",
 		"react": "^16.13.1",
 		"react-dom": "^16.13.1",
@@ -30,6 +31,7 @@
 		"@formatjs/ts-transformer": "^2.11.3",
 		"@testing-library/jest-dom": "^5.11.4",
 		"@testing-library/react": "^11.0.4",
+		"@types/emoji-mart": "^3.0.3",
 		"@types/jest": "^26.0.14",
 		"@types/marked": "^1.1.0",
 		"@types/react": "^16.9.49",

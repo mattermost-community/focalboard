@@ -9,7 +9,7 @@ import {MenuOptionProps} from './menuItem'
 import './subMenuOption.scss'
 
 type SubMenuOptionProps = MenuOptionProps & {
-    position?: 'bottom | top'
+    position?: 'bottom' | 'top'
 }
 
 type SubMenuState = {

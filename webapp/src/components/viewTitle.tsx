@@ -9,6 +9,7 @@ import mutator from '../mutator'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 import Editable from '../widgets/editable'
+import EmojiPicker from '../widgets/emojiPicker'
 import Button from '../widgets/buttons/button'
 
 import './viewTitle.scss'
@@ -31,6 +32,13 @@ class ViewTitle extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props)
         this.state = {title: props.board.title}
+    }
+
+    onSelectEmoji = (emoji: string) => {
+        mutator.changeIcon(this.props.board, emoji)
+
+        // Close the menu
+        document.body.click()
     }
 
     render(): JSX.Element {
@@ -62,6 +70,12 @@ class ViewTitle extends React.Component<Props, State> {
                                     name={intl.formatMessage({id: 'ViewTitle.random-icon', defaultMessage: 'Random'})}
                                     onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}
                                 />
+                                <Menu.SubMenu
+                                    id='pick'
+                                    name={intl.formatMessage({id: 'ViewTitle.pick-icon', defaultMessage: 'Pick Icon'})}
+                                >
+                                    <EmojiPicker onSelect={this.onSelectEmoji}/>
+                                </Menu.SubMenu>
                                 <Menu.Text
                                     id='remove'
                                     name={intl.formatMessage({id: 'ViewTitle.remove-icon', defaultMessage: 'Remove Icon'})}

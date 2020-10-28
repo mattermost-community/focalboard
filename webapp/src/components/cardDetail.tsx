@@ -14,6 +14,7 @@ import {Utils} from '../utils'
 import MenuWrapper from '../widgets/menuWrapper'
 import Menu from '../widgets/menu'
 import Editable from '../widgets/editable'
+import EmojiPicker from '../widgets/emojiPicker'
 import Button from '../widgets/buttons/button'
 
 import {MarkdownEditor} from './markdownEditor'
@@ -48,6 +49,13 @@ class CardDetail extends React.Component<Props, State> {
         this.state = {
             title: '',
         }
+    }
+
+    onSelectEmoji = (emoji: string) => {
+        mutator.changeIcon(this.state.cardTree.card, emoji)
+
+        // Close the menu
+        document.body.click()
     }
 
     componentDidMount() {
@@ -128,6 +136,12 @@ class CardDetail extends React.Component<Props, State> {
                                     name={intl.formatMessage({id: 'CardDetail.random-icon', defaultMessage: 'Random'})}
                                     onClick={() => mutator.changeIcon(card, BlockIcons.shared.randomIcon())}
                                 />
+                                <Menu.SubMenu
+                                    id='pick'
+                                    name={intl.formatMessage({id: 'CardDetail.pick-icon', defaultMessage: 'Pick Icon'})}
+                                >
+                                    <EmojiPicker onSelect={this.onSelectEmoji}/>
+                                </Menu.SubMenu>
                                 <Menu.Text
                                     id='remove'
                                     name={intl.formatMessage({id: 'CardDetail.remove-icon', defaultMessage: 'Remove Icon'})}
