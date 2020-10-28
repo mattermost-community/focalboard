@@ -244,7 +244,7 @@ class ViewHeader extends React.Component<Props, State> {
                                         // This sets the manual card order to the currently displayed order
                                         // Note: Perform this as a single update to change both properties correctly
                                         const newView = new MutableBoardView(activeView)
-                                        newView.cardOrder = boardTree.currentCardOrder()
+                                        newView.cardOrder = boardTree.orderedCards().map((o) => o.id)
                                         newView.sortOptions = []
                                         mutator.updateBlock(newView, activeView, 'reorder')
                                     }}

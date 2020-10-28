@@ -27,7 +27,7 @@ interface BoardTree {
     readonly groupByProperty?: IPropertyTemplate
 
     getSearchText(): string | undefined
-    currentCardOrder(): string[]
+    orderedCards(): Card[]
 }
 
 class MutableBoardTree implements BoardTree {
@@ -378,16 +378,16 @@ class MutableBoardTree implements BoardTree {
         return sortedCards
     }
 
-    currentCardOrder(): string[] {
-        const cardOrder: string[] = []
+    orderedCards(): Card[] {
+        const cards: Card[] = []
         for (const group of this.visibleGroups) {
-            cardOrder.push(...group.cards.map((o) => o.id))
+            cards.push(...group.cards)
         }
         for (const group of this.hiddenGroups) {
-            cardOrder.push(...group.cards.map((o) => o.id))
+            cards.push(...group.cards)
         }
 
-        return cardOrder
+        return cards
     }
 }
 

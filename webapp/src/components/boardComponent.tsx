@@ -490,14 +490,30 @@ class BoardComponent extends React.Component<Props, State> {
 
     private cardClicked(e: React.MouseEvent, card: Card): void {
         if (e.shiftKey) {
-            // Shift+Click = add to selection
             let selectedCards = this.state.selectedCards.slice()
-            if (selectedCards.includes(card)) {
-                selectedCards = selectedCards.filter((o) => o != card)
+            if (selectedCards.length > 0 && (e.metaKey || e.ctrlKey)) {
+                // Cmd+Shift+Click: Extend the selection
+                const {boardTree} = this.props
+                const orderedCards = boardTree.orderedCards()
+                const lastCard = selectedCards[selectedCards.length-1]
+                const srcIndex = orderedCards.indexOf(lastCard)
+                const destIndex = orderedCards.indexOf(card)
+                const newCards = (srcIndex < destIndex) ? orderedCards.slice(srcIndex, destIndex+1) : orderedCards.slice(destIndex, srcIndex+1)
+                for (const newCard of newCards) {
+                    if (!selectedCards.includes(newCard)) {
+                        selectedCards.push(newCard)
+                    }
+                }
+                this.setState({selectedCards})
             } else {
-                selectedCards.push(card)
+                // Shift+Click: add to selection
+                if (selectedCards.includes(card)) {
+                    selectedCards = selectedCards.filter((o) => o != card)
+                } else {
+                    selectedCards.push(card)
+                }
+                this.setState({selectedCards})
             }
-            this.setState({selectedCards})
         } else {
             this.setState({selectedCards: [], shownCard: card})
         }
@@ -564,7 +580,7 @@ class BoardComponent extends React.Component<Props, State> {
             return
         }
 
-        const cardOrder = boardTree.currentCardOrder()
+        const cardOrder = boardTree.orderedCards().map((o) => o.id)
         for (const draggedCard of draggedCards) {
             if (draggedCard.id === card.id) {
                 continue
