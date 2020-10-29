@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 	"os/exec"
@@ -9,8 +10,8 @@ import (
 	"github.com/webview/webview"
 )
 
-func runOctoTasks() {
-	cmd := exec.Command("./octoserver", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10))
+func runOctoTasks(ctx context.Context) {
+	cmd := exec.CommandContext(ctx, "./octoserver", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10))
 	cmd.Stdout = os.Stdout
 	err := cmd.Run()
 	if err != nil {
@@ -23,10 +24,12 @@ func main() {
 	debug := true
 	w := webview.New(debug)
 	defer w.Destroy()
-	go runOctoTasks()
+	ctx, cancel := context.WithCancel(context.Background())
+	go runOctoTasks(ctx)
 
 	w.SetTitle("Octo Tasks")
 	w.SetSize(1024, 768, webview.HintNone)
 	w.Navigate("http://localhost:8000")
 	w.Run()
+	cancel()
 }
