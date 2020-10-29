@@ -13,14 +13,15 @@ const (
 
 // Configuration is the app configuration stored in a json file.
 type Configuration struct {
-	ServerRoot     string `json:"serverRoot" mapstructure:"serverRoot"`
-	Port           int    `json:"port" mapstructure:"port"`
-	DBType         string `json:"dbtype" mapstructure:"dbtype"`
-	DBConfigString string `json:"dbconfig" mapstructure:"dbconfig"`
-	UseSSL         bool   `json:"useSSL" mapstructure:"useSSL"`
-	WebPath        string `json:"webpath" mapstructure:"webpath"`
-	FilesPath      string `json:"filespath" mapstructure:"filespath"`
-	Telemetry      bool   `json:"telemetry" mapstructure:"telemetry"`
+	ServerRoot     string   `json:"serverRoot" mapstructure:"serverRoot"`
+	Port           int      `json:"port" mapstructure:"port"`
+	DBType         string   `json:"dbtype" mapstructure:"dbtype"`
+	DBConfigString string   `json:"dbconfig" mapstructure:"dbconfig"`
+	UseSSL         bool     `json:"useSSL" mapstructure:"useSSL"`
+	WebPath        string   `json:"webpath" mapstructure:"webpath"`
+	FilesPath      string   `json:"filespath" mapstructure:"filespath"`
+	Telemetry      bool     `json:"telemetry" mapstructure:"telemetry"`
+	WebhookUpdate  []string `json:"webhook_update" mapstructure:"webhook_update"`
 }
 
 // ReadConfigFile read the configuration from the filesystem.
@@ -34,6 +35,7 @@ func ReadConfigFile() (*Configuration, error) {
 	viper.SetDefault("DBConfigString", "./octo.db")
 	viper.SetDefault("WebPath", "./pack")
 	viper.SetDefault("FilesPath", "./files")
+	viper.SetDefault("WebhookUpdate", nil)
 
 	err := viper.ReadInConfig() // Find and read the config file
 	if err != nil {             // Handle errors reading the config file
