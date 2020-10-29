@@ -12,6 +12,10 @@ import (
 
 // NotifyUpdate calls webhooks
 func (wh *WebhookClient) NotifyUpdate(block model.Block) {
+	if len(wh.config.WebhookUpdate) < 1 {
+		return
+	}
+
 	json, err := json.Marshal(block)
 	if err != nil {
 		log.Fatal("NotifyUpdate: json.Marshal", err)
