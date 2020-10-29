@@ -87,33 +87,33 @@ class ViewHeader extends React.Component<Props, State> {
         const startCount = boardTree?.cards?.length
         let optionIndex = 0
 
-        mutator.beginUndoGroup()
-        for (let i = 0; i < count; i++) {
-            const card = new MutableCard()
-            card.parentId = boardTree.board.id
-            card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
-            card.title = `Test Card ${startCount + i + 1}`
-            card.icon = BlockIcons.shared.randomIcon()
+        await mutator.performAsUndoGroup(async () => {
+            for (let i = 0; i < count; i++) {
+                const card = new MutableCard()
+                card.parentId = boardTree.board.id
+                card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
+                card.title = `Test Card ${startCount + i + 1}`
+                card.icon = BlockIcons.shared.randomIcon()
 
-            if (boardTree.groupByProperty && boardTree.groupByProperty.options.length > 0) {
-                // Cycle through options
-                const option = boardTree.groupByProperty.options[optionIndex]
-                optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
-                card.properties[boardTree.groupByProperty.id] = option.id
+                if (boardTree.groupByProperty && boardTree.groupByProperty.options.length > 0) {
+                    // Cycle through options
+                    const option = boardTree.groupByProperty.options[optionIndex]
+                    optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
+                    card.properties[boardTree.groupByProperty.id] = option.id
+                }
+                await mutator.insertBlock(card, 'test add card')
             }
-            await mutator.insertBlock(card, 'test add card')
-        }
-        mutator.endUndoGroup()
+        })
     }
 
     private async testRandomizeIcons() {
         const {boardTree} = this.props
 
-        mutator.beginUndoGroup()
-        for (const card of boardTree.cards) {
-            mutator.changeIcon(card, BlockIcons.shared.randomIcon(), 'randomize icon')
-        }
-        mutator.endUndoGroup()
+        await mutator.performAsUndoGroup(async () => {
+            for (const card of boardTree.cards) {
+                await mutator.changeIcon(card, BlockIcons.shared.randomIcon(), 'randomize icon')
+            }
+        })
     }
 
     render(): JSX.Element {

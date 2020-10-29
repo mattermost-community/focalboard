@@ -552,16 +552,16 @@ class BoardComponent extends React.Component<Props, State> {
         Utils.assertValue(boardTree)
 
         if (draggedCards.length > 0) {
-            mutator.beginUndoGroup()
-            const description = draggedCards.length > 1 ? `drag ${draggedCards.length} cards` : 'drag card'
-            for (const draggedCard of draggedCards) {
-                Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${optionId}`)
-                const oldValue = draggedCard.properties[boardTree.groupByProperty.id]
-                if (optionId !== oldValue) {
-                    await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, optionId, description)
+            await mutator.performAsUndoGroup(async () => {
+                const description = draggedCards.length > 1 ? `drag ${draggedCards.length} cards` : 'drag card'
+                for (const draggedCard of draggedCards) {
+                    Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${optionId}`)
+                    const oldValue = draggedCard.properties[boardTree.groupByProperty.id]
+                    if (optionId !== oldValue) {
+                        await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, optionId, description)
+                    }
                 }
-            }
-            mutator.endUndoGroup()
+            })
         } else if (draggedHeaderOption) {
             Utils.log(`ondrop. Header option: ${draggedHeaderOption.value}, column: ${option?.value}`)
             Utils.assertValue(boardTree.groupByProperty)
@@ -605,20 +605,18 @@ class BoardComponent extends React.Component<Props, State> {
         }
         cardOrder.splice(destIndex, 0, ...draggedCardIds)
 
-        mutator.beginUndoGroup()
-
-        // Update properties of dragged cards
-        for (const draggedCard of draggedCards) {
-            Utils.log(`draggedCard: ${draggedCard.title}, column: ${optionId}`)
-            const oldOptionId = draggedCard.properties[boardTree.groupByProperty.id]
-            if (optionId !== oldOptionId) {
-                await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, optionId, description)
+        await mutator.performAsUndoGroup(async () => {
+            // Update properties of dragged cards
+            for (const draggedCard of draggedCards) {
+                Utils.log(`draggedCard: ${draggedCard.title}, column: ${optionId}`)
+                const oldOptionId = draggedCard.properties[boardTree.groupByProperty.id]
+                if (optionId !== oldOptionId) {
+                    await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, optionId, description)
+                }
             }
-        }
 
-        await mutator.changeViewCardOrder(activeView, cardOrder, description)
-
-        mutator.endUndoGroup()
+            await mutator.changeViewCardOrder(activeView, cardOrder, description)
+        })
     }
 
     private async deleteSelectedCards() {
@@ -627,12 +625,12 @@ class BoardComponent extends React.Component<Props, State> {
             return
         }
 
-        mutator.beginUndoGroup()
-        for (const cardId of selectedCardIds) {
-            const card = this.props.boardTree.allCards.find((o) => o.id === cardId)
-            mutator.deleteBlock(card, selectedCardIds.length > 1 ? `delete ${selectedCardIds.length} cards` : 'delete card')
-        }
-        mutator.endUndoGroup()
+        mutator.performAsUndoGroup(async () => {
+            for (const cardId of selectedCardIds) {
+                const card = this.props.boardTree.allCards.find((o) => o.id === cardId)
+                mutator.deleteBlock(card, selectedCardIds.length > 1 ? `delete ${selectedCardIds.length} cards` : 'delete card')
+            }
+        })
 
         this.setState({selectedCardIds: []})
     }

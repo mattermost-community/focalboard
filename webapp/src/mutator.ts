@@ -19,12 +19,31 @@ import {Utils} from './utils'
 class Mutator {
     private undoGroupId?: string
 
-    beginUndoGroup() {
+    private beginUndoGroup(): string {
+        if (this.undoGroupId) {
+            Utils.assertFailure('UndoManager does not support nested groups')
+            return
+        }
         this.undoGroupId = Utils.createGuid()
+        return this.undoGroupId
     }
 
-    endUndoGroup() {
+    private endUndoGroup(groupId: string) {
+        if (this.undoGroupId !== groupId) {
+            Utils.assertFailure('Mismatched groupId. UndoManager does not support nested groups')
+            return
+        }
         this.undoGroupId = undefined
+    }
+
+    async performAsUndoGroup(actions: () => Promise<void>): Promise<void> {
+        const groupId = this.beginUndoGroup()
+        try {
+            await actions()
+        } catch(err) {
+            Utils.assertFailure(`ERROR: ${err?.toString?.()}`)
+        }
+        this.endUndoGroup(groupId)
     }
 
     async updateBlock(newBlock: IBlock, oldBlock: IBlock, description: string): Promise<void> {
