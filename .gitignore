@@ -42,3 +42,5 @@ octo*.db
 mac/temp
 mac/dist
 linux/octo-linux-app
+linux/dist
+linux/temp

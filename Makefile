@@ -1,4 +1,4 @@
-.PHONY: prebuild clean cleanall server server-linux generate watch-server mac
+.PHONY: prebuild clean cleanall server server-linux generate watch-server mac linux-app
 
 all: server
 
@@ -36,6 +36,9 @@ server-doc:
 watch-server:
 	cd server; modd
 
+webapp:
+	cd webapp; npm run pack
+
 mac:
 	rm -rf mac/resources/bin
 	rm -rf mac/resources/pack
@@ -45,6 +48,18 @@ mac:
 	mkdir -p mac/temp
 	xcodebuild archive -workspace mac/Tasks.xcworkspace -scheme Tasks -archivePath mac/temp/tasks.xcarchive
 	xcodebuild -exportArchive -archivePath mac/temp/tasks.xcarchive -exportPath mac/dist -exportOptionsPlist mac/export.plist
+
+linux-app: server-linux webapp
+	rm -rf linux/temp
+	mkdir -p linux/temp/octo-linux-app/webapp
+	mkdir -p linux/dist
+	cp -R bin/octoserver linux/temp/octo-linux-app/
+	cp -R config.json linux/temp/octo-linux-app/
+	cp -R webapp/pack linux/temp/octo-linux-app/webapp/pack
+	cd linux; make build
+	cp -R linux/octo-linux-app linux/temp/octo-linux-app/
+	cd linux/temp; tar -zcf ../dist/octo-linux-app.tar.gz octo-linux-app
+	rm -rf linux/temp
 
 clean:
 	rm -rf bin

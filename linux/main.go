@@ -10,7 +10,7 @@ import (
 )
 
 func runOctoTasks() {
-	cmd := exec.Command("./bin/octoserver", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10))
+	cmd := exec.Command("./octoserver", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10))
 	cmd.Stdout = os.Stdout
 	err := cmd.Run()
 	if err != nil {
@@ -20,7 +20,6 @@ func runOctoTasks() {
 }
 
 func main() {
-	os.Chdir("../")
 	debug := true
 	w := webview.New(debug)
 	defer w.Destroy()
