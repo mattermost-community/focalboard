@@ -19,7 +19,7 @@ func TestGetParentID(t *testing.T) {
 	cfg := config.Configuration{}
 	store := mockstore.NewMockStore(ctrl)
 	wsserver := ws.NewServer()
-	webhook := webhook.New(&cfg)
+	webhook := webhook.NewClient(&cfg)
 	app := New(&cfg, store, wsserver, &mocks.FileBackend{}, webhook)
 
 	t.Run("success query", func(t *testing.T) {

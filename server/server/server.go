@@ -60,7 +60,7 @@ func New(cfg *config.Configuration) (*Server, error) {
 		return nil, errors.New("unable to initialize the files storage")
 	}
 
-	webhookClient := webhook.New(cfg)
+	webhookClient := webhook.NewClient(cfg)
 
 	appBuilder := func() *app.App { return app.New(cfg, store, wsServer, filesBackend, webhookClient) }
 	api := api.NewAPI(appBuilder)

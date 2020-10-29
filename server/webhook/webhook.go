@@ -11,7 +11,7 @@ import (
 )
 
 // NotifyUpdate calls webhooks
-func (wh *WebhookClient) NotifyUpdate(block model.Block) {
+func (wh *Client) NotifyUpdate(block model.Block) {
 	if len(wh.config.WebhookUpdate) < 1 {
 		return
 	}
@@ -26,14 +26,14 @@ func (wh *WebhookClient) NotifyUpdate(block model.Block) {
 	}
 }
 
-// WebhookClient is a webhook client
-type WebhookClient struct {
+// Client is a webhook client
+type Client struct {
 	config *config.Configuration
 }
 
-// New creates a new WebhookClient
-func New(config *config.Configuration) *WebhookClient {
-	return &WebhookClient{
+// NewClient creates a new Client
+func NewClient(config *config.Configuration) *Client {
+	return &Client{
 		config: config,
 	}
 }

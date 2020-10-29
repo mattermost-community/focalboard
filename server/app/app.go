@@ -13,9 +13,9 @@ type App struct {
 	store        store.Store
 	wsServer     *ws.Server
 	filesBackend filesstore.FileBackend
-	webhook      *webhook.WebhookClient
+	webhook      *webhook.Client
 }
 
-func New(config *config.Configuration, store store.Store, wsServer *ws.Server, filesBackend filesstore.FileBackend, webhook *webhook.WebhookClient) *App {
+func New(config *config.Configuration, store store.Store, wsServer *ws.Server, filesBackend filesstore.FileBackend, webhook *webhook.Client) *App {
 	return &App{config: config, store: store, wsServer: wsServer, filesBackend: filesBackend, webhook: webhook}
 }
