@@ -6,6 +6,7 @@ import {Card} from '../blocks/card'
 import {BoardTree} from '../viewModel/boardTree'
 import mutator from '../mutator'
 import Menu from '../widgets/menu'
+import DeleteIcon from '../widgets/icons/delete'
 
 import CardDetail from './cardDetail'
 import Dialog from './dialog'
@@ -22,6 +23,7 @@ class CardDialog extends React.Component<Props> {
             <Menu position='left'>
                 <Menu.Text
                     id='delete'
+                    icon={<DeleteIcon/>}
                     name='Delete'
                     onClick={async () => {
                         await mutator.deleteBlock(this.props.card, 'delete card')

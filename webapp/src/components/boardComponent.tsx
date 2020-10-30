@@ -16,6 +16,9 @@ import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 import OptionsIcon from '../widgets/icons/options'
 import AddIcon from '../widgets/icons/add'
+import HideIcon from '../widgets/icons/hide'
+import ShowIcon from '../widgets/icons/show'
+import DeleteIcon from '../widgets/icons/delete'
 import Button from '../widgets/buttons/button'
 
 import BoardCard from './boardCard'
@@ -309,6 +312,7 @@ class BoardComponent extends React.Component<Props, State> {
                         <Menu>
                             <Menu.Text
                                 id='hide'
+                                icon={<HideIcon/>}
                                 name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
                                 onClick={() => mutator.hideViewColumn(activeView, '')}
                             />
@@ -372,11 +376,13 @@ class BoardComponent extends React.Component<Props, State> {
                     <Menu>
                         <Menu.Text
                             id='hide'
+                            icon={<HideIcon/>}
                             name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
                             onClick={() => mutator.hideViewColumn(activeView, group.option.id)}
                         />
                         <Menu.Text
                             id='delete'
+                            icon={<DeleteIcon/>}
                             name={intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
                             onClick={() => mutator.deletePropertyOption(boardTree, boardTree.groupByProperty, group.option)}
                         />
@@ -450,6 +456,7 @@ class BoardComponent extends React.Component<Props, State> {
                     <Menu>
                         <Menu.Text
                             id='show'
+                            icon={<ShowIcon/>}
                             name={intl.formatMessage({id: 'BoardComponent.show', defaultMessage: 'Show'})}
                             onClick={() => mutator.unhideViewColumn(activeView, group.option.id)}
                         />
