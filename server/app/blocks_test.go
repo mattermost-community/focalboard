@@ -7,7 +7,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/config"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/store/mockstore"
-	"github.com/mattermost/mattermost-octo-tasks/server/webhook"
+	"github.com/mattermost/mattermost-octo-tasks/server/services/webhook"
 	"github.com/mattermost/mattermost-octo-tasks/server/ws"
 	"github.com/mattermost/mattermost-server/v5/services/filesstore/mocks"
 	"github.com/stretchr/testify/require"
