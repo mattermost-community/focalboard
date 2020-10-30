@@ -20,8 +20,8 @@ export default class TextOption extends React.PureComponent<TextOptionProps> {
                 className='MenuOption TextOption menu-option'
                 onClick={this.handleOnClick}
             >
-                <div className='menu-name'>{name}</div>
                 {icon}
+                <div className='menu-name'>{name}</div>
             </div>
         )
     }

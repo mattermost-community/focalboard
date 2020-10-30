@@ -11,6 +11,8 @@ import mutator from '../mutator'
 import MenuWrapper from '../widgets/menuWrapper'
 import Menu from '../widgets/menu'
 import OptionsIcon from '../widgets/icons/options'
+import DeleteIcon from '../widgets/icons/delete'
+import DuplicateIcon from '../widgets/icons/duplicate'
 
 import PropertyValueElement from './propertyValueElement'
 
@@ -89,11 +91,13 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
                     <div className='octo-hoverbutton square'><OptionsIcon/></div>
                     <Menu>
                         <Menu.Text
+                            icon={<DeleteIcon/>}
                             id='delete'
                             name={intl.formatMessage({id: 'BoardCard.delete', defaultMessage: 'Delete'})}
                             onClick={() => mutator.deleteBlock(card, 'delete card')}
                         />
                         <Menu.Text
+                            icon={<DuplicateIcon/>}
                             id='duplicate'
                             name={intl.formatMessage({id: 'BoardCard.duplicate', defaultMessage: 'Duplicate'})}
                             onClick={() => mutator.insertBlock(MutableBlock.duplicate(card), 'duplicate card')}
