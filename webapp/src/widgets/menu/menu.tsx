@@ -7,6 +7,7 @@ import SwitchOption from './switchOption'
 import TextOption from './textOption'
 import ColorOption from './colorOption'
 import SubMenuOption from './subMenuOption'
+import LabelOption from './labelOption'
 
 import './menu.scss'
 
@@ -21,6 +22,7 @@ export default class Menu extends React.PureComponent<MenuProps> {
     static Switch = SwitchOption
     static Separator = SeparatorOption
     static Text = TextOption
+    static Label = LabelOption
 
     public render(): JSX.Element {
         const {position, children} = this.props

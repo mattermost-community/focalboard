@@ -8,6 +8,7 @@ import {IBlock} from '../blocks/block'
 
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
+import DeleteIcon from '../widgets/icons/delete'
 
 import './comment.scss'
 import {Utils} from '../utils'
@@ -36,8 +37,9 @@ const Comment: FC<Props> = (props: Props) => {
                 <div className='comment-date'>{(new Date(comment.createAt)).toLocaleTimeString()}</div>
                 <MenuWrapper>
                     <div className='octo-hoverbutton square'>{'...'}</div>
-                    <Menu>
+                    <Menu position='left'>
                         <Menu.Text
+                            icon={<DeleteIcon/>}
                             id='delete'
                             name={intl.formatMessage({id: 'Comment.delete', defaultMessage: 'Delete'})}
                             onClick={() => mutator.deleteBlock(comment)}

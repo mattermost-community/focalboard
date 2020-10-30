@@ -90,4 +90,13 @@
         cursor: pointer;
         flex-grow: 1;
     }
+
+    .OptionsIcon, .SubmenuTriangleIcon, .DotIcon {
+        fill: rgba(var(--sidebar-fg), 0.5);
+    }
+
+    .HideSidebarIcon {
+        stroke: rgba(var(--sidebar-fg), 0.5);
+        stroke-width: 6px;
+    }
 }

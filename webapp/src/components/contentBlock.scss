@@ -1,0 +1,10 @@
+.ContentBlock {
+    .MenuWrapper {
+        display: none;
+    }
+    &:hover {
+        .MenuWrapper {
+            display: flex;
+        }
+    }
+}

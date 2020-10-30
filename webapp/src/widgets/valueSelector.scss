@@ -1,0 +1,8 @@
+.ValueSelector {
+    width: 100%;
+    border-radius: 5px;
+    color: rgb(var(--main-fg));
+    &:hover {
+        background-color: rgba(var(--main-fg), 0.1),
+    }
+}
