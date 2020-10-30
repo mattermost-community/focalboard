@@ -21,11 +21,13 @@ import DropdownIcon from '../widgets/icons/dropdown'
 import OptionsIcon from '../widgets/icons/options'
 import SortUpIcon from '../widgets/icons/sortUp'
 import SortDownIcon from '../widgets/icons/sortDown'
+import ButtonWithMenu from '../widgets/buttons/buttonWithMenu'
 
 import {Editable} from './editable'
 import FilterComponent from './filterComponent'
 
 import './viewHeader.scss'
+import {sendFlashMessage} from './flashMessages'
 
 type Props = {
     boardTree?: BoardTree
@@ -348,17 +350,33 @@ class ViewHeader extends React.Component<Props, State> {
                         />
                     </Menu>
                 </MenuWrapper>
-                <div
-                    className='octo-button filled'
+                <ButtonWithMenu
                     onClick={() => {
                         this.props.addCard(true)
                     }}
+                    text={(
+                        <FormattedMessage
+                            id='ViewHeader.new'
+                            defaultMessage='New'
+                        />
+                    )}
                 >
-                    <FormattedMessage
-                        id='ViewHeader.new'
-                        defaultMessage='New'
-                    />
-                </div>
+                    <Menu position='left'>
+                        <Menu.Label>
+                            <b>
+                                <FormattedMessage
+                                    id='ViewHeader.select-a-template'
+                                    defaultMessage='Select a template'
+                                />
+                            </b>
+                        </Menu.Label>
+                        <Menu.Text
+                            id='example-template'
+                            name={intl.formatMessage({id: 'ViewHeader.sample-templte', defaultMessage: 'Sample template'})}
+                            onClick={() => sendFlashMessage({content: 'Not implemented yet', severity: 'low'})}
+                        />
+                    </Menu>
+                </ButtonWithMenu>
             </div>
         )
     }
