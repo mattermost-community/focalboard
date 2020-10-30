@@ -1,10 +1,18 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {CSSProperties} from 'react'
-import {ActionMeta, ValueType} from 'react-select'
-import CreatableSelect from 'react-select/creatable';
-import boardCard from 'src/components/boardCard';
+import {injectIntl, IntlShape} from 'react-intl'
+import {ActionMeta, ValueType, FormatOptionLabelMeta} from 'react-select'
+import CreatableSelect from 'react-select/creatable'
+
 import {IPropertyOption} from '../blocks/board'
+import {Constants} from '../constants'
+
+import Menu from './menu'
+import MenuWrapper from './menuWrapper'
+import Button from './buttons/button'
+import OptionsIcon from './icons/options'
+import DeleteIcon from './icons/delete'
 
 import './valueSelector.scss'
 
@@ -13,11 +21,47 @@ type Props = {
     value: IPropertyOption;
     onCreate?: (value: string) => void
     onChange?: (value: string) => void
+    onChangeColor?: (option: IPropertyOption, color: string) => void
+    onDeleteOption?: (option: IPropertyOption) => void
+    intl: IntlShape
 }
 
-export default class ValueSelector extends React.Component<Props> {
+class ValueSelector extends React.Component<Props> {
     public shouldComponentUpdate(): boolean {
         return true
+    }
+
+    renderLabel = (option: IPropertyOption, meta: FormatOptionLabelMeta<IPropertyOption>): React.ReactNode => {
+        if (meta.context === 'value') {
+            return <span className={`octo-label ${option.color}`} >{option.value}</span>
+        }
+        return (
+            <div className='value-menu-option'>
+                <div className='octo-label-container'>
+                    <div className={`octo-label ${option.color}`}>{option.value}</div>
+                </div>
+                <MenuWrapper stopPropagationOnToggle={true}>
+                    <Button><OptionsIcon/></Button>
+                    <Menu position='left'>
+                        <Menu.Text
+                            id='delete'
+                            icon={<DeleteIcon/>}
+                            name={this.props.intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
+                            onClick={() => this.props.onDeleteOption(option)}
+                        />
+                        <Menu.Separator/>
+                        {Constants.menuColors.map((color) => (
+                            <Menu.Color
+                                key={color.id}
+                                id={color.id}
+                                name={color.name}
+                                onClick={() => this.props.onChangeColor(option, color.id)}
+                            />
+                        ))}
+                    </Menu>
+                </MenuWrapper>
+            </div>
+        )
     }
 
     public render(): JSX.Element {
@@ -34,8 +78,8 @@ export default class ValueSelector extends React.Component<Props> {
                     }),
                     option: (provided: CSSProperties, state: {isFocused: boolean}): CSSProperties => ({
                         ...provided,
-                        background: state.isFocused ? 'rgb(var(--button-bg))' : 'rgb(var(--main-bg))',
-                        color: state.isFocused ? 'rgb(var(--button-fg))' : 'rgb(var(--main-fg))',
+                        background: state.isFocused ? 'rgba(var(--main-fg), 0.1)' : 'rgb(var(--main-bg))',
+                        color: state.isFocused ? 'rgb(var(--main-fg))' : 'rgb(var(--main-fg))',
                         padding: '2px 8px',
                     }),
                     control: (): CSSProperties => ({
@@ -56,9 +100,13 @@ export default class ValueSelector extends React.Component<Props> {
                         marginBottom: 0,
                         marginTop: 0,
                     }),
+                    menuList: (provided: CSSProperties): CSSProperties => ({
+                        ...provided,
+                        overflowY: 'unset',
+                    }),
                 }}
+                formatOptionLabel={this.renderLabel}
                 className='ValueSelector'
-                hideSelectedOptions={true}
                 options={this.props.options}
                 getOptionLabel={(o: IPropertyOption) => o.value}
                 getOptionValue={(o: IPropertyOption) => o.id}
@@ -75,3 +123,5 @@ export default class ValueSelector extends React.Component<Props> {
         )
     }
 }
+
+export default injectIntl(ValueSelector)

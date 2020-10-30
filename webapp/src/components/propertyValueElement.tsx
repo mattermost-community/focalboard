@@ -40,7 +40,7 @@ export default class PropertyValueElement extends React.Component<Props, State> 
     }
 
     render(): JSX.Element {
-        const {card, propertyTemplate, readOnly, emptyDisplayValue} = this.props
+        const {card, propertyTemplate, readOnly, emptyDisplayValue, boardTree} = this.props
         const propertyValue = card.properties[propertyTemplate.id]
         const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate)
         const finalDisplayValue = displayValue || emptyDisplayValue
@@ -75,6 +75,12 @@ export default class PropertyValueElement extends React.Component<Props, State> 
                     value={propertyTemplate.options.find((p) => p.id === propertyValue)}
                     onChange={(value) => {
                         mutator.changePropertyValue(card, propertyTemplate.id, value)
+                    }}
+                    onChangeColor={(option: IPropertyOption, colorId: string): void => {
+                        mutator.changePropertyOptionColor(boardTree.board, propertyTemplate, option, colorId)
+                    }}
+                    onDeleteOption={(option: IPropertyOption): void => {
+                        mutator.deletePropertyOption(boardTree, propertyTemplate, option)
                     }}
                     onCreate={
                         async (value) => {

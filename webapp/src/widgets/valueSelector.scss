@@ -5,4 +5,16 @@
     &:hover {
         background-color: rgba(var(--main-fg), 0.1),
     }
+
+    .value-menu-option {
+        display: flex;
+        width: 100%;
+        .octo-label-container {
+            flex-grow: 1;
+        }
+        .MenuWrapper {
+            display: flex;
+            align-self: flex-end;
+        }
+    }
 }
