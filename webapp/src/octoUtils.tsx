@@ -8,6 +8,7 @@ import {MutableBoardView} from './blocks/boardView'
 import {MutableCard} from './blocks/card'
 import {MutableCommentBlock} from './blocks/commentBlock'
 import {MutableImageBlock} from './blocks/imageBlock'
+import {MutableDividerBlock} from './blocks/dividerBlock'
 import {IOrderedBlock} from './blocks/orderedBlock'
 import {MutableTextBlock} from './blocks/textBlock'
 import {Utils} from './utils'
@@ -67,6 +68,7 @@ class OctoUtils {
         case 'card': { return new MutableCard(block) }
         case 'text': { return new MutableTextBlock(block) }
         case 'image': { return new MutableImageBlock(block) }
+        case 'divider': { return new MutableDividerBlock(block) }
         case 'comment': { return new MutableCommentBlock(block) }
         default: {
             Utils.assertFailure(`Can't hydrate unknown block type: ${block.type}`)

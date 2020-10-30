@@ -9,6 +9,7 @@ import {OctoUtils} from '../octoUtils'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import {MutableTextBlock} from '../blocks/textBlock'
+import {MutableDividerBlock} from '../blocks/dividerBlock'
 
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
@@ -19,6 +20,7 @@ import DeleteIcon from '../widgets/icons/delete'
 import AddIcon from '../widgets/icons/add'
 import TextIcon from '../widgets/icons/text'
 import ImageIcon from '../widgets/icons/image'
+import DividerIcon from '../widgets/icons/divider'
 
 import {MarkdownEditor} from './markdownEditor'
 
@@ -37,7 +39,7 @@ class ContentBlock extends React.Component<Props> {
 
     public render(): JSX.Element {
         const {cardId, cardTree, block} = this.props
-        if (block.type !== 'text' && block.type !== 'image') {
+        if (block.type !== 'text' && block.type !== 'image' && block.type !== 'divider') {
             return null
         }
         const index = cardTree.contents.indexOf(block)
@@ -102,6 +104,20 @@ class ContentBlock extends React.Component<Props> {
                                             '.jpg,.jpeg,.png')
                                     }}
                                 />
+                                <Menu.Text
+                                    id='divider'
+                                    name='Divider'
+                                    icon={<DividerIcon/>}
+                                    onClick={() => {
+                                        const newBlock = new MutableDividerBlock()
+                                        newBlock.parentId = cardId
+
+                                        // TODO: Handle need to reorder all blocks
+                                        newBlock.order = OctoUtils.getOrderBefore(block, cardTree.contents)
+                                        Utils.log(`insert block ${block.id}, order: ${block.order}`)
+                                        mutator.insertBlock(newBlock, 'insert card text')
+                                    }}
+                                />
                             </Menu.SubMenu>
                             <Menu.Text
                                 icon={<DeleteIcon/>}
@@ -121,6 +137,7 @@ class ContentBlock extends React.Component<Props> {
                             mutator.changeTitle(block, text, 'edit card text')
                         }}
                     />}
+                {block.type === 'divider' && <div className='divider'/>}
                 {block.type === 'image' &&
                     <img
                         src={block.fields.url}
