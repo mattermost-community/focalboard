@@ -193,6 +193,7 @@ class CardDetail extends React.Component<Props, State> {
                                     <PropertyValueElement
                                         readOnly={false}
                                         card={card}
+                                        boardTree={boardTree}
                                         propertyTemplate={propertyTemplate}
                                         emptyDisplayValue='Empty'
                                     />

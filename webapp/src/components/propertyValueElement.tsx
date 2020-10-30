@@ -7,12 +7,17 @@ import {Card} from '../blocks/card'
 import {IPropertyTemplate, IPropertyOption} from '../blocks/board'
 import {OctoUtils} from '../octoUtils'
 import mutator from '../mutator'
+import {Utils} from '../utils'
+import {BoardTree} from '../viewModel/boardTree'
 
 import Editable from '../widgets/editable'
 import MenuWrapper from '../widgets/menuWrapper'
 import Menu from '../widgets/menu'
+import ValueSelector from '../widgets/valueSelector'
+import {skipPartiallyEmittedExpressions} from 'typescript'
 
 type Props = {
+    boardTree?: BoardTree
     readOnly: boolean
     card: Card
     propertyTemplate: IPropertyTemplate
@@ -54,32 +59,35 @@ export default class PropertyValueElement extends React.Component<Props, State> 
                 className += ' empty'
             }
 
-            return (
-                <MenuWrapper>
+            if (readOnly) {
+                return (
                     <div
                         className={`${className} ${propertyColorCssClassName}`}
                         tabIndex={0}
                     >
                         {finalDisplayValue}
                     </div>
-                    {readOnly ? null : (
-                        <Menu>
-                            <Menu.Text
-                                id=''
-                                name='<Empty>'
-                                onClick={() => mutator.changePropertyValue(card, propertyTemplate.id, '')}
-                            />
-                            {propertyTemplate.options.map((o: IPropertyOption): JSX.Element => (
-                                <Menu.Text
-                                    key={o.id}
-                                    id={o.id}
-                                    name={o.value}
-                                    onClick={() => mutator.changePropertyValue(card, propertyTemplate.id, o.id)}
-                                />
-                            ))}
-                        </Menu>
-                    )}
-                </MenuWrapper>
+                )
+            }
+            return (
+                <ValueSelector
+                    options={propertyTemplate.options}
+                    value={propertyTemplate.options.find((p) => p.id === propertyValue)}
+                    onChange={(value) => {
+                        mutator.changePropertyValue(card, propertyTemplate.id, value)
+                    }}
+                    onCreate={
+                        async (value) => {
+                            const option: IPropertyOption = {
+                                id: Utils.createGuid(),
+                                value,
+                                color: 'propColorDefault',
+                            }
+                            await mutator.insertPropertyOption(this.props.boardTree, propertyTemplate, option, 'add property option')
+                            mutator.changePropertyValue(card, propertyTemplate.id, option.id)
+                        }
+                    }
+                />
             )
         }
 
