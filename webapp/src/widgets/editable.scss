@@ -1,6 +1,8 @@
 .Editable {
 	cursor: text;
     border: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
     &.active {
 	    min-width: 100px;
     }

@@ -114,6 +114,7 @@ class TableRow extends React.Component<Props, State> {
                                 <PropertyValueElement
                                     readOnly={false}
                                     card={card}
+                                    boardTree={boardTree}
                                     propertyTemplate={template}
                                     emptyDisplayValue='Empty'
                                 />
