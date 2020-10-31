@@ -13,6 +13,7 @@ import {Utils} from '../utils'
 
 import MenuWrapper from '../widgets/menuWrapper'
 import Menu from '../widgets/menu'
+import Button from '../widgets/buttons/button'
 
 import './filterComponent.scss'
 
@@ -89,7 +90,7 @@ class FilterComponent extends React.Component<Props> {
                         key={key}
                             >
                         <MenuWrapper>
-                            <div className='octo-button'>{propertyName}</div>
+                            <Button>{propertyName}</Button>
                             <Menu>
                                 {board.cardProperties.filter((o) => o.type === 'select').map((o) => (
                                     <Menu.Text
@@ -112,7 +113,7 @@ class FilterComponent extends React.Component<Props> {
                             </Menu>
                         </MenuWrapper>
                         <MenuWrapper>
-                            <div className='octo-button'>{FilterClause.filterConditionDisplayString(filter.condition, intl)}</div>
+                            <Button>{FilterClause.filterConditionDisplayString(filter.condition, intl)}</Button>
                             <Menu>
                                 <Menu.Text
                                     id='includes'
@@ -140,36 +141,30 @@ class FilterComponent extends React.Component<Props> {
                             this.filterValue(filter, template)
                         }
                         <div className='octo-spacer'/>
-                        <div
-                            className='octo-button'
-                            onClick={() => this.deleteClicked(filter)}
-                        >
+                        <Button onClick={() => this.deleteClicked(filter)}>
                             <FormattedMessage
                                 id='FilterComponent.delete'
                                 defaultMessage='Delete'
                             />
-                        </div>
+                        </Button>
                     </div>)
                 })}
 
                 <br/>
 
-                <div
-                    className='octo-button'
-                    onClick={() => this.addFilterClicked()}
-                >
+                <Button onClick={() => this.addFilterClicked()}>
                     <FormattedMessage
                         id='FilterComponent.add-filter'
                         defaultMessage='+ Add Filter'
                     />
-                </div>
+                </Button>
             </div>
         )
     }
 
     private filterValue(filter: FilterClause, template: IPropertyTemplate): JSX.Element {
         const {boardTree} = this.props
-        const {board, activeView: view} = boardTree
+        const {activeView: view} = boardTree
 
         if (filter.condition === 'includes' || filter.condition === 'notIncludes') {
             let displayValue: string
@@ -188,7 +183,7 @@ class FilterComponent extends React.Component<Props> {
 
             return (
                 <MenuWrapper>
-                    <div className='octo-button'>{displayValue}</div>
+                    <Button>{displayValue}</Button>
                     <Menu>
                         {template.options.map((o) => (
                             <Menu.Switch
