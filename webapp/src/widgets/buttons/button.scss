@@ -1,4 +1,6 @@
 .Button {
+    display: flex;
+    align-items: center;
 	text-align: center;
 	border-radius: 5px;
 	padding: 0 5px;
@@ -14,4 +16,10 @@
 	.octo-hovercontrol {
 		background: rgb(239, 239, 238);
 	}
+    
+    .Icon {
+        width: 14px;
+        height: 14px;
+        margin-right: 5px;
+    }
 }

@@ -11,6 +11,8 @@ import MenuWrapper from '../widgets/menuWrapper'
 import Editable from '../widgets/editable'
 import EmojiPicker from '../widgets/emojiPicker'
 import Button from '../widgets/buttons/button'
+import EmojiIcon from '../widgets/icons/emoji'
+import DeleteIcon from '../widgets/icons/delete'
 
 import './viewTitle.scss'
 
@@ -53,6 +55,7 @@ class ViewTitle extends React.Component<Props, State> {
                             mutator.changeIcon(board, newIcon)
                         }}
                     >
+                        <EmojiIcon/>
                         <FormattedMessage
                             id='TableComponent.add-icon'
                             defaultMessage='Add Icon'
@@ -67,17 +70,20 @@ class ViewTitle extends React.Component<Props, State> {
                             <Menu>
                                 <Menu.Text
                                     id='random'
+                                    icon={<EmojiIcon/>}
                                     name={intl.formatMessage({id: 'ViewTitle.random-icon', defaultMessage: 'Random'})}
                                     onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}
                                 />
                                 <Menu.SubMenu
                                     id='pick'
+                                    icon={<EmojiIcon/>}
                                     name={intl.formatMessage({id: 'ViewTitle.pick-icon', defaultMessage: 'Pick Icon'})}
                                 >
                                     <EmojiPicker onSelect={this.onSelectEmoji}/>
                                 </Menu.SubMenu>
                                 <Menu.Text
                                     id='remove'
+                                    icon={<DeleteIcon/>}
                                     name={intl.formatMessage({id: 'ViewTitle.remove-icon', defaultMessage: 'Remove Icon'})}
                                     onClick={() => mutator.changeIcon(board, undefined, 'remove icon')}
                                 />
