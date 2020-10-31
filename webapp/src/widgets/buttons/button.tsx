@@ -6,22 +6,20 @@ import './button.scss'
 
 type Props = {
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
-    style?: React.CSSProperties
-    backgroundColor?: string
     children?: React.ReactNode
     title?: string
+    icon?: React.ReactNode
 }
 
 export default class Button extends React.Component<Props> {
     render() {
-        const style = {...this.props.style, backgroundColor: this.props.backgroundColor}
         return (
             <div
                 onClick={this.props.onClick}
-                className='Button octo-button'
-                style={style}
+                className='Button'
                 title={this.props.title}
             >
+                {this.props.icon}
                 {this.props.children}
             </div>)
     }

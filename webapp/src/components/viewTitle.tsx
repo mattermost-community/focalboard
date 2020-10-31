@@ -54,8 +54,8 @@ class ViewTitle extends React.Component<Props, State> {
                             const newIcon = BlockIcons.shared.randomIcon()
                             mutator.changeIcon(board, newIcon)
                         }}
+                        icon={<EmojiIcon/>}
                     >
-                        <EmojiIcon/>
                         <FormattedMessage
                             id='TableComponent.add-icon'
                             defaultMessage='Add Icon'
