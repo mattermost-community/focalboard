@@ -21,6 +21,7 @@ import AddIcon from '../widgets/icons/add'
 import TextIcon from '../widgets/icons/text'
 import ImageIcon from '../widgets/icons/image'
 import DividerIcon from '../widgets/icons/divider'
+import IconButton from '../widgets/buttons/iconButton'
 
 import {MarkdownEditor} from './markdownEditor'
 
@@ -47,7 +48,7 @@ class ContentBlock extends React.Component<Props> {
             <div className='ContentBlock octo-block'>
                 <div className='octo-block-margin'>
                     <MenuWrapper>
-                        <div className='octo-button octo-hovercontrol square '><OptionsIcon/></div>
+                        <IconButton icon={<OptionsIcon/>}/>
                         <Menu>
                             {index > 0 &&
                                 <Menu.Text
