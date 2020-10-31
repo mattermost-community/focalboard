@@ -32,18 +32,24 @@
         font-weight: 600;
         padding: 3px 20px;
         margin-bottom: 5px;
-        .show-button {
-            .HamburgerIcon {
+        .IconButton {
+            background-color: var(--sidebar-bg);
+            &:hover {
+                background-color: rgba(var(--sidebar-fg), 0.1);
+            }
+        }
+        &.show-button {
+            .hamburger-icon {
                 display: block;
             }
-            .ShowSidebarIcon {
+            .show-icon {
                 display: none;
             }
             &:hover {
-                .HamburgerIcon {
+                .hamburger-icon {
                     display: none;
                 }
-                .ShowSidebarIcon {
+                .show-icon {
                     display: block;
                 }
             }
@@ -70,19 +76,31 @@
                 background-color: rgba(var(--sidebar-bg));
             }
         }
-        .octo-button {
+
+        .IconButton {
+            background-color: var(--sidebar-bg);
             &:hover {
                 background-color: rgba(var(--sidebar-fg), 0.1);
             }
-            &.expanded {
-                .SubmenuTriangleIcon {
-                    transform: rotate(90deg);
-                }
+        }
+        .MenuWrapper {
+            display: none;
+        }
+        &:hover {
+            display: flex;
+            .MenuWrapper {
+                display: block;
             }
+        }
+
+        &.expanded {
             .SubmenuTriangleIcon {
-                transition: 200ms ease-in-out;
-                transform: rotate(0deg);
+                transform: rotate(90deg);
             }
+        }
+        .SubmenuTriangleIcon {
+            transition: 200ms ease-in-out;
+            transform: rotate(0deg);
         }
     }
 

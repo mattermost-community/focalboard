@@ -3,7 +3,8 @@
 import React from 'react'
 
 import MenuWrapper from '../widgets/menuWrapper'
-import Button from '../widgets/buttons/button'
+import OptionsIcon from '../widgets/icons/options'
+import IconButton from '../widgets/buttons/iconButton'
 
 import './dialog.scss'
 
@@ -54,7 +55,7 @@ export default class Dialog extends React.PureComponent<Props> {
                     <div className='toolbar'>
                         <div className='octo-spacer'/>
                         <MenuWrapper>
-                            <Button>{'...'}</Button>
+                            <IconButton icon={<OptionsIcon/>}/>
                             {toolsMenu}
                         </MenuWrapper>
                     </div>}

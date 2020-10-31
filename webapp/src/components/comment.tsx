@@ -9,6 +9,8 @@ import {IBlock} from '../blocks/block'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 import DeleteIcon from '../widgets/icons/delete'
+import OptionsIcon from '../widgets/icons/options'
+import IconButton from '../widgets/buttons/iconButton'
 
 import './comment.scss'
 import {Utils} from '../utils'
@@ -36,7 +38,7 @@ const Comment: FC<Props> = (props: Props) => {
                 <div className='comment-username'>{username}</div>
                 <div className='comment-date'>{(new Date(comment.createAt)).toLocaleTimeString()}</div>
                 <MenuWrapper>
-                    <div className='octo-hoverbutton square'>{'...'}</div>
+                    <IconButton icon={<OptionsIcon/>}/>
                     <Menu position='left'>
                         <Menu.Text
                             icon={<DeleteIcon/>}

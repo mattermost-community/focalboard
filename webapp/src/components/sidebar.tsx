@@ -14,8 +14,11 @@ import OptionsIcon from '../widgets/icons/options'
 import ShowSidebarIcon from '../widgets/icons/showSidebar'
 import HideSidebarIcon from '../widgets/icons/hideSidebar'
 import HamburgerIcon from '../widgets/icons/hamburger'
+import DeleteIcon from '../widgets/icons/delete'
 import SubmenuTriangleIcon from '../widgets/icons/submenuTriangle'
 import DotIcon from '../widgets/icons/dot'
+import IconButton from '../widgets/buttons/iconButton'
+import Button from '../widgets/buttons/button'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
 import {BoardView} from '../blocks/boardView'
 
@@ -57,13 +60,18 @@ class Sidebar extends React.Component<Props, State> {
         if (this.state.isHidden) {
             return (
                 <div className='Sidebar octo-sidebar hidden'>
-                    <div className='octo-sidebar-header'>
-                        <div
-                            className='octo-button square show-button'
-                            onClick={() => this.showClicked()}
-                        >
-                            <HamburgerIcon/>
-                            <ShowSidebarIcon/>
+                    <div className='octo-sidebar-header show-button'>
+                        <div className='hamburger-icon'>
+                            <IconButton
+                                icon={<HamburgerIcon/>}
+                                onClick={() => this.showClicked()}
+                            />
+                        </div>
+                        <div className='show-icon'>
+                            <IconButton
+                                icon={<ShowSidebarIcon/>}
+                                onClick={() => this.showClicked()}
+                            />
                         </div>
                     </div>
                 </div>
@@ -75,10 +83,10 @@ class Sidebar extends React.Component<Props, State> {
                 <div className='octo-sidebar-header octo-hover-container'>
                     {'OCTO'}
                     <div className='octo-spacer'/>
-                    <div
-                        className='octo-button square octo-hover-item'
+                    <IconButton
                         onClick={() => this.hideClicked()}
-                    ><HideSidebarIcon/></div>
+                        icon={<HideSidebarIcon/>}
+                    />
                 </div>
                 {
                     boards.map((board) => {
@@ -91,17 +99,15 @@ class Sidebar extends React.Component<Props, State> {
                         const boardViews = views.filter((view) => view.parentId === board.id)
                         return (
                             <div key={board.id}>
-                                <div className='octo-sidebar-item octo-hover-container'>
-                                    <div
-                                        className={'octo-button square ' + (collapsedBoards[board.id] ? 'collapsed' : 'expanded')}
+                                <div className={'octo-sidebar-item octo-hover-container ' + (collapsedBoards[board.id] ? 'collapsed' : 'expanded')}>
+                                    <IconButton
+                                        icon={<SubmenuTriangleIcon/>}
                                         onClick={() => {
                                             const newCollapsedBoards = {...this.state.collapsedBoards}
                                             newCollapsedBoards[board.id] = !newCollapsedBoards[board.id]
                                             this.setState({collapsedBoards: newCollapsedBoards})
                                         }}
-                                    >
-                                        <SubmenuTriangleIcon/>
-                                    </div>
+                                    />
                                     <div
                                         className='octo-sidebar-title'
                                         onClick={() => {
@@ -111,11 +117,12 @@ class Sidebar extends React.Component<Props, State> {
                                         {board.icon ? `${board.icon} ${displayTitle}` : displayTitle}
                                     </div>
                                     <MenuWrapper>
-                                        <div className='octo-button square octo-hover-item'><OptionsIcon/></div>
+                                        <IconButton icon={<OptionsIcon/>}/>
                                         <Menu>
                                             <Menu.Text
                                                 id='delete'
                                                 name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete Board'})}
+                                                icon={<DeleteIcon/>}
                                                 onClick={async () => {
                                                     const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id).id : undefined
                                                     mutator.deleteBlock(
@@ -168,27 +175,22 @@ class Sidebar extends React.Component<Props, State> {
 
                 <br/>
 
-                <div
-                    className='octo-button'
-                    onClick={() => {
-                        this.addBoardClicked()
-                    }}
-                >
+                <Button onClick={this.addBoardClicked}>
                     <FormattedMessage
                         id='Sidebar.add-board'
                         defaultMessage='+ Add Board'
                     />
-                </div>
+                </Button>
 
                 <div className='octo-spacer'/>
 
                 <MenuWrapper>
-                    <div className='octo-button'>
+                    <Button>
                         <FormattedMessage
                             id='Sidebar.settings'
                             defaultMessage='Settings'
                         />
-                    </div>
+                    </Button>
                     <Menu position='top'>
                         <Menu.Text
                             id='import'
