@@ -6,13 +6,11 @@ import {injectIntl, IntlShape, FormattedMessage} from 'react-intl'
 import {BlockIcons} from '../blockIcons'
 import {Board} from '../blocks/board'
 import mutator from '../mutator'
-import Menu from '../widgets/menu'
-import MenuWrapper from '../widgets/menuWrapper'
 import Editable from '../widgets/editable'
-import EmojiPicker from '../widgets/emojiPicker'
 import Button from '../widgets/buttons/button'
 import EmojiIcon from '../widgets/icons/emoji'
-import DeleteIcon from '../widgets/icons/delete'
+
+import BlockIconSelector from './blockIconSelector'
 
 import './viewTitle.scss'
 
@@ -36,13 +34,6 @@ class ViewTitle extends React.Component<Props, State> {
         this.state = {title: props.board.title}
     }
 
-    onSelectEmoji = (emoji: string) => {
-        mutator.changeIcon(this.props.board, emoji)
-
-        // Close the menu
-        document.body.click()
-    }
-
     render(): JSX.Element {
         const {board, intl} = this.props
 
@@ -63,32 +54,8 @@ class ViewTitle extends React.Component<Props, State> {
                     </Button>
                 </div>
 
-                <div className='ViewTitle octo-icontitle'>
-                    {board.icon &&
-                        <MenuWrapper>
-                            <div className='octo-button octo-icon'>{board.icon}</div>
-                            <Menu>
-                                <Menu.Text
-                                    id='random'
-                                    icon={<EmojiIcon/>}
-                                    name={intl.formatMessage({id: 'ViewTitle.random-icon', defaultMessage: 'Random'})}
-                                    onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}
-                                />
-                                <Menu.SubMenu
-                                    id='pick'
-                                    icon={<EmojiIcon/>}
-                                    name={intl.formatMessage({id: 'ViewTitle.pick-icon', defaultMessage: 'Pick Icon'})}
-                                >
-                                    <EmojiPicker onSelect={this.onSelectEmoji}/>
-                                </Menu.SubMenu>
-                                <Menu.Text
-                                    id='remove'
-                                    icon={<DeleteIcon/>}
-                                    name={intl.formatMessage({id: 'ViewTitle.remove-icon', defaultMessage: 'Remove Icon'})}
-                                    onClick={() => mutator.changeIcon(board, undefined, 'remove icon')}
-                                />
-                            </Menu>
-                        </MenuWrapper>}
+                <div className='ViewTitle'>
+                    <BlockIconSelector block={board}/>
                     <Editable
                         ref={this.titleEditor}
                         className='title'

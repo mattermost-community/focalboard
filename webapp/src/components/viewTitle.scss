@@ -1,4 +1,9 @@
 .ViewTitle {
+	flex: 0 0 auto;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+
     &.octo-hovercontrols {
         .Button {
             display: none;
@@ -8,5 +13,13 @@
                 display: flex;
             }
         }
+    }
+
+    .BlockIconSelector {
+        margin-right: 10px;
+    }
+
+    .Editable {
+        margin-bottom: 0px;
     }
 }

@@ -14,13 +14,14 @@ import {Utils} from '../utils'
 import MenuWrapper from '../widgets/menuWrapper'
 import Menu from '../widgets/menu'
 import Editable from '../widgets/editable'
-import EmojiPicker from '../widgets/emojiPicker'
 import Button from '../widgets/buttons/button'
+import EmojiIcon from '../widgets/icons/emoji'
 
 import {MarkdownEditor} from './markdownEditor'
 import ContentBlock from './contentBlock'
 import CommentsList from './commentsList'
 import PropertyMenu from './propertyMenu'
+import BlockIconSelector from './blockIconSelector'
 import PropertyValueElement from './propertyValueElement'
 
 import './cardDetail.scss'
@@ -49,13 +50,6 @@ class CardDetail extends React.Component<Props, State> {
         this.state = {
             title: '',
         }
-    }
-
-    onSelectEmoji = (emoji: string) => {
-        mutator.changeIcon(this.state.cardTree.card, emoji)
-
-        // Close the menu
-        document.body.click()
     }
 
     componentDidMount() {
@@ -127,28 +121,10 @@ class CardDetail extends React.Component<Props, State> {
         return (
             <>
                 <div className='CardDetail content'>
-                    {icon &&
-                        <MenuWrapper>
-                            <div className='octo-button octo-icon octo-card-icon'>{icon}</div>
-                            <Menu>
-                                <Menu.Text
-                                    id='random'
-                                    name={intl.formatMessage({id: 'CardDetail.random-icon', defaultMessage: 'Random'})}
-                                    onClick={() => mutator.changeIcon(card, BlockIcons.shared.randomIcon())}
-                                />
-                                <Menu.SubMenu
-                                    id='pick'
-                                    name={intl.formatMessage({id: 'CardDetail.pick-icon', defaultMessage: 'Pick Icon'})}
-                                >
-                                    <EmojiPicker onSelect={this.onSelectEmoji}/>
-                                </Menu.SubMenu>
-                                <Menu.Text
-                                    id='remove'
-                                    name={intl.formatMessage({id: 'CardDetail.remove-icon', defaultMessage: 'Remove Icon'})}
-                                    onClick={() => mutator.changeIcon(card, undefined, 'remove icon')}
-                                />
-                            </Menu>
-                        </MenuWrapper>}
+                    <BlockIconSelector
+                        block={card}
+                        size='l'
+                    />
                     {!icon &&
                         <div className='octo-hovercontrols'>
                             <Button
@@ -156,6 +132,7 @@ class CardDetail extends React.Component<Props, State> {
                                     const newIcon = BlockIcons.shared.randomIcon()
                                     mutator.changeIcon(card, newIcon)
                                 }}
+                                icon={<EmojiIcon/>}
                             >
                                 <FormattedMessage
                                     id='CardDetail.add-icon'
