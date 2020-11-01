@@ -213,28 +213,29 @@ class ViewHeader extends React.Component<Props, State> {
                             ))}
                         </Menu>
                     </MenuWrapper>}
-                <div
-                    className={hasFilter ? 'octo-button active' : 'octo-button'}
-                    style={{position: 'relative', overflow: 'unset'}}
-                    onClick={this.filterClicked}
-                >
-                    <FormattedMessage
-                        id='ViewHeader.filter'
-                        defaultMessage='Filter'
-                    />
-                    {this.state.showFilter &&
-                        <FilterComponent
-                            boardTree={boardTree}
-                            onClose={this.hideFilter}
-                        />}
+                <div className='filter-container'>
+                    <Button
+                        active={hasFilter}
+                        onClick={this.filterClicked}
+                    >
+                        <FormattedMessage
+                            id='ViewHeader.filter'
+                            defaultMessage='Filter'
+                        />
+                        {this.state.showFilter &&
+                            <FilterComponent
+                                boardTree={boardTree}
+                                onClose={this.hideFilter}
+                            />}
+                    </Button>
                 </div>
                 <MenuWrapper>
-                    <div className={hasSort ? 'octo-button active' : 'octo-button'}>
+                    <Button active={hasSort}>
                         <FormattedMessage
                             id='ViewHeader.sort'
                             defaultMessage='Sort'
                         />
-                    </div>
+                    </Button>
                     <Menu>
                         {(activeView.sortOptions.length > 0) &&
                             <>

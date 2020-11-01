@@ -10,6 +10,7 @@ type Props = {
     title?: string
     icon?: React.ReactNode
     filled?: boolean
+    active?: boolean
 }
 
 export default class Button extends React.Component<Props> {
@@ -17,7 +18,7 @@ export default class Button extends React.Component<Props> {
         return (
             <div
                 onClick={this.props.onClick}
-                className={`Button ${this.props.filled ? 'filled' : ''}`}
+                className={`Button ${this.props.active ? 'active' : ''} ${this.props.filled ? 'filled' : ''}`}
                 title={this.props.title}
             >
                 {this.props.icon}

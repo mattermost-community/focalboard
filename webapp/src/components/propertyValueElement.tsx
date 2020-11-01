@@ -54,7 +54,7 @@ export default class PropertyValueElement extends React.Component<Props, State> 
         }
 
         if (propertyTemplate.type === 'select') {
-            let className = 'octo-button octo-propertyvalue'
+            let className = 'octo-propertyvalue'
             if (!displayValue) {
                 className += ' empty'
             }

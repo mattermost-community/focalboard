@@ -24,4 +24,13 @@
             background: rgba(var(--main-fg), 0.1);
         }
     }
+
+    .octo-spacer {
+        flex: 1;
+    }
+
+    .filter-container {
+        position: relative;
+        overflow: unset;
+    }
 }

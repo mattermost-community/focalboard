@@ -25,6 +25,11 @@
         }
     }
 
+    &.active {
+        color: rgb(45, 170, 220);
+        font-weight: 500;
+    }
+
     .Icon {
         width: 14px;
         height: 14px;
