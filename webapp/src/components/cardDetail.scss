@@ -40,4 +40,16 @@
             color: rgba(var(--main-fg), 0.4);
         }
     }
+
+    &.add-content {
+        .Button {
+            opacity: 0;
+            color: rgba(var(--main-fg), 0.6);
+        }
+        &:hover {
+            .Button {
+                opacity: 1;
+            }
+        }
+    }
 }

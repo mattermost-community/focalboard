@@ -19,7 +19,7 @@ export default class ButtonWithMenu extends React.PureComponent<Props> {
         return (
             <div
                 onClick={this.props.onClick}
-                className='ButtonWithMenu octo-button'
+                className='ButtonWithMenu'
                 title={this.props.title}
             >
                 <div className='button-text'>

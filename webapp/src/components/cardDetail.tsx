@@ -208,38 +208,36 @@ class CardDetail extends React.Component<Props, State> {
                     {contentElements}
                 </div>
 
-                <div className='CardDetail content'>
-                    <div className='octo-hoverpanel octo-hover-container'>
-                        <MenuWrapper>
-                            <div className='octo-button octo-hovercontrol octo-hover-item'>
-                                <FormattedMessage
-                                    id='CardDetail.add-content'
-                                    defaultMessage='Add content'
-                                />
-                            </div>
-                            <Menu>
-                                <Menu.Text
-                                    id='text'
-                                    name={intl.formatMessage({id: 'CardDetail.text', defaultMessage: 'Text'})}
-                                    onClick={() => {
-                                        const block = new MutableTextBlock()
-                                        block.parentId = card.id
-                                        block.order = cardTree.contents.length * 1000
-                                        mutator.insertBlock(block, 'add text')
-                                    }}
-                                />
-                                <Menu.Text
-                                    id='image'
-                                    name={intl.formatMessage({id: 'CardDetail.image', defaultMessage: 'Image'})}
-                                    onClick={() => Utils.selectLocalFile(
-                                        (file) => mutator.createImageBlock(card.id, file, cardTree.contents.length * 1000),
-                                        '.jpg,.jpeg,.png',
-                                    )}
-                                />
+                <div className='CardDetail content add-content'>
+                    <MenuWrapper>
+                        <Button>
+                            <FormattedMessage
+                                id='CardDetail.add-content'
+                                defaultMessage='Add content'
+                            />
+                        </Button>
+                        <Menu position='top'>
+                            <Menu.Text
+                                id='text'
+                                name={intl.formatMessage({id: 'CardDetail.text', defaultMessage: 'Text'})}
+                                onClick={() => {
+                                    const block = new MutableTextBlock()
+                                    block.parentId = card.id
+                                    block.order = cardTree.contents.length * 1000
+                                    mutator.insertBlock(block, 'add text')
+                                }}
+                            />
+                            <Menu.Text
+                                id='image'
+                                name={intl.formatMessage({id: 'CardDetail.image', defaultMessage: 'Image'})}
+                                onClick={() => Utils.selectLocalFile(
+                                    (file) => mutator.createImageBlock(card.id, file, cardTree.contents.length * 1000),
+                                    '.jpg,.jpeg,.png',
+                                )}
+                            />
 
-                            </Menu>
-                        </MenuWrapper>
-                    </div>
+                        </Menu>
+                    </MenuWrapper>
                 </div>
             </>
         )
