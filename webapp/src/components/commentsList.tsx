@@ -8,6 +8,8 @@ import {IBlock} from '../blocks/block'
 import {Utils} from '../utils'
 import mutator from '../mutator'
 
+import Button from '../widgets/buttons/button'
+
 import Comment from './comment'
 
 import './commentsList.scss'
@@ -84,8 +86,8 @@ class CommentsList extends React.Component<Props, State> {
                     />
 
                     {this.state.newComment &&
-                        <div
-                            className='octo-button filled'
+                        <Button
+                            filled={true}
                             onClick={() => {
                                 if (this.state.newComment) {
                                     Utils.log(`Send comment: ${this.state.newComment}`)
@@ -98,7 +100,7 @@ class CommentsList extends React.Component<Props, State> {
                                 id='CommentsList.send'
                                 defaultMessage='Send'
                             />
-                        </div>
+                        </Button>
                     }
                 </div>
             </div>

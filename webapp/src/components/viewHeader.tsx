@@ -22,6 +22,8 @@ import OptionsIcon from '../widgets/icons/options'
 import SortUpIcon from '../widgets/icons/sortUp'
 import SortDownIcon from '../widgets/icons/sortDown'
 import ButtonWithMenu from '../widgets/buttons/buttonWithMenu'
+import IconButton from '../widgets/buttons/iconButton'
+import Button from '../widgets/buttons/button'
 
 import {Editable} from './editable'
 import FilterComponent from './filterComponent'
@@ -136,12 +138,7 @@ class ViewHeader extends React.Component<Props, State> {
                     }}
                 />
                 <MenuWrapper>
-                    <div
-                        className='octo-button'
-                        style={{color: 'rgb(var(--main-fg))', fontWeight: 600}}
-                    >
-                        <DropdownIcon/>
-                    </div>
+                    <IconButton icon={<DropdownIcon/>}/>
                     <ViewMenu
                         board={board}
                         boardTree={boardTree}
@@ -150,12 +147,12 @@ class ViewHeader extends React.Component<Props, State> {
                 </MenuWrapper>
                 <div className='octo-spacer'/>
                 <MenuWrapper>
-                    <div className={'octo-button'}>
+                    <Button>
                         <FormattedMessage
                             id='ViewHeader.properties'
                             defaultMessage='Properties'
                         />
-                    </div>
+                    </Button>
                     <Menu>
                         {boardTree.board.cardProperties.map((option: IPropertyTemplate) => (
                             <Menu.Switch
@@ -182,10 +179,7 @@ class ViewHeader extends React.Component<Props, State> {
                 </MenuWrapper>
                 {withGroupBy &&
                     <MenuWrapper>
-                        <div
-                            className='octo-button'
-                            id='groupByButton'
-                        >
+                        <Button>
                             <FormattedMessage
                                 id='ViewHeader.group-by'
                                 defaultMessage='Group by {property}'
@@ -200,7 +194,7 @@ class ViewHeader extends React.Component<Props, State> {
                                     ),
                                 }}
                             />
-                        </div>
+                        </Button>
                         <Menu>
                             {boardTree.board.cardProperties.filter((o: IPropertyTemplate) => o.type === 'select').map((option: IPropertyTemplate) => (
                                 <Menu.Text
@@ -307,21 +301,14 @@ class ViewHeader extends React.Component<Props, State> {
                         }}
                     />}
                 {!this.state.isSearching &&
-                    <div
-                        className='octo-button'
-                        onClick={() => {
-                            this.setState({isSearching: true})
-                        }}
-                    >
+                    <Button onClick={() => this.setState({isSearching: true})}>
                         <FormattedMessage
                             id='ViewHeader.search'
                             defaultMessage='Search'
                         />
-                    </div>}
+                    </Button>}
                 <MenuWrapper>
-                    <div className='octo-button'>
-                        <OptionsIcon/>
-                    </div>
+                    <IconButton icon={<OptionsIcon/>}/>
                     <Menu>
                         <Menu.Text
                             id='exportCsv'

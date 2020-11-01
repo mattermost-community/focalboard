@@ -9,6 +9,7 @@ type Props = {
     children?: React.ReactNode
     title?: string
     icon?: React.ReactNode
+    filled?: boolean
 }
 
 export default class Button extends React.Component<Props> {
@@ -16,7 +17,7 @@ export default class Button extends React.Component<Props> {
         return (
             <div
                 onClick={this.props.onClick}
-                className='Button'
+                className={`Button ${this.props.filled ? 'filled' : ''}`}
                 title={this.props.title}
             >
                 {this.props.icon}

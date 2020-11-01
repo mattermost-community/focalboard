@@ -15,6 +15,16 @@
         background-color: rgba(var(--main-fg), 0.1);
 	}
 
+    &.filled {
+        color: #ffffff;
+        background-color: rgb(var(--button-bg));
+        padding: 2px 10px;
+
+        &:hover {
+            background-color:  rgb(var(--button-bg), 0.8);
+        }
+    }
+
     .Icon {
         width: 14px;
         height: 14px;
