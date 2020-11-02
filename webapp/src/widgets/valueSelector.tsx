@@ -10,7 +10,7 @@ import {Constants} from '../constants'
 
 import Menu from './menu'
 import MenuWrapper from './menuWrapper'
-import Button from './buttons/button'
+import IconButton from './buttons/iconButton'
 import OptionsIcon from './icons/options'
 import DeleteIcon from './icons/delete'
 
@@ -41,7 +41,7 @@ class ValueSelector extends React.Component<Props> {
                     <div className={`octo-label ${option.color}`}>{option.value}</div>
                 </div>
                 <MenuWrapper stopPropagationOnToggle={true}>
-                    <Button><OptionsIcon/></Button>
+                    <IconButton icon={<OptionsIcon/>}/>
                     <Menu position='left'>
                         <Menu.Text
                             id='delete'

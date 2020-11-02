@@ -15,6 +15,12 @@
         .MenuWrapper {
             display: flex;
             align-self: flex-end;
+            .IconButton {
+                background-color: unset;
+                &:hover {
+                    background-color: rgba(var(--main-fg), 0.1);
+                }
+            }
         }
     }
 }
