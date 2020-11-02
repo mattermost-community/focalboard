@@ -101,7 +101,7 @@ class BoardComponent extends React.Component<Props, State> {
     }
 
     render(): JSX.Element {
-        const {boardTree, showView, intl} = this.props
+        const {boardTree, showView} = this.props
 
         if (!boardTree || !boardTree.board) {
             return (
@@ -237,7 +237,7 @@ class BoardComponent extends React.Component<Props, State> {
                     this.cardClicked(e, card)
                 }}
                 onDragStart={() => {
-                    this.draggedCards = this.state.selectedCardIds.includes(card.id) ? this.state.selectedCardIds.map((id) => boardTree.allCards.find(o => o.id === id)) : [card]
+                    this.draggedCards = this.state.selectedCardIds.includes(card.id) ? this.state.selectedCardIds.map((id) => boardTree.allCards.find((o) => o.id === id)) : [card]
                 }}
                 onDragEnd={() => {
                     this.draggedCards = []
@@ -387,14 +387,14 @@ class BoardComponent extends React.Component<Props, State> {
                             onClick={() => mutator.deletePropertyOption(boardTree, boardTree.groupByProperty, group.option)}
                         />
                         <Menu.Separator/>
-                        {Constants.menuColors.map((color) =>
-                            (<Menu.Color
+                        {Constants.menuColors.map((color) => (
+                            <Menu.Color
                                 key={color.id}
                                 id={color.id}
                                 name={color.name}
                                 onClick={() => mutator.changePropertyOptionColor(boardTree.board, boardTree.groupByProperty, group.option, color.id)}
-                            />),
-                        )}
+                            />
+                        ))}
                     </Menu>
                 </MenuWrapper>
                 <IconButton
@@ -508,10 +508,10 @@ class BoardComponent extends React.Component<Props, State> {
                 // Cmd+Shift+Click: Extend the selection
                 const {boardTree} = this.props
                 const orderedCardIds = boardTree.orderedCards().map((o) => o.id)
-                const lastCardId = selectedCardIds[selectedCardIds.length-1]
+                const lastCardId = selectedCardIds[selectedCardIds.length - 1]
                 const srcIndex = orderedCardIds.indexOf(lastCardId)
                 const destIndex = orderedCardIds.indexOf(card.id)
-                const newCardIds = (srcIndex < destIndex) ? orderedCardIds.slice(srcIndex, destIndex+1) : orderedCardIds.slice(destIndex, srcIndex+1)
+                const newCardIds = (srcIndex < destIndex) ? orderedCardIds.slice(srcIndex, destIndex + 1) : orderedCardIds.slice(destIndex, srcIndex + 1)
                 for (const newCardId of newCardIds) {
                     if (!selectedCardIds.includes(newCardId)) {
                         selectedCardIds.push(newCardId)
@@ -521,7 +521,7 @@ class BoardComponent extends React.Component<Props, State> {
             } else {
                 // Shift+Click: add to selection
                 if (selectedCardIds.includes(card.id)) {
-                    selectedCardIds = selectedCardIds.filter((o) => o != card.id)
+                    selectedCardIds = selectedCardIds.filter((o) => o !== card.id)
                 } else {
                     selectedCardIds.push(card.id)
                 }
