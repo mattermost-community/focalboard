@@ -9,7 +9,6 @@
         box-sizing: border-box;
         padding: 5px 8px 6px 8px;
 
-        width: 150px;
         min-height: 32px;
 
         font-size: 14px;
@@ -18,13 +17,18 @@
         position: relative;
 
         .octo-icontitle {
+            flex: 1 1 auto;
             .octo-icon {
                 min-width: 20px;
             }
+
+            .Editable {
+                flex: 1 1 auto;
+            }
         }
 
-        &.title-cell {
-            width: 280px;
+        &.header-cell {
+            padding-right: 0;
         }
 
         &:focus-within {

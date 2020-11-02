@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 class Constants {
-    static menuColors = [
+    static readonly menuColors = [
         {id: 'propColorDefault', name: 'Default', type: 'color'},
         {id: 'propColorGray', name: 'Gray', type: 'color'},
         {id: 'propColorBrown', name: 'Brown', type: 'color'},
@@ -14,6 +14,10 @@ class Constants {
         {id: 'propColorPink', name: 'Pink', type: 'color'},
         {id: 'propColorRed', name: 'Red', type: 'color'},
     ]
+
+    static readonly minColumnWidth = 100
+    static readonly defaultTitleColumnWidth = 280
+    static readonly titleColumnId = '__title'
 }
 
 export {Constants}
