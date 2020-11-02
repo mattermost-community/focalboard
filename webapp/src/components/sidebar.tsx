@@ -80,7 +80,7 @@ class Sidebar extends React.Component<Props, State> {
 
         return (
             <div className='Sidebar octo-sidebar'>
-                <div className='octo-sidebar-header octo-hover-container'>
+                <div className='octo-sidebar-header'>
                     {'OCTO'}
                     <div className='octo-spacer'/>
                     <IconButton
@@ -99,7 +99,7 @@ class Sidebar extends React.Component<Props, State> {
                         const boardViews = views.filter((view) => view.parentId === board.id)
                         return (
                             <div key={board.id}>
-                                <div className={'octo-sidebar-item octo-hover-container ' + (collapsedBoards[board.id] ? 'collapsed' : 'expanded')}>
+                                <div className={'octo-sidebar-item ' + (collapsedBoards[board.id] ? 'collapsed' : 'expanded')}>
                                     <IconButton
                                         icon={<SubmenuTriangleIcon/>}
                                         onClick={() => {
@@ -150,7 +150,7 @@ class Sidebar extends React.Component<Props, State> {
                                 {!collapsedBoards[board.id] && boardViews.map((view) => (
                                     <div
                                         key={view.id}
-                                        className='octo-sidebar-item subitem octo-hover-container'
+                                        className='octo-sidebar-item subitem'
                                     >
                                         <DotIcon/>
                                         <div

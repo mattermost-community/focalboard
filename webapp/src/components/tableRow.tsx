@@ -8,6 +8,7 @@ import {Card} from '../blocks/card'
 import mutator from '../mutator'
 
 import Editable from '../widgets/editable'
+import Button from '../widgets/buttons/button'
 
 import PropertyValueElement from './propertyValueElement'
 import {CardDialog} from './cardDialog'
@@ -80,16 +81,13 @@ class TableRow extends React.Component<Props, State> {
                         />
                     </div>
 
-                    <div
-                        className='octo-hoverbutton open-button'
-                        onClick={() => {
-                            this.setState({showCard: true})
-                        }}
-                    >
-                        <FormattedMessage
-                            id='TableRow.open'
-                            defaultMessage='Open'
-                        />
+                    <div className='open-button'>
+                        <Button onClick={() => this.setState({showCard: true})}>
+                            <FormattedMessage
+                                id='TableRow.open'
+                                defaultMessage='Open'
+                            />
+                        </Button>
                     </div>
                     {this.state.showCard &&
                     <RootPortal>

@@ -99,7 +99,7 @@ class CardDetail extends React.Component<Props, State> {
                 </div>)
         } else {
             contentElements = (<div className='octo-content'>
-                <div className='octo-block octo-hover-container'>
+                <div className='octo-block'>
                     <div className='octo-block-margin'/>
                     <MarkdownEditor
                         text=''
@@ -126,7 +126,7 @@ class CardDetail extends React.Component<Props, State> {
                         size='l'
                     />
                     {!icon &&
-                        <div className='octo-hovercontrols'>
+                        <div className='add-buttons'>
                             <Button
                                 onClick={() => {
                                     const newIcon = BlockIcons.shared.randomIcon()

@@ -13,6 +13,7 @@ import Menu from '../widgets/menu'
 import OptionsIcon from '../widgets/icons/options'
 import DeleteIcon from '../widgets/icons/delete'
 import DuplicateIcon from '../widgets/icons/duplicate'
+import IconButton from '../widgets/buttons/iconButton'
 
 import PropertyValueElement from './propertyValueElement'
 
@@ -88,8 +89,8 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
                     className='optionsMenu'
                     stopPropagationOnToggle={true}
                 >
-                    <div className='octo-hoverbutton square'><OptionsIcon/></div>
-                    <Menu>
+                    <IconButton icon={<OptionsIcon/>}/>
+                    <Menu position='left'>
                         <Menu.Text
                             icon={<DeleteIcon/>}
                             id='delete'

@@ -1,6 +1,10 @@
 .TableRow {
     .open-button {
         display: none;
+        .Button {
+            background-color: rgba(var(--main-fg), 0.1);
+            box-shadow: rgba(var(--main-fg), 0.1) 0px 0px 0px 1px, rgba(var(--main-fg), 0.1) 0px 2px 4px;
+        }
     }
     &:hover {
         .open-button {

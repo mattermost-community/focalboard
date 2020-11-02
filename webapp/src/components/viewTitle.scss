@@ -4,7 +4,12 @@
 	flex-direction: row;
 	align-items: center;
 
-    &.octo-hovercontrols {
+    &.add-buttons {
+        flex-direction: column;
+	    min-height: 30px;
+	    color:rgba(var(--main-fg), 0.4);
+	    width: 100%;
+	    align-items: flex-start;
         .Button {
             display: none;
         }

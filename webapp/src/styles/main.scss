@@ -121,16 +121,6 @@ hr {
 
 /* Icons */
 
-.octo-hovercontrols {
-    display: flex;
-    flex-direction: column;
-	align-items: flex-start;
-
-	min-height: 30px;
-	width: 100%;
-	color:rgba(var(--main-fg), 0.4);
-}
-
 .octo-icon {
 	font-family: "Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji, "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols;
 	line-height: 1.5em;
@@ -182,57 +172,10 @@ hr {
 	box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
 }
 
-.octo-hoverbutton {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-	border-radius: 3px;
-
-	position: absolute;
-	right: 6px;
-	top: 4px;
-	cursor: pointer;
-	background: rgb(var(--main-fg), 0.1);
-	box-shadow: rgba(var(--main-fg), 0.1) 0px 0px 0px 1px, rgba(var(--main-fg), 0.1) 0px 2px 4px;
-	padding: 0 5px;
-
-    &.square {
-        height: 24px;
-        width: 24px;
-        padding: 0;
-    }
-}
-
-/* Hover panel */
-
-.octo-hoverpanel {
-    display: flex;
-    flex-direction: column;
-	align-items: flex-start;
-
-	min-height: 30px;
-	width: 100%;
-	color:rgba(var(--main-fg), 0.4);
-}
-
 .octo-block img {
 	max-width: 500px;
 	max-height: 500px;
 	margin: 5px 0;
-}
-
-/* This needs to be declared after other co-classes */
-.octo-hover-container {
-	position: relative;
-}
-
-.octo-hover-item {
-	display: none;
-}
-
-.octo-hover-container:hover .octo-hover-item {
-	display: flex;
 }
 
 .octo-content {

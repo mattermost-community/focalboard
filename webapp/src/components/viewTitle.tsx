@@ -39,7 +39,7 @@ class ViewTitle extends React.Component<Props, State> {
 
         return (
             <>
-                <div className={'ViewTitle octo-hovercontrols ' + (board.icon ? '' : 'add-visible')}>
+                <div className={'ViewTitle add-buttons ' + (board.icon ? '' : 'add-visible')}>
                     <Button
                         onClick={() => {
                             const newIcon = BlockIcons.shared.randomIcon()
