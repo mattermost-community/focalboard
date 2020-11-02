@@ -119,25 +119,6 @@ hr {
 	flex: 1;
 }
 
-.octo-clickable,
-.octo-button {
-    display: flex;
-    justify-content: center;
-	text-align: center;
-	border-radius: 5px;
-	padding: 0 5px;
-	min-width: 20px;
-	cursor: pointer;
-	overflow: hidden;
-
-	transition: background 100ms ease-out 0s;
-
-    &:hover {
-        background-color: rgba(var(--main-fg), 0.1);
-    }
-}
-
-
 /* Icons */
 
 .octo-hovercontrols {
@@ -200,17 +181,6 @@ hr {
 	border-radius: 3px;
 	box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
 }
-
-.octo-button {
-    &.octo-hovercontrol {
-        background: rgba(var(--main-fg), 0.1);
-    }
-
-    &.square {
-        padding: 0;
-    }
-}
-
 
 .octo-hoverbutton {
     display: inline-flex;

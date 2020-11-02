@@ -161,7 +161,7 @@ class CardDetail extends React.Component<Props, State> {
                                     className='octo-propertyrow'
                                 >
                                     <MenuWrapper>
-                                        <div className='octo-button octo-propertyname'>{propertyTemplate.name}</div>
+                                        <div className='octo-propertyname'><Button>{propertyTemplate.name}</Button></div>
                                         <PropertyMenu
                                             property={propertyTemplate}
                                             boardTree={boardTree}
@@ -178,17 +178,18 @@ class CardDetail extends React.Component<Props, State> {
                             )
                         })}
 
-                        <div
-                            className='octo-button octo-propertyname add-property'
-                            onClick={async () => {
-                                // TODO: Show UI
-                                await mutator.insertPropertyTemplate(boardTree)
-                            }}
-                        >
-                            <FormattedMessage
-                                id='CardDetail.add-property'
-                                defaultMessage='+ Add a property'
-                            />
+                        <div className='octo-propertyname add-property'>
+                            <Button
+                                onClick={async () => {
+                                    // TODO: Show UI
+                                    await mutator.insertPropertyTemplate(boardTree)
+                                }}
+                            >
+                                <FormattedMessage
+                                    id='CardDetail.add-property'
+                                    defaultMessage='+ Add a property'
+                                />
+                            </Button>
                         </div>
                     </div>
 
