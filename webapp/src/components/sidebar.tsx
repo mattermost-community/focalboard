@@ -175,7 +175,7 @@ class Sidebar extends React.Component<Props, State> {
 
                 <br/>
 
-                <Button onClick={this.addBoardClicked}>
+                <Button onClick={() => {this.addBoardClicked()}}>
                     <FormattedMessage
                         id='Sidebar.add-board'
                         defaultMessage='+ Add Board'
@@ -268,9 +268,8 @@ class Sidebar extends React.Component<Props, State> {
                 if (oldBoardId) {
                     showBoard(oldBoardId)
                 }
-            })
-
-        await mutator.insertBlock(board)
+            }
+        )
     }
 
     private hideClicked() {
