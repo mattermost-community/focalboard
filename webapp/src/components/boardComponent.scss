@@ -32,6 +32,13 @@
         > div {
             margin-right: 5px;
         }
+
+        .IconButton{
+            background-color: unset;
+            &:hover {
+                background-color: rgba(var(--main-fg), 0.1);
+            }
+        }
     }
 
 

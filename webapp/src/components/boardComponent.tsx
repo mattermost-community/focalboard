@@ -20,6 +20,7 @@ import HideIcon from '../widgets/icons/hide'
 import ShowIcon from '../widgets/icons/show'
 import DeleteIcon from '../widgets/icons/delete'
 import Button from '../widgets/buttons/button'
+import IconButton from '../widgets/buttons/iconButton'
 
 import BoardCard from './boardCard'
 import {BoardColumn} from './boardColumn'
@@ -308,7 +309,7 @@ class BoardComponent extends React.Component<Props, State> {
                     <Button>{`${group.cards.length}`}</Button>
                     <div className='octo-spacer'/>
                     <MenuWrapper>
-                        <Button><OptionsIcon/></Button>
+                        <IconButton icon={<OptionsIcon/>}/>
                         <Menu>
                             <Menu.Text
                                 id='hide'
@@ -318,11 +319,10 @@ class BoardComponent extends React.Component<Props, State> {
                             />
                         </Menu>
                     </MenuWrapper>
-                    <Button
-                        onClick={() => {
-                            this.addCard(undefined)
-                        }}
-                    ><AddIcon/></Button>
+                    <IconButton
+                        icon={<AddIcon/>}
+                        onClick={() => this.addCard(undefined)}
+                    />
                 </div>
             )
         }
@@ -372,7 +372,7 @@ class BoardComponent extends React.Component<Props, State> {
                 <Button>{`${group.cards.length}`}</Button>
                 <div className='octo-spacer'/>
                 <MenuWrapper>
-                    <Button><OptionsIcon/></Button>
+                    <IconButton icon={<OptionsIcon/>}/>
                     <Menu>
                         <Menu.Text
                             id='hide'
@@ -397,11 +397,10 @@ class BoardComponent extends React.Component<Props, State> {
                         )}
                     </Menu>
                 </MenuWrapper>
-                <Button
-                    onClick={() => {
-                        this.addCard(group.option.id)
-                    }}
-                ><AddIcon/></Button>
+                <IconButton
+                    icon={<AddIcon/>}
+                    onClick={() => this.addCard(group.option.id)}
+                />
             </div>
         )
     }
