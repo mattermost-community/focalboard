@@ -7,6 +7,7 @@ import {BoardTree} from '../viewModel/boardTree'
 import {Card} from '../blocks/card'
 import mutator from '../mutator'
 
+import {Constants} from '../constants'
 import Editable from '../widgets/editable'
 import Button from '../widgets/buttons/button'
 
@@ -63,6 +64,7 @@ class TableRow extends React.Component<Props, State> {
                 <div
                     className='octo-table-cell title-cell'
                     id='mainBoardHeader'
+                    style={{width: this.columnWidth(Constants.titleColumnId)}}
                 >
                     <div className='octo-icontitle'>
                         <div className='octo-icon'>{card.icon}</div>
@@ -108,6 +110,7 @@ class TableRow extends React.Component<Props, State> {
                             <div
                                 className='octo-table-cell'
                                 key={template.id}
+                                style={{width: this.columnWidth(template.id)}}
                             >
                                 <PropertyValueElement
                                     readOnly={false}
@@ -120,6 +123,10 @@ class TableRow extends React.Component<Props, State> {
                     })}
             </div>
         )
+    }
+
+    private columnWidth(templateId: string): number {
+        return Math.max(Constants.minColumnWidth, this.props.boardTree?.activeView?.columnWidths[templateId] || 0)
     }
 
     focusOnTitle(): void {

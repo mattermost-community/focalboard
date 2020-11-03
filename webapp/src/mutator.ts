@@ -40,7 +40,7 @@ class Mutator {
         const groupId = this.beginUndoGroup()
         try {
             await actions()
-        } catch(err) {
+        } catch (err) {
             Utils.assertFailure(`ERROR: ${err?.toString?.()}`)
         }
         this.endUndoGroup(groupId)
@@ -55,7 +55,7 @@ class Mutator {
                 await octoClient.updateBlock(oldBlock)
             },
             description,
-            this.undoGroupId
+            this.undoGroupId,
         )
     }
 
@@ -68,7 +68,7 @@ class Mutator {
                 await octoClient.updateBlocks(oldBlocks)
             },
             description,
-            this.undoGroupId
+            this.undoGroupId,
         )
     }
 
@@ -83,7 +83,7 @@ class Mutator {
                 await octoClient.deleteBlock(block.id)
             },
             description,
-            this.undoGroupId
+            this.undoGroupId,
         )
     }
 
@@ -100,7 +100,7 @@ class Mutator {
                 }
             },
             description,
-            this.undoGroupId
+            this.undoGroupId,
         )
     }
 
@@ -119,7 +119,7 @@ class Mutator {
                 await afterUndo?.()
             },
             description,
-            this.undoGroupId
+            this.undoGroupId,
         )
     }
 
@@ -491,7 +491,7 @@ class Mutator {
                 await octoClient.deleteBlock(block.id)
             },
             'add image',
-            this.undoGroupId
+            this.undoGroupId,
         )
 
         return block
