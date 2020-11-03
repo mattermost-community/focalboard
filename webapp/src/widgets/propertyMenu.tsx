@@ -14,7 +14,7 @@ type Props = {
     propertyName: string
     propertyType: PropertyType
     onNameChanged: (newName: string) => void
-    onTypeChanged: (newType: string) => void
+    onTypeChanged: (newType: PropertyType) => void
     onDelete: (id: string) => void
 }
 
