@@ -6,6 +6,7 @@ import {FormattedMessage, IntlShape, injectIntl} from 'react-intl'
 import {BlockIcons} from '../blockIcons'
 import {MutableTextBlock} from '../blocks/textBlock'
 import {BoardTree} from '../viewModel/boardTree'
+import {PropertyType} from '../blocks/board'
 import {CardTree, MutableCardTree} from '../viewModel/cardTree'
 import mutator from '../mutator'
 import {OctoListener} from '../octoListener'
@@ -163,8 +164,12 @@ class CardDetail extends React.Component<Props, State> {
                                     <MenuWrapper>
                                         <div className='octo-propertyname'><Button>{propertyTemplate.name}</Button></div>
                                         <PropertyMenu
-                                            property={propertyTemplate}
-                                            boardTree={boardTree}
+                                            propertyId={propertyTemplate.id}
+                                            propertyName={propertyTemplate.name}
+                                            propertyType={propertyTemplate.type}
+                                            onNameChanged={(newName: string) => mutator.renameProperty(board, propertyTemplate.id, newName)}
+                                            onTypeChanged={(newType: PropertyType) => mutator.changePropertyType(boardTree, propertyTemplate, newType)}
+                                            onDelete={(id: string) => mutator.deleteProperty(boardTree, id)}
                                         />
                                     </MenuWrapper>
                                     <PropertyValueElement

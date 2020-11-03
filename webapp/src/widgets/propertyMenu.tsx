@@ -2,25 +2,27 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {IPropertyTemplate, PropertyType} from '../blocks/board'
-import {BoardTree} from '../viewModel/boardTree'
+import {PropertyType} from '../blocks/board'
 import {Utils} from '../utils'
-import mutator from '../mutator'
 
 import Menu from '../widgets/menu'
 
 import './propertyMenu.scss'
 
 type Props = {
-    property: IPropertyTemplate
-    boardTree: BoardTree
+    propertyId: string
+    propertyName: string
+    propertyType: PropertyType
+    onNameChanged: (newName: string) => void
+    onTypeChanged: (newType: string) => void
+    onDelete: (id: string) => void
 }
 
 type State = {
     name: string
 }
 
-export default class PropertyMenu extends React.Component<Props, State> {
+export default class PropertyMenu extends React.PureComponent<Props, State> {
     private nameTextbox = React.createRef<HTMLInputElement>()
 
     public shouldComponentUpdate(): boolean {
@@ -29,9 +31,7 @@ export default class PropertyMenu extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
-        this.state = {
-            name: (this.props.property && this.props.property.name) || '',
-        }
+        this.state = {name: this.props.propertyName}
     }
 
     public componentDidMount(): void {
@@ -62,16 +62,7 @@ export default class PropertyMenu extends React.Component<Props, State> {
         }
     }
 
-    private saveName = (): void => {
-        if (this.state.name !== this.props.property.name) {
-            Utils.log('menu.onNameChanged')
-            mutator.renameProperty(this.props.boardTree.board, this.props.property.id, this.state.name)
-        }
-    }
-
     public render(): JSX.Element {
-        const {boardTree, property} = this.props
-        const {board} = boardTree
         return (
             <Menu>
                 <input
@@ -81,48 +72,48 @@ export default class PropertyMenu extends React.Component<Props, State> {
                     onClick={(e) => e.stopPropagation()}
                     onChange={(e) => this.setState({name: e.target.value})}
                     value={this.state.name}
-                    onBlur={this.saveName}
+                    onBlur={() => this.props.onNameChanged(this.state.name)}
                     onKeyDown={(e) => {
                         if (e.keyCode === 13 || e.keyCode === 27) {
-                            this.saveName()
+                            this.props.onNameChanged(this.state.name)
                             e.stopPropagation()
                         }
                     }}
                 />
                 <Menu.SubMenu
                     id='type'
-                    name={this.typeDisplayName(this.props.property.type)}
+                    name={this.typeDisplayName(this.props.propertyType)}
                 >
                     <Menu.Text
                         id='text'
                         name='Text'
-                        onClick={() => mutator.changePropertyType(boardTree, property, 'text')}
+                        onClick={() => this.props.onTypeChanged('text')}
                     />
                     <Menu.Text
                         id='number'
                         name='Number'
-                        onClick={() => mutator.changePropertyType(boardTree, property, 'number')}
+                        onClick={() => this.props.onTypeChanged('number')}
                     />
                     <Menu.Text
                         id='select'
                         name='Select'
-                        onClick={() => mutator.changePropertyType(boardTree, property, 'select')}
+                        onClick={() => this.props.onTypeChanged('select')}
                     />
                     <Menu.Text
                         id='createdTime'
                         name='Created Time'
-                        onClick={() => mutator.changePropertyType(boardTree, property, 'createdTime')}
+                        onClick={() => this.props.onTypeChanged('createdTime')}
                     />
                     <Menu.Text
                         id='updatedTime'
                         name='Updated Time'
-                        onClick={() => mutator.changePropertyType(boardTree, property, 'updatedTime')}
+                        onClick={() => this.props.onTypeChanged('updatedTime')}
                     />
                 </Menu.SubMenu>
                 <Menu.Text
                     id='delete'
                     name='Delete'
-                    onClick={() => mutator.deleteProperty(boardTree, property.id)}
+                    onClick={() => this.props.onDelete(this.props.propertyId)}
                 />
             </Menu>
         )
