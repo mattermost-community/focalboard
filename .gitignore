@@ -48,6 +48,6 @@ octo*.db
 .prettierrc.json
 mac/temp
 mac/dist
-linux/octo-linux-app
+linux/bin
 linux/dist
 linux/temp

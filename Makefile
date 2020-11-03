@@ -1,4 +1,4 @@
-.PHONY: prebuild clean cleanall server server-linux server-win64 generate watch-server webapp mac app linux-app
+.PHONY: prebuild clean cleanall server server-linux server-win64 generate watch-server webapp mac-app win-app linux-app
 
 all: server
 
@@ -43,7 +43,7 @@ watch-server:
 webapp:
 	cd webapp; npm run pack
 
-mac:
+mac-app: server webapp
 	rm -rf mac/resources/bin
 	rm -rf mac/resources/pack
 	mkdir -p mac/resources
@@ -52,8 +52,9 @@ mac:
 	mkdir -p mac/temp
 	xcodebuild archive -workspace mac/Tasks.xcworkspace -scheme Tasks -archivePath mac/temp/tasks.xcarchive
 	xcodebuild -exportArchive -archivePath mac/temp/tasks.xcarchive -exportPath mac/dist -exportOptionsPlist mac/export.plist
+	cd mac/dist; zip -r tasks.zip Tasks.app
 
-win: server-win64 webapp
+win-app: server-win64 webapp
 	cd win; make build
 	cp -R bin/octoserver.exe win/dist
 	cp -R config.json win/dist
@@ -63,14 +64,14 @@ win: server-win64 webapp
 
 linux-app: server-linux webapp
 	rm -rf linux/temp
-	mkdir -p linux/temp/octo-linux-app/webapp
+	mkdir -p linux/temp/tasks-app/webapp
 	mkdir -p linux/dist
-	cp -R bin/octoserver linux/temp/octo-linux-app/
-	cp -R config.json linux/temp/octo-linux-app/
-	cp -R webapp/pack linux/temp/octo-linux-app/webapp/pack
+	cp -R bin/octoserver linux/temp/tasks-app/
+	cp -R config.json linux/temp/tasks-app/
+	cp -R webapp/pack linux/temp/tasks-app/webapp/pack
 	cd linux; make build
-	cp -R linux/octo-linux-app linux/temp/octo-linux-app/
-	cd linux/temp; tar -zcf ../dist/octo-linux-app.tar.gz octo-linux-app
+	cp -R linux/bin/tasks-app linux/temp/tasks-app/
+	cd linux/temp; tar -zcf ../dist/tasks-linux.tar.gz tasks-app
 	rm -rf linux/temp
 
 clean:
