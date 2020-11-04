@@ -106,11 +106,13 @@ class CardDetail extends React.Component<Props, State> {
                         text=''
                         placeholderText='Add a description...'
                         onBlur={(text) => {
-                            const block = new MutableTextBlock()
-                            block.parentId = card.id
-                            block.title = text
-                            block.order = cardTree.contents.length * 1000
-                            mutator.insertBlock(block, 'add card text')
+                            if (text) {
+                                const block = new MutableTextBlock()
+                                block.parentId = card.id
+                                block.title = text
+                                block.order = cardTree.contents.length * 1000
+                                mutator.insertBlock(block, 'add card text')
+                            }
                         }}
                     />
                 </div>

@@ -190,6 +190,13 @@ hr {
 
 	width: 100%;
 	padding-right: 126px;
+
+    > * {
+        flex: 1 1 auto;
+    }
+    > .octo-block-margin {
+        flex: 0 0 auto;
+    }
 }
 
 .octo-block-margin {
