@@ -98,6 +98,7 @@ class ValueSelector extends React.Component<Props, State> {
                     }),
                     menu: (provided: CSSProperties): CSSProperties => ({
                         ...provided,
+                        width: 'unset',
                         background: 'rgb(var(--main-bg))',
                     }),
                     option: (provided: CSSProperties, state: {isFocused: boolean}): CSSProperties => ({
