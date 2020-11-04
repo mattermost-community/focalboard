@@ -29,6 +29,13 @@
 
         &.header-cell {
             padding-right: 0;
+
+            .Icon {
+                width: 16px;
+                height: 16px;
+                vertical-align: middle;
+                margin-left: 5px;
+            }
         }
 
         &:focus-within {

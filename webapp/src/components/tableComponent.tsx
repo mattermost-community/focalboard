@@ -12,6 +12,8 @@ import mutator from '../mutator'
 import {Utils} from '../utils'
 
 import MenuWrapper from '../widgets/menuWrapper'
+import SortDownIcon from '../widgets/icons/sortDown'
+import SortUpIcon from '../widgets/icons/sortUp'
 
 import {CardDialog} from './cardDialog'
 import RootPortal from './rootPortal'
@@ -152,6 +154,12 @@ class TableComponent extends React.Component<Props, State> {
                                     filter((template) => activeView.visiblePropertyIds.includes(template.id)).
                                     map((template) => {
                                         const headerRef = React.createRef<HTMLDivElement>()
+                                        let sortIcon = undefined
+                                        const sortOption = activeView.sortOptions.find(o => o.propertyId === template.id)
+                                        if (sortOption) {
+                                            sortIcon = sortOption.reversed ? <SortUpIcon /> : <SortDownIcon />
+                                        }
+
                                         return (<div
                                             key={template.id}
                                             ref={headerRef}
@@ -182,7 +190,10 @@ class TableComponent extends React.Component<Props, State> {
                                                     onDragEnd={() => {
                                                         this.draggedHeaderTemplate = undefined
                                                     }}
-                                                >{template.name}</div>
+                                                >
+                                                    {template.name}
+                                                    {sortIcon}
+                                                </div>
                                                 <TableHeaderMenu
                                                     boardTree={boardTree}
                                                     templateId={template.id}
