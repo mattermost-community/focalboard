@@ -201,7 +201,7 @@ class ViewHeader extends React.Component<Props, State> {
                                     key={option.id}
                                     id={option.id}
                                     name={option.name}
-                                    icon={boardTree.activeView.groupById === option.id ? <CheckIcon/> : undefined}
+                                    rightIcon={boardTree.activeView.groupById === option.id ? <CheckIcon/> : undefined}
                                     onClick={(id) => {
                                         if (boardTree.activeView.groupById === id) {
                                             return
@@ -269,7 +269,7 @@ class ViewHeader extends React.Component<Props, State> {
                                 key={option.id}
                                 id={option.id}
                                 name={option.name}
-                                icon={(activeView.sortOptions[0]?.propertyId === option.id) ? activeView.sortOptions[0].reversed ? <SortUpIcon/> : <SortDownIcon/> : undefined}
+                                rightIcon={(activeView.sortOptions[0]?.propertyId === option.id) ? activeView.sortOptions[0].reversed ? <SortUpIcon/> : <SortDownIcon/> : undefined}
                                 onClick={(propertyId: string) => {
                                     let newSortOptions: ISortOption[] = []
                                     if (activeView.sortOptions[0] && activeView.sortOptions[0].propertyId === propertyId) {

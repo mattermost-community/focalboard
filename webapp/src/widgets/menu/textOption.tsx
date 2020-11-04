@@ -6,6 +6,7 @@ import {MenuOptionProps} from './menuItem'
 
 type TextOptionProps = MenuOptionProps & {
     icon?: React.ReactNode,
+    rightIcon?: React.ReactNode,
 }
 
 export default class TextOption extends React.PureComponent<TextOptionProps> {
@@ -14,7 +15,7 @@ export default class TextOption extends React.PureComponent<TextOptionProps> {
     }
 
     public render(): JSX.Element {
-        const {name, icon} = this.props
+        const {name, icon, rightIcon} = this.props
         return (
             <div
                 className='MenuOption TextOption menu-option'
@@ -22,6 +23,7 @@ export default class TextOption extends React.PureComponent<TextOptionProps> {
             >
                 {icon}
                 <div className='menu-name'>{name}</div>
+                {rightIcon}
             </div>
         )
     }
