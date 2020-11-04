@@ -64,13 +64,13 @@ class Sidebar extends React.Component<Props, State> {
                         <div className='hamburger-icon'>
                             <IconButton
                                 icon={<HamburgerIcon/>}
-                                onClick={() => this.showClicked()}
+                                onClick={this.showClicked}
                             />
                         </div>
                         <div className='show-icon'>
                             <IconButton
                                 icon={<ShowSidebarIcon/>}
-                                onClick={() => this.showClicked()}
+                                onClick={this.showClicked}
                             />
                         </div>
                     </div>
@@ -84,7 +84,7 @@ class Sidebar extends React.Component<Props, State> {
                     {'OCTO'}
                     <div className='octo-spacer'/>
                     <IconButton
-                        onClick={() => this.hideClicked()}
+                        onClick={this.hideClicked}
                         icon={<HideSidebarIcon/>}
                     />
                 </div>
@@ -175,7 +175,9 @@ class Sidebar extends React.Component<Props, State> {
 
                 <br/>
 
-                <Button onClick={() => {this.addBoardClicked()}}>
+                <Button
+                    onClick={this.addBoardClicked}
+                >
                     <FormattedMessage
                         id='Sidebar.add-board'
                         defaultMessage='+ Add Board'
@@ -253,7 +255,7 @@ class Sidebar extends React.Component<Props, State> {
         this.props.showView(view.id, board.id)
     }
 
-    async addBoardClicked(): Promise<void> {
+    private addBoardClicked = async () => {
         const {boardTree, showBoard} = this.props
 
         const oldBoardId = boardTree?.board?.id
@@ -268,15 +270,15 @@ class Sidebar extends React.Component<Props, State> {
                 if (oldBoardId) {
                     showBoard(oldBoardId)
                 }
-            }
+            },
         )
     }
 
-    private hideClicked() {
+    private hideClicked = () => {
         this.setState({isHidden: true})
     }
 
-    private showClicked() {
+    private showClicked = () => {
         this.setState({isHidden: false})
     }
 }
