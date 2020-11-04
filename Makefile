@@ -56,7 +56,8 @@ mac-app: server webapp
 
 win-app: server-win64 webapp
 	cd win; make build
-	cp -R bin/octoserver.exe win/dist
+	mkdir -p win/dist/bin
+	cp -R bin/octoserver.exe win/dist/bin
 	cp -R config.json win/dist
 	mkdir -p win/dist/webapp
 	cp -R webapp/pack win/dist/webapp/pack
