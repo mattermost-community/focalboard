@@ -179,7 +179,7 @@ class MarkdownEditor extends React.Component<Props, State> {
         const element =
             (<div
                 ref={this.frameRef}
-                className={`MarkdownEditor octo-editor ${this.props.className}`}
+                className={`MarkdownEditor octo-editor ${this.props.className || ''}`}
             >
                 {previewElement}
                 {editorElement}

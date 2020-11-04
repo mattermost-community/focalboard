@@ -13,4 +13,10 @@
         margin-bottom: 17px;
         flex-grow: 1;
     }
+    > * {
+        flex: 1 1 auto;
+    }
+    > .octo-block-margin {
+        flex: 0 0 auto;
+    }
 }
