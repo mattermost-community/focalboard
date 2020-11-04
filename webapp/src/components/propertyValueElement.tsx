@@ -71,6 +71,7 @@ export default class PropertyValueElement extends React.Component<Props, State> 
             }
             return (
                 <ValueSelector
+                    emptyValue={emptyDisplayValue}
                     options={propertyTemplate.options}
                     value={propertyTemplate.options.find((p) => p.id === propertyValue)}
                     onChange={(value) => {

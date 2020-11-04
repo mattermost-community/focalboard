@@ -6,6 +6,13 @@
         background-color: rgba(var(--main-fg), 0.1),
     }
 
+    > .octo-label {
+        margin: 0 10px;
+        &.empty {
+            color: rgba(var(--main-fg), 0.6);
+        }
+    }
+
     .value-menu-option {
         display: flex;
         width: 100%;

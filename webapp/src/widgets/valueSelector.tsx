@@ -19,6 +19,7 @@ import './valueSelector.scss'
 type Props = {
     options: IPropertyOption[]
     value: IPropertyOption;
+    emptyValue: string;
     onCreate?: (value: string) => void
     onChange?: (value: string) => void
     onChangeColor?: (option: IPropertyOption, color: string) => void
@@ -26,7 +27,18 @@ type Props = {
     intl: IntlShape
 }
 
-class ValueSelector extends React.Component<Props> {
+type State = {
+    activated: boolean
+}
+
+class ValueSelector extends React.Component<Props, State> {
+    public constructor(props: Props) {
+        super(props)
+        this.state = {
+            activated: false,
+        }
+    }
+
     public shouldComponentUpdate(): boolean {
         return true
     }
@@ -65,6 +77,18 @@ class ValueSelector extends React.Component<Props> {
     }
 
     public render(): JSX.Element {
+        if (!this.state.activated) {
+            return (
+                <div
+                    className='ValueSelector'
+                    onClick={() => this.setState({activated: true})}
+                >
+                    <span className={`octo-label ${this.props.value ? this.props.value.color : 'empty'}`}>
+                        {this.props.value ? this.props.value.value : this.props.emptyValue}
+                    </span>
+                </div>
+            )
+        }
         return (
             <CreatableSelect
                 styles={{
@@ -119,6 +143,8 @@ class ValueSelector extends React.Component<Props> {
                 autoFocus={true}
                 value={this.props.value}
                 closeMenuOnSelect={true}
+                placeholder={this.props.emptyValue}
+                defaultMenuIsOpen={true}
             />
         )
     }
