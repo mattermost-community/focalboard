@@ -4,6 +4,7 @@ import {Board, IPropertyOption, IPropertyTemplate, MutableBoard} from '../blocks
 import {BoardView, MutableBoardView} from '../blocks/boardView'
 import {Card, MutableCard} from '../blocks/card'
 import {CardFilter} from '../cardFilter'
+import { Constants } from '../constants'
 import octoClient from '../octoClient'
 import {IBlock, IMutableBlock} from '../blocks/block'
 import {OctoUtils} from '../octoUtils'
@@ -269,7 +270,7 @@ class MutableBoardTree implements BoardTree {
             sortedCards = cards.sort((a, b) => this.defaultOrder(a, b))
         } else {
             sortOptions.forEach((sortOption) => {
-                if (sortOption.propertyId === '__name') {
+                if (sortOption.propertyId === Constants.titleColumnId) {
                     Utils.log('Sort by name')
                     sortedCards = cards.sort((a, b) => {
                         const aValue = a.title || ''

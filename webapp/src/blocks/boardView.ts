@@ -6,7 +6,7 @@ import {FilterGroup} from '../filterGroup'
 import {MutableBlock} from './block'
 
 type IViewType = 'board' | 'table' // | 'calendar' | 'list' | 'gallery'
-type ISortOption = { propertyId: '__name' | string, reversed: boolean }
+type ISortOption = { propertyId: '__title' | string, reversed: boolean }
 
 interface BoardView extends IBlock {
     readonly viewType: IViewType

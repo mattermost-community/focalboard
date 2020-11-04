@@ -30,6 +30,7 @@ import FilterComponent from './filterComponent'
 
 import './viewHeader.scss'
 import {sendFlashMessage} from './flashMessages'
+import { Constants } from '../constants'
 
 type Props = {
     boardTree?: BoardTree
@@ -264,7 +265,7 @@ class ViewHeader extends React.Component<Props, State> {
                             </>
                         }
 
-                        {boardTree.board.cardProperties.map((option: IPropertyTemplate) => (
+                        {this.sortDisplayOptions().map((option) => (
                             <Menu.Text
                                 key={option.id}
                                 id={option.id}
@@ -367,6 +368,15 @@ class ViewHeader extends React.Component<Props, State> {
                 </ButtonWithMenu>
             </div>
         )
+    }
+
+    private sortDisplayOptions() {
+        const {boardTree} = this.props
+
+        const options = boardTree.board.cardProperties.map((o) => ({id: o.id, name: o.name}))
+        options.unshift({id: Constants.titleColumnId, name: 'Name'})
+
+        return options
     }
 }
 

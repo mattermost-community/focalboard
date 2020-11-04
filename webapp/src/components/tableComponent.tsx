@@ -64,6 +64,12 @@ class TableComponent extends React.Component<Props, State> {
         const {board, cards, activeView} = boardTree
         const titleRef = React.createRef<HTMLDivElement>()
 
+        let titleSortIcon = undefined
+        const titleSortOption = activeView.sortOptions.find(o => o.propertyId === Constants.titleColumnId)
+        if (titleSortOption) {
+            titleSortIcon = titleSortOption.reversed ? <SortUpIcon /> : <SortDownIcon />
+        }
+
         this.cardIdToRowMap.clear()
 
         return (
@@ -115,10 +121,11 @@ class TableComponent extends React.Component<Props, State> {
                                                 id='TableComponent.name'
                                                 defaultMessage='Name'
                                             />
+                                            {titleSortIcon}
                                         </div>
                                         <TableHeaderMenu
                                             boardTree={boardTree}
-                                            templateId='__name'
+                                            templateId={Constants.titleColumnId}
                                         />
                                     </MenuWrapper>
 
