@@ -8,7 +8,7 @@ import {BoardTree} from '../viewModel/boardTree'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import Menu from '../widgets/menu'
-import { Constants } from '../constants'
+import {Constants} from '../constants'
 
 type Props = {
     boardTree?: BoardTree

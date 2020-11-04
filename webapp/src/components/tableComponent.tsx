@@ -64,10 +64,10 @@ class TableComponent extends React.Component<Props, State> {
         const {board, cards, activeView} = boardTree
         const titleRef = React.createRef<HTMLDivElement>()
 
-        let titleSortIcon = undefined
-        const titleSortOption = activeView.sortOptions.find(o => o.propertyId === Constants.titleColumnId)
+        let titleSortIcon
+        const titleSortOption = activeView.sortOptions.find((o) => o.propertyId === Constants.titleColumnId)
         if (titleSortOption) {
-            titleSortIcon = titleSortOption.reversed ? <SortUpIcon /> : <SortDownIcon />
+            titleSortIcon = titleSortOption.reversed ? <SortUpIcon/> : <SortDownIcon/>
         }
 
         this.cardIdToRowMap.clear()
@@ -161,10 +161,10 @@ class TableComponent extends React.Component<Props, State> {
                                     filter((template) => activeView.visiblePropertyIds.includes(template.id)).
                                     map((template) => {
                                         const headerRef = React.createRef<HTMLDivElement>()
-                                        let sortIcon = undefined
-                                        const sortOption = activeView.sortOptions.find(o => o.propertyId === template.id)
+                                        let sortIcon
+                                        const sortOption = activeView.sortOptions.find((o) => o.propertyId === template.id)
                                         if (sortOption) {
-                                            sortIcon = sortOption.reversed ? <SortUpIcon /> : <SortDownIcon />
+                                            sortIcon = sortOption.reversed ? <SortUpIcon/> : <SortDownIcon/>
                                         }
 
                                         return (<div

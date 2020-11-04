@@ -30,7 +30,8 @@ import FilterComponent from './filterComponent'
 
 import './viewHeader.scss'
 import {sendFlashMessage} from './flashMessages'
-import { Constants } from '../constants'
+
+import {Constants} from '../constants'
 
 type Props = {
     boardTree?: BoardTree

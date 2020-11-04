@@ -3,7 +3,8 @@
 //
 import React, {FC} from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
-import { Constants } from '../constants'
+
+import {Constants} from '../constants'
 
 import mutator from '../mutator'
 import {BoardTree} from '../viewModel/boardTree'

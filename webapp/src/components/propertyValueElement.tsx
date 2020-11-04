@@ -11,10 +11,7 @@ import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
 
 import Editable from '../widgets/editable'
-import MenuWrapper from '../widgets/menuWrapper'
-import Menu from '../widgets/menu'
 import ValueSelector from '../widgets/valueSelector'
-import {skipPartiallyEmittedExpressions} from 'typescript'
 
 type Props = {
     boardTree?: BoardTree

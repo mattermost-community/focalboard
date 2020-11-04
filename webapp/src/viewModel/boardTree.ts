@@ -4,7 +4,7 @@ import {Board, IPropertyOption, IPropertyTemplate, MutableBoard} from '../blocks
 import {BoardView, MutableBoardView} from '../blocks/boardView'
 import {Card, MutableCard} from '../blocks/card'
 import {CardFilter} from '../cardFilter'
-import { Constants } from '../constants'
+import {Constants} from '../constants'
 import octoClient from '../octoClient'
 import {IBlock, IMutableBlock} from '../blocks/block'
 import {OctoUtils} from '../octoUtils'
