@@ -35,7 +35,7 @@ class OctoListener {
     private updatedBlocks: IBlock[] = []
     private updateTimeout: NodeJS.Timeout
 
-    notificationDelay = 200
+    notificationDelay = 100
     reopenDelay = 3000
 
     constructor(serverUrl?: string) {
