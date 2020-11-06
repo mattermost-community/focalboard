@@ -296,6 +296,12 @@ class MutableBoardTree implements BoardTree {
                         }
 
                         let result = aValue.localeCompare(bValue)
+
+                        if (result === 0) {
+                            // In case of "ties", use the default order
+                            result = this.defaultOrder(a, b)
+                        }
+
                         if (sortOption.reversed) {
                             result = -result
                         }
@@ -373,6 +379,11 @@ class MutableBoardTree implements BoardTree {
                             }
 
                             result = aValue.localeCompare(bValue)
+                        }
+
+                        if (result === 0) {
+                            // In case of "ties", use the default order
+                            result = this.defaultOrder(a, b)
                         }
 
                         if (sortOption.reversed) {
