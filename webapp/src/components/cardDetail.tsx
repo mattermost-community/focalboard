@@ -65,7 +65,7 @@ class CardDetail extends React.Component<Props, State> {
                 this.setState({cardTree: newCardTree, title: newCardTree.card.title})
             },
             async () => {
-                Utils.log(`cardListener.onReconnect`)
+                Utils.log('cardListener.onReconnect')
                 const newCardTree = cardTree.mutableCopy()
                 await newCardTree.sync()
                 this.setState({cardTree: newCardTree, title: newCardTree.card.title})

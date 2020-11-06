@@ -159,7 +159,7 @@ export default class BoardPage extends React.Component<Props, State> {
                 this.incrementalUpdate(blocks)
             },
             () => {
-                Utils.log(`workspaceListener.onReconnect`)
+                Utils.log('workspaceListener.onReconnect')
                 this.sync()
             })
 
