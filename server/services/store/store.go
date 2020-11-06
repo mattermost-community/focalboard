@@ -16,4 +16,9 @@ type Store interface {
 	Shutdown() error
 	GetSystemSettings() (map[string]string, error)
 	SetSystemSetting(key string, value string) error
+	GetUserById(userID string) (*model.User, error)
+	GetUserByEmail(email string) (*model.User, error)
+	GetUserByUsername(username string) (*model.User, error)
+	CreateUser(user *model.User) error
+	UpdateUser(user *model.User) error
 }

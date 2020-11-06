@@ -36,6 +36,9 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	r.HandleFunc("/api/v1/blocks/{blockID}", a.handleDeleteBlock).Methods("DELETE")
 	r.HandleFunc("/api/v1/blocks/{blockID}/subtree", a.handleGetSubTree).Methods("GET")
 
+	r.HandleFunc("/api/v1/login", a.handleLogin).Methods("POST")
+	r.HandleFunc("/api/v1/register", a.handleRegister).Methods("POST")
+
 	r.HandleFunc("/api/v1/files", a.handleUploadFile).Methods("POST")
 	r.HandleFunc("/files/{filename}", a.handleServeFile).Methods("GET")
 
@@ -293,6 +296,7 @@ func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) {
 
 func errorResponse(w http.ResponseWriter, code int, message map[string]string) {
 	log.Printf("%d ERROR", code)
+	log.Printf("%v ERROR", message)
 	data, err := json.Marshal(message)
 	if err != nil {
 		data = []byte("{}")

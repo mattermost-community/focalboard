@@ -1,6 +1,7 @@
 package sqlstore
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/mattermost/mattermost-octo-tasks/server/model"
@@ -16,7 +17,13 @@ func (s *SQLStore) getUserByCondition(condition sq.Eq) (*model.User, error) {
 	row := query.QueryRow()
 	user := model.User{}
 
-	err := row.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.MfaSecret, &user.AuthService, &user.AuthData, &user.Props, &user.CreateAt, &user.UpdateAt, &user.DeleteAt)
+	var propsBytes []byte
+	err := row.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.MfaSecret, &user.AuthService, &user.AuthData, &propsBytes, &user.CreateAt, &user.UpdateAt, &user.DeleteAt)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(propsBytes, &user.Props)
 	if err != nil {
 		return nil, err
 	}
@@ -39,10 +46,33 @@ func (s *SQLStore) GetUserByUsername(username string) (*model.User, error) {
 func (s *SQLStore) CreateUser(user *model.User) error {
 	now := time.Now().Unix()
 
+	propsBytes, err := json.Marshal(user.Props)
+	if err != nil {
+		return err
+	}
+
 	query := s.getQueryBuilder().Insert("users").
 		Columns("id", "username", "email", "password", "mfa_secret", "auth_service", "auth_data", "props", "create_at", "update_at", "delete_at").
-		Values(user.ID, user.Username, user.Email, user.Password, user.MfaSecret, user.AuthService, user.AuthData, user.Props, now, now, 0)
+		Values(user.ID, user.Username, user.Email, user.Password, user.MfaSecret, user.AuthService, user.AuthData, propsBytes, now, now, 0)
+
+	_, err = query.Exec()
+	return err
 }
 
 func (s *SQLStore) UpdateUser(user *model.User) error {
+	now := time.Now().Unix()
+
+	propsBytes, err := json.Marshal(user.Props)
+	if err != nil {
+		return err
+	}
+
+	query := s.getQueryBuilder().Update("users").
+		Set("username", user.Username).
+		Set("email", user.Email).
+		Set("props", propsBytes).
+		Set("update_at", now)
+
+	_, err = query.Exec()
+	return err
 }

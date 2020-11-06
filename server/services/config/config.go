@@ -22,6 +22,7 @@ type Configuration struct {
 	FilesPath      string   `json:"filespath" mapstructure:"filespath"`
 	Telemetry      bool     `json:"telemetry" mapstructure:"telemetry"`
 	WebhookUpdate  []string `json:"webhook_update" mapstructure:"webhook_update"`
+	Secret         string   `json:"secret" mapstructure:"secret"`
 }
 
 // ReadConfigFile read the configuration from the filesystem.

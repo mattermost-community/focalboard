@@ -8,5 +8,6 @@
 	"webpath": "./webapp/pack",
 	"filespath": "./files",
     "telemetry": true,
-    "webhook_update": []
+    "webhook_update": [],
+    "secret": "this-is-a-secret-string"
 }

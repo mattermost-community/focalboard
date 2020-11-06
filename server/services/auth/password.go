@@ -81,12 +81,12 @@ type PasswordSettings struct {
 	Symbol        bool
 }
 
-func (as *AuthService) IsPasswordValid(password string) error {
+func IsPasswordValid(password string, settings PasswordSettings) error {
 	err := &InvalidPasswordError{
 		FailingCriterias: []string{},
 	}
 
-	if len(password) < as.passwordSettings.MinimumLength {
+	if len(password) < settings.MinimumLength {
 		err.FailingCriterias = append(err.FailingCriterias, InvalidMinLengthPassword)
 	}
 
@@ -94,25 +94,25 @@ func (as *AuthService) IsPasswordValid(password string) error {
 		err.FailingCriterias = append(err.FailingCriterias, InvalidMaxLengthPassword)
 	}
 
-	if as.passwordSettings.Lowercase {
+	if settings.Lowercase {
 		if !strings.ContainsAny(password, PasswordLowerCaseLetters) {
 			err.FailingCriterias = append(err.FailingCriterias, InvalidLowercasePassword)
 		}
 	}
 
-	if as.passwordSettings.Uppercase {
+	if settings.Uppercase {
 		if !strings.ContainsAny(password, PasswordUpperCaseLetters) {
 			err.FailingCriterias = append(err.FailingCriterias, InvalidUppercasePassword)
 		}
 	}
 
-	if as.passwordSettings.Number {
+	if settings.Number {
 		if !strings.ContainsAny(password, PasswordNumbers) {
 			err.FailingCriterias = append(err.FailingCriterias, InvalidNumberPassword)
 		}
 	}
 
-	if as.passwordSettings.Symbol {
+	if settings.Symbol {
 		if !strings.ContainsAny(password, PasswordSpecialChars) {
 			err.FailingCriterias = append(err.FailingCriterias, InvalidSymbolPassword)
 		}
