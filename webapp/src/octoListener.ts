@@ -1,5 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+import {IBlock} from './blocks/block'
 import {Utils} from './utils'
 
 // These are outgoing commands to the server
@@ -12,7 +13,10 @@ type WSCommand = {
 type WSMessage = {
     action: string
     blockId: string
+    block: IBlock
 }
+
+type OnChangeHandler = (blocks: IBlock[]) => void
 
 //
 // OctoListener calls a handler when a block or any of its children changes
@@ -27,6 +31,10 @@ class OctoListener {
     private blockIds: string[] = []
     private isInitialized = false
 
+    private onChange: OnChangeHandler
+    private updatedBlocks: IBlock[] = []
+    private updateTimeout: NodeJS.Timeout
+
     notificationDelay = 200
     reopenDelay = 3000
 
@@ -35,12 +43,14 @@ class OctoListener {
         Utils.log(`OctoListener serverUrl: ${this.serverUrl}`)
     }
 
-    open(blockIds: string[], onChange: (blockId: string) => void) {
+    open(blockIds: string[], onChange: OnChangeHandler) {
         let timeoutId: NodeJS.Timeout
 
         if (this.ws) {
             this.close()
         }
+
+        this.onChange = onChange
 
         const url = new URL(this.serverUrl)
         const wsServerUrl = `ws://${url.host}${url.pathname}ws/onchange`
@@ -84,10 +94,7 @@ class OctoListener {
                     if (timeoutId) {
                         clearTimeout(timeoutId)
                     }
-                    timeoutId = setTimeout(() => {
-                        timeoutId = undefined
-                        onChange(message.blockId)
-                    }, this.notificationDelay)
+                    this.queueUpdateNotification(message.block)
                     break
                 default:
                     Utils.logError(`Unexpected action: ${message.action}`)
@@ -109,6 +116,7 @@ class OctoListener {
         const ws = this.ws
         this.ws = undefined
         this.blockIds = []
+        this.onChange = undefined
         this.isInitialized = false
         ws.close()
     }
@@ -150,6 +158,24 @@ class OctoListener {
                 }
             }
         }
+    }
+
+    private queueUpdateNotification(block: IBlock) {
+        this.updatedBlocks = this.updatedBlocks.filter((o) => o.id !== block.id) // Remove existing queued update
+        this.updatedBlocks.push(block)
+        if (this.updateTimeout) {
+            clearTimeout(this.updateTimeout)
+            this.updateTimeout = undefined
+        }
+
+        this.updateTimeout = setTimeout(() => {
+            this.flushUpdateNotifications()
+        }, this.notificationDelay)
+    }
+
+    private flushUpdateNotifications() {
+        this.onChange(this.updatedBlocks)
+        this.updatedBlocks = []
     }
 }
 

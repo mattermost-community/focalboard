@@ -10,6 +10,7 @@ import mutator from '../mutator'
 import {OctoListener} from '../octoListener'
 import {Utils} from '../utils'
 import {MutableWorkspaceTree} from '../viewModel/workspaceTree'
+import {IBlock} from '../blocks/block'
 
 type Props = {
     setLanguage: (lang: string) => void
@@ -151,9 +152,9 @@ export default class BoardPage extends React.Component<Props, State> {
         const boardIds = workspaceTree.boards.map((o) => o.id)
 
         // Listen to boards plus all blocks at root (Empty string for parentId)
-        this.workspaceListener.open(['', ...boardIds], async (blockId) => {
-            Utils.log(`workspaceListener.onChanged: ${blockId}`)
-            this.sync()
+        this.workspaceListener.open(['', ...boardIds], async (blocks) => {
+            Utils.log(`workspaceListener.onChanged: ${blocks.length}`)
+            this.incrementalUpdate(blocks)
         })
 
         if (boardId) {
@@ -177,6 +178,19 @@ export default class BoardPage extends React.Component<Props, State> {
         } else {
             this.forceUpdate()
         }
+    }
+
+    private incrementalUpdate(blocks: IBlock[]) {
+        const {workspaceTree, boardTree, viewId} = this.state
+
+        const newWorkspaceTree = workspaceTree.mutableCopy()
+        newWorkspaceTree.incrementalUpdate(blocks)
+
+        const newBoardTree = boardTree.mutableCopy()
+        newBoardTree.incrementalUpdate(blocks)
+        newBoardTree.setActiveView(viewId)
+
+        this.setState({workspaceTree: newWorkspaceTree, boardTree: newBoardTree})
     }
 
     // IPageController

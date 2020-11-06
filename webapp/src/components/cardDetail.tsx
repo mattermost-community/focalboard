@@ -54,13 +54,14 @@ class CardDetail extends React.Component<Props, State> {
     }
 
     componentDidMount() {
-        this.cardListener = new OctoListener()
-        this.cardListener.open([this.props.cardId], async (blockId) => {
-            Utils.log(`cardListener.onChanged: ${blockId}`)
-            await cardTree.sync()
-            this.setState({cardTree})
-        })
         const cardTree = new MutableCardTree(this.props.cardId)
+        this.cardListener = new OctoListener()
+        this.cardListener.open([this.props.cardId], async (blocks) => {
+            Utils.log(`cardListener.onChanged: ${blocks.length}`)
+            const newCardTree = cardTree.mutableCopy()
+            newCardTree.incrementalUpdate(blocks)
+            this.setState({cardTree: newCardTree})
+        })
         cardTree.sync().then(() => {
             this.setState({cardTree, title: cardTree.card.title})
             setTimeout(() => {

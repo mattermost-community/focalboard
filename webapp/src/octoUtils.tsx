@@ -80,6 +80,14 @@ class OctoUtils {
     static hydrateBlocks(blocks: IBlock[]): MutableBlock[] {
         return blocks.map((block) => this.hydrateBlock(block))
     }
+
+    static mergeBlocks(blocks: IBlock[], updatedBlocks: IBlock[]): IBlock[] {
+        const updatedBlockIds = updatedBlocks.map((o) => o.id)
+        const newBlocks = blocks.filter((o) => !updatedBlockIds.includes(o.id))
+        const updatedAndNotDeletedBlocks = updatedBlocks.filter((o) => o.deleteAt === 0)
+        newBlocks.push(...updatedAndNotDeletedBlocks)
+        return newBlocks
+    }
 }
 
 export {OctoUtils}
