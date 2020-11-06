@@ -152,10 +152,16 @@ export default class BoardPage extends React.Component<Props, State> {
         const boardIds = workspaceTree.boards.map((o) => o.id)
 
         // Listen to boards plus all blocks at root (Empty string for parentId)
-        this.workspaceListener.open(['', ...boardIds], async (blocks) => {
-            Utils.log(`workspaceListener.onChanged: ${blocks.length}`)
-            this.incrementalUpdate(blocks)
-        })
+        this.workspaceListener.open(
+            ['', ...boardIds],
+            async (blocks) => {
+                Utils.log(`workspaceListener.onChanged: ${blocks.length}`)
+                this.incrementalUpdate(blocks)
+            },
+            () => {
+                Utils.log(`workspaceListener.onReconnect`)
+                this.sync()
+            })
 
         if (boardId) {
             const boardTree = new MutableBoardTree(boardId)

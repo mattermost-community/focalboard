@@ -43,7 +43,7 @@ class OctoListener {
         Utils.log(`OctoListener serverUrl: ${this.serverUrl}`)
     }
 
-    open(blockIds: string[], onChange: OnChangeHandler) {
+    open(blockIds: string[], onChange: OnChangeHandler, onReconnect: () => void) {
         let timeoutId: NodeJS.Timeout
 
         if (this.ws) {
@@ -75,13 +75,14 @@ class OctoListener {
                 const reopenBlockIds = this.isInitialized ? this.blockIds.slice() : blockIds.slice()
                 Utils.logError(`Unexpected close, re-opening with ${reopenBlockIds.length} blocks...`)
                 setTimeout(() => {
-                    this.open(reopenBlockIds, onChange)
+                    this.open(reopenBlockIds, onChange, onReconnect)
+                    onReconnect()
                 }, this.reopenDelay)
             }
         }
 
         ws.onmessage = (e) => {
-            Utils.log(`OctoListener websocket onmessage. data: ${e.data}`)
+            // Utils.log(`OctoListener websocket onmessage. data: ${e.data}`)
             if (ws !== this.ws) {
                 Utils.log('Ignoring closed ws')
                 return
@@ -94,6 +95,7 @@ class OctoListener {
                     if (timeoutId) {
                         clearTimeout(timeoutId)
                     }
+                    Utils.log(`OctoListener update block: ${message.block?.id}`)
                     this.queueUpdateNotification(message.block)
                     break
                 default:
