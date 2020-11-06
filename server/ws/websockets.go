@@ -180,32 +180,6 @@ func (ws *Server) BroadcastBlockDelete(blockID string, parentID string) {
 	ws.BroadcastBlockChange(block)
 }
 
-/*
-func (ws *Server) BroadcastBlockDelete1(blockIDs []string) {
-	for _, blockID := range blockIDs {
-		listeners := ws.GetListeners(blockID)
-		log.Printf("%d listener(s) for blockID: %s", len(listeners), blockID)
-
-		if listeners != nil {
-			message := DeleteMsg{
-				Action:  "DELETE_BLOCK",
-				BlockID: blockID,
-			}
-
-			for _, listener := range listeners {
-				log.Printf("Broadcast change, blockID: %s, remoteAddr: %s", blockID, listener.RemoteAddr())
-
-				err := listener.WriteJSON(message)
-				if err != nil {
-					log.Printf("broadcast error: %v", err)
-					listener.Close()
-				}
-			}
-		}
-	}
-}
-*/
-
 // BroadcastBlockChange broadcasts update messages to clients
 func (ws *Server) BroadcastBlockChange(block model.Block) {
 	blockIDsToNotify := []string{block.ID, block.ParentID}
