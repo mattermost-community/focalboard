@@ -10,19 +10,28 @@ interface CardTree {
     readonly card: Card
     readonly comments: readonly IBlock[]
     readonly contents: readonly IOrderedBlock[]
+
+    mutableCopy(): MutableCardTree
 }
 
 class MutableCardTree implements CardTree {
     card: Card
-    comments: IBlock[]
-    contents: IOrderedBlock[]
+    comments: IBlock[] = []
+    contents: IOrderedBlock[] = []
+
+    private rawBlocks: IBlock[] = []
 
     constructor(private cardId: string) {
     }
 
     async sync() {
-        const blocks = await octoClient.getSubtree(this.cardId)
-        this.rebuild(OctoUtils.hydrateBlocks(blocks))
+        this.rawBlocks = await octoClient.getSubtree(this.cardId)
+        this.rebuild(OctoUtils.hydrateBlocks(this.rawBlocks))
+    }
+
+    incrementalUpdate(updatedBlocks: IBlock[]) {
+        this.rawBlocks = OctoUtils.mergeBlocks(this.rawBlocks, updatedBlocks)
+        this.rebuild(OctoUtils.hydrateBlocks(this.rawBlocks))
     }
 
     private rebuild(blocks: IBlock[]) {
@@ -34,6 +43,12 @@ class MutableCardTree implements CardTree {
 
         const contentBlocks = blocks.filter((block) => block.type === 'text' || block.type === 'image' || block.type === 'divider') as IOrderedBlock[]
         this.contents = contentBlocks.sort((a, b) => a.order - b.order)
+    }
+
+    mutableCopy(): MutableCardTree {
+        const cardTree = new MutableCardTree(this.cardId)
+        cardTree.incrementalUpdate(this.rawBlocks)
+        return cardTree
     }
 }
 

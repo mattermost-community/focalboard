@@ -44,10 +44,9 @@ func (a *App) InsertBlocks(blocks []model.Block) error {
 			return err
 		}
 
+		a.wsServer.BroadcastBlockChange(block)
 		go a.webhook.NotifyUpdate(block)
 	}
-
-	a.wsServer.BroadcastBlockChangeToWebsocketClients(blockIDsToNotify)
 
 	return nil
 }
@@ -76,7 +75,7 @@ func (a *App) DeleteBlock(blockID string) error {
 		return err
 	}
 
-	a.wsServer.BroadcastBlockChangeToWebsocketClients(blockIDsToNotify)
+	a.wsServer.BroadcastBlockDelete(blockID, parentID)
 
 	return nil
 }

@@ -29,6 +29,8 @@ interface BoardTree {
 
     getSearchText(): string | undefined
     orderedCards(): Card[]
+
+    mutableCopy(): MutableBoardTree
 }
 
 class MutableBoardTree implements BoardTree {
@@ -41,6 +43,7 @@ class MutableBoardTree implements BoardTree {
     activeView?: MutableBoardView
     groupByProperty?: IPropertyTemplate
 
+    private rawBlocks: IBlock[] = []
     private searchText?: string
     allCards: MutableCard[] = []
     get allBlocks(): IBlock[] {
@@ -51,8 +54,13 @@ class MutableBoardTree implements BoardTree {
     }
 
     async sync() {
-        const blocks = await octoClient.getSubtree(this.boardId)
-        this.rebuild(OctoUtils.hydrateBlocks(blocks))
+        this.rawBlocks = await octoClient.getSubtree(this.boardId)
+        this.rebuild(OctoUtils.hydrateBlocks(this.rawBlocks))
+    }
+
+    incrementalUpdate(updatedBlocks: IBlock[]) {
+        this.rawBlocks = OctoUtils.mergeBlocks(this.rawBlocks, updatedBlocks)
+        this.rebuild(OctoUtils.hydrateBlocks(this.rawBlocks))
     }
 
     private rebuild(blocks: IMutableBlock[]) {
@@ -389,6 +397,12 @@ class MutableBoardTree implements BoardTree {
         }
 
         return cards
+    }
+
+    mutableCopy(): MutableBoardTree {
+        const boardTree = new MutableBoardTree(this.boardId)
+        boardTree.incrementalUpdate(this.rawBlocks)
+        return boardTree
     }
 }
 
