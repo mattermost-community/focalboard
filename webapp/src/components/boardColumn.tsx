@@ -4,10 +4,13 @@ import React from 'react'
 
 type Props = {
     onDrop?: (e: React.DragEvent<HTMLDivElement>) => void
+    isDropZone?: boolean
 }
 
 type State = {
     isDragOver?: boolean
+    dragPageX?: number
+    dragPageY?: number
 }
 
 class BoardColumn extends React.Component<Props, State> {
@@ -17,24 +20,30 @@ class BoardColumn extends React.Component<Props, State> {
     }
 
     render() {
+        let className = 'octo-board-column'
+        if (this.props.isDropZone && this.state.isDragOver) {
+            className += ' dragover'
+        }
         const element =
             (<div
-                className={this.state.isDragOver ? 'octo-board-column dragover' : 'octo-board-column'}
+                className={className}
                 onDragOver={(e) => {
                     e.preventDefault()
-                    this.setState({isDragOver: true})
+                    this.setState({isDragOver: true, dragPageX: e.pageX, dragPageY: e.pageY})
                 }}
                 onDragEnter={(e) => {
                     e.preventDefault()
-                    this.setState({isDragOver: true})
+                    this.setState({isDragOver: true, dragPageX: e.pageX, dragPageY: e.pageY})
                 }}
                 onDragLeave={(e) => {
                     e.preventDefault()
-                    this.setState({isDragOver: false})
+                    this.setState({isDragOver: false, dragPageX: undefined, dragPageY: undefined})
                 }}
                 onDrop={(e) => {
-                    this.setState({isDragOver: false})
-                    this.props.onDrop(e)
+                    this.setState({isDragOver: false, dragPageX: undefined, dragPageY: undefined})
+                    if (this.props.isDropZone) {
+                        this.props.onDrop(e)
+                    }
                 }}
             >
                 {this.props.children}

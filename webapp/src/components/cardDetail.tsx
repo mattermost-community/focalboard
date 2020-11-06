@@ -6,6 +6,7 @@ import {FormattedMessage, IntlShape, injectIntl} from 'react-intl'
 import {BlockIcons} from '../blockIcons'
 import {MutableTextBlock} from '../blocks/textBlock'
 import {BoardTree} from '../viewModel/boardTree'
+import {PropertyType} from '../blocks/board'
 import {CardTree, MutableCardTree} from '../viewModel/cardTree'
 import mutator from '../mutator'
 import {OctoListener} from '../octoListener'
@@ -13,14 +14,15 @@ import {Utils} from '../utils'
 
 import MenuWrapper from '../widgets/menuWrapper'
 import Menu from '../widgets/menu'
+import PropertyMenu from '../widgets/propertyMenu'
 import Editable from '../widgets/editable'
-import EmojiPicker from '../widgets/emojiPicker'
 import Button from '../widgets/buttons/button'
+import EmojiIcon from '../widgets/icons/emoji'
 
 import {MarkdownEditor} from './markdownEditor'
 import ContentBlock from './contentBlock'
 import CommentsList from './commentsList'
-import PropertyMenu from './propertyMenu'
+import BlockIconSelector from './blockIconSelector'
 import PropertyValueElement from './propertyValueElement'
 
 import './cardDetail.scss'
@@ -49,13 +51,6 @@ class CardDetail extends React.Component<Props, State> {
         this.state = {
             title: '',
         }
-    }
-
-    onSelectEmoji = (emoji: string) => {
-        mutator.changeIcon(this.state.cardTree.card, emoji)
-
-        // Close the menu
-        document.body.click()
     }
 
     componentDidMount() {
@@ -105,17 +100,19 @@ class CardDetail extends React.Component<Props, State> {
                 </div>)
         } else {
             contentElements = (<div className='octo-content'>
-                <div className='octo-block octo-hover-container'>
+                <div className='octo-block'>
                     <div className='octo-block-margin'/>
                     <MarkdownEditor
                         text=''
                         placeholderText='Add a description...'
                         onBlur={(text) => {
-                            const block = new MutableTextBlock()
-                            block.parentId = card.id
-                            block.title = text
-                            block.order = cardTree.contents.length * 1000
-                            mutator.insertBlock(block, 'add card text')
+                            if (text) {
+                                const block = new MutableTextBlock()
+                                block.parentId = card.id
+                                block.title = text
+                                block.order = cardTree.contents.length * 1000
+                                mutator.insertBlock(block, 'add card text')
+                            }
                         }}
                     />
                 </div>
@@ -127,35 +124,18 @@ class CardDetail extends React.Component<Props, State> {
         return (
             <>
                 <div className='CardDetail content'>
-                    {icon &&
-                        <MenuWrapper>
-                            <div className='octo-button octo-icon octo-card-icon'>{icon}</div>
-                            <Menu>
-                                <Menu.Text
-                                    id='random'
-                                    name={intl.formatMessage({id: 'CardDetail.random-icon', defaultMessage: 'Random'})}
-                                    onClick={() => mutator.changeIcon(card, BlockIcons.shared.randomIcon())}
-                                />
-                                <Menu.SubMenu
-                                    id='pick'
-                                    name={intl.formatMessage({id: 'CardDetail.pick-icon', defaultMessage: 'Pick Icon'})}
-                                >
-                                    <EmojiPicker onSelect={this.onSelectEmoji}/>
-                                </Menu.SubMenu>
-                                <Menu.Text
-                                    id='remove'
-                                    name={intl.formatMessage({id: 'CardDetail.remove-icon', defaultMessage: 'Remove Icon'})}
-                                    onClick={() => mutator.changeIcon(card, undefined, 'remove icon')}
-                                />
-                            </Menu>
-                        </MenuWrapper>}
+                    <BlockIconSelector
+                        block={card}
+                        size='l'
+                    />
                     {!icon &&
-                        <div className='octo-hovercontrols'>
+                        <div className='add-buttons'>
                             <Button
                                 onClick={() => {
                                     const newIcon = BlockIcons.shared.randomIcon()
                                     mutator.changeIcon(card, newIcon)
                                 }}
+                                icon={<EmojiIcon/>}
                             >
                                 <FormattedMessage
                                     id='CardDetail.add-icon'
@@ -184,15 +164,20 @@ class CardDetail extends React.Component<Props, State> {
                                     className='octo-propertyrow'
                                 >
                                     <MenuWrapper>
-                                        <div className='octo-button octo-propertyname'>{propertyTemplate.name}</div>
+                                        <div className='octo-propertyname'><Button>{propertyTemplate.name}</Button></div>
                                         <PropertyMenu
-                                            property={propertyTemplate}
-                                            boardTree={boardTree}
+                                            propertyId={propertyTemplate.id}
+                                            propertyName={propertyTemplate.name}
+                                            propertyType={propertyTemplate.type}
+                                            onNameChanged={(newName: string) => mutator.renameProperty(board, propertyTemplate.id, newName)}
+                                            onTypeChanged={(newType: PropertyType) => mutator.changePropertyType(boardTree, propertyTemplate, newType)}
+                                            onDelete={(id: string) => mutator.deleteProperty(boardTree, id)}
                                         />
                                     </MenuWrapper>
                                     <PropertyValueElement
                                         readOnly={false}
                                         card={card}
+                                        boardTree={boardTree}
                                         propertyTemplate={propertyTemplate}
                                         emptyDisplayValue='Empty'
                                     />
@@ -200,17 +185,18 @@ class CardDetail extends React.Component<Props, State> {
                             )
                         })}
 
-                        <div
-                            className='octo-button octo-propertyname add-property'
-                            onClick={async () => {
-                                // TODO: Show UI
-                                await mutator.insertPropertyTemplate(boardTree)
-                            }}
-                        >
-                            <FormattedMessage
-                                id='CardDetail.add-property'
-                                defaultMessage='+ Add a property'
-                            />
+                        <div className='octo-propertyname add-property'>
+                            <Button
+                                onClick={async () => {
+                                    // TODO: Show UI
+                                    await mutator.insertPropertyTemplate(boardTree)
+                                }}
+                            >
+                                <FormattedMessage
+                                    id='CardDetail.add-property'
+                                    defaultMessage='+ Add a property'
+                                />
+                            </Button>
                         </div>
                     </div>
 
@@ -230,38 +216,36 @@ class CardDetail extends React.Component<Props, State> {
                     {contentElements}
                 </div>
 
-                <div className='CardDetail content'>
-                    <div className='octo-hoverpanel octo-hover-container'>
-                        <MenuWrapper>
-                            <div className='octo-button octo-hovercontrol octo-hover-item'>
-                                <FormattedMessage
-                                    id='CardDetail.add-content'
-                                    defaultMessage='Add content'
-                                />
-                            </div>
-                            <Menu>
-                                <Menu.Text
-                                    id='text'
-                                    name={intl.formatMessage({id: 'CardDetail.text', defaultMessage: 'Text'})}
-                                    onClick={() => {
-                                        const block = new MutableTextBlock()
-                                        block.parentId = card.id
-                                        block.order = cardTree.contents.length * 1000
-                                        mutator.insertBlock(block, 'add text')
-                                    }}
-                                />
-                                <Menu.Text
-                                    id='image'
-                                    name={intl.formatMessage({id: 'CardDetail.image', defaultMessage: 'Image'})}
-                                    onClick={() => Utils.selectLocalFile(
-                                        (file) => mutator.createImageBlock(card.id, file, cardTree.contents.length * 1000),
-                                        '.jpg,.jpeg,.png',
-                                    )}
-                                />
+                <div className='CardDetail content add-content'>
+                    <MenuWrapper>
+                        <Button>
+                            <FormattedMessage
+                                id='CardDetail.add-content'
+                                defaultMessage='Add content'
+                            />
+                        </Button>
+                        <Menu position='top'>
+                            <Menu.Text
+                                id='text'
+                                name={intl.formatMessage({id: 'CardDetail.text', defaultMessage: 'Text'})}
+                                onClick={() => {
+                                    const block = new MutableTextBlock()
+                                    block.parentId = card.id
+                                    block.order = cardTree.contents.length * 1000
+                                    mutator.insertBlock(block, 'add text')
+                                }}
+                            />
+                            <Menu.Text
+                                id='image'
+                                name={intl.formatMessage({id: 'CardDetail.image', defaultMessage: 'Image'})}
+                                onClick={() => Utils.selectLocalFile(
+                                    (file) => mutator.createImageBlock(card.id, file, cardTree.contents.length * 1000),
+                                    '.jpg,.jpeg,.png',
+                                )}
+                            />
 
-                            </Menu>
-                        </MenuWrapper>
-                    </div>
+                        </Menu>
+                    </MenuWrapper>
                 </div>
             </>
         )

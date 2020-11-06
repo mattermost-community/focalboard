@@ -16,6 +16,7 @@ import (
 	"github.com/mattermost/mattermost-octo-tasks/server/services/store"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/store/sqlstore"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/telemetry"
+	"github.com/mattermost/mattermost-octo-tasks/server/services/webhook"
 	"github.com/mattermost/mattermost-octo-tasks/server/web"
 	"github.com/mattermost/mattermost-octo-tasks/server/ws"
 	"github.com/mattermost/mattermost-server/v5/model"
@@ -59,7 +60,9 @@ func New(cfg *config.Configuration) (*Server, error) {
 		return nil, errors.New("unable to initialize the files storage")
 	}
 
-	appBuilder := func() *app.App { return app.New(cfg, store, wsServer, filesBackend) }
+	webhookClient := webhook.NewClient(cfg)
+
+	appBuilder := func() *app.App { return app.New(cfg, store, wsServer, filesBackend, webhookClient) }
 	api := api.NewAPI(appBuilder)
 
 	webServer := web.NewServer(cfg.WebPath, cfg.Port, cfg.UseSSL)

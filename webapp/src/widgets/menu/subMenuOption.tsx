@@ -10,6 +10,7 @@ import './subMenuOption.scss'
 
 type SubMenuOptionProps = MenuOptionProps & {
     position?: 'bottom' | 'top'
+    icon?: React.ReactNode
 }
 
 type SubMenuState = {
@@ -36,6 +37,7 @@ export default class SubMenuOption extends React.PureComponent<SubMenuOptionProp
                 onMouseEnter={this.handleMouseEnter}
                 onMouseLeave={this.close}
             >
+                {this.props.icon}
                 <div className='menu-name'>{this.props.name}</div>
                 <SubmenuTriangleIcon/>
                 {this.state.isOpen &&

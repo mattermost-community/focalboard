@@ -1,0 +1,22 @@
+.ContentBlock {
+    .MenuWrapper {
+        display: none;
+    }
+    &:hover {
+        .MenuWrapper {
+            display: flex;
+        }
+    }
+    .divider {
+        padding-top: 16px;
+        border-bottom: 1px solid rgba(var(--main-fg), 0.09);
+        margin-bottom: 17px;
+        flex-grow: 1;
+    }
+    > * {
+        flex: 1 1 auto;
+    }
+    > .octo-block-margin {
+        flex: 0 0 auto;
+    }
+}

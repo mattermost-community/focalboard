@@ -4,7 +4,7 @@ import React from 'react'
 import {injectIntl, IntlShape, FormattedMessage} from 'react-intl'
 
 import {Archiver} from '../archiver'
-import {ISortOption} from '../blocks/boardView'
+import {ISortOption, MutableBoardView} from '../blocks/boardView'
 import {BlockIcons} from '../blockIcons'
 import {MutableCard} from '../blocks/card'
 import {IPropertyTemplate} from '../blocks/board'
@@ -16,15 +16,22 @@ import mutator from '../mutator'
 import {Utils} from '../utils'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
+import CheckIcon from '../widgets/icons/check'
 import DropdownIcon from '../widgets/icons/dropdown'
 import OptionsIcon from '../widgets/icons/options'
 import SortUpIcon from '../widgets/icons/sortUp'
 import SortDownIcon from '../widgets/icons/sortDown'
+import ButtonWithMenu from '../widgets/buttons/buttonWithMenu'
+import IconButton from '../widgets/buttons/iconButton'
+import Button from '../widgets/buttons/button'
 
 import {Editable} from './editable'
 import FilterComponent from './filterComponent'
 
 import './viewHeader.scss'
+import {sendFlashMessage} from './flashMessages'
+
+import {Constants} from '../constants'
 
 type Props = {
     boardTree?: BoardTree
@@ -86,28 +93,33 @@ class ViewHeader extends React.Component<Props, State> {
         const startCount = boardTree?.cards?.length
         let optionIndex = 0
 
-        for (let i = 0; i < count; i++) {
-            const card = new MutableCard()
-            card.parentId = boardTree.board.id
-            card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
-            if (boardTree.groupByProperty && boardTree.groupByProperty.options.length > 0) {
-                // Cycle through options
-                const option = boardTree.groupByProperty.options[optionIndex]
-                optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
-                card.properties[boardTree.groupByProperty.id] = option.id
+        await mutator.performAsUndoGroup(async () => {
+            for (let i = 0; i < count; i++) {
+                const card = new MutableCard()
+                card.parentId = boardTree.board.id
+                card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
                 card.title = `Test Card ${startCount + i + 1}`
                 card.icon = BlockIcons.shared.randomIcon()
+
+                if (boardTree.groupByProperty && boardTree.groupByProperty.options.length > 0) {
+                    // Cycle through options
+                    const option = boardTree.groupByProperty.options[optionIndex]
+                    optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
+                    card.properties[boardTree.groupByProperty.id] = option.id
+                }
+                await mutator.insertBlock(card, 'test add card')
             }
-            await mutator.insertBlock(card, 'test add card')
-        }
+        })
     }
 
     private async testRandomizeIcons() {
         const {boardTree} = this.props
 
-        for (const card of boardTree.cards) {
-            mutator.changeIcon(card, BlockIcons.shared.randomIcon(), 'randomize icon')
-        }
+        await mutator.performAsUndoGroup(async () => {
+            for (const card of boardTree.cards) {
+                await mutator.changeIcon(card, BlockIcons.shared.randomIcon(), 'randomize icon')
+            }
+        })
     }
 
     render(): JSX.Element {
@@ -128,12 +140,7 @@ class ViewHeader extends React.Component<Props, State> {
                     }}
                 />
                 <MenuWrapper>
-                    <div
-                        className='octo-button'
-                        style={{color: 'rgb(var(--main-fg))', fontWeight: 600}}
-                    >
-                        <DropdownIcon/>
-                    </div>
+                    <IconButton icon={<DropdownIcon/>}/>
                     <ViewMenu
                         board={board}
                         boardTree={boardTree}
@@ -142,12 +149,12 @@ class ViewHeader extends React.Component<Props, State> {
                 </MenuWrapper>
                 <div className='octo-spacer'/>
                 <MenuWrapper>
-                    <div className={'octo-button'}>
+                    <Button>
                         <FormattedMessage
                             id='ViewHeader.properties'
                             defaultMessage='Properties'
                         />
-                    </div>
+                    </Button>
                     <Menu>
                         {boardTree.board.cardProperties.map((option: IPropertyTemplate) => (
                             <Menu.Switch
@@ -174,10 +181,7 @@ class ViewHeader extends React.Component<Props, State> {
                 </MenuWrapper>
                 {withGroupBy &&
                     <MenuWrapper>
-                        <div
-                            className='octo-button'
-                            id='groupByButton'
-                        >
+                        <Button>
                             <FormattedMessage
                                 id='ViewHeader.group-by'
                                 defaultMessage='Group by {property}'
@@ -192,13 +196,14 @@ class ViewHeader extends React.Component<Props, State> {
                                     ),
                                 }}
                             />
-                        </div>
+                        </Button>
                         <Menu>
                             {boardTree.board.cardProperties.filter((o: IPropertyTemplate) => o.type === 'select').map((option: IPropertyTemplate) => (
                                 <Menu.Text
                                     key={option.id}
                                     id={option.id}
                                     name={option.name}
+                                    rightIcon={boardTree.activeView.groupById === option.id ? <CheckIcon/> : undefined}
                                     onClick={(id) => {
                                         if (boardTree.activeView.groupById === id) {
                                             return
@@ -210,45 +215,63 @@ class ViewHeader extends React.Component<Props, State> {
                             ))}
                         </Menu>
                     </MenuWrapper>}
-                <div
-                    className={hasFilter ? 'octo-button active' : 'octo-button'}
-                    style={{position: 'relative', overflow: 'unset'}}
-                    onClick={this.filterClicked}
-                >
-                    <FormattedMessage
-                        id='ViewHeader.filter'
-                        defaultMessage='Filter'
-                    />
-                    {this.state.showFilter &&
-                        <FilterComponent
-                            boardTree={boardTree}
-                            onClose={this.hideFilter}
-                        />}
+                <div className='filter-container'>
+                    <Button
+                        active={hasFilter}
+                        onClick={this.filterClicked}
+                    >
+                        <FormattedMessage
+                            id='ViewHeader.filter'
+                            defaultMessage='Filter'
+                        />
+                        {this.state.showFilter &&
+                            <FilterComponent
+                                boardTree={boardTree}
+                                onClose={this.hideFilter}
+                            />}
+                    </Button>
                 </div>
                 <MenuWrapper>
-                    <div className={hasSort ? 'octo-button active' : 'octo-button'}>
+                    <Button active={hasSort}>
                         <FormattedMessage
                             id='ViewHeader.sort'
                             defaultMessage='Sort'
                         />
-                    </div>
+                    </Button>
                     <Menu>
-                        <Menu.Text
-                            id='none'
-                            name='None'
-                            onClick={() => {
-                                mutator.changeViewSortOptions(activeView, [])
-                            }}
-                        />
+                        {(activeView.sortOptions.length > 0) &&
+                            <>
+                                <Menu.Text
+                                    id='manual'
+                                    name='Manual'
+                                    onClick={() => {
+                                        // This sets the manual card order to the currently displayed order
+                                        // Note: Perform this as a single update to change both properties correctly
+                                        const newView = new MutableBoardView(activeView)
+                                        newView.cardOrder = boardTree.orderedCards().map((o) => o.id)
+                                        newView.sortOptions = []
+                                        mutator.updateBlock(newView, activeView, 'reorder')
+                                    }}
+                                />
 
-                        <Menu.Separator/>
+                                <Menu.Text
+                                    id='revert'
+                                    name='Revert'
+                                    onClick={() => {
+                                        mutator.changeViewSortOptions(activeView, [])
+                                    }}
+                                />
 
-                        {boardTree.board.cardProperties.map((option: IPropertyTemplate) => (
+                                <Menu.Separator/>
+                            </>
+                        }
+
+                        {this.sortDisplayOptions().map((option) => (
                             <Menu.Text
                                 key={option.id}
                                 id={option.id}
                                 name={option.name}
-                                icon={(activeView.sortOptions[0]?.propertyId === option.id) ? activeView.sortOptions[0].reversed ? <SortUpIcon/> : <SortDownIcon/> : undefined}
+                                rightIcon={(activeView.sortOptions[0]?.propertyId === option.id) ? activeView.sortOptions[0].reversed ? <SortUpIcon/> : <SortDownIcon/> : undefined}
                                 onClick={(propertyId: string) => {
                                     let newSortOptions: ISortOption[] = []
                                     if (activeView.sortOptions[0] && activeView.sortOptions[0].propertyId === propertyId) {
@@ -281,21 +304,14 @@ class ViewHeader extends React.Component<Props, State> {
                         }}
                     />}
                 {!this.state.isSearching &&
-                    <div
-                        className='octo-button'
-                        onClick={() => {
-                            this.setState({isSearching: true})
-                        }}
-                    >
+                    <Button onClick={() => this.setState({isSearching: true})}>
                         <FormattedMessage
                             id='ViewHeader.search'
                             defaultMessage='Search'
                         />
-                    </div>}
+                    </Button>}
                 <MenuWrapper>
-                    <div className='octo-button'>
-                        <OptionsIcon/>
-                    </div>
+                    <IconButton icon={<OptionsIcon/>}/>
                     <Menu>
                         <Menu.Text
                             id='exportCsv'
@@ -324,19 +340,44 @@ class ViewHeader extends React.Component<Props, State> {
                         />
                     </Menu>
                 </MenuWrapper>
-                <div
-                    className='octo-button filled'
+                <ButtonWithMenu
                     onClick={() => {
                         this.props.addCard(true)
                     }}
+                    text={(
+                        <FormattedMessage
+                            id='ViewHeader.new'
+                            defaultMessage='New'
+                        />
+                    )}
                 >
-                    <FormattedMessage
-                        id='ViewHeader.new'
-                        defaultMessage='New'
-                    />
-                </div>
+                    <Menu position='left'>
+                        <Menu.Label>
+                            <b>
+                                <FormattedMessage
+                                    id='ViewHeader.select-a-template'
+                                    defaultMessage='Select a template'
+                                />
+                            </b>
+                        </Menu.Label>
+                        <Menu.Text
+                            id='example-template'
+                            name={intl.formatMessage({id: 'ViewHeader.sample-templte', defaultMessage: 'Sample template'})}
+                            onClick={() => sendFlashMessage({content: 'Not implemented yet', severity: 'low'})}
+                        />
+                    </Menu>
+                </ButtonWithMenu>
             </div>
         )
+    }
+
+    private sortDisplayOptions() {
+        const {boardTree} = this.props
+
+        const options = boardTree.board.cardProperties.map((o) => ({id: o.id, name: o.name}))
+        options.unshift({id: Constants.titleColumnId, name: 'Name'})
+
+        return options
     }
 }
 

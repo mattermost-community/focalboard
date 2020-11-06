@@ -5,7 +5,7 @@ import React from 'react'
 import {BoardView} from '../blocks/boardView'
 import {MutableBoardTree} from '../viewModel/boardTree'
 import {WorkspaceComponent} from '../components/workspaceComponent'
-import {FlashMessage} from '../flashMessage'
+import {sendFlashMessage} from '../components/flashMessages'
 import mutator from '../mutator'
 import {OctoListener} from '../octoListener'
 import {Utils} from '../utils'
@@ -76,12 +76,12 @@ export default class BoardPage extends React.Component<Props, State> {
                 const description = mutator.undoDescription
                 await mutator.undo()
                 if (description) {
-                    FlashMessage.show(`Undo ${description}`)
+                    sendFlashMessage({content: `Undo ${description}`, severity: 'low'})
                 } else {
-                    FlashMessage.show('Undo')
+                    sendFlashMessage({content: 'Undo', severity: 'low'})
                 }
             } else {
-                FlashMessage.show('Nothing to Undo', 800, 'background-color: #909050;')
+                sendFlashMessage({content: 'Nothing to Undo', severity: 'low'})
             }
         } else if (e.keyCode === 90 && e.shiftKey && (e.ctrlKey || e.metaKey) && !e.altKey) { // Shift+Cmd+Z
             Utils.log('Redo')
@@ -89,12 +89,12 @@ export default class BoardPage extends React.Component<Props, State> {
                 const description = mutator.redoDescription
                 await mutator.redo()
                 if (description) {
-                    FlashMessage.show(`Redo ${description}`)
+                    sendFlashMessage({content: `Redo ${description}`, severity: 'low'})
                 } else {
-                    FlashMessage.show('Redo')
+                    sendFlashMessage({content: 'Redu', severity: 'low'})
                 }
             } else {
-                FlashMessage.show('Nothing to Redo', 800, 'background-color: #909050;')
+                sendFlashMessage({content: 'Nothing to Redo', severity: 'low'})
             }
         }
     }

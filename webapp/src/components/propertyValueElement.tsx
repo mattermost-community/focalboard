@@ -7,12 +7,14 @@ import {Card} from '../blocks/card'
 import {IPropertyTemplate, IPropertyOption} from '../blocks/board'
 import {OctoUtils} from '../octoUtils'
 import mutator from '../mutator'
+import {Utils} from '../utils'
+import {BoardTree} from '../viewModel/boardTree'
 
 import Editable from '../widgets/editable'
-import MenuWrapper from '../widgets/menuWrapper'
-import Menu from '../widgets/menu'
+import ValueSelector from '../widgets/valueSelector'
 
 type Props = {
+    boardTree?: BoardTree
     readOnly: boolean
     card: Card
     propertyTemplate: IPropertyTemplate
@@ -35,7 +37,7 @@ export default class PropertyValueElement extends React.Component<Props, State> 
     }
 
     render(): JSX.Element {
-        const {card, propertyTemplate, readOnly, emptyDisplayValue} = this.props
+        const {card, propertyTemplate, readOnly, emptyDisplayValue, boardTree} = this.props
         const propertyValue = card.properties[propertyTemplate.id]
         const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate)
         const finalDisplayValue = displayValue || emptyDisplayValue
@@ -49,37 +51,47 @@ export default class PropertyValueElement extends React.Component<Props, State> 
         }
 
         if (propertyTemplate.type === 'select') {
-            let className = 'octo-button octo-propertyvalue'
+            let className = 'octo-propertyvalue'
             if (!displayValue) {
                 className += ' empty'
             }
 
-            return (
-                <MenuWrapper>
+            if (readOnly) {
+                return (
                     <div
                         className={`${className} ${propertyColorCssClassName}`}
                         tabIndex={0}
                     >
                         {finalDisplayValue}
                     </div>
-                    {readOnly ? null : (
-                        <Menu>
-                            <Menu.Text
-                                id=''
-                                name='<Empty>'
-                                onClick={() => mutator.changePropertyValue(card, propertyTemplate.id, '')}
-                            />
-                            {propertyTemplate.options.map((o: IPropertyOption): JSX.Element => (
-                                <Menu.Text
-                                    key={o.id}
-                                    id={o.id}
-                                    name={o.value}
-                                    onClick={() => mutator.changePropertyValue(card, propertyTemplate.id, o.id)}
-                                />
-                            ))}
-                        </Menu>
-                    )}
-                </MenuWrapper>
+                )
+            }
+            return (
+                <ValueSelector
+                    emptyValue={emptyDisplayValue}
+                    options={propertyTemplate.options}
+                    value={propertyTemplate.options.find((p) => p.id === propertyValue)}
+                    onChange={(value) => {
+                        mutator.changePropertyValue(card, propertyTemplate.id, value)
+                    }}
+                    onChangeColor={(option: IPropertyOption, colorId: string): void => {
+                        mutator.changePropertyOptionColor(boardTree.board, propertyTemplate, option, colorId)
+                    }}
+                    onDeleteOption={(option: IPropertyOption): void => {
+                        mutator.deletePropertyOption(boardTree, propertyTemplate, option)
+                    }}
+                    onCreate={
+                        async (value) => {
+                            const option: IPropertyOption = {
+                                id: Utils.createGuid(),
+                                value,
+                                color: 'propColorDefault',
+                            }
+                            await mutator.insertPropertyOption(this.props.boardTree, propertyTemplate, option, 'add property option')
+                            mutator.changePropertyValue(card, propertyTemplate.id, option.id)
+                        }
+                    }
+                />
             )
         }
 

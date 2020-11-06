@@ -6,11 +6,11 @@ import {injectIntl, IntlShape, FormattedMessage} from 'react-intl'
 import {BlockIcons} from '../blockIcons'
 import {Board} from '../blocks/board'
 import mutator from '../mutator'
-import Menu from '../widgets/menu'
-import MenuWrapper from '../widgets/menuWrapper'
 import Editable from '../widgets/editable'
-import EmojiPicker from '../widgets/emojiPicker'
 import Button from '../widgets/buttons/button'
+import EmojiIcon from '../widgets/icons/emoji'
+
+import BlockIconSelector from './blockIconSelector'
 
 import './viewTitle.scss'
 
@@ -34,24 +34,18 @@ class ViewTitle extends React.Component<Props, State> {
         this.state = {title: props.board.title}
     }
 
-    onSelectEmoji = (emoji: string) => {
-        mutator.changeIcon(this.props.board, emoji)
-
-        // Close the menu
-        document.body.click()
-    }
-
     render(): JSX.Element {
         const {board, intl} = this.props
 
         return (
             <>
-                <div className={'ViewTitle octo-hovercontrols ' + (board.icon ? '' : 'add-visible')}>
+                <div className={'ViewTitle add-buttons ' + (board.icon ? '' : 'add-visible')}>
                     <Button
                         onClick={() => {
                             const newIcon = BlockIcons.shared.randomIcon()
                             mutator.changeIcon(board, newIcon)
                         }}
+                        icon={<EmojiIcon/>}
                     >
                         <FormattedMessage
                             id='TableComponent.add-icon'
@@ -60,29 +54,8 @@ class ViewTitle extends React.Component<Props, State> {
                     </Button>
                 </div>
 
-                <div className='ViewTitle octo-icontitle'>
-                    {board.icon &&
-                        <MenuWrapper>
-                            <div className='octo-button octo-icon'>{board.icon}</div>
-                            <Menu>
-                                <Menu.Text
-                                    id='random'
-                                    name={intl.formatMessage({id: 'ViewTitle.random-icon', defaultMessage: 'Random'})}
-                                    onClick={() => mutator.changeIcon(board, BlockIcons.shared.randomIcon())}
-                                />
-                                <Menu.SubMenu
-                                    id='pick'
-                                    name={intl.formatMessage({id: 'ViewTitle.pick-icon', defaultMessage: 'Pick Icon'})}
-                                >
-                                    <EmojiPicker onSelect={this.onSelectEmoji}/>
-                                </Menu.SubMenu>
-                                <Menu.Text
-                                    id='remove'
-                                    name={intl.formatMessage({id: 'ViewTitle.remove-icon', defaultMessage: 'Remove Icon'})}
-                                    onClick={() => mutator.changeIcon(board, undefined, 'remove icon')}
-                                />
-                            </Menu>
-                        </MenuWrapper>}
+                <div className='ViewTitle'>
+                    <BlockIconSelector block={board}/>
                     <Editable
                         ref={this.titleEditor}
                         className='title'

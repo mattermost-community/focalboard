@@ -17,7 +17,36 @@ import {Utils} from './utils'
 // It also ensures that the Undo-manager is called for each action
 //
 class Mutator {
-    private async updateBlock(newBlock: IBlock, oldBlock: IBlock, description: string): Promise<void> {
+    private undoGroupId?: string
+
+    private beginUndoGroup(): string {
+        if (this.undoGroupId) {
+            Utils.assertFailure('UndoManager does not support nested groups')
+            return
+        }
+        this.undoGroupId = Utils.createGuid()
+        return this.undoGroupId
+    }
+
+    private endUndoGroup(groupId: string) {
+        if (this.undoGroupId !== groupId) {
+            Utils.assertFailure('Mismatched groupId. UndoManager does not support nested groups')
+            return
+        }
+        this.undoGroupId = undefined
+    }
+
+    async performAsUndoGroup(actions: () => Promise<void>): Promise<void> {
+        const groupId = this.beginUndoGroup()
+        try {
+            await actions()
+        } catch (err) {
+            Utils.assertFailure(`ERROR: ${err?.toString?.()}`)
+        }
+        this.endUndoGroup(groupId)
+    }
+
+    async updateBlock(newBlock: IBlock, oldBlock: IBlock, description: string): Promise<void> {
         await undoManager.perform(
             async () => {
                 await octoClient.updateBlock(newBlock)
@@ -26,6 +55,7 @@ class Mutator {
                 await octoClient.updateBlock(oldBlock)
             },
             description,
+            this.undoGroupId,
         )
     }
 
@@ -38,6 +68,7 @@ class Mutator {
                 await octoClient.updateBlocks(oldBlocks)
             },
             description,
+            this.undoGroupId,
         )
     }
 
@@ -52,6 +83,7 @@ class Mutator {
                 await octoClient.deleteBlock(block.id)
             },
             description,
+            this.undoGroupId,
         )
     }
 
@@ -68,6 +100,7 @@ class Mutator {
                 }
             },
             description,
+            this.undoGroupId,
         )
     }
 
@@ -86,6 +119,7 @@ class Mutator {
                 await afterUndo?.()
             },
             description,
+            this.undoGroupId,
         )
     }
 
@@ -420,6 +454,14 @@ class Mutator {
         await this.updateBlock(newView, view, 'show column')
     }
 
+    async changeViewCardOrder(view: BoardView, cardOrder: string[], description = 'reorder'): Promise<void> {
+        const newView = new MutableBoardView(view)
+        newView.cardOrder = cardOrder
+        await this.updateBlock(newView, view, description)
+    }
+
+    // Other methods
+
     // Not a mutator, but convenient to put here since Mutator wraps OctoClient
     async exportFullArchive(): Promise<IBlock[]> {
         return octoClient.exportFullArchive()
@@ -449,6 +491,7 @@ class Mutator {
                 await octoClient.deleteBlock(block.id)
             },
             'add image',
+            this.undoGroupId,
         )
 
         return block

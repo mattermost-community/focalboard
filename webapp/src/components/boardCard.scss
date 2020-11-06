@@ -50,4 +50,13 @@
             margin-right: 5px;
         }
     }
+    .IconButton {
+        border-radius: 3px;
+        margin-right: 6px;
+        padding: 0;
+        background: rgb(var(--main-fg), 0.1);
+        box-shadow: rgba(var(--main-fg), 0.1) 0px 0px 0px 1px, rgba(var(--main-fg), 0.1) 0px 2px 4px;
+        height: 24px;
+        width: 24px;
+    }
 }

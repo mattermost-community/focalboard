@@ -9,12 +9,23 @@ import {OctoUtils} from '../octoUtils'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import {MutableTextBlock} from '../blocks/textBlock'
+import {MutableDividerBlock} from '../blocks/dividerBlock'
 
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 import OptionsIcon from '../widgets/icons/options'
+import SortUpIcon from '../widgets/icons/sortUp'
+import SortDownIcon from '../widgets/icons/sortDown'
+import DeleteIcon from '../widgets/icons/delete'
+import AddIcon from '../widgets/icons/add'
+import TextIcon from '../widgets/icons/text'
+import ImageIcon from '../widgets/icons/image'
+import DividerIcon from '../widgets/icons/divider'
+import IconButton from '../widgets/buttons/iconButton'
 
 import {MarkdownEditor} from './markdownEditor'
+
+import './contentBlock.scss'
 
 type Props = {
     block: IOrderedBlock
@@ -23,26 +34,27 @@ type Props = {
 }
 
 class ContentBlock extends React.Component<Props> {
-    shouldComponentUpdate() {
+    shouldComponentUpdate(): boolean {
         return true
     }
 
     public render(): JSX.Element {
         const {cardId, cardTree, block} = this.props
-        if (block.type !== 'text' && block.type !== 'image') {
+        if (block.type !== 'text' && block.type !== 'image' && block.type !== 'divider') {
             return null
         }
         const index = cardTree.contents.indexOf(block)
         return (
-            <div className='octo-block octo-hover-container'>
+            <div className='ContentBlock octo-block'>
                 <div className='octo-block-margin'>
                     <MenuWrapper>
-                        <div className='octo-button octo-hovercontrol square octo-hover-item'><OptionsIcon/></div>
+                        <IconButton icon={<OptionsIcon/>}/>
                         <Menu>
                             {index > 0 &&
                                 <Menu.Text
                                     id='moveUp'
                                     name='Move up'
+                                    icon={<SortUpIcon/>}
                                     onClick={() => {
                                         const previousBlock = cardTree.contents[index - 1]
                                         const newOrder = OctoUtils.getOrderBefore(previousBlock, cardTree.contents)
@@ -54,6 +66,7 @@ class ContentBlock extends React.Component<Props> {
                                 <Menu.Text
                                     id='moveDown'
                                     name='Move down'
+                                    icon={<SortDownIcon/>}
                                     onClick={() => {
                                         const nextBlock = cardTree.contents[index + 1]
                                         const newOrder = OctoUtils.getOrderAfter(nextBlock, cardTree.contents)
@@ -64,10 +77,12 @@ class ContentBlock extends React.Component<Props> {
                             <Menu.SubMenu
                                 id='insertAbove'
                                 name='Insert above'
+                                icon={<AddIcon/>}
                             >
                                 <Menu.Text
                                     id='text'
                                     name='Text'
+                                    icon={<TextIcon/>}
                                     onClick={() => {
                                         const newBlock = new MutableTextBlock()
                                         newBlock.parentId = cardId
@@ -81,6 +96,7 @@ class ContentBlock extends React.Component<Props> {
                                 <Menu.Text
                                     id='image'
                                     name='Image'
+                                    icon={<ImageIcon/>}
                                     onClick={() => {
                                         Utils.selectLocalFile(
                                             (file) => {
@@ -89,8 +105,23 @@ class ContentBlock extends React.Component<Props> {
                                             '.jpg,.jpeg,.png')
                                     }}
                                 />
+                                <Menu.Text
+                                    id='divider'
+                                    name='Divider'
+                                    icon={<DividerIcon/>}
+                                    onClick={() => {
+                                        const newBlock = new MutableDividerBlock()
+                                        newBlock.parentId = cardId
+
+                                        // TODO: Handle need to reorder all blocks
+                                        newBlock.order = OctoUtils.getOrderBefore(block, cardTree.contents)
+                                        Utils.log(`insert block ${block.id}, order: ${block.order}`)
+                                        mutator.insertBlock(newBlock, 'insert card text')
+                                    }}
+                                />
                             </Menu.SubMenu>
                             <Menu.Text
+                                icon={<DeleteIcon/>}
                                 id='delete'
                                 name='Delete'
                                 onClick={() => mutator.deleteBlock(block)}
@@ -107,6 +138,7 @@ class ContentBlock extends React.Component<Props> {
                             mutator.changeTitle(block, text, 'edit card text')
                         }}
                     />}
+                {block.type === 'divider' && <div className='divider'/>}
                 {block.type === 'image' &&
                     <img
                         src={block.fields.url}

@@ -3,45 +3,66 @@
         width: 100%;
     }
 
-    .octo-hovercontrols {
+    .add-buttons {
+        display: flex;
+        flex-direction: column;
+	    min-height: 30px;
+	    color:rgba(var(--main-fg), 0.4);
+	    width: 100%;
+	    align-items: flex-start;
         .Button {
             display: none;
         }
         &:hover {
             .Button {
-                display: block;
+                display: flex;
             }
         }
-    }
-
-    .octo-card-icon {
-        height: 78px;
-        min-width: 78px;
-        font-size: 78px;
-        line-height: 1.1;
-        margin-left: 0;
-        color: #000000;
     }
 
     .octo-propertylist {
         display: flex;
         flex-direction: column;
+        width: 100%;
+        .MenuWrapper: {
+            position: relative;
+        }
     }
 
     .octo-propertyrow {
         display: flex;
         flex-direction: row;
         margin: 8px 0;
+        .octo-propertyvalue {
+            .MenuWrapper {
+                display: flex;
+                align-items: center;
+            }
+        }
     }
 
     .octo-propertyname {
-        text-align: left;
         width: 150px;
         margin-right: 5px;
-        color: #909090;
         color: rgba(var(--main-fg), 0.6);
+        .Button {
+            text-align: left;
+            justify-content: unset;
+        }
         &.add-property {
             color: rgba(var(--main-fg), 0.4);
+        }
+    }
+
+    &.add-content {
+        .Button {
+            opacity: 0;
+            color: rgba(var(--main-fg), 0.6);
+        }
+        &:hover {
+            .Button {
+                opacity: 1;
+            }
         }
     }
 }

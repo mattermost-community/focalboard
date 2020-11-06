@@ -6,7 +6,7 @@ import {FilterGroup} from '../filterGroup'
 import {MutableBlock} from './block'
 
 type IViewType = 'board' | 'table' // | 'calendar' | 'list' | 'gallery'
-type ISortOption = { propertyId: '__name' | string, reversed: boolean }
+type ISortOption = { propertyId: '__title' | string, reversed: boolean }
 
 interface BoardView extends IBlock {
     readonly viewType: IViewType
@@ -16,6 +16,8 @@ interface BoardView extends IBlock {
     readonly visibleOptionIds: readonly string[]
     readonly hiddenOptionIds: readonly string[]
     readonly filter: FilterGroup | undefined
+    readonly cardOrder: readonly string[]
+    readonly columnWidths: Readonly<Record<string, number>>
 }
 
 class MutableBoardView extends MutableBlock {
@@ -68,6 +70,20 @@ class MutableBoardView extends MutableBlock {
         this.fields.filter = value
     }
 
+    get cardOrder(): string[] {
+        return this.fields.cardOrder
+    }
+    set cardOrder(value: string[]) {
+        this.fields.cardOrder = value
+    }
+
+    get columnWidths(): Record<string, number> {
+        return this.fields.columnWidths as Record<string, number>
+    }
+    set columnWidths(value: Record<string, number>) {
+        this.fields.columnWidths = value
+    }
+
     constructor(block: any = {}) {
         super(block)
 
@@ -78,6 +94,8 @@ class MutableBoardView extends MutableBlock {
         this.visibleOptionIds = block.fields?.visibleOptionIds?.slice() || []
         this.hiddenOptionIds = block.fields?.hiddenOptionIds?.slice() || []
         this.filter = new FilterGroup(block.fields?.filter)
+        this.cardOrder = block.fields?.cardOrder?.slice() || []
+        this.columnWidths = {...(block.fields?.columnWidths || {})}
 
         if (!this.viewType) {
             this.viewType = 'board'

@@ -1,4 +1,4 @@
-.PHONY: prebuild clean cleanall server server-linux generate watch-server mac
+.PHONY: prebuild clean cleanall server server-linux server-win64 generate watch-server webapp mac-app win-app linux-app
 
 all: server
 
@@ -8,12 +8,16 @@ prebuild:
 	go get github.com/spf13/viper
 	go get github.com/lib/pq
 	go get github.com/mattn/go-sqlite3
+	cd webapp; npm install
 
 server:
 	cd server; go build -o ../bin/octoserver ./main
 
 server-linux:
 	cd server; env GOOS=linux GOARCH=amd64 go build -o ../bin/octoserver ./main
+
+server-win64:
+	cd server; env GOOS=windows GOARCH=amd64 go build -o ../bin/octoserver.exe ./main
 
 generate:
 	cd server; go get -modfile=go.tools.mod github.com/golang/mock/mockgen
@@ -36,7 +40,10 @@ server-doc:
 watch-server:
 	cd server; modd
 
-mac:
+webapp:
+	cd webapp; npm run pack
+
+mac-app: server webapp
 	rm -rf mac/resources/bin
 	rm -rf mac/resources/pack
 	mkdir -p mac/resources
@@ -45,6 +52,28 @@ mac:
 	mkdir -p mac/temp
 	xcodebuild archive -workspace mac/Tasks.xcworkspace -scheme Tasks -archivePath mac/temp/tasks.xcarchive
 	xcodebuild -exportArchive -archivePath mac/temp/tasks.xcarchive -exportPath mac/dist -exportOptionsPlist mac/export.plist
+	cd mac/dist; zip -r tasks.zip Tasks.app
+
+win-app: server-win64 webapp
+	cd win; make build
+	mkdir -p win/dist/bin
+	cp -R bin/octoserver.exe win/dist/bin
+	cp -R config.json win/dist
+	mkdir -p win/dist/webapp
+	cp -R webapp/pack win/dist/webapp/pack
+	# cd win/dist; zip -r ../tasks-win.zip .
+
+linux-app: server-linux webapp
+	rm -rf linux/temp
+	mkdir -p linux/temp/tasks-app/webapp
+	mkdir -p linux/dist
+	cp -R bin/octoserver linux/temp/tasks-app/
+	cp -R config.json linux/temp/tasks-app/
+	cp -R webapp/pack linux/temp/tasks-app/webapp/pack
+	cd linux; make build
+	cp -R linux/bin/tasks-app linux/temp/tasks-app/
+	cd linux/temp; tar -zcf ../dist/tasks-linux.tar.gz tasks-app
+	rm -rf linux/temp
 
 clean:
 	rm -rf bin

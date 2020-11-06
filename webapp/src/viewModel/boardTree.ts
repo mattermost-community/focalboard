@@ -4,6 +4,7 @@ import {Board, IPropertyOption, IPropertyTemplate, MutableBoard} from '../blocks
 import {BoardView, MutableBoardView} from '../blocks/boardView'
 import {Card, MutableCard} from '../blocks/card'
 import {CardFilter} from '../cardFilter'
+import {Constants} from '../constants'
 import octoClient from '../octoClient'
 import {IBlock, IMutableBlock} from '../blocks/block'
 import {OctoUtils} from '../octoUtils'
@@ -27,6 +28,7 @@ interface BoardTree {
     readonly groupByProperty?: IPropertyTemplate
 
     getSearchText(): string | undefined
+    orderedCards(): Card[]
 }
 
 class MutableBoardTree implements BoardTree {
@@ -226,6 +228,34 @@ class MutableBoardTree implements BoardTree {
         return CardFilter.applyFilterGroup(filterGroup, board.cardProperties, cards)
     }
 
+    private defaultOrder(cardA: Card, cardB: Card) {
+        const {activeView} = this
+
+        const indexA = activeView.cardOrder.indexOf(cardA.id)
+        const indexB = activeView.cardOrder.indexOf(cardB.id)
+
+        if (indexA < 0 && indexB < 0) {
+            // If both cards' order is not defined, first use the title
+            const aValue = cardA.title || ''
+            const bValue = cardB.title || ''
+
+            // Always put untitled cards at the bottom
+            if (aValue && !bValue) {
+                return -1
+            }
+            if (bValue && !aValue) {
+                return 1
+            }
+
+            // If both cards are untitled, use the create date
+            return cardA.createAt - cardB.createAt
+        } else if (indexA < 0 && indexB >= 0) {
+            // If cardA's order is not defined, put it at the end
+            return 1
+        }
+        return indexA - indexB
+    }
+
     private sortCards(cards: Card[]): Card[] {
         if (!this.activeView) {
             Utils.assertFailure()
@@ -237,26 +267,10 @@ class MutableBoardTree implements BoardTree {
 
         if (sortOptions.length < 1) {
             Utils.log('Default sort')
-            sortedCards = cards.sort((a, b) => {
-                const aValue = a.title || ''
-                const bValue = b.title || ''
-
-                // Always put empty values at the bottom
-                if (aValue && !bValue) {
-                    return -1
-                }
-                if (bValue && !aValue) {
-                    return 1
-                }
-                if (!aValue && !bValue) {
-                    return a.createAt - b.createAt
-                }
-
-                return a.createAt - b.createAt
-            })
+            sortedCards = cards.sort((a, b) => this.defaultOrder(a, b))
         } else {
             sortOptions.forEach((sortOption) => {
-                if (sortOption.propertyId === '__name') {
+                if (sortOption.propertyId === Constants.titleColumnId) {
                     Utils.log('Sort by name')
                     sortedCards = cards.sort((a, b) => {
                         const aValue = a.title || ''
@@ -270,7 +284,7 @@ class MutableBoardTree implements BoardTree {
                             return 1
                         }
                         if (!aValue && !bValue) {
-                            return a.createAt - b.createAt
+                            return this.defaultOrder(a, b)
                         }
 
                         let result = aValue.localeCompare(bValue)
@@ -296,7 +310,7 @@ class MutableBoardTree implements BoardTree {
                             return 1
                         }
                         if (!a.title && !b.title) {
-                            return a.createAt - b.createAt
+                            return this.defaultOrder(a, b)
                         }
 
                         const aValue = a.properties[sortPropertyId] || ''
@@ -311,7 +325,7 @@ class MutableBoardTree implements BoardTree {
                                 return 1
                             }
                             if (!aValue && !bValue) {
-                                return a.createAt - b.createAt
+                                return this.defaultOrder(a, b)
                             }
 
                             // Sort by the option order (not alphabetically by value)
@@ -328,12 +342,12 @@ class MutableBoardTree implements BoardTree {
                                 return 1
                             }
                             if (!aValue && !bValue) {
-                                return a.createAt - b.createAt
+                                return this.defaultOrder(a, b)
                             }
 
                             result = Number(aValue) - Number(bValue)
                         } else if (template.type === 'createdTime') {
-                            result = a.createAt - b.createAt
+                            result = this.defaultOrder(a, b)
                         } else if (template.type === 'updatedTime') {
                             result = a.updateAt - b.updateAt
                         } else {
@@ -347,7 +361,7 @@ class MutableBoardTree implements BoardTree {
                                 return 1
                             }
                             if (!aValue && !bValue) {
-                                return a.createAt - b.createAt
+                                return this.defaultOrder(a, b)
                             }
 
                             result = aValue.localeCompare(bValue)
@@ -363,6 +377,18 @@ class MutableBoardTree implements BoardTree {
         }
 
         return sortedCards
+    }
+
+    orderedCards(): Card[] {
+        const cards: Card[] = []
+        for (const group of this.visibleGroups) {
+            cards.push(...group.cards)
+        }
+        for (const group of this.hiddenGroups) {
+            cards.push(...group.cards)
+        }
+
+        return cards
     }
 }
 

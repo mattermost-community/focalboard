@@ -17,4 +17,20 @@
     #groupByLabel {
         margin-left: 0.3em;
     }
+
+    .IconButton {
+        background: none;
+        &:hover {
+            background: rgba(var(--main-fg), 0.1);
+        }
+    }
+
+    .octo-spacer {
+        flex: 1;
+    }
+
+    .filter-container {
+        position: relative;
+        overflow: unset;
+    }
 }

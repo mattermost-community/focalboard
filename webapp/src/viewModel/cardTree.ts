@@ -32,7 +32,7 @@ class MutableCardTree implements CardTree {
             filter((block) => block.type === 'comment').
             sort((a, b) => a.createAt - b.createAt)
 
-        const contentBlocks = blocks.filter((block) => block.type === 'text' || block.type === 'image') as IOrderedBlock[]
+        const contentBlocks = blocks.filter((block) => block.type === 'text' || block.type === 'image' || block.type === 'divider') as IOrderedBlock[]
         this.contents = contentBlocks.sort((a, b) => a.order - b.order)
     }
 }

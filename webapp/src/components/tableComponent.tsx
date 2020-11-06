@@ -3,6 +3,7 @@
 import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
+import {Constants} from '../constants'
 import {BlockIcons} from '../blockIcons'
 import {IPropertyTemplate} from '../blocks/board'
 import {Card, MutableCard} from '../blocks/card'
@@ -11,9 +12,10 @@ import mutator from '../mutator'
 import {Utils} from '../utils'
 
 import MenuWrapper from '../widgets/menuWrapper'
+import SortDownIcon from '../widgets/icons/sortDown'
+import SortUpIcon from '../widgets/icons/sortUp'
 
 import {CardDialog} from './cardDialog'
-import {Editable} from './editable'
 import RootPortal from './rootPortal'
 import {TableRow} from './tableRow'
 import ViewHeader from './viewHeader'
@@ -21,6 +23,9 @@ import ViewTitle from './viewTitle'
 import TableHeaderMenu from './tableHeaderMenu'
 
 import './tableComponent.scss'
+import {HorizontalGrip} from './horizontalGrip'
+
+import {MutableBoardView} from '../blocks/boardView'
 
 type Props = {
     boardTree?: BoardTree
@@ -57,6 +62,13 @@ class TableComponent extends React.Component<Props, State> {
         }
 
         const {board, cards, activeView} = boardTree
+        const titleRef = React.createRef<HTMLDivElement>()
+
+        let titleSortIcon
+        const titleSortOption = activeView.sortOptions.find((o) => o.propertyId === Constants.titleColumnId)
+        if (titleSortOption) {
+            titleSortIcon = titleSortOption.reversed ? <SortUpIcon/> : <SortDownIcon/>
+        }
 
         this.cardIdToRowMap.clear()
 
@@ -95,9 +107,10 @@ class TableComponent extends React.Component<Props, State> {
                                 id='mainBoardHeader'
                             >
                                 <div
-                                    className='octo-table-cell title-cell'
-                                    style={{overflow: 'unset'}}
                                     id='mainBoardHeader'
+                                    ref={titleRef}
+                                    className='octo-table-cell title-cell header-cell'
+                                    style={{overflow: 'unset', width: this.columnWidth(Constants.titleColumnId)}}
                                 >
                                     <MenuWrapper>
                                         <div
@@ -108,29 +121,57 @@ class TableComponent extends React.Component<Props, State> {
                                                 id='TableComponent.name'
                                                 defaultMessage='Name'
                                             />
+                                            {titleSortIcon}
                                         </div>
                                         <TableHeaderMenu
                                             boardTree={boardTree}
-                                            templateId='__name'
+                                            templateId={Constants.titleColumnId}
                                         />
                                     </MenuWrapper>
+
+                                    <div className='octo-spacer'/>
+
+                                    <HorizontalGrip
+                                        onDrag={(offset) => {
+                                            const originalWidth = this.columnWidth(Constants.titleColumnId)
+                                            const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
+                                            titleRef.current.style.width = `${newWidth}px`
+                                        }}
+                                        onDragEnd={(offset) => {
+                                            Utils.log(`onDragEnd offset: ${offset}`)
+                                            const originalWidth = this.columnWidth(Constants.titleColumnId)
+                                            const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
+                                            titleRef.current.style.width = `${newWidth}px`
+
+                                            const columnWidths = {...activeView.columnWidths}
+                                            if (newWidth !== columnWidths[Constants.titleColumnId]) {
+                                                columnWidths[Constants.titleColumnId] = newWidth
+
+                                                const newView = new MutableBoardView(activeView)
+                                                newView.columnWidths = columnWidths
+                                                mutator.updateBlock(newView, activeView, 'resize column')
+                                            }
+                                        }}
+                                    />
                                 </div>
+
+                                {/* Table header row */}
 
                                 {board.cardProperties.
                                     filter((template) => activeView.visiblePropertyIds.includes(template.id)).
-                                    map((template) =>
-                                        (<div
-                                            key={template.id}
-                                            style={{overflow: 'unset'}}
-                                            className='octo-table-cell'
+                                    map((template) => {
+                                        const headerRef = React.createRef<HTMLDivElement>()
+                                        let sortIcon
+                                        const sortOption = activeView.sortOptions.find((o) => o.propertyId === template.id)
+                                        if (sortOption) {
+                                            sortIcon = sortOption.reversed ? <SortUpIcon/> : <SortDownIcon/>
+                                        }
 
-                                            draggable={true}
-                                            onDragStart={() => {
-                                                this.draggedHeaderTemplate = template
-                                            }}
-                                            onDragEnd={() => {
-                                                this.draggedHeaderTemplate = undefined
-                                            }}
+                                        return (<div
+                                            key={template.id}
+                                            ref={headerRef}
+                                            style={{overflow: 'unset', width: this.columnWidth(template.id)}}
+                                            className='octo-table-cell header-cell'
 
                                             onDragOver={(e) => {
                                                 e.preventDefault(); (e.target as HTMLElement).classList.add('dragover')
@@ -149,14 +190,49 @@ class TableComponent extends React.Component<Props, State> {
                                                 <div
                                                     className='octo-label'
                                                     style={{cursor: 'pointer'}}
-                                                >{template.name}</div>
+                                                    draggable={true}
+                                                    onDragStart={() => {
+                                                        this.draggedHeaderTemplate = template
+                                                    }}
+                                                    onDragEnd={() => {
+                                                        this.draggedHeaderTemplate = undefined
+                                                    }}
+                                                >
+                                                    {template.name}
+                                                    {sortIcon}
+                                                </div>
                                                 <TableHeaderMenu
                                                     boardTree={boardTree}
                                                     templateId={template.id}
                                                 />
                                             </MenuWrapper>
-                                        </div>),
-                                    )}
+
+                                            <div className='octo-spacer'/>
+
+                                            <HorizontalGrip
+                                                onDrag={(offset) => {
+                                                    const originalWidth = this.columnWidth(template.id)
+                                                    const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
+                                                    headerRef.current.style.width = `${newWidth}px`
+                                                }}
+                                                onDragEnd={(offset) => {
+                                                    Utils.log(`onDragEnd offset: ${offset}`)
+                                                    const originalWidth = this.columnWidth(template.id)
+                                                    const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
+                                                    headerRef.current.style.width = `${newWidth}px`
+
+                                                    const columnWidths = {...activeView.columnWidths}
+                                                    if (newWidth !== columnWidths[template.id]) {
+                                                        columnWidths[template.id] = newWidth
+
+                                                        const newView = new MutableBoardView(activeView)
+                                                        newView.columnWidths = columnWidths
+                                                        mutator.updateBlock(newView, activeView, 'resize column')
+                                                    }
+                                                }}
+                                            />
+                                        </div>)
+                                    })}
                             </div>
 
                             {/* Rows, one per card */}
@@ -211,6 +287,10 @@ class TableComponent extends React.Component<Props, State> {
                 </div >
             </div >
         )
+    }
+
+    private columnWidth(templateId: string): number {
+        return Math.max(Constants.minColumnWidth, this.props.boardTree?.activeView?.columnWidths[templateId] || 0)
     }
 
     private addCard = async (show = false) => {

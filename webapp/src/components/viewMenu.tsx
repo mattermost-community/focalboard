@@ -8,6 +8,7 @@ import {BoardTree} from '../viewModel/boardTree'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import Menu from '../widgets/menu'
+import {Constants} from '../constants'
 
 type Props = {
     boardTree?: BoardTree
@@ -62,6 +63,8 @@ export default class ViewMenu extends React.Component<Props> {
         view.viewType = 'table'
         view.parentId = board.id
         view.visiblePropertyIds = board.cardProperties.map((o) => o.id)
+        view.columnWidths = {}
+        view.columnWidths[Constants.titleColumnId] = Constants.defaultTitleColumnWidth
 
         const oldViewId = boardTree.activeView.id
 

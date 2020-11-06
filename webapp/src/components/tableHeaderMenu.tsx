@@ -4,6 +4,8 @@
 import React, {FC} from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
+import {Constants} from '../constants'
+
 import mutator from '../mutator'
 import {BoardTree} from '../viewModel/boardTree'
 import Menu from '../widgets/menu'
@@ -33,7 +35,7 @@ const TableHeaderMenu: FC<Props> = (props: Props): JSX.Element => {
                 id='insertLeft'
                 name={intl.formatMessage({id: 'TableHeaderMenu.insert-left', defaultMessage: 'Insert left'})}
                 onClick={() => {
-                    if (props.templateId === '__name') {
+                    if (props.templateId === Constants.titleColumnId) {
                         // TODO: Handle name column
                     } else {
                         const index = board.cardProperties.findIndex((o) => o.id === templateId)
@@ -45,15 +47,15 @@ const TableHeaderMenu: FC<Props> = (props: Props): JSX.Element => {
                 id='insertRight'
                 name={intl.formatMessage({id: 'TableHeaderMenu.insert-right', defaultMessage: 'Insert right'})}
                 onClick={() => {
-                    if (templateId === '__name') {
-                        // TODO: Handle name column
+                    if (templateId === Constants.titleColumnId) {
+                        // TODO: Handle title column
                     } else {
                         const index = board.cardProperties.findIndex((o) => o.id === templateId) + 1
                         mutator.insertPropertyTemplate(boardTree, index)
                     }
                 }}
             />
-            {props.templateId !== '__name' &&
+            {props.templateId !== Constants.titleColumnId &&
                 <>
                     <Menu.Text
                         id='hide'

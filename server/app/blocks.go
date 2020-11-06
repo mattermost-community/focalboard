@@ -43,6 +43,8 @@ func (a *App) InsertBlocks(blocks []model.Block) error {
 		if err != nil {
 			return err
 		}
+
+		go a.webhook.NotifyUpdate(block)
 	}
 
 	a.wsServer.BroadcastBlockChangeToWebsocketClients(blockIDsToNotify)

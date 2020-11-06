@@ -5,6 +5,7 @@ interface UndoCommand {
     undo: () => Promise<void>
     redo: () => Promise<void>
     description?: string
+    groupId?: string
 }
 
 //
@@ -59,10 +60,11 @@ class UndoManager {
         redo: () => Promise<void>,
         undo: () => Promise<void>,
         description?: string,
+        groupId?: string,
         isDiscardable = false,
     ): Promise<UndoManager> {
         await redo()
-        return this.registerUndo({undo, redo}, description, isDiscardable)
+        return this.registerUndo({undo, redo}, description, groupId, isDiscardable)
     }
 
     registerUndo(
@@ -71,6 +73,7 @@ class UndoManager {
             redo: () => Promise<void>
         },
         description?: string,
+        groupId?: string,
         isDiscardable = false,
     ): UndoManager {
         if (this.isExecuting) {
@@ -93,6 +96,7 @@ class UndoManager {
             undo: command.undo,
             redo: command.redo,
             description,
+            groupId,
         }
         this.commands.push(internalCommand)
 
@@ -115,13 +119,20 @@ class UndoManager {
     }
 
     async undo() {
-        const command = this.commands[this.index]
+        if (this.isExecuting) {
+            return this
+        }
+        let command = this.commands[this.index]
         if (!command) {
             return this
         }
 
-        await this.execute(command, 'undo')
-        this.index -= 1
+        const currentGroupId = command.groupId
+        do {
+            await this.execute(command, 'undo')
+            this.index -= 1
+            command = this.commands[this.index]
+        } while (this.index >= 0 && currentGroupId && currentGroupId === command.groupId)
 
         if (this.onStateDidChange) {
             this.onStateDidChange()
@@ -131,13 +142,20 @@ class UndoManager {
     }
 
     async redo() {
-        const command = this.commands[this.index + 1]
+        if (this.isExecuting) {
+            return this
+        }
+        let command = this.commands[this.index + 1]
         if (!command) {
             return this
         }
 
-        await this.execute(command, 'redo')
-        this.index += 1
+        const currentGroupId = command.groupId
+        do {
+            await this.execute(command, 'redo')
+            this.index += 1
+            command = this.commands[this.index + 1]
+        } while (this.index < this.commands.length && currentGroupId && currentGroupId === command.groupId)
 
         if (this.onStateDidChange) {
             this.onStateDidChange()

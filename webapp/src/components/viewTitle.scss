@@ -1,12 +1,30 @@
 .ViewTitle {
-    &.octo-hovercontrols {
+	flex: 0 0 auto;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+
+    &.add-buttons {
+        flex-direction: column;
+	    min-height: 30px;
+	    color:rgba(var(--main-fg), 0.4);
+	    width: 100%;
+	    align-items: flex-start;
         .Button {
             display: none;
         }
         &.add-visible:hover {
             .Button {
-                display: block;
+                display: flex;
             }
         }
+    }
+
+    .BlockIconSelector {
+        margin-right: 10px;
+    }
+
+    .Editable {
+        margin-bottom: 0px;
     }
 }

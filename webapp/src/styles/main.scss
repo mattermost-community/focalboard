@@ -119,45 +119,7 @@ hr {
 	flex: 1;
 }
 
-.octo-clickable,
-.octo-button {
-    display: flex;
-    justify-content: center;
-	text-align: center;
-	border-radius: 5px;
-	padding: 0 5px;
-	min-width: 20px;
-	cursor: pointer;
-	overflow: hidden;
-
-	transition: background 100ms ease-out 0s;
-
-    &:hover {
-        background-color: rgba(var(--main-fg), 0.1);
-    }
-}
-
-.filled {
-	color: #ffffff;
-	background-color: rgb(var(--button-bg));
-	padding: 2px 10px;
-
-    &:hover {
-        background-color:  rgb(var(--button-bg), 0.8);
-    }
-}
-
 /* Icons */
-
-.octo-hovercontrols {
-    display: flex;
-    flex-direction: column;
-	align-items: flex-start;
-
-	min-height: 30px;
-	width: 100%;
-	color:rgba(var(--main-fg), 0.4);
-}
 
 .octo-icon {
 	font-family: "Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji, "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols;
@@ -171,11 +133,6 @@ hr {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-}
-
-.octo-frame > .octo-icontitle .octo-icon {
-	font-size: 36px;
-	margin-right: 15px;
 }
 
 /*-- Property list --*/
@@ -215,108 +172,10 @@ hr {
 	box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
 }
 
-.octo-button {
-    &.octo-hovercontrol {
-        background: rgba(var(--main-fg), 0.1);
-    }
-
-    &.square {
-        padding: 0;
-    }
-
-    &.active {
-        color: rgb(45, 170, 220);
-        font-weight: 500;
-    }
-}
-
-
-.octo-hoverbutton {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-	border-radius: 3px;
-
-	position: absolute;
-	right: 6px;
-	top: 4px;
-	cursor: pointer;
-	background: rgb(var(--main-fg), 0.1);
-	box-shadow: rgba(var(--main-fg), 0.1) 0px 0px 0px 1px, rgba(var(--main-fg), 0.1) 0px 2px 4px;
-	padding: 0 5px;
-
-    &.square {
-        height: 24px;
-        width: 24px;
-        padding: 0;
-    }
-}
-
-/* Flash Panel */
-
-.flashPanel {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	position: absolute;
-	bottom: 120px;
-	left: 0;
-	right: 0;
-	margin: 0 auto;
-	padding: 10px 20px;
-	min-width: 150px;
-	max-width: 420px;
-	min-height: 50px;
-	color: #ffffff;
-	background: rgba(100, 100, 100, 0.8);
-	font-size: 18px;
-	vertical-align: middle;
-	border-radius: 20px;
-	z-index: 12;
-
-    &.flashIn {
-        visibility: visible;
-        opacity: 1;
-    }
-
-    &.flashOut {
-        visibility: hidden;
-        opacity: 0;
-        transition: visibility 0s linear 200ms, opacity ease-in 200ms;
-    }
-}
-
-/* Hover panel */
-
-.octo-hoverpanel {
-    display: flex;
-    flex-direction: column;
-	align-items: flex-start;
-
-	min-height: 30px;
-	width: 100%;
-	color:rgba(var(--main-fg), 0.4);
-}
-
 .octo-block img {
 	max-width: 500px;
 	max-height: 500px;
 	margin: 5px 0;
-}
-
-/* This needs to be declared after other co-classes */
-.octo-hover-container {
-	position: relative;
-}
-
-.octo-hover-item {
-	display: none;
-}
-
-.octo-hover-container:hover .octo-hover-item {
-	display: flex;
 }
 
 .octo-content {
@@ -332,8 +191,11 @@ hr {
 	width: 100%;
 	padding-right: 126px;
 
-    * {
-	    flex-shrink: 0;
+    > * {
+        flex: 1 1 auto;
+    }
+    > .octo-block-margin {
+        flex: 0 0 auto;
     }
 }
 
