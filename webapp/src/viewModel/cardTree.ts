@@ -30,7 +30,11 @@ class MutableCardTree implements CardTree {
     }
 
     incrementalUpdate(updatedBlocks: IBlock[]) {
-        this.rawBlocks = OctoUtils.mergeBlocks(this.rawBlocks, updatedBlocks)
+        const relevantBlocks = updatedBlocks.filter((block) => block.id === this.cardId || block.parentId === this.cardId)
+        if (relevantBlocks.length < 1) {
+            return
+        }
+        this.rawBlocks = OctoUtils.mergeBlocks(this.rawBlocks, relevantBlocks)
         this.rebuild(OctoUtils.hydrateBlocks(this.rawBlocks))
     }
 

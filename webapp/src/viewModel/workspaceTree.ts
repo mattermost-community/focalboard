@@ -27,6 +27,10 @@ class MutableWorkspaceTree {
     }
 
     incrementalUpdate(updatedBlocks: IBlock[]) {
+        const relevantBlocks = updatedBlocks.filter((block) => block.type === 'board' || block.type === 'view')
+        if (relevantBlocks.length < 1) {
+            return
+        }
         this.rawBlocks = OctoUtils.mergeBlocks(this.rawBlocks, updatedBlocks)
         this.rebuild(OctoUtils.hydrateBlocks(this.rawBlocks))
     }
