@@ -58,13 +58,14 @@ class MutableBoardTree implements BoardTree {
         this.rebuild(OctoUtils.hydrateBlocks(this.rawBlocks))
     }
 
-    incrementalUpdate(updatedBlocks: IBlock[]) {
+    incrementalUpdate(updatedBlocks: IBlock[]): boolean {
         const relevantBlocks = updatedBlocks.filter((block) => block.id === this.boardId || block.parentId === this.boardId)
         if (relevantBlocks.length < 1) {
-            return
+            return false
         }
         this.rawBlocks = OctoUtils.mergeBlocks(this.rawBlocks, relevantBlocks)
         this.rebuild(OctoUtils.hydrateBlocks(this.rawBlocks))
+        return true
     }
 
     private rebuild(blocks: IMutableBlock[]) {

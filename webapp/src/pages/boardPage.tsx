@@ -189,14 +189,20 @@ export default class BoardPage extends React.Component<Props, State> {
     private incrementalUpdate(blocks: IBlock[]) {
         const {workspaceTree, boardTree, viewId} = this.state
 
+        let newState = {workspaceTree, boardTree}
+
         const newWorkspaceTree = workspaceTree.mutableCopy()
-        newWorkspaceTree.incrementalUpdate(blocks)
+        if (newWorkspaceTree.incrementalUpdate(blocks)) {
+            newState = {...newState, workspaceTree: newWorkspaceTree}
+        }
 
         const newBoardTree = boardTree ? boardTree.mutableCopy() : new MutableBoardTree(this.state.boardId)
-        newBoardTree.incrementalUpdate(blocks)
-        newBoardTree.setActiveView(viewId)
+        if (newBoardTree.incrementalUpdate(blocks)) {
+            newBoardTree.setActiveView(viewId)
+            newState = {...newState, boardTree: newBoardTree}
+        }
 
-        this.setState({workspaceTree: newWorkspaceTree, boardTree: newBoardTree})
+        this.setState(newState)
     }
 
     // IPageController
