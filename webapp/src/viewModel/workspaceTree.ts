@@ -17,39 +17,28 @@ class MutableWorkspaceTree {
     boards: Board[] = []
     views: BoardView[] = []
 
-    private rawBoards: IBlock[] = []
-    private rawViews: IBlock[] = []
+    private rawBlocks: IBlock[] = []
 
     async sync() {
-        this.rawBoards = await octoClient.getBlocksWithType('board')
-        this.rawViews = await octoClient.getBlocksWithType('view')
-        this.rebuild(
-            OctoUtils.hydrateBlocks(this.rawBoards),
-            OctoUtils.hydrateBlocks(this.rawViews),
-        )
+        const rawBoards = await octoClient.getBlocksWithType('board')
+        const rawViews = await octoClient.getBlocksWithType('view')
+        this.rawBlocks = [...rawBoards, ...rawViews]
+        this.rebuild(OctoUtils.hydrateBlocks(this.rawBlocks))
     }
 
     incrementalUpdate(updatedBlocks: IBlock[]) {
-        const updatedBoards = updatedBlocks.filter((o) => o.type === 'board')
-        const updatedViews = updatedBlocks.filter((o) => o.type === 'view')
-
-        this.rawBoards = OctoUtils.mergeBlocks(this.rawBoards, updatedBoards)
-        this.rawViews = OctoUtils.mergeBlocks(this.rawViews, updatedViews)
-        this.rebuild(
-            OctoUtils.hydrateBlocks(this.rawBoards),
-            OctoUtils.hydrateBlocks(this.rawViews),
-        )
+        this.rawBlocks = OctoUtils.mergeBlocks(this.rawBlocks, updatedBlocks)
+        this.rebuild(OctoUtils.hydrateBlocks(this.rawBlocks))
     }
 
-    private rebuild(boards: IBlock[], views: IBlock[]) {
-        this.boards = boards.filter((block) => block.type === 'board') as Board[]
-        this.views = views.filter((block) => block.type === 'view') as BoardView[]
+    private rebuild(blocks: IBlock[]) {
+        this.boards = blocks.filter((block) => block.type === 'board') as Board[]
+        this.views = blocks.filter((block) => block.type === 'view') as BoardView[]
     }
 
     mutableCopy(): MutableWorkspaceTree {
         const workspaceTree = new MutableWorkspaceTree()
-        const rawBlocks = [...this.rawBoards, ...this.rawViews]
-        workspaceTree.incrementalUpdate(rawBlocks)
+        workspaceTree.incrementalUpdate(this.rawBlocks)
         return workspaceTree
     }
 }

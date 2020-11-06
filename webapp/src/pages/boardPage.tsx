@@ -192,7 +192,7 @@ export default class BoardPage extends React.Component<Props, State> {
         const newWorkspaceTree = workspaceTree.mutableCopy()
         newWorkspaceTree.incrementalUpdate(blocks)
 
-        const newBoardTree = boardTree.mutableCopy()
+        const newBoardTree = boardTree ? boardTree.mutableCopy() : new MutableBoardTree(this.state.boardId)
         newBoardTree.incrementalUpdate(blocks)
         newBoardTree.setActiveView(viewId)
 
