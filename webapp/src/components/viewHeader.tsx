@@ -112,6 +112,29 @@ class ViewHeader extends React.Component<Props, State> {
         })
     }
 
+    private async testDistributeCards() {
+        const {boardTree} = this.props
+        if (!boardTree) {
+            return
+        }
+
+        await mutator.performAsUndoGroup(async () => {
+            let optionIndex = 0
+            for (const card of boardTree.cards) {
+                if (boardTree.groupByProperty && boardTree.groupByProperty.options.length > 0) {
+                    // Cycle through options
+                    const option = boardTree.groupByProperty.options[optionIndex]
+                    optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
+                    const newCard = new MutableCard(card)
+                    if (newCard.properties[boardTree.groupByProperty.id] !== option.id) {
+                        newCard.properties[boardTree.groupByProperty.id] = option.id
+                        await mutator.updateBlock(newCard, card, 'test distribute cards')
+                    }
+                }
+            }
+        })
+    }
+
     private async testRandomizeIcons() {
         const {boardTree} = this.props
 
@@ -323,6 +346,9 @@ class ViewHeader extends React.Component<Props, State> {
                             name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export Board Archive'})}
                             onClick={() => Archiver.exportBoardTree(boardTree)}
                         />
+
+                        <Menu.Separator />
+
                         <Menu.Text
                             id='testAdd100Cards'
                             name={intl.formatMessage({id: 'ViewHeader.test-add-100-cards', defaultMessage: 'TEST: Add 100 cards'})}
@@ -332,6 +358,11 @@ class ViewHeader extends React.Component<Props, State> {
                             id='testAdd1000Cards'
                             name={intl.formatMessage({id: 'ViewHeader.test-add-1000-cards', defaultMessage: 'TEST: Add 1,000 cards'})}
                             onClick={() => this.testAddCards(1000)}
+                        />
+                        <Menu.Text
+                            id='testDistributeCards'
+                            name={intl.formatMessage({id: 'ViewHeader.test-distribute-cards', defaultMessage: 'TEST: Distribute cards'})}
+                            onClick={() => this.testDistributeCards()}
                         />
                         <Menu.Text
                             id='testRandomizeIcons'
