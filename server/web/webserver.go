@@ -76,7 +76,7 @@ func (ws *Server) Start() error {
 		return nil
 	}
 
-	log.Println("http server started on :%d\n", ws.port)
+	log.Printf("http server started on :%d\n", ws.port)
 	err := ws.ListenAndServe()
 	if err != nil {
 		return err
