@@ -25,10 +25,6 @@ type State = {
 export default class PropertyMenu extends React.PureComponent<Props, State> {
     private nameTextbox = React.createRef<HTMLInputElement>()
 
-    public shouldComponentUpdate(): boolean {
-        return true
-    }
-
     constructor(props: Props) {
         super(props)
         this.state = {name: this.props.propertyName}

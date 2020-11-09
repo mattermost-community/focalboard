@@ -3,13 +3,13 @@
 import React from 'react'
 
 import {BoardView} from '../blocks/boardView'
-import {MutableBoardTree} from '../viewModel/boardTree'
+import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
 import {WorkspaceComponent} from '../components/workspaceComponent'
 import {sendFlashMessage} from '../components/flashMessages'
 import mutator from '../mutator'
 import {OctoListener} from '../octoListener'
 import {Utils} from '../utils'
-import {MutableWorkspaceTree} from '../viewModel/workspaceTree'
+import {MutableWorkspaceTree, WorkspaceTree} from '../viewModel/workspaceTree'
 import {IBlock} from '../blocks/block'
 
 type Props = {
@@ -19,8 +19,8 @@ type Props = {
 type State = {
     boardId: string
     viewId: string
-    workspaceTree: MutableWorkspaceTree
-    boardTree?: MutableBoardTree
+    workspaceTree: WorkspaceTree
+    boardTree?: BoardTree
 }
 
 export default class BoardPage extends React.Component<Props, State> {
@@ -145,9 +145,9 @@ export default class BoardPage extends React.Component<Props, State> {
     }
 
     private async sync(boardId: string = this.state.boardId, viewId: string | undefined = this.state.viewId) {
-        const {workspaceTree} = this.state
         Utils.log(`sync start: ${boardId}`)
 
+        const workspaceTree = new MutableWorkspaceTree()
         await workspaceTree.sync()
         const boardIds = workspaceTree.boards.map((o) => o.id)
 
@@ -176,6 +176,7 @@ export default class BoardPage extends React.Component<Props, State> {
 
             // TODO: Handle error (viewId not found)
             this.setState({
+                workspaceTree,
                 boardTree,
                 boardId,
                 viewId: boardTree.activeView.id,
@@ -220,9 +221,14 @@ export default class BoardPage extends React.Component<Props, State> {
     }
 
     showView(viewId: string, boardId: string = this.state.boardId): void {
+        if (!this.state.boardTree) {
+            return
+        }
+
         if (this.state.boardId === boardId) {
-            this.state.boardTree.setActiveView(viewId)
-            this.setState({...this.state, viewId})
+            const newBoardTree = this.state.boardTree.mutableCopy()
+            newBoardTree.setActiveView(viewId)
+            this.setState({boardTree: newBoardTree, viewId})
         } else {
             this.attachToBoard(boardId, viewId)
         }
@@ -232,7 +238,12 @@ export default class BoardPage extends React.Component<Props, State> {
     }
 
     setSearchText(text?: string): void {
-        this.state.boardTree?.setSearchText(text)
-        this.setState({...this.state, boardTree: this.state.boardTree})
+        if (!this.state.boardTree) {
+            return
+        }
+
+        const newBoardTree = this.state.boardTree.mutableCopy()
+        newBoardTree.setSearchText(text)
+        this.setState({boardTree: newBoardTree})
     }
 }
