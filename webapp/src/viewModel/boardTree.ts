@@ -241,27 +241,34 @@ class MutableBoardTree implements BoardTree {
         return CardFilter.applyFilterGroup(filterGroup, board.cardProperties, cards)
     }
 
-    private defaultOrder(cardA: Card, cardB: Card) {
+    private titleOrCreatedOrder(cardA: Card, cardB: Card) {
+        const aValue = cardA.title || ''
+        const bValue = cardB.title || ''
+
+        if (aValue && bValue) {
+            return aValue.localeCompare(bValue)
+        }
+
+        // Always put untitled cards at the bottom
+        if (aValue && !bValue) {
+            return -1
+        }
+        if (bValue && !aValue) {
+            return 1
+        }
+
+        // If both cards are untitled, use the create date
+        return cardA.createAt - cardB.createAt
+    }
+
+    private manualOrder(cardA: Card, cardB: Card) {
         const {activeView} = this
 
         const indexA = activeView.cardOrder.indexOf(cardA.id)
         const indexB = activeView.cardOrder.indexOf(cardB.id)
 
         if (indexA < 0 && indexB < 0) {
-            // If both cards' order is not defined, first use the title
-            const aValue = cardA.title || ''
-            const bValue = cardB.title || ''
-
-            // Always put untitled cards at the bottom
-            if (aValue && !bValue) {
-                return -1
-            }
-            if (bValue && !aValue) {
-                return 1
-            }
-
-            // If both cards are untitled, use the create date
-            return cardA.createAt - cardB.createAt
+            return this.titleOrCreatedOrder(cardA, cardB)
         } else if (indexA < 0 && indexB >= 0) {
             // If cardA's order is not defined, put it at the end
             return 1
@@ -279,33 +286,14 @@ class MutableBoardTree implements BoardTree {
         let sortedCards: Card[] = []
 
         if (sortOptions.length < 1) {
-            Utils.log('Default sort')
-            sortedCards = cards.sort((a, b) => this.defaultOrder(a, b))
+            Utils.log('Manual sort')
+            sortedCards = cards.sort((a, b) => this.manualOrder(a, b))
         } else {
             sortOptions.forEach((sortOption) => {
                 if (sortOption.propertyId === Constants.titleColumnId) {
-                    Utils.log('Sort by name')
+                    Utils.log('Sort by title')
                     sortedCards = cards.sort((a, b) => {
-                        const aValue = a.title || ''
-                        const bValue = b.title || ''
-
-                        // Always put empty values at the bottom, newest last
-                        if (aValue && !bValue) {
-                            return -1
-                        }
-                        if (bValue && !aValue) {
-                            return 1
-                        }
-                        if (!aValue && !bValue) {
-                            return this.defaultOrder(a, b)
-                        }
-
-                        let result = aValue.localeCompare(bValue)
-
-                        if (result === 0) {
-                            // In case of "ties", use the default order
-                            result = this.defaultOrder(a, b)
-                        }
+                        let result = this.titleOrCreatedOrder(a, b)
 
                         if (sortOption.reversed) {
                             result = -result
@@ -319,17 +307,11 @@ class MutableBoardTree implements BoardTree {
                         Utils.logError(`Missing template for property id: ${sortPropertyId}`)
                         return cards.slice()
                     }
-                    Utils.log(`Sort by ${template?.name}`)
+                    Utils.log(`Sort by property: ${template?.name}`)
                     sortedCards = cards.sort((a, b) => {
-                        // Always put cards with no titles at the bottom
-                        if (a.title && !b.title) {
-                            return -1
-                        }
-                        if (b.title && !a.title) {
-                            return 1
-                        }
-                        if (!a.title && !b.title) {
-                            return this.defaultOrder(a, b)
+                        // Always put cards with no titles at the bottom, regardless of sort
+                        if (!a.title || !b.title) {
+                            return this.titleOrCreatedOrder(a, b)
                         }
 
                         const aValue = a.properties[sortPropertyId] || ''
@@ -344,7 +326,7 @@ class MutableBoardTree implements BoardTree {
                                 return 1
                             }
                             if (!aValue && !bValue) {
-                                return this.defaultOrder(a, b)
+                                return this.titleOrCreatedOrder(a, b)
                             }
 
                             // Sort by the option order (not alphabetically by value)
@@ -361,12 +343,12 @@ class MutableBoardTree implements BoardTree {
                                 return 1
                             }
                             if (!aValue && !bValue) {
-                                return this.defaultOrder(a, b)
+                                return this.titleOrCreatedOrder(a, b)
                             }
 
                             result = Number(aValue) - Number(bValue)
                         } else if (template.type === 'createdTime') {
-                            result = this.defaultOrder(a, b)
+                            result = a.createAt - b.createAt
                         } else if (template.type === 'updatedTime') {
                             result = a.updateAt - b.updateAt
                         } else {
@@ -380,15 +362,15 @@ class MutableBoardTree implements BoardTree {
                                 return 1
                             }
                             if (!aValue && !bValue) {
-                                return this.defaultOrder(a, b)
+                                return this.titleOrCreatedOrder(a, b)
                             }
 
                             result = aValue.localeCompare(bValue)
                         }
 
                         if (result === 0) {
-                            // In case of "ties", use the default order
-                            result = this.defaultOrder(a, b)
+                            // In case of "ties", use the title order
+                            result = this.titleOrCreatedOrder(a, b)
                         }
 
                         if (sortOption.reversed) {
