@@ -54,31 +54,39 @@ class CardDetail extends React.Component<Props, State> {
     }
 
     componentDidMount() {
+        this.createCardTreeAndSync()
+    }
+
+    private async createCardTreeAndSync() {
         const cardTree = new MutableCardTree(this.props.cardId)
+        await cardTree.sync()
+        this.createListener()
+        this.setState({cardTree, title: cardTree.card.title})
+        setTimeout(() => {
+            if (this.titleRef.current) {
+                this.titleRef.current.focus()
+            }
+        }, 0)
+    }
+
+    private createListener() {
         this.cardListener = new OctoListener()
         this.cardListener.open(
             [this.props.cardId],
             async (blocks) => {
                 Utils.log(`cardListener.onChanged: ${blocks.length}`)
-                const newCardTree = cardTree.mutableCopy()
+                const newCardTree = this.state.cardTree.mutableCopy()
                 if (newCardTree.incrementalUpdate(blocks)) {
                     this.setState({cardTree: newCardTree, title: newCardTree.card.title})
                 }
             },
             async () => {
                 Utils.log('cardListener.onReconnect')
-                const newCardTree = cardTree.mutableCopy()
+                const newCardTree = this.state.cardTree.mutableCopy()
                 await newCardTree.sync()
                 this.setState({cardTree: newCardTree, title: newCardTree.card.title})
-            })
-        cardTree.sync().then(() => {
-            this.setState({cardTree, title: cardTree.card.title})
-            setTimeout(() => {
-                if (this.titleRef.current) {
-                    this.titleRef.current.focus()
-                }
-            }, 0)
-        })
+            }
+        )
     }
 
     componentWillUnmount() {
@@ -160,7 +168,11 @@ class CardDetail extends React.Component<Props, State> {
                         value={this.state.title}
                         placeholderText='Untitled'
                         onChange={(title: string) => this.setState({title})}
-                        onSave={() => mutator.changeTitle(card, this.state.title)}
+                        onSave={() => {
+                            if (this.state.title !== this.state.cardTree.card.title) {
+                                mutator.changeTitle(card, this.state.title)
+                            }
+                        }}
                         onCancel={() => this.setState({title: this.state.cardTree.card.title})}
                     />
 
