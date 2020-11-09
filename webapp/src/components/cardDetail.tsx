@@ -112,7 +112,7 @@ class CardDetail extends React.Component<Props, State> {
                             key={block.id}
                             block={block}
                             cardId={card.id}
-                            cardTree={cardTree}
+                            contents={cardTree.contents}
                         />
                     ))}
                 </div>)
@@ -128,7 +128,7 @@ class CardDetail extends React.Component<Props, State> {
                                 const block = new MutableTextBlock()
                                 block.parentId = card.id
                                 block.title = text
-                                block.order = cardTree.contents.length * 1000
+                                block.order = (this.state.cardTree.contents.length + 1) * 1000
                                 mutator.insertBlock(block, 'add card text')
                             }
                         }}
@@ -253,7 +253,7 @@ class CardDetail extends React.Component<Props, State> {
                                 onClick={() => {
                                     const block = new MutableTextBlock()
                                     block.parentId = card.id
-                                    block.order = cardTree.contents.length * 1000
+                                    block.order = (this.state.cardTree.contents.length + 1) * 1000
                                     mutator.insertBlock(block, 'add text')
                                 }}
                             />
@@ -261,7 +261,7 @@ class CardDetail extends React.Component<Props, State> {
                                 id='image'
                                 name={intl.formatMessage({id: 'CardDetail.image', defaultMessage: 'Image'})}
                                 onClick={() => Utils.selectLocalFile(
-                                    (file) => mutator.createImageBlock(card.id, file, cardTree.contents.length * 1000),
+                                    (file) => mutator.createImageBlock(card.id, file, (this.state.cardTree.contents.length + 1) * 1000),
                                     '.jpg,.jpeg,.png',
                                 )}
                             />
