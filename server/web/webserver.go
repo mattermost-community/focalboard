@@ -20,7 +20,8 @@ type RoutedService interface {
 
 // Server is the structure responsible for managing our http web server.
 type Server struct {
-	router   *mux.Router
+	http.Server
+
 	rootPath string
 	port     int
 	ssl      bool
@@ -31,7 +32,10 @@ func NewServer(rootPath string, port int, ssl bool) *Server {
 	r := mux.NewRouter()
 
 	ws := &Server{
-		router:   r,
+		Server: http.Server{
+			Addr:    fmt.Sprintf(`:%d`, port),
+			Handler: r,
+		},
 		rootPath: rootPath,
 		port:     port,
 		ssl:      ssl,
@@ -40,14 +44,18 @@ func NewServer(rootPath string, port int, ssl bool) *Server {
 	return ws
 }
 
+func (ws *Server) Router() *mux.Router {
+	return ws.Server.Handler.(*mux.Router)
+}
+
 // AddRoutes allows services to register themself in the webserver router and provide new endpoints.
 func (ws *Server) AddRoutes(rs RoutedService) {
-	rs.RegisterRoutes(ws.router)
+	rs.RegisterRoutes(ws.Router())
 }
 
 func (ws *Server) registerRoutes() {
-	ws.router.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(filepath.Join(ws.rootPath, "static")))))
-	ws.router.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	ws.Router().PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(filepath.Join(ws.rootPath, "static")))))
+	ws.Router().PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		http.ServeFile(w, r, path.Join(ws.rootPath, "index.html"))
 	})
@@ -56,14 +64,11 @@ func (ws *Server) registerRoutes() {
 // Start runs the web server and start listening for charsetnnections.
 func (ws *Server) Start() error {
 	ws.registerRoutes()
-	http.Handle("/", ws.router)
 
-	urlPort := fmt.Sprintf(`:%d`, ws.port)
 	isSSL := ws.ssl && fileExists("./cert/cert.pem") && fileExists("./cert/key.pem")
-
 	if isSSL {
-		log.Println("https server started on ", urlPort)
-		err := http.ListenAndServeTLS(urlPort, "./cert/cert.pem", "./cert/key.pem", nil)
+		log.Printf("https server started on :%d\n", ws.port)
+		err := ws.ListenAndServeTLS("./cert/cert.pem", "./cert/key.pem")
 		if err != nil {
 			return err
 		}
@@ -71,13 +76,17 @@ func (ws *Server) Start() error {
 		return nil
 	}
 
-	log.Println("http server started on ", urlPort)
-	err := http.ListenAndServe(urlPort, nil)
+	log.Println("http server started on :%d\n", ws.port)
+	err := ws.ListenAndServe()
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (ws *Server) Shutdown() error {
+	return ws.Close()
 }
 
 // fileExists returns true if a file exists at the path.
