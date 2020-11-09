@@ -135,5 +135,13 @@ func (s *Server) Start() error {
 }
 
 func (s *Server) Shutdown() error {
+	if err := s.webServer.Shutdown(); err != nil {
+		return err
+	}
+
 	return s.store.Shutdown()
+}
+
+func (s *Server) Config() *config.Configuration {
+	return s.config
 }
