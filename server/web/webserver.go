@@ -22,7 +22,6 @@ type RoutedService interface {
 type Server struct {
 	http.Server
 
-	router   *mux.Router
 	rootPath string
 	port     int
 	ssl      bool
