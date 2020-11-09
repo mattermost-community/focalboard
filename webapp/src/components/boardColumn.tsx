@@ -9,8 +9,6 @@ type Props = {
 
 type State = {
     isDragOver?: boolean
-    dragPageX?: number
-    dragPageY?: number
 }
 
 class BoardColumn extends React.Component<Props, State> {
@@ -29,18 +27,22 @@ class BoardColumn extends React.Component<Props, State> {
                 className={className}
                 onDragOver={(e) => {
                     e.preventDefault()
-                    this.setState({isDragOver: true, dragPageX: e.pageX, dragPageY: e.pageY})
+                    if (!this.state.isDragOver) {
+                        this.setState({isDragOver: true})
+                    }
                 }}
                 onDragEnter={(e) => {
                     e.preventDefault()
-                    this.setState({isDragOver: true, dragPageX: e.pageX, dragPageY: e.pageY})
+                    if (!this.state.isDragOver) {
+                        this.setState({isDragOver: true})
+                    }
                 }}
                 onDragLeave={(e) => {
                     e.preventDefault()
-                    this.setState({isDragOver: false, dragPageX: undefined, dragPageY: undefined})
+                    this.setState({isDragOver: false})
                 }}
                 onDrop={(e) => {
-                    this.setState({isDragOver: false, dragPageX: undefined, dragPageY: undefined})
+                    this.setState({isDragOver: false})
                     if (this.props.isDropZone) {
                         this.props.onDrop(e)
                     }

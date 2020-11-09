@@ -70,10 +70,14 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
                 }}
 
                 onDragOver={(e) => {
-                    this.setState({isDragOver: true})
+                    if (!this.state.isDragOver) {
+                        this.setState({isDragOver: true})
+                    }
                 }}
                 onDragEnter={(e) => {
-                    this.setState({isDragOver: true})
+                    if (!this.state.isDragOver) {
+                        this.setState({isDragOver: true})
+                    }
                 }}
                 onDragLeave={(e) => {
                     this.setState({isDragOver: false})
