@@ -150,6 +150,7 @@ export default class BoardPage extends React.Component<Props, State> {
         const workspaceTree = new MutableWorkspaceTree()
         await workspaceTree.sync()
         const boardIds = workspaceTree.boards.map((o) => o.id)
+        this.setState({workspaceTree})
 
         // Listen to boards plus all blocks at root (Empty string for parentId)
         this.workspaceListener.open(
@@ -161,7 +162,8 @@ export default class BoardPage extends React.Component<Props, State> {
             () => {
                 Utils.log('workspaceListener.onReconnect')
                 this.sync()
-            })
+            },
+        )
 
         if (boardId) {
             const boardTree = new MutableBoardTree(boardId)
@@ -176,14 +178,11 @@ export default class BoardPage extends React.Component<Props, State> {
 
             // TODO: Handle error (viewId not found)
             this.setState({
-                workspaceTree,
                 boardTree,
                 boardId,
                 viewId: boardTree.activeView.id,
             })
             Utils.log(`sync complete: ${boardTree.board.id} (${boardTree.board.title})`)
-        } else {
-            this.forceUpdate()
         }
     }
 
@@ -221,10 +220,6 @@ export default class BoardPage extends React.Component<Props, State> {
     }
 
     showView(viewId: string, boardId: string = this.state.boardId): void {
-        if (!this.state.boardTree) {
-            return
-        }
-
         if (this.state.boardId === boardId) {
             const newBoardTree = this.state.boardTree.mutableCopy()
             newBoardTree.setActiveView(viewId)
@@ -238,10 +233,6 @@ export default class BoardPage extends React.Component<Props, State> {
     }
 
     setSearchText(text?: string): void {
-        if (!this.state.boardTree) {
-            return
-        }
-
         const newBoardTree = this.state.boardTree.mutableCopy()
         newBoardTree.setSearchText(text)
         this.setState({boardTree: newBoardTree})

@@ -347,7 +347,7 @@ class ViewHeader extends React.Component<Props, State> {
                             onClick={() => Archiver.exportBoardTree(boardTree)}
                         />
 
-                        <Menu.Separator />
+                        <Menu.Separator/>
 
                         <Menu.Text
                             id='testAdd100Cards'

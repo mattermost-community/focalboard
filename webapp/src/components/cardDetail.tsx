@@ -85,7 +85,7 @@ class CardDetail extends React.Component<Props, State> {
                 const newCardTree = this.state.cardTree.mutableCopy()
                 await newCardTree.sync()
                 this.setState({cardTree: newCardTree, title: newCardTree.card.title})
-            }
+            },
         )
     }
 
