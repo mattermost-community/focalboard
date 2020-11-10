@@ -62,6 +62,7 @@ class ViewTitle extends React.Component<Props, State> {
                         value={this.state.title}
                         placeholderText={intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})}
                         onChange={(title) => this.setState({title})}
+                        saveOnEsc={true}
                         onSave={() => mutator.changeTitle(board, this.state.title)}
                         onCancel={() => this.setState({title: this.props.board.title})}
                     />

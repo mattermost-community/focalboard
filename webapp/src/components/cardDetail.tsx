@@ -168,6 +168,7 @@ class CardDetail extends React.Component<Props, State> {
                         value={this.state.title}
                         placeholderText='Untitled'
                         onChange={(title: string) => this.setState({title})}
+                        saveOnEsc={true}
                         onSave={() => {
                             if (this.state.title !== this.state.cardTree.card.title) {
                                 mutator.changeTitle(card, this.state.title)
