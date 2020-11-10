@@ -12,7 +12,8 @@ type SwitchOptionProps = MenuOptionProps & {
 }
 
 export default class SwitchOption extends React.PureComponent<SwitchOptionProps> {
-    private handleOnClick = (): void => {
+    private handleOnClick = (e: React.MouseEvent): void => {
+        e.target.dispatchEvent(new Event('menuItemClicked'))
         this.props.onClick(this.props.id)
     }
 

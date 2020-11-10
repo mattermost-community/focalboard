@@ -32,11 +32,13 @@ export default class MenuWrapper extends React.PureComponent<Props, State> {
     }
 
     public componentDidMount() {
+        document.addEventListener('menuItemClicked', this.close, true)
         document.addEventListener('click', this.closeOnBlur, true)
         document.addEventListener('keyup', this.keyboardClose, true)
     }
 
     public componentWillUnmount() {
+        document.removeEventListener('menuItemClicked', this.close, true)
         document.removeEventListener('click', this.closeOnBlur, true)
         document.removeEventListener('keyup', this.keyboardClose, true)
     }

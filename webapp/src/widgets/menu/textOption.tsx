@@ -10,7 +10,8 @@ type TextOptionProps = MenuOptionProps & {
 }
 
 export default class TextOption extends React.PureComponent<TextOptionProps> {
-    private handleOnClick = (): void => {
+    private handleOnClick = (e: React.MouseEvent): void => {
+        e.target.dispatchEvent(new Event('menuItemClicked'))
         this.props.onClick(this.props.id)
     }
 
