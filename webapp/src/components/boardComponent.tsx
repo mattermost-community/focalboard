@@ -6,8 +6,10 @@ import {injectIntl, IntlShape, FormattedMessage} from 'react-intl'
 
 import {BlockIcons} from '../blockIcons'
 import {IPropertyOption, IPropertyTemplate} from '../blocks/board'
+import {IBlock} from '../blocks/block'
 import {Card, MutableCard} from '../blocks/card'
 import {BoardTree, BoardTreeGroup} from '../viewModel/boardTree'
+import {MutableCardTree} from '../viewModel/cardTree'
 import {CardFilter} from '../cardFilter'
 import {Constants} from '../constants'
 import mutator from '../mutator'
@@ -150,6 +152,10 @@ class BoardComponent extends React.Component<Props, State> {
                             showView={showView}
                             setSearchText={this.props.setSearchText}
                             addCard={() => this.addCard()}
+                            addCardFromTemplate={this.addCardFromTemplate}
+                            addCardTemplate={() => this.addCardTemplate()}
+                            editCardTemplate={this.editCardTemplate}
+                            deleteCardTemplate={this.deleteCardTemplate}
                             withGroupBy={true}
                         />
                         <div
@@ -473,26 +479,78 @@ class BoardComponent extends React.Component<Props, State> {
         }
     }
 
-    private async addCard(groupByOptionId?: string): Promise<void> {
+    private addCardFromTemplate = async (cardTemplate?: Card) => {
+        this.addCard(undefined, cardTemplate)
+    }
+
+    private async addCard(groupByOptionId?: string, cardTemplate?: Card): Promise<void> {
         const {boardTree} = this.props
         const {activeView, board} = boardTree
 
-        const card = new MutableCard()
+        let card: MutableCard
+        let blocksToInsert: IBlock[]
+        if (cardTemplate) {
+            const templateCardTree = new MutableCardTree(cardTemplate.id)
+            await templateCardTree.sync()
+            const newCardTree = templateCardTree.duplicateFromTemplate()
+            card = newCardTree.card
+            blocksToInsert = [newCardTree.card, ...newCardTree.contents]
+        } else {
+            card = new MutableCard()
+            blocksToInsert = [card]
+        }
+
         card.parentId = boardTree.board.id
-        card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
-        card.icon = BlockIcons.shared.randomIcon()
+        const propertiesThatMeetFilters = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
         if (boardTree.groupByProperty) {
             if (groupByOptionId) {
-                card.properties[boardTree.groupByProperty.id] = groupByOptionId
+                propertiesThatMeetFilters[boardTree.groupByProperty.id] = groupByOptionId
             } else {
-                delete card.properties[boardTree.groupByProperty.id]
+                delete propertiesThatMeetFilters[boardTree.groupByProperty.id]
             }
         }
-        await mutator.insertBlock(card, 'add card', async () => {
-            this.setState({shownCard: card})
+        card.properties = {...card.properties, ...propertiesThatMeetFilters}
+        card.icon = BlockIcons.shared.randomIcon()
+        await mutator.insertBlocks(
+            blocksToInsert,
+            'add card',
+            async () => {
+                this.setState({shownCard: card})
+            },
+            async () => {
+                this.setState({shownCard: undefined})
+            },
+        )
+    }
+
+    private async addCardTemplate(groupByOptionId?: string): Promise<void> {
+        const {boardTree} = this.props
+        const {activeView, board} = boardTree
+
+        const cardTemplate = new MutableCard()
+        cardTemplate.isTemplate = true
+        cardTemplate.parentId = boardTree.board.id
+        cardTemplate.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
+        if (boardTree.groupByProperty) {
+            if (groupByOptionId) {
+                cardTemplate.properties[boardTree.groupByProperty.id] = groupByOptionId
+            } else {
+                delete cardTemplate.properties[boardTree.groupByProperty.id]
+            }
+        }
+        await mutator.insertBlock(cardTemplate, 'add card template', async () => {
+            this.setState({shownCard: cardTemplate})
         }, async () => {
             this.setState({shownCard: undefined})
         })
+    }
+
+    private editCardTemplate = (cardTemplate: Card) => {
+        this.setState({shownCard: cardTemplate})
+    }
+
+    private deleteCardTemplate = (cardTemplate: Card) => {
+        mutator.deleteBlock(cardTemplate, 'delete card template')
     }
 
     private async propertyNameChanged(option: IPropertyOption, text: string): Promise<void> {
@@ -554,7 +612,6 @@ class BoardComponent extends React.Component<Props, State> {
         const {draggedCards, draggedHeaderOption} = this
         const optionId = option ? option.id : undefined
 
-        Utils.assertValue(mutator)
         Utils.assertValue(boardTree)
 
         if (draggedCards.length > 0) {

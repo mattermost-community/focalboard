@@ -2,6 +2,8 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
+import {FormattedMessage} from 'react-intl'
+
 import {Card} from '../blocks/card'
 import {BoardTree} from '../viewModel/boardTree'
 import mutator from '../mutator'
@@ -37,6 +39,14 @@ class CardDialog extends React.Component<Props> {
                 onClose={this.props.onClose}
                 toolsMenu={menu}
             >
+                {(this.props.card.isTemplate) &&
+                    <div className='banner'>
+                        <FormattedMessage
+                            id='CardDialog.editing-template'
+                            defaultMessage="You're editing a template"
+                        />
+                    </div>
+                }
                 <CardDetail
                     boardTree={this.props.boardTree}
                     cardId={this.props.card.id}

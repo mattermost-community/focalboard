@@ -1,10 +1,11 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Card} from '../blocks/card'
+import {Card, MutableCard} from '../blocks/card'
 import {IOrderedBlock} from '../blocks/orderedBlock'
 import octoClient from '../octoClient'
-import {IBlock} from '../blocks/block'
+import {IBlock, MutableBlock} from '../blocks/block'
 import {OctoUtils} from '../octoUtils'
+import {Utils} from '../utils'
 
 interface CardTree {
     readonly card: Card
@@ -15,7 +16,7 @@ interface CardTree {
 }
 
 class MutableCardTree implements CardTree {
-    card: Card
+    card: MutableCard
     comments: IBlock[] = []
     contents: IOrderedBlock[] = []
 
@@ -40,7 +41,7 @@ class MutableCardTree implements CardTree {
     }
 
     private rebuild(blocks: IBlock[]) {
-        this.card = blocks.find((o) => o.id === this.cardId) as Card
+        this.card = blocks.find((o) => o.id === this.cardId) as MutableCard
 
         this.comments = blocks.
             filter((block) => block.type === 'comment').
@@ -53,6 +54,19 @@ class MutableCardTree implements CardTree {
     mutableCopy(): MutableCardTree {
         const cardTree = new MutableCardTree(this.cardId)
         cardTree.incrementalUpdate(this.rawBlocks)
+        return cardTree
+    }
+
+    duplicateFromTemplate(): MutableCardTree {
+        const card = this.card.newCardFromTemplate()
+        const contents: IOrderedBlock[] = this.contents.map((content) => {
+            const copy = MutableBlock.duplicate(content)
+            copy.parentId = card.id
+            return copy as IOrderedBlock
+        })
+
+        const cardTree = new MutableCardTree(card.id)
+        cardTree.incrementalUpdate([card, ...contents])
         return cardTree
     }
 }

@@ -6,7 +6,7 @@ import {injectIntl, IntlShape, FormattedMessage} from 'react-intl'
 import {Archiver} from '../archiver'
 import {ISortOption, MutableBoardView} from '../blocks/boardView'
 import {BlockIcons} from '../blockIcons'
-import {MutableCard} from '../blocks/card'
+import {Card, MutableCard} from '../blocks/card'
 import {IPropertyTemplate} from '../blocks/board'
 import {BoardTree} from '../viewModel/boardTree'
 import ViewMenu from '../components/viewMenu'
@@ -29,15 +29,19 @@ import {Editable} from './editable'
 import FilterComponent from './filterComponent'
 
 import './viewHeader.scss'
-import {sendFlashMessage} from './flashMessages'
 
 import {Constants} from '../constants'
+import DeleteIcon from '../widgets/icons/delete'
 
 type Props = {
     boardTree?: BoardTree
     showView: (id: string) => void
     setSearchText: (text: string) => void
-    addCard: (show: boolean) => void
+    addCard: () => void
+    addCardFromTemplate: (cardTemplate?: Card) => void
+    addCardTemplate: () => void
+    editCardTemplate: (cardTemplate: Card) => void
+    deleteCardTemplate: (cardTemplate: Card) => void
     withGroupBy?: boolean
     intl: IntlShape
 }
@@ -371,9 +375,10 @@ class ViewHeader extends React.Component<Props, State> {
                         />
                     </Menu>
                 </MenuWrapper>
+
                 <ButtonWithMenu
                     onClick={() => {
-                        this.props.addCard(true)
+                        this.props.addCard()
                     }}
                     text={(
                         <FormattedMessage
@@ -391,10 +396,56 @@ class ViewHeader extends React.Component<Props, State> {
                                 />
                             </b>
                         </Menu.Label>
+
+                        <Menu.Separator/>
+
+                        {boardTree.cardTemplates.map((cardTemplate) => {
+                            return (
+                                <Menu.Text
+                                    key={cardTemplate.id}
+                                    id={cardTemplate.id}
+                                    name={cardTemplate.title || intl.formatMessage({id: 'ViewHeader.untitled', defaultMessage: 'Untitled'})}
+                                    onClick={() => {
+                                        this.props.addCardFromTemplate(cardTemplate)
+                                    }}
+                                    rightIcon={
+                                        <MenuWrapper stopPropagationOnToggle={true}>
+                                            <IconButton icon={<OptionsIcon/>}/>
+                                            <Menu position='left'>
+                                                <Menu.Text
+                                                    id='edit'
+                                                    name={intl.formatMessage({id: 'ViewHeader.edit-template', defaultMessage: 'Edit'})}
+                                                    onClick={() => {
+                                                        this.props.editCardTemplate(cardTemplate)
+                                                    }}
+                                                />
+                                                <Menu.Text
+                                                    icon={<DeleteIcon/>}
+                                                    id='delete'
+                                                    name={intl.formatMessage({id: 'ViewHeader.delete-template', defaultMessage: 'Delete'})}
+                                                    onClick={() => {
+                                                        this.props.deleteCardTemplate(cardTemplate)
+                                                    }}
+                                                />
+                                            </Menu>
+                                        </MenuWrapper>
+                                    }
+                                />
+                            )
+                        })}
+
                         <Menu.Text
-                            id='example-template'
-                            name={intl.formatMessage({id: 'ViewHeader.sample-templte', defaultMessage: 'Sample template'})}
-                            onClick={() => sendFlashMessage({content: 'Not implemented yet', severity: 'low'})}
+                            id='empty-template'
+                            name={intl.formatMessage({id: 'ViewHeader.empty-card', defaultMessage: 'Empty card'})}
+                            onClick={() => {
+                                this.props.addCard()
+                            }}
+                        />
+
+                        <Menu.Text
+                            id='add-template'
+                            name={intl.formatMessage({id: 'ViewHeader.add-template', defaultMessage: '+ New template'})}
+                            onClick={() => this.props.addCardTemplate()}
                         />
                     </Menu>
                 </ButtonWithMenu>

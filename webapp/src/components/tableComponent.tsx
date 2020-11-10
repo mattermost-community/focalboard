@@ -26,6 +26,8 @@ import './tableComponent.scss'
 import {HorizontalGrip} from './horizontalGrip'
 
 import {MutableBoardView} from '../blocks/boardView'
+import {IBlock} from '../blocks/block'
+import {MutableCardTree} from '../viewModel/cardTree'
 
 type Props = {
     boardTree?: BoardTree
@@ -93,7 +95,11 @@ class TableComponent extends React.Component<Props, State> {
                             boardTree={boardTree}
                             showView={showView}
                             setSearchText={this.props.setSearchText}
-                            addCard={this.addCard}
+                            addCard={this.addCardAndShow}
+                            addCardFromTemplate={this.addCardFromTemplate}
+                            addCardTemplate={this.addCardTemplate}
+                            editCardTemplate={this.editCardTemplate}
+                            deleteCardTemplate={this.deleteCardTemplate}
                         />
 
                         {/* Main content */}
@@ -293,14 +299,34 @@ class TableComponent extends React.Component<Props, State> {
         return Math.max(Constants.minColumnWidth, this.props.boardTree?.activeView?.columnWidths[templateId] || 0)
     }
 
-    private addCard = async (show = false) => {
+    private addCardAndShow = () => {
+        this.addCard(true)
+    }
+
+    private addCardFromTemplate = async (cardTemplate?: Card) => {
+        this.addCard(true, cardTemplate)
+    }
+
+    private addCard = async (show = false, cardTemplate?: Card) => {
         const {boardTree} = this.props
 
-        const card = new MutableCard()
+        let card: MutableCard
+        let blocksToInsert: IBlock[]
+        if (cardTemplate) {
+            const templateCardTree = new MutableCardTree(cardTemplate.id)
+            await templateCardTree.sync()
+            const newCardTree = templateCardTree.duplicateFromTemplate()
+            card = newCardTree.card
+            blocksToInsert = [newCardTree.card, ...newCardTree.contents]
+        } else {
+            card = new MutableCard()
+            blocksToInsert = [card]
+        }
+
         card.parentId = boardTree.board.id
         card.icon = BlockIcons.shared.randomIcon()
-        await mutator.insertBlock(
-            card,
+        await mutator.insertBlocks(
+            blocksToInsert,
             'add card',
             async () => {
                 if (show) {
@@ -311,6 +337,30 @@ class TableComponent extends React.Component<Props, State> {
                 }
             },
         )
+    }
+
+    private addCardTemplate = async () => {
+        const {boardTree} = this.props
+
+        const cardTemplate = new MutableCard()
+        cardTemplate.isTemplate = true
+        cardTemplate.parentId = boardTree.board.id
+        cardTemplate.icon = BlockIcons.shared.randomIcon()
+        await mutator.insertBlock(
+            cardTemplate,
+            'add card',
+            async () => {
+                this.setState({shownCard: cardTemplate})
+            },
+        )
+    }
+
+    private editCardTemplate = (cardTemplate: Card) => {
+        this.setState({shownCard: cardTemplate})
+    }
+
+    private deleteCardTemplate = (cardTemplate: Card) => {
+        mutator.deleteBlock(cardTemplate, 'delete card template')
     }
 
     private async onDropToColumn(template: IPropertyTemplate) {

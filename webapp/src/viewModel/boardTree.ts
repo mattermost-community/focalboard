@@ -19,6 +19,7 @@ interface BoardTree {
     readonly board: Board
     readonly views: readonly BoardView[]
     readonly cards: readonly Card[]
+    readonly cardTemplates: readonly Card[]
     readonly allCards: readonly Card[]
     readonly visibleGroups: readonly Group[]
     readonly hiddenGroups: readonly Group[]
@@ -37,6 +38,7 @@ class MutableBoardTree implements BoardTree {
     board!: MutableBoard
     views: MutableBoardView[] = []
     cards: MutableCard[] = []
+    cardTemplates: MutableCard[] = []
     visibleGroups: Group[] = []
     hiddenGroups: Group[] = []
 
@@ -47,7 +49,7 @@ class MutableBoardTree implements BoardTree {
     private searchText?: string
     allCards: MutableCard[] = []
     get allBlocks(): IBlock[] {
-        return [this.board, ...this.views, ...this.allCards]
+        return [this.board, ...this.views, ...this.allCards, ...this.cardTemplates]
     }
 
     constructor(private boardId: string) {
@@ -71,7 +73,8 @@ class MutableBoardTree implements BoardTree {
     private rebuild(blocks: IMutableBlock[]) {
         this.board = blocks.find((block) => block.type === 'board') as MutableBoard
         this.views = blocks.filter((block) => block.type === 'view') as MutableBoardView[]
-        this.allCards = blocks.filter((block) => block.type === 'card') as MutableCard[]
+        this.allCards = blocks.filter((block) => block.type === 'card' && !(block as Card).isTemplate) as MutableCard[]
+        this.cardTemplates = blocks.filter((block) => block.type === 'card' && (block as Card).isTemplate) as MutableCard[]
         this.cards = []
 
         this.ensureMinimumSchema()
