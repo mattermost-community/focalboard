@@ -27,7 +27,7 @@ class MutableWorkspaceTree {
     }
 
     incrementalUpdate(updatedBlocks: IBlock[]): boolean {
-        const relevantBlocks = updatedBlocks.filter((block) => block.type === 'board' || block.type === 'view')
+        const relevantBlocks = updatedBlocks.filter((block) => block.deleteAt !== 0 || block.type === 'board' || block.type === 'view')
         if (relevantBlocks.length < 1) {
             return false
         }

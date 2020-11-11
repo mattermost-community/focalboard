@@ -61,7 +61,7 @@ class MutableBoardTree implements BoardTree {
     }
 
     incrementalUpdate(updatedBlocks: IBlock[]): boolean {
-        const relevantBlocks = updatedBlocks.filter((block) => block.id === this.boardId || block.parentId === this.boardId)
+        const relevantBlocks = updatedBlocks.filter((block) => block.deleteAt !== 0 || block.id === this.boardId || block.parentId === this.boardId)
         if (relevantBlocks.length < 1) {
             return false
         }

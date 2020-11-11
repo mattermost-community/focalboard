@@ -32,7 +32,7 @@ class MutableCardTree implements CardTree {
     }
 
     incrementalUpdate(updatedBlocks: IBlock[]): boolean {
-        const relevantBlocks = updatedBlocks.filter((block) => block.id === this.cardId || block.parentId === this.cardId)
+        const relevantBlocks = updatedBlocks.filter((block) => block.deleteAt !== 0 || block.id === this.cardId || block.parentId === this.cardId)
         if (relevantBlocks.length < 1) {
             return false
         }
