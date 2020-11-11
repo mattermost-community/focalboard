@@ -444,7 +444,7 @@ class BoardComponent extends React.Component<Props, State> {
                     e.preventDefault()
                 }}
                 onDrop={(e) => {
-                    (e.target as HTMLElement).classList.remove('dragover')
+                    ref.current.classList.remove('dragover')
                     e.preventDefault()
                     if (this.draggedCards?.length < 1) {
                         return
