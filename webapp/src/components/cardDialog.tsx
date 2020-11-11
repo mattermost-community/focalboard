@@ -4,23 +4,79 @@ import React from 'react'
 
 import {FormattedMessage} from 'react-intl'
 
-import {Card} from '../blocks/card'
 import {BoardTree} from '../viewModel/boardTree'
 import mutator from '../mutator'
 import Menu from '../widgets/menu'
 import DeleteIcon from '../widgets/icons/delete'
 
-import CardDetail from './cardDetail'
+import {MutableCardTree} from '../viewModel/cardTree'
+import {CardTree} from '../viewModel/cardTree'
+import {OctoListener} from '../octoListener'
+import {Utils} from '../utils'
+
 import Dialog from './dialog'
+import CardDetail from './cardDetail'
 
 type Props = {
     boardTree: BoardTree
-    card: Card
+    cardId: string
     onClose: () => void
+    showCard: (cardId?: string) => void
 }
 
-class CardDialog extends React.Component<Props> {
+type State = {
+    cardTree?: CardTree
+}
+
+class CardDialog extends React.Component<Props, State> {
+    state: State = {}
+
+    private cardListener?: OctoListener
+
+    shouldComponentUpdate() {
+        return true
+    }
+
+    componentDidMount() {
+        this.createCardTreeAndSync()
+    }
+
+    private async createCardTreeAndSync() {
+        const cardTree = new MutableCardTree(this.props.cardId)
+        await cardTree.sync()
+        this.createListener()
+        this.setState({cardTree})
+        Utils.log(`cardDialog.createCardTreeAndSync: ${cardTree.card.id}`)
+    }
+
+    private createListener() {
+        this.cardListener = new OctoListener()
+        this.cardListener.open(
+            [this.props.cardId],
+            async (blocks) => {
+                Utils.log(`cardListener.onChanged: ${blocks.length}`)
+                const newCardTree = this.state.cardTree.mutableCopy()
+                if (newCardTree.incrementalUpdate(blocks)) {
+                    this.setState({cardTree: newCardTree})
+                }
+            },
+            async () => {
+                Utils.log('cardListener.onReconnect')
+                const newCardTree = this.state.cardTree.mutableCopy()
+                await newCardTree.sync()
+                this.setState({cardTree: newCardTree})
+            },
+        )
+    }
+
+    componentWillUnmount() {
+        this.cardListener?.close()
+        this.cardListener = undefined
+    }
+
     render() {
+        const {cardTree} = this.state
+
         const menu = (
             <Menu position='left'>
                 <Menu.Text
@@ -28,10 +84,22 @@ class CardDialog extends React.Component<Props> {
                     icon={<DeleteIcon/>}
                     name='Delete'
                     onClick={async () => {
-                        await mutator.deleteBlock(this.props.card, 'delete card')
+                        const card = this.state.cardTree?.card
+                        if (!card) {
+                            Utils.assertFailure()
+                            return
+                        }
+                        await mutator.deleteBlock(card, 'delete card')
                         this.props.onClose()
                     }}
                 />
+                {(cardTree && !cardTree.card.isTemplate) &&
+                    <Menu.Text
+                        id='makeTemplate'
+                        name='New template from card'
+                        onClick={this.makeTemplate}
+                    />
+                }
             </Menu>
         )
         return (
@@ -39,7 +107,7 @@ class CardDialog extends React.Component<Props> {
                 onClose={this.props.onClose}
                 toolsMenu={menu}
             >
-                {(this.props.card.isTemplate) &&
+                {(cardTree?.card.isTemplate) &&
                     <div className='banner'>
                         <FormattedMessage
                             id='CardDialog.editing-template'
@@ -47,11 +115,39 @@ class CardDialog extends React.Component<Props> {
                         />
                     </div>
                 }
-                <CardDetail
-                    boardTree={this.props.boardTree}
-                    cardId={this.props.card.id}
-                />
+                {this.state.cardTree &&
+                    <CardDetail
+                        boardTree={this.props.boardTree}
+                        cardTree={this.state.cardTree}
+                    />
+                }
             </Dialog>
+        )
+    }
+
+    private makeTemplate = async () => {
+        const {cardTree} = this.state
+        if (!cardTree) {
+            Utils.assertFailure('this.state.cardTree')
+            return
+        }
+
+        const newCardTree = cardTree.templateCopy()
+        newCardTree.card.isTemplate = true
+        newCardTree.card.title = 'New Template'
+
+        Utils.log(`Created new template: ${newCardTree.card.id}`)
+
+        const blocksToInsert = [newCardTree.card, ...newCardTree.contents]
+        await mutator.insertBlocks(
+            blocksToInsert,
+            'create template from card',
+            async () => {
+                this.props.showCard(newCardTree.card.id)
+            },
+            async () => {
+                this.props.showCard(undefined)
+            },
         )
     }
 }

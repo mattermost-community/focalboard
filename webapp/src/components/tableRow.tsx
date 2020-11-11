@@ -12,8 +12,6 @@ import Editable from '../widgets/editable'
 import Button from '../widgets/buttons/button'
 
 import PropertyValueElement from './propertyValueElement'
-import {CardDialog} from './cardDialog'
-import RootPortal from './rootPortal'
 
 import './tableRow.scss'
 
@@ -22,10 +20,10 @@ type Props = {
     card: Card
     focusOnMount: boolean
     onSaveWithEnter: () => void
+    showCard: (cardId: string) => void
 }
 
 type State = {
-    showCard: boolean
     title: string
 }
 
@@ -34,7 +32,6 @@ class TableRow extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props)
         this.state = {
-            showCard: false,
             title: props.card.title,
         }
     }
@@ -84,21 +81,13 @@ class TableRow extends React.Component<Props, State> {
                     </div>
 
                     <div className='open-button'>
-                        <Button onClick={() => this.setState({showCard: true})}>
+                        <Button onClick={() => this.props.showCard(this.props.card.id)}>
                             <FormattedMessage
                                 id='TableRow.open'
                                 defaultMessage='Open'
                             />
                         </Button>
                     </div>
-                    {this.state.showCard &&
-                    <RootPortal>
-                        <CardDialog
-                            boardTree={boardTree}
-                            card={card}
-                            onClose={() => this.setState({showCard: false})}
-                        />
-                    </RootPortal>}
                 </div>
 
                 {/* Columns, one per property */}

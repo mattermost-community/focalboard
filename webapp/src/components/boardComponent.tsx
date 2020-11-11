@@ -43,7 +43,7 @@ type Props = {
 
 type State = {
     isSearching: boolean
-    shownCard?: Card
+    shownCardId?: string
     viewMenu: boolean
     selectedCardIds: string[]
     showFilter: boolean
@@ -131,12 +131,14 @@ class BoardComponent extends React.Component<Props, State> {
                     this.backgroundClicked(e)
                 }}
             >
-                {this.state.shownCard &&
+                {this.state.shownCardId &&
                 <RootPortal>
                     <CardDialog
+                        key={this.state.shownCardId}
                         boardTree={boardTree}
-                        card={this.state.shownCard}
-                        onClose={() => this.setState({shownCard: undefined})}
+                        cardId={this.state.shownCardId}
+                        onClose={() => this.setState({shownCardId: undefined})}
+                        showCard={(cardId) => this.setState({shownCardId: cardId})}
                     />
                 </RootPortal>}
 
@@ -155,7 +157,6 @@ class BoardComponent extends React.Component<Props, State> {
                             addCardFromTemplate={this.addCardFromTemplate}
                             addCardTemplate={() => this.addCardTemplate()}
                             editCardTemplate={this.editCardTemplate}
-                            deleteCardTemplate={this.deleteCardTemplate}
                             withGroupBy={true}
                         />
                         <div
@@ -479,21 +480,23 @@ class BoardComponent extends React.Component<Props, State> {
         }
     }
 
-    private addCardFromTemplate = async (cardTemplate?: Card) => {
-        this.addCard(undefined, cardTemplate)
+    private addCardFromTemplate = async (cardTemplateId?: string) => {
+        this.addCard(undefined, cardTemplateId)
     }
 
-    private async addCard(groupByOptionId?: string, cardTemplate?: Card): Promise<void> {
+    private async addCard(groupByOptionId?: string, cardTemplateId?: string): Promise<void> {
         const {boardTree} = this.props
         const {activeView, board} = boardTree
 
         let card: MutableCard
         let blocksToInsert: IBlock[]
-        if (cardTemplate) {
-            const templateCardTree = new MutableCardTree(cardTemplate.id)
+        if (cardTemplateId) {
+            const templateCardTree = new MutableCardTree(cardTemplateId)
             await templateCardTree.sync()
-            const newCardTree = templateCardTree.duplicateFromTemplate()
+            const newCardTree = templateCardTree.templateCopy()
             card = newCardTree.card
+            card.isTemplate = false
+            card.title = ''
             blocksToInsert = [newCardTree.card, ...newCardTree.contents]
         } else {
             card = new MutableCard()
@@ -515,10 +518,10 @@ class BoardComponent extends React.Component<Props, State> {
             blocksToInsert,
             'add card',
             async () => {
-                this.setState({shownCard: card})
+                this.setState({shownCardId: card.id})
             },
             async () => {
-                this.setState({shownCard: undefined})
+                this.setState({shownCardId: undefined})
             },
         )
     }
@@ -539,18 +542,14 @@ class BoardComponent extends React.Component<Props, State> {
             }
         }
         await mutator.insertBlock(cardTemplate, 'add card template', async () => {
-            this.setState({shownCard: cardTemplate})
+            this.setState({shownCardId: cardTemplate.id})
         }, async () => {
-            this.setState({shownCard: undefined})
+            this.setState({shownCardId: undefined})
         })
     }
 
-    private editCardTemplate = (cardTemplate: Card) => {
-        this.setState({shownCard: cardTemplate})
-    }
-
-    private deleteCardTemplate = (cardTemplate: Card) => {
-        mutator.deleteBlock(cardTemplate, 'delete card template')
+    private editCardTemplate = (cardTemplateId: string) => {
+        this.setState({shownCardId: cardTemplateId})
     }
 
     private async propertyNameChanged(option: IPropertyOption, text: string): Promise<void> {
@@ -586,7 +585,7 @@ class BoardComponent extends React.Component<Props, State> {
                 this.setState({selectedCardIds})
             }
         } else {
-            this.setState({selectedCardIds: [], shownCard: card})
+            this.setState({selectedCardIds: [], shownCardId: card.id})
         }
 
         e.stopPropagation()

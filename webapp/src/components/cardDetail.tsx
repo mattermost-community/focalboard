@@ -7,9 +7,8 @@ import {BlockIcons} from '../blockIcons'
 import {MutableTextBlock} from '../blocks/textBlock'
 import {BoardTree} from '../viewModel/boardTree'
 import {PropertyType} from '../blocks/board'
-import {CardTree, MutableCardTree} from '../viewModel/cardTree'
+import {CardTree} from '../viewModel/cardTree'
 import mutator from '../mutator'
-import {OctoListener} from '../octoListener'
 import {Utils} from '../utils'
 
 import MenuWrapper from '../widgets/menuWrapper'
@@ -29,18 +28,16 @@ import './cardDetail.scss'
 
 type Props = {
     boardTree: BoardTree
-    cardId: string
+    cardTree: CardTree
     intl: IntlShape
 }
 
 type State = {
-    cardTree?: CardTree
     title: string
 }
 
 class CardDetail extends React.Component<Props, State> {
     private titleRef = React.createRef<Editable>()
-    private cardListener?: OctoListener
 
     shouldComponentUpdate() {
         return true
@@ -49,54 +46,12 @@ class CardDetail extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props)
         this.state = {
-            title: '',
+            title: props.cardTree.card.title,
         }
     }
 
-    componentDidMount() {
-        this.createCardTreeAndSync()
-    }
-
-    private async createCardTreeAndSync() {
-        const cardTree = new MutableCardTree(this.props.cardId)
-        await cardTree.sync()
-        this.createListener()
-        this.setState({cardTree, title: cardTree.card.title})
-        setTimeout(() => {
-            if (this.titleRef.current) {
-                this.titleRef.current.focus()
-            }
-        }, 0)
-    }
-
-    private createListener() {
-        this.cardListener = new OctoListener()
-        this.cardListener.open(
-            [this.props.cardId],
-            async (blocks) => {
-                Utils.log(`cardListener.onChanged: ${blocks.length}`)
-                const newCardTree = this.state.cardTree.mutableCopy()
-                if (newCardTree.incrementalUpdate(blocks)) {
-                    this.setState({cardTree: newCardTree, title: newCardTree.card.title})
-                }
-            },
-            async () => {
-                Utils.log('cardListener.onReconnect')
-                const newCardTree = this.state.cardTree.mutableCopy()
-                await newCardTree.sync()
-                this.setState({cardTree: newCardTree, title: newCardTree.card.title})
-            },
-        )
-    }
-
-    componentWillUnmount() {
-        this.cardListener?.close()
-        this.cardListener = undefined
-    }
-
     render() {
-        const {boardTree, intl} = this.props
-        const {cardTree} = this.state
+        const {boardTree, cardTree, intl} = this.props
         const {board} = boardTree
         if (!cardTree) {
             return null
@@ -128,7 +83,7 @@ class CardDetail extends React.Component<Props, State> {
                                 const block = new MutableTextBlock()
                                 block.parentId = card.id
                                 block.title = text
-                                block.order = (this.state.cardTree.contents.length + 1) * 1000
+                                block.order = (this.props.cardTree.contents.length + 1) * 1000
                                 mutator.insertBlock(block, 'add card text')
                             }
                         }}
@@ -170,11 +125,11 @@ class CardDetail extends React.Component<Props, State> {
                         onChange={(title: string) => this.setState({title})}
                         saveOnEsc={true}
                         onSave={() => {
-                            if (this.state.title !== this.state.cardTree.card.title) {
+                            if (this.state.title !== this.props.cardTree.card.title) {
                                 mutator.changeTitle(card, this.state.title)
                             }
                         }}
-                        onCancel={() => this.setState({title: this.state.cardTree.card.title})}
+                        onCancel={() => this.setState({title: this.props.cardTree.card.title})}
                     />
 
                     {/* Property list */}
@@ -254,7 +209,7 @@ class CardDetail extends React.Component<Props, State> {
                                 onClick={() => {
                                     const block = new MutableTextBlock()
                                     block.parentId = card.id
-                                    block.order = (this.state.cardTree.contents.length + 1) * 1000
+                                    block.order = (this.props.cardTree.contents.length + 1) * 1000
                                     mutator.insertBlock(block, 'add text')
                                 }}
                             />
@@ -262,7 +217,7 @@ class CardDetail extends React.Component<Props, State> {
                                 id='image'
                                 name={intl.formatMessage({id: 'CardDetail.image', defaultMessage: 'Image'})}
                                 onClick={() => Utils.selectLocalFile(
-                                    (file) => mutator.createImageBlock(card.id, file, (this.state.cardTree.contents.length + 1) * 1000),
+                                    (file) => mutator.createImageBlock(card.id, file, (this.props.cardTree.contents.length + 1) * 1000),
                                     '.jpg,.jpeg,.png',
                                 )}
                             />

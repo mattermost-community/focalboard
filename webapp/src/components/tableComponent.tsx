@@ -6,7 +6,7 @@ import {FormattedMessage} from 'react-intl'
 import {Constants} from '../constants'
 import {BlockIcons} from '../blockIcons'
 import {IPropertyTemplate} from '../blocks/board'
-import {Card, MutableCard} from '../blocks/card'
+import {MutableCard} from '../blocks/card'
 import {BoardTree} from '../viewModel/boardTree'
 import mutator from '../mutator'
 import {Utils} from '../utils'
@@ -36,7 +36,7 @@ type Props = {
 }
 
 type State = {
-    shownCard?: Card
+    shownCardId?: string
 }
 
 class TableComponent extends React.Component<Props, State> {
@@ -76,12 +76,14 @@ class TableComponent extends React.Component<Props, State> {
 
         return (
             <div className='TableComponent octo-app'>
-                {this.state.shownCard &&
+                {this.state.shownCardId &&
                 <RootPortal>
                     <CardDialog
+                        key={this.state.shownCardId}
                         boardTree={boardTree}
-                        card={this.state.shownCard}
-                        onClose={() => this.setState({shownCard: undefined})}
+                        cardId={this.state.shownCardId}
+                        onClose={() => this.setState({shownCardId: undefined})}
+                        showCard={(cardId) => this.setState({shownCardId: cardId})}
                     />
                 </RootPortal>}
                 <div className='octo-frame'>
@@ -99,7 +101,6 @@ class TableComponent extends React.Component<Props, State> {
                             addCardFromTemplate={this.addCardFromTemplate}
                             addCardTemplate={this.addCardTemplate}
                             editCardTemplate={this.editCardTemplate}
-                            deleteCardTemplate={this.deleteCardTemplate}
                         />
 
                         {/* Main content */}
@@ -266,6 +267,9 @@ class TableComponent extends React.Component<Props, State> {
                                         }
                                         console.log('STILL WORKING')
                                     }}
+                                    showCard={(cardId) => {
+                                        this.setState({shownCardId: cardId})
+                                    }}
                                 />)
 
                                 this.cardIdToRowMap.set(card.id, tableRowRef)
@@ -303,20 +307,22 @@ class TableComponent extends React.Component<Props, State> {
         this.addCard(true)
     }
 
-    private addCardFromTemplate = async (cardTemplate?: Card) => {
-        this.addCard(true, cardTemplate)
+    private addCardFromTemplate = async (cardTemplateId?: string) => {
+        this.addCard(true, cardTemplateId)
     }
 
-    private addCard = async (show = false, cardTemplate?: Card) => {
+    private addCard = async (show = false, cardTemplateId?: string) => {
         const {boardTree} = this.props
 
         let card: MutableCard
         let blocksToInsert: IBlock[]
-        if (cardTemplate) {
-            const templateCardTree = new MutableCardTree(cardTemplate.id)
+        if (cardTemplateId) {
+            const templateCardTree = new MutableCardTree(cardTemplateId)
             await templateCardTree.sync()
-            const newCardTree = templateCardTree.duplicateFromTemplate()
+            const newCardTree = templateCardTree.templateCopy()
             card = newCardTree.card
+            card.isTemplate = false
+            card.title = ''
             blocksToInsert = [newCardTree.card, ...newCardTree.contents]
         } else {
             card = new MutableCard()
@@ -330,7 +336,7 @@ class TableComponent extends React.Component<Props, State> {
             'add card',
             async () => {
                 if (show) {
-                    this.setState({shownCard: card})
+                    this.setState({shownCardId: card.id})
                 } else {
                     // Focus on this card's title inline on next render
                     this.cardIdToFocusOnRender = card.id
@@ -350,17 +356,13 @@ class TableComponent extends React.Component<Props, State> {
             cardTemplate,
             'add card',
             async () => {
-                this.setState({shownCard: cardTemplate})
+                this.setState({shownCardId: cardTemplate.id})
             },
         )
     }
 
-    private editCardTemplate = (cardTemplate: Card) => {
-        this.setState({shownCard: cardTemplate})
-    }
-
-    private deleteCardTemplate = (cardTemplate: Card) => {
-        mutator.deleteBlock(cardTemplate, 'delete card template')
+    private editCardTemplate = (cardTemplateId: string) => {
+        this.setState({shownCardId: cardTemplateId})
     }
 
     private async onDropToColumn(template: IPropertyTemplate) {

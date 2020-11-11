@@ -9,7 +9,7 @@ interface Card extends IBlock {
     readonly icon: string
     readonly isTemplate: boolean
     readonly properties: Readonly<Record<string, string>>
-    newCardFromTemplate(): MutableCard
+    duplicate(): MutableCard
 }
 
 class MutableCard extends MutableBlock {
@@ -41,11 +41,9 @@ class MutableCard extends MutableBlock {
         this.properties = {...(block.fields?.properties || {})}
     }
 
-    newCardFromTemplate(): MutableCard {
+    duplicate(): MutableCard {
         const card = new MutableCard(this)
         card.id = Utils.createGuid()
-        card.isTemplate = false
-        card.title = ''
         return card
     }
 }

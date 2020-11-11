@@ -13,6 +13,7 @@ interface CardTree {
     readonly contents: readonly IOrderedBlock[]
 
     mutableCopy(): MutableCardTree
+    templateCopy(): MutableCardTree
 }
 
 class MutableCardTree implements CardTree {
@@ -57,8 +58,9 @@ class MutableCardTree implements CardTree {
         return cardTree
     }
 
-    duplicateFromTemplate(): MutableCardTree {
-        const card = this.card.newCardFromTemplate()
+    templateCopy(): MutableCardTree {
+        const card = this.card.duplicate()
+
         const contents: IOrderedBlock[] = this.contents.map((content) => {
             const copy = MutableBlock.duplicate(content)
             copy.parentId = card.id

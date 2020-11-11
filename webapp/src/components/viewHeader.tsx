@@ -6,7 +6,7 @@ import {injectIntl, IntlShape, FormattedMessage} from 'react-intl'
 import {Archiver} from '../archiver'
 import {ISortOption, MutableBoardView} from '../blocks/boardView'
 import {BlockIcons} from '../blockIcons'
-import {Card, MutableCard} from '../blocks/card'
+import {MutableCard} from '../blocks/card'
 import {IPropertyTemplate} from '../blocks/board'
 import {BoardTree} from '../viewModel/boardTree'
 import ViewMenu from '../components/viewMenu'
@@ -38,10 +38,9 @@ type Props = {
     showView: (id: string) => void
     setSearchText: (text: string) => void
     addCard: () => void
-    addCardFromTemplate: (cardTemplate?: Card) => void
+    addCardFromTemplate: (cardTemplateId?: string) => void
     addCardTemplate: () => void
-    editCardTemplate: (cardTemplate: Card) => void
-    deleteCardTemplate: (cardTemplate: Card) => void
+    editCardTemplate: (cardTemplateId: string) => void
     withGroupBy?: boolean
     intl: IntlShape
 }
@@ -406,7 +405,7 @@ class ViewHeader extends React.Component<Props, State> {
                                     id={cardTemplate.id}
                                     name={cardTemplate.title || intl.formatMessage({id: 'ViewHeader.untitled', defaultMessage: 'Untitled'})}
                                     onClick={() => {
-                                        this.props.addCardFromTemplate(cardTemplate)
+                                        this.props.addCardFromTemplate(cardTemplate.id)
                                     }}
                                     rightIcon={
                                         <MenuWrapper stopPropagationOnToggle={true}>
@@ -416,15 +415,15 @@ class ViewHeader extends React.Component<Props, State> {
                                                     id='edit'
                                                     name={intl.formatMessage({id: 'ViewHeader.edit-template', defaultMessage: 'Edit'})}
                                                     onClick={() => {
-                                                        this.props.editCardTemplate(cardTemplate)
+                                                        this.props.editCardTemplate(cardTemplate.id)
                                                     }}
                                                 />
                                                 <Menu.Text
                                                     icon={<DeleteIcon/>}
                                                     id='delete'
                                                     name={intl.formatMessage({id: 'ViewHeader.delete-template', defaultMessage: 'Delete'})}
-                                                    onClick={() => {
-                                                        this.props.deleteCardTemplate(cardTemplate)
+                                                    onClick={async () => {
+                                                        await mutator.deleteBlock(cardTemplate, 'delete card template')
                                                     }}
                                                 />
                                             </Menu>
