@@ -351,12 +351,13 @@ class TableComponent extends React.Component<Props, State> {
         const cardTemplate = new MutableCard()
         cardTemplate.isTemplate = true
         cardTemplate.parentId = boardTree.board.id
-        cardTemplate.icon = BlockIcons.shared.randomIcon()
         await mutator.insertBlock(
             cardTemplate,
-            'add card',
+            'add card template',
             async () => {
                 this.setState({shownCardId: cardTemplate.id})
+            }, async () => {
+                this.setState({shownCardId: undefined})
             },
         )
     }

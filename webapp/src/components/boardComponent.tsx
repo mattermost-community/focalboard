@@ -155,7 +155,7 @@ class BoardComponent extends React.Component<Props, State> {
                             setSearchText={this.props.setSearchText}
                             addCard={() => this.addCard()}
                             addCardFromTemplate={this.addCardFromTemplate}
-                            addCardTemplate={() => this.addCardTemplate()}
+                            addCardTemplate={this.addCardTemplate}
                             editCardTemplate={this.editCardTemplate}
                             withGroupBy={true}
                         />
@@ -526,26 +526,21 @@ class BoardComponent extends React.Component<Props, State> {
         )
     }
 
-    private async addCardTemplate(groupByOptionId?: string): Promise<void> {
+    private addCardTemplate = async () => {
         const {boardTree} = this.props
-        const {activeView, board} = boardTree
 
         const cardTemplate = new MutableCard()
         cardTemplate.isTemplate = true
         cardTemplate.parentId = boardTree.board.id
-        cardTemplate.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
-        if (boardTree.groupByProperty) {
-            if (groupByOptionId) {
-                cardTemplate.properties[boardTree.groupByProperty.id] = groupByOptionId
-            } else {
-                delete cardTemplate.properties[boardTree.groupByProperty.id]
-            }
-        }
-        await mutator.insertBlock(cardTemplate, 'add card template', async () => {
-            this.setState({shownCardId: cardTemplate.id})
-        }, async () => {
-            this.setState({shownCardId: undefined})
-        })
+        await mutator.insertBlock(
+            cardTemplate,
+            'add card template',
+            async () => {
+                this.setState({shownCardId: cardTemplate.id})
+            }, async () => {
+                this.setState({shownCardId: undefined})
+            },
+        )
     }
 
     private editCardTemplate = (cardTemplateId: string) => {
