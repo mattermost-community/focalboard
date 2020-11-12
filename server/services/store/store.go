@@ -8,7 +8,8 @@ type Store interface {
 	GetBlocksWithParentAndType(parentID string, blockType string) ([]model.Block, error)
 	GetBlocksWithParent(parentID string) ([]model.Block, error)
 	GetBlocksWithType(blockType string) ([]model.Block, error)
-	GetSubTree(blockID string) ([]model.Block, error)
+	GetSubTree2(blockID string) ([]model.Block, error)
+	GetSubTree3(blockID string) ([]model.Block, error)
 	GetAllBlocks() ([]model.Block, error)
 	GetParentID(blockID string) (string, error)
 	InsertBlock(block model.Block) error

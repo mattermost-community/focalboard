@@ -120,7 +120,7 @@ class Sidebar extends React.Component<Props, State> {
                                         <IconButton icon={<OptionsIcon/>}/>
                                         <Menu>
                                             <Menu.Text
-                                                id='delete'
+                                                id='deleteBoard'
                                                 name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete Board'})}
                                                 icon={<DeleteIcon/>}
                                                 onClick={async () => {
@@ -130,6 +130,23 @@ class Sidebar extends React.Component<Props, State> {
                                                         'delete block',
                                                         async () => {
                                                             nextBoardId && this.props.showBoard(nextBoardId!)
+                                                        },
+                                                        async () => {
+                                                            this.props.showBoard(board.id)
+                                                        },
+                                                    )
+                                                }}
+                                            />
+
+                                            <Menu.Text
+                                                id='duplicateBoard'
+                                                name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate Board'})}
+                                                onClick={async () => {
+                                                    await mutator.duplicateBoard(
+                                                        board.id,
+                                                        'duplicate board',
+                                                        async (newBoardId) => {
+                                                            newBoardId && this.props.showBoard(newBoardId)
                                                         },
                                                         async () => {
                                                             this.props.showBoard(board.id)

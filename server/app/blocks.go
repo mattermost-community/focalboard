@@ -51,8 +51,12 @@ func (a *App) InsertBlocks(blocks []model.Block) error {
 	return nil
 }
 
-func (a *App) GetSubTree(blockID string) ([]model.Block, error) {
-	return a.store.GetSubTree(blockID)
+func (a *App) GetSubTree(blockID string, levels int) ([]model.Block, error) {
+	// Only 2 or 3 levels are supported for now
+	if levels >= 3 {
+		return a.store.GetSubTree3(blockID)
+	}
+	return a.store.GetSubTree2(blockID)
 }
 
 func (a *App) GetAllBlocks() ([]model.Block, error) {

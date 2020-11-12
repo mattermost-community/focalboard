@@ -1,10 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
-
-import {IBlock, MutableBlock} from './blocks/block'
+import {IBlock, IMutableBlock, MutableBlock} from './blocks/block'
 import {IPropertyTemplate, MutableBoard} from './blocks/board'
-import {MutableBoardView} from './blocks/boardView'
+import {BoardView, MutableBoardView} from './blocks/boardView'
 import {MutableCard} from './blocks/card'
 import {MutableCommentBlock} from './blocks/commentBlock'
 import {MutableImageBlock} from './blocks/imageBlock'
@@ -87,6 +85,34 @@ class OctoUtils {
         const updatedAndNotDeletedBlocks = updatedBlocks.filter((o) => o.deleteAt === 0)
         newBlocks.push(...updatedAndNotDeletedBlocks)
         return newBlocks
+    }
+
+    // Creates a copy of the blocks with new ids and parentIDs
+    static duplicateBlockTree(blocks: IBlock[], rootBlockId?: string): [MutableBlock[], Readonly<Record<string, string>>] {
+        const idMap: Record<string, string> = {}
+        const newBlocks = blocks.map((block) => {
+            const newBlock = this.hydrateBlock(block)
+            newBlock.id = Utils.createGuid()
+            idMap[block.id] = newBlock.id
+            return newBlock
+        })
+
+        const newRootBlockId = rootBlockId ? idMap[rootBlockId] : undefined
+        newBlocks.forEach((newBlock) => {
+            // Note: Don't remap the parent of the new root block
+            if (newBlock.id !== newRootBlockId && newBlock.parentId) {
+                newBlock.parentId = idMap[newBlock.parentId] || newBlock.parentId
+                Utils.assert(newBlock.parentId, `Block ${newBlock.id} (${newBlock.type} ${newBlock.title}) has no parent`)
+            }
+
+            // Remap manual card order
+            if (newBlock.type === 'view') {
+                const view = newBlock as MutableBoardView
+                view.cardOrder = view.cardOrder.map(o => idMap[o])
+            }
+        })
+
+        return [newBlocks, idMap]
     }
 }
 

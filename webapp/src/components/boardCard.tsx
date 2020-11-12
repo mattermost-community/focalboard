@@ -106,9 +106,7 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
                             id='duplicate'
                             name={intl.formatMessage({id: 'BoardCard.duplicate', defaultMessage: 'Duplicate'})}
                             onClick={() => {
-                                const newCard = MutableBlock.duplicate(card)
-                                newCard.title = `Copy of ${card.title}`
-                                mutator.insertBlock(newCard, 'duplicate card')
+                                mutator.duplicateCard(card.id)
                             }}
                         />
                     </Menu>

@@ -11,6 +11,7 @@ import {FilterGroup} from './filterGroup'
 import octoClient from './octoClient'
 import undoManager from './undomanager'
 import {Utils} from './utils'
+import {OctoUtils} from './octoUtils'
 
 //
 // The Mutator is used to make all changes to server state
@@ -458,6 +459,46 @@ class Mutator {
         const newView = new MutableBoardView(view)
         newView.cardOrder = cardOrder
         await this.updateBlock(newView, view, description)
+    }
+
+    // Duplicate
+
+    async duplicateCard(cardId: string, description = 'duplicate card', afterRedo?: (newBoardId: string) => Promise<void>, beforeUndo?: () => Promise<void>): Promise<[IBlock[], string]> {
+        const blocks = await octoClient.getSubtree(cardId, 2)
+        let [newBlocks, idMap] = OctoUtils.duplicateBlockTree(blocks, cardId)
+        newBlocks = newBlocks.filter(o => o.type !== 'comment')
+        Utils.log(`duplicateCard: duplicating ${newBlocks.length} blocks`)
+        const newCardId = idMap[cardId]
+        const newCard = newBlocks.find((o) => o.id === newCardId)
+        newCard.title = `Copy of ${newCard.title || ''}`
+        await this.insertBlocks(
+            newBlocks,
+            description,
+            async () => {
+                await afterRedo?.(newCardId)
+            },
+            beforeUndo,
+        )
+        return [newBlocks, newCardId]
+    }
+
+    async duplicateBoard(boardId: string, description = 'duplicate board', afterRedo?: (newBoardId: string) => Promise<void>, beforeUndo?: () => Promise<void>): Promise<[IBlock[], string]> {
+        const blocks = await octoClient.getSubtree(boardId, 3)
+        let [newBlocks, idMap] = OctoUtils.duplicateBlockTree(blocks, boardId)
+        newBlocks = newBlocks.filter(o => o.type !== 'comment')
+        Utils.log(`duplicateBoard: duplicating ${newBlocks.length} blocks`)
+        const newBoardId = idMap[boardId]
+        const newBoard = newBlocks.find((o) => o.id === newBoardId)
+        newBoard.title = `Copy of ${newBoard.title || ''}`
+        await this.insertBlocks(
+            newBlocks,
+            description,
+            async () => {
+                await afterRedo?.(newBoardId)
+            },
+            beforeUndo,
+        )
+        return [newBlocks, newBoardId]
     }
 
     // Other methods

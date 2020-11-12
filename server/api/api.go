@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/gorilla/mux"
@@ -152,7 +153,21 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	blockID := vars["blockID"]
 
-	blocks, err := a.app().GetSubTree(blockID)
+	query := r.URL.Query()
+	levels, err := strconv.ParseInt(query.Get("l"), 10, 32)
+	if err != nil {
+		levels = 2
+	}
+
+	if levels != 2 && levels != 3 {
+		log.Printf(`ERROR Invalid levels: %d`, levels)
+		errorData := map[string]string{"description": "invalid levels"}
+		errorResponse(w, http.StatusInternalServerError, errorData)
+
+		return
+	}
+
+	blocks, err := a.app().GetSubTree(blockID, int(levels))
 	if err != nil {
 		log.Printf(`ERROR: %v`, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
@@ -160,7 +175,7 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Printf("GetSubTree blockID: %s, %d result(s)", blockID, len(blocks))
+	log.Printf("GetSubTree (%v) blockID: %s, %d result(s)", levels, blockID, len(blocks))
 	json, err := json.Marshal(blocks)
 	if err != nil {
 		log.Printf(`ERROR json.Marshal: %v`, r)
@@ -298,7 +313,7 @@ func errorResponse(w http.ResponseWriter, code int, message map[string]string) {
 		data = []byte("{}")
 	}
 	w.WriteHeader(code)
-	fmt.Fprint(w, data)
+	w.Write(data)
 }
 
 func addUserID(rw http.ResponseWriter, req *http.Request, next http.Handler) {

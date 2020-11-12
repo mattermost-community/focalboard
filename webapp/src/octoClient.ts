@@ -14,8 +14,8 @@ class OctoClient {
         Utils.log(`OctoClient serverUrl: ${this.serverUrl}`)
     }
 
-    async getSubtree(rootId?: string): Promise<IBlock[]> {
-        const path = `/api/v1/blocks/${rootId}/subtree`
+    async getSubtree(rootId?: string, levels = 2): Promise<IBlock[]> {
+        const path = `/api/v1/blocks/${rootId}/subtree?l=${levels}`
         const response = await fetch(this.serverUrl + path)
         const blocks = (await response.json() || []) as IMutableBlock[]
         this.fixBlocks(blocks)
@@ -125,7 +125,7 @@ class OctoClient {
     async insertBlocks(blocks: IBlock[]): Promise<Response> {
         Utils.log(`insertBlocks: ${blocks.length} blocks(s)`)
         blocks.forEach((block) => {
-            Utils.log(`\t ${block.type}, ${block.id}`)
+            Utils.log(`\t ${block.type}, ${block.id}, ${block.title?.substr(0, 50) || ''}`)
         })
         const body = JSON.stringify(blocks)
         return await fetch(this.serverUrl + '/api/v1/blocks', {
