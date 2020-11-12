@@ -5,10 +5,9 @@
 package mockstore
 
 import (
-	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
 	model "github.com/mattermost/mattermost-octo-tasks/server/model"
+	reflect "reflect"
 )
 
 // MockStore is a mock of Store interface
@@ -123,19 +122,34 @@ func (mr *MockStoreMockRecorder) GetParentID(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetParentID", reflect.TypeOf((*MockStore)(nil).GetParentID), arg0)
 }
 
-// GetSubTree mocks base method
-func (m *MockStore) GetSubTree(arg0 string) ([]model.Block, error) {
+// GetSubTree2 mocks base method
+func (m *MockStore) GetSubTree2(arg0 string) ([]model.Block, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetSubTree", arg0)
+	ret := m.ctrl.Call(m, "GetSubTree2", arg0)
 	ret0, _ := ret[0].([]model.Block)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetSubTree indicates an expected call of GetSubTree
-func (mr *MockStoreMockRecorder) GetSubTree(arg0 interface{}) *gomock.Call {
+// GetSubTree2 indicates an expected call of GetSubTree2
+func (mr *MockStoreMockRecorder) GetSubTree2(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSubTree", reflect.TypeOf((*MockStore)(nil).GetSubTree), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSubTree2", reflect.TypeOf((*MockStore)(nil).GetSubTree2), arg0)
+}
+
+// GetSubTree3 mocks base method
+func (m *MockStore) GetSubTree3(arg0 string) ([]model.Block, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSubTree3", arg0)
+	ret0, _ := ret[0].([]model.Block)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSubTree3 indicates an expected call of GetSubTree3
+func (mr *MockStoreMockRecorder) GetSubTree3(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSubTree3", reflect.TypeOf((*MockStore)(nil).GetSubTree3), arg0)
 }
 
 // GetSystemSettings mocks base method
