@@ -6,6 +6,7 @@ import {injectIntl, IntlShape, FormattedMessage} from 'react-intl'
 import {Archiver} from '../archiver'
 import {ISortOption, MutableBoardView} from '../blocks/boardView'
 import {BlockIcons} from '../blockIcons'
+import {Constants} from '../constants'
 import {MutableCard} from '../blocks/card'
 import {IPropertyTemplate} from '../blocks/board'
 import {BoardTree} from '../viewModel/boardTree'
@@ -13,7 +14,6 @@ import ViewMenu from '../components/viewMenu'
 import {CsvExporter} from '../csvExporter'
 import {CardFilter} from '../cardFilter'
 import mutator from '../mutator'
-import {Utils} from '../utils'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 import CheckIcon from '../widgets/icons/check'
@@ -24,14 +24,12 @@ import SortDownIcon from '../widgets/icons/sortDown'
 import ButtonWithMenu from '../widgets/buttons/buttonWithMenu'
 import IconButton from '../widgets/buttons/iconButton'
 import Button from '../widgets/buttons/button'
+import DeleteIcon from '../widgets/icons/delete'
 
 import {Editable} from './editable'
 import FilterComponent from './filterComponent'
 
 import './viewHeader.scss'
-
-import {Constants} from '../constants'
-import DeleteIcon from '../widgets/icons/delete'
 
 type Props = {
     boardTree: BoardTree
@@ -96,7 +94,7 @@ class ViewHeader extends React.Component<Props, State> {
         const startCount = boardTree.cards.length
         let optionIndex = 0
 
-        await mutator.performAsUndoGroup(async () => {
+        mutator.performAsUndoGroup(async () => {
             for (let i = 0; i < count; i++) {
                 const card = new MutableCard()
                 card.parentId = boardTree.board.id
@@ -110,14 +108,14 @@ class ViewHeader extends React.Component<Props, State> {
                     optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
                     card.properties[boardTree.groupByProperty.id] = option.id
                 }
-                await mutator.insertBlock(card, 'test add card')
+                mutator.insertBlock(card, 'test add card')
             }
         })
     }
 
     private async testDistributeCards() {
         const {boardTree} = this.props
-        await mutator.performAsUndoGroup(async () => {
+        mutator.performAsUndoGroup(async () => {
             let optionIndex = 0
             for (const card of boardTree.cards) {
                 if (boardTree.groupByProperty && boardTree.groupByProperty.options.length > 0) {
@@ -127,7 +125,7 @@ class ViewHeader extends React.Component<Props, State> {
                     const newCard = new MutableCard(card)
                     if (newCard.properties[boardTree.groupByProperty.id] !== option.id) {
                         newCard.properties[boardTree.groupByProperty.id] = option.id
-                        await mutator.updateBlock(newCard, card, 'test distribute cards')
+                        mutator.updateBlock(newCard, card, 'test distribute cards')
                     }
                 }
             }
@@ -137,9 +135,9 @@ class ViewHeader extends React.Component<Props, State> {
     private async testRandomizeIcons() {
         const {boardTree} = this.props
 
-        await mutator.performAsUndoGroup(async () => {
+        mutator.performAsUndoGroup(async () => {
             for (const card of boardTree.cards) {
-                await mutator.changeIcon(card, BlockIcons.shared.randomIcon(), 'randomize icon')
+                mutator.changeIcon(card, BlockIcons.shared.randomIcon(), 'randomize icon')
             }
         })
     }
@@ -284,28 +282,37 @@ class ViewHeader extends React.Component<Props, State> {
                             </>
                         }
 
-                        {this.sortDisplayOptions().map((option) => (
-                            <Menu.Text
-                                key={option.id}
-                                id={option.id}
-                                name={option.name}
-                                rightIcon={(activeView.sortOptions[0]?.propertyId === option.id) ? activeView.sortOptions[0].reversed ? <SortUpIcon/> : <SortDownIcon/> : undefined}
-                                onClick={(propertyId: string) => {
-                                    let newSortOptions: ISortOption[] = []
-                                    if (activeView.sortOptions[0] && activeView.sortOptions[0].propertyId === propertyId) {
+                        {this.sortDisplayOptions().map((option) => {
+                            let rightIcon: JSX.Element | undefined
+                            if (activeView.sortOptions.length > 0) {
+                                const sortOption = activeView.sortOptions[0]
+                                if (sortOption.propertyId === option.id) {
+                                    rightIcon = sortOption.reversed ? <SortUpIcon/> : <SortDownIcon/>
+                                }
+                            }
+                            return (
+                                <Menu.Text
+                                    key={option.id}
+                                    id={option.id}
+                                    name={option.name}
+                                    rightIcon={rightIcon}
+                                    onClick={(propertyId: string) => {
+                                        let newSortOptions: ISortOption[] = []
+                                        if (activeView.sortOptions[0] && activeView.sortOptions[0].propertyId === propertyId) {
                                         // Already sorting by name, so reverse it
-                                        newSortOptions = [
-                                            {propertyId, reversed: !activeView.sortOptions[0].reversed},
-                                        ]
-                                    } else {
-                                        newSortOptions = [
-                                            {propertyId, reversed: false},
-                                        ]
-                                    }
-                                    mutator.changeViewSortOptions(activeView, newSortOptions)
-                                }}
-                            />
-                        ))}
+                                            newSortOptions = [
+                                                {propertyId, reversed: !activeView.sortOptions[0].reversed},
+                                            ]
+                                        } else {
+                                            newSortOptions = [
+                                                {propertyId, reversed: false},
+                                            ]
+                                        }
+                                        mutator.changeViewSortOptions(activeView, newSortOptions)
+                                    }}
+                                />
+                            )
+                        })}
                     </Menu>
                 </MenuWrapper>
                 {this.state.isSearching &&

@@ -25,7 +25,7 @@ class MutableCardTree implements CardTree {
     constructor(private cardId: string) {
     }
 
-    async sync() {
+    async sync(): Promise<void> {
         this.rawBlocks = await octoClient.getSubtree(this.cardId)
         this.rebuild(OctoUtils.hydrateBlocks(this.rawBlocks))
     }

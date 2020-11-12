@@ -60,7 +60,7 @@ export default class BoardPage extends React.Component<Props, State> {
         }
     }
 
-    undoRedoHandler = async (e: KeyboardEvent) => {
+    private undoRedoHandler = async (e: KeyboardEvent) => {
         if (e.target !== document.body) {
             return
         }
@@ -181,7 +181,7 @@ export default class BoardPage extends React.Component<Props, State> {
     }
 
     private incrementalUpdate(blocks: IBlock[]) {
-        const {workspaceTree, boardTree, viewId} = this.state
+        const {workspaceTree, boardTree} = this.state
 
         let newState = {workspaceTree, boardTree}
 

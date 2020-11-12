@@ -19,7 +19,7 @@ class MutableWorkspaceTree {
 
     private rawBlocks: IBlock[] = []
 
-    async sync() {
+    async sync(): Promise<void> {
         const rawBoards = await octoClient.getBlocksWithType('board')
         const rawViews = await octoClient.getBlocksWithType('view')
         this.rawBlocks = [...rawBoards, ...rawViews]
@@ -37,10 +37,10 @@ class MutableWorkspaceTree {
     }
 
     private rebuild(blocks: IBlock[]) {
-        this.boards = blocks.filter((block) => block.type === 'board')
-            .sort((a, b) => a.title.localeCompare(b.title)) as Board[]
-        this.views = blocks.filter((block) => block.type === 'view')
-            .sort((a, b) => a.title.localeCompare(b.title)) as BoardView[]
+        this.boards = blocks.filter((block) => block.type === 'board').
+            sort((a, b) => a.title.localeCompare(b.title)) as Board[]
+        this.views = blocks.filter((block) => block.type === 'view').
+            sort((a, b) => a.title.localeCompare(b.title)) as BoardView[]
     }
 
     mutableCopy(): MutableWorkspaceTree {

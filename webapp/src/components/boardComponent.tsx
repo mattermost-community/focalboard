@@ -108,7 +108,7 @@ class BoardComponent extends React.Component<Props, State> {
 
         if (!groupByProperty) {
             Utils.assertFailure('Board views must have groupByProperty set')
-            return <div />
+            return <div/>
         }
 
         const propertyValues = groupByProperty.options || []
@@ -609,13 +609,15 @@ class BoardComponent extends React.Component<Props, State> {
         if (draggedCards.length > 0) {
             await mutator.performAsUndoGroup(async () => {
                 const description = draggedCards.length > 1 ? `drag ${draggedCards.length} cards` : 'drag card'
+                const awaits = []
                 for (const draggedCard of draggedCards) {
                     Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${optionId}`)
                     const oldValue = draggedCard.properties[boardTree.groupByProperty!.id]
                     if (optionId !== oldValue) {
-                        await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty!.id, optionId, description)
+                        awaits.push(mutator.changePropertyValue(draggedCard, boardTree.groupByProperty!.id, optionId, description))
                     }
                 }
+                await Promise.all(awaits)
             })
         } else if (draggedHeaderOption) {
             Utils.log(`ondrop. Header option: ${draggedHeaderOption.value}, column: ${option?.value}`)
@@ -661,14 +663,15 @@ class BoardComponent extends React.Component<Props, State> {
 
         await mutator.performAsUndoGroup(async () => {
             // Update properties of dragged cards
+            const awaits = []
             for (const draggedCard of draggedCards) {
                 Utils.log(`draggedCard: ${draggedCard.title}, column: ${optionId}`)
                 const oldOptionId = draggedCard.properties[boardTree.groupByProperty!.id]
                 if (optionId !== oldOptionId) {
-                    await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty!.id, optionId, description)
+                    awaits.push(mutator.changePropertyValue(draggedCard, boardTree.groupByProperty!.id, optionId, description))
                 }
             }
-
+            await Promise.all(awaits)
             await mutator.changeViewCardOrder(activeView, cardOrder, description)
         })
     }

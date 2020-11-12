@@ -23,7 +23,7 @@ class Mutator {
     private beginUndoGroup(): string | undefined {
         if (this.undoGroupId) {
             Utils.assertFailure('UndoManager does not support nested groups')
-            return
+            return undefined
         }
         this.undoGroupId = Utils.createGuid()
         return this.undoGroupId
@@ -108,9 +108,7 @@ class Mutator {
     }
 
     async deleteBlock(block: IBlock, description?: string, beforeRedo?: () => Promise<void>, afterUndo?: () => Promise<void>) {
-        if (!description) {
-            description = `delete ${block.type}`
-        }
+        const actualDescription = description || `delete ${block.type}`
 
         await undoManager.perform(
             async () => {
@@ -121,7 +119,7 @@ class Mutator {
                 await octoClient.insertBlock(block)
                 await afterUndo?.()
             },
-            description,
+            actualDescription,
             this.undoGroupId,
         )
     }

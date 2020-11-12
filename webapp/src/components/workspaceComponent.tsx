@@ -21,13 +21,13 @@ type Props = {
     setLanguage: (lang: string) => void
 }
 
-class WorkspaceComponent extends React.Component<Props> {
-    render() {
+class WorkspaceComponent extends React.PureComponent<Props> {
+    render(): JSX.Element {
         const {boardTree, workspaceTree, showBoard, showView, setLanguage} = this.props
 
         Utils.assert(workspaceTree)
-        const element =
-            (<div className='WorkspaceComponent'>
+        const element = (
+            <div className='WorkspaceComponent'>
                 <Sidebar
                     showBoard={showBoard}
                     showView={showView}
@@ -51,19 +51,21 @@ class WorkspaceComponent extends React.Component<Props> {
 
         switch (activeView.viewType) {
         case 'board': {
-            return (<BoardComponent
-                boardTree={boardTree}
-                setSearchText={setSearchText}
-                showView={showView}
-            />)
+            return (
+                <BoardComponent
+                    boardTree={boardTree}
+                    setSearchText={setSearchText}
+                    showView={showView}
+                />)
         }
 
         case 'table': {
-            return (<TableComponent
-                boardTree={boardTree}
-                setSearchText={setSearchText}
-                showView={showView}
-            />)
+            return (
+                <TableComponent
+                    boardTree={boardTree}
+                    setSearchText={setSearchText}
+                    showView={showView}
+                />)
         }
 
         default: {

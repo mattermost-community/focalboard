@@ -1,8 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IBlock, IMutableBlock, MutableBlock} from './blocks/block'
+import {IBlock, MutableBlock} from './blocks/block'
 import {IPropertyTemplate, MutableBoard} from './blocks/board'
-import {BoardView, MutableBoardView} from './blocks/boardView'
+import {MutableBoardView} from './blocks/boardView'
 import {MutableCard} from './blocks/card'
 import {MutableCommentBlock} from './blocks/commentBlock'
 import {MutableImageBlock} from './blocks/imageBlock'

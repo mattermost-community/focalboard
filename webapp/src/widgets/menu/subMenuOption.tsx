@@ -4,8 +4,6 @@ import React from 'react'
 
 import SubmenuTriangleIcon from '../icons/submenuTriangle'
 
-import {MenuOptionProps} from './menuItem'
-
 import './subMenuOption.scss'
 
 type SubMenuOptionProps = {

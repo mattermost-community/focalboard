@@ -19,8 +19,8 @@ type Props = {
     intl: IntlShape
 }
 
-export class ViewMenu extends React.Component<Props> {
-    handleDeleteView = async () => {
+export class ViewMenu extends React.PureComponent<Props> {
+    private handleDeleteView = async () => {
         const {boardTree, showView} = this.props
         Utils.log('deleteView')
         const view = boardTree.activeView
@@ -31,7 +31,7 @@ export class ViewMenu extends React.Component<Props> {
         }
     }
 
-    handleViewClick = (id: string) => {
+    private handleViewClick = (id: string) => {
         const {boardTree, showView} = this.props
         Utils.log('view ' + id)
         const view = boardTree.views.find((o) => o.id === id)
@@ -41,7 +41,7 @@ export class ViewMenu extends React.Component<Props> {
         }
     }
 
-    handleAddViewBoard = async () => {
+    private handleAddViewBoard = async () => {
         const {board, boardTree, showView, intl} = this.props
         Utils.log('addview-board')
         const view = new MutableBoardView()
@@ -62,7 +62,7 @@ export class ViewMenu extends React.Component<Props> {
             })
     }
 
-    handleAddViewTable = async () => {
+    private handleAddViewTable = async () => {
         const {board, boardTree, showView, intl} = this.props
 
         Utils.log('addview-table')
@@ -87,7 +87,7 @@ export class ViewMenu extends React.Component<Props> {
             })
     }
 
-    render() {
+    render(): JSX.Element {
         const {boardTree} = this.props
         return (
             <Menu>
@@ -99,11 +99,12 @@ export class ViewMenu extends React.Component<Props> {
                         onClick={this.handleViewClick}
                     />))}
                 <Menu.Separator/>
-                {boardTree.views.length > 1 && <Menu.Text
-                    id='__deleteView'
-                    name='Delete View'
-                    onClick={this.handleDeleteView}
-                />}
+                {boardTree.views.length > 1 &&
+                    <Menu.Text
+                        id='__deleteView'
+                        name='Delete View'
+                        onClick={this.handleDeleteView}
+                    />}
                 <Menu.SubMenu
                     id='__addView'
                     name='Add View'

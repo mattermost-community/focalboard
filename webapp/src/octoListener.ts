@@ -43,7 +43,7 @@ class OctoListener {
         Utils.log(`OctoListener serverUrl: ${this.serverUrl}`)
     }
 
-    open(blockIds: string[], onChange: OnChangeHandler, onReconnect: () => void) {
+    open(blockIds: string[], onChange: OnChangeHandler, onReconnect: () => void): void {
         let timeoutId: NodeJS.Timeout
 
         if (this.ws) {
@@ -107,7 +107,7 @@ class OctoListener {
         }
     }
 
-    close() {
+    close(): void {
         if (!this.ws) {
             return
         }

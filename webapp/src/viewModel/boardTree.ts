@@ -55,7 +55,7 @@ class MutableBoardTree implements BoardTree {
     constructor(private boardId: string) {
     }
 
-    async sync() {
+    async sync(): Promise<void> {
         this.rawBlocks = await octoClient.getSubtree(this.boardId)
         this.rebuild(OctoUtils.hydrateBlocks(this.rawBlocks))
     }
@@ -73,11 +73,11 @@ class MutableBoardTree implements BoardTree {
 
     private rebuild(blocks: IMutableBlock[]) {
         this.board = blocks.find((block) => block.type === 'board') as MutableBoard
-        this.views = blocks.filter((block) => block.type === 'view')
-            .sort((a, b) => a.title.localeCompare(b.title)) as MutableBoardView[]
+        this.views = blocks.filter((block) => block.type === 'view').
+            sort((a, b) => a.title.localeCompare(b.title)) as MutableBoardView[]
         this.allCards = blocks.filter((block) => block.type === 'card' && !(block as Card).isTemplate) as MutableCard[]
-        this.cardTemplates = blocks.filter((block) => block.type === 'card' && (block as Card).isTemplate)
-            .sort((a, b) => a.title.localeCompare(b.title)) as MutableCard[]
+        this.cardTemplates = blocks.filter((block) => block.type === 'card' && (block as Card).isTemplate).
+            sort((a, b) => a.title.localeCompare(b.title)) as MutableCard[]
         this.cards = []
 
         this.ensureMinimumSchema()
@@ -119,7 +119,7 @@ class MutableBoardTree implements BoardTree {
         return didChange
     }
 
-    setActiveView(viewId: string) {
+    setActiveView(viewId: string): void {
         let view = this.views.find((o) => o.id === viewId)
         if (!view) {
             Utils.logError(`Cannot find BoardView: ${viewId}`)
@@ -140,12 +140,12 @@ class MutableBoardTree implements BoardTree {
         return this.searchText
     }
 
-    setSearchText(text?: string) {
+    setSearchText(text?: string): void {
         this.searchText = text
         this.applyFilterSortAndGroup()
     }
 
-    applyFilterSortAndGroup() {
+    private applyFilterSortAndGroup(): void {
         Utils.assert(this.allCards !== undefined)
 
         this.cards = this.filterCards(this.allCards) as MutableCard[]
@@ -170,11 +170,7 @@ class MutableBoardTree implements BoardTree {
             return cards.slice()
         }
 
-        return cards.filter((card) => {
-            if (card.title?.toLocaleLowerCase().indexOf(searchText) !== -1) {
-                return true
-            }
-        })
+        return cards.filter((card) => card.title?.toLocaleLowerCase().indexOf(searchText) !== -1)
     }
 
     private setGroupByProperty(propertyId: string) {

@@ -8,8 +8,11 @@ import {BlockIcons} from '../blockIcons'
 import {IPropertyTemplate} from '../blocks/board'
 import {MutableCard} from '../blocks/card'
 import {BoardTree} from '../viewModel/boardTree'
+import {MutableCardTree} from '../viewModel/cardTree'
 import mutator from '../mutator'
 import {Utils} from '../utils'
+import {MutableBoardView} from '../blocks/boardView'
+import {IBlock} from '../blocks/block'
 
 import MenuWrapper from '../widgets/menuWrapper'
 import SortDownIcon from '../widgets/icons/sortDown'
@@ -24,10 +27,6 @@ import TableHeaderMenu from './tableHeaderMenu'
 
 import './tableComponent.scss'
 import {HorizontalGrip} from './horizontalGrip'
-
-import {MutableBoardView} from '../blocks/boardView'
-import {IBlock} from '../blocks/block'
-import {MutableCardTree} from '../viewModel/cardTree'
 
 type Props = {
     boardTree: BoardTree
@@ -162,78 +161,83 @@ class TableComponent extends React.Component<Props, State> {
                                             sortIcon = sortOption.reversed ? <SortUpIcon/> : <SortDownIcon/>
                                         }
 
-                                        return (<div
-                                            key={template.id}
-                                            ref={headerRef}
-                                            style={{overflow: 'unset', width: this.columnWidth(template.id)}}
-                                            className='octo-table-cell header-cell'
+                                        return (
+                                            <div
+                                                key={template.id}
+                                                ref={headerRef}
+                                                style={{overflow: 'unset', width: this.columnWidth(template.id)}}
+                                                className='octo-table-cell header-cell'
 
-                                            onDragOver={(e) => {
-                                                e.preventDefault(); (e.target as HTMLElement).classList.add('dragover')
-                                            }}
-                                            onDragEnter={(e) => {
-                                                e.preventDefault(); (e.target as HTMLElement).classList.add('dragover')
-                                            }}
-                                            onDragLeave={(e) => {
-                                                e.preventDefault(); (e.target as HTMLElement).classList.remove('dragover')
-                                            }}
-                                            onDrop={(e) => {
-                                                e.preventDefault(); (e.target as HTMLElement).classList.remove('dragover'); this.onDropToColumn(template)
-                                            }}
-                                        >
-                                            <MenuWrapper>
-                                                <div
-                                                    className='octo-label'
-                                                    style={{cursor: 'pointer'}}
-                                                    draggable={true}
-                                                    onDragStart={() => {
-                                                        this.draggedHeaderTemplate = template
+                                                onDragOver={(e) => {
+                                                    e.preventDefault();
+                                                    (e.target as HTMLElement).classList.add('dragover')
+                                                }}
+                                                onDragEnter={(e) => {
+                                                    e.preventDefault();
+                                                    (e.target as HTMLElement).classList.add('dragover')
+                                                }}
+                                                onDragLeave={(e) => {
+                                                    e.preventDefault();
+                                                    (e.target as HTMLElement).classList.remove('dragover')
+                                                }}
+                                                onDrop={(e) => {
+                                                    e.preventDefault();
+                                                    (e.target as HTMLElement).classList.remove('dragover')
+                                                    this.onDropToColumn(template)
+                                                }}
+                                            >
+                                                <MenuWrapper>
+                                                    <div
+                                                        className='octo-label'
+                                                        style={{cursor: 'pointer'}}
+                                                        draggable={true}
+                                                        onDragStart={() => {
+                                                            this.draggedHeaderTemplate = template
+                                                        }}
+                                                        onDragEnd={() => {
+                                                            this.draggedHeaderTemplate = undefined
+                                                        }}
+                                                    >
+                                                        {template.name}
+                                                        {sortIcon}
+                                                    </div>
+                                                    <TableHeaderMenu
+                                                        boardTree={boardTree}
+                                                        templateId={template.id}
+                                                    />
+                                                </MenuWrapper>
+
+                                                <div className='octo-spacer'/>
+
+                                                <HorizontalGrip
+                                                    onDrag={(offset) => {
+                                                        const originalWidth = this.columnWidth(template.id)
+                                                        const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
+                                                        headerRef.current!.style.width = `${newWidth}px`
                                                     }}
-                                                    onDragEnd={() => {
-                                                        this.draggedHeaderTemplate = undefined
+                                                    onDragEnd={(offset) => {
+                                                        Utils.log(`onDragEnd offset: ${offset}`)
+                                                        const originalWidth = this.columnWidth(template.id)
+                                                        const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
+                                                        headerRef.current!.style.width = `${newWidth}px`
+
+                                                        const columnWidths = {...activeView.columnWidths}
+                                                        if (newWidth !== columnWidths[template.id]) {
+                                                            columnWidths[template.id] = newWidth
+
+                                                            const newView = new MutableBoardView(activeView)
+                                                            newView.columnWidths = columnWidths
+                                                            mutator.updateBlock(newView, activeView, 'resize column')
+                                                        }
                                                     }}
-                                                >
-                                                    {template.name}
-                                                    {sortIcon}
-                                                </div>
-                                                <TableHeaderMenu
-                                                    boardTree={boardTree}
-                                                    templateId={template.id}
                                                 />
-                                            </MenuWrapper>
-
-                                            <div className='octo-spacer'/>
-
-                                            <HorizontalGrip
-                                                onDrag={(offset) => {
-                                                    const originalWidth = this.columnWidth(template.id)
-                                                    const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
-                                                    headerRef.current!.style.width = `${newWidth}px`
-                                                }}
-                                                onDragEnd={(offset) => {
-                                                    Utils.log(`onDragEnd offset: ${offset}`)
-                                                    const originalWidth = this.columnWidth(template.id)
-                                                    const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
-                                                    headerRef.current!.style.width = `${newWidth}px`
-
-                                                    const columnWidths = {...activeView.columnWidths}
-                                                    if (newWidth !== columnWidths[template.id]) {
-                                                        columnWidths[template.id] = newWidth
-
-                                                        const newView = new MutableBoardView(activeView)
-                                                        newView.columnWidths = columnWidths
-                                                        mutator.updateBlock(newView, activeView, 'resize column')
-                                                    }
-                                                }}
-                                            />
-                                        </div>)
+                                            </div>)
                                     })}
                             </div>
 
                             {/* Rows, one per card */}
 
                             {cards.map((card) => {
-                                const openButonRef = React.createRef<HTMLDivElement>()
                                 const tableRowRef = React.createRef<TableRow>()
 
                                 let focusOnMount = false
@@ -242,23 +246,22 @@ class TableComponent extends React.Component<Props, State> {
                                     focusOnMount = true
                                 }
 
-                                const tableRow = (<TableRow
-                                    key={card.id}
-                                    ref={tableRowRef}
-                                    boardTree={boardTree}
-                                    card={card}
-                                    focusOnMount={focusOnMount}
-                                    onSaveWithEnter={() => {
-                                        console.log('WORKING')
-                                        if (cards.length > 0 && cards[cards.length - 1] === card) {
-                                            this.addCard(false)
-                                        }
-                                        console.log('STILL WORKING')
-                                    }}
-                                    showCard={(cardId) => {
-                                        this.setState({shownCardId: cardId})
-                                    }}
-                                />)
+                                const tableRow = (
+                                    <TableRow
+                                        key={card.id}
+                                        ref={tableRowRef}
+                                        boardTree={boardTree}
+                                        card={card}
+                                        focusOnMount={focusOnMount}
+                                        onSaveWithEnter={() => {
+                                            if (cards.length > 0 && cards[cards.length - 1] === card) {
+                                                this.addCard(false)
+                                            }
+                                        }}
+                                        showCard={(cardId) => {
+                                            this.setState({shownCardId: cardId})
+                                        }}
+                                    />)
 
                                 this.cardIdToRowMap.set(card.id, tableRowRef)
 
