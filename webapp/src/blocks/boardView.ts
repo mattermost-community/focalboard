@@ -10,7 +10,7 @@ type ISortOption = { propertyId: '__title' | string, reversed: boolean }
 
 interface BoardView extends IBlock {
     readonly viewType: IViewType
-    readonly groupById: string
+    readonly groupById?: string
     readonly sortOptions: readonly ISortOption[]
     readonly visiblePropertyIds: readonly string[]
     readonly visibleOptionIds: readonly string[]
@@ -20,7 +20,7 @@ interface BoardView extends IBlock {
     readonly columnWidths: Readonly<Record<string, number>>
 }
 
-class MutableBoardView extends MutableBlock {
+class MutableBoardView extends MutableBlock implements BoardView {
     get viewType(): IViewType {
         return this.fields.viewType
     }

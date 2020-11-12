@@ -146,10 +146,10 @@ class MutableBoardTree implements BoardTree {
         this.cards = this.sortCards(this.cards) as MutableCard[]
         Utils.assert(this.cards !== undefined)
 
-        if (this.activeView.groupById) {
+        if (this.activeView?.groupById) {
             this.setGroupByProperty(this.activeView.groupById)
         } else {
-            Utils.assert(this.activeView.viewType !== 'board')
+            Utils.assert(this.activeView?.viewType !== 'board')
         }
 
         Utils.assert(this.cards !== undefined)
@@ -186,6 +186,10 @@ class MutableBoardTree implements BoardTree {
 
     private groupCards() {
         const {activeView, groupByProperty} = this
+        if (!activeView || !groupByProperty) {
+            Utils.assertFailure('groupCards')
+            return
+        }
 
         const unassignedOptionIds = groupByProperty.options.
             filter((o) => !activeView.visibleOptionIds.includes(o.id) && !activeView.hiddenOptionIds.includes(o.id)).
@@ -221,7 +225,7 @@ class MutableBoardTree implements BoardTree {
                 // Empty group
                 const emptyGroupCards = this.cards.filter((o) => {
                     const optionId = o.properties[groupByProperty.id]
-                    return !optionId || !this.groupByProperty.options.find((option) => option.id === optionId)
+                    return !optionId || !groupByProperty.options.find((option) => option.id === optionId)
                 })
                 const group: Group = {
                     option: {id: '', value: `No ${groupByProperty.name}`, color: ''},
@@ -264,9 +268,7 @@ class MutableBoardTree implements BoardTree {
         return cardA.createAt - cardB.createAt
     }
 
-    private manualOrder(cardA: Card, cardB: Card) {
-        const {activeView} = this
-
+    private manualOrder(activeView: BoardView, cardA: Card, cardB: Card) {
         const indexA = activeView.cardOrder.indexOf(cardA.id)
         const indexB = activeView.cardOrder.indexOf(cardB.id)
 
@@ -280,17 +282,17 @@ class MutableBoardTree implements BoardTree {
     }
 
     private sortCards(cards: Card[]): Card[] {
-        if (!this.activeView) {
+        const {board, activeView} = this
+        if (!activeView) {
             Utils.assertFailure()
             return cards
         }
-        const {board} = this
-        const {sortOptions} = this.activeView
+        const {sortOptions} = activeView
         let sortedCards: Card[] = []
 
         if (sortOptions.length < 1) {
             Utils.log('Manual sort')
-            sortedCards = cards.sort((a, b) => this.manualOrder(a, b))
+            sortedCards = cards.sort((a, b) => this.manualOrder(activeView, a, b))
         } else {
             sortOptions.forEach((sortOption) => {
                 if (sortOption.propertyId === Constants.titleColumnId) {

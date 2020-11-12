@@ -5,7 +5,6 @@ import {IOrderedBlock} from '../blocks/orderedBlock'
 import octoClient from '../octoClient'
 import {IBlock, MutableBlock} from '../blocks/block'
 import {OctoUtils} from '../octoUtils'
-import {Utils} from '../utils'
 
 interface CardTree {
     readonly card: Card
@@ -17,7 +16,7 @@ interface CardTree {
 }
 
 class MutableCardTree implements CardTree {
-    card: MutableCard
+    card!: MutableCard
     comments: IBlock[] = []
     contents: IOrderedBlock[] = []
 

@@ -11,6 +11,7 @@ import {OctoListener} from '../octoListener'
 import {Utils} from '../utils'
 import {MutableWorkspaceTree, WorkspaceTree} from '../viewModel/workspaceTree'
 import {IBlock} from '../blocks/block'
+import { isReturnStatement } from 'typescript'
 
 type Props = {
     setLanguage: (lang: string) => void
@@ -24,18 +25,13 @@ type State = {
 }
 
 export default class BoardPage extends React.Component<Props, State> {
-    view: BoardView
-
-    updateTitleTimeout: number
-    updatePropertyLabelTimeout: number
-
     private workspaceListener = new OctoListener()
 
     constructor(props: Props) {
         super(props)
         const queryString = new URLSearchParams(window.location.search)
-        const boardId = queryString.get('id')
-        const viewId = queryString.get('v')
+        const boardId = queryString.get('id') || ''
+        const viewId = queryString.get('v') || ''
 
         this.state = {
             boardId,
@@ -180,7 +176,7 @@ export default class BoardPage extends React.Component<Props, State> {
             this.setState({
                 boardTree,
                 boardId,
-                viewId: boardTree.activeView.id,
+                viewId: boardTree.activeView!.id,
             })
             Utils.log(`sync complete: ${boardTree.board.id} (${boardTree.board.title})`)
         }
@@ -220,7 +216,7 @@ export default class BoardPage extends React.Component<Props, State> {
     }
 
     showView(viewId: string, boardId: string = this.state.boardId): void {
-        if (this.state.boardId === boardId) {
+        if (this.state.boardTree && this.state.boardId === boardId) {
             const newBoardTree = this.state.boardTree.mutableCopy()
             newBoardTree.setActiveView(viewId)
             this.setState({boardTree: newBoardTree, viewId})
@@ -233,6 +229,11 @@ export default class BoardPage extends React.Component<Props, State> {
     }
 
     setSearchText(text?: string): void {
+        if (!this.state.boardTree) {
+            Utils.assertFailure('setSearchText: boardTree')
+            return
+        }
+
         const newBoardTree = this.state.boardTree.mutableCopy()
         newBoardTree.setSearchText(text)
         this.setState({boardTree: newBoardTree})
