@@ -73,9 +73,11 @@ class MutableBoardTree implements BoardTree {
 
     private rebuild(blocks: IMutableBlock[]) {
         this.board = blocks.find((block) => block.type === 'board') as MutableBoard
-        this.views = blocks.filter((block) => block.type === 'view') as MutableBoardView[]
+        this.views = blocks.filter((block) => block.type === 'view')
+            .sort((a, b) => a.title.localeCompare(b.title)) as MutableBoardView[]
         this.allCards = blocks.filter((block) => block.type === 'card' && !(block as Card).isTemplate) as MutableCard[]
-        this.cardTemplates = blocks.filter((block) => block.type === 'card' && (block as Card).isTemplate) as MutableCard[]
+        this.cardTemplates = blocks.filter((block) => block.type === 'card' && (block as Card).isTemplate)
+            .sort((a, b) => a.title.localeCompare(b.title)) as MutableCard[]
         this.cards = []
 
         this.ensureMinimumSchema()

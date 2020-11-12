@@ -37,8 +37,10 @@ class MutableWorkspaceTree {
     }
 
     private rebuild(blocks: IBlock[]) {
-        this.boards = blocks.filter((block) => block.type === 'board') as Board[]
-        this.views = blocks.filter((block) => block.type === 'view') as BoardView[]
+        this.boards = blocks.filter((block) => block.type === 'board')
+            .sort((a, b) => a.title.localeCompare(b.title)) as Board[]
+        this.views = blocks.filter((block) => block.type === 'view')
+            .sort((a, b) => a.title.localeCompare(b.title)) as BoardView[]
     }
 
     mutableCopy(): MutableWorkspaceTree {
