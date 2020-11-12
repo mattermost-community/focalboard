@@ -3,8 +3,6 @@
 import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
-import {MutableBlock} from '../blocks/block'
-
 import {IPropertyTemplate} from '../blocks/board'
 import {Card} from '../blocks/card'
 import mutator from '../mutator'
@@ -69,17 +67,17 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
                     this.props.onDragEnd(e)
                 }}
 
-                onDragOver={(e) => {
+                onDragOver={() => {
                     if (!this.state.isDragOver) {
                         this.setState({isDragOver: true})
                     }
                 }}
-                onDragEnter={(e) => {
+                onDragEnter={() => {
                     if (!this.state.isDragOver) {
                         this.setState({isDragOver: true})
                     }
                 }}
-                onDragLeave={(e) => {
+                onDragLeave={() => {
                     this.setState({isDragOver: false})
                 }}
                 onDrop={(e) => {

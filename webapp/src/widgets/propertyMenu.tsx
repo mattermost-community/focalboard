@@ -31,8 +31,8 @@ export default class PropertyMenu extends React.PureComponent<Props, State> {
     }
 
     public componentDidMount(): void {
-        this.nameTextbox.current.focus()
-        document.execCommand('selectAll', false, null)
+        this.nameTextbox.current?.focus()
+        document.execCommand('selectAll', false, undefined)
     }
 
     private typeDisplayName(type: PropertyType): string {

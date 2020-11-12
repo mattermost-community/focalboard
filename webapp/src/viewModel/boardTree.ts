@@ -232,9 +232,9 @@ class MutableBoardTree implements BoardTree {
                 }
             } else {
                 // Empty group
-                const emptyGroupCards = this.cards.filter((o) => {
-                    const optionId = o.properties[groupByProperty.id]
-                    return !optionId || !groupByProperty.options.find((option) => option.id === optionId)
+                const emptyGroupCards = this.cards.filter((card) => {
+                    const groupByOptionId = card.properties[groupByProperty.id]
+                    return !groupByOptionId || !groupByProperty.options.find((option) => option.id === groupByOptionId)
                 })
                 const group: Group = {
                     option: {id: '', value: `No ${groupByProperty.name}`, color: ''},

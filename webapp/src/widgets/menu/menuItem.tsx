@@ -6,5 +6,5 @@ import React from 'react'
 export type MenuOptionProps = {
     id: string,
     name: string,
-    onClick?: (id: string) => void,
+    onClick: (id: string) => void,
 }

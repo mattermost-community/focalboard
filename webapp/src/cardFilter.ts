@@ -90,17 +90,17 @@ class CardFilter {
                 result[property.id] = property.value
             }
             return result
-        } else {
-            // And: Need to meet all clauses
-            const result: Record<string, string> = {}
-            filters.forEach((filterClause) => {
-                const property = this.propertyThatMeetsFilterClause(filterClause as FilterClause, templates)
-                if (property.value) {
-                    result[property.id] = property.value
-                }
-            })
-            return result
         }
+
+        // And: Need to meet all clauses
+        const result: Record<string, string> = {}
+        filters.forEach((filterClause) => {
+            const property = this.propertyThatMeetsFilterClause(filterClause as FilterClause, templates)
+            if (property.value) {
+                result[property.id] = property.value
+            }
+        })
+        return result
     }
 
     static propertyThatMeetsFilterClause(filterClause: FilterClause, templates: readonly IPropertyTemplate[]): { id: string, value?: string } {
@@ -125,10 +125,10 @@ class CardFilter {
                 const option = template.options.find((o) => !filterClause.values.includes(o.id))
                 if (option) {
                     return {id: filterClause.propertyId, value: option.id}
-                } else {
-                    // No other options exist
-                    return {id: filterClause.propertyId}
                 }
+
+                // No other options exist
+                return {id: filterClause.propertyId}
             }
 
             // TODO: Handle non-select types

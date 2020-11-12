@@ -8,7 +8,9 @@ import {MenuOptionProps} from './menuItem'
 
 import './subMenuOption.scss'
 
-type SubMenuOptionProps = MenuOptionProps & {
+type SubMenuOptionProps = {
+    id: string,
+    name: string,
     position?: 'bottom' | 'top'
     icon?: React.ReactNode
 }
