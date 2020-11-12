@@ -19,7 +19,7 @@ import DotIcon from '../widgets/icons/dot'
 import IconButton from '../widgets/buttons/iconButton'
 import Button from '../widgets/buttons/button'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
-import {BoardView} from '../blocks/boardView'
+import {BoardView, MutableBoardView} from '../blocks/boardView'
 
 import './sidebar.scss'
 
@@ -272,12 +272,17 @@ class Sidebar extends React.Component<Props, State> {
     }
 
     private addBoardClicked = async () => {
-        const {showBoard} = this.props
+        const {showBoard, intl} = this.props
 
         const oldBoardId = this.props.activeBoardId
         const board = new MutableBoard()
-        await mutator.insertBlock(
-            board,
+        const view = new MutableBoardView()
+        view.viewType = 'board'
+        view.parentId = board.id
+        view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board View'})
+
+        await mutator.insertBlocks(
+            [board, view],
             'add board',
             async () => {
                 showBoard(board.id)

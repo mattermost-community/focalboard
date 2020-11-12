@@ -2,6 +2,8 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
+import {injectIntl, IntlShape} from 'react-intl'
+
 import {Board} from '../blocks/board'
 import {MutableBoardView} from '../blocks/boardView'
 import {BoardTree} from '../viewModel/boardTree'
@@ -14,9 +16,10 @@ type Props = {
     boardTree: BoardTree
     board: Board,
     showView: (id: string) => void
+    intl: IntlShape
 }
 
-export default class ViewMenu extends React.Component<Props> {
+export class ViewMenu extends React.Component<Props> {
     handleDeleteView = async () => {
         const {boardTree, showView} = this.props
         Utils.log('deleteView')
@@ -34,10 +37,10 @@ export default class ViewMenu extends React.Component<Props> {
     }
 
     handleAddViewBoard = async () => {
-        const {board, boardTree, showView} = this.props
+        const {board, boardTree, showView, intl} = this.props
         Utils.log('addview-board')
         const view = new MutableBoardView()
-        view.title = 'Board View'
+        view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board View'})
         view.viewType = 'board'
         view.parentId = board.id
 
@@ -55,11 +58,11 @@ export default class ViewMenu extends React.Component<Props> {
     }
 
     handleAddViewTable = async () => {
-        const {board, boardTree, showView} = this.props
+        const {board, boardTree, showView, intl} = this.props
 
         Utils.log('addview-table')
         const view = new MutableBoardView()
-        view.title = 'Table View'
+        view.title = intl.formatMessage({id: 'View.NewTableTitle', defaultMessage: 'Table View'})
         view.viewType = 'table'
         view.parentId = board.id
         view.visiblePropertyIds = board.cardProperties.map((o) => o.id)
@@ -115,3 +118,5 @@ export default class ViewMenu extends React.Component<Props> {
         )
     }
 }
+
+export default injectIntl(ViewMenu)
