@@ -17,7 +17,7 @@ type Props = {
     boardTree?: BoardTree
     showBoard: (id: string) => void
     showView: (id: string, boardId?: string) => void
-    setSearchText: (text: string) => void
+    setSearchText: (text?: string) => void
     setLanguage: (lang: string) => void
 }
 

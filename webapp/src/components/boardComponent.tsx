@@ -37,7 +37,7 @@ import './boardComponent.scss'
 type Props = {
     boardTree: BoardTree
     showView: (id: string) => void
-    setSearchText: (text: string) => void
+    setSearchText: (text?: string) => void
     intl: IntlShape
 }
 
@@ -51,7 +51,7 @@ type State = {
 
 class BoardComponent extends React.Component<Props, State> {
     private draggedCards: Card[] = []
-    private draggedHeaderOption: IPropertyOption
+    private draggedHeaderOption?: IPropertyOption
     private backgroundRef = React.createRef<HTMLDivElement>()
     private searchFieldRef = React.createRef<Editable>()
 
@@ -98,13 +98,20 @@ class BoardComponent extends React.Component<Props, State> {
 
     componentDidUpdate(prevPros: Props, prevState: State): void {
         if (this.state.isSearching && !prevState.isSearching) {
-            this.searchFieldRef.current.focus()
+            this.searchFieldRef.current?.focus()
         }
     }
 
     render(): JSX.Element {
         const {boardTree, showView} = this.props
-        const propertyValues = boardTree.groupByProperty?.options || []
+        const {groupByProperty} = boardTree
+
+        if (!groupByProperty) {
+            Utils.assertFailure('Board views must have groupByProperty set')
+            return <div />
+        }
+
+        const propertyValues = groupByProperty.options || []
         Utils.log(`${propertyValues.length} propertyValues`)
 
         const {board, activeView, visibleGroups, hiddenGroups} = boardTree
@@ -232,7 +239,11 @@ class BoardComponent extends React.Component<Props, State> {
                     this.cardClicked(e, card)
                 }}
                 onDragStart={() => {
-                    this.draggedCards = this.state.selectedCardIds.includes(card.id) ? this.state.selectedCardIds.map((id) => boardTree.allCards.find((o) => o.id === id)) : [card]
+                    if (this.state.selectedCardIds.includes(card.id)) {
+                        this.draggedCards = this.state.selectedCardIds.map((id) => boardTree.allCards.find((o) => o.id === id)!)
+                    } else {
+                        this.draggedCards = [card]
+                    }
                 }}
                 onDragEnd={() => {
                     this.draggedCards = []
@@ -269,19 +280,19 @@ class BoardComponent extends React.Component<Props, State> {
                     }}
 
                     onDragOver={(e) => {
-                        ref.current.classList.add('dragover')
+                        ref.current!.classList.add('dragover')
                         e.preventDefault()
                     }}
                     onDragEnter={(e) => {
-                        ref.current.classList.add('dragover')
+                        ref.current!.classList.add('dragover')
                         e.preventDefault()
                     }}
                     onDragLeave={(e) => {
-                        ref.current.classList.remove('dragover')
+                        ref.current!.classList.remove('dragover')
                         e.preventDefault()
                     }}
                     onDrop={(e) => {
-                        ref.current.classList.remove('dragover')
+                        ref.current!.classList.remove('dragover')
                         e.preventDefault()
                         this.onDropToColumn(group.option)
                     }}
@@ -291,13 +302,13 @@ class BoardComponent extends React.Component<Props, State> {
                         title={intl.formatMessage({
                             id: 'BoardComponent.no-property-title',
                             defaultMessage: 'Items with an empty {property} property will go here. This column cannot be removed.',
-                        }, {property: boardTree.groupByProperty?.name})}
+                        }, {property: boardTree.groupByProperty!.name})}
                     >
                         <FormattedMessage
                             id='BoardComponent.no-property'
                             defaultMessage='No {property}'
                             values={{
-                                property: boardTree.groupByProperty?.name,
+                                property: boardTree.groupByProperty!.name,
                             }}
                         />
                     </div>
@@ -338,19 +349,19 @@ class BoardComponent extends React.Component<Props, State> {
                 }}
 
                 onDragOver={(e) => {
-                    ref.current.classList.add('dragover')
+                    ref.current!.classList.add('dragover')
                     e.preventDefault()
                 }}
                 onDragEnter={(e) => {
-                    ref.current.classList.add('dragover')
+                    ref.current!.classList.add('dragover')
                     e.preventDefault()
                 }}
                 onDragLeave={(e) => {
-                    ref.current.classList.remove('dragover')
+                    ref.current!.classList.remove('dragover')
                     e.preventDefault()
                 }}
                 onDrop={(e) => {
-                    ref.current.classList.remove('dragover')
+                    ref.current!.classList.remove('dragover')
                     e.preventDefault()
                     this.onDropToColumn(group.option)
                 }}
@@ -379,7 +390,7 @@ class BoardComponent extends React.Component<Props, State> {
                             id='delete'
                             icon={<DeleteIcon/>}
                             name={intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
-                            onClick={() => mutator.deletePropertyOption(boardTree, boardTree.groupByProperty, group.option)}
+                            onClick={() => mutator.deletePropertyOption(boardTree, boardTree.groupByProperty!, group.option)}
                         />
                         <Menu.Separator/>
                         {Constants.menuColors.map((color) => (
@@ -387,7 +398,7 @@ class BoardComponent extends React.Component<Props, State> {
                                 key={color.id}
                                 id={color.id}
                                 name={color.name}
-                                onClick={() => mutator.changePropertyOptionColor(boardTree.board, boardTree.groupByProperty, group.option, color.id)}
+                                onClick={() => mutator.changePropertyOptionColor(boardTree.board, boardTree.groupByProperty!, group.option, color.id)}
                             />
                         ))}
                     </Menu>
@@ -414,25 +425,25 @@ class BoardComponent extends React.Component<Props, State> {
                     if (this.draggedCards?.length < 1) {
                         return
                     }
-                    ref.current.classList.add('dragover')
+                    ref.current!.classList.add('dragover')
                     e.preventDefault()
                 }}
                 onDragEnter={(e) => {
                     if (this.draggedCards?.length < 1) {
                         return
                     }
-                    ref.current.classList.add('dragover')
+                    ref.current!.classList.add('dragover')
                     e.preventDefault()
                 }}
                 onDragLeave={(e) => {
                     if (this.draggedCards?.length < 1) {
                         return
                     }
-                    ref.current.classList.remove('dragover')
+                    ref.current!.classList.remove('dragover')
                     e.preventDefault()
                 }}
                 onDrop={(e) => {
-                    ref.current.classList.remove('dragover')
+                    ref.current!.classList.remove('dragover')
                     e.preventDefault()
                     if (this.draggedCards?.length < 1) {
                         return
@@ -538,7 +549,7 @@ class BoardComponent extends React.Component<Props, State> {
     private async propertyNameChanged(option: IPropertyOption, text: string): Promise<void> {
         const {boardTree} = this.props
 
-        await mutator.changePropertyOptionValue(boardTree, boardTree.groupByProperty, option, text)
+        await mutator.changePropertyOptionValue(boardTree, boardTree.groupByProperty!, option, text)
     }
 
     private cardClicked(e: React.MouseEvent, card: Card): void {
@@ -585,8 +596,7 @@ class BoardComponent extends React.Component<Props, State> {
             color: 'propColorDefault',
         }
 
-        Utils.assert(boardTree.groupByProperty)
-        await mutator.insertPropertyOption(boardTree, boardTree.groupByProperty, option, 'add group')
+        await mutator.insertPropertyOption(boardTree, boardTree.groupByProperty!, option, 'add group')
     }
 
     private async onDropToColumn(option: IPropertyOption) {
@@ -601,15 +611,14 @@ class BoardComponent extends React.Component<Props, State> {
                 const description = draggedCards.length > 1 ? `drag ${draggedCards.length} cards` : 'drag card'
                 for (const draggedCard of draggedCards) {
                     Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${optionId}`)
-                    const oldValue = draggedCard.properties[boardTree.groupByProperty.id]
+                    const oldValue = draggedCard.properties[boardTree.groupByProperty!.id]
                     if (optionId !== oldValue) {
-                        await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, optionId, description)
+                        await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty!.id, optionId, description)
                     }
                 }
             })
         } else if (draggedHeaderOption) {
             Utils.log(`ondrop. Header option: ${draggedHeaderOption.value}, column: ${option?.value}`)
-            Utils.assertValue(boardTree.groupByProperty)
 
             // Move option to new index
             const visibleOptionIds = boardTree.visibleGroups.map((o) => o.option.id)
@@ -629,7 +638,7 @@ class BoardComponent extends React.Component<Props, State> {
         const {boardTree} = this.props
         const {activeView} = boardTree
         const {draggedCards} = this
-        const optionId = card.properties[activeView.groupById]
+        const optionId = card.properties[activeView.groupById!]
 
         if (draggedCards.length < 1 || draggedCards.includes(card)) {
             return
@@ -644,7 +653,7 @@ class BoardComponent extends React.Component<Props, State> {
         const isDraggingDown = cardOrder.indexOf(firstDraggedCard.id) <= cardOrder.indexOf(card.id)
         cardOrder = cardOrder.filter((id) => !draggedCardIds.includes(id))
         let destIndex = cardOrder.indexOf(card.id)
-        if (firstDraggedCard.properties[boardTree.groupByProperty.id] === optionId && isDraggingDown) {
+        if (firstDraggedCard.properties[boardTree.groupByProperty!.id] === optionId && isDraggingDown) {
             // If the cards are in the same column and dragging down, drop after the target card
             destIndex += 1
         }
@@ -654,9 +663,9 @@ class BoardComponent extends React.Component<Props, State> {
             // Update properties of dragged cards
             for (const draggedCard of draggedCards) {
                 Utils.log(`draggedCard: ${draggedCard.title}, column: ${optionId}`)
-                const oldOptionId = draggedCard.properties[boardTree.groupByProperty.id]
+                const oldOptionId = draggedCard.properties[boardTree.groupByProperty!.id]
                 if (optionId !== oldOptionId) {
-                    await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, optionId, description)
+                    await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty!.id, optionId, description)
                 }
             }
 
@@ -673,7 +682,11 @@ class BoardComponent extends React.Component<Props, State> {
         mutator.performAsUndoGroup(async () => {
             for (const cardId of selectedCardIds) {
                 const card = this.props.boardTree.allCards.find((o) => o.id === cardId)
-                mutator.deleteBlock(card, selectedCardIds.length > 1 ? `delete ${selectedCardIds.length} cards` : 'delete card')
+                if (card) {
+                    mutator.deleteBlock(card, selectedCardIds.length > 1 ? `delete ${selectedCardIds.length} cards` : 'delete card')
+                } else {
+                    Utils.assertFailure(`Selected card not found: ${cardId}`)
+                }
             }
         })
 

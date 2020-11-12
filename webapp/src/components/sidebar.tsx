@@ -123,7 +123,7 @@ class Sidebar extends React.Component<Props, State> {
                                                 name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete Board'})}
                                                 icon={<DeleteIcon/>}
                                                 onClick={async () => {
-                                                    const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id).id : undefined
+                                                    const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id)?.id : undefined
                                                     mutator.deleteBlock(
                                                         board,
                                                         'delete block',

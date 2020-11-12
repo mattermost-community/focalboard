@@ -36,7 +36,7 @@ import DeleteIcon from '../widgets/icons/delete'
 type Props = {
     boardTree: BoardTree
     showView: (id: string) => void
-    setSearchText: (text: string) => void
+    setSearchText: (text?: string) => void
     addCard: () => void
     addCardFromTemplate: (cardTemplateId?: string) => void
     addCardTemplate: () => void
@@ -64,7 +64,7 @@ class ViewHeader extends React.Component<Props, State> {
 
     componentDidUpdate(prevPros: Props, prevState: State): void {
         if (this.state.isSearching && !prevState.isSearching) {
-            this.searchFieldRef.current.focus()
+            this.searchFieldRef.current!.focus()
         }
     }
 
@@ -78,7 +78,7 @@ class ViewHeader extends React.Component<Props, State> {
 
     private onSearchKeyDown = (e: React.KeyboardEvent) => {
         if (e.keyCode === 27) { // ESC: Clear search
-            this.searchFieldRef.current.text = ''
+            this.searchFieldRef.current!.text = ''
             this.setState({isSearching: false})
             this.props.setSearchText(undefined)
             e.preventDefault()
@@ -185,10 +185,6 @@ class ViewHeader extends React.Component<Props, State> {
                                 name={option.name}
                                 isOn={activeView.visiblePropertyIds.includes(option.id)}
                                 onClick={(propertyId: string) => {
-                                    const property = boardTree.board.cardProperties.find((o: IPropertyTemplate) => o.id === propertyId)
-                                    Utils.assertValue(property)
-                                    Utils.log(`Toggle property ${property.name}`)
-
                                     let newVisiblePropertyIds = []
                                     if (activeView.visiblePropertyIds.includes(propertyId)) {
                                         newVisiblePropertyIds = activeView.visiblePropertyIds.filter((o: string) => o !== propertyId)

@@ -26,14 +26,19 @@ export class ViewMenu extends React.Component<Props> {
         const view = boardTree.activeView
         const nextView = boardTree.views.find((o) => o !== view)
         await mutator.deleteBlock(view, 'delete view')
-        showView(nextView.id)
+        if (nextView) {
+            showView(nextView.id)
+        }
     }
 
     handleViewClick = (id: string) => {
         const {boardTree, showView} = this.props
         Utils.log('view ' + id)
         const view = boardTree.views.find((o) => o.id === id)
-        showView(view.id)
+        Utils.assert(view, `view not found: ${id}`)
+        if (view) {
+            showView(view.id)
+        }
     }
 
     handleAddViewBoard = async () => {

@@ -18,12 +18,12 @@ import './valueSelector.scss'
 
 type Props = {
     options: IPropertyOption[]
-    value: IPropertyOption;
-    emptyValue: string;
-    onCreate?: (value: string) => void
-    onChange?: (value: string) => void
-    onChangeColor?: (option: IPropertyOption, color: string) => void
-    onDeleteOption?: (option: IPropertyOption) => void
+    value?: IPropertyOption
+    emptyValue: string
+    onCreate: (value: string) => void
+    onChange: (value: string) => void
+    onChangeColor: (option: IPropertyOption, color: string) => void
+    onDeleteOption: (option: IPropertyOption) => void
     intl: IntlShape
 }
 

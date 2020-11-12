@@ -32,7 +32,7 @@ import {MutableCardTree} from '../viewModel/cardTree'
 type Props = {
     boardTree: BoardTree
     showView: (id: string) => void
-    setSearchText: (text: string) => void
+    setSearchText: (text?: string) => void
 }
 
 type State = {
@@ -130,13 +130,13 @@ class TableComponent extends React.Component<Props, State> {
                                         onDrag={(offset) => {
                                             const originalWidth = this.columnWidth(Constants.titleColumnId)
                                             const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
-                                            titleRef.current.style.width = `${newWidth}px`
+                                            titleRef.current!.style!.width = `${newWidth}px`
                                         }}
                                         onDragEnd={(offset) => {
                                             Utils.log(`onDragEnd offset: ${offset}`)
                                             const originalWidth = this.columnWidth(Constants.titleColumnId)
                                             const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
-                                            titleRef.current.style.width = `${newWidth}px`
+                                            titleRef.current!.style!.width = `${newWidth}px`
 
                                             const columnWidths = {...activeView.columnWidths}
                                             if (newWidth !== columnWidths[Constants.titleColumnId]) {
@@ -208,13 +208,13 @@ class TableComponent extends React.Component<Props, State> {
                                                 onDrag={(offset) => {
                                                     const originalWidth = this.columnWidth(template.id)
                                                     const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
-                                                    headerRef.current.style.width = `${newWidth}px`
+                                                    headerRef.current!.style.width = `${newWidth}px`
                                                 }}
                                                 onDragEnd={(offset) => {
                                                     Utils.log(`onDragEnd offset: ${offset}`)
                                                     const originalWidth = this.columnWidth(template.id)
                                                     const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
-                                                    headerRef.current.style.width = `${newWidth}px`
+                                                    headerRef.current!.style.width = `${newWidth}px`
 
                                                     const columnWidths = {...activeView.columnWidths}
                                                     if (newWidth !== columnWidths[template.id]) {

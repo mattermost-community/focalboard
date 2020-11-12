@@ -71,8 +71,12 @@ class CardFilter {
         return true
     }
 
-    static propertiesThatMeetFilterGroup(filterGroup: FilterGroup, templates: readonly IPropertyTemplate[]): Record<string, string> {
+    static propertiesThatMeetFilterGroup(filterGroup: FilterGroup | undefined, templates: readonly IPropertyTemplate[]): Record<string, string> {
         // TODO: Handle filter groups
+        if (!filterGroup) {
+            return {}
+        }
+
         const filters = filterGroup.filters.filter((o) => !FilterGroup.isAnInstanceOf(o))
         if (filters.length < 1) {
             return {}
@@ -82,19 +86,30 @@ class CardFilter {
             // Just need to meet the first clause
             const property = this.propertyThatMeetsFilterClause(filters[0] as FilterClause, templates)
             const result: Record<string, string> = {}
-            result[property.id] = property.value
+            if (property.value) {
+                result[property.id] = property.value
+            }
+            return result
+        } else {
+            // And: Need to meet all clauses
+            const result: Record<string, string> = {}
+            filters.forEach((filterClause) => {
+                const property = this.propertyThatMeetsFilterClause(filterClause as FilterClause, templates)
+                if (property.value) {
+                    result[property.id] = property.value
+                }
+            })
             return result
         }
-        const result: Record<string, string> = {}
-        filters.forEach((filterClause) => {
-            const p = this.propertyThatMeetsFilterClause(filterClause as FilterClause, templates)
-            result[p.id] = p.value
-        })
-        return result
     }
 
     static propertyThatMeetsFilterClause(filterClause: FilterClause, templates: readonly IPropertyTemplate[]): { id: string, value?: string } {
         const template = templates.find((o) => o.id === filterClause.propertyId)
+        if (!template) {
+            Utils.assertFailure(`propertyThatMeetsFilterClause. Cannot find template: ${filterClause.propertyId}`)
+            return {id: filterClause.propertyId}
+        }
+
         switch (filterClause.condition) {
         case 'includes': {
             if (filterClause.values.length < 1) {
@@ -108,7 +123,12 @@ class CardFilter {
             }
             if (template.type === 'select') {
                 const option = template.options.find((o) => !filterClause.values.includes(o.id))
-                return {id: filterClause.propertyId, value: option.id}
+                if (option) {
+                    return {id: filterClause.propertyId, value: option.id}
+                } else {
+                    // No other options exist
+                    return {id: filterClause.propertyId}
+                }
             }
 
             // TODO: Handle non-select types
