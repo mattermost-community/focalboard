@@ -39,8 +39,12 @@ type State = {
 class CardDetail extends React.Component<Props, State> {
     private titleRef = React.createRef<Editable>()
 
-    shouldComponentUpdate() {
+    shouldComponentUpdate(): boolean {
         return true
+    }
+
+    componentDidMount(): void {
+        this.titleRef.current?.focus()
     }
 
     constructor(props: Props) {
