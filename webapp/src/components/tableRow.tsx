@@ -115,7 +115,7 @@ class TableRow extends React.Component<Props, State> {
     }
 
     private columnWidth(templateId: string): number {
-        return Math.max(Constants.minColumnWidth, this.props.boardTree?.activeView?.columnWidths[templateId] || 0)
+        return Math.max(Constants.minColumnWidth, this.props.boardTree.activeView.columnWidths[templateId] || 0)
     }
 
     focusOnTitle(): void {

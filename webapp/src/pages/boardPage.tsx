@@ -2,7 +2,6 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {BoardView} from '../blocks/boardView'
 import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
 import {WorkspaceComponent} from '../components/workspaceComponent'
 import {sendFlashMessage} from '../components/flashMessages'
@@ -11,7 +10,6 @@ import {OctoListener} from '../octoListener'
 import {Utils} from '../utils'
 import {MutableWorkspaceTree, WorkspaceTree} from '../viewModel/workspaceTree'
 import {IBlock} from '../blocks/block'
-import { isReturnStatement } from 'typescript'
 
 type Props = {
     setLanguage: (lang: string) => void
@@ -194,7 +192,7 @@ export default class BoardPage extends React.Component<Props, State> {
 
         const newBoardTree = boardTree ? boardTree.mutableCopy() : new MutableBoardTree(this.state.boardId)
         if (newBoardTree.incrementalUpdate(blocks)) {
-            newBoardTree.setActiveView(viewId)
+            newBoardTree.setActiveView(this.state.viewId)
             newState = {...newState, boardTree: newBoardTree}
         }
 

@@ -32,7 +32,7 @@ class WorkspaceComponent extends React.Component<Props> {
                     showBoard={showBoard}
                     showView={showView}
                     workspaceTree={workspaceTree}
-                    boardTree={boardTree}
+                    activeBoardId={boardTree?.board.id}
                     setLanguage={setLanguage}
                 />
                 {this.mainComponent()}
@@ -45,11 +45,11 @@ class WorkspaceComponent extends React.Component<Props> {
         const {boardTree, setSearchText, showView} = this.props
         const {activeView} = boardTree || {}
 
-        if (!activeView) {
+        if (!boardTree || !activeView) {
             return <div/>
         }
 
-        switch (activeView?.viewType) {
+        switch (activeView.viewType) {
         case 'board': {
             return (<BoardComponent
                 boardTree={boardTree}

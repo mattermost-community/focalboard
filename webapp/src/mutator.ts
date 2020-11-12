@@ -496,7 +496,7 @@ class Mutator {
         Utils.log(`duplicateCard: duplicating ${newBlocks.length} blocks`)
         const newCardId = idMap[cardId]
         const newCard = newBlocks.find((o) => o.id === newCardId)!
-        newCard.title = `Copy of ${newCard.title || ''}`
+        newCard.title = `Copy of ${newCard.title}`
         await this.insertBlocks(
             newBlocks,
             description,
@@ -515,7 +515,7 @@ class Mutator {
         Utils.log(`duplicateBoard: duplicating ${newBlocks.length} blocks`)
         const newBoardId = idMap[boardId]
         const newBoard = newBlocks.find((o) => o.id === newBoardId)!
-        newBoard.title = `Copy of ${newBoard.title || ''}`
+        newBoard.title = `Copy of ${newBoard.title}`
         await this.insertBlocks(
             newBlocks,
             description,

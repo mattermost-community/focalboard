@@ -25,7 +25,7 @@ interface BoardTree {
     readonly hiddenGroups: readonly Group[]
     readonly allBlocks: readonly IBlock[]
 
-    readonly activeView?: BoardView
+    readonly activeView: BoardView
     readonly groupByProperty?: IPropertyTemplate
 
     getSearchText(): string | undefined
@@ -42,7 +42,7 @@ class MutableBoardTree implements BoardTree {
     visibleGroups: Group[] = []
     hiddenGroups: Group[] = []
 
-    activeView?: MutableBoardView
+    activeView!: MutableBoardView
     groupByProperty?: IPropertyTemplate
 
     private rawBlocks: IBlock[] = []
@@ -67,6 +67,7 @@ class MutableBoardTree implements BoardTree {
         }
         this.rawBlocks = OctoUtils.mergeBlocks(this.rawBlocks, relevantBlocks)
         this.rebuild(OctoUtils.hydrateBlocks(this.rawBlocks))
+
         return true
     }
 
@@ -109,15 +110,21 @@ class MutableBoardTree implements BoardTree {
             didChange = true
         }
 
+        if (!this.activeView) {
+            this.activeView = this.views[0]
+        }
+
         return didChange
     }
 
     setActiveView(viewId: string) {
-        this.activeView = this.views.find((o) => o.id === viewId)
-        if (!this.activeView) {
+        let view = this.views.find((o) => o.id === viewId)
+        if (!view) {
             Utils.logError(`Cannot find BoardView: ${viewId}`)
-            this.activeView = this.views[0]
+            view = this.views[0]
         }
+
+        this.activeView = view
 
         // Fix missing group by (e.g. for new views)
         if (this.activeView.viewType === 'board' && !this.activeView.groupById) {
@@ -146,10 +153,10 @@ class MutableBoardTree implements BoardTree {
         this.cards = this.sortCards(this.cards) as MutableCard[]
         Utils.assert(this.cards !== undefined)
 
-        if (this.activeView?.groupById) {
+        if (this.activeView.groupById) {
             this.setGroupByProperty(this.activeView.groupById)
         } else {
-            Utils.assert(this.activeView?.viewType !== 'board')
+            Utils.assert(this.activeView.viewType !== 'board')
         }
 
         Utils.assert(this.cards !== undefined)
@@ -240,7 +247,7 @@ class MutableBoardTree implements BoardTree {
 
     private filterCards(cards: MutableCard[]): Card[] {
         const {board} = this
-        const filterGroup = this.activeView?.filter
+        const filterGroup = this.activeView.filter
         if (!filterGroup) {
             return cards.slice()
         }
@@ -249,8 +256,8 @@ class MutableBoardTree implements BoardTree {
     }
 
     private titleOrCreatedOrder(cardA: Card, cardB: Card) {
-        const aValue = cardA.title || ''
-        const bValue = cardB.title || ''
+        const aValue = cardA.title
+        const bValue = cardB.title
 
         if (aValue && bValue) {
             return aValue.localeCompare(bValue)

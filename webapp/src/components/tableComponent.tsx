@@ -30,7 +30,7 @@ import {IBlock} from '../blocks/block'
 import {MutableCardTree} from '../viewModel/cardTree'
 
 type Props = {
-    boardTree?: BoardTree
+    boardTree: BoardTree
     showView: (id: string) => void
     setSearchText: (text: string) => void
 }
@@ -40,9 +40,9 @@ type State = {
 }
 
 class TableComponent extends React.Component<Props, State> {
-    private draggedHeaderTemplate: IPropertyTemplate
+    private draggedHeaderTemplate?: IPropertyTemplate
     private cardIdToRowMap = new Map<string, React.RefObject<TableRow>>()
-    private cardIdToFocusOnRender: string
+    private cardIdToFocusOnRender?: string
     state: State = {}
 
     shouldComponentUpdate(): boolean {
@@ -51,18 +51,6 @@ class TableComponent extends React.Component<Props, State> {
 
     render(): JSX.Element {
         const {boardTree, showView} = this.props
-
-        if (!boardTree || !boardTree.board) {
-            return (
-                <div>
-                    <FormattedMessage
-                        id='TableComponent.loading'
-                        defaultMessage='Loading...'
-                    />
-                </div>
-            )
-        }
-
         const {board, cards, activeView} = boardTree
         const titleRef = React.createRef<HTMLDivElement>()
 
@@ -300,7 +288,7 @@ class TableComponent extends React.Component<Props, State> {
     }
 
     private columnWidth(templateId: string): number {
-        return Math.max(Constants.minColumnWidth, this.props.boardTree?.activeView?.columnWidths[templateId] || 0)
+        return Math.max(Constants.minColumnWidth, this.props.boardTree.activeView.columnWidths[templateId] || 0)
     }
 
     private addCardAndShow = () => {

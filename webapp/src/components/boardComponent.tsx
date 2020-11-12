@@ -35,7 +35,7 @@ import ViewTitle from './viewTitle'
 import './boardComponent.scss'
 
 type Props = {
-    boardTree?: BoardTree
+    boardTree: BoardTree
     showView: (id: string) => void
     setSearchText: (text: string) => void
     intl: IntlShape
@@ -85,7 +85,7 @@ class BoardComponent extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props)
         this.state = {
-            isSearching: Boolean(this.props.boardTree?.getSearchText()),
+            isSearching: Boolean(this.props.boardTree.getSearchText()),
             viewMenu: false,
             selectedCardIds: [],
             showFilter: false,
@@ -104,18 +104,6 @@ class BoardComponent extends React.Component<Props, State> {
 
     render(): JSX.Element {
         const {boardTree, showView} = this.props
-
-        if (!boardTree || !boardTree.board) {
-            return (
-                <div>
-                    <FormattedMessage
-                        id='BoardComponent.loading'
-                        defaultMessage='Loading...'
-                    />
-                </div>
-            )
-        }
-
         const propertyValues = boardTree.groupByProperty?.options || []
         Utils.log(`${propertyValues.length} propertyValues`)
 

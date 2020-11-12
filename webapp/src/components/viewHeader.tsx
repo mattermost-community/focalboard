@@ -34,7 +34,7 @@ import {Constants} from '../constants'
 import DeleteIcon from '../widgets/icons/delete'
 
 type Props = {
-    boardTree?: BoardTree
+    boardTree: BoardTree
     showView: (id: string) => void
     setSearchText: (text: string) => void
     addCard: () => void
@@ -59,7 +59,7 @@ class ViewHeader extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
-        this.state = {isSearching: Boolean(this.props.boardTree?.getSearchText()), showFilter: false}
+        this.state = {isSearching: Boolean(this.props.boardTree.getSearchText()), showFilter: false}
     }
 
     componentDidUpdate(prevPros: Props, prevState: State): void {
@@ -93,7 +93,7 @@ class ViewHeader extends React.Component<Props, State> {
         const {boardTree} = this.props
         const {board, activeView} = boardTree
 
-        const startCount = boardTree?.cards?.length
+        const startCount = boardTree.cards.length
         let optionIndex = 0
 
         await mutator.performAsUndoGroup(async () => {
@@ -117,10 +117,6 @@ class ViewHeader extends React.Component<Props, State> {
 
     private async testDistributeCards() {
         const {boardTree} = this.props
-        if (!boardTree) {
-            return
-        }
-
         await mutator.performAsUndoGroup(async () => {
             let optionIndex = 0
             for (const card of boardTree.cards) {

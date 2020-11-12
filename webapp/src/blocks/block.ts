@@ -10,7 +10,7 @@ interface IBlock {
 
     readonly schema: number
     readonly type: BlockTypes
-    readonly title?: string
+    readonly title: string
     readonly fields: Readonly<Record<string, any>>
 
     readonly createAt: number
@@ -24,7 +24,7 @@ interface IMutableBlock extends IBlock {
 
     schema: number
     type: BlockTypes
-    title?: string
+    title: string
     fields: Record<string, any>
 
     createAt: number
@@ -56,18 +56,17 @@ class MutableBlock implements IMutableBlock {
     }
 
     constructor(block: any = {}) {
-        const now = Date.now()
-
         this.id = block.id || Utils.createGuid()
         this.schema = 1
-        this.parentId = block.parentId
-        this.type = block.type
+        this.parentId = block.parentId || ''
+        this.type = block.type || ''
 
         // Shallow copy here. Derived classes must make deep copies of their known properties in their constructors.
         this.fields = block.fields ? {...block.fields} : {}
 
-        this.title = block.title
+        this.title = block.title || ''
 
+        const now = Date.now()
         this.createAt = block.createAt || now
         this.updateAt = block.updateAt || now
         this.deleteAt = block.deleteAt || 0

@@ -56,7 +56,7 @@ export default class PropertyValueElement extends React.Component<Props, State> 
                 className += ' empty'
             }
 
-            if (readOnly) {
+            if (readOnly || !boardTree) {
                 return (
                     <div
                         className={`${className} ${propertyColorCssClassName}`}
@@ -87,7 +87,7 @@ export default class PropertyValueElement extends React.Component<Props, State> 
                                 value,
                                 color: 'propColorDefault',
                             }
-                            await mutator.insertPropertyOption(this.props.boardTree, propertyTemplate, option, 'add property option')
+                            await mutator.insertPropertyOption(boardTree, propertyTemplate, option, 'add property option')
                             mutator.changePropertyValue(card, propertyTemplate.id, option.id)
                         }
                     }

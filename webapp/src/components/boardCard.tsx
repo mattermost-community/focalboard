@@ -25,9 +25,9 @@ type BoardCardProps = {
     isSelected: boolean
     isDropZone?: boolean
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
-    onDragStart?: (e: React.DragEvent<HTMLDivElement>) => void
-    onDragEnd?: (e: React.DragEvent<HTMLDivElement>) => void
-    onDrop?: (e: React.DragEvent<HTMLDivElement>) => void
+    onDragStart: (e: React.DragEvent<HTMLDivElement>) => void
+    onDragEnd: (e: React.DragEvent<HTMLDivElement>) => void
+    onDrop: (e: React.DragEvent<HTMLDivElement>) => void
     intl: IntlShape
 }
 

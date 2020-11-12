@@ -6,7 +6,6 @@ import {injectIntl, IntlShape, FormattedMessage} from 'react-intl'
 import {Archiver} from '../archiver'
 import {mattermostTheme, darkTheme, lightTheme, setTheme} from '../theme'
 import {Board, MutableBoard} from '../blocks/board'
-import {BoardTree} from '../viewModel/boardTree'
 import mutator from '../mutator'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
@@ -28,7 +27,7 @@ type Props = {
     showBoard: (id: string) => void
     showView: (id: string, boardId?: string) => void
     workspaceTree: WorkspaceTree,
-    boardTree?: BoardTree,
+    activeBoardId?: string
     setLanguage: (lang: string) => void,
     intl: IntlShape
 }
@@ -273,9 +272,9 @@ class Sidebar extends React.Component<Props, State> {
     }
 
     private addBoardClicked = async () => {
-        const {boardTree, showBoard} = this.props
+        const {showBoard} = this.props
 
-        const oldBoardId = boardTree?.board?.id
+        const oldBoardId = this.props.activeBoardId
         const board = new MutableBoard()
         await mutator.insertBlock(
             board,

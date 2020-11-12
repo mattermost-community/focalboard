@@ -11,7 +11,7 @@ import Menu from '../widgets/menu'
 import {Constants} from '../constants'
 
 type Props = {
-    boardTree?: BoardTree
+    boardTree: BoardTree
     board: Board,
     showView: (id: string) => void
 }
