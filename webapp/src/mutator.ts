@@ -98,9 +98,11 @@ class Mutator {
             },
             async () => {
                 await beforeUndo?.()
+                const awaits = []
                 for (const block of blocks) {
-                    await octoClient.deleteBlock(block.id)
+                    awaits.push(octoClient.deleteBlock(block.id))
                 }
+                await Promise.all(awaits)
             },
             description,
             this.undoGroupId,

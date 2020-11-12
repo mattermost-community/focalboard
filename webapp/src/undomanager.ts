@@ -128,11 +128,16 @@ class UndoManager {
         }
 
         const currentGroupId = command.groupId
-        do {
+        if (currentGroupId) {
+            do {
+                // eslint-disable-next-line no-await-in-loop
+                await this.execute(command, 'undo')
+                this.index -= 1
+                command = this.commands[this.index]
+            } while (this.index >= 0 && currentGroupId === command.groupId)
+        } else {
             await this.execute(command, 'undo')
-            this.index -= 1
-            command = this.commands[this.index]
-        } while (this.index >= 0 && currentGroupId && currentGroupId === command.groupId)
+        }
 
         if (this.onStateDidChange) {
             this.onStateDidChange()
@@ -151,11 +156,16 @@ class UndoManager {
         }
 
         const currentGroupId = command.groupId
-        do {
+        if (currentGroupId) {
+            do {
+                // eslint-disable-next-line no-await-in-loop
+                await this.execute(command, 'redo')
+                this.index += 1
+                command = this.commands[this.index + 1]
+            } while (this.index < this.commands.length - 1 && currentGroupId === command.groupId)
+        } else {
             await this.execute(command, 'redo')
-            this.index += 1
-            command = this.commands[this.index + 1]
-        } while (this.index < this.commands.length - 1 && currentGroupId && currentGroupId === command.groupId)
+        }
 
         if (this.onStateDidChange) {
             this.onStateDidChange()
