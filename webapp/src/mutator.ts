@@ -20,7 +20,7 @@ import {OctoUtils} from './octoUtils'
 class Mutator {
     private undoGroupId?: string
 
-    private beginUndoGroup(): string {
+    private beginUndoGroup(): string | undefined {
         if (this.undoGroupId) {
             Utils.assertFailure('UndoManager does not support nested groups')
             return
@@ -44,7 +44,9 @@ class Mutator {
         } catch (err) {
             Utils.assertFailure(`ERROR: ${err?.toString?.()}`)
         }
-        this.endUndoGroup(groupId)
+        if (groupId) {
+            this.endUndoGroup(groupId)
+        }
     }
 
     async updateBlock(newBlock: IBlock, oldBlock: IBlock, description: string): Promise<void> {
@@ -145,6 +147,10 @@ class Mutator {
             newBlock = board
             break
         }
+        default: {
+            Utils.assertFailure(`changeIcon: Invalid block type: ${block.type}`)
+            return
+        }
         }
 
         await this.updateBlock(newBlock, block, description)
@@ -160,6 +166,10 @@ class Mutator {
 
     async insertPropertyTemplate(boardTree: BoardTree, index = -1, template?: IPropertyTemplate) {
         const {board, activeView} = boardTree
+        if (!activeView) {
+            Utils.assertFailure('insertPropertyTemplate: no activeView')
+            return
+        }
 
         if (index < 0) {
             index = board.cardProperties.length
@@ -197,6 +207,10 @@ class Mutator {
 
     async duplicatePropertyTemplate(boardTree: BoardTree, propertyId: string) {
         const {board, activeView} = boardTree
+        if (!activeView) {
+            Utils.assertFailure('duplicatePropertyTemplate: no activeView')
+            return
+        }
 
         const oldBlocks: IBlock[] = [board]
 
@@ -297,7 +311,7 @@ class Mutator {
         Utils.assert(board.cardProperties.includes(template))
 
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)
+        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)!
         newTemplate.options.push(option)
 
         await this.updateBlock(newBoard, board, description)
@@ -307,7 +321,7 @@ class Mutator {
         const {board} = boardTree
 
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)
+        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)!
         newTemplate.options = newTemplate.options.filter((o) => o.id !== option.id)
 
         await this.updateBlock(newBoard, board, 'delete option')
@@ -318,7 +332,7 @@ class Mutator {
         Utils.log(`srcIndex: ${srcIndex}, destIndex: ${destIndex}`)
 
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)
+        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)!
         newTemplate.options.splice(destIndex, 0, newTemplate.options.splice(srcIndex, 1)[0])
 
         await this.updateBlock(newBoard, board, 'reorder options')
@@ -330,8 +344,8 @@ class Mutator {
         const oldBlocks: IBlock[] = [board]
 
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o) => o.id === propertyTemplate.id)
-        const newOption = newTemplate.options.find((o) => o.id === option.id)
+        const newTemplate = newBoard.cardProperties.find((o) => o.id === propertyTemplate.id)!
+        const newOption = newTemplate.options.find((o) => o.id === option.id)!
         newOption.value = value
         const changedBlocks: IBlock[] = [newBoard]
 
@@ -342,15 +356,19 @@ class Mutator {
 
     async changePropertyOptionColor(board: Board, template: IPropertyTemplate, option: IPropertyOption, color: string) {
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)
-        const newOption = newTemplate.options.find((o) => o.id === option.id)
+        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)!
+        const newOption = newTemplate.options.find((o) => o.id === option.id)!
         newOption.color = color
         await this.updateBlock(newBoard, board, 'change option color')
     }
 
     async changePropertyValue(card: Card, propertyId: string, value?: string, description = 'change property') {
         const newCard = new MutableCard(card)
-        newCard.properties[propertyId] = value
+        if (value) {
+            newCard.properties[propertyId] = value
+        } else {
+            delete newCard.properties[propertyId]
+        }
         await this.updateBlock(newCard, card, description)
     }
 
@@ -358,7 +376,7 @@ class Mutator {
         const {board} = boardTree
 
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o) => o.id === propertyTemplate.id)
+        const newTemplate = newBoard.cardProperties.find((o) => o.id === propertyTemplate.id)!
         newTemplate.type = type
 
         const oldBlocks: IBlock[] = [board]
@@ -370,7 +388,11 @@ class Mutator {
                 if (oldValue) {
                     const newValue = propertyTemplate.options.find((o) => o.id === oldValue)?.value
                     const newCard = new MutableCard(card)
-                    newCard.properties[propertyTemplate.id] = newValue
+                    if (newValue) {
+                        newCard.properties[propertyTemplate.id] = newValue
+                    } else {
+                        delete newCard.properties[propertyTemplate.id]
+                    }
                     newBlocks.push(newCard)
                     oldBlocks.push(card)
                 }
@@ -382,7 +404,11 @@ class Mutator {
                 if (oldValue) {
                     const newValue = propertyTemplate.options.find((o) => o.value === oldValue)?.id
                     const newCard = new MutableCard(card)
-                    newCard.properties[propertyTemplate.id] = newValue
+                    if (newValue) {
+                        newCard.properties[propertyTemplate.id] = newValue
+                    } else {
+                        delete newCard.properties[propertyTemplate.id]
+                    }
                     newBlocks.push(newCard)
                     oldBlocks.push(card)
                 }
@@ -466,10 +492,10 @@ class Mutator {
     async duplicateCard(cardId: string, description = 'duplicate card', afterRedo?: (newBoardId: string) => Promise<void>, beforeUndo?: () => Promise<void>): Promise<[IBlock[], string]> {
         const blocks = await octoClient.getSubtree(cardId, 2)
         let [newBlocks, idMap] = OctoUtils.duplicateBlockTree(blocks, cardId)
-        newBlocks = newBlocks.filter(o => o.type !== 'comment')
+        newBlocks = newBlocks.filter((o) => o.type !== 'comment')
         Utils.log(`duplicateCard: duplicating ${newBlocks.length} blocks`)
         const newCardId = idMap[cardId]
-        const newCard = newBlocks.find((o) => o.id === newCardId)
+        const newCard = newBlocks.find((o) => o.id === newCardId)!
         newCard.title = `Copy of ${newCard.title || ''}`
         await this.insertBlocks(
             newBlocks,
@@ -485,10 +511,10 @@ class Mutator {
     async duplicateBoard(boardId: string, description = 'duplicate board', afterRedo?: (newBoardId: string) => Promise<void>, beforeUndo?: () => Promise<void>): Promise<[IBlock[], string]> {
         const blocks = await octoClient.getSubtree(boardId, 3)
         let [newBlocks, idMap] = OctoUtils.duplicateBlockTree(blocks, boardId)
-        newBlocks = newBlocks.filter(o => o.type !== 'comment')
+        newBlocks = newBlocks.filter((o) => o.type !== 'comment')
         Utils.log(`duplicateBoard: duplicating ${newBlocks.length} blocks`)
         const newBoardId = idMap[boardId]
-        const newBoard = newBlocks.find((o) => o.id === newBoardId)
+        const newBoard = newBlocks.find((o) => o.id === newBoardId)!
         newBoard.title = `Copy of ${newBoard.title || ''}`
         await this.insertBlocks(
             newBlocks,

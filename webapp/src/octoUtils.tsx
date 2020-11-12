@@ -13,7 +13,7 @@ import {Utils} from './utils'
 
 class OctoUtils {
     static propertyDisplayValue(block: IBlock, propertyValue: string | undefined, propertyTemplate: IPropertyTemplate): string | undefined {
-        let displayValue: string
+        let displayValue: string | undefined
         switch (propertyTemplate.type) {
         case 'select': {
             // The property value is the id of the template
@@ -108,7 +108,7 @@ class OctoUtils {
             // Remap manual card order
             if (newBlock.type === 'view') {
                 const view = newBlock as MutableBoardView
-                view.cardOrder = view.cardOrder.map(o => idMap[o])
+                view.cardOrder = view.cardOrder.map((o) => idMap[o])
             }
         })
 

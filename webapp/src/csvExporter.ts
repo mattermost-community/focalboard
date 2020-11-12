@@ -10,7 +10,11 @@ class CsvExporter {
         const {activeView} = boardTree
         const viewToExport = view ?? activeView
 
-        const rows = CsvExporter.generateTableArray(boardTree, view)
+        if (!viewToExport) {
+            return
+        }
+
+        const rows = CsvExporter.generateTableArray(boardTree, viewToExport)
 
         let csvContent = 'data:text/csv;charset=utf-8,'
 
@@ -19,7 +23,7 @@ class CsvExporter {
             csvContent += encodedRow + '\r\n'
         })
 
-        const filename = `${Utils.sanitizeFilename(viewToExport.title)}.csv`
+        const filename = `${Utils.sanitizeFilename(viewToExport.title || 'Untitled')}.csv`
         const encodedUri = encodeURI(csvContent)
         const link = document.createElement('a')
         link.style.display = 'none'
@@ -32,9 +36,8 @@ class CsvExporter {
         // TODO: Remove or reuse link
     }
 
-    private static generateTableArray(boardTree: BoardTree, view?: BoardView): string[][] {
-        const {board, cards, activeView} = boardTree
-        const viewToExport = view ?? activeView
+    private static generateTableArray(boardTree: BoardTree, viewToExport: BoardView): string[][] {
+        const {board, cards} = boardTree
 
         const rows: string[][] = []
         const visibleProperties = board.cardProperties.filter((template) => viewToExport.visiblePropertyIds.includes(template.id))
@@ -54,7 +57,7 @@ class CsvExporter {
                 const propertyValue = card.properties[template.id]
                 const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, template) || ''
                 if (template.type === 'number') {
-                    const numericValue = propertyValue ? Number(propertyValue).toString() : undefined
+                    const numericValue = propertyValue ? Number(propertyValue).toString() : ''
                     row.push(numericValue)
                 } else {
                     // Export as string

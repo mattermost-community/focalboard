@@ -23,7 +23,7 @@ type OnChangeHandler = (blocks: IBlock[]) => void
 //
 class OctoListener {
     get isOpen(): boolean {
-        return this.ws !== undefined
+        return Boolean(this.ws)
     }
 
     readonly serverUrl: string
@@ -31,9 +31,9 @@ class OctoListener {
     private blockIds: string[] = []
     private isInitialized = false
 
-    private onChange: OnChangeHandler
+    private onChange?: OnChangeHandler
     private updatedBlocks: IBlock[] = []
-    private updateTimeout: NodeJS.Timeout
+    private updateTimeout?: NodeJS.Timeout
 
     notificationDelay = 100
     reopenDelay = 3000
@@ -124,7 +124,7 @@ class OctoListener {
     }
 
     addBlocks(blockIds: string[]): void {
-        if (!this.isOpen) {
+        if (!this.ws) {
             Utils.assertFailure('OctoListener.addBlocks: ws is not open')
             return
         }
@@ -139,7 +139,7 @@ class OctoListener {
     }
 
     removeBlocks(blockIds: string[]): void {
-        if (!this.isOpen) {
+        if (!this.ws) {
             Utils.assertFailure('OctoListener.removeBlocks: ws is not open')
             return
         }
@@ -176,7 +176,7 @@ class OctoListener {
     }
 
     private flushUpdateNotifications() {
-        this.onChange(this.updatedBlocks)
+        this.onChange?.(this.updatedBlocks)
         this.updatedBlocks = []
     }
 }
