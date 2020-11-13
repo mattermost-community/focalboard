@@ -31,13 +31,13 @@ export default class MenuWrapper extends React.PureComponent<Props, State> {
         this.node = React.createRef()
     }
 
-    public componentDidMount() {
+    public componentDidMount(): void {
         document.addEventListener('menuItemClicked', this.close, true)
         document.addEventListener('click', this.closeOnBlur, true)
         document.addEventListener('keyup', this.keyboardClose, true)
     }
 
-    public componentWillUnmount() {
+    public componentWillUnmount(): void {
         document.removeEventListener('menuItemClicked', this.close, true)
         document.removeEventListener('click', this.closeOnBlur, true)
         document.removeEventListener('keyup', this.keyboardClose, true)
@@ -61,13 +61,13 @@ export default class MenuWrapper extends React.PureComponent<Props, State> {
         this.close()
     }
 
-    public close = () => {
+    public close = (): void => {
         if (this.state.open) {
             this.setState({open: false})
         }
     }
 
-    toggle = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    private toggle = (e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
         /**
          * This is only here so that we can toggle the menus in the sidebar, because the default behavior of the mobile
          * version (ie the one that uses a modal) needs propagation to close the modal after selecting something
@@ -82,7 +82,7 @@ export default class MenuWrapper extends React.PureComponent<Props, State> {
         this.setState({open: newState})
     }
 
-    public render() {
+    public render(): JSX.Element {
         const {children} = this.props
 
         return (
