@@ -6,7 +6,7 @@
 		"esModuleInterop": true,
 		"noImplicitAny": true,
 		"strict": true,
-		"strictNullChecks": false,
+		"strictNullChecks": true,
 		"forceConsistentCasingInFileNames": true,
 		"sourceMap": true,
 		"allowJs": true,
@@ -26,5 +26,9 @@
 		"."
 	],
 	"exclude": [
-	]
+        ".git",
+		"**/node_modules/*",
+		"dist",
+		"pack"
+    ]
 }
