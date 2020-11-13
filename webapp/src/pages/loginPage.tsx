@@ -3,9 +3,7 @@
 import React from 'react'
 
 import {Utils} from '../utils'
-
 import Button from '../widgets/buttons/button'
-
 import './loginPage.scss'
 
 type Props = {

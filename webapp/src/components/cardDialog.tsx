@@ -1,20 +1,18 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-
 import {FormattedMessage} from 'react-intl'
 
-import {BoardTree} from '../viewModel/boardTree'
 import mutator from '../mutator'
-import Menu from '../widgets/menu'
-import DeleteIcon from '../widgets/icons/delete'
-
-import {MutableCardTree, CardTree} from '../viewModel/cardTree'
 import {OctoListener} from '../octoListener'
 import {Utils} from '../utils'
+import {BoardTree} from '../viewModel/boardTree'
+import {CardTree, MutableCardTree} from '../viewModel/cardTree'
+import DeleteIcon from '../widgets/icons/delete'
+import Menu from '../widgets/menu'
 
-import Dialog from './dialog'
 import CardDetail from './cardDetail'
+import Dialog from './dialog'
 
 type Props = {
     boardTree: BoardTree

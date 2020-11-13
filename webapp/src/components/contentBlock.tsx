@@ -3,28 +3,26 @@
 
 import React from 'react'
 
-import {IOrderedBlock} from '../blocks/orderedBlock'
-import {OctoUtils} from '../octoUtils'
-import mutator from '../mutator'
-import {Utils} from '../utils'
-import {MutableTextBlock} from '../blocks/textBlock'
 import {MutableDividerBlock} from '../blocks/dividerBlock'
-
+import {IOrderedBlock} from '../blocks/orderedBlock'
+import {MutableTextBlock} from '../blocks/textBlock'
+import mutator from '../mutator'
+import {OctoUtils} from '../octoUtils'
+import {Utils} from '../utils'
+import IconButton from '../widgets/buttons/iconButton'
+import AddIcon from '../widgets/icons/add'
+import DeleteIcon from '../widgets/icons/delete'
+import DividerIcon from '../widgets/icons/divider'
+import ImageIcon from '../widgets/icons/image'
+import OptionsIcon from '../widgets/icons/options'
+import SortDownIcon from '../widgets/icons/sortDown'
+import SortUpIcon from '../widgets/icons/sortUp'
+import TextIcon from '../widgets/icons/text'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
-import OptionsIcon from '../widgets/icons/options'
-import SortUpIcon from '../widgets/icons/sortUp'
-import SortDownIcon from '../widgets/icons/sortDown'
-import DeleteIcon from '../widgets/icons/delete'
-import AddIcon from '../widgets/icons/add'
-import TextIcon from '../widgets/icons/text'
-import ImageIcon from '../widgets/icons/image'
-import DividerIcon from '../widgets/icons/divider'
-import IconButton from '../widgets/buttons/iconButton'
-
-import {MarkdownEditor} from './markdownEditor'
 
 import './contentBlock.scss'
+import {MarkdownEditor} from './markdownEditor'
 
 type Props = {
     block: IOrderedBlock

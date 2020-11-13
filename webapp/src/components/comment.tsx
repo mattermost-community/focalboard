@@ -1,19 +1,17 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {FC} from 'react'
-import {IntlShape, injectIntl} from 'react-intl'
+import {injectIntl, IntlShape} from 'react-intl'
 
-import mutator from '../mutator'
 import {IBlock} from '../blocks/block'
-
-import Menu from '../widgets/menu'
-import MenuWrapper from '../widgets/menuWrapper'
+import mutator from '../mutator'
+import {Utils} from '../utils'
+import IconButton from '../widgets/buttons/iconButton'
 import DeleteIcon from '../widgets/icons/delete'
 import OptionsIcon from '../widgets/icons/options'
-import IconButton from '../widgets/buttons/iconButton'
-
+import Menu from '../widgets/menu'
+import MenuWrapper from '../widgets/menuWrapper'
 import './comment.scss'
-import {Utils} from '../utils'
 
 type Props = {
     comment: IBlock

@@ -2,14 +2,14 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
-import {WorkspaceComponent} from '../components/workspaceComponent'
+import {IBlock} from '../blocks/block'
 import {sendFlashMessage} from '../components/flashMessages'
+import {WorkspaceComponent} from '../components/workspaceComponent'
 import mutator from '../mutator'
 import {OctoListener} from '../octoListener'
 import {Utils} from '../utils'
+import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
 import {MutableWorkspaceTree, WorkspaceTree} from '../viewModel/workspaceTree'
-import {IBlock} from '../blocks/block'
 
 type Props = {
     setLanguage: (lang: string) => void

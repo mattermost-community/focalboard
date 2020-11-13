@@ -1,16 +1,15 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-
 import {injectIntl, IntlShape} from 'react-intl'
 
 import {Board} from '../blocks/board'
 import {MutableBoardView} from '../blocks/boardView'
-import {BoardTree} from '../viewModel/boardTree'
+import {Constants} from '../constants'
 import mutator from '../mutator'
 import {Utils} from '../utils'
+import {BoardTree} from '../viewModel/boardTree'
 import Menu from '../widgets/menu'
-import {Constants} from '../constants'
 
 type Props = {
     boardTree: BoardTree

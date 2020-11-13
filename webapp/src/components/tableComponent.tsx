@@ -3,30 +3,28 @@
 import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import {Constants} from '../constants'
 import {BlockIcons} from '../blockIcons'
+import {IBlock} from '../blocks/block'
 import {IPropertyTemplate} from '../blocks/board'
+import {MutableBoardView} from '../blocks/boardView'
 import {MutableCard} from '../blocks/card'
-import {BoardTree} from '../viewModel/boardTree'
-import {MutableCardTree} from '../viewModel/cardTree'
+import {Constants} from '../constants'
 import mutator from '../mutator'
 import {Utils} from '../utils'
-import {MutableBoardView} from '../blocks/boardView'
-import {IBlock} from '../blocks/block'
-
-import MenuWrapper from '../widgets/menuWrapper'
+import {BoardTree} from '../viewModel/boardTree'
+import {MutableCardTree} from '../viewModel/cardTree'
 import SortDownIcon from '../widgets/icons/sortDown'
 import SortUpIcon from '../widgets/icons/sortUp'
+import MenuWrapper from '../widgets/menuWrapper'
 
 import {CardDialog} from './cardDialog'
+import {HorizontalGrip} from './horizontalGrip'
 import RootPortal from './rootPortal'
+import './tableComponent.scss'
+import TableHeaderMenu from './tableHeaderMenu'
 import {TableRow} from './tableRow'
 import ViewHeader from './viewHeader'
 import ViewTitle from './viewTitle'
-import TableHeaderMenu from './tableHeaderMenu'
-
-import './tableComponent.scss'
-import {HorizontalGrip} from './horizontalGrip'
 
 type Props = {
     boardTree: BoardTree

@@ -6,16 +6,15 @@ import {injectIntl, IntlShape} from 'react-intl'
 import {IPropertyTemplate} from '../blocks/board'
 import {Card} from '../blocks/card'
 import mutator from '../mutator'
-import MenuWrapper from '../widgets/menuWrapper'
-import Menu from '../widgets/menu'
-import OptionsIcon from '../widgets/icons/options'
+import IconButton from '../widgets/buttons/iconButton'
 import DeleteIcon from '../widgets/icons/delete'
 import DuplicateIcon from '../widgets/icons/duplicate'
-import IconButton from '../widgets/buttons/iconButton'
-
-import PropertyValueElement from './propertyValueElement'
+import OptionsIcon from '../widgets/icons/options'
+import Menu from '../widgets/menu'
+import MenuWrapper from '../widgets/menuWrapper'
 
 import './boardCard.scss'
+import PropertyValueElement from './propertyValueElement'
 
 type BoardCardProps = {
     card: Card

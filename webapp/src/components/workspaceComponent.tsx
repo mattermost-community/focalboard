@@ -2,14 +2,13 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {BoardTree} from '../viewModel/boardTree'
 import {Utils} from '../utils'
+import {BoardTree} from '../viewModel/boardTree'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
 
 import BoardComponent from './boardComponent'
 import Sidebar from './sidebar'
 import {TableComponent} from './tableComponent'
-
 import './workspaceComponent.scss'
 
 type Props = {

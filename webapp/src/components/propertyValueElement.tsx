@@ -3,13 +3,12 @@
 
 import React from 'react'
 
+import {IPropertyOption, IPropertyTemplate} from '../blocks/board'
 import {Card} from '../blocks/card'
-import {IPropertyTemplate, IPropertyOption} from '../blocks/board'
-import {OctoUtils} from '../octoUtils'
 import mutator from '../mutator'
+import {OctoUtils} from '../octoUtils'
 import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
-
 import Editable from '../widgets/editable'
 import ValueSelector from '../widgets/valueSelector'
 

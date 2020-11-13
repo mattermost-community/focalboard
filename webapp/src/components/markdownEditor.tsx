@@ -4,9 +4,8 @@ import EasyMDE from 'easymde'
 import React from 'react'
 import SimpleMDE from 'react-simplemde-editor'
 
-import './markdownEditor.scss'
-
 import {Utils} from '../utils'
+import './markdownEditor.scss'
 
 type Props = {
     text?: string

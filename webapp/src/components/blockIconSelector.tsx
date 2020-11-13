@@ -7,12 +7,11 @@ import {BlockIcons} from '../blockIcons'
 import {Board} from '../blocks/board'
 import {Card} from '../blocks/card'
 import mutator from '../mutator'
+import EmojiPicker from '../widgets/emojiPicker'
+import DeleteIcon from '../widgets/icons/delete'
+import EmojiIcon from '../widgets/icons/emoji'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
-import EmojiPicker from '../widgets/emojiPicker'
-import EmojiIcon from '../widgets/icons/emoji'
-import DeleteIcon from '../widgets/icons/delete'
-
 import './blockIconSelector.scss'
 
 type Props = {

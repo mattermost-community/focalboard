@@ -3,16 +3,14 @@
 import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import {BoardTree} from '../viewModel/boardTree'
 import {Card} from '../blocks/card'
-import mutator from '../mutator'
-
 import {Constants} from '../constants'
-import Editable from '../widgets/editable'
+import mutator from '../mutator'
+import {BoardTree} from '../viewModel/boardTree'
 import Button from '../widgets/buttons/button'
+import Editable from '../widgets/editable'
 
 import PropertyValueElement from './propertyValueElement'
-
 import './tableRow.scss'
 
 type Props = {

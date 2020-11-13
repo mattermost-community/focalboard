@@ -1,12 +1,12 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+import {IBlock, IMutableBlock} from '../blocks/block'
 import {Board, IPropertyOption, IPropertyTemplate, MutableBoard} from '../blocks/board'
 import {BoardView, MutableBoardView} from '../blocks/boardView'
 import {Card, MutableCard} from '../blocks/card'
 import {CardFilter} from '../cardFilter'
 import {Constants} from '../constants'
 import octoClient from '../octoClient'
-import {IBlock, IMutableBlock} from '../blocks/block'
 import {OctoUtils} from '../octoUtils'
 import {Utils} from '../utils'
 
