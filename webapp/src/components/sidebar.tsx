@@ -16,6 +16,7 @@ import HamburgerIcon from '../widgets/icons/hamburger'
 import DeleteIcon from '../widgets/icons/delete'
 import SubmenuTriangleIcon from '../widgets/icons/submenuTriangle'
 import DotIcon from '../widgets/icons/dot'
+import DuplicateIcon from '../widgets/icons/duplicate'
 import IconButton from '../widgets/buttons/iconButton'
 import Button from '../widgets/buttons/button'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
@@ -117,7 +118,7 @@ class Sidebar extends React.Component<Props, State> {
                                     </div>
                                     <MenuWrapper>
                                         <IconButton icon={<OptionsIcon/>}/>
-                                        <Menu>
+                                        <Menu position='left'>
                                             <Menu.Text
                                                 id='deleteBoard'
                                                 name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete Board'})}
@@ -140,6 +141,7 @@ class Sidebar extends React.Component<Props, State> {
                                             <Menu.Text
                                                 id='duplicateBoard'
                                                 name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate Board'})}
+                                                icon={<DuplicateIcon/>}
                                                 onClick={async () => {
                                                     await mutator.duplicateBoard(
                                                         board.id,
