@@ -8,20 +8,21 @@ import Button from '../widgets/buttons/button'
 
 import './loginPage.scss'
 
-type Props = {}
-
-type State = {
-    username: string;
-    password: string;
+type Props = {
 }
 
-export default class LoginPage extends React.Component<Props, State> {
+type State = {
+    username: string
+    password: string
+}
+
+export default class LoginPage extends React.PureComponent<Props, State> {
     state = {
         username: '',
         password: '',
     }
 
-    handleLogin = () => {
+    private handleLogin = (): void => {
         Utils.log('Logging in')
     }
 
@@ -29,7 +30,7 @@ export default class LoginPage extends React.Component<Props, State> {
         return (
             <div className='LoginPage'>
                 <div className='username'>
-                    <label htmlFor='login-username'>Username</label>
+                    <label htmlFor='login-username'>{'Username'}</label>
                     <input
                         id='login-username'
                         value={this.state.username}
@@ -37,7 +38,7 @@ export default class LoginPage extends React.Component<Props, State> {
                     />
                 </div>
                 <div className='password'>
-                    <label htmlFor='login-username'>Password</label>
+                    <label htmlFor='login-username'>{'Password'}</label>
                     <input
                         id='login-password'
                         type='password'
@@ -45,7 +46,7 @@ export default class LoginPage extends React.Component<Props, State> {
                         onChange={(e) => this.setState({password: e.target.value})}
                     />
                 </div>
-                <Button onClick={this.handleLogin}>Login</Button>
+                <Button onClick={this.handleLogin}>{'Login'}</Button>
             </div>
         )
     }

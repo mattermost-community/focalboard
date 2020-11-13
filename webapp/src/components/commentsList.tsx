@@ -79,7 +79,7 @@ class CommentsList extends React.Component<Props, State> {
                         text={this.state.newComment}
                         placeholderText={intl.formatMessage({id: 'CardDetail.new-comment-placeholder', defaultMessage: 'Add a comment...'})}
                         onChange={(value: string) => {
-                            if (this.state.newComment != value) {
+                            if (this.state.newComment !== value) {
                                 this.setState({newComment: value})
                             }
                         }}
