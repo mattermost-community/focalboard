@@ -164,13 +164,10 @@ export default class BoardPage extends React.Component<Props, State> {
             await boardTree.sync()
 
             // Default to first view
-            if (!viewId) {
-                viewId = boardTree.views[0].id
-            }
-
-            boardTree.setActiveView(viewId)
+            boardTree.setActiveView(viewId || boardTree.views[0].id)
 
             // TODO: Handle error (viewId not found)
+
             this.setState({
                 boardTree,
                 boardId,

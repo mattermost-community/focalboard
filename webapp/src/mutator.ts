@@ -171,23 +171,18 @@ class Mutator {
             return
         }
 
-        if (index < 0) {
-            index = board.cardProperties.length
-        }
-
-        if (!template) {
-            template = {
-                id: Utils.createGuid(),
-                name: 'New Property',
-                type: 'text',
-                options: [],
-            }
+        const newTemplate = template || {
+            id: Utils.createGuid(),
+            name: 'New Property',
+            type: 'text',
+            options: [],
         }
 
         const oldBlocks: IBlock[] = [board]
 
         const newBoard = new MutableBoard(board)
-        newBoard.cardProperties.splice(index, 0, template)
+        const startIndex = (index >= 0) ? index : board.cardProperties.length
+        newBoard.cardProperties.splice(startIndex, 0, newTemplate)
         const changedBlocks: IBlock[] = [newBoard]
 
         let description = 'add property'
@@ -196,7 +191,7 @@ class Mutator {
             oldBlocks.push(activeView)
 
             const newActiveView = new MutableBoardView(activeView)
-            newActiveView.visiblePropertyIds.push(template.id)
+            newActiveView.visiblePropertyIds.push(newTemplate.id)
             changedBlocks.push(newActiveView)
 
             description = 'add column'
@@ -339,7 +334,7 @@ class Mutator {
     }
 
     async changePropertyOptionValue(boardTree: BoardTree, propertyTemplate: IPropertyTemplate, option: IPropertyOption, value: string) {
-        const {board, cards} = boardTree
+        const {board} = boardTree
 
         const oldBlocks: IBlock[] = [board]
 
@@ -491,8 +486,8 @@ class Mutator {
 
     async duplicateCard(cardId: string, description = 'duplicate card', afterRedo?: (newBoardId: string) => Promise<void>, beforeUndo?: () => Promise<void>): Promise<[IBlock[], string]> {
         const blocks = await octoClient.getSubtree(cardId, 2)
-        let [newBlocks, idMap] = OctoUtils.duplicateBlockTree(blocks, cardId)
-        newBlocks = newBlocks.filter((o) => o.type !== 'comment')
+        const [newBlocks1, idMap] = OctoUtils.duplicateBlockTree(blocks, cardId)
+        const newBlocks = newBlocks1.filter((o) => o.type !== 'comment')
         Utils.log(`duplicateCard: duplicating ${newBlocks.length} blocks`)
         const newCardId = idMap[cardId]
         const newCard = newBlocks.find((o) => o.id === newCardId)!
@@ -510,8 +505,8 @@ class Mutator {
 
     async duplicateBoard(boardId: string, description = 'duplicate board', afterRedo?: (newBoardId: string) => Promise<void>, beforeUndo?: () => Promise<void>): Promise<[IBlock[], string]> {
         const blocks = await octoClient.getSubtree(boardId, 3)
-        let [newBlocks, idMap] = OctoUtils.duplicateBlockTree(blocks, boardId)
-        newBlocks = newBlocks.filter((o) => o.type !== 'comment')
+        const [newBlocks1, idMap] = OctoUtils.duplicateBlockTree(blocks, boardId)
+        const newBlocks = newBlocks1.filter((o) => o.type !== 'comment')
         Utils.log(`duplicateBoard: duplicating ${newBlocks.length} blocks`)
         const newBoardId = idMap[boardId]
         const newBoard = newBlocks.find((o) => o.id === newBoardId)!

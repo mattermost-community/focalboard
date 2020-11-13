@@ -293,103 +293,96 @@ class MutableBoardTree implements BoardTree {
             return cards
         }
         const {sortOptions} = activeView
-        let sortedCards: Card[] = []
 
         if (sortOptions.length < 1) {
             Utils.log('Manual sort')
-            sortedCards = cards.sort((a, b) => this.manualOrder(activeView, a, b))
-        } else {
-            sortOptions.forEach((sortOption) => {
-                if (sortOption.propertyId === Constants.titleColumnId) {
-                    Utils.log('Sort by title')
-                    sortedCards = cards.sort((a, b) => {
-                        let result = this.titleOrCreatedOrder(a, b)
+            return cards.sort((a, b) => this.manualOrder(activeView, a, b))
+        }
 
-                        if (sortOption.reversed) {
-                            result = -result
-                        }
-                        return result
-                    })
-                } else {
-                    const sortPropertyId = sortOption.propertyId
-                    const template = board.cardProperties.find((o) => o.id === sortPropertyId)
-                    if (!template) {
-                        Utils.logError(`Missing template for property id: ${sortPropertyId}`)
-                        return cards.slice()
+        let sortedCards = cards
+        for (const sortOption of sortOptions) {
+            if (sortOption.propertyId === Constants.titleColumnId) {
+                Utils.log('Sort by title')
+                sortedCards = sortedCards.sort((a, b) => {
+                    const result = this.titleOrCreatedOrder(a, b)
+                    return sortOption.reversed ? -result : result
+                })
+            } else {
+                const sortPropertyId = sortOption.propertyId
+                const template = board.cardProperties.find((o) => o.id === sortPropertyId)
+                if (!template) {
+                    Utils.logError(`Missing template for property id: ${sortPropertyId}`)
+                    return sortedCards
+                }
+                Utils.log(`Sort by property: ${template?.name}`)
+                sortedCards = sortedCards.sort((a, b) => {
+                    // Always put cards with no titles at the bottom, regardless of sort
+                    if (!a.title || !b.title) {
+                        return this.titleOrCreatedOrder(a, b)
                     }
-                    Utils.log(`Sort by property: ${template?.name}`)
-                    sortedCards = cards.sort((a, b) => {
-                        // Always put cards with no titles at the bottom, regardless of sort
-                        if (!a.title || !b.title) {
+
+                    const aValue = a.properties[sortPropertyId] || ''
+                    const bValue = b.properties[sortPropertyId] || ''
+                    let result = 0
+                    if (template.type === 'select') {
+                        // Always put empty values at the bottom
+                        if (aValue && !bValue) {
+                            return -1
+                        }
+                        if (bValue && !aValue) {
+                            return 1
+                        }
+                        if (!aValue && !bValue) {
                             return this.titleOrCreatedOrder(a, b)
                         }
 
-                        const aValue = a.properties[sortPropertyId] || ''
-                        const bValue = b.properties[sortPropertyId] || ''
-                        let result = 0
-                        if (template.type === 'select') {
-                            // Always put empty values at the bottom
-                            if (aValue && !bValue) {
-                                return -1
-                            }
-                            if (bValue && !aValue) {
-                                return 1
-                            }
-                            if (!aValue && !bValue) {
-                                return this.titleOrCreatedOrder(a, b)
-                            }
+                        // Sort by the option order (not alphabetically by value)
+                        const aOrder = template.options.findIndex((o) => o.id === aValue)
+                        const bOrder = template.options.findIndex((o) => o.id === bValue)
 
-                            // Sort by the option order (not alphabetically by value)
-                            const aOrder = template.options.findIndex((o) => o.id === aValue)
-                            const bOrder = template.options.findIndex((o) => o.id === bValue)
-
-                            result = aOrder - bOrder
-                        } else if (template.type === 'number' || template.type === 'date') {
-                            // Always put empty values at the bottom
-                            if (aValue && !bValue) {
-                                return -1
-                            }
-                            if (bValue && !aValue) {
-                                return 1
-                            }
-                            if (!aValue && !bValue) {
-                                return this.titleOrCreatedOrder(a, b)
-                            }
-
-                            result = Number(aValue) - Number(bValue)
-                        } else if (template.type === 'createdTime') {
-                            result = a.createAt - b.createAt
-                        } else if (template.type === 'updatedTime') {
-                            result = a.updateAt - b.updateAt
-                        } else {
-                            // Text-based sort
-
-                            // Always put empty values at the bottom
-                            if (aValue && !bValue) {
-                                return -1
-                            }
-                            if (bValue && !aValue) {
-                                return 1
-                            }
-                            if (!aValue && !bValue) {
-                                return this.titleOrCreatedOrder(a, b)
-                            }
-
-                            result = aValue.localeCompare(bValue)
+                        result = aOrder - bOrder
+                    } else if (template.type === 'number' || template.type === 'date') {
+                        // Always put empty values at the bottom
+                        if (aValue && !bValue) {
+                            return -1
+                        }
+                        if (bValue && !aValue) {
+                            return 1
+                        }
+                        if (!aValue && !bValue) {
+                            return this.titleOrCreatedOrder(a, b)
                         }
 
-                        if (result === 0) {
-                            // In case of "ties", use the title order
-                            result = this.titleOrCreatedOrder(a, b)
+                        result = Number(aValue) - Number(bValue)
+                    } else if (template.type === 'createdTime') {
+                        result = a.createAt - b.createAt
+                    } else if (template.type === 'updatedTime') {
+                        result = a.updateAt - b.updateAt
+                    } else {
+                        // Text-based sort
+
+                        // Always put empty values at the bottom
+                        if (aValue && !bValue) {
+                            return -1
+                        }
+                        if (bValue && !aValue) {
+                            return 1
+                        }
+                        if (!aValue && !bValue) {
+                            return this.titleOrCreatedOrder(a, b)
                         }
 
-                        if (sortOption.reversed) {
-                            result = -result
-                        }
-                        return result
-                    })
-                }
-            })
+                        result = aValue.localeCompare(bValue)
+                    }
+
+                    if (result === 0) {
+                        // In case of "ties", use the title order
+                        result = this.titleOrCreatedOrder(a, b)
+                    }
+
+                    return sortOption.reversed ? -result : result
+                })
+            }
         }
 
         return sortedCards
