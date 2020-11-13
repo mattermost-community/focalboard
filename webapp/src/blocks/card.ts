@@ -38,6 +38,7 @@ class MutableCard extends MutableBlock {
         super(block)
         this.type = 'card'
 
+        this.icon = block.fields?.icon || ''
         this.properties = {...(block.fields?.properties || {})}
     }
 

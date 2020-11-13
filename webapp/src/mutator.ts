@@ -421,7 +421,7 @@ class Mutator {
         await this.updateBlock(newView, view, 'sort')
     }
 
-    async changeViewFilter(view: BoardView, filter?: FilterGroup): Promise<void> {
+    async changeViewFilter(view: BoardView, filter: FilterGroup): Promise<void> {
         const newView = new MutableBoardView(view)
         newView.filter = filter
         await this.updateBlock(newView, view, 'filter')

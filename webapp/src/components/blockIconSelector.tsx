@@ -37,7 +37,7 @@ class BlockIconSelector extends React.Component<Props> {
         document.body.click()
     }
 
-    render(): JSX.Element {
+    render(): JSX.Element | null {
         const {block, intl, size} = this.props
         if (!block.icon) {
             return null
@@ -64,7 +64,7 @@ class BlockIconSelector extends React.Component<Props> {
                             id='remove'
                             icon={<DeleteIcon/>}
                             name={intl.formatMessage({id: 'ViewTitle.remove-icon', defaultMessage: 'Remove Icon'})}
-                            onClick={() => mutator.changeIcon(block, undefined, 'remove icon')}
+                            onClick={() => mutator.changeIcon(block, '', 'remove icon')}
                         />
                     </Menu>
                 </MenuWrapper>

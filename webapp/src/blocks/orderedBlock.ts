@@ -18,6 +18,7 @@ class MutableOrderedBlock extends MutableBlock implements IOrderedBlock {
 
     constructor(block: any = {}) {
         super(block)
+        this.order = block.fields?.order || 0
     }
 }
 

@@ -15,7 +15,7 @@ interface BoardView extends IBlock {
     readonly visiblePropertyIds: readonly string[]
     readonly visibleOptionIds: readonly string[]
     readonly hiddenOptionIds: readonly string[]
-    readonly filter: FilterGroup | undefined
+    readonly filter: FilterGroup
     readonly cardOrder: readonly string[]
     readonly columnWidths: Readonly<Record<string, number>>
 }
@@ -63,10 +63,10 @@ class MutableBoardView extends MutableBlock implements BoardView {
         this.fields.hiddenOptionIds = value
     }
 
-    get filter(): FilterGroup | undefined {
+    get filter(): FilterGroup {
         return this.fields.filter
     }
-    set filter(value: FilterGroup | undefined) {
+    set filter(value: FilterGroup) {
         this.fields.filter = value
     }
 

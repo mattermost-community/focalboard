@@ -3,27 +3,26 @@
 import React from 'react'
 
 type Props = {
-    onDrop?: (e: React.DragEvent<HTMLDivElement>) => void
-    isDropZone?: boolean
+    onDrop: (e: React.DragEvent<HTMLDivElement>) => void
+    isDropZone: boolean
 }
 
 type State = {
-    isDragOver?: boolean
+    isDragOver: boolean
 }
 
-class BoardColumn extends React.Component<Props, State> {
-    constructor(props: Props) {
-        super(props)
-        this.state = {}
+class BoardColumn extends React.PureComponent<Props, State> {
+    state = {
+        isDragOver: false,
     }
 
-    render() {
+    render(): JSX.Element {
         let className = 'octo-board-column'
         if (this.props.isDropZone && this.state.isDragOver) {
             className += ' dragover'
         }
-        const element =
-            (<div
+        const element = (
+            <div
                 className={className}
                 onDragOver={(e) => {
                     e.preventDefault()

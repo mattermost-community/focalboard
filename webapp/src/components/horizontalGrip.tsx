@@ -10,13 +10,16 @@ type Props = {
 }
 
 type State = {
-    isDragging?: boolean
-    startX?: number
-    offset?: number
+    isDragging: boolean
+    startX: number
+    offset: number
 }
 
 class HorizontalGrip extends React.PureComponent<Props, State> {
     state: State = {
+        isDragging: false,
+        startX: 0,
+        offset: 0,
     }
 
     render(): JSX.Element {

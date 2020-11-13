@@ -58,7 +58,7 @@ class Archiver {
         input.type = 'file'
         input.accept = '.octo'
         input.onchange = async () => {
-            const file = input.files[0]
+            const file = input.files && input.files[0]
             const contents = await (new Response(file)).text()
             Utils.log(`Import ${contents.length} bytes.`)
             const archive: Archive = JSON.parse(contents)

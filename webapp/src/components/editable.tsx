@@ -19,10 +19,7 @@ type Props = {
     onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void
 }
 
-type State = {
-}
-
-class Editable extends React.Component<Props, State> {
+class Editable extends React.PureComponent<Props> {
     static defaultProps = {
         text: '',
         isMarkdown: false,
@@ -30,46 +27,46 @@ class Editable extends React.Component<Props, State> {
         allowEmpty: true,
     }
 
-    private _text = ''
+    private privateText = ''
     get text(): string {
-        return this._text
+        return this.privateText
     }
     set text(value: string) {
         const {isMarkdown} = this.props
 
-        if (!value) {
-            this.elementRef.current.innerText = ''
+        if (value) {
+            this.elementRef.current!.innerHTML = isMarkdown ? Utils.htmlFromMarkdown(value) : Utils.htmlEncode(value)
         } else {
-            this.elementRef.current.innerHTML = isMarkdown ? Utils.htmlFromMarkdown(value) : Utils.htmlEncode(value)
+            this.elementRef.current!.innerText = ''
         }
 
-        this._text = value || ''
+        this.privateText = value || ''
     }
 
     private elementRef = React.createRef<HTMLDivElement>()
 
     constructor(props: Props) {
         super(props)
-        this._text = props.text || ''
+        this.privateText = props.text || ''
     }
 
-    componentDidUpdate() {
-        this._text = this.props.text || ''
+    componentDidUpdate(): void {
+        this.privateText = this.props.text || ''
     }
 
-    focus() {
-        this.elementRef.current.focus()
+    focus(): void {
+        this.elementRef.current!.focus()
 
         // Put cursor at end
-        document.execCommand('selectAll', false, null)
-        document.getSelection().collapseToEnd()
+        document.execCommand('selectAll', false, undefined)
+        document.getSelection()?.collapseToEnd()
     }
 
-    blur() {
-        this.elementRef.current.blur()
+    blur(): void {
+        this.elementRef.current!.blur()
     }
 
-    render() {
+    render(): JSX.Element {
         const {text, className, style, placeholderText, isMarkdown, isMultiline, onFocus, onBlur, onKeyDown, onChanged} = this.props
 
         const initialStyle = {...this.props.style}
@@ -81,8 +78,8 @@ class Editable extends React.Component<Props, State> {
             html = ''
         }
 
-        const element =
-            (<div
+        const element = (
+            <div
                 ref={this.elementRef}
                 className={'octo-editable ' + className}
                 contentEditable={true}
@@ -93,9 +90,9 @@ class Editable extends React.Component<Props, State> {
                 dangerouslySetInnerHTML={{__html: html}}
 
                 onFocus={() => {
-                    this.elementRef.current.innerText = this.text
-                    this.elementRef.current.style.color = style?.color || null
-                    this.elementRef.current.classList.add('active')
+                    this.elementRef.current!.innerText = this.text
+                    this.elementRef.current!.style!.color = style?.color || ''
+                    this.elementRef.current!.classList.add('active')
 
                     if (onFocus) {
                         onFocus()
@@ -103,7 +100,7 @@ class Editable extends React.Component<Props, State> {
                 }}
 
                 onBlur={async () => {
-                    const newText = this.elementRef.current.innerText
+                    const newText = this.elementRef.current!.innerText
                     const oldText = this.props.text || ''
                     if (this.props.allowEmpty || newText) {
                         if (newText !== oldText && onChanged) {
@@ -115,7 +112,7 @@ class Editable extends React.Component<Props, State> {
                         this.text = oldText // Reset text
                     }
 
-                    this.elementRef.current.classList.remove('active')
+                    this.elementRef.current!.classList.remove('active')
                     if (onBlur) {
                         onBlur()
                     }
@@ -124,17 +121,17 @@ class Editable extends React.Component<Props, State> {
                 onKeyDown={(e) => {
                     if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
                         e.stopPropagation()
-                        this.elementRef.current.blur()
+                        this.elementRef.current!.blur()
                     } else if (!isMultiline && e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // Return
                         e.stopPropagation()
-                        this.elementRef.current.blur()
+                        this.elementRef.current!.blur()
                     }
 
                     if (onKeyDown) {
                         onKeyDown(e)
                     }
                 }}
-            />);
+            />)
 
         return element
     }

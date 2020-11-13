@@ -9,8 +9,7 @@ import mutator from '../mutator'
 import Menu from '../widgets/menu'
 import DeleteIcon from '../widgets/icons/delete'
 
-import {MutableCardTree} from '../viewModel/cardTree'
-import {CardTree} from '../viewModel/cardTree'
+import {MutableCardTree, CardTree} from '../viewModel/cardTree'
 import {OctoListener} from '../octoListener'
 import {Utils} from '../utils'
 
@@ -33,11 +32,11 @@ class CardDialog extends React.Component<Props, State> {
 
     private cardListener?: OctoListener
 
-    shouldComponentUpdate() {
+    shouldComponentUpdate(): boolean {
         return true
     }
 
-    componentDidMount() {
+    componentDidMount(): void {
         this.createCardTreeAndSync()
     }
 
@@ -55,26 +54,26 @@ class CardDialog extends React.Component<Props, State> {
             [this.props.cardId],
             async (blocks) => {
                 Utils.log(`cardListener.onChanged: ${blocks.length}`)
-                const newCardTree = this.state.cardTree.mutableCopy()
+                const newCardTree = this.state.cardTree!.mutableCopy()
                 if (newCardTree.incrementalUpdate(blocks)) {
                     this.setState({cardTree: newCardTree})
                 }
             },
             async () => {
                 Utils.log('cardListener.onReconnect')
-                const newCardTree = this.state.cardTree.mutableCopy()
+                const newCardTree = this.state.cardTree!.mutableCopy()
                 await newCardTree.sync()
                 this.setState({cardTree: newCardTree})
             },
         )
     }
 
-    componentWillUnmount() {
+    componentWillUnmount(): void {
         this.cardListener?.close()
         this.cardListener = undefined
     }
 
-    render() {
+    render(): JSX.Element {
         const {cardTree} = this.state
 
         const menu = (

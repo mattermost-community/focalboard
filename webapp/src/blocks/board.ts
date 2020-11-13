@@ -57,6 +57,7 @@ class MutableBoard extends MutableBlock {
         super(block)
         this.type = 'board'
 
+        this.icon = block.fields?.icon || ''
         if (block.fields?.cardProperties) {
             // Deep clone of card properties and their options
             this.cardProperties = block.fields.cardProperties.map((o: IPropertyTemplate) => {

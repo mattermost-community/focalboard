@@ -33,7 +33,7 @@ type Props = {
 }
 
 class ContentBlock extends React.PureComponent<Props> {
-    public render(): JSX.Element {
+    public render(): JSX.Element | null {
         const {cardId, contents, block} = this.props
 
         if (block.type !== 'text' && block.type !== 'image' && block.type !== 'divider') {
