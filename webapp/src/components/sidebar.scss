@@ -112,6 +112,9 @@
     .octo-sidebar-title {
         cursor: pointer;
         flex-grow: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .OptionsIcon, .SubmenuTriangleIcon, .DotIcon {

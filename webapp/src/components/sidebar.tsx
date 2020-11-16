@@ -89,12 +89,7 @@ class Sidebar extends React.Component<Props, State> {
                 </div>
                 {
                     boards.map((board) => {
-                        const displayTitle = board.title || (
-                            <FormattedMessage
-                                id='Sidebar.untitled-board'
-                                defaultMessage='(Untitled Board)'
-                            />
-                        )
+                        const displayTitle: string = board.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})
                         const boardViews = views.filter((view) => view.parentId === board.id)
                         return (
                             <div key={board.id}>
@@ -112,6 +107,7 @@ class Sidebar extends React.Component<Props, State> {
                                         onClick={() => {
                                             this.boardClicked(board)
                                         }}
+                                        title={displayTitle}
                                     >
                                         {board.icon ? `${board.icon} ${displayTitle}` : displayTitle}
                                     </div>
@@ -175,13 +171,9 @@ class Sidebar extends React.Component<Props, State> {
                                             onClick={() => {
                                                 this.viewClicked(board, view)
                                             }}
+                                            title={view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}
                                         >
-                                            {view.title || (
-                                                <FormattedMessage
-                                                    id='Sidebar.untitled-view'
-                                                    defaultMessage='(Untitled View)'
-                                                />
-                                            )}
+                                            {view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}
                                         </div>
                                     </div>
                                 ))}
