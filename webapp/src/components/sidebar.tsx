@@ -18,7 +18,7 @@ import HamburgerIcon from '../widgets/icons/hamburger'
 import HideSidebarIcon from '../widgets/icons/hideSidebar'
 import OptionsIcon from '../widgets/icons/options'
 import ShowSidebarIcon from '../widgets/icons/showSidebar'
-import SubmenuTriangleIcon from '../widgets/icons/submenuTriangle'
+import DisclosureTriangle from '../widgets/icons/disclosureTriangle'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 import './sidebar.scss'
@@ -95,7 +95,7 @@ class Sidebar extends React.Component<Props, State> {
                             <div key={board.id}>
                                 <div className={'octo-sidebar-item ' + (collapsedBoards[board.id] ? 'collapsed' : 'expanded')}>
                                     <IconButton
-                                        icon={<SubmenuTriangleIcon/>}
+                                        icon={<DisclosureTriangle/>}
                                         onClick={() => {
                                             const newCollapsedBoards = {...this.state.collapsedBoards}
                                             newCollapsedBoards[board.id] = !newCollapsedBoards[board.id]

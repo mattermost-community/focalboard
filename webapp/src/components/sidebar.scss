@@ -99,11 +99,11 @@
         }
 
         &.expanded {
-            .SubmenuTriangleIcon {
+            .DisclosureTriangleIcon {
                 transform: rotate(90deg);
             }
         }
-        .SubmenuTriangleIcon {
+        .DisclosureTriangleIcon {
             transition: 200ms ease-in-out;
             transform: rotate(0deg);
         }
@@ -117,7 +117,7 @@
         text-overflow: ellipsis;
     }
 
-    .OptionsIcon, .SubmenuTriangleIcon, .DotIcon {
+    .OptionsIcon, .DisclosureTriangleIcon, .DotIcon {
         fill: rgba(var(--sidebar-fg), 0.5);
         flex-shrink: 0;
     }
