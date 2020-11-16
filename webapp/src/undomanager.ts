@@ -137,6 +137,7 @@ class UndoManager {
             } while (this.index >= 0 && currentGroupId === command.groupId)
         } else {
             await this.execute(command, 'undo')
+            this.index -= 1
         }
 
         if (this.onStateDidChange) {
@@ -165,6 +166,7 @@ class UndoManager {
             } while (this.index < this.commands.length - 1 && currentGroupId === command.groupId)
         } else {
             await this.execute(command, 'redo')
+            this.index += 1
         }
 
         if (this.onStateDidChange) {
