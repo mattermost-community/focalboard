@@ -119,6 +119,7 @@
 
     .OptionsIcon, .SubmenuTriangleIcon, .DotIcon {
         fill: rgba(var(--sidebar-fg), 0.5);
+        flex-shrink: 0;
     }
 
     .HideSidebarIcon {
