@@ -3,8 +3,6 @@
 import React from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
-import {Utils} from '../utils'
-
 import {Archiver} from '../archiver'
 import {BlockIcons} from '../blockIcons'
 import {IPropertyTemplate} from '../blocks/board'
@@ -15,6 +13,7 @@ import ViewMenu from '../components/viewMenu'
 import {Constants} from '../constants'
 import {CsvExporter} from '../csvExporter'
 import mutator from '../mutator'
+import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
 import Button from '../widgets/buttons/button'
 import ButtonWithMenu from '../widgets/buttons/buttonWithMenu'
