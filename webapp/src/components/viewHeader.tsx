@@ -29,6 +29,7 @@ import MenuWrapper from '../widgets/menuWrapper'
 
 import {Editable} from './editable'
 import FilterComponent from './filterComponent'
+import {sendFlashMessage} from './flashMessages'
 import './viewHeader.scss'
 
 type Props = {
@@ -485,6 +486,9 @@ class ViewHeader extends React.Component<Props, State> {
             blocksToInsert,
             'create template from board',
         )
+
+        // TODO: Navigate to board editor
+        sendFlashMessage({content: 'New board template added', severity: 'low'})
     }
 }
 
