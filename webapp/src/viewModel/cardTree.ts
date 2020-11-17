@@ -58,16 +58,10 @@ class MutableCardTree implements CardTree {
     }
 
     templateCopy(): MutableCardTree {
-        const card = this.card.duplicate()
+        const [newBlocks, newCard] = OctoUtils.duplicateBlockTree(this.rawBlocks, this.card.id)
 
-        const contents: IOrderedBlock[] = this.contents.map((content) => {
-            const copy = MutableBlock.duplicate(content)
-            copy.parentId = card.id
-            return copy as IOrderedBlock
-        })
-
-        const cardTree = new MutableCardTree(card.id)
-        cardTree.incrementalUpdate([card, ...contents])
+        const cardTree = new MutableCardTree(newCard.id)
+        cardTree.incrementalUpdate(newBlocks)
         return cardTree
     }
 }

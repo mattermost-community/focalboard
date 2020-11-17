@@ -408,7 +408,7 @@ class MutableBoardTree implements BoardTree {
     }
 
     templateCopy(): MutableBoardTree {
-        const [newBlocks, newBoard] = OctoUtils.duplicateBlockTree(this.allBlocks, this.board.id)
+        const [newBlocks, newBoard] = OctoUtils.duplicateBlockTree(this.rawBlocks, this.board.id)
 
         const boardTree = new MutableBoardTree(newBoard.id)
         boardTree.incrementalUpdate(newBlocks)
