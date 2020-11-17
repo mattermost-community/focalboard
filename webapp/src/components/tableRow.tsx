@@ -51,7 +51,6 @@ class TableRow extends React.Component<Props, State> {
         return (
             <div
                 className='TableRow octo-table-row'
-                key={card.id}
             >
 
                 {/* Name / title */}

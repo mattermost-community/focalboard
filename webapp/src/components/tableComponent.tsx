@@ -254,7 +254,7 @@ class TableComponent extends React.Component<Props, State> {
 
                                 const tableRow = (
                                     <TableRow
-                                        key={card.id}
+                                        key={card.id + card.updateAt}
                                         ref={tableRowRef}
                                         boardTree={boardTree}
                                         card={card}
