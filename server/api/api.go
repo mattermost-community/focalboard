@@ -296,7 +296,7 @@ func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) {
 
 func errorResponse(w http.ResponseWriter, code int, message map[string]string) {
 	log.Printf("%d ERROR", code)
-	log.Printf("%v ERROR", message)
+	w.Header().Set("Content-Type", "application/json")
 	data, err := json.Marshal(message)
 	if err != nil {
 		data = []byte("{}")

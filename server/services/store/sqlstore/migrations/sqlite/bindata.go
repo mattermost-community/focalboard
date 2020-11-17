@@ -61,6 +61,24 @@ func _000002_system_settings_table_up_sql() ([]byte, error) {
 	)
 }
 
+var __000003_users_table_down_sql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\x09\xf2\x0f\x50\x08\x71\x74\xf2\x71\x55\x28\x2d\x4e\x2d\x2a\xb6\xe6\x02\x04\x00\x00\xff\xff\xcf\x0c\x8a\x87\x12\x00\x00\x00")
+
+func _000003_users_table_down_sql() ([]byte, error) {
+	return bindata_read(
+		__000003_users_table_down_sql,
+		"000003_users_table.down.sql",
+	)
+}
+
+var __000003_users_table_up_sql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x6c\xcd\xd1\x4b\x85\x30\x14\xc7\xf1\x67\xf7\x57\x9c\x47\x85\xfb\x70\x13\x7c\xea\x69\xda\xaa\x51\x99\xcc\x15\xfa\x24\x07\x77\xa2\x81\xa6\x6c\xb3\xfe\xfd\x18\x41\x91\xde\xf3\xf8\xf9\xc2\xf9\x55\x4a\x70\x2d\x40\xf3\xf2\x51\x80\xbc\x85\xfa\x59\x83\xe8\x64\xab\x5b\xd8\x3c\x39\x0f\x29\x4b\xac\x81\x57\xae\xaa\x7b\xae\xd2\xab\xf3\x39\x3b\xb1\x24\xa6\x0f\x9c\x69\xef\x34\xa3\x9d\x7e\x31\x2f\x8a\x88\x2b\x7a\xff\xb5\xb8\xfd\x13\x00\x80\xf9\x0d\x07\x4f\xa3\xa3\x70\x21\xe2\x16\xde\x07\x4f\xee\xd3\x8e\x7f\x43\xf9\xbf\x6a\x30\xe0\x7e\xae\x71\xcb\xea\xe1\xe7\xb4\xe8\xf4\x89\x25\x95\x23\x0c\xc4\x43\xa4\x52\xde\xc9\x3a\xe2\xcb\x6a\x8e\x78\x43\x13\x1d\xb0\x51\xf2\x89\xab\x1e\x1e\x44\x0f\xa9\x35\x19\xcb\xae\xd9\x77\x00\x00\x00\xff\xff\x8b\xb1\x5a\xe4\x38\x01\x00\x00")
+
+func _000003_users_table_up_sql() ([]byte, error) {
+	return bindata_read(
+		__000003_users_table_up_sql,
+		"000003_users_table.up.sql",
+	)
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -87,6 +105,8 @@ var _bindata = map[string]func() ([]byte, error){
 	"000001_init.up.sql": _000001_init_up_sql,
 	"000002_system_settings_table.down.sql": _000002_system_settings_table_down_sql,
 	"000002_system_settings_table.up.sql": _000002_system_settings_table_up_sql,
+	"000003_users_table.down.sql": _000003_users_table_down_sql,
+	"000003_users_table.up.sql": _000003_users_table_up_sql,
 }
 // AssetDir returns the file names below a certain
 // directory embedded in the file by go-bindata.
@@ -135,5 +155,9 @@ var _bintree = &_bintree_t{nil, map[string]*_bintree_t{
 	"000002_system_settings_table.down.sql": &_bintree_t{_000002_system_settings_table_down_sql, map[string]*_bintree_t{
 	}},
 	"000002_system_settings_table.up.sql": &_bintree_t{_000002_system_settings_table_up_sql, map[string]*_bintree_t{
+	}},
+	"000003_users_table.down.sql": &_bintree_t{_000003_users_table_down_sql, map[string]*_bintree_t{
+	}},
+	"000003_users_table.up.sql": &_bintree_t{_000003_users_table_up_sql, map[string]*_bintree_t{
 	}},
 }}
