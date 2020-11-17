@@ -327,7 +327,9 @@ class TableComponent extends React.Component<Props, State> {
         }
 
         card.parentId = boardTree.board.id
-        card.icon = BlockIcons.shared.randomIcon()
+        if (!card.icon) {
+            card.icon = BlockIcons.shared.randomIcon()
+        }
         await mutator.insertBlocks(
             blocksToInsert,
             'add card',

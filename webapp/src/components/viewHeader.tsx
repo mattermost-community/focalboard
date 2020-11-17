@@ -399,11 +399,15 @@ class ViewHeader extends React.Component<Props, State> {
                         <Menu.Separator/>
 
                         {boardTree.cardTemplates.map((cardTemplate) => {
+                            let displayName = cardTemplate.title || intl.formatMessage({id: 'ViewHeader.untitled', defaultMessage: 'Untitled'})
+                            if (cardTemplate.icon) {
+                                displayName = `${cardTemplate.icon} ${displayName}`
+                            }
                             return (
                                 <Menu.Text
                                     key={cardTemplate.id}
                                     id={cardTemplate.id}
-                                    name={cardTemplate.title || intl.formatMessage({id: 'ViewHeader.untitled', defaultMessage: 'Untitled'})}
+                                    name={displayName}
                                     onClick={() => {
                                         this.props.addCardFromTemplate(cardTemplate.id)
                                     }}
