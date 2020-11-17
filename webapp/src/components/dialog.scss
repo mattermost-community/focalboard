@@ -24,6 +24,11 @@
 
         overflow-x: hidden;
         overflow-y: auto;
+        > .banner {
+            background-color: rgba(230, 220, 192, 0.9);
+            text-align: center;
+            padding: 10px;
+        }
         > .toolbar {
             display: flex;
             flex-direction: row;

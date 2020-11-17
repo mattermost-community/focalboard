@@ -5,9 +5,11 @@ import (
 	"log"
 	"net/http"
 	"sync"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
+	"github.com/mattermost/mattermost-octo-tasks/server/model"
 )
 
 // RegisterRoutes registers routes.
@@ -98,10 +100,10 @@ func NewServer() *Server {
 	}
 }
 
-// WebsocketMsg is sent on block changes.
-type WebsocketMsg struct {
-	Action  string `json:"action"`
-	BlockID string `json:"blockId"`
+// UpdateMsg is sent on block updates
+type UpdateMsg struct {
+	Action string      `json:"action"`
+	Block  model.Block `json:"block"`
 }
 
 // WebsocketCommand is an incoming command from the client.
@@ -166,16 +168,30 @@ func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request
 	}
 }
 
-// BroadcastBlockChangeToWebsocketClients broadcasts change to clients.
-func (ws *Server) BroadcastBlockChangeToWebsocketClients(blockIDs []string) {
-	for _, blockID := range blockIDs {
+// BroadcastBlockDelete broadcasts delete messages to clients
+func (ws *Server) BroadcastBlockDelete(blockID string, parentID string) {
+	now := time.Now().Unix()
+	block := model.Block{}
+	block.ID = blockID
+	block.ParentID = parentID
+	block.UpdateAt = now
+	block.DeleteAt = now
+
+	ws.BroadcastBlockChange(block)
+}
+
+// BroadcastBlockChange broadcasts update messages to clients
+func (ws *Server) BroadcastBlockChange(block model.Block) {
+	blockIDsToNotify := []string{block.ID, block.ParentID}
+
+	for _, blockID := range blockIDsToNotify {
 		listeners := ws.GetListeners(blockID)
 		log.Printf("%d listener(s) for blockID: %s", len(listeners), blockID)
 
 		if listeners != nil {
-			message := WebsocketMsg{
-				Action:  "UPDATE_BLOCK",
-				BlockID: blockID,
+			message := UpdateMsg{
+				Action: "UPDATE_BLOCK",
+				Block:  block,
 			}
 
 			for _, listener := range listeners {

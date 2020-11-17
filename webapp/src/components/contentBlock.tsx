@@ -3,47 +3,43 @@
 
 import React from 'react'
 
-import {IOrderedBlock} from '../blocks/orderedBlock'
-import {CardTree} from '../viewModel/cardTree'
-import {OctoUtils} from '../octoUtils'
-import mutator from '../mutator'
-import {Utils} from '../utils'
-import {MutableTextBlock} from '../blocks/textBlock'
 import {MutableDividerBlock} from '../blocks/dividerBlock'
-
+import {IOrderedBlock} from '../blocks/orderedBlock'
+import {MutableTextBlock} from '../blocks/textBlock'
+import mutator from '../mutator'
+import {OctoUtils} from '../octoUtils'
+import {Utils} from '../utils'
+import IconButton from '../widgets/buttons/iconButton'
+import AddIcon from '../widgets/icons/add'
+import DeleteIcon from '../widgets/icons/delete'
+import DividerIcon from '../widgets/icons/divider'
+import ImageIcon from '../widgets/icons/image'
+import OptionsIcon from '../widgets/icons/options'
+import SortDownIcon from '../widgets/icons/sortDown'
+import SortUpIcon from '../widgets/icons/sortUp'
+import TextIcon from '../widgets/icons/text'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
-import OptionsIcon from '../widgets/icons/options'
-import SortUpIcon from '../widgets/icons/sortUp'
-import SortDownIcon from '../widgets/icons/sortDown'
-import DeleteIcon from '../widgets/icons/delete'
-import AddIcon from '../widgets/icons/add'
-import TextIcon from '../widgets/icons/text'
-import ImageIcon from '../widgets/icons/image'
-import DividerIcon from '../widgets/icons/divider'
-import IconButton from '../widgets/buttons/iconButton'
-
-import {MarkdownEditor} from './markdownEditor'
 
 import './contentBlock.scss'
+import {MarkdownEditor} from './markdownEditor'
 
 type Props = {
     block: IOrderedBlock
     cardId: string
-    cardTree: CardTree
+    contents: readonly IOrderedBlock[]
 }
 
-class ContentBlock extends React.Component<Props> {
-    shouldComponentUpdate(): boolean {
-        return true
-    }
+class ContentBlock extends React.PureComponent<Props> {
+    public render(): JSX.Element | null {
+        const {cardId, contents, block} = this.props
 
-    public render(): JSX.Element {
-        const {cardId, cardTree, block} = this.props
         if (block.type !== 'text' && block.type !== 'image' && block.type !== 'divider') {
+            Utils.assertFailure(`Block type is unknown: ${block.type}`)
             return null
         }
-        const index = cardTree.contents.indexOf(block)
+
+        const index = contents.indexOf(block)
         return (
             <div className='ContentBlock octo-block'>
                 <div className='octo-block-margin'>
@@ -56,20 +52,20 @@ class ContentBlock extends React.Component<Props> {
                                     name='Move up'
                                     icon={<SortUpIcon/>}
                                     onClick={() => {
-                                        const previousBlock = cardTree.contents[index - 1]
-                                        const newOrder = OctoUtils.getOrderBefore(previousBlock, cardTree.contents)
+                                        const previousBlock = contents[index - 1]
+                                        const newOrder = OctoUtils.getOrderBefore(previousBlock, contents)
                                         Utils.log(`moveUp ${newOrder}`)
                                         mutator.changeOrder(block, newOrder, 'move up')
                                     }}
                                 />}
-                            {index < (cardTree.contents.length - 1) &&
+                            {index < (contents.length - 1) &&
                                 <Menu.Text
                                     id='moveDown'
                                     name='Move down'
                                     icon={<SortDownIcon/>}
                                     onClick={() => {
-                                        const nextBlock = cardTree.contents[index + 1]
-                                        const newOrder = OctoUtils.getOrderAfter(nextBlock, cardTree.contents)
+                                        const nextBlock = contents[index + 1]
+                                        const newOrder = OctoUtils.getOrderAfter(nextBlock, contents)
                                         Utils.log(`moveDown ${newOrder}`)
                                         mutator.changeOrder(block, newOrder, 'move down')
                                     }}
@@ -88,7 +84,7 @@ class ContentBlock extends React.Component<Props> {
                                         newBlock.parentId = cardId
 
                                         // TODO: Handle need to reorder all blocks
-                                        newBlock.order = OctoUtils.getOrderBefore(block, cardTree.contents)
+                                        newBlock.order = OctoUtils.getOrderBefore(block, contents)
                                         Utils.log(`insert block ${block.id}, order: ${block.order}`)
                                         mutator.insertBlock(newBlock, 'insert card text')
                                     }}
@@ -100,7 +96,7 @@ class ContentBlock extends React.Component<Props> {
                                     onClick={() => {
                                         Utils.selectLocalFile(
                                             (file) => {
-                                                mutator.createImageBlock(cardId, file, OctoUtils.getOrderBefore(block, cardTree.contents))
+                                                mutator.createImageBlock(cardId, file, OctoUtils.getOrderBefore(block, contents))
                                             },
                                             '.jpg,.jpeg,.png')
                                     }}
@@ -114,7 +110,7 @@ class ContentBlock extends React.Component<Props> {
                                         newBlock.parentId = cardId
 
                                         // TODO: Handle need to reorder all blocks
-                                        newBlock.order = OctoUtils.getOrderBefore(block, cardTree.contents)
+                                        newBlock.order = OctoUtils.getOrderBefore(block, contents)
                                         Utils.log(`insert block ${block.id}, order: ${block.order}`)
                                         mutator.insertBlock(newBlock, 'insert card text')
                                     }}

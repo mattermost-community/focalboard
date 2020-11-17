@@ -85,69 +85,70 @@ class FilterComponent extends React.Component<Props> {
                     const propertyName = template ? template.name : '(unknown)'		// TODO: Handle error
                     const key = `${filter.propertyId}-${filter.condition}-${filter.values.join(',')}`
                     Utils.log(`FilterClause key: ${key}`)
-                    return (<div
-                        className='octo-filterclause'
-                        key={key}
-                            >
-                        <MenuWrapper>
-                            <Button>{propertyName}</Button>
-                            <Menu>
-                                {board.cardProperties.filter((o) => o.type === 'select').map((o) => (
+                    return (
+                        <div
+                            className='octo-filterclause'
+                            key={key}
+                        >
+                            <MenuWrapper>
+                                <Button>{propertyName}</Button>
+                                <Menu>
+                                    {board.cardProperties.filter((o) => o.type === 'select').map((o) => (
+                                        <Menu.Text
+                                            key={o.id}
+                                            id={o.id}
+                                            name={o.name}
+                                            onClick={(optionId: string) => {
+                                                const filterIndex = activeView.filter.filters.indexOf(filter)
+                                                Utils.assert(filterIndex >= 0, "Can't find filter")
+                                                const filterGroup = new FilterGroup(activeView.filter)
+                                                const newFilter = filterGroup.filters[filterIndex] as FilterClause
+                                                Utils.assert(newFilter, `No filter at index ${filterIndex}`)
+                                                if (newFilter.propertyId !== optionId) {
+                                                    newFilter.propertyId = optionId
+                                                    newFilter.values = []
+                                                    mutator.changeViewFilter(activeView, filterGroup)
+                                                }
+                                            }}
+                                        />))}
+                                </Menu>
+                            </MenuWrapper>
+                            <MenuWrapper>
+                                <Button>{FilterClause.filterConditionDisplayString(filter.condition, intl)}</Button>
+                                <Menu>
                                     <Menu.Text
-                                        key={o.id}
-                                        id={o.id}
-                                        name={o.name}
-                                        onClick={(optionId: string) => {
-                                            const filterIndex = activeView.filter.filters.indexOf(filter)
-                                            Utils.assert(filterIndex >= 0, "Can't find filter")
-                                            const filterGroup = new FilterGroup(activeView.filter)
-                                            const newFilter = filterGroup.filters[filterIndex] as FilterClause
-                                            Utils.assert(newFilter, `No filter at index ${filterIndex}`)
-                                            if (newFilter.propertyId !== optionId) {
-                                                newFilter.propertyId = optionId
-                                                newFilter.values = []
-                                                mutator.changeViewFilter(activeView, filterGroup)
-                                            }
-                                        }}
-                                    />))}
-                            </Menu>
-                        </MenuWrapper>
-                        <MenuWrapper>
-                            <Button>{FilterClause.filterConditionDisplayString(filter.condition, intl)}</Button>
-                            <Menu>
-                                <Menu.Text
-                                    id='includes'
-                                    name={intl.formatMessage({id: 'Filter.includes', defaultMessage: 'includes'})}
-                                    onClick={(id) => this.conditionClicked(id, filter)}
+                                        id='includes'
+                                        name={intl.formatMessage({id: 'Filter.includes', defaultMessage: 'includes'})}
+                                        onClick={(id) => this.conditionClicked(id, filter)}
+                                    />
+                                    <Menu.Text
+                                        id='notIncludes'
+                                        name={intl.formatMessage({id: 'Filter.not-includes', defaultMessage: 'doesn\'t include'})}
+                                        onClick={(id) => this.conditionClicked(id, filter)}
+                                    />
+                                    <Menu.Text
+                                        id='isEmpty'
+                                        name={intl.formatMessage({id: 'Filter.is-empty', defaultMessage: 'is empty'})}
+                                        onClick={(id) => this.conditionClicked(id, filter)}
+                                    />
+                                    <Menu.Text
+                                        id='isNotEmpty'
+                                        name={intl.formatMessage({id: 'Filter.is-not-empty', defaultMessage: 'is not empty'})}
+                                        onClick={(id) => this.conditionClicked(id, filter)}
+                                    />
+                                </Menu>
+                            </MenuWrapper>
+                            {
+                                template && this.filterValue(filter, template)
+                            }
+                            <div className='octo-spacer'/>
+                            <Button onClick={() => this.deleteClicked(filter)}>
+                                <FormattedMessage
+                                    id='FilterComponent.delete'
+                                    defaultMessage='Delete'
                                 />
-                                <Menu.Text
-                                    id='notIncludes'
-                                    name={intl.formatMessage({id: 'Filter.not-includes', defaultMessage: 'doesn\'t include'})}
-                                    onClick={(id) => this.conditionClicked(id, filter)}
-                                />
-                                <Menu.Text
-                                    id='isEmpty'
-                                    name={intl.formatMessage({id: 'Filter.is-empty', defaultMessage: 'is empty'})}
-                                    onClick={(id) => this.conditionClicked(id, filter)}
-                                />
-                                <Menu.Text
-                                    id='isNotEmpty'
-                                    name={intl.formatMessage({id: 'Filter.is-not-empty', defaultMessage: 'is not empty'})}
-                                    onClick={(id) => this.conditionClicked(id, filter)}
-                                />
-                            </Menu>
-                        </MenuWrapper>
-                        {
-                            this.filterValue(filter, template)
-                        }
-                        <div className='octo-spacer'/>
-                        <Button onClick={() => this.deleteClicked(filter)}>
-                            <FormattedMessage
-                                id='FilterComponent.delete'
-                                defaultMessage='Delete'
-                            />
-                        </Button>
-                    </div>)
+                            </Button>
+                        </div>)
                 })}
 
                 <br/>
@@ -162,7 +163,7 @@ class FilterComponent extends React.Component<Props> {
         )
     }
 
-    private filterValue(filter: FilterClause, template: IPropertyTemplate): JSX.Element {
+    private filterValue(filter: FilterClause, template: IPropertyTemplate): JSX.Element | undefined {
         const {boardTree} = this.props
         const {activeView: view} = boardTree
 
@@ -175,10 +176,6 @@ class FilterComponent extends React.Component<Props> {
                 }).join(', ')
             } else {
                 displayValue = '(empty)'
-            }
-
-            if (!template) {
-                return null
             }
 
             return (

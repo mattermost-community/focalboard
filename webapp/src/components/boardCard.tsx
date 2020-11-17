@@ -3,21 +3,18 @@
 import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
-import {MutableBlock} from '../blocks/block'
-
 import {IPropertyTemplate} from '../blocks/board'
 import {Card} from '../blocks/card'
 import mutator from '../mutator'
-import MenuWrapper from '../widgets/menuWrapper'
-import Menu from '../widgets/menu'
-import OptionsIcon from '../widgets/icons/options'
+import IconButton from '../widgets/buttons/iconButton'
 import DeleteIcon from '../widgets/icons/delete'
 import DuplicateIcon from '../widgets/icons/duplicate'
-import IconButton from '../widgets/buttons/iconButton'
-
-import PropertyValueElement from './propertyValueElement'
+import OptionsIcon from '../widgets/icons/options'
+import Menu from '../widgets/menu'
+import MenuWrapper from '../widgets/menuWrapper'
 
 import './boardCard.scss'
+import PropertyValueElement from './propertyValueElement'
 
 type BoardCardProps = {
     card: Card
@@ -25,9 +22,9 @@ type BoardCardProps = {
     isSelected: boolean
     isDropZone?: boolean
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
-    onDragStart?: (e: React.DragEvent<HTMLDivElement>) => void
-    onDragEnd?: (e: React.DragEvent<HTMLDivElement>) => void
-    onDrop?: (e: React.DragEvent<HTMLDivElement>) => void
+    onDragStart: (e: React.DragEvent<HTMLDivElement>) => void
+    onDragEnd: (e: React.DragEvent<HTMLDivElement>) => void
+    onDrop: (e: React.DragEvent<HTMLDivElement>) => void
     intl: IntlShape
 }
 
@@ -69,13 +66,17 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
                     this.props.onDragEnd(e)
                 }}
 
-                onDragOver={(e) => {
-                    this.setState({isDragOver: true})
+                onDragOver={() => {
+                    if (!this.state.isDragOver) {
+                        this.setState({isDragOver: true})
+                    }
                 }}
-                onDragEnter={(e) => {
-                    this.setState({isDragOver: true})
+                onDragEnter={() => {
+                    if (!this.state.isDragOver) {
+                        this.setState({isDragOver: true})
+                    }
                 }}
-                onDragLeave={(e) => {
+                onDragLeave={() => {
                     this.setState({isDragOver: false})
                 }}
                 onDrop={(e) => {
@@ -101,7 +102,9 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
                             icon={<DuplicateIcon/>}
                             id='duplicate'
                             name={intl.formatMessage({id: 'BoardCard.duplicate', defaultMessage: 'Duplicate'})}
-                            onClick={() => mutator.insertBlock(MutableBlock.duplicate(card), 'duplicate card')}
+                            onClick={() => {
+                                mutator.duplicateCard(card.id)
+                            }}
                         />
                     </Menu>
                 </MenuWrapper>

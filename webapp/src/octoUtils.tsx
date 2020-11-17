@@ -1,21 +1,19 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
-
 import {IBlock, MutableBlock} from './blocks/block'
 import {IPropertyTemplate, MutableBoard} from './blocks/board'
 import {MutableBoardView} from './blocks/boardView'
 import {MutableCard} from './blocks/card'
 import {MutableCommentBlock} from './blocks/commentBlock'
-import {MutableImageBlock} from './blocks/imageBlock'
 import {MutableDividerBlock} from './blocks/dividerBlock'
+import {MutableImageBlock} from './blocks/imageBlock'
 import {IOrderedBlock} from './blocks/orderedBlock'
 import {MutableTextBlock} from './blocks/textBlock'
 import {Utils} from './utils'
 
 class OctoUtils {
     static propertyDisplayValue(block: IBlock, propertyValue: string | undefined, propertyTemplate: IPropertyTemplate): string | undefined {
-        let displayValue: string
+        let displayValue: string | undefined
         switch (propertyTemplate.type) {
         case 'select': {
             // The property value is the id of the template
@@ -79,6 +77,42 @@ class OctoUtils {
 
     static hydrateBlocks(blocks: IBlock[]): MutableBlock[] {
         return blocks.map((block) => this.hydrateBlock(block))
+    }
+
+    static mergeBlocks(blocks: IBlock[], updatedBlocks: IBlock[]): IBlock[] {
+        const updatedBlockIds = updatedBlocks.map((o) => o.id)
+        const newBlocks = blocks.filter((o) => !updatedBlockIds.includes(o.id))
+        const updatedAndNotDeletedBlocks = updatedBlocks.filter((o) => o.deleteAt === 0)
+        newBlocks.push(...updatedAndNotDeletedBlocks)
+        return newBlocks
+    }
+
+    // Creates a copy of the blocks with new ids and parentIDs
+    static duplicateBlockTree(blocks: IBlock[], rootBlockId?: string): [MutableBlock[], Readonly<Record<string, string>>] {
+        const idMap: Record<string, string> = {}
+        const newBlocks = blocks.map((block) => {
+            const newBlock = this.hydrateBlock(block)
+            newBlock.id = Utils.createGuid()
+            idMap[block.id] = newBlock.id
+            return newBlock
+        })
+
+        const newRootBlockId = rootBlockId ? idMap[rootBlockId] : undefined
+        newBlocks.forEach((newBlock) => {
+            // Note: Don't remap the parent of the new root block
+            if (newBlock.id !== newRootBlockId && newBlock.parentId) {
+                newBlock.parentId = idMap[newBlock.parentId] || newBlock.parentId
+                Utils.assert(newBlock.parentId, `Block ${newBlock.id} (${newBlock.type} ${newBlock.title}) has no parent`)
+            }
+
+            // Remap manual card order
+            if (newBlock.type === 'view') {
+                const view = newBlock as MutableBoardView
+                view.cardOrder = view.cardOrder.map((o) => idMap[o])
+            }
+        })
+
+        return [newBlocks, idMap]
     }
 }
 

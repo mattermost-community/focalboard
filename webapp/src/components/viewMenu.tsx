@@ -1,43 +1,50 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
+import {injectIntl, IntlShape} from 'react-intl'
 
 import {Board} from '../blocks/board'
 import {MutableBoardView} from '../blocks/boardView'
-import {BoardTree} from '../viewModel/boardTree'
+import {Constants} from '../constants'
 import mutator from '../mutator'
 import {Utils} from '../utils'
+import {BoardTree} from '../viewModel/boardTree'
 import Menu from '../widgets/menu'
-import {Constants} from '../constants'
 
 type Props = {
-    boardTree?: BoardTree
+    boardTree: BoardTree
     board: Board,
     showView: (id: string) => void
+    intl: IntlShape
 }
 
-export default class ViewMenu extends React.Component<Props> {
-    handleDeleteView = async () => {
+export class ViewMenu extends React.PureComponent<Props> {
+    private handleDeleteView = async () => {
         const {boardTree, showView} = this.props
         Utils.log('deleteView')
         const view = boardTree.activeView
         const nextView = boardTree.views.find((o) => o !== view)
         await mutator.deleteBlock(view, 'delete view')
-        showView(nextView.id)
+        if (nextView) {
+            showView(nextView.id)
+        }
     }
 
-    handleViewClick = (id: string) => {
+    private handleViewClick = (id: string) => {
         const {boardTree, showView} = this.props
         Utils.log('view ' + id)
         const view = boardTree.views.find((o) => o.id === id)
-        showView(view.id)
+        Utils.assert(view, `view not found: ${id}`)
+        if (view) {
+            showView(view.id)
+        }
     }
 
-    handleAddViewBoard = async () => {
-        const {board, boardTree, showView} = this.props
+    private handleAddViewBoard = async () => {
+        const {board, boardTree, showView, intl} = this.props
         Utils.log('addview-board')
         const view = new MutableBoardView()
-        view.title = 'Board View'
+        view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board View'})
         view.viewType = 'board'
         view.parentId = board.id
 
@@ -54,12 +61,12 @@ export default class ViewMenu extends React.Component<Props> {
             })
     }
 
-    handleAddViewTable = async () => {
-        const {board, boardTree, showView} = this.props
+    private handleAddViewTable = async () => {
+        const {board, boardTree, showView, intl} = this.props
 
         Utils.log('addview-table')
         const view = new MutableBoardView()
-        view.title = 'Table View'
+        view.title = intl.formatMessage({id: 'View.NewTableTitle', defaultMessage: 'Table View'})
         view.viewType = 'table'
         view.parentId = board.id
         view.visiblePropertyIds = board.cardProperties.map((o) => o.id)
@@ -79,7 +86,7 @@ export default class ViewMenu extends React.Component<Props> {
             })
     }
 
-    render() {
+    render(): JSX.Element {
         const {boardTree} = this.props
         return (
             <Menu>
@@ -91,11 +98,12 @@ export default class ViewMenu extends React.Component<Props> {
                         onClick={this.handleViewClick}
                     />))}
                 <Menu.Separator/>
-                {boardTree.views.length > 1 && <Menu.Text
-                    id='__deleteView'
-                    name='Delete View'
-                    onClick={this.handleDeleteView}
-                />}
+                {boardTree.views.length > 1 &&
+                    <Menu.Text
+                        id='__deleteView'
+                        name='Delete View'
+                        onClick={this.handleDeleteView}
+                    />}
                 <Menu.SubMenu
                     id='__addView'
                     name='Add View'
@@ -115,3 +123,5 @@ export default class ViewMenu extends React.Component<Props> {
         )
     }
 }
+
+export default injectIntl(ViewMenu)

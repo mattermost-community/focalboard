@@ -11,7 +11,8 @@ type ColorOptionProps = MenuOptionProps & {
 }
 
 export default class ColorOption extends React.PureComponent<ColorOptionProps> {
-    private handleOnClick = (): void => {
+    private handleOnClick = (e: React.MouseEvent): void => {
+        e.target.dispatchEvent(new Event('menuItemClicked'))
         this.props.onClick(this.props.id)
     }
 

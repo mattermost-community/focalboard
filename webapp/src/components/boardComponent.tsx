@@ -2,46 +2,47 @@
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
 import React from 'react'
-import {injectIntl, IntlShape, FormattedMessage} from 'react-intl'
+import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {BlockIcons} from '../blockIcons'
+import {IBlock} from '../blocks/block'
 import {IPropertyOption, IPropertyTemplate} from '../blocks/board'
 import {Card, MutableCard} from '../blocks/card'
-import {BoardTree, BoardTreeGroup} from '../viewModel/boardTree'
 import {CardFilter} from '../cardFilter'
 import {Constants} from '../constants'
 import mutator from '../mutator'
 import {Utils} from '../utils'
-import Menu from '../widgets/menu'
-import MenuWrapper from '../widgets/menuWrapper'
-import OptionsIcon from '../widgets/icons/options'
-import AddIcon from '../widgets/icons/add'
-import HideIcon from '../widgets/icons/hide'
-import ShowIcon from '../widgets/icons/show'
-import DeleteIcon from '../widgets/icons/delete'
+import {BoardTree, BoardTreeGroup} from '../viewModel/boardTree'
+import {MutableCardTree} from '../viewModel/cardTree'
 import Button from '../widgets/buttons/button'
 import IconButton from '../widgets/buttons/iconButton'
+import AddIcon from '../widgets/icons/add'
+import DeleteIcon from '../widgets/icons/delete'
+import HideIcon from '../widgets/icons/hide'
+import OptionsIcon from '../widgets/icons/options'
+import ShowIcon from '../widgets/icons/show'
+import Menu from '../widgets/menu'
+import MenuWrapper from '../widgets/menuWrapper'
 
 import BoardCard from './boardCard'
 import {BoardColumn} from './boardColumn'
+import './boardComponent.scss'
 import {CardDialog} from './cardDialog'
 import {Editable} from './editable'
 import RootPortal from './rootPortal'
 import ViewHeader from './viewHeader'
 import ViewTitle from './viewTitle'
 
-import './boardComponent.scss'
-
 type Props = {
-    boardTree?: BoardTree
+    boardTree: BoardTree
     showView: (id: string) => void
-    setSearchText: (text: string) => void
+    setSearchText: (text?: string) => void
     intl: IntlShape
 }
 
 type State = {
     isSearching: boolean
-    shownCard?: Card
+    shownCardId?: string
     viewMenu: boolean
     selectedCardIds: string[]
     showFilter: boolean
@@ -49,7 +50,7 @@ type State = {
 
 class BoardComponent extends React.Component<Props, State> {
     private draggedCards: Card[] = []
-    private draggedHeaderOption: IPropertyOption
+    private draggedHeaderOption?: IPropertyOption
     private backgroundRef = React.createRef<HTMLDivElement>()
     private searchFieldRef = React.createRef<Editable>()
 
@@ -83,7 +84,7 @@ class BoardComponent extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props)
         this.state = {
-            isSearching: Boolean(this.props.boardTree?.getSearchText()),
+            isSearching: Boolean(this.props.boardTree.getSearchText()),
             viewMenu: false,
             selectedCardIds: [],
             showFilter: false,
@@ -96,25 +97,20 @@ class BoardComponent extends React.Component<Props, State> {
 
     componentDidUpdate(prevPros: Props, prevState: State): void {
         if (this.state.isSearching && !prevState.isSearching) {
-            this.searchFieldRef.current.focus()
+            this.searchFieldRef.current?.focus()
         }
     }
 
     render(): JSX.Element {
         const {boardTree, showView} = this.props
+        const {groupByProperty} = boardTree
 
-        if (!boardTree || !boardTree.board) {
-            return (
-                <div>
-                    <FormattedMessage
-                        id='BoardComponent.loading'
-                        defaultMessage='Loading...'
-                    />
-                </div>
-            )
+        if (!groupByProperty) {
+            Utils.assertFailure('Board views must have groupByProperty set')
+            return <div/>
         }
 
-        const propertyValues = boardTree.groupByProperty?.options || []
+        const propertyValues = groupByProperty.options || []
         Utils.log(`${propertyValues.length} propertyValues`)
 
         const {board, activeView, visibleGroups, hiddenGroups} = boardTree
@@ -129,12 +125,14 @@ class BoardComponent extends React.Component<Props, State> {
                     this.backgroundClicked(e)
                 }}
             >
-                {this.state.shownCard &&
+                {this.state.shownCardId &&
                 <RootPortal>
                     <CardDialog
+                        key={this.state.shownCardId}
                         boardTree={boardTree}
-                        card={this.state.shownCard}
-                        onClose={() => this.setState({shownCard: undefined})}
+                        cardId={this.state.shownCardId}
+                        onClose={() => this.setState({shownCardId: undefined})}
+                        showCard={(cardId) => this.setState({shownCardId: cardId})}
                     />
                 </RootPortal>}
 
@@ -150,6 +148,9 @@ class BoardComponent extends React.Component<Props, State> {
                             showView={showView}
                             setSearchText={this.props.setSearchText}
                             addCard={() => this.addCard()}
+                            addCardFromTemplate={this.addCardFromTemplate}
+                            addCardTemplate={this.addCardTemplate}
+                            editCardTemplate={this.editCardTemplate}
                             withGroupBy={true}
                         />
                         <div
@@ -237,7 +238,11 @@ class BoardComponent extends React.Component<Props, State> {
                     this.cardClicked(e, card)
                 }}
                 onDragStart={() => {
-                    this.draggedCards = this.state.selectedCardIds.includes(card.id) ? this.state.selectedCardIds.map((id) => boardTree.allCards.find((o) => o.id === id)) : [card]
+                    if (this.state.selectedCardIds.includes(card.id)) {
+                        this.draggedCards = this.state.selectedCardIds.map((id) => boardTree.allCards.find((o) => o.id === id)!)
+                    } else {
+                        this.draggedCards = [card]
+                    }
                 }}
                 onDragEnd={() => {
                     this.draggedCards = []
@@ -274,19 +279,19 @@ class BoardComponent extends React.Component<Props, State> {
                     }}
 
                     onDragOver={(e) => {
-                        ref.current.classList.add('dragover')
+                        ref.current!.classList.add('dragover')
                         e.preventDefault()
                     }}
                     onDragEnter={(e) => {
-                        ref.current.classList.add('dragover')
+                        ref.current!.classList.add('dragover')
                         e.preventDefault()
                     }}
                     onDragLeave={(e) => {
-                        ref.current.classList.remove('dragover')
+                        ref.current!.classList.remove('dragover')
                         e.preventDefault()
                     }}
                     onDrop={(e) => {
-                        ref.current.classList.remove('dragover')
+                        ref.current!.classList.remove('dragover')
                         e.preventDefault()
                         this.onDropToColumn(group.option)
                     }}
@@ -296,13 +301,13 @@ class BoardComponent extends React.Component<Props, State> {
                         title={intl.formatMessage({
                             id: 'BoardComponent.no-property-title',
                             defaultMessage: 'Items with an empty {property} property will go here. This column cannot be removed.',
-                        }, {property: boardTree.groupByProperty?.name})}
+                        }, {property: boardTree.groupByProperty!.name})}
                     >
                         <FormattedMessage
                             id='BoardComponent.no-property'
                             defaultMessage='No {property}'
                             values={{
-                                property: boardTree.groupByProperty?.name,
+                                property: boardTree.groupByProperty!.name,
                             }}
                         />
                     </div>
@@ -343,19 +348,19 @@ class BoardComponent extends React.Component<Props, State> {
                 }}
 
                 onDragOver={(e) => {
-                    ref.current.classList.add('dragover')
+                    ref.current!.classList.add('dragover')
                     e.preventDefault()
                 }}
                 onDragEnter={(e) => {
-                    ref.current.classList.add('dragover')
+                    ref.current!.classList.add('dragover')
                     e.preventDefault()
                 }}
                 onDragLeave={(e) => {
-                    ref.current.classList.remove('dragover')
+                    ref.current!.classList.remove('dragover')
                     e.preventDefault()
                 }}
                 onDrop={(e) => {
-                    ref.current.classList.remove('dragover')
+                    ref.current!.classList.remove('dragover')
                     e.preventDefault()
                     this.onDropToColumn(group.option)
                 }}
@@ -384,7 +389,7 @@ class BoardComponent extends React.Component<Props, State> {
                             id='delete'
                             icon={<DeleteIcon/>}
                             name={intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
-                            onClick={() => mutator.deletePropertyOption(boardTree, boardTree.groupByProperty, group.option)}
+                            onClick={() => mutator.deletePropertyOption(boardTree, boardTree.groupByProperty!, group.option)}
                         />
                         <Menu.Separator/>
                         {Constants.menuColors.map((color) => (
@@ -392,7 +397,7 @@ class BoardComponent extends React.Component<Props, State> {
                                 key={color.id}
                                 id={color.id}
                                 name={color.name}
-                                onClick={() => mutator.changePropertyOptionColor(boardTree.board, boardTree.groupByProperty, group.option, color.id)}
+                                onClick={() => mutator.changePropertyOptionColor(boardTree.board, boardTree.groupByProperty!, group.option, color.id)}
                             />
                         ))}
                     </Menu>
@@ -419,25 +424,25 @@ class BoardComponent extends React.Component<Props, State> {
                     if (this.draggedCards?.length < 1) {
                         return
                     }
-                    ref.current.classList.add('dragover')
+                    ref.current!.classList.add('dragover')
                     e.preventDefault()
                 }}
                 onDragEnter={(e) => {
                     if (this.draggedCards?.length < 1) {
                         return
                     }
-                    ref.current.classList.add('dragover')
+                    ref.current!.classList.add('dragover')
                     e.preventDefault()
                 }}
                 onDragLeave={(e) => {
                     if (this.draggedCards?.length < 1) {
                         return
                     }
-                    ref.current.classList.remove('dragover')
+                    ref.current!.classList.remove('dragover')
                     e.preventDefault()
                 }}
                 onDrop={(e) => {
-                    (e.target as HTMLElement).classList.remove('dragover')
+                    ref.current!.classList.remove('dragover')
                     e.preventDefault()
                     if (this.draggedCards?.length < 1) {
                         return
@@ -473,32 +478,77 @@ class BoardComponent extends React.Component<Props, State> {
         }
     }
 
-    private async addCard(groupByOptionId?: string): Promise<void> {
+    private addCardFromTemplate = async (cardTemplateId?: string) => {
+        this.addCard(undefined, cardTemplateId)
+    }
+
+    private async addCard(groupByOptionId?: string, cardTemplateId?: string): Promise<void> {
         const {boardTree} = this.props
         const {activeView, board} = boardTree
 
-        const card = new MutableCard()
+        let card: MutableCard
+        let blocksToInsert: IBlock[]
+        if (cardTemplateId) {
+            const templateCardTree = new MutableCardTree(cardTemplateId)
+            await templateCardTree.sync()
+            const newCardTree = templateCardTree.templateCopy()
+            card = newCardTree.card
+            card.isTemplate = false
+            card.title = ''
+            blocksToInsert = [newCardTree.card, ...newCardTree.contents]
+        } else {
+            card = new MutableCard()
+            blocksToInsert = [card]
+        }
+
         card.parentId = boardTree.board.id
-        card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
-        card.icon = BlockIcons.shared.randomIcon()
+        const propertiesThatMeetFilters = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
         if (boardTree.groupByProperty) {
             if (groupByOptionId) {
-                card.properties[boardTree.groupByProperty.id] = groupByOptionId
+                propertiesThatMeetFilters[boardTree.groupByProperty.id] = groupByOptionId
             } else {
-                delete card.properties[boardTree.groupByProperty.id]
+                delete propertiesThatMeetFilters[boardTree.groupByProperty.id]
             }
         }
-        await mutator.insertBlock(card, 'add card', async () => {
-            this.setState({shownCard: card})
-        }, async () => {
-            this.setState({shownCard: undefined})
-        })
+        card.properties = {...card.properties, ...propertiesThatMeetFilters}
+        card.icon = BlockIcons.shared.randomIcon()
+        await mutator.insertBlocks(
+            blocksToInsert,
+            'add card',
+            async () => {
+                this.setState({shownCardId: card.id})
+            },
+            async () => {
+                this.setState({shownCardId: undefined})
+            },
+        )
+    }
+
+    private addCardTemplate = async () => {
+        const {boardTree} = this.props
+
+        const cardTemplate = new MutableCard()
+        cardTemplate.isTemplate = true
+        cardTemplate.parentId = boardTree.board.id
+        await mutator.insertBlock(
+            cardTemplate,
+            'add card template',
+            async () => {
+                this.setState({shownCardId: cardTemplate.id})
+            }, async () => {
+                this.setState({shownCardId: undefined})
+            },
+        )
+    }
+
+    private editCardTemplate = (cardTemplateId: string) => {
+        this.setState({shownCardId: cardTemplateId})
     }
 
     private async propertyNameChanged(option: IPropertyOption, text: string): Promise<void> {
         const {boardTree} = this.props
 
-        await mutator.changePropertyOptionValue(boardTree, boardTree.groupByProperty, option, text)
+        await mutator.changePropertyOptionValue(boardTree, boardTree.groupByProperty!, option, text)
     }
 
     private cardClicked(e: React.MouseEvent, card: Card): void {
@@ -528,7 +578,7 @@ class BoardComponent extends React.Component<Props, State> {
                 this.setState({selectedCardIds})
             }
         } else {
-            this.setState({selectedCardIds: [], shownCard: card})
+            this.setState({selectedCardIds: [], shownCardId: card.id})
         }
 
         e.stopPropagation()
@@ -545,8 +595,7 @@ class BoardComponent extends React.Component<Props, State> {
             color: 'propColorDefault',
         }
 
-        Utils.assert(boardTree.groupByProperty)
-        await mutator.insertPropertyOption(boardTree, boardTree.groupByProperty, option, 'add group')
+        await mutator.insertPropertyOption(boardTree, boardTree.groupByProperty!, option, 'add group')
     }
 
     private async onDropToColumn(option: IPropertyOption) {
@@ -554,23 +603,23 @@ class BoardComponent extends React.Component<Props, State> {
         const {draggedCards, draggedHeaderOption} = this
         const optionId = option ? option.id : undefined
 
-        Utils.assertValue(mutator)
         Utils.assertValue(boardTree)
 
         if (draggedCards.length > 0) {
             await mutator.performAsUndoGroup(async () => {
                 const description = draggedCards.length > 1 ? `drag ${draggedCards.length} cards` : 'drag card'
+                const awaits = []
                 for (const draggedCard of draggedCards) {
                     Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${optionId}`)
-                    const oldValue = draggedCard.properties[boardTree.groupByProperty.id]
+                    const oldValue = draggedCard.properties[boardTree.groupByProperty!.id]
                     if (optionId !== oldValue) {
-                        await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, optionId, description)
+                        awaits.push(mutator.changePropertyValue(draggedCard, boardTree.groupByProperty!.id, optionId, description))
                     }
                 }
+                await Promise.all(awaits)
             })
         } else if (draggedHeaderOption) {
             Utils.log(`ondrop. Header option: ${draggedHeaderOption.value}, column: ${option?.value}`)
-            Utils.assertValue(boardTree.groupByProperty)
 
             // Move option to new index
             const visibleOptionIds = boardTree.visibleGroups.map((o) => o.option.id)
@@ -590,7 +639,7 @@ class BoardComponent extends React.Component<Props, State> {
         const {boardTree} = this.props
         const {activeView} = boardTree
         const {draggedCards} = this
-        const optionId = card.properties[activeView.groupById]
+        const optionId = card.properties[activeView.groupById!]
 
         if (draggedCards.length < 1 || draggedCards.includes(card)) {
             return
@@ -605,7 +654,7 @@ class BoardComponent extends React.Component<Props, State> {
         const isDraggingDown = cardOrder.indexOf(firstDraggedCard.id) <= cardOrder.indexOf(card.id)
         cardOrder = cardOrder.filter((id) => !draggedCardIds.includes(id))
         let destIndex = cardOrder.indexOf(card.id)
-        if (firstDraggedCard.properties[boardTree.groupByProperty.id] === optionId && isDraggingDown) {
+        if (firstDraggedCard.properties[boardTree.groupByProperty!.id] === optionId && isDraggingDown) {
             // If the cards are in the same column and dragging down, drop after the target card
             destIndex += 1
         }
@@ -613,14 +662,15 @@ class BoardComponent extends React.Component<Props, State> {
 
         await mutator.performAsUndoGroup(async () => {
             // Update properties of dragged cards
+            const awaits = []
             for (const draggedCard of draggedCards) {
                 Utils.log(`draggedCard: ${draggedCard.title}, column: ${optionId}`)
-                const oldOptionId = draggedCard.properties[boardTree.groupByProperty.id]
+                const oldOptionId = draggedCard.properties[boardTree.groupByProperty!.id]
                 if (optionId !== oldOptionId) {
-                    await mutator.changePropertyValue(draggedCard, boardTree.groupByProperty.id, optionId, description)
+                    awaits.push(mutator.changePropertyValue(draggedCard, boardTree.groupByProperty!.id, optionId, description))
                 }
             }
-
+            await Promise.all(awaits)
             await mutator.changeViewCardOrder(activeView, cardOrder, description)
         })
     }
@@ -634,7 +684,11 @@ class BoardComponent extends React.Component<Props, State> {
         mutator.performAsUndoGroup(async () => {
             for (const cardId of selectedCardIds) {
                 const card = this.props.boardTree.allCards.find((o) => o.id === cardId)
-                mutator.deleteBlock(card, selectedCardIds.length > 1 ? `delete ${selectedCardIds.length} cards` : 'delete card')
+                if (card) {
+                    mutator.deleteBlock(card, selectedCardIds.length > 1 ? `delete ${selectedCardIds.length} cards` : 'delete card')
+                } else {
+                    Utils.assertFailure(`Selected card not found: ${cardId}`)
+                }
             }
         })
 

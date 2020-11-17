@@ -1,34 +1,33 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {injectIntl, IntlShape, FormattedMessage} from 'react-intl'
+import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {Archiver} from '../archiver'
-import {mattermostTheme, darkTheme, lightTheme, setTheme} from '../theme'
 import {Board, MutableBoard} from '../blocks/board'
-import {BoardTree} from '../viewModel/boardTree'
+import {BoardView, MutableBoardView} from '../blocks/boardView'
 import mutator from '../mutator'
-import Menu from '../widgets/menu'
-import MenuWrapper from '../widgets/menuWrapper'
+import {darkTheme, lightTheme, mattermostTheme, setTheme} from '../theme'
+import {WorkspaceTree} from '../viewModel/workspaceTree'
+import Button from '../widgets/buttons/button'
+import IconButton from '../widgets/buttons/iconButton'
+import DeleteIcon from '../widgets/icons/delete'
+import DotIcon from '../widgets/icons/dot'
+import DuplicateIcon from '../widgets/icons/duplicate'
+import HamburgerIcon from '../widgets/icons/hamburger'
+import HideSidebarIcon from '../widgets/icons/hideSidebar'
 import OptionsIcon from '../widgets/icons/options'
 import ShowSidebarIcon from '../widgets/icons/showSidebar'
-import HideSidebarIcon from '../widgets/icons/hideSidebar'
-import HamburgerIcon from '../widgets/icons/hamburger'
-import DeleteIcon from '../widgets/icons/delete'
-import SubmenuTriangleIcon from '../widgets/icons/submenuTriangle'
-import DotIcon from '../widgets/icons/dot'
-import IconButton from '../widgets/buttons/iconButton'
-import Button from '../widgets/buttons/button'
-import {WorkspaceTree} from '../viewModel/workspaceTree'
-import {BoardView} from '../blocks/boardView'
-
+import DisclosureTriangle from '../widgets/icons/disclosureTriangle'
+import Menu from '../widgets/menu'
+import MenuWrapper from '../widgets/menuWrapper'
 import './sidebar.scss'
 
 type Props = {
     showBoard: (id: string) => void
     showView: (id: string, boardId?: string) => void
     workspaceTree: WorkspaceTree,
-    boardTree?: BoardTree,
+    activeBoardId?: string
     setLanguage: (lang: string) => void,
     intl: IntlShape
 }
@@ -90,18 +89,13 @@ class Sidebar extends React.Component<Props, State> {
                 </div>
                 {
                     boards.map((board) => {
-                        const displayTitle = board.title || (
-                            <FormattedMessage
-                                id='Sidebar.untitled-board'
-                                defaultMessage='(Untitled Board)'
-                            />
-                        )
+                        const displayTitle: string = board.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})
                         const boardViews = views.filter((view) => view.parentId === board.id)
                         return (
                             <div key={board.id}>
                                 <div className={'octo-sidebar-item ' + (collapsedBoards[board.id] ? 'collapsed' : 'expanded')}>
                                     <IconButton
-                                        icon={<SubmenuTriangleIcon/>}
+                                        icon={<DisclosureTriangle/>}
                                         onClick={() => {
                                             const newCollapsedBoards = {...this.state.collapsedBoards}
                                             newCollapsedBoards[board.id] = !newCollapsedBoards[board.id]
@@ -113,23 +107,42 @@ class Sidebar extends React.Component<Props, State> {
                                         onClick={() => {
                                             this.boardClicked(board)
                                         }}
+                                        title={displayTitle}
                                     >
                                         {board.icon ? `${board.icon} ${displayTitle}` : displayTitle}
                                     </div>
                                     <MenuWrapper>
                                         <IconButton icon={<OptionsIcon/>}/>
-                                        <Menu>
+                                        <Menu position='left'>
                                             <Menu.Text
-                                                id='delete'
+                                                id='deleteBoard'
                                                 name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete Board'})}
                                                 icon={<DeleteIcon/>}
                                                 onClick={async () => {
-                                                    const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id).id : undefined
+                                                    const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id)?.id : undefined
                                                     mutator.deleteBlock(
                                                         board,
                                                         'delete block',
                                                         async () => {
                                                             nextBoardId && this.props.showBoard(nextBoardId!)
+                                                        },
+                                                        async () => {
+                                                            this.props.showBoard(board.id)
+                                                        },
+                                                    )
+                                                }}
+                                            />
+
+                                            <Menu.Text
+                                                id='duplicateBoard'
+                                                name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate Board'})}
+                                                icon={<DuplicateIcon/>}
+                                                onClick={async () => {
+                                                    await mutator.duplicateBoard(
+                                                        board.id,
+                                                        'duplicate board',
+                                                        async (newBoardId) => {
+                                                            newBoardId && this.props.showBoard(newBoardId)
                                                         },
                                                         async () => {
                                                             this.props.showBoard(board.id)
@@ -158,13 +171,9 @@ class Sidebar extends React.Component<Props, State> {
                                             onClick={() => {
                                                 this.viewClicked(board, view)
                                             }}
+                                            title={view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}
                                         >
-                                            {view.title || (
-                                                <FormattedMessage
-                                                    id='Sidebar.untitled-view'
-                                                    defaultMessage='(Untitled View)'
-                                                />
-                                            )}
+                                            {view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}
                                         </div>
                                     </div>
                                 ))}
@@ -256,12 +265,17 @@ class Sidebar extends React.Component<Props, State> {
     }
 
     private addBoardClicked = async () => {
-        const {boardTree, showBoard} = this.props
+        const {showBoard, intl} = this.props
 
-        const oldBoardId = boardTree?.board?.id
+        const oldBoardId = this.props.activeBoardId
         const board = new MutableBoard()
-        await mutator.insertBlock(
-            board,
+        const view = new MutableBoardView()
+        view.viewType = 'board'
+        view.parentId = board.id
+        view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board View'})
+
+        await mutator.insertBlocks(
+            [board, view],
             'add board',
             async () => {
                 showBoard(board.id)

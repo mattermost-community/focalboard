@@ -9,9 +9,10 @@ type Props = {
     value?: string
     placeholderText?: string
     className?: string
+    saveOnEsc?: boolean
 
     onCancel?: () => void
-    onSave?: (saveType: 'onEnter'|'onBlur') => void
+    onSave?: (saveType: 'onEnter'|'onEsc'|'onBlur') => void
 }
 
 export default class Editable extends React.Component<Props> {
@@ -23,16 +24,16 @@ export default class Editable extends React.Component<Props> {
     }
 
     public focus(): void {
-        this.elementRef.current.focus()
+        this.elementRef.current!.focus()
 
         // Put cursor at end
-        document.execCommand('selectAll', false, null)
-        document.getSelection().collapseToEnd()
+        document.execCommand('selectAll', false, undefined)
+        document.getSelection()?.collapseToEnd()
     }
 
     public blur = (): void => {
         this.saveOnBlur = false
-        this.elementRef.current.blur()
+        this.elementRef.current!.blur()
         this.saveOnBlur = true
     }
 
@@ -52,15 +53,15 @@ export default class Editable extends React.Component<Props> {
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>): void => {
                     if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
                         e.stopPropagation()
-                        if (this.props.onCancel) {
-                            this.props.onCancel()
+                        if (this.props.saveOnEsc) {
+                            this.props.onSave?.('onEsc')
+                        } else {
+                            this.props.onCancel?.()
                         }
                         this.blur()
                     } else if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // Return
                         e.stopPropagation()
-                        if (this.props.onSave) {
-                            this.props.onSave('onEnter')
-                        }
+                        this.props.onSave?.('onEnter')
                         this.blur()
                     }
                 }}

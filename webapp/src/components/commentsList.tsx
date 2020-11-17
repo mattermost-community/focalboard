@@ -1,17 +1,15 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {injectIntl, IntlShape, FormattedMessage} from 'react-intl'
+import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
-import {MutableCommentBlock} from '../blocks/commentBlock'
 import {IBlock} from '../blocks/block'
-import {Utils} from '../utils'
+import {MutableCommentBlock} from '../blocks/commentBlock'
 import mutator from '../mutator'
-
+import {Utils} from '../utils'
 import Button from '../widgets/buttons/button'
 
 import Comment from './comment'
-
 import './commentsList.scss'
 import {MarkdownEditor} from './markdownEditor'
 
@@ -79,7 +77,7 @@ class CommentsList extends React.Component<Props, State> {
                         text={this.state.newComment}
                         placeholderText={intl.formatMessage({id: 'CardDetail.new-comment-placeholder', defaultMessage: 'Add a comment...'})}
                         onChange={(value: string) => {
-                            if (this.state.newComment != value) {
+                            if (this.state.newComment !== value) {
                                 this.setState({newComment: value})
                             }
                         }}

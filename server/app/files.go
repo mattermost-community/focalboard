@@ -1,13 +1,13 @@
 package app
 
 import (
-	"crypto/rand"
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"path/filepath"
 	"strings"
+
+	"github.com/mattermost/mattermost-octo-tasks/server/utils"
 )
 
 func (a *App) SaveFile(reader io.Reader, filename string) (string, error) {
@@ -17,7 +17,7 @@ func (a *App) SaveFile(reader io.Reader, filename string) (string, error) {
 		fileExtension = ".jpg"
 	}
 
-	createdFilename := fmt.Sprintf(`%s%s`, createGUID(), fileExtension)
+	createdFilename := fmt.Sprintf(`%s%s`, utils.CreateGUID(), fileExtension)
 
 	_, appErr := a.filesBackend.WriteFile(reader, createdFilename)
 	if appErr != nil {
@@ -31,16 +31,4 @@ func (a *App) GetFilePath(filename string) string {
 	folderPath := a.config.FilesPath
 
 	return filepath.Join(folderPath, filename)
-}
-
-// CreateGUID returns a random GUID.
-func createGUID() string {
-	b := make([]byte, 16)
-	_, err := rand.Read(b)
-	if err != nil {
-		log.Fatal(err)
-	}
-	uuid := fmt.Sprintf("%x-%x-%x-%x-%x", b[0:4], b[4:6], b[6:8], b[8:10], b[10:])
-
-	return uuid
 }

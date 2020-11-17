@@ -11,6 +11,7 @@ import {FilterGroup} from './filterGroup'
 import octoClient from './octoClient'
 import undoManager from './undomanager'
 import {Utils} from './utils'
+import {OctoUtils} from './octoUtils'
 
 //
 // The Mutator is used to make all changes to server state
@@ -19,10 +20,10 @@ import {Utils} from './utils'
 class Mutator {
     private undoGroupId?: string
 
-    private beginUndoGroup(): string {
+    private beginUndoGroup(): string | undefined {
         if (this.undoGroupId) {
             Utils.assertFailure('UndoManager does not support nested groups')
-            return
+            return undefined
         }
         this.undoGroupId = Utils.createGuid()
         return this.undoGroupId
@@ -43,7 +44,9 @@ class Mutator {
         } catch (err) {
             Utils.assertFailure(`ERROR: ${err?.toString?.()}`)
         }
-        this.endUndoGroup(groupId)
+        if (groupId) {
+            this.endUndoGroup(groupId)
+        }
     }
 
     async updateBlock(newBlock: IBlock, oldBlock: IBlock, description: string): Promise<void> {
@@ -95,9 +98,11 @@ class Mutator {
             },
             async () => {
                 await beforeUndo?.()
+                const awaits = []
                 for (const block of blocks) {
-                    await octoClient.deleteBlock(block.id)
+                    awaits.push(octoClient.deleteBlock(block.id))
                 }
+                await Promise.all(awaits)
             },
             description,
             this.undoGroupId,
@@ -105,9 +110,7 @@ class Mutator {
     }
 
     async deleteBlock(block: IBlock, description?: string, beforeRedo?: () => Promise<void>, afterUndo?: () => Promise<void>) {
-        if (!description) {
-            description = `delete ${block.type}`
-        }
+        const actualDescription = description || `delete ${block.type}`
 
         await undoManager.perform(
             async () => {
@@ -118,7 +121,7 @@ class Mutator {
                 await octoClient.insertBlock(block)
                 await afterUndo?.()
             },
-            description,
+            actualDescription,
             this.undoGroupId,
         )
     }
@@ -144,6 +147,10 @@ class Mutator {
             newBlock = board
             break
         }
+        default: {
+            Utils.assertFailure(`changeIcon: Invalid block type: ${block.type}`)
+            return
+        }
         }
 
         await this.updateBlock(newBlock, block, description)
@@ -159,24 +166,23 @@ class Mutator {
 
     async insertPropertyTemplate(boardTree: BoardTree, index = -1, template?: IPropertyTemplate) {
         const {board, activeView} = boardTree
-
-        if (index < 0) {
-            index = board.cardProperties.length
+        if (!activeView) {
+            Utils.assertFailure('insertPropertyTemplate: no activeView')
+            return
         }
 
-        if (!template) {
-            template = {
-                id: Utils.createGuid(),
-                name: 'New Property',
-                type: 'text',
-                options: [],
-            }
+        const newTemplate = template || {
+            id: Utils.createGuid(),
+            name: 'New Property',
+            type: 'text',
+            options: [],
         }
 
         const oldBlocks: IBlock[] = [board]
 
         const newBoard = new MutableBoard(board)
-        newBoard.cardProperties.splice(index, 0, template)
+        const startIndex = (index >= 0) ? index : board.cardProperties.length
+        newBoard.cardProperties.splice(startIndex, 0, newTemplate)
         const changedBlocks: IBlock[] = [newBoard]
 
         let description = 'add property'
@@ -185,7 +191,7 @@ class Mutator {
             oldBlocks.push(activeView)
 
             const newActiveView = new MutableBoardView(activeView)
-            newActiveView.visiblePropertyIds.push(template.id)
+            newActiveView.visiblePropertyIds.push(newTemplate.id)
             changedBlocks.push(newActiveView)
 
             description = 'add column'
@@ -196,6 +202,10 @@ class Mutator {
 
     async duplicatePropertyTemplate(boardTree: BoardTree, propertyId: string) {
         const {board, activeView} = boardTree
+        if (!activeView) {
+            Utils.assertFailure('duplicatePropertyTemplate: no activeView')
+            return
+        }
 
         const oldBlocks: IBlock[] = [board]
 
@@ -296,7 +306,7 @@ class Mutator {
         Utils.assert(board.cardProperties.includes(template))
 
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)
+        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)!
         newTemplate.options.push(option)
 
         await this.updateBlock(newBoard, board, description)
@@ -306,7 +316,7 @@ class Mutator {
         const {board} = boardTree
 
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)
+        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)!
         newTemplate.options = newTemplate.options.filter((o) => o.id !== option.id)
 
         await this.updateBlock(newBoard, board, 'delete option')
@@ -317,20 +327,20 @@ class Mutator {
         Utils.log(`srcIndex: ${srcIndex}, destIndex: ${destIndex}`)
 
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)
+        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)!
         newTemplate.options.splice(destIndex, 0, newTemplate.options.splice(srcIndex, 1)[0])
 
         await this.updateBlock(newBoard, board, 'reorder options')
     }
 
     async changePropertyOptionValue(boardTree: BoardTree, propertyTemplate: IPropertyTemplate, option: IPropertyOption, value: string) {
-        const {board, cards} = boardTree
+        const {board} = boardTree
 
         const oldBlocks: IBlock[] = [board]
 
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o) => o.id === propertyTemplate.id)
-        const newOption = newTemplate.options.find((o) => o.id === option.id)
+        const newTemplate = newBoard.cardProperties.find((o) => o.id === propertyTemplate.id)!
+        const newOption = newTemplate.options.find((o) => o.id === option.id)!
         newOption.value = value
         const changedBlocks: IBlock[] = [newBoard]
 
@@ -341,15 +351,19 @@ class Mutator {
 
     async changePropertyOptionColor(board: Board, template: IPropertyTemplate, option: IPropertyOption, color: string) {
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)
-        const newOption = newTemplate.options.find((o) => o.id === option.id)
+        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)!
+        const newOption = newTemplate.options.find((o) => o.id === option.id)!
         newOption.color = color
         await this.updateBlock(newBoard, board, 'change option color')
     }
 
     async changePropertyValue(card: Card, propertyId: string, value?: string, description = 'change property') {
         const newCard = new MutableCard(card)
-        newCard.properties[propertyId] = value
+        if (value) {
+            newCard.properties[propertyId] = value
+        } else {
+            delete newCard.properties[propertyId]
+        }
         await this.updateBlock(newCard, card, description)
     }
 
@@ -357,7 +371,7 @@ class Mutator {
         const {board} = boardTree
 
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o) => o.id === propertyTemplate.id)
+        const newTemplate = newBoard.cardProperties.find((o) => o.id === propertyTemplate.id)!
         newTemplate.type = type
 
         const oldBlocks: IBlock[] = [board]
@@ -369,7 +383,11 @@ class Mutator {
                 if (oldValue) {
                     const newValue = propertyTemplate.options.find((o) => o.id === oldValue)?.value
                     const newCard = new MutableCard(card)
-                    newCard.properties[propertyTemplate.id] = newValue
+                    if (newValue) {
+                        newCard.properties[propertyTemplate.id] = newValue
+                    } else {
+                        delete newCard.properties[propertyTemplate.id]
+                    }
                     newBlocks.push(newCard)
                     oldBlocks.push(card)
                 }
@@ -381,7 +399,11 @@ class Mutator {
                 if (oldValue) {
                     const newValue = propertyTemplate.options.find((o) => o.value === oldValue)?.id
                     const newCard = new MutableCard(card)
-                    newCard.properties[propertyTemplate.id] = newValue
+                    if (newValue) {
+                        newCard.properties[propertyTemplate.id] = newValue
+                    } else {
+                        delete newCard.properties[propertyTemplate.id]
+                    }
                     newBlocks.push(newCard)
                     oldBlocks.push(card)
                 }
@@ -399,7 +421,7 @@ class Mutator {
         await this.updateBlock(newView, view, 'sort')
     }
 
-    async changeViewFilter(view: BoardView, filter?: FilterGroup): Promise<void> {
+    async changeViewFilter(view: BoardView, filter: FilterGroup): Promise<void> {
         const newView = new MutableBoardView(view)
         newView.filter = filter
         await this.updateBlock(newView, view, 'filter')
@@ -458,6 +480,46 @@ class Mutator {
         const newView = new MutableBoardView(view)
         newView.cardOrder = cardOrder
         await this.updateBlock(newView, view, description)
+    }
+
+    // Duplicate
+
+    async duplicateCard(cardId: string, description = 'duplicate card', afterRedo?: (newBoardId: string) => Promise<void>, beforeUndo?: () => Promise<void>): Promise<[IBlock[], string]> {
+        const blocks = await octoClient.getSubtree(cardId, 2)
+        const [newBlocks1, idMap] = OctoUtils.duplicateBlockTree(blocks, cardId)
+        const newBlocks = newBlocks1.filter((o) => o.type !== 'comment')
+        Utils.log(`duplicateCard: duplicating ${newBlocks.length} blocks`)
+        const newCardId = idMap[cardId]
+        const newCard = newBlocks.find((o) => o.id === newCardId)!
+        newCard.title = `Copy of ${newCard.title}`
+        await this.insertBlocks(
+            newBlocks,
+            description,
+            async () => {
+                await afterRedo?.(newCardId)
+            },
+            beforeUndo,
+        )
+        return [newBlocks, newCardId]
+    }
+
+    async duplicateBoard(boardId: string, description = 'duplicate board', afterRedo?: (newBoardId: string) => Promise<void>, beforeUndo?: () => Promise<void>): Promise<[IBlock[], string]> {
+        const blocks = await octoClient.getSubtree(boardId, 3)
+        const [newBlocks1, idMap] = OctoUtils.duplicateBlockTree(blocks, boardId)
+        const newBlocks = newBlocks1.filter((o) => o.type !== 'comment')
+        Utils.log(`duplicateBoard: duplicating ${newBlocks.length} blocks`)
+        const newBoardId = idMap[boardId]
+        const newBoard = newBlocks.find((o) => o.id === newBoardId)!
+        newBoard.title = `Copy of ${newBoard.title}`
+        await this.insertBlocks(
+            newBlocks,
+            description,
+            async () => {
+                await afterRedo?.(newBoardId)
+            },
+            beforeUndo,
+        )
+        return [newBlocks, newBoardId]
     }
 
     // Other methods

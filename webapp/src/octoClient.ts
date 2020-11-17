@@ -14,8 +14,8 @@ class OctoClient {
         Utils.log(`OctoClient serverUrl: ${this.serverUrl}`)
     }
 
-    async getSubtree(rootId?: string): Promise<IBlock[]> {
-        const path = `/api/v1/blocks/${rootId}/subtree`
+    async getSubtree(rootId?: string, levels = 2): Promise<IBlock[]> {
+        const path = `/api/v1/blocks/${rootId}/subtree?l=${levels}`
         const response = await fetch(this.serverUrl + path)
         const blocks = (await response.json() || []) as IMutableBlock[]
         this.fixBlocks(blocks)
@@ -36,7 +36,7 @@ class OctoClient {
             Utils.log(`\t ${block.type}, ${block.id}`)
         })
         const body = JSON.stringify(blocks)
-        return await fetch(this.serverUrl + '/api/v1/blocks/import', {
+        return fetch(this.serverUrl + '/api/v1/blocks/import', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -68,35 +68,22 @@ class OctoClient {
         return blocks
     }
 
+    // TODO: Remove this fixup code
     fixBlocks(blocks: IMutableBlock[]): void {
         if (!blocks) {
             return
         }
 
-        // TODO
         for (const block of blocks) {
             if (!block.fields) {
                 block.fields = {}
-            }
-            const o = block as any
-            if (o.cardProperties) {
-                block.fields.cardProperties = o.cardProperties; delete o.cardProperties
-            }
-            if (o.properties) {
-                block.fields.properties = o.properties; delete o.properties
-            }
-            if (o.icon) {
-                block.fields.icon = o.icon; delete o.icon
-            }
-            if (o.url) {
-                block.fields.url = o.url; delete o.url
             }
         }
     }
 
     async updateBlock(block: IMutableBlock): Promise<Response> {
         block.updateAt = Date.now()
-        return await this.insertBlocks([block])
+        return this.insertBlocks([block])
     }
 
     async updateBlocks(blocks: IMutableBlock[]): Promise<Response> {
@@ -104,12 +91,12 @@ class OctoClient {
         blocks.forEach((block) => {
             block.updateAt = now
         })
-        return await this.insertBlocks(blocks)
+        return this.insertBlocks(blocks)
     }
 
     async deleteBlock(blockId: string): Promise<Response> {
         Utils.log(`deleteBlock: ${blockId}`)
-        return await fetch(this.serverUrl + `/api/v1/blocks/${encodeURIComponent(blockId)}`, {
+        return fetch(this.serverUrl + `/api/v1/blocks/${encodeURIComponent(blockId)}`, {
             method: 'DELETE',
             headers: {
                 Accept: 'application/json',
@@ -125,10 +112,10 @@ class OctoClient {
     async insertBlocks(blocks: IBlock[]): Promise<Response> {
         Utils.log(`insertBlocks: ${blocks.length} blocks(s)`)
         blocks.forEach((block) => {
-            Utils.log(`\t ${block.type}, ${block.id}`)
+            Utils.log(`\t ${block.type}, ${block.id}, ${block.title?.substr(0, 50) || ''}`)
         })
         const body = JSON.stringify(blocks)
-        return await fetch(this.serverUrl + '/api/v1/blocks', {
+        return fetch(this.serverUrl + '/api/v1/blocks', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',

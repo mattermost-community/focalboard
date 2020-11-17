@@ -3,18 +3,14 @@
 import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import {BoardTree} from '../viewModel/boardTree'
 import {Card} from '../blocks/card'
-import mutator from '../mutator'
-
 import {Constants} from '../constants'
-import Editable from '../widgets/editable'
+import mutator from '../mutator'
+import {BoardTree} from '../viewModel/boardTree'
 import Button from '../widgets/buttons/button'
+import Editable from '../widgets/editable'
 
 import PropertyValueElement from './propertyValueElement'
-import {CardDialog} from './cardDialog'
-import RootPortal from './rootPortal'
-
 import './tableRow.scss'
 
 type Props = {
@@ -22,10 +18,10 @@ type Props = {
     card: Card
     focusOnMount: boolean
     onSaveWithEnter: () => void
+    showCard: (cardId: string) => void
 }
 
 type State = {
-    showCard: boolean
     title: string
 }
 
@@ -34,7 +30,6 @@ class TableRow extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props)
         this.state = {
-            showCard: false,
             title: props.card.title,
         }
     }
@@ -45,7 +40,7 @@ class TableRow extends React.Component<Props, State> {
 
     componentDidMount(): void {
         if (this.props.focusOnMount) {
-            setTimeout(() => this.titleRef.current.focus(), 10)
+            setTimeout(() => this.titleRef.current!.focus(), 10)
         }
     }
 
@@ -84,21 +79,13 @@ class TableRow extends React.Component<Props, State> {
                     </div>
 
                     <div className='open-button'>
-                        <Button onClick={() => this.setState({showCard: true})}>
+                        <Button onClick={() => this.props.showCard(this.props.card.id)}>
                             <FormattedMessage
                                 id='TableRow.open'
                                 defaultMessage='Open'
                             />
                         </Button>
                     </div>
-                    {this.state.showCard &&
-                    <RootPortal>
-                        <CardDialog
-                            boardTree={boardTree}
-                            card={card}
-                            onClose={() => this.setState({showCard: false})}
-                        />
-                    </RootPortal>}
                 </div>
 
                 {/* Columns, one per property */}
@@ -126,7 +113,7 @@ class TableRow extends React.Component<Props, State> {
     }
 
     private columnWidth(templateId: string): number {
-        return Math.max(Constants.minColumnWidth, this.props.boardTree?.activeView?.columnWidths[templateId] || 0)
+        return Math.max(Constants.minColumnWidth, this.props.boardTree.activeView.columnWidths[templateId] || 0)
     }
 
     focusOnTitle(): void {

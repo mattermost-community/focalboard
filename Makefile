@@ -1,4 +1,4 @@
-.PHONY: prebuild clean cleanall server server-linux server-win64 generate watch-server webapp mac-app win-app linux-app
+.PHONY: prebuild clean cleanall server server-mac server-linux server-win generate watch-server webapp mac-app win-app linux-app
 
 all: server
 
@@ -13,10 +13,15 @@ prebuild:
 server:
 	cd server; go build -o ../bin/octoserver ./main
 
-server-linux:
-	cd server; env GOOS=linux GOARCH=amd64 go build -o ../bin/octoserver ./main
+server-mac:
+	mkdir -p bin/mac
+	cd server; env GOOS=darwin GOARCH=amd64 go build -o ../bin/mac/octoserver ./main
 
-server-win64:
+server-linux:
+	mkdir -p bin/linux
+	cd server; env GOOS=linux GOARCH=amd64 go build -o ../bin/linux/octoserver ./main
+
+server-win:
 	cd server; env GOOS=windows GOARCH=amd64 go build -o ../bin/octoserver.exe ./main
 
 generate:
@@ -43,18 +48,18 @@ watch-server:
 webapp:
 	cd webapp; npm run pack
 
-mac-app: server webapp
+mac-app: server-mac webapp
 	rm -rf mac/resources/bin
 	rm -rf mac/resources/pack
-	mkdir -p mac/resources
-	cp -R bin mac/resources/bin
+	mkdir -p mac/resources/bin
+	cp bin/mac/octoserver mac/resources/bin/octoserver
 	cp -R webapp/pack mac/resources/pack
 	mkdir -p mac/temp
 	xcodebuild archive -workspace mac/Tasks.xcworkspace -scheme Tasks -archivePath mac/temp/tasks.xcarchive
 	xcodebuild -exportArchive -archivePath mac/temp/tasks.xcarchive -exportPath mac/dist -exportOptionsPlist mac/export.plist
-	cd mac/dist; zip -r tasks.zip Tasks.app
+	cd mac/dist; zip -r tasks-mac.zip Tasks.app
 
-win-app: server-win64 webapp
+win-app: server-win webapp
 	cd win; make build
 	mkdir -p win/dist/bin
 	cp -R bin/octoserver.exe win/dist/bin
@@ -67,7 +72,7 @@ linux-app: server-linux webapp
 	rm -rf linux/temp
 	mkdir -p linux/temp/tasks-app/webapp
 	mkdir -p linux/dist
-	cp -R bin/octoserver linux/temp/tasks-app/
+	cp -R bin/linux/octoserver linux/temp/tasks-app/
 	cp -R config.json linux/temp/tasks-app/
 	cp -R webapp/pack linux/temp/tasks-app/webapp/pack
 	cd linux; make build
@@ -81,6 +86,8 @@ clean:
 	rm -rf webapp/pack
 	rm -rf mac/temp
 	rm -rf mac/dist
+	rm -rf linux/dist
+	rm -rf win/dist
 
 cleanall: clean
 	rm -rf webapp/node_modules

@@ -4,9 +4,8 @@ import EasyMDE from 'easymde'
 import React from 'react'
 import SimpleMDE from 'react-simplemde-editor'
 
-import './markdownEditor.scss'
-
 import {Utils} from '../utils'
+import './markdownEditor.scss'
 
 type Props = {
     text?: string
@@ -29,13 +28,13 @@ class MarkdownEditor extends React.Component<Props, State> {
     }
 
     get text(): string {
-        return this.elementRef.current.state.value
+        return this.elementRef.current!.state.value
     }
     set text(value: string) {
-        this.elementRef.current.setState({value})
+        this.elementRef.current!.setState({value})
     }
 
-    private editorInstance: EasyMDE
+    private editorInstance?: EasyMDE
     private frameRef = React.createRef<HTMLDivElement>()
     private elementRef = React.createRef<SimpleMDE>()
     private previewRef = React.createRef<HTMLDivElement>()
@@ -45,14 +44,18 @@ class MarkdownEditor extends React.Component<Props, State> {
         this.state = {isEditing: false}
     }
 
-    componentDidUpdate(prevProps: Props, prevState: State) {
+    shouldComponentUpdate(): boolean {
+        return true
+    }
+
+    componentDidUpdate(): void {
         const newText = this.props.text || ''
         if (!this.state.isEditing && this.text !== newText) {
             this.text = newText
         }
     }
 
-    showEditor() {
+    showEditor(): void {
         const cm = this.editorInstance?.codemirror
         if (cm) {
             setTimeout(() => {
@@ -66,12 +69,12 @@ class MarkdownEditor extends React.Component<Props, State> {
         this.setState({isEditing: true})
     }
 
-    hideEditor() {
+    hideEditor(): void {
         this.editorInstance?.codemirror?.getInputField()?.blur()
         this.setState({isEditing: false})
     }
 
-    render() {
+    render(): JSX.Element {
         const {text, placeholderText, uniqueId, onFocus, onBlur, onChange} = this.props
 
         let html: string
@@ -81,21 +84,21 @@ class MarkdownEditor extends React.Component<Props, State> {
             html = Utils.htmlFromMarkdown(placeholderText || '')
         }
 
-        const previewElement =
-    (<div
-        ref={this.previewRef}
-        className={text ? 'octo-editor-preview' : 'octo-editor-preview octo-placeholder'}
-        style={{display: this.state.isEditing ? 'none' : null}}
-        dangerouslySetInnerHTML={{__html: html}}
-        onClick={() => {
-            if (!this.state.isEditing) {
-                this.showEditor()
-            }
-        }}
-    />);
+        const previewElement = (
+            <div
+                ref={this.previewRef}
+                className={text ? 'octo-editor-preview' : 'octo-editor-preview octo-placeholder'}
+                style={{display: this.state.isEditing ? 'none' : undefined}}
+                dangerouslySetInnerHTML={{__html: html}}
+                onClick={() => {
+                    if (!this.state.isEditing) {
+                        this.showEditor()
+                    }
+                }}
+            />)
 
-        const editorElement =
-            (<div
+        const editorElement = (
+            <div
                 className='octo-editor-activeEditor'
 
                 // Use visibility instead of display here so the editor is pre-rendered, avoiding a flash on showEditor
@@ -125,22 +128,22 @@ class MarkdownEditor extends React.Component<Props, State> {
                     events={{
                         change: () => {
                             if (this.state.isEditing) {
-                                const newText = this.elementRef.current.state.value
+                                const newText = this.elementRef.current!.state.value
                                 onChange?.(newText)
                             }
                         },
                         blur: () => {
-                            const newText = this.elementRef.current.state.value
+                            const newText = this.elementRef.current!.state.value
                             const oldText = this.props.text || ''
                             if (newText !== oldText && onChange) {
                                 const newHtml = newText ? Utils.htmlFromMarkdown(newText) : Utils.htmlFromMarkdown(placeholderText || '')
-                                this.previewRef.current.innerHTML = newHtml
+                                this.previewRef.current!.innerHTML = newHtml
                                 onChange(newText)
                             }
 
                             this.text = newText
 
-                            this.frameRef.current.classList.remove('active')
+                            this.frameRef.current!.classList.remove('active')
 
                             if (onBlur) {
                                 onBlur(newText)
@@ -149,9 +152,9 @@ class MarkdownEditor extends React.Component<Props, State> {
                             this.hideEditor()
                         },
                         focus: () => {
-                            this.frameRef.current.classList.add('active')
+                            this.frameRef.current!.classList.add('active')
 
-                            this.elementRef.current.setState({value: this.text})
+                            this.elementRef.current!.setState({value: this.text})
 
                             if (onFocus) {
                                 onFocus()
@@ -176,8 +179,8 @@ class MarkdownEditor extends React.Component<Props, State> {
                 />
             </div>)
 
-        const element =
-            (<div
+        const element = (
+            <div
                 ref={this.frameRef}
                 className={`MarkdownEditor octo-editor ${this.props.className || ''}`}
             >

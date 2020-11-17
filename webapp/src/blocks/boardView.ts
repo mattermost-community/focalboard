@@ -10,17 +10,17 @@ type ISortOption = { propertyId: '__title' | string, reversed: boolean }
 
 interface BoardView extends IBlock {
     readonly viewType: IViewType
-    readonly groupById: string
+    readonly groupById?: string
     readonly sortOptions: readonly ISortOption[]
     readonly visiblePropertyIds: readonly string[]
     readonly visibleOptionIds: readonly string[]
     readonly hiddenOptionIds: readonly string[]
-    readonly filter: FilterGroup | undefined
+    readonly filter: FilterGroup
     readonly cardOrder: readonly string[]
     readonly columnWidths: Readonly<Record<string, number>>
 }
 
-class MutableBoardView extends MutableBlock {
+class MutableBoardView extends MutableBlock implements BoardView {
     get viewType(): IViewType {
         return this.fields.viewType
     }
@@ -63,10 +63,10 @@ class MutableBoardView extends MutableBlock {
         this.fields.hiddenOptionIds = value
     }
 
-    get filter(): FilterGroup | undefined {
+    get filter(): FilterGroup {
         return this.fields.filter
     }
-    set filter(value: FilterGroup | undefined) {
+    set filter(value: FilterGroup) {
         this.fields.filter = value
     }
 

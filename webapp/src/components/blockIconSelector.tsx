@@ -7,12 +7,11 @@ import {BlockIcons} from '../blockIcons'
 import {Board} from '../blocks/board'
 import {Card} from '../blocks/card'
 import mutator from '../mutator'
+import EmojiPicker from '../widgets/emojiPicker'
+import DeleteIcon from '../widgets/icons/delete'
+import EmojiIcon from '../widgets/icons/emoji'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
-import EmojiPicker from '../widgets/emojiPicker'
-import EmojiIcon from '../widgets/icons/emoji'
-import DeleteIcon from '../widgets/icons/delete'
-
 import './blockIconSelector.scss'
 
 type Props = {
@@ -37,7 +36,7 @@ class BlockIconSelector extends React.Component<Props> {
         document.body.click()
     }
 
-    render(): JSX.Element {
+    render(): JSX.Element | null {
         const {block, intl, size} = this.props
         if (!block.icon) {
             return null
@@ -64,7 +63,7 @@ class BlockIconSelector extends React.Component<Props> {
                             id='remove'
                             icon={<DeleteIcon/>}
                             name={intl.formatMessage({id: 'ViewTitle.remove-icon', defaultMessage: 'Remove Icon'})}
-                            onClick={() => mutator.changeIcon(block, undefined, 'remove icon')}
+                            onClick={() => mutator.changeIcon(block, '', 'remove icon')}
                         />
                     </Menu>
                 </MenuWrapper>

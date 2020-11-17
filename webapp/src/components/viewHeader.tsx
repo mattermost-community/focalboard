@@ -1,43 +1,43 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {injectIntl, IntlShape, FormattedMessage} from 'react-intl'
+import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {Archiver} from '../archiver'
-import {ISortOption, MutableBoardView} from '../blocks/boardView'
 import {BlockIcons} from '../blockIcons'
-import {MutableCard} from '../blocks/card'
 import {IPropertyTemplate} from '../blocks/board'
-import {BoardTree} from '../viewModel/boardTree'
-import ViewMenu from '../components/viewMenu'
-import {CsvExporter} from '../csvExporter'
+import {ISortOption, MutableBoardView} from '../blocks/boardView'
+import {MutableCard} from '../blocks/card'
 import {CardFilter} from '../cardFilter'
+import ViewMenu from '../components/viewMenu'
+import {Constants} from '../constants'
+import {CsvExporter} from '../csvExporter'
 import mutator from '../mutator'
-import {Utils} from '../utils'
-import Menu from '../widgets/menu'
-import MenuWrapper from '../widgets/menuWrapper'
-import CheckIcon from '../widgets/icons/check'
-import DropdownIcon from '../widgets/icons/dropdown'
-import OptionsIcon from '../widgets/icons/options'
-import SortUpIcon from '../widgets/icons/sortUp'
-import SortDownIcon from '../widgets/icons/sortDown'
+import {BoardTree} from '../viewModel/boardTree'
+import Button from '../widgets/buttons/button'
 import ButtonWithMenu from '../widgets/buttons/buttonWithMenu'
 import IconButton from '../widgets/buttons/iconButton'
-import Button from '../widgets/buttons/button'
+import CheckIcon from '../widgets/icons/check'
+import DeleteIcon from '../widgets/icons/delete'
+import DropdownIcon from '../widgets/icons/dropdown'
+import OptionsIcon from '../widgets/icons/options'
+import SortDownIcon from '../widgets/icons/sortDown'
+import SortUpIcon from '../widgets/icons/sortUp'
+import Menu from '../widgets/menu'
+import MenuWrapper from '../widgets/menuWrapper'
 
 import {Editable} from './editable'
 import FilterComponent from './filterComponent'
-
 import './viewHeader.scss'
-import {sendFlashMessage} from './flashMessages'
-
-import {Constants} from '../constants'
 
 type Props = {
-    boardTree?: BoardTree
+    boardTree: BoardTree
     showView: (id: string) => void
-    setSearchText: (text: string) => void
-    addCard: (show: boolean) => void
+    setSearchText: (text?: string) => void
+    addCard: () => void
+    addCardFromTemplate: (cardTemplateId?: string) => void
+    addCardTemplate: () => void
+    editCardTemplate: (cardTemplateId: string) => void
     withGroupBy?: boolean
     intl: IntlShape
 }
@@ -56,12 +56,12 @@ class ViewHeader extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
-        this.state = {isSearching: Boolean(this.props.boardTree?.getSearchText()), showFilter: false}
+        this.state = {isSearching: Boolean(this.props.boardTree.getSearchText()), showFilter: false}
     }
 
     componentDidUpdate(prevPros: Props, prevState: State): void {
         if (this.state.isSearching && !prevState.isSearching) {
-            this.searchFieldRef.current.focus()
+            this.searchFieldRef.current!.focus()
         }
     }
 
@@ -75,7 +75,7 @@ class ViewHeader extends React.Component<Props, State> {
 
     private onSearchKeyDown = (e: React.KeyboardEvent) => {
         if (e.keyCode === 27) { // ESC: Clear search
-            this.searchFieldRef.current.text = ''
+            this.searchFieldRef.current!.text = ''
             this.setState({isSearching: false})
             this.props.setSearchText(undefined)
             e.preventDefault()
@@ -90,10 +90,10 @@ class ViewHeader extends React.Component<Props, State> {
         const {boardTree} = this.props
         const {board, activeView} = boardTree
 
-        const startCount = boardTree?.cards?.length
+        const startCount = boardTree.cards.length
         let optionIndex = 0
 
-        await mutator.performAsUndoGroup(async () => {
+        mutator.performAsUndoGroup(async () => {
             for (let i = 0; i < count; i++) {
                 const card = new MutableCard()
                 card.parentId = boardTree.board.id
@@ -107,7 +107,26 @@ class ViewHeader extends React.Component<Props, State> {
                     optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
                     card.properties[boardTree.groupByProperty.id] = option.id
                 }
-                await mutator.insertBlock(card, 'test add card')
+                mutator.insertBlock(card, 'test add card')
+            }
+        })
+    }
+
+    private async testDistributeCards() {
+        const {boardTree} = this.props
+        mutator.performAsUndoGroup(async () => {
+            let optionIndex = 0
+            for (const card of boardTree.cards) {
+                if (boardTree.groupByProperty && boardTree.groupByProperty.options.length > 0) {
+                    // Cycle through options
+                    const option = boardTree.groupByProperty.options[optionIndex]
+                    optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
+                    const newCard = new MutableCard(card)
+                    if (newCard.properties[boardTree.groupByProperty.id] !== option.id) {
+                        newCard.properties[boardTree.groupByProperty.id] = option.id
+                        mutator.updateBlock(newCard, card, 'test distribute cards')
+                    }
+                }
             }
         })
     }
@@ -115,9 +134,9 @@ class ViewHeader extends React.Component<Props, State> {
     private async testRandomizeIcons() {
         const {boardTree} = this.props
 
-        await mutator.performAsUndoGroup(async () => {
+        mutator.performAsUndoGroup(async () => {
             for (const card of boardTree.cards) {
-                await mutator.changeIcon(card, BlockIcons.shared.randomIcon(), 'randomize icon')
+                mutator.changeIcon(card, BlockIcons.shared.randomIcon(), 'randomize icon')
             }
         })
     }
@@ -163,10 +182,6 @@ class ViewHeader extends React.Component<Props, State> {
                                 name={option.name}
                                 isOn={activeView.visiblePropertyIds.includes(option.id)}
                                 onClick={(propertyId: string) => {
-                                    const property = boardTree.board.cardProperties.find((o: IPropertyTemplate) => o.id === propertyId)
-                                    Utils.assertValue(property)
-                                    Utils.log(`Toggle property ${property.name}`)
-
                                     let newVisiblePropertyIds = []
                                     if (activeView.visiblePropertyIds.includes(propertyId)) {
                                         newVisiblePropertyIds = activeView.visiblePropertyIds.filter((o: string) => o !== propertyId)
@@ -266,28 +281,37 @@ class ViewHeader extends React.Component<Props, State> {
                             </>
                         }
 
-                        {this.sortDisplayOptions().map((option) => (
-                            <Menu.Text
-                                key={option.id}
-                                id={option.id}
-                                name={option.name}
-                                rightIcon={(activeView.sortOptions[0]?.propertyId === option.id) ? activeView.sortOptions[0].reversed ? <SortUpIcon/> : <SortDownIcon/> : undefined}
-                                onClick={(propertyId: string) => {
-                                    let newSortOptions: ISortOption[] = []
-                                    if (activeView.sortOptions[0] && activeView.sortOptions[0].propertyId === propertyId) {
+                        {this.sortDisplayOptions().map((option) => {
+                            let rightIcon: JSX.Element | undefined
+                            if (activeView.sortOptions.length > 0) {
+                                const sortOption = activeView.sortOptions[0]
+                                if (sortOption.propertyId === option.id) {
+                                    rightIcon = sortOption.reversed ? <SortUpIcon/> : <SortDownIcon/>
+                                }
+                            }
+                            return (
+                                <Menu.Text
+                                    key={option.id}
+                                    id={option.id}
+                                    name={option.name}
+                                    rightIcon={rightIcon}
+                                    onClick={(propertyId: string) => {
+                                        let newSortOptions: ISortOption[] = []
+                                        if (activeView.sortOptions[0] && activeView.sortOptions[0].propertyId === propertyId) {
                                         // Already sorting by name, so reverse it
-                                        newSortOptions = [
-                                            {propertyId, reversed: !activeView.sortOptions[0].reversed},
-                                        ]
-                                    } else {
-                                        newSortOptions = [
-                                            {propertyId, reversed: false},
-                                        ]
-                                    }
-                                    mutator.changeViewSortOptions(activeView, newSortOptions)
-                                }}
-                            />
-                        ))}
+                                            newSortOptions = [
+                                                {propertyId, reversed: !activeView.sortOptions[0].reversed},
+                                            ]
+                                        } else {
+                                            newSortOptions = [
+                                                {propertyId, reversed: false},
+                                            ]
+                                        }
+                                        mutator.changeViewSortOptions(activeView, newSortOptions)
+                                    }}
+                                />
+                            )
+                        })}
                     </Menu>
                 </MenuWrapper>
                 {this.state.isSearching &&
@@ -323,6 +347,9 @@ class ViewHeader extends React.Component<Props, State> {
                             name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export Board Archive'})}
                             onClick={() => Archiver.exportBoardTree(boardTree)}
                         />
+
+                        <Menu.Separator/>
+
                         <Menu.Text
                             id='testAdd100Cards'
                             name={intl.formatMessage({id: 'ViewHeader.test-add-100-cards', defaultMessage: 'TEST: Add 100 cards'})}
@@ -334,15 +361,21 @@ class ViewHeader extends React.Component<Props, State> {
                             onClick={() => this.testAddCards(1000)}
                         />
                         <Menu.Text
+                            id='testDistributeCards'
+                            name={intl.formatMessage({id: 'ViewHeader.test-distribute-cards', defaultMessage: 'TEST: Distribute cards'})}
+                            onClick={() => this.testDistributeCards()}
+                        />
+                        <Menu.Text
                             id='testRandomizeIcons'
                             name={intl.formatMessage({id: 'ViewHeader.test-randomize-icons', defaultMessage: 'TEST: Randomize icons'})}
                             onClick={() => this.testRandomizeIcons()}
                         />
                     </Menu>
                 </MenuWrapper>
+
                 <ButtonWithMenu
                     onClick={() => {
-                        this.props.addCard(true)
+                        this.props.addCard()
                     }}
                     text={(
                         <FormattedMessage
@@ -360,10 +393,56 @@ class ViewHeader extends React.Component<Props, State> {
                                 />
                             </b>
                         </Menu.Label>
+
+                        <Menu.Separator/>
+
+                        {boardTree.cardTemplates.map((cardTemplate) => {
+                            return (
+                                <Menu.Text
+                                    key={cardTemplate.id}
+                                    id={cardTemplate.id}
+                                    name={cardTemplate.title || intl.formatMessage({id: 'ViewHeader.untitled', defaultMessage: 'Untitled'})}
+                                    onClick={() => {
+                                        this.props.addCardFromTemplate(cardTemplate.id)
+                                    }}
+                                    rightIcon={
+                                        <MenuWrapper stopPropagationOnToggle={true}>
+                                            <IconButton icon={<OptionsIcon/>}/>
+                                            <Menu position='left'>
+                                                <Menu.Text
+                                                    id='edit'
+                                                    name={intl.formatMessage({id: 'ViewHeader.edit-template', defaultMessage: 'Edit'})}
+                                                    onClick={() => {
+                                                        this.props.editCardTemplate(cardTemplate.id)
+                                                    }}
+                                                />
+                                                <Menu.Text
+                                                    icon={<DeleteIcon/>}
+                                                    id='delete'
+                                                    name={intl.formatMessage({id: 'ViewHeader.delete-template', defaultMessage: 'Delete'})}
+                                                    onClick={async () => {
+                                                        await mutator.deleteBlock(cardTemplate, 'delete card template')
+                                                    }}
+                                                />
+                                            </Menu>
+                                        </MenuWrapper>
+                                    }
+                                />
+                            )
+                        })}
+
                         <Menu.Text
-                            id='example-template'
-                            name={intl.formatMessage({id: 'ViewHeader.sample-templte', defaultMessage: 'Sample template'})}
-                            onClick={() => sendFlashMessage({content: 'Not implemented yet', severity: 'low'})}
+                            id='empty-template'
+                            name={intl.formatMessage({id: 'ViewHeader.empty-card', defaultMessage: 'Empty card'})}
+                            onClick={() => {
+                                this.props.addCard()
+                            }}
+                        />
+
+                        <Menu.Text
+                            id='add-template'
+                            name={intl.formatMessage({id: 'ViewHeader.add-template', defaultMessage: '+ New template'})}
+                            onClick={() => this.props.addCardTemplate()}
                         />
                     </Menu>
                 </ButtonWithMenu>

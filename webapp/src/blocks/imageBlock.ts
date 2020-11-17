@@ -17,6 +17,7 @@ class MutableImageBlock extends MutableOrderedBlock implements IOrderedBlock {
     constructor(block: any = {}) {
         super(block)
         this.type = 'image'
+        this.url = block.fields?.url || ''
     }
 }
 

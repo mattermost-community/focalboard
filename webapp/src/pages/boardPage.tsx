@@ -2,14 +2,14 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {BoardView} from '../blocks/boardView'
-import {MutableBoardTree} from '../viewModel/boardTree'
-import {WorkspaceComponent} from '../components/workspaceComponent'
+import {IBlock} from '../blocks/block'
 import {sendFlashMessage} from '../components/flashMessages'
+import {WorkspaceComponent} from '../components/workspaceComponent'
 import mutator from '../mutator'
 import {OctoListener} from '../octoListener'
 import {Utils} from '../utils'
-import {MutableWorkspaceTree} from '../viewModel/workspaceTree'
+import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
+import {MutableWorkspaceTree, WorkspaceTree} from '../viewModel/workspaceTree'
 
 type Props = {
     setLanguage: (lang: string) => void
@@ -18,23 +18,18 @@ type Props = {
 type State = {
     boardId: string
     viewId: string
-    workspaceTree: MutableWorkspaceTree
-    boardTree?: MutableBoardTree
+    workspaceTree: WorkspaceTree
+    boardTree?: BoardTree
 }
 
 export default class BoardPage extends React.Component<Props, State> {
-    view: BoardView
-
-    updateTitleTimeout: number
-    updatePropertyLabelTimeout: number
-
     private workspaceListener = new OctoListener()
 
     constructor(props: Props) {
         super(props)
         const queryString = new URLSearchParams(window.location.search)
-        const boardId = queryString.get('id')
-        const viewId = queryString.get('v')
+        const boardId = queryString.get('id') || ''
+        const viewId = queryString.get('v') || ''
 
         this.state = {
             boardId,
@@ -65,7 +60,7 @@ export default class BoardPage extends React.Component<Props, State> {
         }
     }
 
-    undoRedoHandler = async (e: KeyboardEvent) => {
+    private undoRedoHandler = async (e: KeyboardEvent) => {
         if (e.target !== document.body) {
             return
         }
@@ -144,39 +139,61 @@ export default class BoardPage extends React.Component<Props, State> {
     }
 
     private async sync(boardId: string = this.state.boardId, viewId: string | undefined = this.state.viewId) {
-        const {workspaceTree} = this.state
         Utils.log(`sync start: ${boardId}`)
 
+        const workspaceTree = new MutableWorkspaceTree()
         await workspaceTree.sync()
         const boardIds = workspaceTree.boards.map((o) => o.id)
+        this.setState({workspaceTree})
 
         // Listen to boards plus all blocks at root (Empty string for parentId)
-        this.workspaceListener.open(['', ...boardIds], async (blockId) => {
-            Utils.log(`workspaceListener.onChanged: ${blockId}`)
-            this.sync()
-        })
+        this.workspaceListener.open(
+            ['', ...boardIds],
+            async (blocks) => {
+                Utils.log(`workspaceListener.onChanged: ${blocks.length}`)
+                this.incrementalUpdate(blocks)
+            },
+            () => {
+                Utils.log('workspaceListener.onReconnect')
+                this.sync()
+            },
+        )
 
         if (boardId) {
             const boardTree = new MutableBoardTree(boardId)
             await boardTree.sync()
 
             // Default to first view
-            if (!viewId) {
-                viewId = boardTree.views[0].id
-            }
-
-            boardTree.setActiveView(viewId)
+            boardTree.setActiveView(viewId || boardTree.views[0].id)
 
             // TODO: Handle error (viewId not found)
+
             this.setState({
                 boardTree,
                 boardId,
-                viewId: boardTree.activeView.id,
+                viewId: boardTree.activeView!.id,
             })
             Utils.log(`sync complete: ${boardTree.board.id} (${boardTree.board.title})`)
-        } else {
-            this.forceUpdate()
         }
+    }
+
+    private incrementalUpdate(blocks: IBlock[]) {
+        const {workspaceTree, boardTree} = this.state
+
+        let newState = {workspaceTree, boardTree}
+
+        const newWorkspaceTree = workspaceTree.mutableCopy()
+        if (newWorkspaceTree.incrementalUpdate(blocks)) {
+            newState = {...newState, workspaceTree: newWorkspaceTree}
+        }
+
+        const newBoardTree = boardTree ? boardTree.mutableCopy() : new MutableBoardTree(this.state.boardId)
+        if (newBoardTree.incrementalUpdate(blocks)) {
+            newBoardTree.setActiveView(this.state.viewId)
+            newState = {...newState, boardTree: newBoardTree}
+        }
+
+        this.setState(newState)
     }
 
     // IPageController
@@ -194,9 +211,10 @@ export default class BoardPage extends React.Component<Props, State> {
     }
 
     showView(viewId: string, boardId: string = this.state.boardId): void {
-        if (this.state.boardId === boardId) {
-            this.state.boardTree.setActiveView(viewId)
-            this.setState({...this.state, viewId})
+        if (this.state.boardTree && this.state.boardId === boardId) {
+            const newBoardTree = this.state.boardTree.mutableCopy()
+            newBoardTree.setActiveView(viewId)
+            this.setState({boardTree: newBoardTree, viewId})
         } else {
             this.attachToBoard(boardId, viewId)
         }
@@ -206,7 +224,13 @@ export default class BoardPage extends React.Component<Props, State> {
     }
 
     setSearchText(text?: string): void {
-        this.state.boardTree?.setSearchText(text)
-        this.setState({...this.state, boardTree: this.state.boardTree})
+        if (!this.state.boardTree) {
+            Utils.assertFailure('setSearchText: boardTree')
+            return
+        }
+
+        const newBoardTree = this.state.boardTree.mutableCopy()
+        newBoardTree.setSearchText(text)
+        this.setState({boardTree: newBoardTree})
     }
 }

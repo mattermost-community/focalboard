@@ -3,13 +3,12 @@
 
 import React from 'react'
 
+import {IPropertyOption, IPropertyTemplate} from '../blocks/board'
 import {Card} from '../blocks/card'
-import {IPropertyTemplate, IPropertyOption} from '../blocks/board'
-import {OctoUtils} from '../octoUtils'
 import mutator from '../mutator'
+import {OctoUtils} from '../octoUtils'
 import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
-
 import Editable from '../widgets/editable'
 import ValueSelector from '../widgets/valueSelector'
 
@@ -56,7 +55,7 @@ export default class PropertyValueElement extends React.Component<Props, State> 
                 className += ' empty'
             }
 
-            if (readOnly) {
+            if (readOnly || !boardTree) {
                 return (
                     <div
                         className={`${className} ${propertyColorCssClassName}`}
@@ -87,7 +86,7 @@ export default class PropertyValueElement extends React.Component<Props, State> 
                                 value,
                                 color: 'propColorDefault',
                             }
-                            await mutator.insertPropertyOption(this.props.boardTree, propertyTemplate, option, 'add property option')
+                            await mutator.insertPropertyOption(boardTree, propertyTemplate, option, 'add property option')
                             mutator.changePropertyValue(card, propertyTemplate.id, option.id)
                         }
                     }

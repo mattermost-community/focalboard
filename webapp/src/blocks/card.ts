@@ -1,12 +1,15 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+import {Utils} from '../utils'
 import {IBlock} from '../blocks/block'
 
 import {MutableBlock} from './block'
 
 interface Card extends IBlock {
     readonly icon: string
+    readonly isTemplate: boolean
     readonly properties: Readonly<Record<string, string>>
+    duplicate(): MutableCard
 }
 
 class MutableCard extends MutableBlock {
@@ -15,6 +18,13 @@ class MutableCard extends MutableBlock {
     }
     set icon(value: string) {
         this.fields.icon = value
+    }
+
+    get isTemplate(): boolean {
+        return this.fields.isTemplate as boolean
+    }
+    set isTemplate(value: boolean) {
+        this.fields.isTemplate = value
     }
 
     get properties(): Record<string, string> {
@@ -28,7 +38,14 @@ class MutableCard extends MutableBlock {
         super(block)
         this.type = 'card'
 
+        this.icon = block.fields?.icon || ''
         this.properties = {...(block.fields?.properties || {})}
+    }
+
+    duplicate(): MutableCard {
+        const card = new MutableCard(this)
+        card.id = Utils.createGuid()
+        return card
     }
 }
 

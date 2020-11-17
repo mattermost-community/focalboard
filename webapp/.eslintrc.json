@@ -26,7 +26,7 @@
   },
   "rules": {
     "no-unused-expressions": 0,
-    "babel/no-unused-expressions": 2,
+    "babel/no-unused-expressions": [2, {"allowShortCircuit": true}],
     "eol-last": ["error", "always"],
     "import/no-unresolved": 2,
     "import/order": [
@@ -110,6 +110,7 @@
             "SwitchCase": 0
           }
         ],
+        "no-use-before-define": "off",
         "@typescript-eslint/no-use-before-define": [
           2,
           {
@@ -118,6 +119,8 @@
             "variables": false
           }
         ],
+        "no-useless-constructor": 0,
+        "@typescript-eslint/no-useless-constructor": 2,
         "react/jsx-filename-extension": 0
       }
     },

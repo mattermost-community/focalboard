@@ -7,7 +7,8 @@
 	min-height: 100%;
 	color: rgb(var(--sidebar-fg));
 	background-color: rgb(var(--sidebar-bg));
-	padding: 10px 0;
+    padding: 10px 0;
+    overflow-y: scroll;
 
     &.hidden {
         position: absolute;
@@ -23,6 +24,10 @@
             padding: 0;
             margin: auto;
         }
+    }
+
+    >* {
+        flex-shrink: 0;
     }
 
     .octo-sidebar-header {
@@ -94,11 +99,11 @@
         }
 
         &.expanded {
-            .SubmenuTriangleIcon {
+            .DisclosureTriangleIcon {
                 transform: rotate(90deg);
             }
         }
-        .SubmenuTriangleIcon {
+        .DisclosureTriangleIcon {
             transition: 200ms ease-in-out;
             transform: rotate(0deg);
         }
@@ -107,10 +112,14 @@
     .octo-sidebar-title {
         cursor: pointer;
         flex-grow: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
-    .OptionsIcon, .SubmenuTriangleIcon, .DotIcon {
+    .OptionsIcon, .DisclosureTriangleIcon, .DotIcon {
         fill: rgba(var(--sidebar-fg), 0.5);
+        flex-shrink: 0;
     }
 
     .HideSidebarIcon {

@@ -26,7 +26,7 @@ type State = {
 }
 
 export class FlashMessages extends React.PureComponent<Props, State> {
-    private timeout: ReturnType<typeof setTimeout> = null
+    private timeout?: ReturnType<typeof setTimeout>
 
     constructor(props: Props) {
         super(props)
@@ -35,7 +35,7 @@ export class FlashMessages extends React.PureComponent<Props, State> {
         emitter.on('message', (message: FlashMessage) => {
             if (this.timeout) {
                 clearTimeout(this.timeout)
-                this.timeout = null
+                this.timeout = undefined
             }
             this.timeout = setTimeout(this.handleFadeOut, this.props.milliseconds - 200)
             this.setState({message})
@@ -48,16 +48,18 @@ export class FlashMessages extends React.PureComponent<Props, State> {
     }
 
     handleTimeout = (): void => {
-        this.setState({message: null, fadeOut: false})
+        this.setState({message: undefined, fadeOut: false})
     }
 
     handleClick = (): void => {
-        clearTimeout(this.timeout)
-        this.timeout = null
+        if (this.timeout) {
+            clearTimeout(this.timeout)
+            this.timeout = undefined
+        }
         this.handleFadeOut()
     }
 
-    public render(): JSX.Element {
+    public render(): JSX.Element | null {
         if (!this.state.message) {
             return null
         }
