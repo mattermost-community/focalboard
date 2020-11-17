@@ -279,19 +279,19 @@ class BoardComponent extends React.Component<Props, State> {
                     }}
 
                     onDragOver={(e) => {
-                        ref.current!.classList.add('dragover')
+                        ref.current?.classList.add('dragover')
                         e.preventDefault()
                     }}
                     onDragEnter={(e) => {
-                        ref.current!.classList.add('dragover')
+                        ref.current?.classList.add('dragover')
                         e.preventDefault()
                     }}
                     onDragLeave={(e) => {
-                        ref.current!.classList.remove('dragover')
+                        ref.current?.classList.remove('dragover')
                         e.preventDefault()
                     }}
                     onDrop={(e) => {
-                        ref.current!.classList.remove('dragover')
+                        ref.current?.classList.remove('dragover')
                         e.preventDefault()
                         this.onDropToColumn(group.option)
                     }}
@@ -348,19 +348,19 @@ class BoardComponent extends React.Component<Props, State> {
                 }}
 
                 onDragOver={(e) => {
-                    ref.current!.classList.add('dragover')
+                    ref.current?.classList.add('dragover')
                     e.preventDefault()
                 }}
                 onDragEnter={(e) => {
-                    ref.current!.classList.add('dragover')
+                    ref.current?.classList.add('dragover')
                     e.preventDefault()
                 }}
                 onDragLeave={(e) => {
-                    ref.current!.classList.remove('dragover')
+                    ref.current?.classList.remove('dragover')
                     e.preventDefault()
                 }}
                 onDrop={(e) => {
-                    ref.current!.classList.remove('dragover')
+                    ref.current?.classList.remove('dragover')
                     e.preventDefault()
                     this.onDropToColumn(group.option)
                 }}
@@ -424,25 +424,25 @@ class BoardComponent extends React.Component<Props, State> {
                     if (this.draggedCards?.length < 1) {
                         return
                     }
-                    ref.current!.classList.add('dragover')
+                    ref.current?.classList.add('dragover')
                     e.preventDefault()
                 }}
                 onDragEnter={(e) => {
                     if (this.draggedCards?.length < 1) {
                         return
                     }
-                    ref.current!.classList.add('dragover')
+                    ref.current?.classList.add('dragover')
                     e.preventDefault()
                 }}
                 onDragLeave={(e) => {
                     if (this.draggedCards?.length < 1) {
                         return
                     }
-                    ref.current!.classList.remove('dragover')
+                    ref.current?.classList.remove('dragover')
                     e.preventDefault()
                 }}
                 onDrop={(e) => {
-                    ref.current!.classList.remove('dragover')
+                    ref.current?.classList.remove('dragover')
                     e.preventDefault()
                     if (this.draggedCards?.length < 1) {
                         return

@@ -33,7 +33,7 @@ export default class Editable extends React.Component<Props> {
 
     public blur = (): void => {
         this.saveOnBlur = false
-        this.elementRef.current!.blur()
+        this.elementRef.current?.blur()
         this.saveOnBlur = true
     }
 

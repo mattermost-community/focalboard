@@ -152,9 +152,8 @@ class MarkdownEditor extends React.Component<Props, State> {
                             this.hideEditor()
                         },
                         focus: () => {
-                            this.frameRef.current!.classList.add('active')
-
-                            this.elementRef.current!.setState({value: this.text})
+                            this.frameRef.current?.classList.add('active')
+                            this.elementRef.current?.setState({value: this.text})
 
                             if (onFocus) {
                                 onFocus()
