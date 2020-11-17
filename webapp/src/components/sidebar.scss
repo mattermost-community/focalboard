@@ -8,7 +8,6 @@
 	color: rgb(var(--sidebar-fg));
 	background-color: rgb(var(--sidebar-bg));
     padding: 10px 0;
-    overflow-y: scroll;
 
     &.hidden {
         position: absolute;
@@ -28,6 +27,12 @@
 
     >* {
         flex-shrink: 0;
+    }
+
+    .octo-sidebar-list {
+        overflow-y: auto;
+        max-height: calc(100% - 78px);
+        max-width: 250px;
     }
 
     .octo-sidebar-header {
