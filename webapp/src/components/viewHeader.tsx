@@ -3,6 +3,8 @@
 import React from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
+import {Utils} from '../utils'
+
 import {Archiver} from '../archiver'
 import {BlockIcons} from '../blockIcons'
 import {IPropertyTemplate} from '../blocks/board'
@@ -349,6 +351,11 @@ class ViewHeader extends React.Component<Props, State> {
                             name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export Board Archive'})}
                             onClick={() => Archiver.exportBoardTree(boardTree)}
                         />
+                        <Menu.Text
+                            id='newTemplateFromBoard'
+                            name={intl.formatMessage({id: 'ViewHeader.new-template-from-board', defaultMessage: 'New template from board'})}
+                            onClick={this.newTemplateFromBoardClicked}
+                        />
 
                         <Menu.Separator/>
 
@@ -463,6 +470,22 @@ class ViewHeader extends React.Component<Props, State> {
         options.unshift({id: Constants.titleColumnId, name: 'Name'})
 
         return options
+    }
+
+    private newTemplateFromBoardClicked = async () => {
+        const {boardTree} = this.props
+
+        const newBoardTree = boardTree.templateCopy()
+        newBoardTree.board.isTemplate = true
+        newBoardTree.board.title = 'New Board Template'
+
+        Utils.log(`Created new board template: ${newBoardTree.board.id}`)
+
+        const blocksToInsert = newBoardTree.allBlocks
+        await mutator.insertBlocks(
+            blocksToInsert,
+            'create template from board',
+        )
     }
 }
 

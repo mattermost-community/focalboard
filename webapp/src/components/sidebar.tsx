@@ -4,21 +4,23 @@ import React from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {Archiver} from '../archiver'
+import {IBlock} from '../blocks/block'
 import {Board, MutableBoard} from '../blocks/board'
 import {BoardView, MutableBoardView} from '../blocks/boardView'
 import mutator from '../mutator'
 import {darkTheme, lightTheme, mattermostTheme, setTheme} from '../theme'
+import {MutableBoardTree} from '../viewModel/boardTree'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
 import Button from '../widgets/buttons/button'
 import IconButton from '../widgets/buttons/iconButton'
 import DeleteIcon from '../widgets/icons/delete'
+import DisclosureTriangle from '../widgets/icons/disclosureTriangle'
 import DotIcon from '../widgets/icons/dot'
 import DuplicateIcon from '../widgets/icons/duplicate'
 import HamburgerIcon from '../widgets/icons/hamburger'
 import HideSidebarIcon from '../widgets/icons/hideSidebar'
 import OptionsIcon from '../widgets/icons/options'
 import ShowSidebarIcon from '../widgets/icons/showSidebar'
-import DisclosureTriangle from '../widgets/icons/disclosureTriangle'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 import './sidebar.scss'
@@ -185,14 +187,77 @@ class Sidebar extends React.Component<Props, State> {
 
                     <br/>
 
-                    <Button
-                        onClick={this.addBoardClicked}
-                    >
-                        <FormattedMessage
-                            id='Sidebar.add-board'
-                            defaultMessage='+ Add Board'
-                        />
-                    </Button>
+                    <MenuWrapper>
+                        <Button>
+                            <FormattedMessage
+                                id='Sidebar.add-board'
+                                defaultMessage='+ Add Board'
+                            />
+                        </Button>
+                        <Menu position='top'>
+                            <Menu.Label>
+                                <b>
+                                    <FormattedMessage
+                                        id='Sidebar.select-a-template'
+                                        defaultMessage='Select a template'
+                                    />
+                                </b>
+                            </Menu.Label>
+
+                            <Menu.Separator/>
+
+                            {workspaceTree.boardTemplates.map((boardTemplate) => {
+                                let displayName = boardTemplate.title || intl.formatMessage({id: 'Sidebar.untitled', defaultMessage: 'Untitled'})
+                                if (boardTemplate.icon) {
+                                    displayName = `${boardTemplate.icon} ${displayName}`
+                                }
+                                return (
+                                    <Menu.Text
+                                        key={boardTemplate.id}
+                                        id={boardTemplate.id}
+                                        name={displayName}
+                                        onClick={() => {
+                                            this.addBoardClicked(boardTemplate.id)
+                                        }}
+                                        rightIcon={
+                                            <MenuWrapper stopPropagationOnToggle={true}>
+                                                <IconButton icon={<OptionsIcon/>}/>
+                                                <Menu position='left'>
+                                                    <Menu.Text
+                                                        id='edit'
+                                                        name={intl.formatMessage({id: 'Sidebar.edit-template', defaultMessage: 'Edit'})}
+                                                        onClick={() => {
+                                                            this.props.showBoard(boardTemplate.id)
+                                                        }}
+                                                    />
+                                                    <Menu.Text
+                                                        icon={<DeleteIcon/>}
+                                                        id='delete'
+                                                        name={intl.formatMessage({id: 'Sidebar.delete-template', defaultMessage: 'Delete'})}
+                                                        onClick={async () => {
+                                                            await mutator.deleteBlock(boardTemplate, 'delete board template')
+                                                        }}
+                                                    />
+                                                </Menu>
+                                            </MenuWrapper>
+                                        }
+                                    />
+                                )
+                            })}
+
+                            <Menu.Text
+                                id='empty-template'
+                                name={intl.formatMessage({id: 'Sidebar.empty-board', defaultMessage: 'Empty board'})}
+                                onClick={this.addBoardClicked}
+                            />
+
+                            <Menu.Text
+                                id='add-template'
+                                name={intl.formatMessage({id: 'Sidebar.add-template', defaultMessage: '+ New template'})}
+                                onClick={this.addBoardTemplateClicked}
+                            />
+                        </Menu>
+                    </MenuWrapper>
                 </div>
 
                 <div className='octo-spacer'/>
@@ -266,18 +331,34 @@ class Sidebar extends React.Component<Props, State> {
         this.props.showView(view.id, board.id)
     }
 
-    private addBoardClicked = async () => {
+    private addBoardClicked = async (boardTemplateId?: string) => {
         const {showBoard, intl} = this.props
 
         const oldBoardId = this.props.activeBoardId
-        const board = new MutableBoard()
-        const view = new MutableBoardView()
-        view.viewType = 'board'
-        view.parentId = board.id
-        view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board View'})
+        let board: MutableBoard
+        const blocksToInsert: IBlock[] = []
+
+        if (boardTemplateId) {
+            const templateBoardTree = new MutableBoardTree(boardTemplateId)
+            await templateBoardTree.sync()
+            const newBoardTree = templateBoardTree.templateCopy()
+            board = newBoardTree.board
+            board.isTemplate = false
+            board.title = ''
+            blocksToInsert.push(...newBoardTree.allBlocks)
+        } else {
+            board = new MutableBoard()
+            blocksToInsert.push(board)
+
+            const view = new MutableBoardView()
+            view.viewType = 'board'
+            view.parentId = board.id
+            view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board View'})
+            blocksToInsert.push(view)
+        }
 
         await mutator.insertBlocks(
-            [board, view],
+            blocksToInsert,
             'add board',
             async () => {
                 showBoard(board.id)
@@ -285,6 +366,24 @@ class Sidebar extends React.Component<Props, State> {
             async () => {
                 if (oldBoardId) {
                     showBoard(oldBoardId)
+                }
+            },
+        )
+    }
+
+    private addBoardTemplateClicked = async () => {
+        const {activeBoardId} = this.props
+
+        const boardTemplate = new MutableBoard()
+        boardTemplate.isTemplate = true
+        await mutator.insertBlock(
+            boardTemplate,
+            'add board template',
+            async () => {
+                this.props.showBoard(boardTemplate.id)
+            }, async () => {
+                if (activeBoardId) {
+                    this.props.showBoard(activeBoardId)
                 }
             },
         )

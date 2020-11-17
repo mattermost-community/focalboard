@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
+import {FormattedMessage} from 'react-intl'
 
 import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
@@ -34,7 +35,17 @@ class WorkspaceComponent extends React.PureComponent<Props> {
                     activeBoardId={boardTree?.board.id}
                     setLanguage={setLanguage}
                 />
-                {this.mainComponent()}
+                <div className='mainFrame'>
+                    {(boardTree?.board.isTemplate) &&
+                    <div className='banner'>
+                        <FormattedMessage
+                            id='WorkspaceComponent.editing-board-template'
+                            defaultMessage="You're editing a board template"
+                        />
+                    </div>
+                    }
+                    {this.mainComponent()}
+                </div>
             </div>)
 
         return element

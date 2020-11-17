@@ -486,40 +486,36 @@ class Mutator {
 
     async duplicateCard(cardId: string, description = 'duplicate card', afterRedo?: (newBoardId: string) => Promise<void>, beforeUndo?: () => Promise<void>): Promise<[IBlock[], string]> {
         const blocks = await octoClient.getSubtree(cardId, 2)
-        const [newBlocks1, idMap] = OctoUtils.duplicateBlockTree(blocks, cardId)
+        const [newBlocks1, newCard] = OctoUtils.duplicateBlockTree(blocks, cardId)
         const newBlocks = newBlocks1.filter((o) => o.type !== 'comment')
         Utils.log(`duplicateCard: duplicating ${newBlocks.length} blocks`)
-        const newCardId = idMap[cardId]
-        const newCard = newBlocks.find((o) => o.id === newCardId)!
         newCard.title = `Copy of ${newCard.title}`
         await this.insertBlocks(
             newBlocks,
             description,
             async () => {
-                await afterRedo?.(newCardId)
+                await afterRedo?.(newCard.id)
             },
             beforeUndo,
         )
-        return [newBlocks, newCardId]
+        return [newBlocks, newCard.id]
     }
 
     async duplicateBoard(boardId: string, description = 'duplicate board', afterRedo?: (newBoardId: string) => Promise<void>, beforeUndo?: () => Promise<void>): Promise<[IBlock[], string]> {
         const blocks = await octoClient.getSubtree(boardId, 3)
-        const [newBlocks1, idMap] = OctoUtils.duplicateBlockTree(blocks, boardId)
+        const [newBlocks1, newBoard] = OctoUtils.duplicateBlockTree(blocks, boardId)
         const newBlocks = newBlocks1.filter((o) => o.type !== 'comment')
         Utils.log(`duplicateBoard: duplicating ${newBlocks.length} blocks`)
-        const newBoardId = idMap[boardId]
-        const newBoard = newBlocks.find((o) => o.id === newBoardId)!
         newBoard.title = `Copy of ${newBoard.title}`
         await this.insertBlocks(
             newBlocks,
             description,
             async () => {
-                await afterRedo?.(newBoardId)
+                await afterRedo?.(newBoard.id)
             },
             beforeUndo,
         )
-        return [newBlocks, newBoardId]
+        return [newBlocks, newBoard.id]
     }
 
     // Other methods

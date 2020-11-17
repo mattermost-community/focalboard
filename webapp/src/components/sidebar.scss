@@ -42,7 +42,7 @@
         font-weight: 600;
         padding: 3px 20px;
         margin-bottom: 5px;
-        .IconButton {
+        >.IconButton {
             background-color: var(--sidebar-bg);
             &:hover {
                 background-color: rgba(var(--sidebar-fg), 0.1);
@@ -87,7 +87,7 @@
             }
         }
 
-        .IconButton {
+        >.IconButton {
             background-color: var(--sidebar-bg);
             &:hover {
                 background-color: rgba(var(--sidebar-fg), 0.1);
@@ -125,6 +125,10 @@
     .OptionsIcon, .DisclosureTriangleIcon, .DotIcon {
         fill: rgba(var(--sidebar-fg), 0.5);
         flex-shrink: 0;
+    }
+
+    .Menu .OptionsIcon {
+        fill: unset;
     }
 
     .HideSidebarIcon {
