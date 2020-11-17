@@ -29,8 +29,6 @@
             "cwd": "${workspaceRoot}/webapp",
             "args": [
               "--verbose",
-              "-i",
-              "--no-cache"
             ],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
@@ -44,8 +42,6 @@
             "args": [
                 "${fileBasename}",
                 "--verbose",
-                "-i",
-                "--no-cache",
               ],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
