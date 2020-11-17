@@ -33,21 +33,17 @@
         flex-direction: row;
         align-items: center;
 
-        white-space: nowrap;
         font-weight: 400;
         padding: 2px 10px;
         cursor: pointer;
         touch-action: none;
-
-        * {
-            display: flex;
-        }
 
         &:hover {
             background: rgba(90, 90, 90, 0.1);
         }
 
         .menu-name {
+            display: flex;
             flex-grow: 1;
             margin-right: 20px;
         }
@@ -59,6 +55,10 @@
             width: 16px;
             height: 16px;
             margin-right: 5px;
+        }
+
+        .IconButton .Icon {
+            margin-right: 0;
         }
     }
 }
