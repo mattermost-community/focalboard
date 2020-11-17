@@ -20,6 +20,35 @@
 				"<node_internals>/**"
 			],
 			"type": "pwa-node"
-		}
-	]
+		},
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Jest: run all tests",
+            "program": "${workspaceRoot}/webapp/node_modules/jest/bin/jest.js",
+            "cwd": "${workspaceRoot}/webapp",
+            "args": [
+              "--verbose",
+              "-i",
+              "--no-cache"
+            ],
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen"
+          },
+          {
+            "type": "node",
+            "request": "launch",
+            "name": "Jest: run current file",
+            "program": "${workspaceRoot}/webapp/node_modules/jest/bin/jest.js",
+            "cwd": "${workspaceRoot}/webapp",
+            "args": [
+                "${fileBasename}",
+                "--verbose",
+                "-i",
+                "--no-cache",
+              ],
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen"
+          },
+    ]
 }
