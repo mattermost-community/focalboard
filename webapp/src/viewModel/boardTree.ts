@@ -32,7 +32,6 @@ interface BoardTree {
     orderedCards(): Card[]
 
     mutableCopy(): MutableBoardTree
-    templateCopy(): MutableBoardTree
 }
 
 class MutableBoardTree implements BoardTree {
@@ -404,14 +403,6 @@ class MutableBoardTree implements BoardTree {
     mutableCopy(): MutableBoardTree {
         const boardTree = new MutableBoardTree(this.boardId)
         boardTree.incrementalUpdate(this.rawBlocks)
-        return boardTree
-    }
-
-    templateCopy(): MutableBoardTree {
-        const [newBlocks, newBoard] = OctoUtils.duplicateBlockTree(this.rawBlocks, this.board.id)
-
-        const boardTree = new MutableBoardTree(newBoard.id)
-        boardTree.incrementalUpdate(newBlocks)
         return boardTree
     }
 }

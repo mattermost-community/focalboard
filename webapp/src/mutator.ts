@@ -484,12 +484,27 @@ class Mutator {
 
     // Duplicate
 
-    async duplicateCard(cardId: string, description = 'duplicate card', afterRedo?: (newBoardId: string) => Promise<void>, beforeUndo?: () => Promise<void>): Promise<[IBlock[], string]> {
+    async duplicateCard(
+        cardId: string,
+        description = 'duplicate card',
+        asTemplate = false,
+        afterRedo?: (newCardId: string) => Promise<void>,
+        beforeUndo?: () => Promise<void>,
+    ): Promise<[IBlock[], string]> {
         const blocks = await octoClient.getSubtree(cardId, 2)
-        const [newBlocks1, newCard] = OctoUtils.duplicateBlockTree(blocks, cardId)
+        const [newBlocks1, newCard] = OctoUtils.duplicateBlockTree(blocks, cardId) as [IBlock[], MutableCard, Record<string, string>]
         const newBlocks = newBlocks1.filter((o) => o.type !== 'comment')
         Utils.log(`duplicateCard: duplicating ${newBlocks.length} blocks`)
-        newCard.title = `Copy of ${newCard.title}`
+        if (asTemplate === newCard.isTemplate) {
+            newCard.title = `Copy of ${newCard.title}`
+        } else if (asTemplate) {
+            // Template from card
+            newCard.title = 'New card template'
+        } else {
+            // Card from template
+            newCard.title = ''
+        }
+        newCard.isTemplate = asTemplate
         await this.insertBlocks(
             newBlocks,
             description,
@@ -501,12 +516,28 @@ class Mutator {
         return [newBlocks, newCard.id]
     }
 
-    async duplicateBoard(boardId: string, description = 'duplicate board', afterRedo?: (newBoardId: string) => Promise<void>, beforeUndo?: () => Promise<void>): Promise<[IBlock[], string]> {
+    async duplicateBoard(
+        boardId: string,
+        description = 'duplicate board',
+        asTemplate = false,
+        afterRedo?: (newBoardId: string) => Promise<void>,
+        beforeUndo?: () => Promise<void>,
+    ): Promise<[IBlock[], string]> {
         const blocks = await octoClient.getSubtree(boardId, 3)
-        const [newBlocks1, newBoard] = OctoUtils.duplicateBlockTree(blocks, boardId)
+        const [newBlocks1, newBoard] = OctoUtils.duplicateBlockTree(blocks, boardId) as [IBlock[], MutableBoard, Record<string, string>]
         const newBlocks = newBlocks1.filter((o) => o.type !== 'comment')
         Utils.log(`duplicateBoard: duplicating ${newBlocks.length} blocks`)
-        newBoard.title = `Copy of ${newBoard.title}`
+
+        if (asTemplate === newBoard.isTemplate) {
+            newBoard.title = `Copy of ${newBoard.title}`
+        } else if (asTemplate) {
+            // Template from board
+            newBoard.title = 'New board template'
+        } else {
+            // Board from template
+            newBoard.title = ''
+        }
+        newBoard.isTemplate = asTemplate
         await this.insertBlocks(
             newBlocks,
             description,

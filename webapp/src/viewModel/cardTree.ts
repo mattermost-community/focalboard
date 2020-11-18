@@ -12,7 +12,6 @@ interface CardTree {
     readonly contents: readonly IOrderedBlock[]
 
     mutableCopy(): MutableCardTree
-    templateCopy(): MutableCardTree
 }
 
 class MutableCardTree implements CardTree {
@@ -54,14 +53,6 @@ class MutableCardTree implements CardTree {
     mutableCopy(): MutableCardTree {
         const cardTree = new MutableCardTree(this.cardId)
         cardTree.incrementalUpdate(this.rawBlocks)
-        return cardTree
-    }
-
-    templateCopy(): MutableCardTree {
-        const [newBlocks, newCard] = OctoUtils.duplicateBlockTree(this.rawBlocks, this.card.id)
-
-        const cardTree = new MutableCardTree(newCard.id)
-        cardTree.incrementalUpdate(newBlocks)
         return cardTree
     }
 }

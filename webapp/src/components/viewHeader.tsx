@@ -13,7 +13,6 @@ import ViewMenu from '../components/viewMenu'
 import {Constants} from '../constants'
 import {CsvExporter} from '../csvExporter'
 import mutator from '../mutator'
-import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
 import Button from '../widgets/buttons/button'
 import ButtonWithMenu from '../widgets/buttons/buttonWithMenu'
@@ -29,7 +28,6 @@ import MenuWrapper from '../widgets/menuWrapper'
 
 import {Editable} from './editable'
 import FilterComponent from './filterComponent'
-import {sendFlashMessage} from './flashMessages'
 import './viewHeader.scss'
 
 type Props = {
@@ -37,7 +35,7 @@ type Props = {
     showView: (id: string) => void
     setSearchText: (text?: string) => void
     addCard: () => void
-    addCardFromTemplate: (cardTemplateId?: string) => void
+    addCardFromTemplate: (cardTemplateId: string) => void
     addCardTemplate: () => void
     editCardTemplate: (cardTemplateId: string) => void
     withGroupBy?: boolean
@@ -351,11 +349,6 @@ class ViewHeader extends React.Component<Props, State> {
                             name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export Board Archive'})}
                             onClick={() => Archiver.exportBoardTree(boardTree)}
                         />
-                        <Menu.Text
-                            id='newTemplateFromBoard'
-                            name={intl.formatMessage({id: 'ViewHeader.new-template-from-board', defaultMessage: 'New template from board'})}
-                            onClick={this.newTemplateFromBoardClicked}
-                        />
 
                         <Menu.Separator/>
 
@@ -470,25 +463,6 @@ class ViewHeader extends React.Component<Props, State> {
         options.unshift({id: Constants.titleColumnId, name: 'Name'})
 
         return options
-    }
-
-    private newTemplateFromBoardClicked = async () => {
-        const {boardTree} = this.props
-
-        const newBoardTree = boardTree.templateCopy()
-        newBoardTree.board.isTemplate = true
-        newBoardTree.board.title = 'New Board Template'
-
-        Utils.log(`Created new board template: ${newBoardTree.board.id}`)
-
-        const blocksToInsert = newBoardTree.allBlocks
-        await mutator.insertBlocks(
-            blocksToInsert,
-            'create template from board',
-        )
-
-        // TODO: Navigate to board editor
-        sendFlashMessage({content: 'New board template added', severity: 'low'})
     }
 }
 
