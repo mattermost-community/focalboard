@@ -9,7 +9,7 @@ import {WorkspaceTree} from '../viewModel/workspaceTree'
 
 import BoardComponent from './boardComponent'
 import Sidebar from './sidebar'
-import {TableComponent} from './tableComponent'
+import TableComponent from './tableComponent'
 import './workspaceComponent.scss'
 
 type Props = {
