@@ -37,6 +37,8 @@ interface IMutablePropertyTemplate extends IPropertyTemplate {
 
 interface Board extends IBlock {
     readonly icon: string
+    readonly description: string
+    readonly showDescription: boolean
     readonly isTemplate: boolean
     readonly cardProperties: readonly IPropertyTemplate[]
     duplicate(): MutableBoard
@@ -48,6 +50,20 @@ class MutableBoard extends MutableBlock {
     }
     set icon(value: string) {
         this.fields.icon = value
+    }
+
+    get description(): string {
+        return this.fields.description as string
+    }
+    set description(value: string) {
+        this.fields.description = value
+    }
+
+    get showDescription(): boolean {
+        return Boolean(this.fields.showDescription)
+    }
+    set showDescription(value: boolean) {
+        this.fields.showDescription = value
     }
 
     get isTemplate(): boolean {
@@ -69,6 +85,7 @@ class MutableBoard extends MutableBlock {
         this.type = 'board'
 
         this.icon = block.fields?.icon || ''
+        this.description = block.fields?.description || ''
         if (block.fields?.cardProperties) {
             // Deep clone of card properties and their options
             this.cardProperties = block.fields.cardProperties.map((o: IPropertyTemplate) => {

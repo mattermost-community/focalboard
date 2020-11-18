@@ -156,6 +156,22 @@ class Mutator {
         await this.updateBlock(newBlock, block, description)
     }
 
+    async changeDescription(block: IBlock, boardDescription: string, description = 'change description') {
+        const newBoard = new MutableBoard(block)
+        newBoard.description = boardDescription
+        await this.updateBlock(newBoard, block, description)
+    }
+
+    async showDescription(board: Board, showDescription = true, description?: string) {
+        const newBoard = new MutableBoard(board)
+        newBoard.showDescription = showDescription
+        let actionDescription = description
+        if (!actionDescription) {
+            actionDescription = showDescription ? 'show description' : 'hide description'
+        }
+        await this.updateBlock(newBoard, board, actionDescription)
+    }
+
     async changeOrder(block: IOrderedBlock, order: number, description = 'change order') {
         const newBlock = new MutableOrderedBlock(block)
         newBlock.order = order

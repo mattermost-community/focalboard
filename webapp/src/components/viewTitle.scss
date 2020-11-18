@@ -5,7 +5,7 @@
 	align-items: center;
 
     &.add-buttons {
-        flex-direction: column;
+        flex-direction: row;
 	    min-height: 30px;
 	    color:rgba(var(--main-fg), 0.4);
 	    width: 100%;
@@ -26,6 +26,10 @@
 
     .Editable {
         margin-bottom: 0px;
+        flex-grow: 1;
+    }
+
+    &.description > * {
         flex-grow: 1;
     }
 }
