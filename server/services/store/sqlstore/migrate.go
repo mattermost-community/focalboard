@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"errors"
+	"os"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database"
@@ -46,7 +47,7 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	err = m.Up()
-	if err != nil && !errors.Is(err, migrate.ErrNoChange) {
+	if err != nil && !errors.Is(err, migrate.ErrNoChange) && !errors.Is(err, os.ErrNotExist) {
 		return err
 	}
 
