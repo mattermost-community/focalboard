@@ -99,7 +99,11 @@ hr {
 	flex-direction: column;
 	overflow: scroll;
 
-	padding: 10px 95px 50px 95px;
+    padding: 10px 95px 50px 95px;
+
+    @media screen and (max-width: 768px) {
+        padding: 10px 10px 50px 10px;
+    }
 }
 
 .dragover {
@@ -189,7 +193,13 @@ hr {
 	align-items: flex-start;
 
 	width: 100%;
-	padding-right: 126px;
+
+    @media not screen and (max-width: 768px) {
+        padding-right: 126px;
+    }
+    @media screen and (max-width: 768px) {
+        padding-right: 10px;
+    }
 
     > * {
         flex: 1 1 auto;
@@ -207,5 +217,7 @@ hr {
 	padding-top: 10px;
 	padding-right: 10px;
 
-	width: 126px;
+    @media not screen and (max-width: 768px) {
+        width: 126px;
+    }
 }
