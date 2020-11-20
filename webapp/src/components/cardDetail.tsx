@@ -44,7 +44,9 @@ class CardDetail extends React.Component<Props, State> {
     }
 
     componentDidMount(): void {
-        this.titleRef.current?.focus()
+        if (!this.state.title) {
+            this.titleRef.current?.focus()
+        }
     }
 
     constructor(props: Props) {
