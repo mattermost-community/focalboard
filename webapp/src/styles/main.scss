@@ -194,10 +194,10 @@ hr {
 
 	width: 100%;
 
-    @media not screen and (max-width: 768px) {
+    @media not screen and (max-width: 975px) {
         padding-right: 126px;
     }
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 975px) {
         padding-right: 10px;
     }
 
@@ -217,7 +217,7 @@ hr {
 	padding-top: 10px;
 	padding-right: 10px;
 
-    @media not screen and (max-width: 768px) {
+    @media not screen and (max-width: 975px) {
         width: 126px;
     }
 }

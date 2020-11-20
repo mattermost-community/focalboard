@@ -35,6 +35,9 @@
             bottom: 0;
         }
 
+        > * {
+            flex-shrink: 0;
+        }
         > .banner {
             background-color: rgba(230, 220, 192, 0.9);
             text-align: center;
