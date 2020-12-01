@@ -7,6 +7,7 @@ import {Utils} from './utils'
 test('Basic undo/redo', async () => {
     expect(undoManager.canUndo).toBe(false)
     expect(undoManager.canRedo).toBe(false)
+    expect(undoManager.currentCheckpoint).toBe(0)
 
     const values: string[] = []
 
@@ -22,6 +23,7 @@ test('Basic undo/redo', async () => {
 
     expect(undoManager.canUndo).toBe(true)
     expect(undoManager.canRedo).toBe(false)
+    expect(undoManager.currentCheckpoint).toBeGreaterThan(0)
     expect(Utils.arraysEqual(values, ['a'])).toBe(true)
     expect(undoManager.undoDescription).toBe('test')
     expect(undoManager.redoDescription).toBe(undefined)
@@ -41,6 +43,7 @@ test('Basic undo/redo', async () => {
     await undoManager.clear()
     expect(undoManager.canUndo).toBe(false)
     expect(undoManager.canRedo).toBe(false)
+    expect(undoManager.currentCheckpoint).toBe(0)
     expect(undoManager.undoDescription).toBe(undefined)
     expect(undoManager.redoDescription).toBe(undefined)
 })
