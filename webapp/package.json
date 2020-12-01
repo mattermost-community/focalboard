@@ -26,8 +26,10 @@
 	"jest": {
 		"transform": {
 			"^.+\\.tsx?$": "ts-jest"
-		}
-	},
+		},
+        "collectCoverage": true,
+        "collectCoverageFrom": ["src/**/*.{ts,tsx,js,jsx}"]
+    },
 	"devDependencies": {
 		"@formatjs/cli": "^2.13.2",
 		"@formatjs/ts-transformer": "^2.11.3",
