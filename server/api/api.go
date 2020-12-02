@@ -32,7 +32,7 @@ func (a *API) app() *app.App {
 }
 
 func (a *API) RegisterRoutes(r *mux.Router) {
-	r.HandleFunc("/api/v1/blocks", a.handleGetBlocks).Methods("GET")
+	r.HandleFunc("/api/v1/blocks", a.sessionRequired(a.handleGetBlocks)).Methods("GET")
 	r.HandleFunc("/api/v1/blocks", a.handlePostBlocks).Methods("POST")
 	r.HandleFunc("/api/v1/blocks/{blockID}", a.handleDeleteBlock).Methods("DELETE")
 	r.HandleFunc("/api/v1/blocks/{blockID}/subtree", a.handleGetSubTree).Methods("GET")

@@ -22,4 +22,9 @@ type Store interface {
 	GetUserByUsername(username string) (*model.User, error)
 	CreateUser(user *model.User) error
 	UpdateUser(user *model.User) error
+	GetSession(token string) (*model.Session, error)
+	CreateSession(session *model.Session) error
+	RefreshSession(session *model.Session) error
+	UpdateSession(session *model.Session) error
+	DeleteSession(sessionId string) error
 }

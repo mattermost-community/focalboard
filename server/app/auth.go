@@ -8,6 +8,14 @@ import (
 	"github.com/pkg/errors"
 )
 
+func (a *App) GetSession(token string) (*model.Session, error) {
+	session, err := a.store.GetSession(token)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to get the session for the token")
+	}
+	return session, nil
+}
+
 func (a *App) Login(username string, email string, password string, mfaToken string) (string, error) {
 	var user *model.User
 	if username != "" {
@@ -33,8 +41,19 @@ func (a *App) Login(username string, email string, password string, mfaToken str
 		return "", errors.New("invalid username or password")
 	}
 
+	session := model.Session{
+		ID:     uuid.New().String(),
+		Token:  uuid.New().String(),
+		UserID: user.ID,
+		Props:  map[string]interface{}{},
+	}
+	err := a.store.CreateSession(&session)
+	if err != nil {
+		return "", errors.Wrap(err, "unable to create session")
+	}
+
 	// TODO: MFA verification
-	return auth.CreateToken(user.ID, a.config.Secret)
+	return session.Token, nil
 }
 
 func (a *App) RegisterUser(username string, email string, password string) error {

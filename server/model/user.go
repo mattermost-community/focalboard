@@ -13,3 +13,10 @@ type User struct {
 	UpdateAt    int64                  `json:"update_at,omitempty"`
 	DeleteAt    int64                  `json:"delete_at"`
 }
+
+type Session struct {
+	ID     string                 `json:"id"`
+	Token  string                 `json:"token"`
+	UserID string                 `json:"user_id"`
+	Props  map[string]interface{} `json:"props"`
+}

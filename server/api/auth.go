@@ -1,12 +1,15 @@
 package api
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
+
+	"github.com/mattermost/mattermost-octo-tasks/server/services/auth"
 )
 
 type LoginData struct {
@@ -68,6 +71,7 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 		}
 
 		jsonBytesResponse(w, http.StatusOK, json)
+		return
 	}
 
 	errorResponse(w, http.StatusInternalServerError, map[string]string{"error": "Unknown login type"})
@@ -101,4 +105,17 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 	}
 	jsonBytesResponse(w, http.StatusOK, nil)
 	return
+}
+
+func (a *API) sessionRequired(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		token, _ := auth.ParseAuthTokenFromRequest(r)
+		session, err := a.app().GetSession(token)
+		if err != nil {
+			errorResponse(w, http.StatusUnauthorized, map[string]string{"error": err.Error()})
+			return
+		}
+		ctx := context.WithValue(r.Context(), "session", session)
+		handler(w, r.WithContext(ctx))
+	}
 }
