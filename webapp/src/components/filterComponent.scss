@@ -9,6 +9,27 @@
 	background-color: rgb(var(--main-bg));
 	padding: 10px;
 
+    @media screen and (max-width: 420px) {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        min-width: 0;
+    }
+
+    .hideOnWidescreen {
+        /* Hide controls (e.g. close button) on larger screens */
+        @media not screen and (max-width: 420px) {
+            display: none !important;
+        }
+    }
+    > .toolbar {
+        display: flex;
+        flex-direction: row;
+        height: 30px;
+        margin-bottom: 10px;
+    }
     .octo-filterclause {
         display: flex;
         flex-direction: row;

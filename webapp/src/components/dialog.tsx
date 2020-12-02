@@ -53,6 +53,7 @@ export default class Dialog extends React.PureComponent<Props> {
                             onClick={this.closeClicked}
                             icon={<CloseIcon/>}
                             title={'Close dialog'}
+                            className='hideOnWidescreen'
                         />
                         <div className='octo-spacer'/>
                         <MenuWrapper>

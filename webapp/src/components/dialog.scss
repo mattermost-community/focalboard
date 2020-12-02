@@ -48,13 +48,6 @@
             flex-direction: row;
             height: 30px;
             margin: 10px;
-
-            > .IconButton:first-child {
-                /* Hide close button on larger screens */
-                @media not screen and (max-width: 975px) {
-                    display: none;
-                }
-            }
         }
         > .content {
             display: flex;
@@ -70,6 +63,13 @@
         }
         > .content.fullwidth {
             padding: 10px 0 10px 0;
+        }
+
+        .hideOnWidescreen {
+            /* Hide controls (e.g. close button) on larger screens */
+            @media not screen and (max-width: 975px) {
+                display: none;
+            }
         }
     }
 }

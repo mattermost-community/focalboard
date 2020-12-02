@@ -8,14 +8,19 @@ type Props = {
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
     title?: string
     icon?: React.ReactNode
+    className?: string
 }
 
 export default class IconButton extends React.PureComponent<Props> {
     render(): JSX.Element {
+        let className = 'Button IconButton'
+        if (this.props.className) {
+            className += ' ' + this.props.className
+        }
         return (
             <div
                 onClick={this.props.onClick}
-                className='Button IconButton'
+                className={className}
                 title={this.props.title}
             >
                 {this.props.icon}
