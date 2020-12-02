@@ -1,10 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {BlockIcons} from '../blockIcons'
-import {IBlock} from '../blocks/block'
 import {IPropertyTemplate} from '../blocks/board'
 import {MutableBoardView} from '../blocks/boardView'
 import {MutableCard} from '../blocks/card'
@@ -12,12 +11,11 @@ import {Constants} from '../constants'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
-import {MutableCardTree} from '../viewModel/cardTree'
 import SortDownIcon from '../widgets/icons/sortDown'
 import SortUpIcon from '../widgets/icons/sortUp'
 import MenuWrapper from '../widgets/menuWrapper'
 
-import {CardDialog} from './cardDialog'
+import CardDialog from './cardDialog'
 import {HorizontalGrip} from './horizontalGrip'
 import RootPortal from './rootPortal'
 import './tableComponent.scss'
@@ -30,6 +28,7 @@ type Props = {
     boardTree: BoardTree
     showView: (id: string) => void
     setSearchText: (text?: string) => void
+    intl: IntlShape
 }
 
 type State = {
@@ -127,13 +126,17 @@ class TableComponent extends React.Component<Props, State> {
                                         onDrag={(offset) => {
                                             const originalWidth = this.columnWidth(Constants.titleColumnId)
                                             const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
-                                            titleRef.current!.style!.width = `${newWidth}px`
+                                            if (titleRef.current) {
+                                                titleRef.current.style.width = `${newWidth}px`
+                                            }
                                         }}
                                         onDragEnd={(offset) => {
                                             Utils.log(`onDragEnd offset: ${offset}`)
                                             const originalWidth = this.columnWidth(Constants.titleColumnId)
                                             const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
-                                            titleRef.current!.style!.width = `${newWidth}px`
+                                            if (titleRef.current) {
+                                                titleRef.current.style.width = `${newWidth}px`
+                                            }
 
                                             const columnWidths = {...activeView.columnWidths}
                                             if (newWidth !== columnWidths[Constants.titleColumnId]) {
@@ -211,13 +214,17 @@ class TableComponent extends React.Component<Props, State> {
                                                     onDrag={(offset) => {
                                                         const originalWidth = this.columnWidth(template.id)
                                                         const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
-                                                        headerRef.current!.style.width = `${newWidth}px`
+                                                        if (headerRef.current) {
+                                                            headerRef.current.style.width = `${newWidth}px`
+                                                        }
                                                     }}
                                                     onDragEnd={(offset) => {
                                                         Utils.log(`onDragEnd offset: ${offset}`)
                                                         const originalWidth = this.columnWidth(template.id)
                                                         const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
-                                                        headerRef.current!.style.width = `${newWidth}px`
+                                                        if (headerRef.current) {
+                                                            headerRef.current.style.width = `${newWidth}px`
+                                                        }
 
                                                         const columnWidths = {...activeView.columnWidths}
                                                         if (newWidth !== columnWidths[template.id]) {
@@ -246,7 +253,7 @@ class TableComponent extends React.Component<Props, State> {
 
                                 const tableRow = (
                                     <TableRow
-                                        key={card.id}
+                                        key={card.id + card.updateAt}
                                         ref={tableRowRef}
                                         boardTree={boardTree}
                                         card={card}
@@ -296,32 +303,31 @@ class TableComponent extends React.Component<Props, State> {
         this.addCard(true)
     }
 
-    private addCardFromTemplate = async (cardTemplateId?: string) => {
-        this.addCard(true, cardTemplateId)
+    private addCardFromTemplate = async (cardTemplateId: string) => {
+        await mutator.duplicateCard(
+            cardTemplateId,
+            this.props.intl.formatMessage({id: 'Mutator.new-card-from-template', defaultMessage: 'new card from template'}),
+            false,
+            async (newCardId) => {
+                this.setState({shownCardId: newCardId})
+            },
+            async () => {
+                this.setState({shownCardId: undefined})
+            },
+        )
     }
 
-    private addCard = async (show = false, cardTemplateId?: string) => {
+    private addCard = async (show = false) => {
         const {boardTree} = this.props
 
-        let card: MutableCard
-        let blocksToInsert: IBlock[]
-        if (cardTemplateId) {
-            const templateCardTree = new MutableCardTree(cardTemplateId)
-            await templateCardTree.sync()
-            const newCardTree = templateCardTree.templateCopy()
-            card = newCardTree.card
-            card.isTemplate = false
-            card.title = ''
-            blocksToInsert = [newCardTree.card, ...newCardTree.contents]
-        } else {
-            card = new MutableCard()
-            blocksToInsert = [card]
-        }
+        const card = new MutableCard()
 
         card.parentId = boardTree.board.id
-        card.icon = BlockIcons.shared.randomIcon()
-        await mutator.insertBlocks(
-            blocksToInsert,
+        if (!card.icon) {
+            card.icon = BlockIcons.shared.randomIcon()
+        }
+        await mutator.insertBlock(
+            card,
             'add card',
             async () => {
                 if (show) {
@@ -375,4 +381,4 @@ class TableComponent extends React.Component<Props, State> {
     }
 }
 
-export {TableComponent}
+export default injectIntl(TableComponent)

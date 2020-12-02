@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import mutator from '../mutator'
 import {OctoListener} from '../octoListener'
@@ -19,6 +19,7 @@ type Props = {
     cardId: string
     onClose: () => void
     showCard: (cardId?: string) => void
+    intl: IntlShape
 }
 
 type State = {
@@ -94,7 +95,7 @@ class CardDialog extends React.Component<Props, State> {
                     <Menu.Text
                         id='makeTemplate'
                         name='New template from card'
-                        onClick={this.makeTemplate}
+                        onClick={this.makeTemplateClicked}
                     />
                 }
             </Menu>
@@ -122,25 +123,19 @@ class CardDialog extends React.Component<Props, State> {
         )
     }
 
-    private makeTemplate = async () => {
+    private makeTemplateClicked = async () => {
         const {cardTree} = this.state
         if (!cardTree) {
             Utils.assertFailure('this.state.cardTree')
             return
         }
 
-        const newCardTree = cardTree.templateCopy()
-        newCardTree.card.isTemplate = true
-        newCardTree.card.title = 'New Template'
-
-        Utils.log(`Created new template: ${newCardTree.card.id}`)
-
-        const blocksToInsert = [newCardTree.card, ...newCardTree.contents]
-        await mutator.insertBlocks(
-            blocksToInsert,
-            'create template from card',
-            async () => {
-                this.props.showCard(newCardTree.card.id)
+        await mutator.duplicateCard(
+            cardTree.card.id,
+            this.props.intl.formatMessage({id: 'Mutator.new-template-from-card', defaultMessage: 'new template from card'}),
+            true,
+            async (newCardId) => {
+                this.props.showCard(newCardId)
             },
             async () => {
                 this.props.showCard(undefined)
@@ -149,4 +144,4 @@ class CardDialog extends React.Component<Props, State> {
     }
 }
 
-export {CardDialog}
+export default injectIntl(CardDialog)

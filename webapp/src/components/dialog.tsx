@@ -2,10 +2,10 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import MenuWrapper from '../widgets/menuWrapper'
-import OptionsIcon from '../widgets/icons/options'
 import IconButton from '../widgets/buttons/iconButton'
-
+import CloseIcon from '../widgets/icons/close'
+import OptionsIcon from '../widgets/icons/options'
+import MenuWrapper from '../widgets/menuWrapper'
 import './dialog.scss'
 
 type Props = {
@@ -23,17 +23,13 @@ export default class Dialog extends React.PureComponent<Props> {
         document.removeEventListener('keydown', this.keydownHandler)
     }
 
-    private close(): void {
-        this.props.onClose()
-    }
-
     private keydownHandler = (e: KeyboardEvent): void => {
         if (e.target !== document.body) {
             return
         }
 
         if (e.keyCode === 27) {
-            this.close()
+            this.closeClicked()
             e.stopPropagation()
         }
     }
@@ -46,13 +42,18 @@ export default class Dialog extends React.PureComponent<Props> {
                 className='Dialog dialog-back'
                 onMouseDown={(e) => {
                     if (e.target === e.currentTarget) {
-                        this.close()
+                        this.closeClicked()
                     }
                 }}
             >
                 <div className='dialog' >
                     {toolsMenu &&
                     <div className='toolbar'>
+                        <IconButton
+                            onClick={this.closeClicked}
+                            icon={<CloseIcon/>}
+                            title={'Close dialog'}
+                        />
                         <div className='octo-spacer'/>
                         <MenuWrapper>
                             <IconButton icon={<OptionsIcon/>}/>
@@ -63,5 +64,9 @@ export default class Dialog extends React.PureComponent<Props> {
                 </div>
             </div>
         )
+    }
+
+    private closeClicked = () => {
+        this.props.onClose()
     }
 }

@@ -32,12 +32,17 @@ class Editable extends React.PureComponent<Props> {
         return this.privateText
     }
     set text(value: string) {
+        if (!this.elementRef.current) {
+            Utils.assertFailure('elementRef.current')
+            return
+        }
+
         const {isMarkdown} = this.props
 
         if (value) {
-            this.elementRef.current!.innerHTML = isMarkdown ? Utils.htmlFromMarkdown(value) : Utils.htmlEncode(value)
+            this.elementRef.current.innerHTML = isMarkdown ? Utils.htmlFromMarkdown(value) : Utils.htmlEncode(value)
         } else {
-            this.elementRef.current!.innerText = ''
+            this.elementRef.current.innerText = ''
         }
 
         this.privateText = value || ''
@@ -55,7 +60,7 @@ class Editable extends React.PureComponent<Props> {
     }
 
     focus(): void {
-        this.elementRef.current!.focus()
+        this.elementRef.current?.focus()
 
         // Put cursor at end
         document.execCommand('selectAll', false, undefined)
@@ -63,7 +68,7 @@ class Editable extends React.PureComponent<Props> {
     }
 
     blur(): void {
-        this.elementRef.current!.blur()
+        this.elementRef.current?.blur()
     }
 
     render(): JSX.Element {
@@ -90,9 +95,11 @@ class Editable extends React.PureComponent<Props> {
                 dangerouslySetInnerHTML={{__html: html}}
 
                 onFocus={() => {
-                    this.elementRef.current!.innerText = this.text
-                    this.elementRef.current!.style!.color = style?.color || ''
-                    this.elementRef.current!.classList.add('active')
+                    if (this.elementRef.current) {
+                        this.elementRef.current.innerText = this.text
+                        this.elementRef.current.style.color = style?.color || ''
+                        this.elementRef.current.classList.add('active')
+                    }
 
                     if (onFocus) {
                         onFocus()
@@ -100,19 +107,22 @@ class Editable extends React.PureComponent<Props> {
                 }}
 
                 onBlur={async () => {
-                    const newText = this.elementRef.current!.innerText
-                    const oldText = this.props.text || ''
-                    if (this.props.allowEmpty || newText) {
-                        if (newText !== oldText && onChanged) {
-                            onChanged(newText)
+                    if (this.elementRef.current) {
+                        const newText = this.elementRef.current.innerText
+                        const oldText = this.props.text || ''
+                        if (this.props.allowEmpty || newText) {
+                            if (newText !== oldText && onChanged) {
+                                onChanged(newText)
+                            }
+
+                            this.text = newText
+                        } else {
+                            this.text = oldText // Reset text
                         }
 
-                        this.text = newText
-                    } else {
-                        this.text = oldText // Reset text
+                        this.elementRef.current.classList.remove('active')
                     }
 
-                    this.elementRef.current!.classList.remove('active')
                     if (onBlur) {
                         onBlur()
                     }
@@ -121,10 +131,10 @@ class Editable extends React.PureComponent<Props> {
                 onKeyDown={(e) => {
                     if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
                         e.stopPropagation()
-                        this.elementRef.current!.blur()
+                        this.elementRef.current?.blur()
                     } else if (!isMultiline && e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // Return
                         e.stopPropagation()
-                        this.elementRef.current!.blur()
+                        this.elementRef.current?.blur()
                     }
 
                     if (onKeyDown) {

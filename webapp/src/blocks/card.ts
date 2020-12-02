@@ -21,7 +21,7 @@ class MutableCard extends MutableBlock {
     }
 
     get isTemplate(): boolean {
-        return this.fields.isTemplate as boolean
+        return Boolean(this.fields.isTemplate)
     }
     set isTemplate(value: boolean) {
         this.fields.isTemplate = value

@@ -8,6 +8,7 @@ import {OctoUtils} from '../octoUtils'
 
 interface WorkspaceTree {
     readonly boards: readonly Board[]
+    readonly boardTemplates: readonly Board[]
     readonly views: readonly BoardView[]
 
     mutableCopy(): MutableWorkspaceTree
@@ -15,6 +16,7 @@ interface WorkspaceTree {
 
 class MutableWorkspaceTree {
     boards: Board[] = []
+    boardTemplates: Board[] = []
     views: BoardView[] = []
 
     private rawBlocks: IBlock[] = []
@@ -37,7 +39,10 @@ class MutableWorkspaceTree {
     }
 
     private rebuild(blocks: IBlock[]) {
-        this.boards = blocks.filter((block) => block.type === 'board').
+        const allBoards = blocks.filter((block) => block.type === 'board') as Board[]
+        this.boards = allBoards.filter((block) => !block.isTemplate).
+            sort((a, b) => a.title.localeCompare(b.title)) as Board[]
+        this.boardTemplates = allBoards.filter((block) => block.isTemplate).
             sort((a, b) => a.title.localeCompare(b.title)) as Board[]
         this.views = blocks.filter((block) => block.type === 'view').
             sort((a, b) => a.title.localeCompare(b.title)) as BoardView[]

@@ -17,13 +17,27 @@
         background-color: rgb(var(--main-bg));
         border-radius: 3px;
         box-shadow: rgba(var(--main-fg), 0.1) 0px 0px 0px 1px, rgba(var(--main-fg), 0.1) 0px 2px 4px;
-        margin: 72px auto;
         padding: 0;
-        max-width: 975px;
-        height: calc(100% - 144px);
 
         overflow-x: hidden;
         overflow-y: auto;
+
+        @media not screen and (max-width: 975px) {
+            margin: 72px auto;
+            max-width: 975px;
+            height: calc(100% - 144px);
+        }
+        @media screen and (max-width: 975px) {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        > * {
+            flex-shrink: 0;
+        }
         > .banner {
             background-color: rgba(230, 220, 192, 0.9);
             text-align: center;
@@ -33,13 +47,26 @@
             display: flex;
             flex-direction: row;
             height: 30px;
-            margin: 10px
+            margin: 10px;
+
+            > .IconButton:first-child {
+                /* Hide close button on larger screens */
+                @media not screen and (max-width: 975px) {
+                    display: none;
+                }
+            }
         }
         > .content {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            padding: 10px 126px 10px 126px;
+
+            @media not screen and (max-width: 975px) {
+                padding: 10px 126px;
+            }
+            @media screen and (max-width: 975px) {
+                padding: 10px 10px;
+            }
         }
         > .content.fullwidth {
             padding: 10px 0 10px 0;

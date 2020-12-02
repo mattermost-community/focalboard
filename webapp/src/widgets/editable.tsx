@@ -24,16 +24,16 @@ export default class Editable extends React.Component<Props> {
     }
 
     public focus(): void {
-        this.elementRef.current!.focus()
-
-        // Put cursor at end
-        document.execCommand('selectAll', false, undefined)
-        document.getSelection()?.collapseToEnd()
+        if (this.elementRef.current) {
+            const valueLength = this.elementRef.current.value.length
+            this.elementRef.current.focus()
+            this.elementRef.current.setSelectionRange(valueLength, valueLength)
+        }
     }
 
     public blur = (): void => {
         this.saveOnBlur = false
-        this.elementRef.current!.blur()
+        this.elementRef.current?.blur()
         this.saveOnBlur = true
     }
 

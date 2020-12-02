@@ -35,7 +35,7 @@ type Props = {
     showView: (id: string) => void
     setSearchText: (text?: string) => void
     addCard: () => void
-    addCardFromTemplate: (cardTemplateId?: string) => void
+    addCardFromTemplate: (cardTemplateId: string) => void
     addCardTemplate: () => void
     editCardTemplate: (cardTemplateId: string) => void
     withGroupBy?: boolean
@@ -61,7 +61,7 @@ class ViewHeader extends React.Component<Props, State> {
 
     componentDidUpdate(prevPros: Props, prevState: State): void {
         if (this.state.isSearching && !prevState.isSearching) {
-            this.searchFieldRef.current!.focus()
+            this.searchFieldRef.current?.focus()
         }
     }
 
@@ -75,7 +75,9 @@ class ViewHeader extends React.Component<Props, State> {
 
     private onSearchKeyDown = (e: React.KeyboardEvent) => {
         if (e.keyCode === 27) { // ESC: Clear search
-            this.searchFieldRef.current!.text = ''
+            if (this.searchFieldRef.current) {
+                this.searchFieldRef.current.text = ''
+            }
             this.setState({isSearching: false})
             this.props.setSearchText(undefined)
             e.preventDefault()
@@ -397,11 +399,15 @@ class ViewHeader extends React.Component<Props, State> {
                         <Menu.Separator/>
 
                         {boardTree.cardTemplates.map((cardTemplate) => {
+                            let displayName = cardTemplate.title || intl.formatMessage({id: 'ViewHeader.untitled', defaultMessage: 'Untitled'})
+                            if (cardTemplate.icon) {
+                                displayName = `${cardTemplate.icon} ${displayName}`
+                            }
                             return (
                                 <Menu.Text
                                     key={cardTemplate.id}
                                     id={cardTemplate.id}
-                                    name={cardTemplate.title || intl.formatMessage({id: 'ViewHeader.untitled', defaultMessage: 'Untitled'})}
+                                    name={displayName}
                                     onClick={() => {
                                         this.props.addCardFromTemplate(cardTemplate.id)
                                     }}

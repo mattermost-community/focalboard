@@ -88,7 +88,7 @@ class OctoUtils {
     }
 
     // Creates a copy of the blocks with new ids and parentIDs
-    static duplicateBlockTree(blocks: IBlock[], rootBlockId?: string): [MutableBlock[], Readonly<Record<string, string>>] {
+    static duplicateBlockTree(blocks: IBlock[], rootBlockId: string): [MutableBlock[], MutableBlock, Readonly<Record<string, string>>] {
         const idMap: Record<string, string> = {}
         const newBlocks = blocks.map((block) => {
             const newBlock = this.hydrateBlock(block)
@@ -97,7 +97,7 @@ class OctoUtils {
             return newBlock
         })
 
-        const newRootBlockId = rootBlockId ? idMap[rootBlockId] : undefined
+        const newRootBlockId = idMap[rootBlockId]
         newBlocks.forEach((newBlock) => {
             // Note: Don't remap the parent of the new root block
             if (newBlock.id !== newRootBlockId && newBlock.parentId) {
@@ -112,7 +112,8 @@ class OctoUtils {
             }
         })
 
-        return [newBlocks, idMap]
+        const newRootBlock = newBlocks.find((block) => block.id === newRootBlockId)!
+        return [newBlocks, newRootBlock, idMap]
     }
 }
 

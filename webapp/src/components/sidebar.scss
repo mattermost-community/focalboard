@@ -8,13 +8,12 @@
 	color: rgb(var(--sidebar-fg));
 	background-color: rgb(var(--sidebar-bg));
     padding: 10px 0;
-    overflow-y: scroll;
 
     &.hidden {
         position: absolute;
         top: 0;
         left: 0;
-        z-index: 15;
+        z-index: 5;
         min-height: 0;
         height: 50px;
         width: 50px;
@@ -30,6 +29,12 @@
         flex-shrink: 0;
     }
 
+    .octo-sidebar-list {
+        overflow-y: auto;
+        max-height: calc(100% - 78px);
+        max-width: 250px;
+    }
+
     .octo-sidebar-header {
         display: flex;
         flex-direction: row;
@@ -37,7 +42,7 @@
         font-weight: 600;
         padding: 3px 20px;
         margin-bottom: 5px;
-        .IconButton {
+        >.IconButton {
             background-color: var(--sidebar-bg);
             &:hover {
                 background-color: rgba(var(--sidebar-fg), 0.1);
@@ -82,7 +87,7 @@
             }
         }
 
-        .IconButton {
+        >.IconButton {
             background-color: var(--sidebar-bg);
             &:hover {
                 background-color: rgba(var(--sidebar-fg), 0.1);
@@ -120,6 +125,10 @@
     .OptionsIcon, .DisclosureTriangleIcon, .DotIcon {
         fill: rgba(var(--sidebar-fg), 0.5);
         flex-shrink: 0;
+    }
+
+    .Menu .OptionsIcon {
+        fill: unset;
     }
 
     .HideSidebarIcon {

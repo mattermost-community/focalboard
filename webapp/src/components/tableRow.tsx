@@ -40,7 +40,7 @@ class TableRow extends React.Component<Props, State> {
 
     componentDidMount(): void {
         if (this.props.focusOnMount) {
-            setTimeout(() => this.titleRef.current!.focus(), 10)
+            setTimeout(() => this.titleRef.current?.focus(), 10)
         }
     }
 
@@ -51,7 +51,6 @@ class TableRow extends React.Component<Props, State> {
         return (
             <div
                 className='TableRow octo-table-row'
-                key={card.id}
             >
 
                 {/* Name / title */}

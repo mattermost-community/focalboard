@@ -9,8 +9,11 @@ import mutator from '../mutator'
 import Button from '../widgets/buttons/button'
 import Editable from '../widgets/editable'
 import EmojiIcon from '../widgets/icons/emoji'
+import HideIcon from '../widgets/icons/hide'
+import ShowIcon from '../widgets/icons/show'
 
 import BlockIconSelector from './blockIconSelector'
+import {MarkdownEditor} from './markdownEditor'
 import './viewTitle.scss'
 
 type Props = {
@@ -38,19 +41,47 @@ class ViewTitle extends React.Component<Props, State> {
 
         return (
             <>
-                <div className={'ViewTitle add-buttons ' + (board.icon ? '' : 'add-visible')}>
-                    <Button
-                        onClick={() => {
-                            const newIcon = BlockIcons.shared.randomIcon()
-                            mutator.changeIcon(board, newIcon)
-                        }}
-                        icon={<EmojiIcon/>}
-                    >
-                        <FormattedMessage
-                            id='TableComponent.add-icon'
-                            defaultMessage='Add Icon'
-                        />
-                    </Button>
+                <div className='ViewTitle add-buttons add-visible'>
+                    {!board.icon &&
+                        <Button
+                            onClick={() => {
+                                const newIcon = BlockIcons.shared.randomIcon()
+                                mutator.changeIcon(board, newIcon)
+                            }}
+                            icon={<EmojiIcon/>}
+                        >
+                            <FormattedMessage
+                                id='TableComponent.add-icon'
+                                defaultMessage='Add Icon'
+                            />
+                        </Button>
+                    }
+                    {board.showDescription &&
+                        <Button
+                            onClick={() => {
+                                mutator.showDescription(board, false)
+                            }}
+                            icon={<HideIcon/>}
+                        >
+                            <FormattedMessage
+                                id='ViewTitle.hide-description'
+                                defaultMessage='hide description'
+                            />
+                        </Button>
+                    }
+                    {!board.showDescription &&
+                        <Button
+                            onClick={() => {
+                                mutator.showDescription(board, true)
+                            }}
+                            icon={<ShowIcon/>}
+                        >
+                            <FormattedMessage
+                                id='ViewTitle.show-description'
+                                defaultMessage='show description'
+                            />
+                        </Button>
+                    }
                 </div>
 
                 <div className='ViewTitle'>
@@ -66,6 +97,18 @@ class ViewTitle extends React.Component<Props, State> {
                         onCancel={() => this.setState({title: this.props.board.title})}
                     />
                 </div>
+
+                {board.showDescription &&
+                    <div className='ViewTitle description'>
+                        <MarkdownEditor
+                            text={board.description}
+                            placeholderText='Add a description...'
+                            onBlur={(text) => {
+                                mutator.changeDescription(board, text)
+                            }}
+                        />
+                    </div>
+                }
             </>
         )
     }

@@ -143,7 +143,7 @@ export default class BoardPage extends React.Component<Props, State> {
 
         const workspaceTree = new MutableWorkspaceTree()
         await workspaceTree.sync()
-        const boardIds = workspaceTree.boards.map((o) => o.id)
+        const boardIds = [...workspaceTree.boards.map((o) => o.id), ...workspaceTree.boardTemplates.map((o) => o.id)]
         this.setState({workspaceTree})
 
         // Listen to boards plus all blocks at root (Empty string for parentId)

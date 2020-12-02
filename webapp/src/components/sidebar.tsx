@@ -12,13 +12,13 @@ import {WorkspaceTree} from '../viewModel/workspaceTree'
 import Button from '../widgets/buttons/button'
 import IconButton from '../widgets/buttons/iconButton'
 import DeleteIcon from '../widgets/icons/delete'
+import DisclosureTriangle from '../widgets/icons/disclosureTriangle'
 import DotIcon from '../widgets/icons/dot'
 import DuplicateIcon from '../widgets/icons/duplicate'
 import HamburgerIcon from '../widgets/icons/hamburger'
 import HideSidebarIcon from '../widgets/icons/hideSidebar'
 import OptionsIcon from '../widgets/icons/options'
 import ShowSidebarIcon from '../widgets/icons/showSidebar'
-import DisclosureTriangle from '../widgets/icons/disclosureTriangle'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 import './sidebar.scss'
@@ -87,111 +87,175 @@ class Sidebar extends React.Component<Props, State> {
                         icon={<HideSidebarIcon/>}
                     />
                 </div>
-                {
-                    boards.map((board) => {
-                        const displayTitle: string = board.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})
-                        const boardViews = views.filter((view) => view.parentId === board.id)
-                        return (
-                            <div key={board.id}>
-                                <div className={'octo-sidebar-item ' + (collapsedBoards[board.id] ? 'collapsed' : 'expanded')}>
-                                    <IconButton
-                                        icon={<DisclosureTriangle/>}
-                                        onClick={() => {
-                                            const newCollapsedBoards = {...this.state.collapsedBoards}
-                                            newCollapsedBoards[board.id] = !newCollapsedBoards[board.id]
-                                            this.setState({collapsedBoards: newCollapsedBoards})
-                                        }}
-                                    />
-                                    <div
-                                        className='octo-sidebar-title'
-                                        onClick={() => {
-                                            this.boardClicked(board)
-                                        }}
-                                        title={displayTitle}
-                                    >
-                                        {board.icon ? `${board.icon} ${displayTitle}` : displayTitle}
-                                    </div>
-                                    <MenuWrapper>
-                                        <IconButton icon={<OptionsIcon/>}/>
-                                        <Menu position='left'>
-                                            <Menu.Text
-                                                id='deleteBoard'
-                                                name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete Board'})}
-                                                icon={<DeleteIcon/>}
-                                                onClick={async () => {
-                                                    const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id)?.id : undefined
-                                                    mutator.deleteBlock(
-                                                        board,
-                                                        'delete block',
-                                                        async () => {
-                                                            nextBoardId && this.props.showBoard(nextBoardId!)
-                                                        },
-                                                        async () => {
-                                                            this.props.showBoard(board.id)
-                                                        },
-                                                    )
-                                                }}
-                                            />
-
-                                            <Menu.Text
-                                                id='duplicateBoard'
-                                                name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate Board'})}
-                                                icon={<DuplicateIcon/>}
-                                                onClick={async () => {
-                                                    await mutator.duplicateBoard(
-                                                        board.id,
-                                                        'duplicate board',
-                                                        async (newBoardId) => {
-                                                            newBoardId && this.props.showBoard(newBoardId)
-                                                        },
-                                                        async () => {
-                                                            this.props.showBoard(board.id)
-                                                        },
-                                                    )
-                                                }}
-                                            />
-                                        </Menu>
-                                    </MenuWrapper>
-                                </div>
-                                {!collapsedBoards[board.id] && boardViews.length === 0 &&
-                                    <div className='octo-sidebar-item subitem no-views'>
-                                        <FormattedMessage
-                                            id='Sidebar.no-views-in-board'
-                                            defaultMessage='No pages inside'
+                <div className='octo-sidebar-list'>
+                    {
+                        boards.map((board) => {
+                            const displayTitle: string = board.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})
+                            const boardViews = views.filter((view) => view.parentId === board.id)
+                            return (
+                                <div key={board.id}>
+                                    <div className={'octo-sidebar-item ' + (collapsedBoards[board.id] ? 'collapsed' : 'expanded')}>
+                                        <IconButton
+                                            icon={<DisclosureTriangle/>}
+                                            onClick={() => {
+                                                const newCollapsedBoards = {...this.state.collapsedBoards}
+                                                newCollapsedBoards[board.id] = !newCollapsedBoards[board.id]
+                                                this.setState({collapsedBoards: newCollapsedBoards})
+                                            }}
                                         />
-                                    </div>}
-                                {!collapsedBoards[board.id] && boardViews.map((view) => (
-                                    <div
-                                        key={view.id}
-                                        className='octo-sidebar-item subitem'
-                                    >
-                                        <DotIcon/>
                                         <div
                                             className='octo-sidebar-title'
                                             onClick={() => {
-                                                this.viewClicked(board, view)
+                                                this.boardClicked(board)
                                             }}
-                                            title={view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}
+                                            title={displayTitle}
                                         >
-                                            {view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}
+                                            {board.icon ? `${board.icon} ${displayTitle}` : displayTitle}
                                         </div>
+                                        <MenuWrapper>
+                                            <IconButton icon={<OptionsIcon/>}/>
+                                            <Menu position='left'>
+                                                <Menu.Text
+                                                    id='deleteBoard'
+                                                    name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete Board'})}
+                                                    icon={<DeleteIcon/>}
+                                                    onClick={async () => {
+                                                        const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id)?.id : undefined
+                                                        mutator.deleteBlock(
+                                                            board,
+                                                            'delete block',
+                                                            async () => {
+                                                                nextBoardId && this.props.showBoard(nextBoardId!)
+                                                            },
+                                                            async () => {
+                                                                this.props.showBoard(board.id)
+                                                            },
+                                                        )
+                                                    }}
+                                                />
+
+                                                <Menu.Text
+                                                    id='duplicateBoard'
+                                                    name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate Board'})}
+                                                    icon={<DuplicateIcon/>}
+                                                    onClick={() => {
+                                                        this.duplicateBoard(board.id)
+                                                    }}
+                                                />
+
+                                                <Menu.Text
+                                                    id='templateFromBoard'
+                                                    name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}
+                                                    onClick={() => {
+                                                        this.addTemplateFromBoard(board.id)
+                                                    }}
+                                                />
+                                            </Menu>
+                                        </MenuWrapper>
                                     </div>
-                                ))}
-                            </div>
-                        )
-                    })
-                }
+                                    {!collapsedBoards[board.id] && boardViews.length === 0 &&
+                                        <div className='octo-sidebar-item subitem no-views'>
+                                            <FormattedMessage
+                                                id='Sidebar.no-views-in-board'
+                                                defaultMessage='No pages inside'
+                                            />
+                                        </div>}
+                                    {!collapsedBoards[board.id] && boardViews.map((view) => (
+                                        <div
+                                            key={view.id}
+                                            className='octo-sidebar-item subitem'
+                                        >
+                                            <DotIcon/>
+                                            <div
+                                                className='octo-sidebar-title'
+                                                onClick={() => {
+                                                    this.viewClicked(board, view)
+                                                }}
+                                                title={view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}
+                                            >
+                                                {view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )
+                        })
+                    }
 
-                <br/>
+                    <br/>
 
-                <Button
-                    onClick={this.addBoardClicked}
-                >
-                    <FormattedMessage
-                        id='Sidebar.add-board'
-                        defaultMessage='+ Add Board'
-                    />
-                </Button>
+                    <MenuWrapper>
+                        <Button>
+                            <FormattedMessage
+                                id='Sidebar.add-board'
+                                defaultMessage='+ Add Board'
+                            />
+                        </Button>
+                        <Menu position='top'>
+                            <Menu.Label>
+                                <b>
+                                    <FormattedMessage
+                                        id='Sidebar.select-a-template'
+                                        defaultMessage='Select a template'
+                                    />
+                                </b>
+                            </Menu.Label>
+
+                            <Menu.Separator/>
+
+                            {workspaceTree.boardTemplates.map((boardTemplate) => {
+                                let displayName = boardTemplate.title || intl.formatMessage({id: 'Sidebar.untitled', defaultMessage: 'Untitled'})
+                                if (boardTemplate.icon) {
+                                    displayName = `${boardTemplate.icon} ${displayName}`
+                                }
+                                return (
+                                    <Menu.Text
+                                        key={boardTemplate.id}
+                                        id={boardTemplate.id}
+                                        name={displayName}
+                                        onClick={() => {
+                                            this.addBoardFromTemplate(boardTemplate.id)
+                                        }}
+                                        rightIcon={
+                                            <MenuWrapper stopPropagationOnToggle={true}>
+                                                <IconButton icon={<OptionsIcon/>}/>
+                                                <Menu position='left'>
+                                                    <Menu.Text
+                                                        id='edit'
+                                                        name={intl.formatMessage({id: 'Sidebar.edit-template', defaultMessage: 'Edit'})}
+                                                        onClick={() => {
+                                                            this.props.showBoard(boardTemplate.id)
+                                                        }}
+                                                    />
+                                                    <Menu.Text
+                                                        icon={<DeleteIcon/>}
+                                                        id='delete'
+                                                        name={intl.formatMessage({id: 'Sidebar.delete-template', defaultMessage: 'Delete'})}
+                                                        onClick={async () => {
+                                                            await mutator.deleteBlock(boardTemplate, 'delete board template')
+                                                        }}
+                                                    />
+                                                </Menu>
+                                            </MenuWrapper>
+                                        }
+                                    />
+                                )
+                            })}
+
+                            <Menu.Text
+                                id='empty-template'
+                                name={intl.formatMessage({id: 'Sidebar.empty-board', defaultMessage: 'Empty board'})}
+                                onClick={this.addBoardClicked}
+                            />
+
+                            <Menu.Text
+                                id='add-template'
+                                name={intl.formatMessage({id: 'Sidebar.add-template', defaultMessage: '+ New template'})}
+                                onClick={this.addBoardTemplateClicked}
+                            />
+                        </Menu>
+                    </MenuWrapper>
+                </div>
 
                 <div className='octo-spacer'/>
 
@@ -268,7 +332,9 @@ class Sidebar extends React.Component<Props, State> {
         const {showBoard, intl} = this.props
 
         const oldBoardId = this.props.activeBoardId
+
         const board = new MutableBoard()
+
         const view = new MutableBoardView()
         view.viewType = 'board'
         view.parentId = board.id
@@ -283,6 +349,78 @@ class Sidebar extends React.Component<Props, State> {
             async () => {
                 if (oldBoardId) {
                     showBoard(oldBoardId)
+                }
+            },
+        )
+    }
+
+    private async addBoardFromTemplate(boardTemplateId: string) {
+        const oldBoardId = this.props.activeBoardId
+
+        await mutator.duplicateBoard(
+            boardTemplateId,
+            this.props.intl.formatMessage({id: 'Mutator.new-board-from-template', defaultMessage: 'new board from template'}),
+            false,
+            async (newBoardId) => {
+                this.props.showBoard(newBoardId)
+            },
+            async () => {
+                if (oldBoardId) {
+                    this.props.showBoard(oldBoardId)
+                }
+            },
+        )
+    }
+
+    private async duplicateBoard(boardId: string) {
+        const oldBoardId = this.props.activeBoardId
+
+        await mutator.duplicateBoard(
+            boardId,
+            this.props.intl.formatMessage({id: 'Mutator.duplicate-board', defaultMessage: 'duplicate board'}),
+            false,
+            async (newBoardId) => {
+                this.props.showBoard(newBoardId)
+            },
+            async () => {
+                if (oldBoardId) {
+                    this.props.showBoard(oldBoardId)
+                }
+            },
+        )
+    }
+
+    private async addTemplateFromBoard(boardId: string) {
+        const oldBoardId = this.props.activeBoardId
+
+        await mutator.duplicateBoard(
+            boardId,
+            this.props.intl.formatMessage({id: 'Mutator.new-template-from-board', defaultMessage: 'new template from board'}),
+            true,
+            async (newBoardId) => {
+                this.props.showBoard(newBoardId)
+            },
+            async () => {
+                if (oldBoardId) {
+                    this.props.showBoard(oldBoardId)
+                }
+            },
+        )
+    }
+
+    private addBoardTemplateClicked = async () => {
+        const {activeBoardId} = this.props
+
+        const boardTemplate = new MutableBoard()
+        boardTemplate.isTemplate = true
+        await mutator.insertBlock(
+            boardTemplate,
+            'add board template',
+            async () => {
+                this.props.showBoard(boardTemplate.id)
+            }, async () => {
+                if (activeBoardId) {
+                    this.props.showBoard(activeBoardId)
                 }
             },
         )

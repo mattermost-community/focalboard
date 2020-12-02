@@ -10,7 +10,7 @@ type Props = {
     icon?: React.ReactNode
 }
 
-export default class Button extends React.PureComponent<Props> {
+export default class IconButton extends React.PureComponent<Props> {
     render(): JSX.Element {
         return (
             <div

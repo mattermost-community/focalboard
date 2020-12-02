@@ -1,5 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+import {Utils} from '../utils'
+
 import {IBlock} from '../blocks/block'
 
 import {MutableBlock} from './block'
@@ -35,7 +37,11 @@ interface IMutablePropertyTemplate extends IPropertyTemplate {
 
 interface Board extends IBlock {
     readonly icon: string
+    readonly description: string
+    readonly showDescription: boolean
+    readonly isTemplate: boolean
     readonly cardProperties: readonly IPropertyTemplate[]
+    duplicate(): MutableBoard
 }
 
 class MutableBoard extends MutableBlock {
@@ -44,6 +50,27 @@ class MutableBoard extends MutableBlock {
     }
     set icon(value: string) {
         this.fields.icon = value
+    }
+
+    get description(): string {
+        return this.fields.description as string
+    }
+    set description(value: string) {
+        this.fields.description = value
+    }
+
+    get showDescription(): boolean {
+        return Boolean(this.fields.showDescription)
+    }
+    set showDescription(value: boolean) {
+        this.fields.showDescription = value
+    }
+
+    get isTemplate(): boolean {
+        return Boolean(this.fields.isTemplate)
+    }
+    set isTemplate(value: boolean) {
+        this.fields.isTemplate = value
     }
 
     get cardProperties(): IMutablePropertyTemplate[] {
@@ -58,6 +85,7 @@ class MutableBoard extends MutableBlock {
         this.type = 'board'
 
         this.icon = block.fields?.icon || ''
+        this.description = block.fields?.description || ''
         if (block.fields?.cardProperties) {
             // Deep clone of card properties and their options
             this.cardProperties = block.fields.cardProperties.map((o: IPropertyTemplate) => {
@@ -71,6 +99,12 @@ class MutableBoard extends MutableBlock {
         } else {
             this.cardProperties = []
         }
+    }
+
+    duplicate(): MutableBoard {
+        const card = new MutableBoard(this)
+        card.id = Utils.createGuid()
+        return card
     }
 }
 
