@@ -4,12 +4,12 @@
     left: -200px;
     z-index: 10;
 
-	min-width: 420px;
+	min-width: 430px;
 	box-shadow: rgba(var(--main-fg), 0.1) 0px 0px 0px 1px, rgba(var(--main-fg), 0.1) 0px 2px 4px;
 	background-color: rgb(var(--main-bg));
 	padding: 10px;
 
-    @media screen and (max-width: 420px) {
+    @media screen and (max-width: 430px) {
         position: fixed;
         top: 0;
         left: 0;
@@ -20,7 +20,7 @@
 
     .hideOnWidescreen {
         /* Hide controls (e.g. close button) on larger screens */
-        @media not screen and (max-width: 420px) {
+        @media not screen and (max-width: 430px) {
             display: none !important;
         }
     }

@@ -23,8 +23,8 @@ export default class ColorOption extends React.PureComponent<ColorOptionProps> {
                 className='MenuOption ColorOption menu-option'
                 onClick={this.handleOnClick}
             >
+                {icon ?? <div className='noicon'/>}
                 <div className='menu-name'>{name}</div>
-                {icon}
                 <div className={`menu-colorbox ${id}`}/>
             </div>
         )

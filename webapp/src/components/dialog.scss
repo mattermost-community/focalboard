@@ -26,6 +26,11 @@
             margin: 72px auto;
             max-width: 975px;
             height: calc(100% - 144px);
+
+            .hideOnWidescreen {
+                /* Hide controls (e.g. close button) on larger screens */
+                display: none !important;
+            }
         }
         @media screen and (max-width: 975px) {
             position: fixed;
@@ -63,13 +68,6 @@
         }
         > .content.fullwidth {
             padding: 10px 0 10px 0;
-        }
-
-        .hideOnWidescreen {
-            /* Hide controls (e.g. close button) on larger screens */
-            @media not screen and (max-width: 975px) {
-                display: none;
-            }
         }
     }
 }

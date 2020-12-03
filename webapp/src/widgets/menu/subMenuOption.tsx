@@ -4,6 +4,8 @@ import React from 'react'
 
 import SubmenuTriangleIcon from '../icons/submenuTriangle'
 
+import Menu from '.'
+
 import './subMenuOption.scss'
 
 type SubMenuOptionProps = {
@@ -23,7 +25,9 @@ export default class SubMenuOption extends React.PureComponent<SubMenuOptionProp
     }
 
     private handleMouseEnter = (): void => {
-        this.setState({isOpen: true})
+        setTimeout(() => {
+            this.setState({isOpen: true})
+        }, 50)
     }
 
     private close = (): void => {
@@ -37,17 +41,34 @@ export default class SubMenuOption extends React.PureComponent<SubMenuOptionProp
                 onMouseEnter={this.handleMouseEnter}
                 onMouseLeave={this.close}
             >
-                {this.props.icon}
+                {this.props.icon ?? <div className='noicon'/>}
                 <div className='menu-name'>{this.props.name}</div>
                 <SubmenuTriangleIcon/>
                 {this.state.isOpen &&
-                    <div className={'SubMenu menu noselect ' + (this.props.position || 'bottom')}>
-                        <div className='menu-options'>
-                            {this.props.children}
+                    <div className={'SubMenu Menu noselect ' + (this.props.position || 'bottom')}>
+                        <div className='menu-contents'>
+                            <div className='menu-options'>
+                                {this.props.children}
+                            </div>
+                            <div className='menu-spacer hideOnWidescreen'/>
+
+                            <div className='menu-options hideOnWidescreen'>
+                                <Menu.Text
+                                    id='menu-cancel'
+                                    name={'Cancel'}
+                                    className='menu-cancel'
+                                    onClick={this.onCancel}
+                                />
+                            </div>
                         </div>
+
                     </div>
                 }
             </div>
         )
+    }
+
+    private onCancel = () => {
+        // No need to do anything, as click bubbled up to MenuWrapper, which closes
     }
 }
