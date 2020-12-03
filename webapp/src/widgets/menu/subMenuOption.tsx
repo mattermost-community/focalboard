@@ -30,6 +30,13 @@ export default class SubMenuOption extends React.PureComponent<SubMenuOptionProp
         }, 50)
     }
 
+    // The click handler is needed to support Android Chrome
+    private handleClick = (e: React.MouseEvent): void => {
+        e.preventDefault()
+        e.stopPropagation()
+        this.setState({isOpen: true})
+    }
+
     private close = (): void => {
         this.setState({isOpen: false})
     }
@@ -40,6 +47,7 @@ export default class SubMenuOption extends React.PureComponent<SubMenuOptionProp
                 className='MenuOption SubMenuOption menu-option'
                 onMouseEnter={this.handleMouseEnter}
                 onMouseLeave={this.close}
+                onClick={this.handleClick}
             >
                 {this.props.icon ?? <div className='noicon'/>}
                 <div className='menu-name'>{this.props.name}</div>
