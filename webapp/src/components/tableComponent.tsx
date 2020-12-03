@@ -323,6 +323,7 @@ class TableComponent extends React.Component<Props, State> {
         const card = new MutableCard()
 
         card.parentId = boardTree.board.id
+        card.rootId = boardTree.board.rootId
         if (!card.icon) {
             card.icon = BlockIcons.shared.randomIcon()
         }
@@ -346,6 +347,7 @@ class TableComponent extends React.Component<Props, State> {
         const cardTemplate = new MutableCard()
         cardTemplate.isTemplate = true
         cardTemplate.parentId = boardTree.board.id
+        cardTemplate.rootId = boardTree.board.rootId
         await mutator.insertBlock(
             cardTemplate,
             'add card template',

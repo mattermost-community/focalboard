@@ -99,6 +99,7 @@ class ViewHeader extends React.Component<Props, State> {
             for (let i = 0; i < count; i++) {
                 const card = new MutableCard()
                 card.parentId = boardTree.board.id
+                card.rootId = boardTree.board.rootId
                 card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
                 card.title = `Test Card ${startCount + i + 1}`
                 card.icon = BlockIcons.shared.randomIcon()

@@ -334,10 +334,12 @@ class Sidebar extends React.Component<Props, State> {
         const oldBoardId = this.props.activeBoardId
 
         const board = new MutableBoard()
+        board.rootId = board.id
 
         const view = new MutableBoardView()
         view.viewType = 'board'
         view.parentId = board.id
+        view.rootId = board.rootId
         view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board View'})
 
         await mutator.insertBlocks(
@@ -412,6 +414,7 @@ class Sidebar extends React.Component<Props, State> {
         const {activeBoardId} = this.props
 
         const boardTemplate = new MutableBoard()
+        boardTemplate.rootId = boardTemplate.id
         boardTemplate.isTemplate = true
         await mutator.insertBlock(
             boardTemplate,

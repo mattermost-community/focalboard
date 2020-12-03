@@ -102,9 +102,9 @@ class MutableBoard extends MutableBlock {
     }
 
     duplicate(): MutableBoard {
-        const card = new MutableBoard(this)
-        card.id = Utils.createGuid()
-        return card
+        const board = new MutableBoard(this)
+        board.id = Utils.createGuid()
+        return board
     }
 }
 

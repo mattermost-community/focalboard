@@ -84,14 +84,13 @@ class MutableBoardTree implements BoardTree {
     }
 
     private ensureMinimumSchema(): boolean {
-        const {board} = this
-
         let didChange = false
 
         // At least one select property
-        const selectProperties = board?.cardProperties.find((o) => o.type === 'select')
+        const selectProperties = this.board?.cardProperties.find((o) => o.type === 'select')
         if (!selectProperties) {
-            const newBoard = new MutableBoard(board)
+            const newBoard = new MutableBoard(this.board)
+            newBoard.rootId = newBoard.id
             const property: IPropertyTemplate = {
                 id: Utils.createGuid(),
                 name: 'Status',
@@ -106,8 +105,9 @@ class MutableBoardTree implements BoardTree {
         // At least one view
         if (this.views.length < 1) {
             const view = new MutableBoardView()
-            view.parentId = board?.id
-            view.groupById = board?.cardProperties.find((o) => o.type === 'select')?.id
+            view.parentId = this.board.id
+            view.rootId = this.board.rootId
+            view.groupById = this.board.cardProperties.find((o) => o.type === 'select')?.id
             this.views.push(view)
             didChange = true
         }
