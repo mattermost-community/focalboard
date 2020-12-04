@@ -35,7 +35,7 @@ type Server struct {
 	logger       *zap.Logger
 }
 
-func New(cfg *config.Configuration) (*Server, error) {
+func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
 	logger, err := zap.NewProduction()
 	if err != nil {
 		return nil, err
@@ -63,7 +63,7 @@ func New(cfg *config.Configuration) (*Server, error) {
 	webhookClient := webhook.NewClient(cfg)
 
 	appBuilder := func() *app.App { return app.New(cfg, store, wsServer, filesBackend, webhookClient) }
-	api := api.NewAPI(appBuilder)
+	api := api.NewAPI(appBuilder, singleUser)
 
 	webServer := web.NewServer(cfg.WebPath, cfg.Port, cfg.UseSSL)
 	webServer.AddRoutes(wsServer)

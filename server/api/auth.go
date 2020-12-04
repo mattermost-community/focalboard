@@ -8,7 +8,9 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 
+	"github.com/mattermost/mattermost-octo-tasks/server/model"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/auth"
 )
 
@@ -109,6 +111,20 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 
 func (a *API) sessionRequired(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		if a.singleUser {
+			now := time.Now().Unix()
+			session := &model.Session{
+				ID:       "single-user",
+				Token:    "single-user",
+				UserID:   "single-user",
+				CreateAt: now,
+				UpdateAt: now,
+			}
+			ctx := context.WithValue(r.Context(), "session", session)
+			handler(w, r.WithContext(ctx))
+			return
+		}
+
 		token, _ := auth.ParseAuthTokenFromRequest(r)
 		session, err := a.app().GetSession(token)
 		if err != nil {

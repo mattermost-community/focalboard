@@ -21,10 +21,11 @@ import (
 
 type API struct {
 	appBuilder func() *app.App
+	singleUser bool
 }
 
-func NewAPI(appBuilder func() *app.App) *API {
-	return &API{appBuilder: appBuilder}
+func NewAPI(appBuilder func() *app.App, singleUser bool) *API {
+	return &API{appBuilder: appBuilder, singleUser: singleUser}
 }
 
 func (a *API) app() *app.App {

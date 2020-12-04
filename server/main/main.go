@@ -56,6 +56,10 @@ func main() {
 	// Command line args
 	pMonitorPid := flag.Int("monitorpid", -1, "a process ID")
 	pPort := flag.Int("port", config.Port, "the port number")
+	singleUser := false
+	if pSingleUser := flag.Bool("single-user", false, "single user mode"); pSingleUser != nil {
+		singleUser = *pSingleUser
+	}
 	flag.Parse()
 
 	if pMonitorPid != nil && *pMonitorPid > 0 {
@@ -68,7 +72,7 @@ func main() {
 		config.Port = *pPort
 	}
 
-	server, err := server.New(config)
+	server, err := server.New(config, singleUser)
 	if err != nil {
 		log.Fatal("ListenAndServeTLS: ", err)
 	}

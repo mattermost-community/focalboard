@@ -15,8 +15,10 @@ type User struct {
 }
 
 type Session struct {
-	ID     string                 `json:"id"`
-	Token  string                 `json:"token"`
-	UserID string                 `json:"user_id"`
-	Props  map[string]interface{} `json:"props"`
+	ID       string                 `json:"id"`
+	Token    string                 `json:"token"`
+	UserID   string                 `json:"user_id"`
+	Props    map[string]interface{} `json:"props"`
+	CreateAt int64                  `json:"create_at,omitempty"`
+	UpdateAt int64                  `json:"update_at,omitempty"`
 }
