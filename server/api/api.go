@@ -242,7 +242,7 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 
 	err = a.app().InsertBlocks(blocks)
 	if err != nil {
-		log.Printf(`ERROR: %v`, r)
+		log.Printf(`ERROR: %v`, err)
 		errorResponse(w, http.StatusInternalServerError, nil)
 
 		return

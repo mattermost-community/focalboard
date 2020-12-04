@@ -24,8 +24,8 @@ export default class SwitchOption extends React.PureComponent<SwitchOptionProps>
                 className='MenuOption SwitchOption menu-option'
                 onClick={this.handleOnClick}
             >
+                {icon ?? <div className='noicon'/>}
                 <div className='menu-name'>{name}</div>
-                {icon}
                 <Switch
                     isOn={isOn}
                     onChanged={() => {}}

@@ -13,8 +13,8 @@ type Props = {
     active?: boolean
 }
 
-export default class Button extends React.Component<Props> {
-    render() {
+export default class Button extends React.PureComponent<Props> {
+    render(): JSX.Element {
         return (
             <div
                 onClick={this.props.onClick}

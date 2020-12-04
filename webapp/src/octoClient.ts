@@ -74,7 +74,7 @@ class OctoClient {
         return blocks
     }
 
-    async importFullArchive(blocks: IBlock[]): Promise<Response> {
+    async importFullArchive(blocks: readonly IBlock[]): Promise<Response> {
         Utils.log(`importFullArchive: ${blocks.length} blocks(s)`)
         blocks.forEach((block) => {
             Utils.log(`\t ${block.type}, ${block.id}`)

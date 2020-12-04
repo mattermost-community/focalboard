@@ -573,18 +573,19 @@ class Mutator {
     }
 
     // Not a mutator, but convenient to put here since Mutator wraps OctoClient
-    async importFullArchive(blocks: IBlock[]): Promise<Response> {
+    async importFullArchive(blocks: readonly IBlock[]): Promise<Response> {
         return octoClient.importFullArchive(blocks)
     }
 
-    async createImageBlock(parentId: string, file: File, order = 1000): Promise<IBlock | undefined> {
+    async createImageBlock(parent: IBlock, file: File, order = 1000): Promise<IBlock | undefined> {
         const url = await octoClient.uploadFile(file)
         if (!url) {
             return undefined
         }
 
         const block = new MutableImageBlock()
-        block.parentId = parentId
+        block.parentId = parent.id
+        block.rootId = parent.rootId
         block.order = order
         block.url = url
 

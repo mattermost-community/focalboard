@@ -3,6 +3,7 @@
 
 import React from 'react'
 
+import {IBlock} from '../blocks/block'
 import {MutableDividerBlock} from '../blocks/dividerBlock'
 import {IOrderedBlock} from '../blocks/orderedBlock'
 import {MutableTextBlock} from '../blocks/textBlock'
@@ -26,13 +27,13 @@ import {MarkdownEditor} from './markdownEditor'
 
 type Props = {
     block: IOrderedBlock
-    cardId: string
+    card: IBlock
     contents: readonly IOrderedBlock[]
 }
 
 class ContentBlock extends React.PureComponent<Props> {
     public render(): JSX.Element | null {
-        const {cardId, contents, block} = this.props
+        const {card, contents, block} = this.props
 
         if (block.type !== 'text' && block.type !== 'image' && block.type !== 'divider') {
             Utils.assertFailure(`Block type is unknown: ${block.type}`)
@@ -81,7 +82,8 @@ class ContentBlock extends React.PureComponent<Props> {
                                     icon={<TextIcon/>}
                                     onClick={() => {
                                         const newBlock = new MutableTextBlock()
-                                        newBlock.parentId = cardId
+                                        newBlock.parentId = card.id
+                                        newBlock.rootId = card.rootId
 
                                         // TODO: Handle need to reorder all blocks
                                         newBlock.order = OctoUtils.getOrderBefore(block, contents)
@@ -96,7 +98,7 @@ class ContentBlock extends React.PureComponent<Props> {
                                     onClick={() => {
                                         Utils.selectLocalFile(
                                             (file) => {
-                                                mutator.createImageBlock(cardId, file, OctoUtils.getOrderBefore(block, contents))
+                                                mutator.createImageBlock(card, file, OctoUtils.getOrderBefore(block, contents))
                                             },
                                             '.jpg,.jpeg,.png')
                                     }}
@@ -107,7 +109,8 @@ class ContentBlock extends React.PureComponent<Props> {
                                     icon={<DividerIcon/>}
                                     onClick={() => {
                                         const newBlock = new MutableDividerBlock()
-                                        newBlock.parentId = cardId
+                                        newBlock.parentId = card.id
+                                        newBlock.rootId = card.rootId
 
                                         // TODO: Handle need to reorder all blocks
                                         newBlock.order = OctoUtils.getOrderBefore(block, contents)

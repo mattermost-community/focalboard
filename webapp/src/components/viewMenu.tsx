@@ -47,6 +47,7 @@ export class ViewMenu extends React.PureComponent<Props> {
         view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board View'})
         view.viewType = 'board'
         view.parentId = board.id
+        view.rootId = board.rootId
 
         const oldViewId = boardTree.activeView.id
 
@@ -69,6 +70,7 @@ export class ViewMenu extends React.PureComponent<Props> {
         view.title = intl.formatMessage({id: 'View.NewTableTitle', defaultMessage: 'Table View'})
         view.viewType = 'table'
         view.parentId = board.id
+        view.rootId = board.rootId
         view.visiblePropertyIds = board.cardProperties.map((o) => o.id)
         view.columnWidths = {}
         view.columnWidths[Constants.titleColumnId] = Constants.defaultTitleColumnWidth

@@ -11,12 +11,12 @@ import LabelOption from './labelOption'
 
 import './menu.scss'
 
-type MenuProps = {
+type Props = {
     children: React.ReactNode
     position?: 'top'|'bottom'|'left'
 }
 
-export default class Menu extends React.PureComponent<MenuProps> {
+export default class Menu extends React.PureComponent<Props> {
     static Color = ColorOption
     static SubMenu = SubMenuOption
     static Switch = SwitchOption
@@ -28,10 +28,27 @@ export default class Menu extends React.PureComponent<MenuProps> {
         const {position, children} = this.props
         return (
             <div className={'Menu noselect ' + (position || 'bottom')}>
-                <div className='menu-options'>
-                    {children}
+                <div className='menu-contents'>
+                    <div className='menu-options'>
+                        {children}
+                    </div>
+
+                    <div className='menu-spacer hideOnWidescreen'/>
+
+                    <div className='menu-options hideOnWidescreen'>
+                        <Menu.Text
+                            id='menu-cancel'
+                            name={'Cancel'}
+                            className='menu-cancel'
+                            onClick={this.onCancel}
+                        />
+                    </div>
                 </div>
             </div>
         )
+    }
+
+    private onCancel = () => {
+        // No need to do anything, as click bubbled up to MenuWrapper, which closes
     }
 }

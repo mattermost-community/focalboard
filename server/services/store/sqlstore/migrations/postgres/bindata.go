@@ -79,6 +79,24 @@ func _000003_auth_table_up_sql() ([]byte, error) {
 	)
 }
 
+var __000003_blocks_rootid_down_sql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\xf4\x09\x71\x0d\x52\x08\x71\x74\xf2\x71\x55\x48\xca\xc9\x4f\xce\x2e\xe6\x72\x09\xf2\x0f\x50\x70\xf6\xf7\x09\xf5\xf5\x53\x28\xca\xcf\x2f\x89\xcf\x4c\xb1\xe6\x02\x04\x00\x00\xff\xff\x94\x1c\x55\xb9\x28\x00\x00\x00")
+
+func _000003_blocks_rootid_down_sql() ([]byte, error) {
+	return bindata_read(
+		__000003_blocks_rootid_down_sql,
+		"000003_blocks_rootid.down.sql",
+	)
+}
+
+var __000003_blocks_rootid_up_sql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\xf4\x09\x71\x0d\x52\x08\x71\x74\xf2\x71\x55\x48\xca\xc9\x4f\xce\x2e\xe6\x72\x74\x71\x51\x70\xf6\xf7\x09\xf5\xf5\x53\x28\xca\xcf\x2f\x89\xcf\x4c\x51\x08\x73\x0c\x72\xf6\x70\x0c\xd2\x30\x36\xd3\xb4\xe6\x02\x04\x00\x00\xff\xff\xce\x60\x70\x4e\x33\x00\x00\x00")
+
+func _000003_blocks_rootid_up_sql() ([]byte, error) {
+	return bindata_read(
+		__000003_blocks_rootid_up_sql,
+		"000003_blocks_rootid.up.sql",
+	)
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -107,6 +125,8 @@ var _bindata = map[string]func() ([]byte, error){
 	"000002_system_settings_table.up.sql": _000002_system_settings_table_up_sql,
 	"000003_auth_table.down.sql": _000003_auth_table_down_sql,
 	"000003_auth_table.up.sql": _000003_auth_table_up_sql,
+	"000003_blocks_rootid.down.sql": _000003_blocks_rootid_down_sql,
+	"000003_blocks_rootid.up.sql": _000003_blocks_rootid_up_sql,
 }
 // AssetDir returns the file names below a certain
 // directory embedded in the file by go-bindata.
@@ -159,5 +179,9 @@ var _bintree = &_bintree_t{nil, map[string]*_bintree_t{
 	"000003_auth_table.down.sql": &_bintree_t{_000003_auth_table_down_sql, map[string]*_bintree_t{
 	}},
 	"000003_auth_table.up.sql": &_bintree_t{_000003_auth_table_up_sql, map[string]*_bintree_t{
+	}},
+	"000003_blocks_rootid.down.sql": &_bintree_t{_000003_blocks_rootid_down_sql, map[string]*_bintree_t{
+	}},
+	"000003_blocks_rootid.up.sql": &_bintree_t{_000003_blocks_rootid_up_sql, map[string]*_bintree_t{
 	}},
 }}

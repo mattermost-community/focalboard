@@ -65,11 +65,11 @@ class ViewHeader extends React.Component<Props, State> {
         }
     }
 
-    private filterClicked = () => {
+    private showFilterDialog = () => {
         this.setState({showFilter: true})
     }
 
-    private hideFilter = () => {
+    private hideFilterDialog = () => {
         this.setState({showFilter: false})
     }
 
@@ -99,6 +99,7 @@ class ViewHeader extends React.Component<Props, State> {
             for (let i = 0; i < count; i++) {
                 const card = new MutableCard()
                 card.parentId = boardTree.board.id
+                card.rootId = boardTree.board.rootId
                 card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
                 card.title = `Test Card ${startCount + i + 1}`
                 card.icon = BlockIcons.shared.randomIcon()
@@ -235,18 +236,18 @@ class ViewHeader extends React.Component<Props, State> {
                 <div className='filter-container'>
                     <Button
                         active={hasFilter}
-                        onClick={this.filterClicked}
+                        onClick={this.showFilterDialog}
                     >
                         <FormattedMessage
                             id='ViewHeader.filter'
                             defaultMessage='Filter'
                         />
-                        {this.state.showFilter &&
-                            <FilterComponent
-                                boardTree={boardTree}
-                                onClose={this.hideFilter}
-                            />}
                     </Button>
+                    {this.state.showFilter &&
+                    <FilterComponent
+                        boardTree={boardTree}
+                        onClose={this.hideFilterDialog}
+                    />}
                 </div>
                 <MenuWrapper>
                     <Button active={hasSort}>

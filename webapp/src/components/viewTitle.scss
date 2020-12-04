@@ -2,7 +2,8 @@
 	flex: 0 0 auto;
 	display: flex;
 	flex-direction: row;
-	align-items: center;
+    align-items: center;
+    min-width: 300px;
 
     &.add-buttons {
         flex-direction: row;

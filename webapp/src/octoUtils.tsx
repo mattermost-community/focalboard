@@ -1,5 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+
 import {IBlock, MutableBlock} from './blocks/block'
 import {IPropertyTemplate, MutableBoard} from './blocks/board'
 import {MutableBoardView} from './blocks/boardView'
@@ -88,7 +89,7 @@ class OctoUtils {
     }
 
     // Creates a copy of the blocks with new ids and parentIDs
-    static duplicateBlockTree(blocks: IBlock[], rootBlockId: string): [MutableBlock[], MutableBlock, Readonly<Record<string, string>>] {
+    static duplicateBlockTree(blocks: IBlock[], sourceBlockId: string): [MutableBlock[], MutableBlock, Readonly<Record<string, string>>] {
         const idMap: Record<string, string> = {}
         const newBlocks = blocks.map((block) => {
             const newBlock = this.hydrateBlock(block)
@@ -97,12 +98,27 @@ class OctoUtils {
             return newBlock
         })
 
-        const newRootBlockId = idMap[rootBlockId]
+        const newSourceBlockId = idMap[sourceBlockId]
+
+        // Determine the new rootId if needed
+        let newRootId: string
+        const sourceBlock = blocks.find((block) => block.id === sourceBlockId)!
+        if (sourceBlock.rootId === sourceBlock.id) {
+            // Special case: when duplicating a tree from root, remap all the descendant rootIds
+            const newSourceBlock = newBlocks.find((block) => block.id === newSourceBlockId)!
+            newRootId = newSourceBlock.id
+        }
+
         newBlocks.forEach((newBlock) => {
             // Note: Don't remap the parent of the new root block
-            if (newBlock.id !== newRootBlockId && newBlock.parentId) {
+            if (newBlock.id !== newSourceBlockId && newBlock.parentId) {
                 newBlock.parentId = idMap[newBlock.parentId] || newBlock.parentId
                 Utils.assert(newBlock.parentId, `Block ${newBlock.id} (${newBlock.type} ${newBlock.title}) has no parent`)
+            }
+
+            // Remap the rootIds if we are duplicating a tree from root
+            if (newRootId) {
+                newBlock.rootId = newRootId
             }
 
             // Remap manual card order
@@ -112,8 +128,8 @@ class OctoUtils {
             }
         })
 
-        const newRootBlock = newBlocks.find((block) => block.id === newRootBlockId)!
-        return [newBlocks, newRootBlock, idMap]
+        const newSourceBlock = newBlocks.find((block) => block.id === newSourceBlockId)!
+        return [newBlocks, newSourceBlock, idMap]
     }
 }
 

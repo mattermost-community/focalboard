@@ -3,6 +3,7 @@ package sqlstore
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"log"
 	"time"
 
@@ -23,7 +24,7 @@ func (s *SQLStore) latestsBlocksSubquery() sq.SelectBuilder {
 
 func (s *SQLStore) GetBlocksWithParentAndType(parentID string, blockType string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
-		Select("id", "parent_id", "schema", "type", "title",
+		Select("id", "parent_id", "root_id", "schema", "type", "title",
 			"COALESCE(\"fields\", '{}')", "create_at", "update_at",
 			"delete_at").
 		FromSelect(s.latestsBlocksSubquery(), "latest").
@@ -42,7 +43,7 @@ func (s *SQLStore) GetBlocksWithParentAndType(parentID string, blockType string)
 
 func (s *SQLStore) GetBlocksWithParent(parentID string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
-		Select("id", "parent_id", "schema", "type", "title",
+		Select("id", "parent_id", "root_id", "schema", "type", "title",
 			"COALESCE(\"fields\", '{}')", "create_at", "update_at",
 			"delete_at").
 		FromSelect(s.latestsBlocksSubquery(), "latest").
@@ -60,7 +61,7 @@ func (s *SQLStore) GetBlocksWithParent(parentID string) ([]model.Block, error) {
 
 func (s *SQLStore) GetBlocksWithType(blockType string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
-		Select("id", "parent_id", "schema", "type", "title",
+		Select("id", "parent_id", "root_id", "schema", "type", "title",
 			"COALESCE(\"fields\", '{}')", "create_at", "update_at",
 			"delete_at").
 		FromSelect(s.latestsBlocksSubquery(), "latest").
@@ -79,7 +80,7 @@ func (s *SQLStore) GetBlocksWithType(blockType string) ([]model.Block, error) {
 // GetSubTree2 returns blocks within 2 levels of the given blockID
 func (s *SQLStore) GetSubTree2(blockID string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
-		Select("id", "parent_id", "schema", "type", "title",
+		Select("id", "parent_id", "root_id", "schema", "type", "title",
 			"COALESCE(\"fields\", '{}')", "create_at", "update_at",
 			"delete_at").
 		FromSelect(s.latestsBlocksSubquery(), "latest").
@@ -98,7 +99,7 @@ func (s *SQLStore) GetSubTree2(blockID string) ([]model.Block, error) {
 // GetSubTree3 returns blocks within 3 levels of the given blockID
 func (s *SQLStore) GetSubTree3(blockID string) ([]model.Block, error) {
 	// This first subquery returns repeated blocks
-	subquery1 := sq.Select("l3.id", "l3.parent_id", "l3.schema", "l3.type", "l3.title",
+	subquery1 := sq.Select("l3.id", "l3.parent_id", "l3.root_id", "l3.schema", "l3.type", "l3.title",
 		"l3.fields", "l3.create_at", "l3.update_at",
 		"l3.delete_at").
 		FromSelect(s.latestsBlocksSubquery(), "l1").
@@ -111,7 +112,7 @@ func (s *SQLStore) GetSubTree3(blockID string) ([]model.Block, error) {
 	subquery2 := sq.Select("*", "ROW_NUMBER() OVER (PARTITION BY id) AS rn").
 		FromSelect(subquery1, "sub1")
 
-	query := s.getQueryBuilder().Select("id", "parent_id", "schema", "type", "title",
+	query := s.getQueryBuilder().Select("id", "parent_id", "root_id", "schema", "type", "title",
 		"COALESCE(\"fields\", '{}')", "create_at", "update_at",
 		"delete_at").
 		FromSelect(subquery2, "sub2").
@@ -129,7 +130,7 @@ func (s *SQLStore) GetSubTree3(blockID string) ([]model.Block, error) {
 
 func (s *SQLStore) GetAllBlocks() ([]model.Block, error) {
 	query := s.getQueryBuilder().
-		Select("id", "parent_id", "schema", "type", "title",
+		Select("id", "parent_id", "root_id", "schema", "type", "title",
 			"COALESCE(\"fields\", '{}')", "create_at", "update_at",
 			"delete_at").
 		FromSelect(s.latestsBlocksSubquery(), "latest")
@@ -156,6 +157,7 @@ func blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 		err := rows.Scan(
 			&block.ID,
 			&block.ParentID,
+			&block.RootID,
 			&block.Schema,
 			&block.Type,
 			&block.Title,
@@ -202,14 +204,18 @@ func (s *SQLStore) GetParentID(blockID string) (string, error) {
 }
 
 func (s *SQLStore) InsertBlock(block model.Block) error {
+	if block.RootID == "" {
+		return errors.New("rootId is nil")
+	}
+
 	fieldsJSON, err := json.Marshal(block.Fields)
 	if err != nil {
 		return err
 	}
 
 	query := s.getQueryBuilder().Insert("blocks").
-		Columns("id", "parent_id", "schema", "type", "title", "fields", "create_at", "update_at", "delete_at").
-		Values(block.ID, block.ParentID, block.Schema, block.Type, block.Title,
+		Columns("id", "parent_id", "root_id", "schema", "type", "title", "fields", "create_at", "update_at", "delete_at").
+		Values(block.ID, block.ParentID, block.RootID, block.Schema, block.Type, block.Title,
 			fieldsJSON, block.CreateAt, block.UpdateAt, block.DeleteAt)
 
 	_, err = query.Exec()

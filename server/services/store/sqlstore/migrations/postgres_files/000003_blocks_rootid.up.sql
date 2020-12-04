@@ -1,0 +1,2 @@
+ALTER TABLE blocks
+ADD COLUMN root_id VARCHAR(36);

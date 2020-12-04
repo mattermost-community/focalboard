@@ -13,8 +13,9 @@ export default class LabelOption extends React.PureComponent<LabelOptionProps> {
     public render(): JSX.Element {
         return (
             <div className='MenuOption LabelOption menu-option'>
+                {this.props.icon ?? <div className='noicon'/>}
                 <div className='menu-name'>{this.props.children}</div>
-                {this.props.icon}
+                <div className='noicon'/>
             </div>
         )
     }

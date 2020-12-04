@@ -1,20 +1,19 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {FormattedMessage, IntlShape, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {IPropertyTemplate} from '../blocks/board'
-
-import {BoardTree} from '../viewModel/boardTree'
 import {FilterClause, FilterCondition} from '../filterClause'
 import {FilterGroup} from '../filterGroup'
 import mutator from '../mutator'
 import {Utils} from '../utils'
-
-import MenuWrapper from '../widgets/menuWrapper'
-import Menu from '../widgets/menu'
+import {BoardTree} from '../viewModel/boardTree'
 import Button from '../widgets/buttons/button'
-
+import IconButton from '../widgets/buttons/iconButton'
+import CloseIcon from '../widgets/icons/close'
+import Menu from '../widgets/menu'
+import MenuWrapper from '../widgets/menuWrapper'
 import './filterComponent.scss'
 
 type Props = {
@@ -80,11 +79,18 @@ class FilterComponent extends React.Component<Props> {
                 className='FilterComponent'
                 ref={this.node}
             >
+                <div className='toolbar hideOnWidescreen'>
+                    <IconButton
+                        onClick={this.closeClicked}
+                        icon={<CloseIcon/>}
+                        title={'Close dialog'}
+                    />
+                </div>
+
                 {filters.map((filter) => {
                     const template = board.cardProperties.find((o) => o.id === filter.propertyId)
                     const propertyName = template ? template.name : '(unknown)'		// TODO: Handle error
                     const key = `${filter.propertyId}-${filter.condition}-${filter.values.join(',')}`
-                    Utils.log(`FilterClause key: ${key}`)
                     return (
                         <div
                             className='octo-filterclause'
@@ -211,6 +217,10 @@ class FilterComponent extends React.Component<Props> {
         }
 
         return undefined
+    }
+
+    private closeClicked = () => {
+        this.props.onClose()
     }
 
     private deleteClicked(filter: FilterClause) {

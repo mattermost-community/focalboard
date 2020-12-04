@@ -9,6 +9,7 @@ import (
 type Block struct {
 	ID       string                 `json:"id"`
 	ParentID string                 `json:"parentId"`
+	RootID   string                 `json:"rootId"`
 	Schema   int64                  `json:"schema"`
 	Type     string                 `json:"type"`
 	Title    string                 `json:"title"`

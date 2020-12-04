@@ -72,7 +72,7 @@ class CardDetail extends React.Component<Props, State> {
                         <ContentBlock
                             key={block.id}
                             block={block}
-                            cardId={card.id}
+                            card={card}
                             contents={cardTree.contents}
                         />
                     ))}
@@ -88,6 +88,7 @@ class CardDetail extends React.Component<Props, State> {
                             if (text) {
                                 const block = new MutableTextBlock()
                                 block.parentId = card.id
+                                block.rootId = card.rootId
                                 block.title = text
                                 block.order = (this.props.cardTree.contents.length + 1) * 1000
                                 mutator.insertBlock(block, 'add card text')
@@ -215,6 +216,7 @@ class CardDetail extends React.Component<Props, State> {
                                 onClick={() => {
                                     const block = new MutableTextBlock()
                                     block.parentId = card.id
+                                    block.rootId = card.rootId
                                     block.order = (this.props.cardTree.contents.length + 1) * 1000
                                     mutator.insertBlock(block, 'add text')
                                 }}
@@ -223,7 +225,7 @@ class CardDetail extends React.Component<Props, State> {
                                 id='image'
                                 name={intl.formatMessage({id: 'CardDetail.image', defaultMessage: 'Image'})}
                                 onClick={() => Utils.selectLocalFile(
-                                    (file) => mutator.createImageBlock(card.id, file, (this.props.cardTree.contents.length + 1) * 1000),
+                                    (file) => mutator.createImageBlock(card, file, (this.props.cardTree.contents.length + 1) * 1000),
                                     '.jpg,.jpeg,.png',
                                 )}
                             />

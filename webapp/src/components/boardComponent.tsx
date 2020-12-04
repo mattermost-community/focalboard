@@ -497,6 +497,7 @@ class BoardComponent extends React.Component<Props, State> {
         const card = new MutableCard()
 
         card.parentId = boardTree.board.id
+        card.rootId = boardTree.board.rootId
         const propertiesThatMeetFilters = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
         if (boardTree.groupByProperty) {
             if (groupByOptionId) {
@@ -527,6 +528,7 @@ class BoardComponent extends React.Component<Props, State> {
         const cardTemplate = new MutableCard()
         cardTemplate.isTemplate = true
         cardTemplate.parentId = boardTree.board.id
+        cardTemplate.rootId = boardTree.board.rootId
         await mutator.insertBlock(
             cardTemplate,
             'add card template',
