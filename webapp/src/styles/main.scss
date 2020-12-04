@@ -26,9 +26,14 @@ html, body {
     background: rgb(var(--main-bg));
 }
 
-input {
+input, textarea {
     background: rgb(var(--main-bg));
 	color: rgb(var(--main-fg));
+
+    -webkit-user-select: auto;  /* Chrome all / Safari all */
+    -moz-user-select: auto;     /* Firefox all */
+    -ms-user-select: auto;      /* IE 10+ */
+    user-select: auto;          /* Likely future */
 }
 
 body {
@@ -164,6 +169,13 @@ hr {
 
 .octo-placeholder {
 	color: rgba(var(--main-fg), 0.4);
+}
+
+[contentEditable=true] {
+    -webkit-user-select: auto;  /* Chrome all / Safari all */
+    -moz-user-select: auto;     /* Firefox all */
+    -ms-user-select: auto;      /* IE 10+ */
+    user-select: auto;          /* Likely future */
 }
 
 [contentEditable=true]:empty:before{
