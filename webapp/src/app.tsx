@@ -7,13 +7,17 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
+    Redirect,
 } from 'react-router-dom'
+
+import client from './octoClient'
 
 import {getCurrentLanguage, getMessages, storeLanguage} from './i18n'
 
 import {FlashMessages} from './components/flashMessages'
 
 import LoginPage from './pages/loginPage'
+import RegisterPage from './pages/registerPage'
 import BoardPage from './pages/boardPage'
 
 export default function App(): JSX.Element {
@@ -35,10 +39,15 @@ export default function App(): JSX.Element {
                             <Route path='/login'>
                                 <LoginPage/>
                             </Route>
+                            <Route path='/register'>
+                                <RegisterPage/>
+                            </Route>
                             <Route path='/'>
+                                {!client.token && <Redirect to='/login'/>}
                                 <BoardPage setLanguage={setAndStoreLanguage}/>
                             </Route>
                             <Route path='/board'>
+                                {!client.token && <Redirect to='/login'/>}
                                 <BoardPage setLanguage={setAndStoreLanguage}/>
                             </Route>
                         </Switch>

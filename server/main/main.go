@@ -56,11 +56,13 @@ func main() {
 	// Command line args
 	pMonitorPid := flag.Int("monitorpid", -1, "a process ID")
 	pPort := flag.Int("port", config.Port, "the port number")
+	pSingleUser := flag.Bool("single-user", false, "single user mode")
+	flag.Parse()
+
 	singleUser := false
-	if pSingleUser := flag.Bool("single-user", false, "single user mode"); pSingleUser != nil {
+	if pSingleUser != nil {
 		singleUser = *pSingleUser
 	}
-	flag.Parse()
 
 	if pMonitorPid != nil && *pMonitorPid > 0 {
 		monitorPid(*pMonitorPid)

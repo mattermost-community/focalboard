@@ -1,6 +1,8 @@
 package app
 
 import (
+	"log"
+
 	"github.com/google/uuid"
 	"github.com/mattermost/mattermost-octo-tasks/server/model"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/auth"
@@ -38,6 +40,7 @@ func (a *App) Login(username string, email string, password string, mfaToken str
 	}
 
 	if !auth.ComparePassword(user.Password, password) {
+		log.Printf("Not valid passowrd. %s (%s)\n", password, user.Password)
 		return "", errors.New("invalid username or password")
 	}
 

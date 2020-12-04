@@ -60,12 +60,12 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if loginData.Type == "normal" {
-		jwtToken, err := a.app().Login(loginData.Username, loginData.Email, loginData.Password, loginData.MfaToken)
+		token, err := a.app().Login(loginData.Username, loginData.Email, loginData.Password, loginData.MfaToken)
 		if err != nil {
 			errorResponse(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
 			return
 		}
-		json, err := json.Marshal(jwtToken)
+		json, err := json.Marshal(map[string]string{"token": token})
 		if err != nil {
 			log.Printf(`ERROR json.Marshal: %v`, r)
 			errorResponse(w, http.StatusInternalServerError, nil)
@@ -111,6 +111,7 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 
 func (a *API) sessionRequired(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		log.Printf(`Single User: %v`, a.singleUser)
 		if a.singleUser {
 			now := time.Now().Unix()
 			session := &model.Session{

@@ -24,6 +24,20 @@ server-linux:
 server-win:
 	cd server; env GOOS=windows GOARCH=amd64 go build -o ../bin/octoserver.exe ./main
 
+server-single-user:
+	cd server; go build -o ../bin/octoserver ./main --single-user
+
+server-mac-single-user:
+	mkdir -p bin/mac
+	cd server; env GOOS=darwin GOARCH=amd64 go build -o ../bin/mac/octoserver ./main --single-user
+
+server-linux-single-user:
+	mkdir -p bin/linux
+	cd server; env GOOS=linux GOARCH=amd64 go build -o ../bin/linux/octoserver ./main --single-user
+
+server-win-single-user:
+	cd server; env GOOS=windows GOARCH=amd64 go build -o ../bin/octoserver.exe ./main --single-user
+
 generate:
 	cd server; go get -modfile=go.tools.mod github.com/golang/mock/mockgen
 	cd server; go get -modfile=go.tools.mod github.com/jteeuwen/go-bindata
@@ -44,6 +58,9 @@ server-doc:
 
 watch-server:
 	cd server; modd
+
+watch-server-single-user:
+	cd server; env OCTOSERVER_ARGS=--single-user modd
 
 webapp:
 	cd webapp; npm run pack
