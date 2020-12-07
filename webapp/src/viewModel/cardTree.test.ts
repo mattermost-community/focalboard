@@ -6,18 +6,14 @@ console.log = jest.fn()
 
 import 'isomorphic-fetch'
 import {TestBlockFactory} from '../test/block'
+import {FetchMock} from '../test/fetchMock'
 
 import {MutableCardTree} from './cardTree'
 
-const fetchMock = jest.fn(async () => {
-    const response = new Response()
-    return response
-})
-
-global.fetch = fetchMock
+global.fetch = FetchMock.fn
 
 beforeEach(() => {
-    fetchMock.mockReset()
+    FetchMock.fn.mockReset()
 })
 
 test('CardTree', async () => {
@@ -28,11 +24,11 @@ test('CardTree', async () => {
     const image = TestBlockFactory.createImage(card)
     const divider = TestBlockFactory.createDivider(card)
 
-    fetchMock.mockReturnValueOnce(jsonResponse(JSON.stringify([card, comment, text, image, divider])))
+    FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([card, comment, text, image, divider])))
     const cardTree = new MutableCardTree(card.id)
     await cardTree.sync()
 
-    expect(fetchMock).toBeCalledTimes(1)
+    expect(FetchMock.fn).toBeCalledTimes(1)
     expect(cardTree.card).toEqual(card)
     expect(cardTree.comments).toEqual([comment])
     expect(cardTree.contents).toEqual([text, image, divider])
@@ -57,8 +53,3 @@ test('CardTree', async () => {
     expect(cardTree2).toEqual(cardTree)
     expect(cardTree2.card).toEqual(cardTree.card)
 })
-
-async function jsonResponse(json: string) {
-    const response = new Response(json)
-    return response
-}

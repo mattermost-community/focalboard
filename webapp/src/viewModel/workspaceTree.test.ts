@@ -4,18 +4,14 @@ console.log = jest.fn()
 
 import 'isomorphic-fetch'
 import {TestBlockFactory} from '../test/block'
+import {FetchMock} from '../test/fetchMock'
 
 import {MutableWorkspaceTree} from './workspaceTree'
 
-const fetchMock = jest.fn(async () => {
-    const response = new Response()
-    return response
-})
-
-global.fetch = fetchMock
+global.fetch = FetchMock.fn
 
 beforeEach(() => {
-    fetchMock.mockReset()
+    FetchMock.fn.mockReset()
 })
 
 test('WorkspaceTree', async () => {
@@ -25,12 +21,12 @@ test('WorkspaceTree', async () => {
     const view = TestBlockFactory.createBoardView()
 
     // Sync
-    fetchMock.mockReturnValueOnce(jsonResponse(JSON.stringify([board, boardTemplate])))
-    fetchMock.mockReturnValueOnce(jsonResponse(JSON.stringify([view])))
+    FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, boardTemplate])))
+    FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([view])))
     const workspaceTree = new MutableWorkspaceTree()
     await workspaceTree.sync()
 
-    expect(fetchMock).toBeCalledTimes(2)
+    expect(FetchMock.fn).toBeCalledTimes(2)
     expect(workspaceTree.boards).toEqual([board])
     expect(workspaceTree.boardTemplates).toEqual([boardTemplate])
     expect(workspaceTree.views).toEqual([view])
@@ -60,8 +56,3 @@ test('WorkspaceTree', async () => {
     expect(workspaceTree2.boardTemplates).toEqual(workspaceTree.boardTemplates)
     expect(workspaceTree2.views).toEqual(workspaceTree.views)
 })
-
-async function jsonResponse(json: string) {
-    const response = new Response(json)
-    return response
-}

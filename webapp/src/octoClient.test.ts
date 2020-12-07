@@ -8,39 +8,35 @@ import {IBlock} from './blocks/block'
 import {MutableBoard} from './blocks/board'
 import octoClient from './octoClient'
 import 'isomorphic-fetch'
+import {FetchMock} from './test/fetchMock'
 
-const fetchMock = jest.fn(async () => {
-    const response = new Response()
-    return response
-})
-
-global.fetch = fetchMock
+global.fetch = FetchMock.fn
 
 beforeEach(() => {
-    fetchMock.mockReset()
+    FetchMock.fn.mockReset()
 })
 
 test('OctoClient: get blocks', async () => {
     const blocks = createBoards()
 
-    fetchMock.mockReturnValueOnce(jsonResponse(JSON.stringify(blocks)))
+    FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(blocks)))
     let boards = await octoClient.getBlocksWithType('board')
     expect(boards.length).toBe(blocks.length)
 
-    fetchMock.mockReturnValueOnce(jsonResponse(JSON.stringify(blocks)))
+    FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(blocks)))
     boards = await octoClient.getSubtree()
     expect(boards.length).toBe(blocks.length)
 
-    fetchMock.mockReturnValueOnce(jsonResponse(JSON.stringify(blocks)))
+    FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(blocks)))
     boards = await octoClient.exportFullArchive()
     expect(boards.length).toBe(blocks.length)
 
-    fetchMock.mockReturnValueOnce(jsonResponse(JSON.stringify(blocks)))
+    FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(blocks)))
     const parentId = 'id1'
     boards = await octoClient.getBlocksWithParent(parentId)
     expect(boards.length).toBe(blocks.length)
 
-    fetchMock.mockReturnValueOnce(jsonResponse(JSON.stringify(blocks)))
+    FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(blocks)))
     boards = await octoClient.getBlocksWithParent(parentId, 'board')
     expect(boards.length).toBe(blocks.length)
 })
@@ -50,8 +46,8 @@ test('OctoClient: insert blocks', async () => {
 
     await octoClient.insertBlocks(blocks)
 
-    expect(fetchMock).toBeCalledTimes(1)
-    expect(fetchMock).toHaveBeenCalledWith(
+    expect(FetchMock.fn).toBeCalledTimes(1)
+    expect(FetchMock.fn).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({
             method: 'POST',
@@ -64,19 +60,14 @@ test('OctoClient: importFullArchive', async () => {
 
     await octoClient.importFullArchive(blocks)
 
-    expect(fetchMock).toBeCalledTimes(1)
-    expect(fetchMock).toHaveBeenCalledWith(
+    expect(FetchMock.fn).toBeCalledTimes(1)
+    expect(FetchMock.fn).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({
             method: 'POST',
             body: JSON.stringify(blocks),
         }))
 })
-
-async function jsonResponse(json: string) {
-    const response = new Response(json)
-    return response
-}
 
 function createBoards(): IBlock[] {
     const blocks = []
