@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"runtime"
+	"time"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -13,6 +14,7 @@ import (
 	"github.com/mattermost/mattermost-octo-tasks/server/api"
 	"github.com/mattermost/mattermost-octo-tasks/server/app"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/config"
+	"github.com/mattermost/mattermost-octo-tasks/server/services/scheduler"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/store"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/store/sqlstore"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/telemetry"
@@ -26,13 +28,14 @@ import (
 const currentVersion = "0.0.1"
 
 type Server struct {
-	config       *config.Configuration
-	wsServer     *ws.Server
-	webServer    *web.Server
-	store        store.Store
-	filesBackend filesstore.FileBackend
-	telemetry    *telemetry.Service
-	logger       *zap.Logger
+	config              *config.Configuration
+	wsServer            *ws.Server
+	webServer           *web.Server
+	store               store.Store
+	filesBackend        filesstore.FileBackend
+	telemetry           *telemetry.Service
+	logger              *zap.Logger
+	cleanUpSessionsTask *scheduler.ScheduledTask
 }
 
 func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
@@ -130,6 +133,11 @@ func (s *Server) Start() error {
 	if err := s.webServer.Start(); err != nil {
 		return err
 	}
+	s.cleanUpSessionsTask = scheduler.CreateRecurringTask("cleanUpSessions", func() {
+		if err := s.store.CleanUpSessions(s.config.SessionExpireTime); err != nil {
+			s.logger.Error("Unable to clean up the sessions", zap.Error(err))
+		}
+	}, 10*time.Minute)
 
 	return nil
 }
@@ -138,6 +146,8 @@ func (s *Server) Shutdown() error {
 	if err := s.webServer.Shutdown(); err != nil {
 		return err
 	}
+
+	s.cleanUpSessionsTask.Cancel()
 
 	return s.store.Shutdown()
 }

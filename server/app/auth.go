@@ -2,6 +2,7 @@ package app
 
 import (
 	"log"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/mattermost/mattermost-octo-tasks/server/model"
@@ -10,14 +11,19 @@ import (
 	"github.com/pkg/errors"
 )
 
+// GetSession Get a user active session and refresh the session if is needed
 func (a *App) GetSession(token string) (*model.Session, error) {
-	session, err := a.store.GetSession(token)
+	session, err := a.store.GetSession(token, a.config.SessionExpireTime)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get the session for the token")
+	}
+	if session.UpdateAt < (time.Now().Unix() - a.config.SessionRefreshTime) {
+		a.store.RefreshSession(session)
 	}
 	return session, nil
 }
 
+// Login create a new user session if the authentication data is valid
 func (a *App) Login(username string, email string, password string, mfaToken string) (string, error) {
 	var user *model.User
 	if username != "" {
@@ -59,6 +65,7 @@ func (a *App) Login(username string, email string, password string, mfaToken str
 	return session.Token, nil
 }
 
+// RegisterUser create a new user if the provided data is valid
 func (a *App) RegisterUser(username string, email string, password string) error {
 	var user *model.User
 	if username != "" {

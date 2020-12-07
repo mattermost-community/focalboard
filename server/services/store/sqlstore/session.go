@@ -8,11 +8,12 @@ import (
 	"github.com/mattermost/mattermost-octo-tasks/server/model"
 )
 
-func (s *SQLStore) GetSession(token string) (*model.Session, error) {
+func (s *SQLStore) GetSession(token string, expireTime int64) (*model.Session, error) {
 	query := s.getQueryBuilder().
 		Select("id", "token", "user_id", "props").
 		From("sessions").
-		Where(sq.Eq{"token": token})
+		Where(sq.Eq{"token": token}).
+		Where(sq.Gt{"update_at": time.Now().Unix() - expireTime})
 
 	row := query.QueryRow()
 	session := model.Session{}
@@ -76,6 +77,14 @@ func (s *SQLStore) UpdateSession(session *model.Session) error {
 func (s *SQLStore) DeleteSession(sessionId string) error {
 	query := s.getQueryBuilder().Delete("sessions").
 		Where("id", sessionId)
+
+	_, err := query.Exec()
+	return err
+}
+
+func (s *SQLStore) CleanUpSessions(expireTime int64) error {
+	query := s.getQueryBuilder().Delete("sessions").
+		Where(sq.Lt{"update_at": time.Now().Unix() - expireTime})
 
 	_, err := query.Exec()
 	return err
