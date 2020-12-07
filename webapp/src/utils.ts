@@ -163,7 +163,7 @@ class Utils {
 
     // Arrays
 
-    static arraysEqual(a: any[], b: any[]): boolean {
+    static arraysEqual(a: readonly any[], b: readonly any[]): boolean {
         if (a === b) {
             return true
         }
