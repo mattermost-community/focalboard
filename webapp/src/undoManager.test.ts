@@ -2,7 +2,6 @@
 // See LICENSE.txt for license information.
 
 import undoManager from './undomanager'
-import {Utils} from './utils'
 
 test('Basic undo/redo', async () => {
     expect(undoManager.canUndo).toBe(false)
