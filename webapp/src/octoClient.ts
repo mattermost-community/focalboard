@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {IBlock, IMutableBlock} from './blocks/block'
+import {IUser} from './user'
 import {Utils} from './utils'
 
 //
@@ -56,6 +57,13 @@ class OctoClient {
             'Content-Type': 'application/json',
             Authorization: this.token ? 'Bearer ' + this.token : '',
         }
+    }
+
+    async getMe(): Promise<IUser|null> {
+        const path = '/api/v1/users/me'
+        const response = await fetch(this.serverUrl + path, {headers: this.headers()})
+        const user = (await response.json()) as IUser || null
+        return user
     }
 
     async getSubtree(rootId?: string, levels = 2): Promise<IBlock[]> {

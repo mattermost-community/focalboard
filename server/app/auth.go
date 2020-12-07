@@ -23,6 +23,15 @@ func (a *App) GetSession(token string) (*model.Session, error) {
 	return session, nil
 }
 
+// GetUser Get an existing active user by id
+func (a *App) GetUser(ID string) (*model.User, error) {
+	user, err := a.store.GetUserById(ID)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to get the session for the token")
+	}
+	return user, nil
+}
+
 // Login create a new user session if the authentication data is valid
 func (a *App) Login(username string, email string, password string, mfaToken string) (string, error) {
 	var user *model.User
