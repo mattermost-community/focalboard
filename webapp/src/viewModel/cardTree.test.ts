@@ -5,7 +5,7 @@
 console.log = jest.fn()
 
 import 'isomorphic-fetch'
-import {TestBlockFactory} from '../test/block'
+import {TestBlockFactory} from '../test/testBlockFactory'
 import {FetchMock} from '../test/fetchMock'
 
 import {MutableCardTree} from './cardTree'
@@ -50,6 +50,7 @@ test('CardTree', async () => {
 
     // Copy
     const cardTree2 = cardTree.mutableCopy()
-    expect(cardTree2).toEqual(cardTree)
     expect(cardTree2.card).toEqual(cardTree.card)
+    expect(cardTree2.comments).toEqual(cardTree.comments)
+    expect(cardTree2.contents).toEqual(cardTree.contents)
 })

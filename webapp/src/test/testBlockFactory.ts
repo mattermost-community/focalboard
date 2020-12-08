@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {IPropertyOption, IPropertyTemplate, MutableBoard} from '../blocks/board'
+import {Board, IPropertyOption, IPropertyTemplate, MutableBoard} from '../blocks/board'
 import {MutableBoardView} from '../blocks/boardView'
 import {Card, MutableCard} from '../blocks/card'
 import {MutableCommentBlock} from '../blocks/commentBlock'
@@ -10,27 +10,25 @@ import {ImageBlock, MutableImageBlock} from '../blocks/imageBlock'
 import {MutableTextBlock, TextBlock} from '../blocks/textBlock'
 import {FilterClause} from '../filterClause'
 import {FilterGroup} from '../filterGroup'
-import {Utils} from '../utils'
 
 class TestBlockFactory {
     static createBoard(): MutableBoard {
         const board = new MutableBoard()
-        board.parentId = 'parent'
-        board.rootId = 'root'
-        board.title = 'title'
+        board.rootId = board.id
+        board.title = 'board title'
         board.description = 'description'
         board.showDescription = true
         board.icon = 'i'
 
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 3; i++) {
             const propertyOption: IPropertyOption = {
-                id: 'property1',
-                value: 'value1',
+                id: 'value1',
+                value: 'value 1',
                 color: 'color1',
             }
             const propertyTemplate: IPropertyTemplate = {
-                id: Utils.createGuid(),
-                name: 'Status',
+                id: `property${i + 1}`,
+                name: `Property ${i + 1}`,
                 type: 'select',
                 options: [propertyOption],
             }
@@ -40,14 +38,14 @@ class TestBlockFactory {
         return board
     }
 
-    static createBoardView(): MutableBoardView {
+    static createBoardView(board?: Board): MutableBoardView {
         const view = new MutableBoardView()
-        view.parentId = 'parent'
-        view.rootId = 'root'
-        view.title = 'title'
+        view.parentId = board ? board.id : 'parent'
+        view.rootId = board ? board.rootId : 'root'
+        view.title = 'view title'
         view.viewType = 'board'
-        view.groupById = 'groupId'
-        view.hiddenOptionIds = ['option1', 'option2', 'option3']
+        view.groupById = 'property1'
+        view.hiddenOptionIds = ['value1']
         view.cardOrder = ['card1', 'card2', 'card3']
         view.sortOptions = [
             {
@@ -76,10 +74,10 @@ class TestBlockFactory {
         return view
     }
 
-    static createCard(): MutableCard {
+    static createCard(board?: Board): MutableCard {
         const card = new MutableCard()
-        card.parentId = 'parent'
-        card.rootId = 'root'
+        card.parentId = board ? board.id : 'parent'
+        card.rootId = board ? board.rootId : 'root'
         card.title = 'title'
         card.icon = 'i'
         card.properties.property1 = 'value1'
