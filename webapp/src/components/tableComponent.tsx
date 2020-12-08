@@ -45,6 +45,18 @@ class TableComponent extends React.Component<Props, State> {
         return true
     }
 
+    componentDidMount(): void {
+        this.showCardInUrl()
+    }
+
+    private showCardInUrl() {
+        const queryString = new URLSearchParams(window.location.search)
+        const cardId = queryString.get('c') || undefined
+        if (cardId !== this.state.shownCardId) {
+            this.setState({shownCardId: cardId})
+        }
+    }
+
     render(): JSX.Element {
         const {boardTree, showView} = this.props
         const {board, cards, activeView} = boardTree
@@ -66,8 +78,8 @@ class TableComponent extends React.Component<Props, State> {
                         key={this.state.shownCardId}
                         boardTree={boardTree}
                         cardId={this.state.shownCardId}
-                        onClose={() => this.setState({shownCardId: undefined})}
-                        showCard={(cardId) => this.setState({shownCardId: cardId})}
+                        onClose={() => this.showCard(undefined)}
+                        showCard={(cardId) => this.showCard(cardId)}
                     />
                 </RootPortal>}
                 <div className='octo-frame'>
@@ -263,9 +275,7 @@ class TableComponent extends React.Component<Props, State> {
                                                 this.addCard(false)
                                             }
                                         }}
-                                        showCard={(cardId) => {
-                                            this.setState({shownCardId: cardId})
-                                        }}
+                                        showCard={this.showCard}
                                     />)
 
                                 this.cardIdToRowMap.set(card.id, tableRowRef)
@@ -295,6 +305,11 @@ class TableComponent extends React.Component<Props, State> {
         )
     }
 
+    private showCard = (cardId?: string) => {
+        Utils.replaceUrlQueryParam('c', cardId)
+        this.setState({shownCardId: cardId})
+    }
+
     private columnWidth(templateId: string): number {
         return Math.max(Constants.minColumnWidth, this.props.boardTree.activeView.columnWidths[templateId] || 0)
     }
@@ -309,10 +324,10 @@ class TableComponent extends React.Component<Props, State> {
             this.props.intl.formatMessage({id: 'Mutator.new-card-from-template', defaultMessage: 'new card from template'}),
             false,
             async (newCardId) => {
-                this.setState({shownCardId: newCardId})
+                this.showCard(newCardId)
             },
             async () => {
-                this.setState({shownCardId: undefined})
+                this.showCard(undefined)
             },
         )
     }
@@ -332,7 +347,7 @@ class TableComponent extends React.Component<Props, State> {
             'add card',
             async () => {
                 if (show) {
-                    this.setState({shownCardId: card.id})
+                    this.showCard(card.id)
                 } else {
                     // Focus on this card's title inline on next render
                     this.cardIdToFocusOnRender = card.id
@@ -352,15 +367,15 @@ class TableComponent extends React.Component<Props, State> {
             cardTemplate,
             'add card template',
             async () => {
-                this.setState({shownCardId: cardTemplate.id})
+                this.showCard(cardTemplate.id)
             }, async () => {
-                this.setState({shownCardId: undefined})
+                this.showCard(undefined)
             },
         )
     }
 
     private editCardTemplate = (cardTemplateId: string) => {
-        this.setState({shownCardId: cardTemplateId})
+        this.showCard(cardTemplateId)
     }
 
     private async onDropToColumn(template: IPropertyTemplate) {

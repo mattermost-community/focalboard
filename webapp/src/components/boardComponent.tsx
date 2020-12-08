@@ -72,6 +72,7 @@ class BoardComponent extends React.Component<Props, State> {
     }
 
     componentDidMount(): void {
+        this.showCardInUrl()
         document.addEventListener('keydown', this.keydownHandler)
     }
 
@@ -96,6 +97,14 @@ class BoardComponent extends React.Component<Props, State> {
     componentDidUpdate(prevPros: Props, prevState: State): void {
         if (this.state.isSearching && !prevState.isSearching) {
             this.searchFieldRef.current?.focus()
+        }
+    }
+
+    private showCardInUrl() {
+        const queryString = new URLSearchParams(window.location.search)
+        const cardId = queryString.get('c') || undefined
+        if (cardId !== this.state.shownCardId) {
+            this.setState({shownCardId: cardId})
         }
     }
 
@@ -129,8 +138,8 @@ class BoardComponent extends React.Component<Props, State> {
                         key={this.state.shownCardId}
                         boardTree={boardTree}
                         cardId={this.state.shownCardId}
-                        onClose={() => this.setState({shownCardId: undefined})}
-                        showCard={(cardId) => this.setState({shownCardId: cardId})}
+                        onClose={() => this.showCard(undefined)}
+                        showCard={(cardId) => this.showCard(cardId)}
                     />
                 </RootPortal>}
 
@@ -482,10 +491,10 @@ class BoardComponent extends React.Component<Props, State> {
             this.props.intl.formatMessage({id: 'Mutator.new-card-from-template', defaultMessage: 'new card from template'}),
             false,
             async (newCardId) => {
-                this.setState({shownCardId: newCardId})
+                this.showCard(newCardId)
             },
             async () => {
-                this.setState({shownCardId: undefined})
+                this.showCard(undefined)
             },
         )
     }
@@ -514,10 +523,10 @@ class BoardComponent extends React.Component<Props, State> {
             card,
             'add card',
             async () => {
-                this.setState({shownCardId: card.id})
+                this.showCard(card.id)
             },
             async () => {
-                this.setState({shownCardId: undefined})
+                this.showCard(undefined)
             },
         )
     }
@@ -533,15 +542,15 @@ class BoardComponent extends React.Component<Props, State> {
             cardTemplate,
             'add card template',
             async () => {
-                this.setState({shownCardId: cardTemplate.id})
+                this.showCard(cardTemplate.id)
             }, async () => {
-                this.setState({shownCardId: undefined})
+                this.showCard(undefined)
             },
         )
     }
 
     private editCardTemplate = (cardTemplateId: string) => {
-        this.setState({shownCardId: cardTemplateId})
+        this.showCard(cardTemplateId)
     }
 
     private async propertyNameChanged(option: IPropertyOption, text: string): Promise<void> {
@@ -577,10 +586,15 @@ class BoardComponent extends React.Component<Props, State> {
                 this.setState({selectedCardIds})
             }
         } else {
-            this.setState({selectedCardIds: [], shownCardId: card.id})
+            this.showCard(card.id)
         }
 
         e.stopPropagation()
+    }
+
+    private showCard = (cardId?: string) => {
+        Utils.replaceUrlQueryParam('c', cardId)
+        this.setState({selectedCardIds: [], shownCardId: cardId})
     }
 
     private addGroupClicked = async () => {
