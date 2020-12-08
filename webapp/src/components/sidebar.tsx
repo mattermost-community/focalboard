@@ -181,83 +181,81 @@ class Sidebar extends React.Component<Props, State> {
                             )
                         })
                     }
-
-                    <br/>
-
-                    <MenuWrapper>
-                        <Button>
-                            <FormattedMessage
-                                id='Sidebar.add-board'
-                                defaultMessage='+ Add Board'
-                            />
-                        </Button>
-                        <Menu position='top'>
-                            <Menu.Label>
-                                <b>
-                                    <FormattedMessage
-                                        id='Sidebar.select-a-template'
-                                        defaultMessage='Select a template'
-                                    />
-                                </b>
-                            </Menu.Label>
-
-                            <Menu.Separator/>
-
-                            {workspaceTree.boardTemplates.map((boardTemplate) => {
-                                let displayName = boardTemplate.title || intl.formatMessage({id: 'Sidebar.untitled', defaultMessage: 'Untitled'})
-                                if (boardTemplate.icon) {
-                                    displayName = `${boardTemplate.icon} ${displayName}`
-                                }
-                                return (
-                                    <Menu.Text
-                                        key={boardTemplate.id}
-                                        id={boardTemplate.id}
-                                        name={displayName}
-                                        onClick={() => {
-                                            this.addBoardFromTemplate(boardTemplate.id)
-                                        }}
-                                        rightIcon={
-                                            <MenuWrapper stopPropagationOnToggle={true}>
-                                                <IconButton icon={<OptionsIcon/>}/>
-                                                <Menu position='left'>
-                                                    <Menu.Text
-                                                        id='edit'
-                                                        name={intl.formatMessage({id: 'Sidebar.edit-template', defaultMessage: 'Edit'})}
-                                                        onClick={() => {
-                                                            this.props.showBoard(boardTemplate.id)
-                                                        }}
-                                                    />
-                                                    <Menu.Text
-                                                        icon={<DeleteIcon/>}
-                                                        id='delete'
-                                                        name={intl.formatMessage({id: 'Sidebar.delete-template', defaultMessage: 'Delete'})}
-                                                        onClick={async () => {
-                                                            await mutator.deleteBlock(boardTemplate, 'delete board template')
-                                                        }}
-                                                    />
-                                                </Menu>
-                                            </MenuWrapper>
-                                        }
-                                    />
-                                )
-                            })}
-
-                            <Menu.Text
-                                id='empty-template'
-                                name={intl.formatMessage({id: 'Sidebar.empty-board', defaultMessage: 'Empty board'})}
-                                onClick={this.addBoardClicked}
-                            />
-
-                            <Menu.Text
-                                id='add-template'
-                                name={intl.formatMessage({id: 'Sidebar.add-template', defaultMessage: '+ New template'})}
-                                onClick={this.addBoardTemplateClicked}
-                            />
-                        </Menu>
-                    </MenuWrapper>
                 </div>
 
                 <div className='octo-spacer'/>
+
+                <MenuWrapper>
+                    <Button>
+                        <FormattedMessage
+                            id='Sidebar.add-board'
+                            defaultMessage='+ Add Board'
+                        />
+                    </Button>
+                    <Menu position='top'>
+                        <Menu.Label>
+                            <b>
+                                <FormattedMessage
+                                    id='Sidebar.select-a-template'
+                                    defaultMessage='Select a template'
+                                />
+                            </b>
+                        </Menu.Label>
+
+                        <Menu.Separator/>
+
+                        {workspaceTree.boardTemplates.map((boardTemplate) => {
+                            let displayName = boardTemplate.title || intl.formatMessage({id: 'Sidebar.untitled', defaultMessage: 'Untitled'})
+                            if (boardTemplate.icon) {
+                                displayName = `${boardTemplate.icon} ${displayName}`
+                            }
+                            return (
+                                <Menu.Text
+                                    key={boardTemplate.id}
+                                    id={boardTemplate.id}
+                                    name={displayName}
+                                    onClick={() => {
+                                        this.addBoardFromTemplate(boardTemplate.id)
+                                    }}
+                                    rightIcon={
+                                        <MenuWrapper stopPropagationOnToggle={true}>
+                                            <IconButton icon={<OptionsIcon/>}/>
+                                            <Menu position='left'>
+                                                <Menu.Text
+                                                    id='edit'
+                                                    name={intl.formatMessage({id: 'Sidebar.edit-template', defaultMessage: 'Edit'})}
+                                                    onClick={() => {
+                                                        this.props.showBoard(boardTemplate.id)
+                                                    }}
+                                                />
+                                                <Menu.Text
+                                                    icon={<DeleteIcon/>}
+                                                    id='delete'
+                                                    name={intl.formatMessage({id: 'Sidebar.delete-template', defaultMessage: 'Delete'})}
+                                                    onClick={async () => {
+                                                        await mutator.deleteBlock(boardTemplate, 'delete board template')
+                                                    }}
+                                                />
+                                            </Menu>
+                                        </MenuWrapper>
+                                    }
+                                />
+                            )
+                        })}
+
+                        <Menu.Text
+                            id='empty-template'
+                            name={intl.formatMessage({id: 'Sidebar.empty-board', defaultMessage: 'Empty board'})}
+                            onClick={this.addBoardClicked}
+                        />
+
+                        <Menu.Text
+                            id='add-template'
+                            name={intl.formatMessage({id: 'Sidebar.add-template', defaultMessage: '+ New template'})}
+                            onClick={this.addBoardTemplateClicked}
+                        />
+                    </Menu>
+                </MenuWrapper>
 
                 <MenuWrapper>
                     <Button>
