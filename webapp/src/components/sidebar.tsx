@@ -24,7 +24,7 @@ import MenuWrapper from '../widgets/menuWrapper'
 import './sidebar.scss'
 
 type Props = {
-    showBoard: (id: string) => void
+    showBoard: (id?: string) => void
     showView: (id: string, boardId?: string) => void
     workspaceTree: WorkspaceTree,
     activeBoardId?: string
@@ -125,7 +125,7 @@ class Sidebar extends React.Component<Props, State> {
                                                             board,
                                                             'delete block',
                                                             async () => {
-                                                                nextBoardId && this.props.showBoard(nextBoardId!)
+                                                                this.props.showBoard(nextBoardId)
                                                             },
                                                             async () => {
                                                                 this.props.showBoard(board.id)

@@ -133,9 +133,18 @@ export default class BoardPage extends React.Component<Props, State> {
         )
     }
 
-    private async attachToBoard(boardId: string, viewId?: string) {
+    private async attachToBoard(boardId?: string, viewId?: string) {
         Utils.log(`attachToBoard: ${boardId}`)
-        this.sync(boardId, viewId)
+        if (boardId) {
+            this.sync(boardId, viewId)
+        } else {
+            // No board
+            this.setState({
+                boardTree: undefined,
+                boardId: '',
+                viewId: '',
+            })
+        }
     }
 
     private async sync(boardId: string = this.state.boardId, viewId: string | undefined = this.state.viewId) {
@@ -187,24 +196,29 @@ export default class BoardPage extends React.Component<Props, State> {
             newState = {...newState, workspaceTree: newWorkspaceTree}
         }
 
-        const newBoardTree = boardTree ? boardTree.mutableCopy() : new MutableBoardTree(this.state.boardId)
-        if (newBoardTree.incrementalUpdate(blocks)) {
-            newBoardTree.setActiveView(this.state.viewId)
-            newState = {...newState, boardTree: newBoardTree}
+        if (boardTree || this.state.boardId) {
+            const newBoardTree = boardTree ? boardTree.mutableCopy() : new MutableBoardTree(this.state.boardId)
+            if (newBoardTree.incrementalUpdate(blocks)) {
+                newBoardTree.setActiveView(this.state.viewId)
+                newState = {...newState, boardTree: newBoardTree}
+            }
         }
 
         this.setState(newState)
     }
 
     // IPageController
-    showBoard(boardId: string): void {
+    showBoard(boardId?: string): void {
         const {boardTree} = this.state
 
         if (boardTree?.board?.id === boardId) {
             return
         }
 
-        const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + `?id=${encodeURIComponent(boardId)}`
+        let newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname
+        if (boardId) {
+            newUrl += `?id=${encodeURIComponent(boardId)}`
+        }
         window.history.pushState({path: newUrl}, '', newUrl)
 
         this.attachToBoard(boardId)
