@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IBlock, IMutableBlock} from '../blocks/block'
+import {IBlock} from '../blocks/block'
 import {Board, IPropertyOption, IPropertyTemplate, MutableBoard} from '../blocks/board'
 import {BoardView, MutableBoardView} from '../blocks/boardView'
 import {Card, MutableCard} from '../blocks/card'
@@ -35,59 +35,70 @@ interface BoardTree {
 }
 
 class MutableBoardTree implements BoardTree {
-    board!: MutableBoard
+    board: MutableBoard
     views: MutableBoardView[] = []
     cards: MutableCard[] = []
     cardTemplates: MutableCard[] = []
+
     visibleGroups: Group[] = []
     hiddenGroups: Group[] = []
 
     activeView!: MutableBoardView
     groupByProperty?: IPropertyTemplate
 
-    private rawBlocks: IBlock[] = []
     private searchText?: string
     allCards: MutableCard[] = []
     get allBlocks(): IBlock[] {
-        return [this.board, ...this.views, ...this.allCards, ...this.cardTemplates]
-    }
-
-    constructor(private boardId: string) {
-    }
-
-    async sync(): Promise<void> {
-        this.rawBlocks = await octoClient.getSubtree(this.boardId)
-        this.rebuild(OctoUtils.hydrateBlocks(this.rawBlocks))
-    }
-
-    incrementalUpdate(updatedBlocks: IBlock[]): boolean {
-        const relevantBlocks = updatedBlocks.filter((block) => block.deleteAt !== 0 || block.id === this.boardId || block.parentId === this.boardId)
-        if (relevantBlocks.length < 1) {
-            return false
+        const blocks: IBlock[] = [...this.views, ...this.allCards, ...this.cardTemplates]
+        if (this.board) {
+            blocks.unshift(this.board)
         }
-        this.rawBlocks = OctoUtils.mergeBlocks(this.rawBlocks, relevantBlocks)
-        this.rebuild(OctoUtils.hydrateBlocks(this.rawBlocks))
-
-        return true
+        return blocks
     }
 
-    private rebuild(blocks: IMutableBlock[]) {
-        this.board = blocks.find((block) => block.type === 'board') as MutableBoard
-        this.views = blocks.filter((block) => block.type === 'view').
-            sort((a, b) => a.title.localeCompare(b.title)) as MutableBoardView[]
-        this.allCards = blocks.filter((block) => block.type === 'card' && !(block as Card).isTemplate) as MutableCard[]
-        this.cardTemplates = blocks.filter((block) => block.type === 'card' && (block as Card).isTemplate).
-            sort((a, b) => a.title.localeCompare(b.title)) as MutableCard[]
-        this.cards = []
+    constructor(board: MutableBoard) {
+        this.board = board
+    }
 
-        this.ensureMinimumSchema()
+    // Factory methods
+    static async sync(boardId: string): Promise<MutableBoardTree | undefined> {
+        const rawBlocks = await octoClient.getSubtree(boardId)
+        return this.buildTree(boardId, rawBlocks)
+    }
+
+    static incrementalUpdate(boardTree: BoardTree, updatedBlocks: IBlock[]): MutableBoardTree | undefined {
+        const relevantBlocks = updatedBlocks.filter((block) => block.deleteAt !== 0 || block.id === boardTree.board.id || block.parentId === boardTree.board.id)
+        if (relevantBlocks.length < 1) {
+            // No change
+            return boardTree.mutableCopy()
+        }
+        const rawBlocks = OctoUtils.mergeBlocks(boardTree.allBlocks, relevantBlocks)
+        return this.buildTree(boardTree.board.id, rawBlocks)
+    }
+
+    static buildTree(boardId: string, sourceBlocks: readonly IBlock[]): MutableBoardTree | undefined {
+        const blocks = OctoUtils.hydrateBlocks(sourceBlocks)
+        const board = blocks.find((block) => block.type === 'board' && block.id === boardId) as MutableBoard
+        if (!board) {
+            return undefined
+        }
+        const boardTree = new MutableBoardTree(board)
+        boardTree.views = blocks.filter((block) => block.type === 'view').
+            sort((a, b) => a.title.localeCompare(b.title)) as MutableBoardView[]
+        boardTree.allCards = blocks.filter((block) => block.type === 'card' && !(block as Card).isTemplate) as MutableCard[]
+        boardTree.cardTemplates = blocks.filter((block) => block.type === 'card' && (block as Card).isTemplate).
+            sort((a, b) => a.title.localeCompare(b.title)) as MutableCard[]
+        boardTree.cards = []
+
+        boardTree.ensureMinimumSchema()
+        return boardTree
     }
 
     private ensureMinimumSchema(): boolean {
         let didChange = false
 
         // At least one select property
-        const selectProperties = this.board?.cardProperties.find((o) => o.type === 'select')
+        const selectProperties = this.board.cardProperties.find((o) => o.type === 'select')
         if (!selectProperties) {
             const newBoard = new MutableBoard(this.board)
             newBoard.rootId = newBoard.id
@@ -146,6 +157,10 @@ class MutableBoardTree implements BoardTree {
     }
 
     private applyFilterSortAndGroup(): void {
+        if (!this.activeView) {
+            Utils.assertFailure('activeView')
+            return
+        }
         Utils.assert(this.allCards !== undefined)
 
         this.cards = this.filterCards(this.allCards) as MutableCard[]
@@ -401,9 +416,7 @@ class MutableBoardTree implements BoardTree {
     }
 
     mutableCopy(): MutableBoardTree {
-        const boardTree = new MutableBoardTree(this.boardId)
-        boardTree.incrementalUpdate(this.rawBlocks)
-        return boardTree
+        return MutableBoardTree.buildTree(this.board.id, this.allBlocks)!
     }
 }
 

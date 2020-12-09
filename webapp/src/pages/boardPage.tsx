@@ -169,20 +169,28 @@ export default class BoardPage extends React.Component<Props, State> {
         )
 
         if (boardId) {
-            const boardTree = new MutableBoardTree(boardId)
-            await boardTree.sync()
+            const boardTree = await MutableBoardTree.sync(boardId)
 
+            if (boardTree && boardTree.board) {
             // Default to first view
-            boardTree.setActiveView(viewId || boardTree.views[0].id)
+                boardTree.setActiveView(viewId || boardTree.views[0].id)
 
-            // TODO: Handle error (viewId not found)
+                // TODO: Handle error (viewId not found)
 
-            this.setState({
-                boardTree,
-                boardId,
-                viewId: boardTree.activeView!.id,
-            })
-            Utils.log(`sync complete: ${boardTree.board.id} (${boardTree.board.title})`)
+                this.setState({
+                    boardTree,
+                    boardId,
+                    viewId: boardTree.activeView!.id,
+                })
+                Utils.log(`sync complete: ${boardTree.board?.id} (${boardTree.board?.title})`)
+            } else {
+                // Board may have been deleted
+                this.setState({
+                    boardTree: undefined,
+                    viewId: '',
+                })
+                Utils.log(`sync complete: board ${boardId} not found`)
+            }
         }
     }
 
@@ -196,11 +204,21 @@ export default class BoardPage extends React.Component<Props, State> {
             newState = {...newState, workspaceTree: newWorkspaceTree}
         }
 
-        if (boardTree || this.state.boardId) {
-            const newBoardTree = boardTree ? boardTree.mutableCopy() : new MutableBoardTree(this.state.boardId)
-            if (newBoardTree.incrementalUpdate(blocks)) {
+        if (boardTree) {
+            const newBoardTree = MutableBoardTree.incrementalUpdate(boardTree, blocks)
+            if (newBoardTree) {
                 newBoardTree.setActiveView(this.state.viewId)
                 newState = {...newState, boardTree: newBoardTree}
+            } else {
+                newState = {...newState, boardTree: undefined}
+            }
+        } else if (this.state.boardId) {
+            const newBoardTree = MutableBoardTree.buildTree(this.state.boardId, blocks)
+            if (newBoardTree) {
+                newBoardTree.setActiveView(this.state.viewId)
+                newState = {...newState, boardTree: newBoardTree}
+            } else {
+                newState = {...newState, boardTree: undefined}
             }
         }
 

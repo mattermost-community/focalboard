@@ -30,9 +30,11 @@ test('BoardTree', async () => {
 
     // Sync
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-    const boardTree = new MutableBoardTree(board.id)
-    await boardTree.sync()
-
+    let boardTree = await MutableBoardTree.sync(board.id)
+    expect(boardTree).not.toBeUndefined()
+    if (!boardTree) {
+        fail('sync')
+    }
     expect(FetchMock.fn).toBeCalledTimes(1)
     expect(boardTree.board).toEqual(board)
     expect(boardTree.views).toEqual([view, view2])
@@ -60,7 +62,11 @@ test('BoardTree', async () => {
     const cardTemplate2 = TestBlockFactory.createCard(board)
     cardTemplate2.isTemplate = true
 
-    expect(boardTree.incrementalUpdate([view3, card2, cardTemplate2])).toBe(true)
+    boardTree = MutableBoardTree.incrementalUpdate(boardTree, [view3, card2, cardTemplate2])
+    expect(boardTree).not.toBeUndefined()
+    if (!boardTree) {
+        fail('incrementalUpdate')
+    }
     expect(boardTree.views).toEqual([view, view2, view3])
     expect(boardTree.allCards).toEqual([card, card2])
     expect(boardTree.cardTemplates).toEqual([cardTemplate, cardTemplate2])
@@ -78,7 +84,11 @@ test('BoardTree', async () => {
     // Incremental update: No change
     const anotherBoard = TestBlockFactory.createBoard()
     const card4 = TestBlockFactory.createCard(anotherBoard)
-    expect(boardTree.incrementalUpdate([anotherBoard, card4])).toBe(false)
+    boardTree = MutableBoardTree.incrementalUpdate(boardTree, [anotherBoard, card4])
+    expect(boardTree).not.toBeUndefined()
+    if (!boardTree) {
+        fail('incrementalUpdate')
+    }
 
     // Copy
     const boardTree2 = boardTree.mutableCopy()
@@ -101,15 +111,20 @@ test('BoardTree: defaults', async () => {
 
     // Sync
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board])))
-    const boardTree = new MutableBoardTree(board.id)
-    await boardTree.sync()
+    const boardTree = await MutableBoardTree.sync(board.id)
+    expect(boardTree).not.toBeUndefined()
+    if (!boardTree) {
+        fail('sync')
+    }
 
     expect(FetchMock.fn).toBeCalledTimes(1)
+    expect(boardTree.board).not.toBeUndefined()
+    expect(boardTree.activeView).not.toBeUndefined()
     expect(boardTree.views.length).toEqual(1)
     expect(boardTree.allCards).toEqual([])
     expect(boardTree.cardTemplates).toEqual([])
 
     // Match everything except for cardProperties
-    board.cardProperties = boardTree.board.cardProperties
+    board.cardProperties = boardTree.board!.cardProperties
     expect(boardTree.board).toEqual(board)
 })

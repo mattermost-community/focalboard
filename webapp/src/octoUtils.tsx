@@ -76,11 +76,11 @@ class OctoUtils {
         }
     }
 
-    static hydrateBlocks(blocks: IBlock[]): MutableBlock[] {
+    static hydrateBlocks(blocks: readonly IBlock[]): MutableBlock[] {
         return blocks.map((block) => this.hydrateBlock(block))
     }
 
-    static mergeBlocks(blocks: IBlock[], updatedBlocks: IBlock[]): IBlock[] {
+    static mergeBlocks(blocks: readonly IBlock[], updatedBlocks: readonly IBlock[]): IBlock[] {
         const updatedBlockIds = updatedBlocks.map((o) => o.id)
         const newBlocks = blocks.filter((o) => !updatedBlockIds.includes(o.id))
         const updatedAndNotDeletedBlocks = updatedBlocks.filter((o) => o.deleteAt === 0)
@@ -89,7 +89,7 @@ class OctoUtils {
     }
 
     // Creates a copy of the blocks with new ids and parentIDs
-    static duplicateBlockTree(blocks: IBlock[], sourceBlockId: string): [MutableBlock[], MutableBlock, Readonly<Record<string, string>>] {
+    static duplicateBlockTree(blocks: readonly IBlock[], sourceBlockId: string): [MutableBlock[], MutableBlock, Readonly<Record<string, string>>] {
         const idMap: Record<string, string> = {}
         const newBlocks = blocks.map((block) => {
             const newBlock = this.hydrateBlock(block)
