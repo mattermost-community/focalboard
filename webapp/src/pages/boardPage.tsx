@@ -56,7 +56,15 @@ export default class BoardPage extends React.Component<Props, State> {
             Utils.setFavicon(board?.icon)
         }
         if (board?.title !== prevBoard?.title || activeView?.title !== prevActiveView?.title) {
-            document.title = `${board?.title} | ${activeView?.title}`
+            if (board) {
+                let title = `${board.title}`
+                if (activeView?.title) {
+                    title += ` | ${activeView.title}`
+                }
+                document.title = title
+            } else {
+                document.title = 'OCTO'
+            }
         }
     }
 
@@ -194,7 +202,7 @@ export default class BoardPage extends React.Component<Props, State> {
         }
     }
 
-    private incrementalUpdate(blocks: IBlock[]) {
+    private async incrementalUpdate(blocks: IBlock[]) {
         const {workspaceTree, boardTree} = this.state
 
         let newState = {workspaceTree, boardTree}
@@ -213,7 +221,8 @@ export default class BoardPage extends React.Component<Props, State> {
                 newState = {...newState, boardTree: undefined}
             }
         } else if (this.state.boardId) {
-            const newBoardTree = MutableBoardTree.buildTree(this.state.boardId, blocks)
+            // Corner case: When the page is viewing a deleted board, that is subsequently un-deleted on another client
+            const newBoardTree = await MutableBoardTree.sync(this.state.boardId)
             if (newBoardTree) {
                 newBoardTree.setActiveView(this.state.viewId)
                 newState = {...newState, boardTree: newBoardTree}
