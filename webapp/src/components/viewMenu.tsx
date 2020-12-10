@@ -55,7 +55,10 @@ export class ViewMenu extends React.PureComponent<Props> {
             view,
             'add view',
             async () => {
-                showView(view.id)
+                // This delay is needed because OctoListener has a default 100 ms notification delay before updates
+                setTimeout(() => {
+                    showView(view.id)
+                }, 120)
             },
             async () => {
                 showView(oldViewId)
@@ -81,7 +84,11 @@ export class ViewMenu extends React.PureComponent<Props> {
             view,
             'add view',
             async () => {
-                showView(view.id)
+                // This delay is needed because OctoListener has a default 100 ms notification delay before updates
+                setTimeout(() => {
+                    Utils.log(`showView: ${view.id}`)
+                    showView(view.id)
+                }, 120)
             },
             async () => {
                 showView(oldViewId)
