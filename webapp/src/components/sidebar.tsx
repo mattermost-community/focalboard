@@ -193,16 +193,18 @@ class Sidebar extends React.Component<Props, State> {
                         />
                     </Button>
                     <Menu position='top'>
-                        <Menu.Label>
-                            <b>
-                                <FormattedMessage
-                                    id='Sidebar.select-a-template'
-                                    defaultMessage='Select a template'
-                                />
-                            </b>
-                        </Menu.Label>
+                        {workspaceTree.boardTemplates.length > 0 && <>
+                            <Menu.Label>
+                                <b>
+                                    <FormattedMessage
+                                        id='Sidebar.select-a-template'
+                                        defaultMessage='Select a template'
+                                    />
+                                </b>
+                            </Menu.Label>
 
-                        <Menu.Separator/>
+                            <Menu.Separator/>
+                        </>}
 
                         {workspaceTree.boardTemplates.map((boardTemplate) => {
                             let displayName = boardTemplate.title || intl.formatMessage({id: 'Sidebar.untitled', defaultMessage: 'Untitled'})

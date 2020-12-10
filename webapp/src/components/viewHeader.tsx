@@ -388,16 +388,18 @@ class ViewHeader extends React.Component<Props, State> {
                     )}
                 >
                     <Menu position='left'>
-                        <Menu.Label>
-                            <b>
-                                <FormattedMessage
-                                    id='ViewHeader.select-a-template'
-                                    defaultMessage='Select a template'
-                                />
-                            </b>
-                        </Menu.Label>
+                        {boardTree.cardTemplates.length > 0 && <>
+                            <Menu.Label>
+                                <b>
+                                    <FormattedMessage
+                                        id='ViewHeader.select-a-template'
+                                        defaultMessage='Select a template'
+                                    />
+                                </b>
+                            </Menu.Label>
 
-                        <Menu.Separator/>
+                            <Menu.Separator/>
+                        </>}
 
                         {boardTree.cardTemplates.map((cardTemplate) => {
                             let displayName = cardTemplate.title || intl.formatMessage({id: 'ViewHeader.untitled', defaultMessage: 'Untitled'})
