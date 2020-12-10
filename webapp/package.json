@@ -31,7 +31,12 @@
 		"react-simplemde-editor": "^4.1.3"
 	},
 	"jest": {
-		"transform": {
+        "globals": {
+            "ts-jest": {
+              "tsConfig": "./src/tsconfig.json"
+            }
+        },
+        "transform": {
 			"^.+\\.tsx?$": "ts-jest"
 		},
 		"collectCoverage": true,
