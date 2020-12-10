@@ -21,9 +21,10 @@ interface BoardTree {
     readonly cards: readonly Card[]
     readonly cardTemplates: readonly Card[]
     readonly allCards: readonly Card[]
+    readonly allBlocks: readonly IBlock[]
+
     readonly visibleGroups: readonly Group[]
     readonly hiddenGroups: readonly Group[]
-    readonly allBlocks: readonly IBlock[]
 
     readonly activeView: BoardView
     readonly groupByProperty?: IPropertyTemplate
@@ -49,11 +50,7 @@ class MutableBoardTree implements BoardTree {
     private searchText?: string
     allCards: MutableCard[] = []
     get allBlocks(): IBlock[] {
-        const blocks: IBlock[] = [...this.views, ...this.allCards, ...this.cardTemplates]
-        if (this.board) {
-            blocks.unshift(this.board)
-        }
-        return blocks
+        return [this.board, ...this.views, ...this.allCards, ...this.cardTemplates]
     }
 
     constructor(board: MutableBoard) {

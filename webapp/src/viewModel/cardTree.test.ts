@@ -25,8 +25,11 @@ test('CardTree', async () => {
     const divider = TestBlockFactory.createDivider(card)
 
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([card, comment, text, image, divider])))
-    const cardTree = new MutableCardTree(card.id)
-    await cardTree.sync()
+    let cardTree = await MutableCardTree.sync(card.id)
+    expect(cardTree).not.toBeUndefined()
+    if (!cardTree) {
+        fail('sync')
+    }
 
     expect(FetchMock.fn).toBeCalledTimes(1)
     expect(cardTree.card).toEqual(card)
@@ -39,14 +42,22 @@ test('CardTree', async () => {
     const image2 = TestBlockFactory.createImage(card)
     const divider2 = TestBlockFactory.createDivider(card)
 
-    expect(cardTree.incrementalUpdate([comment2, text2, image2, divider2])).toBe(true)
+    cardTree = MutableCardTree.incrementalUpdate(cardTree, [comment2, text2, image2, divider2])
+    expect(cardTree).not.toBeUndefined()
+    if (!cardTree) {
+        fail('incrementalUpdate')
+    }
     expect(cardTree.comments).toEqual([comment, comment2])
     expect(cardTree.contents).toEqual([text, image, divider, text2, image2, divider2])
 
     // Incremental update: No change
     const anotherCard = TestBlockFactory.createCard()
     const comment3 = TestBlockFactory.createComment(anotherCard)
-    expect(cardTree.incrementalUpdate([comment3])).toBe(false)
+    cardTree = MutableCardTree.incrementalUpdate(cardTree, [comment3])
+    expect(cardTree).not.toBeUndefined()
+    if (!cardTree) {
+        fail('incrementalUpdate')
+    }
 
     // Copy
     const cardTree2 = cardTree.mutableCopy()
