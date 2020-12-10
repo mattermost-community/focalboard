@@ -4,6 +4,7 @@
 	"dbtype": "sqlite3",
 	"dbconfig": "./octo.db",
 	"postgres_dbconfig": "dbname=octo sslmode=disable",
+	"test_dbconfig": "file::memory:?cache=shared",
 	"useSSL": false,
 	"webpath": "./webapp/pack",
 	"filespath": "./files",

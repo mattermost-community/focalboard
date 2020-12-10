@@ -10,8 +10,15 @@
 		"test": "jest",
 		"check": "eslint --ext .tsx,.ts . --quiet --cache",
 		"fix": "eslint --ext .tsx,.ts . --quiet --fix --cache",
-		"i18n-extract": "formatjs extract src/**/*.tsx src/**/*.ts --out-file i18n/tmp.json; formatjs compile i18n/tmp.json --out-file i18n/en.json; rm i18n/tmp.json"
-	},
+		"i18n-extract": "formatjs extract src/**/*.tsx src/**/*.ts --out-file i18n/tmp.json; formatjs compile i18n/tmp.json --out-file i18n/en.json; rm i18n/tmp.json",
+		"runserver-test": "cd cypress && ../../bin/octoserver",
+		"cypress:run": "cypress run --browser chrome",
+		"cypress:ci": "start-server-and-test runserver-test http://localhost:8088 cypress:run",
+        "cypress:run:firefox": "cypress run --browser firefox",
+        "cypress:run:edge": "cypress run --browser edge",
+        "cypress:run:electron": "cypress run --browser electron",
+        "cypress:open": "cypress open"
+    },
 	"dependencies": {
 		"emoji-mart": "^3.0.0",
 		"marked": "^1.1.1",
@@ -29,8 +36,8 @@
 		},
 		"collectCoverage": true,
 		"collectCoverageFrom": [
-            "src/**/*.{ts,tsx,js,jsx}",
-            "!src/test/**"
+			"src/**/*.{ts,tsx,js,jsx}",
+			"!src/test/**"
 		]
 	},
 	"devDependencies": {
@@ -51,6 +58,7 @@
 		"@typescript-eslint/parser": "^4.4.1",
 		"copy-webpack-plugin": "^6.0.3",
 		"css-loader": "^4.3.0",
+		"cypress": "^6.1.0",
 		"eslint": "^7.11.0",
 		"eslint-import-resolver-webpack": "0.12.2",
 		"eslint-plugin-babel": "5.3.1",
@@ -67,6 +75,7 @@
 		"jest": "^26.5.3",
 		"sass": "^1.27.0",
 		"sass-loader": "^10.0.2",
+		"start-server-and-test": "^1.11.6",
 		"style-loader": "^1.3.0",
 		"terser-webpack-plugin": "^4.1.0",
 		"ts-jest": "^26.4.1",
