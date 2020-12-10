@@ -196,7 +196,9 @@ func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Printf("EXPORT Blocks, %d result(s)", len(blocks))
+	log.Printf("%d raw block(s)", len(blocks))
+	blocks = filterOrphanBlocks(blocks)
+	log.Printf("EXPORT Blocks, %d filtered block(s)", len(blocks))
 
 	json, err := json.Marshal(blocks)
 	if err != nil {
@@ -207,6 +209,24 @@ func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jsonBytesResponse(w, http.StatusOK, json)
+}
+
+func filterOrphanBlocks(blocks []model.Block) (ret []model.Block) {
+	for _, block := range blocks {
+		if len(block.ParentID) == 0 || arrayContainsBlockWithID(blocks, block.ParentID) {
+			ret = append(ret, block)
+		}
+	}
+	return
+}
+
+func arrayContainsBlockWithID(array []model.Block, blockID string) bool {
+	for _, item := range array {
+		if item.ID == blockID {
+			return true
+		}
+	}
+	return false
 }
 
 func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
