@@ -4,11 +4,13 @@ import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
 import {Board} from '../blocks/board'
-import {MutableBoardView} from '../blocks/boardView'
+import {IViewType, MutableBoardView} from '../blocks/boardView'
 import {Constants} from '../constants'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
+import BoardIcon from '../widgets/icons/board'
+import TableIcon from '../widgets/icons/table'
 import Menu from '../widgets/menu'
 
 type Props = {
@@ -104,6 +106,7 @@ export class ViewMenu extends React.PureComponent<Props> {
                         key={view.id}
                         id={view.id}
                         name={view.title}
+                        icon={this.iconForViewType(view.viewType)}
                         onClick={this.handleViewClick}
                     />))}
                 <Menu.Separator/>
@@ -130,6 +133,14 @@ export class ViewMenu extends React.PureComponent<Props> {
                 </Menu.SubMenu>
             </Menu>
         )
+    }
+
+    private iconForViewType(viewType: IViewType) {
+        switch (viewType) {
+        case 'board': return <BoardIcon/>
+        case 'table': return <TableIcon/>
+        default: return <div/>
+        }
     }
 }
 

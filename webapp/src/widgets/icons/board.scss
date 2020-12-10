@@ -1,0 +1,6 @@
+@use 'StandardIcon.scss';
+
+.BoardIcon {
+    @extend .StandardIcon;
+    stroke-width: 8px;
+}
