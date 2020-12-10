@@ -30,7 +30,7 @@ test('BoardTree', async () => {
 
     // Sync
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-    let boardTree = await MutableBoardTree.sync(board.id)
+    let boardTree = await MutableBoardTree.sync(board.id, view.id)
     expect(boardTree).not.toBeUndefined()
     if (!boardTree) {
         fail('sync')
@@ -43,17 +43,16 @@ test('BoardTree', async () => {
     expect(boardTree.allBlocks).toEqual([board, view, view2, card, cardTemplate])
 
     // Group / filter with sort
-    boardTree.setActiveView(view.id)
     expect(boardTree.activeView).toEqual(view)
     expect(boardTree.cards).toEqual([card])
 
     // Group / filter without sort
-    boardTree.setActiveView(view2.id)
+    boardTree = boardTree.copyWithView(view2.id)
     expect(boardTree.activeView).toEqual(view2)
     expect(boardTree.cards).toEqual([card])
 
     // Invalid view, defaults to first view
-    boardTree.setActiveView('invalid id')
+    boardTree = boardTree.copyWithView('invalid id')
     expect(boardTree.activeView).toEqual(view)
 
     // Incremental update
@@ -62,7 +61,9 @@ test('BoardTree', async () => {
     const cardTemplate2 = TestBlockFactory.createCard(board)
     cardTemplate2.isTemplate = true
 
+    let originalBoardTree = boardTree
     boardTree = MutableBoardTree.incrementalUpdate(boardTree, [view3, card2, cardTemplate2])
+    expect(boardTree).not.toBe(originalBoardTree)
     expect(boardTree).not.toBeUndefined()
     if (!boardTree) {
         fail('incrementalUpdate')
@@ -72,36 +73,42 @@ test('BoardTree', async () => {
     expect(boardTree.cardTemplates).toEqual([cardTemplate, cardTemplate2])
 
     // Group / filter with sort
-    boardTree.setActiveView(view.id)
+    originalBoardTree = boardTree
+    boardTree = boardTree.copyWithView(view.id)
+    expect(boardTree).not.toBe(originalBoardTree)
     expect(boardTree.activeView).toEqual(view)
     expect(boardTree.cards).toEqual([card, card2])
 
     // Group / filter without sort
-    boardTree.setActiveView(view2.id)
+    originalBoardTree = boardTree
+    boardTree = boardTree.copyWithView(view2.id)
+    expect(boardTree).not.toBe(originalBoardTree)
     expect(boardTree.activeView).toEqual(view2)
     expect(boardTree.cards).toEqual([card, card2])
 
     // Incremental update: No change
     const anotherBoard = TestBlockFactory.createBoard()
     const card4 = TestBlockFactory.createCard(anotherBoard)
+    originalBoardTree = boardTree
     boardTree = MutableBoardTree.incrementalUpdate(boardTree, [anotherBoard, card4])
+    expect(boardTree).toBe(originalBoardTree) // Expect same value on no change
     expect(boardTree).not.toBeUndefined()
     if (!boardTree) {
         fail('incrementalUpdate')
     }
 
     // Copy
-    const boardTree2 = boardTree.mutableCopy()
-    expect(boardTree2.board).toEqual(boardTree.board)
-    expect(boardTree2.views).toEqual(boardTree.views)
-    expect(boardTree2.allCards).toEqual(boardTree.allCards)
-    expect(boardTree2.cardTemplates).toEqual(boardTree.cardTemplates)
-    expect(boardTree2.allBlocks).toEqual(boardTree.allBlocks)
+    // const boardTree2 = boardTree.mutableCopy()
+    // expect(boardTree2.board).toEqual(boardTree.board)
+    // expect(boardTree2.views).toEqual(boardTree.views)
+    // expect(boardTree2.allCards).toEqual(boardTree.allCards)
+    // expect(boardTree2.cardTemplates).toEqual(boardTree.cardTemplates)
+    // expect(boardTree2.allBlocks).toEqual(boardTree.allBlocks)
 
     // Search text
     const searchText = 'search text'
     expect(boardTree.getSearchText()).toBeUndefined()
-    boardTree.setSearchText(searchText)
+    boardTree = boardTree.copyWithSearchText(searchText)
     expect(boardTree.getSearchText()).toBe(searchText)
 })
 
@@ -111,7 +118,7 @@ test('BoardTree: defaults', async () => {
 
     // Sync
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board])))
-    const boardTree = await MutableBoardTree.sync(board.id)
+    const boardTree = await MutableBoardTree.sync(board.id, 'noView')
     expect(boardTree).not.toBeUndefined()
     if (!boardTree) {
         fail('sync')
@@ -125,6 +132,6 @@ test('BoardTree: defaults', async () => {
     expect(boardTree.cardTemplates).toEqual([])
 
     // Match everything except for cardProperties
-    board.cardProperties = boardTree.board!.cardProperties
+    board.cardProperties = boardTree.board!.cardProperties.slice()
     expect(boardTree.board).toEqual(board)
 })

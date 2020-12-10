@@ -10,48 +10,53 @@ interface WorkspaceTree {
     readonly boards: readonly Board[]
     readonly boardTemplates: readonly Board[]
     readonly views: readonly BoardView[]
-
-    mutableCopy(): MutableWorkspaceTree
+    readonly allBlocks: readonly IBlock[]
 }
 
 class MutableWorkspaceTree {
     boards: Board[] = []
     boardTemplates: Board[] = []
     views: BoardView[] = []
+    get allBlocks(): IBlock[] {
+        return [...this.boards, ...this.boardTemplates, ...this.views]
+    }
 
-    private rawBlocks: IBlock[] = []
+    // Factory methods
 
-    async sync(): Promise<void> {
+    static async sync(): Promise<WorkspaceTree> {
         const rawBoards = await octoClient.getBlocksWithType('board')
         const rawViews = await octoClient.getBlocksWithType('view')
-        this.rawBlocks = [...rawBoards, ...rawViews]
-        this.rebuild(OctoUtils.hydrateBlocks(this.rawBlocks))
+        const rawBlocks = [...rawBoards, ...rawViews]
+        return this.buildTree(rawBlocks)
     }
 
-    incrementalUpdate(updatedBlocks: IBlock[]): boolean {
+    static incrementalUpdate(workspaceTree: WorkspaceTree, updatedBlocks: IBlock[]): WorkspaceTree {
         const relevantBlocks = updatedBlocks.filter((block) => block.deleteAt !== 0 || block.type === 'board' || block.type === 'view')
         if (relevantBlocks.length < 1) {
-            return false
+            // No change
+            return workspaceTree
         }
-        this.rawBlocks = OctoUtils.mergeBlocks(this.rawBlocks, updatedBlocks)
-        this.rebuild(OctoUtils.hydrateBlocks(this.rawBlocks))
-        return true
+        const rawBlocks = OctoUtils.mergeBlocks(workspaceTree.allBlocks, relevantBlocks)
+        return this.buildTree(rawBlocks)
     }
 
-    private rebuild(blocks: IBlock[]) {
-        const allBoards = blocks.filter((block) => block.type === 'board') as Board[]
-        this.boards = allBoards.filter((block) => !block.isTemplate).
-            sort((a, b) => a.title.localeCompare(b.title)) as Board[]
-        this.boardTemplates = allBoards.filter((block) => block.isTemplate).
-            sort((a, b) => a.title.localeCompare(b.title)) as Board[]
-        this.views = blocks.filter((block) => block.type === 'view').
-            sort((a, b) => a.title.localeCompare(b.title)) as BoardView[]
-    }
+    private static buildTree(sourceBlocks: readonly IBlock[]): MutableWorkspaceTree {
+        const blocks = OctoUtils.hydrateBlocks(sourceBlocks)
 
-    mutableCopy(): MutableWorkspaceTree {
         const workspaceTree = new MutableWorkspaceTree()
-        workspaceTree.incrementalUpdate(this.rawBlocks)
+        const allBoards = blocks.filter((block) => block.type === 'board') as Board[]
+        workspaceTree.boards = allBoards.filter((block) => !block.isTemplate).
+            sort((a, b) => a.title.localeCompare(b.title)) as Board[]
+        workspaceTree.boardTemplates = allBoards.filter((block) => block.isTemplate).
+            sort((a, b) => a.title.localeCompare(b.title)) as Board[]
+        workspaceTree.views = blocks.filter((block) => block.type === 'view').
+            sort((a, b) => a.title.localeCompare(b.title)) as BoardView[]
+
         return workspaceTree
+    }
+
+    private mutableCopy(): MutableWorkspaceTree {
+        return MutableWorkspaceTree.buildTree(this.allBlocks)!
     }
 }
 

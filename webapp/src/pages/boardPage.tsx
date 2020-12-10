@@ -3,7 +3,6 @@
 import React from 'react'
 
 import {IBlock} from '../blocks/block'
-import {MutableBoard} from '../blocks/board'
 import {sendFlashMessage} from '../components/flashMessages'
 import {WorkspaceComponent} from '../components/workspaceComponent'
 import mutator from '../mutator'
@@ -159,8 +158,7 @@ export default class BoardPage extends React.Component<Props, State> {
     private async sync(boardId: string = this.state.boardId, viewId: string | undefined = this.state.viewId) {
         Utils.log(`sync start: ${boardId}`)
 
-        const workspaceTree = new MutableWorkspaceTree()
-        await workspaceTree.sync()
+        const workspaceTree = await MutableWorkspaceTree.sync()
         const boardIds = [...workspaceTree.boards.map((o) => o.id), ...workspaceTree.boardTemplates.map((o) => o.id)]
         this.setState({workspaceTree})
 
@@ -178,12 +176,9 @@ export default class BoardPage extends React.Component<Props, State> {
         )
 
         if (boardId) {
-            const boardTree = await MutableBoardTree.sync(boardId)
+            const boardTree = await MutableBoardTree.sync(boardId, viewId)
 
             if (boardTree && boardTree.board) {
-                // Default to first view
-                boardTree.setActiveView(viewId || boardTree.views[0].id)
-
                 // Update url with viewId if it's different
                 if (boardTree.activeView.id !== this.state.viewId) {
                     Utils.replaceUrlQueryParam('v', boardTree.activeView.id)
@@ -213,21 +208,20 @@ export default class BoardPage extends React.Component<Props, State> {
 
         let newState = {workspaceTree, boardTree, viewId}
 
-        const newWorkspaceTree = workspaceTree.mutableCopy()
-        if (newWorkspaceTree.incrementalUpdate(blocks)) {
+        const newWorkspaceTree = MutableWorkspaceTree.incrementalUpdate(workspaceTree, blocks)
+        if (newWorkspaceTree) {
             newState = {...newState, workspaceTree: newWorkspaceTree}
         }
 
-        let newBoardTree: MutableBoardTree | undefined
+        let newBoardTree: BoardTree | undefined
         if (boardTree) {
             newBoardTree = MutableBoardTree.incrementalUpdate(boardTree, blocks)
         } else if (this.state.boardId) {
             // Corner case: When the page is viewing a deleted board, that is subsequently un-deleted on another client
-            newBoardTree = await MutableBoardTree.sync(this.state.boardId)
+            newBoardTree = await MutableBoardTree.sync(this.state.boardId, this.state.viewId)
         }
 
         if (newBoardTree) {
-            newBoardTree.setActiveView(this.state.viewId)
             newState = {...newState, boardTree: newBoardTree, viewId: newBoardTree.activeView.id}
         } else {
             newState = {...newState, boardTree: undefined}
@@ -260,8 +254,7 @@ export default class BoardPage extends React.Component<Props, State> {
 
     showView(viewId: string, boardId: string = this.state.boardId): void {
         if (this.state.boardTree && this.state.boardId === boardId) {
-            const newBoardTree = this.state.boardTree.mutableCopy()
-            newBoardTree.setActiveView(viewId)
+            const newBoardTree = this.state.boardTree.copyWithView(viewId)
             this.setState({boardTree: newBoardTree, viewId})
         } else {
             this.attachToBoard(boardId, viewId)
@@ -277,8 +270,7 @@ export default class BoardPage extends React.Component<Props, State> {
             return
         }
 
-        const newBoardTree = this.state.boardTree.mutableCopy()
-        newBoardTree.setSearchText(text)
+        const newBoardTree = this.state.boardTree.copyWithSearchText(text)
         this.setState({boardTree: newBoardTree})
     }
 }

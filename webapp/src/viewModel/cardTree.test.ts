@@ -8,7 +8,7 @@ import 'isomorphic-fetch'
 import {TestBlockFactory} from '../test/testBlockFactory'
 import {FetchMock} from '../test/fetchMock'
 
-import {MutableCardTree} from './cardTree'
+import {CardTree, MutableCardTree} from './cardTree'
 
 global.fetch = FetchMock.fn
 
@@ -25,7 +25,7 @@ test('CardTree', async () => {
     const divider = TestBlockFactory.createDivider(card)
 
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([card, comment, text, image, divider])))
-    let cardTree = await MutableCardTree.sync(card.id)
+    let cardTree: CardTree | undefined = await MutableCardTree.sync(card.id)
     expect(cardTree).not.toBeUndefined()
     if (!cardTree) {
         fail('sync')
@@ -53,15 +53,17 @@ test('CardTree', async () => {
     // Incremental update: No change
     const anotherCard = TestBlockFactory.createCard()
     const comment3 = TestBlockFactory.createComment(anotherCard)
+    const originalCardTree = cardTree
     cardTree = MutableCardTree.incrementalUpdate(cardTree, [comment3])
+    expect(cardTree).toBe(originalCardTree)
     expect(cardTree).not.toBeUndefined()
     if (!cardTree) {
         fail('incrementalUpdate')
     }
 
     // Copy
-    const cardTree2 = cardTree.mutableCopy()
-    expect(cardTree2.card).toEqual(cardTree.card)
-    expect(cardTree2.comments).toEqual(cardTree.comments)
-    expect(cardTree2.contents).toEqual(cardTree.contents)
+    // const cardTree2 = cardTree.mutableCopy()
+    // expect(cardTree2.card).toEqual(cardTree.card)
+    // expect(cardTree2.comments).toEqual(cardTree.comments)
+    // expect(cardTree2.contents).toEqual(cardTree.contents)
 })

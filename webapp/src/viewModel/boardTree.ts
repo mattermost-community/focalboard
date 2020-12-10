@@ -32,7 +32,8 @@ interface BoardTree {
     getSearchText(): string | undefined
     orderedCards(): Card[]
 
-    mutableCopy(): MutableBoardTree
+    copyWithView(viewId: string): BoardTree
+    copyWithSearchText(searchText?: string): BoardTree
 }
 
 class MutableBoardTree implements BoardTree {
@@ -58,22 +59,31 @@ class MutableBoardTree implements BoardTree {
     }
 
     // Factory methods
-    static async sync(boardId: string): Promise<MutableBoardTree | undefined> {
+
+    static async sync(boardId: string, viewId: string): Promise<BoardTree | undefined> {
         const rawBlocks = await octoClient.getSubtree(boardId)
-        return this.buildTree(boardId, rawBlocks)
+        const newBoardTree = this.buildTree(boardId, rawBlocks)
+        if (newBoardTree) {
+            newBoardTree.setActiveView(viewId)
+        }
+        return newBoardTree
     }
 
-    static incrementalUpdate(boardTree: BoardTree, updatedBlocks: IBlock[]): MutableBoardTree | undefined {
+    static incrementalUpdate(boardTree: BoardTree, updatedBlocks: IBlock[]): BoardTree | undefined {
         const relevantBlocks = updatedBlocks.filter((block) => block.deleteAt !== 0 || block.id === boardTree.board.id || block.parentId === boardTree.board.id)
         if (relevantBlocks.length < 1) {
             // No change
-            return boardTree.mutableCopy()
+            return boardTree
         }
         const rawBlocks = OctoUtils.mergeBlocks(boardTree.allBlocks, relevantBlocks)
-        return this.buildTree(boardTree.board.id, rawBlocks)
+        const newBoardTree = this.buildTree(boardTree.board.id, rawBlocks)
+        if (newBoardTree && boardTree.activeView) {
+            newBoardTree.setActiveView(boardTree.activeView.id)
+        }
+        return newBoardTree
     }
 
-    static buildTree(boardId: string, sourceBlocks: readonly IBlock[]): MutableBoardTree | undefined {
+    private static buildTree(boardId: string, sourceBlocks: readonly IBlock[]): MutableBoardTree | undefined {
         const blocks = OctoUtils.hydrateBlocks(sourceBlocks)
         const board = blocks.find((block) => block.type === 'board' && block.id === boardId) as MutableBoard
         if (!board) {
@@ -127,9 +137,9 @@ class MutableBoardTree implements BoardTree {
         return didChange
     }
 
-    setActiveView(viewId: string): void {
+    private setActiveView(viewId: string): void {
         let view = this.views.find((o) => o.id === viewId)
-        if (!view) {
+        if (!view || !viewId) {
             Utils.logError(`Cannot find BoardView: ${viewId}`)
             view = this.views[0]
         }
@@ -148,7 +158,7 @@ class MutableBoardTree implements BoardTree {
         return this.searchText
     }
 
-    setSearchText(text?: string): void {
+    private setSearchText(text?: string): void {
         this.searchText = text
         this.applyFilterSortAndGroup()
     }
@@ -412,8 +422,20 @@ class MutableBoardTree implements BoardTree {
         return cards
     }
 
-    mutableCopy(): MutableBoardTree {
+    private mutableCopy(): MutableBoardTree {
         return MutableBoardTree.buildTree(this.board.id, this.allBlocks)!
+    }
+
+    copyWithView(viewId: string): BoardTree {
+        const boardTree = this.mutableCopy()
+        boardTree.setActiveView(viewId)
+        return boardTree
+    }
+
+    copyWithSearchText(searchText?: string): BoardTree {
+        const boardTree = this.mutableCopy()
+        boardTree.setSearchText(searchText)
+        return boardTree
     }
 }
 
