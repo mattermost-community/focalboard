@@ -12,6 +12,7 @@ import octoClient from './octoClient'
 import undoManager from './undomanager'
 import {Utils} from './utils'
 import {OctoUtils} from './octoUtils'
+import {BlockIcons} from './blockIcons'
 
 //
 // The Mutator is used to make all changes to server state
@@ -512,6 +513,7 @@ class Mutator {
         const newBlocks = newBlocks1.filter((o) => o.type !== 'comment')
         Utils.log(`duplicateCard: duplicating ${newBlocks.length} blocks`)
         if (asTemplate === newCard.isTemplate) {
+            // Copy template
             newCard.title = `Copy of ${newCard.title}`
         } else if (asTemplate) {
             // Template from card
@@ -519,6 +521,11 @@ class Mutator {
         } else {
             // Card from template
             newCard.title = ''
+
+            // If the template doesn't specify an icon, initialize it to a random one
+            if (!newCard.icon) {
+                newCard.icon = BlockIcons.shared.randomIcon()
+            }
         }
         newCard.isTemplate = asTemplate
         await this.insertBlocks(
