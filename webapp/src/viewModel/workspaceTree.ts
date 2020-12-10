@@ -55,9 +55,9 @@ class MutableWorkspaceTree {
         return workspaceTree
     }
 
-    private mutableCopy(): MutableWorkspaceTree {
-        return MutableWorkspaceTree.buildTree(this.allBlocks)!
-    }
+    // private mutableCopy(): MutableWorkspaceTree {
+    //     return MutableWorkspaceTree.buildTree(this.allBlocks)!
+    // }
 }
 
 export {MutableWorkspaceTree, WorkspaceTree}

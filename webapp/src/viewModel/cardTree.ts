@@ -61,9 +61,9 @@ class MutableCardTree implements CardTree {
         return cardTree
     }
 
-    private mutableCopy(): MutableCardTree {
-        return MutableCardTree.buildTree(this.card.id, this.allBlocks)!
-    }
+    // private mutableCopy(): MutableCardTree {
+    //     return MutableCardTree.buildTree(this.card.id, this.allBlocks)!
+    // }
 }
 
 export {MutableCardTree, CardTree}

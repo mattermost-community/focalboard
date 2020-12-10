@@ -24,14 +24,21 @@ test('CardTree', async () => {
     const image = TestBlockFactory.createImage(card)
     const divider = TestBlockFactory.createDivider(card)
 
+    let cardTree: CardTree | undefined
+
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([card, comment, text, image, divider])))
-    let cardTree: CardTree | undefined = await MutableCardTree.sync(card.id)
+    cardTree = await MutableCardTree.sync('invalid_id')
+    expect(cardTree).toBeUndefined()
+    expect(FetchMock.fn).toBeCalledTimes(1)
+
+    FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([card, comment, text, image, divider])))
+    cardTree = await MutableCardTree.sync(card.id)
     expect(cardTree).not.toBeUndefined()
     if (!cardTree) {
         fail('sync')
     }
 
-    expect(FetchMock.fn).toBeCalledTimes(1)
+    expect(FetchMock.fn).toBeCalledTimes(2)
     expect(cardTree.card).toEqual(card)
     expect(cardTree.comments).toEqual([comment])
     expect(cardTree.contents).toEqual([text, image, divider])

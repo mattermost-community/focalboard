@@ -9,7 +9,7 @@ import 'isomorphic-fetch'
 import {TestBlockFactory} from '../test/testBlockFactory'
 import {FetchMock} from '../test/fetchMock'
 
-import {MutableBoardTree} from './boardTree'
+import {BoardTree, MutableBoardTree} from './boardTree'
 
 global.fetch = FetchMock.fn
 
@@ -30,15 +30,23 @@ test('BoardTree', async () => {
 
     // Sync
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-    let boardTree = await MutableBoardTree.sync(board.id, view.id)
+    let boardTree: BoardTree | undefined
+
+    boardTree = await MutableBoardTree.sync('invalid_id', 'invalid_id')
+    expect(boardTree).toBeUndefined()
+    expect(FetchMock.fn).toBeCalledTimes(1)
+
+    FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
+    boardTree = await MutableBoardTree.sync(board.id, view.id)
     expect(boardTree).not.toBeUndefined()
     if (!boardTree) {
         fail('sync')
     }
-    expect(FetchMock.fn).toBeCalledTimes(1)
+    expect(FetchMock.fn).toBeCalledTimes(2)
     expect(boardTree.board).toEqual(board)
     expect(boardTree.views).toEqual([view, view2])
     expect(boardTree.allCards).toEqual([card])
+    expect(boardTree.orderedCards()).toEqual([card])
     expect(boardTree.cardTemplates).toEqual([cardTemplate])
     expect(boardTree.allBlocks).toEqual([board, view, view2, card, cardTemplate])
 
@@ -78,6 +86,7 @@ test('BoardTree', async () => {
     expect(boardTree).not.toBe(originalBoardTree)
     expect(boardTree.activeView).toEqual(view)
     expect(boardTree.cards).toEqual([card, card2])
+    expect(boardTree.orderedCards()).toEqual([card, card2])
 
     // Group / filter without sort
     originalBoardTree = boardTree
