@@ -137,14 +137,20 @@ class MutableBoardTree implements BoardTree {
         return didChange
     }
 
-    private setActiveView(viewId: string): void {
-        let view = this.views.find((o) => o.id === viewId)
-        if (!view || !viewId) {
-            Utils.logError(`Cannot find BoardView: ${viewId}`)
+    private setActiveView(viewId?: string): void {
+        let view: MutableBoardView | undefined
+        if (viewId) {
+            view = this.views.find((o) => o.id === viewId)
+            if (!view) {
+                Utils.logError(`Cannot find BoardView: ${viewId}`)
+                view = this.views[0]
+            }
+        } else {
+            // Default to first view
             view = this.views[0]
         }
 
-        this.activeView = view
+        this.activeView = view!
 
         // Fix missing group by (e.g. for new views)
         if (this.activeView.viewType === 'board' && !this.activeView.groupById) {

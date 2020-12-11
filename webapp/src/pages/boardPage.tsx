@@ -141,7 +141,7 @@ export default class BoardPage extends React.Component<Props, State> {
         )
     }
 
-    private async attachToBoard(boardId?: string, viewId?: string) {
+    private async attachToBoard(boardId?: string, viewId = '') {
         Utils.log(`attachToBoard: ${boardId}`)
         if (boardId) {
             this.sync(boardId, viewId)

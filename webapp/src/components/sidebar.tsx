@@ -126,7 +126,10 @@ class Sidebar extends React.Component<Props, State> {
                                                             board,
                                                             intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'}),
                                                             async () => {
-                                                                this.props.showBoard(nextBoardId)
+                                                                // This delay is needed because OctoListener has a default 100 ms notification delay before updates
+                                                                setTimeout(() => {
+                                                                    this.props.showBoard(nextBoardId)
+                                                                }, 120)
                                                             },
                                                             async () => {
                                                                 this.props.showBoard(board.id)
