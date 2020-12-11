@@ -11,6 +11,7 @@ import {darkTheme, lightTheme, mattermostTheme, setTheme} from '../theme'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
 import Button from '../widgets/buttons/button'
 import IconButton from '../widgets/buttons/iconButton'
+import BoardIcon from '../widgets/icons/board'
 import DeleteIcon from '../widgets/icons/delete'
 import DisclosureTriangle from '../widgets/icons/disclosureTriangle'
 import DotIcon from '../widgets/icons/dot'
@@ -248,6 +249,7 @@ class Sidebar extends React.Component<Props, State> {
                         <Menu.Text
                             id='empty-template'
                             name={intl.formatMessage({id: 'Sidebar.empty-board', defaultMessage: 'Empty board'})}
+                            icon={<BoardIcon/>}
                             onClick={this.addBoardClicked}
                         />
 
