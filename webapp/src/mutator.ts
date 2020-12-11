@@ -558,7 +558,6 @@ class Mutator {
             newBoard.title = 'New board template'
         } else {
             // Board from template
-            newBoard.title = ''
         }
         newBoard.isTemplate = asTemplate
         await this.insertBlocks(
