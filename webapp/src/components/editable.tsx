@@ -72,7 +72,7 @@ class Editable extends React.PureComponent<Props> {
     }
 
     render(): JSX.Element {
-        const {text, className, style, placeholderText, isMarkdown, isMultiline, onFocus, onBlur, onKeyDown, onChanged} = this.props
+        const {text, style, placeholderText, isMarkdown, isMultiline, onFocus, onBlur, onKeyDown, onChanged} = this.props
 
         const initialStyle = {...this.props.style}
 
@@ -83,10 +83,15 @@ class Editable extends React.PureComponent<Props> {
             html = ''
         }
 
+        let className = 'octo-editable'
+        if (this.props.className) {
+            className += ' ' + this.props.className
+        }
+
         const element = (
             <div
                 ref={this.elementRef}
-                className={'octo-editable ' + className}
+                className={className}
                 contentEditable={true}
                 suppressContentEditableWarning={true}
                 style={initialStyle}
