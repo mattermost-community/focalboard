@@ -9,7 +9,9 @@ import {Constants} from '../constants'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
+import AddIcon from '../widgets/icons/add'
 import BoardIcon from '../widgets/icons/board'
+import DeleteIcon from '../widgets/icons/delete'
 import TableIcon from '../widgets/icons/table'
 import Menu from '../widgets/menu'
 
@@ -114,20 +116,24 @@ export class ViewMenu extends React.PureComponent<Props> {
                     <Menu.Text
                         id='__deleteView'
                         name='Delete View'
+                        icon={<DeleteIcon/>}
                         onClick={this.handleDeleteView}
                     />}
                 <Menu.SubMenu
                     id='__addView'
                     name='Add View'
+                    icon={<AddIcon/>}
                 >
                     <Menu.Text
                         id='board'
                         name='Board'
+                        icon={<BoardIcon/>}
                         onClick={this.handleAddViewBoard}
                     />
                     <Menu.Text
                         id='table'
                         name='Table'
+                        icon={<TableIcon/>}
                         onClick={this.handleAddViewTable}
                     />
                 </Menu.SubMenu>
