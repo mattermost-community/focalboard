@@ -119,7 +119,7 @@ class CardDetail extends React.Component<Props, State> {
                             >
                                 <FormattedMessage
                                     id='CardDetail.add-icon'
-                                    defaultMessage='Add Icon'
+                                    defaultMessage='Add icon'
                                 />
                             </Button>
                         </div>}

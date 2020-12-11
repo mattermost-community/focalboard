@@ -55,14 +55,14 @@ class BlockIconSelector extends React.Component<Props> {
                         <Menu.SubMenu
                             id='pick'
                             icon={<EmojiIcon/>}
-                            name={intl.formatMessage({id: 'ViewTitle.pick-icon', defaultMessage: 'Pick Icon'})}
+                            name={intl.formatMessage({id: 'ViewTitle.pick-icon', defaultMessage: 'Pick icon'})}
                         >
                             <EmojiPicker onSelect={this.onSelectEmoji}/>
                         </Menu.SubMenu>
                         <Menu.Text
                             id='remove'
                             icon={<DeleteIcon/>}
-                            name={intl.formatMessage({id: 'ViewTitle.remove-icon', defaultMessage: 'Remove Icon'})}
+                            name={intl.formatMessage({id: 'ViewTitle.remove-icon', defaultMessage: 'Remove icon'})}
                             onClick={() => mutator.changeIcon(block, '', 'remove icon')}
                         />
                     </Menu>

@@ -52,7 +52,7 @@ class ViewTitle extends React.Component<Props, State> {
                         >
                             <FormattedMessage
                                 id='TableComponent.add-icon'
-                                defaultMessage='Add Icon'
+                                defaultMessage='Add icon'
                             />
                         </Button>
                     }
@@ -90,7 +90,7 @@ class ViewTitle extends React.Component<Props, State> {
                         ref={this.titleEditor}
                         className='title'
                         value={this.state.title}
-                        placeholderText={intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})}
+                        placeholderText={intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled board'})}
                         onChange={(title) => this.setState({title})}
                         saveOnEsc={true}
                         onSave={() => mutator.changeTitle(board, this.state.title)}

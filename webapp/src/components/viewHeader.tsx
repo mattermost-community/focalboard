@@ -347,7 +347,7 @@ class ViewHeader extends React.Component<Props, State> {
                         />
                         <Menu.Text
                             id='exportBoardArchive'
-                            name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export Board Archive'})}
+                            name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
                             onClick={() => Archiver.exportBoardTree(boardTree)}
                         />
 

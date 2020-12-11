@@ -117,13 +117,13 @@ class Sidebar extends React.Component<Props, State> {
                                             <Menu position='left'>
                                                 <Menu.Text
                                                     id='deleteBoard'
-                                                    name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete Board'})}
+                                                    name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
                                                     icon={<DeleteIcon/>}
                                                     onClick={async () => {
                                                         const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id)?.id : undefined
                                                         mutator.deleteBlock(
                                                             board,
-                                                            'delete block',
+                                                            intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'}),
                                                             async () => {
                                                                 this.props.showBoard(nextBoardId)
                                                             },
@@ -136,7 +136,7 @@ class Sidebar extends React.Component<Props, State> {
 
                                                 <Menu.Text
                                                     id='duplicateBoard'
-                                                    name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate Board'})}
+                                                    name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
                                                     icon={<DuplicateIcon/>}
                                                     onClick={() => {
                                                         this.duplicateBoard(board.id)
@@ -269,17 +269,17 @@ class Sidebar extends React.Component<Props, State> {
                     <Menu position='top'>
                         <Menu.Text
                             id='import'
-                            name={intl.formatMessage({id: 'Sidebar.import-archive', defaultMessage: 'Import Archive'})}
+                            name={intl.formatMessage({id: 'Sidebar.import-archive', defaultMessage: 'Import archive'})}
                             onClick={async () => Archiver.importFullArchive()}
                         />
                         <Menu.Text
                             id='export'
-                            name={intl.formatMessage({id: 'Sidebar.export-archive', defaultMessage: 'Export Archive'})}
+                            name={intl.formatMessage({id: 'Sidebar.export-archive', defaultMessage: 'Export archive'})}
                             onClick={async () => Archiver.exportFullArchive()}
                         />
                         <Menu.SubMenu
                             id='lang'
-                            name={intl.formatMessage({id: 'Sidebar.set-language', defaultMessage: 'Set Language'})}
+                            name={intl.formatMessage({id: 'Sidebar.set-language', defaultMessage: 'Set language'})}
                             position='top'
                         >
                             <Menu.Text
@@ -295,22 +295,22 @@ class Sidebar extends React.Component<Props, State> {
                         </Menu.SubMenu>
                         <Menu.SubMenu
                             id='theme'
-                            name={intl.formatMessage({id: 'Sidebar.set-theme', defaultMessage: 'Set Theme'})}
+                            name={intl.formatMessage({id: 'Sidebar.set-theme', defaultMessage: 'Set theme'})}
                             position='top'
                         >
                             <Menu.Text
                                 id='dark-theme'
-                                name={intl.formatMessage({id: 'Sidebar.dark-theme', defaultMessage: 'Dark Theme'})}
+                                name={intl.formatMessage({id: 'Sidebar.dark-theme', defaultMessage: 'Dark theme'})}
                                 onClick={async () => setTheme(darkTheme)}
                             />
                             <Menu.Text
                                 id='light-theme'
-                                name={intl.formatMessage({id: 'Sidebar.light-theme', defaultMessage: 'Light Theme'})}
+                                name={intl.formatMessage({id: 'Sidebar.light-theme', defaultMessage: 'Light theme'})}
                                 onClick={async () => setTheme(lightTheme)}
                             />
                             <Menu.Text
                                 id='mattermost-theme'
-                                name={intl.formatMessage({id: 'Sidebar.mattermost-theme', defaultMessage: 'Mattermost Theme'})}
+                                name={intl.formatMessage({id: 'Sidebar.mattermost-theme', defaultMessage: 'Mattermost theme'})}
                                 onClick={async () => setTheme(mattermostTheme)}
                             />
                         </Menu.SubMenu>
@@ -340,7 +340,7 @@ class Sidebar extends React.Component<Props, State> {
         view.viewType = 'board'
         view.parentId = board.id
         view.rootId = board.rootId
-        view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board View'})
+        view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
 
         await mutator.insertBlocks(
             [board, view],

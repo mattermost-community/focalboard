@@ -174,7 +174,7 @@ class BoardComponent extends React.Component<Props, State> {
                                 <div className='octo-board-header-cell narrow'>
                                     <FormattedMessage
                                         id='BoardComponent.hidden-columns'
-                                        defaultMessage='Hidden Columns'
+                                        defaultMessage='Hidden columns'
                                     />
                                 </div>}
 

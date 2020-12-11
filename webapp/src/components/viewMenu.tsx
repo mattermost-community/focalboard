@@ -46,7 +46,7 @@ export class ViewMenu extends React.PureComponent<Props> {
         const {board, boardTree, showView, intl} = this.props
         Utils.log('addview-board')
         const view = new MutableBoardView()
-        view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board View'})
+        view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
         view.viewType = 'board'
         view.parentId = board.id
         view.rootId = board.rootId
@@ -72,7 +72,7 @@ export class ViewMenu extends React.PureComponent<Props> {
 
         Utils.log('addview-table')
         const view = new MutableBoardView()
-        view.title = intl.formatMessage({id: 'View.NewTableTitle', defaultMessage: 'Table View'})
+        view.title = intl.formatMessage({id: 'View.NewTableTitle', defaultMessage: 'Table view'})
         view.viewType = 'table'
         view.parentId = board.id
         view.rootId = board.rootId
