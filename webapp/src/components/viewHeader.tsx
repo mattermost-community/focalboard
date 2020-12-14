@@ -17,6 +17,7 @@ import {BoardTree} from '../viewModel/boardTree'
 import Button from '../widgets/buttons/button'
 import ButtonWithMenu from '../widgets/buttons/buttonWithMenu'
 import IconButton from '../widgets/buttons/iconButton'
+import CardIcon from '../widgets/icons/card'
 import CheckIcon from '../widgets/icons/check'
 import DeleteIcon from '../widgets/icons/delete'
 import DropdownIcon from '../widgets/icons/dropdown'
@@ -402,15 +403,13 @@ class ViewHeader extends React.Component<Props, State> {
                         </>}
 
                         {boardTree.cardTemplates.map((cardTemplate) => {
-                            let displayName = cardTemplate.title || intl.formatMessage({id: 'ViewHeader.untitled', defaultMessage: 'Untitled'})
-                            if (cardTemplate.icon) {
-                                displayName = `${cardTemplate.icon} ${displayName}`
-                            }
+                            const displayName = cardTemplate.title || intl.formatMessage({id: 'ViewHeader.untitled', defaultMessage: 'Untitled'})
                             return (
                                 <Menu.Text
                                     key={cardTemplate.id}
                                     id={cardTemplate.id}
                                     name={displayName}
+                                    icon={<div className='Icon'>{cardTemplate.icon}</div>}
                                     onClick={() => {
                                         this.props.addCardFromTemplate(cardTemplate.id)
                                     }}
@@ -443,6 +442,7 @@ class ViewHeader extends React.Component<Props, State> {
                         <Menu.Text
                             id='empty-template'
                             name={intl.formatMessage({id: 'ViewHeader.empty-card', defaultMessage: 'Empty card'})}
+                            icon={<CardIcon/>}
                             onClick={() => {
                                 this.props.addCard()
                             }}

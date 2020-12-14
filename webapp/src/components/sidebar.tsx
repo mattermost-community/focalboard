@@ -211,15 +211,14 @@ class Sidebar extends React.Component<Props, State> {
                         </>}
 
                         {workspaceTree.boardTemplates.map((boardTemplate) => {
-                            let displayName = boardTemplate.title || intl.formatMessage({id: 'Sidebar.untitled', defaultMessage: 'Untitled'})
-                            if (boardTemplate.icon) {
-                                displayName = `${boardTemplate.icon} ${displayName}`
-                            }
+                            const displayName = boardTemplate.title || intl.formatMessage({id: 'Sidebar.untitled', defaultMessage: 'Untitled'})
+
                             return (
                                 <Menu.Text
                                     key={boardTemplate.id}
                                     id={boardTemplate.id}
                                     name={displayName}
+                                    icon={<div className='Icon'>{boardTemplate.icon}</div>}
                                     onClick={() => {
                                         this.addBoardFromTemplate(boardTemplate.id)
                                     }}
