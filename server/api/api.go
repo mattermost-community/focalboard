@@ -198,7 +198,7 @@ func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("%d raw block(s)", len(blocks))
 	blocks = filterOrphanBlocks(blocks)
-	log.Printf("EXPORT Blocks, %d filtered block(s)", len(blocks))
+	log.Printf("EXPORT %d filtered block(s)", len(blocks))
 
 	json, err := json.Marshal(blocks)
 	if err != nil {
@@ -212,12 +212,38 @@ func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
 }
 
 func filterOrphanBlocks(blocks []model.Block) (ret []model.Block) {
+	queue := make([]model.Block, 0)
+	var childrenOfBlockWithID = make(map[string]*[]model.Block)
+
+	// Build the trees from nodes
 	for _, block := range blocks {
-		if len(block.ParentID) == 0 || arrayContainsBlockWithID(blocks, block.ParentID) {
-			ret = append(ret, block)
+		if len(block.ParentID) == 0 {
+			// Queue root blocks to process first
+			queue = append(queue, block)
+		} else {
+			siblings := childrenOfBlockWithID[block.ParentID]
+			if siblings != nil {
+				*siblings = append(*siblings, block)
+			} else {
+				siblings := []model.Block{block}
+				childrenOfBlockWithID[block.ParentID] = &siblings
+			}
 		}
 	}
-	return
+
+	// Map the trees to an array, which skips orphaned nodes
+	blocks = make([]model.Block, 0)
+	for len(queue) > 0 {
+		block := queue[0]
+		queue = queue[1:] // dequeue
+		blocks = append(blocks, block)
+		children := childrenOfBlockWithID[block.ID]
+		if children != nil {
+			queue = append(queue, (*children)...)
+		}
+	}
+
+	return blocks
 }
 
 func arrayContainsBlockWithID(array []model.Block, blockID string) bool {
