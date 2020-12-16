@@ -1,4 +1,6 @@
-.PHONY: prebuild clean cleanall server server-mac server-linux server-win generate watch-server webapp mac-app win-app linux-app
+.PHONY: prebuild clean cleanall server server-mac server-linux server-win server-linux-package generate watch-server webapp mac-app win-app linux-app
+
+PACKAGE_FOLDER = octo
 
 all: server
 
@@ -23,6 +25,16 @@ server-linux:
 
 server-win:
 	cd server; env GOOS=windows GOARCH=amd64 go build -o ../bin/octoserver.exe ./main
+
+server-linux-package: server-linux webapp
+	rm -rf package
+	mkdir -p package/${PACKAGE_FOLDER}/bin
+	cp bin/octoserver package/${PACKAGE_FOLDER}/bin
+	cp -R webapp/pack package/${PACKAGE_FOLDER}/pack
+	cp config.json package/${PACKAGE_FOLDER}
+	mkdir -p dist
+	cd package && tar -czvf ../dist/octo-linux-amd64.tar.gz ${PACKAGE_FOLDER}
+	rm -rf package
 
 generate:
 	cd server; go get -modfile=go.tools.mod github.com/golang/mock/mockgen
