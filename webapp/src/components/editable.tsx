@@ -13,6 +13,7 @@ type Props = {
     isMarkdown: boolean
     isMultiline: boolean
     allowEmpty: boolean
+    readonly?: boolean
 
     onFocus?: () => void
     onBlur?: () => void
@@ -92,7 +93,7 @@ class Editable extends React.PureComponent<Props> {
             <div
                 ref={this.elementRef}
                 className={className}
-                contentEditable={true}
+                contentEditable={!this.props.readonly}
                 suppressContentEditableWarning={true}
                 style={initialStyle}
                 placeholder={placeholderText}
@@ -100,6 +101,10 @@ class Editable extends React.PureComponent<Props> {
                 dangerouslySetInnerHTML={{__html: html}}
 
                 onFocus={() => {
+                    if (this.props.readonly) {
+                        return
+                    }
+
                     if (this.elementRef.current) {
                         this.elementRef.current.innerText = this.text
                         this.elementRef.current.style.color = style?.color || ''
@@ -112,6 +117,10 @@ class Editable extends React.PureComponent<Props> {
                 }}
 
                 onBlur={async () => {
+                    if (this.props.readonly) {
+                        return
+                    }
+
                     if (this.elementRef.current) {
                         const newText = this.elementRef.current.innerText
                         const oldText = this.props.text || ''
@@ -134,6 +143,10 @@ class Editable extends React.PureComponent<Props> {
                 }}
 
                 onKeyDown={(e) => {
+                    if (this.props.readonly) {
+                        return
+                    }
+
                     if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
                         e.stopPropagation()
                         this.elementRef.current?.blur()

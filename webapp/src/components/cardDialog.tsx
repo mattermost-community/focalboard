@@ -20,6 +20,7 @@ type Props = {
     onClose: () => void
     showCard: (cardId?: string) => void
     intl: IntlShape
+    readonly: boolean
 }
 
 type State = {
@@ -106,7 +107,7 @@ class CardDialog extends React.Component<Props, State> {
         return (
             <Dialog
                 onClose={this.props.onClose}
-                toolsMenu={menu}
+                toolsMenu={!this.props.readonly && menu}
             >
                 {(cardTree?.card.isTemplate) &&
                     <div className='banner'>
@@ -120,6 +121,7 @@ class CardDialog extends React.Component<Props, State> {
                     <CardDetail
                         boardTree={this.props.boardTree}
                         cardTree={this.state.cardTree}
+                        readonly={this.props.readonly}
                     />
                 }
                 {(!this.state.cardTree && this.state.syncComplete) &&

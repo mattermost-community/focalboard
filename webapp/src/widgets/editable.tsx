@@ -10,6 +10,7 @@ type Props = {
     placeholderText?: string
     className?: string
     saveOnEsc?: boolean
+    readonly?: boolean
 
     onCancel?: () => void
     onSave?: (saveType: 'onEnter'|'onEsc'|'onBlur') => void
@@ -65,6 +66,7 @@ export default class Editable extends React.Component<Props> {
                         this.blur()
                     }
                 }}
+                readOnly={this.props.readonly}
             />
         )
     }

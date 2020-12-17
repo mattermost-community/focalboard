@@ -20,6 +20,7 @@ type Props = {
     board: Board,
     showView: (id: string) => void
     intl: IntlShape
+    readonly: boolean
 }
 
 export class ViewMenu extends React.PureComponent<Props> {
@@ -112,31 +113,34 @@ export class ViewMenu extends React.PureComponent<Props> {
                         onClick={this.handleViewClick}
                     />))}
                 <Menu.Separator/>
-                {boardTree.views.length > 1 &&
+                {!this.props.readonly && boardTree.views.length > 1 &&
                     <Menu.Text
                         id='__deleteView'
                         name='Delete View'
                         icon={<DeleteIcon/>}
                         onClick={this.handleDeleteView}
-                    />}
-                <Menu.SubMenu
-                    id='__addView'
-                    name='Add View'
-                    icon={<AddIcon/>}
-                >
-                    <Menu.Text
-                        id='board'
-                        name='Board'
-                        icon={<BoardIcon/>}
-                        onClick={this.handleAddViewBoard}
                     />
-                    <Menu.Text
-                        id='table'
-                        name='Table'
-                        icon={<TableIcon/>}
-                        onClick={this.handleAddViewTable}
-                    />
-                </Menu.SubMenu>
+                }
+                {!this.props.readonly &&
+                    <Menu.SubMenu
+                        id='__addView'
+                        name='Add View'
+                        icon={<AddIcon/>}
+                    >
+                        <Menu.Text
+                            id='board'
+                            name='Board'
+                            icon={<BoardIcon/>}
+                            onClick={this.handleAddViewBoard}
+                        />
+                        <Menu.Text
+                            id='table'
+                            name='Table'
+                            icon={<TableIcon/>}
+                            onClick={this.handleAddViewTable}
+                        />
+                    </Menu.SubMenu>
+                }
             </Menu>
         )
     }

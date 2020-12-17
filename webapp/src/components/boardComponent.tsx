@@ -36,6 +36,7 @@ type Props = {
     showView: (id: string) => void
     setSearchText: (text?: string) => void
     intl: IntlShape
+    readonly: boolean
 }
 
 type State = {
@@ -140,6 +141,7 @@ class BoardComponent extends React.Component<Props, State> {
                         cardId={this.state.shownCardId}
                         onClose={() => this.showCard(undefined)}
                         showCard={(cardId) => this.showCard(cardId)}
+                        readonly={this.props.readonly}
                     />
                 </RootPortal>}
 
@@ -147,6 +149,7 @@ class BoardComponent extends React.Component<Props, State> {
                     <ViewTitle
                         key={board.id + board.title}
                         board={board}
+                        readonly={this.props.readonly}
                     />
 
                     <div className='octo-board'>
@@ -159,6 +162,7 @@ class BoardComponent extends React.Component<Props, State> {
                             addCardTemplate={this.addCardTemplate}
                             editCardTemplate={this.editCardTemplate}
                             withGroupBy={true}
+                            readonly={this.props.readonly}
                         />
                         <div
                             className='octo-board-header'
@@ -176,18 +180,21 @@ class BoardComponent extends React.Component<Props, State> {
                                         id='BoardComponent.hidden-columns'
                                         defaultMessage='Hidden columns'
                                     />
-                                </div>}
+                                </div>
+                            }
 
-                            <div className='octo-board-header-cell narrow'>
-                                <Button
-                                    onClick={this.addGroupClicked}
-                                >
-                                    <FormattedMessage
-                                        id='BoardComponent.add-a-group'
-                                        defaultMessage='+ Add a group'
-                                    />
-                                </Button>
-                            </div>
+                            {!this.props.readonly &&
+                                <div className='octo-board-header-cell narrow'>
+                                    <Button
+                                        onClick={this.addGroupClicked}
+                                    >
+                                        <FormattedMessage
+                                            id='BoardComponent.add-a-group'
+                                            defaultMessage='+ Add a group'
+                                        />
+                                    </Button>
+                                </div>
+                            }
                         </div>
 
                         {/* Main content */}
@@ -205,16 +212,18 @@ class BoardComponent extends React.Component<Props, State> {
                                     onDrop={() => this.onDropToColumn(group.option)}
                                 >
                                     {group.cards.map((card) => this.renderCard(card, visiblePropertyTemplates))}
-                                    <Button
-                                        onClick={() => {
-                                            this.addCard(group.option.id)
-                                        }}
-                                    >
-                                        <FormattedMessage
-                                            id='BoardComponent.neww'
-                                            defaultMessage='+ New'
-                                        />
-                                    </Button>
+                                    {!this.props.readonly &&
+                                        <Button
+                                            onClick={() => {
+                                                this.addCard(group.option.id)
+                                            }}
+                                        >
+                                            <FormattedMessage
+                                                id='BoardComponent.neww'
+                                                defaultMessage='+ New'
+                                            />
+                                        </Button>
+                                    }
                                 </BoardColumn>
                             ))}
 
@@ -240,6 +249,7 @@ class BoardComponent extends React.Component<Props, State> {
                 card={card}
                 visiblePropertyTemplates={visiblePropertyTemplates}
                 key={card.id}
+                readonly={this.props.readonly}
                 isSelected={this.state.selectedCardIds.includes(card.id)}
                 onClick={(e) => {
                     this.cardClicked(e, card)
@@ -277,7 +287,7 @@ class BoardComponent extends React.Component<Props, State> {
                     ref={ref}
                     className='octo-board-header-cell'
 
-                    draggable={true}
+                    draggable={!this.props.readonly}
                     onDragStart={() => {
                         this.draggedHeaderOption = group.option
                     }}
@@ -320,21 +330,25 @@ class BoardComponent extends React.Component<Props, State> {
                     </div>
                     <Button>{`${group.cards.length}`}</Button>
                     <div className='octo-spacer'/>
-                    <MenuWrapper>
-                        <IconButton icon={<OptionsIcon/>}/>
-                        <Menu>
-                            <Menu.Text
-                                id='hide'
-                                icon={<HideIcon/>}
-                                name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
-                                onClick={() => mutator.hideViewColumn(activeView, '')}
+                    {!this.props.readonly &&
+                        <>
+                            <MenuWrapper>
+                                <IconButton icon={<OptionsIcon/>}/>
+                                <Menu>
+                                    <Menu.Text
+                                        id='hide'
+                                        icon={<HideIcon/>}
+                                        name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
+                                        onClick={() => mutator.hideViewColumn(activeView, '')}
+                                    />
+                                </Menu>
+                            </MenuWrapper>
+                            <IconButton
+                                icon={<AddIcon/>}
+                                onClick={() => this.addCard(undefined)}
                             />
-                        </Menu>
-                    </MenuWrapper>
-                    <IconButton
-                        icon={<AddIcon/>}
-                        onClick={() => this.addCard(undefined)}
-                    />
+                        </>
+                    }
                 </div>
             )
         }
@@ -346,7 +360,7 @@ class BoardComponent extends React.Component<Props, State> {
                 ref={ref}
                 className='octo-board-header-cell'
 
-                draggable={true}
+                draggable={!this.props.readonly}
                 onDragStart={() => {
                     this.draggedHeaderOption = group.option
                 }}
@@ -380,39 +394,44 @@ class BoardComponent extends React.Component<Props, State> {
                     onChanged={(text) => {
                         this.propertyNameChanged(group.option, text)
                     }}
+                    readonly={this.props.readonly}
                 />
                 <Button>{`${group.cards.length}`}</Button>
                 <div className='octo-spacer'/>
-                <MenuWrapper>
-                    <IconButton icon={<OptionsIcon/>}/>
-                    <Menu>
-                        <Menu.Text
-                            id='hide'
-                            icon={<HideIcon/>}
-                            name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
-                            onClick={() => mutator.hideViewColumn(activeView, group.option.id)}
+                {!this.props.readonly &&
+                    <>
+                        <MenuWrapper>
+                            <IconButton icon={<OptionsIcon/>}/>
+                            <Menu>
+                                <Menu.Text
+                                    id='hide'
+                                    icon={<HideIcon/>}
+                                    name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
+                                    onClick={() => mutator.hideViewColumn(activeView, group.option.id)}
+                                />
+                                <Menu.Text
+                                    id='delete'
+                                    icon={<DeleteIcon/>}
+                                    name={intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
+                                    onClick={() => mutator.deletePropertyOption(boardTree, boardTree.groupByProperty!, group.option)}
+                                />
+                                <Menu.Separator/>
+                                {Constants.menuColors.map((color) => (
+                                    <Menu.Color
+                                        key={color.id}
+                                        id={color.id}
+                                        name={color.name}
+                                        onClick={() => mutator.changePropertyOptionColor(boardTree.board, boardTree.groupByProperty!, group.option, color.id)}
+                                    />
+                                ))}
+                            </Menu>
+                        </MenuWrapper>
+                        <IconButton
+                            icon={<AddIcon/>}
+                            onClick={() => this.addCard(group.option.id)}
                         />
-                        <Menu.Text
-                            id='delete'
-                            icon={<DeleteIcon/>}
-                            name={intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
-                            onClick={() => mutator.deletePropertyOption(boardTree, boardTree.groupByProperty!, group.option)}
-                        />
-                        <Menu.Separator/>
-                        {Constants.menuColors.map((color) => (
-                            <Menu.Color
-                                key={color.id}
-                                id={color.id}
-                                name={color.name}
-                                onClick={() => mutator.changePropertyOptionColor(boardTree.board, boardTree.groupByProperty!, group.option, color.id)}
-                            />
-                        ))}
-                    </Menu>
-                </MenuWrapper>
-                <IconButton
-                    icon={<AddIcon/>}
-                    onClick={() => this.addCard(group.option.id)}
-                />
+                    </>
+                }
             </div>
         )
     }
@@ -457,7 +476,9 @@ class BoardComponent extends React.Component<Props, State> {
                     this.onDropToColumn(group.option)
                 }}
             >
-                <MenuWrapper>
+                <MenuWrapper
+                    disabled={this.props.readonly}
+                >
                     <div
                         key={group.option.id || 'empty'}
                         className={`octo-label ${group.option.color}`}

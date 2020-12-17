@@ -19,6 +19,7 @@ type Props = {
     showView: (id: string, boardId?: string) => void
     setSearchText: (text?: string) => void
     setLanguage: (lang: string) => void
+    readonly: boolean
 }
 
 class WorkspaceComponent extends React.PureComponent<Props> {
@@ -28,13 +29,15 @@ class WorkspaceComponent extends React.PureComponent<Props> {
         Utils.assert(workspaceTree)
         const element = (
             <div className='WorkspaceComponent'>
-                <Sidebar
-                    showBoard={showBoard}
-                    showView={showView}
-                    workspaceTree={workspaceTree}
-                    activeBoardId={boardTree?.board.id}
-                    setLanguage={setLanguage}
-                />
+                {!this.props.readonly &&
+                    <Sidebar
+                        showBoard={showBoard}
+                        showView={showView}
+                        workspaceTree={workspaceTree}
+                        activeBoardId={boardTree?.board.id}
+                        setLanguage={setLanguage}
+                    />
+                }
                 <div className='mainFrame'>
                     {(boardTree?.board.isTemplate) &&
                     <div className='banner'>
@@ -66,6 +69,7 @@ class WorkspaceComponent extends React.PureComponent<Props> {
                     boardTree={boardTree}
                     setSearchText={setSearchText}
                     showView={showView}
+                    readonly={this.props.readonly}
                 />)
         }
 
@@ -75,6 +79,7 @@ class WorkspaceComponent extends React.PureComponent<Props> {
                     boardTree={boardTree}
                     setSearchText={setSearchText}
                     showView={showView}
+                    readonly={this.props.readonly}
                 />)
         }
 

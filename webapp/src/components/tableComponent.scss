@@ -55,6 +55,8 @@
 
         .octo-propertyvalue {
             line-height: 17px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .octo-editable,

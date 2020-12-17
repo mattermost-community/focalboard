@@ -1,24 +1,31 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
+/* eslint-disable max-nested-callbacks */
+
 /// <reference types="Cypress" />
 
 describe('Create and delete board / card', () => {
+    const timestamp = new Date().toLocaleString();
+    const boardTitle = `Test Board (${timestamp})`;
+    const cardTitle = `Test Card (${timestamp})`;
+
     it('Can create and delete a board and card', () => {
         cy.visit('/');
         cy.contains('+ Add Board').click({force: true});
         cy.contains('Empty board').click({force: true});
         cy.get('.BoardComponent').should('exist');
+    });
 
-        const timestamp = new Date().toLocaleString();
-
+    it('Can set the board title', () => {
         // Board title
-        const boardTitle = `Test Board (${timestamp})`;
         cy.get('.ViewTitle>.Editable.title').
             type(boardTitle).
             type('{enter}').
             should('have.value', boardTitle);
+    });
 
+    it('Can rename the board view', () => {
         // Rename board view
         const boardViewTitle = `Test board (${timestamp})`;
         cy.get('.ViewHeader').
@@ -30,13 +37,16 @@ describe('Create and delete board / card', () => {
         cy.get('.ViewHeader').
             contains('.octo-editable', boardViewTitle).
             should('exist');
+    });
 
+    it('Can create a card', () => {
         // Create card
         cy.get('.ViewHeader').contains('New').click();
         cy.get('.CardDetail').should('exist');
+    });
 
+    it('Can set the card title', () => {
         // Card title
-        const cardTitle = `Test Card (${timestamp})`;
         cy.get('.CardDetail>.Editable.title').
             type(cardTitle).
             type('{enter}').
@@ -44,7 +54,9 @@ describe('Create and delete board / card', () => {
 
         // Close card
         cy.get('.Dialog.dialog-back').click({force: true});
+    });
 
+    it('Can create a table view', () => {
         // Create table view
         // cy.intercept('POST', '/api/v1/blocks').as('insertBlocks');
         cy.get('.ViewHeader').get('.DropdownIcon').first().parent().click();
@@ -59,7 +71,9 @@ describe('Create and delete board / card', () => {
 
         // Card should exist in table
         cy.get(`.TableRow [value='${cardTitle}']`).should('exist');
+    });
 
+    it('Can rename the table view', () => {
         // Rename table view
         const tableViewTitle = `Test table (${timestamp})`;
         cy.get('.ViewHeader').
@@ -71,11 +85,24 @@ describe('Create and delete board / card', () => {
         cy.get('.ViewHeader').
             contains('.octo-editable', tableViewTitle).
             should('exist');
+    });
 
+    it('Can sort the table', () => {
         // Sort
         cy.get('.ViewHeader').contains('Sort').click();
         cy.get('.ViewHeader').contains('Sort').parent().contains('Name').click();
+    });
 
+    it('Can view the readonly board', () => {
+        cy.url().then((url) => {
+            const readonlyUrl = url + '&r=1';
+            cy.visit(readonlyUrl);
+            cy.get('.ViewTitle>.Editable.title').should('have.attr', 'readonly');
+            cy.visit(url);
+        });
+    });
+
+    it('Can delete the board', () => {
         // Delete board
         cy.get('.Sidebar .octo-sidebar-list').
             contains(boardTitle).first().

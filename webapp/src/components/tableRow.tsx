@@ -19,6 +19,7 @@ type Props = {
     focusOnMount: boolean
     onSaveWithEnter: () => void
     showCard: (cardId: string) => void
+    readonly: boolean
 }
 
 type State = {
@@ -74,6 +75,7 @@ class TableRow extends React.Component<Props, State> {
                                 }
                             }}
                             onCancel={() => this.setState({title: card.title})}
+                            readonly={this.props.readonly}
                         />
                     </div>
 
@@ -99,7 +101,7 @@ class TableRow extends React.Component<Props, State> {
                                 style={{width: this.columnWidth(template.id)}}
                             >
                                 <PropertyValueElement
-                                    readOnly={false}
+                                    readOnly={this.props.readonly}
                                     card={card}
                                     boardTree={boardTree}
                                     propertyTemplate={template}

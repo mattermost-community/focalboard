@@ -30,6 +30,7 @@ type Props = {
     boardTree: BoardTree
     cardTree: CardTree
     intl: IntlShape
+    readonly: boolean
 }
 
 type State = {
@@ -74,6 +75,7 @@ class CardDetail extends React.Component<Props, State> {
                             block={block}
                             card={card}
                             contents={cardTree.contents}
+                            readonly={this.props.readonly}
                         />
                     ))}
                 </div>)
@@ -81,20 +83,22 @@ class CardDetail extends React.Component<Props, State> {
             contentElements = (<div className='octo-content'>
                 <div className='octo-block'>
                     <div className='octo-block-margin'/>
-                    <MarkdownEditor
-                        text=''
-                        placeholderText='Add a description...'
-                        onBlur={(text) => {
-                            if (text) {
-                                const block = new MutableTextBlock()
-                                block.parentId = card.id
-                                block.rootId = card.rootId
-                                block.title = text
-                                block.order = (this.props.cardTree.contents.length + 1) * 1000
-                                mutator.insertBlock(block, 'add card text')
-                            }
-                        }}
-                    />
+                    {!this.props.readonly &&
+                        <MarkdownEditor
+                            text=''
+                            placeholderText='Add a description...'
+                            onBlur={(text) => {
+                                if (text) {
+                                    const block = new MutableTextBlock()
+                                    block.parentId = card.id
+                                    block.rootId = card.rootId
+                                    block.title = text
+                                    block.order = (this.props.cardTree.contents.length + 1) * 1000
+                                    mutator.insertBlock(block, 'add card text')
+                                }
+                            }}
+                        />
+                    }
                 </div>
             </div>)
         }
@@ -107,8 +111,9 @@ class CardDetail extends React.Component<Props, State> {
                     <BlockIconSelector
                         block={card}
                         size='l'
+                        readonly={this.props.readonly}
                     />
-                    {!icon &&
+                    {!this.props.readonly && !icon &&
                         <div className='add-buttons'>
                             <Button
                                 onClick={() => {
@@ -137,6 +142,7 @@ class CardDetail extends React.Component<Props, State> {
                             }
                         }}
                         onCancel={() => this.setState({title: this.props.cardTree.card.title})}
+                        readonly={this.props.readonly}
                     />
 
                     {/* Property list */}
@@ -148,19 +154,22 @@ class CardDetail extends React.Component<Props, State> {
                                     key={propertyTemplate.id}
                                     className='octo-propertyrow'
                                 >
-                                    <MenuWrapper>
-                                        <div className='octo-propertyname'><Button>{propertyTemplate.name}</Button></div>
-                                        <PropertyMenu
-                                            propertyId={propertyTemplate.id}
-                                            propertyName={propertyTemplate.name}
-                                            propertyType={propertyTemplate.type}
-                                            onNameChanged={(newName: string) => mutator.renameProperty(board, propertyTemplate.id, newName)}
-                                            onTypeChanged={(newType: PropertyType) => mutator.changePropertyType(boardTree, propertyTemplate, newType)}
-                                            onDelete={(id: string) => mutator.deleteProperty(boardTree, id)}
-                                        />
-                                    </MenuWrapper>
+                                    {this.props.readonly && <div className='octo-propertyname'>{propertyTemplate.name}</div>}
+                                    {!this.props.readonly &&
+                                        <MenuWrapper>
+                                            <div className='octo-propertyname'><Button>{propertyTemplate.name}</Button></div>
+                                            <PropertyMenu
+                                                propertyId={propertyTemplate.id}
+                                                propertyName={propertyTemplate.name}
+                                                propertyType={propertyTemplate.type}
+                                                onNameChanged={(newName: string) => mutator.renameProperty(board, propertyTemplate.id, newName)}
+                                                onTypeChanged={(newType: PropertyType) => mutator.changePropertyType(boardTree, propertyTemplate, newType)}
+                                                onDelete={(id: string) => mutator.deleteProperty(boardTree, id)}
+                                            />
+                                        </MenuWrapper>
+                                    }
                                     <PropertyValueElement
-                                        readOnly={false}
+                                        readOnly={this.props.readonly}
                                         card={card}
                                         boardTree={boardTree}
                                         propertyTemplate={propertyTemplate}
@@ -170,29 +179,35 @@ class CardDetail extends React.Component<Props, State> {
                             )
                         })}
 
-                        <div className='octo-propertyname add-property'>
-                            <Button
-                                onClick={async () => {
-                                    // TODO: Show UI
-                                    await mutator.insertPropertyTemplate(boardTree)
-                                }}
-                            >
-                                <FormattedMessage
-                                    id='CardDetail.add-property'
-                                    defaultMessage='+ Add a property'
-                                />
-                            </Button>
-                        </div>
+                        {!this.props.readonly &&
+                            <div className='octo-propertyname add-property'>
+                                <Button
+                                    onClick={async () => {
+                                        // TODO: Show UI
+                                        await mutator.insertPropertyTemplate(boardTree)
+                                    }}
+                                >
+                                    <FormattedMessage
+                                        id='CardDetail.add-property'
+                                        defaultMessage='+ Add a property'
+                                    />
+                                </Button>
+                            </div>
+                        }
                     </div>
 
                     {/* Comments */}
 
-                    <hr/>
-                    <CommentsList
-                        comments={comments}
-                        cardId={card.id}
-                    />
-                    <hr/>
+                    {!this.props.readonly &&
+                    <>
+                        <hr/>
+                        <CommentsList
+                            comments={comments}
+                            cardId={card.id}
+                        />
+                        <hr/>
+                    </>
+                    }
                 </div>
 
                 {/* Content blocks */}
@@ -201,38 +216,40 @@ class CardDetail extends React.Component<Props, State> {
                     {contentElements}
                 </div>
 
-                <div className='CardDetail content add-content'>
-                    <MenuWrapper>
-                        <Button>
-                            <FormattedMessage
-                                id='CardDetail.add-content'
-                                defaultMessage='Add content'
-                            />
-                        </Button>
-                        <Menu position='top'>
-                            <Menu.Text
-                                id='text'
-                                name={intl.formatMessage({id: 'CardDetail.text', defaultMessage: 'Text'})}
-                                onClick={() => {
-                                    const block = new MutableTextBlock()
-                                    block.parentId = card.id
-                                    block.rootId = card.rootId
-                                    block.order = (this.props.cardTree.contents.length + 1) * 1000
-                                    mutator.insertBlock(block, 'add text')
-                                }}
-                            />
-                            <Menu.Text
-                                id='image'
-                                name={intl.formatMessage({id: 'CardDetail.image', defaultMessage: 'Image'})}
-                                onClick={() => Utils.selectLocalFile(
-                                    (file) => mutator.createImageBlock(card, file, (this.props.cardTree.contents.length + 1) * 1000),
-                                    '.jpg,.jpeg,.png',
-                                )}
-                            />
+                {!this.props.readonly &&
+                    <div className='CardDetail content add-content'>
+                        <MenuWrapper>
+                            <Button>
+                                <FormattedMessage
+                                    id='CardDetail.add-content'
+                                    defaultMessage='Add content'
+                                />
+                            </Button>
+                            <Menu position='top'>
+                                <Menu.Text
+                                    id='text'
+                                    name={intl.formatMessage({id: 'CardDetail.text', defaultMessage: 'Text'})}
+                                    onClick={() => {
+                                        const block = new MutableTextBlock()
+                                        block.parentId = card.id
+                                        block.rootId = card.rootId
+                                        block.order = (this.props.cardTree.contents.length + 1) * 1000
+                                        mutator.insertBlock(block, 'add text')
+                                    }}
+                                />
+                                <Menu.Text
+                                    id='image'
+                                    name={intl.formatMessage({id: 'CardDetail.image', defaultMessage: 'Image'})}
+                                    onClick={() => Utils.selectLocalFile(
+                                        (file) => mutator.createImageBlock(card, file, (this.props.cardTree.contents.length + 1) * 1000),
+                                        '.jpg,.jpeg,.png',
+                                    )}
+                                />
 
-                        </Menu>
-                    </MenuWrapper>
-                </div>
+                            </Menu>
+                        </MenuWrapper>
+                    </div>
+                }
             </>
         )
     }

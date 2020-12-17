@@ -11,6 +11,7 @@ type Props = {
     isDisabled?: boolean;
     stopPropagationOnToggle?: boolean;
     className?: string
+    disabled?: boolean
 }
 
 type State = {
@@ -68,6 +69,10 @@ export default class MenuWrapper extends React.PureComponent<Props, State> {
     }
 
     private toggle = (e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
+        if (this.props.disabled) {
+            return
+        }
+
         /**
          * This is only here so that we can toggle the menus in the sidebar, because the default behavior of the mobile
          * version (ie the one that uses a modal) needs propagation to close the modal after selecting something
@@ -84,15 +89,22 @@ export default class MenuWrapper extends React.PureComponent<Props, State> {
 
     public render(): JSX.Element {
         const {children} = this.props
+        let className = 'MenuWrapper'
+        if (this.props.disabled) {
+            className += ' disabled'
+        }
+        if (this.props.className) {
+            className += ' ' + this.props.className
+        }
 
         return (
             <div
-                className={`MenuWrapper ${this.props.className || ''}`}
+                className={className}
                 onClick={this.toggle}
                 ref={this.node}
             >
                 {children ? Object.values(children)[0] : null}
-                {children && this.state.open ? Object.values(children)[1] : null}
+                {children && !this.props.disabled && this.state.open ? Object.values(children)[1] : null}
             </div>
         )
     }

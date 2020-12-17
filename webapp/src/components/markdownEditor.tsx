@@ -12,6 +12,7 @@ type Props = {
     placeholderText?: string
     uniqueId?: string
     className?: string
+    readonly?: boolean
 
     onChange?: (text: string) => void
     onFocus?: () => void
@@ -28,7 +29,7 @@ class MarkdownEditor extends React.Component<Props, State> {
     }
 
     get text(): string {
-        return this.elementRef.current!.state.value
+        return this.elementRef.current!.state.value || ''
     }
     set text(value: string) {
         this.elementRef.current!.setState({value})
@@ -91,7 +92,7 @@ class MarkdownEditor extends React.Component<Props, State> {
                 style={{display: this.state.isEditing ? 'none' : undefined}}
                 dangerouslySetInnerHTML={{__html: html}}
                 onClick={() => {
-                    if (!this.state.isEditing) {
+                    if (!this.props.readonly && !this.state.isEditing) {
                         this.showEditor()
                     }
                 }}

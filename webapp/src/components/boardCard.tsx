@@ -26,6 +26,7 @@ type BoardCardProps = {
     onDragEnd: (e: React.DragEvent<HTMLDivElement>) => void
     onDrop: (e: React.DragEvent<HTMLDivElement>) => void
     intl: IntlShape
+    readonly: boolean
 }
 
 type BoardCardState = {
@@ -54,7 +55,7 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
         const element = (
             <div
                 className={className}
-                draggable={true}
+                draggable={!this.props.readonly}
                 style={{opacity: this.state.isDragged ? 0.5 : 1}}
                 onClick={this.props.onClick}
                 onDragStart={(e) => {
@@ -86,28 +87,30 @@ class BoardCard extends React.Component<BoardCardProps, BoardCardState> {
                     }
                 }}
             >
-                <MenuWrapper
-                    className='optionsMenu'
-                    stopPropagationOnToggle={true}
-                >
-                    <IconButton icon={<OptionsIcon/>}/>
-                    <Menu position='left'>
-                        <Menu.Text
-                            icon={<DeleteIcon/>}
-                            id='delete'
-                            name={intl.formatMessage({id: 'BoardCard.delete', defaultMessage: 'Delete'})}
-                            onClick={() => mutator.deleteBlock(card, 'delete card')}
-                        />
-                        <Menu.Text
-                            icon={<DuplicateIcon/>}
-                            id='duplicate'
-                            name={intl.formatMessage({id: 'BoardCard.duplicate', defaultMessage: 'Duplicate'})}
-                            onClick={() => {
-                                mutator.duplicateCard(card.id)
-                            }}
-                        />
-                    </Menu>
-                </MenuWrapper>
+                {!this.props.readonly &&
+                    <MenuWrapper
+                        className='optionsMenu'
+                        stopPropagationOnToggle={true}
+                    >
+                        <IconButton icon={<OptionsIcon/>}/>
+                        <Menu position='left'>
+                            <Menu.Text
+                                icon={<DeleteIcon/>}
+                                id='delete'
+                                name={intl.formatMessage({id: 'BoardCard.delete', defaultMessage: 'Delete'})}
+                                onClick={() => mutator.deleteBlock(card, 'delete card')}
+                            />
+                            <Menu.Text
+                                icon={<DuplicateIcon/>}
+                                id='duplicate'
+                                name={intl.formatMessage({id: 'BoardCard.duplicate', defaultMessage: 'Duplicate'})}
+                                onClick={() => {
+                                    mutator.duplicateCard(card.id)
+                                }}
+                            />
+                        </Menu>
+                    </MenuWrapper>
+                }
 
                 <div className='octo-icontitle'>
                     { card.icon ? <div className='octo-icon'>{card.icon}</div> : undefined }

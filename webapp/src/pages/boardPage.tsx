@@ -20,6 +20,7 @@ type State = {
     viewId: string
     workspaceTree: WorkspaceTree
     boardTree?: BoardTree
+    readonly: boolean
 }
 
 export default class BoardPage extends React.Component<Props, State> {
@@ -30,11 +31,13 @@ export default class BoardPage extends React.Component<Props, State> {
         const queryString = new URLSearchParams(window.location.search)
         const boardId = queryString.get('id') || ''
         const viewId = queryString.get('v') || ''
+        const readonly = (queryString.get('r') === '1')
 
         this.state = {
             boardId,
             viewId,
             workspaceTree: new MutableWorkspaceTree(),
+            readonly,
         }
 
         Utils.log(`BoardPage. boardId: ${boardId}`)
@@ -70,6 +73,10 @@ export default class BoardPage extends React.Component<Props, State> {
 
     private undoRedoHandler = async (e: KeyboardEvent) => {
         if (e.target !== document.body) {
+            return
+        }
+
+        if (this.state.readonly) {
             return
         }
 
@@ -136,6 +143,7 @@ export default class BoardPage extends React.Component<Props, State> {
                         this.setSearchText(text)
                     }}
                     setLanguage={this.props.setLanguage}
+                    readonly={this.state.readonly}
                 />
             </div>
         )
@@ -246,6 +254,10 @@ export default class BoardPage extends React.Component<Props, State> {
         let newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname
         if (boardId) {
             newUrl += `?id=${encodeURIComponent(boardId)}`
+
+            if (this.state.readonly) {
+                newUrl += '&r=1'
+            }
         }
         window.history.pushState({path: newUrl}, '', newUrl)
 
@@ -260,7 +272,10 @@ export default class BoardPage extends React.Component<Props, State> {
             this.attachToBoard(boardId, viewId)
         }
 
-        const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + `?id=${encodeURIComponent(boardId)}&v=${encodeURIComponent(viewId)}`
+        let newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + `?id=${encodeURIComponent(boardId)}&v=${encodeURIComponent(viewId)}`
+        if (this.state.readonly) {
+            newUrl += '&r=1'
+        }
         window.history.pushState({path: newUrl}, '', newUrl)
     }
 
