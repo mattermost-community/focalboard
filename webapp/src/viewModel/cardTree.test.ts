@@ -8,6 +8,8 @@ import 'isomorphic-fetch'
 import {TestBlockFactory} from '../test/testBlockFactory'
 import {FetchMock} from '../test/fetchMock'
 
+import {Utils} from '../utils'
+
 import {CardTree, MutableCardTree} from './cardTree'
 
 global.fetch = FetchMock.fn
@@ -20,9 +22,14 @@ test('CardTree', async () => {
     const card = TestBlockFactory.createCard()
     expect(card.id).not.toBeNull()
     const comment = TestBlockFactory.createComment(card)
+
+    // Content
     const text = TestBlockFactory.createText(card)
+    await Utils.sleep(10)
     const image = TestBlockFactory.createImage(card)
+    await Utils.sleep(10)
     const divider = TestBlockFactory.createDivider(card)
+    card.contentOrder = [image.id, divider.id, text.id]
 
     let cardTree: CardTree | undefined
 
@@ -41,12 +48,14 @@ test('CardTree', async () => {
     expect(FetchMock.fn).toBeCalledTimes(2)
     expect(cardTree.card).toEqual(card)
     expect(cardTree.comments).toEqual([comment])
-    expect(cardTree.contents).toEqual([text, image, divider])
+    expect(cardTree.contents).toEqual([image, divider, text]) // Must match specified card.contentOrder
 
     // Incremental update
     const comment2 = TestBlockFactory.createComment(card)
     const text2 = TestBlockFactory.createText(card)
+    await Utils.sleep(10)
     const image2 = TestBlockFactory.createImage(card)
+    await Utils.sleep(10)
     const divider2 = TestBlockFactory.createDivider(card)
 
     cardTree = MutableCardTree.incrementalUpdate(cardTree, [comment2, text2, image2, divider2])
@@ -55,7 +64,9 @@ test('CardTree', async () => {
         fail('incrementalUpdate')
     }
     expect(cardTree.comments).toEqual([comment, comment2])
-    expect(cardTree.contents).toEqual([text, image, divider, text2, image2, divider2])
+
+    // The added content's order was not specified in card.contentOrder, so much match created date order
+    expect(cardTree.contents).toEqual([image, divider, text, text2, image2, divider2])
 
     // Incremental update: No change
     const anotherCard = TestBlockFactory.createCard()

@@ -1,18 +1,17 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+import {BlockIcons} from './blockIcons'
 import {IBlock, MutableBlock} from './blocks/block'
 import {Board, IPropertyOption, IPropertyTemplate, MutableBoard, PropertyType} from './blocks/board'
 import {BoardView, ISortOption, MutableBoardView} from './blocks/boardView'
 import {Card, MutableCard} from './blocks/card'
 import {MutableImageBlock} from './blocks/imageBlock'
-import {IOrderedBlock, MutableOrderedBlock} from './blocks/orderedBlock'
-import {BoardTree} from './viewModel/boardTree'
 import {FilterGroup} from './filterGroup'
 import octoClient from './octoClient'
+import {OctoUtils} from './octoUtils'
 import undoManager from './undomanager'
 import {Utils} from './utils'
-import {OctoUtils} from './octoUtils'
-import {BlockIcons} from './blockIcons'
+import {BoardTree} from './viewModel/boardTree'
 
 //
 // The Mutator is used to make all changes to server state
@@ -173,10 +172,10 @@ class Mutator {
         await this.updateBlock(newBoard, board, actionDescription)
     }
 
-    async changeOrder(block: IOrderedBlock, order: number, description = 'change order') {
-        const newBlock = new MutableOrderedBlock(block)
-        newBlock.order = order
-        await this.updateBlock(newBlock, block, description)
+    async changeCardContentOrder(card: Card, contentOrder: string[], description = 'reorder'): Promise<void> {
+        const newCard = new MutableCard(card)
+        newCard.contentOrder = contentOrder
+        await this.updateBlock(newCard, card, description)
     }
 
     // Property Templates
@@ -583,7 +582,7 @@ class Mutator {
         return octoClient.importFullArchive(blocks)
     }
 
-    async createImageBlock(parent: IBlock, file: File, order = 1000): Promise<IBlock | undefined> {
+    async createImageBlock(parent: IBlock, file: File, description = 'add image'): Promise<IBlock | undefined> {
         const url = await octoClient.uploadFile(file)
         if (!url) {
             return undefined
@@ -592,7 +591,6 @@ class Mutator {
         const block = new MutableImageBlock()
         block.parentId = parent.id
         block.rootId = parent.rootId
-        block.order = order
         block.url = url
 
         await undoManager.perform(
@@ -602,7 +600,7 @@ class Mutator {
             async () => {
                 await octoClient.deleteBlock(block.id)
             },
-            'add image',
+            description,
             this.undoGroupId,
         )
 

@@ -99,7 +99,6 @@ class TestBlockFactory {
         block.parentId = card.id
         block.rootId = card.rootId
         block.title = 'title'
-        block.order = 100
 
         return block
     }
@@ -109,7 +108,6 @@ class TestBlockFactory {
         block.parentId = card.id
         block.rootId = card.rootId
         block.url = 'url'
-        block.order = 100
 
         return block
     }
@@ -119,7 +117,6 @@ class TestBlockFactory {
         block.parentId = card.id
         block.rootId = card.rootId
         block.title = 'title'
-        block.order = 100
 
         return block
     }

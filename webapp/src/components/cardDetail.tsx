@@ -89,12 +89,7 @@ class CardDetail extends React.Component<Props, State> {
                             placeholderText='Add a description...'
                             onBlur={(text) => {
                                 if (text) {
-                                    const block = new MutableTextBlock()
-                                    block.parentId = card.id
-                                    block.rootId = card.rootId
-                                    block.title = text
-                                    block.order = (this.props.cardTree.contents.length + 1) * 1000
-                                    mutator.insertBlock(block, 'add card text')
+                                    this.addTextBlock(text)
                                 }
                             }}
                         />
@@ -230,19 +225,24 @@ class CardDetail extends React.Component<Props, State> {
                                     id='text'
                                     name={intl.formatMessage({id: 'CardDetail.text', defaultMessage: 'Text'})}
                                     onClick={() => {
-                                        const block = new MutableTextBlock()
-                                        block.parentId = card.id
-                                        block.rootId = card.rootId
-                                        block.order = (this.props.cardTree.contents.length + 1) * 1000
-                                        mutator.insertBlock(block, 'add text')
+                                        this.addTextBlock('')
                                     }}
                                 />
                                 <Menu.Text
                                     id='image'
                                     name={intl.formatMessage({id: 'CardDetail.image', defaultMessage: 'Image'})}
-                                    onClick={() => Utils.selectLocalFile(
-                                        (file) => mutator.createImageBlock(card, file, (this.props.cardTree.contents.length + 1) * 1000),
-                                        '.jpg,.jpeg,.png',
+                                    onClick={() => Utils.selectLocalFile((file) => {
+                                        mutator.performAsUndoGroup(async () => {
+                                            const description = intl.formatMessage({id: 'ContentBlock.addImage', defaultMessage: 'add image'})
+                                            const newBlock = await mutator.createImageBlock(card, file, description)
+                                            if (newBlock) {
+                                                const contentOrder = card.contentOrder.slice()
+                                                contentOrder.push(newBlock.id)
+                                                await mutator.changeCardContentOrder(card, contentOrder, description)
+                                            }
+                                        })
+                                    },
+                                    '.jpg,.jpeg,.png',
                                     )}
                                 />
 
@@ -252,6 +252,24 @@ class CardDetail extends React.Component<Props, State> {
                 }
             </>
         )
+    }
+
+    private addTextBlock(text: string): void {
+        const {intl, cardTree} = this.props
+        const {card} = cardTree
+
+        const block = new MutableTextBlock()
+        block.parentId = card.id
+        block.rootId = card.rootId
+        block.title = text
+
+        const contentOrder = card.contentOrder.slice()
+        contentOrder.push(block.id)
+        mutator.performAsUndoGroup(async () => {
+            const description = intl.formatMessage({id: 'CardDetail.addCardText', defaultMessage: 'add card text'})
+            await mutator.insertBlock(block, description)
+            await mutator.changeCardContentOrder(card, contentOrder, description)
+        })
     }
 }
 

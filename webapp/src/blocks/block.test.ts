@@ -63,7 +63,6 @@ test('block: clone text', async () => {
     const blockB = new MutableTextBlock(blockA)
 
     expect(blockB).toEqual(blockA)
-    expect(blockB.order).toEqual(blockA.order)
 })
 
 test('block: clone image', async () => {
@@ -72,7 +71,6 @@ test('block: clone image', async () => {
     const blockB = new MutableImageBlock(blockA)
 
     expect(blockB).toEqual(blockA)
-    expect(blockB.order).toEqual(blockA.order)
     expect(blockB.url.length).toBeGreaterThan(0)
     expect(blockB.url).toEqual(blockA.url)
 })
@@ -83,5 +81,4 @@ test('block: clone divider', async () => {
     const blockB = new MutableDividerBlock(blockA)
 
     expect(blockB).toEqual(blockA)
-    expect(blockB.order).toEqual(blockA.order)
 })

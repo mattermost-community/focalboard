@@ -76,6 +76,10 @@ class Utils {
         return text
     }
 
+    static sleep(miliseconds: number): Promise<void> {
+        return new Promise((resolve) => setTimeout(resolve, miliseconds))
+    }
+
     // Errors
 
     static assertValue(valueObject: any): void {
@@ -199,6 +203,10 @@ class Utils {
             }
         }
         return true
+    }
+
+    static arrayMove(arr: any[], srcIndex: number, destIndex: number): void {
+        arr.splice(destIndex, 0, arr.splice(srcIndex, 1)[0])
     }
 }
 

@@ -1,10 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IOrderedBlock, MutableOrderedBlock} from './orderedBlock'
+import {IContentBlock, MutableContentBlock} from './contentBlock'
 
-type DividerBlock = IOrderedBlock
+type DividerBlock = IContentBlock
 
-class MutableDividerBlock extends MutableOrderedBlock {
+class MutableDividerBlock extends MutableContentBlock {
     constructor(block: any = {}) {
         super(block)
         this.type = 'divider'
