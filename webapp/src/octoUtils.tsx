@@ -130,6 +130,12 @@ class OctoUtils {
                 const view = newBlock as MutableBoardView
                 view.cardOrder = view.cardOrder.map((o) => idMap[o])
             }
+
+            // Remap card content order
+            if (newBlock.type === 'card') {
+                const card = newBlock as MutableCard
+                card.contentOrder = card.contentOrder.map((o) => idMap[o])
+            }
         })
 
         const newSourceBlock = newBlocks.find((block) => block.id === newSourceBlockId)!

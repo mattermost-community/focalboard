@@ -47,6 +47,7 @@ test('block: clone card', async () => {
     expect(cardB).toEqual(cardA)
     expect(cardB.icon).toBe(cardA.icon)
     expect(cardB.isTemplate).toBe(cardA.isTemplate)
+    expect(cardB.contentOrder).toEqual(cardA.contentOrder)
 })
 
 test('block: clone comment', async () => {
