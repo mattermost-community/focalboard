@@ -73,6 +73,15 @@
         width: 20px;
         flex: 0 0 auto;
     }
+
+    @media not screen and (max-width: 430px) {
+        &.top {
+            bottom: 100%;
+        }
+        &.left {
+            right: 0;
+        }
+    }
 }
 
 .Menu, .SubMenuOption .SubMenu {
@@ -123,13 +132,6 @@
         }
     }
     @media not screen and (max-width: 430px) {
-        &.top {
-            bottom: 100%;
-        }
-        &.left {
-            right: 0;
-        }
-
         .hideOnWidescreen {
         /* Hide controls (e.g. close button) on larger screens */
             display: none !important;
