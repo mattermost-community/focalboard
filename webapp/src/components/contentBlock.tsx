@@ -89,7 +89,7 @@ class ContentBlock extends React.PureComponent<Props> {
                                             const contentOrder = contents.map((o) => o.id)
                                             contentOrder.splice(index, 0, newBlock.id)
                                             mutator.performAsUndoGroup(async () => {
-                                                const description = intl.formatMessage({id: 'ContentBlock.addText', defaultMessage: 'Add text'})
+                                                const description = intl.formatMessage({id: 'ContentBlock.addText', defaultMessage: 'add text'})
                                                 await mutator.insertBlock(newBlock, description)
                                                 await mutator.changeCardContentOrder(card, contentOrder, description)
                                             })
@@ -102,7 +102,7 @@ class ContentBlock extends React.PureComponent<Props> {
                                         onClick={() => {
                                             Utils.selectLocalFile((file) => {
                                                 mutator.performAsUndoGroup(async () => {
-                                                    const description = intl.formatMessage({id: 'ContentBlock.addImage', defaultMessage: 'Add image'})
+                                                    const description = intl.formatMessage({id: 'ContentBlock.addImage', defaultMessage: 'add image'})
                                                     const newBlock = await mutator.createImageBlock(card, file, description)
                                                     if (newBlock) {
                                                         const contentOrder = contents.map((o) => o.id)
@@ -126,7 +126,7 @@ class ContentBlock extends React.PureComponent<Props> {
                                             const contentOrder = contents.map((o) => o.id)
                                             contentOrder.splice(index, 0, newBlock.id)
                                             mutator.performAsUndoGroup(async () => {
-                                                const description = intl.formatMessage({id: 'ContentBlock.addDivider', defaultMessage: 'Add divider'})
+                                                const description = intl.formatMessage({id: 'ContentBlock.addDivider', defaultMessage: 'add divider'})
                                                 await mutator.insertBlock(newBlock, description)
                                                 await mutator.changeCardContentOrder(card, contentOrder, description)
                                             })

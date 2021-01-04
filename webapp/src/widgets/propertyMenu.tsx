@@ -1,12 +1,11 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
+import {injectIntl, IntlShape} from 'react-intl'
 
 import {PropertyType} from '../blocks/board'
 import {Utils} from '../utils'
-
 import Menu from '../widgets/menu'
-
 import './propertyMenu.scss'
 
 type Props = {
@@ -16,13 +15,14 @@ type Props = {
     onNameChanged: (newName: string) => void
     onTypeChanged: (newType: PropertyType) => void
     onDelete: (id: string) => void
+    intl: IntlShape
 }
 
 type State = {
     name: string
 }
 
-export default class PropertyMenu extends React.PureComponent<Props, State> {
+class PropertyMenu extends React.PureComponent<Props, State> {
     private nameTextbox = React.createRef<HTMLInputElement>()
 
     constructor(props: Props) {
@@ -36,26 +36,32 @@ export default class PropertyMenu extends React.PureComponent<Props, State> {
     }
 
     private typeDisplayName(type: PropertyType): string {
+        const {intl} = this.props
+
         switch (type) {
-        case 'text': return 'Text'
-        case 'number': return 'Number'
-        case 'select': return 'Select'
-        case 'multiSelect': return 'Multi Select'
-        case 'person': return 'Person'
-        case 'file': return 'File or Media'
-        case 'checkbox': return 'Checkbox'
-        case 'url': return 'URL'
-        case 'email': return 'Email'
-        case 'phone': return 'Phone'
-        case 'createdTime': return 'Created Time'
-        case 'createdBy': return 'Created By'
-        case 'updatedTime': return 'Updated Time'
-        case 'updatedBy': return 'Updated By'
+        case 'text': return intl.formatMessage({id: 'PropertyType.Text', defaultMessage: 'Text'})
+        case 'number': return intl.formatMessage({id: 'PropertyType.Number', defaultMessage: 'Number'})
+        case 'select': return intl.formatMessage({id: 'PropertyType.Select', defaultMessage: 'Select'})
+        case 'multiSelect': return intl.formatMessage({id: 'PropertyType.MultiSelect', defaultMessage: 'Multi Select'})
+        case 'person': return intl.formatMessage({id: 'PropertyType.Person', defaultMessage: 'Person'})
+        case 'file': return intl.formatMessage({id: 'PropertyType.File', defaultMessage: 'File or Media'})
+        case 'checkbox': return intl.formatMessage({id: 'PropertyType.Checkbox', defaultMessage: 'Checkbox'})
+        case 'url': return intl.formatMessage({id: 'PropertyType.URL', defaultMessage: 'URL'})
+        case 'email': return intl.formatMessage({id: 'PropertyType.Email', defaultMessage: 'Email'})
+        case 'phone': return intl.formatMessage({id: 'PropertyType.Phone', defaultMessage: 'Phone'})
+        case 'createdTime': return intl.formatMessage({id: 'PropertyType.CreatedTime', defaultMessage: 'Created Time'})
+        case 'createdBy': return intl.formatMessage({id: 'PropertyType.CreatedBy', defaultMessage: 'Created By'})
+        case 'updatedTime': return intl.formatMessage({id: 'PropertyType.UpdatedTime', defaultMessage: 'Updated Time'})
+        case 'updatedBy': return intl.formatMessage({id: 'PropertyType.UpdatedBy', defaultMessage: 'Updated By'})
         default: {
             Utils.assertFailure(`typeDisplayName, unhandled type: ${type}`)
             return type
         }
         }
+    }
+
+    private typeMenuTitle(type: PropertyType): string {
+        return `${this.props.intl.formatMessage({id: 'PropertyMenu.typeTitle', defaultMessage: 'Type'})}: ${this.typeDisplayName(type)}`
     }
 
     public render(): JSX.Element {
@@ -78,8 +84,16 @@ export default class PropertyMenu extends React.PureComponent<Props, State> {
                 />
                 <Menu.SubMenu
                     id='type'
-                    name={this.typeDisplayName(this.props.propertyType)}
+                    name={this.typeMenuTitle(this.props.propertyType)}
                 >
+                    <Menu.Label>
+                        <b>
+                            {this.props.intl.formatMessage({id: 'PropertyMenu.changeType', defaultMessage: 'Change property type'})}
+                        </b>
+                    </Menu.Label>
+
+                    <Menu.Separator/>
+
                     <Menu.Text
                         id='text'
                         name='Text'
@@ -115,3 +129,5 @@ export default class PropertyMenu extends React.PureComponent<Props, State> {
         )
     }
 }
+
+export default injectIntl(PropertyMenu)
