@@ -7,7 +7,7 @@ import {Archiver} from '../archiver'
 import {Board, MutableBoard} from '../blocks/board'
 import {BoardView, MutableBoardView} from '../blocks/boardView'
 import mutator from '../mutator'
-import {darkTheme, lightTheme, mattermostTheme, setTheme} from '../theme'
+import {defaultTheme, darkTheme, lightTheme, setTheme} from '../theme'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
 import Button from '../widgets/buttons/button'
 import IconButton from '../widgets/buttons/iconButton'
@@ -303,6 +303,11 @@ class Sidebar extends React.Component<Props, State> {
                             position='top'
                         >
                             <Menu.Text
+                                id='default-theme'
+                                name={intl.formatMessage({id: 'Sidebar.default-theme', defaultMessage: 'Default theme'})}
+                                onClick={async () => setTheme(defaultTheme)}
+                            />
+                            <Menu.Text
                                 id='dark-theme'
                                 name={intl.formatMessage({id: 'Sidebar.dark-theme', defaultMessage: 'Dark theme'})}
                                 onClick={async () => setTheme(darkTheme)}
@@ -311,11 +316,6 @@ class Sidebar extends React.Component<Props, State> {
                                 id='light-theme'
                                 name={intl.formatMessage({id: 'Sidebar.light-theme', defaultMessage: 'Light theme'})}
                                 onClick={async () => setTheme(lightTheme)}
-                            />
-                            <Menu.Text
-                                id='mattermost-theme'
-                                name={intl.formatMessage({id: 'Sidebar.mattermost-theme', defaultMessage: 'Mattermost theme'})}
-                                onClick={async () => setTheme(mattermostTheme)}
                             />
                         </Menu.SubMenu>
                     </Menu>
