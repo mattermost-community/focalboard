@@ -12,6 +12,7 @@ import {BoardTree} from '../viewModel/boardTree'
 import AddIcon from '../widgets/icons/add'
 import BoardIcon from '../widgets/icons/board'
 import DeleteIcon from '../widgets/icons/delete'
+import DuplicateIcon from '../widgets/icons/duplicate'
 import TableIcon from '../widgets/icons/table'
 import Menu from '../widgets/menu'
 
@@ -24,6 +25,27 @@ type Props = {
 }
 
 export class ViewMenu extends React.PureComponent<Props> {
+    private handleDuplicateView = async () => {
+        const {boardTree, showView} = this.props
+        Utils.log('duplicateView')
+        const currentViewId = boardTree.activeView.id
+        const newView = boardTree.activeView.duplicate()
+        newView.title = `Copy of ${boardTree.activeView.title}`
+        await mutator.insertBlock(
+            newView,
+            'duplicate view',
+            async () => {
+                // This delay is needed because OctoListener has a default 100 ms notification delay before updates
+                setTimeout(() => {
+                    showView(newView.id)
+                }, 120)
+            },
+            async () => {
+                showView(currentViewId)
+            },
+        )
+    }
+
     private handleDeleteView = async () => {
         const {boardTree, showView} = this.props
         Utils.log('deleteView')
@@ -113,6 +135,14 @@ export class ViewMenu extends React.PureComponent<Props> {
                         onClick={this.handleViewClick}
                     />))}
                 <Menu.Separator/>
+                {!this.props.readonly &&
+                    <Menu.Text
+                        id='__duplicateView'
+                        name='Duplicate View'
+                        icon={<DuplicateIcon/>}
+                        onClick={this.handleDuplicateView}
+                    />
+                }
                 {!this.props.readonly && boardTree.views.length > 1 &&
                     <Menu.Text
                         id='__deleteView'

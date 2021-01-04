@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 import {IBlock} from '../blocks/block'
 import {FilterGroup} from '../filterGroup'
+import {Utils} from '../utils'
 
 import {MutableBlock} from './block'
 
@@ -18,6 +19,8 @@ interface BoardView extends IBlock {
     readonly filter: FilterGroup
     readonly cardOrder: readonly string[]
     readonly columnWidths: Readonly<Record<string, number>>
+
+    duplicate(): MutableBoardView
 }
 
 class MutableBoardView extends MutableBlock implements BoardView {
@@ -100,6 +103,12 @@ class MutableBoardView extends MutableBlock implements BoardView {
         if (!this.viewType) {
             this.viewType = 'board'
         }
+    }
+
+    duplicate(): MutableBoardView {
+        const view = new MutableBoardView(this)
+        view.id = Utils.createGuid()
+        return view
     }
 }
 
