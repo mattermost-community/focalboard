@@ -4,12 +4,19 @@ on: workflow_dispatch
 
 jobs:
 
-  ubuntu:
+  windows:
     runs-on: windows-latest
 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+
+    - name: win-node-env
+      run: npm install -g win-node-env
+
+    # Skip Cypress binary install
+    - name: set CYPRESS_INSTALL_BINARY=0
+      run: set CYPRESS_INSTALL_BINARY=0
 
     - name: npm install
       run: cd webapp; npm install
