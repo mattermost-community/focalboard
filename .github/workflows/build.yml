@@ -28,6 +28,9 @@ jobs:
     - name: Build server Linux package
       run: make server-linux-package
 
+    - name: Copy server binary for Cypress
+      run: cp bin/linux/octoserver bin/
+
     - uses: actions/upload-artifact@v1
       with:
         name: octo-linux-amd64.tar.gz

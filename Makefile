@@ -24,7 +24,7 @@ server-linux:
 	cd server; env GOOS=linux GOARCH=amd64 go build -o ../bin/linux/octoserver ./main
 
 server-win:
-	cd server; env GOOS=windows GOARCH=amd64 go build -o ../bin/octoserver.exe ./main
+	cd server; env GOOS=windows GOARCH=amd64 go build -o ../bin/win/octoserver.exe ./main
 
 server-linux-package: server-linux webapp
 	rm -rf package
@@ -74,7 +74,7 @@ mac-app: server-mac webapp
 win-app: server-win webapp
 	cd win; make build
 	mkdir -p win/dist/bin
-	cp -R bin/octoserver.exe win/dist/bin
+	cp -R bin/win/octoserver.exe win/dist/bin
 	cp -R config.json win/dist
 	mkdir -p win/dist/webapp
 	cp -R webapp/pack win/dist/webapp/pack
