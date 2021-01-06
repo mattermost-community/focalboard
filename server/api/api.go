@@ -51,7 +51,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 
 	blocks, err := a.app().GetBlocks(parentID, blockType)
 	if err != nil {
-		log.Printf(`ERROR GetBlocks: %v`, r)
+		log.Printf(`ERROR GetBlocks: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
 
 		return
@@ -61,7 +61,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 
 	json, err := json.Marshal(blocks)
 	if err != nil {
-		log.Printf(`ERROR json.Marshal: %v`, r)
+		log.Printf(`ERROR json.Marshal: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
 
 		return
@@ -123,7 +123,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	err = a.app().InsertBlocks(blocks)
 	if err != nil {
-		log.Printf(`ERROR: %v`, r)
+		log.Printf(`ERROR: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
 
 		return
@@ -139,7 +139,7 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 
 	err := a.app().DeleteBlock(blockID)
 	if err != nil {
-		log.Printf(`ERROR: %v`, r)
+		log.Printf(`ERROR: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
 
 		return
@@ -169,7 +169,7 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 
 	blocks, err := a.app().GetSubTree(blockID, int(levels))
 	if err != nil {
-		log.Printf(`ERROR: %v`, r)
+		log.Printf(`ERROR: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
 
 		return
@@ -178,7 +178,7 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	log.Printf("GetSubTree (%v) blockID: %s, %d result(s)", levels, blockID, len(blocks))
 	json, err := json.Marshal(blocks)
 	if err != nil {
-		log.Printf(`ERROR json.Marshal: %v`, r)
+		log.Printf(`ERROR json.Marshal: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
 
 		return
@@ -190,7 +190,7 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
 	blocks, err := a.app().GetAllBlocks()
 	if err != nil {
-		log.Printf(`ERROR: %v`, r)
+		log.Printf(`ERROR: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
 
 		return
@@ -202,7 +202,7 @@ func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
 
 	json, err := json.Marshal(blocks)
 	if err != nil {
-		log.Printf(`ERROR json.Marshal: %v`, r)
+		log.Printf(`ERROR json.Marshal: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
 
 		return
@@ -284,7 +284,7 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 
 	err = a.app().InsertBlocks(blocks)
 	if err != nil {
-		log.Printf(`ERROR: %v`, err)
+		log.Printf(`ERROR: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
 
 		return
