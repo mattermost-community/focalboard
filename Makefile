@@ -29,7 +29,7 @@ server-win:
 server-linux-package: server-linux webapp
 	rm -rf package
 	mkdir -p package/${PACKAGE_FOLDER}/bin
-	cp bin/octoserver package/${PACKAGE_FOLDER}/bin
+	cp bin/linux/octoserver package/${PACKAGE_FOLDER}/bin
 	cp -R webapp/pack package/${PACKAGE_FOLDER}/pack
 	cp config.json package/${PACKAGE_FOLDER}
 	mkdir -p dist
