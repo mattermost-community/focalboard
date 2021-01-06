@@ -23,8 +23,8 @@ jobs:
       with:
         go-version: 1.15
 
-    - name: Build server Linux package
-      run: make server-linux-package
+    - name: Build Linux server and app
+      run: make server-linux-package linux-app
 
     - name: Copy server binary for Cypress
       run: cp bin/linux/octoserver bin/
@@ -34,6 +34,12 @@ jobs:
       with:
         name: octo-linux-amd64.tar.gz
         path: ${{ github.workspace }}/dist/octo-linux-amd64.tar.gz
+
+    - name: Upload app package
+      uses: actions/upload-artifact@v1
+      with:
+        name: tasks-linux.tar.gz
+        path: ${{ github.workspace }}/linux/dist/tasks-linux.tar.gz
 
     - name: ESLint
       run: cd webapp; npm run check
