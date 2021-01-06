@@ -11,7 +11,20 @@
 			"mode": "debug",
 			"program": "${workspaceFolder}/server/main",
 			"cwd": "${workspaceFolder}"
-		},
+        },
+        {
+            "name": "Go: Test Current File",
+            "type": "go",
+            "request": "launch",
+            "mode": "test",
+            "remotePath": "",
+            "port": 8888,
+            "host": "127.0.0.1",
+            "program": "${file}",
+            "env": {},
+            "args": [],
+            "showLog": true
+        },
 		{
 			"name": "Attach by Process ID",
 			"processId": "${command:PickProcess}",
