@@ -75,12 +75,13 @@ mac-app: server-mac webapp
 
 win-app: server-win webapp
 	cd win; make build
-	mkdir -p win/dist/bin
-	cp -R bin/win/octoserver.exe win/dist/bin
-	cp -R config.json win/dist
-	mkdir -p win/dist/webapp
-	cp -R webapp/pack win/dist/webapp/pack
-	# cd win/dist; zip -r ../tasks-win.zip .
+	mkdir -p win/temp/bin
+	cp -R bin/win/octoserver.exe win/temp/bin
+	cp -R config.json win/temp
+	mkdir -p win/temp/webapp
+	cp -R webapp/pack win/temp/webapp/pack
+	mkdir -p win/dist
+	cd win/temp; zip -r ../dist/tasks-win.zip .
 
 linux-app: server-linux webapp
 	rm -rf linux/temp

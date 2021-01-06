@@ -52,5 +52,6 @@ mac/dist
 linux/bin
 linux/dist
 linux/temp
+win/temp
 win/dist
 webapp/cypress/videos
