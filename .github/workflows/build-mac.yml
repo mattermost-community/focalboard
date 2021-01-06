@@ -1,0 +1,36 @@
+name: Build-Mac
+
+on: workflow_dispatch
+
+jobs:
+
+  macos:
+    runs-on: macos-10.15
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: npm install
+      run: cd webapp; npm install
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.15
+
+    - name: List Xcode versions
+      run: ls -n /Applications/ | grep Xcode*
+
+    - name: Build macOS
+      run: make mac-app
+      env:
+        DEVELOPER_DIR: /Applications/Xcode_12.3.app/Contents/Developer
+
+    - name: Upload macOS package
+      uses: actions/upload-artifact@v1
+      with:
+        name: tasks-mac.zip
+        path: ${{ github.workspace }}/mac/dist/tasks-mac.zip
+
