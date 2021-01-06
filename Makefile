@@ -68,6 +68,7 @@ mac-app: server-mac webapp
 	cp -R webapp/pack mac/resources/pack
 	mkdir -p mac/temp
 	xcodebuild archive -workspace mac/Tasks.xcworkspace -scheme Tasks -archivePath mac/temp/tasks.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO" CODE_SIGNING_ALLOWED="NO"
+	mkdir -p mac/dist
 	cp -R mac/temp/tasks.xcarchive/Products/Applications/Tasks.app mac/dist/
 	# xcodebuild -exportArchive -archivePath mac/temp/tasks.xcarchive -exportPath mac/dist -exportOptionsPlist mac/export.plist
 	cd mac/dist; zip -r tasks-mac.zip Tasks.app
