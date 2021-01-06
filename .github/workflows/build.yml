@@ -31,11 +31,11 @@ jobs:
     - name: Build webapp
       run: cd webapp; npm run pack
 
-    - name: Test server
-      run: cd server; go test -v ./...
-
     - name: "Test webapp: Jest"
       run: cd webapp; npm run test
 
     - name: "Test webapp: Cypress"
       run: "cd webapp; npm run cypress:ci"
+
+    - name: Test server
+      run: cd server; go test -v ./...
