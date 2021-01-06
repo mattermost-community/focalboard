@@ -1,0 +1,41 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: npm install
+      run: cd webapp; npm install
+
+    - name: ESLint
+      run: cd webapp; npm run check
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.15
+
+    - name: Build server
+      run: make server
+
+    - name: Build webapp
+      run: cd webapp; npm run pack
+
+    - name: Test server
+      run: cd server; go test -v ./...
+
+    - name: "Test webapp: Jest"
+      run: cd webapp; npm run test
+
+    - name: "Test webapp: Cypress"
+      run: "cd webapp; npm run cypress:ci"
