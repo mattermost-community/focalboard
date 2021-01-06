@@ -67,8 +67,9 @@ mac-app: server-mac webapp
 	cp bin/mac/octoserver mac/resources/bin/octoserver
 	cp -R webapp/pack mac/resources/pack
 	mkdir -p mac/temp
-	xcodebuild archive -workspace mac/Tasks.xcworkspace -scheme Tasks -archivePath mac/temp/tasks.xcarchive
-	xcodebuild -exportArchive -archivePath mac/temp/tasks.xcarchive -exportPath mac/dist -exportOptionsPlist mac/export.plist
+	xcodebuild archive -workspace mac/Tasks.xcworkspace -scheme Tasks -archivePath mac/temp/tasks.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO" CODE_SIGNING_ALLOWED="NO"
+	cp -R mac/temp/tasks.xcarchive/Products/Applications/Tasks.app mac/dist/
+	# xcodebuild -exportArchive -archivePath mac/temp/tasks.xcarchive -exportPath mac/dist -exportOptionsPlist mac/export.plist
 	cd mac/dist; zip -r tasks-mac.zip Tasks.app
 
 win-app: server-win webapp
