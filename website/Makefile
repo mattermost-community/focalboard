@@ -1,7 +1,10 @@
+
+BASE_URL?=http://www.mattergoals.com
+
 .PHONY: dist
 dist:
 	rm -rf ./dist
-	hugo -s site --destination ../dist/html
+	hugo -s site --destination ../dist/html -b$(BASE_URL)
 
 .PHONY: run
 run:
