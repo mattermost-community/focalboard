@@ -1,0 +1,61 @@
+    <section id="fh5co-contact" data-section="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 section-heading text-center">
+                    <h2 class="to-animate">{{ with .Site.Params.contact.title }}{{ . | markdownify }}{{ end }}</h2>
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2 subtext to-animate">
+                            <h3>{{ with .Site.Params.contact.description }}{{ . | markdownify }}{{ end }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row row-bottom-padded-md">
+                <div class="col-md-6 to-animate">
+                    <h3>{{ with .Site.Params.contact.info }}{{ . | markdownify }}{{ end }}</h3>
+                    <ul class="fh5co-contact-info">
+                    {{ range .Site.Params.contact.details }}
+                        <li class="fh5co-contact-address "><i class="{{ with index . 0}}{{ . }}{{ end }}"></i>{{ with index . 1}}{{ . | markdownify }}{{ end }}</li>
+                    {{ end }}
+                    </ul>
+                </div>
+
+                <div class="col-md-6 to-animate">
+                    <h3>{{ with .Site.Params.contact.form }}{{ . | markdownify }}{{ end }}</h3>
+                    <form method="post" action="//formspree.io/{{ with .Site.Params.email }}{{.}}{{ end }}">
+                    <div class="form-group ">
+                        {{ with .Site.Params.contact.name }}
+                        <label for="name" class="sr-only">{{ . | markdownify }}</label>
+                        <input id="name" class="form-control" name="name" placeholder="{{ . }}" type="text">
+                        {{ end }}
+                    </div>
+                    <div class="form-group ">
+                        {{ with .Site.Params.contact.email }}
+                        <label for="email" class="sr-only">{{ . | markdownify }}</label>
+                        <input id="email" class="form-control" name="_replyto" placeholder="{{ . }}" type="email">
+                        {{ end }}
+                    </div>
+                    <div class="form-group ">
+                        {{ with .Site.Params.contact.phone }}
+                        <label for="phone" class="sr-only">{{ . | markdownify }}</label>
+                        <input id="phone" class="form-control" name="phone" placeholder="{{ . }}" type="text">
+                        {{ end }}
+                    </div>
+                    <div class="form-group ">
+                        {{ with .Site.Params.contact.message }}
+                        <label for="message" class="sr-only">{{ . | markdownify }}</label>
+                        <textarea id="message" cols="30" rows="5" class="form-control" name="message" placeholder="{{ . }}"></textarea>
+                        {{ end }}
+                    </div>
+                    <div class="form-group ">
+                        <input class="btn btn-primary btn-lg" value="{{ .Site.Params.contact.button | markdownify }}" type="submit">
+                    </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+        {{ if .Site.Params.contact.map }}
+            <div id="map" class="to-animate"></div>
+        {{ end }}
+    </section>

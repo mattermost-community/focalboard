@@ -1,0 +1,26 @@
+# http://editorconfig.org/
+
+root = true
+
+[*]
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+charset = utf-8
+
+[*.{md,css,html}]
+indent_style = space
+indent_size = 4
+
+[*.toml]
+indent_style = space
+indent_size = 2
+
+[*.go]
+indent_style = tab
+
+[Makefile,*.mk]
+indent_style = tab
+
+[*.md]
+trim_trailing_whitespace = false

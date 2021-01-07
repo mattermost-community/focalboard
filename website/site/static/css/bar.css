@@ -1,0 +1,45 @@
+.notification-bar {
+    text-align: center;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    height: 64px;
+    white-space: nowrap;
+    background-image: -webkit-gradient(linear,left top,right top,from(#f0f6ff),to(#d7e7ff));
+    background-image: linear-gradient(90deg,#f0f6ff 0,#d7e7ff 100%);
+    position: fixed;
+    z-index: 6;
+}
+
+.notification-bar.closed {
+    display: none;
+}
+
+.notification-bar__content {
+    padding: 2rem 2.4rem;
+    width: 1080px;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.4;
+}
+
+.notification-bar a {
+    color: #0058cc;
+}
+
+.notification-bar__close {
+    font-size: 36px;
+    font-weight: 300;
+    position: absolute;
+    cursor: pointer;
+    right: 0px;
+    opacity: .3;
+    top: 0;
+    width: 64px;
+    line-height: 64px;
+}
+
+.notification-bar-hide:hover {
+    opacity: .5;
+}

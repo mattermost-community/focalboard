@@ -1,0 +1,26 @@
+{{ if .Site.Params.notification.enable }}
+<header class="with-notification-bar">
+{{ else }}
+<header>
+{{ end }}
+    <a href="/"><img src="/img/logo.png" alt="Logo" width="212px"></a>
+    <div class="header__menu-toggle">
+        <i class="fa fa-bars"></i>
+    </div>
+    <ul class="header__links--right">
+        <li><a href="/">Home</a></li>
+        {{ range .Site.Menus.postpend }}
+            {{ $drafts := index $.Site.Params.navigation.drafts 0}}
+            {{ $draft := index $drafts .Name }}
+            {{ if or (eq $.Site.BuildDrafts true) (eq $draft false) }}
+                {{ if eq (lower .Name) $.Section }}
+                    <li class="active"><a href="{{ .URL }}">{{ .Name | markdownify }}</a></li>
+                {{ else }}
+                    <li><a href="{{ .URL }}">{{ .Name | markdownify }}</a></li>
+                {{ end }}
+            {{ end }}
+        {{ end }}
+    </ul>
+</header>
+
+{{ partial "notification.html" .}}

@@ -1,0 +1,29 @@
+    <section id="fh5co-testimonials" data-section="testimonials">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 section-heading text-center">
+                    <h2 class="to-animate">{{ with .Site.Params.testimonials.title }}{{ . | markdownify }}{{ end }}</h2>
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2 subtext to-animate">
+                            <h3>{{ with .Site.Params.testimonials.description }}{{ . | markdownify }}{{ end }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+            {{ range .Site.Params.testimonials.item }}
+                <div class="col-md-4">
+                    <div class="box-testimony">
+                        <blockquote class="to-animate-2">
+                            <p>{{ .quote | markdownify}}</p>
+                        </blockquote>
+                        <div class="author to-animate">
+                            <figure><img src="images/{{ .img }}" alt="{{ .alt }}"></figure>
+                            <p>{{ .person | markdownify }}</p>
+                        </div>
+                    </div>
+                </div>
+            {{ end }}
+            </div>
+        </div>
+    </section>

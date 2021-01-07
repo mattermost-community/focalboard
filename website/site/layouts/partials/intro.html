@@ -1,0 +1,20 @@
+<div class="homepage-boxes text-center">
+    <div class="row">
+        {{ range .Site.Params.intro.item }}
+        <div class="col-md-4 homepage-boxes__box box-dropshadow">
+            <div class="homepage-boxes__icon">
+                <img src="{{ .icon }}" width="57px" height="53px" alt="">
+            </div>
+            <h4>{{ .title }}</h4>
+            <p>
+                {{ .description }}
+            </p>
+            {{ if or (eq $.Site.BuildDrafts true) (eq .draft false) }}
+            <a href="{{ .url }}" class="btn btn-primary btn-shadow btn-xs">{{ .button }}</a>
+            {{ else }}
+            <span class="btn btn-secondary btn-shadow btn-md">Coming Soon</a>
+            {{ end }}
+        </div>
+        {{ end }}
+    </div>
+</div>
