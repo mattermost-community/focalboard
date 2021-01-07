@@ -81,7 +81,7 @@ win-app: server-win webapp
 	mkdir -p win/temp/webapp
 	cp -R webapp/pack win/temp/webapp/pack
 	mkdir -p win/dist
-	cd win/temp; tar -zcf ../dist/tasks-win.zip .
+	cd win/temp; tar -acf ../dist/tasks-win.zip .
 
 linux-app: server-linux webapp
 	rm -rf linux/temp

@@ -14,9 +14,8 @@ jobs:
     - name: win-node-env
       run: npm install -g win-node-env
 
-    # Skip Cypress binary install
     - name: npm install
-      run: set CYPRESS_INSTALL_BINARY=0; cd webapp; npm install
+      run: cd webapp; npm install --no-optional
 
     - name: Set up Go
       uses: actions/setup-go@v2
