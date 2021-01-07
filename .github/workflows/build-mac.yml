@@ -13,7 +13,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: npm install
-      run: cd webapp; npm install
+      run: cd webapp; npm install --no-optional
 
     - name: Set up Go
       uses: actions/setup-go@v2
