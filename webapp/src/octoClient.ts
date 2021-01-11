@@ -51,7 +51,7 @@ class OctoClient {
         return false
     }
 
-    headers() {
+    private headers() {
         return {
             Accept: 'application/json',
             'Content-Type': 'application/json',

@@ -10,5 +10,7 @@
 	"filespath": "./files",
     "telemetry": true,
     "webhook_update": [],
-    "secret": "this-is-a-secret-string"
+    "secret": "this-is-a-secret-string",
+    "session_expire_time": 2592000,
+    "session_refresh_time": 18000
 }
