@@ -80,7 +80,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		NSLog("pid: \(pid)")
 		let serverProcess = Process()
 		serverProcess.currentDirectoryPath = cwdUrl.path
-		serverProcess.arguments = ["-monitorpid", "\(pid)", "-port", "\(serverPort)"]
+		serverProcess.arguments = ["-monitorpid", "\(pid)", "-port", "\(serverPort)", "--single-user"]
 		serverProcess.launchPath = executablePath
 		serverProcess.launch()
 		self.serverProcess = serverProcess

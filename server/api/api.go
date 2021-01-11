@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/mattermost/mattermost-octo-tasks/server/app"
@@ -21,10 +22,11 @@ import (
 
 type API struct {
 	appBuilder func() *app.App
+	singleUser bool
 }
 
-func NewAPI(appBuilder func() *app.App) *API {
-	return &API{appBuilder: appBuilder}
+func NewAPI(appBuilder func() *app.App, singleUser bool) *API {
+	return &API{appBuilder: appBuilder, singleUser: singleUser}
 }
 
 func (a *API) app() *app.App {
@@ -32,16 +34,22 @@ func (a *API) app() *app.App {
 }
 
 func (a *API) RegisterRoutes(r *mux.Router) {
-	r.HandleFunc("/api/v1/blocks", a.handleGetBlocks).Methods("GET")
-	r.HandleFunc("/api/v1/blocks", a.handlePostBlocks).Methods("POST")
-	r.HandleFunc("/api/v1/blocks/{blockID}", a.handleDeleteBlock).Methods("DELETE")
-	r.HandleFunc("/api/v1/blocks/{blockID}/subtree", a.handleGetSubTree).Methods("GET")
+	r.HandleFunc("/api/v1/blocks", a.sessionRequired(a.handleGetBlocks)).Methods("GET")
+	r.HandleFunc("/api/v1/blocks", a.sessionRequired(a.handlePostBlocks)).Methods("POST")
+	r.HandleFunc("/api/v1/blocks/{blockID}", a.sessionRequired(a.handleDeleteBlock)).Methods("DELETE")
+	r.HandleFunc("/api/v1/blocks/{blockID}/subtree", a.sessionRequired(a.handleGetSubTree)).Methods("GET")
 
-	r.HandleFunc("/api/v1/files", a.handleUploadFile).Methods("POST")
-	r.HandleFunc("/files/{filename}", a.handleServeFile).Methods("GET")
+	r.HandleFunc("/api/v1/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
+	r.HandleFunc("/api/v1/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
 
-	r.HandleFunc("/api/v1/blocks/export", a.handleExport).Methods("GET")
-	r.HandleFunc("/api/v1/blocks/import", a.handleImport).Methods("POST")
+	r.HandleFunc("/api/v1/login", a.handleLogin).Methods("POST")
+	r.HandleFunc("/api/v1/register", a.handleRegister).Methods("POST")
+
+	r.HandleFunc("/api/v1/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
+	r.HandleFunc("/files/{filename}", a.sessionRequired(a.handleServeFile)).Methods("GET")
+
+	r.HandleFunc("/api/v1/blocks/export", a.sessionRequired(a.handleExport)).Methods("GET")
+	r.HandleFunc("/api/v1/blocks/import", a.sessionRequired(a.handleImport)).Methods("POST")
 }
 
 func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
@@ -131,6 +139,65 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("POST Blocks %d block(s)", len(blocks))
 	jsonStringResponse(w, http.StatusOK, "{}")
+}
+
+func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userID := vars["userID"]
+
+	user, err := a.app().GetUser(userID)
+	if err != nil {
+		log.Printf(`ERROR: %v`, r)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
+		return
+	}
+
+	userData, err := json.Marshal(user)
+	if err != nil {
+		log.Printf(`ERROR: %v`, r)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
+		return
+	}
+
+	jsonStringResponse(w, http.StatusOK, string(userData))
+}
+
+func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	session := ctx.Value("session").(*model.Session)
+	var user *model.User
+	var err error
+
+	if session.UserID == "single-user" {
+		now := time.Now().Unix()
+		user = &model.User{
+			ID:       "single-user",
+			Username: "single-user",
+			Email:    "single-user",
+			CreateAt: now,
+			UpdateAt: now,
+		}
+	} else {
+		user, err = a.app().GetUser(session.UserID)
+		if err != nil {
+			log.Printf(`ERROR: %v`, r)
+			errorResponse(w, http.StatusInternalServerError, nil)
+
+			return
+		}
+	}
+
+	userData, err := json.Marshal(user)
+	if err != nil {
+		log.Printf(`ERROR: %v`, r)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
+		return
+	}
+
+	jsonStringResponse(w, http.StatusOK, string(userData))
 }
 
 func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
@@ -354,6 +421,7 @@ func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) {
 
 func errorResponse(w http.ResponseWriter, code int, message map[string]string) {
 	log.Printf("%d ERROR", code)
+	w.Header().Set("Content-Type", "application/json")
 	data, err := json.Marshal(message)
 	if err != nil {
 		data = []byte("{}")

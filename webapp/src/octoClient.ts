@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {IBlock, IMutableBlock} from './blocks/block'
+import {IUser} from './user'
 import {Utils} from './utils'
 
 //
@@ -8,15 +9,66 @@ import {Utils} from './utils'
 //
 class OctoClient {
     serverUrl: string
+    token?: string
 
-    constructor(serverUrl?: string) {
+    constructor(serverUrl?: string, token?: string) {
         this.serverUrl = serverUrl || window.location.origin
+        this.token = token
         Utils.log(`OctoClient serverUrl: ${this.serverUrl}`)
+    }
+
+    async login(username: string, password: string): Promise<boolean> {
+        const path = '/api/v1/login'
+        const body = JSON.stringify({username, password, type: 'normal'})
+        const response = await fetch(this.serverUrl + path, {
+            method: 'POST',
+            headers: this.headers(),
+            body,
+        })
+        if (response.status === 200) {
+            const responseJson = (await response.json() || {}) as {token?: string}
+            this.token = responseJson.token
+            if (responseJson.token !== '') {
+                localStorage.setItem('sessionId', this.token || '')
+                return true
+            }
+            return false
+        }
+        return false
+    }
+
+    async register(email: string, username: string, password: string): Promise<boolean> {
+        const path = '/api/v1/register'
+        const body = JSON.stringify({email, username, password})
+        const response = await fetch(this.serverUrl + path, {
+            method: 'POST',
+            headers: this.headers(),
+            body,
+        })
+        if (response.status === 200) {
+            return true
+        }
+        return false
+    }
+
+    private headers() {
+        return {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: this.token ? 'Bearer ' + this.token : '',
+        }
+    }
+
+    async getMe(): Promise<IUser|null> {
+        const path = '/api/v1/users/me'
+        const response = await fetch(this.serverUrl + path, {headers: this.headers()})
+        const user = (await response.json()) as IUser || null
+        return user
     }
 
     async getSubtree(rootId?: string, levels = 2): Promise<IBlock[]> {
         const path = `/api/v1/blocks/${rootId}/subtree?l=${levels}`
-        const response = await fetch(this.serverUrl + path)
+        const response = await fetch(this.serverUrl + path, {headers: this.headers()})
         const blocks = (await response.json() || []) as IMutableBlock[]
         this.fixBlocks(blocks)
         return blocks
@@ -24,7 +76,7 @@ class OctoClient {
 
     async exportFullArchive(): Promise<IBlock[]> {
         const path = '/api/v1/blocks/export'
-        const response = await fetch(this.serverUrl + path)
+        const response = await fetch(this.serverUrl + path, {headers: this.headers()})
         const blocks = (await response.json() || []) as IMutableBlock[]
         this.fixBlocks(blocks)
         return blocks
@@ -38,10 +90,7 @@ class OctoClient {
         const body = JSON.stringify(blocks)
         return fetch(this.serverUrl + '/api/v1/blocks/import', {
             method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
+            headers: this.headers(),
             body,
         })
     }
@@ -62,7 +111,7 @@ class OctoClient {
     }
 
     private async getBlocksWithPath(path: string): Promise<IBlock[]> {
-        const response = await fetch(this.serverUrl + path)
+        const response = await fetch(this.serverUrl + path, {headers: this.headers()})
         const blocks = (await response.json() || []) as IMutableBlock[]
         this.fixBlocks(blocks)
         return blocks
@@ -98,10 +147,7 @@ class OctoClient {
         Utils.log(`deleteBlock: ${blockId}`)
         return fetch(this.serverUrl + `/api/v1/blocks/${encodeURIComponent(blockId)}`, {
             method: 'DELETE',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
+            headers: this.headers(),
         })
     }
 
@@ -117,10 +163,7 @@ class OctoClient {
         const body = JSON.stringify(blocks)
         return fetch(this.serverUrl + '/api/v1/blocks', {
             method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
+            headers: this.headers(),
             body,
         })
     }
@@ -138,6 +181,7 @@ class OctoClient {
                 // TIPTIP: Leave out Content-Type here, it will be automatically set by the browser
                 headers: {
                     Accept: 'application/json',
+                    Authorization: this.token ? 'Bearer ' + this.token : '',
                 },
                 body: formData,
             })
@@ -161,6 +205,6 @@ class OctoClient {
     }
 }
 
-const client = new OctoClient()
+const client = new OctoClient(undefined, localStorage.getItem('sessionId') || '')
 
 export default client

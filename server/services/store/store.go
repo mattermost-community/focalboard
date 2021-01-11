@@ -17,4 +17,15 @@ type Store interface {
 	Shutdown() error
 	GetSystemSettings() (map[string]string, error)
 	SetSystemSetting(key string, value string) error
+	GetUserById(userID string) (*model.User, error)
+	GetUserByEmail(email string) (*model.User, error)
+	GetUserByUsername(username string) (*model.User, error)
+	CreateUser(user *model.User) error
+	UpdateUser(user *model.User) error
+	GetSession(token string, expireTime int64) (*model.Session, error)
+	CreateSession(session *model.Session) error
+	RefreshSession(session *model.Session) error
+	UpdateSession(session *model.Session) error
+	DeleteSession(sessionId string) error
+	CleanUpSessions(expireTime int64) error
 }

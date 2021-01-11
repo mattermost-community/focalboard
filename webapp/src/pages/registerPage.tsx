@@ -10,31 +10,44 @@ import {
 
 import Button from '../widgets/buttons/button'
 import client from '../octoClient'
-import './loginPage.scss'
+import './registerPage.scss'
 
 type Props = RouteComponentProps
 
 type State = {
+    email: string
     username: string
     password: string
 }
 
-class LoginPage extends React.PureComponent<Props, State> {
+class RegisterPage extends React.PureComponent<Props, State> {
     state = {
+        email: '',
         username: '',
         password: '',
     }
 
-    private handleLogin = async (): Promise<void> => {
-        const logged = await client.login(this.state.username, this.state.password)
-        if (logged) {
-            this.props.history.push('/')
+    private handleRegister = async (): Promise<void> => {
+        const registered = await client.register(this.state.email, this.state.username, this.state.password)
+        if (registered) {
+            const logged = await client.login(this.state.username, this.state.password)
+            if (logged) {
+                this.props.history.push('/')
+            }
         }
     }
 
     render(): React.ReactNode {
         return (
-            <div className='LoginPage'>
+            <div className='RegisterPage'>
+                <div className='email'>
+                    <label htmlFor='login-email'>{'Email'}</label>
+                    <input
+                        id='login-email'
+                        value={this.state.email}
+                        onChange={(e) => this.setState({email: e.target.value})}
+                    />
+                </div>
                 <div className='username'>
                     <label htmlFor='login-username'>{'Username'}</label>
                     <input
@@ -52,11 +65,10 @@ class LoginPage extends React.PureComponent<Props, State> {
                         onChange={(e) => this.setState({password: e.target.value})}
                     />
                 </div>
-                <Button onClick={this.handleLogin}>{'Login'}</Button>
-                <Link to='/register'>{'or create an account if you don\'t have one'}</Link>
+                <Button onClick={this.handleRegister}>{'Register'}</Button>
+                <Link to='/login'>{'or login if you already have an account'}</Link>
             </div>
         )
     }
 }
-
-export default withRouter(LoginPage)
+export default withRouter(RegisterPage)
