@@ -1,5 +1,5 @@
 
-BASE_URL?=http://www.mattergoals.com
+BASE_URL?=http://www.matternote.com
 
 .PHONY: dist
 dist:

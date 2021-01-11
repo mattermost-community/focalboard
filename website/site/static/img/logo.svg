@@ -3,7 +3,7 @@
 	<style>
 		text { font: lighter 28px sans-serif; fill: #222C3B;}
 	</style>
-	<g id="dark-color-logo" transform="translate(0, 33)">
-		<text>🎯 Mattergoals</text>
+	<g transform="translate(0, 28)">
+		<text>🎯 Matternote</text>
 	</g>
 </svg>

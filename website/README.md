@@ -1,6 +1,6 @@
-# Mattergoals website
+# Matternote website
 
-Website for Mattergoals, built using [Hugo](https://gohugo.io/).
+Website for Matternote, built using [Hugo](https://gohugo.io/).
 
 ## How to build
 

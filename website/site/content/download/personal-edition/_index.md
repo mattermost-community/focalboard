@@ -5,6 +5,6 @@ section: "download"
 weight: 1
 ---
 
-If you are new to Mattergoals, [Personal Desktop](desktop) is the fastest way to try it out.
+If you are new to Matternote, [Personal Desktop](desktop) is the fastest way to try it out.
 
 You can also set up [Personal Server](ubuntu) on Ubuntu to use it with your team, and import boards from Personal Desktop.

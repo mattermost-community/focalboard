@@ -1,6 +1,6 @@
 # Page settings
 baseurl = "localhost:1313"
-title = "Mattergoals"
+title = "Matternote"
 languageCode = "en-us"
 theme = "hugo-elate-theme"
 
@@ -14,7 +14,7 @@ theme = "hugo-elate-theme"
   email = ""
   # Navigation
   [params.navigation]
-    brand = "Mattergoals"
+    brand = "Matternote"
     home = "Home"
 
     # You can add custom links before or after the default links
@@ -34,7 +34,7 @@ theme = "hugo-elate-theme"
 
   # Hero section
   [params.hero]
-    title = "Get Mattergoals"
+    title = "Get Matternote"
     subtitle = ''
 
   # Intro section
@@ -43,7 +43,7 @@ theme = "hugo-elate-theme"
 
   [[params.intro.item]]
     title = "Contribute"
-    description = "Join the hunrdeds of contributors and submit code directly to the Mattergoals open-source project."
+    description = "Join the hunrdeds of contributors and submit code directly to the Matternote open-source project."
     url = "/contribute/"
     button = "Start Contributing"
     icon = "icon-bulb"
@@ -59,7 +59,7 @@ theme = "hugo-elate-theme"
 
   [[params.intro.item]]
     title = "Extend"
-    description = "Extend Mattergoals to fit your purposes."
+    description = "Extend Matternote to fit your purposes."
     url = "#"
     button = "Start Extending"
     icon = "icon-rocket"

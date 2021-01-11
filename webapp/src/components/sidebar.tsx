@@ -81,7 +81,7 @@ class Sidebar extends React.Component<Props, State> {
         return (
             <div className='Sidebar octo-sidebar'>
                 <div className='octo-sidebar-header'>
-                    {'Mattergoals'}
+                    {'Matternote'}
                     <div className='octo-spacer'/>
                     <IconButton
                         onClick={this.hideClicked}
