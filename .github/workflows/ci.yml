@@ -1,0 +1,48 @@
+name: Check-in tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  ci-ubuntu:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: npm install
+      run: cd webapp; npm install
+
+    - name: ESLint
+      run: cd webapp; npm run check
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.15
+
+    - name: Build Linux server
+      run: make server-linux-package
+
+    - name: Copy server binary for Cypress
+      run: cp bin/linux/octoserver bin/
+
+    - name: Upload server package
+      uses: actions/upload-artifact@v1
+      with:
+        name: octo-linux-amd64.tar.gz
+        path: ${{ github.workspace }}/dist/octo-linux-amd64.tar.gz
+
+    - name: Test server
+      run: make server-test
+
+    - name: "Test webapp: Jest"
+      run: cd webapp; npm run test
+
+    - name: "Test webapp: Cypress"
+      run: "cd webapp; npm run cypress:ci"

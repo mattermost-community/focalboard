@@ -7,7 +7,7 @@
 	min-height: 100%;
 	color: rgb(var(--sidebar-fg));
 	background-color: rgb(var(--sidebar-bg));
-    padding: 10px 0;
+    padding-top: 10px;
 
     &.hidden {
         position: absolute;
@@ -26,12 +26,12 @@
     }
 
     >* {
-        flex-shrink: 0;
+        flex: 0 0 auto;
     }
 
     .octo-sidebar-list {
+        flex: 1 1 auto;
         overflow-y: auto;
-        max-height: calc(100% - 78px);
         max-width: 250px;
     }
 
@@ -134,5 +134,9 @@
     .HideSidebarIcon {
         stroke: rgba(var(--sidebar-fg), 0.5);
         stroke-width: 6px;
+    }
+
+    .Button {
+        min-height: 30px;
     }
 }

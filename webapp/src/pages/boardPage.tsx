@@ -20,6 +20,7 @@ type State = {
     viewId: string
     workspaceTree: WorkspaceTree
     boardTree?: BoardTree
+    readonly: boolean
 }
 
 export default class BoardPage extends React.Component<Props, State> {
@@ -30,11 +31,13 @@ export default class BoardPage extends React.Component<Props, State> {
         const queryString = new URLSearchParams(window.location.search)
         const boardId = queryString.get('id') || ''
         const viewId = queryString.get('v') || ''
+        const readonly = (queryString.get('r') === '1')
 
         this.state = {
             boardId,
             viewId,
             workspaceTree: new MutableWorkspaceTree(),
+            readonly,
         }
 
         Utils.log(`BoardPage. boardId: ${boardId}`)
@@ -56,12 +59,24 @@ export default class BoardPage extends React.Component<Props, State> {
             Utils.setFavicon(board?.icon)
         }
         if (board?.title !== prevBoard?.title || activeView?.title !== prevActiveView?.title) {
-            document.title = `${board?.title} | ${activeView?.title}`
+            if (board) {
+                let title = `${board.title}`
+                if (activeView?.title) {
+                    title += ` | ${activeView.title}`
+                }
+                document.title = title
+            } else {
+                document.title = 'OCTO'
+            }
         }
     }
 
     private undoRedoHandler = async (e: KeyboardEvent) => {
         if (e.target !== document.body) {
+            return
+        }
+
+        if (this.state.readonly) {
             return
         }
 
@@ -128,21 +143,30 @@ export default class BoardPage extends React.Component<Props, State> {
                         this.setSearchText(text)
                     }}
                     setLanguage={this.props.setLanguage}
+                    readonly={this.state.readonly}
                 />
             </div>
         )
     }
 
-    private async attachToBoard(boardId: string, viewId?: string) {
+    private async attachToBoard(boardId?: string, viewId = '') {
         Utils.log(`attachToBoard: ${boardId}`)
-        this.sync(boardId, viewId)
+        if (boardId) {
+            this.sync(boardId, viewId)
+        } else {
+            // No board
+            this.setState({
+                boardTree: undefined,
+                boardId: '',
+                viewId: '',
+            })
+        }
     }
 
     private async sync(boardId: string = this.state.boardId, viewId: string | undefined = this.state.viewId) {
         Utils.log(`sync start: ${boardId}`)
 
-        const workspaceTree = new MutableWorkspaceTree()
-        await workspaceTree.sync()
+        const workspaceTree = await MutableWorkspaceTree.sync()
         const boardIds = [...workspaceTree.boards.map((o) => o.id), ...workspaceTree.boardTemplates.map((o) => o.id)]
         this.setState({workspaceTree})
 
@@ -160,51 +184,81 @@ export default class BoardPage extends React.Component<Props, State> {
         )
 
         if (boardId) {
-            const boardTree = new MutableBoardTree(boardId)
-            await boardTree.sync()
+            const boardTree = await MutableBoardTree.sync(boardId, viewId)
 
-            // Default to first view
-            boardTree.setActiveView(viewId || boardTree.views[0].id)
+            if (boardTree && boardTree.board) {
+                // Update url with viewId if it's different
+                if (boardTree.activeView.id !== this.state.viewId) {
+                    Utils.replaceUrlQueryParam('v', boardTree.activeView.id)
+                }
 
-            // TODO: Handle error (viewId not found)
+                // TODO: Handle error (viewId not found)
 
-            this.setState({
-                boardTree,
-                boardId,
-                viewId: boardTree.activeView!.id,
-            })
-            Utils.log(`sync complete: ${boardTree.board.id} (${boardTree.board.title})`)
+                this.setState({
+                    boardTree,
+                    boardId,
+                    viewId: boardTree.activeView!.id,
+                })
+                Utils.log(`sync complete: ${boardTree.board?.id} (${boardTree.board?.title})`)
+            } else {
+                // Board may have been deleted
+                this.setState({
+                    boardTree: undefined,
+                    viewId: '',
+                })
+                Utils.log(`sync complete: board ${boardId} not found`)
+            }
         }
     }
 
-    private incrementalUpdate(blocks: IBlock[]) {
-        const {workspaceTree, boardTree} = this.state
+    private async incrementalUpdate(blocks: IBlock[]) {
+        const {workspaceTree, boardTree, viewId} = this.state
 
-        let newState = {workspaceTree, boardTree}
+        let newState = {workspaceTree, boardTree, viewId}
 
-        const newWorkspaceTree = workspaceTree.mutableCopy()
-        if (newWorkspaceTree.incrementalUpdate(blocks)) {
+        const newWorkspaceTree = MutableWorkspaceTree.incrementalUpdate(workspaceTree, blocks)
+        if (newWorkspaceTree) {
             newState = {...newState, workspaceTree: newWorkspaceTree}
         }
 
-        const newBoardTree = boardTree ? boardTree.mutableCopy() : new MutableBoardTree(this.state.boardId)
-        if (newBoardTree.incrementalUpdate(blocks)) {
-            newBoardTree.setActiveView(this.state.viewId)
-            newState = {...newState, boardTree: newBoardTree}
+        let newBoardTree: BoardTree | undefined
+        if (boardTree) {
+            newBoardTree = MutableBoardTree.incrementalUpdate(boardTree, blocks)
+        } else if (this.state.boardId) {
+            // Corner case: When the page is viewing a deleted board, that is subsequently un-deleted on another client
+            newBoardTree = await MutableBoardTree.sync(this.state.boardId, this.state.viewId)
+        }
+
+        if (newBoardTree) {
+            newState = {...newState, boardTree: newBoardTree, viewId: newBoardTree.activeView.id}
+        } else {
+            newState = {...newState, boardTree: undefined}
+        }
+
+        // Update url with viewId if it's different
+        if (newBoardTree && newBoardTree.activeView.id !== this.state.viewId) {
+            Utils.replaceUrlQueryParam('v', newBoardTree?.activeView.id)
         }
 
         this.setState(newState)
     }
 
     // IPageController
-    showBoard(boardId: string): void {
+    showBoard(boardId?: string): void {
         const {boardTree} = this.state
 
         if (boardTree?.board?.id === boardId) {
             return
         }
 
-        const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + `?id=${encodeURIComponent(boardId)}`
+        let newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname
+        if (boardId) {
+            newUrl += `?id=${encodeURIComponent(boardId)}`
+
+            if (this.state.readonly) {
+                newUrl += '&r=1'
+            }
+        }
         window.history.pushState({path: newUrl}, '', newUrl)
 
         this.attachToBoard(boardId)
@@ -212,14 +266,16 @@ export default class BoardPage extends React.Component<Props, State> {
 
     showView(viewId: string, boardId: string = this.state.boardId): void {
         if (this.state.boardTree && this.state.boardId === boardId) {
-            const newBoardTree = this.state.boardTree.mutableCopy()
-            newBoardTree.setActiveView(viewId)
+            const newBoardTree = this.state.boardTree.copyWithView(viewId)
             this.setState({boardTree: newBoardTree, viewId})
         } else {
             this.attachToBoard(boardId, viewId)
         }
 
-        const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + `?id=${encodeURIComponent(boardId)}&v=${encodeURIComponent(viewId)}`
+        let newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + `?id=${encodeURIComponent(boardId)}&v=${encodeURIComponent(viewId)}`
+        if (this.state.readonly) {
+            newUrl += '&r=1'
+        }
         window.history.pushState({path: newUrl}, '', newUrl)
     }
 
@@ -229,8 +285,7 @@ export default class BoardPage extends React.Component<Props, State> {
             return
         }
 
-        const newBoardTree = this.state.boardTree.mutableCopy()
-        newBoardTree.setSearchText(text)
+        const newBoardTree = this.state.boardTree.copyWithSearchText(text)
         this.setState({boardTree: newBoardTree})
     }
 }

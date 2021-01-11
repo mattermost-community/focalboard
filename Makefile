@@ -1,4 +1,6 @@
-.PHONY: prebuild clean cleanall server server-mac server-linux server-win generate watch-server webapp mac-app win-app linux-app
+.PHONY: prebuild clean cleanall server server-mac server-linux server-win server-linux-package generate watch-server webapp mac-app win-app linux-app
+
+PACKAGE_FOLDER = octo
 
 all: server
 
@@ -22,7 +24,17 @@ server-linux:
 	cd server; env GOOS=linux GOARCH=amd64 go build -o ../bin/linux/octoserver ./main
 
 server-win:
-	cd server; env GOOS=windows GOARCH=amd64 go build -o ../bin/octoserver.exe ./main
+	cd server; env GOOS=windows GOARCH=amd64 go build -o ../bin/win/octoserver.exe ./main
+
+server-linux-package: server-linux webapp
+	rm -rf package
+	mkdir -p package/${PACKAGE_FOLDER}/bin
+	cp bin/linux/octoserver package/${PACKAGE_FOLDER}/bin
+	cp -R webapp/pack package/${PACKAGE_FOLDER}/pack
+	cp config.json package/${PACKAGE_FOLDER}
+	mkdir -p dist
+	cd package && tar -czvf ../dist/octo-linux-amd64.tar.gz ${PACKAGE_FOLDER}
+	rm -rf package
 
 server-single-user:
 	cd server; go build -o ../bin/octoserver ./main --single-user
@@ -51,7 +63,7 @@ server-lint:
 	cd server; golangci-lint run -p format -p unused -p complexity -p bugs -p performance -E asciicheck -E depguard -E dogsled -E dupl -E funlen -E gochecknoglobals -E gochecknoinits -E goconst -E gocritic -E godot -E godox -E goerr113 -E goheader -E golint -E gomnd -E gomodguard -E goprintffuncname -E gosimple -E interfacer -E lll -E misspell -E nlreturn -E nolintlint -E stylecheck -E unconvert -E whitespace -E wsl --skip-dirs services/store/sqlstore/migrations/ ./...
 
 server-test:
-	cd server; go test ./...
+	cd server; go test -v ./...
 
 server-doc:
 	cd server; go doc ./...
@@ -72,18 +84,22 @@ mac-app: server-mac webapp
 	cp bin/mac/octoserver mac/resources/bin/octoserver
 	cp -R webapp/pack mac/resources/pack
 	mkdir -p mac/temp
-	xcodebuild archive -workspace mac/Tasks.xcworkspace -scheme Tasks -archivePath mac/temp/tasks.xcarchive
-	xcodebuild -exportArchive -archivePath mac/temp/tasks.xcarchive -exportPath mac/dist -exportOptionsPlist mac/export.plist
+	xcodebuild archive -workspace mac/Tasks.xcworkspace -scheme Tasks -archivePath mac/temp/tasks.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO" CODE_SIGNING_ALLOWED="NO"
+	mkdir -p mac/dist
+	cp -R mac/temp/tasks.xcarchive/Products/Applications/Tasks.app mac/dist/
+	# xcodebuild -exportArchive -archivePath mac/temp/tasks.xcarchive -exportPath mac/dist -exportOptionsPlist mac/export.plist
 	cd mac/dist; zip -r tasks-mac.zip Tasks.app
 
 win-app: server-win webapp
 	cd win; make build
-	mkdir -p win/dist/bin
-	cp -R bin/octoserver.exe win/dist/bin
-	cp -R config.json win/dist
-	mkdir -p win/dist/webapp
-	cp -R webapp/pack win/dist/webapp/pack
-	# cd win/dist; zip -r ../tasks-win.zip .
+	mkdir -p win/temp/bin
+	cp -R bin/win/octoserver.exe win/temp/bin
+	cp -R config.json win/temp
+	mkdir -p win/temp/webapp
+	cp -R webapp/pack win/temp/webapp/pack
+	mkdir -p win/dist
+	# cd win/temp; tar -acf ../dist/tasks-win.zip .
+	cd win/temp; powershell "Compress-Archive * ../dist/tasks-win.zip"
 
 linux-app: server-linux webapp
 	rm -rf linux/temp

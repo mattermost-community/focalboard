@@ -29,6 +29,7 @@ type Props = {
     showView: (id: string) => void
     setSearchText: (text?: string) => void
     intl: IntlShape
+    readonly: boolean
 }
 
 type State = {
@@ -43,6 +44,18 @@ class TableComponent extends React.Component<Props, State> {
 
     shouldComponentUpdate(): boolean {
         return true
+    }
+
+    componentDidMount(): void {
+        this.showCardInUrl()
+    }
+
+    private showCardInUrl() {
+        const queryString = new URLSearchParams(window.location.search)
+        const cardId = queryString.get('c') || undefined
+        if (cardId !== this.state.shownCardId) {
+            this.setState({shownCardId: cardId})
+        }
     }
 
     render(): JSX.Element {
@@ -66,14 +79,16 @@ class TableComponent extends React.Component<Props, State> {
                         key={this.state.shownCardId}
                         boardTree={boardTree}
                         cardId={this.state.shownCardId}
-                        onClose={() => this.setState({shownCardId: undefined})}
-                        showCard={(cardId) => this.setState({shownCardId: cardId})}
+                        onClose={() => this.showCard(undefined)}
+                        showCard={(cardId) => this.showCard(cardId)}
+                        readonly={this.props.readonly}
                     />
                 </RootPortal>}
                 <div className='octo-frame'>
                     <ViewTitle
                         key={board.id + board.title}
                         board={board}
+                        readonly={this.props.readonly}
                     />
 
                     <div className='octo-table'>
@@ -85,6 +100,7 @@ class TableComponent extends React.Component<Props, State> {
                             addCardFromTemplate={this.addCardFromTemplate}
                             addCardTemplate={this.addCardTemplate}
                             editCardTemplate={this.editCardTemplate}
+                            readonly={this.props.readonly}
                         />
 
                         {/* Main content */}
@@ -103,10 +119,11 @@ class TableComponent extends React.Component<Props, State> {
                                     className='octo-table-cell title-cell header-cell'
                                     style={{overflow: 'unset', width: this.columnWidth(Constants.titleColumnId)}}
                                 >
-                                    <MenuWrapper>
+                                    <MenuWrapper
+                                        disabled={this.props.readonly}
+                                    >
                                         <div
                                             className='octo-label'
-                                            style={{cursor: 'pointer'}}
                                         >
                                             <FormattedMessage
                                                 id='TableComponent.name'
@@ -122,32 +139,34 @@ class TableComponent extends React.Component<Props, State> {
 
                                     <div className='octo-spacer'/>
 
-                                    <HorizontalGrip
-                                        onDrag={(offset) => {
-                                            const originalWidth = this.columnWidth(Constants.titleColumnId)
-                                            const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
-                                            if (titleRef.current) {
-                                                titleRef.current.style.width = `${newWidth}px`
-                                            }
-                                        }}
-                                        onDragEnd={(offset) => {
-                                            Utils.log(`onDragEnd offset: ${offset}`)
-                                            const originalWidth = this.columnWidth(Constants.titleColumnId)
-                                            const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
-                                            if (titleRef.current) {
-                                                titleRef.current.style.width = `${newWidth}px`
-                                            }
+                                    {!this.props.readonly &&
+                                        <HorizontalGrip
+                                            onDrag={(offset) => {
+                                                const originalWidth = this.columnWidth(Constants.titleColumnId)
+                                                const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
+                                                if (titleRef.current) {
+                                                    titleRef.current.style.width = `${newWidth}px`
+                                                }
+                                            }}
+                                            onDragEnd={(offset) => {
+                                                Utils.log(`onDragEnd offset: ${offset}`)
+                                                const originalWidth = this.columnWidth(Constants.titleColumnId)
+                                                const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
+                                                if (titleRef.current) {
+                                                    titleRef.current.style.width = `${newWidth}px`
+                                                }
 
-                                            const columnWidths = {...activeView.columnWidths}
-                                            if (newWidth !== columnWidths[Constants.titleColumnId]) {
-                                                columnWidths[Constants.titleColumnId] = newWidth
+                                                const columnWidths = {...activeView.columnWidths}
+                                                if (newWidth !== columnWidths[Constants.titleColumnId]) {
+                                                    columnWidths[Constants.titleColumnId] = newWidth
 
-                                                const newView = new MutableBoardView(activeView)
-                                                newView.columnWidths = columnWidths
-                                                mutator.updateBlock(newView, activeView, 'resize column')
-                                            }
-                                        }}
-                                    />
+                                                    const newView = new MutableBoardView(activeView)
+                                                    newView.columnWidths = columnWidths
+                                                    mutator.updateBlock(newView, activeView, 'resize column')
+                                                }
+                                            }}
+                                        />
+                                    }
                                 </div>
 
                                 {/* Table header row */}
@@ -187,11 +206,12 @@ class TableComponent extends React.Component<Props, State> {
                                                     this.onDropToColumn(template)
                                                 }}
                                             >
-                                                <MenuWrapper>
+                                                <MenuWrapper
+                                                    disabled={this.props.readonly}
+                                                >
                                                     <div
                                                         className='octo-label'
-                                                        style={{cursor: 'pointer'}}
-                                                        draggable={true}
+                                                        draggable={!this.props.readonly}
                                                         onDragStart={() => {
                                                             this.draggedHeaderTemplate = template
                                                         }}
@@ -210,32 +230,34 @@ class TableComponent extends React.Component<Props, State> {
 
                                                 <div className='octo-spacer'/>
 
-                                                <HorizontalGrip
-                                                    onDrag={(offset) => {
-                                                        const originalWidth = this.columnWidth(template.id)
-                                                        const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
-                                                        if (headerRef.current) {
-                                                            headerRef.current.style.width = `${newWidth}px`
-                                                        }
-                                                    }}
-                                                    onDragEnd={(offset) => {
-                                                        Utils.log(`onDragEnd offset: ${offset}`)
-                                                        const originalWidth = this.columnWidth(template.id)
-                                                        const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
-                                                        if (headerRef.current) {
-                                                            headerRef.current.style.width = `${newWidth}px`
-                                                        }
+                                                {!this.props.readonly &&
+                                                    <HorizontalGrip
+                                                        onDrag={(offset) => {
+                                                            const originalWidth = this.columnWidth(template.id)
+                                                            const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
+                                                            if (headerRef.current) {
+                                                                headerRef.current.style.width = `${newWidth}px`
+                                                            }
+                                                        }}
+                                                        onDragEnd={(offset) => {
+                                                            Utils.log(`onDragEnd offset: ${offset}`)
+                                                            const originalWidth = this.columnWidth(template.id)
+                                                            const newWidth = Math.max(Constants.minColumnWidth, originalWidth + offset)
+                                                            if (headerRef.current) {
+                                                                headerRef.current.style.width = `${newWidth}px`
+                                                            }
 
-                                                        const columnWidths = {...activeView.columnWidths}
-                                                        if (newWidth !== columnWidths[template.id]) {
-                                                            columnWidths[template.id] = newWidth
+                                                            const columnWidths = {...activeView.columnWidths}
+                                                            if (newWidth !== columnWidths[template.id]) {
+                                                                columnWidths[template.id] = newWidth
 
-                                                            const newView = new MutableBoardView(activeView)
-                                                            newView.columnWidths = columnWidths
-                                                            mutator.updateBlock(newView, activeView, 'resize column')
-                                                        }
-                                                    }}
-                                                />
+                                                                const newView = new MutableBoardView(activeView)
+                                                                newView.columnWidths = columnWidths
+                                                                mutator.updateBlock(newView, activeView, 'resize column')
+                                                            }
+                                                        }}
+                                                    />
+                                                }
                                             </div>)
                                     })}
                             </div>
@@ -263,9 +285,8 @@ class TableComponent extends React.Component<Props, State> {
                                                 this.addCard(false)
                                             }
                                         }}
-                                        showCard={(cardId) => {
-                                            this.setState({shownCardId: cardId})
-                                        }}
+                                        showCard={this.showCard}
+                                        readonly={this.props.readonly}
                                     />)
 
                                 this.cardIdToRowMap.set(card.id, tableRowRef)
@@ -276,23 +297,30 @@ class TableComponent extends React.Component<Props, State> {
                             {/* Add New row */}
 
                             <div className='octo-table-footer'>
-                                <div
-                                    className='octo-table-cell'
-                                    onClick={() => {
-                                        this.addCard()
-                                    }}
-                                >
-                                    <FormattedMessage
-                                        id='TableComponent.plus-new'
-                                        defaultMessage='+ New'
-                                    />
-                                </div>
+                                {!this.props.readonly &&
+                                    <div
+                                        className='octo-table-cell'
+                                        onClick={() => {
+                                            this.addCard()
+                                        }}
+                                    >
+                                        <FormattedMessage
+                                            id='TableComponent.plus-new'
+                                            defaultMessage='+ New'
+                                        />
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
                 </div >
             </div >
         )
+    }
+
+    private showCard = (cardId?: string) => {
+        Utils.replaceUrlQueryParam('c', cardId)
+        this.setState({shownCardId: cardId})
     }
 
     private columnWidth(templateId: string): number {
@@ -309,10 +337,10 @@ class TableComponent extends React.Component<Props, State> {
             this.props.intl.formatMessage({id: 'Mutator.new-card-from-template', defaultMessage: 'new card from template'}),
             false,
             async (newCardId) => {
-                this.setState({shownCardId: newCardId})
+                this.showCard(newCardId)
             },
             async () => {
-                this.setState({shownCardId: undefined})
+                this.showCard(undefined)
             },
         )
     }
@@ -332,7 +360,7 @@ class TableComponent extends React.Component<Props, State> {
             'add card',
             async () => {
                 if (show) {
-                    this.setState({shownCardId: card.id})
+                    this.showCard(card.id)
                 } else {
                     // Focus on this card's title inline on next render
                     this.cardIdToFocusOnRender = card.id
@@ -352,15 +380,15 @@ class TableComponent extends React.Component<Props, State> {
             cardTemplate,
             'add card template',
             async () => {
-                this.setState({shownCardId: cardTemplate.id})
+                this.showCard(cardTemplate.id)
             }, async () => {
-                this.setState({shownCardId: undefined})
+                this.showCard(undefined)
             },
         )
     }
 
     private editCardTemplate = (cardTemplateId: string) => {
-        this.setState({shownCardId: cardTemplateId})
+        this.showCard(cardTemplateId)
     }
 
     private async onDropToColumn(template: IPropertyTemplate) {

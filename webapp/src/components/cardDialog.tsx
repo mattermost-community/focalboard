@@ -20,14 +20,16 @@ type Props = {
     onClose: () => void
     showCard: (cardId?: string) => void
     intl: IntlShape
+    readonly: boolean
 }
 
 type State = {
-    cardTree?: CardTree
+    cardTree?: CardTree,
+    syncComplete: boolean
 }
 
 class CardDialog extends React.Component<Props, State> {
-    state: State = {}
+    state: State = {syncComplete: false}
 
     private cardListener?: OctoListener
 
@@ -40,36 +42,38 @@ class CardDialog extends React.Component<Props, State> {
     }
 
     private async createCardTreeAndSync() {
-        const cardTree = new MutableCardTree(this.props.cardId)
-        await cardTree.sync()
+        const cardTree = await MutableCardTree.sync(this.props.cardId)
         this.createListener()
-        this.setState({cardTree})
-        Utils.log(`cardDialog.createCardTreeAndSync: ${cardTree.card.id}`)
+        this.setState({cardTree, syncComplete: true})
+        Utils.log(`cardDialog.createCardTreeAndSync: ${cardTree?.card.id}`)
     }
 
     private createListener() {
+        this.deleteListener()
+
         this.cardListener = new OctoListener()
         this.cardListener.open(
             [this.props.cardId],
             async (blocks) => {
                 Utils.log(`cardListener.onChanged: ${blocks.length}`)
-                const newCardTree = this.state.cardTree!.mutableCopy()
-                if (newCardTree.incrementalUpdate(blocks)) {
-                    this.setState({cardTree: newCardTree})
-                }
+                const newCardTree = this.state.cardTree ? MutableCardTree.incrementalUpdate(this.state.cardTree, blocks) : await MutableCardTree.sync(this.props.cardId)
+                this.setState({cardTree: newCardTree, syncComplete: true})
             },
             async () => {
                 Utils.log('cardListener.onReconnect')
-                const newCardTree = this.state.cardTree!.mutableCopy()
-                await newCardTree.sync()
-                this.setState({cardTree: newCardTree})
+                const newCardTree = await MutableCardTree.sync(this.props.cardId)
+                this.setState({cardTree: newCardTree, syncComplete: true})
             },
         )
     }
 
-    componentWillUnmount(): void {
+    private deleteListener() {
         this.cardListener?.close()
         this.cardListener = undefined
+    }
+
+    componentWillUnmount(): void {
+        this.deleteListener()
     }
 
     render(): JSX.Element {
@@ -103,7 +107,7 @@ class CardDialog extends React.Component<Props, State> {
         return (
             <Dialog
                 onClose={this.props.onClose}
-                toolsMenu={menu}
+                toolsMenu={!this.props.readonly && menu}
             >
                 {(cardTree?.card.isTemplate) &&
                     <div className='banner'>
@@ -117,7 +121,16 @@ class CardDialog extends React.Component<Props, State> {
                     <CardDetail
                         boardTree={this.props.boardTree}
                         cardTree={this.state.cardTree}
+                        readonly={this.props.readonly}
                     />
+                }
+                {(!this.state.cardTree && this.state.syncComplete) &&
+                    <div className='banner error'>
+                        <FormattedMessage
+                            id='CardDialog.nocard'
+                            defaultMessage="This card doesn't exist or is inaccessible"
+                        />
+                    </div>
                 }
             </Dialog>
         )

@@ -47,20 +47,23 @@ export default class Dialog extends React.PureComponent<Props> {
                 }}
             >
                 <div className='dialog' >
-                    {toolsMenu &&
                     <div className='toolbar'>
-                        <IconButton
-                            onClick={this.closeClicked}
-                            icon={<CloseIcon/>}
-                            title={'Close dialog'}
-                            className='hideOnWidescreen'
-                        />
-                        <div className='octo-spacer'/>
-                        <MenuWrapper>
-                            <IconButton icon={<OptionsIcon/>}/>
-                            {toolsMenu}
-                        </MenuWrapper>
-                    </div>}
+                        {toolsMenu &&
+                        <>
+                            <IconButton
+                                onClick={this.closeClicked}
+                                icon={<CloseIcon/>}
+                                title={'Close dialog'}
+                                className='hideOnWidescreen'
+                            />
+                            <div className='octo-spacer'/>
+                            <MenuWrapper>
+                                <IconButton icon={<OptionsIcon/>}/>
+                                {toolsMenu}
+                            </MenuWrapper>
+                        </>
+                        }
+                    </div>
                     {this.props.children}
                 </div>
             </div>

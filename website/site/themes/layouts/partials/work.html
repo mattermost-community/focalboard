@@ -1,0 +1,34 @@
+    <section id="fh5co-work" data-section="work">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 section-heading text-center">
+                    <h2 class="to-animate">{{ with .Site.Params.work.title }}{{ . }}{{ end }}</h2>
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2 subtext to-animate">
+                            <h3>{{ with .Site.Params.work.description }}{{ . | markdownify }}{{ end }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row row-bottom-padded-sm">
+            {{ range .Site.Params.work.row }}
+                <div class="col-md-4 col-sm-6 col-xxs-12">
+                    <a href="images/{{ .img }}" class="fh5co-project-item image-popup to-animate">
+                        <img src="images/{{ .img }}" alt="{{ .alt }}" class="img-responsive">
+                        <div class="fh5co-text">
+                        <h2>{{ .title }}</h2>
+                        <span>{{ .subtitle }}</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="clearfix visible-sm-block"></div>
+            {{ end }}
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center to-animate">
+                    <p>{{ .Site.Params.work.footertext | markdownify }}</p>
+                </div>
+            </div>
+        </div>
+    </section>

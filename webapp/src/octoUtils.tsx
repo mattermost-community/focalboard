@@ -8,7 +8,6 @@ import {MutableCard} from './blocks/card'
 import {MutableCommentBlock} from './blocks/commentBlock'
 import {MutableDividerBlock} from './blocks/dividerBlock'
 import {MutableImageBlock} from './blocks/imageBlock'
-import {IOrderedBlock} from './blocks/orderedBlock'
 import {MutableTextBlock} from './blocks/textBlock'
 import {Utils} from './utils'
 
@@ -42,22 +41,27 @@ class OctoUtils {
         return displayValue
     }
 
-    static getOrderBefore(block: IOrderedBlock, blocks: readonly IOrderedBlock[]): number {
-        const index = blocks.indexOf(block)
-        if (index === 0) {
-            return block.order / 2
+    static relativeBlockOrder(partialOrder: readonly string[], blocks: readonly IBlock[], blockA: IBlock, blockB: IBlock): number {
+        const orderA = partialOrder.indexOf(blockA.id)
+        const orderB = partialOrder.indexOf(blockB.id)
+
+        if (orderA >= 0 && orderB >= 0) {
+            // Order of both blocks is specified
+            return orderA - orderB
         }
-        const previousBlock = blocks[index - 1]
-        return (block.order + previousBlock.order) / 2
+        if (orderA >= 0) {
+            return -1
+        }
+        if (orderB >= 0) {
+            return 1
+        }
+
+        // Order of both blocks are unspecified, use create date
+        return blockA.createAt - blockB.createAt
     }
 
-    static getOrderAfter(block: IOrderedBlock, blocks: readonly IOrderedBlock[]): number {
-        const index = blocks.indexOf(block)
-        if (index === blocks.length - 1) {
-            return block.order + 1000
-        }
-        const nextBlock = blocks[index + 1]
-        return (block.order + nextBlock.order) / 2
+    static getBlockOrder(partialOrder: readonly string[], blocks: readonly IBlock[]): IBlock[] {
+        return blocks.slice().sort((a, b) => this.relativeBlockOrder(partialOrder, blocks, a, b))
     }
 
     static hydrateBlock(block: IBlock): MutableBlock {
@@ -76,11 +80,11 @@ class OctoUtils {
         }
     }
 
-    static hydrateBlocks(blocks: IBlock[]): MutableBlock[] {
+    static hydrateBlocks(blocks: readonly IBlock[]): MutableBlock[] {
         return blocks.map((block) => this.hydrateBlock(block))
     }
 
-    static mergeBlocks(blocks: IBlock[], updatedBlocks: IBlock[]): IBlock[] {
+    static mergeBlocks(blocks: readonly IBlock[], updatedBlocks: readonly IBlock[]): IBlock[] {
         const updatedBlockIds = updatedBlocks.map((o) => o.id)
         const newBlocks = blocks.filter((o) => !updatedBlockIds.includes(o.id))
         const updatedAndNotDeletedBlocks = updatedBlocks.filter((o) => o.deleteAt === 0)
@@ -89,7 +93,7 @@ class OctoUtils {
     }
 
     // Creates a copy of the blocks with new ids and parentIDs
-    static duplicateBlockTree(blocks: IBlock[], sourceBlockId: string): [MutableBlock[], MutableBlock, Readonly<Record<string, string>>] {
+    static duplicateBlockTree(blocks: readonly IBlock[], sourceBlockId: string): [MutableBlock[], MutableBlock, Readonly<Record<string, string>>] {
         const idMap: Record<string, string> = {}
         const newBlocks = blocks.map((block) => {
             const newBlock = this.hydrateBlock(block)
@@ -125,6 +129,12 @@ class OctoUtils {
             if (newBlock.type === 'view') {
                 const view = newBlock as MutableBoardView
                 view.cardOrder = view.cardOrder.map((o) => idMap[o])
+            }
+
+            // Remap card content order
+            if (newBlock.type === 'card') {
+                const card = newBlock as MutableCard
+                card.contentOrder = card.contentOrder.map((o) => idMap[o])
             }
         })
 

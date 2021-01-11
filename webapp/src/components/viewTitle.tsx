@@ -19,6 +19,7 @@ import './viewTitle.scss'
 type Props = {
     board: Board
     intl: IntlShape
+    readonly: boolean
 }
 
 type State = {
@@ -42,7 +43,7 @@ class ViewTitle extends React.Component<Props, State> {
         return (
             <>
                 <div className='ViewTitle add-buttons add-visible'>
-                    {!board.icon &&
+                    {!this.props.readonly && !board.icon &&
                         <Button
                             onClick={() => {
                                 const newIcon = BlockIcons.shared.randomIcon()
@@ -52,11 +53,11 @@ class ViewTitle extends React.Component<Props, State> {
                         >
                             <FormattedMessage
                                 id='TableComponent.add-icon'
-                                defaultMessage='Add Icon'
+                                defaultMessage='Add icon'
                             />
                         </Button>
                     }
-                    {board.showDescription &&
+                    {!this.props.readonly && board.showDescription &&
                         <Button
                             onClick={() => {
                                 mutator.showDescription(board, false)
@@ -69,7 +70,7 @@ class ViewTitle extends React.Component<Props, State> {
                             />
                         </Button>
                     }
-                    {!board.showDescription &&
+                    {!this.props.readonly && !board.showDescription &&
                         <Button
                             onClick={() => {
                                 mutator.showDescription(board, true)
@@ -90,11 +91,12 @@ class ViewTitle extends React.Component<Props, State> {
                         ref={this.titleEditor}
                         className='title'
                         value={this.state.title}
-                        placeholderText={intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})}
+                        placeholderText={intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled board'})}
                         onChange={(title) => this.setState({title})}
                         saveOnEsc={true}
                         onSave={() => mutator.changeTitle(board, this.state.title)}
                         onCancel={() => this.setState({title: this.props.board.title})}
+                        readonly={this.props.readonly}
                     />
                 </div>
 
@@ -106,6 +108,7 @@ class ViewTitle extends React.Component<Props, State> {
                             onBlur={(text) => {
                                 mutator.changeDescription(board, text)
                             }}
+                            readonly={this.props.readonly}
                         />
                     </div>
                 }

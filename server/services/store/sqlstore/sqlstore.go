@@ -44,6 +44,13 @@ func New(dbType, connectionString string) (*SQLStore, error) {
 		return nil, err
 	}
 
+	err = store.InitializeTemplates()
+	if err != nil {
+		log.Printf(`InitializeTemplates failed: %v`, err)
+
+		return nil, err
+	}
+
 	return store, nil
 }
 

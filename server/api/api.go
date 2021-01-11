@@ -59,7 +59,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 
 	blocks, err := a.app().GetBlocks(parentID, blockType)
 	if err != nil {
-		log.Printf(`ERROR GetBlocks: %v`, r)
+		log.Printf(`ERROR GetBlocks: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
 
 		return
@@ -69,7 +69,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 
 	json, err := json.Marshal(blocks)
 	if err != nil {
-		log.Printf(`ERROR json.Marshal: %v`, r)
+		log.Printf(`ERROR json.Marshal: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
 
 		return
@@ -131,7 +131,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	err = a.app().InsertBlocks(blocks)
 	if err != nil {
-		log.Printf(`ERROR: %v`, r)
+		log.Printf(`ERROR: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
 
 		return
@@ -206,7 +206,7 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 
 	err := a.app().DeleteBlock(blockID)
 	if err != nil {
-		log.Printf(`ERROR: %v`, r)
+		log.Printf(`ERROR: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
 
 		return
@@ -236,7 +236,7 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 
 	blocks, err := a.app().GetSubTree(blockID, int(levels))
 	if err != nil {
-		log.Printf(`ERROR: %v`, r)
+		log.Printf(`ERROR: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
 
 		return
@@ -245,7 +245,7 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	log.Printf("GetSubTree (%v) blockID: %s, %d result(s)", levels, blockID, len(blocks))
 	json, err := json.Marshal(blocks)
 	if err != nil {
-		log.Printf(`ERROR json.Marshal: %v`, r)
+		log.Printf(`ERROR json.Marshal: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
 
 		return
@@ -257,23 +257,69 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
 	blocks, err := a.app().GetAllBlocks()
 	if err != nil {
-		log.Printf(`ERROR: %v`, r)
+		log.Printf(`ERROR: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
 
 		return
 	}
 
-	log.Printf("EXPORT Blocks, %d result(s)", len(blocks))
+	log.Printf("%d raw block(s)", len(blocks))
+	blocks = filterOrphanBlocks(blocks)
+	log.Printf("EXPORT %d filtered block(s)", len(blocks))
 
 	json, err := json.Marshal(blocks)
 	if err != nil {
-		log.Printf(`ERROR json.Marshal: %v`, r)
+		log.Printf(`ERROR json.Marshal: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
 
 		return
 	}
 
 	jsonBytesResponse(w, http.StatusOK, json)
+}
+
+func filterOrphanBlocks(blocks []model.Block) (ret []model.Block) {
+	queue := make([]model.Block, 0)
+	var childrenOfBlockWithID = make(map[string]*[]model.Block)
+
+	// Build the trees from nodes
+	for _, block := range blocks {
+		if len(block.ParentID) == 0 {
+			// Queue root blocks to process first
+			queue = append(queue, block)
+		} else {
+			siblings := childrenOfBlockWithID[block.ParentID]
+			if siblings != nil {
+				*siblings = append(*siblings, block)
+			} else {
+				siblings := []model.Block{block}
+				childrenOfBlockWithID[block.ParentID] = &siblings
+			}
+		}
+	}
+
+	// Map the trees to an array, which skips orphaned nodes
+	blocks = make([]model.Block, 0)
+	for len(queue) > 0 {
+		block := queue[0]
+		queue = queue[1:] // dequeue
+		blocks = append(blocks, block)
+		children := childrenOfBlockWithID[block.ID]
+		if children != nil {
+			queue = append(queue, (*children)...)
+		}
+	}
+
+	return blocks
+}
+
+func arrayContainsBlockWithID(array []model.Block, blockID string) bool {
+	for _, item := range array {
+		if item.ID == blockID {
+			return true
+		}
+	}
+	return false
 }
 
 func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
@@ -305,7 +351,7 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 
 	err = a.app().InsertBlocks(blocks)
 	if err != nil {
-		log.Printf(`ERROR: %v`, err)
+		log.Printf(`ERROR: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
 
 		return

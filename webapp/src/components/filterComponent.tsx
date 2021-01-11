@@ -162,7 +162,7 @@ class FilterComponent extends React.Component<Props> {
                 <Button onClick={() => this.addFilterClicked()}>
                     <FormattedMessage
                         id='FilterComponent.add-filter'
-                        defaultMessage='+ Add Filter'
+                        defaultMessage='+ Add filter'
                     />
                 </Button>
             </div>

@@ -1,0 +1,5 @@
+{{ if .File }}
+<a href="{{.Site.Params.ghrepo}}edit/master/site/content/{{ .File.Path }}" class="float-right edit-github">
+    Edit on GitHub
+</a>
+{{ end }}

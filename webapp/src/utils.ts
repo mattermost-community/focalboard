@@ -76,6 +76,10 @@ class Utils {
         return text
     }
 
+    static sleep(miliseconds: number): Promise<void> {
+        return new Promise((resolve) => setTimeout(resolve, miliseconds))
+    }
+
     // Errors
 
     static assertValue(valueObject: any): void {
@@ -131,6 +135,22 @@ class Utils {
         document.getElementsByTagName('head')[0].appendChild(link)
     }
 
+    // URL
+
+    static replaceUrlQueryParam(paramName: string, value?: string): void {
+        const queryString = new URLSearchParams(window.location.search)
+        const currentValue = queryString.get(paramName) || ''
+        if (currentValue !== value) {
+            const newUrl = new URL(window.location.toString())
+            if (value) {
+                newUrl.searchParams.set(paramName, value)
+            } else {
+                newUrl.searchParams.delete(paramName)
+            }
+            window.history.pushState({}, document.title, newUrl.toString())
+        }
+    }
+
     // File names
 
     static sanitizeFilename(filename: string): string {
@@ -163,7 +183,7 @@ class Utils {
 
     // Arrays
 
-    static arraysEqual(a: any[], b: any[]): boolean {
+    static arraysEqual(a: readonly any[], b: readonly any[]): boolean {
         if (a === b) {
             return true
         }
@@ -183,6 +203,10 @@ class Utils {
             }
         }
         return true
+    }
+
+    static arrayMove(arr: any[], srcIndex: number, destIndex: number): void {
+        arr.splice(destIndex, 0, arr.splice(srcIndex, 1)[0])
     }
 }
 

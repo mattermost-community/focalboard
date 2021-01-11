@@ -10,6 +10,15 @@ export type Theme = {
     sidebarFg: string
 }
 
+export const defaultTheme = {
+    mainBg: '255, 255, 255',
+    mainFg: '55, 53, 47',
+    buttonBg: '22, 109, 224',
+    buttonFg: '255, 255, 255',
+    sidebarBg: '20, 93, 191',
+    sidebarFg: '255, 255, 255',
+}
+
 export const darkTheme = {
     mainBg: '55, 53, 47',
     mainFg: '200, 200, 200',
@@ -26,15 +35,6 @@ export const lightTheme = {
     buttonFg: '255, 255, 255',
     sidebarBg: '247, 246, 243',
     sidebarFg: '55, 53, 47',
-}
-
-export const mattermostTheme = {
-    mainBg: '255, 255, 255',
-    mainFg: '55, 53, 47',
-    buttonBg: '22, 109, 224',
-    buttonFg: '255, 255, 255',
-    sidebarBg: '20, 93, 191',
-    sidebarFg: '255, 255, 255',
 }
 
 export function setTheme(theme: Theme): void {
@@ -54,9 +54,9 @@ export function loadTheme(): void {
             const theme = JSON.parse(themeStr)
             setTheme(theme)
         } catch (e) {
-            setTheme(lightTheme)
+            setTheme(defaultTheme)
         }
     } else {
-        setTheme(lightTheme)
+        setTheme(defaultTheme)
     }
 }

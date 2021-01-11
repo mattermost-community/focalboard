@@ -1,0 +1,9 @@
+# build artifacts
+dist
+
+# os artifacts
+*.swp
+.DS_Store
+
+# IDE artifacts
+.idea/

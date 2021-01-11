@@ -15,10 +15,8 @@ import {CsvExporter} from '../csvExporter'
 import mutator from '../mutator'
 import {BoardTree} from '../viewModel/boardTree'
 import Button from '../widgets/buttons/button'
-import ButtonWithMenu from '../widgets/buttons/buttonWithMenu'
 import IconButton from '../widgets/buttons/iconButton'
 import CheckIcon from '../widgets/icons/check'
-import DeleteIcon from '../widgets/icons/delete'
 import DropdownIcon from '../widgets/icons/dropdown'
 import OptionsIcon from '../widgets/icons/options'
 import SortDownIcon from '../widgets/icons/sortDown'
@@ -28,6 +26,7 @@ import MenuWrapper from '../widgets/menuWrapper'
 
 import {Editable} from './editable'
 import FilterComponent from './filterComponent'
+import NewCardButton from './newCardButton'
 import './viewHeader.scss'
 
 type Props = {
@@ -40,6 +39,7 @@ type Props = {
     editCardTemplate: (cardTemplateId: string) => void
     withGroupBy?: boolean
     intl: IntlShape
+    readonly: boolean
 }
 
 type State = {
@@ -63,6 +63,286 @@ class ViewHeader extends React.Component<Props, State> {
         if (this.state.isSearching && !prevState.isSearching) {
             this.searchFieldRef.current?.focus()
         }
+    }
+
+    render(): JSX.Element {
+        const {boardTree, showView, withGroupBy, intl} = this.props
+        const {board, activeView} = boardTree
+
+        const hasFilter = activeView.filter && activeView.filter.filters?.length > 0
+        const hasSort = activeView.sortOptions.length > 0
+
+        return (
+            <div className='ViewHeader'>
+                <Editable
+                    style={{color: 'rgb(var(--main-fg))', fontWeight: 600}}
+                    text={activeView.title}
+                    placeholderText='Untitled View'
+                    onChanged={(text) => {
+                        mutator.changeTitle(activeView, text)
+                    }}
+                    readonly={this.props.readonly}
+                />
+                <MenuWrapper>
+                    <IconButton icon={<DropdownIcon/>}/>
+                    <ViewMenu
+                        board={board}
+                        boardTree={boardTree}
+                        showView={showView}
+                        readonly={this.props.readonly}
+                    />
+                </MenuWrapper>
+
+                <div className='octo-spacer'/>
+
+                {!this.props.readonly &&
+                <>
+                    {/* Card properties */}
+
+                    <MenuWrapper>
+                        <Button>
+                            <FormattedMessage
+                                id='ViewHeader.properties'
+                                defaultMessage='Properties'
+                            />
+                        </Button>
+                        <Menu>
+                            {boardTree.board.cardProperties.map((option: IPropertyTemplate) => (
+                                <Menu.Switch
+                                    key={option.id}
+                                    id={option.id}
+                                    name={option.name}
+                                    isOn={activeView.visiblePropertyIds.includes(option.id)}
+                                    onClick={(propertyId: string) => {
+                                        let newVisiblePropertyIds = []
+                                        if (activeView.visiblePropertyIds.includes(propertyId)) {
+                                            newVisiblePropertyIds = activeView.visiblePropertyIds.filter((o: string) => o !== propertyId)
+                                        } else {
+                                            newVisiblePropertyIds = [...activeView.visiblePropertyIds, propertyId]
+                                        }
+                                        mutator.changeViewVisibleProperties(activeView, newVisiblePropertyIds)
+                                    }}
+                                />
+                            ))}
+                        </Menu>
+                    </MenuWrapper>
+
+                    {/* Group by */}
+
+                    {withGroupBy &&
+                    <MenuWrapper>
+                        <Button>
+                            <FormattedMessage
+                                id='ViewHeader.group-by'
+                                defaultMessage='Group by {property}'
+                                values={{
+                                    property: (
+                                        <span
+                                            style={{color: 'rgb(var(--main-fg))'}}
+                                            id='groupByLabel'
+                                        >
+                                            {boardTree.groupByProperty?.name}
+                                        </span>
+                                    ),
+                                }}
+                            />
+                        </Button>
+                        <Menu>
+                            {boardTree.board.cardProperties.filter((o: IPropertyTemplate) => o.type === 'select').map((option: IPropertyTemplate) => (
+                                <Menu.Text
+                                    key={option.id}
+                                    id={option.id}
+                                    name={option.name}
+                                    rightIcon={boardTree.activeView.groupById === option.id ? <CheckIcon/> : undefined}
+                                    onClick={(id) => {
+                                        if (boardTree.activeView.groupById === id) {
+                                            return
+                                        }
+
+                                        mutator.changeViewGroupById(boardTree.activeView, id)
+                                    }}
+                                />
+                            ))}
+                        </Menu>
+                    </MenuWrapper>}
+
+                    {/* Filter */}
+
+                    <div className='filter-container'>
+                        <Button
+                            active={hasFilter}
+                            onClick={this.showFilterDialog}
+                        >
+                            <FormattedMessage
+                                id='ViewHeader.filter'
+                                defaultMessage='Filter'
+                            />
+                        </Button>
+                        {this.state.showFilter &&
+                        <FilterComponent
+                            boardTree={boardTree}
+                            onClose={this.hideFilterDialog}
+                        />}
+                    </div>
+
+                    {/* Sort */}
+
+                    <MenuWrapper>
+                        <Button active={hasSort}>
+                            <FormattedMessage
+                                id='ViewHeader.sort'
+                                defaultMessage='Sort'
+                            />
+                        </Button>
+                        <Menu>
+                            {(activeView.sortOptions.length > 0) &&
+                            <>
+                                <Menu.Text
+                                    id='manual'
+                                    name='Manual'
+                                    onClick={() => {
+                                        // This sets the manual card order to the currently displayed order
+                                        // Note: Perform this as a single update to change both properties correctly
+                                        const newView = new MutableBoardView(activeView)
+                                        newView.cardOrder = boardTree.orderedCards().map((o) => o.id)
+                                        newView.sortOptions = []
+                                        mutator.updateBlock(newView, activeView, 'reorder')
+                                    }}
+                                />
+
+                                <Menu.Text
+                                    id='revert'
+                                    name='Revert'
+                                    onClick={() => {
+                                        mutator.changeViewSortOptions(activeView, [])
+                                    }}
+                                />
+
+                                <Menu.Separator/>
+                            </>
+                            }
+
+                            {this.sortDisplayOptions().map((option) => {
+                                let rightIcon: JSX.Element | undefined
+                                if (activeView.sortOptions.length > 0) {
+                                    const sortOption = activeView.sortOptions[0]
+                                    if (sortOption.propertyId === option.id) {
+                                        rightIcon = sortOption.reversed ? <SortUpIcon/> : <SortDownIcon/>
+                                    }
+                                }
+                                return (
+                                    <Menu.Text
+                                        key={option.id}
+                                        id={option.id}
+                                        name={option.name}
+                                        rightIcon={rightIcon}
+                                        onClick={(propertyId: string) => {
+                                            let newSortOptions: ISortOption[] = []
+                                            if (activeView.sortOptions[0] && activeView.sortOptions[0].propertyId === propertyId) {
+                                                // Already sorting by name, so reverse it
+                                                newSortOptions = [
+                                                    {propertyId, reversed: !activeView.sortOptions[0].reversed},
+                                                ]
+                                            } else {
+                                                newSortOptions = [
+                                                    {propertyId, reversed: false},
+                                                ]
+                                            }
+                                            mutator.changeViewSortOptions(activeView, newSortOptions)
+                                        }}
+                                    />
+                                )
+                            })}
+                        </Menu>
+                    </MenuWrapper>
+                </>
+                }
+
+                {/* Search */}
+
+                {this.state.isSearching &&
+                    <Editable
+                        ref={this.searchFieldRef}
+                        text={boardTree.getSearchText()}
+                        placeholderText={intl.formatMessage({id: 'ViewHeader.search-text', defaultMessage: 'Search text'})}
+                        style={{color: 'rgb(var(--main-fg))'}}
+                        onChanged={(text) => {
+                            this.searchChanged(text)
+                        }}
+                        onKeyDown={(e) => {
+                            this.onSearchKeyDown(e)
+                        }}
+                    />
+                }
+
+                {!this.state.isSearching &&
+                    <Button onClick={() => this.setState({isSearching: true})}>
+                        <FormattedMessage
+                            id='ViewHeader.search'
+                            defaultMessage='Search'
+                        />
+                    </Button>}
+
+                {/* Options menu */}
+
+                {!this.props.readonly &&
+                <>
+                    <MenuWrapper>
+                        <IconButton icon={<OptionsIcon/>}/>
+                        <Menu>
+                            <Menu.Text
+                                id='exportCsv'
+                                name={intl.formatMessage({id: 'ViewHeader.export-csv', defaultMessage: 'Export to CSV'})}
+                                onClick={() => CsvExporter.exportTableCsv(boardTree)}
+                            />
+                            <Menu.Text
+                                id='exportBoardArchive'
+                                name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
+                                onClick={() => Archiver.exportBoardTree(boardTree)}
+                            />
+
+                            {/*
+
+                            <Menu.Separator/>
+
+                            <Menu.Text
+                                id='testAdd100Cards'
+                                name={intl.formatMessage({id: 'ViewHeader.test-add-100-cards', defaultMessage: 'TEST: Add 100 cards'})}
+                                onClick={() => this.testAddCards(100)}
+                            />
+                            <Menu.Text
+                                id='testAdd1000Cards'
+                                name={intl.formatMessage({id: 'ViewHeader.test-add-1000-cards', defaultMessage: 'TEST: Add 1,000 cards'})}
+                                onClick={() => this.testAddCards(1000)}
+                            />
+                            <Menu.Text
+                                id='testDistributeCards'
+                                name={intl.formatMessage({id: 'ViewHeader.test-distribute-cards', defaultMessage: 'TEST: Distribute cards'})}
+                                onClick={() => this.testDistributeCards()}
+                            />
+                            <Menu.Text
+                                id='testRandomizeIcons'
+                                name={intl.formatMessage({id: 'ViewHeader.test-randomize-icons', defaultMessage: 'TEST: Randomize icons'})}
+                                onClick={() => this.testRandomizeIcons()}
+                            />
+
+                            */}
+                        </Menu>
+                    </MenuWrapper>
+
+                    {/* New card button */}
+
+                    <NewCardButton
+                        boardTree={this.props.boardTree}
+                        addCard={this.props.addCard}
+                        addCardFromTemplate={this.props.addCardFromTemplate}
+                        addCardTemplate={this.props.addCardTemplate}
+                        editCardTemplate={this.props.editCardTemplate}
+                    />
+                </>
+                }
+            </div>
+        )
     }
 
     private showFilterDialog = () => {
@@ -142,319 +422,6 @@ class ViewHeader extends React.Component<Props, State> {
                 mutator.changeIcon(card, BlockIcons.shared.randomIcon(), 'randomize icon')
             }
         })
-    }
-
-    render(): JSX.Element {
-        const {boardTree, showView, withGroupBy, intl} = this.props
-        const {board, activeView} = boardTree
-
-        const hasFilter = activeView.filter && activeView.filter.filters?.length > 0
-        const hasSort = activeView.sortOptions.length > 0
-
-        return (
-            <div className='ViewHeader'>
-                <Editable
-                    style={{color: 'rgb(var(--main-fg))', fontWeight: 600}}
-                    text={activeView.title}
-                    placeholderText='Untitled View'
-                    onChanged={(text) => {
-                        mutator.changeTitle(activeView, text)
-                    }}
-                />
-                <MenuWrapper>
-                    <IconButton icon={<DropdownIcon/>}/>
-                    <ViewMenu
-                        board={board}
-                        boardTree={boardTree}
-                        showView={showView}
-                    />
-                </MenuWrapper>
-                <div className='octo-spacer'/>
-                <MenuWrapper>
-                    <Button>
-                        <FormattedMessage
-                            id='ViewHeader.properties'
-                            defaultMessage='Properties'
-                        />
-                    </Button>
-                    <Menu>
-                        {boardTree.board.cardProperties.map((option: IPropertyTemplate) => (
-                            <Menu.Switch
-                                key={option.id}
-                                id={option.id}
-                                name={option.name}
-                                isOn={activeView.visiblePropertyIds.includes(option.id)}
-                                onClick={(propertyId: string) => {
-                                    let newVisiblePropertyIds = []
-                                    if (activeView.visiblePropertyIds.includes(propertyId)) {
-                                        newVisiblePropertyIds = activeView.visiblePropertyIds.filter((o: string) => o !== propertyId)
-                                    } else {
-                                        newVisiblePropertyIds = [...activeView.visiblePropertyIds, propertyId]
-                                    }
-                                    mutator.changeViewVisibleProperties(activeView, newVisiblePropertyIds)
-                                }}
-                            />
-                        ))}
-                    </Menu>
-                </MenuWrapper>
-                {withGroupBy &&
-                    <MenuWrapper>
-                        <Button>
-                            <FormattedMessage
-                                id='ViewHeader.group-by'
-                                defaultMessage='Group by {property}'
-                                values={{
-                                    property: (
-                                        <span
-                                            style={{color: 'rgb(var(--main-fg))'}}
-                                            id='groupByLabel'
-                                        >
-                                            {boardTree.groupByProperty?.name}
-                                        </span>
-                                    ),
-                                }}
-                            />
-                        </Button>
-                        <Menu>
-                            {boardTree.board.cardProperties.filter((o: IPropertyTemplate) => o.type === 'select').map((option: IPropertyTemplate) => (
-                                <Menu.Text
-                                    key={option.id}
-                                    id={option.id}
-                                    name={option.name}
-                                    rightIcon={boardTree.activeView.groupById === option.id ? <CheckIcon/> : undefined}
-                                    onClick={(id) => {
-                                        if (boardTree.activeView.groupById === id) {
-                                            return
-                                        }
-
-                                        mutator.changeViewGroupById(boardTree.activeView, id)
-                                    }}
-                                />
-                            ))}
-                        </Menu>
-                    </MenuWrapper>}
-                <div className='filter-container'>
-                    <Button
-                        active={hasFilter}
-                        onClick={this.showFilterDialog}
-                    >
-                        <FormattedMessage
-                            id='ViewHeader.filter'
-                            defaultMessage='Filter'
-                        />
-                    </Button>
-                    {this.state.showFilter &&
-                    <FilterComponent
-                        boardTree={boardTree}
-                        onClose={this.hideFilterDialog}
-                    />}
-                </div>
-                <MenuWrapper>
-                    <Button active={hasSort}>
-                        <FormattedMessage
-                            id='ViewHeader.sort'
-                            defaultMessage='Sort'
-                        />
-                    </Button>
-                    <Menu>
-                        {(activeView.sortOptions.length > 0) &&
-                            <>
-                                <Menu.Text
-                                    id='manual'
-                                    name='Manual'
-                                    onClick={() => {
-                                        // This sets the manual card order to the currently displayed order
-                                        // Note: Perform this as a single update to change both properties correctly
-                                        const newView = new MutableBoardView(activeView)
-                                        newView.cardOrder = boardTree.orderedCards().map((o) => o.id)
-                                        newView.sortOptions = []
-                                        mutator.updateBlock(newView, activeView, 'reorder')
-                                    }}
-                                />
-
-                                <Menu.Text
-                                    id='revert'
-                                    name='Revert'
-                                    onClick={() => {
-                                        mutator.changeViewSortOptions(activeView, [])
-                                    }}
-                                />
-
-                                <Menu.Separator/>
-                            </>
-                        }
-
-                        {this.sortDisplayOptions().map((option) => {
-                            let rightIcon: JSX.Element | undefined
-                            if (activeView.sortOptions.length > 0) {
-                                const sortOption = activeView.sortOptions[0]
-                                if (sortOption.propertyId === option.id) {
-                                    rightIcon = sortOption.reversed ? <SortUpIcon/> : <SortDownIcon/>
-                                }
-                            }
-                            return (
-                                <Menu.Text
-                                    key={option.id}
-                                    id={option.id}
-                                    name={option.name}
-                                    rightIcon={rightIcon}
-                                    onClick={(propertyId: string) => {
-                                        let newSortOptions: ISortOption[] = []
-                                        if (activeView.sortOptions[0] && activeView.sortOptions[0].propertyId === propertyId) {
-                                        // Already sorting by name, so reverse it
-                                            newSortOptions = [
-                                                {propertyId, reversed: !activeView.sortOptions[0].reversed},
-                                            ]
-                                        } else {
-                                            newSortOptions = [
-                                                {propertyId, reversed: false},
-                                            ]
-                                        }
-                                        mutator.changeViewSortOptions(activeView, newSortOptions)
-                                    }}
-                                />
-                            )
-                        })}
-                    </Menu>
-                </MenuWrapper>
-                {this.state.isSearching &&
-                    <Editable
-                        ref={this.searchFieldRef}
-                        text={boardTree.getSearchText()}
-                        placeholderText={intl.formatMessage({id: 'ViewHeader.search-text', defaultMessage: 'Search text'})}
-                        style={{color: 'rgb(var(--main-fg))'}}
-                        onChanged={(text) => {
-                            this.searchChanged(text)
-                        }}
-                        onKeyDown={(e) => {
-                            this.onSearchKeyDown(e)
-                        }}
-                    />}
-                {!this.state.isSearching &&
-                    <Button onClick={() => this.setState({isSearching: true})}>
-                        <FormattedMessage
-                            id='ViewHeader.search'
-                            defaultMessage='Search'
-                        />
-                    </Button>}
-                <MenuWrapper>
-                    <IconButton icon={<OptionsIcon/>}/>
-                    <Menu>
-                        <Menu.Text
-                            id='exportCsv'
-                            name={intl.formatMessage({id: 'ViewHeader.export-csv', defaultMessage: 'Export to CSV'})}
-                            onClick={() => CsvExporter.exportTableCsv(boardTree)}
-                        />
-                        <Menu.Text
-                            id='exportBoardArchive'
-                            name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export Board Archive'})}
-                            onClick={() => Archiver.exportBoardTree(boardTree)}
-                        />
-
-                        <Menu.Separator/>
-
-                        <Menu.Text
-                            id='testAdd100Cards'
-                            name={intl.formatMessage({id: 'ViewHeader.test-add-100-cards', defaultMessage: 'TEST: Add 100 cards'})}
-                            onClick={() => this.testAddCards(100)}
-                        />
-                        <Menu.Text
-                            id='testAdd1000Cards'
-                            name={intl.formatMessage({id: 'ViewHeader.test-add-1000-cards', defaultMessage: 'TEST: Add 1,000 cards'})}
-                            onClick={() => this.testAddCards(1000)}
-                        />
-                        <Menu.Text
-                            id='testDistributeCards'
-                            name={intl.formatMessage({id: 'ViewHeader.test-distribute-cards', defaultMessage: 'TEST: Distribute cards'})}
-                            onClick={() => this.testDistributeCards()}
-                        />
-                        <Menu.Text
-                            id='testRandomizeIcons'
-                            name={intl.formatMessage({id: 'ViewHeader.test-randomize-icons', defaultMessage: 'TEST: Randomize icons'})}
-                            onClick={() => this.testRandomizeIcons()}
-                        />
-                    </Menu>
-                </MenuWrapper>
-
-                <ButtonWithMenu
-                    onClick={() => {
-                        this.props.addCard()
-                    }}
-                    text={(
-                        <FormattedMessage
-                            id='ViewHeader.new'
-                            defaultMessage='New'
-                        />
-                    )}
-                >
-                    <Menu position='left'>
-                        <Menu.Label>
-                            <b>
-                                <FormattedMessage
-                                    id='ViewHeader.select-a-template'
-                                    defaultMessage='Select a template'
-                                />
-                            </b>
-                        </Menu.Label>
-
-                        <Menu.Separator/>
-
-                        {boardTree.cardTemplates.map((cardTemplate) => {
-                            let displayName = cardTemplate.title || intl.formatMessage({id: 'ViewHeader.untitled', defaultMessage: 'Untitled'})
-                            if (cardTemplate.icon) {
-                                displayName = `${cardTemplate.icon} ${displayName}`
-                            }
-                            return (
-                                <Menu.Text
-                                    key={cardTemplate.id}
-                                    id={cardTemplate.id}
-                                    name={displayName}
-                                    onClick={() => {
-                                        this.props.addCardFromTemplate(cardTemplate.id)
-                                    }}
-                                    rightIcon={
-                                        <MenuWrapper stopPropagationOnToggle={true}>
-                                            <IconButton icon={<OptionsIcon/>}/>
-                                            <Menu position='left'>
-                                                <Menu.Text
-                                                    id='edit'
-                                                    name={intl.formatMessage({id: 'ViewHeader.edit-template', defaultMessage: 'Edit'})}
-                                                    onClick={() => {
-                                                        this.props.editCardTemplate(cardTemplate.id)
-                                                    }}
-                                                />
-                                                <Menu.Text
-                                                    icon={<DeleteIcon/>}
-                                                    id='delete'
-                                                    name={intl.formatMessage({id: 'ViewHeader.delete-template', defaultMessage: 'Delete'})}
-                                                    onClick={async () => {
-                                                        await mutator.deleteBlock(cardTemplate, 'delete card template')
-                                                    }}
-                                                />
-                                            </Menu>
-                                        </MenuWrapper>
-                                    }
-                                />
-                            )
-                        })}
-
-                        <Menu.Text
-                            id='empty-template'
-                            name={intl.formatMessage({id: 'ViewHeader.empty-card', defaultMessage: 'Empty card'})}
-                            onClick={() => {
-                                this.props.addCard()
-                            }}
-                        />
-
-                        <Menu.Text
-                            id='add-template'
-                            name={intl.formatMessage({id: 'ViewHeader.add-template', defaultMessage: '+ New template'})}
-                            onClick={() => this.props.addCardTemplate()}
-                        />
-                    </Menu>
-                </ButtonWithMenu>
-            </div>
-        )
     }
 
     private sortDisplayOptions() {

@@ -18,6 +18,7 @@ type Props = {
     block: Board|Card
     size?: 's' | 'm' | 'l'
     intl: IntlShape
+    readonly?: boolean
 }
 
 class BlockIconSelector extends React.Component<Props> {
@@ -41,10 +42,17 @@ class BlockIconSelector extends React.Component<Props> {
         if (!block.icon) {
             return null
         }
+        let className = `octo-icon size-${size}`
+        if (this.props.readonly) {
+            className += ' readonly'
+        }
+        const iconElement = <div className={className}><span>{block.icon}</span></div>
         return (
             <div className='BlockIconSelector'>
+                {this.props.readonly && iconElement}
+                {!this.props.readonly &&
                 <MenuWrapper>
-                    <div className={`octo-icon size-${size}`}><span>{block.icon}</span></div>
+                    {iconElement}
                     <Menu>
                         <Menu.Text
                             id='random'
@@ -55,18 +63,19 @@ class BlockIconSelector extends React.Component<Props> {
                         <Menu.SubMenu
                             id='pick'
                             icon={<EmojiIcon/>}
-                            name={intl.formatMessage({id: 'ViewTitle.pick-icon', defaultMessage: 'Pick Icon'})}
+                            name={intl.formatMessage({id: 'ViewTitle.pick-icon', defaultMessage: 'Pick icon'})}
                         >
                             <EmojiPicker onSelect={this.onSelectEmoji}/>
                         </Menu.SubMenu>
                         <Menu.Text
                             id='remove'
                             icon={<DeleteIcon/>}
-                            name={intl.formatMessage({id: 'ViewTitle.remove-icon', defaultMessage: 'Remove Icon'})}
+                            name={intl.formatMessage({id: 'ViewTitle.remove-icon', defaultMessage: 'Remove icon'})}
                             onClick={() => mutator.changeIcon(block, '', 'remove icon')}
                         />
                     </Menu>
                 </MenuWrapper>
+                }
             </div>
         )
     }

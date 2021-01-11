@@ -1,12 +1,12 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IOrderedBlock, MutableOrderedBlock} from './orderedBlock'
+import {IContentBlock, MutableContentBlock} from './contentBlock'
 
-interface ImageBlock extends IOrderedBlock {
+interface ImageBlock extends IContentBlock {
     readonly url: string
 }
 
-class MutableImageBlock extends MutableOrderedBlock implements IOrderedBlock {
+class MutableImageBlock extends MutableContentBlock implements IContentBlock {
     get url(): string {
         return this.fields.url as string
     }

@@ -7,10 +7,11 @@ import {Archiver} from '../archiver'
 import {Board, MutableBoard} from '../blocks/board'
 import {BoardView, MutableBoardView} from '../blocks/boardView'
 import mutator from '../mutator'
-import {darkTheme, lightTheme, mattermostTheme, setTheme} from '../theme'
+import {defaultTheme, darkTheme, lightTheme, setTheme} from '../theme'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
 import Button from '../widgets/buttons/button'
 import IconButton from '../widgets/buttons/iconButton'
+import BoardIcon from '../widgets/icons/board'
 import DeleteIcon from '../widgets/icons/delete'
 import DisclosureTriangle from '../widgets/icons/disclosureTriangle'
 import DotIcon from '../widgets/icons/dot'
@@ -24,7 +25,7 @@ import MenuWrapper from '../widgets/menuWrapper'
 import './sidebar.scss'
 
 type Props = {
-    showBoard: (id: string) => void
+    showBoard: (id?: string) => void
     showView: (id: string, boardId?: string) => void
     workspaceTree: WorkspaceTree,
     activeBoardId?: string
@@ -80,7 +81,7 @@ class Sidebar extends React.Component<Props, State> {
         return (
             <div className='Sidebar octo-sidebar'>
                 <div className='octo-sidebar-header'>
-                    {'OCTO'}
+                    {'Mattergoals'}
                     <div className='octo-spacer'/>
                     <IconButton
                         onClick={this.hideClicked}
@@ -117,15 +118,18 @@ class Sidebar extends React.Component<Props, State> {
                                             <Menu position='left'>
                                                 <Menu.Text
                                                     id='deleteBoard'
-                                                    name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete Board'})}
+                                                    name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
                                                     icon={<DeleteIcon/>}
                                                     onClick={async () => {
                                                         const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id)?.id : undefined
                                                         mutator.deleteBlock(
                                                             board,
-                                                            'delete block',
+                                                            intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'}),
                                                             async () => {
-                                                                nextBoardId && this.props.showBoard(nextBoardId!)
+                                                                // This delay is needed because OctoListener has a default 100 ms notification delay before updates
+                                                                setTimeout(() => {
+                                                                    this.props.showBoard(nextBoardId)
+                                                                }, 120)
                                                             },
                                                             async () => {
                                                                 this.props.showBoard(board.id)
@@ -136,7 +140,7 @@ class Sidebar extends React.Component<Props, State> {
 
                                                 <Menu.Text
                                                     id='duplicateBoard'
-                                                    name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate Board'})}
+                                                    name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
                                                     icon={<DuplicateIcon/>}
                                                     onClick={() => {
                                                         this.duplicateBoard(board.id)
@@ -181,17 +185,19 @@ class Sidebar extends React.Component<Props, State> {
                             )
                         })
                     }
+                </div>
 
-                    <br/>
+                <div className='octo-spacer'/>
 
-                    <MenuWrapper>
-                        <Button>
-                            <FormattedMessage
-                                id='Sidebar.add-board'
-                                defaultMessage='+ Add Board'
-                            />
-                        </Button>
-                        <Menu position='top'>
+                <MenuWrapper>
+                    <Button>
+                        <FormattedMessage
+                            id='Sidebar.add-board'
+                            defaultMessage='+ Add Board'
+                        />
+                    </Button>
+                    <Menu position='top'>
+                        {workspaceTree.boardTemplates.length > 0 && <>
                             <Menu.Label>
                                 <b>
                                     <FormattedMessage
@@ -202,62 +208,60 @@ class Sidebar extends React.Component<Props, State> {
                             </Menu.Label>
 
                             <Menu.Separator/>
+                        </>}
 
-                            {workspaceTree.boardTemplates.map((boardTemplate) => {
-                                let displayName = boardTemplate.title || intl.formatMessage({id: 'Sidebar.untitled', defaultMessage: 'Untitled'})
-                                if (boardTemplate.icon) {
-                                    displayName = `${boardTemplate.icon} ${displayName}`
-                                }
-                                return (
-                                    <Menu.Text
-                                        key={boardTemplate.id}
-                                        id={boardTemplate.id}
-                                        name={displayName}
-                                        onClick={() => {
-                                            this.addBoardFromTemplate(boardTemplate.id)
-                                        }}
-                                        rightIcon={
-                                            <MenuWrapper stopPropagationOnToggle={true}>
-                                                <IconButton icon={<OptionsIcon/>}/>
-                                                <Menu position='left'>
-                                                    <Menu.Text
-                                                        id='edit'
-                                                        name={intl.formatMessage({id: 'Sidebar.edit-template', defaultMessage: 'Edit'})}
-                                                        onClick={() => {
-                                                            this.props.showBoard(boardTemplate.id)
-                                                        }}
-                                                    />
-                                                    <Menu.Text
-                                                        icon={<DeleteIcon/>}
-                                                        id='delete'
-                                                        name={intl.formatMessage({id: 'Sidebar.delete-template', defaultMessage: 'Delete'})}
-                                                        onClick={async () => {
-                                                            await mutator.deleteBlock(boardTemplate, 'delete board template')
-                                                        }}
-                                                    />
-                                                </Menu>
-                                            </MenuWrapper>
-                                        }
-                                    />
-                                )
-                            })}
+                        {workspaceTree.boardTemplates.map((boardTemplate) => {
+                            const displayName = boardTemplate.title || intl.formatMessage({id: 'Sidebar.untitled', defaultMessage: 'Untitled'})
 
-                            <Menu.Text
-                                id='empty-template'
-                                name={intl.formatMessage({id: 'Sidebar.empty-board', defaultMessage: 'Empty board'})}
-                                onClick={this.addBoardClicked}
-                            />
+                            return (
+                                <Menu.Text
+                                    key={boardTemplate.id}
+                                    id={boardTemplate.id}
+                                    name={displayName}
+                                    icon={<div className='Icon'>{boardTemplate.icon}</div>}
+                                    onClick={() => {
+                                        this.addBoardFromTemplate(boardTemplate.id)
+                                    }}
+                                    rightIcon={
+                                        <MenuWrapper stopPropagationOnToggle={true}>
+                                            <IconButton icon={<OptionsIcon/>}/>
+                                            <Menu position='left'>
+                                                <Menu.Text
+                                                    id='edit'
+                                                    name={intl.formatMessage({id: 'Sidebar.edit-template', defaultMessage: 'Edit'})}
+                                                    onClick={() => {
+                                                        this.props.showBoard(boardTemplate.id)
+                                                    }}
+                                                />
+                                                <Menu.Text
+                                                    icon={<DeleteIcon/>}
+                                                    id='delete'
+                                                    name={intl.formatMessage({id: 'Sidebar.delete-template', defaultMessage: 'Delete'})}
+                                                    onClick={async () => {
+                                                        await mutator.deleteBlock(boardTemplate, 'delete board template')
+                                                    }}
+                                                />
+                                            </Menu>
+                                        </MenuWrapper>
+                                    }
+                                />
+                            )
+                        })}
 
-                            <Menu.Text
-                                id='add-template'
-                                name={intl.formatMessage({id: 'Sidebar.add-template', defaultMessage: '+ New template'})}
-                                onClick={this.addBoardTemplateClicked}
-                            />
-                        </Menu>
-                    </MenuWrapper>
-                </div>
+                        <Menu.Text
+                            id='empty-template'
+                            name={intl.formatMessage({id: 'Sidebar.empty-board', defaultMessage: 'Empty board'})}
+                            icon={<BoardIcon/>}
+                            onClick={this.addBoardClicked}
+                        />
 
-                <div className='octo-spacer'/>
+                        <Menu.Text
+                            id='add-template'
+                            name={intl.formatMessage({id: 'Sidebar.add-template', defaultMessage: '+ New template'})}
+                            onClick={this.addBoardTemplateClicked}
+                        />
+                    </Menu>
+                </MenuWrapper>
 
                 <MenuWrapper>
                     <Button>
@@ -269,17 +273,17 @@ class Sidebar extends React.Component<Props, State> {
                     <Menu position='top'>
                         <Menu.Text
                             id='import'
-                            name={intl.formatMessage({id: 'Sidebar.import-archive', defaultMessage: 'Import Archive'})}
+                            name={intl.formatMessage({id: 'Sidebar.import-archive', defaultMessage: 'Import archive'})}
                             onClick={async () => Archiver.importFullArchive()}
                         />
                         <Menu.Text
                             id='export'
-                            name={intl.formatMessage({id: 'Sidebar.export-archive', defaultMessage: 'Export Archive'})}
+                            name={intl.formatMessage({id: 'Sidebar.export-archive', defaultMessage: 'Export archive'})}
                             onClick={async () => Archiver.exportFullArchive()}
                         />
                         <Menu.SubMenu
                             id='lang'
-                            name={intl.formatMessage({id: 'Sidebar.set-language', defaultMessage: 'Set Language'})}
+                            name={intl.formatMessage({id: 'Sidebar.set-language', defaultMessage: 'Set language'})}
                             position='top'
                         >
                             <Menu.Text
@@ -295,23 +299,23 @@ class Sidebar extends React.Component<Props, State> {
                         </Menu.SubMenu>
                         <Menu.SubMenu
                             id='theme'
-                            name={intl.formatMessage({id: 'Sidebar.set-theme', defaultMessage: 'Set Theme'})}
+                            name={intl.formatMessage({id: 'Sidebar.set-theme', defaultMessage: 'Set theme'})}
                             position='top'
                         >
                             <Menu.Text
+                                id='default-theme'
+                                name={intl.formatMessage({id: 'Sidebar.default-theme', defaultMessage: 'Default theme'})}
+                                onClick={async () => setTheme(defaultTheme)}
+                            />
+                            <Menu.Text
                                 id='dark-theme'
-                                name={intl.formatMessage({id: 'Sidebar.dark-theme', defaultMessage: 'Dark Theme'})}
+                                name={intl.formatMessage({id: 'Sidebar.dark-theme', defaultMessage: 'Dark theme'})}
                                 onClick={async () => setTheme(darkTheme)}
                             />
                             <Menu.Text
                                 id='light-theme'
-                                name={intl.formatMessage({id: 'Sidebar.light-theme', defaultMessage: 'Light Theme'})}
+                                name={intl.formatMessage({id: 'Sidebar.light-theme', defaultMessage: 'Light theme'})}
                                 onClick={async () => setTheme(lightTheme)}
-                            />
-                            <Menu.Text
-                                id='mattermost-theme'
-                                name={intl.formatMessage({id: 'Sidebar.mattermost-theme', defaultMessage: 'Mattermost Theme'})}
-                                onClick={async () => setTheme(mattermostTheme)}
                             />
                         </Menu.SubMenu>
                     </Menu>
@@ -340,7 +344,7 @@ class Sidebar extends React.Component<Props, State> {
         view.viewType = 'board'
         view.parentId = board.id
         view.rootId = board.rootId
-        view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board View'})
+        view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
 
         await mutator.insertBlocks(
             [board, view],

@@ -1,4 +1,8 @@
 .MenuWrapper {
     position: relative;
     cursor: pointer;
+
+    &.disabled {
+        cursor: default;
+    }
 }

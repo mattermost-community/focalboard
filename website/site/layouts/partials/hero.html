@@ -1,0 +1,38 @@
+<div class="homepage__intro text-center">
+    <div class="container-fluid">
+
+		<p>
+			<a href="download/personal-edition">
+				<img src="img/hero.png" style="max-height: 500px;" />
+			</a>
+		</p>
+
+		<p>
+			Mattergoals is a free open-source project management system, perfect for organizing your personal todos or running team projects.
+		</p>
+
+		<p>
+			It can run standalone on your laptop or self-hosted on your own server, so your information never leaves your control.
+		</p>
+
+		<p>
+			We're currently in early-access beta, and are looking for feedback. So please <a href="download">download it today</a> and let us know what you think.
+		</p>
+
+		<p>
+			You can also <a href="contribute/getting-started">check out the source code</a>, and contribute to the future of this project.
+		</p>
+
+        <div class="homepage-search row">
+            {{ if .Site.Params.search.enable }}
+            <div class="homepage-search__input col-sm-9">
+                <img src="img/search-icon.svg" width="24px" height="24px" alt="Search icon">
+                <input type="text" class="transparent" placeholder="Search developer documentation">
+            </div>
+            <div class="homepage-search__button col-sm-3">
+                <input type="button" class="btn btn-white btn-shadow form-control" value="Get Started">
+            </div>
+            {{ end }}
+        </div>
+    </div>
+</div>

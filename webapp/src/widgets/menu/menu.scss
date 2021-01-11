@@ -60,6 +60,7 @@
             >.Icon {
                 width: 16px;
                 height: 16px;
+                line-height: 16px;
             }
             >.IconButton .Icon {
                 margin-right: 0;
@@ -71,6 +72,15 @@
         height: 20px;
         width: 20px;
         flex: 0 0 auto;
+    }
+
+    @media not screen and (max-width: 430px) {
+        &.top {
+            bottom: 100%;
+        }
+        &.left {
+            right: 0;
+        }
     }
 }
 
@@ -122,13 +132,6 @@
         }
     }
     @media not screen and (max-width: 430px) {
-        &.top {
-            bottom: 100%;
-        }
-        &.left {
-            right: 0;
-        }
-
         .hideOnWidescreen {
         /* Hide controls (e.g. close button) on larger screens */
             display: none !important;

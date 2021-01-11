@@ -1,7 +1,9 @@
 package integrationtests
 
 import (
+	"log"
 	"net/http"
+	"time"
 
 	"github.com/mattermost/mattermost-octo-tasks/server/client"
 	"github.com/mattermost/mattermost-octo-tasks/server/server"
@@ -42,6 +44,29 @@ func (th *TestHelper) InitBasic() *TestHelper {
 			panic(err)
 		}
 	}()
+
+	for {
+		URL := th.Server.Config().ServerRoot
+		log.Printf("Polling server at %v", URL)
+		resp, err := http.Get(URL)
+		if err != nil {
+			log.Println("Polling failed:", err)
+			time.Sleep(100 * time.Millisecond)
+			continue
+		}
+		resp.Body.Close()
+
+		// Currently returns 404
+		// if resp.StatusCode != http.StatusOK {
+		// 	log.Println("Not OK:", resp.StatusCode)
+		// 	continue
+		// }
+
+		// Reached this point: server is up and running!
+		log.Println("Server ping OK, statusCode:", resp.StatusCode)
+
+		break
+	}
 
 	return th
 }

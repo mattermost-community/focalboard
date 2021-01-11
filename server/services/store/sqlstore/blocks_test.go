@@ -14,10 +14,11 @@ func TestInsertBlock(t *testing.T) {
 
 	blocks, err := store.GetAllBlocks()
 	require.NoError(t, err)
-	require.Empty(t, blocks)
+	initialCount := len(blocks)
 
 	block := model.Block{
-		ID: "id-test",
+		ID:     "id-test",
+		RootID: "id-test",
 	}
 
 	err = store.InsertBlock(block)
@@ -25,7 +26,7 @@ func TestInsertBlock(t *testing.T) {
 
 	blocks, err = store.GetAllBlocks()
 	require.NoError(t, err)
-	require.Len(t, blocks, 1)
+	require.Len(t, blocks, initialCount+1)
 
 	// Wait for not colliding the ID+insert_at key
 	time.Sleep(1 * time.Millisecond)
@@ -34,7 +35,7 @@ func TestInsertBlock(t *testing.T) {
 
 	blocks, err = store.GetAllBlocks()
 	require.NoError(t, err)
-	require.Empty(t, blocks)
+	require.Len(t, blocks, initialCount)
 }
 
 func TestGetSubTree2(t *testing.T) {
@@ -43,35 +44,45 @@ func TestGetSubTree2(t *testing.T) {
 
 	blocks, err := store.GetAllBlocks()
 	require.NoError(t, err)
-	require.Empty(t, blocks)
+	initialCount := len(blocks)
 
 	blocksToInsert := []model.Block{
 		model.Block{
-			ID: "parent",
+			ID:     "parent",
+			RootID: "parent",
 		},
 		model.Block{
 			ID:       "child1",
+			RootID:   "parent",
 			ParentID: "parent",
 		},
 		model.Block{
 			ID:       "child2",
+			RootID:   "parent",
 			ParentID: "parent",
 		},
 		model.Block{
 			ID:       "grandchild1",
+			RootID:   "parent",
 			ParentID: "child1",
 		},
 		model.Block{
 			ID:       "grandchild2",
+			RootID:   "parent",
 			ParentID: "child2",
 		},
 		model.Block{
 			ID:       "greatgrandchild1",
+			RootID:   "parent",
 			ParentID: "grandchild1",
 		},
 	}
 
 	InsertBlocks(t, store, blocksToInsert)
+
+	blocks, err = store.GetAllBlocks()
+	require.NoError(t, err)
+	require.Len(t, blocks, initialCount+6)
 
 	blocks, err = store.GetSubTree2("parent")
 	require.NoError(t, err)
@@ -86,7 +97,7 @@ func TestGetSubTree2(t *testing.T) {
 
 	blocks, err = store.GetAllBlocks()
 	require.NoError(t, err)
-	require.Empty(t, blocks)
+	require.Len(t, blocks, initialCount)
 }
 
 func TestGetSubTree3(t *testing.T) {
@@ -95,35 +106,45 @@ func TestGetSubTree3(t *testing.T) {
 
 	blocks, err := store.GetAllBlocks()
 	require.NoError(t, err)
-	require.Empty(t, blocks)
+	initialCount := len(blocks)
 
 	blocksToInsert := []model.Block{
 		model.Block{
-			ID: "parent",
+			ID:     "parent",
+			RootID: "parent",
 		},
 		model.Block{
 			ID:       "child1",
+			RootID:   "parent",
 			ParentID: "parent",
 		},
 		model.Block{
 			ID:       "child2",
+			RootID:   "parent",
 			ParentID: "parent",
 		},
 		model.Block{
 			ID:       "grandchild1",
+			RootID:   "parent",
 			ParentID: "child1",
 		},
 		model.Block{
 			ID:       "grandchild2",
+			RootID:   "parent",
 			ParentID: "child2",
 		},
 		model.Block{
 			ID:       "greatgrandchild1",
+			RootID:   "parent",
 			ParentID: "grandchild1",
 		},
 	}
 
 	InsertBlocks(t, store, blocksToInsert)
+
+	blocks, err = store.GetAllBlocks()
+	require.NoError(t, err)
+	require.Len(t, blocks, initialCount+6)
 
 	blocks, err = store.GetSubTree3("parent")
 	require.NoError(t, err)
@@ -140,5 +161,5 @@ func TestGetSubTree3(t *testing.T) {
 
 	blocks, err = store.GetAllBlocks()
 	require.NoError(t, err)
-	require.Empty(t, blocks)
+	require.Len(t, blocks, initialCount)
 }

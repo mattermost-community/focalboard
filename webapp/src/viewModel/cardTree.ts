@@ -2,59 +2,68 @@
 // See LICENSE.txt for license information.
 import {IBlock} from '../blocks/block'
 import {Card, MutableCard} from '../blocks/card'
-import {IOrderedBlock} from '../blocks/orderedBlock'
+import {IContentBlock} from '../blocks/contentBlock'
 import octoClient from '../octoClient'
 import {OctoUtils} from '../octoUtils'
 
 interface CardTree {
     readonly card: Card
     readonly comments: readonly IBlock[]
-    readonly contents: readonly IOrderedBlock[]
-
-    mutableCopy(): MutableCardTree
+    readonly contents: readonly IContentBlock[]
+    readonly allBlocks: readonly IBlock[]
 }
 
 class MutableCardTree implements CardTree {
-    card!: MutableCard
+    card: MutableCard
     comments: IBlock[] = []
-    contents: IOrderedBlock[] = []
+    contents: IContentBlock[] = []
 
-    private rawBlocks: IBlock[] = []
-
-    constructor(private cardId: string) {
+    get allBlocks(): IBlock[] {
+        return [this.card, ...this.comments, ...this.contents]
     }
 
-    async sync(): Promise<void> {
-        this.rawBlocks = await octoClient.getSubtree(this.cardId)
-        this.rebuild(OctoUtils.hydrateBlocks(this.rawBlocks))
+    constructor(card: MutableCard) {
+        this.card = card
     }
 
-    incrementalUpdate(updatedBlocks: IBlock[]): boolean {
-        const relevantBlocks = updatedBlocks.filter((block) => block.deleteAt !== 0 || block.id === this.cardId || block.parentId === this.cardId)
+    // Factory methods
+
+    static async sync(boardId: string): Promise<CardTree | undefined> {
+        const rawBlocks = await octoClient.getSubtree(boardId)
+        return this.buildTree(boardId, rawBlocks)
+    }
+
+    static incrementalUpdate(cardTree: CardTree, updatedBlocks: IBlock[]): CardTree | undefined {
+        const relevantBlocks = updatedBlocks.filter((block) => block.deleteAt !== 0 || block.id === cardTree.card.id || block.parentId === cardTree.card.id)
         if (relevantBlocks.length < 1) {
-            return false
+            // No change
+            return cardTree
         }
-        this.rawBlocks = OctoUtils.mergeBlocks(this.rawBlocks, relevantBlocks)
-        this.rebuild(OctoUtils.hydrateBlocks(this.rawBlocks))
-        return true
+        const rawBlocks = OctoUtils.mergeBlocks(cardTree.allBlocks, relevantBlocks)
+        return this.buildTree(cardTree.card.id, rawBlocks)
     }
 
-    private rebuild(blocks: IBlock[]) {
-        this.card = blocks.find((o) => o.id === this.cardId) as MutableCard
+    private static buildTree(cardId: string, sourceBlocks: readonly IBlock[]): MutableCardTree | undefined {
+        const blocks = OctoUtils.hydrateBlocks(sourceBlocks)
 
-        this.comments = blocks.
+        const card = blocks.find((o) => o.type === 'card' && o.id === cardId) as MutableCard
+        if (!card) {
+            return undefined
+        }
+        const cardTree = new MutableCardTree(card)
+        cardTree.comments = blocks.
             filter((block) => block.type === 'comment').
             sort((a, b) => a.createAt - b.createAt)
 
-        const contentBlocks = blocks.filter((block) => block.type === 'text' || block.type === 'image' || block.type === 'divider') as IOrderedBlock[]
-        this.contents = contentBlocks.sort((a, b) => a.order - b.order)
-    }
+        const contentBlocks = blocks.filter((block) => block.type === 'text' || block.type === 'image' || block.type === 'divider') as IContentBlock[]
+        cardTree.contents = OctoUtils.getBlockOrder(card.contentOrder, contentBlocks)
 
-    mutableCopy(): MutableCardTree {
-        const cardTree = new MutableCardTree(this.cardId)
-        cardTree.incrementalUpdate(this.rawBlocks)
         return cardTree
     }
+
+    // private mutableCopy(): MutableCardTree {
+    //     return MutableCardTree.buildTree(this.card.id, this.allBlocks)!
+    // }
 }
 
 export {MutableCardTree, CardTree}

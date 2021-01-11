@@ -1,17 +1,17 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+import {BlockIcons} from './blockIcons'
 import {IBlock, MutableBlock} from './blocks/block'
 import {Board, IPropertyOption, IPropertyTemplate, MutableBoard, PropertyType} from './blocks/board'
 import {BoardView, ISortOption, MutableBoardView} from './blocks/boardView'
 import {Card, MutableCard} from './blocks/card'
 import {MutableImageBlock} from './blocks/imageBlock'
-import {IOrderedBlock, MutableOrderedBlock} from './blocks/orderedBlock'
-import {BoardTree} from './viewModel/boardTree'
 import {FilterGroup} from './filterGroup'
 import octoClient from './octoClient'
+import {OctoUtils} from './octoUtils'
 import undoManager from './undomanager'
 import {Utils} from './utils'
-import {OctoUtils} from './octoUtils'
+import {BoardTree} from './viewModel/boardTree'
 
 //
 // The Mutator is used to make all changes to server state
@@ -172,10 +172,10 @@ class Mutator {
         await this.updateBlock(newBoard, board, actionDescription)
     }
 
-    async changeOrder(block: IOrderedBlock, order: number, description = 'change order') {
-        const newBlock = new MutableOrderedBlock(block)
-        newBlock.order = order
-        await this.updateBlock(newBlock, block, description)
+    async changeCardContentOrder(card: Card, contentOrder: string[], description = 'reorder'): Promise<void> {
+        const newCard = new MutableCard(card)
+        newCard.contentOrder = contentOrder
+        await this.updateBlock(newCard, card, description)
     }
 
     // Property Templates
@@ -446,6 +446,8 @@ class Mutator {
     async changeViewGroupById(view: BoardView, groupById: string): Promise<void> {
         const newView = new MutableBoardView(view)
         newView.groupById = groupById
+        newView.hiddenOptionIds = []
+        newView.visibleOptionIds = []
         await this.updateBlock(newView, view, 'group by')
     }
 
@@ -512,6 +514,7 @@ class Mutator {
         const newBlocks = newBlocks1.filter((o) => o.type !== 'comment')
         Utils.log(`duplicateCard: duplicating ${newBlocks.length} blocks`)
         if (asTemplate === newCard.isTemplate) {
+            // Copy template
             newCard.title = `Copy of ${newCard.title}`
         } else if (asTemplate) {
             // Template from card
@@ -519,6 +522,11 @@ class Mutator {
         } else {
             // Card from template
             newCard.title = ''
+
+            // If the template doesn't specify an icon, initialize it to a random one
+            if (!newCard.icon) {
+                newCard.icon = BlockIcons.shared.randomIcon()
+            }
         }
         newCard.isTemplate = asTemplate
         await this.insertBlocks(
@@ -551,7 +559,6 @@ class Mutator {
             newBoard.title = 'New board template'
         } else {
             // Board from template
-            newBoard.title = ''
         }
         newBoard.isTemplate = asTemplate
         await this.insertBlocks(
@@ -577,7 +584,7 @@ class Mutator {
         return octoClient.importFullArchive(blocks)
     }
 
-    async createImageBlock(parent: IBlock, file: File, order = 1000): Promise<IBlock | undefined> {
+    async createImageBlock(parent: IBlock, file: File, description = 'add image'): Promise<IBlock | undefined> {
         const url = await octoClient.uploadFile(file)
         if (!url) {
             return undefined
@@ -586,7 +593,6 @@ class Mutator {
         const block = new MutableImageBlock()
         block.parentId = parent.id
         block.rootId = parent.rootId
-        block.order = order
         block.url = url
 
         await undoManager.perform(
@@ -596,7 +602,7 @@ class Mutator {
             async () => {
                 await octoClient.deleteBlock(block.id)
             },
-            'add image',
+            description,
             this.undoGroupId,
         )
 

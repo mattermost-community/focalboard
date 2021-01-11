@@ -2,13 +2,13 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
+import {injectIntl, IntlShape} from 'react-intl'
 
-import {IBlock} from '../blocks/block'
+import {Card} from '../blocks/card'
+import {IContentBlock} from '../blocks/contentBlock'
 import {MutableDividerBlock} from '../blocks/dividerBlock'
-import {IOrderedBlock} from '../blocks/orderedBlock'
 import {MutableTextBlock} from '../blocks/textBlock'
 import mutator from '../mutator'
-import {OctoUtils} from '../octoUtils'
 import {Utils} from '../utils'
 import IconButton from '../widgets/buttons/iconButton'
 import AddIcon from '../widgets/icons/add'
@@ -26,14 +26,16 @@ import './contentBlock.scss'
 import {MarkdownEditor} from './markdownEditor'
 
 type Props = {
-    block: IOrderedBlock
-    card: IBlock
-    contents: readonly IOrderedBlock[]
+    block: IContentBlock
+    card: Card
+    contents: readonly IContentBlock[]
+    readonly: boolean
+    intl: IntlShape
 }
 
 class ContentBlock extends React.PureComponent<Props> {
     public render(): JSX.Element | null {
-        const {card, contents, block} = this.props
+        const {intl, card, contents, block} = this.props
 
         if (block.type !== 'text' && block.type !== 'image' && block.type !== 'divider') {
             Utils.assertFailure(`Block type is unknown: ${block.type}`)
@@ -44,98 +46,118 @@ class ContentBlock extends React.PureComponent<Props> {
         return (
             <div className='ContentBlock octo-block'>
                 <div className='octo-block-margin'>
-                    <MenuWrapper>
-                        <IconButton icon={<OptionsIcon/>}/>
-                        <Menu>
-                            {index > 0 &&
-                                <Menu.Text
-                                    id='moveUp'
-                                    name='Move up'
-                                    icon={<SortUpIcon/>}
-                                    onClick={() => {
-                                        const previousBlock = contents[index - 1]
-                                        const newOrder = OctoUtils.getOrderBefore(previousBlock, contents)
-                                        Utils.log(`moveUp ${newOrder}`)
-                                        mutator.changeOrder(block, newOrder, 'move up')
-                                    }}
-                                />}
-                            {index < (contents.length - 1) &&
-                                <Menu.Text
-                                    id='moveDown'
-                                    name='Move down'
-                                    icon={<SortDownIcon/>}
-                                    onClick={() => {
-                                        const nextBlock = contents[index + 1]
-                                        const newOrder = OctoUtils.getOrderAfter(nextBlock, contents)
-                                        Utils.log(`moveDown ${newOrder}`)
-                                        mutator.changeOrder(block, newOrder, 'move down')
-                                    }}
-                                />}
-                            <Menu.SubMenu
-                                id='insertAbove'
-                                name='Insert above'
-                                icon={<AddIcon/>}
-                            >
-                                <Menu.Text
-                                    id='text'
-                                    name='Text'
-                                    icon={<TextIcon/>}
-                                    onClick={() => {
-                                        const newBlock = new MutableTextBlock()
-                                        newBlock.parentId = card.id
-                                        newBlock.rootId = card.rootId
+                    {!this.props.readonly &&
+                        <MenuWrapper>
+                            <IconButton icon={<OptionsIcon/>}/>
+                            <Menu>
+                                {index > 0 &&
+                                    <Menu.Text
+                                        id='moveUp'
+                                        name={intl.formatMessage({id: 'ContentBlock.moveUp', defaultMessage: 'Move up'})}
+                                        icon={<SortUpIcon/>}
+                                        onClick={() => {
+                                            const contentOrder = contents.map((o) => o.id)
+                                            Utils.arrayMove(contentOrder, index, index - 1)
+                                            mutator.changeCardContentOrder(card, contentOrder)
+                                        }}
+                                    />}
+                                {index < (contents.length - 1) &&
+                                    <Menu.Text
+                                        id='moveDown'
+                                        name={intl.formatMessage({id: 'ContentBlock.moveDown', defaultMessage: 'Move down'})}
+                                        icon={<SortDownIcon/>}
+                                        onClick={() => {
+                                            const contentOrder = contents.map((o) => o.id)
+                                            Utils.arrayMove(contentOrder, index, index + 1)
+                                            mutator.changeCardContentOrder(card, contentOrder)
+                                        }}
+                                    />}
+                                <Menu.SubMenu
+                                    id='insertAbove'
+                                    name={intl.formatMessage({id: 'ContentBlock.insertAbove', defaultMessage: 'Insert above'})}
+                                    icon={<AddIcon/>}
+                                >
+                                    <Menu.Text
+                                        id='text'
+                                        name={intl.formatMessage({id: 'ContentBlock.Text', defaultMessage: 'Text'})}
+                                        icon={<TextIcon/>}
+                                        onClick={() => {
+                                            const newBlock = new MutableTextBlock()
+                                            newBlock.parentId = card.id
+                                            newBlock.rootId = card.rootId
 
-                                        // TODO: Handle need to reorder all blocks
-                                        newBlock.order = OctoUtils.getOrderBefore(block, contents)
-                                        Utils.log(`insert block ${block.id}, order: ${block.order}`)
-                                        mutator.insertBlock(newBlock, 'insert card text')
-                                    }}
-                                />
-                                <Menu.Text
-                                    id='image'
-                                    name='Image'
-                                    icon={<ImageIcon/>}
-                                    onClick={() => {
-                                        Utils.selectLocalFile(
-                                            (file) => {
-                                                mutator.createImageBlock(card, file, OctoUtils.getOrderBefore(block, contents))
+                                            const contentOrder = contents.map((o) => o.id)
+                                            contentOrder.splice(index, 0, newBlock.id)
+                                            mutator.performAsUndoGroup(async () => {
+                                                const description = intl.formatMessage({id: 'ContentBlock.addText', defaultMessage: 'add text'})
+                                                await mutator.insertBlock(newBlock, description)
+                                                await mutator.changeCardContentOrder(card, contentOrder, description)
+                                            })
+                                        }}
+                                    />
+                                    <Menu.Text
+                                        id='image'
+                                        name='Image'
+                                        icon={<ImageIcon/>}
+                                        onClick={() => {
+                                            Utils.selectLocalFile((file) => {
+                                                mutator.performAsUndoGroup(async () => {
+                                                    const description = intl.formatMessage({id: 'ContentBlock.addImage', defaultMessage: 'add image'})
+                                                    const newBlock = await mutator.createImageBlock(card, file, description)
+                                                    if (newBlock) {
+                                                        const contentOrder = contents.map((o) => o.id)
+                                                        contentOrder.splice(index, 0, newBlock.id)
+                                                        await mutator.changeCardContentOrder(card, contentOrder, description)
+                                                    }
+                                                })
                                             },
                                             '.jpg,.jpeg,.png')
-                                    }}
-                                />
-                                <Menu.Text
-                                    id='divider'
-                                    name='Divider'
-                                    icon={<DividerIcon/>}
-                                    onClick={() => {
-                                        const newBlock = new MutableDividerBlock()
-                                        newBlock.parentId = card.id
-                                        newBlock.rootId = card.rootId
+                                        }}
+                                    />
+                                    <Menu.Text
+                                        id='divider'
+                                        name={intl.formatMessage({id: 'ContentBlock.divider', defaultMessage: 'Divider'})}
+                                        icon={<DividerIcon/>}
+                                        onClick={() => {
+                                            const newBlock = new MutableDividerBlock()
+                                            newBlock.parentId = card.id
+                                            newBlock.rootId = card.rootId
 
-                                        // TODO: Handle need to reorder all blocks
-                                        newBlock.order = OctoUtils.getOrderBefore(block, contents)
-                                        Utils.log(`insert block ${block.id}, order: ${block.order}`)
-                                        mutator.insertBlock(newBlock, 'insert card text')
+                                            const contentOrder = contents.map((o) => o.id)
+                                            contentOrder.splice(index, 0, newBlock.id)
+                                            mutator.performAsUndoGroup(async () => {
+                                                const description = intl.formatMessage({id: 'ContentBlock.addDivider', defaultMessage: 'add divider'})
+                                                await mutator.insertBlock(newBlock, description)
+                                                await mutator.changeCardContentOrder(card, contentOrder, description)
+                                            })
+                                        }}
+                                    />
+                                </Menu.SubMenu>
+                                <Menu.Text
+                                    icon={<DeleteIcon/>}
+                                    id='delete'
+                                    name={intl.formatMessage({id: 'ContentBlock.Delete', defaultMessage: 'Delete'})}
+                                    onClick={() => {
+                                        const description = intl.formatMessage({id: 'ContentBlock.DeleteAction', defaultMessage: 'delete'})
+                                        const contentOrder = contents.map((o) => o.id).filter((o) => o !== block.id)
+                                        mutator.performAsUndoGroup(async () => {
+                                            await mutator.deleteBlock(block, description)
+                                            await mutator.changeCardContentOrder(card, contentOrder, description)
+                                        })
                                     }}
                                 />
-                            </Menu.SubMenu>
-                            <Menu.Text
-                                icon={<DeleteIcon/>}
-                                id='delete'
-                                name='Delete'
-                                onClick={() => mutator.deleteBlock(block)}
-                            />
-                        </Menu>
-                    </MenuWrapper>
+                            </Menu>
+                        </MenuWrapper>
+                    }
                 </div>
                 {block.type === 'text' &&
                     <MarkdownEditor
                         text={block.title}
-                        placeholderText='Edit text...'
+                        placeholderText={intl.formatMessage({id: 'ContentBlock.editText', defaultMessage: 'Edit text...'})}
                         onBlur={(text) => {
-                            Utils.log(`change text ${block.id}, ${text}`)
-                            mutator.changeTitle(block, text, 'edit card text')
+                            mutator.changeTitle(block, text, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card text'}))
                         }}
+                        readonly={this.props.readonly}
                     />}
                 {block.type === 'divider' && <div className='divider'/>}
                 {block.type === 'image' &&
@@ -148,4 +170,4 @@ class ContentBlock extends React.PureComponent<Props> {
     }
 }
 
-export default ContentBlock
+export default injectIntl(ContentBlock)

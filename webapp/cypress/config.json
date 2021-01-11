@@ -1,0 +1,11 @@
+{
+	"serverRoot": "http://localhost:8088",
+	"port": 8088,
+	"dbtype": "sqlite3",
+	"dbconfig": "file::memory:?cache=shared",
+	"useSSL": false,
+	"webpath": "../pack",
+	"filespath": "../../files",
+    "telemetry": true,
+    "webhook_update": []
+}

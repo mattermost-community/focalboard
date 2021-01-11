@@ -1,0 +1,32 @@
+name: Build-Windows
+
+on: workflow_dispatch
+
+jobs:
+
+  windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: win-node-env
+      run: npm install -g win-node-env
+
+    - name: npm install
+      run: cd webapp; npm install --no-optional
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.15
+
+    - name: Build Windows app
+      run: make win-app
+
+    - name: Upload app package
+      uses: actions/upload-artifact@v1
+      with:
+        name: tasks-win.zip
+        path: ${{ github.workspace }}/win/dist/tasks-win.zip
