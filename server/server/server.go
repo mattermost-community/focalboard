@@ -147,7 +147,9 @@ func (s *Server) Shutdown() error {
 		return err
 	}
 
-	s.cleanUpSessionsTask.Cancel()
+	if s.cleanUpSessionsTask != nil {
+		s.cleanUpSessionsTask.Cancel()
+	}
 
 	return s.store.Shutdown()
 }

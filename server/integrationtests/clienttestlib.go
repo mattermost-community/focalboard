@@ -28,7 +28,7 @@ func getTestConfig() *config.Configuration {
 
 func SetupTestHelper() *TestHelper {
 	th := &TestHelper{}
-	srv, err := server.New(getTestConfig())
+	srv, err := server.New(getTestConfig(), true)
 	if err != nil {
 		panic(err)
 	}

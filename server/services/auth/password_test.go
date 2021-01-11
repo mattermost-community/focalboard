@@ -153,8 +153,7 @@ func TestIsPasswordValidWithSettings(t *testing.T) {
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
-			as := New(tc.Settings)
-			err := as.IsPasswordValid(tc.Password)
+			err := IsPasswordValid(tc.Password, tc.Settings)
 			if len(tc.ExpectedFailingCriterias) == 0 {
 				assert.NoError(t, err)
 			} else {

@@ -33,6 +33,20 @@ func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 	return m.recorder
 }
 
+// CleanUpSessions mocks base method
+func (m *MockStore) CleanUpSessions(arg0 int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CleanUpSessions", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CleanUpSessions indicates an expected call of CleanUpSessions
+func (mr *MockStoreMockRecorder) CleanUpSessions(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CleanUpSessions", reflect.TypeOf((*MockStore)(nil).CleanUpSessions), arg0)
+}
+
 // CreateSession mocks base method
 func (m *MockStore) CreateSession(arg0 *model.Session) error {
 	m.ctrl.T.Helper()
@@ -165,18 +179,18 @@ func (mr *MockStoreMockRecorder) GetParentID(arg0 interface{}) *gomock.Call {
 }
 
 // GetSession mocks base method
-func (m *MockStore) GetSession(arg0 string) (*model.Session, error) {
+func (m *MockStore) GetSession(arg0 string, arg1 int64) (*model.Session, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetSession", arg0)
+	ret := m.ctrl.Call(m, "GetSession", arg0, arg1)
 	ret0, _ := ret[0].(*model.Session)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetSession indicates an expected call of GetSession
-func (mr *MockStoreMockRecorder) GetSession(arg0 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) GetSession(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSession", reflect.TypeOf((*MockStore)(nil).GetSession), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSession", reflect.TypeOf((*MockStore)(nil).GetSession), arg0, arg1)
 }
 
 // GetSubTree2 mocks base method
