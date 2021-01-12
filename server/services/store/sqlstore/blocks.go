@@ -324,9 +324,21 @@ func (s *SQLStore) InsertBlock(block model.Block) error {
 	return nil
 }
 
-func (s *SQLStore) DeleteBlock(blockID string) error {
+func (s *SQLStore) DeleteBlock(blockID string, modifiedBy string) error {
 	now := time.Now().Unix()
-	query := s.getQueryBuilder().Insert("blocks").Columns("id", "update_at", "delete_at").Values(blockID, now, now)
+	query := s.getQueryBuilder().Insert("blocks").
+		Columns(
+			"id",
+			"modified_by",
+			"update_at",
+			"delete_at",
+		).
+		Values(
+			blockID,
+			modifiedBy,
+			now,
+			now,
+		)
 
 	_, err := query.Exec()
 	if err != nil {

@@ -216,10 +216,14 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	session := ctx.Value("session").(*model.Session)
+	userID := session.UserID
+
 	vars := mux.Vars(r)
 	blockID := vars["blockID"]
 
-	err := a.app().DeleteBlock(blockID)
+	err := a.app().DeleteBlock(blockID, userID)
 	if err != nil {
 		log.Printf(`ERROR: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)

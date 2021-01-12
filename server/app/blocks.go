@@ -63,7 +63,7 @@ func (a *App) GetAllBlocks() ([]model.Block, error) {
 	return a.store.GetAllBlocks()
 }
 
-func (a *App) DeleteBlock(blockID string) error {
+func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
 	blockIDsToNotify := []string{blockID}
 	parentID, err := a.GetParentID(blockID)
 	if err != nil {
@@ -74,7 +74,7 @@ func (a *App) DeleteBlock(blockID string) error {
 		blockIDsToNotify = append(blockIDsToNotify, parentID)
 	}
 
-	err = a.store.DeleteBlock(blockID)
+	err = a.store.DeleteBlock(blockID, modifiedBy)
 	if err != nil {
 		return err
 	}

@@ -76,17 +76,17 @@ func (mr *MockStoreMockRecorder) CreateUser(arg0 interface{}) *gomock.Call {
 }
 
 // DeleteBlock mocks base method
-func (m *MockStore) DeleteBlock(arg0 string) error {
+func (m *MockStore) DeleteBlock(arg0, arg1 string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteBlock", arg0)
+	ret := m.ctrl.Call(m, "DeleteBlock", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteBlock indicates an expected call of DeleteBlock
-func (mr *MockStoreMockRecorder) DeleteBlock(arg0 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) DeleteBlock(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteBlock", reflect.TypeOf((*MockStore)(nil).DeleteBlock), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteBlock", reflect.TypeOf((*MockStore)(nil).DeleteBlock), arg0, arg1)
 }
 
 // DeleteSession mocks base method
