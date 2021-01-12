@@ -50,6 +50,9 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	r.HandleFunc("/api/v1/blocks/export", a.sessionRequired(a.handleExport)).Methods("GET")
 	r.HandleFunc("/api/v1/blocks/import", a.sessionRequired(a.handleImport)).Methods("POST")
+
+	r.HandleFunc("/api/v1/sharing/{rootID}", a.sessionRequired(a.handlePostSharing)).Methods("POST")
+	r.HandleFunc("/api/v1/sharing/{rootID}", a.handleGetSharing).Methods("GET")
 }
 
 func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
@@ -379,6 +382,80 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Printf("IMPORT Blocks %d block(s)", len(blocks))
+	jsonStringResponse(w, http.StatusOK, "{}")
+}
+
+// Sharing
+
+func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	rootID := vars["rootID"]
+
+	sharing, err := a.app().GetSharing(rootID)
+	if err != nil {
+		log.Printf(`ERROR: %v`, r)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
+		return
+	}
+
+	sharingData, err := json.Marshal(sharing)
+	if err != nil {
+		log.Printf(`ERROR: %v`, r)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
+		return
+	}
+
+	log.Printf("GET sharing %s", rootID)
+	jsonStringResponse(w, http.StatusOK, string(sharingData))
+}
+
+func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		errorResponse(w, http.StatusInternalServerError, nil)
+
+		return
+	}
+
+	// Catch panics from parse errors, etc.
+	defer func() {
+		if r := recover(); r != nil {
+			log.Printf(`ERROR: %v`, r)
+			errorResponse(w, http.StatusInternalServerError, nil)
+
+			return
+		}
+	}()
+
+	var sharing model.Sharing
+
+	err = json.Unmarshal(requestBody, &sharing)
+	if err != nil {
+		errorResponse(w, http.StatusInternalServerError, nil)
+
+		return
+	}
+
+	// Stamp ModifiedBy
+	ctx := r.Context()
+	session := ctx.Value("session").(*model.Session)
+	userID := session.UserID
+	if userID == "single-user" {
+		userID = ""
+	}
+	sharing.ModifiedBy = userID
+
+	err = a.app().UpsertSharing(sharing)
+	if err != nil {
+		log.Printf(`ERROR: %v, REQUEST: %v`, err, r)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
+		return
+	}
+
+	log.Printf("POST sharing %s", sharing.ID)
 	jsonStringResponse(w, http.StatusOK, "{}")
 }
 
