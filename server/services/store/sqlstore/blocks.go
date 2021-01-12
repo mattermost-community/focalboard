@@ -24,9 +24,19 @@ func (s *SQLStore) latestsBlocksSubquery() sq.SelectBuilder {
 
 func (s *SQLStore) GetBlocksWithParentAndType(parentID string, blockType string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
-		Select("id", "parent_id", "root_id", "schema", "type", "title",
-			"COALESCE(\"fields\", '{}')", "create_at", "update_at",
-			"delete_at").
+		Select(
+			"id",
+			"parent_id",
+			"root_id",
+			"modified_by",
+			"schema",
+			"type",
+			"title",
+			"COALESCE(\"fields\", '{}')",
+			"create_at",
+			"update_at",
+			"delete_at",
+		).
 		FromSelect(s.latestsBlocksSubquery(), "latest").
 		Where(sq.Eq{"parent_id": parentID}).
 		Where(sq.Eq{"type": blockType})
@@ -43,9 +53,19 @@ func (s *SQLStore) GetBlocksWithParentAndType(parentID string, blockType string)
 
 func (s *SQLStore) GetBlocksWithParent(parentID string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
-		Select("id", "parent_id", "root_id", "schema", "type", "title",
-			"COALESCE(\"fields\", '{}')", "create_at", "update_at",
-			"delete_at").
+		Select(
+			"id",
+			"parent_id",
+			"root_id",
+			"modified_by",
+			"schema",
+			"type",
+			"title",
+			"COALESCE(\"fields\", '{}')",
+			"create_at",
+			"update_at",
+			"delete_at",
+		).
 		FromSelect(s.latestsBlocksSubquery(), "latest").
 		Where(sq.Eq{"parent_id": parentID})
 
@@ -61,9 +81,19 @@ func (s *SQLStore) GetBlocksWithParent(parentID string) ([]model.Block, error) {
 
 func (s *SQLStore) GetBlocksWithType(blockType string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
-		Select("id", "parent_id", "root_id", "schema", "type", "title",
-			"COALESCE(\"fields\", '{}')", "create_at", "update_at",
-			"delete_at").
+		Select(
+			"id",
+			"parent_id",
+			"root_id",
+			"modified_by",
+			"schema",
+			"type",
+			"title",
+			"COALESCE(\"fields\", '{}')",
+			"create_at",
+			"update_at",
+			"delete_at",
+		).
 		FromSelect(s.latestsBlocksSubquery(), "latest").
 		Where(sq.Eq{"type": blockType})
 
@@ -80,9 +110,19 @@ func (s *SQLStore) GetBlocksWithType(blockType string) ([]model.Block, error) {
 // GetSubTree2 returns blocks within 2 levels of the given blockID
 func (s *SQLStore) GetSubTree2(blockID string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
-		Select("id", "parent_id", "root_id", "schema", "type", "title",
-			"COALESCE(\"fields\", '{}')", "create_at", "update_at",
-			"delete_at").
+		Select(
+			"id",
+			"parent_id",
+			"root_id",
+			"modified_by",
+			"schema",
+			"type",
+			"title",
+			"COALESCE(\"fields\", '{}')",
+			"create_at",
+			"update_at",
+			"delete_at",
+		).
 		FromSelect(s.latestsBlocksSubquery(), "latest").
 		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}})
 
@@ -99,9 +139,19 @@ func (s *SQLStore) GetSubTree2(blockID string) ([]model.Block, error) {
 // GetSubTree3 returns blocks within 3 levels of the given blockID
 func (s *SQLStore) GetSubTree3(blockID string) ([]model.Block, error) {
 	// This first subquery returns repeated blocks
-	subquery1 := sq.Select("l3.id", "l3.parent_id", "l3.root_id", "l3.schema", "l3.type", "l3.title",
-		"l3.fields", "l3.create_at", "l3.update_at",
-		"l3.delete_at").
+	subquery1 := sq.Select(
+		"l3.id",
+		"l3.parent_id",
+		"l3.root_id",
+		"l3.modified_by",
+		"l3.schema",
+		"l3.type",
+		"l3.title",
+		"l3.fields",
+		"l3.create_at",
+		"l3.update_at",
+		"l3.delete_at",
+	).
 		FromSelect(s.latestsBlocksSubquery(), "l1").
 		JoinClause(s.latestsBlocksSubquery().Prefix("JOIN (").Suffix(") l2 on l2.parent_id = l1.id or l2.id = l1.id")).
 		JoinClause(s.latestsBlocksSubquery().Prefix("JOIN (").Suffix(") l3 on l3.parent_id = l2.id or l3.id = l2.id")).
@@ -112,9 +162,19 @@ func (s *SQLStore) GetSubTree3(blockID string) ([]model.Block, error) {
 	subquery2 := sq.Select("*", "ROW_NUMBER() OVER (PARTITION BY id) AS rn").
 		FromSelect(subquery1, "sub1")
 
-	query := s.getQueryBuilder().Select("id", "parent_id", "root_id", "schema", "type", "title",
-		"COALESCE(\"fields\", '{}')", "create_at", "update_at",
-		"delete_at").
+	query := s.getQueryBuilder().Select(
+		"id",
+		"parent_id",
+		"root_id",
+		"modified_by",
+		"schema",
+		"type",
+		"title",
+		"COALESCE(\"fields\", '{}')",
+		"create_at",
+		"update_at",
+		"delete_at",
+	).
 		FromSelect(subquery2, "sub2").
 		Where(sq.Eq{"rn": 1})
 
@@ -130,9 +190,19 @@ func (s *SQLStore) GetSubTree3(blockID string) ([]model.Block, error) {
 
 func (s *SQLStore) GetAllBlocks() ([]model.Block, error) {
 	query := s.getQueryBuilder().
-		Select("id", "parent_id", "root_id", "schema", "type", "title",
-			"COALESCE(\"fields\", '{}')", "create_at", "update_at",
-			"delete_at").
+		Select(
+			"id",
+			"parent_id",
+			"root_id",
+			"modified_by",
+			"schema",
+			"type",
+			"title",
+			"COALESCE(\"fields\", '{}')",
+			"create_at",
+			"update_at",
+			"delete_at",
+		).
 		FromSelect(s.latestsBlocksSubquery(), "latest")
 
 	rows, err := query.Query()
@@ -153,11 +223,13 @@ func blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 	for rows.Next() {
 		var block model.Block
 		var fieldsJSON string
+		var modifiedBy sql.NullString
 
 		err := rows.Scan(
 			&block.ID,
 			&block.ParentID,
 			&block.RootID,
+			&modifiedBy,
 			&block.Schema,
 			&block.Type,
 			&block.Title,
@@ -170,6 +242,10 @@ func blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 			log.Printf(`ERROR blocksFromRows: %v`, err)
 
 			return nil, err
+		}
+
+		if modifiedBy.Valid {
+			block.ModifiedBy = modifiedBy.String
 		}
 
 		err = json.Unmarshal([]byte(fieldsJSON), &block.Fields)
@@ -214,9 +290,31 @@ func (s *SQLStore) InsertBlock(block model.Block) error {
 	}
 
 	query := s.getQueryBuilder().Insert("blocks").
-		Columns("id", "parent_id", "root_id", "schema", "type", "title", "fields", "create_at", "update_at", "delete_at").
-		Values(block.ID, block.ParentID, block.RootID, block.Schema, block.Type, block.Title,
-			fieldsJSON, block.CreateAt, block.UpdateAt, block.DeleteAt)
+		Columns(
+			"id",
+			"parent_id",
+			"root_id",
+			"modified_by",
+			"schema",
+			"type",
+			"title",
+			"fields",
+			"create_at",
+			"update_at",
+			"delete_at",
+		).Values(
+		block.ID,
+		block.ParentID,
+		block.RootID,
+		block.ModifiedBy,
+		block.Schema,
+		block.Type,
+		block.Title,
+		fieldsJSON,
+		block.CreateAt,
+		block.UpdateAt,
+		block.DeleteAt,
+	)
 
 	_, err = query.Exec()
 	if err != nil {

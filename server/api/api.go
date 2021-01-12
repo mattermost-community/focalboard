@@ -78,6 +78,19 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	jsonBytesResponse(w, http.StatusOK, json)
 }
 
+func stampModifiedByUser(r *http.Request, blocks []model.Block) {
+	ctx := r.Context()
+	session := ctx.Value("session").(*model.Session)
+	userID := session.UserID
+	if userID == "single-user" {
+		userID = ""
+	}
+
+	for i := range blocks {
+		blocks[i].ModifiedBy = userID
+	}
+}
+
 func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -128,6 +141,8 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+
+	stampModifiedByUser(r, blocks)
 
 	err = a.app().InsertBlocks(blocks)
 	if err != nil {
@@ -348,6 +363,8 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
+
+	stampModifiedByUser(r, blocks)
 
 	err = a.app().InsertBlocks(blocks)
 	if err != nil {

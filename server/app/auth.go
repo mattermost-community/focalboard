@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -15,7 +16,7 @@ import (
 func (a *App) GetSession(token string) (*model.Session, error) {
 	session, err := a.store.GetSession(token, a.config.SessionExpireTime)
 	if err != nil {
-		return nil, errors.Wrap(err, "unable to get the session for the token")
+		return nil, errors.Wrap(err, fmt.Sprintf("unable to get the session for the token (%v)", token))
 	}
 	if session.UpdateAt < (time.Now().Unix() - a.config.SessionRefreshTime) {
 		a.store.RefreshSession(session)
@@ -27,7 +28,7 @@ func (a *App) GetSession(token string) (*model.Session, error) {
 func (a *App) GetUser(ID string) (*model.User, error) {
 	user, err := a.store.GetUserById(ID)
 	if err != nil {
-		return nil, errors.Wrap(err, "unable to get the session for the token")
+		return nil, errors.Wrap(err, fmt.Sprintf("unable to get the session for the user (%v)", ID))
 	}
 	return user, nil
 }

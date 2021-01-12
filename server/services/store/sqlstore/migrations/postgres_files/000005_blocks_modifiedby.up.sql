@@ -1,0 +1,2 @@
+ALTER TABLE blocks
+ADD COLUMN modified_by VARCHAR(36);
