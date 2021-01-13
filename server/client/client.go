@@ -184,3 +184,30 @@ func (c *Client) GetSubtree(blockID string) ([]model.Block, *Response) {
 
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
+
+// Sharing
+
+func (c *Client) GetSharingRoute(rootID string) string {
+	return fmt.Sprintf("/sharing/%s", rootID)
+}
+
+func (c *Client) GetSharing(rootID string) (*model.Sharing, *Response) {
+	r, err := c.DoApiGet(c.GetSharingRoute(rootID), "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	sharing := model.SharingFromJSON(r.Body)
+	return &sharing, BuildResponse(r)
+}
+
+func (c *Client) PostSharing(sharing model.Sharing) (bool, *Response) {
+	r, err := c.DoApiPost(c.GetSharingRoute(sharing.ID), toJSON(sharing))
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
+}

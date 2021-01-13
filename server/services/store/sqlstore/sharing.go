@@ -27,7 +27,7 @@ func (s *SQLStore) UpsertSharing(sharing model.Sharing) error {
 			sharing.ModifiedBy,
 			now,
 		).
-		Suffix("ON CONFLICT (id) DO SET enabled = EXCLUDED.enabled, token = EXCLUDED.token, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at")
+		Suffix("ON CONFLICT (id) DO UPDATE SET enabled = EXCLUDED.enabled, token = EXCLUDED.token, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at")
 
 	_, err := query.Exec()
 	return err
