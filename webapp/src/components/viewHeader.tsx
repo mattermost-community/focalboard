@@ -26,7 +26,9 @@ import MenuWrapper from '../widgets/menuWrapper'
 
 import {Editable} from './editable'
 import FilterComponent from './filterComponent'
+import ModalWrapper from './modalWrapper'
 import NewCardButton from './newCardButton'
+import ShareBoardComponent from './shareBoardComponent'
 import './viewHeader.scss'
 
 type Props = {
@@ -45,6 +47,7 @@ type Props = {
 type State = {
     isSearching: boolean
     showFilter: boolean
+    showShareDialog: boolean
 }
 
 class ViewHeader extends React.Component<Props, State> {
@@ -56,7 +59,7 @@ class ViewHeader extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
-        this.state = {isSearching: Boolean(this.props.boardTree.getSearchText()), showFilter: false}
+        this.state = {isSearching: Boolean(this.props.boardTree.getSearchText()), showFilter: false, showShareDialog: false}
     }
 
     componentDidUpdate(prevPros: Props, prevState: State): void {
@@ -287,21 +290,27 @@ class ViewHeader extends React.Component<Props, State> {
 
                 {!this.props.readonly &&
                 <>
-                    <MenuWrapper>
-                        <IconButton icon={<OptionsIcon/>}/>
-                        <Menu>
-                            <Menu.Text
-                                id='exportCsv'
-                                name={intl.formatMessage({id: 'ViewHeader.export-csv', defaultMessage: 'Export to CSV'})}
-                                onClick={() => CsvExporter.exportTableCsv(boardTree)}
-                            />
-                            <Menu.Text
-                                id='exportBoardArchive'
-                                name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
-                                onClick={() => Archiver.exportBoardTree(boardTree)}
-                            />
+                    <ModalWrapper>
+                        <MenuWrapper>
+                            <IconButton icon={<OptionsIcon/>}/>
+                            <Menu>
+                                <Menu.Text
+                                    id='exportCsv'
+                                    name={intl.formatMessage({id: 'ViewHeader.export-csv', defaultMessage: 'Export to CSV'})}
+                                    onClick={() => CsvExporter.exportTableCsv(boardTree)}
+                                />
+                                <Menu.Text
+                                    id='exportBoardArchive'
+                                    name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
+                                    onClick={() => Archiver.exportBoardTree(boardTree)}
+                                />
+                                <Menu.Text
+                                    id='shareBoard'
+                                    name={intl.formatMessage({id: 'ViewHeader.share-board', defaultMessage: 'Share board'})}
+                                    onClick={this.showShareDialog}
+                                />
 
-                            {/*
+                                {/*
 
                             <Menu.Separator/>
 
@@ -327,8 +336,14 @@ class ViewHeader extends React.Component<Props, State> {
                             />
 
                             */}
-                        </Menu>
-                    </MenuWrapper>
+                            </Menu>
+                        </MenuWrapper>
+                        {this.state.showShareDialog &&
+                            <ShareBoardComponent
+                                onClose={this.hideShareDialog}
+                            />
+                        }
+                    </ModalWrapper>
 
                     {/* New card button */}
 
@@ -351,6 +366,14 @@ class ViewHeader extends React.Component<Props, State> {
 
     private hideFilterDialog = () => {
         this.setState({showFilter: false})
+    }
+
+    private showShareDialog = () => {
+        this.setState({showShareDialog: true})
+    }
+
+    private hideShareDialog = () => {
+        this.setState({showShareDialog: false})
     }
 
     private onSearchKeyDown = (e: React.KeyboardEvent) => {
