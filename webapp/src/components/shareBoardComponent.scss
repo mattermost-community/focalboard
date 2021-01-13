@@ -1,13 +1,27 @@
 .ShareBoardComponent {
     display: flex;
     flex-direction: column;
+    padding: 5px;
 
     > .row {
         display: flex;
         flex-direction: row;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    > .row:last-child {
+        margin-bottom: 0;
     }
 
     .spacer {
         flex-grow: 1;
+    }
+
+    input.shareUrl {
+        flex-grow: 1;
+        border: solid 1px #cccccc;
+        margin-right: 5px;
+        padding: 5px;
     }
 }

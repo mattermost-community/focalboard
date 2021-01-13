@@ -3,6 +3,8 @@
 import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
+import {Utils} from '../utils'
+
 import Button from '../widgets/buttons/button'
 import Switch from '../widgets/switch'
 
@@ -16,6 +18,7 @@ type Props = {
 
 type State = {
     isShared?: boolean
+    wasCopied?: boolean
 }
 
 class ShareBoardComponent extends React.PureComponent<Props, State> {
@@ -23,6 +26,10 @@ class ShareBoardComponent extends React.PureComponent<Props, State> {
 
     render(): JSX.Element {
         const {intl} = this.props
+
+        const readToken = '123'
+        const shareUrl = new URL(window.location.toString())
+        shareUrl.searchParams.set('r', readToken)
 
         return (
             <Modal
@@ -39,7 +46,20 @@ class ShareBoardComponent extends React.PureComponent<Props, State> {
                     </div>
                     {this.state.isShared &&
                         <div className='row'>
-                            <Button>{'Copy link'}</Button>
+                            <input
+                                className='shareUrl'
+                                readOnly={true}
+                                value={shareUrl.toString()}
+                            />
+                            <Button
+                                filled={true}
+                                onClick={() => {
+                                    Utils.copyTextToClipboard(shareUrl.toString())
+                                    this.setState({wasCopied: true})
+                                }}
+                            >
+                                {this.state.wasCopied ? intl.formatMessage({id: 'ShareBoard.copiedLink', defaultMessage: 'Copied!'}) : intl.formatMessage({id: 'ShareBoard.copyLink', defaultMessage: 'Copy link'})}
+                            </Button>
                         </div>
                     }
                 </div>
