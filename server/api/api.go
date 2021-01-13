@@ -270,7 +270,6 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// TODO: Check token
 		if sharing == nil || !(sharing.ID == rootID && sharing.Enabled && sharing.Token == readToken) {
 			log.Printf(`handleGetSubTree public unauthorized, rootID: %v`, rootID)
 			errorResponse(w, http.StatusUnauthorized, nil)
