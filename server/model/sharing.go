@@ -7,8 +7,8 @@ import (
 
 type Sharing struct {
 	ID         string `json:"id"`
-	Token      string `json:"token"`
 	Enabled    bool   `json:"enabled"`
+	Token      string `json:"token"`
 	ModifiedBy string `json:"modifiedBy"`
 	UpdateAt   int64  `json:"update_at,omitempty"`
 }

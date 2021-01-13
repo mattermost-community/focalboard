@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {IBlock, IMutableBlock} from './blocks/block'
+import {ISharing} from './blocks/sharing'
 import {IUser} from './user'
 import {Utils} from './utils'
 
@@ -202,6 +203,33 @@ class OctoClient {
         }
 
         return undefined
+    }
+
+    // Sharing
+
+    async getSharing(rootId: string): Promise<ISharing> {
+        const path = `/api/v1/sharing/${rootId}`
+        const response = await fetch(this.serverUrl + path, {headers: this.headers()})
+        const sharing = (await response.json()) as ISharing || null
+        return sharing
+    }
+
+    async setSharing(sharing: ISharing): Promise<boolean> {
+        const path = `/api/v1/sharing/${sharing.id}`
+        const body = JSON.stringify(sharing)
+        const response = await fetch(
+            this.serverUrl + path,
+            {
+                method: 'POST',
+                headers: this.headers(),
+                body,
+            },
+        )
+
+        if (response.status === 200) {
+            return true
+        }
+        return false
     }
 }
 
