@@ -171,7 +171,7 @@ class ViewHeader extends React.Component<Props, State> {
 
                     {/* Filter */}
 
-                    <div className='filter-container'>
+                    <ModalWrapper>
                         <Button
                             active={hasFilter}
                             onClick={this.showFilterDialog}
@@ -186,7 +186,7 @@ class ViewHeader extends React.Component<Props, State> {
                             boardTree={boardTree}
                             onClose={this.hideFilterDialog}
                         />}
-                    </div>
+                    </ModalWrapper>
 
                     {/* Sort */}
 
