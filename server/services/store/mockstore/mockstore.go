@@ -178,6 +178,21 @@ func (mr *MockStoreMockRecorder) GetParentID(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetParentID", reflect.TypeOf((*MockStore)(nil).GetParentID), arg0)
 }
 
+// GetRootID mocks base method
+func (m *MockStore) GetRootID(arg0 string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetRootID", arg0)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetRootID indicates an expected call of GetRootID
+func (mr *MockStoreMockRecorder) GetRootID(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRootID", reflect.TypeOf((*MockStore)(nil).GetRootID), arg0)
+}
+
 // GetSession mocks base method
 func (m *MockStore) GetSession(arg0 string, arg1 int64) (*model.Session, error) {
 	m.ctrl.T.Helper()
