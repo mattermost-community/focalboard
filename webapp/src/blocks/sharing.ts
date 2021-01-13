@@ -5,8 +5,8 @@ interface ISharing {
     id: string,
     enabled: boolean,
     token: string,
-    modifiedBy: string,
-    updateAt: number,
+    modifiedBy?: string,
+    updateAt?: number,
 }
 
 export {ISharing}

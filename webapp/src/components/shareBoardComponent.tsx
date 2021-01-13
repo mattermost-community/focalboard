@@ -3,6 +3,10 @@
 import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
+import {ISharing} from '../blocks/sharing'
+
+import client from '../octoClient'
+
 import {Utils} from '../utils'
 
 import Button from '../widgets/buttons/button'
@@ -12,22 +16,34 @@ import Modal from './modal'
 import './shareBoardComponent.scss'
 
 type Props = {
+    boardId: string
     onClose: () => void
     intl: IntlShape
 }
 
 type State = {
-    isShared?: boolean
+    sharing?: ISharing
     wasCopied?: boolean
 }
 
 class ShareBoardComponent extends React.PureComponent<Props, State> {
     state: State = {}
 
+    componentDidMount() {
+        this.loadData()
+    }
+
+    private async loadData() {
+        const sharing = await client.getSharing(this.props.boardId)
+        this.setState({sharing})
+    }
+
     render(): JSX.Element {
         const {intl} = this.props
+        const {sharing} = this.state
 
-        const readToken = '123'
+        const isSharing = sharing && sharing.id === this.props.boardId && sharing.enabled
+        const readToken = (sharing && isSharing) ? sharing.token : ''
         const shareUrl = new URL(window.location.toString())
         shareUrl.searchParams.set('r', readToken)
 
@@ -40,11 +56,11 @@ class ShareBoardComponent extends React.PureComponent<Props, State> {
                         <div>{intl.formatMessage({id: 'ShareBoard.share', defaultMessage: 'Publish to web and share this board to anyone'})}</div>
                         <div className='spacer'/>
                         <Switch
-                            isOn={Boolean(this.state.isShared)}
+                            isOn={Boolean(isSharing)}
                             onChanged={this.onShareChanged}
                         />
                     </div>
-                    {this.state.isShared &&
+                    {isSharing &&
                         <div className='row'>
                             <input
                                 className='shareUrl'
@@ -67,9 +83,22 @@ class ShareBoardComponent extends React.PureComponent<Props, State> {
         )
     }
 
-    private onShareChanged = (isOn: boolean) => {
-        // TODO
-        this.setState({isShared: isOn})
+    private createSharingInfo() {
+        const sharing: ISharing = {
+            id: this.props.boardId,
+            enabled: true,
+            token: Utils.createGuid(),
+        }
+        return sharing
+    }
+
+    private onShareChanged = async (isOn: boolean) => {
+        const sharing: ISharing = this.state.sharing || this.createSharingInfo()
+        sharing.id = this.props.boardId
+        sharing.enabled = isOn
+        sharing.token = Utils.createGuid()
+        await client.setSharing(sharing)
+        await this.loadData()
     }
 }
 

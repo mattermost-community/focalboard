@@ -340,6 +340,7 @@ class ViewHeader extends React.Component<Props, State> {
                         </MenuWrapper>
                         {this.state.showShareDialog &&
                             <ShareBoardComponent
+                                boardId={this.props.boardTree.board.id}
                                 onClose={this.hideShareDialog}
                             />
                         }
