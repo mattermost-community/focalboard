@@ -9,12 +9,17 @@ import {Utils} from './utils'
 // OctoClient is the client interface to the server APIs
 //
 class OctoClient {
-    serverUrl: string
+    readonly serverUrl: string
     token?: string
+    readonly readToken?: string
 
-    constructor(serverUrl?: string, token?: string) {
+    constructor(
+        serverUrl?: string,
+        token?: string,
+        readToken?: string) {
         this.serverUrl = serverUrl || window.location.origin
         this.token = token
+        this.readToken = readToken
         Utils.log(`OctoClient serverUrl: ${this.serverUrl}`)
     }
 
@@ -68,7 +73,10 @@ class OctoClient {
     }
 
     async getSubtree(rootId?: string, levels = 2): Promise<IBlock[]> {
-        const path = `/api/v1/blocks/${rootId}/subtree?l=${levels}`
+        let path = `/api/v1/blocks/${rootId}/subtree?l=${levels}`
+        if (this.readToken) {
+            path += `&read_token=${this.readToken}`
+        }
         const response = await fetch(this.serverUrl + path, {headers: this.headers()})
         const blocks = (await response.json() || []) as IMutableBlock[]
         this.fixBlocks(blocks)
@@ -236,6 +244,12 @@ class OctoClient {
     }
 }
 
-const client = new OctoClient(undefined, localStorage.getItem('sessionId') || '')
+function getReadToken(): string {
+    const queryString = new URLSearchParams(window.location.search)
+    const readToken = queryString.get('r') || ''
+    return readToken
+}
+
+const client = new OctoClient(undefined, localStorage.getItem('sessionId') || '', getReadToken())
 
 export default client

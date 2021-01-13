@@ -246,6 +246,16 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	session, _ := ctx.Value("session").(*model.Session)
 	if session == nil {
+		query := r.URL.Query()
+		readToken := query.Get("read_token")
+
+		// Require read token
+		if len(readToken) < 1 {
+			log.Printf(`ERROR: No read_token`)
+			errorResponse(w, http.StatusUnauthorized, map[string]string{"error": "No read_token"})
+			return
+		}
+
 		rootID, err := a.app().GetRootID(blockID)
 		if err != nil {
 			log.Printf(`ERROR GetRootID %v: %v, REQUEST: %v`, blockID, err, r)
@@ -261,7 +271,7 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// TODO: Check token
-		if sharing == nil || !(sharing.ID == rootID && sharing.Enabled) {
+		if sharing == nil || !(sharing.ID == rootID && sharing.Enabled && sharing.Token == readToken) {
 			log.Printf(`handleGetSubTree public unauthorized, rootID: %v`, rootID)
 			errorResponse(w, http.StatusUnauthorized, nil)
 			return
