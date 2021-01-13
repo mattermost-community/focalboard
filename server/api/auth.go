@@ -110,6 +110,10 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) sessionRequired(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
+	return a.attachSession(handler, true)
+}
+
+func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request), required bool) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Printf(`Single User: %v`, a.singleUser)
 		if a.singleUser {
@@ -129,7 +133,12 @@ func (a *API) sessionRequired(handler func(w http.ResponseWriter, r *http.Reques
 		token, _ := auth.ParseAuthTokenFromRequest(r)
 		session, err := a.app().GetSession(token)
 		if err != nil {
-			errorResponse(w, http.StatusUnauthorized, map[string]string{"error": err.Error()})
+			if required {
+				errorResponse(w, http.StatusUnauthorized, map[string]string{"error": err.Error()})
+				return
+			}
+
+			handler(w, r)
 			return
 		}
 		ctx := context.WithValue(r.Context(), "session", session)

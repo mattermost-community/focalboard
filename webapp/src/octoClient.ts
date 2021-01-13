@@ -113,6 +113,9 @@ class OctoClient {
 
     private async getBlocksWithPath(path: string): Promise<IBlock[]> {
         const response = await fetch(this.serverUrl + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return []
+        }
         const blocks = (await response.json() || []) as IMutableBlock[]
         this.fixBlocks(blocks)
         return blocks

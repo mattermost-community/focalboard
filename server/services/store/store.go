@@ -11,6 +11,7 @@ type Store interface {
 	GetSubTree2(blockID string) ([]model.Block, error)
 	GetSubTree3(blockID string) ([]model.Block, error)
 	GetAllBlocks() ([]model.Block, error)
+	GetRootID(blockID string) (string, error)
 	GetParentID(blockID string) (string, error)
 	InsertBlock(block model.Block) error
 	DeleteBlock(blockID string, modifiedBy string) error

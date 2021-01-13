@@ -37,7 +37,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	r.HandleFunc("/api/v1/blocks", a.sessionRequired(a.handleGetBlocks)).Methods("GET")
 	r.HandleFunc("/api/v1/blocks", a.sessionRequired(a.handlePostBlocks)).Methods("POST")
 	r.HandleFunc("/api/v1/blocks/{blockID}", a.sessionRequired(a.handleDeleteBlock)).Methods("DELETE")
-	r.HandleFunc("/api/v1/blocks/{blockID}/subtree", a.sessionRequired(a.handleGetSubTree)).Methods("GET")
+	r.HandleFunc("/api/v1/blocks/{blockID}/subtree", a.attachSession(a.handleGetSubTree, false)).Methods("GET")
 
 	r.HandleFunc("/api/v1/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
 	r.HandleFunc("/api/v1/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
@@ -242,6 +242,32 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	blockID := vars["blockID"]
 
+	// If not authenticated (no session), check that block is publicly shared
+	ctx := r.Context()
+	session, _ := ctx.Value("session").(*model.Session)
+	if session == nil {
+		rootID, err := a.app().GetRootID(blockID)
+		if err != nil {
+			log.Printf(`ERROR GetRootID %v: %v, REQUEST: %v`, blockID, err, r)
+			errorResponse(w, http.StatusInternalServerError, nil)
+			return
+		}
+
+		sharing, err := a.app().GetSharing(rootID)
+		if err != nil {
+			log.Printf(`ERROR GetSharing %v: %v, REQUEST: %v`, rootID, err, r)
+			errorResponse(w, http.StatusInternalServerError, nil)
+			return
+		}
+
+		// TODO: Check token
+		if sharing == nil || !(sharing.ID == rootID && sharing.Enabled) {
+			log.Printf(`handleGetSubTree public unauthorized, rootID: %v`, rootID)
+			errorResponse(w, http.StatusUnauthorized, nil)
+			return
+		}
+	}
+
 	query := r.URL.Query()
 	levels, err := strconv.ParseInt(query.Get("l"), 10, 32)
 	if err != nil {
@@ -252,7 +278,6 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 		log.Printf(`ERROR Invalid levels: %d`, levels)
 		errorData := map[string]string{"description": "invalid levels"}
 		errorResponse(w, http.StatusInternalServerError, errorData)
-
 		return
 	}
 
@@ -260,7 +285,6 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf(`ERROR: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
-
 		return
 	}
 
@@ -269,7 +293,6 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf(`ERROR json.Marshal: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
-
 		return
 	}
 
