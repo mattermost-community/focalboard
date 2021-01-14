@@ -32,16 +32,19 @@ class RegisterPage extends React.PureComponent<Props, State> {
         const queryString = new URLSearchParams(window.location.search)
         const signupToken = queryString.get('t') || ''
 
-        const registered = await client.register(this.state.email, this.state.username, this.state.password, signupToken)
-        if (registered === 200) {
+        const response = await client.register(this.state.email, this.state.username, this.state.password, signupToken)
+        if (response.code === 200) {
             const logged = await client.login(this.state.username, this.state.password)
             if (logged) {
                 this.props.history.push('/')
+
+                // HACKHACK: react-router-dom seems to require a refresh to navigate correctly
+                // this.setState({email: '', username: '', password: ''})
             }
-        } else if (registered === 401) {
+        } else if (response.code === 401) {
             this.setState({errorMessage: 'Invalid registration link, please contact your administrator'})
         } else {
-            this.setState({errorMessage: 'Server error'})
+            this.setState({errorMessage: response.json.error})
         }
     }
 

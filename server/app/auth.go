@@ -94,7 +94,7 @@ func (a *App) RegisterUser(username string, email string, password string) error
 		var err error
 		user, err = a.store.GetUserByUsername(username)
 		if err == nil && user != nil {
-			return errors.Wrap(err, "The username already exists")
+			return errors.New("The username already exists")
 		}
 	}
 
@@ -102,7 +102,7 @@ func (a *App) RegisterUser(username string, email string, password string) error
 		var err error
 		user, err = a.store.GetUserByEmail(email)
 		if err == nil && user != nil {
-			return errors.Wrap(err, "The email already exists")
+			return errors.New("The email already exists")
 		}
 	}
 

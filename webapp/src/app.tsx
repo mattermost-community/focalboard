@@ -65,11 +65,11 @@ export default class App extends React.PureComponent<unknown, State> {
                                     <Route path='/register'>
                                         <RegisterPage/>
                                     </Route>
-                                    <Route path='/'>
+                                    <Route path='/board'>
                                         {this.state.initialLoad && !this.state.user && <Redirect to='login'/>}
                                         <BoardPage setLanguage={this.setAndStoreLanguage}/>
                                     </Route>
-                                    <Route path='/board'>
+                                    <Route path='/'>
                                         {this.state.initialLoad && !this.state.user && <Redirect to='login'/>}
                                         <BoardPage setLanguage={this.setAndStoreLanguage}/>
                                     </Route>

@@ -24,6 +24,15 @@ class OctoClient {
         Utils.log(`OctoClient serverUrl: ${this.serverUrl}`)
     }
 
+    private async getJson(response: Response, defaultValue: any = {}): Promise<any> {
+        // The server may return null or malformed json
+        try {
+            return await response.json()
+        } catch {
+            return defaultValue
+        }
+    }
+
     async login(username: string, password: string): Promise<boolean> {
         const path = '/api/v1/login'
         const body = JSON.stringify({username, password, type: 'normal'})
@@ -36,7 +45,7 @@ class OctoClient {
             return false
         }
 
-        const responseJson = (await response.json() || {}) as {token?: string}
+        const responseJson = (await this.getJson(response)) as {token?: string}
         this.token = responseJson.token
         if (responseJson.token !== '') {
             localStorage.setItem('sessionId', this.token || '')
@@ -45,7 +54,7 @@ class OctoClient {
         return false
     }
 
-    async register(email: string, username: string, password: string, token?: string): Promise<200 | 401 | 500> {
+    async register(email: string, username: string, password: string, token?: string): Promise<{code: number, json: any}> {
         const path = '/api/v1/register'
         const body = JSON.stringify({email, username, password, token})
         const response = await fetch(this.serverUrl + path, {
@@ -53,10 +62,8 @@ class OctoClient {
             headers: this.headers(),
             body,
         })
-        if (response.status === 200 || response.status === 401) {
-            return response.status
-        }
-        return 500
+        const json = (await this.getJson(response))
+        return {code: response.status, json}
     }
 
     private headers() {
@@ -73,7 +80,7 @@ class OctoClient {
         if (response.status !== 200) {
             return undefined
         }
-        const user = (await response.json()) as IUser
+        const user = (await this.getJson(response)) as IUser
         return user
     }
 
@@ -86,7 +93,7 @@ class OctoClient {
         if (response.status !== 200) {
             return []
         }
-        const blocks = (await response.json() || []) as IMutableBlock[]
+        const blocks = (await this.getJson(response, [])) as IMutableBlock[]
         this.fixBlocks(blocks)
         return blocks
     }
@@ -97,7 +104,7 @@ class OctoClient {
         if (response.status !== 200) {
             return []
         }
-        const blocks = (await response.json() || []) as IMutableBlock[]
+        const blocks = (await this.getJson(response, [])) as IMutableBlock[]
         this.fixBlocks(blocks)
         return blocks
     }
@@ -135,7 +142,7 @@ class OctoClient {
         if (response.status !== 200) {
             return []
         }
-        const blocks = (await response.json() || []) as IMutableBlock[]
+        const blocks = (await this.getJson(response, [])) as IMutableBlock[]
         this.fixBlocks(blocks)
         return blocks
     }
@@ -217,7 +224,7 @@ class OctoClient {
                 Utils.log(`uploadFile response: ${text}`)
                 const json = JSON.parse(text)
 
-                // const json = await response.json()
+                // const json = await this.getJson(response)
                 return json.url
             } catch (e) {
                 Utils.logError(`uploadFile json ERROR: ${e}`)
@@ -237,7 +244,7 @@ class OctoClient {
         if (response.status !== 200) {
             return undefined
         }
-        const sharing = (await response.json()) as ISharing
+        const sharing = (await this.getJson(response)) as ISharing
         return sharing
     }
 
@@ -267,7 +274,7 @@ class OctoClient {
         if (response.status !== 200) {
             return undefined
         }
-        const workspace = (await response.json()) as IWorkspace
+        const workspace = (await this.getJson(response)) as IWorkspace
         return workspace
     }
 
