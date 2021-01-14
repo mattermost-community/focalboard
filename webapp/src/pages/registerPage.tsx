@@ -18,22 +18,30 @@ type State = {
     email: string
     username: string
     password: string
+    errorMessage?: string
 }
 
 class RegisterPage extends React.PureComponent<Props, State> {
-    state = {
+    state: State = {
         email: '',
         username: '',
         password: '',
     }
 
     private handleRegister = async (): Promise<void> => {
-        const registered = await client.register(this.state.email, this.state.username, this.state.password)
-        if (registered) {
+        const queryString = new URLSearchParams(window.location.search)
+        const signupToken = queryString.get('t') || ''
+
+        const registered = await client.register(this.state.email, this.state.username, this.state.password, signupToken)
+        if (registered === 200) {
             const logged = await client.login(this.state.username, this.state.password)
             if (logged) {
                 this.props.history.push('/')
             }
+        } else if (registered === 401) {
+            this.setState({errorMessage: 'Invalid registration link, please contact your administrator'})
+        } else {
+            this.setState({errorMessage: 'Server error'})
         }
     }
 
@@ -67,6 +75,11 @@ class RegisterPage extends React.PureComponent<Props, State> {
                 </div>
                 <Button onClick={this.handleRegister}>{'Register'}</Button>
                 <Link to='/login'>{'or login if you already have an account'}</Link>
+                {this.state.errorMessage &&
+                    <div className='error'>
+                        {this.state.errorMessage}
+                    </div>
+                }
             </div>
         )
     }

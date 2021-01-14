@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 import {IBlock, IMutableBlock} from './blocks/block'
 import {ISharing} from './blocks/sharing'
+import {IWorkspace} from './blocks/workspace'
 import {IUser} from './user'
 import {Utils} from './utils'
 
@@ -43,18 +44,18 @@ class OctoClient {
         return false
     }
 
-    async register(email: string, username: string, password: string): Promise<boolean> {
+    async register(email: string, username: string, password: string, token?: string): Promise<200 | 401 | 500> {
         const path = '/api/v1/register'
-        const body = JSON.stringify({email, username, password})
+        const body = JSON.stringify({email, username, password, token})
         const response = await fetch(this.serverUrl + path, {
             method: 'POST',
             headers: this.headers(),
             body,
         })
-        if (response.status === 200) {
-            return true
+        if (response.status === 200 || response.status === 401) {
+            return response.status
         }
-        return false
+        return 500
     }
 
     private headers() {
@@ -240,6 +241,28 @@ class OctoClient {
         if (response.status === 200) {
             return true
         }
+        return false
+    }
+
+    // Workspace
+
+    async getWorkspace(): Promise<IWorkspace> {
+        const path = '/api/v1/workspace'
+        const response = await fetch(this.serverUrl + path, {headers: this.headers()})
+        const workspace = (await response.json()) as IWorkspace || null
+        return workspace
+    }
+
+    async regenerateWorkspaceSignupToken(): Promise<boolean> {
+        const path = '/api/v1/workspace/regenerate_signup_token'
+        const response = await fetch(this.serverUrl + path, {
+            method: 'POST',
+            headers: this.headers(),
+        })
+        if (response.status === 200) {
+            return true
+        }
+
         return false
     }
 }

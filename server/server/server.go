@@ -47,7 +47,6 @@ func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
 	store, err := sqlstore.New(cfg.DBType, cfg.DBConfigString)
 	if err != nil {
 		log.Fatal("Unable to start the database", err)
-
 		return nil, err
 	}
 
@@ -67,6 +66,9 @@ func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
 
 	appBuilder := func() *app.App { return app.New(cfg, store, wsServer, filesBackend, webhookClient) }
 	api := api.NewAPI(appBuilder, singleUser)
+
+	// Init workspace
+	appBuilder().GetRootWorkspace()
 
 	webServer := web.NewServer(cfg.WebPath, cfg.Port, cfg.UseSSL)
 	webServer.AddRoutes(wsServer)

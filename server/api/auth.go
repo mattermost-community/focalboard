@@ -26,6 +26,7 @@ type RegisterData struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
+	Token    string `json:"token"`
 }
 
 func (rd *RegisterData) IsValid() error {
@@ -77,14 +78,12 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	errorResponse(w, http.StatusInternalServerError, map[string]string{"error": "Unknown login type"})
-	return
 }
 
 func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, nil)
-
 		return
 	}
 
@@ -93,6 +92,33 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, nil)
 		return
+	}
+
+	// Validate token
+	if len(registerData.Token) > 0 {
+		workspace, err := a.app().GetRootWorkspace()
+		if err != nil {
+			log.Println("ERROR: Unable to get active user count", err)
+			errorResponse(w, http.StatusInternalServerError, nil)
+			return
+		}
+
+		if registerData.Token != workspace.SignupToken {
+			errorResponse(w, http.StatusUnauthorized, nil)
+			return
+		}
+	} else {
+		// No signup token, check if no active users
+		userCount, err := a.app().GetActiveUserCount()
+		if err != nil {
+			log.Println("ERROR: Unable to get active user count", err)
+			errorResponse(w, http.StatusInternalServerError, nil)
+			return
+		}
+		if userCount > 0 {
+			errorResponse(w, http.StatusUnauthorized, nil)
+			return
+		}
 	}
 
 	if err = registerData.IsValid(); err != nil {
@@ -105,8 +131,8 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 		errorResponse(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		return
 	}
+
 	jsonBytesResponse(w, http.StatusOK, nil)
-	return
 }
 
 func (a *API) sessionRequired(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
