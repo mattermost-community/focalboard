@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {IBlock, IMutableBlock} from './blocks/block'
+import {ISharing} from './blocks/sharing'
 import {IUser} from './user'
 import {Utils} from './utils'
 
@@ -8,12 +9,17 @@ import {Utils} from './utils'
 // OctoClient is the client interface to the server APIs
 //
 class OctoClient {
-    serverUrl: string
+    readonly serverUrl: string
     token?: string
+    readonly readToken?: string
 
-    constructor(serverUrl?: string, token?: string) {
+    constructor(
+        serverUrl?: string,
+        token?: string,
+        readToken?: string) {
         this.serverUrl = serverUrl || window.location.origin
         this.token = token
+        this.readToken = readToken
         Utils.log(`OctoClient serverUrl: ${this.serverUrl}`)
     }
 
@@ -67,7 +73,10 @@ class OctoClient {
     }
 
     async getSubtree(rootId?: string, levels = 2): Promise<IBlock[]> {
-        const path = `/api/v1/blocks/${rootId}/subtree?l=${levels}`
+        let path = `/api/v1/blocks/${rootId}/subtree?l=${levels}`
+        if (this.readToken) {
+            path += `&read_token=${this.readToken}`
+        }
         const response = await fetch(this.serverUrl + path, {headers: this.headers()})
         const blocks = (await response.json() || []) as IMutableBlock[]
         this.fixBlocks(blocks)
@@ -112,6 +121,9 @@ class OctoClient {
 
     private async getBlocksWithPath(path: string): Promise<IBlock[]> {
         const response = await fetch(this.serverUrl + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return []
+        }
         const blocks = (await response.json() || []) as IMutableBlock[]
         this.fixBlocks(blocks)
         return blocks
@@ -203,8 +215,41 @@ class OctoClient {
 
         return undefined
     }
+
+    // Sharing
+
+    async getSharing(rootId: string): Promise<ISharing> {
+        const path = `/api/v1/sharing/${rootId}`
+        const response = await fetch(this.serverUrl + path, {headers: this.headers()})
+        const sharing = (await response.json()) as ISharing || null
+        return sharing
+    }
+
+    async setSharing(sharing: ISharing): Promise<boolean> {
+        const path = `/api/v1/sharing/${sharing.id}`
+        const body = JSON.stringify(sharing)
+        const response = await fetch(
+            this.serverUrl + path,
+            {
+                method: 'POST',
+                headers: this.headers(),
+                body,
+            },
+        )
+
+        if (response.status === 200) {
+            return true
+        }
+        return false
+    }
 }
 
-const client = new OctoClient(undefined, localStorage.getItem('sessionId') || '')
+function getReadToken(): string {
+    const queryString = new URLSearchParams(window.location.search)
+    const readToken = queryString.get('r') || ''
+    return readToken
+}
+
+const client = new OctoClient(undefined, localStorage.getItem('sessionId') || '', getReadToken())
 
 export default client

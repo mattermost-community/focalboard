@@ -31,7 +31,7 @@ export default class BoardPage extends React.Component<Props, State> {
         const queryString = new URLSearchParams(window.location.search)
         const boardId = queryString.get('id') || ''
         const viewId = queryString.get('v') || ''
-        const readonly = (queryString.get('r') === '1')
+        const readonly = Boolean(queryString.get('r'))
 
         this.state = {
             boardId,

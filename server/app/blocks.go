@@ -16,6 +16,10 @@ func (a *App) GetBlocks(parentID string, blockType string) ([]model.Block, error
 	return a.store.GetBlocksWithParent(parentID)
 }
 
+func (a *App) GetRootID(blockID string) (string, error) {
+	return a.store.GetRootID(blockID)
+}
+
 func (a *App) GetParentID(blockID string) (string, error) {
 	return a.store.GetParentID(blockID)
 }

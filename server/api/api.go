@@ -37,7 +37,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	r.HandleFunc("/api/v1/blocks", a.sessionRequired(a.handleGetBlocks)).Methods("GET")
 	r.HandleFunc("/api/v1/blocks", a.sessionRequired(a.handlePostBlocks)).Methods("POST")
 	r.HandleFunc("/api/v1/blocks/{blockID}", a.sessionRequired(a.handleDeleteBlock)).Methods("DELETE")
-	r.HandleFunc("/api/v1/blocks/{blockID}/subtree", a.sessionRequired(a.handleGetSubTree)).Methods("GET")
+	r.HandleFunc("/api/v1/blocks/{blockID}/subtree", a.attachSession(a.handleGetSubTree, false)).Methods("GET")
 
 	r.HandleFunc("/api/v1/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
 	r.HandleFunc("/api/v1/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
@@ -50,6 +50,9 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	r.HandleFunc("/api/v1/blocks/export", a.sessionRequired(a.handleExport)).Methods("GET")
 	r.HandleFunc("/api/v1/blocks/import", a.sessionRequired(a.handleImport)).Methods("POST")
+
+	r.HandleFunc("/api/v1/sharing/{rootID}", a.sessionRequired(a.handlePostSharing)).Methods("POST")
+	r.HandleFunc("/api/v1/sharing/{rootID}", a.handleGetSharing).Methods("GET")
 }
 
 func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
@@ -239,6 +242,41 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	blockID := vars["blockID"]
 
+	// If not authenticated (no session), check that block is publicly shared
+	ctx := r.Context()
+	session, _ := ctx.Value("session").(*model.Session)
+	if session == nil {
+		query := r.URL.Query()
+		readToken := query.Get("read_token")
+
+		// Require read token
+		if len(readToken) < 1 {
+			log.Printf(`ERROR: No read_token`)
+			errorResponse(w, http.StatusUnauthorized, map[string]string{"error": "No read_token"})
+			return
+		}
+
+		rootID, err := a.app().GetRootID(blockID)
+		if err != nil {
+			log.Printf(`ERROR GetRootID %v: %v, REQUEST: %v`, blockID, err, r)
+			errorResponse(w, http.StatusInternalServerError, nil)
+			return
+		}
+
+		sharing, err := a.app().GetSharing(rootID)
+		if err != nil {
+			log.Printf(`ERROR GetSharing %v: %v, REQUEST: %v`, rootID, err, r)
+			errorResponse(w, http.StatusInternalServerError, nil)
+			return
+		}
+
+		if sharing == nil || !(sharing.ID == rootID && sharing.Enabled && sharing.Token == readToken) {
+			log.Printf(`handleGetSubTree public unauthorized, rootID: %v`, rootID)
+			errorResponse(w, http.StatusUnauthorized, nil)
+			return
+		}
+	}
+
 	query := r.URL.Query()
 	levels, err := strconv.ParseInt(query.Get("l"), 10, 32)
 	if err != nil {
@@ -249,7 +287,6 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 		log.Printf(`ERROR Invalid levels: %d`, levels)
 		errorData := map[string]string{"description": "invalid levels"}
 		errorResponse(w, http.StatusInternalServerError, errorData)
-
 		return
 	}
 
@@ -257,7 +294,6 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf(`ERROR: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
-
 		return
 	}
 
@@ -266,7 +302,6 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf(`ERROR json.Marshal: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
-
 		return
 	}
 
@@ -379,6 +414,80 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Printf("IMPORT Blocks %d block(s)", len(blocks))
+	jsonStringResponse(w, http.StatusOK, "{}")
+}
+
+// Sharing
+
+func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	rootID := vars["rootID"]
+
+	sharing, err := a.app().GetSharing(rootID)
+	if err != nil {
+		log.Printf(`ERROR: %v`, r)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
+		return
+	}
+
+	sharingData, err := json.Marshal(sharing)
+	if err != nil {
+		log.Printf(`ERROR: %v`, r)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
+		return
+	}
+
+	log.Printf("GET sharing %s", rootID)
+	jsonStringResponse(w, http.StatusOK, string(sharingData))
+}
+
+func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		errorResponse(w, http.StatusInternalServerError, nil)
+
+		return
+	}
+
+	// Catch panics from parse errors, etc.
+	defer func() {
+		if r := recover(); r != nil {
+			log.Printf(`ERROR: %v`, r)
+			errorResponse(w, http.StatusInternalServerError, nil)
+
+			return
+		}
+	}()
+
+	var sharing model.Sharing
+
+	err = json.Unmarshal(requestBody, &sharing)
+	if err != nil {
+		errorResponse(w, http.StatusInternalServerError, nil)
+
+		return
+	}
+
+	// Stamp ModifiedBy
+	ctx := r.Context()
+	session := ctx.Value("session").(*model.Session)
+	userID := session.UserID
+	if userID == "single-user" {
+		userID = ""
+	}
+	sharing.ModifiedBy = userID
+
+	err = a.app().UpsertSharing(sharing)
+	if err != nil {
+		log.Printf(`ERROR: %v, REQUEST: %v`, err, r)
+		errorResponse(w, http.StatusInternalServerError, nil)
+
+		return
+	}
+
+	log.Printf("POST sharing %s", sharing.ID)
 	jsonStringResponse(w, http.StatusOK, "{}")
 }
 

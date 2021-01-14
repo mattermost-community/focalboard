@@ -262,6 +262,23 @@ func blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 	return results, nil
 }
 
+func (s *SQLStore) GetRootID(blockID string) (string, error) {
+	query := s.getQueryBuilder().Select("root_id").
+		FromSelect(s.latestsBlocksSubquery(), "latest").
+		Where(sq.Eq{"id": blockID})
+
+	row := query.QueryRow()
+
+	var rootID string
+
+	err := row.Scan(&rootID)
+	if err != nil {
+		return "", err
+	}
+
+	return rootID, nil
+}
+
 func (s *SQLStore) GetParentID(blockID string) (string, error) {
 	query := s.getQueryBuilder().Select("parent_id").
 		FromSelect(s.latestsBlocksSubquery(), "latest").

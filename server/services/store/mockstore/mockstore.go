@@ -178,6 +178,21 @@ func (mr *MockStoreMockRecorder) GetParentID(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetParentID", reflect.TypeOf((*MockStore)(nil).GetParentID), arg0)
 }
 
+// GetRootID mocks base method
+func (m *MockStore) GetRootID(arg0 string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetRootID", arg0)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetRootID indicates an expected call of GetRootID
+func (mr *MockStoreMockRecorder) GetRootID(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRootID", reflect.TypeOf((*MockStore)(nil).GetRootID), arg0)
+}
+
 // GetSession mocks base method
 func (m *MockStore) GetSession(arg0 string, arg1 int64) (*model.Session, error) {
 	m.ctrl.T.Helper()
@@ -191,6 +206,21 @@ func (m *MockStore) GetSession(arg0 string, arg1 int64) (*model.Session, error) 
 func (mr *MockStoreMockRecorder) GetSession(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSession", reflect.TypeOf((*MockStore)(nil).GetSession), arg0, arg1)
+}
+
+// GetSharing mocks base method
+func (m *MockStore) GetSharing(arg0 string) (*model.Sharing, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSharing", arg0)
+	ret0, _ := ret[0].(*model.Sharing)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSharing indicates an expected call of GetSharing
+func (mr *MockStoreMockRecorder) GetSharing(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSharing", reflect.TypeOf((*MockStore)(nil).GetSharing), arg0)
 }
 
 // GetSubTree2 mocks base method
@@ -365,4 +395,18 @@ func (m *MockStore) UpdateUser(arg0 *model.User) error {
 func (mr *MockStoreMockRecorder) UpdateUser(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateUser", reflect.TypeOf((*MockStore)(nil).UpdateUser), arg0)
+}
+
+// UpsertSharing mocks base method
+func (m *MockStore) UpsertSharing(arg0 model.Sharing) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertSharing", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpsertSharing indicates an expected call of UpsertSharing
+func (mr *MockStoreMockRecorder) UpsertSharing(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertSharing", reflect.TypeOf((*MockStore)(nil).UpsertSharing), arg0)
 }

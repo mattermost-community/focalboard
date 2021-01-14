@@ -9,20 +9,11 @@ type Props = {
     isOn: boolean
 }
 
-type State = {
-    isOn: boolean
-}
-
 // Switch is an on-off style switch / checkbox
-export default class Switch extends React.Component<Props, State> {
+export default class Switch extends React.Component<Props> {
     static defaultProps = {
         isMarkdown: false,
         isMultiline: false,
-    }
-
-    constructor(props: Props) {
-        super(props)
-        this.state = {isOn: props.isOn}
     }
 
     shouldComponentUpdate(): boolean {
@@ -30,28 +21,22 @@ export default class Switch extends React.Component<Props, State> {
     }
 
     render(): JSX.Element {
-        const {isOn} = this.state
+        const {isOn} = this.props
 
         const className = isOn ? 'Switch on' : 'Switch'
         return (
             <div
                 className={className}
-                onClick={() => {
-                    this.onClicked()
-                }}
+                onClick={this.onClicked}
             >
                 <div className='octo-switch-inner'/>
             </div>
         )
     }
 
-    private async onClicked() {
-        const newIsOn = !this.state.isOn
-        this.setState({isOn: newIsOn})
-
-        const {onChanged} = this.props
-
-        onChanged(newIsOn)
+    private onClicked = async () => {
+        const newIsOn = !this.props.isOn
+        this.props.onChanged(newIsOn)
     }
 }
 

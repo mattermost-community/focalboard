@@ -208,6 +208,29 @@ class Utils {
     static arrayMove(arr: any[], srcIndex: number, destIndex: number): void {
         arr.splice(destIndex, 0, arr.splice(srcIndex, 1)[0])
     }
+
+    // Clipboard
+
+    static copyTextToClipboard(text: string): boolean {
+        const textField = document.createElement('textarea')
+        textField.innerText = text
+        textField.style.position = 'fixed'
+        textField.style.opacity = '0'
+
+        document.body.appendChild(textField)
+        textField.select()
+
+        let result = false
+        try {
+            result = document.execCommand('copy')
+        } catch (err) {
+            Utils.logError(`copyTextToClipboard ERROR: ${err}`)
+            result = false
+        }
+        textField.remove()
+
+        return result
+    }
 }
 
 export {Utils}

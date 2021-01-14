@@ -10,6 +10,8 @@
 // postgres_files/000004_auth_table.up.sql
 // postgres_files/000005_blocks_modifiedby.down.sql
 // postgres_files/000005_blocks_modifiedby.up.sql
+// postgres_files/000006_sharing_table.down.sql
+// postgres_files/000006_sharing_table.up.sql
 package postgres
 
 import (
@@ -210,7 +212,7 @@ func _000004_auth_tableDownSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000004_auth_table.down.sql", size: 39, mode: os.FileMode(420), modTime: time.Unix(1610392216, 0)}
+	info := bindataFileInfo{name: "000004_auth_table.down.sql", size: 39, mode: os.FileMode(420), modTime: time.Unix(1610481092, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -230,7 +232,7 @@ func _000004_auth_tableUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000004_auth_table.up.sql", size: 491, mode: os.FileMode(420), modTime: time.Unix(1610392216, 0)}
+	info := bindataFileInfo{name: "000004_auth_table.up.sql", size: 491, mode: os.FileMode(420), modTime: time.Unix(1610481092, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -250,7 +252,7 @@ func _000005_blocks_modifiedbyDownSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000005_blocks_modifiedby.down.sql", size: 44, mode: os.FileMode(420), modTime: time.Unix(1610412613, 0)}
+	info := bindataFileInfo{name: "000005_blocks_modifiedby.down.sql", size: 44, mode: os.FileMode(420), modTime: time.Unix(1610481092, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -270,7 +272,47 @@ func _000005_blocks_modifiedbyUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000005_blocks_modifiedby.up.sql", size: 55, mode: os.FileMode(420), modTime: time.Unix(1610412615, 0)}
+	info := bindataFileInfo{name: "000005_blocks_modifiedby.up.sql", size: 55, mode: os.FileMode(420), modTime: time.Unix(1610481092, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var __000006_sharing_tableDownSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\x09\xf2\x0f\x50\x08\x71\x74\xf2\x71\x55\x28\xce\x48\x2c\xca\xcc\x4b\xb7\xe6\x02\x04\x00\x00\xff\xff\xdd\x4c\x62\xe8\x14\x00\x00\x00")
+
+func _000006_sharing_tableDownSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__000006_sharing_tableDownSql,
+		"000006_sharing_table.down.sql",
+	)
+}
+
+func _000006_sharing_tableDownSql() (*asset, error) {
+	bytes, err := _000006_sharing_tableDownSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "000006_sharing_table.down.sql", size: 20, mode: os.FileMode(420), modTime: time.Unix(1610482431, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var __000006_sharing_tableUpSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x5c\xcc\xb1\xca\xc2\x30\x10\x00\xe0\x39\xf7\x14\x37\xb6\xd0\xa1\x3f\x3f\xb8\x38\x5d\xcb\xa9\xc1\xda\x4a\x1a\xc4\x4e\x25\xe5\xa2\x06\xb5\x15\x8d\x83\x6f\x2f\x2e\x0e\xee\x1f\x5f\x69\x98\x2c\xa3\xa5\xa2\x62\xd4\x0b\xac\x1b\x8b\xbc\xd7\xad\x6d\xf1\x71\x72\xf7\x30\x1e\x31\x01\x15\x04\x77\x64\xca\x15\x99\xe4\x7f\x96\x66\xa0\xfc\xe8\x86\x8b\x17\x2c\x9a\xa6\x62\xaa\x33\x50\x71\x3a\xfb\xf1\xab\xfe\xf2\xfc\xc3\xae\x93\x84\x43\xf0\xd2\x0f\xaf\x9f\xe0\x79\x13\x17\x7d\xef\x22\x16\x7a\xa9\x6b\x9b\x81\xda\x1a\xbd\x21\xd3\xe1\x9a\x3b\x4c\x82\xa4\x90\xce\xe1\x1d\x00\x00\xff\xff\x6c\x91\x98\xb6\x9f\x00\x00\x00")
+
+func _000006_sharing_tableUpSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__000006_sharing_tableUpSql,
+		"000006_sharing_table.up.sql",
+	)
+}
+
+func _000006_sharing_tableUpSql() (*asset, error) {
+	bytes, err := _000006_sharing_tableUpSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "000006_sharing_table.up.sql", size: 159, mode: os.FileMode(420), modTime: time.Unix(1610483324, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -337,6 +379,8 @@ var _bindata = map[string]func() (*asset, error){
 	"000004_auth_table.up.sql": _000004_auth_tableUpSql,
 	"000005_blocks_modifiedby.down.sql": _000005_blocks_modifiedbyDownSql,
 	"000005_blocks_modifiedby.up.sql": _000005_blocks_modifiedbyUpSql,
+	"000006_sharing_table.down.sql": _000006_sharing_tableDownSql,
+	"000006_sharing_table.up.sql": _000006_sharing_tableUpSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -389,6 +433,8 @@ var _bintree = &bintree{nil, map[string]*bintree{
 	"000004_auth_table.up.sql": &bintree{_000004_auth_tableUpSql, map[string]*bintree{}},
 	"000005_blocks_modifiedby.down.sql": &bintree{_000005_blocks_modifiedbyDownSql, map[string]*bintree{}},
 	"000005_blocks_modifiedby.up.sql": &bintree{_000005_blocks_modifiedbyUpSql, map[string]*bintree{}},
+	"000006_sharing_table.down.sql": &bintree{_000006_sharing_tableDownSql, map[string]*bintree{}},
+	"000006_sharing_table.up.sql": &bintree{_000006_sharing_tableUpSql, map[string]*bintree{}},
 }}
 
 // RestoreAsset restores an asset under the given directory
