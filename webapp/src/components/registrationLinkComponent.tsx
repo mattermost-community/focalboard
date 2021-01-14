@@ -19,11 +19,11 @@ type Props = {
 
 type State = {
     workspace?: IWorkspace
-    wasCopied?: boolean
+    wasCopied: boolean
 }
 
 class RegistrationLinkComponent extends React.PureComponent<Props, State> {
-    state: State = {}
+    state: State = {wasCopied: false}
 
     componentDidMount() {
         this.loadData()
@@ -31,7 +31,7 @@ class RegistrationLinkComponent extends React.PureComponent<Props, State> {
 
     private async loadData() {
         const workspace = await client.getWorkspace()
-        this.setState({workspace})
+        this.setState({workspace, wasCopied: false})
     }
 
     render(): JSX.Element {
@@ -49,7 +49,6 @@ class RegistrationLinkComponent extends React.PureComponent<Props, State> {
                     {workspace && <>
                         <div className='row'>
                             <input
-                                key={registrationUrl}
                                 className='shareUrl'
                                 readOnly={true}
                                 value={registrationUrl}

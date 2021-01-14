@@ -24,11 +24,11 @@ type Props = {
 
 type State = {
     sharing?: ISharing
-    wasCopied?: boolean
+    wasCopied: boolean
 }
 
 class ShareBoardComponent extends React.PureComponent<Props, State> {
-    state: State = {}
+    state: State = {wasCopied: false}
 
     componentDidMount() {
         this.loadData()
@@ -36,7 +36,7 @@ class ShareBoardComponent extends React.PureComponent<Props, State> {
 
     private async loadData() {
         const sharing = await client.getSharing(this.props.boardId)
-        this.setState({sharing})
+        this.setState({sharing, wasCopied: false})
     }
 
     render(): JSX.Element {
@@ -70,7 +70,6 @@ class ShareBoardComponent extends React.PureComponent<Props, State> {
                     {isSharing && <>
                         <div className='row'>
                             <input
-                                key={shareUrl.toString()}
                                 className='shareUrl'
                                 readOnly={true}
                                 value={shareUrl.toString()}
