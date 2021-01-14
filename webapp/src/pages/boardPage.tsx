@@ -12,6 +12,7 @@ import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
 import {MutableWorkspaceTree, WorkspaceTree} from '../viewModel/workspaceTree'
 
 type Props = {
+    readonly?: boolean
     setLanguage: (lang: string) => void
 }
 
@@ -20,7 +21,6 @@ type State = {
     viewId: string
     workspaceTree: WorkspaceTree
     boardTree?: BoardTree
-    readonly: boolean
 }
 
 export default class BoardPage extends React.Component<Props, State> {
@@ -31,13 +31,11 @@ export default class BoardPage extends React.Component<Props, State> {
         const queryString = new URLSearchParams(window.location.search)
         const boardId = queryString.get('id') || ''
         const viewId = queryString.get('v') || ''
-        const readonly = Boolean(queryString.get('r'))
 
         this.state = {
             boardId,
             viewId,
             workspaceTree: new MutableWorkspaceTree(),
-            readonly,
         }
 
         Utils.log(`BoardPage. boardId: ${boardId}`)
@@ -76,7 +74,7 @@ export default class BoardPage extends React.Component<Props, State> {
             return
         }
 
-        if (this.state.readonly) {
+        if (this.props.readonly) {
             return
         }
 
@@ -143,7 +141,7 @@ export default class BoardPage extends React.Component<Props, State> {
                         this.setSearchText(text)
                     }}
                     setLanguage={this.props.setLanguage}
-                    readonly={this.state.readonly}
+                    readonly={this.props.readonly || false}
                 />
             </div>
         )
@@ -255,7 +253,7 @@ export default class BoardPage extends React.Component<Props, State> {
         if (boardId) {
             newUrl += `?id=${encodeURIComponent(boardId)}`
 
-            if (this.state.readonly) {
+            if (this.props.readonly) {
                 newUrl += '&r=1'
             }
         }
@@ -273,7 +271,7 @@ export default class BoardPage extends React.Component<Props, State> {
         }
 
         let newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + `?id=${encodeURIComponent(boardId)}&v=${encodeURIComponent(viewId)}`
-        if (this.state.readonly) {
+        if (this.props.readonly) {
             newUrl += '&r=1'
         }
         window.history.pushState({path: newUrl}, '', newUrl)

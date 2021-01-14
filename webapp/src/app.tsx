@@ -65,6 +65,12 @@ export default class App extends React.PureComponent<unknown, State> {
                                     <Route path='/register'>
                                         <RegisterPage/>
                                     </Route>
+                                    <Route path='/shared'>
+                                        <BoardPage
+                                            readonly={true}
+                                            setLanguage={this.setAndStoreLanguage}
+                                        />
+                                    </Route>
                                     <Route path='/board'>
                                         {this.state.initialLoad && !this.state.user && <Redirect to='login'/>}
                                         <BoardPage setLanguage={this.setAndStoreLanguage}/>

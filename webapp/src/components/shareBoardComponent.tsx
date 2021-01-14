@@ -47,6 +47,7 @@ class ShareBoardComponent extends React.PureComponent<Props, State> {
         const readToken = (sharing && isSharing) ? sharing.token : ''
         const shareUrl = new URL(window.location.toString())
         shareUrl.searchParams.set('r', readToken)
+        shareUrl.pathname = '/shared'
 
         let stateDescription: string
         if (isSharing) {
