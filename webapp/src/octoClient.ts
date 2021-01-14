@@ -32,14 +32,15 @@ class OctoClient {
             headers: this.headers(),
             body,
         })
-        if (response.status === 200) {
-            const responseJson = (await response.json() || {}) as {token?: string}
-            this.token = responseJson.token
-            if (responseJson.token !== '') {
-                localStorage.setItem('sessionId', this.token || '')
-                return true
-            }
+        if (response.status !== 200) {
             return false
+        }
+
+        const responseJson = (await response.json() || {}) as {token?: string}
+        this.token = responseJson.token
+        if (responseJson.token !== '') {
+            localStorage.setItem('sessionId', this.token || '')
+            return true
         }
         return false
     }
@@ -66,10 +67,13 @@ class OctoClient {
         }
     }
 
-    async getMe(): Promise<IUser|null> {
+    async getMe(): Promise<IUser | undefined> {
         const path = '/api/v1/users/me'
         const response = await fetch(this.serverUrl + path, {headers: this.headers()})
-        const user = (await response.json()) as IUser || null
+        if (response.status !== 200) {
+            return undefined
+        }
+        const user = (await response.json()) as IUser
         return user
     }
 
@@ -79,6 +83,9 @@ class OctoClient {
             path += `&read_token=${this.readToken}`
         }
         const response = await fetch(this.serverUrl + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return []
+        }
         const blocks = (await response.json() || []) as IMutableBlock[]
         this.fixBlocks(blocks)
         return blocks
@@ -87,6 +94,9 @@ class OctoClient {
     async exportFullArchive(): Promise<IBlock[]> {
         const path = '/api/v1/blocks/export'
         const response = await fetch(this.serverUrl + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return []
+        }
         const blocks = (await response.json() || []) as IMutableBlock[]
         this.fixBlocks(blocks)
         return blocks
@@ -198,17 +208,19 @@ class OctoClient {
                 },
                 body: formData,
             })
-            if (response.status === 200) {
-                try {
-                    const text = await response.text()
-                    Utils.log(`uploadFile response: ${text}`)
-                    const json = JSON.parse(text)
+            if (response.status !== 200) {
+                return undefined
+            }
 
-                    // const json = await response.json()
-                    return json.url
-                } catch (e) {
-                    Utils.logError(`uploadFile json ERROR: ${e}`)
-                }
+            try {
+                const text = await response.text()
+                Utils.log(`uploadFile response: ${text}`)
+                const json = JSON.parse(text)
+
+                // const json = await response.json()
+                return json.url
+            } catch (e) {
+                Utils.logError(`uploadFile json ERROR: ${e}`)
             }
         } catch (e) {
             Utils.logError(`uploadFile ERROR: ${e}`)
@@ -219,10 +231,13 @@ class OctoClient {
 
     // Sharing
 
-    async getSharing(rootId: string): Promise<ISharing> {
+    async getSharing(rootId: string): Promise<ISharing | undefined> {
         const path = `/api/v1/sharing/${rootId}`
         const response = await fetch(this.serverUrl + path, {headers: this.headers()})
-        const sharing = (await response.json()) as ISharing || null
+        if (response.status !== 200) {
+            return undefined
+        }
+        const sharing = (await response.json()) as ISharing
         return sharing
     }
 
@@ -237,19 +252,22 @@ class OctoClient {
                 body,
             },
         )
-
-        if (response.status === 200) {
-            return true
+        if (response.status !== 200) {
+            return false
         }
-        return false
+
+        return true
     }
 
     // Workspace
 
-    async getWorkspace(): Promise<IWorkspace> {
+    async getWorkspace(): Promise<IWorkspace | undefined> {
         const path = '/api/v1/workspace'
         const response = await fetch(this.serverUrl + path, {headers: this.headers()})
-        const workspace = (await response.json()) as IWorkspace || null
+        if (response.status !== 200) {
+            return undefined
+        }
+        const workspace = (await response.json()) as IWorkspace
         return workspace
     }
 
@@ -259,11 +277,11 @@ class OctoClient {
             method: 'POST',
             headers: this.headers(),
         })
-        if (response.status === 200) {
-            return true
+        if (response.status !== 200) {
+            return false
         }
 
-        return false
+        return true
     }
 }
 

@@ -23,7 +23,7 @@ import BoardPage from './pages/boardPage'
 
 type State = {
     language: string,
-    user: IUser|null,
+    user?: IUser
     initialLoad: boolean,
 }
 
@@ -32,13 +32,12 @@ export default class App extends React.PureComponent<unknown, State> {
         super(props)
         this.state = {
             language: getCurrentLanguage(),
-            user: null,
             initialLoad: false,
         }
     }
 
     public componentDidMount(): void {
-        client.getMe().then((user: IUser|null) => {
+        client.getMe().then((user?: IUser) => {
             this.setState({user, initialLoad: true})
         })
     }

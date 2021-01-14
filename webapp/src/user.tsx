@@ -3,7 +3,7 @@
 
 import React from 'react'
 
-const UserContext = React.createContext(null as IUser|null)
+const UserContext = React.createContext(undefined as IUser|undefined)
 
 interface IUser {
     id: string,
