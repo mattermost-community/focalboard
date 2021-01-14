@@ -12,6 +12,8 @@
 // postgres_files/000005_blocks_modifiedby.up.sql
 // postgres_files/000006_sharing_table.down.sql
 // postgres_files/000006_sharing_table.up.sql
+// postgres_files/000007_workspaces_table.down.sql
+// postgres_files/000007_workspaces_table.up.sql
 package postgres
 
 import (
@@ -292,7 +294,7 @@ func _000006_sharing_tableDownSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000006_sharing_table.down.sql", size: 20, mode: os.FileMode(420), modTime: time.Unix(1610482431, 0)}
+	info := bindataFileInfo{name: "000006_sharing_table.down.sql", size: 20, mode: os.FileMode(420), modTime: time.Unix(1610576067, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -312,7 +314,47 @@ func _000006_sharing_tableUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000006_sharing_table.up.sql", size: 159, mode: os.FileMode(420), modTime: time.Unix(1610483324, 0)}
+	info := bindataFileInfo{name: "000006_sharing_table.up.sql", size: 159, mode: os.FileMode(420), modTime: time.Unix(1610576067, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var __000007_workspaces_tableDownSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\x09\xf2\x0f\x50\x08\x71\x74\xf2\x71\x55\x28\xcf\x2f\xca\x2e\x2e\x48\x4c\x4e\x2d\xb6\xe6\x02\x04\x00\x00\xff\xff\xc4\x05\x92\x8e\x17\x00\x00\x00")
+
+func _000007_workspaces_tableDownSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__000007_workspaces_tableDownSql,
+		"000007_workspaces_table.down.sql",
+	)
+}
+
+func _000007_workspaces_tableDownSql() (*asset, error) {
+	bytes, err := _000007_workspaces_tableDownSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "000007_workspaces_table.down.sql", size: 23, mode: os.FileMode(420), modTime: time.Unix(1610576169, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var __000007_workspaces_tableUpSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x5c\xcc\xc1\x6a\x83\x30\x00\x06\xe0\x73\xf2\x14\xff\xd1\x40\x0e\x8e\xc1\x2e\x3b\x45\xc9\xb6\x6c\x2e\x96\x98\x96\x7a\x12\xdb\xa4\x12\xa4\x2a\x4d\xa4\xf4\xed\x0b\x3d\xf4\xd0\xf3\x07\x5f\x69\xa4\xb0\x12\x56\x14\x95\x84\xfa\x82\xae\x2d\xe4\x5e\x35\xb6\xc1\x75\xbe\x8c\x71\xe9\x8f\x3e\x22\xa3\x24\x38\xec\x84\x29\x7f\x84\xc9\xde\x3f\x18\xa7\x24\x86\x61\x5a\x97\x2e\xcd\xa3\x9f\x9e\xf4\x96\xe7\xec\x71\xe8\x6d\x55\x71\x0a\x00\xd1\xa7\x14\xa6\x21\xe2\xb7\xa9\x35\xa7\xe4\x3c\xbb\x70\x0a\xde\x75\x87\xdb\xcb\xb8\x2e\xae\x4f\xbe\xeb\x13\x0a\xf5\xad\xb4\xe5\x94\x6c\x8c\xfa\x17\xa6\xc5\x9f\x6c\x91\x05\xc7\x28\xfb\xa4\xf7\x00\x00\x00\xff\xff\x3b\x70\x91\x2c\xb3\x00\x00\x00")
+
+func _000007_workspaces_tableUpSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__000007_workspaces_tableUpSql,
+		"000007_workspaces_table.up.sql",
+	)
+}
+
+func _000007_workspaces_tableUpSql() (*asset, error) {
+	bytes, err := _000007_workspaces_tableUpSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "000007_workspaces_table.up.sql", size: 179, mode: os.FileMode(420), modTime: time.Unix(1610577228, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -381,6 +423,8 @@ var _bindata = map[string]func() (*asset, error){
 	"000005_blocks_modifiedby.up.sql": _000005_blocks_modifiedbyUpSql,
 	"000006_sharing_table.down.sql": _000006_sharing_tableDownSql,
 	"000006_sharing_table.up.sql": _000006_sharing_tableUpSql,
+	"000007_workspaces_table.down.sql": _000007_workspaces_tableDownSql,
+	"000007_workspaces_table.up.sql": _000007_workspaces_tableUpSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -435,6 +479,8 @@ var _bintree = &bintree{nil, map[string]*bintree{
 	"000005_blocks_modifiedby.up.sql": &bintree{_000005_blocks_modifiedbyUpSql, map[string]*bintree{}},
 	"000006_sharing_table.down.sql": &bintree{_000006_sharing_tableDownSql, map[string]*bintree{}},
 	"000006_sharing_table.up.sql": &bintree{_000006_sharing_tableUpSql, map[string]*bintree{}},
+	"000007_workspaces_table.down.sql": &bintree{_000007_workspaces_tableDownSql, map[string]*bintree{}},
+	"000007_workspaces_table.up.sql": &bintree{_000007_workspaces_tableUpSql, map[string]*bintree{}},
 }}
 
 // RestoreAsset restores an asset under the given directory

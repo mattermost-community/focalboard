@@ -15,6 +15,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/mattermost/mattermost-octo-tasks/server/app"
 	"github.com/mattermost/mattermost-octo-tasks/server/model"
+	"github.com/mattermost/mattermost-octo-tasks/server/utils"
 )
 
 // ----------------------------------------------------------------------------------------------------
@@ -53,6 +54,9 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	r.HandleFunc("/api/v1/sharing/{rootID}", a.sessionRequired(a.handlePostSharing)).Methods("POST")
 	r.HandleFunc("/api/v1/sharing/{rootID}", a.handleGetSharing).Methods("GET")
+
+	r.HandleFunc("/api/v1/workspace", a.sessionRequired(a.handleGetWorkspace)).Methods("GET")
+	r.HandleFunc("/api/v1/workspace/regenerate_signup_token", a.sessionRequired(a.handlePostWorkspaceRegenerateSignupToken)).Methods("POST")
 }
 
 func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
@@ -427,7 +431,6 @@ func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf(`ERROR: %v`, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
-
 		return
 	}
 
@@ -435,7 +438,6 @@ func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf(`ERROR: %v`, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
-
 		return
 	}
 
@@ -447,7 +449,6 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, nil)
-
 		return
 	}
 
@@ -456,7 +457,6 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 		if r := recover(); r != nil {
 			log.Printf(`ERROR: %v`, r)
 			errorResponse(w, http.StatusInternalServerError, nil)
-
 			return
 		}
 	}()
@@ -466,7 +466,6 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(requestBody, &sharing)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, nil)
-
 		return
 	}
 
@@ -483,11 +482,50 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf(`ERROR: %v, REQUEST: %v`, err, r)
 		errorResponse(w, http.StatusInternalServerError, nil)
-
 		return
 	}
 
 	log.Printf("POST sharing %s", sharing.ID)
+	jsonStringResponse(w, http.StatusOK, "{}")
+}
+
+// Workspace
+
+func (a *API) handleGetWorkspace(w http.ResponseWriter, r *http.Request) {
+	workspace, err := a.app().GetRootWorkspace()
+	if err != nil {
+		log.Printf(`ERROR: %v`, r)
+		errorResponse(w, http.StatusInternalServerError, nil)
+		return
+	}
+
+	workspaceData, err := json.Marshal(workspace)
+	if err != nil {
+		log.Printf(`ERROR: %v`, r)
+		errorResponse(w, http.StatusInternalServerError, nil)
+		return
+	}
+
+	jsonStringResponse(w, http.StatusOK, string(workspaceData))
+}
+
+func (a *API) handlePostWorkspaceRegenerateSignupToken(w http.ResponseWriter, r *http.Request) {
+	workspace, err := a.app().GetRootWorkspace()
+	if err != nil {
+		log.Printf(`ERROR: %v`, r)
+		errorResponse(w, http.StatusInternalServerError, nil)
+		return
+	}
+
+	workspace.SignupToken = utils.CreateGUID()
+
+	err = a.app().UpsertWorkspaceSignupToken(*workspace)
+	if err != nil {
+		log.Printf(`ERROR: %v`, r)
+		errorResponse(w, http.StatusInternalServerError, nil)
+		return
+	}
+
 	jsonStringResponse(w, http.StatusOK, "{}")
 }
 

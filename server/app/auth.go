@@ -27,6 +27,11 @@ func (a *App) GetSession(token string) (*model.Session, error) {
 	return session, nil
 }
 
+// GetActiveUserCount returns the number of active users
+func (a *App) GetActiveUserCount() (int, error) {
+	return a.store.GetActiveUserCount()
+}
+
 // GetUser Get an existing active user by id
 func (a *App) GetUser(ID string) (*model.User, error) {
 	if len(ID) < 1 {

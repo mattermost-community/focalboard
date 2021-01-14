@@ -21,6 +21,7 @@ type Store interface {
 	GetSystemSettings() (map[string]string, error)
 	SetSystemSetting(key string, value string) error
 
+	GetActiveUserCount() (int, error)
 	GetUserById(userID string) (*model.User, error)
 	GetUserByEmail(email string) (*model.User, error)
 	GetUserByUsername(username string) (*model.User, error)
@@ -36,4 +37,8 @@ type Store interface {
 
 	UpsertSharing(sharing model.Sharing) error
 	GetSharing(rootID string) (*model.Sharing, error)
+
+	UpsertWorkspaceSignupToken(workspace model.Workspace) error
+	UpsertWorkspaceSettings(workspace model.Workspace) error
+	GetWorkspace(ID string) (*model.Workspace, error)
 }

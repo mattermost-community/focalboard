@@ -18,6 +18,14 @@
         min-width: 0;
     }
 
+    @media not screen and (max-width: 430px) {
+        &.top {
+            top: auto;
+            bottom: 25px;
+            left: 25px;
+        }
+    }
+
     .hideOnWidescreen {
         /* Hide controls (e.g. close button) on larger screens */
         @media not screen and (max-width: 430px) {

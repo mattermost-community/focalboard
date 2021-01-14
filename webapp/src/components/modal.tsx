@@ -10,6 +10,7 @@ import './modal.scss'
 type Props = {
     onClose: () => void
     intl: IntlShape
+    position?: 'top'|'bottom'
 }
 
 class Modal extends React.PureComponent<Props> {
@@ -37,9 +38,11 @@ class Modal extends React.PureComponent<Props> {
     }
 
     render(): JSX.Element {
+        const {position} = this.props
+
         return (
             <div
-                className='Modal'
+                className={'Modal ' + (position || 'bottom')}
                 ref={this.node}
             >
                 <div className='toolbar hideOnWidescreen'>

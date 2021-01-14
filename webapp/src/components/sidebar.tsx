@@ -7,7 +7,7 @@ import {Archiver} from '../archiver'
 import {Board, MutableBoard} from '../blocks/board'
 import {BoardView, MutableBoardView} from '../blocks/boardView'
 import mutator from '../mutator'
-import {defaultTheme, darkTheme, lightTheme, setTheme} from '../theme'
+import {darkTheme, defaultTheme, lightTheme, setTheme} from '../theme'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
 import Button from '../widgets/buttons/button'
 import IconButton from '../widgets/buttons/iconButton'
@@ -22,6 +22,9 @@ import OptionsIcon from '../widgets/icons/options'
 import ShowSidebarIcon from '../widgets/icons/showSidebar'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
+
+import ModalWrapper from './modalWrapper'
+import RegistrationLinkComponent from './registrationLinkComponent'
 import './sidebar.scss'
 
 type Props = {
@@ -36,6 +39,7 @@ type Props = {
 type State = {
     isHidden: boolean
     collapsedBoards: {[key: string]: boolean}
+    showRegistrationLinkDialog?: boolean
 }
 
 class Sidebar extends React.Component<Props, State> {
@@ -263,63 +267,79 @@ class Sidebar extends React.Component<Props, State> {
                     </Menu>
                 </MenuWrapper>
 
-                <MenuWrapper>
-                    <Button>
-                        <FormattedMessage
-                            id='Sidebar.settings'
-                            defaultMessage='Settings'
+                <ModalWrapper>
+                    <MenuWrapper>
+                        <Button>
+                            <FormattedMessage
+                                id='Sidebar.settings'
+                                defaultMessage='Settings'
+                            />
+                        </Button>
+                        <Menu position='top'>
+                            <Menu.Text
+                                id='invite'
+                                name={intl.formatMessage({id: 'Sidebar.invite-users', defaultMessage: 'Invite Users'})}
+                                onClick={async () => {
+                                    this.setState({showRegistrationLinkDialog: true})
+                                }}
+                            />
+                            <Menu.Text
+                                id='import'
+                                name={intl.formatMessage({id: 'Sidebar.import-archive', defaultMessage: 'Import archive'})}
+                                onClick={async () => Archiver.importFullArchive()}
+                            />
+                            <Menu.Text
+                                id='export'
+                                name={intl.formatMessage({id: 'Sidebar.export-archive', defaultMessage: 'Export archive'})}
+                                onClick={async () => Archiver.exportFullArchive()}
+                            />
+                            <Menu.SubMenu
+                                id='lang'
+                                name={intl.formatMessage({id: 'Sidebar.set-language', defaultMessage: 'Set language'})}
+                                position='top'
+                            >
+                                <Menu.Text
+                                    id='english-lang'
+                                    name={intl.formatMessage({id: 'Sidebar.english', defaultMessage: 'English'})}
+                                    onClick={async () => this.props.setLanguage('en')}
+                                />
+                                <Menu.Text
+                                    id='spanish-lang'
+                                    name={intl.formatMessage({id: 'Sidebar.spanish', defaultMessage: 'Spanish'})}
+                                    onClick={async () => this.props.setLanguage('es')}
+                                />
+                            </Menu.SubMenu>
+                            <Menu.SubMenu
+                                id='theme'
+                                name={intl.formatMessage({id: 'Sidebar.set-theme', defaultMessage: 'Set theme'})}
+                                position='top'
+                            >
+                                <Menu.Text
+                                    id='default-theme'
+                                    name={intl.formatMessage({id: 'Sidebar.default-theme', defaultMessage: 'Default theme'})}
+                                    onClick={async () => setTheme(defaultTheme)}
+                                />
+                                <Menu.Text
+                                    id='dark-theme'
+                                    name={intl.formatMessage({id: 'Sidebar.dark-theme', defaultMessage: 'Dark theme'})}
+                                    onClick={async () => setTheme(darkTheme)}
+                                />
+                                <Menu.Text
+                                    id='light-theme'
+                                    name={intl.formatMessage({id: 'Sidebar.light-theme', defaultMessage: 'Light theme'})}
+                                    onClick={async () => setTheme(lightTheme)}
+                                />
+                            </Menu.SubMenu>
+                        </Menu>
+                    </MenuWrapper>
+                    {this.state.showRegistrationLinkDialog &&
+                        <RegistrationLinkComponent
+                            onClose={() => {
+                                this.setState({showRegistrationLinkDialog: false})
+                            }}
                         />
-                    </Button>
-                    <Menu position='top'>
-                        <Menu.Text
-                            id='import'
-                            name={intl.formatMessage({id: 'Sidebar.import-archive', defaultMessage: 'Import archive'})}
-                            onClick={async () => Archiver.importFullArchive()}
-                        />
-                        <Menu.Text
-                            id='export'
-                            name={intl.formatMessage({id: 'Sidebar.export-archive', defaultMessage: 'Export archive'})}
-                            onClick={async () => Archiver.exportFullArchive()}
-                        />
-                        <Menu.SubMenu
-                            id='lang'
-                            name={intl.formatMessage({id: 'Sidebar.set-language', defaultMessage: 'Set language'})}
-                            position='top'
-                        >
-                            <Menu.Text
-                                id='english-lang'
-                                name={intl.formatMessage({id: 'Sidebar.english', defaultMessage: 'English'})}
-                                onClick={async () => this.props.setLanguage('en')}
-                            />
-                            <Menu.Text
-                                id='spanish-lang'
-                                name={intl.formatMessage({id: 'Sidebar.spanish', defaultMessage: 'Spanish'})}
-                                onClick={async () => this.props.setLanguage('es')}
-                            />
-                        </Menu.SubMenu>
-                        <Menu.SubMenu
-                            id='theme'
-                            name={intl.formatMessage({id: 'Sidebar.set-theme', defaultMessage: 'Set theme'})}
-                            position='top'
-                        >
-                            <Menu.Text
-                                id='default-theme'
-                                name={intl.formatMessage({id: 'Sidebar.default-theme', defaultMessage: 'Default theme'})}
-                                onClick={async () => setTheme(defaultTheme)}
-                            />
-                            <Menu.Text
-                                id='dark-theme'
-                                name={intl.formatMessage({id: 'Sidebar.dark-theme', defaultMessage: 'Dark theme'})}
-                                onClick={async () => setTheme(darkTheme)}
-                            />
-                            <Menu.Text
-                                id='light-theme'
-                                name={intl.formatMessage({id: 'Sidebar.light-theme', defaultMessage: 'Light theme'})}
-                                onClick={async () => setTheme(lightTheme)}
-                            />
-                        </Menu.SubMenu>
-                    </Menu>
-                </MenuWrapper>
+                    }
+                </ModalWrapper>
             </div>
         )
     }

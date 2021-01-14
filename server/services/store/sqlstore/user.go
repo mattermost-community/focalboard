@@ -9,6 +9,22 @@ import (
 	sq "github.com/Masterminds/squirrel"
 )
 
+func (s *SQLStore) GetActiveUserCount() (int, error) {
+	query := s.getQueryBuilder().
+		Select("count(*)").
+		From("users").
+		Where(sq.Eq{"delete_at": 0})
+	row := query.QueryRow()
+
+	var count int
+	err := row.Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
 func (s *SQLStore) getUserByCondition(condition sq.Eq) (*model.User, error) {
 	query := s.getQueryBuilder().
 		Select("id", "username", "email", "password", "mfa_secret", "auth_service", "auth_data", "props", "create_at", "update_at", "delete_at").

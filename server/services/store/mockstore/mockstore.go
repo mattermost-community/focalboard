@@ -103,6 +103,21 @@ func (mr *MockStoreMockRecorder) DeleteSession(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteSession", reflect.TypeOf((*MockStore)(nil).DeleteSession), arg0)
 }
 
+// GetActiveUserCount mocks base method
+func (m *MockStore) GetActiveUserCount() (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetActiveUserCount")
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetActiveUserCount indicates an expected call of GetActiveUserCount
+func (mr *MockStoreMockRecorder) GetActiveUserCount() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetActiveUserCount", reflect.TypeOf((*MockStore)(nil).GetActiveUserCount))
+}
+
 // GetAllBlocks mocks base method
 func (m *MockStore) GetAllBlocks() ([]model.Block, error) {
 	m.ctrl.T.Helper()
@@ -313,6 +328,21 @@ func (mr *MockStoreMockRecorder) GetUserByUsername(arg0 interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByUsername", reflect.TypeOf((*MockStore)(nil).GetUserByUsername), arg0)
 }
 
+// GetWorkspace mocks base method
+func (m *MockStore) GetWorkspace(arg0 string) (*model.Workspace, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetWorkspace", arg0)
+	ret0, _ := ret[0].(*model.Workspace)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetWorkspace indicates an expected call of GetWorkspace
+func (mr *MockStoreMockRecorder) GetWorkspace(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetWorkspace", reflect.TypeOf((*MockStore)(nil).GetWorkspace), arg0)
+}
+
 // InsertBlock mocks base method
 func (m *MockStore) InsertBlock(arg0 model.Block) error {
 	m.ctrl.T.Helper()
@@ -409,4 +439,32 @@ func (m *MockStore) UpsertSharing(arg0 model.Sharing) error {
 func (mr *MockStoreMockRecorder) UpsertSharing(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertSharing", reflect.TypeOf((*MockStore)(nil).UpsertSharing), arg0)
+}
+
+// UpsertWorkspaceSettings mocks base method
+func (m *MockStore) UpsertWorkspaceSettings(arg0 model.Workspace) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertWorkspaceSettings", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpsertWorkspaceSettings indicates an expected call of UpsertWorkspaceSettings
+func (mr *MockStoreMockRecorder) UpsertWorkspaceSettings(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertWorkspaceSettings", reflect.TypeOf((*MockStore)(nil).UpsertWorkspaceSettings), arg0)
+}
+
+// UpsertWorkspaceSignupToken mocks base method
+func (m *MockStore) UpsertWorkspaceSignupToken(arg0 model.Workspace) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertWorkspaceSignupToken", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpsertWorkspaceSignupToken indicates an expected call of UpsertWorkspaceSignupToken
+func (mr *MockStoreMockRecorder) UpsertWorkspaceSignupToken(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertWorkspaceSignupToken", reflect.TypeOf((*MockStore)(nil).UpsertWorkspaceSignupToken), arg0)
 }
