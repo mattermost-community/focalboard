@@ -54,4 +54,5 @@ linux/dist
 linux/temp
 win/temp
 win/dist
+webapp/cypress/screenshots
 webapp/cypress/videos

@@ -93,15 +93,6 @@ describe('Create and delete board / card', () => {
         cy.get('.ViewHeader').contains('Sort').parent().contains('Name').click();
     });
 
-    it('Can view the readonly board', () => {
-        cy.url().then((url) => {
-            const readonlyUrl = url + '&r=1';
-            cy.visit(readonlyUrl);
-            cy.get('.ViewTitle>.Editable.title').should('have.attr', 'readonly');
-            cy.visit(url);
-        });
-    });
-
     it('Can delete the board', () => {
         // Delete board
         cy.get('.Sidebar .octo-sidebar-list').
