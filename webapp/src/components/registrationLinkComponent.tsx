@@ -48,11 +48,17 @@ class RegistrationLinkComponent extends React.PureComponent<Props, State> {
                 <div className='RegistrationLinkComponent'>
                     {workspace && <>
                         <div className='row'>
-                            <input
+                            {intl.formatMessage({id: 'RegistrationLink.description', defaultMessage: 'Share this link for others to create accounts:'})}
+                        </div>
+                        <div className='row'>
+                            <a
                                 className='shareUrl'
-                                readOnly={true}
-                                value={registrationUrl}
-                            />
+                                href={registrationUrl}
+                                target='_blank'
+                                rel='noreferrer'
+                            >
+                                {registrationUrl}
+                            </a>
                             <Button
                                 filled={true}
                                 onClick={() => {

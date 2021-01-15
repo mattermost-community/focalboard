@@ -70,11 +70,14 @@ class ShareBoardComponent extends React.PureComponent<Props, State> {
                     </div>
                     {isSharing && <>
                         <div className='row'>
-                            <input
+                            <a
                                 className='shareUrl'
-                                readOnly={true}
-                                value={shareUrl.toString()}
-                            />
+                                href={shareUrl.toString()}
+                                target='_blank'
+                                rel='noreferrer'
+                            >
+                                {shareUrl.toString()}
+                            </a>
                             <Button
                                 filled={true}
                                 onClick={() => {

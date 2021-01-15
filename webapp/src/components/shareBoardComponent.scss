@@ -3,6 +3,7 @@
     flex-direction: column;
     padding: 5px;
     color: rgb(var(--main-fg));
+	max-width: 400px;
 
     > .row {
         display: flex;
@@ -19,10 +20,11 @@
         flex-grow: 1;
     }
 
-    input.shareUrl {
+    a.shareUrl {
         flex-grow: 1;
-        border: solid 1px #cccccc;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         margin-right: 5px;
-        padding: 5px;
     }
 }
