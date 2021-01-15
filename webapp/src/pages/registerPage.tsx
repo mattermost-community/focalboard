@@ -76,7 +76,12 @@ class RegisterPage extends React.PureComponent<Props, State> {
                         onChange={(e) => this.setState({password: e.target.value})}
                     />
                 </div>
-                <Button onClick={this.handleRegister}>{'Register'}</Button>
+                <Button
+                    filled={true}
+                    onClick={this.handleRegister}
+                >
+                    {'Register'}
+                </Button>
                 <Link to='/login'>{'or login if you already have an account'}</Link>
                 {this.state.errorMessage &&
                     <div className='error'>

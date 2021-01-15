@@ -8,20 +8,32 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    box-shadow: rgba(var(--main-fg), 0.1) 0px 0px 0px 1px, rgba(var(--main-fg), 0.3) 0px 4px 8px;
+
     .username, .password {
-        margin-bottom: 5px;
+        margin-bottom: 10px;
+
         label {
             display: inline-block;
             width: 140px;
         }
+
         input {
             display: inline-block;
             width: 250px;
             border: 1px solid #cccccc;
             border-radius: 4px;
+            min-height: 30px;
         }
     }
-    .Button {
+
+    > .Button {
+        min-width: 120px;
         margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .error {
+        color: #900000;
     }
 }

@@ -17,10 +17,11 @@ type Props = RouteComponentProps
 type State = {
     username: string
     password: string
+    errorMessage?: string
 }
 
 class LoginPage extends React.PureComponent<Props, State> {
-    state = {
+    state: State = {
         username: '',
         password: '',
     }
@@ -29,6 +30,8 @@ class LoginPage extends React.PureComponent<Props, State> {
         const logged = await client.login(this.state.username, this.state.password)
         if (logged) {
             this.props.history.push('/')
+        } else {
+            this.setState({errorMessage: 'Login failed'})
         }
     }
 
@@ -40,7 +43,7 @@ class LoginPage extends React.PureComponent<Props, State> {
                     <input
                         id='login-username'
                         value={this.state.username}
-                        onChange={(e) => this.setState({username: e.target.value})}
+                        onChange={(e) => this.setState({username: e.target.value, errorMessage: undefined})}
                     />
                 </div>
                 <div className='password'>
@@ -49,11 +52,21 @@ class LoginPage extends React.PureComponent<Props, State> {
                         id='login-password'
                         type='password'
                         value={this.state.password}
-                        onChange={(e) => this.setState({password: e.target.value})}
+                        onChange={(e) => this.setState({password: e.target.value, errorMessage: undefined})}
                     />
                 </div>
-                <Button onClick={this.handleLogin}>{'Login'}</Button>
+                <Button
+                    filled={true}
+                    onClick={this.handleLogin}
+                >
+                    {'Login'}
+                </Button>
                 <Link to='/register'>{'or create an account if you don\'t have one'}</Link>
+                {this.state.errorMessage &&
+                    <div className='error'>
+                        {this.state.errorMessage}
+                    </div>
+                }
             </div>
         )
     }
