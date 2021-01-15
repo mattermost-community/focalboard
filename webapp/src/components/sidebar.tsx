@@ -92,7 +92,7 @@ class Sidebar extends React.Component<Props, State> {
                             <div className='username'>
                                 <MenuWrapper>
                                     <Button>
-                                        {user ? user.username : ' '}
+                                        {user?.username}
                                     </Button>
                                     <Menu>
                                         <Menu.Text
