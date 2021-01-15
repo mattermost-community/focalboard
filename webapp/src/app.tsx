@@ -55,7 +55,7 @@ export default class App extends React.PureComponent<unknown, State> {
             >
                 <UserContext.Provider value={this.state.user}>
                     <FlashMessages milliseconds={2000}/>
-                    <Router>
+                    <Router forceRefresh={true}>
                         <div id='frame'>
                             <div id='main'>
                                 <Switch>
