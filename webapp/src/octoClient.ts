@@ -54,6 +54,10 @@ class OctoClient {
         return false
     }
 
+    logout() {
+        localStorage.removeItem('sessionId')
+    }
+
     async register(email: string, username: string, password: string, token?: string): Promise<{code: number, json: any}> {
         const path = '/api/v1/register'
         const body = JSON.stringify({email, username, password, token})

@@ -1,12 +1,13 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useContext} from 'react'
+import React from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {Archiver} from '../archiver'
 import {Board, MutableBoard} from '../blocks/board'
 import {BoardView, MutableBoardView} from '../blocks/boardView'
 import mutator from '../mutator'
+import octoClient from '../octoClient'
 import {darkTheme, defaultTheme, lightTheme, setTheme} from '../theme'
 import {UserContext} from '../user'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
@@ -89,7 +90,22 @@ class Sidebar extends React.Component<Props, State> {
                     <UserContext.Consumer>
                         {(user) => (
                             <div className='username'>
-                                {user ? user.username : ' '}
+                                <MenuWrapper>
+                                    <Button>
+                                        {user ? user.username : ' '}
+                                    </Button>
+                                    <Menu>
+                                        <Menu.Text
+                                            id='logout'
+                                            name={intl.formatMessage({id: 'Sidebar.logout', defaultMessage: 'Log out'})}
+                                            onClick={async () => {
+                                                octoClient.logout()
+                                                window.location.href = '/login'
+                                            }}
+                                        />
+                                    </Menu>
+                                </MenuWrapper>
+
                             </div>
                         )}
                     </UserContext.Consumer>
