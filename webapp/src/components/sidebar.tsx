@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useContext} from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {Archiver} from '../archiver'
@@ -8,6 +8,7 @@ import {Board, MutableBoard} from '../blocks/board'
 import {BoardView, MutableBoardView} from '../blocks/boardView'
 import mutator from '../mutator'
 import {darkTheme, defaultTheme, lightTheme, setTheme} from '../theme'
+import {UserContext} from '../user'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
 import Button from '../widgets/buttons/button'
 import IconButton from '../widgets/buttons/iconButton'
@@ -85,7 +86,14 @@ class Sidebar extends React.Component<Props, State> {
         return (
             <div className='Sidebar octo-sidebar'>
                 <div className='octo-sidebar-header'>
-                    {'Matternote'}
+                    <UserContext.Consumer>
+                        {(user) => (
+                            <div className='username'>
+                                {user ? user.username : ' '}
+                            </div>
+                        )}
+                    </UserContext.Consumer>
+
                     <div className='octo-spacer'/>
                     <IconButton
                         onClick={this.hideClicked}

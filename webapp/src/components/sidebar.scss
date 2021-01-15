@@ -29,6 +29,7 @@
         flex: 0 0 auto;
     }
 
+
     .octo-sidebar-list {
         flex: 1 1 auto;
         overflow-y: auto;
@@ -42,12 +43,18 @@
         font-weight: 600;
         padding: 3px 20px;
         margin-bottom: 5px;
+
+        >.username {
+            line-height: 30px;
+        }
+
         >.IconButton {
             background-color: var(--sidebar-bg);
             &:hover {
                 background-color: rgba(var(--sidebar-fg), 0.1);
             }
         }
+
         &.show-button {
             .hamburger-icon {
                 display: block;
