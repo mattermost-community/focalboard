@@ -11,6 +11,18 @@
     flex-direction: column;
     box-shadow: rgba(var(--main-fg), 0.1) 0px 0px 0px 1px, rgba(var(--main-fg), 0.3) 0px 4px 8px;
 
+    @media screen and (max-width: 430px) {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        margin: auto;
+        padding-top: 10px;
+    }
+
     .title {
         font-size: 16px;
         font-weight: 500;
