@@ -14,15 +14,19 @@ jobs:
     - name: npm install
       run: cd webapp; npm install --no-optional
 
-    - name: Replace tokens 1
-      run: perl -pi -e 's/placeholder_rudder_dataplane_url/"$ENV{RUDDER_DATAPLANE_URL}"/' ${{ github.workspace }}/server/services/telemetry/telemetry.go
-      env:
-        RUDDER_DATAPLANE_URL: ${{ secrets.RUDDER_DATAPLANE_URL }}
+    - name: Replace token 1
+      uses: jacobtomlinson/gha-find-replace@master
+      with:
+        find: "placeholder_rudder_dataplane_url"
+        replace: "${{ secrets.RUDDER_DATAPLANE_URL }}"
+        include: server/services/telemetry/telemetry.go
 
-    - name: Replace tokens 2
-      run: perl -pi -e 's/placeholder_rudder_key/"$ENV{RUDDER_KEY}"/' ${{ github.workspace }}/server/services/telemetry/telemetry.go
-      env:
-        RUDDER_KEY: ${{ secrets.RUDDER_DEV_KEY }}
+    - name: Replace token 2
+      uses: jacobtomlinson/gha-find-replace@master
+      with:
+        find: "placeholder_rudder_key"
+        replace: "${{ secrets.RUDDER_DEV_KEY }}"
+        include: server/services/telemetry/telemetry.go
 
     - name: Set up Go
       uses: actions/setup-go@v2
