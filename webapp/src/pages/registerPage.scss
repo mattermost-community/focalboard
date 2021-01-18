@@ -3,12 +3,18 @@
     border-radius: 15px;
     width: 450px;
     height: 400px;
-    margin: auto;
+    margin: 150px auto;
+    padding: 40px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     flex-direction: column;
     box-shadow: rgba(var(--main-fg), 0.1) 0px 0px 0px 1px, rgba(var(--main-fg), 0.3) 0px 4px 8px;
+
+    .title {
+        font-size: 16px;
+        font-weight: 500;
+    }
 
     .email, .username, .password {
         margin-bottom: 10px;
@@ -23,14 +29,16 @@
             width: 250px;
             border: 1px solid #cccccc;
             border-radius: 4px;
-            min-height: 30px;
+            min-height: 44px;
+            padding: 7px;
         }
     }
 
     > .Button {
         margin-top: 10px;
-        margin-bottom: 10px;
-        min-width: 120px;
+        margin-bottom: 20px;
+        min-height: 38px;
+        min-width: 250px;
     }
 
     .error {

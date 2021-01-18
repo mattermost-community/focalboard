@@ -38,19 +38,20 @@ class LoginPage extends React.PureComponent<Props, State> {
     render(): React.ReactNode {
         return (
             <div className='LoginPage'>
+                <div className='title'>{'Log in'}</div>
                 <div className='username'>
-                    <label htmlFor='login-username'>{'Username'}</label>
                     <input
                         id='login-username'
+                        placeholder={'Enter username'}
                         value={this.state.username}
                         onChange={(e) => this.setState({username: e.target.value, errorMessage: undefined})}
                     />
                 </div>
                 <div className='password'>
-                    <label htmlFor='login-username'>{'Password'}</label>
                     <input
                         id='login-password'
                         type='password'
+                        placeholder={'Enter password'}
                         value={this.state.password}
                         onChange={(e) => this.setState({password: e.target.value, errorMessage: undefined})}
                     />
@@ -59,7 +60,7 @@ class LoginPage extends React.PureComponent<Props, State> {
                     filled={true}
                     onClick={this.handleLogin}
                 >
-                    {'Login'}
+                    {'Log in'}
                 </Button>
                 <Link to='/register'>{'or create an account if you don\'t have one'}</Link>
                 {this.state.errorMessage &&
