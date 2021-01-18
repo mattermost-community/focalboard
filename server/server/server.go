@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"runtime"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -21,6 +22,7 @@ import (
 	"github.com/mattermost/mattermost-octo-tasks/server/services/webhook"
 	"github.com/mattermost/mattermost-octo-tasks/server/web"
 	"github.com/mattermost/mattermost-octo-tasks/server/ws"
+	"github.com/mattermost/mattermost-server/utils"
 	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/services/filesstore"
 )
@@ -132,14 +134,23 @@ func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
 }
 
 func (s *Server) Start() error {
-	if err := s.webServer.Start(); err != nil {
-		return err
-	}
+	httpServerExitDone := &sync.WaitGroup{}
+	httpServerExitDone.Add(1)
+
+	s.webServer.Start(httpServerExitDone)
+
 	s.cleanUpSessionsTask = scheduler.CreateRecurringTask("cleanUpSessions", func() {
 		if err := s.store.CleanUpSessions(s.config.SessionExpireTime); err != nil {
 			s.logger.Error("Unable to clean up the sessions", zap.Error(err))
 		}
 	}, 10*time.Minute)
+
+	if s.config.Telemetry {
+		firstRun := utils.MillisFromTime(time.Now())
+		s.telemetry.RunTelemetryJob(firstRun)
+	}
+
+	httpServerExitDone.Wait()
 
 	return nil
 }
@@ -152,6 +163,8 @@ func (s *Server) Shutdown() error {
 	if s.cleanUpSessionsTask != nil {
 		s.cleanUpSessionsTask.Cancel()
 	}
+
+	s.telemetry.Shutdown()
 
 	return s.store.Shutdown()
 }

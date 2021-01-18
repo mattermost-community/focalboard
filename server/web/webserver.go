@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"sync"
 
 	"github.com/gorilla/mux"
 )
@@ -62,27 +63,29 @@ func (ws *Server) registerRoutes() {
 }
 
 // Start runs the web server and start listening for charsetnnections.
-func (ws *Server) Start() error {
+func (ws *Server) Start(wg *sync.WaitGroup) {
 	ws.registerRoutes()
 
 	isSSL := ws.ssl && fileExists("./cert/cert.pem") && fileExists("./cert/key.pem")
 	if isSSL {
 		log.Printf("https server started on :%d\n", ws.port)
-		err := ws.ListenAndServeTLS("./cert/cert.pem", "./cert/key.pem")
-		if err != nil {
-			return err
-		}
+		go func() {
+			defer wg.Done()
+			if err := ws.ListenAndServeTLS("./cert/cert.pem", "./cert/key.pem"); err != nil {
+				log.Fatalf("ListenAndServeTLS: %v", err)
+			}
+		}()
 
-		return nil
+		return
 	}
 
 	log.Printf("http server started on :%d\n", ws.port)
-	err := ws.ListenAndServe()
-	if err != nil {
-		return err
-	}
-
-	return nil
+	go func() {
+		defer wg.Done()
+		if err := ws.ListenAndServe(); err != http.ErrServerClosed {
+			log.Fatalf("ListenAndServe: %v", err)
+		}
+	}()
 }
 
 func (ws *Server) Shutdown() error {
