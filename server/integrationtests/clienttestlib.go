@@ -40,7 +40,7 @@ func SetupTestHelper() *TestHelper {
 
 func (th *TestHelper) InitBasic() *TestHelper {
 	go func() {
-		if err := th.Server.Start(); err != http.ErrServerClosed {
+		if err := th.Server.Start(); err != nil {
 			panic(err)
 		}
 	}()
