@@ -11,6 +11,16 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: Replace tokens 1
+      run: perl -pi -e 's/placeholder_rudder_dataplane_url/"$ENV{RUDDER_DATAPLANE_URL}"/' ${{ github.workspace }}/server/services/telemetry/telemetry.go
+      env:
+        RUDDER_DATAPLANE_URL: ${{ secrets.RUDDER_DATAPLANE_URL }}
+
+    - name: Replace tokens 2
+      run: perl -pi -e 's/placeholder_rudder_key/"$ENV{RUDDER_KEY}"/' ${{ github.workspace }}/server/services/telemetry/telemetry.go
+      env:
+        RUDDER_KEY: ${{ secrets.RUDDER_DEV_KEY }}
+
     - name: win-node-env
       run: npm install -g win-node-env
 
