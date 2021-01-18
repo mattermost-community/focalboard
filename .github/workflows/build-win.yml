@@ -12,18 +12,10 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Replace token 1
-      uses: jacobtomlinson/gha-find-replace@master
-      with:
-        find: "placeholder_rudder_dataplane_url"
-        replace: "${{ secrets.RUDDER_DATAPLANE_URL }}"
-        include: server/services/telemetry/telemetry.go
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/src/index.ts
 
     - name: Replace token 2
-      uses: jacobtomlinson/gha-find-replace@master
-      with:
-        find: "placeholder_rudder_key"
-        replace: "${{ secrets.RUDDER_DEV_KEY }}"
-        include: server/services/telemetry/telemetry.go
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/src/index.ts
 
     - name: win-node-env
       run: npm install -g win-node-env
