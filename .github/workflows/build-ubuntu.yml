@@ -33,6 +33,8 @@ jobs:
 
     - name: Build Linux server and app
       run: make server-linux-package linux-app
+      env:
+        BUILD_NUMBER: ${{ github.run_id }}
 
     - name: Upload server package
       uses: actions/upload-artifact@v1

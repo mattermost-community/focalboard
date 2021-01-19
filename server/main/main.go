@@ -7,6 +7,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/mattermost/mattermost-octo-tasks/server/model"
 	"github.com/mattermost/mattermost-octo-tasks/server/server"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/config"
 )
@@ -45,11 +46,17 @@ func monitorPid(pid int) {
 }
 
 func main() {
+	// Log version
+	log.Println("Version: " + model.CurrentVersion)
+	log.Println("Edition: " + model.Edition)
+	log.Println("Build Number: " + model.BuildNumber)
+	log.Println("Build Date: " + model.BuildDate)
+	log.Println("Build Hash: " + model.BuildHash)
+
 	// config.json file
 	config, err := config.ReadConfigFile()
 	if err != nil {
 		log.Fatal("Unable to read the config file: ", err)
-
 		return
 	}
 

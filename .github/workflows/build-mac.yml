@@ -33,6 +33,7 @@ jobs:
       run: make mac-app
       env:
         DEVELOPER_DIR: /Applications/Xcode_12.3.app/Contents/Developer
+        BUILD_NUMBER: ${{ github.run_id }}
 
     - name: Upload macOS package
       uses: actions/upload-artifact@v1

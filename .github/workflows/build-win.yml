@@ -30,6 +30,8 @@ jobs:
 
     - name: Build Windows app
       run: make win-app
+      env:
+        BUILD_NUMBER: ${{ github.run_id }}
 
     - name: Upload app package
       uses: actions/upload-artifact@v1

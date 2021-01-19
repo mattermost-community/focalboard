@@ -14,6 +14,7 @@ import (
 
 	"github.com/mattermost/mattermost-octo-tasks/server/api"
 	"github.com/mattermost/mattermost-octo-tasks/server/app"
+	appModel "github.com/mattermost/mattermost-octo-tasks/server/model"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/config"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/scheduler"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/store"
@@ -26,8 +27,6 @@ import (
 	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/services/filesstore"
 )
-
-const currentVersion = "0.0.1"
 
 type Server struct {
 	config              *config.Configuration
@@ -109,7 +108,10 @@ func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
 	telemetryService := telemetry.New(telemetryID, zap.NewStdLog(logger))
 	telemetryService.RegisterTracker("server", func() map[string]interface{} {
 		return map[string]interface{}{
-			"version":          currentVersion,
+			"version":          appModel.CurrentVersion,
+			"build_number":     appModel.BuildNumber,
+			"build_hash":       appModel.BuildHash,
+			"edition":          appModel.Edition,
 			"operating_system": runtime.GOOS,
 		}
 	})
