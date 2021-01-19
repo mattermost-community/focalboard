@@ -4,7 +4,7 @@ import {IContentBlock, MutableContentBlock} from './contentBlock'
 
 type DividerBlock = IContentBlock
 
-class MutableDividerBlock extends MutableContentBlock {
+class MutableDividerBlock extends MutableContentBlock implements DividerBlock {
     constructor(block: any = {}) {
         super(block)
         this.type = 'divider'

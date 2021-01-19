@@ -6,7 +6,7 @@ interface ImageBlock extends IContentBlock {
     readonly url: string
 }
 
-class MutableImageBlock extends MutableContentBlock implements IContentBlock {
+class MutableImageBlock extends MutableContentBlock implements ImageBlock {
     get url(): string {
         return this.fields.url as string
     }

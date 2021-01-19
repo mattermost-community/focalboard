@@ -3,8 +3,7 @@
 import React from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
-import {IBlock} from '../blocks/block'
-import {MutableCommentBlock} from '../blocks/commentBlock'
+import {CommentBlock, MutableCommentBlock} from '../blocks/commentBlock'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import Button from '../widgets/buttons/button'
@@ -14,7 +13,8 @@ import './commentsList.scss'
 import {MarkdownEditor} from './markdownEditor'
 
 type Props = {
-    comments: readonly IBlock[]
+    comments: readonly CommentBlock[]
+    userId: string
     rootId: string
     cardId: string
     intl: IntlShape
@@ -39,12 +39,16 @@ class CommentsList extends React.Component<Props, State> {
     }
 
     private sendComment = () => {
-        const {rootId, cardId} = this.props
+        const {userId, rootId, cardId} = this.props
 
         Utils.assertValue(cardId)
 
-        const block = new MutableCommentBlock({rootId, parentId: cardId, title: this.state.newComment})
-        mutator.insertBlock(block, 'add comment')
+        const comment = new MutableCommentBlock()
+        comment.parentId = cardId
+        comment.rootId = rootId
+        comment.userId = userId
+        comment.title = this.state.newComment
+        mutator.insertBlock(comment, 'add comment')
         this.setState({newComment: ''})
     }
 
@@ -52,7 +56,6 @@ class CommentsList extends React.Component<Props, State> {
         const {comments, intl} = this.props
 
         // TODO: Replace this placeholder
-        const username = 'John Smith'
         const userImageUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="fill: rgb(192, 192, 192);"><rect width="100" height="100" /></svg>'
 
         return (
@@ -62,7 +65,9 @@ class CommentsList extends React.Component<Props, State> {
                         key={comment.id}
                         comment={comment}
                         userImageUrl={userImageUrl}
-                        username={username}
+
+                        // TODO: Look up user name from userId
+                        username={comment.userId}
                     />
                 ))}
 

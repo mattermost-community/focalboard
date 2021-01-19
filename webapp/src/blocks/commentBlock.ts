@@ -4,12 +4,23 @@ import {IBlock} from '../blocks/block'
 
 import {MutableBlock} from './block'
 
-type CommentBlock = IBlock
+interface CommentBlock extends IBlock {
+    readonly userId: string
+}
 
-class MutableCommentBlock extends MutableBlock {
+class MutableCommentBlock extends MutableBlock implements CommentBlock {
+    get userId(): string {
+        return this.fields.userId as string
+    }
+    set userId(value: string) {
+        this.fields.userId = value
+    }
+
     constructor(block: any = {}) {
         super(block)
         this.type = 'comment'
+
+        this.userId = block.fields?.userId || ''
     }
 }
 

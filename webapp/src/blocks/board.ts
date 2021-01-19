@@ -44,7 +44,7 @@ interface Board extends IBlock {
     duplicate(): MutableBoard
 }
 
-class MutableBoard extends MutableBlock {
+class MutableBoard extends MutableBlock implements Board {
     get icon(): string {
         return this.fields.icon as string
     }

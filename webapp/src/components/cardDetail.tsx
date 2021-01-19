@@ -1,30 +1,29 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {FormattedMessage, IntlShape, injectIntl} from 'react-intl'
+import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {BlockIcons} from '../blockIcons'
-import {MutableTextBlock} from '../blocks/textBlock'
-import {BoardTree} from '../viewModel/boardTree'
 import {PropertyType} from '../blocks/board'
-import {CardTree} from '../viewModel/cardTree'
+import {MutableTextBlock} from '../blocks/textBlock'
 import mutator from '../mutator'
+import {UserContext} from '../user'
 import {Utils} from '../utils'
-
-import MenuWrapper from '../widgets/menuWrapper'
-import Menu from '../widgets/menu'
-import PropertyMenu from '../widgets/propertyMenu'
-import Editable from '../widgets/editable'
+import {BoardTree} from '../viewModel/boardTree'
+import {CardTree} from '../viewModel/cardTree'
 import Button from '../widgets/buttons/button'
+import Editable from '../widgets/editable'
 import EmojiIcon from '../widgets/icons/emoji'
+import Menu from '../widgets/menu'
+import MenuWrapper from '../widgets/menuWrapper'
+import PropertyMenu from '../widgets/propertyMenu'
 
-import {MarkdownEditor} from './markdownEditor'
-import ContentBlock from './contentBlock'
-import CommentsList from './commentsList'
 import BlockIconSelector from './blockIconSelector'
-import PropertyValueElement from './propertyValueElement'
-
 import './cardDetail.scss'
+import CommentsList from './commentsList'
+import ContentBlock from './contentBlock'
+import {MarkdownEditor} from './markdownEditor'
+import PropertyValueElement from './propertyValueElement'
 
 type Props = {
     boardTree: BoardTree
@@ -196,11 +195,16 @@ class CardDetail extends React.Component<Props, State> {
                     {!this.props.readonly &&
                     <>
                         <hr/>
-                        <CommentsList
-                            comments={comments}
-                            rootId={card.rootId}
-                            cardId={card.id}
-                        />
+                        <UserContext.Consumer>
+                            {(user) => (user &&
+                            <CommentsList
+                                comments={comments}
+                                userId={user.id}
+                                rootId={card.rootId}
+                                cardId={card.id}
+                            />
+                            )}
+                        </UserContext.Consumer>
                         <hr/>
                     </>
                     }

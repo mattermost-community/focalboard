@@ -2,20 +2,21 @@
 // See LICENSE.txt for license information.
 import {IBlock} from '../blocks/block'
 import {Card, MutableCard} from '../blocks/card'
+import {CommentBlock} from '../blocks/commentBlock'
 import {IContentBlock} from '../blocks/contentBlock'
 import octoClient from '../octoClient'
 import {OctoUtils} from '../octoUtils'
 
 interface CardTree {
     readonly card: Card
-    readonly comments: readonly IBlock[]
+    readonly comments: readonly CommentBlock[]
     readonly contents: readonly IContentBlock[]
     readonly allBlocks: readonly IBlock[]
 }
 
 class MutableCardTree implements CardTree {
     card: MutableCard
-    comments: IBlock[] = []
+    comments: CommentBlock[] = []
     contents: IContentBlock[] = []
 
     get allBlocks(): IBlock[] {
@@ -53,7 +54,7 @@ class MutableCardTree implements CardTree {
         const cardTree = new MutableCardTree(card)
         cardTree.comments = blocks.
             filter((block) => block.type === 'comment').
-            sort((a, b) => a.createAt - b.createAt)
+            sort((a, b) => a.createAt - b.createAt) as CommentBlock[]
 
         const contentBlocks = blocks.filter((block) => block.type === 'text' || block.type === 'image' || block.type === 'divider') as IContentBlock[]
         cardTree.contents = OctoUtils.getBlockOrder(card.contentOrder, contentBlocks)

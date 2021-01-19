@@ -13,7 +13,7 @@ interface WorkspaceTree {
     readonly allBlocks: readonly IBlock[]
 }
 
-class MutableWorkspaceTree {
+class MutableWorkspaceTree implements WorkspaceTree {
     boards: Board[] = []
     boardTemplates: Board[] = []
     views: BoardView[] = []

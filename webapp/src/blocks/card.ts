@@ -14,7 +14,7 @@ interface Card extends IBlock {
     duplicate(): MutableCard
 }
 
-class MutableCard extends MutableBlock {
+class MutableCard extends MutableBlock implements Card {
     get icon(): string {
         return this.fields.icon as string
     }

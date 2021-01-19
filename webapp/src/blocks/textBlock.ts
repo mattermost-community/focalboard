@@ -4,7 +4,7 @@ import {IContentBlock, MutableContentBlock} from './contentBlock'
 
 type TextBlock = IContentBlock
 
-class MutableTextBlock extends MutableContentBlock {
+class MutableTextBlock extends MutableContentBlock implements TextBlock {
     constructor(block: any = {}) {
         super(block)
         this.type = 'text'
