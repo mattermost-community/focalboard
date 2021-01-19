@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {FC} from 'react'
+import React, {FC, useEffect, useState} from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
 import {IBlock} from '../blocks/block'
@@ -11,18 +11,30 @@ import DeleteIcon from '../widgets/icons/delete'
 import OptionsIcon from '../widgets/icons/options'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
+import {UserCache} from '../userCache'
 import './comment.scss'
 
 type Props = {
     comment: IBlock
-    username: string
+    userId: string
     userImageUrl: string
     intl: IntlShape
 }
 
 const Comment: FC<Props> = (props: Props) => {
-    const {comment, username, userImageUrl, intl} = props
+    const {comment, userId, userImageUrl, intl} = props
     const html = Utils.htmlFromMarkdown(comment.title)
+
+    const [username, setUsername] = useState('')
+
+    useEffect(() => {
+        UserCache.shared.getUser(userId).then((user) => {
+            if (user) {
+                setUsername(user.username)
+            }
+        })
+    }, [])
+
     return (
         <div
             key={comment.id}

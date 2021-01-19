@@ -65,9 +65,7 @@ class CommentsList extends React.Component<Props, State> {
                         key={comment.id}
                         comment={comment}
                         userImageUrl={userImageUrl}
-
-                        // TODO: Look up user name from userId
-                        username={comment.userId}
+                        userId={comment.userId}
                     />
                 ))}
 

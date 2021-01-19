@@ -88,8 +88,18 @@ class OctoClient {
         return user
     }
 
+    async getUser(userId: string): Promise<IUser | undefined> {
+        const path = `/api/v1/users/${encodeURIComponent(userId)}`
+        const response = await fetch(this.serverUrl + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return undefined
+        }
+        const user = (await this.getJson(response)) as IUser
+        return user
+    }
+
     async getSubtree(rootId?: string, levels = 2): Promise<IBlock[]> {
-        let path = `/api/v1/blocks/${rootId}/subtree?l=${levels}`
+        let path = `/api/v1/blocks/${encodeURIComponent(rootId || '')}/subtree?l=${levels}`
         if (this.readToken) {
             path += `&read_token=${this.readToken}`
         }
