@@ -274,7 +274,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Comment out codesign for now\n# /usr/bin/codesign --force --sign \"$CODE_SIGN_IDENTITY\" -i \"com.qrayon.octoserver\" --entitlement \"$PROJECT_DIR/Tasks/Inherit.entitlements\" \"$BUILD_DIR/$CONFIGURATION/$EXECUTABLE_FOLDER_PATH/../Resources/resources/bin/octoserver\"\n";
+			shellScript = "# Comment out codesign for now\n# /usr/bin/codesign --force --sign \"$CODE_SIGN_IDENTITY\" -i \"com.mattermost.octoserver\" --entitlement \"$PROJECT_DIR/Tasks/Inherit.entitlements\" \"$BUILD_DIR/$CONFIGURATION/$EXECUTABLE_FOLDER_PATH/../Resources/resources/bin/octoserver\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
