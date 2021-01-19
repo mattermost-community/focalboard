@@ -37,6 +37,9 @@ You can build standalone apps that package the server to run locally against SQL
     * run `mac/dist/Tasks.app`
     * *Requires: macOS Catalina (10.15), Xcode 12 and a development signing certificate.*
 * Linux:
+    * Install webgtk dependencies
+        * `sudo apt-get install libgtk-3-dev`
+        * `sudo apt-get install libwebkit2gtk-4.0-dev`
     * `make linux-app`
     * run `linux/dist/tasks-app`
 * Windows
@@ -44,4 +47,4 @@ You can build standalone apps that package the server to run locally against SQL
     * run `win/dist/tasks-win.exe`
     * *Requires: Windows 10*
 
-Cross-compilation currently isn't fully supported, so please build on the appropriate platform.
+Cross-compilation currently isn't fully supported, so please build on the appropriate platform. Refer to the GitHub Actions workflows (build-mac.yml, build-win.yml, build-ubuntu.yml) for the detailed list of steps on each platform.
