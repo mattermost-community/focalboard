@@ -198,6 +198,7 @@ class CardDetail extends React.Component<Props, State> {
                         <hr/>
                         <CommentsList
                             comments={comments}
+                            rootId={card.rootId}
                             cardId={card.id}
                         />
                         <hr/>
