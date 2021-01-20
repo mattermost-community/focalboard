@@ -132,3 +132,12 @@ func (a *App) RegisterUser(username string, email string, password string) error
 
 	return nil
 }
+
+func (a *App) UpdateUserPassword(username string, password string) error {
+	err := a.store.UpdateUserPassword(username, auth.HashPassword(password))
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

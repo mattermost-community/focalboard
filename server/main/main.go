@@ -83,10 +83,10 @@ func main() {
 
 	server, err := server.New(config, singleUser)
 	if err != nil {
-		log.Fatal("ListenAndServeTLS: ", err)
+		log.Fatal("server.New ERROR: ", err)
 	}
 
 	if err := server.Start(); err != nil {
-		log.Fatal("ListenAndServeTLS: ", err)
+		log.Fatal("server.Start ERROR: ", err)
 	}
 }

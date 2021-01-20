@@ -27,6 +27,7 @@ type Store interface {
 	GetUserByUsername(username string) (*model.User, error)
 	CreateUser(user *model.User) error
 	UpdateUser(user *model.User) error
+	UpdateUserPassword(username string, password string) error
 
 	GetSession(token string, expireTime int64) (*model.Session, error)
 	CreateSession(session *model.Session) error

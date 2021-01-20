@@ -13,18 +13,20 @@ const (
 
 // Configuration is the app configuration stored in a json file.
 type Configuration struct {
-	ServerRoot         string   `json:"serverRoot" mapstructure:"serverRoot"`
-	Port               int      `json:"port" mapstructure:"port"`
-	DBType             string   `json:"dbtype" mapstructure:"dbtype"`
-	DBConfigString     string   `json:"dbconfig" mapstructure:"dbconfig"`
-	UseSSL             bool     `json:"useSSL" mapstructure:"useSSL"`
-	WebPath            string   `json:"webpath" mapstructure:"webpath"`
-	FilesPath          string   `json:"filespath" mapstructure:"filespath"`
-	Telemetry          bool     `json:"telemetry" mapstructure:"telemetry"`
-	WebhookUpdate      []string `json:"webhook_update" mapstructure:"webhook_update"`
-	Secret             string   `json:"secret" mapstructure:"secret"`
-	SessionExpireTime  int64    `json:"session_expire_time" mapstructure:"session_expire_time"`
-	SessionRefreshTime int64    `json:"session_refresh_time" mapstructure:"session_refresh_time"`
+	ServerRoot              string   `json:"serverRoot" mapstructure:"serverRoot"`
+	Port                    int      `json:"port" mapstructure:"port"`
+	DBType                  string   `json:"dbtype" mapstructure:"dbtype"`
+	DBConfigString          string   `json:"dbconfig" mapstructure:"dbconfig"`
+	UseSSL                  bool     `json:"useSSL" mapstructure:"useSSL"`
+	WebPath                 string   `json:"webpath" mapstructure:"webpath"`
+	FilesPath               string   `json:"filespath" mapstructure:"filespath"`
+	Telemetry               bool     `json:"telemetry" mapstructure:"telemetry"`
+	WebhookUpdate           []string `json:"webhook_update" mapstructure:"webhook_update"`
+	Secret                  string   `json:"secret" mapstructure:"secret"`
+	SessionExpireTime       int64    `json:"session_expire_time" mapstructure:"session_expire_time"`
+	SessionRefreshTime      int64    `json:"session_refresh_time" mapstructure:"session_refresh_time"`
+	EnableLocalMode         bool     `json:"enableLocalMode" mapstructure:"enableLocalMode"`
+	LocalModeSocketLocation string   `json:"localModeSocketLocation" mapstructure:"localModeSocketLocation"`
 }
 
 // ReadConfigFile read the configuration from the filesystem.
@@ -41,6 +43,8 @@ func ReadConfigFile() (*Configuration, error) {
 	viper.SetDefault("WebhookUpdate", nil)
 	viper.SetDefault("SessionExpireTime", 60*60*24*30) // 30 days session lifetime
 	viper.SetDefault("SessionRefreshTime", 60*60*5)    // 5 minutes session refresh
+	viper.SetDefault("EnableLocalMode", false)
+	viper.SetDefault("LocalModeSocketLocation", "/var/tmp/octo_local.socket")
 
 	err := viper.ReadInConfig() // Find and read the config file
 	if err != nil {             // Handle errors reading the config file

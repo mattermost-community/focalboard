@@ -12,5 +12,7 @@
     "webhook_update": [],
     "secret": "this-is-a-secret-string",
     "session_expire_time": 2592000,
-    "session_refresh_time": 18000
+    "session_refresh_time": 18000,
+    "enableLocalMode": true,
+    "localModeSocketLocation": "/var/tmp/octo_local.socket"
 }
