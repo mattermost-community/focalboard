@@ -195,16 +195,11 @@ class CardDetail extends React.Component<Props, State> {
                     {!this.props.readonly &&
                     <>
                         <hr/>
-                        <UserContext.Consumer>
-                            {(user) => (user &&
-                            <CommentsList
-                                comments={comments}
-                                userId={user.id}
-                                rootId={card.rootId}
-                                cardId={card.id}
-                            />
-                            )}
-                        </UserContext.Consumer>
+                        <CommentsList
+                            comments={comments}
+                            rootId={card.rootId}
+                            cardId={card.id}
+                        />
                         <hr/>
                     </>
                     }

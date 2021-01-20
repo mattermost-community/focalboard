@@ -14,7 +14,6 @@ import {MarkdownEditor} from './markdownEditor'
 
 type Props = {
     comments: readonly CommentBlock[]
-    userId: string
     rootId: string
     cardId: string
     intl: IntlShape
@@ -39,14 +38,13 @@ class CommentsList extends React.Component<Props, State> {
     }
 
     private sendComment = () => {
-        const {userId, rootId, cardId} = this.props
+        const {rootId, cardId} = this.props
 
         Utils.assertValue(cardId)
 
         const comment = new MutableCommentBlock()
         comment.parentId = cardId
         comment.rootId = rootId
-        comment.userId = userId
         comment.title = this.state.newComment
         mutator.insertBlock(comment, 'add comment')
         this.setState({newComment: ''})
@@ -65,7 +63,7 @@ class CommentsList extends React.Component<Props, State> {
                         key={comment.id}
                         comment={comment}
                         userImageUrl={userImageUrl}
-                        userId={comment.userId}
+                        userId={comment.modifiedBy}
                     />
                 ))}
 

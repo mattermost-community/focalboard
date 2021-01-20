@@ -8,6 +8,7 @@ interface IBlock {
     readonly id: string
     readonly parentId: string
     readonly rootId: string
+    readonly modifiedBy: string
 
     readonly schema: number
     readonly type: BlockTypes
@@ -23,6 +24,7 @@ interface IMutableBlock extends IBlock {
     id: string
     parentId: string
     rootId: string
+    modifiedBy: string
 
     schema: number
     type: BlockTypes
@@ -39,6 +41,7 @@ class MutableBlock implements IMutableBlock {
     schema: number
     parentId: string
     rootId: string
+    modifiedBy: string
     type: BlockTypes
     title: string
     fields: Record<string, any> = {}
@@ -63,6 +66,7 @@ class MutableBlock implements IMutableBlock {
         this.schema = 1
         this.parentId = block.parentId || ''
         this.rootId = block.rootId || ''
+        this.modifiedBy = block.modifiedBy || ''
         this.type = block.type || ''
 
         // Shallow copy here. Derived classes must make deep copies of their known properties in their constructors.

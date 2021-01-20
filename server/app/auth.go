@@ -40,7 +40,7 @@ func (a *App) GetUser(ID string) (*model.User, error) {
 
 	user, err := a.store.GetUserById(ID)
 	if err != nil {
-		return nil, errors.Wrap(err, "unable to get the session for the user")
+		return nil, errors.Wrap(err, "unable to find user")
 	}
 	return user, nil
 }
