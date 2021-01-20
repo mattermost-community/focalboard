@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
+import {injectIntl, IntlShape} from 'react-intl'
 
 import {IBlock} from '../blocks/block'
 import {sendFlashMessage} from '../components/flashMessages'
@@ -10,10 +11,12 @@ import {OctoListener} from '../octoListener'
 import {Utils} from '../utils'
 import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
 import {MutableWorkspaceTree, WorkspaceTree} from '../viewModel/workspaceTree'
+import './boardPage.scss'
 
 type Props = {
     readonly?: boolean
     setLanguage: (lang: string) => void
+    intl: IntlShape
 }
 
 type State = {
@@ -21,9 +24,10 @@ type State = {
     viewId: string
     workspaceTree: WorkspaceTree
     boardTree?: BoardTree
+    syncFailed?: boolean
 }
 
-export default class BoardPage extends React.Component<Props, State> {
+class BoardPage extends React.Component<Props, State> {
     private workspaceListener = new OctoListener()
 
     constructor(props: Props) {
@@ -123,9 +127,22 @@ export default class BoardPage extends React.Component<Props, State> {
     }
 
     render(): JSX.Element {
+        const {intl} = this.props
         const {workspaceTree} = this.state
 
         Utils.log(`BoardPage.render ${this.state.boardTree?.board?.title}`)
+
+        if (this.props.readonly && this.state.syncFailed) {
+            Utils.log('BoardPage.render: sync failed')
+            return (
+                <div className='BoardPage'>
+                    <div className='error'>
+                        {intl.formatMessage({id: 'BoardPage.syncFailed', defaultMessage: 'Board may be deleted or access revoked.'})}
+                    </div>
+                </div>
+            )
+        }
+
         return (
             <div className='BoardPage'>
                 <WorkspaceComponent
@@ -196,6 +213,7 @@ export default class BoardPage extends React.Component<Props, State> {
                     boardTree,
                     boardId,
                     viewId: boardTree.activeView!.id,
+                    syncFailed: false,
                 })
                 Utils.log(`sync complete: ${boardTree.board?.id} (${boardTree.board?.title})`)
             } else {
@@ -203,6 +221,7 @@ export default class BoardPage extends React.Component<Props, State> {
                 this.setState({
                     boardTree: undefined,
                     viewId: '',
+                    syncFailed: true,
                 })
                 Utils.log(`sync complete: board ${boardId} not found`)
             }
@@ -287,3 +306,5 @@ export default class BoardPage extends React.Component<Props, State> {
         this.setState({boardTree: newBoardTree})
     }
 }
+
+export default injectIntl(BoardPage)
