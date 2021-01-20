@@ -1,4 +1,4 @@
-.PHONY: prebuild clean cleanall server server-mac server-linux server-win server-linux-package generate watch-server webapp mac-app win-app linux-app
+.PHONY: prebuild clean cleanall ci server server-mac server-linux server-win server-linux-package generate watch-server webapp mac-app win-app linux-app
 
 PACKAGE_FOLDER = octo
 
@@ -24,6 +24,11 @@ prebuild:
 	go get github.com/lib/pq
 	go get github.com/mattn/go-sqlite3
 	cd webapp; npm install
+
+ci: server-test
+	cd webapp; npm run check
+	cd webapp; npm run test
+	cd webapp; npm run cypress:ci
 
 server:
 	$(eval LDFLAGS += -X "github.com/mattermost/mattermost-octo-tasks/server/model.Edition=dev")
