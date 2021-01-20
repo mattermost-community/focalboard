@@ -130,6 +130,7 @@ win-app: server-win webapp
 linux-app: server-linux webapp
 	rm -rf linux/temp
 	mkdir -p linux/dist
+	mkdir -p linux/temp/tasks-app
 	cp -R bin/linux/octoserver linux/temp/tasks-app/
 	cp -R app-config.json linux/temp/tasks-app/config.json
 	cp -R webapp/pack linux/temp/tasks-app/pack
