@@ -3,7 +3,6 @@
 	"port": 8088,
 	"dbtype": "sqlite3",
 	"dbconfig": "./octo.db",
-	"postgres_dbconfig": "dbname=octo sslmode=disable",
 	"useSSL": false,
 	"webpath": "./pack",
 	"filespath": "./files",

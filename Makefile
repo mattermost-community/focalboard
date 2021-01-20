@@ -108,6 +108,7 @@ mac-app: server-mac webapp
 	rm -rf mac/resources/pack
 	mkdir -p mac/resources/bin
 	cp bin/mac/octoserver mac/resources/bin/octoserver
+	cp -R app-config.json mac/resources/config.json
 	cp -R webapp/pack mac/resources/pack
 	mkdir -p mac/temp
 	xcodebuild archive -workspace mac/Tasks.xcworkspace -scheme Tasks -archivePath mac/temp/tasks.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO" CODE_SIGNING_ALLOWED="NO"
@@ -120,20 +121,18 @@ win-app: server-win webapp
 	cd win; make build
 	mkdir -p win/temp/bin
 	cp -R bin/win/octoserver.exe win/temp/bin
-	cp -R config.json win/temp
-	mkdir -p win/temp/webapp
-	cp -R webapp/pack win/temp/webapp/pack
+	cp -R app-config.json win/temp/config.json
+	cp -R webapp/pack win/temp/pack
 	mkdir -p win/dist
 	# cd win/temp; tar -acf ../dist/tasks-win.zip .
 	cd win/temp; powershell "Compress-Archive * ../dist/tasks-win.zip"
 
 linux-app: server-linux webapp
 	rm -rf linux/temp
-	mkdir -p linux/temp/tasks-app/webapp
 	mkdir -p linux/dist
 	cp -R bin/linux/octoserver linux/temp/tasks-app/
-	cp -R config.json linux/temp/tasks-app/
-	cp -R webapp/pack linux/temp/tasks-app/webapp/pack
+	cp -R app-config.json linux/temp/tasks-app/config.json
+	cp -R webapp/pack linux/temp/tasks-app/pack
 	cd linux; make build
 	cp -R linux/bin/tasks-app linux/temp/tasks-app/
 	cd linux/temp; tar -zcf ../dist/tasks-linux.tar.gz tasks-app
