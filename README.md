@@ -48,3 +48,11 @@ You can build standalone apps that package the server to run locally against SQL
     * *Requires: Windows 10*
 
 Cross-compilation currently isn't fully supported, so please build on the appropriate platform. Refer to the GitHub Actions workflows (build-mac.yml, build-win.yml, build-ubuntu.yml) for the detailed list of steps on each platform.
+
+## Unit tests
+
+Before checking-in commits, run: `make ci`, which is simlar to the ci.yml workflow and includes:
+* Server unit tests: `make server-test`
+* Webapp eslint: `cd webapp; npm run check`
+* Webapp unit tests: `cd webapp; npm run test`
+* Webapp UI tests: `cd webapp; npm run cypress:ci`
