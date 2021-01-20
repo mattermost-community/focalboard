@@ -11,8 +11,8 @@ import (
 )
 
 func runOctoTasks(ctx context.Context) *exec.Cmd {
-	// cmd := exec.CommandContext(ctx, "bin/octoserver.exe", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10))
-	cmd := exec.CommandContext(ctx, "bin/octoserver.exe", "--single-user")
+	// cmd := exec.CommandContext(ctx, "octoserver.exe", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10), "--single-user")
+	cmd := exec.CommandContext(ctx, "octoserver.exe", "--single-user")
 	// cmd := exec.CommandContext(ctx, "cmd.exe", "/C", "start", "./bin/octoserver.exe", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10))
 	// cmd := exec.CommandContext(ctx, "cmd.exe", "/C", "start", "./bin/octoserver.exe")
 
