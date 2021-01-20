@@ -36,7 +36,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	cmd := runOctoTasks(ctx)
 
-	ui, err := lorca.New("http://localhost:8000", "", 1024, 768)
+	ui, err := lorca.New("http://localhost:8088", "", 1024, 768)
 	if err != nil {
 		log.Fatal(err)
 	}

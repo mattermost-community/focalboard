@@ -29,7 +29,7 @@ func main() {
 
 	w.SetTitle("Octo Tasks")
 	w.SetSize(1024, 768, webview.HintNone)
-	w.Navigate("http://localhost:8000")
+	w.Navigate("http://localhost:8088")
 	w.Run()
 	cancel()
 }
