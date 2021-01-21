@@ -97,6 +97,10 @@ server {
 }
 ```
 
+## Set up TLS on NGINX (Highly recommended)
+
+For a production server, it's important to set up TLS to encrypt web traffic. Without this, your login passwords and data are unprotected. Refer to the [NGINX TLS guide](https://docs.nginx.com/nginx/admin-guide/security-controls/terminating-ssl-http/) and [Let's Encrypt guide](https://www.nginx.com/blog/using-free-ssltls-certificates-from-lets-encrypt-with-nginx/) on setting this up.
+
 ## Install Postgresql (Recommended)
 
 Matterdeck stores data in a SQLite database by default, but we recommend running against Postgres in production (we've tested against Postgres 10.15). To install, run:
