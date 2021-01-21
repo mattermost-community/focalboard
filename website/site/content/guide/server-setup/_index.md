@@ -10,3 +10,5 @@ weight: 1
 After installing the server, open a browser to the domain you used (or `http://localhost:8000` for local installs). You should be redirected to the login screen. Click the link to register a new user instead, and complete the registration.
 
 The first user registration will always be permitted, but **subsequent registrations will require an invite link which includes a code**. You can invite additional users by clicking on your username in the top left, then selecting "Invite users".
+
+You are now ready to use Matterdeck. Please refer to the [user's guide](../user/) for details.
