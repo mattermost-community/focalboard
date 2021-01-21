@@ -42,7 +42,7 @@ class RegistrationLinkComponent extends React.PureComponent<Props, State> {
 
         return (
             <Modal
-                position='top'
+                position='bottom-right'
                 onClose={this.props.onClose}
             >
                 <div className='RegistrationLinkComponent'>

@@ -284,79 +284,63 @@ class Sidebar extends React.Component<Props, State> {
                     </Menu>
                 </MenuWrapper>
 
-                <ModalWrapper>
-                    <MenuWrapper>
-                        <Button>
-                            <FormattedMessage
-                                id='Sidebar.settings'
-                                defaultMessage='Settings'
-                            />
-                        </Button>
-                        <Menu position='top'>
-                            <Menu.Text
-                                id='invite'
-                                name={intl.formatMessage({id: 'Sidebar.invite-users', defaultMessage: 'Invite Users'})}
-                                onClick={async () => {
-                                    this.setState({showRegistrationLinkDialog: true})
-                                }}
-                            />
-                            <Menu.Text
-                                id='import'
-                                name={intl.formatMessage({id: 'Sidebar.import-archive', defaultMessage: 'Import archive'})}
-                                onClick={async () => Archiver.importFullArchive()}
-                            />
-                            <Menu.Text
-                                id='export'
-                                name={intl.formatMessage({id: 'Sidebar.export-archive', defaultMessage: 'Export archive'})}
-                                onClick={async () => Archiver.exportFullArchive()}
-                            />
-                            <Menu.SubMenu
-                                id='lang'
-                                name={intl.formatMessage({id: 'Sidebar.set-language', defaultMessage: 'Set language'})}
-                                position='top'
-                            >
-                                <Menu.Text
-                                    id='english-lang'
-                                    name={intl.formatMessage({id: 'Sidebar.english', defaultMessage: 'English'})}
-                                    onClick={async () => this.props.setLanguage('en')}
-                                />
-                                <Menu.Text
-                                    id='spanish-lang'
-                                    name={intl.formatMessage({id: 'Sidebar.spanish', defaultMessage: 'Spanish'})}
-                                    onClick={async () => this.props.setLanguage('es')}
-                                />
-                            </Menu.SubMenu>
-                            <Menu.SubMenu
-                                id='theme'
-                                name={intl.formatMessage({id: 'Sidebar.set-theme', defaultMessage: 'Set theme'})}
-                                position='top'
-                            >
-                                <Menu.Text
-                                    id='default-theme'
-                                    name={intl.formatMessage({id: 'Sidebar.default-theme', defaultMessage: 'Default theme'})}
-                                    onClick={async () => setTheme(defaultTheme)}
-                                />
-                                <Menu.Text
-                                    id='dark-theme'
-                                    name={intl.formatMessage({id: 'Sidebar.dark-theme', defaultMessage: 'Dark theme'})}
-                                    onClick={async () => setTheme(darkTheme)}
-                                />
-                                <Menu.Text
-                                    id='light-theme'
-                                    name={intl.formatMessage({id: 'Sidebar.light-theme', defaultMessage: 'Light theme'})}
-                                    onClick={async () => setTheme(lightTheme)}
-                                />
-                            </Menu.SubMenu>
-                        </Menu>
-                    </MenuWrapper>
-                    {this.state.showRegistrationLinkDialog &&
-                        <RegistrationLinkComponent
-                            onClose={() => {
-                                this.setState({showRegistrationLinkDialog: false})
-                            }}
+                <MenuWrapper>
+                    <Button>
+                        <FormattedMessage
+                            id='Sidebar.settings'
+                            defaultMessage='Settings'
                         />
-                    }
-                </ModalWrapper>
+                    </Button>
+                    <Menu position='top'>
+                        <Menu.Text
+                            id='import'
+                            name={intl.formatMessage({id: 'Sidebar.import-archive', defaultMessage: 'Import archive'})}
+                            onClick={async () => Archiver.importFullArchive()}
+                        />
+                        <Menu.Text
+                            id='export'
+                            name={intl.formatMessage({id: 'Sidebar.export-archive', defaultMessage: 'Export archive'})}
+                            onClick={async () => Archiver.exportFullArchive()}
+                        />
+                        <Menu.SubMenu
+                            id='lang'
+                            name={intl.formatMessage({id: 'Sidebar.set-language', defaultMessage: 'Set language'})}
+                            position='top'
+                        >
+                            <Menu.Text
+                                id='english-lang'
+                                name={intl.formatMessage({id: 'Sidebar.english', defaultMessage: 'English'})}
+                                onClick={async () => this.props.setLanguage('en')}
+                            />
+                            <Menu.Text
+                                id='spanish-lang'
+                                name={intl.formatMessage({id: 'Sidebar.spanish', defaultMessage: 'Spanish'})}
+                                onClick={async () => this.props.setLanguage('es')}
+                            />
+                        </Menu.SubMenu>
+                        <Menu.SubMenu
+                            id='theme'
+                            name={intl.formatMessage({id: 'Sidebar.set-theme', defaultMessage: 'Set theme'})}
+                            position='top'
+                        >
+                            <Menu.Text
+                                id='default-theme'
+                                name={intl.formatMessage({id: 'Sidebar.default-theme', defaultMessage: 'Default theme'})}
+                                onClick={async () => setTheme(defaultTheme)}
+                            />
+                            <Menu.Text
+                                id='dark-theme'
+                                name={intl.formatMessage({id: 'Sidebar.dark-theme', defaultMessage: 'Dark theme'})}
+                                onClick={async () => setTheme(darkTheme)}
+                            />
+                            <Menu.Text
+                                id='light-theme'
+                                name={intl.formatMessage({id: 'Sidebar.light-theme', defaultMessage: 'Light theme'})}
+                                onClick={async () => setTheme(lightTheme)}
+                            />
+                        </Menu.SubMenu>
+                    </Menu>
+                </MenuWrapper>
             </div>
         )
     }
@@ -365,28 +349,45 @@ class Sidebar extends React.Component<Props, State> {
         const {intl} = this.props
 
         return (
-            <MenuWrapper>
-                <Button>
-                    {user.username}
-                </Button>
-                <Menu>
-                    <Menu.Text
-                        id='logout'
-                        name={intl.formatMessage({id: 'Sidebar.logout', defaultMessage: 'Log out'})}
-                        onClick={async () => {
-                            octoClient.logout()
-                            window.location.href = '/login'
+            <ModalWrapper>
+                <MenuWrapper>
+                    <Button>
+                        {user.username}
+                    </Button>
+                    <Menu>
+                        <Menu.Text
+                            id='logout'
+                            name={intl.formatMessage({id: 'Sidebar.logout', defaultMessage: 'Log out'})}
+                            onClick={async () => {
+                                octoClient.logout()
+                                window.location.href = '/login'
+                            }}
+                        />
+                        <Menu.Text
+                            id='changePassword'
+                            name={intl.formatMessage({id: 'Sidebar.changePassword', defaultMessage: 'Change password'})}
+                            onClick={async () => {
+                                window.location.href = '/change_password'
+                            }}
+                        />
+                        <Menu.Text
+                            id='invite'
+                            name={intl.formatMessage({id: 'Sidebar.invite-users', defaultMessage: 'Invite Users'})}
+                            onClick={async () => {
+                                this.setState({showRegistrationLinkDialog: true})
+                            }}
+                        />
+                    </Menu>
+                </MenuWrapper>
+
+                {this.state.showRegistrationLinkDialog &&
+                    <RegistrationLinkComponent
+                        onClose={() => {
+                            this.setState({showRegistrationLinkDialog: false})
                         }}
                     />
-                    <Menu.Text
-                        id='changePassword'
-                        name={intl.formatMessage({id: 'Sidebar.changePassword', defaultMessage: 'Change password'})}
-                        onClick={async () => {
-                            window.location.href = '/change_password'
-                        }}
-                    />
-                </Menu>
-            </MenuWrapper>
+                }
+            </ModalWrapper>
         )
     }
 

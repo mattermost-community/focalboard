@@ -10,7 +10,7 @@ import './modal.scss'
 type Props = {
     onClose: () => void
     intl: IntlShape
-    position?: 'top'|'bottom'
+    position?: 'top'|'bottom'|'bottom-right'
 }
 
 class Modal extends React.PureComponent<Props> {
