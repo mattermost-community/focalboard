@@ -178,3 +178,7 @@ curl localhost
 The first command checks that the server is running on port 8000 (default), and the second checks that NGINX is proxying requests successfully. Both commands should return the same snippet of html.
 
 To access the server remotely, open a browser to its IP address or domain.
+
+## Set up the server
+
+Refer to the [server setup guide](/guide/server-setup/) to complete server setup.
