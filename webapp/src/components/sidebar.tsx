@@ -9,7 +9,7 @@ import {BoardView, MutableBoardView} from '../blocks/boardView'
 import mutator from '../mutator'
 import octoClient from '../octoClient'
 import {darkTheme, defaultTheme, lightTheme, setTheme} from '../theme'
-import {UserContext} from '../user'
+import {IUser, UserContext} from '../user'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
 import Button from '../widgets/buttons/button'
 import IconButton from '../widgets/buttons/iconButton'
@@ -87,35 +87,21 @@ class Sidebar extends React.Component<Props, State> {
         return (
             <div className='Sidebar octo-sidebar'>
                 <div className='octo-sidebar-header'>
-                    <UserContext.Consumer>
-                        {(user) => (
-                            <div className='username'>
-                                <MenuWrapper>
-                                    <Button>
-                                        {user?.username}
-                                    </Button>
-                                    <Menu>
-                                        <Menu.Text
-                                            id='logout'
-                                            name={intl.formatMessage({id: 'Sidebar.logout', defaultMessage: 'Log out'})}
-                                            onClick={async () => {
-                                                octoClient.logout()
-                                                window.location.href = '/login'
-                                            }}
-                                        />
-                                        <Menu.Text
-                                            id='changePassword'
-                                            name={intl.formatMessage({id: 'Sidebar.changePassword', defaultMessage: 'Change password'})}
-                                            onClick={async () => {
-                                                window.location.href = '/change_password'
-                                            }}
-                                        />
-                                    </Menu>
-                                </MenuWrapper>
-
-                            </div>
-                        )}
-                    </UserContext.Consumer>
+                    <div className='heading'>
+                        <UserContext.Consumer>
+                            {(user) => {
+                                if (user) {
+                                    if (user.id === 'single-user') {
+                                        return (
+                                            <div>{intl.formatMessage({id: 'Sidebar.title', defaultMessage: 'Boards'})}</div>
+                                        )
+                                    }
+                                    return this.renderUserMenu(user)
+                                }
+                                return <div/>
+                            }}
+                        </UserContext.Consumer>
+                    </div>
 
                     <div className='octo-spacer'/>
                     <IconButton
@@ -372,6 +358,35 @@ class Sidebar extends React.Component<Props, State> {
                     }
                 </ModalWrapper>
             </div>
+        )
+    }
+
+    private renderUserMenu(user: IUser): JSX.Element {
+        const {intl} = this.props
+
+        return (
+            <MenuWrapper>
+                <Button>
+                    {user.username}
+                </Button>
+                <Menu>
+                    <Menu.Text
+                        id='logout'
+                        name={intl.formatMessage({id: 'Sidebar.logout', defaultMessage: 'Log out'})}
+                        onClick={async () => {
+                            octoClient.logout()
+                            window.location.href = '/login'
+                        }}
+                    />
+                    <Menu.Text
+                        id='changePassword'
+                        name={intl.formatMessage({id: 'Sidebar.changePassword', defaultMessage: 'Change password'})}
+                        onClick={async () => {
+                            window.location.href = '/change_password'
+                        }}
+                    />
+                </Menu>
+            </MenuWrapper>
         )
     }
 
