@@ -103,6 +103,13 @@ class Sidebar extends React.Component<Props, State> {
                                                 window.location.href = '/login'
                                             }}
                                         />
+                                        <Menu.Text
+                                            id='changePassword'
+                                            name={intl.formatMessage({id: 'Sidebar.changePassword', defaultMessage: 'Change password'})}
+                                            onClick={async () => {
+                                                window.location.href = '/change_password'
+                                            }}
+                                        />
                                     </Menu>
                                 </MenuWrapper>
 

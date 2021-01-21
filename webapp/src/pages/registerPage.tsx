@@ -44,7 +44,7 @@ class RegisterPage extends React.PureComponent<Props, State> {
         } else if (response.code === 401) {
             this.setState({errorMessage: 'Invalid registration link, please contact your administrator'})
         } else {
-            this.setState({errorMessage: response.json.error})
+            this.setState({errorMessage: response.json?.error})
         }
     }
 

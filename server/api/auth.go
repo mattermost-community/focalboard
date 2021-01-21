@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/mattermost/mattermost-octo-tasks/server/model"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/auth"
 )
@@ -39,8 +40,37 @@ func (rd *RegisterData) IsValid() error {
 	if !strings.Contains(rd.Email, "@") {
 		return errors.New("Invalid email format")
 	}
-	if !strings.Contains(rd.Password, "") {
+	if rd.Password == "" {
 		return errors.New("Password is required")
+	}
+	if err := isValidPassword(rd.Password); err != nil {
+		return err
+	}
+	return nil
+}
+
+type ChangePasswordData struct {
+	OldPassword string `json:"oldPassword"`
+	NewPassword string `json:"newPassword"`
+}
+
+func (rd *ChangePasswordData) IsValid() error {
+	if rd.OldPassword == "" {
+		return errors.New("Old password is required")
+	}
+	if rd.NewPassword == "" {
+		return errors.New("New password is required")
+	}
+	if err := isValidPassword(rd.NewPassword); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func isValidPassword(password string) error {
+	if len(password) < 8 {
+		return errors.New("Password must be at least 8 characters")
 	}
 	return nil
 }
@@ -124,6 +154,35 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 
 	err = a.app().RegisterUser(registerData.Username, registerData.Email, registerData.Password)
 	if err != nil {
+		errorResponse(w, http.StatusInternalServerError, map[string]string{"error": err.Error()}, err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, nil)
+}
+
+func (a *API) handleChangePassword(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userID := vars["userID"]
+
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		errorResponse(w, http.StatusInternalServerError, nil, err)
+		return
+	}
+
+	var requestData ChangePasswordData
+	if err := json.Unmarshal(requestBody, &requestData); err != nil {
+		errorResponse(w, http.StatusInternalServerError, nil, err)
+		return
+	}
+
+	if err = requestData.IsValid(); err != nil {
+		errorResponse(w, http.StatusInternalServerError, map[string]string{"error": err.Error()}, err)
+		return
+	}
+
+	if err = a.app().ChangePassword(userID, requestData.OldPassword, requestData.NewPassword); err != nil {
 		errorResponse(w, http.StatusInternalServerError, map[string]string{"error": err.Error()}, err)
 		return
 	}

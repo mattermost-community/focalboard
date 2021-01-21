@@ -68,7 +68,7 @@ func (a *App) Login(username string, email string, password string, mfaToken str
 	}
 
 	if !auth.ComparePassword(user.Password, password) {
-		log.Printf("Not valid passowrd. %s (%s)\n", password, user.Password)
+		log.Printf("Invalid password for userID: %s\n", user.ID)
 		return "", errors.New("invalid username or password")
 	}
 
@@ -128,6 +128,33 @@ func (a *App) RegisterUser(username string, email string, password string) error
 	})
 	if err != nil {
 		return errors.Wrap(err, "Unable to create the new user")
+	}
+
+	return nil
+}
+
+func (a *App) ChangePassword(userID string, oldPassword string, newPassword string) error {
+	var user *model.User
+	if userID != "" {
+		var err error
+		user, err = a.store.GetUserById(userID)
+		if err != nil {
+			return errors.Wrap(err, "invalid username or password")
+		}
+	}
+
+	if user == nil {
+		return errors.New("invalid username or password")
+	}
+
+	if !auth.ComparePassword(user.Password, oldPassword) {
+		log.Printf("Invalid password for userID: %s\n", user.ID)
+		return errors.New("invalid username or password")
+	}
+
+	err := a.store.UpdateUserPasswordByID(userID, auth.HashPassword(newPassword))
+	if err != nil {
+		return errors.Wrap(err, "unable to update password")
 	}
 
 	return nil
