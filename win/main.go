@@ -34,13 +34,13 @@ func main() {
 	// log.Printf("PID: %s", strconv.FormatInt(int64(os.Getpid()), 10))
 	hideConsole()
 
+	if len(lorca.ChromeExecutable) == 0 {
+		lorca.PromptDownload()
+		log.Fatal("Chrome not installed")
+	}
+
 	ctx, cancel := context.WithCancel(context.Background())
 	cmd := runOctoTasks(ctx)
-
-	chromePath := locateChrome()
-	if len(chromePath) > 0 {
-		os.Setenv("LORCACHROME", chromePath)
-	}
 
 	ui, err := lorca.New("http://localhost:8088", "", 1024, 768)
 	if err != nil {
@@ -118,3 +118,14 @@ func locateChrome() string {
 
 	return ""
 }
+
+// set LORCACHROME for Lorca to pick up at init time
+func setLorcaChromeLocation() {
+	chromePath := locateChrome()
+	log.Printf("chromePath: %s", chromePath)
+	if len(chromePath) > 0 {
+		os.Setenv("LORCACHROME", chromePath)
+	}
+}
+
+setLorcaChromeLocation()
