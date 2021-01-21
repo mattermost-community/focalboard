@@ -1,6 +1,6 @@
-# Matternote website
+# Matterdeck website
 
-Website for Matternote, built using [Hugo](https://gohugo.io/).
+Website for Matterdeck, built using [Hugo](https://gohugo.io/).
 
 ## How to build
 

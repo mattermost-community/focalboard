@@ -3,7 +3,7 @@ baseURL = "https://tasks.octo.mattermost.com/"
 canonifyURLs = true
 #relativeURLs = true
 
-title = "Matternote"
+title = "Matterdeck"
 languageCode = "en-us"
 publishDir = "../docs"
 pygmentsCodeFences = true
@@ -48,7 +48,7 @@ pygmentsStyle = "manni"
 
   # Navigation
   [params.navigation]
-    brand = "Matternote"
+    brand = "Matterdeck"
     home = "Home"
 
     # You can add custom links before or after the default links
@@ -92,7 +92,7 @@ pygmentsStyle = "manni"
 
   # Hero section
   [params.hero]
-    title = "Get Matternote"
+    title = "Get Matterdeck"
     subtitle = ''
 
   # Intro section
@@ -100,7 +100,7 @@ pygmentsStyle = "manni"
   [params.intro]
   [[params.intro.item]]
     title = "Download"
-    description = "Download Matternote here."
+    description = "Download Matterdeck here."
     url = "download/personal-edition"
     button = "Download Now"
     icon = "/img/download-icon.svg"
@@ -108,7 +108,7 @@ pygmentsStyle = "manni"
 
   [[params.intro.item]]
     title = "Read Guide"
-    description = "Read the User's Guide to ge the most out of Matternote."
+    description = "Read the User's Guide to ge the most out of Matterdeck."
     url = "guide/user"
     button = "User's Guide"
     icon = "/img/use-icon.svg"
@@ -116,7 +116,7 @@ pygmentsStyle = "manni"
 
   [[params.intro.item]]
     title = "Contribute"
-    description = "Help build the future of productivity and submit code directly to the Matternote open-source project."
+    description = "Help build the future of productivity and submit code directly to the Matterdeck open-source project."
     url = "contribute/getting-started"
     button = "Start Contributing"
     icon = "/img/contribute-icon.svg"

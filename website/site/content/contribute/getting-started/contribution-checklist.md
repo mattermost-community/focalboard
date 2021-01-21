@@ -7,7 +7,7 @@ subsection: Getting Started
 
 Thanks for your interest in contributing code!
 
-<!-- Come join our [Contributors community channel](https://community.mattermost.com/core/channels/tickets) on the community server, where you can discuss questions with community members and the Matternote core team. -->
+<!-- Come join our [Contributors community channel](https://community.mattermost.com/core/channels/tickets) on the community server, where you can discuss questions with community members and the Matterdeck core team. -->
 
 <!-- To help with translations, [see the localization process](https://docs.mattermost.com/developer/localization.html). -->
 
