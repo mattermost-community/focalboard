@@ -34,9 +34,16 @@ func main() {
 	// log.Printf("PID: %s", strconv.FormatInt(int64(os.Getpid()), 10))
 	hideConsole()
 
+	// Try to find Chrome if Lorca can't find it
 	if len(lorca.ChromeExecutable) == 0 {
-		lorca.PromptDownload()
-		log.Fatal("Chrome not installed")
+		chromePath := locateChrome()
+		log.Printf("chromePath: %s", chromePath)
+		if len(chromePath) > 0 {
+			lorca.ChromeExecutable = chromePath
+		} else {
+			lorca.PromptDownload()
+			log.Fatal("Chrome not installed")
+		}
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -70,13 +77,6 @@ func hideConsole() {
 
 // This duplicates the logic in Lorca, but adds Edge as an option for Windows, fallback to standard logic for other OSes
 func locateChrome() string {
-	// If env variable "LORCACHROME" specified and it exists
-	if path, ok := os.LookupEnv("LORCACHROME"); ok {
-		if _, err := os.Stat(path); err == nil {
-			return path
-		}
-	}
-
 	var paths []string
 	switch runtime.GOOS {
 	// case "darwin":
@@ -118,14 +118,3 @@ func locateChrome() string {
 
 	return ""
 }
-
-// set LORCACHROME for Lorca to pick up at init time
-func setLorcaChromeLocation() {
-	chromePath := locateChrome()
-	log.Printf("chromePath: %s", chromePath)
-	if len(chromePath) > 0 {
-		os.Setenv("LORCACHROME", chromePath)
-	}
-}
-
-setLorcaChromeLocation()
