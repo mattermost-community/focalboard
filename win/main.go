@@ -35,11 +35,11 @@ func main() {
 	hideConsole()
 
 	// Try to find Chrome if Lorca can't find it
-	if len(lorca.ChromeExecutable) == 0 {
+	if len(lorca.ChromeExecutable()) == 0 {
 		chromePath := locateChrome()
 		log.Printf("chromePath: %s", chromePath)
 		if len(chromePath) > 0 {
-			lorca.ChromeExecutable = chromePath
+			os.Setenv("LORCACHROME", chromePath)
 		} else {
 			lorca.PromptDownload()
 			log.Fatal("Chrome not installed")
