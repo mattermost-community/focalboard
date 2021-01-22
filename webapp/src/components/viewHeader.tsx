@@ -3,7 +3,6 @@
 import React from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
-import {Archiver} from '../archiver'
 import {BlockIcons} from '../blockIcons'
 import {IPropertyTemplate} from '../blocks/board'
 import {ISortOption, MutableBoardView} from '../blocks/boardView'
