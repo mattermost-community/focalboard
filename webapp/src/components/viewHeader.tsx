@@ -299,11 +299,11 @@ class ViewHeader extends React.Component<Props, State> {
                                     name={intl.formatMessage({id: 'ViewHeader.export-csv', defaultMessage: 'Export to CSV'})}
                                     onClick={() => CsvExporter.exportTableCsv(boardTree)}
                                 />
-                                <Menu.Text
+                                {/* <Menu.Text
                                     id='exportBoardArchive'
                                     name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
                                     onClick={() => Archiver.exportBoardTree(boardTree)}
-                                />
+                                /> */}
                                 <Menu.Text
                                     id='shareBoard'
                                     name={intl.formatMessage({id: 'ViewHeader.share-board', defaultMessage: 'Share board'})}
