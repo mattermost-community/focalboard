@@ -137,7 +137,7 @@ class ViewHeader extends React.Component<Props, State> {
                         <Button>
                             <FormattedMessage
                                 id='ViewHeader.group-by'
-                                defaultMessage='Group by {property}'
+                                defaultMessage='Group by: {property}'
                                 values={{
                                     property: (
                                         <span

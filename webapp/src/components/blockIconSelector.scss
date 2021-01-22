@@ -8,7 +8,7 @@
         align-items: center;
         justify-content: center;
         &:not(.readonly):hover {
-            background-color: rgba(var(--main-fg), 0.1);
+            background-color: rgba(var(--body-color), 0.1);
         }
         &.size-s {
             height: 24px;

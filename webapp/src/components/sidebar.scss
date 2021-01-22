@@ -1,13 +1,13 @@
 .Sidebar {
-    flex: 0 0 230px;
+    flex: 0 0 240px;
 
-	display: flex;
-	flex-direction: column;
+    display: flex;
+    flex-direction: column;
 
-	min-height: 100%;
-	color: rgb(var(--sidebar-fg));
-	background-color: rgb(var(--sidebar-bg));
-    padding-top: 10px;
+    min-height: 100%;
+    color: rgb(var(--sidebar-fg));
+    background-color: rgb(var(--sidebar-bg));
+    padding: 12px 0;
 
     &.hidden {
         position: absolute;
@@ -19,7 +19,8 @@
         width: 50px;
         background: none;
         padding: 0;
-        > div {
+
+        >div {
             padding: 0;
             margin: auto;
         }
@@ -34,6 +35,10 @@
         flex: 1 1 auto;
         overflow-y: auto;
         max-width: 250px;
+
+        >div {
+            margin-bottom: 16px;
+        }
     }
 
     .octo-sidebar-header {
@@ -42,7 +47,14 @@
 
         font-weight: 600;
         padding: 3px 20px;
-        margin-bottom: 5px;
+        margin-bottom: 16px;
+        height: 48px;
+        align-items: center;
+
+        button {
+            font-size: 16px;
+            font-weight: 600;
+        }
 
         >.heading {
             line-height: 30px;
@@ -51,6 +63,7 @@
 
         >.IconButton {
             background-color: var(--sidebar-bg);
+
             &:hover {
                 background-color: rgba(var(--sidebar-fg), 0.1);
             }
@@ -60,13 +73,16 @@
             .hamburger-icon {
                 display: block;
             }
+
             .show-icon {
                 display: none;
             }
+
             &:hover {
                 .hamburger-icon {
                     display: none;
                 }
+
                 .show-icon {
                     display: block;
                 }
@@ -77,19 +93,24 @@
     .octo-sidebar-item {
         display: flex;
         flex-direction: row;
-
         font-weight: 500;
-        padding: 3px 20px;
+        padding: 0 16px 0 8px;
+        height: 36px;
+        align-items: center;
+
         &:hover {
-            background-color: rgba(var(--sidebar-fg), 0.05);
+            background-color: rgba(var(--sidebar-fg), 0.08);
         }
+
         &.subitem {
-            color: rgba(var(--sidebar-fg), 0.6);
+            padding-left: 20px;
+            color: rgba(var(--sidebar-fg), 0.64);
             font-weight: 400;
-            margin-left: 20px;
         }
+
         &.no-views {
             color: rgba(var(--sidebar-fg), 0.4);
+
             &:hover {
                 background-color: rgba(var(--sidebar-bg));
             }
@@ -97,15 +118,19 @@
 
         >.IconButton {
             background-color: var(--sidebar-bg);
+
             &:hover {
                 background-color: rgba(var(--sidebar-fg), 0.1);
             }
         }
+
         .MenuWrapper {
             display: none;
         }
+
         &:hover {
             display: flex;
+
             .MenuWrapper {
                 display: block;
             }
@@ -116,6 +141,7 @@
                 transform: rotate(90deg);
             }
         }
+
         .DisclosureTriangleIcon {
             transition: 200ms ease-in-out;
             transform: rotate(0deg);
@@ -123,6 +149,7 @@
     }
 
     .octo-sidebar-title {
+        font-weight: 600;
         cursor: pointer;
         flex-grow: 1;
         white-space: nowrap;
@@ -130,7 +157,9 @@
         text-overflow: ellipsis;
     }
 
-    .OptionsIcon, .DisclosureTriangleIcon, .DotIcon {
+    .OptionsIcon,
+    .DisclosureTriangleIcon,
+    .DotIcon {
         fill: rgba(var(--sidebar-fg), 0.5);
         flex-shrink: 0;
     }

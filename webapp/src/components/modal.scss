@@ -1,12 +1,12 @@
 .Modal {
     position: absolute;
     top: 25px;
-    left: -230px;
+    left: -240px;
     z-index: 10;
 	background-color: rgb(var(--main-bg));
 	padding: 10px;
     border-radius: 3px;
-    box-shadow: rgba(var(--main-fg), 0.05) 0px 0px 0px 1px, rgba(var(--main-fg), 0.1) 0px 3px 6px, rgba(var(--main-fg), 0.2) 0px 9px 24px;
+    box-shadow: var(--elevation-4);
 
     @media screen and (max-width: 430px) {
         position: fixed;

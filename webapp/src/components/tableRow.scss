@@ -1,11 +1,18 @@
 .TableRow {
     .open-button {
         display: none;
+
         .Button {
-            background-color: rgba(var(--main-fg), 0.1);
-            box-shadow: rgba(var(--main-fg), 0.1) 0px 0px 0px 1px, rgba(var(--main-fg), 0.1) 0px 2px 4px;
+            padding: 2px 4px;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: rgba(var(--body-color), .64);
+            background-color: rgba(var(--body-color), 0.1);
+            box-shadow: rgba(var(--body-color), 0.1) 0px 0px 0px 1px, rgba(var(--body-color), 0.1) 0px 2px 4px;
         }
     }
+
     &:hover {
         .open-button {
             display: block;
