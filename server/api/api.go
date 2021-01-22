@@ -61,7 +61,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
-	r.HandleFunc("/api/v1/admin/users/{username}/password", a.handleAdminSetPassword).Methods("POST")
+	r.HandleFunc("/api/v1/admin/users/{username}/password", a.adminRequired(a.handleAdminSetPassword)).Methods("POST")
 }
 
 func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {

@@ -6,11 +6,13 @@ import (
 	"errors"
 	"io/ioutil"
 	"log"
+	"net"
 	"net/http"
 	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
+	serverContext "github.com/mattermost/mattermost-octo-tasks/server/context"
 	"github.com/mattermost/mattermost-octo-tasks/server/model"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/auth"
 )
@@ -224,5 +226,19 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 		}
 		ctx := context.WithValue(r.Context(), "session", session)
 		handler(w, r.WithContext(ctx))
+	}
+}
+
+func (a *API) adminRequired(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Currently, admin APIs require local unix connections
+		conn := serverContext.GetContextConn(r)
+		if _, isUnix := conn.(*net.UnixConn); !isUnix {
+			errorResponse(w, http.StatusUnauthorized, nil, nil)
+			return
+		}
+
+		handler(w, r)
+		return
 	}
 }

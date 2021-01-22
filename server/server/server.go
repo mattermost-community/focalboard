@@ -17,6 +17,7 @@ import (
 
 	"github.com/mattermost/mattermost-octo-tasks/server/api"
 	"github.com/mattermost/mattermost-octo-tasks/server/app"
+	"github.com/mattermost/mattermost-octo-tasks/server/context"
 	appModel "github.com/mattermost/mattermost-octo-tasks/server/model"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/config"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/scheduler"
@@ -200,7 +201,8 @@ func (s *Server) Config() *config.Configuration {
 
 func (s *Server) startLocalModeServer() error {
 	s.localModeServer = &http.Server{
-		Handler: s.localRouter,
+		Handler:     s.localRouter,
+		ConnContext: context.SetContextConn,
 	}
 
 	// TODO: Close and delete socket file on shutdown
