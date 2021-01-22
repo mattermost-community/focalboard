@@ -441,6 +441,20 @@ func (mr *MockStoreMockRecorder) UpdateUserPassword(arg0, arg1 interface{}) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateUserPassword", reflect.TypeOf((*MockStore)(nil).UpdateUserPassword), arg0, arg1)
 }
 
+// UpdateUserPasswordByID mocks base method
+func (m *MockStore) UpdateUserPasswordByID(arg0, arg1 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateUserPasswordByID", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateUserPasswordByID indicates an expected call of UpdateUserPasswordByID
+func (mr *MockStoreMockRecorder) UpdateUserPasswordByID(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateUserPasswordByID", reflect.TypeOf((*MockStore)(nil).UpdateUserPasswordByID), arg0, arg1)
+}
+
 // UpsertSharing mocks base method
 func (m *MockStore) UpsertSharing(arg0 model.Sharing) error {
 	m.ctrl.T.Helper()

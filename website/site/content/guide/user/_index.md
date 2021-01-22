@@ -7,7 +7,7 @@ weight: 2
 
 ## Adding new Boards
 
-1. Click "+ Add Board" at the lower left of the sidebar to add a new board to Matternote.
+1. Click "+ Add Board" at the lower left of the sidebar to add a new board to Matterdeck.
 2. Pick "Project Tasks" from the list of templates.
 3. This shows the first view of the new board, which is a table of all tasks
 ![image](./all%20tasks.png)

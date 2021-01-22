@@ -3,6 +3,8 @@
     flex-direction: column;
     padding: 5px;
     color: rgb(var(--main-fg));
+    font-weight: normal;
+    line-height: normal;
 
     > .row {
         display: flex;

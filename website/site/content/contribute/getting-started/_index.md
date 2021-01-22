@@ -5,7 +5,7 @@ section: "contribute"
 weight: 1
 ---
 
-Welcome to the Matternote project!
+Welcome to the Matterdeck project!
 
 We're very glad you want to check it out and perhaps contribute code our repository in GitHub.
 

@@ -106,3 +106,15 @@ func (s *SQLStore) UpdateUserPassword(username string, password string) error {
 	_, err := query.Exec()
 	return err
 }
+
+func (s *SQLStore) UpdateUserPasswordByID(userID string, password string) error {
+	now := time.Now().Unix()
+
+	query := s.getQueryBuilder().Update("users").
+		Set("password", password).
+		Set("update_at", now).
+		Where(sq.Eq{"id": userID})
+
+	_, err := query.Exec()
+	return err
+}

@@ -36,6 +36,10 @@ class CsvExporter {
         // TODO: Remove or reuse link
     }
 
+    private static encodeText(text: string): string {
+        return text.replace(/"/g, '""')
+    }
+
     private static generateTableArray(boardTree: BoardTree, viewToExport: BoardView): string[][] {
         const {board, cards} = boardTree
 
@@ -44,7 +48,7 @@ class CsvExporter {
 
         {
             // Header row
-            const row: string[] = []
+            const row: string[] = ['Title']
             visibleProperties.forEach((template) => {
                 row.push(template.name)
             })
@@ -53,6 +57,7 @@ class CsvExporter {
 
         cards.forEach((card) => {
             const row: string[] = []
+            row.push(`"${this.encodeText(card.title)}"`)
             visibleProperties.forEach((template) => {
                 const propertyValue = card.properties[template.id]
                 const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, template) || ''
@@ -61,7 +66,7 @@ class CsvExporter {
                     row.push(numericValue)
                 } else {
                     // Export as string
-                    row.push(`"${displayValue}"`)
+                    row.push(`"${this.encodeText(displayValue)}"`)
                 }
             })
             rows.push(row)

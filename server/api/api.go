@@ -42,6 +42,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	r.HandleFunc("/api/v1/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
 	r.HandleFunc("/api/v1/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
+	r.HandleFunc("/api/v1/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
 
 	r.HandleFunc("/api/v1/login", a.handleLogin).Methods("POST")
 	r.HandleFunc("/api/v1/register", a.handleRegister).Methods("POST")

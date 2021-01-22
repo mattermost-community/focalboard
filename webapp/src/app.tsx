@@ -2,24 +2,21 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 import {IntlProvider} from 'react-intl'
-
 import {
     BrowserRouter as Router,
-    Switch,
-    Route,
     Redirect,
+    Route,
+    Switch,
 } from 'react-router-dom'
 
-import client from './octoClient'
-import {IUser, UserContext} from './user'
-
-import {getCurrentLanguage, getMessages, storeLanguage} from './i18n'
-
 import {FlashMessages} from './components/flashMessages'
-
+import {getCurrentLanguage, getMessages, storeLanguage} from './i18n'
+import client from './octoClient'
+import BoardPage from './pages/boardPage'
+import ChangePasswordPage from './pages/changePasswordPage'
 import LoginPage from './pages/loginPage'
 import RegisterPage from './pages/registerPage'
-import BoardPage from './pages/boardPage'
+import {IUser, UserContext} from './user'
 
 type State = {
     language: string,
@@ -64,6 +61,9 @@ export default class App extends React.PureComponent<unknown, State> {
                                     </Route>
                                     <Route path='/register'>
                                         <RegisterPage/>
+                                    </Route>
+                                    <Route path='/change_password'>
+                                        <ChangePasswordPage/>
                                     </Route>
                                     <Route path='/shared'>
                                         <BoardPage

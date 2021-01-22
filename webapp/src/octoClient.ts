@@ -70,6 +70,18 @@ class OctoClient {
         return {code: response.status, json}
     }
 
+    async changePassword(userId: string, oldPassword: string, newPassword: string): Promise<{code: number, json: any}> {
+        const path = `/api/v1/users/${encodeURIComponent(userId)}/changepassword`
+        const body = JSON.stringify({oldPassword, newPassword})
+        const response = await fetch(this.serverUrl + path, {
+            method: 'POST',
+            headers: this.headers(),
+            body,
+        })
+        const json = (await this.getJson(response))
+        return {code: response.status, json}
+    }
+
     private headers() {
         return {
             Accept: 'application/json',

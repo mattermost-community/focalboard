@@ -5,7 +5,7 @@ subsection: Personal Edition
 weight: 2
 ---
 
-Matternote Personal Server allows your team to work together on shared project boards.
+Matterdeck Personal Server allows your team to work together on shared project boards.
 
 Follow these steps it up on an Ubuntu server.
 
@@ -15,7 +15,7 @@ Popular hosted options include:
 * [Digital Ocean](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-18-04)
 * [Amazon EC2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html)
 
-## Install Matternote
+## Install Matterdeck
 
 [Download the Ubuntu archive package here](/download), then unpack it to /opt/octo:
 
@@ -26,7 +26,7 @@ sudo mv octo /opt
 
 ## Install NGINX
 
-By default, the Matternote server runs on port 8000 (specified in config.json). We recommend running NGINX as a web proxy to forward http and websocket requests from port 80 to it. To install NGINX, run:
+By default, the Matterdeck server runs on port 8000 (specified in config.json). We recommend running NGINX as a web proxy to forward http and websocket requests from port 80 to it. To install NGINX, run:
 
 ```
 sudo apt update
@@ -97,9 +97,13 @@ server {
 }
 ```
 
+## Set up TLS on NGINX (Highly recommended)
+
+For a production server, it's important to set up TLS to encrypt web traffic. Without this, your login passwords and data are unprotected. Refer to the [NGINX TLS guide](https://docs.nginx.com/nginx/admin-guide/security-controls/terminating-ssl-http/) and [Let's Encrypt guide](https://www.nginx.com/blog/using-free-ssltls-certificates-from-lets-encrypt-with-nginx/) on setting this up.
+
 ## Install Postgresql (Recommended)
 
-Matternote stores data in a SQLite database by default, but we recommend running against Postgres in production (we've tested against Postgres 10.15). To install, run:
+Matterdeck stores data in a SQLite database by default, but we recommend running against Postgres in production (we've tested against Postgres 10.15). To install, run:
 
 ```
 sudo apt install postgresql postgresql-contrib
@@ -123,7 +127,7 @@ Exit the postgres user session:
 exit
 ```
 
-Edit the Matternote config.json:
+Edit the Matterdeck config.json:
 
 ```
 nano /opt/octo/config.json
@@ -134,7 +138,7 @@ Change the dbconfig setting to use the postgres database you created:
 "dbconfig": "postgres://tasksuser:tasksuser-password@localhost/octo?sslmode=disable&connect_timeout=10",
 ```
 
-## Configure Matternote to run as a service
+## Configure Matterdeck to run as a service
 
 This will keep the server running across reboots. First, create a new service config file:
 
@@ -145,7 +149,7 @@ sudo nano /lib/systemd/system/octo.service
 Paste in the following:
 ```
 [Unit]
-Description=Tasks server
+Description=Matterdeck server
 
 [Service]
 Type=simple
@@ -167,7 +171,7 @@ sudo systemctl enable octo.service
 
 ## Test the server
 
-At this point, the Matternote server should be running.
+At this point, the Matterdeck server should be running.
 
 Test that it's running locally with:
 ```
@@ -178,3 +182,7 @@ curl localhost
 The first command checks that the server is running on port 8000 (default), and the second checks that NGINX is proxying requests successfully. Both commands should return the same snippet of html.
 
 To access the server remotely, open a browser to its IP address or domain.
+
+## Set up the server
+
+Refer to the [server setup guide](/guide/server-setup/) to complete server setup.
