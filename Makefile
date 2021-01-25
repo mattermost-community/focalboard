@@ -54,6 +54,7 @@ server-linux-package: server-linux webapp
 	cp bin/linux/octoserver package/${PACKAGE_FOLDER}/bin
 	cp -R webapp/pack package/${PACKAGE_FOLDER}/pack
 	cp config.json package/${PACKAGE_FOLDER}
+	cp build/MIT-COMPILED-LICENSE.md package/${PACKAGE_FOLDER}
 	mkdir -p dist
 	cd package && tar -czvf ../dist/octo-linux-amd64.tar.gz ${PACKAGE_FOLDER}
 	rm -rf package
@@ -104,24 +105,30 @@ webapp:
 	cd webapp; npm run pack
 
 mac-app: server-mac webapp
+	rm -rf mac/temp
+	rm -rf mac/dist
 	rm -rf mac/resources/bin
 	rm -rf mac/resources/pack
 	mkdir -p mac/resources/bin
 	cp bin/mac/octoserver mac/resources/bin/octoserver
-	cp -R app-config.json mac/resources/config.json
+	cp app-config.json mac/resources/config.json
 	cp -R webapp/pack mac/resources/pack
 	mkdir -p mac/temp
 	xcodebuild archive -workspace mac/Tasks.xcworkspace -scheme Tasks -archivePath mac/temp/tasks.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO" CODE_SIGNING_ALLOWED="NO"
 	mkdir -p mac/dist
 	cp -R mac/temp/tasks.xcarchive/Products/Applications/Tasks.app mac/dist/
 	# xcodebuild -exportArchive -archivePath mac/temp/tasks.xcarchive -exportPath mac/dist -exportOptionsPlist mac/export.plist
-	cd mac/dist; zip -r tasks-mac.zip Tasks.app
+	cp build/MIT-COMPILED-LICENSE.md mac/dist
+	cd mac/dist; zip -r tasks-mac.zip Tasks.app MIT-COMPILED-LICENSE.md
 
 win-app: server-win webapp
+	rm -rf win/temp
+	rm -rf win/dist
 	cd win; make build
 	mkdir -p win/temp
-	cp -R bin/win/octoserver.exe win/temp
-	cp -R app-config.json win/temp/config.json
+	cp bin/win/octoserver.exe win/temp
+	cp app-config.json win/temp/config.json
+	cp build/MIT-COMPILED-LICENSE.md win/temp
 	cp -R webapp/pack win/temp/pack
 	mkdir -p win/dist
 	# cd win/temp; tar -acf ../dist/tasks-win.zip .
@@ -129,10 +136,12 @@ win-app: server-win webapp
 
 linux-app: server-linux webapp
 	rm -rf linux/temp
+	rm -rf linux/dist
 	mkdir -p linux/dist
 	mkdir -p linux/temp/tasks-app
-	cp -R bin/linux/octoserver linux/temp/tasks-app/
-	cp -R app-config.json linux/temp/tasks-app/config.json
+	cp bin/linux/octoserver linux/temp/tasks-app/
+	cp app-config.json linux/temp/tasks-app/config.json
+	cp build/MIT-COMPILED-LICENSE.md linux/temp/tasks-app/
 	cp -R webapp/pack linux/temp/tasks-app/pack
 	cd linux; make build
 	cp -R linux/bin/tasks-app linux/temp/tasks-app/
