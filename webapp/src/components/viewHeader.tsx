@@ -12,6 +12,7 @@ import ViewMenu from '../components/viewMenu'
 import {Constants} from '../constants'
 import {CsvExporter} from '../csvExporter'
 import mutator from '../mutator'
+import {UserContext} from '../user'
 import {BoardTree} from '../viewModel/boardTree'
 import Button from '../widgets/buttons/button'
 import IconButton from '../widgets/buttons/iconButton'
@@ -303,11 +304,15 @@ class ViewHeader extends React.Component<Props, State> {
                                     name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
                                     onClick={() => Archiver.exportBoardTree(boardTree)}
                                 /> */}
-                                <Menu.Text
-                                    id='shareBoard'
-                                    name={intl.formatMessage({id: 'ViewHeader.share-board', defaultMessage: 'Share board'})}
-                                    onClick={this.showShareDialog}
-                                />
+                                <UserContext.Consumer>
+                                    {(user) => (user && user.id !== 'single-user' &&
+                                        <Menu.Text
+                                            id='shareBoard'
+                                            name={intl.formatMessage({id: 'ViewHeader.share-board', defaultMessage: 'Share board'})}
+                                            onClick={this.showShareDialog}
+                                        />
+                                    )}
+                                </UserContext.Consumer>
 
                                 {/*
 
