@@ -119,6 +119,18 @@ class ViewController:
 		webView.evaluateJavaScript("document.body.setAttribute('oncontextmenu', 'event.preventDefault();');", completionHandler: nil)
 	}
 
+	func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+		if let frame = navigationAction.targetFrame,
+			frame.isMainFrame {
+			return nil
+		}
+		// for _blank target or non-mainFrame target, open in default browser
+		if let url = navigationAction.request.url {
+			NSWorkspace.shared.open(url)
+		}
+		return nil
+	}
+
 	@IBAction func navigateToHome(_ sender: NSObject) {
 		loadHomepage()
 	}
