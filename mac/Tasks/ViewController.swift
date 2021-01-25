@@ -13,7 +13,7 @@ class ViewController:
 	WKUIDelegate,
 	WKNavigationDelegate {
 	@IBOutlet var webView: WKWebView!
-	
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -85,6 +85,31 @@ class ViewController:
 		}
 	}
 
+	private func downloadCsvUrl(_ url: URL) {
+		NSLog("downloadCsvUrl")
+		let prefix = "data:text/csv;charset=utf-8,"
+		let urlString = url.absoluteString
+		let encodedContents = String(urlString[urlString.index(urlString.startIndex, offsetBy: prefix.lengthOfBytes(using: .utf8))...])
+		guard let contents = encodedContents.removingPercentEncoding else {
+			return
+		}
+
+		let filename = "data.csv"
+
+		// Save file
+		let savePanel = NSSavePanel()
+		savePanel.canCreateDirectories = true
+		savePanel.nameFieldStringValue = filename
+		// BUGBUG: Specifying the allowedFileTypes causes Catalina to hang / error out
+		//savePanel.allowedFileTypes = [".octo"]
+		savePanel.begin { (result) in
+			if result.rawValue == NSApplication.ModalResponse.OK.rawValue,
+			   let fileUrl = savePanel.url {
+				try? contents.write(to: fileUrl, atomically: true, encoding: .utf8)
+			}
+		}
+	}
+
 	func webView(_ webView: WKWebView, runOpenPanelWith parameters: WKOpenPanelParameters, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping ([URL]?) -> Void) {
 		NSLog("webView runOpenPanel")
 		let openPanel = NSOpenPanel()
@@ -106,6 +131,11 @@ class ViewController:
 			if (url.absoluteString.hasPrefix("data:text/json,")) {
 				decisionHandler(.cancel)
 				downloadJsonUrl(url)
+				return
+			}
+			if (url.absoluteString.hasPrefix("data:text/csv;charset=utf-8,")) {
+				decisionHandler(.cancel)
+				downloadCsvUrl(url)
 				return
 			}
 			NSLog("decidePolicyFor navigationAction: \(url.absoluteString)")
