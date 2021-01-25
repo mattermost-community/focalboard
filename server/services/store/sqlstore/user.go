@@ -88,9 +88,22 @@ func (s *SQLStore) UpdateUser(user *model.User) error {
 		Set("username", user.Username).
 		Set("email", user.Email).
 		Set("props", propsBytes).
-		Set("update_at", now)
+		Set("update_at", now).
+		Where(sq.Eq{"id": user.ID})
 
 	_, err = query.Exec()
+	return err
+}
+
+func (s *SQLStore) UpdateUserPassword(username string, password string) error {
+	now := time.Now().Unix()
+
+	query := s.getQueryBuilder().Update("users").
+		Set("password", password).
+		Set("update_at", now).
+		Where(sq.Eq{"username": username})
+
+	_, err := query.Exec()
 	return err
 }
 

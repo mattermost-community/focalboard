@@ -60,6 +60,10 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	r.HandleFunc("/api/v1/workspace/regenerate_signup_token", a.sessionRequired(a.handlePostWorkspaceRegenerateSignupToken)).Methods("POST")
 }
 
+func (a *API) RegisterAdminRoutes(r *mux.Router) {
+	r.HandleFunc("/api/v1/admin/users/{username}/password", a.adminRequired(a.handleAdminSetPassword)).Methods("POST")
+}
+
 func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	parentID := query.Get("parent_id")

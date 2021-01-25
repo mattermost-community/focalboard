@@ -1,19 +1,23 @@
 package server
 
 import (
-	"errors"
 	"log"
+	"net"
+	"net/http"
 	"os"
 	"os/signal"
 	"runtime"
 	"sync"
+	"syscall"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 
 	"github.com/mattermost/mattermost-octo-tasks/server/api"
 	"github.com/mattermost/mattermost-octo-tasks/server/app"
+	"github.com/mattermost/mattermost-octo-tasks/server/context"
 	appModel "github.com/mattermost/mattermost-octo-tasks/server/model"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/config"
 	"github.com/mattermost/mattermost-octo-tasks/server/services/scheduler"
@@ -26,6 +30,8 @@ import (
 	"github.com/mattermost/mattermost-server/utils"
 	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/services/filesstore"
+
+	"github.com/pkg/errors"
 )
 
 type Server struct {
@@ -37,6 +43,9 @@ type Server struct {
 	telemetry           *telemetry.Service
 	logger              *zap.Logger
 	cleanUpSessionsTask *scheduler.ScheduledTask
+
+	localRouter     *mux.Router
+	localModeServer *http.Server
 }
 
 func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
@@ -67,6 +76,10 @@ func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
 
 	appBuilder := func() *app.App { return app.New(cfg, store, wsServer, filesBackend, webhookClient) }
 	api := api.NewAPI(appBuilder, singleUser)
+
+	// Local router for admin APIs
+	localRouter := mux.NewRouter()
+	api.RegisterAdminRoutes(localRouter)
 
 	// Init workspace
 	appBuilder().GetRootWorkspace()
@@ -132,6 +145,7 @@ func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
 		filesBackend: filesBackend,
 		telemetry:    telemetryService,
 		logger:       logger,
+		localRouter:  localRouter,
 	}, nil
 }
 
@@ -140,6 +154,12 @@ func (s *Server) Start() error {
 	httpServerExitDone.Add(1)
 
 	s.webServer.Start(httpServerExitDone)
+
+	if s.config.EnableLocalMode {
+		if err := s.startLocalModeServer(); err != nil {
+			return err
+		}
+	}
 
 	s.cleanUpSessionsTask = scheduler.CreateRecurringTask("cleanUpSessions", func() {
 		if err := s.store.CleanUpSessions(s.config.SessionExpireTime); err != nil {
@@ -162,6 +182,8 @@ func (s *Server) Shutdown() error {
 		return err
 	}
 
+	s.stopLocalModeServer()
+
 	if s.cleanUpSessionsTask != nil {
 		s.cleanUpSessionsTask.Cancel()
 	}
@@ -173,4 +195,42 @@ func (s *Server) Shutdown() error {
 
 func (s *Server) Config() *config.Configuration {
 	return s.config
+}
+
+// Local server
+
+func (s *Server) startLocalModeServer() error {
+	s.localModeServer = &http.Server{
+		Handler:     s.localRouter,
+		ConnContext: context.SetContextConn,
+	}
+
+	// TODO: Close and delete socket file on shutdown
+	syscall.Unlink(s.config.LocalModeSocketLocation)
+
+	socket := s.config.LocalModeSocketLocation
+	unixListener, err := net.Listen("unix", socket)
+	if err != nil {
+		return err
+	}
+	if err = os.Chmod(socket, 0600); err != nil {
+		return err
+	}
+
+	go func() {
+		log.Println("Starting unix socket server")
+		err = s.localModeServer.Serve(unixListener)
+		if err != nil && err != http.ErrServerClosed {
+			log.Fatalf("Error starting unix socket server: %v", err)
+		}
+	}()
+
+	return nil
+}
+
+func (s *Server) stopLocalModeServer() {
+	if s.localModeServer != nil {
+		s.localModeServer.Close()
+		s.localModeServer = nil
+	}
 }

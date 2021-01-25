@@ -133,6 +133,15 @@ func (a *App) RegisterUser(username string, email string, password string) error
 	return nil
 }
 
+func (a *App) UpdateUserPassword(username string, password string) error {
+	err := a.store.UpdateUserPassword(username, auth.HashPassword(password))
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (a *App) ChangePassword(userID string, oldPassword string, newPassword string) error {
 	var user *model.User
 	if userID != "" {
