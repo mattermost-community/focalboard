@@ -28,6 +28,7 @@ import './boardComponent.scss'
 import CardDialog from './cardDialog'
 import {Editable} from './editable'
 import RootPortal from './rootPortal'
+import TopBar from './topBar'
 import ViewHeader from './viewHeader'
 import ViewTitle from './viewTitle'
 
@@ -146,6 +147,7 @@ class BoardComponent extends React.Component<Props, State> {
                 </RootPortal>}
 
                 <div className='octo-frame'>
+                    <TopBar/>
                     <ViewTitle
                         key={board.id + board.title}
                         board={board}
