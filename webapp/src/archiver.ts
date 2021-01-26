@@ -38,7 +38,7 @@ class Archiver {
         const content = JSON.stringify(archive)
 
         const date = new Date()
-        const filename = `archive-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.octo`
+        const filename = `archive-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.focalboard`
         const link = document.createElement('a')
         link.style.display = 'none'
 
@@ -56,7 +56,7 @@ class Archiver {
     static importFullArchive(onComplete?: () => void): void {
         const input = document.createElement('input')
         input.type = 'file'
-        input.accept = '.octo'
+        input.accept = '.focalboard'
         input.onchange = async () => {
             const file = input.files && input.files[0]
             const contents = await (new Response(file)).text()

@@ -65,14 +65,14 @@ class ViewController:
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "yyyy-M-d"
 		let dateString = dateFormatter.string(from: Date())
-		let filename = "archive-\(dateString).octo"
+		let filename = "archive-\(dateString).focalboard"
 
 		// Save file
 		let savePanel = NSSavePanel()
 		savePanel.canCreateDirectories = true
 		savePanel.nameFieldStringValue = filename
 		// BUGBUG: Specifying the allowedFileTypes causes Catalina to hang / error out
-		//savePanel.allowedFileTypes = [".octo"]
+		//savePanel.allowedFileTypes = [".focalboard"]
 		savePanel.begin { (result) in
 			if result.rawValue == NSApplication.ModalResponse.OK.rawValue,
 			   let fileUrl = savePanel.url {
@@ -97,7 +97,7 @@ class ViewController:
 		savePanel.canCreateDirectories = true
 		savePanel.nameFieldStringValue = filename
 		// BUGBUG: Specifying the allowedFileTypes causes Catalina to hang / error out
-		//savePanel.allowedFileTypes = [".octo"]
+		//savePanel.allowedFileTypes = [".focalboard"]
 		savePanel.begin { (result) in
 			if result.rawValue == NSApplication.ModalResponse.OK.rawValue,
 			   let fileUrl = savePanel.url {

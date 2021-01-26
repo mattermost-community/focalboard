@@ -44,6 +44,7 @@ debug
 __debug_bin
 files
 octo*.db
+focalboard*.db
 .eslintcache
 .vscode/settings.json
 .prettierrc.json
