@@ -55,6 +55,7 @@ server-linux-package: server-linux webapp
 	cp -R webapp/pack package/${PACKAGE_FOLDER}/pack
 	cp config.json package/${PACKAGE_FOLDER}
 	cp build/MIT-COMPILED-LICENSE.md package/${PACKAGE_FOLDER}
+	cp NOTICE.txt package/${PACKAGE_FOLDER}
 	mkdir -p dist
 	cd package && tar -czvf ../dist/focalboard-server-linux-amd64.tar.gz ${PACKAGE_FOLDER}
 	rm -rf package
@@ -119,7 +120,8 @@ mac-app: server-mac webapp
 	cp -R mac/temp/focalboard.xcarchive/Products/Applications/Focalboard.app mac/dist/
 	# xcodebuild -exportArchive -archivePath mac/temp/focalboard.xcarchive -exportPath mac/dist -exportOptionsPlist mac/export.plist
 	cp build/MIT-COMPILED-LICENSE.md mac/dist
-	cd mac/dist; zip -r focalboard-mac.zip Focalboard.app MIT-COMPILED-LICENSE.md
+	cp NOTICE.txt mac/dist
+	cd mac/dist; zip -r focalboard-mac.zip Focalboard.app MIT-COMPILED-LICENSE.md NOTICE.txt
 
 win-app: server-win webapp
 	rm -rf win/temp
@@ -129,6 +131,7 @@ win-app: server-win webapp
 	cp bin/win/octoserver.exe win/temp
 	cp app-config.json win/temp/config.json
 	cp build/MIT-COMPILED-LICENSE.md win/temp
+	cp NOTICE.txt win/temp
 	cp -R webapp/pack win/temp/pack
 	mkdir -p win/dist
 	# cd win/temp; tar -acf ../dist/focalboard-win.zip .
@@ -142,6 +145,7 @@ linux-app: server-linux webapp
 	cp bin/linux/octoserver linux/temp/focalboard-app/
 	cp app-config.json linux/temp/focalboard-app/config.json
 	cp build/MIT-COMPILED-LICENSE.md linux/temp/focalboard-app/
+	cp NOTICE.txt linux/temp/focalboard-app/
 	cp -R webapp/pack linux/temp/focalboard-app/pack
 	cd linux; make build
 	cp -R linux/bin/focalboard-app linux/temp/focalboard-app/
