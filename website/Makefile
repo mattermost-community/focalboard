@@ -1,5 +1,5 @@
 
-BASE_URL?=http://www.matterdeck.com
+BASE_URL?=http://www.focalboard.com
 
 .PHONY: dist
 dist:

@@ -11,4 +11,4 @@ After installing the server, open a browser to the domain you used (or `http://l
 
 The first user registration will always be permitted, but **subsequent registrations will require an invite link which includes a code**. You can invite additional users by clicking on your username in the top left, then selecting "Invite users".
 
-You are now ready to use Matterdeck. Please refer to the [user's guide](../user/) for details.
+You are now ready to use Focalboard. Please refer to the [user's guide](../user/) for details.

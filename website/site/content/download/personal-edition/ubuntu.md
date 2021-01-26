@@ -5,7 +5,7 @@ subsection: Personal Edition
 weight: 2
 ---
 
-Matterdeck Personal Server allows your team to work together on shared project boards.
+Focalboard Personal Server allows your team to work together on shared project boards.
 
 Follow these steps it up on an Ubuntu server.
 
@@ -15,7 +15,7 @@ Popular hosted options include:
 * [Digital Ocean](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-18-04)
 * [Amazon EC2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html)
 
-## Install Matterdeck
+## Install Focalboard
 
 [Download the Ubuntu archive package here](/download), then unpack it to /opt/octo:
 
@@ -26,7 +26,7 @@ sudo mv octo /opt
 
 ## Install NGINX
 
-By default, the Matterdeck server runs on port 8000 (specified in config.json). We recommend running NGINX as a web proxy to forward http and websocket requests from port 80 to it. To install NGINX, run:
+By default, the Focalboard server runs on port 8000 (specified in config.json). We recommend running NGINX as a web proxy to forward http and websocket requests from port 80 to it. To install NGINX, run:
 
 ```
 sudo apt update
@@ -103,7 +103,7 @@ For a production server, it's important to set up TLS to encrypt web traffic. Wi
 
 ## Install Postgresql (Recommended)
 
-Matterdeck stores data in a SQLite database by default, but we recommend running against Postgres in production (we've tested against Postgres 10.15). To install, run:
+Focalboard stores data in a SQLite database by default, but we recommend running against Postgres in production (we've tested against Postgres 10.15). To install, run:
 
 ```
 sudo apt install postgresql postgresql-contrib
@@ -127,7 +127,7 @@ Exit the postgres user session:
 exit
 ```
 
-Edit the Matterdeck config.json:
+Edit the Focalboard config.json:
 
 ```
 nano /opt/octo/config.json
@@ -138,7 +138,7 @@ Change the dbconfig setting to use the postgres database you created:
 "dbconfig": "postgres://tasksuser:tasksuser-password@localhost/octo?sslmode=disable&connect_timeout=10",
 ```
 
-## Configure Matterdeck to run as a service
+## Configure Focalboard to run as a service
 
 This will keep the server running across reboots. First, create a new service config file:
 
@@ -149,7 +149,7 @@ sudo nano /lib/systemd/system/octo.service
 Paste in the following:
 ```
 [Unit]
-Description=Matterdeck server
+Description=Focalboard server
 
 [Service]
 Type=simple
@@ -171,7 +171,7 @@ sudo systemctl enable octo.service
 
 ## Test the server
 
-At this point, the Matterdeck server should be running.
+At this point, the Focalboard server should be running.
 
 Test that it's running locally with:
 ```

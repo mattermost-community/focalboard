@@ -1,6 +1,6 @@
-# Matterdeck website
+# Focalboard website
 
-Website for Matterdeck, built using [Hugo](https://gohugo.io/).
+Website for Focalboard, built using [Hugo](https://gohugo.io/).
 
 ## How to build
 
