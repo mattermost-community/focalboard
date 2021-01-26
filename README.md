@@ -1,6 +1,8 @@
 # Focalboard
 
-Focalboard is an open source project management app for individuals and teams. It comes in two editions:
+[![Focalboard](website/site/static/img/hero.png)](http://www.focalboard.com)
+
+[Focalboard](http://www.focalboard.com) is an open source project management app for individuals and teams. It comes in two editions:
 * **Personal Desktop**: A stand-alone desktop app for your todos and personal projects
 * **Personal Server**: A self-hosted server for your team to collaborate
 
