@@ -36,5 +36,5 @@ jobs:
     - name: Upload app package
       uses: actions/upload-artifact@v1
       with:
-        name: tasks-win.zip
-        path: ${{ github.workspace }}/win/dist/tasks-win.zip
+        name: focalboard-win.zip
+        path: ${{ github.workspace }}/win/dist/focalboard-win.zip

@@ -131,8 +131,8 @@ win-app: server-win webapp
 	cp build/MIT-COMPILED-LICENSE.md win/temp
 	cp -R webapp/pack win/temp/pack
 	mkdir -p win/dist
-	# cd win/temp; tar -acf ../dist/tasks-win.zip .
-	cd win/temp; powershell "Compress-Archive * ../dist/tasks-win.zip"
+	# cd win/temp; tar -acf ../dist/focalboard-win.zip .
+	cd win/temp; powershell "Compress-Archive * ../dist/focalboard-win.zip"
 
 linux-app: server-linux webapp
 	rm -rf linux/temp
