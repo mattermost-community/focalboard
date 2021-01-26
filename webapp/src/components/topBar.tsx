@@ -19,7 +19,7 @@ class TopBar extends React.PureComponent<Props> {
                 className='TopBar'
             >
                 <a
-                    href='https://docs.mattermost.com/?utm_source=tasks'
+                    href='http://www.focalboard.com/guide/user?utm_source=webapp'
                     target='_blank'
                     rel='noreferrer'
                 >
