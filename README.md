@@ -23,7 +23,7 @@ The server defaults to using SQLite as the store, but can be configured to use P
 * In config.json
 	* Set dbtype to "postgres"
 	* Set dbconfig to the connection string (which you can copy from dbconfig_postgres)
-* Create a new "octo" database with psql
+* Create a new "focalboard" database with psql
 * Restart the server
 
 ## Running and testing the server
