@@ -13,6 +13,7 @@
     "secret": "this-is-a-secret-string",
     "session_expire_time": 2592000,
     "session_refresh_time": 18000,
+    "localOnly": false,
     "enableLocalMode": true,
     "localModeSocketLocation": "/var/tmp/octo_local.socket"
 }

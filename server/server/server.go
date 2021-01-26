@@ -84,7 +84,7 @@ func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
 	// Init workspace
 	appBuilder().GetRootWorkspace()
 
-	webServer := web.NewServer(cfg.WebPath, cfg.Port, cfg.UseSSL)
+	webServer := web.NewServer(cfg.WebPath, cfg.Port, cfg.UseSSL, cfg.LocalOnly)
 	webServer.AddRoutes(wsServer)
 	webServer.AddRoutes(api)
 

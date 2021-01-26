@@ -25,6 +25,7 @@ type Configuration struct {
 	Secret                  string   `json:"secret" mapstructure:"secret"`
 	SessionExpireTime       int64    `json:"session_expire_time" mapstructure:"session_expire_time"`
 	SessionRefreshTime      int64    `json:"session_refresh_time" mapstructure:"session_refresh_time"`
+	LocalOnly               bool     `json:"localonly" mapstructure:"localonly"`
 	EnableLocalMode         bool     `json:"enableLocalMode" mapstructure:"enableLocalMode"`
 	LocalModeSocketLocation string   `json:"localModeSocketLocation" mapstructure:"localModeSocketLocation"`
 }
@@ -40,9 +41,11 @@ func ReadConfigFile() (*Configuration, error) {
 	viper.SetDefault("DBConfigString", "./octo.db")
 	viper.SetDefault("WebPath", "./pack")
 	viper.SetDefault("FilesPath", "./files")
+	viper.SetDefault("Telemetry", true)
 	viper.SetDefault("WebhookUpdate", nil)
 	viper.SetDefault("SessionExpireTime", 60*60*24*30) // 30 days session lifetime
 	viper.SetDefault("SessionRefreshTime", 60*60*5)    // 5 minutes session refresh
+	viper.SetDefault("LocalOnly", false)
 	viper.SetDefault("EnableLocalMode", false)
 	viper.SetDefault("LocalModeSocketLocation", "/var/tmp/octo_local.socket")
 

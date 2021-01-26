@@ -23,18 +23,26 @@ type RoutedService interface {
 type Server struct {
 	http.Server
 
-	rootPath string
-	port     int
-	ssl      bool
+	rootPath  string
+	port      int
+	ssl       bool
+	localOnly bool
 }
 
 // NewServer creates a new instance of the webserver.
-func NewServer(rootPath string, port int, ssl bool) *Server {
+func NewServer(rootPath string, port int, ssl bool, localOnly bool) *Server {
 	r := mux.NewRouter()
+
+	var addr string
+	if localOnly {
+		addr = fmt.Sprintf(`localhost:%d`, port)
+	} else {
+		addr = fmt.Sprintf(`:%d`, port)
+	}
 
 	ws := &Server{
 		Server: http.Server{
-			Addr:    fmt.Sprintf(`:%d`, port),
+			Addr:    addr,
 			Handler: r,
 		},
 		rootPath: rootPath,
