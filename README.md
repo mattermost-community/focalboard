@@ -1,4 +1,10 @@
-# mattermost-octo-tasks
+# Focalboard
+
+Focalboard is an open source project management app for individuals and teams. It comes in two editions:
+* **Personal Desktop**: A stand-alone desktop app for your todos and personal projects
+* **Personal Server**: A self-hosted server for your team to collaborate
+
+The same server binary powers both editions.
 
 ## Building the server
 
@@ -34,17 +40,17 @@ You can build standalone apps that package the server to run locally against SQL
 
 * Mac:
     * `make mac-app`
-    * run `mac/dist/Tasks.app`
+    * run `mac/dist/Focalboard.app`
     * *Requires: macOS Catalina (10.15), Xcode 12 and a development signing certificate.*
 * Linux:
     * Install webgtk dependencies
         * `sudo apt-get install libgtk-3-dev`
         * `sudo apt-get install libwebkit2gtk-4.0-dev`
     * `make linux-app`
-    * run `linux/dist/tasks-app`
+    * run `linux/dist/focalboard-app`
 * Windows
     * `make win-app`
-    * run `win/dist/tasks-win.exe`
+    * run `win/dist/focalboard.exe`
     * *Requires: Windows 10*
 
 Cross-compilation currently isn't fully supported, so please build on the appropriate platform. Refer to the GitHub Actions workflows (build-mac.yml, build-win.yml, build-ubuntu.yml) for the detailed list of steps on each platform.

@@ -17,11 +17,11 @@ Popular hosted options include:
 
 ## Install Focalboard
 
-[Download the Ubuntu archive package here](/download), then unpack it to /opt/octo:
+[Download the Ubuntu archive package here](/download), then unpack it to /opt/focalboard:
 
 ```
-tar -xvzf octo-linux-amd64.tar.gz
-sudo mv octo /opt
+tar -xvzf focalboard-server-linux-amd64.tar.gz
+sudo mv focalboard /opt
 ```
 
 ## Install NGINX
@@ -41,12 +41,12 @@ You may need to adjust your firewall settings depending on the host, e.g.
 
 Create a new site config:
 ```
-sudo nano /etc/nginx/sites-available/tasks
+sudo nano /etc/nginx/sites-available/focalboard
 ```
 
 Copy and paste this configuration:
 ```
-upstream tasks {
+upstream focalboard {
    server localhost:8000;
    keepalive 32;
 }
@@ -54,7 +54,7 @@ upstream tasks {
 server {
    listen 80 default_server;
 
-   server_name tasks.example.com;
+   server_name focalboard.example.com;
 
    location ~ /ws/* {
        proxy_set_header Upgrade $http_upgrade;
@@ -73,7 +73,7 @@ server {
        proxy_connect_timeout 1d;
        proxy_send_timeout 1d;
        proxy_read_timeout 1d;
-       proxy_pass http://tasks;
+       proxy_pass http://focalboard;
    }
 
    location / {
@@ -92,9 +92,16 @@ server {
        proxy_cache_use_stale timeout;
        proxy_cache_lock on;
        proxy_http_version 1.1;
-       proxy_pass http://tasks;
+       proxy_pass http://focalboard;
    }
 }
+```
+
+Enable the site, test the config, and reload NGINX:
+```
+sudo ln -s /etc/nginx/sites-enabled/focalboard /etc/nginx/sites-available/focalboard
+sudo nginx -t
+sudo /etc/init.d/nginx reload
 ```
 
 ## Set up TLS on NGINX
@@ -117,8 +124,8 @@ psql
 
 On the psql prompt, run the following commands (**change the user/password** to your own values):
 <pre>
-CREATE DATABASE tasks;
-CREATE USER <b>tasksuser</b> WITH PASSWORD '<b>tasksuser-password</b>';
+CREATE DATABASE boards;
+CREATE USER <b>boardsuser</b> WITH PASSWORD '<b>boardsuser-password</b>';
 \q
 </pre>
 
@@ -130,12 +137,12 @@ exit
 Edit the Focalboard config.json:
 
 ```
-nano /opt/octo/config.json
+nano /opt/focalboard/config.json
 ```
 
 Change the dbconfig setting to use the postgres database you created:
 ```
-"dbconfig": "postgres://tasksuser:tasksuser-password@localhost/octo?sslmode=disable&connect_timeout=10",
+"dbconfig": "postgres://boardsuser:boardsuser-password@localhost/boards?sslmode=disable&connect_timeout=10",
 ```
 
 ## Configure Focalboard to run as a service
@@ -155,8 +162,8 @@ Description=Focalboard server
 Type=simple
 Restart=always
 RestartSec=5s
-ExecStart=/opt/octo/bin/octoserver
-WorkingDirectory=/opt/octo
+ExecStart=/opt/focalboard/bin/octoserver
+WorkingDirectory=/opt/focalboard
 
 [Install]
 WantedBy=multi-user.target

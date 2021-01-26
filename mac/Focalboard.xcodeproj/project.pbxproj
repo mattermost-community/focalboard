@@ -11,8 +11,8 @@
 		80D6DEBD252E13CB00AEED9E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D6DEBC252E13CB00AEED9E /* ViewController.swift */; };
 		80D6DEBF252E13CD00AEED9E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 80D6DEBE252E13CD00AEED9E /* Assets.xcassets */; };
 		80D6DEC2252E13CD00AEED9E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 80D6DEC0252E13CD00AEED9E /* Main.storyboard */; };
-		80D6DECE252E13CD00AEED9E /* TasksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D6DECD252E13CD00AEED9E /* TasksTests.swift */; };
-		80D6DED9252E13CD00AEED9E /* TasksUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D6DED8252E13CD00AEED9E /* TasksUITests.swift */; };
+		80D6DECE252E13CD00AEED9E /* FocalboardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D6DECD252E13CD00AEED9E /* FocalboardTests.swift */; };
+		80D6DED9252E13CD00AEED9E /* FocalboardUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D6DED8252E13CD00AEED9E /* FocalboardUITests.swift */; };
 		80D6DEEA252E15D100AEED9E /* resources in Resources */ = {isa = PBXBuildFile; fileRef = 80D6DEE9252E15D100AEED9E /* resources */; };
 		80D6DF18252F9BDE00AEED9E /* AutoSaveWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D6DF17252F9BDE00AEED9E /* AutoSaveWindowController.swift */; };
 /* End PBXBuildFile section */
@@ -23,14 +23,14 @@
 			containerPortal = 80D6DEAF252E13CB00AEED9E /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 80D6DEB6252E13CB00AEED9E;
-			remoteInfo = Tasks;
+			remoteInfo = Focalboard;
 		};
 		80D6DED5252E13CD00AEED9E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 80D6DEAF252E13CB00AEED9E /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 80D6DEB6252E13CB00AEED9E;
-			remoteInfo = Tasks;
+			remoteInfo = Focalboard;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -41,12 +41,12 @@
 		80D6DEBE252E13CD00AEED9E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		80D6DEC1252E13CD00AEED9E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		80D6DEC3252E13CD00AEED9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		80D6DEC4252E13CD00AEED9E /* Tasks.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tasks.entitlements; sourceTree = "<group>"; };
+		80D6DEC4252E13CD00AEED9E /* Focalboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Focalboard.entitlements; sourceTree = "<group>"; };
 		80D6DEC9252E13CD00AEED9E /* FocalboardTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FocalboardTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		80D6DECD252E13CD00AEED9E /* TasksTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksTests.swift; sourceTree = "<group>"; };
+		80D6DECD252E13CD00AEED9E /* FocalboardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocalboardTests.swift; sourceTree = "<group>"; };
 		80D6DECF252E13CD00AEED9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		80D6DED4252E13CD00AEED9E /* FocalboardUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FocalboardUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		80D6DED8252E13CD00AEED9E /* TasksUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksUITests.swift; sourceTree = "<group>"; };
+		80D6DED8252E13CD00AEED9E /* FocalboardUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocalboardUITests.swift; sourceTree = "<group>"; };
 		80D6DEDA252E13CD00AEED9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		80D6DEE9252E15D100AEED9E /* resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = resources; sourceTree = "<group>"; };
 		80D6DF17252F9BDE00AEED9E /* AutoSaveWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoSaveWindowController.swift; sourceTree = "<group>"; };
@@ -108,7 +108,7 @@
 				80D6DEBE252E13CD00AEED9E /* Assets.xcassets */,
 				80D6DEC0252E13CD00AEED9E /* Main.storyboard */,
 				80D6DEC3252E13CD00AEED9E /* Info.plist */,
-				80D6DEC4252E13CD00AEED9E /* Tasks.entitlements */,
+				80D6DEC4252E13CD00AEED9E /* Focalboard.entitlements */,
 				80D6DF1C25324A4F00AEED9E /* Inherit.entitlements */,
 			);
 			path = Focalboard;
@@ -117,7 +117,7 @@
 		80D6DECC252E13CD00AEED9E /* FocalboardTests */ = {
 			isa = PBXGroup;
 			children = (
-				80D6DECD252E13CD00AEED9E /* TasksTests.swift */,
+				80D6DECD252E13CD00AEED9E /* FocalboardTests.swift */,
 				80D6DECF252E13CD00AEED9E /* Info.plist */,
 			);
 			path = FocalboardTests;
@@ -126,7 +126,7 @@
 		80D6DED7252E13CD00AEED9E /* FocalboardUITests */ = {
 			isa = PBXGroup;
 			children = (
-				80D6DED8252E13CD00AEED9E /* TasksUITests.swift */,
+				80D6DED8252E13CD00AEED9E /* FocalboardUITests.swift */,
 				80D6DEDA252E13CD00AEED9E /* Info.plist */,
 			);
 			path = FocalboardUITests;
@@ -149,7 +149,7 @@
 			dependencies = (
 			);
 			name = Focalboard;
-			productName = Tasks;
+			productName = Focalboard;
 			productReference = 80D6DEB7252E13CB00AEED9E /* Focalboard.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -167,7 +167,7 @@
 				80D6DECB252E13CD00AEED9E /* PBXTargetDependency */,
 			);
 			name = FocalboardTests;
-			productName = TasksTests;
+			productName = FocalboardTests;
 			productReference = 80D6DEC9252E13CD00AEED9E /* FocalboardTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
@@ -185,7 +185,7 @@
 				80D6DED6252E13CD00AEED9E /* PBXTargetDependency */,
 			);
 			name = FocalboardUITests;
-			productName = TasksUITests;
+			productName = FocalboardUITests;
 			productReference = 80D6DED4252E13CD00AEED9E /* FocalboardUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
@@ -293,7 +293,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				80D6DECE252E13CD00AEED9E /* TasksTests.swift in Sources */,
+				80D6DECE252E13CD00AEED9E /* FocalboardTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,7 +301,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				80D6DED9252E13CD00AEED9E /* TasksUITests.swift in Sources */,
+				80D6DED9252E13CD00AEED9E /* FocalboardUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -499,14 +499,14 @@
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = UQ8HT4Q2XM;
-				INFOPLIST_FILE = TasksTests/Info.plist;
+				INFOPLIST_FILE = FocalboardTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mattermost.TasksTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mattermost.FocalboardTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Focalboard.app/Contents/MacOS/Focalboard";
@@ -521,14 +521,14 @@
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = UQ8HT4Q2XM;
-				INFOPLIST_FILE = TasksTests/Info.plist;
+				INFOPLIST_FILE = FocalboardTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mattermost.TasksTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mattermost.FocalboardTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Focalboard.app/Contents/MacOS/Focalboard";
@@ -542,16 +542,16 @@
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = UQ8HT4Q2XM;
-				INFOPLIST_FILE = TasksUITests/Info.plist;
+				INFOPLIST_FILE = FocalboardUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.mattermost.TasksUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mattermost.FocalboardUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = Tasks;
+				TEST_TARGET_NAME = Focalboard;
 			};
 			name = Debug;
 		};
@@ -562,16 +562,16 @@
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = UQ8HT4Q2XM;
-				INFOPLIST_FILE = TasksUITests/Info.plist;
+				INFOPLIST_FILE = FocalboardUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.mattermost.TasksUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mattermost.FocalboardUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = Tasks;
+				TEST_TARGET_NAME = Focalboard;
 			};
 			name = Release;
 		};

@@ -2,9 +2,9 @@
 // See LICENSE.txt for license information.
 
 import XCTest
-@testable import Tasks
+@testable import Focalboard
 
-class TasksTests: XCTestCase {
+class FocalboardTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
