@@ -1,6 +1,6 @@
 .PHONY: prebuild clean cleanall ci server server-mac server-linux server-win server-linux-package generate watch-server webapp mac-app win-app linux-app
 
-PACKAGE_FOLDER = octo
+PACKAGE_FOLDER = focalboard
 
 # Build Flags
 BUILD_NUMBER ?= $(BUILD_NUMBER:)
@@ -56,7 +56,7 @@ server-linux-package: server-linux webapp
 	cp config.json package/${PACKAGE_FOLDER}
 	cp build/MIT-COMPILED-LICENSE.md package/${PACKAGE_FOLDER}
 	mkdir -p dist
-	cd package && tar -czvf ../dist/octo-linux-amd64.tar.gz ${PACKAGE_FOLDER}
+	cd package && tar -czvf ../dist/focalboard-server-linux-amd64.tar.gz ${PACKAGE_FOLDER}
 	rm -rf package
 
 server-single-user:
@@ -138,14 +138,14 @@ linux-app: server-linux webapp
 	rm -rf linux/temp
 	rm -rf linux/dist
 	mkdir -p linux/dist
-	mkdir -p linux/temp/tasks-app
-	cp bin/linux/octoserver linux/temp/tasks-app/
-	cp app-config.json linux/temp/tasks-app/config.json
-	cp build/MIT-COMPILED-LICENSE.md linux/temp/tasks-app/
-	cp -R webapp/pack linux/temp/tasks-app/pack
+	mkdir -p linux/temp/focalboard-app
+	cp bin/linux/octoserver linux/temp/focalboard-app/
+	cp app-config.json linux/temp/focalboard-app/config.json
+	cp build/MIT-COMPILED-LICENSE.md linux/temp/focalboard-app/
+	cp -R webapp/pack linux/temp/focalboard-app/pack
 	cd linux; make build
-	cp -R linux/bin/tasks-app linux/temp/tasks-app/
-	cd linux/temp; tar -zcf ../dist/tasks-linux.tar.gz tasks-app
+	cp -R linux/bin/focalboard-app linux/temp/focalboard-app/
+	cd linux/temp; tar -zcf ../dist/focalboard-linux.tar.gz focalboard-app
 	rm -rf linux/temp
 
 clean:

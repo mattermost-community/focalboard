@@ -5,4 +5,4 @@ run:
 
 build:
 	mkdir -p bin
-	go build -o bin/tasks-app
+	go build -o bin/focalboard-app

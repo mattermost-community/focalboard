@@ -35,8 +35,8 @@ jobs:
     - name: Upload server package
       uses: actions/upload-artifact@v1
       with:
-        name: octo-linux-amd64.tar.gz
-        path: ${{ github.workspace }}/dist/octo-linux-amd64.tar.gz
+        name: focalboard-server-linux-amd64.tar.gz
+        path: ${{ github.workspace }}/dist/focalboard-server-linux-amd64.tar.gz
 
     - name: Test server
       run: make server-test
