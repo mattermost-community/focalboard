@@ -150,7 +150,7 @@ Change the dbconfig setting to use the postgres database you created:
 This will keep the server running across reboots. First, create a new service config file:
 
 ```
-sudo nano /lib/systemd/system/octo.service
+sudo nano /lib/systemd/system/focalboard.service
 ```
 
 Paste in the following:
@@ -172,8 +172,8 @@ WantedBy=multi-user.target
 Make systemd reload the new unit, and start it on machine reboot:
 ```
 sudo systemctl daemon-reload
-sudo systemctl start octo.service
-sudo systemctl enable octo.service
+sudo systemctl start focalboard.service
+sudo systemctl enable focalboard.service
 ```
 
 ## Test the server
