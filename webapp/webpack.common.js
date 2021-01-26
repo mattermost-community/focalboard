@@ -78,7 +78,7 @@ function makeCommonConfig() {
             }),
             new HtmlWebpackPlugin({
                 inject: true,
-                title: 'OCTO',
+                title: 'Focalboard',
                 chunks: ['main'],
                 template: 'html-templates/page.ejs',
                 filename: 'index.html',
