@@ -31,7 +31,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	private func webFolder() -> URL {
 		let url = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-		return url.appendingPathComponent("server")
+		return url.appendingPathComponent("Focalboard").appendingPathComponent("server")
 	}
 
 	private func copyResources() {
