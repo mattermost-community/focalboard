@@ -53,8 +53,8 @@ class OctoListener {
         this.onChange = onChange
 
         const url = new URL(this.serverUrl)
-        const scheme = (url.protocol === 'https') ? 'wss' : 'ws'
-        const wsServerUrl = `${scheme}://${url.host}${url.pathname}ws/onchange`
+        const protocol = (url.protocol === 'https:') ? 'wss:' : 'ws:'
+        const wsServerUrl = `${protocol}//${url.host}${url.pathname}ws/onchange`
         Utils.log(`OctoListener open: ${wsServerUrl}`)
         const ws = new WebSocket(wsServerUrl)
         this.ws = ws
