@@ -35,17 +35,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		80D6DEB7252E13CB00AEED9E /* Tasks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tasks.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		80D6DEB7252E13CB00AEED9E /* Focalboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Focalboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		80D6DEBA252E13CB00AEED9E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		80D6DEBC252E13CB00AEED9E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		80D6DEBE252E13CD00AEED9E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		80D6DEC1252E13CD00AEED9E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		80D6DEC3252E13CD00AEED9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		80D6DEC4252E13CD00AEED9E /* Tasks.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tasks.entitlements; sourceTree = "<group>"; };
-		80D6DEC9252E13CD00AEED9E /* TasksTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TasksTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		80D6DEC9252E13CD00AEED9E /* FocalboardTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FocalboardTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		80D6DECD252E13CD00AEED9E /* TasksTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksTests.swift; sourceTree = "<group>"; };
 		80D6DECF252E13CD00AEED9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		80D6DED4252E13CD00AEED9E /* TasksUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TasksUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		80D6DED4252E13CD00AEED9E /* FocalboardUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FocalboardUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		80D6DED8252E13CD00AEED9E /* TasksUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksUITests.swift; sourceTree = "<group>"; };
 		80D6DEDA252E13CD00AEED9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		80D6DEE9252E15D100AEED9E /* resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = resources; sourceTree = "<group>"; };
@@ -81,10 +81,10 @@
 		80D6DEAE252E13CB00AEED9E = {
 			isa = PBXGroup;
 			children = (
-				80D6DEB9252E13CB00AEED9E /* Tasks */,
-				80D6DECC252E13CD00AEED9E /* TasksTests */,
+				80D6DEB9252E13CB00AEED9E /* Focalboard */,
+				80D6DECC252E13CD00AEED9E /* FocalboardTests */,
 				80D6DEE9252E15D100AEED9E /* resources */,
-				80D6DED7252E13CD00AEED9E /* TasksUITests */,
+				80D6DED7252E13CD00AEED9E /* FocalboardUITests */,
 				80D6DEB8252E13CB00AEED9E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -92,14 +92,14 @@
 		80D6DEB8252E13CB00AEED9E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				80D6DEB7252E13CB00AEED9E /* Tasks.app */,
-				80D6DEC9252E13CD00AEED9E /* TasksTests.xctest */,
-				80D6DED4252E13CD00AEED9E /* TasksUITests.xctest */,
+				80D6DEB7252E13CB00AEED9E /* Focalboard.app */,
+				80D6DEC9252E13CD00AEED9E /* FocalboardTests.xctest */,
+				80D6DED4252E13CD00AEED9E /* FocalboardUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		80D6DEB9252E13CB00AEED9E /* Tasks */ = {
+		80D6DEB9252E13CB00AEED9E /* Focalboard */ = {
 			isa = PBXGroup;
 			children = (
 				80D6DEBA252E13CB00AEED9E /* AppDelegate.swift */,
@@ -111,33 +111,33 @@
 				80D6DEC4252E13CD00AEED9E /* Tasks.entitlements */,
 				80D6DF1C25324A4F00AEED9E /* Inherit.entitlements */,
 			);
-			path = Tasks;
+			path = Focalboard;
 			sourceTree = "<group>";
 		};
-		80D6DECC252E13CD00AEED9E /* TasksTests */ = {
+		80D6DECC252E13CD00AEED9E /* FocalboardTests */ = {
 			isa = PBXGroup;
 			children = (
 				80D6DECD252E13CD00AEED9E /* TasksTests.swift */,
 				80D6DECF252E13CD00AEED9E /* Info.plist */,
 			);
-			path = TasksTests;
+			path = FocalboardTests;
 			sourceTree = "<group>";
 		};
-		80D6DED7252E13CD00AEED9E /* TasksUITests */ = {
+		80D6DED7252E13CD00AEED9E /* FocalboardUITests */ = {
 			isa = PBXGroup;
 			children = (
 				80D6DED8252E13CD00AEED9E /* TasksUITests.swift */,
 				80D6DEDA252E13CD00AEED9E /* Info.plist */,
 			);
-			path = TasksUITests;
+			path = FocalboardUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		80D6DEB6252E13CB00AEED9E /* Tasks */ = {
+		80D6DEB6252E13CB00AEED9E /* Focalboard */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 80D6DEDD252E13CD00AEED9E /* Build configuration list for PBXNativeTarget "Tasks" */;
+			buildConfigurationList = 80D6DEDD252E13CD00AEED9E /* Build configuration list for PBXNativeTarget "Focalboard" */;
 			buildPhases = (
 				80D6DEB3252E13CB00AEED9E /* Sources */,
 				80D6DEB4252E13CB00AEED9E /* Frameworks */,
@@ -148,14 +148,14 @@
 			);
 			dependencies = (
 			);
-			name = Tasks;
+			name = Focalboard;
 			productName = Tasks;
-			productReference = 80D6DEB7252E13CB00AEED9E /* Tasks.app */;
+			productReference = 80D6DEB7252E13CB00AEED9E /* Focalboard.app */;
 			productType = "com.apple.product-type.application";
 		};
-		80D6DEC8252E13CD00AEED9E /* TasksTests */ = {
+		80D6DEC8252E13CD00AEED9E /* FocalboardTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 80D6DEE0252E13CD00AEED9E /* Build configuration list for PBXNativeTarget "TasksTests" */;
+			buildConfigurationList = 80D6DEE0252E13CD00AEED9E /* Build configuration list for PBXNativeTarget "FocalboardTests" */;
 			buildPhases = (
 				80D6DEC5252E13CD00AEED9E /* Sources */,
 				80D6DEC6252E13CD00AEED9E /* Frameworks */,
@@ -166,14 +166,14 @@
 			dependencies = (
 				80D6DECB252E13CD00AEED9E /* PBXTargetDependency */,
 			);
-			name = TasksTests;
+			name = FocalboardTests;
 			productName = TasksTests;
-			productReference = 80D6DEC9252E13CD00AEED9E /* TasksTests.xctest */;
+			productReference = 80D6DEC9252E13CD00AEED9E /* FocalboardTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		80D6DED3252E13CD00AEED9E /* TasksUITests */ = {
+		80D6DED3252E13CD00AEED9E /* FocalboardUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 80D6DEE3252E13CD00AEED9E /* Build configuration list for PBXNativeTarget "TasksUITests" */;
+			buildConfigurationList = 80D6DEE3252E13CD00AEED9E /* Build configuration list for PBXNativeTarget "FocalboardUITests" */;
 			buildPhases = (
 				80D6DED0252E13CD00AEED9E /* Sources */,
 				80D6DED1252E13CD00AEED9E /* Frameworks */,
@@ -184,9 +184,9 @@
 			dependencies = (
 				80D6DED6252E13CD00AEED9E /* PBXTargetDependency */,
 			);
-			name = TasksUITests;
+			name = FocalboardUITests;
 			productName = TasksUITests;
-			productReference = 80D6DED4252E13CD00AEED9E /* TasksUITests.xctest */;
+			productReference = 80D6DED4252E13CD00AEED9E /* FocalboardUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -211,7 +211,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 80D6DEB2252E13CB00AEED9E /* Build configuration list for PBXProject "Tasks" */;
+			buildConfigurationList = 80D6DEB2252E13CB00AEED9E /* Build configuration list for PBXProject "Focalboard" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -224,9 +224,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				80D6DEB6252E13CB00AEED9E /* Tasks */,
-				80D6DEC8252E13CD00AEED9E /* TasksTests */,
-				80D6DED3252E13CD00AEED9E /* TasksUITests */,
+				80D6DEB6252E13CB00AEED9E /* Focalboard */,
+				80D6DEC8252E13CD00AEED9E /* FocalboardTests */,
+				80D6DED3252E13CD00AEED9E /* FocalboardUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -274,7 +274,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Comment out codesign for now\n# /usr/bin/codesign --force --sign \"$CODE_SIGN_IDENTITY\" -i \"com.mattermost.octoserver\" --entitlement \"$PROJECT_DIR/Tasks/Inherit.entitlements\" \"$BUILD_DIR/$CONFIGURATION/$EXECUTABLE_FOLDER_PATH/../Resources/resources/bin/octoserver\"\n";
+			shellScript = "# Comment out codesign for now\n# /usr/bin/codesign --force --sign \"$CODE_SIGN_IDENTITY\" -i \"com.mattermost.octoserver\" --entitlement \"$PROJECT_DIR/Focalboard/Inherit.entitlements\" \"$BUILD_DIR/$CONFIGURATION/$EXECUTABLE_FOLDER_PATH/../Resources/resources/bin/octoserver\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -310,12 +310,12 @@
 /* Begin PBXTargetDependency section */
 		80D6DECB252E13CD00AEED9E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 80D6DEB6252E13CB00AEED9E /* Tasks */;
+			target = 80D6DEB6252E13CB00AEED9E /* Focalboard */;
 			targetProxy = 80D6DECA252E13CD00AEED9E /* PBXContainerItemProxy */;
 		};
 		80D6DED6252E13CD00AEED9E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 80D6DEB6252E13CB00AEED9E /* Tasks */;
+			target = 80D6DEB6252E13CB00AEED9E /* Focalboard */;
 			targetProxy = 80D6DED5252E13CD00AEED9E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -452,17 +452,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Tasks/Tasks.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Focalboard/Focalboard.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = UQ8HT4Q2XM;
 				ENABLE_HARDENED_RUNTIME = YES;
-				INFOPLIST_FILE = Tasks/Info.plist;
+				INFOPLIST_FILE = Focalboard/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.mattermost.Tasks;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mattermost.Focalboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -474,17 +474,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Tasks/Tasks.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Focalboard/Focalboard.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = UQ8HT4Q2XM;
 				ENABLE_HARDENED_RUNTIME = YES;
-				INFOPLIST_FILE = Tasks/Info.plist;
+				INFOPLIST_FILE = Focalboard/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.mattermost.Tasks;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mattermost.Focalboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -509,7 +509,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattermost.TasksTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tasks.app/Contents/MacOS/Tasks";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Focalboard.app/Contents/MacOS/Focalboard";
 			};
 			name = Debug;
 		};
@@ -531,7 +531,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattermost.TasksTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tasks.app/Contents/MacOS/Tasks";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Focalboard.app/Contents/MacOS/Focalboard";
 			};
 			name = Release;
 		};
@@ -578,7 +578,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		80D6DEB2252E13CB00AEED9E /* Build configuration list for PBXProject "Tasks" */ = {
+		80D6DEB2252E13CB00AEED9E /* Build configuration list for PBXProject "Focalboard" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				80D6DEDB252E13CD00AEED9E /* Debug */,
@@ -587,7 +587,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		80D6DEDD252E13CD00AEED9E /* Build configuration list for PBXNativeTarget "Tasks" */ = {
+		80D6DEDD252E13CD00AEED9E /* Build configuration list for PBXNativeTarget "Focalboard" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				80D6DEDE252E13CD00AEED9E /* Debug */,
@@ -596,7 +596,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		80D6DEE0252E13CD00AEED9E /* Build configuration list for PBXNativeTarget "TasksTests" */ = {
+		80D6DEE0252E13CD00AEED9E /* Build configuration list for PBXNativeTarget "FocalboardTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				80D6DEE1252E13CD00AEED9E /* Debug */,
@@ -605,7 +605,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		80D6DEE3252E13CD00AEED9E /* Build configuration list for PBXNativeTarget "TasksUITests" */ = {
+		80D6DEE3252E13CD00AEED9E /* Build configuration list for PBXNativeTarget "FocalboardUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				80D6DEE4252E13CD00AEED9E /* Debug */,

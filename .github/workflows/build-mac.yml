@@ -38,6 +38,6 @@ jobs:
     - name: Upload macOS package
       uses: actions/upload-artifact@v1
       with:
-        name: tasks-mac.zip
-        path: ${{ github.workspace }}/mac/dist/tasks-mac.zip
+        name: focalboard-mac.zip
+        path: ${{ github.workspace }}/mac/dist/focalboard-mac.zip
 

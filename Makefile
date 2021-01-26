@@ -114,12 +114,12 @@ mac-app: server-mac webapp
 	cp app-config.json mac/resources/config.json
 	cp -R webapp/pack mac/resources/pack
 	mkdir -p mac/temp
-	xcodebuild archive -workspace mac/Tasks.xcworkspace -scheme Tasks -archivePath mac/temp/tasks.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO" CODE_SIGNING_ALLOWED="NO"
+	xcodebuild archive -workspace mac/Focalboard.xcworkspace -scheme Focalboard -archivePath mac/temp/focalboard.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO" CODE_SIGNING_ALLOWED="NO"
 	mkdir -p mac/dist
-	cp -R mac/temp/tasks.xcarchive/Products/Applications/Tasks.app mac/dist/
-	# xcodebuild -exportArchive -archivePath mac/temp/tasks.xcarchive -exportPath mac/dist -exportOptionsPlist mac/export.plist
+	cp -R mac/temp/focalboard.xcarchive/Products/Applications/Focalboard.app mac/dist/
+	# xcodebuild -exportArchive -archivePath mac/temp/focalboard.xcarchive -exportPath mac/dist -exportOptionsPlist mac/export.plist
 	cp build/MIT-COMPILED-LICENSE.md mac/dist
-	cd mac/dist; zip -r tasks-mac.zip Tasks.app MIT-COMPILED-LICENSE.md
+	cd mac/dist; zip -r focalboard-mac.zip Focalboard.app MIT-COMPILED-LICENSE.md
 
 win-app: server-win webapp
 	rm -rf win/temp
