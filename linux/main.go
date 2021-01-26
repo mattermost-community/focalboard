@@ -10,7 +10,7 @@ import (
 	"github.com/webview/webview"
 )
 
-func runOctoTasks(ctx context.Context) {
+func runServer(ctx context.Context) {
 	cmd := exec.CommandContext(ctx, "./octoserver", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10), "--single-user")
 	cmd.Stdout = os.Stdout
 	err := cmd.Run()
@@ -25,9 +25,9 @@ func main() {
 	w := webview.New(debug)
 	defer w.Destroy()
 	ctx, cancel := context.WithCancel(context.Background())
-	go runOctoTasks(ctx)
+	go runServer(ctx)
 
-	w.SetTitle("Octo Tasks")
+	w.SetTitle("Focalboard")
 	w.SetSize(1024, 768, webview.HintNone)
 	w.Navigate("http://localhost:8088")
 	w.Run()

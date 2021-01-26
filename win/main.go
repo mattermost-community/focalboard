@@ -11,7 +11,7 @@ import (
 	"github.com/zserge/lorca"
 )
 
-func runOctoTasks(ctx context.Context) *exec.Cmd {
+func runServer(ctx context.Context) *exec.Cmd {
 	// cmd := exec.CommandContext(ctx, "octoserver.exe", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10), "--single-user")
 	cmd := exec.CommandContext(ctx, "octoserver.exe", "--single-user")
 	// cmd := exec.CommandContext(ctx, "cmd.exe", "/C", "start", "./bin/octoserver.exe", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10))
@@ -47,7 +47,7 @@ func main() {
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
-	cmd := runOctoTasks(ctx)
+	cmd := runServer(ctx)
 
 	ui, err := lorca.New("http://localhost:8088", "", 1024, 768)
 	if err != nil {
