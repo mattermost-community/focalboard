@@ -1,10 +1,10 @@
 package app
 
 import (
-	"github.com/mattermost/mattermost-octo-tasks/server/services/config"
-	"github.com/mattermost/mattermost-octo-tasks/server/services/store"
-	"github.com/mattermost/mattermost-octo-tasks/server/services/webhook"
-	"github.com/mattermost/mattermost-octo-tasks/server/ws"
+	"github.com/mattermost/focalboard/server/services/config"
+	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/services/webhook"
+	"github.com/mattermost/focalboard/server/ws"
 	"github.com/mattermost/mattermost-server/v5/services/filesstore"
 )
 

@@ -3,7 +3,7 @@ package sqlstore
 import (
 	"time"
 
-	"github.com/mattermost/mattermost-octo-tasks/server/model"
+	"github.com/mattermost/focalboard/server/model"
 
 	sq "github.com/Masterminds/squirrel"
 )

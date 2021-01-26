@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/mattermost/mattermost-octo-tasks/server/client"
-	"github.com/mattermost/mattermost-octo-tasks/server/server"
-	"github.com/mattermost/mattermost-octo-tasks/server/services/config"
+	"github.com/mattermost/focalboard/server/client"
+	"github.com/mattermost/focalboard/server/server"
+	"github.com/mattermost/focalboard/server/services/config"
 )
 
 type TestHelper struct {

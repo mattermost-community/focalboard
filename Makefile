@@ -11,9 +11,9 @@ ifeq ($(BUILD_NUMBER),)
 	BUILD_NUMBER := dev
 endif
 
-LDFLAGS += -X "github.com/mattermost/mattermost-octo-tasks/server/model.BuildNumber=$(BUILD_NUMBER)"
-LDFLAGS += -X "github.com/mattermost/mattermost-octo-tasks/server/model.BuildDate=$(BUILD_DATE)"
-LDFLAGS += -X "github.com/mattermost/mattermost-octo-tasks/server/model.BuildHash=$(BUILD_HASH)"
+LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildNumber=$(BUILD_NUMBER)"
+LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildDate=$(BUILD_DATE)"
+LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildHash=$(BUILD_HASH)"
 
 all: server
 
@@ -31,21 +31,21 @@ ci: server-test
 	cd webapp; npm run cypress:ci
 
 server:
-	$(eval LDFLAGS += -X "github.com/mattermost/mattermost-octo-tasks/server/model.Edition=dev")
+	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=dev")
 	cd server; go build -ldflags '$(LDFLAGS)' -o ../bin/octoserver ./main
 
 server-mac:
 	mkdir -p bin/mac
-	$(eval LDFLAGS += -X "github.com/mattermost/mattermost-octo-tasks/server/model.Edition=mac")
+	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=mac")
 	cd server; env GOOS=darwin GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/mac/octoserver ./main
 
 server-linux:
 	mkdir -p bin/linux
-	$(eval LDFLAGS += -X "github.com/mattermost/mattermost-octo-tasks/server/model.Edition=linux")
+	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=linux")
 	cd server; env GOOS=linux GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/linux/octoserver ./main
 
 server-win:
-	$(eval LDFLAGS += -X "github.com/mattermost/mattermost-octo-tasks/server/model.Edition=win")
+	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=win")
 	cd server; env GOOS=windows GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/win/octoserver.exe ./main
 
 server-linux-package: server-linux webapp
@@ -61,21 +61,21 @@ server-linux-package: server-linux webapp
 	rm -rf package
 
 server-single-user:
-	$(eval LDFLAGS += -X "github.com/mattermost/mattermost-octo-tasks/server/model.Edition=dev")
+	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=dev")
 	cd server; go build -ldflags '$(LDFLAGS)' -o ../bin/octoserver ./main --single-user
 
 server-mac-single-user:
 	mkdir -p bin/mac
-	$(eval LDFLAGS += -X "github.com/mattermost/mattermost-octo-tasks/server/model.Edition=mac")
+	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=mac")
 	cd server; env GOOS=darwin GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/mac/octoserver ./main --single-user
 
 server-linux-single-user:
 	mkdir -p bin/linux
-	$(eval LDFLAGS += -X "github.com/mattermost/mattermost-octo-tasks/server/model.Edition=linux")
+	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=linux")
 	cd server; env GOOS=linux GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/linux/octoserver ./main --single-user
 
 server-win-single-user:
-	$(eval LDFLAGS += -X "github.com/mattermost/mattermost-octo-tasks/server/model.Edition=win")
+	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=win")
 	cd server; env GOOS=windows GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/octoserver.exe ./main --single-user
 
 generate:

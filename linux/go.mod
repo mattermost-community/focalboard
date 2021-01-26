@@ -1,4 +1,4 @@
-module github.com/mattermost/mattermost-octo-tasks/linux
+module github.com/mattermost/focalboard/linux
 
 go 1.15
 

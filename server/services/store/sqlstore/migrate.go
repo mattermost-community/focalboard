@@ -11,8 +11,8 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
 	_ "github.com/lib/pq"
-	pgmigrations "github.com/mattermost/mattermost-octo-tasks/server/services/store/sqlstore/migrations/postgres"
-	"github.com/mattermost/mattermost-octo-tasks/server/services/store/sqlstore/migrations/sqlite"
+	pgmigrations "github.com/mattermost/focalboard/server/services/store/sqlstore/migrations/postgres"
+	"github.com/mattermost/focalboard/server/services/store/sqlstore/migrations/sqlite"
 )
 
 func (s *SQLStore) Migrate() error {

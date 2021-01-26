@@ -9,7 +9,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
-	"github.com/mattermost/mattermost-octo-tasks/server/model"
+	"github.com/mattermost/focalboard/server/model"
 )
 
 // RegisterRoutes registers routes.

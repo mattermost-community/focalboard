@@ -5,7 +5,7 @@ import (
 	"time"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/mattermost/mattermost-octo-tasks/server/model"
+	"github.com/mattermost/focalboard/server/model"
 )
 
 func (s *SQLStore) GetSession(token string, expireTime int64) (*model.Session, error) {

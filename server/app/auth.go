@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/mattermost/mattermost-octo-tasks/server/model"
-	"github.com/mattermost/mattermost-octo-tasks/server/services/auth"
+	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/auth"
 
 	"github.com/pkg/errors"
 )

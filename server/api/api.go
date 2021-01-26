@@ -13,9 +13,9 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/mattermost/mattermost-octo-tasks/server/app"
-	"github.com/mattermost/mattermost-octo-tasks/server/model"
-	"github.com/mattermost/mattermost-octo-tasks/server/utils"
+	"github.com/mattermost/focalboard/server/app"
+	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/utils"
 )
 
 // ----------------------------------------------------------------------------------------------------

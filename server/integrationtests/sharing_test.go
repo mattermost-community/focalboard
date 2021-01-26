@@ -3,8 +3,8 @@ package integrationtests
 import (
 	"testing"
 
-	"github.com/mattermost/mattermost-octo-tasks/server/model"
-	"github.com/mattermost/mattermost-octo-tasks/server/utils"
+	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/utils"
 	"github.com/stretchr/testify/require"
 )
 

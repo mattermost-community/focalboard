@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"log"
 
-	"github.com/mattermost/mattermost-octo-tasks/server/model"
-	"github.com/mattermost/mattermost-octo-tasks/server/services/store/sqlstore/initializations"
+	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/store/sqlstore/initializations"
 )
 
 // InitializeTemplates imports default templates if the blocks table is empty

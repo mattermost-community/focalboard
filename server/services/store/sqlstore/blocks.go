@@ -9,7 +9,7 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 	_ "github.com/lib/pq"
-	"github.com/mattermost/mattermost-octo-tasks/server/model"
+	"github.com/mattermost/focalboard/server/model"
 	_ "github.com/mattn/go-sqlite3"
 )
 

@@ -11,7 +11,7 @@ We're very glad you want to check it out and perhaps contribute code our reposit
 
 Our goal is to make your experience as great as possible. Follow these simple steps to contribute:
 
-{{< bignumber number="1" title="Set up your developer machine" content="Just [clone the project from GitHub](https://github.com/mattermost/mattermost-octo-tasks) and follow the steps in the README to build." >}}
+{{< bignumber number="1" title="Set up your developer machine" content="Just [clone the project from GitHub](https://github.com/mattermost/focalboard) and follow the steps in the README to build." >}}
 
 {{< bignumber number="2" title="Select a ticket" content="Find [help wanted tickets in GitHub](https://mattermost.com/pl/help-wanted). Comment to let everyone know you’re working on it. If there’s no ticket for what you want to work on see [contributions without a ticket.](/contribute/getting-started/contributions-without-ticket)" >}}
 

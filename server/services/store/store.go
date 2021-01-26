@@ -1,7 +1,7 @@
 //go:generate mockgen -destination=mockstore/mockstore.go -package mockstore . Store
 package store
 
-import "github.com/mattermost/mattermost-octo-tasks/server/model"
+import "github.com/mattermost/focalboard/server/model"
 
 // Store represents the abstraction of the data storage.
 type Store interface {

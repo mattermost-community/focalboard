@@ -3,7 +3,7 @@ package app
 import (
 	"database/sql"
 
-	"github.com/mattermost/mattermost-octo-tasks/server/model"
+	"github.com/mattermost/focalboard/server/model"
 )
 
 func (a *App) GetSharing(rootID string) (*model.Sharing, error) {

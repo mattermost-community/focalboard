@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/mattermost/mattermost-octo-tasks/server/model"
+	"github.com/mattermost/focalboard/server/model"
 )
 
 func (a *App) GetBlocks(parentID string, blockType string) ([]model.Block, error) {

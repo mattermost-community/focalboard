@@ -17,7 +17,7 @@ Follow this checklist for submitting a pull request (PR):
 2. Your ticket is a Help Wanted GitHub issue for the project you're contributing to.
     - If not, follow the process [here](/contribute/getting-started/contributions-without-ticket).
 3. Your code is thoroughly tested, including appropriate unit tests, and manual testing.
-4. If applicable, user interface strings are included in the localization file ([en.json](https://github.com/mattermost/mattermost-octo-tasks/blob/main/webapp/i18n/en.json))
+4. If applicable, user interface strings are included in the localization file ([en.json](https://github.com/mattermost/focalboard/blob/main/webapp/i18n/en.json))
     - In the webapp folder, run `npm run i18n-extract` to generate the new/updated strings.
 5. The PR is submitted against the `main` branch from your fork.
 6. The PR title begins with the GitHub Ticket ID (e.g. `[GH-394]`) and the summary template is filled out.

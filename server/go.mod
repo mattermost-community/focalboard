@@ -1,4 +1,4 @@
-module github.com/mattermost/mattermost-octo-tasks/server
+module github.com/mattermost/focalboard/server
 
 go 1.15
 

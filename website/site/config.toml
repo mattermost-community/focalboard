@@ -17,7 +17,7 @@ pygmentsStyle = "manni"
   author = ""
   description = ""
   email = ""
-  ghrepo = "https://github.com/mattermost/mattermost-octo-tasks/tree/main/website"
+  ghrepo = "https://github.com/mattermost/focalboard/tree/main/website"
 
   [params.mailinglist]
     enable = false

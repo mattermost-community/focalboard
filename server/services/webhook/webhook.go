@@ -6,8 +6,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/mattermost/mattermost-octo-tasks/server/model"
-	"github.com/mattermost/mattermost-octo-tasks/server/services/config"
+	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/config"
 )
 
 // NotifyUpdate calls webhooks

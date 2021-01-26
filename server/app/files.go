@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/mattermost/mattermost-octo-tasks/server/utils"
+	"github.com/mattermost/focalboard/server/utils"
 )
 
 func (a *App) SaveFile(reader io.Reader, filename string) (string, error) {

@@ -12,9 +12,9 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	serverContext "github.com/mattermost/mattermost-octo-tasks/server/context"
-	"github.com/mattermost/mattermost-octo-tasks/server/model"
-	"github.com/mattermost/mattermost-octo-tasks/server/services/auth"
+	serverContext "github.com/mattermost/focalboard/server/context"
+	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/auth"
 )
 
 type LoginData struct {
