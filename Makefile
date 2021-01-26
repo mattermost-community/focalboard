@@ -18,11 +18,6 @@ LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildHash=$(BUILD_H
 all: server
 
 prebuild:
-	go get github.com/gorilla/mux
-	go get github.com/gorilla/websocket
-	go get github.com/spf13/viper
-	go get github.com/lib/pq
-	go get github.com/mattn/go-sqlite3
 	cd webapp; npm install
 
 ci: server-test
