@@ -83,6 +83,8 @@ pygmentsStyle = "manni"
 
     # Workaround to add draft status to menu items
     [[params.navigation.drafts]]
+      Download = false
+      "User's Guide" = false
       Contribute = false
       Integrate = false
       Extend = false
