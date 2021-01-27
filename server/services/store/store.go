@@ -30,6 +30,7 @@ type Store interface {
 	UpdateUserPassword(username string, password string) error
 	UpdateUserPasswordByID(userID string, password string) error
 
+	GetActiveUserCount(updatedSecondsAgo int64) (int, error)
 	GetSession(token string, expireTime int64) (*model.Session, error)
 	CreateSession(session *model.Session) error
 	RefreshSession(session *model.Session) error

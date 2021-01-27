@@ -8,6 +8,24 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 )
 
+// GetActiveUserCount returns the number of users with active sessions within N seconds ago
+func (s *SQLStore) GetActiveUserCount(updatedSecondsAgo int64) (int, error) {
+	query := s.getQueryBuilder().
+		Select("count(distinct user_id)").
+		From("sessions").
+		Where(sq.Gt{"update_at": time.Now().Unix() - updatedSecondsAgo})
+
+	row := query.QueryRow()
+
+	var count int
+	err := row.Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
 func (s *SQLStore) GetSession(token string, expireTime int64) (*model.Session, error) {
 	query := s.getQueryBuilder().
 		Select("id", "token", "user_id", "props").
@@ -52,6 +70,7 @@ func (s *SQLStore) RefreshSession(session *model.Session) error {
 	now := time.Now().Unix()
 
 	query := s.getQueryBuilder().Update("sessions").
+		Where(sq.Eq{"token": session.Token}).
 		Set("update_at", now)
 
 	_, err := query.Exec()

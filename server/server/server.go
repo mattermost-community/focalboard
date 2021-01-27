@@ -123,6 +123,21 @@ func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
 		return nil, err
 	}
 
+	dailyActiveUsers, err := appBuilder().GetDailyActiveUsers()
+	if err != nil {
+		return nil, err
+	}
+
+	weeklyActiveUsers, err := appBuilder().GetWeeklyActiveUsers()
+	if err != nil {
+		return nil, err
+	}
+
+	monthlyActiveUsers, err := appBuilder().GetMonthlyActiveUsers()
+	if err != nil {
+		return nil, err
+	}
+
 	telemetryService := telemetry.New(telemetryID, zap.NewStdLog(logger))
 	telemetryService.RegisterTracker("server", func() map[string]interface{} {
 		return map[string]interface{}{
@@ -144,7 +159,10 @@ func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
 	})
 	telemetryService.RegisterTracker("activity", func() map[string]interface{} {
 		return map[string]interface{}{
-			"registered_users": registeredUserCount,
+			"registered_users":     registeredUserCount,
+			"daily_active_users":   dailyActiveUsers,
+			"weekly_active_users":  weeklyActiveUsers,
+			"monthly_active_users": monthlyActiveUsers,
 		}
 	})
 
@@ -173,7 +191,11 @@ func (s *Server) Start() error {
 	}
 
 	s.cleanUpSessionsTask = scheduler.CreateRecurringTask("cleanUpSessions", func() {
-		if err := s.store.CleanUpSessions(s.config.SessionExpireTime); err != nil {
+		secondsAgo := int64(60 * 60 * 24 * 31)
+		if secondsAgo < s.config.SessionExpireTime {
+			secondsAgo = s.config.SessionExpireTime
+		}
+		if err := s.store.CleanUpSessions(secondsAgo); err != nil {
 			s.logger.Error("Unable to clean up the sessions", zap.Error(err))
 		}
 	}, 10*time.Minute)

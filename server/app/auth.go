@@ -32,6 +32,24 @@ func (a *App) GetRegisteredUserCount() (int, error) {
 	return a.store.GetRegisteredUserCount()
 }
 
+// GetDailyActiveUsers returns the number of daily active users
+func (a *App) GetDailyActiveUsers() (int, error) {
+	secondsAgo := int64(60 * 60 * 24)
+	return a.store.GetActiveUserCount(secondsAgo)
+}
+
+// GetWeeklyActiveUsers returns the number of weekly active users
+func (a *App) GetWeeklyActiveUsers() (int, error) {
+	secondsAgo := int64(60 * 60 * 24 * 7)
+	return a.store.GetActiveUserCount(secondsAgo)
+}
+
+// GetMonthlyActiveUsers returns the number of monthly active users
+func (a *App) GetMonthlyActiveUsers() (int, error) {
+	secondsAgo := int64(60 * 60 * 24 * 30)
+	return a.store.GetActiveUserCount(secondsAgo)
+}
+
 // GetUser Get an existing active user by id
 func (a *App) GetUser(ID string) (*model.User, error) {
 	if len(ID) < 1 {

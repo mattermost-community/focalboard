@@ -103,6 +103,21 @@ func (mr *MockStoreMockRecorder) DeleteSession(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteSession", reflect.TypeOf((*MockStore)(nil).DeleteSession), arg0)
 }
 
+// GetActiveUserCount mocks base method
+func (m *MockStore) GetActiveUserCount(arg0 int64) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetActiveUserCount", arg0)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetActiveUserCount indicates an expected call of GetActiveUserCount
+func (mr *MockStoreMockRecorder) GetActiveUserCount(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetActiveUserCount", reflect.TypeOf((*MockStore)(nil).GetActiveUserCount), arg0)
+}
+
 // GetAllBlocks mocks base method
 func (m *MockStore) GetAllBlocks() ([]model.Block, error) {
 	m.ctrl.T.Helper()
