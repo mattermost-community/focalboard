@@ -86,6 +86,7 @@ func (s *SQLStore) UpdateSession(session *model.Session) error {
 	}
 
 	query := s.getQueryBuilder().Update("sessions").
+		Where(sq.Eq{"token": session.Token}).
 		Set("update_at", now).
 		Set("props", propsBytes)
 
