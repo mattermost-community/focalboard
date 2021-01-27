@@ -11,7 +11,7 @@ type Props = {
     className?: string
 }
 
-export default class cIconButton extends React.PureComponent<Props> {
+export default class IconButton extends React.PureComponent<Props> {
     render(): JSX.Element {
         let className = 'Button IconButton'
         if (this.props.className) {
