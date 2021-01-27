@@ -7,16 +7,16 @@
 
 	border-radius: 3px;
 	margin-bottom: 10px;
-	padding: 7px 10px;
-	box-shadow: rgba(var(--main-fg), 0.1) 0px 0px 0px 1px, rgba(var(--main-fg), 0.1) 0px 2px 4px;
+	padding: 8px 16px;
+	box-shadow: rgba(var(--body-color), 0.1) 0px 0px 0px 1px, rgba(var(--body-color), 0.1) 0px 2px 4px;
 
 	cursor: pointer;
-	color: rgb(var(--main-fg));
+	color: rgb(var(--body-color));
 
 	transition: background 100ms ease-out 0s;
 
     &:hover {
-        background-color: rgba(var(--main-fg), 0.1);
+        background-color: rgba(var(--body-color), 0.1);
         .optionsMenu {
             display: block;
         }
@@ -32,13 +32,14 @@
         right: 0;
     }
 
-    > div {
-        margin-bottom: 3px;
-    }
-
     > .octo-propertyvalue {
+        margin: 4px 0 0;
         font-size: 12px;
         line-height: 18px;
+
+        &:empty {
+            display: none;
+        }
     }
 
     .octo-icontitle {
@@ -54,8 +55,8 @@
         border-radius: 3px;
         margin-right: 6px;
         padding: 0;
-        background: rgb(var(--main-fg), 0.1);
-        box-shadow: rgba(var(--main-fg), 0.1) 0px 0px 0px 1px, rgba(var(--main-fg), 0.1) 0px 2px 4px;
+        background: rgb(var(--body-color), 0.1);
+        box-shadow: rgba(var(--body-color), 0.1) 0px 0px 0px 1px, rgba(var(--body-color), 0.1) 0px 2px 4px;
         height: 24px;
         width: 24px;
     }

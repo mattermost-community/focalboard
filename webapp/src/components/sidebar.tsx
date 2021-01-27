@@ -285,12 +285,12 @@ class Sidebar extends React.Component<Props, State> {
                 </MenuWrapper>
 
                 <MenuWrapper>
-                    <Button>
+                    <div className='octo-sidebar-item subitem'>
                         <FormattedMessage
                             id='Sidebar.settings'
                             defaultMessage='Settings'
                         />
-                    </Button>
+                    </div>
                     <Menu position='top'>
                         <Menu.Text
                             id='import'

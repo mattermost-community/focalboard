@@ -116,7 +116,7 @@ class TableComponent extends React.Component<Props, State> {
                                 <div
                                     id='mainBoardHeader'
                                     ref={titleRef}
-                                    className='octo-table-cell title-cell header-cell'
+                                    className='octo-table-cell header-cell'
                                     style={{overflow: 'unset', width: this.columnWidth(Constants.titleColumnId)}}
                                 >
                                     <MenuWrapper

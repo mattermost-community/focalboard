@@ -4,16 +4,18 @@
     align-items: center;
 	text-align: center;
     justify-content: center;
-	border-radius: 5px;
-	padding: 0 5px;
+	border-radius: var(--default-rad);
+	padding: 4px 8px;
 	min-width: 20px;
 	cursor: pointer;
 	overflow: hidden;
-
-	transition: background 100ms ease-out 0s;
+    background: transparent;
+    border: none;
+    transition: background 100ms ease-out 0s;
+    color: inherit;
 
 	&:hover {
-        background-color: rgba(var(--main-fg), 0.1);
+        background-color: rgba(var(--body-color), 0.1);
 	}
 
     &.filled {
@@ -27,8 +29,8 @@
     }
 
     &.active {
-        color: rgb(45, 170, 220);
-        font-weight: 500;
+        color: rgb(var(--link-color));
+        font-weight: 600;
     }
 
     .Icon {

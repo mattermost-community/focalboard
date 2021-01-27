@@ -121,7 +121,7 @@
   "ViewHeader.export-board-archive": "Export board archive",
   "ViewHeader.export-csv": "Export to CSV",
   "ViewHeader.filter": "Filter",
-  "ViewHeader.group-by": "Group by {property}",
+  "ViewHeader.group-by": "Group by: {property}",
   "ViewHeader.new": "New",
   "ViewHeader.properties": "Properties",
   "ViewHeader.search": "Search",

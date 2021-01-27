@@ -1,0 +1,34 @@
+:root {
+    --body-color: 38, 38, 38;
+    --main-bg: 255, 255, 255;
+    --button-bg: 80, 170, 221;
+    --button-fg: 255, 255, 255;
+    --sidebar-bg: 20, 93, 191;
+    --sidebar-fg: 55, 53, 47;
+    --button-bg: 22, 109, 204;
+    --link-color: 35, 137, 215;
+
+    // Label Colors
+    --prop-default: #fff;
+    --prop-gray: #EDEDED;
+    --prop-brown: #F7DDC3;
+    --prop-orange: #ffd3c1;
+    --prop-yellow: #f7f0b6;
+    --prop-green: #c7eac3;
+    --prop-blue: #B1D1F6;
+    --prop-purple: #e6d0ff;
+    --prop-pink: #ffd6e9;
+    --prop-red: #ffa9a9;
+
+    // Elevations
+    --elevation-1: 0 2px 3px 0 rgba(0, 0, 0, .8);
+    --elevation-2: 0 4px 6px 0 rgba(0, 0, 0, .12);
+    --elevation-3: 0 6px 14px 0 rgba(0, 0, 0, .12);
+    --elevation-4: 0 8px 24px 0 rgba(0, 0, 0, .12);
+    --elevation-5: 0 12px 32px 0 rgba(0, 0, 0, .12);
+    --elevation-6: 0 20px 32px 0 rgba(0, 0, 0, .12);
+
+    // Radius
+    --default-rad: 4px;
+    --modal-rad: 8px;
+}

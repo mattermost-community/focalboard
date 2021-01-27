@@ -7,16 +7,15 @@
         bottom: 0;
         z-index: 10;
 
-        background-color: rgba(var(--main-fg), 0.5);
+        background-color: rgba(var(--body-color), 0.5);
     }
 
     .dialog {
         display: flex;
         flex-direction: column;
-
         background-color: rgb(var(--main-bg));
-        border-radius: 3px;
-        box-shadow: rgba(var(--main-fg), 0.1) 0px 0px 0px 1px, rgba(var(--main-fg), 0.1) 0px 2px 4px;
+        box-shadow: rgba(var(--body-color), 0.1) 0px 0px 0px 1px, rgba(var(--body-color), 0.1) 0px 2px 4px;
+        border-radius: var(--modal-rad);
         padding: 0;
 
         overflow-x: hidden;
@@ -54,8 +53,7 @@
         > .toolbar {
             display: flex;
             flex-direction: row;
-            height: 30px;
-            margin: 10px;
+            padding: 16px;
         }
         > .content {
             display: flex;

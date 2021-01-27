@@ -11,8 +11,7 @@
         flex-direction: row;
 
         min-height: 30px;
-        margin-bottom: 10px;
-        padding: 0px 10px;
+        margin-bottom: 16px;
         color: #909090;
     }
 
@@ -30,13 +29,17 @@
         }
 
         > div {
-            margin-right: 5px;
+            margin-right: 8px;
+
+            &:last-child {
+                margin: 0;
+            }
         }
 
         .IconButton{
             background-color: unset;
             &:hover {
-                background-color: rgba(var(--main-fg), 0.1);
+                background-color: rgba(var(--body-color), 0.1);
             }
         }
     }
@@ -45,7 +48,6 @@
     .octo-board-body {
         display: flex;
         flex-direction: row;
-        padding: 0 10px;
         flex: 0 1 auto;
     }
 

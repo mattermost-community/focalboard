@@ -1,15 +1,16 @@
 .ValueSelector {
     width: 100%;
-    border-radius: 5px;
-    color: rgb(var(--main-fg));
+    border-radius: var(--default-rad);
+    color: rgb(var(--body-color));
+
     &:hover {
-        background-color: rgba(var(--main-fg), 0.1),
+        background-color: rgba(var(--body-color), 0.1),
     }
 
     > .octo-label {
         margin: 0 10px;
         &.empty {
-            color: rgba(var(--main-fg), 0.6);
+            color: rgba(var(--body-color), 0.6);
         }
     }
 
@@ -25,7 +26,7 @@
             .IconButton {
                 background-color: unset;
                 &:hover {
-                    background-color: rgba(var(--main-fg), 0.1);
+                    background-color: rgba(var(--body-color), 0.1);
                 }
             }
         }

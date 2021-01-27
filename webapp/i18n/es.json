@@ -57,7 +57,7 @@
   "ViewHeader.export-board-archive": "Exportar Archivo del Panel",
   "ViewHeader.export-csv": "Exportar a CSV",
   "ViewHeader.filter": "Filtrar",
-  "ViewHeader.group-by": "Agrupar por {property}",
+  "ViewHeader.group-by": "Agrupar por: {property}",
   "ViewHeader.new": "Nueva",
   "ViewHeader.properties": "Propiedades",
   "ViewHeader.search": "Buscar",

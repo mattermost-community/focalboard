@@ -5,7 +5,7 @@ import React from 'react'
 import './button.scss'
 
 type Props = {
-    onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
+    onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
     children?: React.ReactNode
     title?: string
     icon?: React.ReactNode
@@ -16,13 +16,14 @@ type Props = {
 export default class Button extends React.PureComponent<Props> {
     render(): JSX.Element {
         return (
-            <div
+            <button
+                type='button'
                 onClick={this.props.onClick}
                 className={`Button ${this.props.active ? 'active' : ''} ${this.props.filled ? 'filled' : ''}`}
                 title={this.props.title}
             >
                 {this.props.icon}
                 {this.props.children}
-            </div>)
+            </button>)
     }
 }
