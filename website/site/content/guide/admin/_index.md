@@ -20,6 +20,7 @@ Personal Server settings are stored in `config.json` and is read when the server
 | telemetry     | Enable health diagnostics telemetry | true
 | session_expire_time | Session expiration time in seconds | 2592000
 | session_refresh_time  | Session refresh time in seconds | 18000
+| localOnly | Only allow connections from localhost | false
 | enableLocalMode | Enable Admin APIs on local Unix port | true
 | localModeSocketLocation | Location of local Unix port | "/var/tmp/octo_local.socket"
 
@@ -40,3 +41,5 @@ fi
 
 curl --unix-socket /var/tmp/octo_local.socket http://localhost/api/v1/admin/users/$1/password -X POST -H 'Content-Type: application/json' -d '{ "password": "'$2'" }'
 ```
+
+After resetting a user's password (e.g. if they forgot it), direct them to change it from the user menu, by clicking on their username at the top of the side bar.
