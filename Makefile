@@ -51,6 +51,7 @@ server-linux-package: server-linux webapp
 	cp config.json package/${PACKAGE_FOLDER}
 	cp build/MIT-COMPILED-LICENSE.md package/${PACKAGE_FOLDER}
 	cp NOTICE.txt package/${PACKAGE_FOLDER}
+	cp webapp/NOTICE.txt package/${PACKAGE_FOLDER}/webapp-NOTICE.txt
 	mkdir -p dist
 	cd package && tar -czvf ../dist/focalboard-server-linux-amd64.tar.gz ${PACKAGE_FOLDER}
 	rm -rf package
@@ -116,7 +117,8 @@ mac-app: server-mac webapp
 	# xcodebuild -exportArchive -archivePath mac/temp/focalboard.xcarchive -exportPath mac/dist -exportOptionsPlist mac/export.plist
 	cp build/MIT-COMPILED-LICENSE.md mac/dist
 	cp NOTICE.txt mac/dist
-	cd mac/dist; zip -r focalboard-mac.zip Focalboard.app MIT-COMPILED-LICENSE.md NOTICE.txt
+	cp webapp/NOTICE.txt mac/dist/webapp-NOTICE.txt
+	cd mac/dist; zip -r focalboard-mac.zip Focalboard.app MIT-COMPILED-LICENSE.md NOTICE.txt webapp-NOTICE.txt
 
 win-app: server-win webapp
 	rm -rf win/temp
@@ -127,6 +129,7 @@ win-app: server-win webapp
 	cp app-config.json win/temp/config.json
 	cp build/MIT-COMPILED-LICENSE.md win/temp
 	cp NOTICE.txt win/temp
+	cp webapp/NOTICE.txt win/temp/webapp-NOTICE.txt
 	cp -R webapp/pack win/temp/pack
 	mkdir -p win/dist
 	# cd win/temp; tar -acf ../dist/focalboard-win.zip .
@@ -141,6 +144,7 @@ linux-app: server-linux webapp
 	cp app-config.json linux/temp/focalboard-app/config.json
 	cp build/MIT-COMPILED-LICENSE.md linux/temp/focalboard-app/
 	cp NOTICE.txt linux/temp/focalboard-app/
+	cp webapp/NOTICE.txt linux/temp/focalboard-app/webapp-NOTICE.txt
 	cp -R webapp/pack linux/temp/focalboard-app/pack
 	cd linux; make build
 	cp -R linux/bin/focalboard-app linux/temp/focalboard-app/
