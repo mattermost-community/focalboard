@@ -17,7 +17,7 @@
             {{ $drafts := index $.Site.Params.navigation.drafts 0}}
             {{ $draft := index $drafts .Name }}
             {{ if or (eq $.Site.BuildDrafts true) (eq $draft false) }}
-            <li><a class="external" href="{{ .URL }}">{{ .Name }}</a></li>
+            <li><a class="external" rel="noopener" href="{{ .URL }}">{{ .Name }}</a></li>
             {{ end }}
         {{ end }}
     </ul>

@@ -5,4 +5,4 @@ Disallow: /&utm_medium
 Disallow: /&utm_campaign
 Disallow: /?utm_
 
-Sitemap: https://developers.mattermost.com/sitemap.xml
+Sitemap: https://www.focalboard.com/sitemap.xml

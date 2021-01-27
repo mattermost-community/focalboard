@@ -81,6 +81,11 @@ pygmentsStyle = "manni"
       name = "Blog"
       weight = 4
 
+    [[menu.postpend]]
+      url = "https://docs.google.com/forms/d/e/1FAIpQLSdTq7M69Pdlz71CwucaSEG0FCK1M_WRvIbZbPr2imfT2QvUCQ/viewform?usp=sf_link"
+      name = "Feedback"
+      weight = 5
+
     # Workaround to add draft status to menu items
     [[params.navigation.drafts]]
       Download = false
@@ -89,6 +94,7 @@ pygmentsStyle = "manni"
       Integrate = false
       Extend = false
       Blog = false
+      Feedback = false
       Internal = false
       'Admin Docs' = false
 
