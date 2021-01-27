@@ -3435,6 +3435,7 @@ table>tbody>tr:nth-of-type(odd) {
     transform: skew(0deg, -5deg);
     background-image: linear-gradient(-135deg, #1ba4f7 0%, #4641ff 100%);
     height: 100%;
+    min-height: 1500px;
     left: 0;
     position: absolute;
     top: -15%;
