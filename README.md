@@ -1,6 +1,6 @@
 # Focalboard
 
-[![Focalboard](website/site/static/img/hero.png)](http://www.focalboard.com)
+[![Focalboard](website/site/static/img/hero.jpg)](http://www.focalboard.com)
 
 [Focalboard](http://www.focalboard.com) is an open source project management app for individuals and teams. It comes in two editions:
 * **Personal Desktop**: A stand-alone desktop app for your todos and personal projects
