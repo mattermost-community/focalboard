@@ -118,6 +118,11 @@ func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
 		}
 	}
 
+	registeredUserCount, err := appBuilder().GetRegisteredUserCount()
+	if err != nil {
+		return nil, err
+	}
+
 	telemetryService := telemetry.New(telemetryID, zap.NewStdLog(logger))
 	telemetryService.RegisterTracker("server", func() map[string]interface{} {
 		return map[string]interface{}{
@@ -130,10 +135,16 @@ func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
 	})
 	telemetryService.RegisterTracker("config", func() map[string]interface{} {
 		return map[string]interface{}{
-			"serverRoot": cfg.ServerRoot == config.DefaultServerRoot,
-			"port":       cfg.Port == config.DefaultPort,
-			"useSSL":     cfg.UseSSL,
-			"dbType":     cfg.DBType,
+			"serverRoot":  cfg.ServerRoot == config.DefaultServerRoot,
+			"port":        cfg.Port == config.DefaultPort,
+			"useSSL":      cfg.UseSSL,
+			"dbType":      cfg.DBType,
+			"single_user": singleUser,
+		}
+	})
+	telemetryService.RegisterTracker("activity", func() map[string]interface{} {
+		return map[string]interface{}{
+			"registered_users": registeredUserCount,
 		}
 	})
 

@@ -138,7 +138,7 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		// No signup token, check if no active users
-		userCount, err := a.app().GetActiveUserCount()
+		userCount, err := a.app().GetRegisteredUserCount()
 		if err != nil {
 			errorResponse(w, http.StatusInternalServerError, nil, err)
 			return
