@@ -397,6 +397,16 @@ class Sidebar extends React.Component<Props, State> {
                                 this.setState({showRegistrationLinkDialog: true})
                             }}
                         />
+
+                        <Menu.Separator/>
+
+                        <Menu.Text
+                            id='about'
+                            name={intl.formatMessage({id: 'Sidebar.about', defaultMessage: 'About Focalboard'})}
+                            onClick={async () => {
+                                this.showAbout()
+                            }}
+                        />
                     </Menu>
                 </MenuWrapper>
 
@@ -526,6 +536,11 @@ class Sidebar extends React.Component<Props, State> {
 
     private showClicked = () => {
         this.setState({isHidden: false})
+    }
+
+    private showAbout = () => {
+        const url = 'http://www.focalboard.com?utm_source=webapp'
+        window.open(url, '_blank')
     }
 }
 
