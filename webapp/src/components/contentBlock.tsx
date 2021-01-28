@@ -9,6 +9,7 @@ import {IContentBlock} from '../blocks/contentBlock'
 import {MutableDividerBlock} from '../blocks/dividerBlock'
 import {MutableTextBlock} from '../blocks/textBlock'
 import mutator from '../mutator'
+import octoClient from '../octoClient'
 import {Utils} from '../utils'
 import IconButton from '../widgets/buttons/iconButton'
 import AddIcon from '../widgets/icons/add'
@@ -33,7 +34,24 @@ type Props = {
     intl: IntlShape
 }
 
-class ContentBlock extends React.PureComponent<Props> {
+type State = {
+    imageDataUrl?: string
+}
+
+class ContentBlock extends React.PureComponent<Props, State> {
+    state: State = {}
+
+    componentDidMount() {
+        if (this.props.block.type === 'image' && !this.state.imageDataUrl) {
+            this.loadImage()
+        }
+    }
+
+    private async loadImage() {
+        const imageDataUrl = await octoClient.fetchImage(this.props.block.fields.url)
+        this.setState({imageDataUrl})
+    }
+
     public render(): JSX.Element | null {
         const {intl, card, contents, block} = this.props
 
@@ -160,9 +178,9 @@ class ContentBlock extends React.PureComponent<Props> {
                         readonly={this.props.readonly}
                     />}
                 {block.type === 'divider' && <div className='divider'/>}
-                {block.type === 'image' &&
+                {block.type === 'image' && this.state.imageDataUrl &&
                     <img
-                        src={block.fields.url}
+                        src={this.state.imageDataUrl}
                         alt={block.title}
                     />}
             </div>

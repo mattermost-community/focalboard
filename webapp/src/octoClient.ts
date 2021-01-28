@@ -316,6 +316,17 @@ class OctoClient {
 
         return true
     }
+
+    // Images
+
+    async fetchImage(url: string): Promise<string> {
+        const response = await fetch(url, {headers: this.headers()})
+        if (response.status !== 200) {
+            return ''
+        }
+        const blob = await response.blob()
+        return URL.createObjectURL(blob)
+    }
 }
 
 function getReadToken(): string {
