@@ -41,13 +41,13 @@
       "size" : "256x256"
     },
     {
-      "filename" : "tasks app icon-512x512.png",
+      "filename" : "focalboard-512.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "512x512"
     },
     {
-      "filename" : "tasks app icon.png",
+      "filename" : "focalboard-1024.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "512x512"
