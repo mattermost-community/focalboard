@@ -105,15 +105,7 @@ class Sidebar extends React.Component<Props, State> {
                     <div className='heading'>
                         <UserContext.Consumer>
                             {(user) => {
-                                if (user) {
-                                    if (user.id === 'single-user') {
-                                        return (
-                                            <div>{intl.formatMessage({id: 'Sidebar.title', defaultMessage: 'Boards'})}</div>
-                                        )
-                                    }
-                                    return this.renderUserMenu(user)
-                                }
-                                return <div/>
+                                return this.renderUserMenu(user)
                             }}
                         </UserContext.Consumer>
                     </div>
@@ -366,7 +358,7 @@ class Sidebar extends React.Component<Props, State> {
         this.setState({whiteLogo})
     }
 
-    private renderUserMenu(user: IUser): JSX.Element {
+    private renderUserMenu(user?: IUser): JSX.Element {
         const {intl} = this.props
 
         return (
@@ -374,31 +366,33 @@ class Sidebar extends React.Component<Props, State> {
                 <MenuWrapper>
                     {this.state.whiteLogo ? <LogoWithNameWhiteIcon/> : <LogoWithNameIcon/>}
                     <Menu>
-                        <Menu.Label><b>{user.username}</b></Menu.Label>
-                        <Menu.Text
-                            id='logout'
-                            name={intl.formatMessage({id: 'Sidebar.logout', defaultMessage: 'Log out'})}
-                            onClick={async () => {
-                                octoClient.logout()
-                                window.location.href = '/login'
-                            }}
-                        />
-                        <Menu.Text
-                            id='changePassword'
-                            name={intl.formatMessage({id: 'Sidebar.changePassword', defaultMessage: 'Change password'})}
-                            onClick={async () => {
-                                window.location.href = '/change_password'
-                            }}
-                        />
-                        <Menu.Text
-                            id='invite'
-                            name={intl.formatMessage({id: 'Sidebar.invite-users', defaultMessage: 'Invite Users'})}
-                            onClick={async () => {
-                                this.setState({showRegistrationLinkDialog: true})
-                            }}
-                        />
+                        {user && user.username !== 'single-user' && <>
+                            <Menu.Label><b>{user.username}</b></Menu.Label>
+                            <Menu.Text
+                                id='logout'
+                                name={intl.formatMessage({id: 'Sidebar.logout', defaultMessage: 'Log out'})}
+                                onClick={async () => {
+                                    octoClient.logout()
+                                    window.location.href = '/login'
+                                }}
+                            />
+                            <Menu.Text
+                                id='changePassword'
+                                name={intl.formatMessage({id: 'Sidebar.changePassword', defaultMessage: 'Change password'})}
+                                onClick={async () => {
+                                    window.location.href = '/change_password'
+                                }}
+                            />
+                            <Menu.Text
+                                id='invite'
+                                name={intl.formatMessage({id: 'Sidebar.invite-users', defaultMessage: 'Invite Users'})}
+                                onClick={async () => {
+                                    this.setState({showRegistrationLinkDialog: true})
+                                }}
+                            />
 
-                        <Menu.Separator/>
+                            <Menu.Separator/>
+                        </>}
 
                         <Menu.Text
                             id='about'
