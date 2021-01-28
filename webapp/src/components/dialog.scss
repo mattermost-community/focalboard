@@ -27,7 +27,7 @@
             height: calc(100% - 144px);
 
             .hideOnWidescreen {
-                /* Hide controls (e.g. close button) on larger screens */
+                /* Hide elements on larger screens */
                 display: none !important;
             }
         }
