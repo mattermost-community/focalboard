@@ -48,7 +48,7 @@ server-linux-package: server-linux webapp
 	mkdir -p package/${PACKAGE_FOLDER}/bin
 	cp bin/linux/octoserver package/${PACKAGE_FOLDER}/bin
 	cp -R webapp/pack package/${PACKAGE_FOLDER}/pack
-	cp config.json package/${PACKAGE_FOLDER}
+	cp server-config.json package/${PACKAGE_FOLDER}/config.json
 	cp build/MIT-COMPILED-LICENSE.md package/${PACKAGE_FOLDER}
 	cp NOTICE.txt package/${PACKAGE_FOLDER}
 	cp webapp/NOTICE.txt package/${PACKAGE_FOLDER}/webapp-NOTICE.txt
