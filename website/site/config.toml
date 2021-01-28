@@ -1,5 +1,5 @@
 # Page settings
-baseURL = "https://tasks.octo.mattermost.com/"
+baseURL = "http://www.focalboard.com/"
 canonifyURLs = true
 #relativeURLs = true
 
