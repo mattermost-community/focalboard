@@ -1,5 +1,5 @@
 # Page settings
-baseURL = "http://www.focalboard.com/"
+baseURL = "https://www.focalboard.com/"
 canonifyURLs = true
 #relativeURLs = true
 

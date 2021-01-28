@@ -1,5 +1,5 @@
 
-BASE_URL?=http://www.focalboard.com
+BASE_URL?=https://www.focalboard.com
 
 .PHONY: dist
 dist:

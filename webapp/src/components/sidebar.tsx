@@ -533,7 +533,7 @@ class Sidebar extends React.Component<Props, State> {
     }
 
     private showAbout = () => {
-        const url = 'http://www.focalboard.com?utm_source=webapp'
+        const url = 'https://www.focalboard.com?utm_source=webapp'
         window.open(url, '_blank')
     }
 }
