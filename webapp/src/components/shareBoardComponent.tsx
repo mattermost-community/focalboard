@@ -30,7 +30,7 @@ type State = {
 class ShareBoardComponent extends React.PureComponent<Props, State> {
     state: State = {wasCopied: false}
 
-    componentDidMount() {
+    componentDidMount(): void {
         this.loadData()
     }
 

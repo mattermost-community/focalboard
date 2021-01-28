@@ -41,7 +41,7 @@ type State = {
 class ContentBlock extends React.PureComponent<Props, State> {
     state: State = {}
 
-    componentDidMount() {
+    componentDidMount(): void {
         if (this.props.block.type === 'image' && !this.state.imageDataUrl) {
             this.loadImage()
         }

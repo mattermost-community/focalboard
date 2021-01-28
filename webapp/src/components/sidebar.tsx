@@ -8,7 +8,7 @@ import {Board, MutableBoard} from '../blocks/board'
 import {BoardView, MutableBoardView} from '../blocks/boardView'
 import mutator from '../mutator'
 import octoClient from '../octoClient'
-import {darkTheme, defaultTheme, lightTheme, setTheme} from '../theme'
+import {darkTheme, defaultTheme, lightTheme, loadTheme, setTheme, Theme} from '../theme'
 import {IUser, UserContext} from '../user'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
 import Button from '../widgets/buttons/button'
@@ -20,6 +20,8 @@ import DotIcon from '../widgets/icons/dot'
 import DuplicateIcon from '../widgets/icons/duplicate'
 import HamburgerIcon from '../widgets/icons/hamburger'
 import HideSidebarIcon from '../widgets/icons/hideSidebar'
+import LogoWithNameIcon from '../widgets/icons/logoWithName'
+import LogoWithNameWhiteIcon from '../widgets/icons/logoWithNameWhite'
 import OptionsIcon from '../widgets/icons/options'
 import ShowSidebarIcon from '../widgets/icons/showSidebar'
 import Menu from '../widgets/menu'
@@ -42,16 +44,29 @@ type State = {
     isHidden: boolean
     collapsedBoards: {[key: string]: boolean}
     showRegistrationLinkDialog?: boolean
+    whiteLogo: boolean
 }
 
 class Sidebar extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props)
-        this.state = {isHidden: false, collapsedBoards: {}}
+        this.state = {isHidden: false, collapsedBoards: {}, whiteLogo: false}
     }
 
     shouldComponentUpdate(): boolean {
         return true
+    }
+
+    componentDidMount(): void {
+        this.updateLogo()
+    }
+
+    private updateLogo() {
+        const theme = loadTheme()
+        const whiteLogo = theme.sidebarWhiteLogo === 'true'
+        if (this.state.whiteLogo !== whiteLogo) {
+            this.setState({whiteLogo})
+        }
     }
 
     render(): JSX.Element {
@@ -326,17 +341,17 @@ class Sidebar extends React.Component<Props, State> {
                             <Menu.Text
                                 id='default-theme'
                                 name={intl.formatMessage({id: 'Sidebar.default-theme', defaultMessage: 'Default theme'})}
-                                onClick={async () => setTheme(defaultTheme)}
+                                onClick={async () => this.updateTheme(defaultTheme)}
                             />
                             <Menu.Text
                                 id='dark-theme'
                                 name={intl.formatMessage({id: 'Sidebar.dark-theme', defaultMessage: 'Dark theme'})}
-                                onClick={async () => setTheme(darkTheme)}
+                                onClick={async () => this.updateTheme(darkTheme)}
                             />
                             <Menu.Text
                                 id='light-theme'
                                 name={intl.formatMessage({id: 'Sidebar.light-theme', defaultMessage: 'Light theme'})}
-                                onClick={async () => setTheme(lightTheme)}
+                                onClick={async () => this.updateTheme(lightTheme)}
                             />
                         </Menu.SubMenu>
                     </Menu>
@@ -345,16 +360,21 @@ class Sidebar extends React.Component<Props, State> {
         )
     }
 
+    private updateTheme(theme: Theme) {
+        setTheme(theme)
+        const whiteLogo = (theme.sidebarWhiteLogo === 'true')
+        this.setState({whiteLogo})
+    }
+
     private renderUserMenu(user: IUser): JSX.Element {
         const {intl} = this.props
 
         return (
             <ModalWrapper>
                 <MenuWrapper>
-                    <Button>
-                        {user.username}
-                    </Button>
+                    {this.state.whiteLogo ? <LogoWithNameWhiteIcon/> : <LogoWithNameIcon/>}
                     <Menu>
+                        <Menu.Label><b>{user.username}</b></Menu.Label>
                         <Menu.Text
                             id='logout'
                             name={intl.formatMessage({id: 'Sidebar.logout', defaultMessage: 'Log out'})}
