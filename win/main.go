@@ -12,10 +12,10 @@ import (
 )
 
 func runServer(ctx context.Context) *exec.Cmd {
-	// cmd := exec.CommandContext(ctx, "octoserver.exe", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10), "--single-user")
-	cmd := exec.CommandContext(ctx, "octoserver.exe", "--single-user")
-	// cmd := exec.CommandContext(ctx, "cmd.exe", "/C", "start", "./bin/octoserver.exe", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10))
-	// cmd := exec.CommandContext(ctx, "cmd.exe", "/C", "start", "./bin/octoserver.exe")
+	// cmd := exec.CommandContext(ctx, "focalboard-server.exe", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10), "--single-user")
+	cmd := exec.CommandContext(ctx, "focalboard-server.exe", "--single-user")
+	// cmd := exec.CommandContext(ctx, "cmd.exe", "/C", "start", "./bin/focalboard-server.exe", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10))
+	// cmd := exec.CommandContext(ctx, "cmd.exe", "/C", "start", "./bin/focalboard-server.exe")
 
 	// cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 	cmd.Stdout = os.Stdout

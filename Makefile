@@ -27,26 +27,26 @@ ci: server-test
 
 server:
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=dev")
-	cd server; go build -ldflags '$(LDFLAGS)' -o ../bin/octoserver ./main
+	cd server; go build -ldflags '$(LDFLAGS)' -o ../bin/focalboard-server ./main
 
 server-mac:
 	mkdir -p bin/mac
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=mac")
-	cd server; env GOOS=darwin GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/mac/octoserver ./main
+	cd server; env GOOS=darwin GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/mac/focalboard-server ./main
 
 server-linux:
 	mkdir -p bin/linux
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=linux")
-	cd server; env GOOS=linux GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/linux/octoserver ./main
+	cd server; env GOOS=linux GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/linux/focalboard-server ./main
 
 server-win:
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=win")
-	cd server; env GOOS=windows GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/win/octoserver.exe ./main
+	cd server; env GOOS=windows GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/win/focalboard-server.exe ./main
 
 server-linux-package: server-linux webapp
 	rm -rf package
 	mkdir -p package/${PACKAGE_FOLDER}/bin
-	cp bin/linux/octoserver package/${PACKAGE_FOLDER}/bin
+	cp bin/linux/focalboard-server package/${PACKAGE_FOLDER}/bin
 	cp -R webapp/pack package/${PACKAGE_FOLDER}/pack
 	cp server-config.json package/${PACKAGE_FOLDER}/config.json
 	cp build/MIT-COMPILED-LICENSE.md package/${PACKAGE_FOLDER}
@@ -58,21 +58,21 @@ server-linux-package: server-linux webapp
 
 server-single-user:
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=dev")
-	cd server; go build -ldflags '$(LDFLAGS)' -o ../bin/octoserver ./main --single-user
+	cd server; go build -ldflags '$(LDFLAGS)' -o ../bin/focalboard-server ./main --single-user
 
 server-mac-single-user:
 	mkdir -p bin/mac
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=mac")
-	cd server; env GOOS=darwin GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/mac/octoserver ./main --single-user
+	cd server; env GOOS=darwin GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/mac/focalboard-server ./main --single-user
 
 server-linux-single-user:
 	mkdir -p bin/linux
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=linux")
-	cd server; env GOOS=linux GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/linux/octoserver ./main --single-user
+	cd server; env GOOS=linux GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/linux/focalboard-server ./main --single-user
 
 server-win-single-user:
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=win")
-	cd server; env GOOS=windows GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/octoserver.exe ./main --single-user
+	cd server; env GOOS=windows GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/focalboard-server.exe ./main --single-user
 
 generate:
 	cd server; go get -modfile=go.tools.mod github.com/golang/mock/mockgen
@@ -96,7 +96,7 @@ watch-server:
 	cd server; modd
 
 watch-server-single-user:
-	cd server; env OCTOSERVER_ARGS=--single-user modd
+	cd server; env FOCALBOARDSERVER_ARGS=--single-user modd
 
 webapp:
 	cd webapp; npm run pack
@@ -107,7 +107,7 @@ mac-app: server-mac webapp
 	rm -rf mac/resources/bin
 	rm -rf mac/resources/pack
 	mkdir -p mac/resources/bin
-	cp bin/mac/octoserver mac/resources/bin/octoserver
+	cp bin/mac/focalboard-server mac/resources/bin/focalboard-server
 	cp app-config.json mac/resources/config.json
 	cp -R webapp/pack mac/resources/pack
 	mkdir -p mac/temp
@@ -125,7 +125,7 @@ win-app: server-win webapp
 	rm -rf win/dist
 	cd win; make build
 	mkdir -p win/temp
-	cp bin/win/octoserver.exe win/temp
+	cp bin/win/focalboard-server.exe win/temp
 	cp app-config.json win/temp/config.json
 	cp build/MIT-COMPILED-LICENSE.md win/temp
 	cp NOTICE.txt win/temp
@@ -140,7 +140,7 @@ linux-app: server-linux webapp
 	rm -rf linux/dist
 	mkdir -p linux/dist
 	mkdir -p linux/temp/focalboard-app
-	cp bin/linux/octoserver linux/temp/focalboard-app/
+	cp bin/linux/focalboard-server linux/temp/focalboard-app/
 	cp app-config.json linux/temp/focalboard-app/config.json
 	cp build/MIT-COMPILED-LICENSE.md linux/temp/focalboard-app/
 	cp NOTICE.txt linux/temp/focalboard-app/

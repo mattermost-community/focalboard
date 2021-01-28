@@ -30,7 +30,7 @@ The server defaults to using SQLite as the store, but can be configured to use P
 
 ## Running and testing the server
 
-To start the server, run `./bin/octoserver`
+To start the server, run `./bin/focalboard-server`
 
 Server settings are in config.json.
 

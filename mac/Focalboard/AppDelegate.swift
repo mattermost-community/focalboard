@@ -70,7 +70,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	private func startServer() {
 		let cwdUrl = webFolder()
-		let executablePath = Bundle.main.path(forResource: "resources/bin/octoserver", ofType: "")
+		let executablePath = Bundle.main.path(forResource: "resources/bin/focalboard-server", ofType: "")
 
 		let pid = ProcessInfo.processInfo.processIdentifier
 		NSLog("pid: \(pid)")

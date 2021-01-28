@@ -162,7 +162,7 @@ Description=Focalboard server
 Type=simple
 Restart=always
 RestartSec=5s
-ExecStart=/opt/focalboard/bin/octoserver
+ExecStart=/opt/focalboard/bin/focalboard-server
 WorkingDirectory=/opt/focalboard
 
 [Install]

@@ -30,7 +30,7 @@ jobs:
       run: make server-linux-package
 
     - name: Copy server binary for Cypress
-      run: cp bin/linux/octoserver bin/
+      run: cp bin/linux/focalboard-server bin/
 
     - name: Upload server package
       uses: actions/upload-artifact@v1
