@@ -10,16 +10,13 @@ The same server binary powers both editions.
 
 ## Building the server
 
+First, install dependencies:
+* Go 1.15.2
+
 ```
 make prebuild
 make
 ```
-
-Currently tested with:
-* Go 1.15.2
-* MacOS Catalina (10.15.6)
-* Ubuntu 18.04
-* Windows 10
 
 The server defaults to using SQLite as the store, but can be configured to use Postgres:
 * In config.json
@@ -43,17 +40,20 @@ You can build standalone apps that package the server to run locally against SQL
 * Mac:
     * `make mac-app`
     * run `mac/dist/Focalboard.app`
-    * *Requires: macOS Catalina (10.15), Xcode 12 and a development signing certificate.*
+    * *Requires: macOS Catalina (10.15)+, Xcode 12.*
 * Linux:
     * Install webgtk dependencies
         * `sudo apt-get install libgtk-3-dev`
         * `sudo apt-get install libwebkit2gtk-4.0-dev`
     * `make linux-app`
     * run `linux/dist/focalboard-app`
+    * *Tested with: Ubuntu 18.04*
 * Windows
+    * Open a git-bash prompt
     * `make win-app`
     * run `win/dist/focalboard.exe`
     * *Requires: Windows 10*
+    * *Tested with: git bash*
 
 Cross-compilation currently isn't fully supported, so please build on the appropriate platform. Refer to the GitHub Actions workflows (build-mac.yml, build-win.yml, build-ubuntu.yml) for the detailed list of steps on each platform.
 
