@@ -1,15 +1,30 @@
-package sqlstore
+package storetests
 
 import (
 	"testing"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/stretchr/testify/require"
 )
 
-func TestInsertBlock(t *testing.T) {
-	store, tearDown := SetupTests(t)
+func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
+	t.Run("InsertBlock", func(t *testing.T) {
+		store, tearDown := setup(t)
+		testInsertBlock(t, store, tearDown)
+	})
+	t.Run("GetSubTree2", func(t *testing.T) {
+		store, tearDown := setup(t)
+		testGetSubTree2(t, store, tearDown)
+	})
+	t.Run("GetSubTree3", func(t *testing.T) {
+		store, tearDown := setup(t)
+		testGetSubTree3(t, store, tearDown)
+	})
+}
+
+func testInsertBlock(t *testing.T, store store.Store, tearDown func()) {
 	defer tearDown()
 
 	userID := "user-id"
@@ -41,8 +56,7 @@ func TestInsertBlock(t *testing.T) {
 	require.Len(t, blocks, initialCount)
 }
 
-func TestGetSubTree2(t *testing.T) {
-	store, tearDown := SetupTests(t)
+func testGetSubTree2(t *testing.T, store store.Store, tearDown func()) {
 	defer tearDown()
 
 	userID := "user-id"
@@ -52,36 +66,36 @@ func TestGetSubTree2(t *testing.T) {
 	initialCount := len(blocks)
 
 	blocksToInsert := []model.Block{
-		model.Block{
+		{
 			ID:         "parent",
 			RootID:     "parent",
 			ModifiedBy: userID,
 		},
-		model.Block{
+		{
 			ID:         "child1",
 			RootID:     "parent",
 			ParentID:   "parent",
 			ModifiedBy: userID,
 		},
-		model.Block{
+		{
 			ID:         "child2",
 			RootID:     "parent",
 			ParentID:   "parent",
 			ModifiedBy: userID,
 		},
-		model.Block{
+		{
 			ID:         "grandchild1",
 			RootID:     "parent",
 			ParentID:   "child1",
 			ModifiedBy: userID,
 		},
-		model.Block{
+		{
 			ID:         "grandchild2",
 			RootID:     "parent",
 			ParentID:   "child2",
 			ModifiedBy: userID,
 		},
-		model.Block{
+		{
 			ID:         "greatgrandchild1",
 			RootID:     "parent",
 			ParentID:   "grandchild1",
@@ -111,8 +125,7 @@ func TestGetSubTree2(t *testing.T) {
 	require.Len(t, blocks, initialCount)
 }
 
-func TestGetSubTree3(t *testing.T) {
-	store, tearDown := SetupTests(t)
+func testGetSubTree3(t *testing.T, store store.Store, tearDown func()) {
 	defer tearDown()
 
 	userID := "user-id"
@@ -122,36 +135,36 @@ func TestGetSubTree3(t *testing.T) {
 	initialCount := len(blocks)
 
 	blocksToInsert := []model.Block{
-		model.Block{
+		{
 			ID:         "parent",
 			RootID:     "parent",
 			ModifiedBy: userID,
 		},
-		model.Block{
+		{
 			ID:         "child1",
 			RootID:     "parent",
 			ParentID:   "parent",
 			ModifiedBy: userID,
 		},
-		model.Block{
+		{
 			ID:         "child2",
 			RootID:     "parent",
 			ParentID:   "parent",
 			ModifiedBy: userID,
 		},
-		model.Block{
+		{
 			ID:         "grandchild1",
 			RootID:     "parent",
 			ParentID:   "child1",
 			ModifiedBy: userID,
 		},
-		model.Block{
+		{
 			ID:         "grandchild2",
 			RootID:     "parent",
 			ParentID:   "child2",
 			ModifiedBy: userID,
 		},
-		model.Block{
+		{
 			ID:         "greatgrandchild1",
 			RootID:     "parent",
 			ParentID:   "grandchild1",

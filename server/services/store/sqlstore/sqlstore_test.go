@@ -4,11 +4,12 @@ import (
 	"os"
 	"testing"
 
-	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/services/store/storetests"
 	"github.com/stretchr/testify/require"
 )
 
-func SetupTests(t *testing.T) (*SQLStore, func()) {
+func SetupTests(t *testing.T) (store.Store, func()) {
 	dbType := os.Getenv("OT_STORE_TEST_DB_TYPE")
 	if dbType == "" {
 		dbType = "sqlite3"
@@ -30,26 +31,6 @@ func SetupTests(t *testing.T) (*SQLStore, func()) {
 	return store, tearDown
 }
 
-func InsertBlocks(t *testing.T, s *SQLStore, blocks []model.Block) {
-	for _, block := range blocks {
-		err := s.InsertBlock(block)
-		require.NoError(t, err)
-	}
-}
-
-func DeleteBlocks(t *testing.T, s *SQLStore, blocks []model.Block, modifiedBy string) {
-	for _, block := range blocks {
-		err := s.DeleteBlock(block.ID, modifiedBy)
-		require.NoError(t, err)
-	}
-}
-
-func ContainsBlockWithID(blocks []model.Block, blockID string) bool {
-	for _, block := range blocks {
-		if block.ID == blockID {
-			return true
-		}
-	}
-
-	return false
+func TestBlocksStore(t *testing.T) {
+	t.Run("BlocksStore", func(t *testing.T) { storetests.StoreTestBlocksStore(t, SetupTests) })
 }
