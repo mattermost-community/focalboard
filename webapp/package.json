@@ -77,7 +77,7 @@
 		"file-loader": "^6.1.0",
 		"html-webpack-plugin": "^4.5.0",
 		"isomorphic-fetch": "^3.0.0",
-		"jest": "^26.5.3",
+		"jest": "^26.6.3",
 		"sass": "^1.27.0",
 		"sass-loader": "^10.0.2",
 		"start-server-and-test": "^1.11.7",
