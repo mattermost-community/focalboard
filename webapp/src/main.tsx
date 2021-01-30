@@ -11,4 +11,4 @@ import './styles/main.scss'
 import './styles/labels.scss'
 
 loadTheme()
-ReactDOM.render(<App/>, document.getElementById('octo-tasks-app'))
+ReactDOM.render(<App/>, document.getElementById('main-app'))

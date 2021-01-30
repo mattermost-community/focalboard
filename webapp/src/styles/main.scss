@@ -76,16 +76,16 @@ button {
 
 /* App frame */
 
-#octo-tasks-app {
+#main-app {
 	flex: 1 1 auto;
 	display: flex;
 	flex-direction: column;
 	overflow: auto;
 }
 
-#octo-tasks-app #frame,
-#octo-tasks-app #main,
-#octo-tasks-app .BoardPage {
+#main-app #frame,
+#main-app #main,
+#main-app .BoardPage {
 	flex: 1 1 auto;
 	display: flex;
 	flex-direction: column;
