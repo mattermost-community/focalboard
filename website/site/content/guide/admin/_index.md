@@ -22,14 +22,14 @@ Personal Server settings are stored in `config.json` and is read when the server
 | session_refresh_time  | Session refresh time in seconds | 18000
 | localOnly | Only allow connections from localhost | false
 | enableLocalMode | Enable Admin APIs on local Unix port | true
-| localModeSocketLocation | Location of local Unix port | "/var/tmp/octo_local.socket"
+| localModeSocketLocation | Location of local Unix port | "/var/tmp/focalboard_local.socket"
 
 
 ## Resetting passwords
 
-By default, Personal Server exposes admin APIs on a local Unix socket at `/var/tmp/octo_local.socket`. This is configurable by the `enableLocalMode` and `localModeSocketLocation` settings in config.json.
+By default, Personal Server exposes admin APIs on a local Unix socket at `/var/tmp/focalboard_local.socket`. This is configurable by the `enableLocalMode` and `localModeSocketLocation` settings in config.json.
 
-To reset a user's password, you can use the follwing `reset-password.sh` script:
+To reset a user's password, you can use the following `reset-password.sh` script:
 
 ```
 #!/bin/bash
@@ -39,7 +39,7 @@ if [[ $# < 2 ]] ; then
     exit 1
 fi
 
-curl --unix-socket /var/tmp/octo_local.socket http://localhost/api/v1/admin/users/$1/password -X POST -H 'Content-Type: application/json' -d '{ "password": "'$2'" }'
+curl --unix-socket /var/tmp/focalboard_local.socket http://localhost/api/v1/admin/users/$1/password -X POST -H 'Content-Type: application/json' -d '{ "password": "'$2'" }'
 ```
 
 After resetting a user's password (e.g. if they forgot it), direct them to change it from the user menu, by clicking on their username at the top of the side bar.

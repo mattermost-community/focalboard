@@ -47,7 +47,7 @@ func ReadConfigFile() (*Configuration, error) {
 	viper.SetDefault("SessionRefreshTime", 60*60*5)    // 5 minutes session refresh
 	viper.SetDefault("LocalOnly", false)
 	viper.SetDefault("EnableLocalMode", false)
-	viper.SetDefault("LocalModeSocketLocation", "/var/tmp/octo_local.socket")
+	viper.SetDefault("LocalModeSocketLocation", "/var/tmp/focalboard_local.socket")
 
 	err := viper.ReadInConfig() // Find and read the config file
 	if err != nil {             // Handle errors reading the config file
