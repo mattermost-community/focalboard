@@ -106,7 +106,7 @@ sudo /etc/init.d/nginx reload
 
 ## Set up TLS on NGINX
 
-For a production server, it's important to set up TLS to encrypt web traffic. Without this, your login passwords and data are unprotected. Refer to the [NGINX TLS guide](https://docs.nginx.com/nginx/admin-guide/security-controls/terminating-ssl-http/) and [Let's Encrypt guide](https://certbot.eff.org/lets-encrypt/ubuntubionic-nginx) on setting this up.
+For a production server, it's important to set up TLS to encrypt web traffic. Without this, your login passwords and data are unprotected. Refer to the [NGINX TLS guide](https://docs.nginx.com/nginx/admin-guide/security-controls/terminating-ssl-http/) and [Let's Encrypt Certbot guide](https://certbot.eff.org/lets-encrypt/ubuntubionic-nginx) on setting this up.
 
 ## Install Postgresql (Recommended)
 
