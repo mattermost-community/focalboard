@@ -32,18 +32,18 @@ type State = {
 }
 
 class ValueSelector extends React.Component<Props, State> {
-    public constructor(props: Props) {
+    constructor(props: Props) {
         super(props)
         this.state = {
             activated: false,
         }
     }
 
-    public shouldComponentUpdate(): boolean {
+    shouldComponentUpdate(): boolean {
         return true
     }
 
-    renderLabel = (option: IPropertyOption, meta: FormatOptionLabelMeta<IPropertyOption>): React.ReactNode => {
+    private renderLabel = (option: IPropertyOption, meta: FormatOptionLabelMeta<IPropertyOption>): React.ReactNode => {
         if (meta.context === 'value') {
             return <span className={`octo-label ${option.color}`} >{option.value}</span>
         }
@@ -76,7 +76,7 @@ class ValueSelector extends React.Component<Props, State> {
         )
     }
 
-    public render(): JSX.Element {
+    render(): JSX.Element {
         if (!this.state.activated) {
             return (
                 <div
@@ -91,6 +91,7 @@ class ValueSelector extends React.Component<Props, State> {
         }
         return (
             <CreatableSelect
+                isClearable={true}
                 styles={{
                     indicatorsContainer: (provided: CSSProperties): CSSProperties => ({
                         ...provided,
@@ -138,6 +139,8 @@ class ValueSelector extends React.Component<Props, State> {
                 onChange={(value: ValueType<IPropertyOption>, action: ActionMeta<IPropertyOption>): void => {
                     if (action.action === 'select-option') {
                         this.props.onChange((value as IPropertyOption).id)
+                    } else if (action.action === 'clear') {
+                        this.props.onChange('')
                     }
                 }}
                 onCreateOption={this.props.onCreate}
