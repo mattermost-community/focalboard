@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"encoding/json"
+	"errors"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -91,8 +92,21 @@ func (s *SQLStore) UpdateUser(user *model.User) error {
 		Set("update_at", now).
 		Where(sq.Eq{"id": user.ID})
 
-	_, err = query.Exec()
-	return err
+	result, err := query.Exec()
+	if err != nil {
+		return err
+	}
+
+	rowCount, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowCount < 1 {
+		return errors.New("user not found")
+	}
+
+	return nil
 }
 
 func (s *SQLStore) UpdateUserPassword(username string, password string) error {
@@ -103,8 +117,21 @@ func (s *SQLStore) UpdateUserPassword(username string, password string) error {
 		Set("update_at", now).
 		Where(sq.Eq{"username": username})
 
-	_, err := query.Exec()
-	return err
+	result, err := query.Exec()
+	if err != nil {
+		return err
+	}
+
+	rowCount, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowCount < 1 {
+		return errors.New("user not found")
+	}
+
+	return nil
 }
 
 func (s *SQLStore) UpdateUserPasswordByID(userID string, password string) error {
@@ -115,6 +142,19 @@ func (s *SQLStore) UpdateUserPasswordByID(userID string, password string) error 
 		Set("update_at", now).
 		Where(sq.Eq{"id": userID})
 
-	_, err := query.Exec()
-	return err
+	result, err := query.Exec()
+	if err != nil {
+		return err
+	}
+
+	rowCount, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowCount < 1 {
+		return errors.New("user not found")
+	}
+
+	return nil
 }
