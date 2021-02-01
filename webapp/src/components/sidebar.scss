@@ -125,6 +125,14 @@
             }
         }
 
+        >.Icon {
+            stroke: rgba(var(--sidebar-fg), 0.3);
+            height: 14px;
+            width: 14px;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+
         >.IconButton {
             background-color: var(--sidebar-bg);
 

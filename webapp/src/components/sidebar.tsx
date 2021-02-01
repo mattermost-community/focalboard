@@ -5,7 +5,7 @@ import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {Archiver} from '../archiver'
 import {Board, MutableBoard} from '../blocks/board'
-import {BoardView, MutableBoardView} from '../blocks/boardView'
+import {BoardView, IViewType, MutableBoardView} from '../blocks/boardView'
 import mutator from '../mutator'
 import octoClient from '../octoClient'
 import {darkTheme, defaultTheme, lightTheme, loadTheme, setTheme, Theme} from '../theme'
@@ -16,7 +16,6 @@ import IconButton from '../widgets/buttons/iconButton'
 import BoardIcon from '../widgets/icons/board'
 import DeleteIcon from '../widgets/icons/delete'
 import DisclosureTriangle from '../widgets/icons/disclosureTriangle'
-import DotIcon from '../widgets/icons/dot'
 import DuplicateIcon from '../widgets/icons/duplicate'
 import HamburgerIcon from '../widgets/icons/hamburger'
 import HideSidebarIcon from '../widgets/icons/hideSidebar'
@@ -24,6 +23,7 @@ import LogoWithNameIcon from '../widgets/icons/logoWithName'
 import LogoWithNameWhiteIcon from '../widgets/icons/logoWithNameWhite'
 import OptionsIcon from '../widgets/icons/options'
 import ShowSidebarIcon from '../widgets/icons/showSidebar'
+import TableIcon from '../widgets/icons/table'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 
@@ -197,7 +197,7 @@ class Sidebar extends React.Component<Props, State> {
                                             key={view.id}
                                             className='octo-sidebar-item subitem'
                                         >
-                                            <DotIcon/>
+                                            {this.iconForViewType(view.viewType)}
                                             <div
                                                 className='octo-sidebar-title'
                                                 onClick={() => {
@@ -449,6 +449,14 @@ class Sidebar extends React.Component<Props, State> {
                 }
             },
         )
+    }
+
+    private iconForViewType(viewType: IViewType): JSX.Element {
+        switch (viewType) {
+        case 'board': return <BoardIcon/>
+        case 'table': return <TableIcon/>
+        default: return <div/>
+        }
     }
 
     private async addBoardFromTemplate(boardTemplateId: string) {
