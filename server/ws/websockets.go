@@ -31,6 +31,11 @@ type UpdateMsg struct {
 	Block  model.Block `json:"block"`
 }
 
+// ErrorMsg is sent on errors
+type ErrorMsg struct {
+	Error string `json:"error"`
+}
+
 // WebsocketCommand is an incoming command from the client.
 type WebsocketCommand struct {
 	Action   string   `json:"action"`
@@ -156,6 +161,7 @@ func (ws *Server) authenticateListener(wsSession *websocketSession, token string
 func (ws *Server) addListener(wsSession *websocketSession, blockIDs []string) {
 	if !wsSession.isAuthenticated {
 		log.Printf("addListener: NOT AUTHENTICATED")
+		sendError(wsSession.client, "not authenticated")
 		return
 	}
 
@@ -191,6 +197,7 @@ func (ws *Server) removeListener(client *websocket.Conn) {
 func (ws *Server) removeListenerFromBlocks(wsSession *websocketSession, blockIDs []string) {
 	if !wsSession.isAuthenticated {
 		log.Printf("removeListenerFromBlocks: NOT AUTHENTICATED")
+		sendError(wsSession.client, "not authenticated")
 		return
 	}
 
@@ -215,6 +222,18 @@ func (ws *Server) removeListenerFromBlocks(wsSession *websocketSession, blockIDs
 	}
 
 	ws.mu.Unlock()
+}
+
+func sendError(conn *websocket.Conn, message string) {
+	errorMsg := ErrorMsg{
+		Error: message,
+	}
+
+	err := conn.WriteJSON(errorMsg)
+	if err != nil {
+		log.Printf("sendError error: %v", err)
+		conn.Close()
+	}
 }
 
 // getListeners returns the listeners to a blockID's changes.

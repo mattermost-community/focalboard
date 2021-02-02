@@ -11,9 +11,9 @@ type WSCommand = {
 
 // These are messages from the server
 type WSMessage = {
-    action: string
-    blockId: string
-    block: IBlock
+    action?: string
+    block?: IBlock
+    error?: string
 }
 
 type OnChangeHandler = (blocks: IBlock[]) => void
@@ -92,10 +92,15 @@ class OctoListener {
 
             try {
                 const message = JSON.parse(e.data) as WSMessage
+                if (message.error) {
+                    Utils.logError(`Listener websocket error: ${message.error}`)
+                    return
+                }
+
                 switch (message.action) {
                 case 'UPDATE_BLOCK':
                     Utils.log(`OctoListener update block: ${message.block?.id}`)
-                    this.queueUpdateNotification(message.block)
+                    this.queueUpdateNotification(message.block!)
                     break
                 default:
                     Utils.logError(`Unexpected action: ${message.action}`)
