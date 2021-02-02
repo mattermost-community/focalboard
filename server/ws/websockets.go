@@ -152,7 +152,7 @@ func (ws *Server) authenticateListener(wsSession *websocketSession, token string
 	log.Printf("authenticateListener: Authenticated")
 }
 
-// AddListener adds a listener for a block's change.
+// addListener adds a listener for a block's change.
 func (ws *Server) addListener(wsSession *websocketSession, blockIDs []string) {
 	if !wsSession.isAuthenticated {
 		log.Printf("addListener: NOT AUTHENTICATED")
@@ -217,8 +217,8 @@ func (ws *Server) removeListenerFromBlocks(wsSession *websocketSession, blockIDs
 	ws.mu.Unlock()
 }
 
-// GetListeners returns the listeners to a blockID's changes.
-func (ws *Server) GetListeners(blockID string) []*websocket.Conn {
+// getListeners returns the listeners to a blockID's changes.
+func (ws *Server) getListeners(blockID string) []*websocket.Conn {
 	ws.mu.Lock()
 	listeners := ws.listeners[blockID]
 	ws.mu.Unlock()
@@ -243,7 +243,7 @@ func (ws *Server) BroadcastBlockChange(block model.Block) {
 	blockIDsToNotify := []string{block.ID, block.ParentID}
 
 	for _, blockID := range blockIDsToNotify {
-		listeners := ws.GetListeners(blockID)
+		listeners := ws.getListeners(blockID)
 		log.Printf("%d listener(s) for blockID: %s", len(listeners), blockID)
 
 		if listeners != nil {
