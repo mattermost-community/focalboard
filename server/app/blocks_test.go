@@ -14,10 +14,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func isValidSessionToken(token string) bool {
-	return true
-}
-
 func TestGetParentID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
