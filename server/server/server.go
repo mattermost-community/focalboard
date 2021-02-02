@@ -77,7 +77,7 @@ func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
 
 	webhookClient := webhook.NewClient(cfg)
 
-	appBuilder := func() *app.App { return app.New(cfg, store, wsServer, filesBackend, webhookClient) }
+	appBuilder := func() *app.App { return app.New(cfg, store, auth, wsServer, filesBackend, webhookClient) }
 	api := api.NewAPI(appBuilder, singleUser)
 
 	// Local router for admin APIs

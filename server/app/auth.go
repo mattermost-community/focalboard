@@ -2,7 +2,6 @@ package app
 
 import (
 	"log"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/mattermost/focalboard/server/model"
@@ -13,18 +12,7 @@ import (
 
 // GetSession Get a user active session and refresh the session if is needed
 func (a *App) GetSession(token string) (*model.Session, error) {
-	if len(token) < 1 {
-		return nil, errors.New("no session token")
-	}
-
-	session, err := a.store.GetSession(token, a.config.SessionExpireTime)
-	if err != nil {
-		return nil, errors.Wrap(err, "unable to get the session for the token")
-	}
-	if session.UpdateAt < (time.Now().Unix() - a.config.SessionRefreshTime) {
-		a.store.RefreshSession(session)
-	}
-	return session, nil
+	return a.auth.GetSession(token)
 }
 
 // GetRegisteredUserCount returns the number of registered users
