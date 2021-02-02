@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/store/mockstore"
 	"github.com/mattermost/focalboard/server/services/webhook"
@@ -13,12 +14,17 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func isValidSessionToken(token string) bool {
+	return true
+}
+
 func TestGetParentID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	cfg := config.Configuration{}
 	store := mockstore.NewMockStore(ctrl)
-	wsserver := ws.NewServer()
+	auth := auth.New(&cfg, store)
+	wsserver := ws.NewServer(auth, true)
 	webhook := webhook.NewClient(&cfg)
 	app := New(&cfg, store, wsserver, &mocks.FileBackend{}, webhook)
 
