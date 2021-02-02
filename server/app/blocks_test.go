@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/store/mockstore"
 	"github.com/mattermost/focalboard/server/services/webhook"
@@ -18,9 +19,10 @@ func TestGetParentID(t *testing.T) {
 	defer ctrl.Finish()
 	cfg := config.Configuration{}
 	store := mockstore.NewMockStore(ctrl)
-	wsserver := ws.NewServer()
+	auth := auth.New(&cfg, store)
+	wsserver := ws.NewServer(auth, true)
 	webhook := webhook.NewClient(&cfg)
-	app := New(&cfg, store, wsserver, &mocks.FileBackend{}, webhook)
+	app := New(&cfg, store, auth, wsserver, &mocks.FileBackend{}, webhook)
 
 	t.Run("success query", func(t *testing.T) {
 		store.EXPECT().GetParentID(gomock.Eq("test-id")).Return("test-parent-id", nil)

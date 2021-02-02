@@ -17,6 +17,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/app"
+	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/context"
 	appModel "github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/config"
@@ -60,7 +61,9 @@ func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
 		return nil, err
 	}
 
-	wsServer := ws.NewServer()
+	auth := auth.New(cfg, store)
+
+	wsServer := ws.NewServer(auth, singleUser)
 
 	filesBackendSettings := model.FileSettings{}
 	filesBackendSettings.SetDefaults(false)
@@ -74,7 +77,7 @@ func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
 
 	webhookClient := webhook.NewClient(cfg)
 
-	appBuilder := func() *app.App { return app.New(cfg, store, wsServer, filesBackend, webhookClient) }
+	appBuilder := func() *app.App { return app.New(cfg, store, auth, wsServer, filesBackend, webhookClient) }
 	api := api.NewAPI(appBuilder, singleUser)
 
 	// Local router for admin APIs

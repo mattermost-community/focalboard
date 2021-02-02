@@ -11,9 +11,9 @@ type WSCommand = {
 
 // These are messages from the server
 type WSMessage = {
-    action: string
-    blockId: string
-    block: IBlock
+    action?: string
+    block?: IBlock
+    error?: string
 }
 
 type OnChangeHandler = (blocks: IBlock[]) => void
@@ -27,6 +27,7 @@ class OctoListener {
     }
 
     readonly serverUrl: string
+    private token: string
     private ws?: WebSocket
     private blockIds: string[] = []
     private isInitialized = false
@@ -38,14 +39,13 @@ class OctoListener {
     notificationDelay = 100
     reopenDelay = 3000
 
-    constructor(serverUrl?: string) {
+    constructor(serverUrl?: string, token?: string) {
         this.serverUrl = serverUrl || window.location.origin
+        this.token = token || localStorage.getItem('sessionId') || ''
         Utils.log(`OctoListener serverUrl: ${this.serverUrl}`)
     }
 
     open(blockIds: string[], onChange: OnChangeHandler, onReconnect: () => void): void {
-        let timeoutId: NodeJS.Timeout
-
         if (this.ws) {
             this.close()
         }
@@ -61,6 +61,7 @@ class OctoListener {
 
         ws.onopen = () => {
             Utils.log('OctoListener webSocket opened.')
+            this.authenticate()
             this.addBlocks(blockIds)
             this.isInitialized = true
         }
@@ -91,13 +92,15 @@ class OctoListener {
 
             try {
                 const message = JSON.parse(e.data) as WSMessage
+                if (message.error) {
+                    Utils.logError(`Listener websocket error: ${message.error}`)
+                    return
+                }
+
                 switch (message.action) {
                 case 'UPDATE_BLOCK':
-                    if (timeoutId) {
-                        clearTimeout(timeoutId)
-                    }
                     Utils.log(`OctoListener update block: ${message.block?.id}`)
-                    this.queueUpdateNotification(message.block)
+                    this.queueUpdateNotification(message.block!)
                     break
                 default:
                     Utils.logError(`Unexpected action: ${message.action}`)
@@ -122,6 +125,20 @@ class OctoListener {
         this.onChange = undefined
         this.isInitialized = false
         ws.close()
+    }
+
+    authenticate(): void {
+        if (!this.ws) {
+            Utils.assertFailure('OctoListener.addBlocks: ws is not open')
+            return
+        }
+
+        const command = {
+            action: 'AUTH',
+            token: this.token,
+        }
+
+        this.ws.send(JSON.stringify(command))
     }
 
     addBlocks(blockIds: string[]): void {
