@@ -15,6 +15,11 @@ func (a *App) GetSession(token string) (*model.Session, error) {
 	return a.auth.GetSession(token)
 }
 
+// IsValidReadToken validates the read token for a block
+func (a *App) IsValidReadToken(blockID string, readToken string) (bool, error) {
+	return a.auth.IsValidReadToken(blockID, readToken)
+}
+
 // GetRegisteredUserCount returns the number of registered users
 func (a *App) GetRegisteredUserCount() (int, error) {
 	return a.store.GetRegisteredUserCount()

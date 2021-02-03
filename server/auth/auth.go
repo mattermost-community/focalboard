@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -34,4 +35,26 @@ func (a *Auth) GetSession(token string) (*model.Session, error) {
 		a.store.RefreshSession(session)
 	}
 	return session, nil
+}
+
+// IsValidReadToken validates the read token for a block
+func (a *Auth) IsValidReadToken(blockID string, readToken string) (bool, error) {
+	rootID, err := a.store.GetRootID(blockID)
+	if err != nil {
+		return false, err
+	}
+
+	sharing, err := a.store.GetSharing(rootID)
+	if err == sql.ErrNoRows {
+		return false, nil
+	}
+	if err != nil {
+		return false, err
+	}
+
+	if sharing != nil && (sharing.ID == rootID && sharing.Enabled && sharing.Token == readToken) {
+		return true, nil
+	}
+
+	return false, nil
 }

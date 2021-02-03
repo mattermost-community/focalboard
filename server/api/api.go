@@ -265,19 +265,13 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		rootID, err := a.app().GetRootID(blockID)
+		isValid, err := a.app().IsValidReadToken(blockID, readToken)
 		if err != nil {
 			errorResponse(w, http.StatusInternalServerError, nil, err)
 			return
 		}
 
-		sharing, err := a.app().GetSharing(rootID)
-		if err != nil {
-			errorResponse(w, http.StatusInternalServerError, nil, err)
-			return
-		}
-
-		if sharing == nil || !(sharing.ID == rootID && sharing.Enabled && sharing.Token == readToken) {
+		if !isValid {
 			errorResponse(w, http.StatusUnauthorized, nil, nil)
 			return
 		}
