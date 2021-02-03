@@ -38,9 +38,10 @@ type ErrorMsg struct {
 
 // WebsocketCommand is an incoming command from the client.
 type WebsocketCommand struct {
-	Action   string   `json:"action"`
-	Token    string   `json:"token"`
-	BlockIDs []string `json:"blockIds"`
+	Action    string   `json:"action"`
+	Token     string   `json:"token"`
+	ReadToken string   `json:"readToken"`
+	BlockIDs  []string `json:"blockIds"`
 }
 
 type websocketSession struct {
@@ -116,15 +117,15 @@ func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request
 		switch command.Action {
 		case "AUTH":
 			log.Printf(`Command: AUTH, client: %s`, client.RemoteAddr())
-			ws.authenticateListener(&wsSession, command.Token)
+			ws.authenticateListener(&wsSession, command.Token, command.ReadToken)
 
 		case "ADD":
 			log.Printf(`Command: Add blockID: %v, client: %s`, command.BlockIDs, client.RemoteAddr())
-			ws.addListener(&wsSession, command.BlockIDs)
+			ws.addListener(&wsSession, &command)
 
 		case "REMOVE":
 			log.Printf(`Command: Remove blockID: %v, client: %s`, command.BlockIDs, client.RemoteAddr())
-			ws.removeListenerFromBlocks(&wsSession, command.BlockIDs)
+			ws.removeListenerFromBlocks(&wsSession, &command)
 
 		default:
 			log.Printf(`ERROR webSocket command, invalid action: %v`, command.Action)
@@ -138,14 +139,15 @@ func (ws *Server) isValidSessionToken(token string) bool {
 	}
 
 	session, err := ws.auth.GetSession(token)
-	if session == nil || err != nil {
-		return false
+	if session != nil && err == nil {
+		return true
 	}
 
-	return true
+	return false
 }
 
-func (ws *Server) authenticateListener(wsSession *websocketSession, token string) {
+func (ws *Server) authenticateListener(wsSession *websocketSession, token string, readToken string) {
+	// Authenticate session
 	isValidSession := ws.isValidSessionToken(token)
 	if !isValidSession {
 		wsSession.client.Close()
@@ -157,16 +159,39 @@ func (ws *Server) authenticateListener(wsSession *websocketSession, token string
 	log.Printf("authenticateListener: Authenticated")
 }
 
+func (ws *Server) checkAuthentication(wsSession *websocketSession, command *WebsocketCommand) bool {
+	if ws.singleUser {
+		return true
+	}
+
+	if wsSession.isAuthenticated {
+		return true
+	}
+
+	if len(command.ReadToken) > 0 {
+		// Read token must be valid for all block IDs
+		for _, blockID := range command.BlockIDs {
+			isValid, _ := ws.auth.IsValidReadToken(blockID, command.ReadToken)
+			if !isValid {
+				return false
+			}
+		}
+		return true
+	}
+
+	return false
+}
+
 // addListener adds a listener for a block's change.
-func (ws *Server) addListener(wsSession *websocketSession, blockIDs []string) {
-	if !wsSession.isAuthenticated {
+func (ws *Server) addListener(wsSession *websocketSession, command *WebsocketCommand) {
+	if !ws.checkAuthentication(wsSession, command) {
 		log.Printf("addListener: NOT AUTHENTICATED")
 		sendError(wsSession.client, "not authenticated")
 		return
 	}
 
 	ws.mu.Lock()
-	for _, blockID := range blockIDs {
+	for _, blockID := range command.BlockIDs {
 		if ws.listeners[blockID] == nil {
 			ws.listeners[blockID] = []*websocket.Conn{}
 		}
@@ -194,8 +219,8 @@ func (ws *Server) removeListener(client *websocket.Conn) {
 }
 
 // removeListenerFromBlocks removes a webSocket listener from a set of block.
-func (ws *Server) removeListenerFromBlocks(wsSession *websocketSession, blockIDs []string) {
-	if !wsSession.isAuthenticated {
+func (ws *Server) removeListenerFromBlocks(wsSession *websocketSession, command *WebsocketCommand) {
+	if !ws.checkAuthentication(wsSession, command) {
 		log.Printf("removeListenerFromBlocks: NOT AUTHENTICATED")
 		sendError(wsSession.client, "not authenticated")
 		return
@@ -203,7 +228,7 @@ func (ws *Server) removeListenerFromBlocks(wsSession *websocketSession, blockIDs
 
 	ws.mu.Lock()
 
-	for _, blockID := range blockIDs {
+	for _, blockID := range command.BlockIDs {
 		listeners := ws.listeners[blockID]
 		if listeners == nil {
 			return

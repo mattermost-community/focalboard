@@ -185,9 +185,17 @@ class BoardPage extends React.Component<Props, State> {
         const boardIds = [...workspaceTree.boards.map((o) => o.id), ...workspaceTree.boardTemplates.map((o) => o.id)]
         this.setState({workspaceTree})
 
+        let boardIdsToListen: string[]
+        if (boardIds.length > 0) {
+            boardIdsToListen = ['', ...boardIds]
+        } else {
+            // Read-only view
+            boardIdsToListen = [this.state.boardId]
+        }
+
         // Listen to boards plus all blocks at root (Empty string for parentId)
         this.workspaceListener.open(
-            ['', ...boardIds],
+            boardIdsToListen,
             async (blocks) => {
                 Utils.log(`workspaceListener.onChanged: ${blocks.length}`)
                 this.incrementalUpdate(blocks)

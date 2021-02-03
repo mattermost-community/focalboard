@@ -6,6 +6,7 @@ import {Utils} from './utils'
 // These are outgoing commands to the server
 type WSCommand = {
     action: string
+    readToken?: string
     blockIds: string[]
 }
 
@@ -28,6 +29,7 @@ class OctoListener {
 
     readonly serverUrl: string
     private token: string
+    private readToken: string
     private ws?: WebSocket
     private blockIds: string[] = []
     private isInitialized = false
@@ -39,10 +41,17 @@ class OctoListener {
     notificationDelay = 100
     reopenDelay = 3000
 
-    constructor(serverUrl?: string, token?: string) {
+    constructor(serverUrl?: string, token?: string, readToken?: string) {
         this.serverUrl = serverUrl || window.location.origin
         this.token = token || localStorage.getItem('sessionId') || ''
+        this.readToken = readToken || OctoListener.getReadToken()
         Utils.log(`OctoListener serverUrl: ${this.serverUrl}`)
+    }
+
+    static getReadToken(): string {
+        const queryString = new URLSearchParams(window.location.search)
+        const readToken = queryString.get('r') || ''
+        return readToken
     }
 
     open(blockIds: string[], onChange: OnChangeHandler, onReconnect: () => void): void {
@@ -133,11 +142,13 @@ class OctoListener {
             return
         }
 
+        if (!this.token) {
+            return
+        }
         const command = {
             action: 'AUTH',
             token: this.token,
         }
-
         this.ws.send(JSON.stringify(command))
     }
 
@@ -150,6 +161,7 @@ class OctoListener {
         const command: WSCommand = {
             action: 'ADD',
             blockIds,
+            readToken: this.readToken,
         }
 
         this.ws.send(JSON.stringify(command))
@@ -165,6 +177,7 @@ class OctoListener {
         const command: WSCommand = {
             action: 'REMOVE',
             blockIds,
+            readToken: this.readToken,
         }
 
         this.ws.send(JSON.stringify(command))
