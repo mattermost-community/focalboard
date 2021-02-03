@@ -87,6 +87,7 @@ class OctoClient {
             Accept: 'application/json',
             'Content-Type': 'application/json',
             Authorization: this.token ? 'Bearer ' + this.token : '',
+            'X-Requested-With': 'XMLHttpRequest',
         }
     }
 
