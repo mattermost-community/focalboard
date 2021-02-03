@@ -54,7 +54,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	r.HandleFunc("/api/v1/blocks/import", a.sessionRequired(a.handleImport)).Methods("POST")
 
 	r.HandleFunc("/api/v1/sharing/{rootID}", a.sessionRequired(a.handlePostSharing)).Methods("POST")
-	r.HandleFunc("/api/v1/sharing/{rootID}", a.handleGetSharing).Methods("GET")
+	r.HandleFunc("/api/v1/sharing/{rootID}", a.sessionRequired(a.handleGetSharing)).Methods("GET")
 
 	r.HandleFunc("/api/v1/workspace", a.sessionRequired(a.handleGetWorkspace)).Methods("GET")
 	r.HandleFunc("/api/v1/workspace/regenerate_signup_token", a.sessionRequired(a.handlePostWorkspaceRegenerateSignupToken)).Methods("POST")
