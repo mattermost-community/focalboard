@@ -18,6 +18,11 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 )
 
+const (
+	HEADER_REQUESTED_WITH     = "X-Requested-With"
+	HEADER_REQUESTED_WITH_XML = "XMLHttpRequest"
+)
+
 // ----------------------------------------------------------------------------------------------------
 // REST APIs
 
@@ -35,33 +40,59 @@ func (a *API) app() *app.App {
 }
 
 func (a *API) RegisterRoutes(r *mux.Router) {
-	r.HandleFunc("/api/v1/blocks", a.sessionRequired(a.handleGetBlocks)).Methods("GET")
-	r.HandleFunc("/api/v1/blocks", a.sessionRequired(a.handlePostBlocks)).Methods("POST")
-	r.HandleFunc("/api/v1/blocks/{blockID}", a.sessionRequired(a.handleDeleteBlock)).Methods("DELETE")
-	r.HandleFunc("/api/v1/blocks/{blockID}/subtree", a.attachSession(a.handleGetSubTree, false)).Methods("GET")
+	a.addHandler(r, "/api/v1/blocks", "GET", a.sessionRequired(a.handleGetBlocks))
+	a.addHandler(r, "/api/v1/blocks", "POST", a.sessionRequired(a.handlePostBlocks))
+	a.addHandler(r, "/api/v1/blocks/{blockID}", "DELETE", a.sessionRequired(a.handleDeleteBlock))
+	a.addHandler(r, "/api/v1/blocks/{blockID}/subtree", "GET", a.attachSession(a.handleGetSubTree, false))
 
-	r.HandleFunc("/api/v1/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
-	r.HandleFunc("/api/v1/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
-	r.HandleFunc("/api/v1/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
+	a.addHandler(r, "/api/v1/users/me", "GET", a.sessionRequired(a.handleGetMe))
+	a.addHandler(r, "/api/v1/users/{userID}", "GET", a.sessionRequired(a.handleGetUser))
+	a.addHandler(r, "/api/v1/users/{userID}/changepassword", "POST", a.sessionRequired(a.handleChangePassword))
 
-	r.HandleFunc("/api/v1/login", a.handleLogin).Methods("POST")
-	r.HandleFunc("/api/v1/register", a.handleRegister).Methods("POST")
+	a.addHandler(r, "/api/v1/login", "POST", a.sessionRequired(a.handleLogin))
+	a.addHandler(r, "/api/v1/register", "POST", a.sessionRequired(a.handleRegister))
 
-	r.HandleFunc("/api/v1/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
-	r.HandleFunc("/files/{filename}", a.sessionRequired(a.handleServeFile)).Methods("GET")
+	a.addHandler(r, "api/v1/files", "POST", a.sessionRequired(a.handleUploadFile))
+	a.addHandler(r, "/files/{filename}", "GET", a.sessionRequired(a.handleServeFile))
 
-	r.HandleFunc("/api/v1/blocks/export", a.sessionRequired(a.handleExport)).Methods("GET")
-	r.HandleFunc("/api/v1/blocks/import", a.sessionRequired(a.handleImport)).Methods("POST")
+	a.addHandler(r, "/api/v1/blocks/export", "GET", a.sessionRequired(a.handleExport))
+	a.addHandler(r, "/api/v1/blocks/import", "POST", a.sessionRequired(a.handleImport))
 
-	r.HandleFunc("/api/v1/sharing/{rootID}", a.sessionRequired(a.handlePostSharing)).Methods("POST")
-	r.HandleFunc("/api/v1/sharing/{rootID}", a.sessionRequired(a.handleGetSharing)).Methods("GET")
+	a.addHandler(r, "/api/v1/sharing/{rootID}", "POST", a.sessionRequired(a.handlePostSharing))
+	a.addHandler(r, "/api/v1/sharing/{rootID}", "GET", a.sessionRequired(a.handleGetSharing))
 
-	r.HandleFunc("/api/v1/workspace", a.sessionRequired(a.handleGetWorkspace)).Methods("GET")
-	r.HandleFunc("/api/v1/workspace/regenerate_signup_token", a.sessionRequired(a.handlePostWorkspaceRegenerateSignupToken)).Methods("POST")
+	a.addHandler(r, "/api/v1/workspace", "GET", a.sessionRequired(a.handleGetWorkspace))
+	a.addHandler(r, "/api/v1/workspace/regenerate_signup_token", "POST", a.sessionRequired(a.handlePostWorkspaceRegenerateSignupToken))
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
 	r.HandleFunc("/api/v1/admin/users/{username}/password", a.adminRequired(a.handleAdminSetPassword)).Methods("POST")
+}
+
+func (a *API) addHandler(r *mux.Router, path string, method string, f func(http.ResponseWriter, *http.Request)) {
+	r.HandleFunc(path, a.preHandle(f)).Methods(method)
+}
+
+func (a *API) preHandle(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if !a.checkCSRFToken(r) {
+			log.Println("checkCSRFToken FAILED")
+			errorResponse(w, http.StatusBadRequest, nil, nil)
+			return
+		}
+
+		handler(w, r)
+	}
+}
+
+func (a *API) checkCSRFToken(r *http.Request) bool {
+	token := r.Header.Get(HEADER_REQUESTED_WITH)
+
+	if token == HEADER_REQUESTED_WITH_XML {
+		return true
+	}
+
+	return false
 }
 
 func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
