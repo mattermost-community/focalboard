@@ -21,6 +21,7 @@ import RootPortal from './rootPortal'
 import './tableComponent.scss'
 import TableHeaderMenu from './tableHeaderMenu'
 import {TableRow} from './tableRow'
+import TopBar from './topBar'
 import ViewHeader from './viewHeader'
 import ViewTitle from './viewTitle'
 
@@ -85,6 +86,7 @@ class TableComponent extends React.Component<Props, State> {
                     />
                 </RootPortal>}
                 <div className='octo-frame'>
+                    <TopBar/>
                     <ViewTitle
                         key={board.id + board.title}
                         board={board}
