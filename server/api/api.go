@@ -68,7 +68,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	// Get Files API
 
-	files := r.PathPrefix("/files/").Subrouter()
+	files := r.PathPrefix("/files").Subrouter()
 	files.HandleFunc("/{filename}", a.sessionRequired(a.handleServeFile)).Methods("GET")
 }
 
