@@ -55,6 +55,8 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/login", a.handleLogin).Methods("POST")
 	apiv1.HandleFunc("/register", a.handleRegister).Methods("POST")
 
+	apiv1.HandleFunc("/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
+
 	apiv1.HandleFunc("/blocks/export", a.sessionRequired(a.handleExport)).Methods("GET")
 	apiv1.HandleFunc("/blocks/import", a.sessionRequired(a.handleImport)).Methods("POST")
 
@@ -64,12 +66,9 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/workspace", a.sessionRequired(a.handleGetWorkspace)).Methods("GET")
 	apiv1.HandleFunc("/workspace/regenerate_signup_token", a.sessionRequired(a.handlePostWorkspaceRegenerateSignupToken)).Methods("POST")
 
-	// Files API
+	// Get Files API
 
 	files := r.PathPrefix("/files/").Subrouter()
-	files.Use(a.requireCSRFToken)
-
-	files.HandleFunc("/", a.sessionRequired(a.handleUploadFile)).Methods("POST")
 	files.HandleFunc("/{filename}", a.sessionRequired(a.handleServeFile)).Methods("GET")
 }
 
