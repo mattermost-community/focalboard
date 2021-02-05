@@ -87,6 +87,7 @@ class OctoClient {
             Accept: 'application/json',
             'Content-Type': 'application/json',
             Authorization: this.token ? 'Bearer ' + this.token : '',
+            'X-Requested-With': 'XMLHttpRequest',
         }
     }
 
@@ -231,14 +232,14 @@ class OctoClient {
         formData.append('file', file)
 
         try {
+            const headers = this.headers() as Record<string, string>
+
+            // TIPTIP: Leave out Content-Type here, it will be automatically set by the browser
+            delete headers['Content-Type']
+
             const response = await fetch(this.serverUrl + '/api/v1/files', {
                 method: 'POST',
-
-                // TIPTIP: Leave out Content-Type here, it will be automatically set by the browser
-                headers: {
-                    Accept: 'application/json',
-                    Authorization: this.token ? 'Bearer ' + this.token : '',
-                },
+                headers,
                 body: formData,
             })
             if (response.status !== 200) {

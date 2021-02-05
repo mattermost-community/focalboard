@@ -18,6 +18,11 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 )
 
+const (
+	HEADER_REQUESTED_WITH     = "X-Requested-With"
+	HEADER_REQUESTED_WITH_XML = "XMLHttpRequest"
+)
+
 // ----------------------------------------------------------------------------------------------------
 // REST APIs
 
@@ -35,33 +40,62 @@ func (a *API) app() *app.App {
 }
 
 func (a *API) RegisterRoutes(r *mux.Router) {
-	r.HandleFunc("/api/v1/blocks", a.sessionRequired(a.handleGetBlocks)).Methods("GET")
-	r.HandleFunc("/api/v1/blocks", a.sessionRequired(a.handlePostBlocks)).Methods("POST")
-	r.HandleFunc("/api/v1/blocks/{blockID}", a.sessionRequired(a.handleDeleteBlock)).Methods("DELETE")
-	r.HandleFunc("/api/v1/blocks/{blockID}/subtree", a.attachSession(a.handleGetSubTree, false)).Methods("GET")
+	apiv1 := r.PathPrefix("/api/v1").Subrouter()
+	apiv1.Use(a.requireCSRFToken)
 
-	r.HandleFunc("/api/v1/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
-	r.HandleFunc("/api/v1/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
-	r.HandleFunc("/api/v1/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
+	apiv1.HandleFunc("/blocks", a.sessionRequired(a.handleGetBlocks)).Methods("GET")
+	apiv1.HandleFunc("/blocks", a.sessionRequired(a.handlePostBlocks)).Methods("POST")
+	apiv1.HandleFunc("/blocks/{blockID}", a.sessionRequired(a.handleDeleteBlock)).Methods("DELETE")
+	apiv1.HandleFunc("/blocks/{blockID}/subtree", a.attachSession(a.handleGetSubTree, false)).Methods("GET")
 
-	r.HandleFunc("/api/v1/login", a.handleLogin).Methods("POST")
-	r.HandleFunc("/api/v1/register", a.handleRegister).Methods("POST")
+	apiv1.HandleFunc("/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
+	apiv1.HandleFunc("/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
+	apiv1.HandleFunc("/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
 
-	r.HandleFunc("/api/v1/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
-	r.HandleFunc("/files/{filename}", a.sessionRequired(a.handleServeFile)).Methods("GET")
+	apiv1.HandleFunc("/login", a.handleLogin).Methods("POST")
+	apiv1.HandleFunc("/register", a.handleRegister).Methods("POST")
 
-	r.HandleFunc("/api/v1/blocks/export", a.sessionRequired(a.handleExport)).Methods("GET")
-	r.HandleFunc("/api/v1/blocks/import", a.sessionRequired(a.handleImport)).Methods("POST")
+	apiv1.HandleFunc("/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
 
-	r.HandleFunc("/api/v1/sharing/{rootID}", a.sessionRequired(a.handlePostSharing)).Methods("POST")
-	r.HandleFunc("/api/v1/sharing/{rootID}", a.sessionRequired(a.handleGetSharing)).Methods("GET")
+	apiv1.HandleFunc("/blocks/export", a.sessionRequired(a.handleExport)).Methods("GET")
+	apiv1.HandleFunc("/blocks/import", a.sessionRequired(a.handleImport)).Methods("POST")
 
-	r.HandleFunc("/api/v1/workspace", a.sessionRequired(a.handleGetWorkspace)).Methods("GET")
-	r.HandleFunc("/api/v1/workspace/regenerate_signup_token", a.sessionRequired(a.handlePostWorkspaceRegenerateSignupToken)).Methods("POST")
+	apiv1.HandleFunc("/sharing/{rootID}", a.sessionRequired(a.handlePostSharing)).Methods("POST")
+	apiv1.HandleFunc("/sharing/{rootID}", a.sessionRequired(a.handleGetSharing)).Methods("GET")
+
+	apiv1.HandleFunc("/workspace", a.sessionRequired(a.handleGetWorkspace)).Methods("GET")
+	apiv1.HandleFunc("/workspace/regenerate_signup_token", a.sessionRequired(a.handlePostWorkspaceRegenerateSignupToken)).Methods("POST")
+
+	// Get Files API
+
+	files := r.PathPrefix("/files").Subrouter()
+	files.HandleFunc("/{filename}", a.sessionRequired(a.handleServeFile)).Methods("GET")
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
 	r.HandleFunc("/api/v1/admin/users/{username}/password", a.adminRequired(a.handleAdminSetPassword)).Methods("POST")
+}
+
+func (a *API) requireCSRFToken(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if !a.checkCSRFToken(r) {
+			log.Println("checkCSRFToken FAILED")
+			errorResponse(w, http.StatusBadRequest, nil, nil)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
+func (a *API) checkCSRFToken(r *http.Request) bool {
+	token := r.Header.Get(HEADER_REQUESTED_WITH)
+
+	if token == HEADER_REQUESTED_WITH_XML {
+		return true
+	}
+
+	return false
 }
 
 func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
