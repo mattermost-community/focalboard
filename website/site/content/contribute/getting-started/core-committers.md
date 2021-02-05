@@ -1,6 +1,6 @@
 ---
 title: "Core Committers"
-date: 2017-08-20T12:33:36-04:00
+date: 2021-02-03T08:00:00-00:00
 weight: 4
 subsection: Getting Started
 ---

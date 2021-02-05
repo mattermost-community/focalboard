@@ -17,9 +17,10 @@ Popular hosted options include:
 
 ## Install Focalboard
 
-[Download the Ubuntu archive package here](/download), then unpack it to /opt/focalboard:
+[Download the Ubuntu archive package](https://releases.mattermost.com/focalboard/0.5.0/focalboard-server-linux-amd64.tar.gz), then unpack it to /opt/focalboard:
 
 ```
+wget https://releases.mattermost.com/focalboard/0.5.0/focalboard-server-linux-amd64.tar.gz
 tar -xvzf focalboard-server-linux-amd64.tar.gz
 sudo mv focalboard /opt
 ```

@@ -45,6 +45,7 @@ class LoginPage extends React.PureComponent<Props, State> {
                         placeholder={'Enter username'}
                         value={this.state.username}
                         onChange={(e) => this.setState({username: e.target.value, errorMessage: undefined})}
+                        onKeyPress={this.onKeyPress}
                     />
                 </div>
                 <div className='password'>
@@ -54,6 +55,7 @@ class LoginPage extends React.PureComponent<Props, State> {
                         placeholder={'Enter password'}
                         value={this.state.password}
                         onChange={(e) => this.setState({password: e.target.value, errorMessage: undefined})}
+                        onKeyPress={this.onKeyPress}
                     />
                 </div>
                 <Button
@@ -70,6 +72,16 @@ class LoginPage extends React.PureComponent<Props, State> {
                 }
             </div>
         )
+    }
+
+    private onKeyPress = (e: React.KeyboardEvent) => {
+        if (!(e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'Enter') {
+            this.handleLogin()
+            e.preventDefault()
+            return false
+        }
+
+        return true
     }
 }
 

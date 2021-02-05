@@ -10,20 +10,17 @@ The same server binary powers both editions.
 
 ## Building the server
 
-First, install dependencies:
-* Go 1.15.2
+Please refer to the [Developer's Tips & Tricks](https://www.focalboard.com/contribute/getting-started/dev-tips/) for more detailed steps. Here's a summary:
+
+First, install basic dependencies:
+* Go 1.15+
+* Node 10+ and npm
+* Mingw64 on Windows
 
 ```
 make prebuild
 make
 ```
-
-The server defaults to using SQLite as the store, but can be configured to use Postgres:
-* In config.json
-	* Set dbtype to "postgres"
-	* Set dbconfig to the connection string (which you can copy from dbconfig_postgres)
-* Create a new "focalboard" database with psql
-* Restart the server
 
 ## Running and testing the server
 
@@ -40,7 +37,7 @@ You can build standalone apps that package the server to run locally against SQL
 * Mac:
     * `make mac-app`
     * run `mac/dist/Focalboard.app`
-    * *Requires: macOS Catalina (10.15)+, Xcode 12.*
+    * *Requires: macOS Catalina (10.15)+, Xcode 12+.*
 * Linux:
     * Install webgtk dependencies
         * `sudo apt-get install libgtk-3-dev`

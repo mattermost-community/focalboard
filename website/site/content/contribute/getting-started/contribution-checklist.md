@@ -1,7 +1,7 @@
 ---
 title: "Contribution Checklist"
-date: 2017-08-20T12:33:36-04:00
-weight: 1
+date: 2021-02-03T08:00:00-00:00
+weight: 2
 subsection: Getting Started
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: "Code Review"
-date: 2018-03-06T00:00:00-04:00
+date: 2021-02-03T08:00:00-00:00
 weight: 5
 subsection: Getting Started
 ---
@@ -18,7 +18,7 @@ If you are a community member seeking a review
 2. Wait for a reviewer to be assigned.
     * Product managers are on the lookout for new pull requests and usually handle this for you automatically.
     * If you have been working alongside a core committer, feel free to message them for help.
-    * When in doubt, ask for help in the [Developers](https://community.mattermost.com/core/channels/developers) channel on our community server.
+    * When in doubt, ask for help in the [Focalboard](https://community.mattermost.com/core/channels/focalboard) channel on our community server.
     * If you are still stuck, please message Chen Lim (@chenilim on GitHub).
 3. [Wait for a review](#if-you-are-awaiting-a-review).
     * Expect some interaction with at least one reviewer within 5 business days (weekdays, Monday through Friday, excluding [statutory holidays](https://docs.mattermost.com/process/working-at-mattermost.html#holidays)).

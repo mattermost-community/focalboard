@@ -32,14 +32,10 @@ class ChangePasswordPage extends React.PureComponent<Props, State> {
     private handleSubmit = async (userId: string): Promise<void> => {
         const response = await client.changePassword(userId, this.state.oldPassword, this.state.newPassword)
         if (response.code === 200) {
-            this.setState({succeeded: true})
+            this.setState({oldPassword: '', newPassword: '', errorMessage: undefined, succeeded: true})
         } else {
             this.setState({errorMessage: `Change password failed: ${response.json?.error}`})
         }
-    }
-
-    private closeClicked = () => {
-        this.props.history.push('/')
     }
 
     render(): React.ReactNode {
@@ -58,6 +54,7 @@ class ChangePasswordPage extends React.PureComponent<Props, State> {
                                         placeholder={'Enter current password'}
                                         value={this.state.oldPassword}
                                         onChange={(e) => this.setState({oldPassword: e.target.value, errorMessage: undefined})}
+                                        onKeyPress={(e) => this.onKeyPress(e, user.id)}
                                     />
                                 </div>
                                 <div className='newPassword'>
@@ -67,6 +64,7 @@ class ChangePasswordPage extends React.PureComponent<Props, State> {
                                         placeholder={'Enter new password'}
                                         value={this.state.newPassword}
                                         onChange={(e) => this.setState({newPassword: e.target.value, errorMessage: undefined})}
+                                        onKeyPress={(e) => this.onKeyPress(e, user.id)}
                                     />
                                 </div>
                                 <Button
@@ -98,6 +96,16 @@ class ChangePasswordPage extends React.PureComponent<Props, State> {
                 </UserContext.Consumer>
             </div>
         )
+    }
+
+    private onKeyPress = (e: React.KeyboardEvent, userId: string) => {
+        if (!(e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'Enter') {
+            this.handleSubmit(userId)
+            e.preventDefault()
+            return false
+        }
+
+        return true
     }
 }
 
