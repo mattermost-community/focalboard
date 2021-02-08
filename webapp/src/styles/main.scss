@@ -18,6 +18,10 @@ html, body {
     background: rgb(var(--main-bg));
 }
 
+input, textarea, select, button {
+    font-size: 100%;        /* Normalize */
+}
+
 input, textarea {
     background: rgb(var(--main-bg));
 	color: rgb(var(--body-color));
