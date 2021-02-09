@@ -17,6 +17,7 @@ class ViewController:
 
 		webView.navigationDelegate = self
 		webView.uiDelegate = self
+		webView.isHidden = true
 
 		clearWebViewCache()
 
@@ -154,7 +155,13 @@ class ViewController:
 		NSLog("webView didFinish navigation: \(webView.url?.absoluteString ?? "")")
 		// Disable right-click menu
 		webView.evaluateJavaScript("document.body.setAttribute('oncontextmenu', 'event.preventDefault();');", completionHandler: nil)
+		webView.isHidden = false
 	}
+
+	func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+		webView.isHidden = false
+	}
+
 
 	func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
 		if let frame = navigationAction.targetFrame,
