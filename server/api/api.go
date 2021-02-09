@@ -27,12 +27,15 @@ const (
 // REST APIs
 
 type API struct {
-	appBuilder func() *app.App
-	singleUser bool
+	appBuilder      func() *app.App
+	singleUserToken string
 }
 
-func NewAPI(appBuilder func() *app.App, singleUser bool) *API {
-	return &API{appBuilder: appBuilder, singleUser: singleUser}
+func NewAPI(appBuilder func() *app.App, singleUserToken string) *API {
+	return &API{
+		appBuilder:      appBuilder,
+		singleUserToken: singleUserToken,
+	}
 }
 
 func (a *API) app() *app.App {

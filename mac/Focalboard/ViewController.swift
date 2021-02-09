@@ -19,7 +19,6 @@ class ViewController:
 		webView.uiDelegate = self
 
 		clearWebViewCache()
-		loadHomepage()
 
 		// Do any additional setup after loading the view.
 		NotificationCenter.default.addObserver(self, selector: #selector(onServerStarted), name: AppDelegate.serverStartedNotification, object: nil)
@@ -40,8 +39,20 @@ class ViewController:
 	@objc func onServerStarted() {
 		NSLog("onServerStarted")
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+			self.updateSessionToken()
 			self.loadHomepage()
 		}
+	}
+
+	private func updateSessionToken() {
+		let appDelegate = NSApplication.shared.delegate as! AppDelegate
+		let script = WKUserScript(
+			source: "localStorage.setItem('sessionId', '\(appDelegate.sessionToken)');",
+			injectionTime: .atDocumentStart,
+			forMainFrameOnly: true
+		)
+		webView.configuration.userContentController.removeAllUserScripts()
+		webView.configuration.userContentController.addUserScript(script)
 	}
 
 	private func loadHomepage() {

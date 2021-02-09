@@ -9,6 +9,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	private var serverProcess: Process?
 	var serverPort = 8088
+	var sessionToken: String = ""
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		copyResources()
@@ -69,6 +70,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	private func startServer() {
+		sessionToken = UUID().uuidString
+
 		let cwdUrl = webFolder()
 		let executablePath = Bundle.main.path(forResource: "resources/bin/focalboard-server", ofType: "")
 
@@ -76,7 +79,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		NSLog("pid: \(pid)")
 		let serverProcess = Process()
 		serverProcess.currentDirectoryPath = cwdUrl.path
-		serverProcess.arguments = ["-monitorpid", "\(pid)", "-port", "\(serverPort)", "--single-user"]
+		serverProcess.arguments = ["-monitorpid", "\(pid)", "-port", "\(serverPort)", "-single-user", sessionToken]
 		serverProcess.launchPath = executablePath
 		serverProcess.launch()
 		self.serverProcess = serverProcess

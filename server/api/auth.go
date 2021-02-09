@@ -198,12 +198,19 @@ func (a *API) sessionRequired(handler func(w http.ResponseWriter, r *http.Reques
 
 func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request), required bool) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Printf(`Single User: %v`, a.singleUser)
-		if a.singleUser {
+		token, _ := auth.ParseAuthTokenFromRequest(r)
+
+		log.Printf(`Single User: %v`, len(a.singleUserToken) > 0)
+		if len(a.singleUserToken) > 0 {
+			if required && (token != a.singleUserToken) {
+				errorResponse(w, http.StatusUnauthorized, nil, nil)
+				return
+			}
+
 			now := time.Now().Unix()
 			session := &model.Session{
 				ID:       "single-user",
-				Token:    "single-user",
+				Token:    token,
 				UserID:   "single-user",
 				CreateAt: now,
 				UpdateAt: now,
@@ -213,11 +220,10 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 			return
 		}
 
-		token, _ := auth.ParseAuthTokenFromRequest(r)
 		session, err := a.app().GetSession(token)
 		if err != nil {
 			if required {
-				errorResponse(w, http.StatusUnauthorized, map[string]string{"error": err.Error()}, err)
+				errorResponse(w, http.StatusUnauthorized, nil, err)
 				return
 			}
 
