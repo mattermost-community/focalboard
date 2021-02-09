@@ -8,12 +8,15 @@ import (
 	"runtime"
 
 	"github.com/gonutz/w32"
+	"github.com/google/uuid"
 	"github.com/zserge/lorca"
 )
 
+var sessionToken string = uuid.New().String()
+
 func runServer(ctx context.Context) *exec.Cmd {
-	// cmd := exec.CommandContext(ctx, "focalboard-server.exe", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10), "--single-user")
-	cmd := exec.CommandContext(ctx, "focalboard-server.exe", "--single-user")
+	// cmd := exec.CommandContext(ctx, "focalboard-server.exe", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10), "-single-user", sessionToken)
+	cmd := exec.CommandContext(ctx, "focalboard-server.exe", "-single-user", sessionToken)
 	// cmd := exec.CommandContext(ctx, "cmd.exe", "/C", "start", "./bin/focalboard-server.exe", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10))
 	// cmd := exec.CommandContext(ctx, "cmd.exe", "/C", "start", "./bin/focalboard-server.exe")
 
@@ -55,6 +58,8 @@ func main() {
 	}
 	// defer ui.Close()
 
+	ui.Bind("clientSingleUserToken", getSessionToken)
+
 	log.Printf("Started")
 	<-ui.Done()
 
@@ -63,6 +68,10 @@ func main() {
 	if err := cmd.Process.Kill(); err != nil {
 		log.Fatal("failed to kill process: ", err)
 	}
+}
+
+func getSessionToken() string {
+	return sessionToken
 }
 
 func hideConsole() {

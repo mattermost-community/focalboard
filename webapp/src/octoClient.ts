@@ -338,4 +338,13 @@ function getReadToken(): string {
 
 const client = new OctoClient(undefined, localStorage.getItem('sessionId') || '', getReadToken())
 
+declare global {
+    function clientSingleUserToken(): string
+}
+
+if (clientSingleUserToken && typeof clientSingleUserToken === 'function') {
+    Utils.log('clientSingleUserToken')
+    client.token = clientSingleUserToken()
+}
+
 export default client
