@@ -80,7 +80,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 		randomNumber = randomBytes.map({String(format: "%02hhx", $0)}).joined(separator: "")
 
-        return randomNumber
+        return "su-" + randomNumber
     }
 
 	private func startServer() {
