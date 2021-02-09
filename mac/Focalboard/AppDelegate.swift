@@ -69,8 +69,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 	}
 
+    private func generateSessionToken() -> String {
+        let bytesCount = 16
+        var randomNumber = ""
+		var randomBytes = [UInt8](repeating: 0, count: bytesCount)
+
+        let status = SecRandomCopyBytes(kSecRandomDefault, bytesCount, &randomBytes)
+		if status != errSecSuccess {
+			fatalError("SecRandomCopyBytes ERROR: \(status)")
+		}
+		randomNumber = randomBytes.map({String(format: "%02hhx", $0)}).joined(separator: "")
+
+        return randomNumber
+    }
+
 	private func startServer() {
-		sessionToken = UUID().uuidString
+		sessionToken = generateSessionToken()
 
 		let cwdUrl = webFolder()
 		let executablePath = Bundle.main.path(forResource: "resources/bin/focalboard-server", ofType: "")
