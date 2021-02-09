@@ -78,6 +78,12 @@ func isValidPassword(password string) error {
 }
 
 func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
+	if len(a.singleUserToken) > 0 {
+		// Not permitted in single-user mode
+		errorResponse(w, http.StatusUnauthorized, nil, nil)
+		return
+	}
+
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, nil, err)
@@ -111,6 +117,12 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
+	if len(a.singleUserToken) > 0 {
+		// Not permitted in single-user mode
+		errorResponse(w, http.StatusUnauthorized, nil, nil)
+		return
+	}
+
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, nil, err)
@@ -164,6 +176,12 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleChangePassword(w http.ResponseWriter, r *http.Request) {
+	if len(a.singleUserToken) > 0 {
+		// Not permitted in single-user mode
+		errorResponse(w, http.StatusUnauthorized, nil, nil)
+		return
+	}
+
 	vars := mux.Vars(r)
 	userID := vars["userID"]
 
