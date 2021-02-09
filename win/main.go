@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -12,7 +13,7 @@ import (
 	"github.com/zserge/lorca"
 )
 
-var sessionToken string = uuid.New().String()
+var sessionToken string = "su-" + uuid.New().String()
 
 func runServer(ctx context.Context) *exec.Cmd {
 	// cmd := exec.CommandContext(ctx, "focalboard-server.exe", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10), "-single-user", sessionToken)
@@ -52,13 +53,21 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	cmd := runServer(ctx)
 
-	ui, err := lorca.New("http://localhost:8088", "", 1024, 768)
+	ui, err := lorca.New("", "", 1024, 768)
 	if err != nil {
 		log.Fatal(err)
 	}
 	// defer ui.Close()
 
-	ui.Bind("clientSingleUserToken", getSessionToken)
+	if err := ui.Load("http://localhost:8088"); err != nil {
+		log.Fatal(err)
+	}
+
+	script := fmt.Sprintf("localStorage.setItem('sessionId', '%s');", sessionToken)
+	value := ui.Eval(script)
+	if err := value.Err(); err != nil {
+		log.Fatal(err)
+	}
 
 	log.Printf("Started")
 	<-ui.Done()
@@ -68,10 +77,6 @@ func main() {
 	if err := cmd.Process.Kill(); err != nil {
 		log.Fatal("failed to kill process: ", err)
 	}
-}
-
-func getSessionToken() string {
-	return sessionToken
 }
 
 func hideConsole() {
