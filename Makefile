@@ -56,24 +56,6 @@ server-linux-package: server-linux webapp
 	cd package && tar -czvf ../dist/focalboard-server-linux-amd64.tar.gz ${PACKAGE_FOLDER}
 	rm -rf package
 
-server-single-user:
-	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=dev")
-	cd server; go build -ldflags '$(LDFLAGS)' -o ../bin/focalboard-server ./main --single-user
-
-server-mac-single-user:
-	mkdir -p bin/mac
-	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=mac")
-	cd server; env GOOS=darwin GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/mac/focalboard-server ./main --single-user
-
-server-linux-single-user:
-	mkdir -p bin/linux
-	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=linux")
-	cd server; env GOOS=linux GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/linux/focalboard-server ./main --single-user
-
-server-win-single-user:
-	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=win")
-	cd server; env GOOS=windows GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/focalboard-server.exe ./main --single-user
-
 generate:
 	cd server; go get -modfile=go.tools.mod github.com/golang/mock/mockgen
 	cd server; go get -modfile=go.tools.mod github.com/jteeuwen/go-bindata
