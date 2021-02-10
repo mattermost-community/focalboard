@@ -78,7 +78,7 @@ func main() {
 	script := fmt.Sprintf("localStorage.setItem('sessionId', '%s');", sessionToken)
 	value := ui.Eval(script)
 	if err := value.Err(); err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	log.Printf("Started")
