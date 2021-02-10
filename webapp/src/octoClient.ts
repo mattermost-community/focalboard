@@ -46,9 +46,9 @@ class OctoClient {
         }
 
         const responseJson = (await this.getJson(response)) as {token?: string}
-        this.token = responseJson.token
-        if (responseJson.token !== '') {
-            localStorage.setItem('sessionId', this.token || '')
+        this.token = responseJson.token || ''
+        if (this.token) {
+            localStorage.setItem('sessionId', this.token)
             return true
         }
         return false
