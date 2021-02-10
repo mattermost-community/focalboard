@@ -54,7 +54,7 @@ func main() {
 	cmd := runServer(ctx)
 
 	defer func() {
-		fmt.Println("Cleanup")
+		log.Println("Cleanup")
 		cancel()
 		if err := cmd.Process.Kill(); err != nil {
 			log.Fatal("failed to kill server process: ", err)
@@ -84,7 +84,7 @@ func main() {
 	log.Printf("Started")
 	<-ui.Done()
 
-	log.Printf("App Closed")
+	log.Println("App Closed")
 }
 
 func hideConsole() {
