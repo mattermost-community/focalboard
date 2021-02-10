@@ -53,14 +53,26 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	cmd := runServer(ctx)
 
+	defer func() {
+		fmt.Println("Cleanup")
+		cancel()
+		if err := cmd.Process.Kill(); err != nil {
+			log.Fatal("failed to kill server process: ", err)
+		}
+
+		if r := recover(); r != nil {
+			log.Fatal("ERROR: ", r)
+		}
+	}()
+
 	ui, err := lorca.New("", "", 1024, 768)
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
-	// defer ui.Close()
+	defer ui.Close()
 
 	if err := ui.Load("http://localhost:8088"); err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	script := fmt.Sprintf("localStorage.setItem('sessionId', '%s');", sessionToken)
@@ -73,10 +85,6 @@ func main() {
 	<-ui.Done()
 
 	log.Printf("App Closed")
-	cancel()
-	if err := cmd.Process.Kill(); err != nil {
-		log.Fatal("failed to kill process: ", err)
-	}
 }
 
 func hideConsole() {
