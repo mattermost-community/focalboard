@@ -6,6 +6,6 @@
 	"useSSL": false,
 	"webpath": "../pack",
 	"filespath": "../../files",
-    "telemetry": false,
-    "webhook_update": []
+	"telemetry": false,
+	"webhook_update": []
 }
