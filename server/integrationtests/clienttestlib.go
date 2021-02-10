@@ -27,13 +27,14 @@ func getTestConfig() *config.Configuration {
 }
 
 func SetupTestHelper() *TestHelper {
+	sessionToken := "TESTTOKEN"
 	th := &TestHelper{}
-	srv, err := server.New(getTestConfig(), true)
+	srv, err := server.New(getTestConfig(), sessionToken)
 	if err != nil {
 		panic(err)
 	}
 	th.Server = srv
-	th.Client = client.NewClient(srv.Config().ServerRoot)
+	th.Client = client.NewClient(srv.Config().ServerRoot, sessionToken)
 
 	return th
 }
