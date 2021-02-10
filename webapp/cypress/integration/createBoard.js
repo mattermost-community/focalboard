@@ -10,6 +10,11 @@ describe('Create and delete board / card', () => {
     const boardTitle = `Test Board (${timestamp})`;
     const cardTitle = `Test Card (${timestamp})`;
 
+    beforeEach(() => {
+        localStorage.setItem('sessionId', 'TESTTOKEN');
+        cy.expect(localStorage.getItem('sessionId')).to.eq('TESTTOKEN');
+    });
+
     it('Can create and delete a board and card', () => {
         cy.visit('/');
         cy.contains('+ Add Board').click({force: true});
