@@ -27,6 +27,7 @@ func runServer(ctx context.Context) *exec.Cmd {
 	go func() {
 		err := cmd.Run()
 		if err != nil {
+			log.Println("Failed to start server")
 			log.Fatal(err)
 		}
 		log.Printf("Just ran subprocess %d, exiting\n", cmd.Process.Pid)
