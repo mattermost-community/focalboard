@@ -11,20 +11,36 @@
 			"mode": "debug",
 			"program": "${workspaceFolder}/server/main",
 			"cwd": "${workspaceFolder}"
-        },
-        {
-            "name": "Go: Test Current File",
-            "type": "go",
-            "request": "launch",
-            "mode": "test",
-            "remotePath": "",
-            "port": 8888,
-            "host": "127.0.0.1",
-            "program": "${file}",
-            "env": {},
-            "args": [],
-            "showLog": true
-        },
+		},
+		{
+		"name": "Go: Launch Windows App",
+		"type": "go",
+		"request": "launch",
+		"mode": "debug",
+		"program": "${workspaceFolder}/win",
+		"cwd": "${workspaceFolder}/win/temp",
+		},
+		{
+			"name": "Go: Launch Linux App",
+			"type": "go",
+			"request": "launch",
+			"mode": "debug",
+			"program": "${workspaceFolder}/linux",
+			"cwd": "${workspaceFolder}/linux/dist/focalboard-app",
+		},
+		{
+			"name": "Go: Test Current File",
+			"type": "go",
+			"request": "launch",
+			"mode": "test",
+			"remotePath": "",
+			"port": 8888,
+			"host": "127.0.0.1",
+			"program": "${file}",
+			"env": {},
+			"args": [],
+			"showLog": true
+		},
 		{
 			"name": "Attach by Process ID",
 			"processId": "${command:PickProcess}",
@@ -34,30 +50,30 @@
 			],
 			"type": "pwa-node"
 		},
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Jest: run all tests",
-            "program": "${workspaceRoot}/webapp/node_modules/jest/bin/jest.js",
-            "cwd": "${workspaceRoot}/webapp",
-            "args": [
-              "--verbose",
-            ],
-            "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen"
-          },
-          {
-            "type": "node",
-            "request": "launch",
-            "name": "Jest: run current file",
-            "program": "${workspaceRoot}/webapp/node_modules/jest/bin/jest.js",
-            "cwd": "${workspaceRoot}/webapp",
-            "args": [
-                "${fileBasename}",
-                "--verbose",
-              ],
-            "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen"
-          },
-    ]
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Jest: run all tests",
+			"program": "${workspaceRoot}/webapp/node_modules/jest/bin/jest.js",
+			"cwd": "${workspaceRoot}/webapp",
+			"args": [
+				"--verbose",
+			],
+			"console": "integratedTerminal",
+			"internalConsoleOptions": "neverOpen"
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Jest: run current file",
+			"program": "${workspaceRoot}/webapp/node_modules/jest/bin/jest.js",
+			"cwd": "${workspaceRoot}/webapp",
+			"args": [
+				"${fileBasename}",
+				"--verbose",
+				],
+			"console": "integratedTerminal",
+			"internalConsoleOptions": "neverOpen"
+		},
+	]
 }

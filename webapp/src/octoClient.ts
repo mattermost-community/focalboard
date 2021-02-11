@@ -11,16 +11,17 @@ import {Utils} from './utils'
 //
 class OctoClient {
     readonly serverUrl: string
-    token?: string
-    readonly readToken?: string
+    get token(): string {
+        return localStorage.getItem('sessionId') || ''
+    }
+    get readToken(): string {
+        const queryString = new URLSearchParams(window.location.search)
+        const readToken = queryString.get('r') || ''
+        return readToken
+    }
 
-    constructor(
-        serverUrl?: string,
-        token?: string,
-        readToken?: string) {
+    constructor(serverUrl?: string) {
         this.serverUrl = serverUrl || window.location.origin
-        this.token = token
-        this.readToken = readToken
         Utils.log(`OctoClient serverUrl: ${this.serverUrl}`)
     }
 
@@ -46,9 +47,8 @@ class OctoClient {
         }
 
         const responseJson = (await this.getJson(response)) as {token?: string}
-        this.token = responseJson.token || ''
-        if (this.token) {
-            localStorage.setItem('sessionId', this.token)
+        if (responseJson.token) {
+            localStorage.setItem('sessionId', responseJson.token)
             return true
         }
         return false
@@ -330,12 +330,6 @@ class OctoClient {
     }
 }
 
-function getReadToken(): string {
-    const queryString = new URLSearchParams(window.location.search)
-    const readToken = queryString.get('r') || ''
-    return readToken
-}
-
-const client = new OctoClient(undefined, localStorage.getItem('sessionId') || '', getReadToken())
+const client = new OctoClient()
 
 export default client

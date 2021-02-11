@@ -2,26 +2,32 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
 	"runtime"
 
 	"github.com/gonutz/w32"
+	"github.com/google/uuid"
 	"github.com/zserge/lorca"
 )
 
+var sessionToken string = "su-" + uuid.New().String()
+
 func runServer(ctx context.Context) *exec.Cmd {
-	// cmd := exec.CommandContext(ctx, "focalboard-server.exe", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10), "--single-user")
-	cmd := exec.CommandContext(ctx, "focalboard-server.exe", "--single-user")
+	// cmd := exec.CommandContext(ctx, "focalboard-server.exe", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10), "-single-user")
+	cmd := exec.CommandContext(ctx, "focalboard-server.exe", "-single-user")
 	// cmd := exec.CommandContext(ctx, "cmd.exe", "/C", "start", "./bin/focalboard-server.exe", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10))
 	// cmd := exec.CommandContext(ctx, "cmd.exe", "/C", "start", "./bin/focalboard-server.exe")
 
 	// cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+	cmd.Env = []string{fmt.Sprintf("FOCALBOARD_SINGLE_USER_TOKEN=%s", sessionToken)}
 	cmd.Stdout = os.Stdout
 	go func() {
 		err := cmd.Run()
 		if err != nil {
+			log.Println("Failed to start server")
 			log.Fatal(err)
 		}
 		log.Printf("Just ran subprocess %d, exiting\n", cmd.Process.Pid)
@@ -49,20 +55,38 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	cmd := runServer(ctx)
 
-	ui, err := lorca.New("http://localhost:8088", "", 1024, 768)
+	defer func() {
+		log.Println("Cleanup")
+		cancel()
+		if err := cmd.Process.Kill(); err != nil {
+			log.Fatal("failed to kill server process: ", err)
+		}
+
+		if r := recover(); r != nil {
+			log.Fatal("ERROR: ", r)
+		}
+	}()
+
+	ui, err := lorca.New("", "", 1024, 768)
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
-	// defer ui.Close()
+	defer ui.Close()
+
+	if err := ui.Load("http://localhost:8088"); err != nil {
+		log.Panic(err)
+	}
+
+	script := fmt.Sprintf("localStorage.setItem('sessionId', '%s');", sessionToken)
+	value := ui.Eval(script)
+	if err := value.Err(); err != nil {
+		log.Panic(err)
+	}
 
 	log.Printf("Started")
 	<-ui.Done()
 
-	log.Printf("App Closed")
-	cancel()
-	if err := cmd.Process.Kill(); err != nil {
-		log.Fatal("failed to kill process: ", err)
-	}
+	log.Println("App Closed")
 }
 
 func hideConsole() {

@@ -9,6 +9,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	private var serverProcess: Process?
 	var serverPort = 8088
+	var sessionToken: String = ""
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		copyResources()
@@ -68,7 +69,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 	}
 
+    private func generateSessionToken() -> String {
+        let bytesCount = 16
+        var randomNumber = ""
+		var randomBytes = [UInt8](repeating: 0, count: bytesCount)
+
+        let status = SecRandomCopyBytes(kSecRandomDefault, bytesCount, &randomBytes)
+		if status != errSecSuccess {
+			fatalError("SecRandomCopyBytes ERROR: \(status)")
+		}
+		randomNumber = randomBytes.map({String(format: "%02hhx", $0)}).joined(separator: "")
+
+        return "su-" + randomNumber
+    }
+
 	private func startServer() {
+		sessionToken = generateSessionToken()
+
 		let cwdUrl = webFolder()
 		let executablePath = Bundle.main.path(forResource: "resources/bin/focalboard-server", ofType: "")
 
@@ -76,7 +93,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		NSLog("pid: \(pid)")
 		let serverProcess = Process()
 		serverProcess.currentDirectoryPath = cwdUrl.path
-		serverProcess.arguments = ["-monitorpid", "\(pid)", "-port", "\(serverPort)", "--single-user"]
+		serverProcess.arguments = ["-monitorpid", "\(pid)", "-port", "\(serverPort)", "-single-user"]
+		serverProcess.environment = ["FOCALBOARD_SINGLE_USER_TOKEN": sessionToken]
 		serverProcess.launchPath = executablePath
 		serverProcess.launch()
 		self.serverProcess = serverProcess

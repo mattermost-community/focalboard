@@ -8,12 +8,12 @@
 	"useSSL": false,
 	"webpath": "./webapp/pack",
 	"filespath": "./files",
-    "telemetry": true,
-    "webhook_update": [],
-    "secret": "this-is-a-secret-string",
-    "session_expire_time": 2592000,
-    "session_refresh_time": 18000,
-    "localOnly": false,
-    "enableLocalMode": true,
-    "localModeSocketLocation": "/var/tmp/focalboard_local.socket"
+	"telemetry": true,
+	"webhook_update": [],
+	"secret": "this-is-a-secret-string",
+	"session_expire_time": 2592000,
+	"session_refresh_time": 18000,
+	"localOnly": false,
+	"enableLocalMode": true,
+	"localModeSocketLocation": "/var/tmp/focalboard_local.socket"
 }

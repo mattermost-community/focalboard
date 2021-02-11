@@ -49,7 +49,7 @@ type Server struct {
 	localModeServer *http.Server
 }
 
-func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
+func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 	logger, err := zap.NewProduction()
 	if err != nil {
 		return nil, err
@@ -63,7 +63,7 @@ func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
 
 	auth := auth.New(cfg, store)
 
-	wsServer := ws.NewServer(auth, singleUser)
+	wsServer := ws.NewServer(auth, singleUserToken)
 
 	filesBackendSettings := model.FileSettings{}
 	filesBackendSettings.SetDefaults(false)
@@ -78,7 +78,7 @@ func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
 	webhookClient := webhook.NewClient(cfg)
 
 	appBuilder := func() *app.App { return app.New(cfg, store, auth, wsServer, filesBackend, webhookClient) }
-	api := api.NewAPI(appBuilder, singleUser)
+	api := api.NewAPI(appBuilder, singleUserToken)
 
 	// Local router for admin APIs
 	localRouter := mux.NewRouter()
@@ -157,7 +157,7 @@ func New(cfg *config.Configuration, singleUser bool) (*Server, error) {
 			"port":        cfg.Port == config.DefaultPort,
 			"useSSL":      cfg.UseSSL,
 			"dbType":      cfg.DBType,
-			"single_user": singleUser,
+			"single_user": len(singleUserToken) > 0,
 		}
 	})
 	telemetryService.RegisterTracker("activity", func() map[string]interface{} {

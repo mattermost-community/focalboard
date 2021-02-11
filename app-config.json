@@ -6,6 +6,6 @@
 	"useSSL": false,
 	"webpath": "./pack",
 	"filespath": "./files",
-    "telemetry": true,
-    "localOnly": true
+	"telemetry": true,
+	"localOnly": true
 }

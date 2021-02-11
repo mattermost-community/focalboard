@@ -18,11 +18,11 @@ type IsValidSessionToken func(token string) bool
 
 // Server is a WebSocket server.
 type Server struct {
-	upgrader   websocket.Upgrader
-	listeners  map[string][]*websocket.Conn
-	mu         sync.RWMutex
-	auth       *auth.Auth
-	singleUser bool
+	upgrader        websocket.Upgrader
+	listeners       map[string][]*websocket.Conn
+	mu              sync.RWMutex
+	auth            *auth.Auth
+	singleUserToken string
 }
 
 // UpdateMsg is sent on block updates
@@ -50,7 +50,7 @@ type websocketSession struct {
 }
 
 // NewServer creates a new Server.
-func NewServer(auth *auth.Auth, singleUser bool) *Server {
+func NewServer(auth *auth.Auth, singleUserToken string) *Server {
 	return &Server{
 		listeners: make(map[string][]*websocket.Conn),
 		upgrader: websocket.Upgrader{
@@ -58,8 +58,8 @@ func NewServer(auth *auth.Auth, singleUser bool) *Server {
 				return true
 			},
 		},
-		auth:       auth,
-		singleUser: singleUser,
+		auth:            auth,
+		singleUserToken: singleUserToken,
 	}
 }
 
@@ -91,7 +91,7 @@ func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request
 
 	wsSession := websocketSession{
 		client:          client,
-		isAuthenticated: ws.singleUser,
+		isAuthenticated: false,
 	}
 
 	// Simple message handling loop
@@ -134,8 +134,8 @@ func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request
 }
 
 func (ws *Server) isValidSessionToken(token string) bool {
-	if ws.singleUser {
-		return true
+	if len(ws.singleUserToken) > 0 {
+		return token == ws.singleUserToken
 	}
 
 	session, err := ws.auth.GetSession(token)
@@ -160,10 +160,6 @@ func (ws *Server) authenticateListener(wsSession *websocketSession, token string
 }
 
 func (ws *Server) checkAuthentication(wsSession *websocketSession, command *WebsocketCommand) bool {
-	if ws.singleUser {
-		return true
-	}
-
 	if wsSession.isAuthenticated {
 		return true
 	}

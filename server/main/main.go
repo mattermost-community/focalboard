@@ -71,6 +71,16 @@ func main() {
 		singleUser = *pSingleUser
 	}
 
+	singleUserToken := ""
+	if singleUser {
+		singleUserToken = os.Getenv("FOCALBOARD_SINGLE_USER_TOKEN")
+		if len(singleUserToken) < 1 {
+			log.Fatal("The FOCALBOARD_SINGLE_USER_TOKEN environment variable must be set for single user mode ")
+			return
+		}
+		log.Printf("Single user mode")
+	}
+
 	if pMonitorPid != nil && *pMonitorPid > 0 {
 		monitorPid(*pMonitorPid)
 	}
@@ -81,7 +91,7 @@ func main() {
 		config.Port = *pPort
 	}
 
-	server, err := server.New(config, singleUser)
+	server, err := server.New(config, singleUserToken)
 	if err != nil {
 		log.Fatal("server.New ERROR: ", err)
 	}
