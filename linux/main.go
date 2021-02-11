@@ -15,10 +15,12 @@ import (
 var sessionToken string = "su-" + uuid.New().String()
 
 func runServer(ctx context.Context) {
-	cmd := exec.CommandContext(ctx, "./focalboard-server", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10), "-single-user", sessionToken)
+	cmd := exec.CommandContext(ctx, "./focalboard-server", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10), "-single-user")
+	cmd.Env = []string{fmt.Sprintf("FOCALBOARD_SINGLE_USER_TOKEN=%s", sessionToken)}
 	cmd.Stdout = os.Stdout
 	err := cmd.Run()
 	if err != nil {
+		log.Println("Failed to start server")
 		log.Fatal(err)
 	}
 	log.Printf("Just ran subprocess %d, exiting\n", cmd.Process.Pid)

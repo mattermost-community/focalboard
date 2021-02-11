@@ -63,12 +63,22 @@ func main() {
 	// Command line args
 	pMonitorPid := flag.Int("monitorpid", -1, "a process ID")
 	pPort := flag.Int("port", config.Port, "the port number")
-	pSingleUserToken := flag.String("single-user", "", "single user token")
+	pSingleUser := flag.Bool("single-user", false, "single user mode")
 	flag.Parse()
 
+	singleUser := false
+	if pSingleUser != nil {
+		singleUser = *pSingleUser
+	}
+
 	singleUserToken := ""
-	if pSingleUserToken != nil {
-		singleUserToken = *pSingleUserToken
+	if singleUser {
+		singleUserToken = os.Getenv("FOCALBOARD_SINGLE_USER_TOKEN")
+		if len(singleUserToken) < 1 {
+			log.Fatal("The FOCALBOARD_SINGLE_USER_TOKEN environment variable must be set for single user mode ")
+			return
+		}
+		log.Printf("Single user mode")
 	}
 
 	if pMonitorPid != nil && *pMonitorPid > 0 {

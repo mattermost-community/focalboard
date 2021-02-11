@@ -93,7 +93,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		NSLog("pid: \(pid)")
 		let serverProcess = Process()
 		serverProcess.currentDirectoryPath = cwdUrl.path
-		serverProcess.arguments = ["-monitorpid", "\(pid)", "-port", "\(serverPort)", "-single-user", sessionToken]
+		serverProcess.arguments = ["-monitorpid", "\(pid)", "-port", "\(serverPort)", "-single-user"]
+		serverProcess.environment = ["FOCALBOARD_SINGLE_USER_TOKEN": sessionToken]
 		serverProcess.launchPath = executablePath
 		serverProcess.launch()
 		self.serverProcess = serverProcess

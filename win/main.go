@@ -16,12 +16,13 @@ import (
 var sessionToken string = "su-" + uuid.New().String()
 
 func runServer(ctx context.Context) *exec.Cmd {
-	// cmd := exec.CommandContext(ctx, "focalboard-server.exe", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10), "-single-user", sessionToken)
-	cmd := exec.CommandContext(ctx, "focalboard-server.exe", "-single-user", sessionToken)
+	// cmd := exec.CommandContext(ctx, "focalboard-server.exe", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10), "-single-user")
+	cmd := exec.CommandContext(ctx, "focalboard-server.exe", "-single-user")
 	// cmd := exec.CommandContext(ctx, "cmd.exe", "/C", "start", "./bin/focalboard-server.exe", "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10))
 	// cmd := exec.CommandContext(ctx, "cmd.exe", "/C", "start", "./bin/focalboard-server.exe")
 
 	// cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+	cmd.Env = []string{fmt.Sprintf("FOCALBOARD_SINGLE_USER_TOKEN=%s", sessionToken)}
 	cmd.Stdout = os.Stdout
 	go func() {
 		err := cmd.Run()
