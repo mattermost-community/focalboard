@@ -46,7 +46,7 @@ const Comment: FC<Props> = (props: Props) => {
                     src={userImageUrl}
                 />
                 <div className='comment-username'>{username}</div>
-                <div className='comment-date'>{(new Date(comment.createAt)).toLocaleTimeString()}</div>
+                <div className='comment-date'>{(new Date(comment.createAt)).toLocaleString()}</div>
                 <MenuWrapper>
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu position='left'>
