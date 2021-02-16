@@ -50,6 +50,7 @@ export default class Editable extends React.Component<Props> {
                     onChange(e.target.value)
                 }}
                 value={value}
+                title={value}
                 onBlur={() => this.saveOnBlur && this.props.onSave && this.props.onSave('onBlur')}
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>): void => {
                     if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
