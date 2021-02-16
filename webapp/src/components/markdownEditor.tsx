@@ -17,6 +17,7 @@ type Props = {
     onChange?: (text: string) => void
     onFocus?: () => void
     onBlur?: (text: string) => void
+    onAccept?: (text: string) => void
 }
 
 type State = {
@@ -108,6 +109,14 @@ class MarkdownEditor extends React.Component<Props, State> {
                     // HACKHACK: Need to handle here instad of in CodeMirror because that breaks auto-lists
                     if (e.keyCode === 27 && !e.shiftKey && !(e.ctrlKey || e.metaKey) && !e.altKey) { // Esc
                         this.editorInstance?.codemirror?.getInputField()?.blur()
+                    } else if (e.keyCode === 13 && !e.shiftKey && (e.ctrlKey || e.metaKey) && !e.altKey) { // Cmd+Enter
+                        this.editorInstance?.codemirror?.getInputField()?.blur()
+
+                        // HACKHACK: Call onAccept after visual state change
+                        setTimeout(() => {
+                            Utils.log('onAccept')
+                            this.props.onAccept?.(this.elementRef.current!.state.value)
+                        }, 20)
                     }
                 }}
             >

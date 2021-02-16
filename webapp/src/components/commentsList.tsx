@@ -21,23 +21,21 @@ type Props = {
 
 type State = {
     newComment: string
-    inputFocused: boolean
 }
 
 class CommentsList extends React.Component<Props, State> {
-    public constructor(props: Props) {
+    constructor(props: Props) {
         super(props)
         this.state = {
             newComment: '',
-            inputFocused: false,
         }
     }
 
-    public shouldComponentUpdate() {
+    shouldComponentUpdate() {
         return true
     }
 
-    private sendComment = () => {
+    private sendComment = (commentText: string) => {
         const {rootId, cardId} = this.props
 
         Utils.assertValue(cardId)
@@ -45,12 +43,20 @@ class CommentsList extends React.Component<Props, State> {
         const comment = new MutableCommentBlock()
         comment.parentId = cardId
         comment.rootId = rootId
-        comment.title = this.state.newComment
+        comment.title = commentText
         mutator.insertBlock(comment, 'add comment')
-        this.setState({newComment: ''})
     }
 
-    public render(): JSX.Element {
+    private onSendClicked = () => {
+        const commentText = this.state.newComment
+        if (commentText) {
+            Utils.log(`Send comment: ${commentText}`)
+            this.sendComment(commentText)
+            this.setState({newComment: ''})
+        }
+    }
+
+    render(): JSX.Element {
         const {comments, intl} = this.props
 
         // TODO: Replace this placeholder
@@ -83,18 +89,13 @@ class CommentsList extends React.Component<Props, State> {
                                 this.setState({newComment: value})
                             }
                         }}
+                        onAccept={this.onSendClicked}
                     />
 
                     {this.state.newComment &&
                         <Button
                             filled={true}
-                            onClick={() => {
-                                if (this.state.newComment) {
-                                    Utils.log(`Send comment: ${this.state.newComment}`)
-                                    this.sendComment()
-                                    this.setState({inputFocused: false, newComment: ''})
-                                }
-                            }}
+                            onClick={this.onSendClicked}
                         >
                             <FormattedMessage
                                 id='CommentsList.send'
