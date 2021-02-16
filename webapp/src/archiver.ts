@@ -1,20 +1,15 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {BoardTree} from './viewModel/boardTree'
+import {IArchive} from './blocks/archive'
+import {IMutableBlock} from './blocks/block'
 import mutator from './mutator'
-import {IBlock, IMutableBlock} from './blocks/block'
 import {Utils} from './utils'
-
-interface Archive {
-    version: number
-    date: number
-    blocks: readonly IBlock[]
-}
+import {BoardTree} from './viewModel/boardTree'
 
 class Archiver {
     static async exportBoardTree(boardTree: BoardTree): Promise<void> {
         const blocks = boardTree.allBlocks
-        const archive: Archive = {
+        const archive: IArchive = {
             version: 1,
             date: Date.now(),
             blocks,
@@ -25,7 +20,7 @@ class Archiver {
 
     static async exportFullArchive(): Promise<void> {
         const blocks = await mutator.exportFullArchive()
-        const archive: Archive = {
+        const archive: IArchive = {
             version: 1,
             date: Date.now(),
             blocks,
@@ -34,7 +29,7 @@ class Archiver {
         this.exportArchive(archive)
     }
 
-    private static exportArchive(archive: Archive): void {
+    private static exportArchive(archive: IArchive): void {
         const content = JSON.stringify(archive)
 
         const date = new Date()
@@ -61,7 +56,7 @@ class Archiver {
             const file = input.files && input.files[0]
             const contents = await (new Response(file)).text()
             Utils.log(`Import ${contents.length} bytes.`)
-            const archive: Archive = JSON.parse(contents)
+            const archive: IArchive = JSON.parse(contents)
             const {blocks} = archive
             const date = new Date(archive.date)
             Utils.log(`Import archive, version: ${archive.version}, date/time: ${date.toLocaleString()}, ${blocks.length} block(s).`)
