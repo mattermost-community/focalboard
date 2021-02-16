@@ -112,8 +112,8 @@ class OctoUtils {
         const sourceBlock = blocks.find((block) => block.id === sourceBlockId)!
         if (sourceBlock.rootId === sourceBlock.id) {
             // Special case: when duplicating a tree from root, remap all the descendant rootIds
-            const newSourceBlock = newBlocks.find((block) => block.id === newSourceBlockId)!
-            newRootId = newSourceBlock.id
+            const newSourceRootBlock = newBlocks.find((block) => block.id === newSourceBlockId)!
+            newRootId = newSourceRootBlock.id
         }
 
         newBlocks.forEach((newBlock) => {
