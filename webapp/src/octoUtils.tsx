@@ -1,6 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
+import {IntlShape} from 'react-intl'
+
 import {IBlock, MutableBlock} from './blocks/block'
 import {IPropertyTemplate, MutableBoard} from './blocks/board'
 import {MutableBoardView} from './blocks/boardView'
@@ -9,6 +11,7 @@ import {MutableCommentBlock} from './blocks/commentBlock'
 import {MutableDividerBlock} from './blocks/dividerBlock'
 import {MutableImageBlock} from './blocks/imageBlock'
 import {MutableTextBlock} from './blocks/textBlock'
+import {FilterCondition} from './blocks/filterClause'
 import {Utils} from './utils'
 
 class OctoUtils {
@@ -140,6 +143,19 @@ class OctoUtils {
 
         const newSourceBlock = newBlocks.find((block) => block.id === newSourceBlockId)!
         return [newBlocks, newSourceBlock, idMap]
+    }
+
+    static filterConditionDisplayString(filterCondition: FilterCondition, intl: IntlShape): string {
+        switch (filterCondition) {
+        case 'includes': return intl.formatMessage({id: 'Filter.includes', defaultMessage: 'includes'})
+        case 'notIncludes': return intl.formatMessage({id: 'Filter.not-includes', defaultMessage: 'doesn\'t include'})
+        case 'isEmpty': return intl.formatMessage({id: 'Filter.is-empty', defaultMessage: 'is empty'})
+        case 'isNotEmpty': return intl.formatMessage({id: 'Filter.is-not-empty', defaultMessage: 'is not empty'})
+        default: {
+            Utils.assertFailure()
+            return '(unknown)'
+        }
+        }
     }
 }
 

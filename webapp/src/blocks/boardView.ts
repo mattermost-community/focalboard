@@ -1,10 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IBlock} from '../blocks/block'
-import {FilterGroup} from '../filterGroup'
 import {Utils} from '../utils'
 
-import {MutableBlock} from './block'
+import {IBlock, MutableBlock} from './block'
+import {FilterGroup} from './filterGroup'
 
 type IViewType = 'board' | 'table' // | 'calendar' | 'list' | 'gallery'
 type ISortOption = { propertyId: '__title' | string, reversed: boolean }

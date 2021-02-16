@@ -1,9 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {Utils} from '../utils'
-import {IBlock} from '../blocks/block'
 
-import {MutableBlock} from './block'
+import {IBlock, MutableBlock} from './block'
 
 interface Card extends IBlock {
     readonly icon: string

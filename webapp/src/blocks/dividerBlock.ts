@@ -12,4 +12,3 @@ class MutableDividerBlock extends MutableContentBlock implements DividerBlock {
 }
 
 export {DividerBlock, MutableDividerBlock}
-

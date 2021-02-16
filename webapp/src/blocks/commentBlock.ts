@@ -1,8 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IBlock} from '../blocks/block'
-
-import {MutableBlock} from './block'
+import {IBlock, MutableBlock} from './block'
 
 type CommentBlock = IBlock
 

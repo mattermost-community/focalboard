@@ -4,9 +4,10 @@ import React from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {IPropertyTemplate} from '../blocks/board'
-import {FilterClause, FilterCondition} from '../filterClause'
-import {FilterGroup} from '../filterGroup'
+import {FilterClause, FilterCondition} from '../blocks/filterClause'
+import {FilterGroup} from '../blocks/filterGroup'
 import mutator from '../mutator'
+import {OctoUtils} from '../octoUtils'
 import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
 import Button from '../widgets/buttons/button'
@@ -91,7 +92,7 @@ class FilterComponent extends React.Component<Props> {
                                     </Menu>
                                 </MenuWrapper>
                                 <MenuWrapper>
-                                    <Button>{FilterClause.filterConditionDisplayString(filter.condition, intl)}</Button>
+                                    <Button>{OctoUtils.filterConditionDisplayString(filter.condition, intl)}</Button>
                                     <Menu>
                                         <Menu.Text
                                             id='includes'

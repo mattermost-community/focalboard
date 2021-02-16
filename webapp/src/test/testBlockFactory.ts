@@ -6,10 +6,10 @@ import {MutableBoardView} from '../blocks/boardView'
 import {Card, MutableCard} from '../blocks/card'
 import {MutableCommentBlock} from '../blocks/commentBlock'
 import {DividerBlock, MutableDividerBlock} from '../blocks/dividerBlock'
+import {FilterClause} from '../blocks/filterClause'
+import {FilterGroup} from '../blocks/filterGroup'
 import {ImageBlock, MutableImageBlock} from '../blocks/imageBlock'
 import {MutableTextBlock, TextBlock} from '../blocks/textBlock'
-import {FilterClause} from '../filterClause'
-import {FilterGroup} from '../filterGroup'
 
 class TestBlockFactory {
     static createBoard(): MutableBoard {

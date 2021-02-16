@@ -2,8 +2,8 @@
 // See LICENSE.txt for license information.
 import {IPropertyTemplate} from './blocks/board'
 import {Card} from './blocks/card'
-import {FilterClause} from './filterClause'
-import {FilterGroup} from './filterGroup'
+import {FilterClause} from './blocks/filterClause'
+import {FilterGroup} from './blocks/filterGroup'
 import {Utils} from './utils'
 
 class CardFilter {

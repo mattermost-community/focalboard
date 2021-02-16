@@ -2,9 +2,7 @@
 // See LICENSE.txt for license information.
 import {Utils} from '../utils'
 
-import {IBlock} from '../blocks/block'
-
-import {MutableBlock} from './block'
+import {IBlock, MutableBlock} from './block'
 
 type PropertyType = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy'
 
