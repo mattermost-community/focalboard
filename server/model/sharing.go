@@ -5,12 +5,28 @@ import (
 	"io"
 )
 
+// Sharing is sharing information for a root block
+// swagger:model
 type Sharing struct {
-	ID         string `json:"id"`
-	Enabled    bool   `json:"enabled"`
-	Token      string `json:"token"`
+	// ID of the root block
+	// required: true
+	ID string `json:"id"`
+
+	// Is sharing enabled
+	// required: true
+	Enabled bool `json:"enabled"`
+
+	// Access token
+	// required: true
+	Token string `json:"token"`
+
+	// ID of the user who last modified this
+	// required: true
 	ModifiedBy string `json:"modifiedBy"`
-	UpdateAt   int64  `json:"update_at,omitempty"`
+
+	// Updated time
+	// required: true
+	UpdateAt int64 `json:"update_at,omitempty"`
 }
 
 func SharingFromJSON(data io.Reader) Sharing {

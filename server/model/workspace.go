@@ -1,9 +1,25 @@
 package model
 
+// Workspace is information global to a workspace
+// swagger:model
 type Workspace struct {
-	ID          string                 `json:"id"`
-	SignupToken string                 `json:"signupToken"`
-	Settings    map[string]interface{} `json:"settings"`
-	ModifiedBy  string                 `json:"modifiedBy"`
-	UpdateAt    int64                  `json:"updateAt"`
+	// ID of the workspace
+	// required: true
+	ID string `json:"id"`
+
+	// Token required to register new users
+	// required: true
+	SignupToken string `json:"signupToken"`
+
+	// Workspace settings
+	// required: false
+	Settings map[string]interface{} `json:"settings"`
+
+	// ID of user who last modified this
+	// required: true
+	ModifiedBy string `json:"modifiedBy"`
+
+	// Updated time
+	// required: true
+	UpdateAt int64 `json:"updateAt"`
 }

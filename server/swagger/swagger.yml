@@ -1,0 +1,693 @@
+basePath: /api/v1
+consumes:
+- application/json
+definitions:
+  Block:
+    description: Block is the basic data unit
+    properties:
+      createAt:
+        description: The creation time
+        format: int64
+        type: integer
+        x-go-name: CreateAt
+      deleteAt:
+        description: The deleted time. Set to indicate this block is deleted
+        format: int64
+        type: integer
+        x-go-name: DeleteAt
+      fields:
+        additionalProperties:
+          type: object
+        description: The block fields
+        type: object
+        x-go-name: Fields
+      id:
+        description: The id for this block
+        type: string
+        x-go-name: ID
+      modifiedBy:
+        description: The id for user who last modified this block
+        type: string
+        x-go-name: ModifiedBy
+      parentId:
+        description: The id for this block's parent block. Empty for root blocks
+        type: string
+        x-go-name: ParentID
+      rootId:
+        description: The id for this block's root block
+        type: string
+        x-go-name: RootID
+      schema:
+        description: The schema version of this block
+        format: int64
+        type: integer
+        x-go-name: Schema
+      title:
+        description: The display title
+        type: string
+        x-go-name: Title
+      type:
+        description: The block type
+        type: string
+        x-go-name: Type
+      updateAt:
+        description: The last modified time
+        format: int64
+        type: integer
+        x-go-name: UpdateAt
+    required:
+    - id
+    - rootId
+    - modifiedBy
+    - schema
+    - type
+    - createAt
+    - updateAt
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/model
+  ChangePasswordRequest:
+    description: ChangePasswordRequest is a user password change request
+    properties:
+      newPassword:
+        description: New password
+        type: string
+        x-go-name: NewPassword
+      oldPassword:
+        description: Old password
+        type: string
+        x-go-name: OldPassword
+    required:
+    - oldPassword
+    - newPassword
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/api
+  ErrorResponse:
+    description: ErrorResponse is an error response
+    properties:
+      error:
+        description: The error message
+        type: string
+        x-go-name: Error
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/model
+  FileUploadResponse:
+    description: FileUploadResponse is the response to a file upload
+    properties:
+      url:
+        description: The URL to retrieve the uploaded file
+        type: string
+        x-go-name: URL
+    required:
+    - url
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/api
+  LoginRequest:
+    description: LoginRequest is a login request
+    properties:
+      email:
+        description: If specified, login using email
+        type: string
+        x-go-name: Email
+      password:
+        description: Password
+        type: string
+        x-go-name: Password
+      type:
+        description: Type of login, currently must be set to "normal"
+        type: string
+        x-go-name: Type
+      username:
+        description: If specified, login using username
+        type: string
+        x-go-name: Username
+    required:
+    - type
+    - password
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/api
+  LoginResponse:
+    description: LoginResponse is a login response
+    properties:
+      token:
+        description: Session token
+        type: string
+        x-go-name: Token
+    required:
+    - token
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/api
+  RegisterRequest:
+    description: RegisterRequest is a user registration request
+    properties:
+      email:
+        description: User's email
+        type: string
+        x-go-name: Email
+      password:
+        description: Password
+        type: string
+        x-go-name: Password
+      token:
+        description: Registration authorization token
+        type: string
+        x-go-name: Token
+      username:
+        description: User name
+        type: string
+        x-go-name: Username
+    required:
+    - username
+    - email
+    - password
+    - token
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/api
+  Sharing:
+    description: Sharing is sharing information for a root block
+    properties:
+      enabled:
+        description: Is sharing enabled
+        type: boolean
+        x-go-name: Enabled
+      id:
+        description: ID of the root block
+        type: string
+        x-go-name: ID
+      modifiedBy:
+        description: ID of the user who last modified this
+        type: string
+        x-go-name: ModifiedBy
+      token:
+        description: Access token
+        type: string
+        x-go-name: Token
+      update_at:
+        description: Updated time
+        format: int64
+        type: integer
+        x-go-name: UpdateAt
+    required:
+    - id
+    - enabled
+    - token
+    - modifiedBy
+    - update_at
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/model
+  User:
+    description: User is a user
+    properties:
+      create_at:
+        description: Created time
+        format: int64
+        type: integer
+        x-go-name: CreateAt
+      delete_at:
+        description: Deleted time, set to indicate user is deleted
+        format: int64
+        type: integer
+        x-go-name: DeleteAt
+      email:
+        description: The user's email
+        type: string
+        x-go-name: Email
+      id:
+        description: The user ID
+        type: string
+        x-go-name: ID
+      props:
+        additionalProperties:
+          type: object
+        description: User settings
+        type: object
+        x-go-name: Props
+      update_at:
+        description: Updated time
+        format: int64
+        type: integer
+        x-go-name: UpdateAt
+      username:
+        description: The user name
+        type: string
+        x-go-name: Username
+    required:
+    - id
+    - username
+    - email
+    - props
+    - create_at
+    - update_at
+    - delete_at
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/model
+  Workspace:
+    description: Workspace is information global to a workspace
+    properties:
+      id:
+        description: ID of the workspace
+        type: string
+        x-go-name: ID
+      modifiedBy:
+        description: ID of user who last modified this
+        type: string
+        x-go-name: ModifiedBy
+      settings:
+        additionalProperties:
+          type: object
+        description: Workspace settings
+        type: object
+        x-go-name: Settings
+      signupToken:
+        description: Token required to register new users
+        type: string
+        x-go-name: SignupToken
+      updateAt:
+        description: Updated time
+        format: int64
+        type: integer
+        x-go-name: UpdateAt
+    required:
+    - id
+    - signupToken
+    - modifiedBy
+    - updateAt
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/model
+host: localhost
+info:
+  contact:
+    email: api@focalboard.com
+    name: Focalboard
+    url: https://www.focalboard.com
+  description: Server for Focalboard
+  license:
+    name: Custom
+    url: https://github.com/mattermost/focalboard/blob/main/LICENSE.txt
+  title: Focalboard Server
+  version: 0.5.0
+paths:
+  /api/v1/blocks:
+    get:
+      description: Returns blocks
+      operationId: getBlocks
+      parameters:
+      - description: ID of parent block, omit to specify all blocks
+        in: query
+        name: parent_id
+        type: string
+      - description: Type of blocks to return, omit to specify all types
+        in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            items:
+              $ref: '#/definitions/Block'
+            type: array
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+    post:
+      description: Insert or update blocks
+      operationId: updateBlocks
+      parameters:
+      - description: array of blocks to insert or update
+        in: body
+        name: Body
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/Block'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/blocks/{blockID}:
+    delete:
+      description: Deletes a block
+      operationId: deleteBlock
+      parameters:
+      - description: ID of block to delete
+        in: path
+        name: blockID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/blocks/{blockID}/subtree:
+    get:
+      description: Returns the blocks of a subtree
+      operationId: getSubTree
+      parameters:
+      - description: The ID of the root block of the subtree
+        in: path
+        name: blockID
+        required: true
+        type: string
+      - description: The number of levels to return. 2 or 3. Defaults to 2.
+        in: query
+        maximum: 3
+        minimum: 2
+        name: l
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            items:
+              $ref: '#/definitions/Block'
+            type: array
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/blocks/export:
+    get:
+      description: Returns all blocks
+      operationId: exportBlocks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            items:
+              $ref: '#/definitions/Block'
+            type: array
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/blocks/import:
+    post:
+      description: Import blocks
+      operationId: importBlocks
+      parameters:
+      - description: array of blocks to import
+        in: body
+        name: Body
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/Block'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/files:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload a binary file
+      operationId: uploadFile
+      parameters:
+      - description: The file to upload
+        in: formData
+        name: uploaded file
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/FileUploadResponse'
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/login:
+    post:
+      description: Login user
+      operationId: login
+      parameters:
+      - description: Login request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/LoginResponse'
+        "401":
+          description: invalid login
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /api/v1/register:
+    post:
+      description: Register new user
+      operationId: register
+      parameters:
+      - description: Register request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        "401":
+          description: invalid registration token
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /api/v1/sharing/{rootID}:
+    get:
+      description: Returns sharing information for a root block
+      operationId: getSharing
+      parameters:
+      - description: ID of the root block
+        in: path
+        name: rootID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/Sharing'
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+    post:
+      description: Sets sharing information for a root block
+      operationId: postSharing
+      parameters:
+      - description: ID of the root block
+        in: path
+        name: rootID
+        required: true
+        type: string
+      - description: sharing information for a root block
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/Sharing'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/users/{userID}:
+    get:
+      description: Returns a user
+      operationId: getUser
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/users/{userID}/changepassword:
+    post:
+      description: Change a user's password
+      operationId: changePassword
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      - description: Change password request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/ChangePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        "400":
+          description: invalid request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/users/me:
+    get:
+      description: Returns the currently logged-in user
+      operationId: getMe
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/workspace:
+    get:
+      description: Returns information of the root workspace
+      operationId: getWorkspace
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/Workspace'
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/workspace/regenerate_signup_token:
+    post:
+      description: Regenerates the signup token for the root workspace
+      operationId: regenerateSignupToken
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /files/{fileID}:
+    get:
+      description: Returns the contents of an uploaded file
+      operationId: getFile
+      parameters:
+      - description: ID of the file
+        in: path
+        name: fileID
+        required: true
+        type: string
+      produces:
+      - application/json
+      - image/jpg
+      - image/png
+      responses:
+        "200":
+          description: success
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+produces:
+- application/json
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAuth:
+    description: 'Pass session token using Bearer authentication, e.g. set header "Authorization: Bearer <session token>"'
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

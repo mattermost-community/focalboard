@@ -133,6 +133,18 @@ linux-app: server-linux webapp
 	cd linux/temp; tar -zcf ../dist/focalboard-linux.tar.gz focalboard-app
 	rm -rf linux/temp
 
+swagger:
+	mkdir -p server/swagger/docs
+	mkdir -p server/swagger/clients
+	cd server && swagger generate spec -m -o ./swagger/swagger.yml
+
+	cd server/swagger && openapi-generator generate -i swagger.yml -g html2 -o docs/html
+	cd server/swagger && openapi-generator generate -i swagger.yml -g go -o clients/go
+	cd server/swagger && openapi-generator generate -i swagger.yml -g javascript -o clients/javascript
+	cd server/swagger && openapi-generator generate -i swagger.yml -g typescript-fetch -o clients/typescript
+	cd server/swagger && openapi-generator generate -i swagger.yml -g swift5 -o clients/swift
+	cd server/swagger && openapi-generator generate -i swagger.yml -g python -o clients/python
+
 clean:
 	rm -rf bin
 	rm -rf dist

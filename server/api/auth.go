@@ -17,22 +17,60 @@ import (
 	"github.com/mattermost/focalboard/server/services/auth"
 )
 
-type LoginData struct {
-	Type     string `json:"type"`
+// LoginRequest is a login request
+// swagger:model
+type LoginRequest struct {
+	// Type of login, currently must be set to "normal"
+	// required: true
+	Type string `json:"type"`
+
+	// If specified, login using username
+	// required: false
 	Username string `json:"username"`
-	Email    string `json:"email"`
+
+	// If specified, login using email
+	// required: false
+	Email string `json:"email"`
+
+	// Password
+	// required: true
 	Password string `json:"password"`
+
+	// MFA token
+	// required: false
+	// swagger:ignore
 	MfaToken string `json:"mfa_token"`
 }
 
-type RegisterData struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Token    string `json:"token"`
+// LoginResponse is a login response
+// swagger:model
+type LoginResponse struct {
+	// Session token
+	// required: true
+	Token string `json:"token"`
 }
 
-func (rd *RegisterData) IsValid() error {
+// RegisterRequest is a user registration request
+// swagger:model
+type RegisterRequest struct {
+	// User name
+	// required: true
+	Username string `json:"username"`
+
+	// User's email
+	// required: true
+	Email string `json:"email"`
+
+	// Password
+	// required: true
+	Password string `json:"password"`
+
+	// Registration authorization token
+	// required: true
+	Token string `json:"token"`
+}
+
+func (rd *RegisterRequest) IsValid() error {
 	if rd.Username == "" {
 		return errors.New("Username is required")
 	}
@@ -51,12 +89,20 @@ func (rd *RegisterData) IsValid() error {
 	return nil
 }
 
-type ChangePasswordData struct {
+// ChangePasswordRequest is a user password change request
+// swagger:model
+type ChangePasswordRequest struct {
+	// Old password
+	// required: true
 	OldPassword string `json:"oldPassword"`
+
+	// New password
+	// required: true
 	NewPassword string `json:"newPassword"`
 }
 
-func (rd *ChangePasswordData) IsValid() error {
+// IsValid validates a password change request
+func (rd *ChangePasswordRequest) IsValid() error {
 	if rd.OldPassword == "" {
 		return errors.New("Old password is required")
 	}
@@ -78,34 +124,62 @@ func isValidPassword(password string) error {
 }
 
 func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /api/v1/login login
+	//
+	// Login user
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: body
+	//   in: body
+	//   description: Login request
+	//   required: true
+	//   schema:
+	//     "$ref": "#/definitions/LoginRequest"
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       "$ref": "#/definitions/LoginResponse"
+	//   '401':
+	//     description: invalid login
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+	//   '500':
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
-		errorResponse(w, http.StatusUnauthorized, nil, nil)
+		errorResponse(w, http.StatusUnauthorized, "", nil)
 		return
 	}
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		errorResponse(w, http.StatusInternalServerError, nil, err)
+		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
 	}
 
-	var loginData LoginData
+	var loginData LoginRequest
 	err = json.Unmarshal(requestBody, &loginData)
 	if err != nil {
-		errorResponse(w, http.StatusInternalServerError, nil, err)
+		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	if loginData.Type == "normal" {
 		token, err := a.app().Login(loginData.Username, loginData.Email, loginData.Password, loginData.MfaToken)
 		if err != nil {
-			errorResponse(w, http.StatusInternalServerError, map[string]string{"error": err.Error()}, err)
+			errorResponse(w, http.StatusUnauthorized, "incorrect login", err)
 			return
 		}
-		json, err := json.Marshal(map[string]string{"token": token})
+		json, err := json.Marshal(LoginResponse{Token: token})
 		if err != nil {
-			errorResponse(w, http.StatusInternalServerError, nil, err)
+			errorResponse(w, http.StatusInternalServerError, "", err)
 			return
 		}
 
@@ -113,26 +187,50 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	errorResponse(w, http.StatusInternalServerError, map[string]string{"error": "Unknown login type"}, nil)
+	errorResponse(w, http.StatusBadRequest, "invalid login type", nil)
 }
 
 func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /api/v1/register register
+	//
+	// Register new user
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: body
+	//   in: body
+	//   description: Register request
+	//   required: true
+	//   schema:
+	//     "$ref": "#/definitions/RegisterRequest"
+	// responses:
+	//   '200':
+	//     description: success
+	//   '401':
+	//     description: invalid registration token
+	//   '500':
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
-		errorResponse(w, http.StatusUnauthorized, nil, nil)
+		errorResponse(w, http.StatusUnauthorized, "", nil)
 		return
 	}
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		errorResponse(w, http.StatusInternalServerError, nil, err)
+		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
 	}
 
-	var registerData RegisterData
+	var registerData RegisterRequest
 	err = json.Unmarshal(requestBody, &registerData)
 	if err != nil {
-		errorResponse(w, http.StatusInternalServerError, nil, err)
+		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
 	}
 
@@ -140,45 +238,78 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 	if len(registerData.Token) > 0 {
 		workspace, err := a.app().GetRootWorkspace()
 		if err != nil {
-			errorResponse(w, http.StatusInternalServerError, nil, err)
+			errorResponse(w, http.StatusInternalServerError, "", err)
 			return
 		}
 
 		if registerData.Token != workspace.SignupToken {
-			errorResponse(w, http.StatusUnauthorized, nil, nil)
+			errorResponse(w, http.StatusUnauthorized, "", nil)
 			return
 		}
 	} else {
 		// No signup token, check if no active users
 		userCount, err := a.app().GetRegisteredUserCount()
 		if err != nil {
-			errorResponse(w, http.StatusInternalServerError, nil, err)
+			errorResponse(w, http.StatusInternalServerError, "", err)
 			return
 		}
 		if userCount > 0 {
-			errorResponse(w, http.StatusUnauthorized, nil, nil)
+			errorResponse(w, http.StatusUnauthorized, "", nil)
 			return
 		}
 	}
 
 	if err = registerData.IsValid(); err != nil {
-		errorResponse(w, http.StatusInternalServerError, map[string]string{"error": err.Error()}, err)
+		errorResponse(w, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
 	err = a.app().RegisterUser(registerData.Username, registerData.Email, registerData.Password)
 	if err != nil {
-		errorResponse(w, http.StatusInternalServerError, map[string]string{"error": err.Error()}, err)
+		errorResponse(w, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
-	jsonBytesResponse(w, http.StatusOK, nil)
+	jsonStringResponse(w, http.StatusOK, "{}")
 }
 
 func (a *API) handleChangePassword(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /api/v1/users/{userID}/changepassword changePassword
+	//
+	// Change a user's password
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: userID
+	//   in: path
+	//   description: User ID
+	//   required: true
+	//   type: string
+	// - name: body
+	//   in: body
+	//   description: Change password request
+	//   required: true
+	//   schema:
+	//     "$ref": "#/definitions/ChangePasswordRequest"
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   '400':
+	//     description: invalid request
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+	//   '500':
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
-		errorResponse(w, http.StatusUnauthorized, nil, nil)
+		errorResponse(w, http.StatusUnauthorized, "", nil)
 		return
 	}
 
@@ -187,27 +318,27 @@ func (a *API) handleChangePassword(w http.ResponseWriter, r *http.Request) {
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		errorResponse(w, http.StatusInternalServerError, nil, err)
+		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
 	}
 
-	var requestData ChangePasswordData
+	var requestData ChangePasswordRequest
 	if err := json.Unmarshal(requestBody, &requestData); err != nil {
-		errorResponse(w, http.StatusInternalServerError, nil, err)
+		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	if err = requestData.IsValid(); err != nil {
-		errorResponse(w, http.StatusInternalServerError, map[string]string{"error": err.Error()}, err)
+		errorResponse(w, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
 	if err = a.app().ChangePassword(userID, requestData.OldPassword, requestData.NewPassword); err != nil {
-		errorResponse(w, http.StatusInternalServerError, map[string]string{"error": err.Error()}, err)
+		errorResponse(w, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
-	jsonBytesResponse(w, http.StatusOK, nil)
+	jsonStringResponse(w, http.StatusOK, "{}")
 }
 
 func (a *API) sessionRequired(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
@@ -221,7 +352,7 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 		log.Printf(`Single User: %v`, len(a.singleUserToken) > 0)
 		if len(a.singleUserToken) > 0 {
 			if required && (token != a.singleUserToken) {
-				errorResponse(w, http.StatusUnauthorized, nil, nil)
+				errorResponse(w, http.StatusUnauthorized, "", nil)
 				return
 			}
 
@@ -241,7 +372,7 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 		session, err := a.app().GetSession(token)
 		if err != nil {
 			if required {
-				errorResponse(w, http.StatusUnauthorized, nil, err)
+				errorResponse(w, http.StatusUnauthorized, "", err)
 				return
 			}
 
@@ -258,7 +389,7 @@ func (a *API) adminRequired(handler func(w http.ResponseWriter, r *http.Request)
 		// Currently, admin APIs require local unix connections
 		conn := serverContext.GetContextConn(r)
 		if _, isUnix := conn.(*net.UnixConn); !isUnix {
-			errorResponse(w, http.StatusUnauthorized, nil, nil)
+			errorResponse(w, http.StatusUnauthorized, "", nil)
 			return
 		}
 

@@ -5,19 +5,52 @@ import (
 	"io"
 )
 
-// Block is the basic data unit.
+// Block is the basic data unit
+// swagger:model
 type Block struct {
-	ID         string                 `json:"id"`
-	ParentID   string                 `json:"parentId"`
-	RootID     string                 `json:"rootId"`
-	ModifiedBy string                 `json:"modifiedBy"`
-	Schema     int64                  `json:"schema"`
-	Type       string                 `json:"type"`
-	Title      string                 `json:"title"`
-	Fields     map[string]interface{} `json:"fields"`
-	CreateAt   int64                  `json:"createAt"`
-	UpdateAt   int64                  `json:"updateAt"`
-	DeleteAt   int64                  `json:"deleteAt"`
+	// The id for this block
+	// required: true
+	ID string `json:"id"`
+
+	// The id for this block's parent block. Empty for root blocks
+	// required: false
+	ParentID string `json:"parentId"`
+
+	// The id for this block's root block
+	// required: true
+	RootID string `json:"rootId"`
+
+	// The id for user who last modified this block
+	// required: true
+	ModifiedBy string `json:"modifiedBy"`
+
+	// The schema version of this block
+	// required: true
+	Schema int64 `json:"schema"`
+
+	// The block type
+	// required: true
+	Type string `json:"type"`
+
+	// The display title
+	// required: false
+	Title string `json:"title"`
+
+	// The block fields
+	// required: false
+	Fields map[string]interface{} `json:"fields"`
+
+	// The creation time
+	// required: true
+	CreateAt int64 `json:"createAt"`
+
+	// The last modified time
+	// required: true
+	UpdateAt int64 `json:"updateAt"`
+
+	// The deleted time. Set to indicate this block is deleted
+	// required: false
+	DeleteAt int64 `json:"deleteAt"`
 }
 
 // Archive is an import / export archive
