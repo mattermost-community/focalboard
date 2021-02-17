@@ -12,3 +12,7 @@ brew tap go-swagger/go-swagger
 brew install go-swagger
 brew install openapi-generator
 ```
+
+# Server API documentation
+
+See the generated [server API documentation here](https://htmlpreview.github.io/?https://github.com/mattermost/focalboard/blob/main/server/swagger/docs/html/index.html).
