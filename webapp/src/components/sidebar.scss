@@ -30,10 +30,21 @@
         flex: 0 0 auto;
     }
 
-    .LogoWithNameIcon, .LogoWithNameWhiteIcon {
-        max-height: 24px;
-        margin-top: 6px;
-        width: auto;
+    .logo {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .LogoWithNameIcon, .LogoWithNameWhiteIcon {
+            max-height: 24px;
+            width: auto;
+        }
+
+        .version {
+            font-size: 11px;
+            font-weight: 500;
+            color: rgba(var(--sidebar-fg), 0.8);
+        }
     }
 
     .octo-sidebar-list {
@@ -68,6 +79,7 @@
         >.heading {
             line-height: 30px;
             cursor: default;
+            flex-grow: 1;
         }
 
         >.IconButton {

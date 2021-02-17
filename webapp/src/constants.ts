@@ -18,6 +18,8 @@ class Constants {
     static readonly minColumnWidth = 100
     static readonly defaultTitleColumnWidth = 280
     static readonly titleColumnId = '__title'
+
+    static readonly versionString = '0.5.0'
 }
 
 export {Constants}

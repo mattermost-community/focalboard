@@ -6,6 +6,7 @@ import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 import {Archiver} from '../archiver'
 import {Board, MutableBoard} from '../blocks/board'
 import {BoardView, IViewType, MutableBoardView} from '../blocks/boardView'
+import {Constants} from '../constants'
 import mutator from '../mutator'
 import octoClient from '../octoClient'
 import {darkTheme, defaultTheme, lightTheme, loadTheme, setTheme, Theme} from '../theme'
@@ -364,7 +365,13 @@ class Sidebar extends React.Component<Props, State> {
         return (
             <ModalWrapper>
                 <MenuWrapper>
-                    {this.state.whiteLogo ? <LogoWithNameWhiteIcon/> : <LogoWithNameIcon/>}
+                    <div className='logo'>
+                        {this.state.whiteLogo ? <LogoWithNameWhiteIcon/> : <LogoWithNameIcon/>}
+                        <div className='octo-spacer'/>
+                        <div className='version'>
+                            {`v${Constants.versionString}`}
+                        </div>
+                    </div>
                     <Menu>
                         {user && user.username !== 'single-user' && <>
                             <Menu.Label><b>{user.username}</b></Menu.Label>
