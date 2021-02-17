@@ -1,6 +1,9 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import * as fs from 'fs'
 import minimist from 'minimist'
 import {exit} from 'process'
+import {Z_FIXED} from 'zlib'
 import {IArchive} from '../../webapp/src/blocks/archive'
 import {IBlock} from '../../webapp/src/blocks/block'
 import {IPropertyOption, IPropertyTemplate, MutableBoard} from '../../webapp/src/blocks/board'
@@ -23,6 +26,11 @@ function main() {
         showHelp()
     }
 
+    if (!fs.existsSync(inputFile)) {
+        console.error(`File not found: ${inputFile}`)
+        exit(2)
+    }
+
     // Read input
     const inputData = fs.readFileSync(inputFile, 'utf-8')
     const input = JSON.parse(inputData) as Asana
@@ -38,32 +46,32 @@ function main() {
 }
 
 function getProjects(input: Asana): Workspace[] {
-	const projectMap = new Map<string, Workspace>()
+    const projectMap = new Map<string, Workspace>()
 
-	input.data.forEach(datum => {
-		datum.projects.forEach(project => {
-			if (!projectMap.get(project.gid)) {
-				projectMap.set(project.gid, project)
-			}
-		})
-	})
+    input.data.forEach(datum => {
+        datum.projects.forEach(project => {
+            if (!projectMap.get(project.gid)) {
+                projectMap.set(project.gid, project)
+            }
+        })
+    })
 
-	return [...projectMap.values()]
+    return [...projectMap.values()]
 }
 
 function getSections(input: Asana, projectId: string): Workspace[] {
-	const sectionMap = new Map<string, Workspace>()
+    const sectionMap = new Map<string, Workspace>()
 
-	input.data.forEach(datum => {
-		const membership = datum.memberships.find(o => o.project.gid === projectId)
-		if (membership) {
-			if (!sectionMap.get(membership.section.gid)) {
-				sectionMap.set(membership.section.gid, membership.section)
-			}
-		}
-	})
+    input.data.forEach(datum => {
+        const membership = datum.memberships.find(o => o.project.gid === projectId)
+        if (membership) {
+            if (!sectionMap.get(membership.section.gid)) {
+                sectionMap.set(membership.section.gid, membership.section)
+            }
+        }
+    })
 
-	return [...sectionMap.values()]
+    return [...sectionMap.values()]
 }
 
 function convert(input: Asana): IArchive {
@@ -73,14 +81,14 @@ function convert(input: Asana): IArchive {
         blocks: []
     }
 
-	const projects = getProjects(input)
-	if (projects.length < 1) {
-		console.error('No projects found')
-		return archive
-	}
+    const projects = getProjects(input)
+    if (projects.length < 1) {
+        console.error('No projects found')
+        return archive
+    }
 
-	// TODO: Handle multiple projects
-	const project = projects[0]
+    // TODO: Handle multiple projects
+    const project = projects[0]
 
     const blocks: IBlock[] = []
 
@@ -93,7 +101,7 @@ function convert(input: Asana): IArchive {
     // Convert sections (columns) to a Select property
     const optionIdMap = new Map<string, string>()
     const options: IPropertyOption[] = []
-	const sections = getSections(input, project.gid)
+    const sections = getSections(input, project.gid)
     sections.forEach(section => {
         const optionId = Utils.createGuid()
         optionIdMap.set(section.gid, optionId)
@@ -132,7 +140,7 @@ function convert(input: Asana): IArchive {
         outCard.parentId = board.id
 
         // Map lists to Select property options
-		const membership = card.memberships.find(o => o.project.gid === project.gid)
+        const membership = card.memberships.find(o => o.project.gid === project.gid)
         if (membership) {
             const optionId = optionIdMap.get(membership.section.gid)
             if (optionId) {
@@ -158,7 +166,7 @@ function convert(input: Asana): IArchive {
         }
     })
 
-	archive.blocks = blocks
+    archive.blocks = blocks
 
     console.log('')
     console.log(`Found ${input.data.length} card(s).`)
@@ -168,7 +176,7 @@ function convert(input: Asana): IArchive {
 
 function showHelp() {
     console.log('import -i <input.json> -o [output.focalboard]')
-    exit(-1)
+    exit(1)
 }
 
 main()

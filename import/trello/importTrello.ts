@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import * as fs from 'fs'
 import minimist from 'minimist'
 import {exit} from 'process'
@@ -21,6 +23,11 @@ function main() {
 
     if (!inputFile) {
         showHelp()
+    }
+
+    if (!fs.existsSync(inputFile)) {
+        console.error(`File not found: ${inputFile}`)
+        exit(2)
     }
 
     // Read input
@@ -127,7 +134,7 @@ function convert(input: Trello): IArchive {
 
 function showHelp() {
     console.log('import -i <input.json> -o [output.focalboard]')
-    exit(-1)
+    exit(1)
 }
 
 main()

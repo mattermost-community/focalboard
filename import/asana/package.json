@@ -5,7 +5,10 @@
   "description": "",
   "main": "importAsana.js",
   "scripts": {
-    "test": "ts-node importAsana.ts -i test/asana.json -o test/archive.focalboard"
+    "lint": "eslint --ext .tsx,.ts . --quiet --cache",
+	"fix": "eslint --ext .tsx,.ts . --quiet --fix --cache",
+    "test": "ts-node importAsana.ts -i test/asana.json -o test/archive.focalboard",
+    "debug:test": "node --inspect=5858 -r ts-node/register importAsana.ts -i test/asana.json -o test/archive.focalboard"
   },
   "keywords": [],
   "author": "",
