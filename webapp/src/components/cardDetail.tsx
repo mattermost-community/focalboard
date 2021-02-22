@@ -144,7 +144,7 @@ class CardDetail extends React.Component<Props, State> {
                         {board.cardProperties.map((propertyTemplate) => {
                             return (
                                 <div
-                                    key={propertyTemplate.id}
+                                    key={propertyTemplate.id + '-' + propertyTemplate.type}
                                     className='octo-propertyrow'
                                 >
                                     {this.props.readonly && <div className='octo-propertyname'>{propertyTemplate.name}</div>}

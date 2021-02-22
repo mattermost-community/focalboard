@@ -388,6 +388,7 @@ class Mutator {
 
         const newBoard = new MutableBoard(board)
         const newTemplate = newBoard.cardProperties.find((o) => o.id === propertyTemplate.id)!
+        newTemplate.options = []
         newTemplate.type = type
 
         const oldBlocks: IBlock[] = [board]
@@ -402,6 +403,7 @@ class Mutator {
                     if (newValue) {
                         newCard.properties[propertyTemplate.id] = newValue
                     } else {
+                        // This was an invalid select option, so delete it
                         delete newCard.properties[propertyTemplate.id]
                     }
                     newBlocks.push(newCard)
@@ -409,17 +411,23 @@ class Mutator {
                 }
             }
         } else if (type === 'select') {
-            // Map values to template option IDs
+            // Map values to new template option IDs
             for (const card of boardTree.allCards) {
                 const oldValue = card.properties[propertyTemplate.id]
                 if (oldValue) {
-                    const newValue = propertyTemplate.options.find((o) => o.value === oldValue)?.id
-                    const newCard = new MutableCard(card)
-                    if (newValue) {
-                        newCard.properties[propertyTemplate.id] = newValue
-                    } else {
-                        delete newCard.properties[propertyTemplate.id]
+                    let option = newTemplate.options.find((o) => o.value === oldValue)
+                    if (!option) {
+                        option = {
+                            id: Utils.createGuid(),
+                            value: oldValue,
+                            color: 'propColorDefault',
+                        }
+                        newTemplate.options.push(option)
                     }
+
+                    const newCard = new MutableCard(card)
+                    newCard.properties[propertyTemplate.id] = option.id
+
                     newBlocks.push(newCard)
                     oldBlocks.push(card)
                 }
