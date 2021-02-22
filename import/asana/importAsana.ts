@@ -3,7 +3,6 @@
 import * as fs from 'fs'
 import minimist from 'minimist'
 import {exit} from 'process'
-import {Z_FIXED} from 'zlib'
 import {IArchive} from '../../webapp/src/blocks/archive'
 import {IBlock} from '../../webapp/src/blocks/block'
 import {IPropertyOption, IPropertyTemplate, MutableBoard} from '../../webapp/src/blocks/board'
@@ -15,6 +14,20 @@ import {Utils} from './utils'
 
 // HACKHACK: To allow Utils.CreateGuid to work
 (global.window as any) = {}
+
+const optionColors = [
+    // 'propColorDefault',
+    'propColorGray',
+    'propColorBrown',
+    'propColorOrange',
+    'propColorYellow',
+    'propColorGreen',
+    'propColorBlue',
+    'propColorPurple',
+    'propColorPink',
+    'propColorRed',
+]
+let optionColorIndex = 0
 
 function main() {
     const args: minimist.ParsedArgs = minimist(process.argv.slice(2))
@@ -105,10 +118,12 @@ function convert(input: Asana): IArchive {
     sections.forEach(section => {
         const optionId = Utils.createGuid()
         optionIdMap.set(section.gid, optionId)
+        const color = optionColors[optionColorIndex % optionColors.length]
+        optionColorIndex += 1
         const option: IPropertyOption = {
             id: optionId,
             value: section.name,
-            color: 'propColorDefault',
+            color,
         }
         options.push(option)
     })

@@ -15,6 +15,20 @@ import {Utils} from './utils'
 // HACKHACK: To allow Utils.CreateGuid to work
 (global.window as any) = {}
 
+const optionColors = [
+    // 'propColorDefault',
+    'propColorGray',
+    'propColorBrown',
+    'propColorOrange',
+    'propColorYellow',
+    'propColorGreen',
+    'propColorBlue',
+    'propColorPurple',
+    'propColorPink',
+    'propColorRed',
+]
+let optionColorIndex = 0
+
 function main() {
     const args: minimist.ParsedArgs = minimist(process.argv.slice(2))
 
@@ -60,10 +74,12 @@ function convert(input: Trello): IArchive {
     input.lists.forEach(list => {
         const optionId = Utils.createGuid()
         optionIdMap.set(list.id, optionId)
+        const color = optionColors[optionColorIndex % optionColors.length]
+        optionColorIndex += 1
         const option: IPropertyOption = {
             id: optionId,
             value: list.name,
-            color: 'propColorDefault',
+            color,
         }
         options.push(option)
     })
