@@ -1,0 +1,29 @@
+{
+    // Controls the rendering size of tabs in characters. Accepted values: "auto", 2, 4, 6, etc. If set to "auto", the value will be guessed when a file is opened.
+    "editor.tabSize": 4,
+    // Controls if the editor will insert spaces for tabs. Accepted values:  "auto", true, false. If set to "auto", the value will be guessed when a file is opened.
+    "editor.insertSpaces": true,
+    "eslint.validate": [
+        "typescript",
+        "typescriptreact"
+    ],
+    "files.exclude": {
+        ".vscode": true,
+        "**/__snapshots__": true,
+        "**/node_modules": true,
+    },
+    "search.exclude": {
+        "**/__snapshots__": true,
+        "**/node_modules": true,
+    },
+    "editor.codeActionsOnSave": {
+        // "source.organizeImports": true,
+        "source.fixAll.eslint": true,
+    },
+    "[typescriptreact]": {
+        "editor.codeActionsOnSave": {
+            // "source.organizeImports": true,
+        },
+    },
+    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false
+}
