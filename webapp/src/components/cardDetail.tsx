@@ -142,9 +142,10 @@ class CardDetail extends React.Component<Props, State> {
 
                     <div className='octo-propertylist'>
                         {board.cardProperties.map((propertyTemplate) => {
+                            const propertyValue = card.properties[propertyTemplate.id]
                             return (
                                 <div
-                                    key={propertyTemplate.id + '-' + propertyTemplate.type}
+                                    key={propertyTemplate.id + '-' + propertyTemplate.type + '-' + propertyValue}
                                     className='octo-propertyrow'
                                 >
                                     {this.props.readonly && <div className='octo-propertyname'>{propertyTemplate.name}</div>}
