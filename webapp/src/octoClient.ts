@@ -184,6 +184,20 @@ class OctoClient {
             if (!block.fields) {
                 block.fields = {}
             }
+
+            if (block.type === 'image') {
+                if (!block.fields.fileId && block.fields.url) {
+                    // Convert deprecated url to fileId
+                    try {
+                        const url = new URL(block.fields.url)
+                        const path = url.pathname
+                        const fileId = path.substring(path.lastIndexOf('/') + 1)
+                        block.fields.fileId = fileId
+                    } catch {
+                        Utils.logError(`Failed to get fileId from url: ${block.fields.url}`)
+                    }
+                }
+            }
         }
     }
 
@@ -223,44 +237,6 @@ class OctoClient {
             headers: this.headers(),
             body,
         })
-    }
-
-    // Returns URL of uploaded file, or undefined on failure
-    async uploadFile(file: File): Promise<string | undefined> {
-        // IMPORTANT: We need to post the image as a form. The browser will convert this to a application/x-www-form-urlencoded POST
-        const formData = new FormData()
-        formData.append('file', file)
-
-        try {
-            const headers = this.headers() as Record<string, string>
-
-            // TIPTIP: Leave out Content-Type here, it will be automatically set by the browser
-            delete headers['Content-Type']
-
-            const response = await fetch(this.serverUrl + '/api/v1/files', {
-                method: 'POST',
-                headers,
-                body: formData,
-            })
-            if (response.status !== 200) {
-                return undefined
-            }
-
-            try {
-                const text = await response.text()
-                Utils.log(`uploadFile response: ${text}`)
-                const json = JSON.parse(text)
-
-                // const json = await this.getJson(response)
-                return json.url
-            } catch (e) {
-                Utils.logError(`uploadFile json ERROR: ${e}`)
-            }
-        } catch (e) {
-            Utils.logError(`uploadFile ERROR: ${e}`)
-        }
-
-        return undefined
     }
 
     // Sharing
@@ -318,10 +294,49 @@ class OctoClient {
         return true
     }
 
-    // Images
+    // Files
 
-    async fetchImage(url: string): Promise<string> {
-        const response = await fetch(url, {headers: this.headers()})
+    // Returns fileId of uploaded file, or undefined on failure
+    async uploadFile(file: File): Promise<string | undefined> {
+        // IMPORTANT: We need to post the image as a form. The browser will convert this to a application/x-www-form-urlencoded POST
+        const formData = new FormData()
+        formData.append('file', file)
+
+        try {
+            const headers = this.headers() as Record<string, string>
+
+            // TIPTIP: Leave out Content-Type here, it will be automatically set by the browser
+            delete headers['Content-Type']
+
+            const response = await fetch(this.serverUrl + '/api/v1/files', {
+                method: 'POST',
+                headers,
+                body: formData,
+            })
+            if (response.status !== 200) {
+                return undefined
+            }
+
+            try {
+                const text = await response.text()
+                Utils.log(`uploadFile response: ${text}`)
+                const json = JSON.parse(text)
+
+                // const json = await this.getJson(response)
+                return json.url
+            } catch (e) {
+                Utils.logError(`uploadFile json ERROR: ${e}`)
+            }
+        } catch (e) {
+            Utils.logError(`uploadFile ERROR: ${e}`)
+        }
+
+        return undefined
+    }
+
+    async getFileAsDataUrl(fileId: string): Promise<string> {
+        const path = '/files/' + fileId
+        const response = await fetch(this.serverUrl + path, {headers: this.headers()})
         if (response.status !== 200) {
             return ''
         }

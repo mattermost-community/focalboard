@@ -948,13 +948,13 @@ ul.nav-tabs {
   "x-go-package" : "github.com/mattermost/focalboard/server/model"
 };
     defs["FileUploadResponse"] = {
-  "required" : [ "url" ],
+  "required" : [ "fileId" ],
   "type" : "object",
   "properties" : {
-    "url" : {
+    "fileId" : {
       "type" : "string",
-      "description" : "The URL to retrieve the uploaded file",
-      "x-go-name" : "URL"
+      "description" : "The FileID to retrieve the uploaded file",
+      "x-go-name" : "FileID"
     }
   },
   "description" : "FileUploadResponse is the response to a file upload",

@@ -837,9 +837,9 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 // FileUploadResponse is the response to a file upload
 // swagger:model
 type FileUploadResponse struct {
-	// The URL to retrieve the uploaded file
+	// The FileID to retrieve the uploaded file
 	// required: true
-	URL string `json:"url"`
+	FileID string `json:"fileId"`
 }
 
 func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
@@ -877,14 +877,14 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	url, err := a.app().SaveFile(file, handle.Filename)
+	fileId, err := a.app().SaveFile(file, handle.Filename)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
 	}
 
-	log.Printf("uploadFile, filename: %s, url: %s", handle.Filename, url)
-	data, err := json.Marshal(FileUploadResponse{URL: url})
+	log.Printf("uploadFile, filename: %s, fileId: %s", handle.Filename, fileId)
+	data, err := json.Marshal(FileUploadResponse{FileID: fileId})
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 		return

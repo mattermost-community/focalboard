@@ -93,12 +93,12 @@ definitions:
   FileUploadResponse:
     description: FileUploadResponse is the response to a file upload
     properties:
-      url:
-        description: The URL to retrieve the uploaded file
+      fileId:
+        description: The FileID to retrieve the uploaded file
         type: string
-        x-go-name: URL
+        x-go-name: FileID
     required:
-    - url
+    - fileId
     type: object
     x-go-package: github.com/mattermost/focalboard/server/api
   LoginRequest:

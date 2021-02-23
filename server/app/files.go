@@ -24,7 +24,7 @@ func (a *App) SaveFile(reader io.Reader, filename string) (string, error) {
 		return "", errors.New("unable to store the file in the files storage")
 	}
 
-	return fmt.Sprintf(`%s/files/%s`, a.config.ServerRoot, createdFilename), nil
+	return createdFilename, nil
 }
 
 func (a *App) GetFilePath(filename string) string {

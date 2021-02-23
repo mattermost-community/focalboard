@@ -48,7 +48,7 @@ class ContentBlock extends React.PureComponent<Props, State> {
     }
 
     private async loadImage() {
-        const imageDataUrl = await octoClient.fetchImage(this.props.block.fields.url)
+        const imageDataUrl = await octoClient.getFileAsDataUrl(this.props.block.fields.fileId)
         this.setState({imageDataUrl})
     }
 

@@ -593,15 +593,15 @@ class Mutator {
     }
 
     async createImageBlock(parent: IBlock, file: File, description = 'add image'): Promise<IBlock | undefined> {
-        const url = await octoClient.uploadFile(file)
-        if (!url) {
+        const fileId = await octoClient.uploadFile(file)
+        if (!fileId) {
             return undefined
         }
 
         const block = new MutableImageBlock()
         block.parentId = parent.id
         block.rootId = parent.rootId
-        block.url = url
+        block.fileId = fileId
 
         await undoManager.perform(
             async () => {

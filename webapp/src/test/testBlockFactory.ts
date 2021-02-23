@@ -107,7 +107,7 @@ class TestBlockFactory {
         const block = new MutableImageBlock()
         block.parentId = card.id
         block.rootId = card.rootId
-        block.url = 'url'
+        block.fileId = 'fileId'
 
         return block
     }

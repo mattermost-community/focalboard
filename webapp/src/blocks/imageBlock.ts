@@ -3,21 +3,21 @@
 import {IContentBlock, MutableContentBlock} from './contentBlock'
 
 interface ImageBlock extends IContentBlock {
-    readonly url: string
+    readonly fileId: string
 }
 
 class MutableImageBlock extends MutableContentBlock implements ImageBlock {
-    get url(): string {
-        return this.fields.url as string
+    get fileId(): string {
+        return this.fields.fileId as string
     }
-    set url(value: string) {
-        this.fields.url = value
+    set fileId(value: string) {
+        this.fields.fileId = value
     }
 
     constructor(block: any = {}) {
         super(block)
         this.type = 'image'
-        this.url = block.fields?.url || ''
+        this.fileId = block.fields?.fileId || ''
     }
 }
 
