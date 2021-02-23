@@ -323,7 +323,7 @@ class OctoClient {
                 const json = JSON.parse(text)
 
                 // const json = await this.getJson(response)
-                return json.url
+                return json.fileId
             } catch (e) {
                 Utils.logError(`uploadFile json ERROR: ${e}`)
             }
