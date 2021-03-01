@@ -1,0 +1,40 @@
+name: Build-Windows-WPF
+
+on: workflow_dispatch
+
+jobs:
+
+  windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Replace token 1
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
+
+    - name: Replace token 2
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
+
+    - name: win-node-env
+      run: npm install -g win-node-env
+
+    - name: npm install
+      run: cd webapp; npm install --no-optional
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.15
+
+    - name: Build Windows app
+      run: make win-wpf-app
+      env:
+        BUILD_NUMBER: ${{ github.run_id }}
+
+    - name: Upload app package
+      uses: actions/upload-artifact@v1
+      with:
+        name: focalboard.msix
+        path: ${{ github.workspace }}/win-wpf/focalboard.msix
