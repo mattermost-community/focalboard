@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+    xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+    xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities">
+    <Identity Name="Mattermost.Focalboard" Publisher="CN=1111111-1111-1111-1111-111111111111" Version="1.0.0.0" ProcessorArchitecture="x64" />
+    <Properties>
+        <DisplayName>Focalboard</DisplayName>
+        <PublisherDisplayName>Mattermost</PublisherDisplayName>
+        <Description>Focalboard Desktop Edition</Description>
+        <Logo>Assets\StoreLogo.png</Logo>
+    </Properties>
+    <Resources>
+        <Resource Language="en-us" />
+    </Resources>
+    <Dependencies>
+        <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.1" />
+    </Dependencies>
+    <Capabilities>
+        <rescap:Capability Name="runFullTrust"/>
+    </Capabilities>
+    <Applications>
+        <Application Id="Focalboard" Executable="Focalboard.exe" EntryPoint="Windows.FullTrustApplication">
+            <uap:VisualElements BackgroundColor="#464646" DisplayName="Focalboard" Square150x150Logo="Assets\icon150.png" Square44x44Logo="Assets\icon44.png" Description="Focalboard Desktop Edition" />
+        </Application>
+    </Applications>
+</Package>

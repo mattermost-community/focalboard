@@ -43,6 +43,10 @@ server-win:
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=win")
 	cd server; env GOOS=windows GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/win/focalboard-server.exe ./main
 
+server-dll:
+	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=win")
+	cd server; env GOOS=windows GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -buildmode=c-shared -o ../bin/win-dll/focalboard-server.dll ./main
+
 server-linux-package: server-linux webapp
 	rm -rf package
 	mkdir -p package/${PACKAGE_FOLDER}/bin
@@ -116,6 +120,9 @@ win-app: server-win webapp
 	mkdir -p win/dist
 	# cd win/temp; tar -acf ../dist/focalboard-win.zip .
 	cd win/temp; powershell "Compress-Archive * ../dist/focalboard-win.zip"
+
+win-wpf-app: server-dll webapp
+	cd win-wpf && ./build.bat && ./package.bat
 
 linux-app: server-linux webapp
 	rm -rf linux/temp

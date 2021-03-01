@@ -1,0 +1,6 @@
+packages
+obj
+msix
+*.msix
+*.suo
+*.csproj.user

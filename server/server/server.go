@@ -5,9 +5,7 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"os/signal"
 	"runtime"
-	"sync"
 	"syscall"
 	"time"
 
@@ -91,21 +89,6 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 	webServer.AddRoutes(wsServer)
 	webServer.AddRoutes(api)
 
-	// Ctrl+C handling
-	handler := make(chan os.Signal, 1)
-	signal.Notify(handler, os.Interrupt)
-
-	go func() {
-		for sig := range handler {
-			// sig is a ^C, handle it
-			if sig == os.Interrupt {
-				os.Exit(1)
-
-				break
-			}
-		}
-	}()
-
 	// Init telemetry
 	settings, err := store.GetSystemSettings()
 	if err != nil {
@@ -182,10 +165,9 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 }
 
 func (s *Server) Start() error {
-	httpServerExitDone := &sync.WaitGroup{}
-	httpServerExitDone.Add(1)
+	s.logger.Info("Server.Start")
 
-	s.webServer.Start(httpServerExitDone)
+	s.webServer.Start()
 
 	if s.config.EnableLocalMode {
 		if err := s.startLocalModeServer(); err != nil {
@@ -208,8 +190,6 @@ func (s *Server) Start() error {
 		s.telemetry.RunTelemetryJob(firstRun)
 	}
 
-	httpServerExitDone.Wait()
-
 	return nil
 }
 
@@ -225,6 +205,8 @@ func (s *Server) Shutdown() error {
 	}
 
 	s.telemetry.Shutdown()
+
+	defer s.logger.Info("Server.Shutdown")
 
 	return s.store.Shutdown()
 }
