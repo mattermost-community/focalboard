@@ -17,6 +17,9 @@ jobs:
     - name: Replace token 2
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
 
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
+
     - name: win-node-env
       run: npm install -g win-node-env
 
