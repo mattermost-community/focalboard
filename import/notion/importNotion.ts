@@ -3,7 +3,7 @@ import * as fs from 'fs'
 import minimist from 'minimist'
 import path from 'path'
 import {exit} from 'process'
-import {IArchive} from '../../webapp/src/blocks/archive'
+import {ArchiveUtils} from '../../webapp/src/blocks/archive'
 import {IBlock} from '../../webapp/src/blocks/block'
 import {IPropertyTemplate, MutableBoard} from '../../webapp/src/blocks/board'
 import {MutableBoardView} from '../../webapp/src/blocks/boardView'
@@ -70,10 +70,11 @@ async function main() {
     markdownFolder = path.join(inputFolder, basename)
 
     // Convert
-    const output = convert(input, title)
+    const blocks = convert(input, title)
 
     // Save output
-    const outputData = JSON.stringify(output)
+    // TODO: Stream output
+    const outputData = ArchiveUtils.buildBlockArchive(blocks)
     fs.writeFileSync(outputFile, outputData)
 
     console.log(`Exported to ${outputFile}`)
@@ -115,14 +116,8 @@ function getColumns(input: any[]) {
     return keys.slice(1)
 }
 
-function convert(input: any[], title: string): IArchive {
+function convert(input: any[], title: string): IBlock[] {
     const blocks: IBlock[] = []
-
-    const archive: IArchive = {
-        version: 1,
-        date: Date.now(),
-        blocks
-    }
 
     // Board
     const board = new MutableBoard()
@@ -160,7 +155,7 @@ function convert(input: any[], title: string): IArchive {
         console.log(keys)
         if (keys.length < 1) {
             console.error(`Expected at least one column`)
-            return archive
+            return blocks
         }
 
         const titleKey = keys[0]
@@ -216,7 +211,7 @@ function convert(input: any[], title: string): IArchive {
     console.log('')
     console.log(`Found ${input.length} card(s).`)
 
-    return archive
+    return blocks
 }
 
 function showHelp() {

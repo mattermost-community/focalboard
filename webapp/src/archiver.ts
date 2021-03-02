@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IArchive} from './blocks/archive'
-import {IMutableBlock} from './blocks/block'
+import {ArchiveUtils, IArchiveHeader, IArchiveLine, IBlockArchiveLine} from './blocks/archive'
+import {IBlock, IMutableBlock} from './blocks/block'
 import mutator from './mutator'
 import {Utils} from './utils'
 import {BoardTree} from './viewModel/boardTree'
@@ -9,28 +9,16 @@ import {BoardTree} from './viewModel/boardTree'
 class Archiver {
     static async exportBoardTree(boardTree: BoardTree): Promise<void> {
         const blocks = boardTree.allBlocks
-        const archive: IArchive = {
-            version: 1,
-            date: Date.now(),
-            blocks,
-        }
-
-        this.exportArchive(archive)
+        this.exportArchive(blocks)
     }
 
     static async exportFullArchive(): Promise<void> {
         const blocks = await mutator.exportFullArchive()
-        const archive: IArchive = {
-            version: 1,
-            date: Date.now(),
-            blocks,
-        }
-
-        this.exportArchive(archive)
+        this.exportArchive(blocks)
     }
 
-    private static exportArchive(archive: IArchive): void {
-        const content = JSON.stringify(archive)
+    private static exportArchive(blocks: readonly IBlock[]): void {
+        const content = ArchiveUtils.buildBlockArchive(blocks)
 
         const date = new Date()
         const filename = `archive-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.focalboard`
@@ -48,32 +36,73 @@ class Archiver {
         // TODO: Remove or reuse link
     }
 
+    private static async readBlocksFromFile(file: File): Promise<IBlock[]> {
+        // TODO: Read input as a stream, line by line
+        const contents = await (new Response(file)).text()
+        Utils.log(`Import ${contents.length} bytes.`)
+
+        const blocks: IBlock[] = []
+        const allLineStrings = contents.split('\n')
+        if (allLineStrings.length >= 2) {
+            const headerString = allLineStrings[0]
+            const header = JSON.parse(headerString) as IArchiveHeader
+            if (header.date && header.version >= 1) {
+                const date = new Date(header.date)
+                Utils.log(`Import archive, version: ${header.version}, date/time: ${date.toLocaleString()}, ${blocks.length} block(s).`)
+
+                const lineStrings = allLineStrings.slice(1)
+                for (const lineString of lineStrings) {
+                    if (!lineString) {
+                        // Ignore empty lines, e.g. last line
+                        continue
+                    }
+
+                    const line = JSON.parse(lineString) as IArchiveLine
+                    if (!line || !line.type || !line.data) {
+                        Utils.logError('importFullArchive ERROR parsing line')
+                        continue
+                    }
+                    switch (line.type) {
+                    case 'block': {
+                        const blockLine = line as IBlockArchiveLine
+                        const block = blockLine.data
+                        blocks.push(block)
+                        break
+                    }
+                    }
+                }
+            } else {
+                Utils.logError('importFullArchive ERROR parsing header')
+            }
+        }
+
+        return blocks
+    }
+
     static importFullArchive(onComplete?: () => void): void {
         const input = document.createElement('input')
         input.type = 'file'
         input.accept = '.focalboard'
         input.onchange = async () => {
             const file = input.files && input.files[0]
-            const contents = await (new Response(file)).text()
-            Utils.log(`Import ${contents.length} bytes.`)
-            const archive: IArchive = JSON.parse(contents)
-            const {blocks} = archive
-            const date = new Date(archive.date)
-            Utils.log(`Import archive, version: ${archive.version}, date/time: ${date.toLocaleString()}, ${blocks.length} block(s).`)
+            if (file) {
+                const blocks = await Archiver.readBlocksFromFile(file)
 
-            // Basic error checking
-            let filteredBlocks = blocks.filter((o) => Boolean(o.id))
+                // Basic error checking
+                let filteredBlocks = blocks.filter((o) => Boolean(o.id))
 
-            Utils.log(`Import ${filteredBlocks.length} filtered blocks with ids.`)
+                Utils.log(`Import ${filteredBlocks.length} filtered blocks with ids.`)
 
-            this.fixRootIds(filteredBlocks)
+                this.fixRootIds(filteredBlocks)
 
-            filteredBlocks = filteredBlocks.filter((o) => Boolean(o.rootId))
+                filteredBlocks = filteredBlocks.filter((o) => Boolean(o.rootId))
 
-            Utils.log(`Import ${filteredBlocks.length} filtered blocks with rootIds.`)
+                Utils.log(`Import ${filteredBlocks.length} filtered blocks with rootIds.`)
 
-            await mutator.importFullArchive(filteredBlocks)
-            Utils.log('Import completed')
+                await mutator.importFullArchive(filteredBlocks)
+                Utils.log('Import completed')
+            }
+
             onComplete?.()
         }
 

@@ -7,8 +7,8 @@
   "scripts": {
 	"lint": "eslint --ext .tsx,.ts . --quiet --cache",
 	"fix": "eslint --ext .tsx,.ts . --quiet --fix --cache",
-	"test": "ts-node importNotion.ts -i test/export -o test/archive.focalboard",
-    "debug:test": "node --inspect=5858 -r ts-node/register importNotion.ts -i test/export -o test/archive.focalboard"
+	"test": "ts-node importNotion.ts -i test/export -o test/notion-import.focalboard",
+    "debug:test": "node --inspect=5858 -r ts-node/register importNotion.ts -i test/export -o test/notion-import.focalboard"
   },
   "keywords": [],
   "author": "",
