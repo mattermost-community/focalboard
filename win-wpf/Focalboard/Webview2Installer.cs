@@ -20,9 +20,9 @@ namespace Focalboard {
         private string filePath;
 
         public Webview2Installer() {
-            const string filename = "MicrosoftEdgeWebview2Setup.exe";
-            var downloadsFolder = UserDataPaths.GetDefault().Downloads;
-            filePath = Path.Combine(downloadsFolder, filename);
+            var filename = $"{Guid.NewGuid().ToString()} MicrosoftEdgeWebview2Setup.exe";
+            filePath = Path.Combine(System.IO.Path.GetTempPath(), filename);
+            Debug.WriteLine($"Webview2Installer.filePath: {filePath}");
         }
 
         public void DownloadAndInstall() {
@@ -39,7 +39,7 @@ namespace Focalboard {
                 wc.DownloadProgressChanged += new DownloadProgressChangedEventHandler(wc_DownloadProgressChanged);
                 wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadFileCompleted);
             } catch (Exception ex) {
-                MessageBox.Show(ex.Message.ToString());
+                MessageBox.Show($"Webview2 download ERROR: {ex.Message}", "Download error");
             }
         }
 
@@ -59,6 +59,15 @@ namespace Focalboard {
         }
 
         private void Proc_Exited(object sender, EventArgs e) {
+            // Delete downloaded installer
+            try {
+                if (File.Exists(filePath)) {
+                    File.Delete(filePath);
+                }
+            } catch (Exception ex) {
+                Debug.WriteLine($"Delete file failed. Error: {ex.Message}, filePath: {filePath}");
+            }
+
             var proc = (Process)sender;
             exitCode = proc.ExitCode;
             InstallCompleted?.Invoke(this, e);
