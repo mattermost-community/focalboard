@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {ArchiveUtils, IArchiveHeader, IArchiveLine, IBlockArchiveLine} from './blocks/archive'
-import {IBlock, IMutableBlock} from './blocks/block'
+import {IBlock} from './blocks/block'
 import {LineReader} from './lineReader'
 import mutator from './mutator'
 import {Utils} from './utils'
@@ -65,13 +65,23 @@ class Archiver {
                     case 'block': {
                         const blockLine = row as IBlockArchiveLine
                         const block = blockLine.data
-                        blocks.push(block)
+                        if (Archiver.isValidBlock(block)) {
+                            blocks.push(block)
+                        }
                         break
                     }
                     }
                 }
             })
         })
+    }
+
+    static isValidBlock(block: IBlock): boolean {
+        if (!block.id || !block.rootId) {
+            return false
+        }
+
+        return true
     }
 
     static importFullArchive(onComplete?: () => void): void {
@@ -83,19 +93,9 @@ class Archiver {
             if (file) {
                 const blocks = await Archiver.readBlocksFromFile(file)
 
-                // Basic error checking
-                let filteredBlocks = blocks.filter((o) => Boolean(o.id))
-
-                Utils.log(`Import ${filteredBlocks.length} filtered blocks with ids.`)
-
-                this.fixRootIds(filteredBlocks)
-
-                filteredBlocks = filteredBlocks.filter((o) => Boolean(o.rootId))
-
-                Utils.log(`Import ${filteredBlocks.length} filtered blocks with rootIds.`)
-
-                await mutator.importFullArchive(filteredBlocks)
-                Utils.log('Import completed')
+                Utils.log(`Importing ${blocks.length} blocks...`)
+                await mutator.importFullArchive(blocks)
+                Utils.log(`Imported ${blocks.length} blocks.`)
             }
 
             onComplete?.()
@@ -106,42 +106,6 @@ class Archiver {
         input.click()
 
         // TODO: Remove or reuse input
-    }
-
-    private static fixRootIds(blocks: IMutableBlock[]) {
-        const blockMap = new Map(blocks.map((o) => [o.id, o]))
-        const maxLevels = 5
-        for (let i = 0; i < maxLevels; i++) {
-            let missingRootIds = false
-            blocks.forEach((o) => {
-                if (o.parentId) {
-                    const parent = blockMap.get(o.parentId)
-                    if (parent) {
-                        o.rootId = parent.rootId
-                    } else {
-                        Utils.assert(`No parent for ${o.type}: ${o.id} (${o.title})`)
-                    }
-                    if (!o.rootId) {
-                        missingRootIds = true
-                    }
-                } else {
-                    o.rootId = o.id
-                }
-            })
-
-            if (!missingRootIds) {
-                Utils.log(`fixRootIds in ${i} levels`)
-                break
-            }
-        }
-
-        // Check and log remaining errors
-        blocks.forEach((o) => {
-            if (!o.rootId) {
-                const parent = blockMap.get(o.parentId)
-                Utils.logError(`RootId is null: ${o.type} ${o.id}, parentId ${o.parentId}: ${o.title}, parent: ${parent?.type}, parent.rootId: ${parent?.rootId}, parent.title: ${parent?.title}`)
-            }
-        })
     }
 }
 

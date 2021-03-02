@@ -138,9 +138,10 @@ class OctoClient {
 
     async importFullArchive(blocks: readonly IBlock[]): Promise<Response> {
         Utils.log(`importFullArchive: ${blocks.length} blocks(s)`)
-        blocks.forEach((block) => {
-            Utils.log(`\t ${block.type}, ${block.id}`)
-        })
+
+        // blocks.forEach((block) => {
+        //     Utils.log(`\t ${block.type}, ${block.id}`)
+        // })
         const body = JSON.stringify(blocks)
         return fetch(this.serverUrl + '/api/v1/blocks/import', {
             method: 'POST',
