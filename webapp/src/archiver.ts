@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 import {ArchiveUtils, IArchiveHeader, IArchiveLine, IBlockArchiveLine} from './blocks/archive'
 import {IBlock, IMutableBlock} from './blocks/block'
+import {LineReader} from './lineReader'
 import mutator from './mutator'
 import {Utils} from './utils'
 import {BoardTree} from './viewModel/boardTree'
@@ -37,46 +38,40 @@ class Archiver {
     }
 
     private static async readBlocksFromFile(file: File): Promise<IBlock[]> {
-        // TODO: Read input as a stream, line by line
-        const contents = await (new Response(file)).text()
-        Utils.log(`Import ${contents.length} bytes.`)
-
         const blocks: IBlock[] = []
-        const allLineStrings = contents.split('\n')
-        if (allLineStrings.length >= 2) {
-            const headerString = allLineStrings[0]
-            const header = JSON.parse(headerString) as IArchiveHeader
-            if (header.date && header.version >= 1) {
-                const date = new Date(header.date)
-                Utils.log(`Import archive, version: ${header.version}, date/time: ${date.toLocaleString()}, ${blocks.length} block(s).`)
 
-                const lineStrings = allLineStrings.slice(1)
-                for (const lineString of lineStrings) {
-                    if (!lineString) {
-                        // Ignore empty lines, e.g. last line
-                        continue
+        let isFirstLine = true
+        return new Promise<IBlock[]>((resolve) => {
+            LineReader.readFile(file, (line, completed) => {
+                if (completed) {
+                    resolve(blocks)
+                    return
+                }
+
+                if (isFirstLine) {
+                    isFirstLine = false
+                    const header = JSON.parse(line) as IArchiveHeader
+                    if (header.date && header.version >= 1) {
+                        const date = new Date(header.date)
+                        Utils.log(`Import archive, version: ${header.version}, date/time: ${date.toLocaleString()}.`)
                     }
-
-                    const line = JSON.parse(lineString) as IArchiveLine
-                    if (!line || !line.type || !line.data) {
+                } else {
+                    const row = JSON.parse(line) as IArchiveLine
+                    if (!row || !row.type || !row.data) {
                         Utils.logError('importFullArchive ERROR parsing line')
-                        continue
+                        return
                     }
-                    switch (line.type) {
+                    switch (row.type) {
                     case 'block': {
-                        const blockLine = line as IBlockArchiveLine
+                        const blockLine = row as IBlockArchiveLine
                         const block = blockLine.data
                         blocks.push(block)
                         break
                     }
                     }
                 }
-            } else {
-                Utils.logError('importFullArchive ERROR parsing header')
-            }
-        }
-
-        return blocks
+            })
+        })
     }
 
     static importFullArchive(onComplete?: () => void): void {
