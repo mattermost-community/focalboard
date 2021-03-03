@@ -98,9 +98,12 @@ class OctoUtils {
     // Creates a copy of the blocks with new ids and parentIDs
     static duplicateBlockTree(blocks: readonly IBlock[], sourceBlockId: string): [MutableBlock[], MutableBlock, Readonly<Record<string, string>>] {
         const idMap: Record<string, string> = {}
+        const now = Date.now()
         const newBlocks = blocks.map((block) => {
             const newBlock = this.hydrateBlock(block)
             newBlock.id = Utils.createGuid()
+            newBlock.createAt = now
+            newBlock.updateAt = now
             idMap[block.id] = newBlock.id
             return newBlock
         })
