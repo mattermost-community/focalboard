@@ -49,18 +49,6 @@ class MutableBlock implements IMutableBlock {
     updateAt = 0
     deleteAt = 0
 
-    static duplicate(block: IBlock): IMutableBlock {
-        const now = Date.now()
-
-        const newBlock = new MutableBlock(block)
-        newBlock.id = Utils.createGuid()
-        newBlock.createAt = now
-        newBlock.updateAt = now
-        newBlock.deleteAt = 0
-
-        return newBlock
-    }
-
     constructor(block: any = {}) {
         this.id = block.id || Utils.createGuid()
         this.schema = 1
