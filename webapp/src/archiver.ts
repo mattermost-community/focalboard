@@ -39,8 +39,8 @@ class Archiver {
 
     private static async importBlocksFromFile(file: File): Promise<void> {
         let blockCount = 0
-        const maxBlocksPerImport = 100
-        const blocks: IBlock[] = []
+        const maxBlocksPerImport = 1000
+        let blocks: IBlock[] = []
 
         let isFirstLine = true
         return new Promise<void>((resolve) => {
@@ -75,9 +75,10 @@ class Archiver {
                         if (Archiver.isValidBlock(block)) {
                             blocks.push(block)
                             if (blocks.length >= maxBlocksPerImport) {
-                                await mutator.importFullArchive(blocks)
-                                blockCount += blocks.length
-                                blocks.length = 0
+                                const blocksToSend = blocks
+                                blocks = []
+                                await mutator.importFullArchive(blocksToSend)
+                                blockCount += blocksToSend.length
                             }
                         }
                         break
