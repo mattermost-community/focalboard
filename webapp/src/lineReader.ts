@@ -20,7 +20,7 @@ class LineReader {
         return -1
     }
 
-    static readFile(file: File, callback: (line: string, completed: boolean) => void): void {
+    static readFile(file: File, callback: (line: string, completed: boolean) => Promise<void>): void {
         let buffer = new Uint8Array(0)
 
         const chunkSize = 1024 * 1000
@@ -28,7 +28,7 @@ class LineReader {
         const fr = new FileReader()
         const decoder = new TextDecoder()
 
-        fr.onload = () => {
+        fr.onload = async () => {
             const chunk = new Uint8Array(fr.result as ArrayBuffer)
             buffer = LineReader.appendBuffer(buffer, chunk)
 
@@ -37,7 +37,9 @@ class LineReader {
             while (newlineIndex >= 0) {
                 const result = decoder.decode(buffer.slice(0, newlineIndex))
                 buffer = buffer.slice(newlineIndex + 1)
-                callback(result, false)
+
+                // eslint-disable-next-line no-await-in-loop
+                await callback(result, false)
                 newlineIndex = LineReader.arrayBufferIndexOf(buffer, newlineChar)
             }
 
@@ -47,10 +49,10 @@ class LineReader {
 
                 if (buffer.byteLength > 0) {
                     // Handle last line
-                    callback(decoder.decode(buffer), false)
+                    await callback(decoder.decode(buffer), false)
                 }
 
-                callback('', true)
+                await callback('', true)
                 return
             }
 

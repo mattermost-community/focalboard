@@ -37,14 +37,21 @@ class Archiver {
         // TODO: Remove or reuse link
     }
 
-    private static async readBlocksFromFile(file: File): Promise<IBlock[]> {
+    private static async importBlocksFromFile(file: File): Promise<void> {
+        let blockCount = 0
+        const maxBlocksPerImport = 100
         const blocks: IBlock[] = []
 
         let isFirstLine = true
-        return new Promise<IBlock[]>((resolve) => {
-            LineReader.readFile(file, (line, completed) => {
+        return new Promise<void>((resolve) => {
+            LineReader.readFile(file, async (line, completed) => {
                 if (completed) {
-                    resolve(blocks)
+                    if (blocks.length > 0) {
+                        await mutator.importFullArchive(blocks)
+                        blockCount += blocks.length
+                    }
+                    Utils.log(`Imported ${blockCount} blocks.`)
+                    resolve()
                     return
                 }
 
@@ -67,6 +74,11 @@ class Archiver {
                         const block = blockLine.data
                         if (Archiver.isValidBlock(block)) {
                             blocks.push(block)
+                            if (blocks.length >= maxBlocksPerImport) {
+                                await mutator.importFullArchive(blocks)
+                                blockCount += blocks.length
+                                blocks.length = 0
+                            }
                         }
                         break
                     }
@@ -91,11 +103,7 @@ class Archiver {
         input.onchange = async () => {
             const file = input.files && input.files[0]
             if (file) {
-                const blocks = await Archiver.readBlocksFromFile(file)
-
-                Utils.log(`Importing ${blocks.length} blocks...`)
-                await mutator.importFullArchive(blocks)
-                Utils.log(`Imported ${blocks.length} blocks.`)
+                await Archiver.importBlocksFromFile(file)
             }
 
             onComplete?.()
