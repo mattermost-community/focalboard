@@ -108,7 +108,6 @@ class OctoListener {
 
                 switch (message.action) {
                 case 'UPDATE_BLOCK':
-                    Utils.log(`OctoListener update block: ${message.block?.id}`)
                     this.queueUpdateNotification(message.block!)
                     break
                 default:
@@ -207,6 +206,9 @@ class OctoListener {
     }
 
     private flushUpdateNotifications() {
+        for (const block of this.updatedBlocks) {
+            Utils.log(`OctoListener flush update block: ${block.id}`)
+        }
         this.onChange?.(this.updatedBlocks)
         this.updatedBlocks = []
     }
