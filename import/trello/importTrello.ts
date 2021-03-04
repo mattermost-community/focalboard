@@ -3,7 +3,7 @@
 import * as fs from 'fs'
 import minimist from 'minimist'
 import {exit} from 'process'
-import {IArchive} from '../../webapp/src/blocks/archive'
+import {ArchiveUtils} from '../../webapp/src/blocks/archive'
 import {IBlock} from '../../webapp/src/blocks/block'
 import {IPropertyOption, IPropertyTemplate, MutableBoard} from '../../webapp/src/blocks/board'
 import {MutableBoardView} from '../../webapp/src/blocks/boardView'
@@ -49,16 +49,17 @@ function main() {
     const input = JSON.parse(inputData) as Trello
 
     // Convert
-    const output = convert(input)
+    const blocks = convert(input)
 
     // Save output
-    const outputData = JSON.stringify(output)
+    // TODO: Stream output
+    const outputData = ArchiveUtils.buildBlockArchive(blocks)
     fs.writeFileSync(outputFile, outputData)
 
     console.log(`Exported to ${outputFile}`)
 }
 
-function convert(input: Trello): IArchive {
+function convert(input: Trello): IBlock[] {
     const blocks: IBlock[] = []
 
     // Board
@@ -136,16 +137,10 @@ function convert(input: Trello): IArchive {
         }
     })
 
-    const archive: IArchive = {
-        version: 1,
-        date: Date.now(),
-        blocks
-    }
-
     console.log('')
     console.log(`Found ${input.cards.length} card(s).`)
 
-    return archive
+    return blocks
 }
 
 function showHelp() {

@@ -3,7 +3,7 @@
 import * as fs from 'fs'
 import minimist from 'minimist'
 import {exit} from 'process'
-import {IArchive} from '../../webapp/src/blocks/archive'
+import {ArchiveUtils} from '../../webapp/src/blocks/archive'
 import {IBlock} from '../../webapp/src/blocks/block'
 import {IPropertyOption, IPropertyTemplate, MutableBoard} from '../../webapp/src/blocks/board'
 import {MutableBoardView} from '../../webapp/src/blocks/boardView'
@@ -49,10 +49,11 @@ function main() {
     const input = JSON.parse(inputData) as Asana
 
     // Convert
-    const output = convert(input)
+    const blocks = convert(input)
 
     // Save output
-    const outputData = JSON.stringify(output)
+    // TODO: Stream output
+    const outputData = ArchiveUtils.buildBlockArchive(blocks)
     fs.writeFileSync(outputFile, outputData)
 
     console.log(`Exported to ${outputFile}`)
@@ -87,17 +88,11 @@ function getSections(input: Asana, projectId: string): Workspace[] {
     return [...sectionMap.values()]
 }
 
-function convert(input: Asana): IArchive {
-    const archive: IArchive = {
-        version: 1,
-        date: Date.now(),
-        blocks: []
-    }
-
+function convert(input: Asana): IBlock[] {
     const projects = getProjects(input)
     if (projects.length < 1) {
         console.error('No projects found')
-        return archive
+        return []
     }
 
     // TODO: Handle multiple projects
@@ -181,12 +176,10 @@ function convert(input: Asana): IArchive {
         }
     })
 
-    archive.blocks = blocks
-
     console.log('')
     console.log(`Found ${input.data.length} card(s).`)
 
-    return archive
+    return blocks
 }
 
 function showHelp() {

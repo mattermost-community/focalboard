@@ -7,8 +7,8 @@
   "scripts": {
 	"lint": "eslint --ext .tsx,.ts . --quiet --cache",
 	"fix": "eslint --ext .tsx,.ts . --quiet --fix --cache",
-    "test": "ts-node importTrello.ts -i test/trello.json -o test/archive.focalboard",
-    "debug:test": "node --inspect=5858 -r ts-node/register importTrello.ts -i test/trello.json -o test/archive.focalboard"
+    "test": "ts-node importTrello.ts -i test/trello.json -o test/trello-import.focalboard",
+    "debug:test": "node --inspect=5858 -r ts-node/register importTrello.ts -i test/trello.json -o test/trello-import.focalboard"
   },
   "keywords": [],
   "author": "",

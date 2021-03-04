@@ -7,8 +7,8 @@
   "scripts": {
     "lint": "eslint --ext .tsx,.ts . --quiet --cache",
 	"fix": "eslint --ext .tsx,.ts . --quiet --fix --cache",
-    "test": "ts-node importAsana.ts -i test/asana.json -o test/archive.focalboard",
-    "debug:test": "node --inspect=5858 -r ts-node/register importAsana.ts -i test/asana.json -o test/archive.focalboard"
+    "test": "ts-node importAsana.ts -i test/asana.json -o test/asana-import.focalboard",
+    "debug:test": "node --inspect=5858 -r ts-node/register importAsana.ts -i test/asana.json -o test/asana-import.focalboard"
   },
   "keywords": [],
   "author": "",
