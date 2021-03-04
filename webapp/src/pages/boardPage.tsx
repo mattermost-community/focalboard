@@ -291,15 +291,10 @@ class BoardPage extends React.Component<Props, State> {
             return
         }
 
-        let newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname
-        if (boardId) {
-            newUrl += `?id=${encodeURIComponent(boardId)}`
-
-            if (this.props.readonly) {
-                newUrl += '&r=1'
-            }
-        }
-        window.history.pushState({path: newUrl}, '', newUrl)
+        const newUrl = new URL(window.location.toString())
+        newUrl.searchParams.set('id', boardId || '')
+        newUrl.searchParams.set('v', '')
+        window.history.pushState({path: newUrl.toString()}, '', newUrl.toString())
 
         this.attachToBoard(boardId)
     }
@@ -314,11 +309,10 @@ class BoardPage extends React.Component<Props, State> {
             this.attachToBoard(boardId, viewId)
         }
 
-        let newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + `?id=${encodeURIComponent(boardId)}&v=${encodeURIComponent(viewId)}`
-        if (this.props.readonly) {
-            newUrl += '&r=1'
-        }
-        window.history.pushState({path: newUrl}, '', newUrl)
+        const newUrl = new URL(window.location.toString())
+        newUrl.searchParams.set('id', boardId)
+        newUrl.searchParams.set('v', viewId)
+        window.history.pushState({path: newUrl.toString()}, '', newUrl.toString())
     }
 
     setSearchText(text?: string): void {
