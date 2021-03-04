@@ -82,7 +82,7 @@ pygmentsStyle = "manni"
       weight = 4
 
     [[menu.postpend]]
-      url = "https://docs.google.com/forms/d/e/1FAIpQLSdTq7M69Pdlz71CwucaSEG0FCK1M_WRvIbZbPr2imfT2QvUCQ/viewform?usp=sf_link"
+      url = "/feedback"
       name = "Feedback"
       weight = 5
 
