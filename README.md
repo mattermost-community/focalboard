@@ -62,6 +62,11 @@ Before checking-in commits, run: `make ci`, which is simlar to the ci.yml workfl
 * Webapp unit tests: `cd webapp; npm run test`
 * Webapp UI tests: `cd webapp; npm run cypress:ci`
 
+## Stay informed on progress
+
+* **Changelog**: See [CHANGELOG.md](CHANGELOG.md) for the latest updates
+* **Chat**: Join the [Focalboard community channel](https://community.mattermost.com/core/channels/focalboard)
+
 ## Contributing
 
 Contribute code, bug reports, and ideas to the future of the Focalboard project. We welcome your input! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to get involved.
