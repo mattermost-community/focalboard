@@ -5,7 +5,7 @@
     <Identity Name="MattermostInc.Focalboard" Publisher="CN=5C59534D-C37D-4D0C-8464-26AA0D0B6EFE" Version="0.6.0.0" ProcessorArchitecture="x64" />
     <Properties>
         <DisplayName>Focalboard</DisplayName>
-        <PublisherDisplayName>Mattermost</PublisherDisplayName>
+        <PublisherDisplayName>Mattermost, Inc.</PublisherDisplayName>
         <Description>Focalboard Desktop Edition</Description>
         <Logo>Assets\StoreLogo.png</Logo>
     </Properties>
