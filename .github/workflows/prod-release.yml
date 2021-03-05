@@ -101,6 +101,9 @@ jobs:
     - name: Replace token 2
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_PROD_KEY }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
 
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
+
     - name: win-node-env
       run: npm install -g win-node-env
 
@@ -112,13 +115,21 @@ jobs:
       with:
         go-version: 1.15
 
-    - name: Build Windows app
-      run: make win-app
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v1
+      with:
+        nuget-version: '5.x'
+
+    - name: NuGet Restore
+      run: nuget restore win-wpf\Focalboard.sln
+
+    - name: Build Windows WPF app
+      run: make win-wpf-app
       env:
         BUILD_NUMBER: ${{ github.run_id }}
 
     - name: Upload app package
       uses: actions/upload-artifact@v1
       with:
-        name: focalboard-win.zip
-        path: ${{ github.workspace }}/win/dist/focalboard-win.zip
+        name: focalboard.msix
+        path: ${{ github.workspace }}/win-wpf/focalboard.msix

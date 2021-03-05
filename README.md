@@ -48,8 +48,8 @@ You can build standalone apps that package the server to run locally against SQL
 * Windows:
     * Open a git-bash prompt
     * Install win-node-env `npm install -g win-node-env`
-    * `make win-app`
-    * run `win/dist/focalboard.exe`
+    * `make win-wpf-app`
+    * run `cd win-wpf/msix && focalboard.exe`
     * *Requires: Windows 10*
 
 Cross-compilation currently isn't fully supported, so please build on the appropriate platform. Refer to the GitHub Actions workflows (build-mac.yml, build-win.yml, build-ubuntu.yml) for the detailed list of steps on each platform.

@@ -1,4 +1,4 @@
-.PHONY: prebuild clean cleanall ci server server-mac server-linux server-win server-linux-package generate watch-server webapp mac-app win-app linux-app
+.PHONY: prebuild clean cleanall ci server server-mac server-linux server-win server-linux-package generate watch-server webapp mac-app win-app-wpf linux-app
 
 PACKAGE_FOLDER = focalboard
 
@@ -106,21 +106,6 @@ mac-app: server-mac webapp
 	cp webapp/NOTICE.txt mac/dist/webapp-NOTICE.txt
 	cd mac/dist; zip -r focalboard-mac.zip Focalboard.app MIT-COMPILED-LICENSE.md NOTICE.txt webapp-NOTICE.txt
 
-win-app: server-win webapp
-	rm -rf win/temp
-	rm -rf win/dist
-	cd win; make build
-	mkdir -p win/temp
-	cp bin/win/focalboard-server.exe win/temp
-	cp app-config.json win/temp/config.json
-	cp build/MIT-COMPILED-LICENSE.md win/temp
-	cp NOTICE.txt win/temp
-	cp webapp/NOTICE.txt win/temp/webapp-NOTICE.txt
-	cp -R webapp/pack win/temp/pack
-	mkdir -p win/dist
-	# cd win/temp; tar -acf ../dist/focalboard-win.zip .
-	cd win/temp; powershell "Compress-Archive * ../dist/focalboard-win.zip"
-
 win-wpf-app: server-dll webapp
 	cd win-wpf && ./build.bat && ./package.bat
 
@@ -159,7 +144,8 @@ clean:
 	rm -rf mac/temp
 	rm -rf mac/dist
 	rm -rf linux/dist
-	rm -rf win/dist
+	rm -rf win-wpf/msix
+	rm win-wpf/focalboard.msix
 
 cleanall: clean
 	rm -rf webapp/node_modules
