@@ -14,6 +14,8 @@
     }
 
     &:hover {
+        background-color: rgba(var(--body-color), 0.05);
+
         .open-button {
             display: block;
         }

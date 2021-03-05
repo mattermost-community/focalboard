@@ -12,6 +12,10 @@
         line-height: 20px;
         position: relative;
 
+        &:hover {
+            background-color: rgba(var(--body-color), 0.05);
+        }
+
         &.title-cell {
             padding-left: 16px;
         }
