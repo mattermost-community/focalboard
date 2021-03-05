@@ -2,7 +2,7 @@
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
     xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
     xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities">
-    <Identity Name="MattermostInc.Focalboard" Publisher="CN=5C59534D-C37D-4D0C-8464-26AA0D0B6EFE" Version="0.6.0.0" ProcessorArchitecture="x64" />
+    <Identity Name="MattermostInc.Focalboard" Publisher="CN=5C59534D-C37D-4D0C-8464-26AA0D0B6EFE" Version="0.6.1.0" ProcessorArchitecture="x64" />
     <Properties>
         <DisplayName>Focalboard</DisplayName>
         <PublisherDisplayName>Mattermost, Inc.</PublisherDisplayName>
@@ -20,7 +20,7 @@
     </Capabilities>
     <Applications>
         <Application Id="Focalboard" Executable="Focalboard.exe" EntryPoint="Windows.FullTrustApplication">
-            <uap:VisualElements BackgroundColor="#464646" DisplayName="Focalboard" Square150x150Logo="Assets\icon150.png" Square44x44Logo="Assets\icon44.png" Description="Focalboard Desktop Edition" />
+            <uap:VisualElements BackgroundColor="#ffffff" DisplayName="Focalboard" Square150x150Logo="Assets\icon150.png" Square44x44Logo="Assets\icon44.png" Description="Focalboard Desktop Edition" />
         </Application>
     </Applications>
 </Package>
