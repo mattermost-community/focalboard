@@ -44,6 +44,12 @@ body {
 
 a {
 	text-decoration: none;
+    color: var(--link-color);
+
+    &:visited {
+        color: var(--link-visited-color);
+    }
+
     &:hover {
         background-color: rgba(192, 192, 255, 0.2);
     }

@@ -2,13 +2,16 @@
 // See LICENSE.txt for license information.
 
 export type Theme = {
-    mainBg: string
-    mainFg: string
-    buttonBg: string
-    buttonFg: string
-    sidebarBg: string
-    sidebarFg: string
-    sidebarWhiteLogo: string
+    mainBg: string,
+    mainFg: string,
+    buttonBg: string,
+    buttonFg: string,
+    sidebarBg: string,
+    sidebarFg: string,
+    sidebarWhiteLogo: string,
+
+    link: string,
+    linkVisited: string,
 
     propDefault: string,
     propGray: string,
@@ -30,6 +33,9 @@ export const defaultTheme = {
     sidebarBg: '20, 93, 191',
     sidebarFg: '255, 255, 255',
     sidebarWhiteLogo: 'true',
+
+    link: '#0000ee',
+    linkVisited: '#551a8b',
 
     propDefault: '#fff',
     propGray: '#EDEDED',
@@ -53,6 +59,9 @@ export const darkTheme = {
     sidebarBg: '75, 73, 67',
     sidebarFg: '255, 255, 255',
     sidebarWhiteLogo: 'true',
+
+    link: '#0090ff',
+    linkVisited: 'hsla(270, 68%, 70%, 1.0)',
 
     propDefault: 'hsla(0, 100%, 100%, 0.4)',
     propGray: 'hsla(0, 0%, 70%, 0.4)',
@@ -89,6 +98,9 @@ export function setTheme(theme: Theme): void {
     document.documentElement.style.setProperty('--sidebar-bg', consolidatedTheme.sidebarBg)
     document.documentElement.style.setProperty('--sidebar-fg', consolidatedTheme.sidebarFg)
     document.documentElement.style.setProperty('--sidebar-white-logo', consolidatedTheme.sidebarWhiteLogo)
+
+    document.documentElement.style.setProperty('--link-color', consolidatedTheme.link)
+    document.documentElement.style.setProperty('--link-visited-color', consolidatedTheme.linkVisited)
 
     document.documentElement.style.setProperty('--prop-default', consolidatedTheme.propDefault)
     document.documentElement.style.setProperty('--prop-gray', consolidatedTheme.propGray)
