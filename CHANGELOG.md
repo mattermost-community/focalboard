@@ -1,6 +1,8 @@
 # Focalboard Changelog
 
-This changelog summarizes updates to Focalboard, an open source project management application as an alternative to Notion, Asana and Trello.
+Focalboard is an open source, self-hosted alternative to Trello, Notion, Asana and Jira for project management. We help individuals and teams define, organize, track and manage their work. 
+
+This changelog summarizes updates to our open source project. 
 
 ## Draft for v0.6 Release - Target: March 2021
 
