@@ -1,6 +1,5 @@
 <div class="homepage__intro text-center">
     <div class="container-fluid">
-
 		<p>
 			<a href="download/personal-edition">
 				<img src="img/hero.jpg" style="width: 100%; max-width: 1000px" />
@@ -8,12 +7,19 @@
 		</p>
 
 		<p>
-			Focalboard is an easy-to-use project management system, perfect for organizing your personal todos or running team projects.
+            Focalboard is an open source, self-hosted alternative to Trello, Notion, and Asana.
 		</p>
 
 		<p>
-			It can run as a standalone desktop app or self-hosted on your own server, so your information never leaves your control.
+            It helps define, organize, track and manage work across individuals and teams. Focalboard comes in two editions:
 		</p>
+
+        <div class="text-left" style="max-width: 800px; margin: 0 auto;">
+            <ul >
+                <li><b><a href="https://www.focalboard.com/download/personal-edition/desktop/">Focalboard Personal Desktop</a></b>: A stand-alone desktop app for your todos and personal projects</li>
+                <li><b><a href="https://www.focalboard.com/download/personal-edition/ubuntu/">Focalboard Personal Server</a></b>: A self-hosted server for your team to collaborate</li>
+            </ul>
+        </div>
 
 		<p>
 			We're currently in early-access beta, and are looking for feedback. So please <a href="download/personal-edition/">download it today</a> and <a href="https://docs.google.com/forms/d/e/1FAIpQLSdTq7M69Pdlz71CwucaSEG0FCK1M_WRvIbZbPr2imfT2QvUCQ/viewform?usp=sf_link" target="_blank" rel="noopener">let us know what you think</a>.
@@ -23,16 +29,16 @@
 			Focalboard is open source! <a href="contribute/getting-started/">Check out the source code here</a>, and contribute to the future of this project.
 		</p>
 
-        <div class="homepage-search row">
-            {{ if .Site.Params.search.enable }}
-            <div class="homepage-search__input col-sm-9">
-                <img src="img/search-icon.svg" width="24px" height="24px" alt="Search icon">
-                <input type="text" class="transparent" placeholder="Search developer documentation">
-            </div>
-            <div class="homepage-search__button col-sm-3">
-                <input type="button" class="btn btn-white btn-shadow form-control" value="Get Started">
-            </div>
-            {{ end }}
-        </div>
+		{{ if .Site.Params.search.enable }}
+			<div class="homepage-search row">
+				<div class="homepage-search__input col-sm-9">
+					<img src="img/search-icon.svg" width="24px" height="24px" alt="Search icon">
+					<input type="text" class="transparent" placeholder="Search developer documentation">
+				</div>
+				<div class="homepage-search__button col-sm-3">
+					<input type="button" class="btn btn-white btn-shadow form-control" value="Get Started">
+				</div>
+			</div>
+		{{ end }}
     </div>
 </div>

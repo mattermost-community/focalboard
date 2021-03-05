@@ -3499,6 +3499,7 @@ table>tbody>tr:nth-of-type(odd) {
     padding-top: 2em;
     padding-bottom: 10em;
     position: relative;
+	font-size: 16px;
 }
 
 .homepage__intro h1 {
