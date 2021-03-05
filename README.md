@@ -2,9 +2,12 @@
 
 [![Focalboard](website/site/static/img/hero.jpg)](https://www.focalboard.com)
 
-[Focalboard](https://www.focalboard.com) is an open source project management app for individuals and teams. It comes in two editions:
-* **Personal Desktop**: A stand-alone desktop app for your todos and personal projects
-* **Personal Server**: A self-hosted server for your team to collaborate
+[Focalboard](https://www.focalboard.com) is an open source, self-hosted alternative to Trello, Notion, and Asana. 
+
+It helps define, organize, track and manage work across individuals and teams. Focalboard comes in two editions:
+
+* **Focalboard Personal Desktop**: A stand-alone desktop app for your todos and personal projects
+* **Focalboard Personal Server**: A self-hosted server for your team to collaborate
 
 The same server binary powers both editions.
 
