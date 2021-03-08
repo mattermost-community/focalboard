@@ -3,7 +3,7 @@ baseURL = "https://www.focalboard.com/"
 canonifyURLs = true
 #relativeURLs = true
 
-title = "Focalboard"
+title = "Focalboard: Open source alternative to Trello, Asana, and Notion"
 languageCode = "en-us"
 publishDir = "../docs"
 pygmentsCodeFences = true
