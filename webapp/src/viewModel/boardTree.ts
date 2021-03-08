@@ -440,6 +440,9 @@ class MutableBoardTree implements BoardTree {
 
     copyWithSearchText(searchText?: string): BoardTree {
         const boardTree = this.mutableCopy()
+        if (this.activeView) {
+            boardTree.setActiveView(this.activeView.id)
+        }
         boardTree.setSearchText(searchText)
         return boardTree
     }
