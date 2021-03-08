@@ -235,7 +235,7 @@ class Mutator {
         const srcTemplate = newBoard.cardProperties[index]
         const newTemplate: IPropertyTemplate = {
             id: Utils.createGuid(),
-            name: `Copy of ${srcTemplate.name}`,
+            name: `${srcTemplate.name} copy`,
             type: srcTemplate.type,
             options: srcTemplate.options.slice(),
         }
@@ -523,7 +523,7 @@ class Mutator {
         Utils.log(`duplicateCard: duplicating ${newBlocks.length} blocks`)
         if (asTemplate === newCard.isTemplate) {
             // Copy template
-            newCard.title = `Copy of ${newCard.title}`
+            newCard.title = `${newCard.title} copy`
         } else if (asTemplate) {
             // Template from card
             newCard.title = 'New card template'
@@ -561,7 +561,7 @@ class Mutator {
         Utils.log(`duplicateBoard: duplicating ${newBlocks.length} blocks`)
 
         if (asTemplate === newBoard.isTemplate) {
-            newBoard.title = `Copy of ${newBoard.title}`
+            newBoard.title = `${newBoard.title} copy`
         } else if (asTemplate) {
             // Template from board
             newBoard.title = 'New board template'

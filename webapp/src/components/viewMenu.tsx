@@ -30,7 +30,7 @@ export class ViewMenu extends React.PureComponent<Props> {
         Utils.log('duplicateView')
         const currentViewId = boardTree.activeView.id
         const newView = boardTree.activeView.duplicate()
-        newView.title = `Copy of ${boardTree.activeView.title}`
+        newView.title = `${boardTree.activeView.title} copy`
         await mutator.insertBlock(
             newView,
             'duplicate view',
