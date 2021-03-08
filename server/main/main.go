@@ -5,7 +5,7 @@
 //     Schemes: http, https
 //     Host: localhost
 //     BasePath: /api/v1
-//     Version: 0.5.0
+//     Version: 1.0.0
 //     License: Custom https://github.com/mattermost/focalboard/blob/main/LICENSE.txt
 //     Contact: Focalboard<api@focalboard.com> https://www.focalboard.com
 //
