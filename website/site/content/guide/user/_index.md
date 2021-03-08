@@ -5,6 +5,10 @@ section: "guide"
 weight: 2
 ---
 
+This guide is an overview of the basic features to get you started. Focalboard is an open source project that is being updated continuously.
+
+[Let us know](/feedback/) if there's a feature you are looking for, or [connect with our vibrant community](/contribute/getting-started/) to help bring it to life.
+
 ## Adding new Boards
 
 1. Click "+ Add Board" at the lower left of the sidebar to add a new board to Focalboard.
