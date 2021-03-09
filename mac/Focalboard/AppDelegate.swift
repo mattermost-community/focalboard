@@ -8,6 +8,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	static let serverStartedNotification = NSNotification.Name("serverStarted")
 
 	private var serverProcess: Process?
+
+	var isServerStarted: Bool {
+		get { return serverProcess != nil }
+	}
+
 	var serverPort = 8088
 	var sessionToken: String = ""
 

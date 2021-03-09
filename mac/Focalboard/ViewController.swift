@@ -21,6 +21,13 @@ class ViewController:
 
 		clearWebViewCache()
 
+		// Load the home page if the server was started, otherwise wait until it has
+		let appDelegate = NSApplication.shared.delegate as! AppDelegate
+		if (appDelegate.isServerStarted) {
+			self.updateSessionToken()
+			self.loadHomepage()
+		}
+
 		// Do any additional setup after loading the view.
 		NotificationCenter.default.addObserver(self, selector: #selector(onServerStarted), name: AppDelegate.serverStartedNotification, object: nil)
 	}
