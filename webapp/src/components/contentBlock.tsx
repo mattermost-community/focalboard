@@ -12,17 +12,15 @@ import {Utils} from '../utils'
 import IconButton from '../widgets/buttons/iconButton'
 import AddIcon from '../widgets/icons/add'
 import DeleteIcon from '../widgets/icons/delete'
-import ImageIcon from '../widgets/icons/image'
 import OptionsIcon from '../widgets/icons/options'
 import SortDownIcon from '../widgets/icons/sortDown'
 import SortUpIcon from '../widgets/icons/sortUp'
-import TextIcon from '../widgets/icons/text'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 
 import ContentElement from './content/contentElement'
-import './contentBlock.scss'
 import contentRegistry from './content/contentRegistry'
+import './contentBlock.scss'
 
 type Props = {
     block: IContentBlock
@@ -108,7 +106,7 @@ class ContentBlock extends React.PureComponent<Props> {
                 ref={type}
                 id={type}
                 name={contentRegistry.typeDisplayText(intl, type)}
-                icon={<ImageIcon/>}
+                icon={contentRegistry.getIcon(type)}
                 onClick={() => {
                     Utils.selectLocalFile((file) => {
                         mutator.performAsUndoGroup(async () => {
@@ -130,7 +128,7 @@ class ContentBlock extends React.PureComponent<Props> {
                 ref={type}
                 id={type}
                 name={contentRegistry.typeDisplayText(intl, type)}
-                icon={<TextIcon/>}
+                icon={contentRegistry.getIcon(type)}
                 onClick={() => {
                     const newBlock = contentRegistry.createBlock(type)!
                     newBlock.parentId = card.id

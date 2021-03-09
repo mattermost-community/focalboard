@@ -11,6 +11,9 @@ import {MutableDividerBlock} from '../../blocks/dividerBlock'
 import {MutableImageBlock} from '../../blocks/imageBlock'
 import {MutableTextBlock} from '../../blocks/textBlock'
 import {Utils} from '../../utils'
+import DividerIcon from '../../widgets/icons/divider'
+import ImageIcon from '../../widgets/icons/image'
+import TextIcon from '../../widgets/icons/text'
 
 import DividerElement from './dividerElement'
 import ImageElement from './imageElement'
@@ -20,6 +23,7 @@ type RegistryEntry = {
     type: BlockTypes,
     createBlock: () => MutableContentBlock,
     getDisplayText: (intl: IntlShape) => string,
+    getIcon: () => JSX.Element,
     createComponent: (block: IContentBlock, readonly: boolean) => JSX.Element,
 }
 
@@ -38,6 +42,7 @@ class ContentRegistry {
                     return new MutableTextBlock()
                 },
                 getDisplayText: (intl) => intl.formatMessage({id: 'ContentBlock.text', defaultMessage: 'text'}),
+                getIcon: () => <TextIcon/>,
                 createComponent: (block, readonly) => (
                     <TextElement
                         block={block}
@@ -49,23 +54,25 @@ class ContentRegistry {
 
         this.registerContentType(
             {
-                type: 'divider',
-                createBlock: () => {
-                    return new MutableDividerBlock()
-                },
-                getDisplayText: (intl) => intl.formatMessage({id: 'ContentBlock.divider', defaultMessage: 'divider'}),
-                createComponent: () => <DividerElement/>,
-            },
-        )
-
-        this.registerContentType(
-            {
                 type: 'image',
                 createBlock: () => {
                     return new MutableImageBlock()
                 },
                 getDisplayText: (intl) => intl.formatMessage({id: 'ContentBlock.image', defaultMessage: 'image'}),
+                getIcon: () => <ImageIcon/>,
                 createComponent: (block) => <ImageElement block={block}/>,
+            },
+        )
+
+        this.registerContentType(
+            {
+                type: 'divider',
+                createBlock: () => {
+                    return new MutableDividerBlock()
+                },
+                getDisplayText: (intl) => intl.formatMessage({id: 'ContentBlock.divider', defaultMessage: 'divider'}),
+                getIcon: () => <DividerIcon/>,
+                createComponent: () => <DividerElement/>,
             },
         )
     }
@@ -96,6 +103,11 @@ class ContentRegistry {
         }
 
         return entry.getDisplayText(intl)
+    }
+
+    getIcon(type: BlockTypes): JSX.Element | undefined {
+        const entry = this.registry.get(type)
+        return entry?.getIcon()
     }
 }
 
