@@ -110,7 +110,7 @@ class ContentBlock extends React.PureComponent<Props> {
                 onClick={() => {
                     Utils.selectLocalFile((file) => {
                         mutator.performAsUndoGroup(async () => {
-                            const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type, string}'}, {type: contentRegistry.typeDisplayText(intl, type)})
+                            const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: contentRegistry.typeDisplayText(intl, type)})
                             const newBlock = await mutator.createImageBlock(card, file, description)
                             if (newBlock) {
                                 const contentOrder = contents.map((o) => o.id)
@@ -137,7 +137,7 @@ class ContentBlock extends React.PureComponent<Props> {
                     const contentOrder = contents.map((o) => o.id)
                     contentOrder.splice(index, 0, newBlock.id)
                     mutator.performAsUndoGroup(async () => {
-                        const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type, string}'}, {type: contentRegistry.typeDisplayText(intl, type)})
+                        const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: contentRegistry.typeDisplayText(intl, type)})
                         await mutator.insertBlock(newBlock, description)
                         await mutator.changeCardContentOrder(card, contentOrder, description)
                     })
