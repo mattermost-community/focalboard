@@ -4,17 +4,14 @@
 import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
+import {BlockTypes} from '../blocks/block'
 import {Card} from '../blocks/card'
 import {IContentBlock} from '../blocks/contentBlock'
-import {MutableDividerBlock} from '../blocks/dividerBlock'
-import {MutableTextBlock} from '../blocks/textBlock'
 import mutator from '../mutator'
-import octoClient from '../octoClient'
 import {Utils} from '../utils'
 import IconButton from '../widgets/buttons/iconButton'
 import AddIcon from '../widgets/icons/add'
 import DeleteIcon from '../widgets/icons/delete'
-import DividerIcon from '../widgets/icons/divider'
 import ImageIcon from '../widgets/icons/image'
 import OptionsIcon from '../widgets/icons/options'
 import SortDownIcon from '../widgets/icons/sortDown'
@@ -23,8 +20,9 @@ import TextIcon from '../widgets/icons/text'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 
+import ContentElement from './content/contentElement'
 import './contentBlock.scss'
-import {MarkdownEditor} from './markdownEditor'
+import contentRegistry from './content/contentRegistry'
 
 type Props = {
     block: IContentBlock
@@ -34,31 +32,9 @@ type Props = {
     intl: IntlShape
 }
 
-type State = {
-    imageDataUrl?: string
-}
-
-class ContentBlock extends React.PureComponent<Props, State> {
-    state: State = {}
-
-    componentDidMount(): void {
-        if (this.props.block.type === 'image' && !this.state.imageDataUrl) {
-            this.loadImage()
-        }
-    }
-
-    private async loadImage() {
-        const imageDataUrl = await octoClient.getFileAsDataUrl(this.props.block.fields.fileId)
-        this.setState({imageDataUrl})
-    }
-
+class ContentBlock extends React.PureComponent<Props> {
     public render(): JSX.Element | null {
-        const {intl, card, contents, block} = this.props
-
-        if (block.type !== 'text' && block.type !== 'image' && block.type !== 'divider') {
-            Utils.assertFailure(`Block type is unknown: ${block.type}`)
-            return null
-        }
+        const {intl, card, contents, block, readonly} = this.props
 
         const index = contents.indexOf(block)
         return (
@@ -95,61 +71,7 @@ class ContentBlock extends React.PureComponent<Props, State> {
                                     name={intl.formatMessage({id: 'ContentBlock.insertAbove', defaultMessage: 'Insert above'})}
                                     icon={<AddIcon/>}
                                 >
-                                    <Menu.Text
-                                        id='text'
-                                        name={intl.formatMessage({id: 'ContentBlock.Text', defaultMessage: 'Text'})}
-                                        icon={<TextIcon/>}
-                                        onClick={() => {
-                                            const newBlock = new MutableTextBlock()
-                                            newBlock.parentId = card.id
-                                            newBlock.rootId = card.rootId
-
-                                            const contentOrder = contents.map((o) => o.id)
-                                            contentOrder.splice(index, 0, newBlock.id)
-                                            mutator.performAsUndoGroup(async () => {
-                                                const description = intl.formatMessage({id: 'ContentBlock.addText', defaultMessage: 'add text'})
-                                                await mutator.insertBlock(newBlock, description)
-                                                await mutator.changeCardContentOrder(card, contentOrder, description)
-                                            })
-                                        }}
-                                    />
-                                    <Menu.Text
-                                        id='image'
-                                        name='Image'
-                                        icon={<ImageIcon/>}
-                                        onClick={() => {
-                                            Utils.selectLocalFile((file) => {
-                                                mutator.performAsUndoGroup(async () => {
-                                                    const description = intl.formatMessage({id: 'ContentBlock.addImage', defaultMessage: 'add image'})
-                                                    const newBlock = await mutator.createImageBlock(card, file, description)
-                                                    if (newBlock) {
-                                                        const contentOrder = contents.map((o) => o.id)
-                                                        contentOrder.splice(index, 0, newBlock.id)
-                                                        await mutator.changeCardContentOrder(card, contentOrder, description)
-                                                    }
-                                                })
-                                            },
-                                            '.jpg,.jpeg,.png')
-                                        }}
-                                    />
-                                    <Menu.Text
-                                        id='divider'
-                                        name={intl.formatMessage({id: 'ContentBlock.divider', defaultMessage: 'Divider'})}
-                                        icon={<DividerIcon/>}
-                                        onClick={() => {
-                                            const newBlock = new MutableDividerBlock()
-                                            newBlock.parentId = card.id
-                                            newBlock.rootId = card.rootId
-
-                                            const contentOrder = contents.map((o) => o.id)
-                                            contentOrder.splice(index, 0, newBlock.id)
-                                            mutator.performAsUndoGroup(async () => {
-                                                const description = intl.formatMessage({id: 'ContentBlock.addDivider', defaultMessage: 'add divider'})
-                                                await mutator.insertBlock(newBlock, description)
-                                                await mutator.changeCardContentOrder(card, contentOrder, description)
-                                            })
-                                        }}
-                                    />
+                                    {contentRegistry.contentTypes.map((type) => this.addContentMenu(type))}
                                 </Menu.SubMenu>
                                 <Menu.Text
                                     icon={<DeleteIcon/>}
@@ -168,23 +90,63 @@ class ContentBlock extends React.PureComponent<Props, State> {
                         </MenuWrapper>
                     }
                 </div>
-                {block.type === 'text' &&
-                    <MarkdownEditor
-                        text={block.title}
-                        placeholderText={intl.formatMessage({id: 'ContentBlock.editText', defaultMessage: 'Edit text...'})}
-                        onBlur={(text) => {
-                            mutator.changeTitle(block, text, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card text'}))
-                        }}
-                        readonly={this.props.readonly}
-                    />}
-                {block.type === 'divider' && <div className='divider'/>}
-                {block.type === 'image' && this.state.imageDataUrl &&
-                    <img
-                        src={this.state.imageDataUrl}
-                        alt={block.title}
-                    />}
+                <ContentElement
+                    block={block}
+                    readonly={readonly}
+                />
             </div>
         )
+    }
+
+    private addContentMenu(type: BlockTypes): JSX.Element {
+        const {intl, card, contents, block} = this.props
+        const index = contents.indexOf(block)
+
+        switch (type) {
+        case 'image': return (
+            <Menu.Text
+                ref={type}
+                id={type}
+                name={contentRegistry.typeDisplayText(intl, type)}
+                icon={<ImageIcon/>}
+                onClick={() => {
+                    Utils.selectLocalFile((file) => {
+                        mutator.performAsUndoGroup(async () => {
+                            const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type, string}'}, {type: contentRegistry.typeDisplayText(intl, type)})
+                            const newBlock = await mutator.createImageBlock(card, file, description)
+                            if (newBlock) {
+                                const contentOrder = contents.map((o) => o.id)
+                                contentOrder.splice(index, 0, newBlock.id)
+                                await mutator.changeCardContentOrder(card, contentOrder, description)
+                            }
+                        })
+                    },
+                    '.jpg,.jpeg,.png')
+                }}
+            />
+        )
+        default: return (
+            <Menu.Text
+                ref={type}
+                id={type}
+                name={contentRegistry.typeDisplayText(intl, type)}
+                icon={<TextIcon/>}
+                onClick={() => {
+                    const newBlock = contentRegistry.createBlock(type)!
+                    newBlock.parentId = card.id
+                    newBlock.rootId = card.rootId
+
+                    const contentOrder = contents.map((o) => o.id)
+                    contentOrder.splice(index, 0, newBlock.id)
+                    mutator.performAsUndoGroup(async () => {
+                        const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type, string}'}, {type: contentRegistry.typeDisplayText(intl, type)})
+                        await mutator.insertBlock(newBlock, description)
+                        await mutator.changeCardContentOrder(card, contentOrder, description)
+                    })
+                }}
+            />
+        )
+        }
     }
 }
 

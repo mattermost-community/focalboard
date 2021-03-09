@@ -2,7 +2,10 @@
 // See LICENSE.txt for license information.
 import {Utils} from '../utils'
 
-type BlockTypes = 'board' | 'view' | 'card' | 'text' | 'image' | 'divider' | 'comment'
+const contentBlockTypes = ['text', 'image', 'divider'] as const
+const blockTypes = [...contentBlockTypes, 'board', 'view', 'card', 'comment'] as const
+type ContentBlockTypes = typeof contentBlockTypes[number]
+type BlockTypes = typeof blockTypes[number]
 
 interface IBlock {
     readonly id: string
@@ -69,4 +72,5 @@ class MutableBlock implements IMutableBlock {
     }
 }
 
-export {IBlock, IMutableBlock, MutableBlock}
+export type {ContentBlockTypes, BlockTypes}
+export {blockTypes, contentBlockTypes, IBlock, IMutableBlock, MutableBlock}

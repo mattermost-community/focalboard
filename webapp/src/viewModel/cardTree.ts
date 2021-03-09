@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IBlock} from '../blocks/block'
+import {ContentBlockTypes, contentBlockTypes, IBlock} from '../blocks/block'
 import {Card, MutableCard} from '../blocks/card'
 import {CommentBlock} from '../blocks/commentBlock'
 import {IContentBlock} from '../blocks/contentBlock'
@@ -56,7 +56,7 @@ class MutableCardTree implements CardTree {
             filter((block) => block.type === 'comment').
             sort((a, b) => a.createAt - b.createAt) as CommentBlock[]
 
-        const contentBlocks = blocks.filter((block) => block.type === 'text' || block.type === 'image' || block.type === 'divider') as IContentBlock[]
+        const contentBlocks = blocks.filter((block) => contentBlockTypes.includes(block.type as ContentBlockTypes)) as IContentBlock[]
         cardTree.contents = OctoUtils.getBlockOrder(card.contentOrder, contentBlocks)
 
         return cardTree
