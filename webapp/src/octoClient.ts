@@ -28,7 +28,8 @@ class OctoClient {
     private async getJson(response: Response, defaultValue: any = {}): Promise<any> {
         // The server may return null or malformed json
         try {
-            return await response.json()
+            const value = await response.json()
+            return value || defaultValue
         } catch {
             return defaultValue
         }

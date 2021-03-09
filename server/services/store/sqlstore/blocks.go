@@ -218,7 +218,7 @@ func (s *SQLStore) GetAllBlocks() ([]model.Block, error) {
 func blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 	defer rows.Close()
 
-	var results []model.Block
+	var results = []model.Block{}
 
 	for rows.Next() {
 		var block model.Block
