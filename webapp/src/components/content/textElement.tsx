@@ -52,7 +52,7 @@ contentRegistry.registerContentType({
     type: 'text',
     getDisplayText: (intl) => intl.formatMessage({id: 'ContentBlock.text', defaultMessage: 'text'}),
     getIcon: () => <TextIcon/>,
-    createBlock: () => {
+    createBlock: async () => {
         return new MutableTextBlock()
     },
     addBlock: (card, contents, index, intl) => {

@@ -56,8 +56,21 @@ contentRegistry.registerContentType({
     type: 'image',
     getDisplayText: (intl) => intl.formatMessage({id: 'ContentBlock.image', defaultMessage: 'image'}),
     getIcon: () => <ImageIcon/>,
-    createBlock: () => {
-        return new MutableImageBlock()
+    createBlock: async () => {
+        return new Promise<MutableImageBlock>(
+            (resolve) => {
+                Utils.selectLocalFile(async (file) => {
+                    const fileId = await octoClient.uploadFile(file)
+
+                    const block = new MutableImageBlock()
+                    block.fileId = fileId || ''
+                    resolve(block)
+                },
+                '.jpg,.jpeg,.png')
+            },
+        )
+
+        // return new MutableImageBlock()
     },
     addBlock: (card, contents, index, intl) => {
         Utils.selectLocalFile((file) => {

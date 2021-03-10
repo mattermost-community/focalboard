@@ -112,8 +112,19 @@ class ContentBlock extends React.PureComponent<Props> {
                 id={type}
                 name={handler.getDisplayText(intl)}
                 icon={handler.getIcon()}
-                onClick={() => {
-                    handler.addBlock(card, contents, index, intl)
+                onClick={async () => {
+                    const newBlock = await handler.createBlock()
+                    newBlock.parentId = card.id
+                    newBlock.rootId = card.rootId
+
+                    const contentOrder = contents.map((o) => o.id)
+                    contentOrder.splice(index, 0, newBlock.id)
+                    const typeName = handler.getDisplayText(intl)
+                    const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
+                    mutator.performAsUndoGroup(async () => {
+                        await mutator.insertBlock(newBlock, description)
+                        await mutator.changeCardContentOrder(card, contentOrder, description)
+                    })
                 }}
             />
         )

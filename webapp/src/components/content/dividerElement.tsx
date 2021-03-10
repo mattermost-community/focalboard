@@ -19,7 +19,7 @@ contentRegistry.registerContentType({
     type: 'divider',
     getDisplayText: (intl) => intl.formatMessage({id: 'ContentBlock.divider', defaultMessage: 'divider'}),
     getIcon: () => <DividerIcon/>,
-    createBlock: () => {
+    createBlock: async () => {
         return new MutableDividerBlock()
     },
     addBlock: (card, contents, index, intl) => {
