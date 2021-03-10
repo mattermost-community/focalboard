@@ -108,7 +108,7 @@ class ContentBlock extends React.PureComponent<Props> {
 
         return (
             <Menu.Text
-                ref={type}
+                key={type}
                 id={type}
                 name={handler.getDisplayText(intl)}
                 icon={handler.getIcon()}

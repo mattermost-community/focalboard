@@ -243,7 +243,7 @@ class CardDetail extends React.Component<Props, State> {
 
         return (
             <Menu.Text
-                ref={type}
+                key={type}
                 id={type}
                 name={handler.getDisplayText(intl)}
                 icon={handler.getIcon()}
