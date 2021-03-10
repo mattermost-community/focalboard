@@ -106,51 +106,17 @@ class ContentBlock extends React.PureComponent<Props> {
             return <></>
         }
 
-        switch (type) {
-        case 'image': return (
+        return (
             <Menu.Text
                 ref={type}
                 id={type}
                 name={handler.getDisplayText(intl)}
                 icon={handler.getIcon()}
                 onClick={() => {
-                    Utils.selectLocalFile((file) => {
-                        mutator.performAsUndoGroup(async () => {
-                            const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: handler.getDisplayText(intl)})
-                            const newBlock = await mutator.createImageBlock(card, file, description)
-                            if (newBlock) {
-                                const contentOrder = contents.map((o) => o.id)
-                                contentOrder.splice(index, 0, newBlock.id)
-                                await mutator.changeCardContentOrder(card, contentOrder, description)
-                            }
-                        })
-                    },
-                    '.jpg,.jpeg,.png')
+                    handler.addBlock(card, contents, index, intl)
                 }}
             />
         )
-        default: return (
-            <Menu.Text
-                ref={type}
-                id={type}
-                name={handler.getDisplayText(intl)}
-                icon={handler.getIcon()}
-                onClick={() => {
-                    const newBlock = handler.createBlock()!
-                    newBlock.parentId = card.id
-                    newBlock.rootId = card.rootId
-
-                    const contentOrder = contents.map((o) => o.id)
-                    contentOrder.splice(index, 0, newBlock.id)
-                    mutator.performAsUndoGroup(async () => {
-                        const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: handler.getDisplayText(intl)})
-                        await mutator.insertBlock(newBlock, description)
-                        await mutator.changeCardContentOrder(card, contentOrder, description)
-                    })
-                }}
-            />
-        )
-        }
     }
 }
 

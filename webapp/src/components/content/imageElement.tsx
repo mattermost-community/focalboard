@@ -5,7 +5,9 @@ import {injectIntl, IntlShape} from 'react-intl'
 
 import {IContentBlock, MutableContentBlock} from '../../blocks/contentBlock'
 import {MutableImageBlock} from '../../blocks/imageBlock'
+import mutator from '../../mutator'
 import octoClient from '../../octoClient'
+import {Utils} from '../../utils'
 import ImageIcon from '../../widgets/icons/image'
 
 import {contentRegistry} from './contentRegistry'
@@ -56,6 +58,21 @@ contentRegistry.registerContentType({
     getIcon: () => <ImageIcon/>,
     createBlock: () => {
         return new MutableImageBlock()
+    },
+    addBlock: (card, contents, index, intl) => {
+        Utils.selectLocalFile((file) => {
+            mutator.performAsUndoGroup(async () => {
+                const typeName = intl.formatMessage({id: 'ContentBlock.image', defaultMessage: 'image'})
+                const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
+                const newBlock = await mutator.createImageBlock(card, file, description)
+                if (newBlock) {
+                    const contentOrder = contents.map((o) => o.id)
+                    contentOrder.splice(index, 0, newBlock.id)
+                    await mutator.changeCardContentOrder(card, contentOrder, description)
+                }
+            })
+        },
+        '.jpg,.jpeg,.png')
     },
     createComponent: (block, intl) => {
         return (

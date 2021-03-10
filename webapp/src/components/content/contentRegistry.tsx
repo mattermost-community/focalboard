@@ -4,6 +4,7 @@
 import {IntlShape} from 'react-intl'
 
 import {BlockTypes} from '../../blocks/block'
+import {Card} from '../../blocks/card'
 import {IContentBlock, MutableContentBlock} from '../../blocks/contentBlock'
 
 type ContentHandler = {
@@ -11,6 +12,7 @@ type ContentHandler = {
     getDisplayText: (intl: IntlShape) => string,
     getIcon: () => JSX.Element,
     createBlock: () => MutableContentBlock,
+    addBlock(card: Card, contents: readonly IContentBlock[], index: number, intl: IntlShape): void,
     createComponent: (block: IContentBlock, intl: IntlShape, readonly: boolean) => JSX.Element,
 }
 

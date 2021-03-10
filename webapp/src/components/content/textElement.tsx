@@ -55,6 +55,20 @@ contentRegistry.registerContentType({
     createBlock: () => {
         return new MutableTextBlock()
     },
+    addBlock: (card, contents, index, intl) => {
+        const newBlock = new MutableTextBlock()
+        newBlock.parentId = card.id
+        newBlock.rootId = card.rootId
+
+        const contentOrder = contents.map((o) => o.id)
+        contentOrder.splice(index, 0, newBlock.id)
+        const typeName = intl.formatMessage({id: 'ContentBlock.text', defaultMessage: 'text'})
+        mutator.performAsUndoGroup(async () => {
+            const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
+            await mutator.insertBlock(newBlock, description)
+            await mutator.changeCardContentOrder(card, contentOrder, description)
+        })
+    },
     createComponent: (block, intl, readonly) => {
         return (
             <TextElement

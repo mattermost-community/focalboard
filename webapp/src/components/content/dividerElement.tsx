@@ -3,6 +3,7 @@
 import React from 'react'
 
 import {MutableDividerBlock} from '../../blocks/dividerBlock'
+import mutator from '../../mutator'
 import DividerIcon from '../../widgets/icons/divider'
 
 import {contentRegistry} from './contentRegistry'
@@ -20,6 +21,20 @@ contentRegistry.registerContentType({
     getIcon: () => <DividerIcon/>,
     createBlock: () => {
         return new MutableDividerBlock()
+    },
+    addBlock: (card, contents, index, intl) => {
+        const newBlock = new MutableDividerBlock()
+        newBlock.parentId = card.id
+        newBlock.rootId = card.rootId
+
+        const contentOrder = contents.map((o) => o.id)
+        contentOrder.splice(index, 0, newBlock.id)
+        const typeName = intl.formatMessage({id: 'ContentBlock.divider', defaultMessage: 'divider'})
+        mutator.performAsUndoGroup(async () => {
+            const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
+            await mutator.insertBlock(newBlock, description)
+            await mutator.changeCardContentOrder(card, contentOrder, description)
+        })
     },
     createComponent: () => <DividerElement/>,
 })
