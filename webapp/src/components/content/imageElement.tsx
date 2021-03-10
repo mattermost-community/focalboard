@@ -3,8 +3,12 @@
 import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
-import {IContentBlock} from '../../blocks/contentBlock'
+import {IContentBlock, MutableContentBlock} from '../../blocks/contentBlock'
+import {MutableImageBlock} from '../../blocks/imageBlock'
 import octoClient from '../../octoClient'
+import ImageIcon from '../../widgets/icons/image'
+
+import {contentRegistry} from './contentRegistry'
 
 type Props = {
     block: IContentBlock
@@ -45,5 +49,22 @@ class ImageElement extends React.PureComponent<Props> {
         )
     }
 }
+
+contentRegistry.registerContentType({
+    type: 'image',
+    getDisplayText: (intl) => intl.formatMessage({id: 'ContentBlock.image', defaultMessage: 'image'}),
+    getIcon: () => <ImageIcon/>,
+    createBlock: () => {
+        return new MutableImageBlock()
+    },
+    createComponent: (block, intl) => {
+        return (
+            <ImageElement
+                block={block}
+                intl={intl}
+            />
+        )
+    },
+})
 
 export default injectIntl(ImageElement)

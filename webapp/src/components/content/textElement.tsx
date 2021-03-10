@@ -3,9 +3,13 @@
 import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
-import {IContentBlock} from '../../blocks/contentBlock'
+import {IContentBlock, MutableContentBlock} from '../../blocks/contentBlock'
+import {MutableTextBlock} from '../../blocks/textBlock'
 import mutator from '../../mutator'
+import TextIcon from '../../widgets/icons/text'
 import {MarkdownEditor} from '../markdownEditor'
+
+import {contentRegistry} from './contentRegistry'
 
 type Props = {
     block: IContentBlock
@@ -14,7 +18,21 @@ type Props = {
 }
 
 class TextElement extends React.PureComponent<Props> {
-    public render(): JSX.Element {
+    readonly type = 'text'
+
+    createBlock(): MutableContentBlock {
+        return new MutableTextBlock()
+    }
+
+    getDisplayText(intl: IntlShape): string {
+        return intl.formatMessage({id: 'ContentBlock.text', defaultMessage: 'text'})
+    }
+
+    getIcon(): JSX.Element {
+        return <TextIcon/>
+    }
+
+    render(): JSX.Element {
         const {intl, block, readonly} = this.props
 
         return (
@@ -29,5 +47,23 @@ class TextElement extends React.PureComponent<Props> {
         )
     }
 }
+
+contentRegistry.registerContentType({
+    type: 'text',
+    getDisplayText: (intl) => intl.formatMessage({id: 'ContentBlock.text', defaultMessage: 'text'}),
+    getIcon: () => <TextIcon/>,
+    createBlock: () => {
+        return new MutableTextBlock()
+    },
+    createComponent: (block, intl, readonly) => {
+        return (
+            <TextElement
+                block={block}
+                intl={intl}
+                readonly={readonly}
+            />
+        )
+    },
+})
 
 export default injectIntl(TextElement)

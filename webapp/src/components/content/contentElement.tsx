@@ -5,8 +5,15 @@ import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
 import {IContentBlock} from '../../blocks/contentBlock'
+import {Utils} from '../../utils'
 
-import contentRegistry from './contentRegistry'
+import {contentRegistry} from './contentRegistry'
+
+// Need to require here to prevent webpack from tree-shaking these away
+// TODO: Update webpack to avoid this
+require('./textElement')
+require('./imageElement')
+require('./dividerElement')
 
 type Props = {
     block: IContentBlock
@@ -16,9 +23,15 @@ type Props = {
 
 class ContentElement extends React.PureComponent<Props> {
     public render(): JSX.Element | null {
-        const {block, readonly} = this.props
+        const {block, intl, readonly} = this.props
 
-        return contentRegistry.createComponent(block, readonly) || null
+        const handler = contentRegistry.getHandler(block.type)
+        if (!handler) {
+            Utils.logError(`ContentElement, unknown content type: ${block.type}`)
+            return null
+        }
+
+        return handler.createComponent(block, intl, readonly)
     }
 }
 

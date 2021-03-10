@@ -19,7 +19,7 @@ import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 
 import ContentElement from './content/contentElement'
-import contentRegistry from './content/contentRegistry'
+import {contentRegistry} from './content/contentRegistry'
 import './contentBlock.scss'
 
 type Props = {
@@ -100,17 +100,23 @@ class ContentBlock extends React.PureComponent<Props> {
         const {intl, card, contents, block} = this.props
         const index = contents.indexOf(block)
 
+        const handler = contentRegistry.getHandler(type)
+        if (!handler) {
+            Utils.logError(`addContentMenu, unknown content type: ${type}`)
+            return <></>
+        }
+
         switch (type) {
         case 'image': return (
             <Menu.Text
                 ref={type}
                 id={type}
-                name={contentRegistry.typeDisplayText(intl, type)}
-                icon={contentRegistry.getIcon(type)}
+                name={handler.getDisplayText(intl)}
+                icon={handler.getIcon()}
                 onClick={() => {
                     Utils.selectLocalFile((file) => {
                         mutator.performAsUndoGroup(async () => {
-                            const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: contentRegistry.typeDisplayText(intl, type)})
+                            const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: handler.getDisplayText(intl)})
                             const newBlock = await mutator.createImageBlock(card, file, description)
                             if (newBlock) {
                                 const contentOrder = contents.map((o) => o.id)
@@ -127,17 +133,17 @@ class ContentBlock extends React.PureComponent<Props> {
             <Menu.Text
                 ref={type}
                 id={type}
-                name={contentRegistry.typeDisplayText(intl, type)}
-                icon={contentRegistry.getIcon(type)}
+                name={handler.getDisplayText(intl)}
+                icon={handler.getIcon()}
                 onClick={() => {
-                    const newBlock = contentRegistry.createBlock(type)!
+                    const newBlock = handler.createBlock()!
                     newBlock.parentId = card.id
                     newBlock.rootId = card.rootId
 
                     const contentOrder = contents.map((o) => o.id)
                     contentOrder.splice(index, 0, newBlock.id)
                     mutator.performAsUndoGroup(async () => {
-                        const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: contentRegistry.typeDisplayText(intl, type)})
+                        const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: handler.getDisplayText(intl)})
                         await mutator.insertBlock(newBlock, description)
                         await mutator.changeCardContentOrder(card, contentOrder, description)
                     })
