@@ -6,6 +6,7 @@ import {IntlShape} from 'react-intl'
 import {BlockTypes} from '../../blocks/block'
 import {Card} from '../../blocks/card'
 import {IContentBlock, MutableContentBlock} from '../../blocks/contentBlock'
+import {Utils} from '../../utils'
 
 type ContentHandler = {
     type: BlockTypes,
@@ -24,6 +25,10 @@ class ContentRegistry {
     }
 
     registerContentType(entry: ContentHandler) {
+        if (this.isContentType(entry.type)) {
+            Utils.logError(`registerContentType, already registered type: ${entry.type}`)
+            return
+        }
         this.registry.set(entry.type, entry)
     }
 
