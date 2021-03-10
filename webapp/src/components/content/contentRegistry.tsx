@@ -38,5 +38,5 @@ class ContentRegistry {
 
 const contentRegistry = new ContentRegistry()
 
-// export type {ContentHandler}
+export type {ContentHandler}
 export {contentRegistry}
