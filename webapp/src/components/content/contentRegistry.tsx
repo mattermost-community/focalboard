@@ -13,7 +13,6 @@ type ContentHandler = {
     getDisplayText: (intl: IntlShape) => string,
     getIcon: () => JSX.Element,
     createBlock: () => Promise<MutableContentBlock>,
-    addBlock(card: Card, contents: readonly IContentBlock[], index: number, intl: IntlShape): void,
     createComponent: (block: IContentBlock, intl: IntlShape, readonly: boolean) => JSX.Element,
 }
 
