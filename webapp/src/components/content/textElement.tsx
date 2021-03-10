@@ -3,7 +3,7 @@
 import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
-import {IContentBlock, MutableContentBlock} from '../../blocks/contentBlock'
+import {IContentBlock} from '../../blocks/contentBlock'
 import {MutableTextBlock} from '../../blocks/textBlock'
 import mutator from '../../mutator'
 import TextIcon from '../../widgets/icons/text'

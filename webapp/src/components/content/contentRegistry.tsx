@@ -4,7 +4,6 @@
 import {IntlShape} from 'react-intl'
 
 import {BlockTypes} from '../../blocks/block'
-import {Card} from '../../blocks/card'
 import {IContentBlock, MutableContentBlock} from '../../blocks/contentBlock'
 import {Utils} from '../../utils'
 
@@ -44,3 +43,4 @@ const contentRegistry = new ContentRegistry()
 
 export type {ContentHandler}
 export {contentRegistry}
+
