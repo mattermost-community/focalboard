@@ -32,31 +32,6 @@ class ContentRegistry {
     getHandler(type: BlockTypes): ContentHandler | undefined {
         return this.registry.get(type)
     }
-
-    // createBlock(type: BlockTypes): MutableContentBlock | undefined {
-    //     const entry = this.registry.get(type)
-    //     return entry?.createBlock()
-    // }
-
-    // createComponent(block: IContentBlock, intl: IntlShape, readonly: boolean): JSX.Element | undefined {
-    //     const entry = this.registry.get(block.type)
-    //     return entry?.createComponent(block, intl, readonly)
-    // }
-
-    // typeDisplayText(intl: IntlShape, type: BlockTypes): string {
-    //     const entry = this.registry.get(type)
-    //     if (!entry) {
-    //         Utils.logError(`Unknown type: ${type}`)
-    //         return type
-    //     }
-
-    //     return entry.getDisplayText(intl)
-    // }
-
-    // getIcon(type: BlockTypes): JSX.Element | undefined {
-    //     const entry = this.registry.get(type)
-    //     return entry?.getIcon()
-    // }
 }
 
 const contentRegistry = new ContentRegistry()
