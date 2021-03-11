@@ -11,9 +11,9 @@ import {contentRegistry} from './contentRegistry'
 
 // Need to require here to prevent webpack from tree-shaking these away
 // TODO: Update webpack to avoid this
-require('./textElement')
-require('./imageElement')
-require('./dividerElement')
+import './textElement'
+import './imageElement'
+import './dividerElement'
 
 type Props = {
     block: IContentBlock
