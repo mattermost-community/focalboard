@@ -9,6 +9,7 @@ class ViewController:
 	WKUIDelegate,
 	WKNavigationDelegate {
 	@IBOutlet var webView: WKWebView!
+	private var refreshWebViewOnLoad = true
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -68,6 +69,7 @@ class ViewController:
 		let port = appDelegate.serverPort
 		let url = URL(string: "http://localhost:\(port)/")!
 		let request = URLRequest(url: url)
+		refreshWebViewOnLoad = true
 		webView.load(request)
 	}
 
@@ -163,12 +165,28 @@ class ViewController:
 		// Disable right-click menu
 		webView.evaluateJavaScript("document.body.setAttribute('oncontextmenu', 'event.preventDefault();');", completionHandler: nil)
 		webView.isHidden = false
+
+		// HACKHACK: Fix WebView initial rendering artifacts
+		if (refreshWebViewOnLoad) {
+			refreshWebViewOnLoad = false
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
+				self.refreshWebView()
+			})
+		}
+	}
+
+	// HACKHACK: Fix WebView initial rendering artifacts
+	private func refreshWebView() {
+		let frame = self.webView.frame
+		var frame2 = frame
+		frame2.size.height += 1
+		self.webView.frame = frame2
+		self.webView.frame = frame
 	}
 
 	func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
 		webView.isHidden = false
 	}
-
 
 	func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
 		if let frame = navigationAction.targetFrame,
