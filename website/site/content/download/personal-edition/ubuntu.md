@@ -100,7 +100,7 @@ server {
 
 Enable the site, test the config, and reload NGINX:
 ```
-sudo ln -s /etc/nginx/sites-enabled/focalboard /etc/nginx/sites-available/focalboard
+sudo ln -s /etc/nginx/sites-available/focalboard /etc/nginx/sites-enabled/focalboard
 sudo nginx -t
 sudo /etc/init.d/nginx reload
 ```
