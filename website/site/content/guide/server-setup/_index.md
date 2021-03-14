@@ -5,6 +5,8 @@ section: "guide"
 weight: 1
 ---
 
+If you haven't alrady, first follow the [install guide](/download/personal-edition/ubuntu/) to install the Focalboard server.
+
 ## Registering the first user
 
 After installing the server, open a browser to the domain you used (or `http://localhost:8000` for local installs). You should be redirected to the login screen. Click the link to register a new user instead, and complete the registration.
