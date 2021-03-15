@@ -7,12 +7,6 @@
             display: flex;
         }
     }
-    .divider {
-        padding-top: 16px;
-        border-bottom: 1px solid rgba(var(--body-color), 0.09);
-        margin-bottom: 17px;
-        flex-grow: 1;
-    }
     > * {
         flex: 1 1 auto;
     }
