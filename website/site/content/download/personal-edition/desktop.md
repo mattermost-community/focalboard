@@ -9,24 +9,15 @@ Personal Desktop is a fully contained, standalone app meant for a single user, t
 
 #### macOS
 
-To install Personal Desktop for macOS:
-1. Download the [Mac package](https://releases.mattermost.com/focalboard/0.5.0/focalboard-mac.zip)
-2. Unzip the .zip archive
-3. Copy the `Focalboard.app` file to your Applications folder
-4. Open it from the Applications folder
-    a. If you see a Gatekeeper error, right click on Focalboard.app, then click "open".
+Download Focalboard from the [Mac App Store](https://apps.apple.com/app/apple-store/id1556908618?pt=2114704&ct=website&mt=8).
 
 #### Windows
 
-To install Personal Desktop for Windows:
-1. Download the [Windows package](https://releases.mattermost.com/focalboard/0.5.0/focalboard-win.zip)
-2. Unzip the .zip archive
-3. Copy the folder to your Program Files folder (optional, you can put it anywhere)
-4. Open `focalboard.exe` from within the folder
+Download Focalboard from the [Microsoft App Store](https://www.microsoft.com/store/apps/9NLN2T0SX9VF?cid=website).
 
 #### Linux Desktop
 
 To install Personal Desktop for Linux:
-1. Download the [Linux package](https://releases.mattermost.com/focalboard/0.5.0/focalboard-linux.tar.gz)
+1. Download `focalboard-linux.tar.gz` from the latest [release on GitHub](https://github.com/mattermost/focalboard/releases)
 2. Unpack the .tar.gz archive
 4. Open `focalboard` from within the focalboard folder
