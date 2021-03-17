@@ -25,7 +25,7 @@ class OctoClient {
         Utils.log(`OctoClient serverUrl: ${this.serverUrl}`)
     }
 
-    private async getJson(response: Response, defaultValue: any = {}): Promise<any> {
+    private async getJson(response: Response, defaultValue: any): Promise<any> {
         // The server may return null or malformed json
         try {
             const value = await response.json()
@@ -47,7 +47,7 @@ class OctoClient {
             return false
         }
 
-        const responseJson = (await this.getJson(response)) as {token?: string}
+        const responseJson = (await this.getJson(response, {})) as {token?: string}
         if (responseJson.token) {
             localStorage.setItem('sessionId', responseJson.token)
             return true
@@ -67,7 +67,7 @@ class OctoClient {
             headers: this.headers(),
             body,
         })
-        const json = (await this.getJson(response))
+        const json = (await this.getJson(response, {}))
         return {code: response.status, json}
     }
 
@@ -79,7 +79,7 @@ class OctoClient {
             headers: this.headers(),
             body,
         })
-        const json = (await this.getJson(response))
+        const json = (await this.getJson(response, {}))
         return {code: response.status, json}
     }
 
@@ -98,7 +98,7 @@ class OctoClient {
         if (response.status !== 200) {
             return undefined
         }
-        const user = (await this.getJson(response)) as IUser
+        const user = (await this.getJson(response, {})) as IUser
         return user
     }
 
@@ -108,7 +108,7 @@ class OctoClient {
         if (response.status !== 200) {
             return undefined
         }
-        const user = (await this.getJson(response)) as IUser
+        const user = (await this.getJson(response, {})) as IUser
         return user
     }
 
@@ -249,7 +249,7 @@ class OctoClient {
         if (response.status !== 200) {
             return undefined
         }
-        const sharing = (await this.getJson(response)) as ISharing
+        const sharing = (await this.getJson(response, undefined)) as ISharing
         return sharing
     }
 
@@ -279,7 +279,7 @@ class OctoClient {
         if (response.status !== 200) {
             return undefined
         }
-        const workspace = (await this.getJson(response)) as IWorkspace
+        const workspace = (await this.getJson(response, undefined)) as IWorkspace
         return workspace
     }
 
