@@ -77,7 +77,7 @@ func (rd *RegisterRequest) IsValid() error {
 	if strings.TrimSpace(rd.Email) == "" {
 		return errors.New("email is required")
 	}
-	if auth.IsEmailValid(rd.Email) {
+	if !auth.IsEmailValid(rd.Email) {
 		return errors.New("invalid email format")
 	}
 	if rd.Password == "" {
