@@ -11,6 +11,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
 	"github.com/mattermost/focalboard/server/api"
@@ -26,11 +27,9 @@ import (
 	"github.com/mattermost/focalboard/server/services/webhook"
 	"github.com/mattermost/focalboard/server/web"
 	"github.com/mattermost/focalboard/server/ws"
-	"github.com/mattermost/mattermost-server/utils"
 	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/services/filesstore"
-
-	"github.com/pkg/errors"
+	"github.com/mattermost/mattermost-server/v5/utils"
 )
 
 type Server struct {
