@@ -15,7 +15,7 @@ LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildNumber=$(BUILD
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildDate=$(BUILD_DATE)"
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildHash=$(BUILD_HASH)"
 
-all: server
+all: webapp server
 
 prebuild:
 	cd webapp; npm install
