@@ -16,6 +16,7 @@ import Button from '../widgets/buttons/button'
 import IconButton from '../widgets/buttons/iconButton'
 import BoardIcon from '../widgets/icons/board'
 import DeleteIcon from '../widgets/icons/delete'
+import EditIcon from '../widgets/icons/edit'
 import DisclosureTriangle from '../widgets/icons/disclosureTriangle'
 import DuplicateIcon from '../widgets/icons/duplicate'
 import HamburgerIcon from '../widgets/icons/hamburger'
@@ -256,6 +257,7 @@ class Sidebar extends React.Component<Props, State> {
                                             <IconButton icon={<OptionsIcon/>}/>
                                             <Menu position='left'>
                                                 <Menu.Text
+                                                    icon={<EditIcon/>}
                                                     id='edit'
                                                     name={intl.formatMessage({id: 'Sidebar.edit-template', defaultMessage: 'Edit'})}
                                                     onClick={() => {
