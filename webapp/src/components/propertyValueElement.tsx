@@ -94,7 +94,7 @@ export default class PropertyValueElement extends React.Component<Props, State> 
             )
         }
 
-        if (propertyTemplate.type === 'text' || propertyTemplate.type === 'number') {
+        if (propertyTemplate.type === 'text' || propertyTemplate.type === 'number' || propertyTemplate.type === 'email') {
             if (!readOnly) {
                 return (
                     <Editable

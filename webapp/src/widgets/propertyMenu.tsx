@@ -105,6 +105,11 @@ class PropertyMenu extends React.PureComponent<Props, State> {
                         onClick={() => this.props.onTypeChanged('number')}
                     />
                     <Menu.Text
+                        id='email'
+                        name='Email'
+                        onClick={() => this.props.onTypeChanged('email')}
+                    />
+                    <Menu.Text
                         id='select'
                         name='Select'
                         onClick={() => this.props.onTypeChanged('select')}
