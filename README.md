@@ -13,6 +13,10 @@ It helps define, organize, track and manage work across individuals and teams. F
 
 The same server binary powers both editions.
 
+## Try out Focalboard 
+
+You can quickly try out **Focalboard Personal Desktop** by going to the Windows Store or the Apple AppStore, searching for `Focalboard` and downloading and running the compiled software to run locally. 
+
 ## Building the server
 
 Please refer to the [Developer's Tips & Tricks](https://www.focalboard.com/contribute/getting-started/dev-tips/) for more detailed steps. Here's a summary:
