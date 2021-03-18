@@ -15,7 +15,17 @@ The same server binary powers both editions.
 
 ## Try out Focalboard 
 
-You can quickly try out **Focalboard Personal Desktop** by going to the Windows Store or the Apple AppStore, searching for `Focalboard` and downloading and running the compiled software to run locally. 
+**Focalboard Personal Desktop**
+
+Try out **Focalboard Personal Desktop** by going to the Windows Store or the Apple AppStore, searching for `Focalboard` and installing to run the compiled version locally. 
+
+While we don't yet offer installs of **Focalboard Personal Desktop** outside of Store-based installs, it is in [consideration for the future](https://github.com/mattermost/focalboard/issues/99) (please upvote the ticket if you're interested in this addition). 
+
+**Focalboard Personal Server (Ubuntu)**
+
+You can download and run the compiled **Focalboard Personal Server** by following [our latest install guide](https://www.focalboard.com/download/personal-edition/ubuntu/).
+
+To download the latest server release, see: https://github.com/mattermost/focalboard/releases
 
 ## Building the server
 
