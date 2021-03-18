@@ -7,6 +7,8 @@
     .CodeMirror {
         padding: 0;
         min-height: 0;
+        background: var(--main-bg);
+        color: var(--body-color);
     }
 
     pre.CodeMirror-line {
