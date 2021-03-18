@@ -71,17 +71,17 @@ type RegisterRequest struct {
 }
 
 func (rd *RegisterRequest) IsValid() error {
-	if rd.Username == "" {
-		return errors.New("Username is required")
+	if strings.TrimSpace(rd.Username) == "" {
+		return errors.New("username is required")
 	}
-	if rd.Email == "" {
-		return errors.New("Email is required")
+	if strings.TrimSpace(rd.Email) == "" {
+		return errors.New("email is required")
 	}
-	if !strings.Contains(rd.Email, "@") {
-		return errors.New("Invalid email format")
+	if auth.IsEmailValid(rd.Email) {
+		return errors.New("invalid email format")
 	}
 	if rd.Password == "" {
-		return errors.New("Password is required")
+		return errors.New("password is required")
 	}
 	if err := isValidPassword(rd.Password); err != nil {
 		return err
