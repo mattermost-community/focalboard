@@ -15,4 +15,4 @@ Our goal is to make your experience as great as possible. Follow these simple st
 
 {{< bignumber number="2" title="Select a ticket" content="Find [help wanted tickets in GitHub](https://github.com/mattermost/focalboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22). Comment to let everyone know you’re working on it. If there’s no ticket for what you want to work on see [contributions without a ticket.](/contribute/getting-started/contributions-without-ticket)" >}}
 
-{{< bignumber number="3" title="Start developing" content="EWhen your changes are ready, run through our [checklist for pull requests](/contribute/getting-started/contribution-checklist). Note that if it’s your first contribution, there is a standard [CLA](https://www.mattermost.org/mattermost-contributor-agreement/) to sign." >}}
+{{< bignumber number="3" title="Start developing" content="When your changes are ready, run through our [checklist for pull requests](/contribute/getting-started/contribution-checklist). Note that if it’s your first contribution, there is a standard [CLA](https://www.mattermost.org/mattermost-contributor-agreement/) to sign." >}}
