@@ -2,7 +2,6 @@ FROM ubuntu:latest
 
 # Make sure that the underlying container is patched to the latest versions
 RUN apt update && \
-    apt upgrade -y && \
     apt install -y wget tar gzip unzip file
 
 # Now install Focalboard as a seperate layer
