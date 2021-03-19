@@ -4,6 +4,8 @@ services:
     build:
       context: ./
     container_name: focalboard
+    depends_on:
+      - focalboard-db
     expose: 
       - 8000
     environment:
