@@ -73,4 +73,25 @@ describe('widgets/PropertyMenu', () => {
         fireEvent.blur(input)
         expect(callback).toHaveBeenCalledWith('changed name')
     })
+
+    test('handles type change event', () => {
+        const callback = jest.fn()
+
+        render(
+            <IntlProvider locale='en'>
+                <PropertyMenu
+                    propertyId={'id'}
+                    propertyName={'test-property'}
+                    propertyType={'text'}
+                    onTypeChanged={callback}
+                    onNameChanged={callback}
+                    onDelete={callback}
+                />
+            </IntlProvider>,
+        )
+        const menuOpen = screen.getByText(/Type: Text/i)
+        fireEvent.click(menuOpen)
+        fireEvent.click(screen.getByText('Select'))
+        expect(callback).toHaveBeenCalledWith('select')
+    })
 })
