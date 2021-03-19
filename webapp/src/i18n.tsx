@@ -5,11 +5,14 @@ import messages_en from '../i18n/en.json'
 import messages_es from '../i18n/es.json'
 import messages_de from '../i18n/de.json'
 import messages_ja from '../i18n/ja.json'
+import messages_fr from '../i18n/fr.json'
 
 export function getMessages(lang: string): {[key: string]: string} {
     switch (lang) {
     case 'de':
         return messages_de
+    case 'fr':
+        return messages_fr
     case 'ja':
         return messages_ja
     case 'es':
