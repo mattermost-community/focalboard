@@ -45,5 +45,15 @@
             // "source.organizeImports": true,
         },
     },
-    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false
+    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
+    "go.delveConfig": {
+        "useApiV1": false,
+        "dlvLoadConfig": {
+            "followPointers": true,
+            "maxVariableRecurse": 3,
+            "maxStringLen": 2048,
+            "maxArrayValues": 64,
+            "maxStructFields": -1
+        }
+    }
 }
