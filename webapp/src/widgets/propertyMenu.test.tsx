@@ -15,7 +15,7 @@ describe('widgets/PropertyMenu', () => {
         document.execCommand = jest.fn()
     })
 
-    test('should trigger callback when type change', () => {
+    test('should display the type of property', () => {
         const rootPortalDiv = document.createElement('div')
         rootPortalDiv.id = 'root-portal'
         const callback = jest.fn()
