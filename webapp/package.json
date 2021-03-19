@@ -32,6 +32,9 @@
 		"react-simplemde-editor": "^4.1.3"
 	},
 	"jest": {
+    "moduleNameMapper": {
+      "\\.(scss)$": "<rootDir>/__mocks__/styleMock.js"
+    },
 		"globals": {
 			"ts-jest": {
 				"tsConfig": "./src/tsconfig.json"
