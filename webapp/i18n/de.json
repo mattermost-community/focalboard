@@ -1,0 +1,12 @@
+{
+  "BoardCard.delete": "Löschen",
+  "BoardCard.duplicate": "Duplizieren",
+  "BoardCard.untitled": "Unbenannt",
+  "BoardComponent.add-a-group": "+ Hinzufügen einer Gruppe",
+  "BoardComponent.delete": "Löschen",
+  "BoardComponent.hide": "Ausblenden",
+  "BoardComponent.neww": "+ Neu",
+  "BoardComponent.show": "Anzeigen",
+  "CardDetail.add-content": "Inhalt hinzufügen",
+  "CardDetail.new-comment-placeholder": "Kommentar hinzufügen..."
+}
