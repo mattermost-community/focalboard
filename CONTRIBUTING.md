@@ -6,7 +6,7 @@ When you submit a pull request, it goes through a [code review process outlined 
 
 # Updating Changelog
 
-After you've merged a bug fix or an improvement, please make a pull request to the [CHANGELOG.MD](https://github.com/mattermost/focalboard/blob/main/CHANGELOG.md) under the next release section. 
+After you've merged a bug fix or an improvement, please make a pull request to the [CHANGELOG.md](https://github.com/mattermost/focalboard/blob/main/CHANGELOG.md) under the next release section. 
 
 # Bug reports
 
