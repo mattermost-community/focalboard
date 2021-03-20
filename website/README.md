@@ -2,7 +2,7 @@
 
 This folder is used to manage the website at [focalboard.com](https://www.focalboard.com/). It was built using [Hugo](https://gohugo.io/).
 
-The content can be found in this folder: https://github.com/mattermost/focalboard/tree/main/website/site/content
+The content can be found in the [/site/content](site/content) folder. 
 
 ## How to contribute 
 
