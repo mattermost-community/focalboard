@@ -2,11 +2,13 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {render} from '@testing-library/react'
+import {fireEvent, render} from '@testing-library/react'
 import '@testing-library/jest-dom'
 import {IntlProvider} from 'react-intl'
 
 import PropertyMenu from './propertyMenu'
+
+const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
 
 describe('widgets/PropertyMenu', () => {
     beforeEach(() => {
@@ -16,24 +18,73 @@ describe('widgets/PropertyMenu', () => {
     })
 
     test('should display the type of property', () => {
-        const rootPortalDiv = document.createElement('div')
-        rootPortalDiv.id = 'root-portal'
         const callback = jest.fn()
-
-        const {getByText} = render(
-            <IntlProvider locale='en'>
-                <PropertyMenu
-                    propertyId={'id'}
-                    propertyName={'email of a person'}
-                    propertyType={'email'}
-                    onTypeChanged={callback}
-                    onNameChanged={callback}
-                    onDelete={callback}
-                />
-            </IntlProvider>,
-            {container: document.body.appendChild(rootPortalDiv)},
+        const component = wrapIntl(
+            <PropertyMenu
+                propertyId={'id'}
+                propertyName={'email of a person'}
+                propertyType={'email'}
+                onTypeChanged={callback}
+                onNameChanged={callback}
+                onDelete={callback}
+            />,
         )
-
+        const {getByText} = render(component)
         expect(getByText('Type: Email')).toBeVisible()
+    })
+
+    test('handles delete event', () => {
+        const callback = jest.fn()
+        const component = wrapIntl(
+            <PropertyMenu
+                propertyId={'id'}
+                propertyName={'email of a person'}
+                propertyType={'email'}
+                onTypeChanged={callback}
+                onNameChanged={callback}
+                onDelete={callback}
+            />,
+        )
+        const {getByText} = render(component)
+        fireEvent.click(getByText(/delete/i))
+        expect(callback).toHaveBeenCalledWith('id')
+    })
+
+    test('handles name change event', () => {
+        const callback = jest.fn()
+        const component = wrapIntl(
+            <PropertyMenu
+                propertyId={'id'}
+                propertyName={'test-property'}
+                propertyType={'text'}
+                onTypeChanged={callback}
+                onNameChanged={callback}
+                onDelete={callback}
+            />,
+        )
+        const {getByDisplayValue} = render(component)
+        const input = getByDisplayValue(/test-property/i)
+        fireEvent.change(input, {target: {value: 'changed name'}})
+        fireEvent.blur(input)
+        expect(callback).toHaveBeenCalledWith('changed name')
+    })
+
+    test('handles type change event', () => {
+        const callback = jest.fn()
+        const component = wrapIntl(
+            <PropertyMenu
+                propertyId={'id'}
+                propertyName={'test-property'}
+                propertyType={'text'}
+                onTypeChanged={callback}
+                onNameChanged={callback}
+                onDelete={callback}
+            />,
+        )
+        const {getByText} = render(component)
+        const menuOpen = getByText(/Type: Text/i)
+        fireEvent.click(menuOpen)
+        fireEvent.click(getByText('Select'))
+        expect(callback).toHaveBeenCalledWith('select')
     })
 })
