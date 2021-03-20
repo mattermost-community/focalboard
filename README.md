@@ -70,7 +70,8 @@ Before checking-in commits, run: `make ci`, which is simlar to the ci.yml workfl
 ## Stay informed on progress
 
 * **Changelog**: See [CHANGELOG.md](CHANGELOG.md) for the latest updates
-* **Chat**: Join the [Focalboard community channel](https://community.mattermost.com/core/channels/focalboard)
+* **Developer Discussion**: Join the [Developer Discussion](https://github.com/mattermost/focalboard/discussions) board
+* **Chat**: Join the [Focalboard community channel](https://community.mattermost.com/core/channels/focalboard) 
 
 ## Share your feedback 
 
