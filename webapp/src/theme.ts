@@ -87,8 +87,18 @@ export const lightTheme = {
     sidebarWhiteLogo: 'false',
 }
 
-export function setTheme(theme: Theme): void {
-    const consolidatedTheme = {...defaultTheme, ...theme}
+export function setTheme(theme: Theme | null): Theme {
+    let consolidatedTheme = defaultTheme
+    if (theme) {
+        consolidatedTheme = {...defaultTheme, ...theme}
+        localStorage.setItem('theme', JSON.stringify(consolidatedTheme))
+    } else {
+        localStorage.setItem('theme', '')
+        const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)')
+        if (darkThemeMq.matches) {
+            consolidatedTheme = {...defaultTheme, ...darkTheme}
+        }
+    }
 
     document.documentElement.style.setProperty('--main-bg', consolidatedTheme.mainBg)
     document.documentElement.style.setProperty('--main-fg', consolidatedTheme.mainFg)
@@ -113,22 +123,26 @@ export function setTheme(theme: Theme): void {
     document.documentElement.style.setProperty('--prop-pink', consolidatedTheme.propPink)
     document.documentElement.style.setProperty('--prop-red', consolidatedTheme.propRed)
 
-    localStorage.setItem('theme', JSON.stringify(consolidatedTheme))
+    return consolidatedTheme
 }
 
 export function loadTheme(): Theme {
+    const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)')
+    darkThemeMq.addListener(() => {
+        const themeStr = localStorage.getItem('theme')
+        if (!themeStr) {
+            setTheme(null)
+        }
+    })
     const themeStr = localStorage.getItem('theme')
     if (themeStr) {
         try {
             const theme = JSON.parse(themeStr)
-            setTheme(theme)
-            return theme
+            return setTheme(theme)
         } catch (e) {
-            setTheme(defaultTheme)
-            return defaultTheme
+            return setTheme(null)
         }
     } else {
-        setTheme(defaultTheme)
-        return defaultTheme
+        return setTheme(null)
     }
 }

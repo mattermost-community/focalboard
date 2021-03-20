@@ -363,6 +363,11 @@ class Sidebar extends React.Component<Props, State> {
                                 name={intl.formatMessage({id: 'Sidebar.light-theme', defaultMessage: 'Light theme'})}
                                 onClick={async () => this.updateTheme(lightTheme)}
                             />
+                            <Menu.Text
+                                id='system-theme'
+                                name={intl.formatMessage({id: 'Sidebar.system-theme', defaultMessage: 'System theme'})}
+                                onClick={async () => this.updateTheme(null)}
+                            />
                         </Menu.SubMenu>
                     </Menu>
                 </MenuWrapper>
@@ -370,9 +375,9 @@ class Sidebar extends React.Component<Props, State> {
         )
     }
 
-    private updateTheme(theme: Theme) {
-        setTheme(theme)
-        const whiteLogo = (theme.sidebarWhiteLogo === 'true')
+    private updateTheme(theme: Theme | null) {
+        const consolidatedTheme = setTheme(theme)
+        const whiteLogo = (consolidatedTheme.sidebarWhiteLogo === 'true')
         this.setState({whiteLogo})
     }
 
