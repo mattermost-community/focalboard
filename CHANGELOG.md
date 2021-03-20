@@ -7,6 +7,7 @@ This changelog summarizes updates to our open source project. You can also find 
 ## [Work In Progress] - v0.7 Release - [Date TBD]
 
 * Key Updates: 
+  * You can now contribute translations to Focalboard on https://translate.mattermost.com/. Thanks @jespino!
   * Added German language translation. Thanks @svelle!
   * Added Japanese language translation. Thanks @kaakaa!
   * Add Dockerfile to run service in a container. Thanks @proffalken!
