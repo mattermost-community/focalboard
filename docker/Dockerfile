@@ -1,8 +1,8 @@
-FROM ubuntu:latest
+FROM ubuntu:20.04
 
 # Make sure that the underlying container is patched to the latest versions
-RUN apt update && \
-    apt install -y wget tar gzip
+RUN apt-get update && \
+    apt-get install -y gzip tar wget
 
 # Now install Focalboard as a seperate layer
 RUN wget https://github.com/mattermost/focalboard/releases/download/v0.6.1/focalboard-server-linux-amd64.tar.gz && \
