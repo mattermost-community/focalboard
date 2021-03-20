@@ -6,7 +6,14 @@ This changelog summarizes updates to our open source project. You can also find 
 
 ## [Work In Progress] - v0.7 Release - [Date TBD]
 
-* Added German and Japanese language translations. Thanks @svelle and @kaakaa! 
+* Headlines: 
+  * Added German language translation. Thanks @svelle!
+  * Added Japanese language translation. Thanks @kaakaa! 
+* Requested Contributions 
+  * [GH-40](https://github.com/mattermost/focalboard/issues/40) - Add property type email [#84](https://github.com/mattermost/focalboard/pull/84). Thanks @renjithgr! 
+* Other Contributions 
+  * Removed unnecessary binary [#122](https://github.com/mattermost/focalboard/pull/122). Thanks @proffalken!
+  * Add basic setup for unit testing components with sass files import [#126](https://github.com/mattermost/focalboard/pull/126). Thanks @renjithgr!
 
 ## v0.6 Release - March 2021
 
@@ -21,5 +28,3 @@ This changelog summarizes updates to our open source project. You can also find 
 	* [Single-user session token](https://github.com/mattermost/focalboard/commit/0fe96ad7ed3b0c3a68c9a5889b34b764782f9266)
 	* [CSRF prevention with X-Requested-With header](https://github.com/mattermost/focalboard/commit/43c656c9a440e12f87b61d66654ed3d9873b1620)
 
-03-04-21
-* Added initial changelog.md file
