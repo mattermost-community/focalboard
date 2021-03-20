@@ -18,7 +18,7 @@ This changelog summarizes updates to our open source project. You can also find 
   * Add more frontend unit test coverage. [#126](https://github.com/mattermost/focalboard/pull/126) Thanks @renjithgr!
   * [GH-40](https://github.com/mattermost/focalboard/issues/40) - Add property type email [#84](https://github.com/mattermost/focalboard/pull/84). Thanks @renjithgr!
 
-## v0.6 Release - March 2021
+## v0.6 Release - March 15, 2021
 
 * Focalboard Personal Desktop is now live in the App Stores:
     * [Mac App Store](https://apps.apple.com/app/apple-store/id1556908618?pt=2114704&ct=changelog&mt=8)
