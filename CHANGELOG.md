@@ -4,6 +4,15 @@ Focalboard is an open source, self-hosted alternative to Trello, Notion, Asana a
 
 This changelog summarizes updates to our open source project. You can also find the [latest releases and release notes on GitHub here](https://github.com/mattermost/focalboard/releases).
 
+## [Work In Progress] - v0.7 Release - [Date TBD]
+
+* Key Updates: 
+  * Added German language translation. Thanks @svelle!
+  * Added Japanese language translation. Thanks @kaakaa!
+  * Add Dockerfile to run service in a container. Thanks @proffalken!
+* Requested Contributions 
+  * [GH-40](https://github.com/mattermost/focalboard/issues/40) - Add property type email [#84](https://github.com/mattermost/focalboard/pull/84). Thanks @renjithgr! 
+
 ## v0.6 Release - March 2021
 
 * Focalboard Personal Desktop is now live in the App Stores:
@@ -17,5 +26,3 @@ This changelog summarizes updates to our open source project. You can also find 
 	* [Single-user session token](https://github.com/mattermost/focalboard/commit/0fe96ad7ed3b0c3a68c9a5889b34b764782f9266)
 	* [CSRF prevention with X-Requested-With header](https://github.com/mattermost/focalboard/commit/43c656c9a440e12f87b61d66654ed3d9873b1620)
 
-03-04-21
-* Added initial changelog.md file
