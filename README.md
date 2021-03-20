@@ -15,9 +15,9 @@ The same server binary powers both editions.
 
 ## Try out Focalboard 
 
-**Focalboard Personal Desktop**
+**Focalboard Personal Desktop (Windows, Mac or Linux Desktop)**
 
-Try out **Focalboard Personal Desktop** by going to the Windows Store or the Apple AppStore, searching for `Focalboard` and installing to run the compiled version locally. 
+If you're running Windows or Mac, try out **Focalboard Personal Desktop** by going to the Windows Store or the Apple AppStore, searching for `Focalboard` and installing to run the compiled version locally. 
 
 If you're running a Linux Desktop, [download the latest `focalboard-linux.tar.gz` release](https://github.com/mattermost/focalboard/releases), unpack the `.tar.gz` archive, and open `focalboard-app` from the `focalboard-app` folder.
 
