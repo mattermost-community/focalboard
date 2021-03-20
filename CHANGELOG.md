@@ -4,6 +4,10 @@ Focalboard is an open source, self-hosted alternative to Trello, Notion, Asana a
 
 This changelog summarizes updates to our open source project. You can also find the [latest releases and release notes on GitHub here](https://github.com/mattermost/focalboard/releases).
 
+## [Work In Progress] - v0.7 Release - [Date TBD]
+
+* Added German and Japanese language translations. Thanks @svelle and @kaakaa! 
+
 ## v0.6 Release - March 2021
 
 * Focalboard Personal Desktop is now live in the App Stores:
