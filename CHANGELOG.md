@@ -6,14 +6,12 @@ This changelog summarizes updates to our open source project. You can also find 
 
 ## [Work In Progress] - v0.7 Release - [Date TBD]
 
-* Headlines: 
+* Key Updates: 
   * Added German language translation. Thanks @svelle!
-  * Added Japanese language translation. Thanks @kaakaa! 
+  * Added Japanese language translation. Thanks @kaakaa!
+  * Add Dockerfile to run service in a container. Thanks @proffalken!
 * Requested Contributions 
   * [GH-40](https://github.com/mattermost/focalboard/issues/40) - Add property type email [#84](https://github.com/mattermost/focalboard/pull/84). Thanks @renjithgr! 
-* Other Contributions 
-  * Removed unnecessary binary [#122](https://github.com/mattermost/focalboard/pull/122). Thanks @proffalken!
-  * Add basic setup for unit testing components with sass files import [#126](https://github.com/mattermost/focalboard/pull/126). Thanks @renjithgr!
 
 ## v0.6 Release - March 2021
 
