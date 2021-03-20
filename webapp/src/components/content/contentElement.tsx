@@ -13,6 +13,7 @@ import {contentRegistry} from './contentRegistry'
 import './textElement'
 import './imageElement'
 import './dividerElement'
+import './checkboxElement'
 
 type Props = {
     block: IContentBlock
