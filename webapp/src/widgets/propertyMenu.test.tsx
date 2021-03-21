@@ -87,4 +87,22 @@ describe('widgets/PropertyMenu', () => {
         fireEvent.click(getByText('Select'))
         expect(callback).toHaveBeenCalledWith('select')
     })
+
+    test('should match snapshot', () => {
+        const callback = jest.fn()
+        const component = wrapIntl(
+            <PropertyMenu
+                propertyId={'id'}
+                propertyName={'test-property'}
+                propertyType={'text'}
+                onTypeChanged={callback}
+                onNameChanged={callback}
+                onDelete={callback}
+            />,
+        )
+        const {container, getByText} = render(component)
+        const menuOpen = getByText(/Type: Text/i)
+        fireEvent.click(menuOpen)
+        expect(container).toMatchSnapshot()
+    })
 })
