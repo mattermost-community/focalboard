@@ -26,7 +26,7 @@ type State = {
 class CheckboxElement extends React.PureComponent<Props, State> {
     constructor(props: Props) {
         super(props)
-        this.state = {active: props.block.fields?.value, title: props.block.title}
+        this.state = {active: Boolean(props.block.fields.value), title: props.block.title}
     }
 
     render(): JSX.Element {
@@ -39,13 +39,11 @@ class CheckboxElement extends React.PureComponent<Props, State> {
                     id={`checkbox-${block.id}`}
                     disabled={readonly}
                     checked={this.state.active}
-                    onChange={() => {
+                    value={this.state.active ? 'on' : 'off'}
+                    onChange={(e) => {
+                        e.preventDefault()
                         const newBlock = new MutableCheckboxBlock(block)
-                        if (newBlock.fields) {
-                            newBlock.fields.value = !this.state.active
-                        } else {
-                            newBlock.fields = {value: !this.state.active}
-                        }
+                        newBlock.fields.value = !this.state.active
                         newBlock.title = this.state.title
                         this.setState({active: newBlock.fields.value})
                         mutator.updateBlock(newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckbox', defaultMessage: 'toggled-checkbox'}))
@@ -58,11 +56,7 @@ class CheckboxElement extends React.PureComponent<Props, State> {
                         this.setState({title: text})
                         const newBlock = new MutableCheckboxBlock(block)
                         newBlock.title = text
-                        if (newBlock.fields) {
-                            newBlock.fields.value = this.state.active
-                        } else {
-                            newBlock.fields = {value: this.state.active}
-                        }
+                        newBlock.fields.value = this.state.active
                         mutator.updateBlock(newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckboxText', defaultMessage: 'edit card text'}))
                     }}
                     readonly={readonly}

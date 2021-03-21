@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/content/CheckboxElement should match snapshot 1`] = `
+<div>
+  <div
+    class="CheckboxElement"
+  >
+    <input
+      id="checkbox-test-id"
+      type="checkbox"
+      value="off"
+    />
+    <div
+      class="octo-editable"
+      contenteditable="true"
+      placeholder="Edit text..."
+    >
+      test-title
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/content/CheckboxElement should match snapshot on change title 1`] = `
+<div>
+  <div
+    class="CheckboxElement"
+  >
+    <input
+      id="checkbox-test-id"
+      type="checkbox"
+      value="off"
+    />
+    <div
+      class="octo-editable"
+      contenteditable="true"
+      placeholder="Edit text..."
+    >
+      changed name
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/content/CheckboxElement should match snapshot on read only 1`] = `
+<div>
+  <div
+    class="CheckboxElement"
+  >
+    <input
+      disabled=""
+      id="checkbox-test-id"
+      type="checkbox"
+      value="off"
+    />
+    <div
+      class="octo-editable"
+      contenteditable="false"
+      placeholder="Edit text..."
+    >
+      test-title
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/content/CheckboxElement should match snapshot on toggle 1`] = `
+<div>
+  <div
+    class="CheckboxElement"
+  >
+    <input
+      id="checkbox-test-id"
+      type="checkbox"
+      value="on"
+    />
+    <div
+      class="octo-editable"
+      contenteditable="true"
+      placeholder="Edit text..."
+    >
+      test-title
+    </div>
+  </div>
+</div>
+`;
