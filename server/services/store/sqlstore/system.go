@@ -26,7 +26,7 @@ func (s *SQLStore) GetSystemSettings() (map[string]string, error) {
 	return results, nil
 }
 
-func (s *SQLStore) SetSystemSetting(id string, value string) error {
+func (s *SQLStore) SetSystemSetting(id, value string) error {
 	query := s.getQueryBuilder().Insert("system_settings").Columns("id", "value").Values(id, value)
 
 	_, err := query.Exec()

@@ -4,7 +4,7 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 )
 
-func (a *App) GetBlocks(parentID string, blockType string) ([]model.Block, error) {
+func (a *App) GetBlocks(parentID, blockType string) ([]model.Block, error) {
 	if len(blockType) > 0 && len(parentID) > 0 {
 		return a.store.GetBlocksWithParentAndType(parentID, blockType)
 	}
@@ -67,7 +67,7 @@ func (a *App) GetAllBlocks() ([]model.Block, error) {
 	return a.store.GetAllBlocks()
 }
 
-func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
+func (a *App) DeleteBlock(blockID, modifiedBy string) error {
 	blockIDsToNotify := []string{blockID}
 	parentID, err := a.GetParentID(blockID)
 	if err != nil {

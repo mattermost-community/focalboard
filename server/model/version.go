@@ -9,8 +9,10 @@ var versions = []string{
 	"0.5.0",
 }
 
-var CurrentVersion string = versions[0]
-var BuildNumber string
-var BuildDate string
-var BuildHash string
-var Edition string
+var (
+	CurrentVersion string = versions[0]
+	BuildNumber    string
+	BuildDate      string
+	BuildHash      string
+	Edition        string
+)
