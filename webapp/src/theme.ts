@@ -127,13 +127,6 @@ export function setTheme(theme: Theme | null): Theme {
 }
 
 export function loadTheme(): Theme {
-    const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)')
-    darkThemeMq.addListener(() => {
-        const themeStr = localStorage.getItem('theme')
-        if (!themeStr) {
-            setTheme(null)
-        }
-    })
     const themeStr = localStorage.getItem('theme')
     if (themeStr) {
         try {
@@ -145,4 +138,15 @@ export function loadTheme(): Theme {
     } else {
         return setTheme(null)
     }
+}
+
+export function initThemes(): void {
+    const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)')
+    darkThemeMq.addEventListener('change', () => {
+        const themeStr = localStorage.getItem('theme')
+        if (!themeStr) {
+            setTheme(null)
+        }
+    })
+    loadTheme()
 }
