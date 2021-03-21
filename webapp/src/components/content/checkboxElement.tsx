@@ -39,7 +39,7 @@ class CheckboxElement extends React.PureComponent<Props, State> {
                     id={`checkbox-${block.id}`}
                     disabled={readonly}
                     checked={this.state.active}
-                    onChange={(e) => {
+                    onChange={() => {
                         const newBlock = new MutableCheckboxBlock(block)
                         if (newBlock.fields) {
                             newBlock.fields.value = !this.state.active
