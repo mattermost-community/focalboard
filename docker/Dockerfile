@@ -9,6 +9,12 @@ RUN wget https://github.com/mattermost/focalboard/releases/download/v0.6.1/focal
     tar -xvzf focalboard-server-linux-amd64.tar.gz && \
     mv focalboard /opt
 
+# Copy config.json to point data to /data directory
+COPY server_config.json /opt/focalboard/config.json
+
+# Add volume if volume map not specified
+VOLUME /data
+
 EXPOSE 8000
 
 WORKDIR /opt/focalboard

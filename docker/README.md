@@ -6,7 +6,7 @@ The Dockerfile gives a quick and easy way to pull the latest Focalboard server a
 
 ```
 docker build -t focalboard .
-docker run -it -p 80:8000 focalboard
+docker run -it -v "/home/user/focalboard-data:/data" -p 80:8000 focalboard
 ```
 
 Open a browser to http://localhost to start
