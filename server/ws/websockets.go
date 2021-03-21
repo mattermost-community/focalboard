@@ -146,7 +146,7 @@ func (ws *Server) isValidSessionToken(token string) bool {
 	return false
 }
 
-func (ws *Server) authenticateListener(wsSession *websocketSession, token string, readToken string) {
+func (ws *Server) authenticateListener(wsSession *websocketSession, token, readToken string) {
 	// Authenticate session
 	isValidSession := ws.isValidSessionToken(token)
 	if !isValidSession {
@@ -267,7 +267,7 @@ func (ws *Server) getListeners(blockID string) []*websocket.Conn {
 }
 
 // BroadcastBlockDelete broadcasts delete messages to clients
-func (ws *Server) BroadcastBlockDelete(blockID string, parentID string) {
+func (ws *Server) BroadcastBlockDelete(blockID, parentID string) {
 	now := time.Now().Unix()
 	block := model.Block{}
 	block.ID = blockID

@@ -109,7 +109,7 @@ func (s *SQLStore) UpdateUser(user *model.User) error {
 	return nil
 }
 
-func (s *SQLStore) UpdateUserPassword(username string, password string) error {
+func (s *SQLStore) UpdateUserPassword(username, password string) error {
 	now := time.Now().Unix()
 
 	query := s.getQueryBuilder().Update("users").
@@ -134,7 +134,7 @@ func (s *SQLStore) UpdateUserPassword(username string, password string) error {
 	return nil
 }
 
-func (s *SQLStore) UpdateUserPasswordByID(userID string, password string) error {
+func (s *SQLStore) UpdateUserPasswordByID(userID, password string) error {
 	now := time.Now().Unix()
 
 	query := s.getQueryBuilder().Update("users").

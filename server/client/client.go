@@ -63,7 +63,7 @@ type Client struct {
 	HttpHeader map[string]string
 }
 
-func NewClient(url string, sessionToken string) *Client {
+func NewClient(url, sessionToken string) *Client {
 	url = strings.TrimRight(url, "/")
 	headers := map[string]string{
 		"X-Requested-With": "XMLHttpRequest",
@@ -72,11 +72,11 @@ func NewClient(url string, sessionToken string) *Client {
 	return &Client{url, url + API_URL_SUFFIX, &http.Client{}, headers}
 }
 
-func (c *Client) DoApiGet(url string, etag string) (*http.Response, error) {
+func (c *Client) DoApiGet(url, etag string) (*http.Response, error) {
 	return c.DoApiRequest(http.MethodGet, c.ApiUrl+url, "", etag)
 }
 
-func (c *Client) DoApiPost(url string, data string) (*http.Response, error) {
+func (c *Client) DoApiPost(url, data string) (*http.Response, error) {
 	return c.DoApiRequest(http.MethodPost, c.ApiUrl+url, data, "")
 }
 
@@ -84,7 +84,7 @@ func (c *Client) doApiPostBytes(url string, data []byte) (*http.Response, error)
 	return c.doApiRequestBytes(http.MethodPost, c.ApiUrl+url, data, "")
 }
 
-func (c *Client) DoApiPut(url string, data string) (*http.Response, error) {
+func (c *Client) DoApiPut(url, data string) (*http.Response, error) {
 	return c.DoApiRequest(http.MethodPut, c.ApiUrl+url, data, "")
 }
 

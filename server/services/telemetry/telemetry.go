@@ -81,7 +81,7 @@ func (ts *Service) sendTelemetry(event string, properties map[string]interface{}
 	}
 }
 
-func (ts *Service) initRudder(endpoint string, rudderKey string) {
+func (ts *Service) initRudder(endpoint, rudderKey string) {
 	if ts.rudderClient == nil {
 		config := rudder.Config{}
 		config.Logger = rudder.StdLogger(ts.log)
