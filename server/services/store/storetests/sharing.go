@@ -9,14 +9,18 @@ import (
 )
 
 func StoreTestSharingStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
+	container := store.Container{
+		WorkspaceID: "",
+	}
+
 	t.Run("UpsertSharingAndGetSharing", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testUpsertSharingAndGetSharing(t, store)
+		testUpsertSharingAndGetSharing(t, store, container)
 	})
 }
 
-func testUpsertSharingAndGetSharing(t *testing.T, store store.Store) {
+func testUpsertSharingAndGetSharing(t *testing.T, store store.Store, container store.Container) {
 	t.Run("Insert first sharing and get it", func(t *testing.T) {
 		sharing := model.Sharing{
 			ID:         "sharing-id",
@@ -25,9 +29,9 @@ func testUpsertSharingAndGetSharing(t *testing.T, store store.Store) {
 			ModifiedBy: "user-id",
 		}
 
-		err := store.UpsertSharing(sharing)
+		err := store.UpsertSharing(container, sharing)
 		require.NoError(t, err)
-		newSharing, err := store.GetSharing("sharing-id")
+		newSharing, err := store.GetSharing(container, "sharing-id")
 		require.NoError(t, err)
 		newSharing.UpdateAt = 0
 		require.Equal(t, sharing, *newSharing)
@@ -40,20 +44,20 @@ func testUpsertSharingAndGetSharing(t *testing.T, store store.Store) {
 			ModifiedBy: "user-id2",
 		}
 
-		newSharing, err := store.GetSharing("sharing-id")
+		newSharing, err := store.GetSharing(container, "sharing-id")
 		require.NoError(t, err)
 		newSharing.UpdateAt = 0
 		require.NotEqual(t, sharing, *newSharing)
 
-		err = store.UpsertSharing(sharing)
+		err = store.UpsertSharing(container, sharing)
 		require.NoError(t, err)
-		newSharing, err = store.GetSharing("sharing-id")
+		newSharing, err = store.GetSharing(container, "sharing-id")
 		require.NoError(t, err)
 		newSharing.UpdateAt = 0
 		require.Equal(t, sharing, *newSharing)
 	})
 	t.Run("Get not existing sharing", func(t *testing.T) {
-		_, err := store.GetSharing("not-existing")
+		_, err := store.GetSharing(container, "not-existing")
 		require.Error(t, err)
 	})
 }

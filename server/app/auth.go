@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/auth"
+	"github.com/mattermost/focalboard/server/services/store"
 
 	"github.com/pkg/errors"
 )
@@ -16,8 +17,8 @@ func (a *App) GetSession(token string) (*model.Session, error) {
 }
 
 // IsValidReadToken validates the read token for a block
-func (a *App) IsValidReadToken(blockID, readToken string) (bool, error) {
-	return a.auth.IsValidReadToken(blockID, readToken)
+func (a *App) IsValidReadToken(c store.Container, blockID string, readToken string) (bool, error) {
+	return a.auth.IsValidReadToken(c, blockID, readToken)
 }
 
 // GetRegisteredUserCount returns the number of registered users

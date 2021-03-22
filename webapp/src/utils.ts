@@ -43,6 +43,14 @@ class Utils {
         return String(text).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
     }
 
+    static getCookieValue(name: string): string {
+        return document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
+    }
+
+    static deleteCookie(name: string): void {
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; Max-Age=0; path=/`
+    }
+
     // Markdown
 
     static htmlFromMarkdown(text: string): string {

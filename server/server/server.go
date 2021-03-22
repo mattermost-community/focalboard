@@ -18,6 +18,7 @@ import (
 	"github.com/mattermost/focalboard/server/app"
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/context"
+	"github.com/mattermost/focalboard/server/mmauth"
 	appModel "github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/scheduler"
@@ -87,6 +88,20 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 	webServer := web.NewServer(cfg.WebPath, cfg.Port, cfg.UseSSL, cfg.LocalOnly)
 	webServer.AddRoutes(wsServer)
 	webServer.AddRoutes(api)
+
+	// Mattermost OAuth
+	if cfg.AuthMode == "mattermost" {
+		log.Println("Using Mattermost Auth")
+		params := mmauth.MMAuthParameters{
+			ServerRoot:    cfg.ServerRoot,
+			MattermostURL: cfg.MattermostURL,
+			ClientID:      cfg.MattermostClientID,
+			ClientSecret:  cfg.MattermostClientSecret,
+		}
+		mmauthHandler := mmauth.NewMMAuth(params, appBuilder, store)
+		webServer.AddRoutes(mmauthHandler)
+		api.WorkspaceAuthenticator = mmauthHandler
+	}
 
 	// Init telemetry
 	settings, err := store.GetSystemSettings()

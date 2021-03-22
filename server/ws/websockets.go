@@ -11,6 +11,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/store"
 )
 
 // IsValidSessionToken authenticates session tokens
@@ -159,15 +160,31 @@ func (ws *Server) authenticateListener(wsSession *websocketSession, token, readT
 	log.Printf("authenticateListener: Authenticated")
 }
 
+func (ws *Server) getContainer(wsSession *websocketSession) (store.Container, error) {
+	// TODO
+	container := store.Container{
+		WorkspaceID: "",
+	}
+
+	return container, nil
+}
+
 func (ws *Server) checkAuthentication(wsSession *websocketSession, command *WebsocketCommand) bool {
 	if wsSession.isAuthenticated {
 		return true
 	}
 
+	container, err := ws.getContainer(wsSession)
+	if err != nil {
+		log.Printf("checkAuthentication: No container")
+		sendError(wsSession.client, "No container")
+		return false
+	}
+
 	if len(command.ReadToken) > 0 {
 		// Read token must be valid for all block IDs
 		for _, blockID := range command.BlockIDs {
-			isValid, _ := ws.auth.IsValidReadToken(blockID, command.ReadToken)
+			isValid, _ := ws.auth.IsValidReadToken(container, blockID, command.ReadToken)
 			if !isValid {
 				return false
 			}
