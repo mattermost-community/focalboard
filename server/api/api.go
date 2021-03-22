@@ -39,14 +39,16 @@ type WorkspaceAuthenticator interface {
 
 type API struct {
 	appBuilder             func() *app.App
+	authService            string
 	singleUserToken        string
 	WorkspaceAuthenticator WorkspaceAuthenticator
 }
 
-func NewAPI(appBuilder func() *app.App, singleUserToken string) *API {
+func NewAPI(appBuilder func() *app.App, singleUserToken string, authService string) *API {
 	return &API{
 		appBuilder:      appBuilder,
 		singleUserToken: singleUserToken,
+		authService:     authService,
 	}
 }
 

@@ -88,7 +88,9 @@ func (a *App) Login(username, email, password, mfaToken string) (string, error) 
 		ID:     uuid.New().String(),
 		Token:  uuid.New().String(),
 		UserID: user.ID,
-		Props:  map[string]interface{}{},
+		Props: map[string]interface{}{
+			"authService": user.AuthService,
+		},
 	}
 	err := a.store.CreateSession(&session)
 	if err != nil {
@@ -134,7 +136,7 @@ func (a *App) RegisterUser(username, email, password string) error {
 		Email:       email,
 		Password:    auth.HashPassword(password),
 		MfaSecret:   "",
-		AuthService: "",
+		AuthService: a.config.AuthMode,
 		AuthData:    "",
 		Props:       map[string]interface{}{},
 	})

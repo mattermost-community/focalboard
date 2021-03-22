@@ -35,8 +35,6 @@ class BoardPage extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props)
 
-        this.storeTokenFromCookie()
-
         const queryString = new URLSearchParams(window.location.search)
         let boardId = queryString.get('id') || ''
         let viewId = queryString.get('v') || ''
@@ -60,15 +58,6 @@ class BoardPage extends React.Component<Props, State> {
         }
 
         Utils.log(`BoardPage. boardId: ${boardId}`)
-    }
-
-    private storeTokenFromCookie() {
-        const authToken = Utils.getCookieValue('oauthtoken')
-        if (authToken) {
-            Utils.log('Storing authToken from cookie')
-            octoClient.token = authToken
-            Utils.deleteCookie('oauthtoken')
-        }
     }
 
     shouldComponentUpdate(): boolean {

@@ -11,13 +11,14 @@ import {
 
 import {FlashMessages} from './components/flashMessages'
 import {getCurrentLanguage, getMessages, storeLanguage} from './i18n'
-import client from './octoClient'
+import {default as client, default as octoClient} from './octoClient'
 import BoardPage from './pages/boardPage'
 import ChangePasswordPage from './pages/changePasswordPage'
 import ErrorPage from './pages/errorPage'
 import LoginPage from './pages/loginPage'
 import RegisterPage from './pages/registerPage'
 import {IUser, UserContext} from './user'
+import {Utils} from './utils'
 
 type State = {
     language: string,
@@ -32,10 +33,27 @@ export default class App extends React.PureComponent<unknown, State> {
             language: getCurrentLanguage(),
             initialLoad: false,
         }
+
+        this.storeTokenFromCookie()
+    }
+
+    private storeTokenFromCookie() {
+        const authToken = Utils.getCookieValue('oauthtoken')
+        if (authToken) {
+            Utils.log('Storing authToken from cookie')
+            octoClient.token = authToken
+            Utils.deleteCookie('oauthtoken')
+        }
     }
 
     public componentDidMount(): void {
         client.getMe().then((user?: IUser) => {
+            if (!user) {
+                // Unauthorized
+                Utils.log('getMe unauthorized, re-login')
+                octoClient.logout()
+                window.location.href = '/login'
+            }
             this.setState({user, initialLoad: true})
         })
     }

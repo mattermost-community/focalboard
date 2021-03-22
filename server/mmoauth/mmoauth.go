@@ -19,21 +19,21 @@ import (
 	mattermost "github.com/mattermost/mattermost-server/v5/model"
 )
 
-type MMAuthParameters struct {
+type MMOAuthParameters struct {
 	ServerRoot    string
 	MattermostURL string
 	ClientID      string
 	ClientSecret  string
 }
 
-type MMAuth struct {
+type MMOAuth struct {
 	appBuilder func() *app.App
 	store      store.Store
 	config     *oauth2.Config
-	params     MMAuthParameters
+	params     MMOAuthParameters
 }
 
-func NewMMAuth(params MMAuthParameters, appBuilder func() *app.App, store store.Store) *MMAuth {
+func NewMMOAuth(params MMOAuthParameters, appBuilder func() *app.App, store store.Store) *MMOAuth {
 	callbackURL := fmt.Sprintf("%s/oauth/callback", params.ServerRoot)
 
 	authURL := fmt.Sprintf("%s/oauth/authorize", params.MattermostURL)
@@ -52,7 +52,7 @@ func NewMMAuth(params MMAuthParameters, appBuilder func() *app.App, store store.
 		Endpoint:     endpoint,
 	}
 
-	return &MMAuth{
+	return &MMOAuth{
 		appBuilder: appBuilder,
 		store:      store,
 		params:     params,
@@ -60,17 +60,17 @@ func NewMMAuth(params MMAuthParameters, appBuilder func() *app.App, store store.
 	}
 }
 
-func (a *MMAuth) app() *app.App {
+func (a *MMOAuth) app() *app.App {
 	return a.appBuilder()
 }
 
-func (a *MMAuth) RegisterRoutes(r *mux.Router) {
+func (a *MMOAuth) RegisterRoutes(r *mux.Router) {
 	// This replaces the native login page
 	r.HandleFunc("/login", a.handleOAuthLogin).Methods("GET")
 	r.HandleFunc("/oauth/callback", a.handleOAuthCallback).Methods("GET")
 }
 
-func (a *MMAuth) handleOAuthLogin(w http.ResponseWriter, r *http.Request) {
+func (a *MMOAuth) handleOAuthLogin(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	redirectUrl := query.Get("r")
 
@@ -99,7 +99,7 @@ func deleteCookie(name string, w http.ResponseWriter) {
 	http.SetCookie(w, &redirectCookie)
 }
 
-func (a *MMAuth) handleOAuthCallback(w http.ResponseWriter, r *http.Request) {
+func (a *MMOAuth) handleOAuthCallback(w http.ResponseWriter, r *http.Request) {
 	// Read oauthState from Cookie
 	stateCookie, err := r.Cookie("oauthstate")
 	if err != nil {
@@ -174,7 +174,6 @@ func (a *MMAuth) handleOAuthCallback(w http.ResponseWriter, r *http.Request) {
 	log.Printf("userId: %s, teamId: %s, channelId: %s", user.Id, teamId, channelId)
 
 	// Create native user
-	// TODO: Update user info with any changes?
 	nativeUser, _ := a.store.GetUserById(user.Id)
 	if nativeUser == nil {
 		err = a.store.CreateUser(&model.User{
@@ -227,13 +226,13 @@ func (a *MMAuth) handleOAuthCallback(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, redirectUrl, http.StatusTemporaryRedirect)
 }
 
-func (a *MMAuth) handleError(logInfo string, err error, w http.ResponseWriter, r *http.Request) {
+func (a *MMOAuth) handleError(logInfo string, err error, w http.ResponseWriter, r *http.Request) {
 	log.Printf("%s. ERROR: %s\n", logInfo, err)
 	// TODO: Implement user error page
 	http.Redirect(w, r, "/error?id=server_error", http.StatusTemporaryRedirect)
 }
 
-func (a *MMAuth) DoesUserHaveWorkspaceAccess(session *model.Session, workspaceID string) bool {
+func (a *MMOAuth) DoesUserHaveWorkspaceAccess(session *model.Session, workspaceID string) bool {
 	// Check that the user has access to the channel with id = workspaceID
 	// TODO: Cache this in memory
 	client := mattermost.NewAPIv4Client(a.params.MattermostURL)
