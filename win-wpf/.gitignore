@@ -1,6 +1,7 @@
 packages
 obj
 msix
+dist
 *.msix
 *.suo
 *.csproj.user

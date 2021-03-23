@@ -108,6 +108,7 @@ mac-app: server-mac webapp
 
 win-wpf-app: server-dll webapp
 	cd win-wpf && ./build.bat && ./package.bat
+	cd win-wpf && ./package-zip.bat
 
 linux-app: server-linux webapp
 	rm -rf linux/temp
