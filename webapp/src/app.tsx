@@ -48,12 +48,6 @@ export default class App extends React.PureComponent<unknown, State> {
 
     public componentDidMount(): void {
         client.getMe().then((user?: IUser) => {
-            if (!user) {
-                // Unauthorized
-                Utils.log('getMe unauthorized, re-login')
-                octoClient.logout()
-                window.location.href = '/login'
-            }
             this.setState({user, initialLoad: true})
         })
     }
