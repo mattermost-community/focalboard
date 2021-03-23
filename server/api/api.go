@@ -116,33 +116,34 @@ func (a *API) checkCSRFToken(r *http.Request) bool {
 	return false
 }
 
-func (a *API) getContainer(r *http.Request) (store.Container, error) {
+func (a *API) getContainer(r *http.Request) (*store.Container, error) {
 	if a.WorkspaceAuthenticator == nil {
 		// Native auth: always use root workspace
 		container := store.Container{
 			WorkspaceID: "",
 		}
-		return container, nil
+		return &container, nil
 	}
 
 	vars := mux.Vars(r)
 	workspaceID := vars["workspaceID"]
-	container := store.Container{
-		WorkspaceID: workspaceID,
-	}
 
 	if workspaceID == "" || workspaceID == "0" {
 		// When authenticating, a workspace is required
-		return container, errors.New("No workspace specified")
+		return nil, errors.New("No workspace specified")
 	}
 
 	ctx := r.Context()
 	session := ctx.Value("session").(*model.Session)
 	if !a.WorkspaceAuthenticator.DoesUserHaveWorkspaceAccess(session, workspaceID) {
-		return container, errors.New("Access denied to workspace")
+		return nil, errors.New("Access denied to workspace")
 	}
 
-	return container, nil
+	container := store.Container{
+		WorkspaceID: workspaceID,
+	}
+
+	return &container, nil
 }
 
 func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
@@ -192,7 +193,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	blocks, err := a.app().GetBlocks(container, parentID, blockType)
+	blocks, err := a.app().GetBlocks(*container, parentID, blockType)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -297,7 +298,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	stampModifiedByUser(r, blocks)
 
-	err = a.app().InsertBlocks(container, blocks)
+	err = a.app().InsertBlocks(*container, blocks)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -444,7 +445,7 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = a.app().DeleteBlock(container, blockID, userID)
+	err = a.app().DeleteBlock(*container, blockID, userID)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 
@@ -517,7 +518,7 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		isValid, err := a.app().IsValidReadToken(container, blockID, readToken)
+		isValid, err := a.app().IsValidReadToken(*container, blockID, readToken)
 		if err != nil {
 			errorResponse(w, http.StatusInternalServerError, "", err)
 			return
@@ -541,7 +542,7 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	blocks, err := a.app().GetSubTree(container, blockID, int(levels))
+	blocks, err := a.app().GetSubTree(*container, blockID, int(levels))
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -591,7 +592,7 @@ func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	blocks, err := a.app().GetAllBlocks(container)
+	blocks, err := a.app().GetAllBlocks(*container)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -708,7 +709,7 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 
 	stampModifiedByUser(r, blocks)
 
-	err = a.app().InsertBlocks(container, blocks)
+	err = a.app().InsertBlocks(*container, blocks)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -760,7 +761,7 @@ func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sharing, err := a.app().GetSharing(container, rootID)
+	sharing, err := a.app().GetSharing(*container, rootID)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -840,7 +841,7 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 	}
 	sharing.ModifiedBy = userID
 
-	err = a.app().UpsertSharing(container, sharing)
+	err = a.app().UpsertSharing(*container, sharing)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
