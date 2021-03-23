@@ -30,6 +30,7 @@ import ModalWrapper from './modalWrapper'
 import NewCardButton from './newCardButton'
 import ShareBoardComponent from './shareBoardComponent'
 import './viewHeader.scss'
+import {sendFlashMessage} from './flashMessages'
 
 type Props = {
     boardTree: BoardTree
@@ -65,6 +66,23 @@ class ViewHeader extends React.Component<Props, State> {
     componentDidUpdate(prevPros: Props, prevState: State): void {
         if (this.state.isSearching && !prevState.isSearching) {
             this.searchFieldRef.current?.focus()
+        }
+    }
+
+    onExportCsvTrigger(boardTree: BoardTree, intl: IntlShape) {
+        try {
+            CsvExporter.exportTableCsv(boardTree)
+            const exportCompleteMessage = intl.formatMessage({
+                id: 'ViewHeader.exportComplete',
+                defaultMessage: 'Export complete!',
+            })
+            sendFlashMessage({content: exportCompleteMessage, severity: 'normal'})
+        } catch (e) {
+            const exportFailedMessage = intl.formatMessage({
+                id: 'ViewHeader.exportFailed',
+                defaultMessage: 'Export failed!',
+            })
+            sendFlashMessage({content: exportFailedMessage, severity: 'high'})
         }
     }
 
@@ -297,7 +315,7 @@ class ViewHeader extends React.Component<Props, State> {
                                 <Menu.Text
                                     id='exportCsv'
                                     name={intl.formatMessage({id: 'ViewHeader.export-csv', defaultMessage: 'Export to CSV'})}
-                                    onClick={() => CsvExporter.exportTableCsv(boardTree)}
+                                    onClick={() => this.onExportCsvTrigger(boardTree, intl)}
                                 />
                                 {/* <Menu.Text
                                     id='exportBoardArchive'
