@@ -84,12 +84,17 @@ func (a *App) Login(username, email, password, mfaToken string) (string, error) 
 		return "", errors.New("invalid username or password")
 	}
 
+	authService := user.AuthService
+	if authService == "" {
+		authService = "native"
+	}
+
 	session := model.Session{
 		ID:     uuid.New().String(),
 		Token:  uuid.New().String(),
 		UserID: user.ID,
 		Props: map[string]interface{}{
-			"authService": user.AuthService,
+			"authService": authService,
 		},
 	}
 	err := a.store.CreateSession(&session)
