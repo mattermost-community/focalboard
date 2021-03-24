@@ -73,13 +73,13 @@ class ViewHeader extends React.Component<Props, State> {
         try {
             CsvExporter.exportTableCsv(boardTree)
             const exportCompleteMessage = intl.formatMessage({
-                id: 'ViewHeader.exportComplete',
+                id: 'ViewHeader.export-complete',
                 defaultMessage: 'Export complete!',
             })
             sendFlashMessage({content: exportCompleteMessage, severity: 'normal'})
         } catch (e) {
             const exportFailedMessage = intl.formatMessage({
-                id: 'ViewHeader.exportFailed',
+                id: 'ViewHeader.export-failed',
                 defaultMessage: 'Export failed!',
             })
             sendFlashMessage({content: exportFailedMessage, severity: 'high'})
