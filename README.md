@@ -12,7 +12,7 @@ It helps define, organize, track and manage work across individuals and teams. F
 
 * **Focalboard Personal Server**: A self-hosted server for your team to collaborate.
 
-The same server binary powers both editions.
+The same MIT-licensed binary powers both desktop and server editions.
 
 ## Try out Focalboard 
 
