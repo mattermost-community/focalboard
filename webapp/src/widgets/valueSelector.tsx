@@ -1,9 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {CSSProperties} from 'react'
+import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 import {ActionMeta, ValueType, FormatOptionLabelMeta} from 'react-select'
 import CreatableSelect from 'react-select/creatable'
+import { CSSObject } from '@emotion/serialize';
 
 import {IPropertyOption} from '../blocks/board'
 import {Constants} from '../constants'
@@ -43,7 +44,7 @@ class ValueSelector extends React.Component<Props, State> {
         return true
     }
 
-    private renderLabel = (option: IPropertyOption, meta: FormatOptionLabelMeta<IPropertyOption>): React.ReactNode => {
+    private renderLabel = (option: IPropertyOption, meta: FormatOptionLabelMeta<IPropertyOption, false>): React.ReactNode => {
         if (meta.context === 'value') {
             return <span className={`octo-label ${option.color}`} >{option.value}</span>
         }
@@ -93,40 +94,40 @@ class ValueSelector extends React.Component<Props, State> {
             <CreatableSelect
                 isClearable={true}
                 styles={{
-                    indicatorsContainer: (provided: CSSProperties): CSSProperties => ({
+                    indicatorsContainer: (provided: CSSObject): CSSObject => ({
                         ...provided,
                         display: 'none',
                     }),
-                    menu: (provided: CSSProperties): CSSProperties => ({
+                    menu: (provided: CSSObject): CSSObject => ({
                         ...provided,
                         width: 'unset',
                         background: 'rgb(var(--main-bg))',
                     }),
-                    option: (provided: CSSProperties, state: {isFocused: boolean}): CSSProperties => ({
+                    option: (provided: CSSObject, state: {isFocused: boolean}): CSSObject => ({
                         ...provided,
                         background: state.isFocused ? 'rgba(var(--main-fg), 0.1)' : 'rgb(var(--main-bg))',
                         color: state.isFocused ? 'rgb(var(--main-fg))' : 'rgb(var(--main-fg))',
                         padding: '2px 8px',
                     }),
-                    control: (): CSSProperties => ({
+                    control: (): CSSObject => ({
                         border: 0,
                     }),
-                    valueContainer: (provided: CSSProperties): CSSProperties => ({
+                    valueContainer: (provided: CSSObject): CSSObject => ({
                         ...provided,
                         padding: '0 8px',
                     }),
-                    singleValue: (provided: CSSProperties): CSSProperties => ({
+                    singleValue: (provided: CSSObject): CSSObject => ({
                         ...provided,
                         color: 'rgb(var(--main-fg))',
                     }),
-                    input: (provided: CSSProperties): CSSProperties => ({
+                    input: (provided: CSSObject): CSSObject => ({
                         ...provided,
                         paddingBottom: 0,
                         paddingTop: 0,
                         marginBottom: 0,
                         marginTop: 0,
                     }),
-                    menuList: (provided: CSSProperties): CSSProperties => ({
+                    menuList: (provided: CSSObject): CSSObject => ({
                         ...provided,
                         overflowY: 'unset',
                     }),
@@ -136,7 +137,7 @@ class ValueSelector extends React.Component<Props, State> {
                 options={this.props.options}
                 getOptionLabel={(o: IPropertyOption) => o.value}
                 getOptionValue={(o: IPropertyOption) => o.id}
-                onChange={(value: ValueType<IPropertyOption>, action: ActionMeta<IPropertyOption>): void => {
+                onChange={(value: ValueType<IPropertyOption, false>, action: ActionMeta<IPropertyOption>): void => {
                     if (action.action === 'select-option') {
                         this.props.onChange((value as IPropertyOption).id)
                     } else if (action.action === 'clear') {
