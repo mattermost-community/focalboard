@@ -77,14 +77,9 @@ pygmentsStyle = "manni"
       weight = 3
 
     [[menu.postpend]]
-      url = "/blog"
-      name = "Blog"
-      weight = 4
-
-    [[menu.postpend]]
       url = "/feedback"
       name = "Feedback"
-      weight = 5
+      weight = 4
 
     # Workaround to add draft status to menu items
     [[params.navigation.drafts]]
