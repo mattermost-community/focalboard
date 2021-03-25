@@ -352,6 +352,21 @@ class Sidebar extends React.Component<Props, State> {
                                 name={intl.formatMessage({id: 'Sidebar.russian', defaultMessage: 'Russian'})}
                                 onClick={async () => this.props.setLanguage('ru')}
                             />
+                            <Menu.Text
+                                id='chinese-lang'
+                                name={intl.formatMessage({id: 'Sidebar.chinese', defaultMessage: 'Chinese'})}
+                                onClick={async () => this.props.setLanguage('zh')}
+                            />
+                            <Menu.Text
+                                id='turkish-lang'
+                                name={intl.formatMessage({id: 'Sidebar.turkish', defaultMessage: 'Turkish'})}
+                                onClick={async () => this.props.setLanguage('tr')}
+                            />
+                            <Menu.Text
+                                id='occitan-lang'
+                                name={intl.formatMessage({id: 'Sidebar.occitan', defaultMessage: 'Occitan'})}
+                                onClick={async () => this.props.setLanguage('oc')}
+                            />
                         </Menu.SubMenu>
                         <Menu.SubMenu
                             id='theme'
