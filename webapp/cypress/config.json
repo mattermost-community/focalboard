@@ -4,6 +4,7 @@
 	"dbtype": "sqlite3",
 	"dbconfig": "file::memory:?cache=shared",
 	"useSSL": false,
+    "secureCookie": false,
 	"webpath": "../pack",
 	"filespath": "../../files",
 	"telemetry": false,

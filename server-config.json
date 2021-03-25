@@ -5,6 +5,7 @@
 	"dbconfig": "./focalboard.db",
 	"postgres_dbconfig": "dbname=focalboard sslmode=disable",
 	"useSSL": false,
+    "secureCookie": false,
 	"webpath": "./pack",
 	"filespath": "./files",
     "telemetry": true,

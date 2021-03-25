@@ -93,10 +93,11 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 	if cfg.AuthMode == "mattermost" {
 		log.Println("Using Mattermost Auth")
 		params := mmauth.MMAuthParameters{
-			ServerRoot:    cfg.ServerRoot,
-			MattermostURL: cfg.MattermostURL,
-			ClientID:      cfg.MattermostClientID,
-			ClientSecret:  cfg.MattermostClientSecret,
+			ServerRoot:      cfg.ServerRoot,
+			MattermostURL:   cfg.MattermostURL,
+			ClientID:        cfg.MattermostClientID,
+			ClientSecret:    cfg.MattermostClientSecret,
+			UseSecureCookie: cfg.SecureCookie,
 		}
 		mmauthHandler := mmauth.NewMMAuth(params, appBuilder, store)
 		webServer.AddRoutes(mmauthHandler)

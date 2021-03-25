@@ -6,6 +6,7 @@
 	"postgres_dbconfig": "dbname=focalboard sslmode=disable",
 	"test_dbconfig": "file::memory:?cache=shared",
 	"useSSL": false,
+    "secureCookie": false,
 	"webpath": "./webapp/pack",
 	"filespath": "./files",
 	"telemetry": true,

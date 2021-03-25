@@ -18,6 +18,7 @@ type Configuration struct {
 	DBType                  string   `json:"dbtype" mapstructure:"dbtype"`
 	DBConfigString          string   `json:"dbconfig" mapstructure:"dbconfig"`
 	UseSSL                  bool     `json:"useSSL" mapstructure:"useSSL"`
+	SecureCookie            bool     `json:"secureCookie" mapstructure:"secureCookie"`
 	WebPath                 string   `json:"webpath" mapstructure:"webpath"`
 	FilesPath               string   `json:"filespath" mapstructure:"filespath"`
 	Telemetry               bool     `json:"telemetry" mapstructure:"telemetry"`
@@ -44,6 +45,7 @@ func ReadConfigFile() (*Configuration, error) {
 	viper.SetDefault("Port", DefaultPort)
 	viper.SetDefault("DBType", "sqlite3")
 	viper.SetDefault("DBConfigString", "./octo.db")
+	viper.SetDefault("SecureCookie", false)
 	viper.SetDefault("WebPath", "./pack")
 	viper.SetDefault("FilesPath", "./files")
 	viper.SetDefault("Telemetry", true)

@@ -20,10 +20,11 @@ import (
 )
 
 type MMAuthParameters struct {
-	ServerRoot    string
-	MattermostURL string
-	ClientID      string
-	ClientSecret  string
+	ServerRoot      string
+	MattermostURL   string
+	ClientID        string
+	ClientSecret    string
+	UseSecureCookie bool
 }
 
 type MMAuth struct {
@@ -76,11 +77,11 @@ func (a *MMAuth) handleOAuthLogin(w http.ResponseWriter, r *http.Request) {
 
 	var expiration = time.Now().Add(365 * 24 * time.Hour)
 
-	redirectCookie := http.Cookie{Name: "oauthredirect", Path: "/", Value: redirectUrl, Expires: expiration, HttpOnly: true}
+	redirectCookie := http.Cookie{Name: "oauthredirect", Path: "/", Value: redirectUrl, Expires: expiration, HttpOnly: true, Secure: a.params.UseSecureCookie}
 	http.SetCookie(w, &redirectCookie)
 
 	oauthState := generateSecurityToken()
-	stateCookie := http.Cookie{Name: "oauthstate", Path: "/", Value: oauthState, Expires: expiration, HttpOnly: true}
+	stateCookie := http.Cookie{Name: "oauthstate", Path: "/", Value: oauthState, Expires: expiration, HttpOnly: true, Secure: a.params.UseSecureCookie}
 	http.SetCookie(w, &stateCookie)
 
 	authUrl := a.config.AuthCodeURL(oauthState)
@@ -94,8 +95,8 @@ func generateSecurityToken() string {
 	return securityToken
 }
 
-func deleteCookie(name string, w http.ResponseWriter) {
-	redirectCookie := http.Cookie{Name: name, Path: "/", Value: "", MaxAge: -1, Expires: time.Now().Add(-100 * time.Hour), HttpOnly: true}
+func deleteCookie(name string, w http.ResponseWriter, useSecureCookie bool) {
+	redirectCookie := http.Cookie{Name: name, Path: "/", Value: "", MaxAge: -1, Expires: time.Now().Add(-100 * time.Hour), HttpOnly: true, Secure: useSecureCookie}
 	http.SetCookie(w, &redirectCookie)
 }
 
@@ -114,8 +115,8 @@ func (a *MMAuth) handleOAuthCallback(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Delete cookies
-	deleteCookie("oauthredirect", w)
-	deleteCookie("oauthstate", w)
+	deleteCookie("oauthredirect", w, a.params.UseSecureCookie)
+	deleteCookie("oauthstate", w, a.params.UseSecureCookie)
 
 	if r.FormValue("state") != stateCookie.Value {
 		log.Println("invalid oauth state")
@@ -184,7 +185,7 @@ func (a *MMAuth) handleOAuthCallback(w http.ResponseWriter, r *http.Request) {
 	// Pass access token to client via cookie
 	// TODO: Review security of this approach
 	var expiration = time.Now().Add(365 * 24 * time.Hour)
-	tokenCookie := http.Cookie{Name: "oauthtoken", Path: "/", Value: token.AccessToken, Expires: expiration, HttpOnly: false}
+	tokenCookie := http.Cookie{Name: "oauthtoken", Path: "/", Value: token.AccessToken, Expires: expiration, HttpOnly: false, Secure: a.params.UseSecureCookie}
 	http.SetCookie(w, &tokenCookie)
 
 	redirectUrl := redirectCookie.Value
