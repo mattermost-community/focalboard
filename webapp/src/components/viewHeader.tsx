@@ -69,16 +69,16 @@ class ViewHeader extends React.Component<Props, State> {
         }
     }
 
-    onExportCsvTrigger(boardTree: BoardTree, intl: IntlShape) {
+    onExportCsvTrigger(boardTree: BoardTree) {
         try {
             CsvExporter.exportTableCsv(boardTree)
-            const exportCompleteMessage = intl.formatMessage({
+            const exportCompleteMessage = this.props.intl.formatMessage({
                 id: 'ViewHeader.export-complete',
                 defaultMessage: 'Export complete!',
             })
             sendFlashMessage({content: exportCompleteMessage, severity: 'normal'})
         } catch (e) {
-            const exportFailedMessage = intl.formatMessage({
+            const exportFailedMessage = this.props.intl.formatMessage({
                 id: 'ViewHeader.export-failed',
                 defaultMessage: 'Export failed!',
             })
@@ -315,7 +315,7 @@ class ViewHeader extends React.Component<Props, State> {
                                 <Menu.Text
                                     id='exportCsv'
                                     name={intl.formatMessage({id: 'ViewHeader.export-csv', defaultMessage: 'Export to CSV'})}
-                                    onClick={() => this.onExportCsvTrigger(boardTree, intl)}
+                                    onClick={() => this.onExportCsvTrigger(boardTree)}
                                 />
                                 {/* <Menu.Text
                                     id='exportBoardArchive'
