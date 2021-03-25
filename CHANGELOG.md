@@ -12,6 +12,11 @@ This changelog summarizes updates to our open source project. You can also find 
   * Added German language translation. Thanks @svelle!
   * Added Japanese language translation. Thanks @kaakaa!
   * Added French language translation. Thanks @CyrilLD!
+  * Added Occitan language translation. Thanks Quentin PAGÈS!
+  * Added Dutch language translation. Thanks Tom De Moor!
+  * Added Turkish language translation. Thanks Abdullah Musab!
+  * Added Chinese language translation. Thanks Yao Xie and toto6038!
+  * Added Russian language translation. Thanks Edward Smirnov!
   * Add Dockerfile to run service in a container. [#76](https://github.com/mattermost/focalboard/pull/76) Thanks @proffalken!
   * Add docker-compose to run the whole service in containers. [#105](https://github.com/mattermost/focalboard/pull/105) Thanks @jbutler992!
 * Requested Contributions
