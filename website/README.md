@@ -2,7 +2,8 @@
 
 This folder is used to manage the website at [focalboard.com](https://www.focalboard.com/). It was built using [Hugo](https://gohugo.io/).
 
-The content can be found in the [/site/content](site/content) folder. 
+- The main page for https://focalboard.com can be found at [/site/layouts/partials/hero.htm](site/layouts/partials). 
+- Other content can be found in the [/site/content](site/content) folder. 
 
 ## How to contribute 
 
