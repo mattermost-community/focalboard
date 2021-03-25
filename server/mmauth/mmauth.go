@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"text/template"
 	"time"
 
 	"github.com/google/uuid"
@@ -32,6 +33,11 @@ type MMAuth struct {
 	store      store.Store
 	config     *oauth2.Config
 	params     MMAuthParameters
+}
+
+type htmlContext struct {
+	SessionID   string
+	RedirectURL string
 }
 
 func NewMMAuth(params MMAuthParameters, appBuilder func() *app.App, store store.Store) *MMAuth {
@@ -186,20 +192,39 @@ func (a *MMAuth) handleOAuthCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Pass access token to client via cookie
-	// TODO: Review security of this approach
-	var expiration = time.Now().Add(365 * 24 * time.Hour)
-	tokenCookie := http.Cookie{Name: "oauthtoken", Path: "/", Value: token.AccessToken, Expires: expiration, HttpOnly: false, Secure: a.params.UseSecureCookie}
-	http.SetCookie(w, &tokenCookie)
-
-	redirectUrl := redirectCookie.Value
-	if len(redirectUrl) == 0 {
+	redirectURL := redirectCookie.Value
+	if len(redirectURL) == 0 {
 		// TODO: Implement user error page
-		redirectUrl = "/error?id=no_workspace"
+		redirectURL = "/error?id=no_workspace"
 	}
 
-	log.Printf("Redirecting to: %s", redirectUrl)
-	http.Redirect(w, r, redirectUrl, http.StatusTemporaryRedirect)
+	log.Printf("Redirecting to: %s", redirectURL)
+
+	const doc = `
+		<!DOCTYPE html>
+		<html>
+			<head>
+				<title>Focalboard - Login</title>
+				<script>
+					localStorage.setItem('sessionId', '{{.SessionID}}');
+					window.location.replace("{{.RedirectURL}}");
+				</script>
+			</head>
+			<body>
+				<a href='{{.RedirectURL}}'>Click here to complete login</a>
+			</body>
+		</html>
+	`
+
+	templates := template.New("template")
+	templates.New("doc").Parse(doc)
+	context := htmlContext{
+		RedirectURL: redirectURL,
+		SessionID:   token.AccessToken,
+	}
+	templates.Lookup("doc").Execute(w, context)
+
+	// http.Redirect(w, r, RedirectURL, http.StatusTemporaryRedirect)
 }
 
 func (a *MMAuth) handleError(logInfo string, err error, w http.ResponseWriter, r *http.Request) {
