@@ -143,36 +143,6 @@ func (a *MMAuth) handleOAuthCallback(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("UserInfo: %v\n", user)
 
-	teams, resp := client.GetAllTeams(etag, 0, 10)
-	if resp.Error != nil {
-		a.handleError("failed getting Mattermost teams", err, w, r)
-		return
-	}
-
-	if len(teams) < 1 {
-		a.handleError("User has no teams", err, w, r)
-		return
-	}
-
-	log.Printf("%d team(s).", len(teams))
-	teamId := teams[0].Id
-
-	channels, resp := client.GetChannelsForTeamForUser(teamId, user.Id, false, etag)
-	if resp.Error != nil {
-		a.handleError("failed getting Mattermost channels for user", err, w, r)
-		return
-	}
-
-	if len(channels) < 1 {
-		a.handleError("User has no channels", err, w, r)
-		return
-	}
-
-	log.Printf("%d channel(s).", len(channels))
-	channelId := channels[0].Id
-
-	log.Printf("userId: %s, teamId: %s, channelId: %s", user.Id, teamId, channelId)
-
 	// Create native user
 	// TODO: Update user info with any changes?
 	nativeUser, _ := a.store.GetUserById(user.Id)
