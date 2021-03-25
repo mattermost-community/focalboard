@@ -118,9 +118,13 @@ func (a *MMAuth) handleOAuthCallback(w http.ResponseWriter, r *http.Request) {
 	deleteCookie("oauthredirect", w, a.params.UseSecureCookie)
 	deleteCookie("oauthstate", w, a.params.UseSecureCookie)
 
+	if len(stateCookie.Value) == 0 {
+		a.handleError("empty oauthstate cookie", nil, w, r)
+		return
+	}
+
 	if r.FormValue("state") != stateCookie.Value {
-		log.Println("invalid oauth state")
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		a.handleError("invalid oauth state", nil, w, r)
 		return
 	}
 
@@ -201,7 +205,7 @@ func (a *MMAuth) handleOAuthCallback(w http.ResponseWriter, r *http.Request) {
 func (a *MMAuth) handleError(logInfo string, err error, w http.ResponseWriter, r *http.Request) {
 	log.Printf("%s. ERROR: %s\n", logInfo, err)
 	// TODO: Implement user error page
-	http.Redirect(w, r, "/error?id=server_error", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, "/error?id=auth_error", http.StatusTemporaryRedirect)
 }
 
 func (a *MMAuth) DoesUserHaveWorkspaceAccess(session *model.Session, workspaceID string) bool {
