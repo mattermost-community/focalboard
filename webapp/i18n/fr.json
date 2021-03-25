@@ -116,6 +116,7 @@
   "ViewHeader.edit-template": "Editer",
   "ViewHeader.empty-card": "Carte vide",
   "ViewHeader.export-csv": "Exporter au format CSV",
+  "ViewHeader.export-failed": "L'export a échoué !",
   "ViewHeader.filter": "Filtre",
   "ViewHeader.group-by": "Grouper par : {property}",
   "ViewHeader.new": "Nouveau",
