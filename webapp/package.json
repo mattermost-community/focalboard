@@ -32,9 +32,9 @@
 		"react-simplemde-editor": "^4.1.3"
 	},
 	"jest": {
-    "moduleNameMapper": {
-      "\\.(scss)$": "<rootDir>/__mocks__/styleMock.js"
-    },
+		"moduleNameMapper": {
+			"\\.(scss)$": "<rootDir>/__mocks__/styleMock.js"
+		},
 		"globals": {
 			"ts-jest": {
 				"tsConfig": "./src/tsconfig.json"
@@ -65,7 +65,7 @@
 		"@types/react-select": "^3.0.22",
 		"@typescript-eslint/eslint-plugin": "^4.4.1",
 		"@typescript-eslint/parser": "^4.4.1",
-		"copy-webpack-plugin": "^6.0.3",
+		"copy-webpack-plugin": "^8.1.0",
 		"css-loader": "^4.3.0",
 		"eslint": "^7.11.0",
 		"eslint-import-resolver-webpack": "0.12.2",
@@ -85,7 +85,7 @@
 		"sass-loader": "^10.0.2",
 		"start-server-and-test": "^1.11.7",
 		"style-loader": "^1.3.0",
-		"terser-webpack-plugin": "^4.1.0",
+		"terser-webpack-plugin": "^5.1.1",
 		"ts-jest": "^26.4.1",
 		"ts-loader": "^8.0.3",
 		"typescript": "^4.0.2",
