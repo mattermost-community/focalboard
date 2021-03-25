@@ -358,14 +358,13 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 
 			now := time.Now().Unix()
 			session := &model.Session{
-				ID:     "single-user",
-				Token:  token,
-				UserID: "single-user",
-				Props: map[string]interface{}{
-					"authService": a.authService,
-				},
-				CreateAt: now,
-				UpdateAt: now,
+				ID:          "single-user",
+				Token:       token,
+				UserID:      "single-user",
+				AuthService: a.authService,
+				Props:       map[string]interface{}{},
+				CreateAt:    now,
+				UpdateAt:    now,
 			}
 			ctx := context.WithValue(r.Context(), "session", session)
 			handler(w, r.WithContext(ctx))
@@ -383,9 +382,9 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 			return
 		}
 
-		authService := session.Props["authService"]
+		authService := session.AuthService
 		if authService != a.authService {
-			log.Printf(`Session '%s' authService mismatch %s instead of %s`, session.ID, authService, a.authService)
+			log.Printf(`Session '%s' authService mismatch '%s' instead of '%s'`, session.ID, authService, a.authService)
 			errorResponse(w, http.StatusUnauthorized, "", err)
 			return
 		}

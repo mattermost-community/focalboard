@@ -90,12 +90,11 @@ func (a *App) Login(username, email, password, mfaToken string) (string, error) 
 	}
 
 	session := model.Session{
-		ID:     uuid.New().String(),
-		Token:  uuid.New().String(),
-		UserID: user.ID,
-		Props: map[string]interface{}{
-			"authService": authService,
-		},
+		ID:          uuid.New().String(),
+		Token:       uuid.New().String(),
+		UserID:      user.ID,
+		AuthService: authService,
+		Props:       map[string]interface{}{},
 	}
 	err := a.store.CreateSession(&session)
 	if err != nil {

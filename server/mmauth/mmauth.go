@@ -196,11 +196,11 @@ func (a *MMAuth) handleOAuthCallback(w http.ResponseWriter, r *http.Request) {
 	// Create session
 	// TODO: Remove any existing sessions with the same token? (Happens on re-login)
 	session := model.Session{
-		ID:     uuid.New().String(),
-		Token:  token.AccessToken,
-		UserID: user.Id,
+		ID:          uuid.New().String(),
+		Token:       token.AccessToken,
+		UserID:      user.Id,
+		AuthService: "mattermost",
 		Props: map[string]interface{}{
-			"authService":  "mattermost",
 			"expiry":       token.Expiry.Unix(),
 			"refreshToken": token.RefreshToken,
 		},
