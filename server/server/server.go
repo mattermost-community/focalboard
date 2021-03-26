@@ -27,7 +27,6 @@ import (
 	"github.com/mattermost/focalboard/server/services/webhook"
 	"github.com/mattermost/focalboard/server/web"
 	"github.com/mattermost/focalboard/server/ws"
-	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/services/filesstore"
 	"github.com/mattermost/mattermost-server/v5/utils"
 )
@@ -62,10 +61,10 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 
 	wsServer := ws.NewServer(auth, singleUserToken)
 
-	filesBackendSettings := model.FileSettings{}
-	filesBackendSettings.SetDefaults(false)
-	filesBackendSettings.Directory = &cfg.FilesPath
-	filesBackend, appErr := filesstore.NewFileBackend(&filesBackendSettings, false)
+	filesBackendSettings := filesstore.FileBackendSettings{}
+	filesBackendSettings.DriverName = "local"
+	filesBackendSettings.Directory = cfg.FilesPath
+	filesBackend, appErr := filesstore.NewFileBackend(filesBackendSettings)
 	if appErr != nil {
 		log.Fatal("Unable to initialize the files storage")
 
