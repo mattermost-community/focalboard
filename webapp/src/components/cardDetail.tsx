@@ -50,6 +50,17 @@ class CardDetail extends React.Component<Props, State> {
         }
     }
 
+    componentWillUnmount(): void {
+        const {cardTree} = this.props
+        if (!cardTree) {
+            return
+        }
+        const {card} = cardTree
+        if (this.state.title !== card.title) {
+            mutator.changeTitle(card, this.state.title)
+        }
+    }
+
     constructor(props: Props) {
         super(props)
         this.state = {
