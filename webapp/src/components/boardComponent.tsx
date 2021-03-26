@@ -46,8 +46,6 @@ class BoardComponent extends React.Component<Props, State> {
     private draggedHeaderOption?: IPropertyOption
     private backgroundRef = React.createRef<HTMLDivElement>()
     private searchFieldRef = React.createRef<Editable>()
-    private props: Props
-    private state: State
 
     private keydownHandler = (e: KeyboardEvent) => {
         if (e.target !== document.body) {
