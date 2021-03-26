@@ -8,22 +8,15 @@ import {BlockIcons} from '../blockIcons'
 import {IPropertyOption, IPropertyTemplate} from '../blocks/board'
 import {Card, MutableCard} from '../blocks/card'
 import {CardFilter} from '../cardFilter'
-import {Constants} from '../constants'
 import mutator from '../mutator'
 import {Utils} from '../utils'
-import {BoardTree, BoardTreeGroup} from '../viewModel/boardTree'
+import {BoardTree} from '../viewModel/boardTree'
 import Button from '../widgets/buttons/button'
-import IconButton from '../widgets/buttons/iconButton'
-import AddIcon from '../widgets/icons/add'
-import DeleteIcon from '../widgets/icons/delete'
-import HideIcon from '../widgets/icons/hide'
-import OptionsIcon from '../widgets/icons/options'
-import ShowIcon from '../widgets/icons/show'
-import Menu from '../widgets/menu'
-import MenuWrapper from '../widgets/menuWrapper'
 
 import BoardCard from './boardCard'
 import BoardColumn from './boardColumn'
+import BoardColumnHeader from './boardColumnHeader'
+import HiddenColumnItem from './hiddenColumnItem'
 import './boardComponent.scss'
 import CardDialog from './cardDialog'
 import {Editable} from './editable'
@@ -53,6 +46,8 @@ class BoardComponent extends React.Component<Props, State> {
     private draggedHeaderOption?: IPropertyOption
     private backgroundRef = React.createRef<HTMLDivElement>()
     private searchFieldRef = React.createRef<Editable>()
+    private props: Props
+    private state: State
 
     private keydownHandler = (e: KeyboardEvent) => {
         if (e.target !== document.body) {
@@ -172,7 +167,19 @@ class BoardComponent extends React.Component<Props, State> {
                         >
                             {/* Column headers */}
 
-                            {visibleGroups.map((group) => this.renderColumnHeader(group))}
+                            {visibleGroups.map((group) => (
+                                <BoardColumnHeader
+                                    key={group.option.id}
+                                    group={group}
+                                    boardTree={boardTree}
+                                    intl={this.props.intl}
+                                    addCard={this.addCard}
+                                    readonly={this.props.readonly}
+                                    propertyNameChanged={this.propertyNameChanged}
+                                    onDropToColumn={this.onDropToColumn}
+                                    setDraggedHeaderOption={(draggedHeaderOption?: IPropertyOption) => this.draggedHeaderOption = draggedHeaderOption}
+                                />
+                            ))}
 
                             {/* Hidden column header */}
 
@@ -213,7 +220,33 @@ class BoardComponent extends React.Component<Props, State> {
                                     isDropZone={!isManualSort || group.cards.length < 1}
                                     onDrop={() => this.onDropToColumn(group.option)}
                                 >
-                                    {group.cards.map((card) => this.renderCard(card, visiblePropertyTemplates))}
+                                    {group.cards.map((card) => (
+                                        <BoardCard
+                                            card={card}
+                                            visiblePropertyTemplates={visiblePropertyTemplates}
+                                            key={card.id}
+                                            readonly={this.props.readonly}
+                                            isSelected={this.state.selectedCardIds.includes(card.id)}
+                                            onClick={(e) => {
+                                                this.cardClicked(e, card)
+                                            }}
+                                            onDragStart={() => {
+                                                if (this.state.selectedCardIds.includes(card.id)) {
+                                                    this.draggedCards = this.state.selectedCardIds.map((id) => boardTree.allCards.find((o) => o.id === id)!)
+                                                } else {
+                                                    this.draggedCards = [card]
+                                                }
+                                            }}
+                                            onDragEnd={() => {
+                                                this.draggedCards = []
+                                            }}
+
+                                            isDropZone={isManualSort}
+                                            onDrop={() => {
+                                                this.onDropToCard(card)
+                                            }}
+                                        />
+                                    ))}
                                     {!this.props.readonly &&
                                         <Button
                                             onClick={() => {
@@ -233,270 +266,21 @@ class BoardComponent extends React.Component<Props, State> {
 
                             {hiddenGroups.length > 0 &&
                                 <div className='octo-board-column narrow'>
-                                    {hiddenGroups.map((group) => this.renderHiddenColumnItem(group))}
+                                    {hiddenGroups.map((group) => (
+                                        <HiddenColumnItem
+                                            key={group.option.id}
+                                            group={group}
+                                            boardTree={boardTree}
+                                            intl={this.props.intl}
+                                            readonly={this.props.readonly}
+                                            onDropToColumn={this.onDropToColumn}
+                                            hasDraggedCards={this.draggedCards.length > 0}
+                                        />
+                                    ))}
                                 </div>}
                         </div>
                     </div>
                 </div>
-            </div>
-        )
-    }
-
-    private renderCard(card: Card, visiblePropertyTemplates: IPropertyTemplate[]) {
-        const {boardTree} = this.props
-        const {activeView} = boardTree
-        const isManualSort = activeView.sortOptions.length < 1
-        return (
-            <BoardCard
-                card={card}
-                visiblePropertyTemplates={visiblePropertyTemplates}
-                key={card.id}
-                readonly={this.props.readonly}
-                isSelected={this.state.selectedCardIds.includes(card.id)}
-                onClick={(e) => {
-                    this.cardClicked(e, card)
-                }}
-                onDragStart={() => {
-                    if (this.state.selectedCardIds.includes(card.id)) {
-                        this.draggedCards = this.state.selectedCardIds.map((id) => boardTree.allCards.find((o) => o.id === id)!)
-                    } else {
-                        this.draggedCards = [card]
-                    }
-                }}
-                onDragEnd={() => {
-                    this.draggedCards = []
-                }}
-
-                isDropZone={isManualSort}
-                onDrop={() => {
-                    this.onDropToCard(card)
-                }}
-            />
-        )
-    }
-
-    private renderColumnHeader(group: BoardTreeGroup) {
-        const {boardTree, intl} = this.props
-        const {activeView} = boardTree
-
-        // TODO: Refactor this as a component
-        if (!group.option.id) {
-            // Empty group
-            const ref = React.createRef<HTMLDivElement>()
-            return (
-                <div
-                    key='empty'
-                    ref={ref}
-                    className='octo-board-header-cell'
-
-                    draggable={!this.props.readonly}
-                    onDragStart={() => {
-                        this.draggedHeaderOption = group.option
-                    }}
-                    onDragEnd={() => {
-                        this.draggedHeaderOption = undefined
-                    }}
-
-                    onDragOver={(e) => {
-                        ref.current?.classList.add('dragover')
-                        e.preventDefault()
-                    }}
-                    onDragEnter={(e) => {
-                        ref.current?.classList.add('dragover')
-                        e.preventDefault()
-                    }}
-                    onDragLeave={(e) => {
-                        ref.current?.classList.remove('dragover')
-                        e.preventDefault()
-                    }}
-                    onDrop={(e) => {
-                        ref.current?.classList.remove('dragover')
-                        e.preventDefault()
-                        this.onDropToColumn(group.option)
-                    }}
-                >
-                    <div
-                        className='octo-label'
-                        title={intl.formatMessage({
-                            id: 'BoardComponent.no-property-title',
-                            defaultMessage: 'Items with an empty {property} property will go here. This column cannot be removed.',
-                        }, {property: boardTree.groupByProperty!.name})}
-                    >
-                        <FormattedMessage
-                            id='BoardComponent.no-property'
-                            defaultMessage='No {property}'
-                            values={{
-                                property: boardTree.groupByProperty!.name,
-                            }}
-                        />
-                    </div>
-                    <Button>{`${group.cards.length}`}</Button>
-                    <div className='octo-spacer'/>
-                    {!this.props.readonly &&
-                        <>
-                            <MenuWrapper>
-                                <IconButton icon={<OptionsIcon/>}/>
-                                <Menu>
-                                    <Menu.Text
-                                        id='hide'
-                                        icon={<HideIcon/>}
-                                        name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
-                                        onClick={() => mutator.hideViewColumn(activeView, '')}
-                                    />
-                                </Menu>
-                            </MenuWrapper>
-                            <IconButton
-                                icon={<AddIcon/>}
-                                onClick={() => this.addCard(undefined)}
-                            />
-                        </>
-                    }
-                </div>
-            )
-        }
-
-        const ref = React.createRef<HTMLDivElement>()
-        return (
-            <div
-                key={group.option.id}
-                ref={ref}
-                className='octo-board-header-cell'
-
-                draggable={!this.props.readonly}
-                onDragStart={() => {
-                    this.draggedHeaderOption = group.option
-                }}
-                onDragEnd={() => {
-                    this.draggedHeaderOption = undefined
-                }}
-
-                onDragOver={(e) => {
-                    ref.current?.classList.add('dragover')
-                    e.preventDefault()
-                }}
-                onDragEnter={(e) => {
-                    ref.current?.classList.add('dragover')
-                    e.preventDefault()
-                }}
-                onDragLeave={(e) => {
-                    ref.current?.classList.remove('dragover')
-                    e.preventDefault()
-                }}
-                onDrop={(e) => {
-                    ref.current?.classList.remove('dragover')
-                    e.preventDefault()
-                    this.onDropToColumn(group.option)
-                }}
-            >
-                <Editable
-                    className={`octo-label ${group.option.color}`}
-                    text={group.option.value}
-                    placeholderText='New Select'
-                    allowEmpty={false}
-                    onChanged={(text) => {
-                        this.propertyNameChanged(group.option, text)
-                    }}
-                    readonly={this.props.readonly}
-                />
-                <Button>{`${group.cards.length}`}</Button>
-                <div className='octo-spacer'/>
-                {!this.props.readonly &&
-                    <>
-                        <MenuWrapper>
-                            <IconButton icon={<OptionsIcon/>}/>
-                            <Menu>
-                                <Menu.Text
-                                    id='hide'
-                                    icon={<HideIcon/>}
-                                    name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
-                                    onClick={() => mutator.hideViewColumn(activeView, group.option.id)}
-                                />
-                                <Menu.Text
-                                    id='delete'
-                                    icon={<DeleteIcon/>}
-                                    name={intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
-                                    onClick={() => mutator.deletePropertyOption(boardTree, boardTree.groupByProperty!, group.option)}
-                                />
-                                <Menu.Separator/>
-                                {Constants.menuColors.map((color) => (
-                                    <Menu.Color
-                                        key={color.id}
-                                        id={color.id}
-                                        name={color.name}
-                                        onClick={() => mutator.changePropertyOptionColor(boardTree.board, boardTree.groupByProperty!, group.option, color.id)}
-                                    />
-                                ))}
-                            </Menu>
-                        </MenuWrapper>
-                        <IconButton
-                            icon={<AddIcon/>}
-                            onClick={() => this.addCard(group.option.id)}
-                        />
-                    </>
-                }
-            </div>
-        )
-    }
-
-    private renderHiddenColumnItem(group: BoardTreeGroup) {
-        const {boardTree, intl} = this.props
-        const {activeView} = boardTree
-
-        const ref = React.createRef<HTMLDivElement>()
-        return (
-            <div
-                ref={ref}
-                key={group.option.id || 'empty'}
-                className='octo-board-hidden-item'
-                onDragOver={(e) => {
-                    if (this.draggedCards?.length < 1) {
-                        return
-                    }
-                    ref.current?.classList.add('dragover')
-                    e.preventDefault()
-                }}
-                onDragEnter={(e) => {
-                    if (this.draggedCards?.length < 1) {
-                        return
-                    }
-                    ref.current?.classList.add('dragover')
-                    e.preventDefault()
-                }}
-                onDragLeave={(e) => {
-                    if (this.draggedCards?.length < 1) {
-                        return
-                    }
-                    ref.current?.classList.remove('dragover')
-                    e.preventDefault()
-                }}
-                onDrop={(e) => {
-                    ref.current?.classList.remove('dragover')
-                    e.preventDefault()
-                    if (this.draggedCards?.length < 1) {
-                        return
-                    }
-                    this.onDropToColumn(group.option)
-                }}
-            >
-                <MenuWrapper
-                    disabled={this.props.readonly}
-                >
-                    <div
-                        key={group.option.id || 'empty'}
-                        className={`octo-label ${group.option.color}`}
-                    >
-                        {group.option.value}
-                    </div>
-                    <Menu>
-                        <Menu.Text
-                            id='show'
-                            icon={<ShowIcon/>}
-                            name={intl.formatMessage({id: 'BoardComponent.show', defaultMessage: 'Show'})}
-                            onClick={() => mutator.unhideViewColumn(activeView, group.option.id)}
-                        />
-                    </Menu>
-                </MenuWrapper>
-                <Button>{`${group.cards.length}`}</Button>
             </div>
         )
     }
@@ -634,7 +418,7 @@ class BoardComponent extends React.Component<Props, State> {
         await mutator.insertPropertyOption(boardTree, boardTree.groupByProperty!, option, 'add group')
     }
 
-    private async onDropToColumn(option: IPropertyOption) {
+    private onDropToColumn = async (option: IPropertyOption) => {
         const {boardTree} = this.props
         const {draggedCards, draggedHeaderOption} = this
         const optionId = option ? option.id : undefined
