@@ -62,3 +62,5 @@ webapp/cypress/videos
 server/swagger/clients
 server/vendor
 .idea
+docker/certs
+docker/data

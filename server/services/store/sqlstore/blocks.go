@@ -22,7 +22,7 @@ func (s *SQLStore) latestsBlocksSubquery() sq.SelectBuilder {
 		Where(sq.Eq{"delete_at": 0})
 }
 
-func (s *SQLStore) GetBlocksWithParentAndType(parentID string, blockType string) ([]model.Block, error) {
+func (s *SQLStore) GetBlocksWithParentAndType(parentID, blockType string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
 		Select(
 			"id",
@@ -218,7 +218,7 @@ func (s *SQLStore) GetAllBlocks() ([]model.Block, error) {
 func blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 	defer rows.Close()
 
-	var results = []model.Block{}
+	results := []model.Block{}
 
 	for rows.Next() {
 		var block model.Block
@@ -341,7 +341,7 @@ func (s *SQLStore) InsertBlock(block model.Block) error {
 	return nil
 }
 
-func (s *SQLStore) DeleteBlock(blockID string, modifiedBy string) error {
+func (s *SQLStore) DeleteBlock(blockID, modifiedBy string) error {
 	now := time.Now().Unix()
 	query := s.getQueryBuilder().Insert("blocks").
 		Columns(

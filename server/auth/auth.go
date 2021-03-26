@@ -38,7 +38,7 @@ func (a *Auth) GetSession(token string) (*model.Session, error) {
 }
 
 // IsValidReadToken validates the read token for a block
-func (a *Auth) IsValidReadToken(blockID string, readToken string) (bool, error) {
+func (a *Auth) IsValidReadToken(blockID, readToken string) (bool, error) {
 	rootID, err := a.store.GetRootID(blockID)
 	if err != nil {
 		return false, err

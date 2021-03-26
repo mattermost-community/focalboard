@@ -513,7 +513,7 @@ func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
 
 func filterOrphanBlocks(blocks []model.Block) (ret []model.Block) {
 	queue := make([]model.Block, 0)
-	var childrenOfBlockWithID = make(map[string]*[]model.Block)
+	childrenOfBlockWithID := make(map[string]*[]model.Block)
 
 	// Build the trees from nodes
 	for _, block := range blocks {

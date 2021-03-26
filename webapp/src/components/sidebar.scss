@@ -157,6 +157,10 @@
             display: none;
         }
 
+        .Menu.left {
+            right: -32px;
+        }
+
         &:hover {
             display: flex;
 

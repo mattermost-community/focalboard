@@ -327,6 +327,46 @@ class Sidebar extends React.Component<Props, State> {
                                 name={intl.formatMessage({id: 'Sidebar.spanish', defaultMessage: 'Spanish'})}
                                 onClick={async () => this.props.setLanguage('es')}
                             />
+                            <Menu.Text
+                                id='german-lang'
+                                name={intl.formatMessage({id: 'Sidebar.german', defaultMessage: 'German'})}
+                                onClick={async () => this.props.setLanguage('de')}
+                            />
+                            <Menu.Text
+                                id='japanese-lang'
+                                name={intl.formatMessage({id: 'Sidebar.japanese', defaultMessage: 'Japanese'})}
+                                onClick={async () => this.props.setLanguage('ja')}
+                            />
+                            <Menu.Text
+                                id='french-lang'
+                                name={intl.formatMessage({id: 'Sidebar.french', defaultMessage: 'French'})}
+                                onClick={async () => this.props.setLanguage('fr')}
+                            />
+                            <Menu.Text
+                                id='dutch-lang'
+                                name={intl.formatMessage({id: 'Sidebar.dutch', defaultMessage: 'Dutch'})}
+                                onClick={async () => this.props.setLanguage('nl')}
+                            />
+                            <Menu.Text
+                                id='russian-lang'
+                                name={intl.formatMessage({id: 'Sidebar.russian', defaultMessage: 'Russian'})}
+                                onClick={async () => this.props.setLanguage('ru')}
+                            />
+                            <Menu.Text
+                                id='chinese-lang'
+                                name={intl.formatMessage({id: 'Sidebar.chinese', defaultMessage: 'Chinese'})}
+                                onClick={async () => this.props.setLanguage('zh')}
+                            />
+                            <Menu.Text
+                                id='turkish-lang'
+                                name={intl.formatMessage({id: 'Sidebar.turkish', defaultMessage: 'Turkish'})}
+                                onClick={async () => this.props.setLanguage('tr')}
+                            />
+                            <Menu.Text
+                                id='occitan-lang'
+                                name={intl.formatMessage({id: 'Sidebar.occitan', defaultMessage: 'Occitan'})}
+                                onClick={async () => this.props.setLanguage('oc')}
+                            />
                         </Menu.SubMenu>
                         <Menu.SubMenu
                             id='theme'

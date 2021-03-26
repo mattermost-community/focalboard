@@ -18,6 +18,12 @@ function makeCommonConfig() {
         module: {
             rules: [
                 {
+                    test: /\.m?js/,
+                    resolve: {
+                        fullySpecified: false
+                    }
+                },
+                {
                     test: /\.tsx?$/,
                     use: {
                         loader: 'ts-loader',
@@ -37,7 +43,7 @@ function makeCommonConfig() {
                 },
                 {
                     test: /\.html$/,
-                    loader: 'file-loader',
+                    type: 'asset/resource',
                 },
                 {
                     test: /\.s[ac]ss$/i,
@@ -55,7 +61,7 @@ function makeCommonConfig() {
                     ],
                 },
                 {
-                    test: /\.(tsx?|js|jsx|html)$/,
+                    test: /\.(tsx?|js|jsx|mjs|html)$/,
                     use: [
                     ],
                     exclude: [/node_modules/],
@@ -67,6 +73,7 @@ function makeCommonConfig() {
                 'node_modules',
                 path.resolve(__dirname),
             ],
+            fullySpecified: false,
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },
         plugins: [

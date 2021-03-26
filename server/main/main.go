@@ -159,7 +159,7 @@ func main() {
 
 // StartServer starts the server
 //export StartServer
-func StartServer(webPath *C.char, port int, singleUserToken *C.char, dbConfigString *C.char) {
+func StartServer(webPath *C.char, port int, singleUserToken, dbConfigString *C.char) {
 	startServer(
 		C.GoString(webPath),
 		port,
@@ -174,7 +174,7 @@ func StopServer() {
 	stopServer()
 }
 
-func startServer(webPath string, port int, singleUserToken string, dbConfigString string) {
+func startServer(webPath string, port int, singleUserToken, dbConfigString string) {
 	logInfo()
 
 	if pServer != nil {
