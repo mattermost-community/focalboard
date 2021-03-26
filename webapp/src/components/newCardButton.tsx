@@ -20,63 +20,61 @@ type Props = {
     intl: IntlShape
 }
 
-class NewCardButton extends React.PureComponent<Props> {
-    render(): JSX.Element {
-        const {intl, boardTree} = this.props
+const NewCardButton = React.memo((props: Props): JSX.Element => {
+    const {intl, boardTree} = props
 
-        return (
-            <ButtonWithMenu
-                onClick={() => {
-                    this.props.addCard()
-                }}
-                text={(
-                    <FormattedMessage
-                        id='ViewHeader.new'
-                        defaultMessage='New'
+    return (
+        <ButtonWithMenu
+            onClick={() => {
+                props.addCard()
+            }}
+            text={(
+                <FormattedMessage
+                    id='ViewHeader.new'
+                    defaultMessage='New'
+                />
+            )}
+        >
+            <Menu position='left'>
+                {boardTree.cardTemplates.length > 0 && <>
+                    <Menu.Label>
+                        <b>
+                            <FormattedMessage
+                                id='ViewHeader.select-a-template'
+                                defaultMessage='Select a template'
+                            />
+                        </b>
+                    </Menu.Label>
+
+                    <Menu.Separator/>
+                </>}
+
+                {boardTree.cardTemplates.map((cardTemplate) => (
+                    <NewCardButtonTemplateItem
+                        key={cardTemplate.id}
+                        cardTemplate={cardTemplate}
+                        addCardFromTemplate={props.addCardFromTemplate}
+                        editCardTemplate={props.editCardTemplate}
                     />
-                )}
-            >
-                <Menu position='left'>
-                    {boardTree.cardTemplates.length > 0 && <>
-                        <Menu.Label>
-                            <b>
-                                <FormattedMessage
-                                    id='ViewHeader.select-a-template'
-                                    defaultMessage='Select a template'
-                                />
-                            </b>
-                        </Menu.Label>
+                ))}
 
-                        <Menu.Separator/>
-                    </>}
+                <Menu.Text
+                    id='empty-template'
+                    name={intl.formatMessage({id: 'ViewHeader.empty-card', defaultMessage: 'Empty card'})}
+                    icon={<CardIcon/>}
+                    onClick={() => {
+                        props.addCard()
+                    }}
+                />
 
-                    {boardTree.cardTemplates.map((cardTemplate) => (
-                        <NewCardButtonTemplateItem
-                            key={cardTemplate.id}
-                            cardTemplate={cardTemplate}
-                            addCardFromTemplate={this.props.addCardFromTemplate}
-                            editCardTemplate={this.props.editCardTemplate}
-                        />
-                    ))}
-
-                    <Menu.Text
-                        id='empty-template'
-                        name={intl.formatMessage({id: 'ViewHeader.empty-card', defaultMessage: 'Empty card'})}
-                        icon={<CardIcon/>}
-                        onClick={() => {
-                            this.props.addCard()
-                        }}
-                    />
-
-                    <Menu.Text
-                        id='add-template'
-                        name={intl.formatMessage({id: 'ViewHeader.add-template', defaultMessage: '+ New template'})}
-                        onClick={() => this.props.addCardTemplate()}
-                    />
-                </Menu>
-            </ButtonWithMenu>
-        )
-    }
-}
+                <Menu.Text
+                    id='add-template'
+                    name={intl.formatMessage({id: 'ViewHeader.add-template', defaultMessage: '+ New template'})}
+                    onClick={() => props.addCardTemplate()}
+                />
+            </Menu>
+        </ButtonWithMenu>
+    )
+})
 
 export default injectIntl(NewCardButton)
