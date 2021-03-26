@@ -10,27 +10,25 @@ type TextOptionProps = MenuOptionProps & {
     className?: string
 }
 
-export default class TextOption extends React.PureComponent<TextOptionProps> {
-    private handleOnClick = (e: React.MouseEvent): void => {
-        e.target.dispatchEvent(new Event('menuItemClicked'))
-        this.props.onClick(this.props.id)
+function TextOption(props:TextOptionProps): JSX.Element {
+    const {name, icon, rightIcon} = props
+    let className = 'MenuOption TextOption menu-option'
+    if (props.className) {
+        className += ' ' + props.className
     }
-
-    public render(): JSX.Element {
-        const {name, icon, rightIcon} = this.props
-        let className = 'MenuOption TextOption menu-option'
-        if (this.props.className) {
-            className += ' ' + this.props.className
-        }
-        return (
-            <div
-                className={className}
-                onClick={this.handleOnClick}
-            >
-                {icon ?? <div className='noicon'/>}
-                <div className='menu-name'>{name}</div>
-                {rightIcon ?? <div className='noicon'/>}
-            </div>
-        )
-    }
+    return (
+        <div
+            className={className}
+            onClick={(e: React.MouseEvent) => {
+                e.target.dispatchEvent(new Event('menuItemClicked'))
+                props.onClick(props.id)
+            }}
+        >
+            {icon ?? <div className='noicon'/>}
+            <div className='menu-name'>{name}</div>
+            {rightIcon ?? <div className='noicon'/>}
+        </div>
+    )
 }
+
+export default React.memo(TextOption)
