@@ -1,0 +1,41 @@
+.ErrorPage {
+    border: 1px solid #cccccc;
+    border-radius: 15px;
+    width: 450px;
+    height: 400px;
+    margin: 150px auto;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    box-shadow: rgba(var(--body-color), 0.1) 0px 0px 0px 1px, rgba(var(--body-color), 0.3) 0px 4px 8px;
+
+    @media screen and (max-width: 430px) {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        margin: auto;
+        padding-top: 10px;
+    }
+
+    .title {
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    > .Button {
+        margin-top: 10px;
+        margin-bottom: 20px;
+        min-height: 38px;
+        min-width: 250px;
+    }
+
+    .error {
+        color: #900000;
+    }
+}

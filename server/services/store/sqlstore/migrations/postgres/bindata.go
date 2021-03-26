@@ -14,6 +14,8 @@
 // postgres_files/000006_sharing_table.up.sql
 // postgres_files/000007_workspaces_table.down.sql
 // postgres_files/000007_workspaces_table.up.sql
+// postgres_files/000008_teams.down.sql
+// postgres_files/000008_teams.up.sql
 package postgres
 
 import (
@@ -214,7 +216,7 @@ func _000004_auth_tableDownSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000004_auth_table.down.sql", size: 39, mode: os.FileMode(420), modTime: time.Unix(1610481092, 0)}
+	info := bindataFileInfo{name: "000004_auth_table.down.sql", size: 39, mode: os.FileMode(420), modTime: time.Unix(1611791102, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -234,7 +236,7 @@ func _000004_auth_tableUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000004_auth_table.up.sql", size: 491, mode: os.FileMode(420), modTime: time.Unix(1610481092, 0)}
+	info := bindataFileInfo{name: "000004_auth_table.up.sql", size: 491, mode: os.FileMode(420), modTime: time.Unix(1611791102, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -254,7 +256,7 @@ func _000005_blocks_modifiedbyDownSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000005_blocks_modifiedby.down.sql", size: 44, mode: os.FileMode(420), modTime: time.Unix(1610481092, 0)}
+	info := bindataFileInfo{name: "000005_blocks_modifiedby.down.sql", size: 44, mode: os.FileMode(420), modTime: time.Unix(1611791102, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -274,7 +276,7 @@ func _000005_blocks_modifiedbyUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000005_blocks_modifiedby.up.sql", size: 55, mode: os.FileMode(420), modTime: time.Unix(1610481092, 0)}
+	info := bindataFileInfo{name: "000005_blocks_modifiedby.up.sql", size: 55, mode: os.FileMode(420), modTime: time.Unix(1611791102, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -294,7 +296,7 @@ func _000006_sharing_tableDownSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000006_sharing_table.down.sql", size: 20, mode: os.FileMode(420), modTime: time.Unix(1610576067, 0)}
+	info := bindataFileInfo{name: "000006_sharing_table.down.sql", size: 20, mode: os.FileMode(420), modTime: time.Unix(1611791102, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -314,7 +316,7 @@ func _000006_sharing_tableUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000006_sharing_table.up.sql", size: 159, mode: os.FileMode(420), modTime: time.Unix(1610576067, 0)}
+	info := bindataFileInfo{name: "000006_sharing_table.up.sql", size: 159, mode: os.FileMode(420), modTime: time.Unix(1611791102, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -334,7 +336,7 @@ func _000007_workspaces_tableDownSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000007_workspaces_table.down.sql", size: 23, mode: os.FileMode(420), modTime: time.Unix(1610576169, 0)}
+	info := bindataFileInfo{name: "000007_workspaces_table.down.sql", size: 23, mode: os.FileMode(420), modTime: time.Unix(1611791102, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -354,7 +356,47 @@ func _000007_workspaces_tableUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000007_workspaces_table.up.sql", size: 179, mode: os.FileMode(420), modTime: time.Unix(1610577228, 0)}
+	info := bindataFileInfo{name: "000007_workspaces_table.up.sql", size: 179, mode: os.FileMode(420), modTime: time.Unix(1611791102, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var __000008_teamsDownSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\xf4\x09\x71\x0d\x52\x08\x71\x74\xf2\x71\x55\x48\xca\xc9\x4f\xce\x2e\xe6\x72\x09\xf2\x0f\x50\x70\xf6\xf7\x09\xf5\xf5\x53\x28\xcf\x2f\xca\x2e\x2e\x48\x4c\x4e\x8d\xcf\x4c\xb1\xe6\xe2\x42\x56\x5d\x9c\x91\x58\x94\x99\x97\x4e\xb4\xf2\xd4\xe2\xe2\xcc\xfc\x3c\x54\xe3\x13\x4b\x4b\x32\xe2\x8b\x53\x8b\xca\x32\x93\x53\xad\xb9\x00\x01\x00\x00\xff\xff\xdd\xff\x41\x9f\x8c\x00\x00\x00")
+
+func _000008_teamsDownSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__000008_teamsDownSql,
+		"000008_teams.down.sql",
+	)
+}
+
+func _000008_teamsDownSql() (*asset, error) {
+	bytes, err := _000008_teamsDownSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "000008_teams.down.sql", size: 140, mode: os.FileMode(420), modTime: time.Unix(1616709037, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var __000008_teamsUpSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\xf4\x09\x71\x0d\x52\x08\x71\x74\xf2\x71\x55\x48\xca\xc9\x4f\xce\x2e\xe6\x72\x74\x71\x51\x70\xf6\xf7\x09\xf5\xf5\x53\x28\xcf\x2f\xca\x2e\x2e\x48\x4c\x4e\x8d\xcf\x4c\x51\x08\x73\x0c\x72\xf6\x70\x0c\xd2\x30\x36\xd3\xb4\xe6\xe2\x42\xd6\x58\x9c\x91\x58\x94\x99\x97\x4e\x8e\xce\xd4\xe2\xe2\xcc\xfc\x3c\x14\x4b\x13\x4b\x4b\x32\xe2\x8b\x53\x8b\xca\x32\x93\x53\xe1\x5a\x8d\x0c\x34\xad\xb9\x00\x01\x00\x00\xff\xff\xba\x55\x30\xd8\xad\x00\x00\x00")
+
+func _000008_teamsUpSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__000008_teamsUpSql,
+		"000008_teams.up.sql",
+	)
+}
+
+func _000008_teamsUpSql() (*asset, error) {
+	bytes, err := _000008_teamsUpSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "000008_teams.up.sql", size: 173, mode: os.FileMode(420), modTime: time.Unix(1616709035, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -425,6 +467,8 @@ var _bindata = map[string]func() (*asset, error){
 	"000006_sharing_table.up.sql": _000006_sharing_tableUpSql,
 	"000007_workspaces_table.down.sql": _000007_workspaces_tableDownSql,
 	"000007_workspaces_table.up.sql": _000007_workspaces_tableUpSql,
+	"000008_teams.down.sql": _000008_teamsDownSql,
+	"000008_teams.up.sql": _000008_teamsUpSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -481,6 +525,8 @@ var _bintree = &bintree{nil, map[string]*bintree{
 	"000006_sharing_table.up.sql": &bintree{_000006_sharing_tableUpSql, map[string]*bintree{}},
 	"000007_workspaces_table.down.sql": &bintree{_000007_workspaces_tableDownSql, map[string]*bintree{}},
 	"000007_workspaces_table.up.sql": &bintree{_000007_workspaces_tableUpSql, map[string]*bintree{}},
+	"000008_teams.down.sql": &bintree{_000008_teamsDownSql, map[string]*bintree{}},
+	"000008_teams.up.sql": &bintree{_000008_teamsUpSql, map[string]*bintree{}},
 }}
 
 // RestoreAsset restores an asset under the given directory

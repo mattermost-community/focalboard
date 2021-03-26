@@ -43,6 +43,8 @@ type Server struct {
 
 	localRouter     *mux.Router
 	localModeServer *http.Server
+	api             *api.API
+	appBuilder      func() *app.App
 }
 
 func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
@@ -74,7 +76,7 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 	webhookClient := webhook.NewClient(cfg)
 
 	appBuilder := func() *app.App { return app.New(cfg, store, auth, wsServer, filesBackend, webhookClient) }
-	api := api.NewAPI(appBuilder, singleUserToken)
+	api := api.NewAPI(appBuilder, singleUserToken, cfg.AuthMode)
 
 	// Local router for admin APIs
 	localRouter := mux.NewRouter()
@@ -150,7 +152,7 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 		}
 	})
 
-	return &Server{
+	server := Server{
 		config:       cfg,
 		wsServer:     wsServer,
 		webServer:    webServer,
@@ -159,7 +161,13 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 		telemetry:    telemetryService,
 		logger:       logger,
 		localRouter:  localRouter,
-	}, nil
+		api:          api,
+		appBuilder:   appBuilder,
+	}
+
+	server.initHandlers()
+
+	return &server, nil
 }
 
 func (s *Server) Start() error {

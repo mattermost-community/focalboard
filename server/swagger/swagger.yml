@@ -88,6 +88,11 @@ definitions:
         description: The error message
         type: string
         x-go-name: Error
+      errorCode:
+        description: The error code
+        format: int64
+        type: integer
+        x-go-name: ErrorCode
     type: object
     x-go-package: github.com/mattermost/focalboard/server/model
   FileUploadResponse:
@@ -286,152 +291,6 @@ info:
   title: Focalboard Server
   version: 1.0.0
 paths:
-  /api/v1/blocks:
-    get:
-      description: Returns blocks
-      operationId: getBlocks
-      parameters:
-      - description: ID of parent block, omit to specify all blocks
-        in: query
-        name: parent_id
-        type: string
-      - description: Type of blocks to return, omit to specify all types
-        in: query
-        name: type
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            items:
-              $ref: '#/definitions/Block'
-            type: array
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-    post:
-      description: Insert or update blocks
-      operationId: updateBlocks
-      parameters:
-      - description: array of blocks to insert or update
-        in: body
-        name: Body
-        required: true
-        schema:
-          items:
-            $ref: '#/definitions/Block'
-          type: array
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /api/v1/blocks/{blockID}:
-    delete:
-      description: Deletes a block
-      operationId: deleteBlock
-      parameters:
-      - description: ID of block to delete
-        in: path
-        name: blockID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /api/v1/blocks/{blockID}/subtree:
-    get:
-      description: Returns the blocks of a subtree
-      operationId: getSubTree
-      parameters:
-      - description: The ID of the root block of the subtree
-        in: path
-        name: blockID
-        required: true
-        type: string
-      - description: The number of levels to return. 2 or 3. Defaults to 2.
-        in: query
-        maximum: 3
-        minimum: 2
-        name: l
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            items:
-              $ref: '#/definitions/Block'
-            type: array
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /api/v1/blocks/export:
-    get:
-      description: Returns all blocks
-      operationId: exportBlocks
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            items:
-              $ref: '#/definitions/Block'
-            type: array
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /api/v1/blocks/import:
-    post:
-      description: Import blocks
-      operationId: importBlocks
-      parameters:
-      - description: array of blocks to import
-        in: body
-        name: Body
-        required: true
-        schema:
-          items:
-            $ref: '#/definitions/Block'
-          type: array
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
   /api/v1/files:
     post:
       consumes:
@@ -504,55 +363,6 @@ paths:
           description: internal error
           schema:
             $ref: '#/definitions/ErrorResponse'
-  /api/v1/sharing/{rootID}:
-    get:
-      description: Returns sharing information for a root block
-      operationId: getSharing
-      parameters:
-      - description: ID of the root block
-        in: path
-        name: rootID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/Sharing'
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-    post:
-      description: Sets sharing information for a root block
-      operationId: postSharing
-      parameters:
-      - description: ID of the root block
-        in: path
-        name: rootID
-        required: true
-        type: string
-      - description: sharing information for a root block
-        in: body
-        name: Body
-        required: true
-        schema:
-          $ref: '#/definitions/Sharing'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
   /api/v1/users/{userID}:
     get:
       description: Returns a user
@@ -624,10 +434,16 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       security:
       - BearerAuth: []
-  /api/v1/workspace:
+  /api/v1/workspaces/{workspaceID}:
     get:
       description: Returns information of the root workspace
       operationId: getWorkspace
+      parameters:
+      - description: Workspace ID
+        in: path
+        name: workspaceID
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -641,10 +457,252 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       security:
       - BearerAuth: []
-  /api/v1/workspace/regenerate_signup_token:
+  /api/v1/workspaces/{workspaceID}/blocks:
+    get:
+      description: Returns blocks
+      operationId: getBlocks
+      parameters:
+      - description: Workspace ID
+        in: path
+        name: workspaceID
+        required: true
+        type: string
+      - description: ID of parent block, omit to specify all blocks
+        in: query
+        name: parent_id
+        type: string
+      - description: Type of blocks to return, omit to specify all types
+        in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            items:
+              $ref: '#/definitions/Block'
+            type: array
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+    post:
+      description: Insert or update blocks
+      operationId: updateBlocks
+      parameters:
+      - description: Workspace ID
+        in: path
+        name: workspaceID
+        required: true
+        type: string
+      - description: array of blocks to insert or update
+        in: body
+        name: Body
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/Block'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspaceID}/blocks/{blockID}:
+    delete:
+      description: Deletes a block
+      operationId: deleteBlock
+      parameters:
+      - description: Workspace ID
+        in: path
+        name: workspaceID
+        required: true
+        type: string
+      - description: ID of block to delete
+        in: path
+        name: blockID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspaceID}/blocks/{blockID}/subtree:
+    get:
+      description: Returns the blocks of a subtree
+      operationId: getSubTree
+      parameters:
+      - description: Workspace ID
+        in: path
+        name: workspaceID
+        required: true
+        type: string
+      - description: The ID of the root block of the subtree
+        in: path
+        name: blockID
+        required: true
+        type: string
+      - description: The number of levels to return. 2 or 3. Defaults to 2.
+        in: query
+        maximum: 3
+        minimum: 2
+        name: l
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            items:
+              $ref: '#/definitions/Block'
+            type: array
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspaceID}/blocks/export:
+    get:
+      description: Returns all blocks
+      operationId: exportBlocks
+      parameters:
+      - description: Workspace ID
+        in: path
+        name: workspaceID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            items:
+              $ref: '#/definitions/Block'
+            type: array
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspaceID}/blocks/import:
+    post:
+      description: Import blocks
+      operationId: importBlocks
+      parameters:
+      - description: Workspace ID
+        in: path
+        name: workspaceID
+        required: true
+        type: string
+      - description: array of blocks to import
+        in: body
+        name: Body
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/Block'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspaceID}/regenerate_signup_token:
     post:
       description: Regenerates the signup token for the root workspace
       operationId: regenerateSignupToken
+      parameters:
+      - description: Workspace ID
+        in: path
+        name: workspaceID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspaceID}/sharing/{rootID}:
+    get:
+      description: Returns sharing information for a root block
+      operationId: getSharing
+      parameters:
+      - description: Workspace ID
+        in: path
+        name: workspaceID
+        required: true
+        type: string
+      - description: ID of the root block
+        in: path
+        name: rootID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/Sharing'
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+    post:
+      description: Sets sharing information for a root block
+      operationId: postSharing
+      parameters:
+      - description: Workspace ID
+        in: path
+        name: workspaceID
+        required: true
+        type: string
+      - description: ID of the root block
+        in: path
+        name: rootID
+        required: true
+        type: string
+      - description: sharing information for a root block
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/Sharing'
       produces:
       - application/json
       responses:
