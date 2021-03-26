@@ -21,18 +21,16 @@ type Props = {
     intl: IntlShape
 }
 
-class ContentElement extends React.PureComponent<Props> {
-    public render(): JSX.Element | null {
-        const {block, intl, readonly} = this.props
+function ContentElement(props: Props): JSX.Element|null {
+    const {block, intl, readonly} = props
 
-        const handler = contentRegistry.getHandler(block.type)
-        if (!handler) {
-            Utils.logError(`ContentElement, unknown content type: ${block.type}`)
-            return null
-        }
-
-        return handler.createComponent(block, intl, readonly)
+    const handler = contentRegistry.getHandler(block.type)
+    if (!handler) {
+        Utils.logError(`ContentElement, unknown content type: ${block.type}`)
+        return null
     }
+
+    return handler.createComponent(block, intl, readonly)
 }
 
 export default injectIntl(ContentElement)

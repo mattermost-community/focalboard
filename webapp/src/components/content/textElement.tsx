@@ -17,22 +17,20 @@ type Props = {
     intl: IntlShape
 }
 
-class TextElement extends React.PureComponent<Props> {
-    render(): JSX.Element {
-        const {intl, block, readonly} = this.props
+const TextElement = React.memo((props: Props): JSX.Element => {
+    const {intl, block, readonly} = props
 
-        return (
-            <MarkdownEditor
-                text={block.title}
-                placeholderText={intl.formatMessage({id: 'ContentBlock.editText', defaultMessage: 'Edit text...'})}
-                onBlur={(text) => {
-                    mutator.changeTitle(block, text, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card text'}))
-                }}
-                readonly={readonly}
-            />
-        )
-    }
-}
+    return (
+        <MarkdownEditor
+            text={block.title}
+            placeholderText={intl.formatMessage({id: 'ContentBlock.editText', defaultMessage: 'Edit text...'})}
+            onBlur={(text) => {
+                mutator.changeTitle(block, text, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card text'}))
+            }}
+            readonly={readonly}
+        />
+    )
+})
 
 contentRegistry.registerContentType({
     type: 'text',
