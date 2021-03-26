@@ -12,7 +12,6 @@ import messages_oc from '../i18n/oc.json'
 import messages_tr from '../i18n/tr.json'
 import messages_zhHant from '../i18n/zh_Hant.json'
 
-
 export function getMessages(lang: string): {[key: string]: string} {
     switch (lang) {
     case 'de':

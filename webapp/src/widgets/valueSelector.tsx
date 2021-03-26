@@ -4,7 +4,7 @@ import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 import {ActionMeta, ValueType, FormatOptionLabelMeta} from 'react-select'
 import CreatableSelect from 'react-select/creatable'
-import { CSSObject } from '@emotion/serialize';
+import {CSSObject} from '@emotion/serialize'
 
 import {IPropertyOption} from '../blocks/board'
 import {Constants} from '../constants'
