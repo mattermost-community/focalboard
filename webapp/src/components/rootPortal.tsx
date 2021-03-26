@@ -23,7 +23,7 @@ const RootPortal = React.memo((props: Props): JSX.Element => {
         }
     }, [])
 
-    return ReactDOM.createPortal(props.children, el)
+    return ReactDOM.createPortal(props.children, el)  // eslint-disable-line
 })
 
 export default RootPortal
