@@ -19,7 +19,7 @@ function SwitchOption(props: SwitchOptionProps): JSX.Element {
             className='MenuOption SwitchOption menu-option'
             onClick={(e: React.MouseEvent) => {
                 e.target.dispatchEvent(new Event('menuItemClicked'))
-                this.props.onClick(props.id)
+                props.onClick(props.id)
             }}
         >
             {icon ?? <div className='noicon'/>}
