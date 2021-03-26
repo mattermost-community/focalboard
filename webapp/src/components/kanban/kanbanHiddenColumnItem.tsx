@@ -4,13 +4,13 @@
 import React from 'react'
 import {IntlShape} from 'react-intl'
 
-import {IPropertyOption} from '../blocks/board'
-import mutator from '../mutator'
-import {BoardTree, BoardTreeGroup} from '../viewModel/boardTree'
-import Button from '../widgets/buttons/button'
-import Menu from '../widgets/menu'
-import MenuWrapper from '../widgets/menuWrapper'
-import ShowIcon from '../widgets/icons/show'
+import {IPropertyOption} from '../../blocks/board'
+import mutator from '../../mutator'
+import {BoardTree, BoardTreeGroup} from '../../viewModel/boardTree'
+import Button from '../../widgets/buttons/button'
+import Menu from '../../widgets/menu'
+import MenuWrapper from '../../widgets/menuWrapper'
+import ShowIcon from '../../widgets/icons/show'
 
 type Props = {
     boardTree: BoardTree
@@ -21,7 +21,7 @@ type Props = {
     hasDraggedCards: boolean
 }
 
-export default function HiddenColumnItem(props: Props): JSX.Element {
+export default function KanbanHiddenColumnItem(props: Props): JSX.Element {
     const {boardTree, intl, group} = props
     const {activeView} = boardTree
 

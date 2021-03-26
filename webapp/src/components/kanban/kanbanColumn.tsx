@@ -8,7 +8,7 @@ type Props = {
     children: React.ReactNode
 }
 
-const BoardColumn = React.memo((props: Props) => {
+const KanbanColumn = React.memo((props: Props) => {
     const [isDragOver, setIsDragOver] = useState(false)
 
     let className = 'octo-board-column'
@@ -46,4 +46,4 @@ const BoardColumn = React.memo((props: Props) => {
     )
 })
 
-export default BoardColumn
+export default KanbanColumn

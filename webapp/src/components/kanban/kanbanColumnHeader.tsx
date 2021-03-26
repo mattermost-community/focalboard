@@ -4,20 +4,20 @@
 import React from 'react'
 import {FormattedMessage, IntlShape} from 'react-intl'
 
-import {Constants} from '../constants'
-import {IPropertyOption} from '../blocks/board'
-import mutator from '../mutator'
-import {BoardTree, BoardTreeGroup} from '../viewModel/boardTree'
-import Button from '../widgets/buttons/button'
-import IconButton from '../widgets/buttons/iconButton'
-import AddIcon from '../widgets/icons/add'
-import DeleteIcon from '../widgets/icons/delete'
-import HideIcon from '../widgets/icons/hide'
-import OptionsIcon from '../widgets/icons/options'
-import Menu from '../widgets/menu'
-import MenuWrapper from '../widgets/menuWrapper'
+import {Constants} from '../../constants'
+import {IPropertyOption} from '../../blocks/board'
+import mutator from '../../mutator'
+import {BoardTree, BoardTreeGroup} from '../../viewModel/boardTree'
+import Button from '../../widgets/buttons/button'
+import IconButton from '../../widgets/buttons/iconButton'
+import AddIcon from '../../widgets/icons/add'
+import DeleteIcon from '../../widgets/icons/delete'
+import HideIcon from '../../widgets/icons/hide'
+import OptionsIcon from '../../widgets/icons/options'
+import Menu from '../../widgets/menu'
+import MenuWrapper from '../../widgets/menuWrapper'
 
-import {Editable} from './editable'
+import {Editable} from '../editable'
 
 type Props = {
     boardTree: BoardTree
@@ -30,7 +30,7 @@ type Props = {
     setDraggedHeaderOption: (draggedHeaderOption?: IPropertyOption) => void
 }
 
-export default function BoardColumnHeader(props: Props): JSX.Element {
+export default function KanbanColumnHeader(props: Props): JSX.Element {
     const {boardTree, intl, group} = props
     const {activeView} = boardTree
 
@@ -41,7 +41,7 @@ export default function BoardColumnHeader(props: Props): JSX.Element {
             <div
                 key='empty'
                 ref={ref}
-                className='octo-board-header-cell'
+                className='octo-board-header-cell KanbanColumnHeader'
 
                 draggable={!props.readonly}
                 onDragStart={() => {
@@ -114,7 +114,7 @@ export default function BoardColumnHeader(props: Props): JSX.Element {
         <div
             key={group.option.id}
             ref={ref}
-            className='octo-board-header-cell'
+            className='octo-board-header-cell KanbanColumnHeader'
 
             draggable={!props.readonly}
             onDragStart={() => {
