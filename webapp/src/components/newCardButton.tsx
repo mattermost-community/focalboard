@@ -4,15 +4,12 @@
 import React from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
-import mutator from '../mutator'
 import {BoardTree} from '../viewModel/boardTree'
 import ButtonWithMenu from '../widgets/buttons/buttonWithMenu'
-import IconButton from '../widgets/buttons/iconButton'
 import CardIcon from '../widgets/icons/card'
-import DeleteIcon from '../widgets/icons/delete'
-import OptionsIcon from '../widgets/icons/options'
 import Menu from '../widgets/menu'
-import MenuWrapper from '../widgets/menuWrapper'
+
+import NewCardButtonTemplateItem from './newCardButtonTemplateItem'
 
 type Props = {
     boardTree: BoardTree
@@ -53,42 +50,14 @@ class NewCardButton extends React.PureComponent<Props> {
                         <Menu.Separator/>
                     </>}
 
-                    {boardTree.cardTemplates.map((cardTemplate) => {
-                        const displayName = cardTemplate.title || intl.formatMessage({id: 'ViewHeader.untitled', defaultMessage: 'Untitled'})
-                        return (
-                            <Menu.Text
-                                key={cardTemplate.id}
-                                id={cardTemplate.id}
-                                name={displayName}
-                                icon={<div className='Icon'>{cardTemplate.icon}</div>}
-                                onClick={() => {
-                                    this.props.addCardFromTemplate(cardTemplate.id)
-                                }}
-                                rightIcon={
-                                    <MenuWrapper stopPropagationOnToggle={true}>
-                                        <IconButton icon={<OptionsIcon/>}/>
-                                        <Menu position='left'>
-                                            <Menu.Text
-                                                id='edit'
-                                                name={intl.formatMessage({id: 'ViewHeader.edit-template', defaultMessage: 'Edit'})}
-                                                onClick={() => {
-                                                    this.props.editCardTemplate(cardTemplate.id)
-                                                }}
-                                            />
-                                            <Menu.Text
-                                                icon={<DeleteIcon/>}
-                                                id='delete'
-                                                name={intl.formatMessage({id: 'ViewHeader.delete-template', defaultMessage: 'Delete'})}
-                                                onClick={async () => {
-                                                    await mutator.deleteBlock(cardTemplate, 'delete card template')
-                                                }}
-                                            />
-                                        </Menu>
-                                    </MenuWrapper>
-                                }
-                            />
-                        )
-                    })}
+                    {boardTree.cardTemplates.map((cardTemplate) => (
+                        <NewCardButtonTemplateItem
+                            key={cardTemplate.id}
+                            cardTemplate={cardTemplate}
+                            addCardFromTemplate={this.props.addCardFromTemplate}
+                            editCardTemplate={this.props.editCardTemplate}
+                        />
+                    ))}
 
                     <Menu.Text
                         id='empty-template'
