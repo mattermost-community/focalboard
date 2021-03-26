@@ -23,7 +23,7 @@ import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 
 import BoardCard from './boardCard'
-import {BoardColumn} from './boardColumn'
+import BoardColumn from './boardColumn'
 import './boardComponent.scss'
 import CardDialog from './cardDialog'
 import {Editable} from './editable'
