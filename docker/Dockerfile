@@ -6,7 +6,7 @@ RUN apt-get update && \
 
 # Now install Focalboard as a seperate layer
 RUN RELEASE=$(curl --silent "https://api.github.com/repos/mattermost/focalboard/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') && \
-    wget https://github.com/mattermost/focalboard/$RELEASE/download/v0.6.1/focalboard-server-linux-amd64.tar.gz && \
+    wget https://github.com/mattermost/focalboard/releases/download/$RELEASE/focalboard-server-linux-amd64.tar.gz && \
     tar -xvzf focalboard-server-linux-amd64.tar.gz && \
     mv focalboard /opt
 
