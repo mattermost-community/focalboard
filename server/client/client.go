@@ -138,7 +138,7 @@ func (c *Client) doApiRequestReader(method, url string, data io.Reader, etag str
 }
 
 func (c *Client) GetBlocksRoute() string {
-	return "/blocks"
+	return "/workspaces/0/blocks"
 }
 
 func (c *Client) GetBlockRoute(id string) string {
@@ -192,7 +192,7 @@ func (c *Client) GetSubtree(blockID string) ([]model.Block, *Response) {
 // Sharing
 
 func (c *Client) GetSharingRoute(rootID string) string {
-	return fmt.Sprintf("/sharing/%s", rootID)
+	return fmt.Sprintf("/workspaces/0/sharing/%s", rootID)
 }
 
 func (c *Client) GetSharing(rootID string) (*model.Sharing, *Response) {

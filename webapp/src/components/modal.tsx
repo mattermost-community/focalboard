@@ -1,7 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import React, {useRef, useEffect} from 'react'
 
 import IconButton from '../widgets/buttons/iconButton'
 import CloseIcon from '../widgets/icons/close'
@@ -9,57 +8,45 @@ import './modal.scss'
 
 type Props = {
     onClose: () => void
-    intl: IntlShape
     position?: 'top'|'bottom'|'bottom-right'
+    children: React.ReactNode
 }
 
-class Modal extends React.PureComponent<Props> {
-    private node: React.RefObject<HTMLDivElement>
+const Modal = React.memo((props: Props): JSX.Element => {
+    const node = useRef<HTMLDivElement>(null)
 
-    public constructor(props: Props) {
-        super(props)
-        this.node = React.createRef()
-    }
+    const {position, onClose, children} = props
 
-    public componentDidMount(): void {
-        document.addEventListener('click', this.closeOnBlur, true)
-    }
-
-    public componentWillUnmount(): void {
-        document.removeEventListener('click', this.closeOnBlur, true)
-    }
-
-    private closeOnBlur = (e: Event) => {
-        if (this.node && this.node.current && e.target && this.node.current.contains(e.target as Node)) {
+    const closeOnBlur = (e: Event) => {
+        if (e.target && node.current?.contains(e.target as Node)) {
             return
         }
 
-        this.props.onClose()
+        onClose()
     }
 
-    render(): JSX.Element {
-        const {position} = this.props
+    useEffect(() => {
+        document.addEventListener('click', closeOnBlur, true)
+        return () => {
+            document.removeEventListener('click', closeOnBlur, true)
+        }
+    }, [])
 
-        return (
-            <div
-                className={'Modal ' + (position || 'bottom')}
-                ref={this.node}
-            >
-                <div className='toolbar hideOnWidescreen'>
-                    <IconButton
-                        onClick={this.closeClicked}
-                        icon={<CloseIcon/>}
-                        title={'Close'}
-                    />
-                </div>
-                {this.props.children}
+    return (
+        <div
+            className={'Modal ' + (position || 'bottom')}
+            ref={node}
+        >
+            <div className='toolbar hideOnWidescreen'>
+                <IconButton
+                    onClick={() => onClose()}
+                    icon={<CloseIcon/>}
+                    title={'Close'}
+                />
             </div>
-        )
-    }
+            {children}
+        </div>
+    )
+})
 
-    private closeClicked = () => {
-        this.props.onClose()
-    }
-}
-
-export default injectIntl(Modal)
+export default Modal

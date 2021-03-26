@@ -28,7 +28,7 @@ func (s *SQLStore) GetActiveUserCount(updatedSecondsAgo int64) (int, error) {
 
 func (s *SQLStore) GetSession(token string, expireTime int64) (*model.Session, error) {
 	query := s.getQueryBuilder().
-		Select("id", "token", "user_id", "props").
+		Select("id", "token", "user_id", "auth_service", "props").
 		From("sessions").
 		Where(sq.Eq{"token": token}).
 		Where(sq.Gt{"update_at": time.Now().Unix() - expireTime})
@@ -37,7 +37,7 @@ func (s *SQLStore) GetSession(token string, expireTime int64) (*model.Session, e
 	session := model.Session{}
 
 	var propsBytes []byte
-	err := row.Scan(&session.ID, &session.Token, &session.UserID, &propsBytes)
+	err := row.Scan(&session.ID, &session.Token, &session.UserID, &session.AuthService, &propsBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -59,8 +59,8 @@ func (s *SQLStore) CreateSession(session *model.Session) error {
 	}
 
 	query := s.getQueryBuilder().Insert("sessions").
-		Columns("id", "token", "user_id", "props", "create_at", "update_at").
-		Values(session.ID, session.Token, session.UserID, propsBytes, now, now)
+		Columns("id", "token", "user_id", "auth_service", "props", "create_at", "update_at").
+		Values(session.ID, session.Token, session.UserID, session.AuthService, propsBytes, now, now)
 
 	_, err = query.Exec()
 	return err

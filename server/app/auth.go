@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/auth"
+	"github.com/mattermost/focalboard/server/services/store"
 
 	"github.com/pkg/errors"
 )
@@ -16,8 +17,8 @@ func (a *App) GetSession(token string) (*model.Session, error) {
 }
 
 // IsValidReadToken validates the read token for a block
-func (a *App) IsValidReadToken(blockID, readToken string) (bool, error) {
-	return a.auth.IsValidReadToken(blockID, readToken)
+func (a *App) IsValidReadToken(c store.Container, blockID string, readToken string) (bool, error) {
+	return a.auth.IsValidReadToken(c, blockID, readToken)
 }
 
 // GetRegisteredUserCount returns the number of registered users
@@ -83,11 +84,17 @@ func (a *App) Login(username, email, password, mfaToken string) (string, error) 
 		return "", errors.New("invalid username or password")
 	}
 
+	authService := user.AuthService
+	if authService == "" {
+		authService = "native"
+	}
+
 	session := model.Session{
-		ID:     uuid.New().String(),
-		Token:  uuid.New().String(),
-		UserID: user.ID,
-		Props:  map[string]interface{}{},
+		ID:          uuid.New().String(),
+		Token:       uuid.New().String(),
+		UserID:      user.ID,
+		AuthService: authService,
+		Props:       map[string]interface{}{},
 	}
 	err := a.store.CreateSession(&session)
 	if err != nil {
@@ -133,7 +140,7 @@ func (a *App) RegisterUser(username, email, password string) error {
 		Email:       email,
 		Password:    auth.HashPassword(password),
 		MfaSecret:   "",
-		AuthService: "",
+		AuthService: a.config.AuthMode,
 		AuthData:    "",
 		Props:       map[string]interface{}{},
 	})

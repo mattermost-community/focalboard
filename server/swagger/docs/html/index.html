@@ -942,6 +942,12 @@ ul.nav-tabs {
       "type" : "string",
       "description" : "The error message",
       "x-go-name" : "Error"
+    },
+    "errorCode" : {
+      "type" : "integer",
+      "description" : "The error code",
+      "format" : "int64",
+      "x-go-name" : "ErrorCode"
     }
   },
   "description" : "ErrorResponse is an error response",
@@ -1770,7 +1776,7 @@ $(document).ready(function() {
                         <p class="marked">Deletes a block</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="delete"><code><span class="pln">/api/v1/blocks/{blockID}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="delete"><code><span class="pln">/api/v1/workspaces/{workspaceID}/blocks/{blockID}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -1794,7 +1800,7 @@ $(document).ready(function() {
                             <pre class="prettyprint"><code class="language-bsh">curl -X DELETE\
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
- "http://localhost/api/v1/api/v1/blocks/{blockID}"</code></pre>
+ "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/blocks/{blockID}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-deleteBlock-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -1817,10 +1823,11 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
         String blockID = blockID_example; // String | ID of block to delete
         
         try {
-            apiInstance.deleteBlock(blockID);
+            apiInstance.deleteBlock(workspaceID, blockID);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#deleteBlock");
             e.printStackTrace();
@@ -1836,10 +1843,11 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
         String blockID = blockID_example; // String | ID of block to delete
         
         try {
-            apiInstance.deleteBlock(blockID);
+            apiInstance.deleteBlock(workspaceID, blockID);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#deleteBlock");
             e.printStackTrace();
@@ -1862,9 +1870,11 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *workspaceID = workspaceID_example; // Workspace ID (default to null)
 String *blockID = blockID_example; // ID of block to delete (default to null)
 
-[apiInstance deleteBlockWith:blockID
+[apiInstance deleteBlockWith:workspaceID
+    blockID:blockID
               completionHandler: ^(NSError* error) {
     if (error) {
         NSLog(@"Error: %@", error);
@@ -1885,6 +1895,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new FocalboardServer.DefaultApi()
+var workspaceID = workspaceID_example; // {String} Workspace ID
 var blockID = blockID_example; // {String} ID of block to delete
 
 var callback = function(error, data, response) {
@@ -1894,7 +1905,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully.');
   }
 };
-api.deleteBlock(blockID, callback);
+api.deleteBlock(workspaceID, blockID, callback);
 </code></pre>
                             </div>
 
@@ -1921,10 +1932,11 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
+            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
             var blockID = blockID_example;  // String | ID of block to delete (default to null)
 
             try {
-                apiInstance.deleteBlock(blockID);
+                apiInstance.deleteBlock(workspaceID, blockID);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.deleteBlock: " + e.Message );
             }
@@ -1945,10 +1957,11 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$workspaceID = workspaceID_example; // String | Workspace ID
 $blockID = blockID_example; // String | ID of block to delete
 
 try {
-    $api_instance->deleteBlock($blockID);
+    $api_instance->deleteBlock($workspaceID, $blockID);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->deleteBlock: ', $e->getMessage(), PHP_EOL;
 }
@@ -1967,10 +1980,11 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $workspaceID = workspaceID_example; # String | Workspace ID
 my $blockID = blockID_example; # String | ID of block to delete
 
 eval { 
-    $api_instance->deleteBlock(blockID => $blockID);
+    $api_instance->deleteBlock(workspaceID => $workspaceID, blockID => $blockID);
 };
 if ($@) {
     warn "Exception when calling DefaultApi->deleteBlock: $@\n";
@@ -1991,10 +2005,11 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
+workspaceID = workspaceID_example # String | Workspace ID (default to null)
 blockID = blockID_example # String | ID of block to delete (default to null)
 
 try: 
-    api_instance.delete_block(blockID)
+    api_instance.delete_block(workspaceID, blockID)
 except ApiException as e:
     print("Exception when calling DefaultApi->deleteBlock: %s\n" % e)</code></pre>
                             </div>
@@ -2003,10 +2018,11 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
+    let workspaceID = workspaceID_example; // String
     let blockID = blockID_example; // String
 
     let mut context = DefaultApi::Context::default();
-    let result = client.deleteBlock(blockID, &context).wait();
+    let result = client.deleteBlock(workspaceID, blockID, &context).wait();
 
     println!("{:?}", result);
 }
@@ -2027,6 +2043,29 @@ pub fn main() {
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
+                                  <tr><td style="width:150px;">workspaceID*</td>
+<td>
+
+
+    <div id="d2e199_deleteBlock_workspaceID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Workspace ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
                                   <tr><td style="width:150px;">blockID*</td>
 <td>
 
@@ -2160,7 +2199,7 @@ ID of block to delete
                         <p class="marked">Returns all blocks</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/blocks/export</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/workspaces/{workspaceID}/blocks/export</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -2184,7 +2223,7 @@ ID of block to delete
                             <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
- "http://localhost/api/v1/api/v1/blocks/export"</code></pre>
+ "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/blocks/export"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-exportBlocks-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -2207,9 +2246,10 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
         
         try {
-            array[Block] result = apiInstance.exportBlocks();
+            array[Block] result = apiInstance.exportBlocks(workspaceID);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#exportBlocks");
@@ -2226,9 +2266,10 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
         
         try {
-            array[Block] result = apiInstance.exportBlocks();
+            array[Block] result = apiInstance.exportBlocks(workspaceID);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#exportBlocks");
@@ -2252,9 +2293,10 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *workspaceID = workspaceID_example; // Workspace ID (default to null)
 
-[apiInstance exportBlocksWithCompletionHandler: 
-              ^(array[Block] output, NSError* error) {
+[apiInstance exportBlocksWith:workspaceID
+              completionHandler: ^(array[Block] output, NSError* error) {
     if (output) {
         NSLog(@"%@", output);
     }
@@ -2277,6 +2319,8 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new FocalboardServer.DefaultApi()
+var workspaceID = workspaceID_example; // {String} Workspace ID
+
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -2284,7 +2328,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.exportBlocks(callback);
+api.exportBlocks(workspaceID, callback);
 </code></pre>
                             </div>
 
@@ -2311,9 +2355,10 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
+            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
 
             try {
-                array[Block] result = apiInstance.exportBlocks();
+                array[Block] result = apiInstance.exportBlocks(workspaceID);
                 Debug.WriteLine(result);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.exportBlocks: " + e.Message );
@@ -2335,9 +2380,10 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$workspaceID = workspaceID_example; // String | Workspace ID
 
 try {
-    $result = $api_instance->exportBlocks();
+    $result = $api_instance->exportBlocks($workspaceID);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->exportBlocks: ', $e->getMessage(), PHP_EOL;
@@ -2357,9 +2403,10 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $workspaceID = workspaceID_example; # String | Workspace ID
 
 eval { 
-    my $result = $api_instance->exportBlocks();
+    my $result = $api_instance->exportBlocks(workspaceID => $workspaceID);
     print Dumper($result);
 };
 if ($@) {
@@ -2381,9 +2428,10 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
+workspaceID = workspaceID_example # String | Workspace ID (default to null)
 
 try: 
-    api_response = api_instance.export_blocks()
+    api_response = api_instance.export_blocks(workspaceID)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DefaultApi->exportBlocks: %s\n" % e)</code></pre>
@@ -2393,9 +2441,10 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
+    let workspaceID = workspaceID_example; // String
 
     let mut context = DefaultApi::Context::default();
-    let result = client.exportBlocks(&context).wait();
+    let result = client.exportBlocks(workspaceID, &context).wait();
 
     println!("{:?}", result);
 }
@@ -2410,6 +2459,36 @@ pub fn main() {
 
                           <h2>Parameters</h2>
 
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">workspaceID*</td>
+<td>
+
+
+    <div id="d2e199_exportBlocks_workspaceID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Workspace ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
 
 
 
@@ -2566,7 +2645,7 @@ pub fn main() {
                         <p class="marked">Returns blocks</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/blocks</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/workspaces/{workspaceID}/blocks</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -2590,7 +2669,7 @@ pub fn main() {
                             <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
- "http://localhost/api/v1/api/v1/blocks?parent_id=&type="</code></pre>
+ "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/blocks?parent_id=&type="</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-getBlocks-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -2613,11 +2692,12 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
         String parentId = parentId_example; // String | ID of parent block, omit to specify all blocks
         String type = type_example; // String | Type of blocks to return, omit to specify all types
         
         try {
-            array[Block] result = apiInstance.getBlocks(parentId, type);
+            array[Block] result = apiInstance.getBlocks(workspaceID, parentId, type);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getBlocks");
@@ -2634,11 +2714,12 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
         String parentId = parentId_example; // String | ID of parent block, omit to specify all blocks
         String type = type_example; // String | Type of blocks to return, omit to specify all types
         
         try {
-            array[Block] result = apiInstance.getBlocks(parentId, type);
+            array[Block] result = apiInstance.getBlocks(workspaceID, parentId, type);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getBlocks");
@@ -2662,10 +2743,12 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *workspaceID = workspaceID_example; // Workspace ID (default to null)
 String *parentId = parentId_example; // ID of parent block, omit to specify all blocks (optional) (default to null)
 String *type = type_example; // Type of blocks to return, omit to specify all types (optional) (default to null)
 
-[apiInstance getBlocksWith:parentId
+[apiInstance getBlocksWith:workspaceID
+    parentId:parentId
     type:type
               completionHandler: ^(array[Block] output, NSError* error) {
     if (output) {
@@ -2690,6 +2773,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new FocalboardServer.DefaultApi()
+var workspaceID = workspaceID_example; // {String} Workspace ID
 var opts = {
   'parentId': parentId_example, // {String} ID of parent block, omit to specify all blocks
   'type': type_example // {String} Type of blocks to return, omit to specify all types
@@ -2702,7 +2786,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.getBlocks(opts, callback);
+api.getBlocks(workspaceID, opts, callback);
 </code></pre>
                             </div>
 
@@ -2729,11 +2813,12 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
+            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
             var parentId = parentId_example;  // String | ID of parent block, omit to specify all blocks (optional)  (default to null)
             var type = type_example;  // String | Type of blocks to return, omit to specify all types (optional)  (default to null)
 
             try {
-                array[Block] result = apiInstance.getBlocks(parentId, type);
+                array[Block] result = apiInstance.getBlocks(workspaceID, parentId, type);
                 Debug.WriteLine(result);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.getBlocks: " + e.Message );
@@ -2755,11 +2840,12 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$workspaceID = workspaceID_example; // String | Workspace ID
 $parentId = parentId_example; // String | ID of parent block, omit to specify all blocks
 $type = type_example; // String | Type of blocks to return, omit to specify all types
 
 try {
-    $result = $api_instance->getBlocks($parentId, $type);
+    $result = $api_instance->getBlocks($workspaceID, $parentId, $type);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->getBlocks: ', $e->getMessage(), PHP_EOL;
@@ -2779,11 +2865,12 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $workspaceID = workspaceID_example; # String | Workspace ID
 my $parentId = parentId_example; # String | ID of parent block, omit to specify all blocks
 my $type = type_example; # String | Type of blocks to return, omit to specify all types
 
 eval { 
-    my $result = $api_instance->getBlocks(parentId => $parentId, type => $type);
+    my $result = $api_instance->getBlocks(workspaceID => $workspaceID, parentId => $parentId, type => $type);
     print Dumper($result);
 };
 if ($@) {
@@ -2805,11 +2892,12 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
+workspaceID = workspaceID_example # String | Workspace ID (default to null)
 parentId = parentId_example # String | ID of parent block, omit to specify all blocks (optional) (default to null)
 type = type_example # String | Type of blocks to return, omit to specify all types (optional) (default to null)
 
 try: 
-    api_response = api_instance.get_blocks(parentId=parentId, type=type)
+    api_response = api_instance.get_blocks(workspaceID, parentId=parentId, type=type)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DefaultApi->getBlocks: %s\n" % e)</code></pre>
@@ -2819,11 +2907,12 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
+    let workspaceID = workspaceID_example; // String
     let parentId = parentId_example; // String
     let type = type_example; // String
 
     let mut context = DefaultApi::Context::default();
-    let result = client.getBlocks(parentId, type, &context).wait();
+    let result = client.getBlocks(workspaceID, parentId, type, &context).wait();
 
     println!("{:?}", result);
 }
@@ -2838,6 +2927,36 @@ pub fn main() {
 
                           <h2>Parameters</h2>
 
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">workspaceID*</td>
+<td>
+
+
+    <div id="d2e199_getBlocks_workspaceID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Workspace ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
 
 
 
@@ -3844,7 +3963,7 @@ pub fn main() {
                         <p class="marked">Returns sharing information for a root block</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/sharing/{rootID}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/workspaces/{workspaceID}/sharing/{rootID}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -3868,7 +3987,7 @@ pub fn main() {
                             <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
- "http://localhost/api/v1/api/v1/sharing/{rootID}"</code></pre>
+ "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/sharing/{rootID}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-getSharing-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -3891,10 +4010,11 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
         String rootID = rootID_example; // String | ID of the root block
         
         try {
-            Sharing result = apiInstance.getSharing(rootID);
+            Sharing result = apiInstance.getSharing(workspaceID, rootID);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getSharing");
@@ -3911,10 +4031,11 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
         String rootID = rootID_example; // String | ID of the root block
         
         try {
-            Sharing result = apiInstance.getSharing(rootID);
+            Sharing result = apiInstance.getSharing(workspaceID, rootID);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getSharing");
@@ -3938,9 +4059,11 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *workspaceID = workspaceID_example; // Workspace ID (default to null)
 String *rootID = rootID_example; // ID of the root block (default to null)
 
-[apiInstance getSharingWith:rootID
+[apiInstance getSharingWith:workspaceID
+    rootID:rootID
               completionHandler: ^(Sharing output, NSError* error) {
     if (output) {
         NSLog(@"%@", output);
@@ -3964,6 +4087,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new FocalboardServer.DefaultApi()
+var workspaceID = workspaceID_example; // {String} Workspace ID
 var rootID = rootID_example; // {String} ID of the root block
 
 var callback = function(error, data, response) {
@@ -3973,7 +4097,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.getSharing(rootID, callback);
+api.getSharing(workspaceID, rootID, callback);
 </code></pre>
                             </div>
 
@@ -4000,10 +4124,11 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
+            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
             var rootID = rootID_example;  // String | ID of the root block (default to null)
 
             try {
-                Sharing result = apiInstance.getSharing(rootID);
+                Sharing result = apiInstance.getSharing(workspaceID, rootID);
                 Debug.WriteLine(result);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.getSharing: " + e.Message );
@@ -4025,10 +4150,11 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$workspaceID = workspaceID_example; // String | Workspace ID
 $rootID = rootID_example; // String | ID of the root block
 
 try {
-    $result = $api_instance->getSharing($rootID);
+    $result = $api_instance->getSharing($workspaceID, $rootID);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->getSharing: ', $e->getMessage(), PHP_EOL;
@@ -4048,10 +4174,11 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $workspaceID = workspaceID_example; # String | Workspace ID
 my $rootID = rootID_example; # String | ID of the root block
 
 eval { 
-    my $result = $api_instance->getSharing(rootID => $rootID);
+    my $result = $api_instance->getSharing(workspaceID => $workspaceID, rootID => $rootID);
     print Dumper($result);
 };
 if ($@) {
@@ -4073,10 +4200,11 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
+workspaceID = workspaceID_example # String | Workspace ID (default to null)
 rootID = rootID_example # String | ID of the root block (default to null)
 
 try: 
-    api_response = api_instance.get_sharing(rootID)
+    api_response = api_instance.get_sharing(workspaceID, rootID)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DefaultApi->getSharing: %s\n" % e)</code></pre>
@@ -4086,10 +4214,11 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
+    let workspaceID = workspaceID_example; // String
     let rootID = rootID_example; // String
 
     let mut context = DefaultApi::Context::default();
-    let result = client.getSharing(rootID, &context).wait();
+    let result = client.getSharing(workspaceID, rootID, &context).wait();
 
     println!("{:?}", result);
 }
@@ -4110,6 +4239,29 @@ pub fn main() {
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
+                                  <tr><td style="width:150px;">workspaceID*</td>
+<td>
+
+
+    <div id="d2e199_getSharing_workspaceID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Workspace ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
                                   <tr><td style="width:150px;">rootID*</td>
 <td>
 
@@ -4287,7 +4439,7 @@ ID of the root block
                         <p class="marked">Returns the blocks of a subtree</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/blocks/{blockID}/subtree</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/workspaces/{workspaceID}/blocks/{blockID}/subtree</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -4311,7 +4463,7 @@ ID of the root block
                             <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
- "http://localhost/api/v1/api/v1/blocks/{blockID}/subtree?l="</code></pre>
+ "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/blocks/{blockID}/subtree?l="</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-getSubTree-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -4334,11 +4486,12 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
         String blockID = blockID_example; // String | The ID of the root block of the subtree
         Integer l = 56; // Integer | The number of levels to return. 2 or 3. Defaults to 2.
         
         try {
-            array[Block] result = apiInstance.getSubTree(blockID, l);
+            array[Block] result = apiInstance.getSubTree(workspaceID, blockID, l);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getSubTree");
@@ -4355,11 +4508,12 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
         String blockID = blockID_example; // String | The ID of the root block of the subtree
         Integer l = 56; // Integer | The number of levels to return. 2 or 3. Defaults to 2.
         
         try {
-            array[Block] result = apiInstance.getSubTree(blockID, l);
+            array[Block] result = apiInstance.getSubTree(workspaceID, blockID, l);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getSubTree");
@@ -4383,10 +4537,12 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *workspaceID = workspaceID_example; // Workspace ID (default to null)
 String *blockID = blockID_example; // The ID of the root block of the subtree (default to null)
 Integer *l = 56; // The number of levels to return. 2 or 3. Defaults to 2. (optional) (default to null)
 
-[apiInstance getSubTreeWith:blockID
+[apiInstance getSubTreeWith:workspaceID
+    blockID:blockID
     l:l
               completionHandler: ^(array[Block] output, NSError* error) {
     if (output) {
@@ -4411,6 +4567,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new FocalboardServer.DefaultApi()
+var workspaceID = workspaceID_example; // {String} Workspace ID
 var blockID = blockID_example; // {String} The ID of the root block of the subtree
 var opts = {
   'l': 56 // {Integer} The number of levels to return. 2 or 3. Defaults to 2.
@@ -4423,7 +4580,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.getSubTree(blockID, opts, callback);
+api.getSubTree(workspaceID, blockID, opts, callback);
 </code></pre>
                             </div>
 
@@ -4450,11 +4607,12 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
+            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
             var blockID = blockID_example;  // String | The ID of the root block of the subtree (default to null)
             var l = 56;  // Integer | The number of levels to return. 2 or 3. Defaults to 2. (optional)  (default to null)
 
             try {
-                array[Block] result = apiInstance.getSubTree(blockID, l);
+                array[Block] result = apiInstance.getSubTree(workspaceID, blockID, l);
                 Debug.WriteLine(result);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.getSubTree: " + e.Message );
@@ -4476,11 +4634,12 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$workspaceID = workspaceID_example; // String | Workspace ID
 $blockID = blockID_example; // String | The ID of the root block of the subtree
 $l = 56; // Integer | The number of levels to return. 2 or 3. Defaults to 2.
 
 try {
-    $result = $api_instance->getSubTree($blockID, $l);
+    $result = $api_instance->getSubTree($workspaceID, $blockID, $l);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->getSubTree: ', $e->getMessage(), PHP_EOL;
@@ -4500,11 +4659,12 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $workspaceID = workspaceID_example; # String | Workspace ID
 my $blockID = blockID_example; # String | The ID of the root block of the subtree
 my $l = 56; # Integer | The number of levels to return. 2 or 3. Defaults to 2.
 
 eval { 
-    my $result = $api_instance->getSubTree(blockID => $blockID, l => $l);
+    my $result = $api_instance->getSubTree(workspaceID => $workspaceID, blockID => $blockID, l => $l);
     print Dumper($result);
 };
 if ($@) {
@@ -4526,11 +4686,12 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
+workspaceID = workspaceID_example # String | Workspace ID (default to null)
 blockID = blockID_example # String | The ID of the root block of the subtree (default to null)
 l = 56 # Integer | The number of levels to return. 2 or 3. Defaults to 2. (optional) (default to null)
 
 try: 
-    api_response = api_instance.get_sub_tree(blockID, l=l)
+    api_response = api_instance.get_sub_tree(workspaceID, blockID, l=l)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DefaultApi->getSubTree: %s\n" % e)</code></pre>
@@ -4540,11 +4701,12 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
+    let workspaceID = workspaceID_example; // String
     let blockID = blockID_example; // String
     let l = 56; // Integer
 
     let mut context = DefaultApi::Context::default();
-    let result = client.getSubTree(blockID, l, &context).wait();
+    let result = client.getSubTree(workspaceID, blockID, l, &context).wait();
 
     println!("{:?}", result);
 }
@@ -4565,6 +4727,29 @@ pub fn main() {
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
+                                  <tr><td style="width:150px;">workspaceID*</td>
+<td>
+
+
+    <div id="d2e199_getSubTree_workspaceID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Workspace ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
                                   <tr><td style="width:150px;">blockID*</td>
 <td>
 
@@ -5215,7 +5400,7 @@ User ID
                         <p class="marked">Returns information of the root workspace</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/workspace</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/workspaces/{workspaceID}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -5239,7 +5424,7 @@ User ID
                             <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
- "http://localhost/api/v1/api/v1/workspace"</code></pre>
+ "http://localhost/api/v1/api/v1/workspaces/{workspaceID}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-getWorkspace-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -5262,9 +5447,10 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
         
         try {
-            Workspace result = apiInstance.getWorkspace();
+            Workspace result = apiInstance.getWorkspace(workspaceID);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getWorkspace");
@@ -5281,9 +5467,10 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
         
         try {
-            Workspace result = apiInstance.getWorkspace();
+            Workspace result = apiInstance.getWorkspace(workspaceID);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getWorkspace");
@@ -5307,9 +5494,10 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *workspaceID = workspaceID_example; // Workspace ID (default to null)
 
-[apiInstance getWorkspaceWithCompletionHandler: 
-              ^(Workspace output, NSError* error) {
+[apiInstance getWorkspaceWith:workspaceID
+              completionHandler: ^(Workspace output, NSError* error) {
     if (output) {
         NSLog(@"%@", output);
     }
@@ -5332,6 +5520,8 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new FocalboardServer.DefaultApi()
+var workspaceID = workspaceID_example; // {String} Workspace ID
+
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -5339,7 +5529,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.getWorkspace(callback);
+api.getWorkspace(workspaceID, callback);
 </code></pre>
                             </div>
 
@@ -5366,9 +5556,10 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
+            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
 
             try {
-                Workspace result = apiInstance.getWorkspace();
+                Workspace result = apiInstance.getWorkspace(workspaceID);
                 Debug.WriteLine(result);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.getWorkspace: " + e.Message );
@@ -5390,9 +5581,10 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$workspaceID = workspaceID_example; // String | Workspace ID
 
 try {
-    $result = $api_instance->getWorkspace();
+    $result = $api_instance->getWorkspace($workspaceID);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->getWorkspace: ', $e->getMessage(), PHP_EOL;
@@ -5412,9 +5604,10 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $workspaceID = workspaceID_example; # String | Workspace ID
 
 eval { 
-    my $result = $api_instance->getWorkspace();
+    my $result = $api_instance->getWorkspace(workspaceID => $workspaceID);
     print Dumper($result);
 };
 if ($@) {
@@ -5436,9 +5629,10 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
+workspaceID = workspaceID_example # String | Workspace ID (default to null)
 
 try: 
-    api_response = api_instance.get_workspace()
+    api_response = api_instance.get_workspace(workspaceID)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DefaultApi->getWorkspace: %s\n" % e)</code></pre>
@@ -5448,9 +5642,10 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
+    let workspaceID = workspaceID_example; // String
 
     let mut context = DefaultApi::Context::default();
-    let result = client.getWorkspace(&context).wait();
+    let result = client.getWorkspace(workspaceID, &context).wait();
 
     println!("{:?}", result);
 }
@@ -5465,6 +5660,36 @@ pub fn main() {
 
                           <h2>Parameters</h2>
 
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">workspaceID*</td>
+<td>
+
+
+    <div id="d2e199_getWorkspace_workspaceID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Workspace ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
 
 
 
@@ -5618,7 +5843,7 @@ pub fn main() {
                         <p class="marked">Import blocks</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/blocks/import</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/workspaces/{workspaceID}/blocks/import</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -5643,7 +5868,7 @@ pub fn main() {
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
  -H "Content-Type: application/json"\
- "http://localhost/api/v1/api/v1/blocks/import"</code></pre>
+ "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/blocks/import"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-importBlocks-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -5666,10 +5891,11 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
         array[Block] body = ; // array[Block] | 
         
         try {
-            apiInstance.importBlocks(body);
+            apiInstance.importBlocks(workspaceID, body);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#importBlocks");
             e.printStackTrace();
@@ -5685,10 +5911,11 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
         array[Block] body = ; // array[Block] | 
         
         try {
-            apiInstance.importBlocks(body);
+            apiInstance.importBlocks(workspaceID, body);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#importBlocks");
             e.printStackTrace();
@@ -5711,9 +5938,11 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *workspaceID = workspaceID_example; // Workspace ID (default to null)
 array[Block] *body = ; // 
 
-[apiInstance importBlocksWith:body
+[apiInstance importBlocksWith:workspaceID
+    body:body
               completionHandler: ^(NSError* error) {
     if (error) {
         NSLog(@"Error: %@", error);
@@ -5734,6 +5963,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new FocalboardServer.DefaultApi()
+var workspaceID = workspaceID_example; // {String} Workspace ID
 var body = ; // {array[Block]} 
 
 var callback = function(error, data, response) {
@@ -5743,7 +5973,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully.');
   }
 };
-api.importBlocks(body, callback);
+api.importBlocks(workspaceID, body, callback);
 </code></pre>
                             </div>
 
@@ -5770,10 +6000,11 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
+            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
             var body = new array[Block](); // array[Block] | 
 
             try {
-                apiInstance.importBlocks(body);
+                apiInstance.importBlocks(workspaceID, body);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.importBlocks: " + e.Message );
             }
@@ -5794,10 +6025,11 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$workspaceID = workspaceID_example; // String | Workspace ID
 $body = ; // array[Block] | 
 
 try {
-    $api_instance->importBlocks($body);
+    $api_instance->importBlocks($workspaceID, $body);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->importBlocks: ', $e->getMessage(), PHP_EOL;
 }
@@ -5816,10 +6048,11 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $workspaceID = workspaceID_example; # String | Workspace ID
 my $body = [WWW::OPenAPIClient::Object::array[Block]->new()]; # array[Block] | 
 
 eval { 
-    $api_instance->importBlocks(body => $body);
+    $api_instance->importBlocks(workspaceID => $workspaceID, body => $body);
 };
 if ($@) {
     warn "Exception when calling DefaultApi->importBlocks: $@\n";
@@ -5840,10 +6073,11 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
+workspaceID = workspaceID_example # String | Workspace ID (default to null)
 body =  # array[Block] | 
 
 try: 
-    api_instance.import_blocks(body)
+    api_instance.import_blocks(workspaceID, body)
 except ApiException as e:
     print("Exception when calling DefaultApi->importBlocks: %s\n" % e)</code></pre>
                             </div>
@@ -5852,10 +6086,11 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
+    let workspaceID = workspaceID_example; // String
     let body = ; // array[Block]
 
     let mut context = DefaultApi::Context::default();
-    let result = client.importBlocks(body, &context).wait();
+    let result = client.importBlocks(workspaceID, body, &context).wait();
 
     println!("{:?}", result);
 }
@@ -5870,6 +6105,36 @@ pub fn main() {
 
                           <h2>Parameters</h2>
 
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">workspaceID*</td>
+<td>
+
+
+    <div id="d2e199_importBlocks_workspaceID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Workspace ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
 
 
                             <div class="methodsubtabletitle">Body parameters</div>
@@ -6516,7 +6781,7 @@ $(document).ready(function() {
                         <p class="marked">Sets sharing information for a root block</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/sharing/{rootID}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/workspaces/{workspaceID}/sharing/{rootID}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -6541,7 +6806,7 @@ $(document).ready(function() {
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
  -H "Content-Type: application/json"\
- "http://localhost/api/v1/api/v1/sharing/{rootID}"</code></pre>
+ "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/sharing/{rootID}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-postSharing-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -6564,11 +6829,12 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
         String rootID = rootID_example; // String | ID of the root block
         Sharing body = ; // Sharing | 
         
         try {
-            apiInstance.postSharing(rootID, body);
+            apiInstance.postSharing(workspaceID, rootID, body);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#postSharing");
             e.printStackTrace();
@@ -6584,11 +6850,12 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
         String rootID = rootID_example; // String | ID of the root block
         Sharing body = ; // Sharing | 
         
         try {
-            apiInstance.postSharing(rootID, body);
+            apiInstance.postSharing(workspaceID, rootID, body);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#postSharing");
             e.printStackTrace();
@@ -6611,10 +6878,12 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *workspaceID = workspaceID_example; // Workspace ID (default to null)
 String *rootID = rootID_example; // ID of the root block (default to null)
 Sharing *body = ; // 
 
-[apiInstance postSharingWith:rootID
+[apiInstance postSharingWith:workspaceID
+    rootID:rootID
     body:body
               completionHandler: ^(NSError* error) {
     if (error) {
@@ -6636,6 +6905,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new FocalboardServer.DefaultApi()
+var workspaceID = workspaceID_example; // {String} Workspace ID
 var rootID = rootID_example; // {String} ID of the root block
 var body = ; // {Sharing} 
 
@@ -6646,7 +6916,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully.');
   }
 };
-api.postSharing(rootID, body, callback);
+api.postSharing(workspaceID, rootID, body, callback);
 </code></pre>
                             </div>
 
@@ -6673,11 +6943,12 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
+            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
             var rootID = rootID_example;  // String | ID of the root block (default to null)
             var body = new Sharing(); // Sharing | 
 
             try {
-                apiInstance.postSharing(rootID, body);
+                apiInstance.postSharing(workspaceID, rootID, body);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.postSharing: " + e.Message );
             }
@@ -6698,11 +6969,12 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$workspaceID = workspaceID_example; // String | Workspace ID
 $rootID = rootID_example; // String | ID of the root block
 $body = ; // Sharing | 
 
 try {
-    $api_instance->postSharing($rootID, $body);
+    $api_instance->postSharing($workspaceID, $rootID, $body);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->postSharing: ', $e->getMessage(), PHP_EOL;
 }
@@ -6721,11 +6993,12 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $workspaceID = workspaceID_example; # String | Workspace ID
 my $rootID = rootID_example; # String | ID of the root block
 my $body = WWW::OPenAPIClient::Object::Sharing->new(); # Sharing | 
 
 eval { 
-    $api_instance->postSharing(rootID => $rootID, body => $body);
+    $api_instance->postSharing(workspaceID => $workspaceID, rootID => $rootID, body => $body);
 };
 if ($@) {
     warn "Exception when calling DefaultApi->postSharing: $@\n";
@@ -6746,11 +7019,12 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
+workspaceID = workspaceID_example # String | Workspace ID (default to null)
 rootID = rootID_example # String | ID of the root block (default to null)
 body =  # Sharing | 
 
 try: 
-    api_instance.post_sharing(rootID, body)
+    api_instance.post_sharing(workspaceID, rootID, body)
 except ApiException as e:
     print("Exception when calling DefaultApi->postSharing: %s\n" % e)</code></pre>
                             </div>
@@ -6759,11 +7033,12 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
+    let workspaceID = workspaceID_example; // String
     let rootID = rootID_example; // String
     let body = ; // Sharing
 
     let mut context = DefaultApi::Context::default();
-    let result = client.postSharing(rootID, body, &context).wait();
+    let result = client.postSharing(workspaceID, rootID, body, &context).wait();
 
     println!("{:?}", result);
 }
@@ -6784,6 +7059,29 @@ pub fn main() {
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
+                                  <tr><td style="width:150px;">workspaceID*</td>
+<td>
+
+
+    <div id="d2e199_postSharing_workspaceID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Workspace ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
                                   <tr><td style="width:150px;">rootID*</td>
 <td>
 
@@ -6964,7 +7262,7 @@ $(document).ready(function() {
                         <p class="marked">Regenerates the signup token for the root workspace</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/workspace/regenerate_signup_token</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/workspaces/{workspaceID}/regenerate_signup_token</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -6988,7 +7286,7 @@ $(document).ready(function() {
                             <pre class="prettyprint"><code class="language-bsh">curl -X POST\
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
- "http://localhost/api/v1/api/v1/workspace/regenerate_signup_token"</code></pre>
+ "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/regenerate_signup_token"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-regenerateSignupToken-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -7011,9 +7309,10 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
         
         try {
-            apiInstance.regenerateSignupToken();
+            apiInstance.regenerateSignupToken(workspaceID);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#regenerateSignupToken");
             e.printStackTrace();
@@ -7029,9 +7328,10 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
         
         try {
-            apiInstance.regenerateSignupToken();
+            apiInstance.regenerateSignupToken(workspaceID);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#regenerateSignupToken");
             e.printStackTrace();
@@ -7054,9 +7354,10 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *workspaceID = workspaceID_example; // Workspace ID (default to null)
 
-[apiInstance regenerateSignupTokenWithCompletionHandler: 
-              ^(NSError* error) {
+[apiInstance regenerateSignupTokenWith:workspaceID
+              completionHandler: ^(NSError* error) {
     if (error) {
         NSLog(@"Error: %@", error);
     }
@@ -7076,6 +7377,8 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new FocalboardServer.DefaultApi()
+var workspaceID = workspaceID_example; // {String} Workspace ID
+
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -7083,7 +7386,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully.');
   }
 };
-api.regenerateSignupToken(callback);
+api.regenerateSignupToken(workspaceID, callback);
 </code></pre>
                             </div>
 
@@ -7110,9 +7413,10 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
+            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
 
             try {
-                apiInstance.regenerateSignupToken();
+                apiInstance.regenerateSignupToken(workspaceID);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.regenerateSignupToken: " + e.Message );
             }
@@ -7133,9 +7437,10 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$workspaceID = workspaceID_example; // String | Workspace ID
 
 try {
-    $api_instance->regenerateSignupToken();
+    $api_instance->regenerateSignupToken($workspaceID);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->regenerateSignupToken: ', $e->getMessage(), PHP_EOL;
 }
@@ -7154,9 +7459,10 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $workspaceID = workspaceID_example; # String | Workspace ID
 
 eval { 
-    $api_instance->regenerateSignupToken();
+    $api_instance->regenerateSignupToken(workspaceID => $workspaceID);
 };
 if ($@) {
     warn "Exception when calling DefaultApi->regenerateSignupToken: $@\n";
@@ -7177,9 +7483,10 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
+workspaceID = workspaceID_example # String | Workspace ID (default to null)
 
 try: 
-    api_instance.regenerate_signup_token()
+    api_instance.regenerate_signup_token(workspaceID)
 except ApiException as e:
     print("Exception when calling DefaultApi->regenerateSignupToken: %s\n" % e)</code></pre>
                             </div>
@@ -7188,9 +7495,10 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
+    let workspaceID = workspaceID_example; // String
 
     let mut context = DefaultApi::Context::default();
-    let result = client.regenerateSignupToken(&context).wait();
+    let result = client.regenerateSignupToken(workspaceID, &context).wait();
 
     println!("{:?}", result);
 }
@@ -7205,6 +7513,36 @@ pub fn main() {
 
                           <h2>Parameters</h2>
 
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">workspaceID*</td>
+<td>
+
+
+    <div id="d2e199_regenerateSignupToken_workspaceID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Workspace ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
 
 
 
@@ -7704,7 +8042,7 @@ $(document).ready(function() {
                         <p class="marked">Insert or update blocks</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/blocks</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/workspaces/{workspaceID}/blocks</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -7729,7 +8067,7 @@ $(document).ready(function() {
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
  -H "Content-Type: application/json"\
- "http://localhost/api/v1/api/v1/blocks"</code></pre>
+ "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/blocks"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-updateBlocks-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -7752,10 +8090,11 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
         array[Block] body = ; // array[Block] | 
         
         try {
-            apiInstance.updateBlocks(body);
+            apiInstance.updateBlocks(workspaceID, body);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#updateBlocks");
             e.printStackTrace();
@@ -7771,10 +8110,11 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
         array[Block] body = ; // array[Block] | 
         
         try {
-            apiInstance.updateBlocks(body);
+            apiInstance.updateBlocks(workspaceID, body);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#updateBlocks");
             e.printStackTrace();
@@ -7797,9 +8137,11 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *workspaceID = workspaceID_example; // Workspace ID (default to null)
 array[Block] *body = ; // 
 
-[apiInstance updateBlocksWith:body
+[apiInstance updateBlocksWith:workspaceID
+    body:body
               completionHandler: ^(NSError* error) {
     if (error) {
         NSLog(@"Error: %@", error);
@@ -7820,6 +8162,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new FocalboardServer.DefaultApi()
+var workspaceID = workspaceID_example; // {String} Workspace ID
 var body = ; // {array[Block]} 
 
 var callback = function(error, data, response) {
@@ -7829,7 +8172,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully.');
   }
 };
-api.updateBlocks(body, callback);
+api.updateBlocks(workspaceID, body, callback);
 </code></pre>
                             </div>
 
@@ -7856,10 +8199,11 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
+            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
             var body = new array[Block](); // array[Block] | 
 
             try {
-                apiInstance.updateBlocks(body);
+                apiInstance.updateBlocks(workspaceID, body);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.updateBlocks: " + e.Message );
             }
@@ -7880,10 +8224,11 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$workspaceID = workspaceID_example; // String | Workspace ID
 $body = ; // array[Block] | 
 
 try {
-    $api_instance->updateBlocks($body);
+    $api_instance->updateBlocks($workspaceID, $body);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->updateBlocks: ', $e->getMessage(), PHP_EOL;
 }
@@ -7902,10 +8247,11 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $workspaceID = workspaceID_example; # String | Workspace ID
 my $body = [WWW::OPenAPIClient::Object::array[Block]->new()]; # array[Block] | 
 
 eval { 
-    $api_instance->updateBlocks(body => $body);
+    $api_instance->updateBlocks(workspaceID => $workspaceID, body => $body);
 };
 if ($@) {
     warn "Exception when calling DefaultApi->updateBlocks: $@\n";
@@ -7926,10 +8272,11 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
+workspaceID = workspaceID_example # String | Workspace ID (default to null)
 body =  # array[Block] | 
 
 try: 
-    api_instance.update_blocks(body)
+    api_instance.update_blocks(workspaceID, body)
 except ApiException as e:
     print("Exception when calling DefaultApi->updateBlocks: %s\n" % e)</code></pre>
                             </div>
@@ -7938,10 +8285,11 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
+    let workspaceID = workspaceID_example; // String
     let body = ; // array[Block]
 
     let mut context = DefaultApi::Context::default();
-    let result = client.updateBlocks(body, &context).wait();
+    let result = client.updateBlocks(workspaceID, body, &context).wait();
 
     println!("{:?}", result);
 }
@@ -7956,6 +8304,36 @@ pub fn main() {
 
                           <h2>Parameters</h2>
 
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">workspaceID*</td>
+<td>
+
+
+    <div id="d2e199_updateBlocks_workspaceID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Workspace ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
 
 
                             <div class="methodsubtabletitle">Body parameters</div>
