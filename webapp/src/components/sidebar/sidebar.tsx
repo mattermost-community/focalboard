@@ -3,34 +3,36 @@
 import React from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
-import {Archiver} from '../archiver'
-import {Board, MutableBoard} from '../blocks/board'
-import {BoardView, IViewType, MutableBoardView} from '../blocks/boardView'
-import {Constants} from '../constants'
-import mutator from '../mutator'
-import octoClient from '../octoClient'
-import {darkTheme, defaultTheme, lightTheme, loadTheme, setTheme, Theme} from '../theme'
-import {IUser, UserContext} from '../user'
-import {WorkspaceTree} from '../viewModel/workspaceTree'
-import Button from '../widgets/buttons/button'
-import IconButton from '../widgets/buttons/iconButton'
-import BoardIcon from '../widgets/icons/board'
-import DeleteIcon from '../widgets/icons/delete'
-import EditIcon from '../widgets/icons/edit'
-import DisclosureTriangle from '../widgets/icons/disclosureTriangle'
-import DuplicateIcon from '../widgets/icons/duplicate'
-import HamburgerIcon from '../widgets/icons/hamburger'
-import HideSidebarIcon from '../widgets/icons/hideSidebar'
-import LogoWithNameIcon from '../widgets/icons/logoWithName'
-import LogoWithNameWhiteIcon from '../widgets/icons/logoWithNameWhite'
-import OptionsIcon from '../widgets/icons/options'
-import ShowSidebarIcon from '../widgets/icons/showSidebar'
-import TableIcon from '../widgets/icons/table'
-import Menu from '../widgets/menu'
-import MenuWrapper from '../widgets/menuWrapper'
+import {Archiver} from '../../archiver'
+import {Board, MutableBoard} from '../../blocks/board'
+import {BoardView, IViewType, MutableBoardView} from '../../blocks/boardView'
+import {Constants} from '../../constants'
+import mutator from '../../mutator'
+import octoClient from '../../octoClient'
+import {darkTheme, defaultTheme, lightTheme, loadTheme, setTheme, Theme} from '../../theme'
+import {IUser, UserContext} from '../../user'
+import {WorkspaceTree} from '../../viewModel/workspaceTree'
+import Button from '../../widgets/buttons/button'
+import IconButton from '../../widgets/buttons/iconButton'
+import BoardIcon from '../../widgets/icons/board'
+import DeleteIcon from '../../widgets/icons/delete'
+import EditIcon from '../../widgets/icons/edit'
+import DisclosureTriangle from '../../widgets/icons/disclosureTriangle'
+import DuplicateIcon from '../../widgets/icons/duplicate'
+import HamburgerIcon from '../../widgets/icons/hamburger'
+import HideSidebarIcon from '../../widgets/icons/hideSidebar'
+import LogoWithNameIcon from '../../widgets/icons/logoWithName'
+import LogoWithNameWhiteIcon from '../../widgets/icons/logoWithNameWhite'
+import OptionsIcon from '../../widgets/icons/options'
+import ShowSidebarIcon from '../../widgets/icons/showSidebar'
+import TableIcon from '../../widgets/icons/table'
+import Menu from '../../widgets/menu'
+import MenuWrapper from '../../widgets/menuWrapper'
 
-import ModalWrapper from './modalWrapper'
-import RegistrationLink from './registrationLink'
+import ModalWrapper from '../modalWrapper'
+import RegistrationLink from '../registrationLink'
+
+import SidebarSettingsMenu from './sidebarSettingsMenu'
 import './sidebar.scss'
 
 type Props = {
@@ -294,103 +296,10 @@ class Sidebar extends React.Component<Props, State> {
                     </Menu>
                 </MenuWrapper>
 
-                <MenuWrapper>
-                    <div className='octo-sidebar-item subitem'>
-                        <FormattedMessage
-                            id='Sidebar.settings'
-                            defaultMessage='Settings'
-                        />
-                    </div>
-                    <Menu position='top'>
-                        <Menu.Text
-                            id='import'
-                            name={intl.formatMessage({id: 'Sidebar.import-archive', defaultMessage: 'Import archive'})}
-                            onClick={async () => Archiver.importFullArchive()}
-                        />
-                        <Menu.Text
-                            id='export'
-                            name={intl.formatMessage({id: 'Sidebar.export-archive', defaultMessage: 'Export archive'})}
-                            onClick={async () => Archiver.exportFullArchive()}
-                        />
-                        <Menu.SubMenu
-                            id='lang'
-                            name={intl.formatMessage({id: 'Sidebar.set-language', defaultMessage: 'Set language'})}
-                            position='top'
-                        >
-                            <Menu.Text
-                                id='english-lang'
-                                name={intl.formatMessage({id: 'Sidebar.english', defaultMessage: 'English'})}
-                                onClick={async () => this.props.setLanguage('en')}
-                            />
-                            <Menu.Text
-                                id='spanish-lang'
-                                name={intl.formatMessage({id: 'Sidebar.spanish', defaultMessage: 'Spanish'})}
-                                onClick={async () => this.props.setLanguage('es')}
-                            />
-                            <Menu.Text
-                                id='german-lang'
-                                name={intl.formatMessage({id: 'Sidebar.german', defaultMessage: 'German'})}
-                                onClick={async () => this.props.setLanguage('de')}
-                            />
-                            <Menu.Text
-                                id='japanese-lang'
-                                name={intl.formatMessage({id: 'Sidebar.japanese', defaultMessage: 'Japanese'})}
-                                onClick={async () => this.props.setLanguage('ja')}
-                            />
-                            <Menu.Text
-                                id='french-lang'
-                                name={intl.formatMessage({id: 'Sidebar.french', defaultMessage: 'French'})}
-                                onClick={async () => this.props.setLanguage('fr')}
-                            />
-                            <Menu.Text
-                                id='dutch-lang'
-                                name={intl.formatMessage({id: 'Sidebar.dutch', defaultMessage: 'Dutch'})}
-                                onClick={async () => this.props.setLanguage('nl')}
-                            />
-                            <Menu.Text
-                                id='russian-lang'
-                                name={intl.formatMessage({id: 'Sidebar.russian', defaultMessage: 'Russian'})}
-                                onClick={async () => this.props.setLanguage('ru')}
-                            />
-                            <Menu.Text
-                                id='chinese-lang'
-                                name={intl.formatMessage({id: 'Sidebar.chinese', defaultMessage: 'Chinese'})}
-                                onClick={async () => this.props.setLanguage('zh')}
-                            />
-                            <Menu.Text
-                                id='turkish-lang'
-                                name={intl.formatMessage({id: 'Sidebar.turkish', defaultMessage: 'Turkish'})}
-                                onClick={async () => this.props.setLanguage('tr')}
-                            />
-                            <Menu.Text
-                                id='occitan-lang'
-                                name={intl.formatMessage({id: 'Sidebar.occitan', defaultMessage: 'Occitan'})}
-                                onClick={async () => this.props.setLanguage('oc')}
-                            />
-                        </Menu.SubMenu>
-                        <Menu.SubMenu
-                            id='theme'
-                            name={intl.formatMessage({id: 'Sidebar.set-theme', defaultMessage: 'Set theme'})}
-                            position='top'
-                        >
-                            <Menu.Text
-                                id='default-theme'
-                                name={intl.formatMessage({id: 'Sidebar.default-theme', defaultMessage: 'Default theme'})}
-                                onClick={async () => this.updateTheme(defaultTheme)}
-                            />
-                            <Menu.Text
-                                id='dark-theme'
-                                name={intl.formatMessage({id: 'Sidebar.dark-theme', defaultMessage: 'Dark theme'})}
-                                onClick={async () => this.updateTheme(darkTheme)}
-                            />
-                            <Menu.Text
-                                id='light-theme'
-                                name={intl.formatMessage({id: 'Sidebar.light-theme', defaultMessage: 'Light theme'})}
-                                onClick={async () => this.updateTheme(lightTheme)}
-                            />
-                        </Menu.SubMenu>
-                    </Menu>
-                </MenuWrapper>
+                <SidebarSettingsMenu
+                    setLanguage={this.props.setLanguage}
+                    setWhiteLogo={(whiteLogo: boolean) => this.setState({whiteLogo})}
+                /> 
             </div>
         )
     }
