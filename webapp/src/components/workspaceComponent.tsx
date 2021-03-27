@@ -26,7 +26,7 @@ class WorkspaceComponent extends React.PureComponent<Props> {
     render(): JSX.Element {
         const {boardTree, workspaceTree, showBoard, showView, setLanguage} = this.props
 
-        Utils.assert(workspaceTree)
+        Utils.assert(workspaceTree || !this.props.readonly)
         const element = (
             <div className='WorkspaceComponent'>
                 {!this.props.readonly &&
