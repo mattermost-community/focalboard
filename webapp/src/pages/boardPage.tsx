@@ -221,6 +221,7 @@ class BoardPage extends React.Component<Props, State> {
 
         // Listen to boards plus all blocks at root (Empty string for parentId)
         this.workspaceListener.open(
+            octoClient.workspaceId,
             boardIdsToListen,
             async (blocks) => {
                 Utils.log(`workspaceListener.onChanged: ${blocks.length}`)
