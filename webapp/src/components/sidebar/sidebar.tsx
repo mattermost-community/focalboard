@@ -234,12 +234,6 @@ class Sidebar extends React.Component<Props, State> {
         )
     }
 
-    private updateTheme(theme: Theme) {
-        setTheme(theme)
-        const whiteLogo = (theme.sidebarWhiteLogo === 'true')
-        this.setState({whiteLogo})
-    }
-
     private renderUserMenu(user?: IUser): JSX.Element {
         const {intl} = this.props
 
@@ -311,58 +305,12 @@ class Sidebar extends React.Component<Props, State> {
         this.props.showView(view.id, board.id)
     }
 
-    private addBoardClicked = async () => {
-        const {showBoard, intl} = this.props
-
-        const oldBoardId = this.props.activeBoardId
-
-        const board = new MutableBoard()
-        board.rootId = board.id
-
-        const view = new MutableBoardView()
-        view.viewType = 'board'
-        view.parentId = board.id
-        view.rootId = board.rootId
-        view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
-
-        await mutator.insertBlocks(
-            [board, view],
-            'add board',
-            async () => {
-                showBoard(board.id)
-            },
-            async () => {
-                if (oldBoardId) {
-                    showBoard(oldBoardId)
-                }
-            },
-        )
-    }
-
     private iconForViewType(viewType: IViewType): JSX.Element {
         switch (viewType) {
         case 'board': return <BoardIcon/>
         case 'table': return <TableIcon/>
         default: return <div/>
         }
-    }
-
-    private async addBoardFromTemplate(boardTemplateId: string) {
-        const oldBoardId = this.props.activeBoardId
-
-        await mutator.duplicateBoard(
-            boardTemplateId,
-            this.props.intl.formatMessage({id: 'Mutator.new-board-from-template', defaultMessage: 'new board from template'}),
-            false,
-            async (newBoardId) => {
-                this.props.showBoard(newBoardId)
-            },
-            async () => {
-                if (oldBoardId) {
-                    this.props.showBoard(oldBoardId)
-                }
-            },
-        )
     }
 
     private async duplicateBoard(boardId: string) {
@@ -396,25 +344,6 @@ class Sidebar extends React.Component<Props, State> {
             async () => {
                 if (oldBoardId) {
                     this.props.showBoard(oldBoardId)
-                }
-            },
-        )
-    }
-
-    private addBoardTemplateClicked = async () => {
-        const {activeBoardId} = this.props
-
-        const boardTemplate = new MutableBoard()
-        boardTemplate.rootId = boardTemplate.id
-        boardTemplate.isTemplate = true
-        await mutator.insertBlock(
-            boardTemplate,
-            'add board template',
-            async () => {
-                this.props.showBoard(boardTemplate.id)
-            }, async () => {
-                if (activeBoardId) {
-                    this.props.showBoard(activeBoardId)
                 }
             },
         )
