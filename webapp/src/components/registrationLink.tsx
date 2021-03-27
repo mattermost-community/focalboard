@@ -10,7 +10,7 @@ import {Utils} from '../utils'
 import Button from '../widgets/buttons/button'
 
 import Modal from './modal'
-import './registrationLinkComponent.scss'
+import './registrationLink.scss'
 
 type Props = {
     onClose: () => void
@@ -22,7 +22,7 @@ type State = {
     wasCopied: boolean
 }
 
-class RegistrationLinkComponent extends React.PureComponent<Props, State> {
+class RegistrationLink extends React.PureComponent<Props, State> {
     state: State = {wasCopied: false}
 
     componentDidMount() {
@@ -45,7 +45,7 @@ class RegistrationLinkComponent extends React.PureComponent<Props, State> {
                 position='bottom-right'
                 onClose={this.props.onClose}
             >
-                <div className='RegistrationLinkComponent'>
+                <div className='RegistrationLink'>
                     {workspace && <>
                         <div className='row'>
                             {intl.formatMessage({id: 'RegistrationLink.description', defaultMessage: 'Share this link for others to create accounts:'})}
@@ -94,4 +94,4 @@ class RegistrationLinkComponent extends React.PureComponent<Props, State> {
     }
 }
 
-export default injectIntl(RegistrationLinkComponent)
+export default injectIntl(RegistrationLink)

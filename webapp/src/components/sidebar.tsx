@@ -30,7 +30,7 @@ import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 
 import ModalWrapper from './modalWrapper'
-import RegistrationLinkComponent from './registrationLinkComponent'
+import RegistrationLink from './registrationLink'
 import './sidebar.scss'
 
 type Props = {
@@ -454,7 +454,7 @@ class Sidebar extends React.Component<Props, State> {
                 </MenuWrapper>
 
                 {this.state.showRegistrationLinkDialog &&
-                    <RegistrationLinkComponent
+                    <RegistrationLink
                         onClose={() => {
                             this.setState({showRegistrationLinkDialog: false})
                         }}
