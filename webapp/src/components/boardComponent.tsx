@@ -29,16 +29,12 @@ type Props = {
 }
 
 type State = {
-    isSearching: boolean
     shownCardId?: string
-    viewMenu: boolean
     selectedCardIds: string[]
-    showFilter: boolean
 }
 
 class BoardComponent extends React.Component<Props, State> {
     private backgroundRef = React.createRef<HTMLDivElement>()
-    private searchFieldRef = React.createRef<Editable>()
 
     private keydownHandler = (e: KeyboardEvent) => {
         if (e.target !== document.body) {
@@ -71,21 +67,12 @@ class BoardComponent extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props)
         this.state = {
-            isSearching: Boolean(this.props.boardTree.getSearchText()),
-            viewMenu: false,
             selectedCardIds: [],
-            showFilter: false,
         }
     }
 
     shouldComponentUpdate(): boolean {
         return true
-    }
-
-    componentDidUpdate(prevPros: Props, prevState: State): void {
-        if (this.state.isSearching && !prevState.isSearching) {
-            this.searchFieldRef.current?.focus()
-        }
     }
 
     private showCardInUrl() {
