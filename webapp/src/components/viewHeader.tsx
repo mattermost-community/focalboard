@@ -24,7 +24,7 @@ import SortUpIcon from '../widgets/icons/sortUp'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 
-import {Editable} from './editable'
+import Editable from './editable'
 import FilterComponent from './filterComponent'
 import ModalWrapper from './modalWrapper'
 import NewCardButton from './newCardButton'

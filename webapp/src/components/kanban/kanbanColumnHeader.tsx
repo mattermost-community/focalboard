@@ -17,7 +17,7 @@ import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 
-import {Editable} from '../editable'
+import Editable from '../editable'
 
 type Props = {
     boardTree: BoardTree

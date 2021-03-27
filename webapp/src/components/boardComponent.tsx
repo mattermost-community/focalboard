@@ -13,7 +13,6 @@ import {BoardTree} from '../viewModel/boardTree'
 
 import './boardComponent.scss'
 import CardDialog from './cardDialog'
-import {Editable} from './editable'
 import RootPortal from './rootPortal'
 import TopBar from './topBar'
 import ViewHeader from './viewHeader'
