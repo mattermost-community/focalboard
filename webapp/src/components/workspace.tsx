@@ -21,55 +21,41 @@ type Props = {
     readonly: boolean
 }
 
-class Workspace extends React.PureComponent<Props> {
-    render(): JSX.Element {
-        const {boardTree, workspaceTree, showBoard, showView, setLanguage} = this.props
+const Workspace = React.memo((props: Props) => {
+    const {boardTree, setSearchText, workspaceTree, showBoard, showView, setLanguage} = props
+    const {activeView} = boardTree || {}
 
-        Utils.assert(workspaceTree || !this.props.readonly)
-        const element = (
-            <div className='Workspace'>
-                {!this.props.readonly &&
-                    <Sidebar
-                        showBoard={showBoard}
-                        showView={showView}
-                        workspaceTree={workspaceTree}
-                        activeBoardId={boardTree?.board.id}
-                        setLanguage={setLanguage}
+    Utils.assert(workspaceTree || !props.readonly)
+
+    return (
+        <div className='Workspace'>
+            {!props.readonly &&
+                <Sidebar
+                    showBoard={showBoard}
+                    showView={showView}
+                    workspaceTree={workspaceTree}
+                    activeBoardId={boardTree?.board.id}
+                    setLanguage={setLanguage}
+                />
+            }
+            <div className='mainFrame'>
+                {(boardTree?.board.isTemplate) &&
+                <div className='banner'>
+                    <FormattedMessage
+                        id='Workspace.editing-board-template'
+                        defaultMessage="You're editing a board template"
                     />
-                }
-                <div className='mainFrame'>
-                    {(boardTree?.board.isTemplate) &&
-                    <div className='banner'>
-                        <FormattedMessage
-                            id='Workspace.editing-board-template'
-                            defaultMessage="You're editing a board template"
-                        />
-                    </div>
-                    }
-                    {this.mainComponent()}
-                </div>
-            </div>)
-
-        return element
-    }
-
-    private mainComponent() {
-        const {boardTree, setSearchText, showView} = this.props
-        const {activeView} = boardTree || {}
-
-        if (!boardTree || !activeView) {
-            return <div/>
-        }
-
-        return (
-            <CenterPanel
-                boardTree={boardTree}
-                setSearchText={setSearchText}
-                showView={showView}
-                readonly={this.props.readonly}
-            />
-        )
-    }
-}
+                </div>}
+                {boardTree && activeView &&
+                    <CenterPanel
+                        boardTree={boardTree}
+                        setSearchText={setSearchText}
+                        showView={showView}
+                        readonly={props.readonly}
+                    />}
+            </div>
+        </div>
+    )
+})
 
 export default Workspace
