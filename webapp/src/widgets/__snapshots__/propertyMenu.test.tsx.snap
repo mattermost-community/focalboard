@@ -18,6 +18,7 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
         />
         <div
           class="MenuOption SubMenuOption menu-option"
+          id="type"
         >
           <div
             class="noicon"
