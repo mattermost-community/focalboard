@@ -4,10 +4,10 @@
 import React, {FC} from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
-import {Constants} from '../constants'
-import mutator from '../mutator'
-import {BoardTree} from '../viewModel/boardTree'
-import Menu from '../widgets/menu'
+import {Constants} from '../../constants'
+import mutator from '../../mutator'
+import {BoardTree} from '../../viewModel/boardTree'
+import Menu from '../../widgets/menu'
 
 type Props = {
     templateId: string

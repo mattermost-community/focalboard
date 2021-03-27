@@ -3,14 +3,14 @@
 import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import {Card} from '../blocks/card'
-import {Constants} from '../constants'
-import mutator from '../mutator'
-import {BoardTree} from '../viewModel/boardTree'
-import Button from '../widgets/buttons/button'
-import Editable from '../widgets/editable'
+import {Card} from '../../blocks/card'
+import {Constants} from '../../constants'
+import mutator from '../../mutator'
+import {BoardTree} from '../../viewModel/boardTree'
+import Button from '../../widgets/buttons/button'
+import Editable from '../../widgets/editable'
 
-import PropertyValueElement from './propertyValueElement'
+import PropertyValueElement from '../propertyValueElement'
 import './tableRow.scss'
 
 type Props = {
@@ -122,4 +122,4 @@ class TableRow extends React.Component<Props, State> {
     }
 }
 
-export {TableRow}
+export default TableRow

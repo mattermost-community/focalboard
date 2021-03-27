@@ -1,0 +1,118 @@
+.Table {
+    .octo-table-cell {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: row;
+        color: rgb(var(--body-color));
+        border-right: solid 1px rgba(var(--body-color), 0.09);
+        box-sizing: border-box;
+        padding: 8px;
+        min-height: 32px;
+        font-size: 14px;
+        line-height: 20px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &:hover {
+            background-color: rgba(var(--body-color), 0.05);
+        }
+
+        &.title-cell {
+            padding-left: 16px;
+        }
+
+        .octo-icontitle {
+            flex: 1 1 auto;
+
+            .octo-icon {
+                min-width: 20px;
+            }
+
+            .Editable {
+                flex: 1 1 auto;
+            }
+        }
+
+        &.header-cell {
+            padding-right: 0;
+
+            .Icon {
+                width: 16px;
+                height: 16px;
+                vertical-align: middle;
+                margin-left: 5px;
+            }
+        }
+
+        &:focus-within {
+            background-color: rgba(46, 170, 220, 0.15);
+            border: 1px solid rgba(46, 170, 220, 0.6);
+        }
+
+        .octo-editable {
+            padding: 0 5px;
+            display: relative;
+            left: -5px;
+        }
+
+        .octo-editable.octo-editable.active {
+            overflow: hidden;
+        }
+
+        .octo-propertyvalue {
+            line-height: 17px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .octo-editable,
+        .octo-propertyvalue {
+            text-align: left;
+            white-space: nowrap;
+        }
+    }
+
+    .octo-table-body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .octo-table-header,
+    .octo-table-row,
+    .octo-table-footer {
+        display: flex;
+        flex-direction: row;
+
+        border-bottom: solid 1px rgba(var(--body-color), 0.09);
+    }
+
+    .octo-table-header {
+        .octo-table-cell {
+            color: rgba(var(--body-color), 0.6);
+
+            .MenuWrapper {
+                overflow: hidden;
+            }
+
+            .octo-label {
+                color: rgba(var(--body-color), 0.6);
+            }
+        }
+    }
+
+    .octo-table-footer {
+        .octo-table-cell {
+            color: rgba(var(--body-color), 0.6);
+            cursor: pointer;
+
+            width: 100%;
+            border-right: none;
+            padding-left: 15px;
+
+            &:hover {
+                background-color: rgba(var(--body-color), 0.08);
+            }
+        }
+    }
+}
