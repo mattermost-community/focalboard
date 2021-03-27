@@ -9,7 +9,7 @@ import {WorkspaceTree} from '../viewModel/workspaceTree'
 
 import Sidebar from './sidebar'
 import CenterPanel from './centerPanel'
-import './workspaceComponent.scss'
+import './workspace.scss'
 
 type Props = {
     workspaceTree: WorkspaceTree
@@ -21,13 +21,13 @@ type Props = {
     readonly: boolean
 }
 
-class WorkspaceComponent extends React.PureComponent<Props> {
+class Workspace extends React.PureComponent<Props> {
     render(): JSX.Element {
         const {boardTree, workspaceTree, showBoard, showView, setLanguage} = this.props
 
         Utils.assert(workspaceTree || !this.props.readonly)
         const element = (
-            <div className='WorkspaceComponent'>
+            <div className='Workspace'>
                 {!this.props.readonly &&
                     <Sidebar
                         showBoard={showBoard}
@@ -41,7 +41,7 @@ class WorkspaceComponent extends React.PureComponent<Props> {
                     {(boardTree?.board.isTemplate) &&
                     <div className='banner'>
                         <FormattedMessage
-                            id='WorkspaceComponent.editing-board-template'
+                            id='Workspace.editing-board-template'
                             defaultMessage="You're editing a board template"
                         />
                     </div>
@@ -72,4 +72,4 @@ class WorkspaceComponent extends React.PureComponent<Props> {
     }
 }
 
-export {WorkspaceComponent}
+export default Workspace

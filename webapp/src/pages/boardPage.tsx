@@ -5,7 +5,7 @@ import {injectIntl, IntlShape} from 'react-intl'
 
 import {IBlock} from '../blocks/block'
 import {sendFlashMessage} from '../components/flashMessages'
-import {WorkspaceComponent} from '../components/workspaceComponent'
+import Workspace from '../components/workspace'
 import mutator from '../mutator'
 import octoClient from '../octoClient'
 import {OctoListener} from '../octoListener'
@@ -163,7 +163,7 @@ class BoardPage extends React.Component<Props, State> {
 
         return (
             <div className='BoardPage'>
-                <WorkspaceComponent
+                <Workspace
                     workspaceTree={workspaceTree}
                     boardTree={this.state.boardTree}
                     showView={(id, boardId) => {
