@@ -11,13 +11,14 @@ import mutator from '../mutator'
 import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
 
-import './boardComponent.scss'
+import './centerPanel.scss'
 import CardDialog from './cardDialog'
 import RootPortal from './rootPortal'
 import TopBar from './topBar'
 import ViewHeader from './viewHeader'
 import ViewTitle from './viewTitle'
 import Kanban from './kanban/kanban'
+import Table from './table/table'
 
 type Props = {
     boardTree: BoardTree
@@ -30,9 +31,10 @@ type Props = {
 type State = {
     shownCardId?: string
     selectedCardIds: string[]
+    cardIdToFocusOnRender: string
 }
 
-class BoardComponent extends React.Component<Props, State> {
+class CenterPanel extends React.Component<Props, State> {
     private backgroundRef = React.createRef<HTMLDivElement>()
 
     private keydownHandler = (e: KeyboardEvent) => {
@@ -67,6 +69,7 @@ class BoardComponent extends React.Component<Props, State> {
         super(props)
         this.state = {
             selectedCardIds: [],
+            cardIdToFocusOnRender: '',
         }
     }
 
@@ -85,14 +88,12 @@ class BoardComponent extends React.Component<Props, State> {
     render(): JSX.Element {
         const {boardTree, showView} = this.props
         const {groupByProperty} = boardTree
+        const {activeView} = boardTree
 
-        if (!groupByProperty) {
+        if (!groupByProperty && activeView.viewType === 'board') {
             Utils.assertFailure('Board views must have groupByProperty set')
             return <div/>
         }
-
-        const propertyValues = groupByProperty.options || []
-        Utils.log(`${propertyValues.length} propertyValues`)
 
         const {board} = boardTree
 
@@ -124,25 +125,36 @@ class BoardComponent extends React.Component<Props, State> {
                         readonly={this.props.readonly}
                     />
 
-                    <div className='octo-board'>
+                    <div className={activeView.viewType === 'board' ? 'octo-board' : 'octo-table'}>
                         <ViewHeader
                             boardTree={boardTree}
                             showView={showView}
                             setSearchText={this.props.setSearchText}
-                            addCard={() => this.addCard()}
+                            addCard={() => this.addCard('', true)}
                             addCardFromTemplate={this.addCardFromTemplate}
                             addCardTemplate={this.addCardTemplate}
                             editCardTemplate={this.editCardTemplate}
-                            withGroupBy={true}
+                            withGroupBy={activeView.viewType === 'board'}
                             readonly={this.props.readonly}
                         />
-                        <Kanban
-                            boardTree={boardTree}
-                            selectedCardIds={this.state.selectedCardIds}
-                            readonly={this.props.readonly}
-                            onCardClicked={this.cardClicked}
-                            addCard={this.addCard}
-                        />
+                        {activeView.viewType === 'board' &&
+                            <Kanban
+                                boardTree={boardTree}
+                                selectedCardIds={this.state.selectedCardIds}
+                                readonly={this.props.readonly}
+                                onCardClicked={this.cardClicked}
+                                addCard={this.addCard}
+                            />}
+                        {activeView.viewType === 'table' &&
+                            <Table
+                                boardTree={boardTree}
+                                selectedCardIds={this.state.selectedCardIds}
+                                readonly={this.props.readonly}
+                                cardIdToFocusOnRender={this.state.cardIdToFocusOnRender}
+                                showCard={this.showCard}
+                                addCard={(show) => this.addCard('', show)}
+                                onCardClicked={this.cardClicked}
+                            />}
                     </div>
                 </div>
             </div>
@@ -170,7 +182,7 @@ class BoardComponent extends React.Component<Props, State> {
         )
     }
 
-    addCard = async (groupByOptionId?: string): Promise<void> => {
+    addCard = async (groupByOptionId?: string, show = false): Promise<void> => {
         const {boardTree} = this.props
         const {activeView, board} = boardTree
 
@@ -179,7 +191,7 @@ class BoardComponent extends React.Component<Props, State> {
         card.parentId = boardTree.board.id
         card.rootId = boardTree.board.rootId
         const propertiesThatMeetFilters = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
-        if (boardTree.groupByProperty) {
+        if (activeView.viewType === 'board' && boardTree.groupByProperty) {
             if (groupByOptionId) {
                 propertiesThatMeetFilters[boardTree.groupByProperty.id] = groupByOptionId
             } else {
@@ -194,7 +206,13 @@ class BoardComponent extends React.Component<Props, State> {
             card,
             'add card',
             async () => {
-                this.showCard(card.id)
+                if (show) {
+                    this.showCard(card.id)
+                } else {
+                    // Focus on this card's title inline on next render
+                    this.setState({cardIdToFocusOnRender: card.id})
+                    setTimeout(() => this.setState({cardIdToFocusOnRender: ''}), 100)
+                }
             },
             async () => {
                 this.showCard(undefined)
@@ -225,11 +243,13 @@ class BoardComponent extends React.Component<Props, State> {
     }
 
     cardClicked = (e: React.MouseEvent, card: Card): void => {
+        const {boardTree} = this.props
+        const {activeView} = boardTree
+
         if (e.shiftKey) {
             let selectedCardIds = this.state.selectedCardIds.slice()
             if (selectedCardIds.length > 0 && (e.metaKey || e.ctrlKey)) {
                 // Cmd+Shift+Click: Extend the selection
-                const {boardTree} = this.props
                 const orderedCardIds = boardTree.orderedCards().map((o) => o.id)
                 const lastCardId = selectedCardIds[selectedCardIds.length - 1]
                 const srcIndex = orderedCardIds.indexOf(lastCardId)
@@ -250,7 +270,7 @@ class BoardComponent extends React.Component<Props, State> {
                 }
                 this.setState({selectedCardIds})
             }
-        } else {
+        } else if (activeView.viewType === 'board') {
             this.showCard(card.id)
         }
 
@@ -283,4 +303,4 @@ class BoardComponent extends React.Component<Props, State> {
     }
 }
 
-export default injectIntl(BoardComponent)
+export default injectIntl(CenterPanel)

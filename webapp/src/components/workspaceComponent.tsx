@@ -7,9 +7,8 @@ import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
 
-import BoardComponent from './boardComponent'
 import Sidebar from './sidebar'
-import TableComponent from './tableComponent'
+import CenterPanel from './centerPanel'
 import './workspaceComponent.scss'
 
 type Props = {
@@ -62,32 +61,14 @@ class WorkspaceComponent extends React.PureComponent<Props> {
             return <div/>
         }
 
-        switch (activeView.viewType) {
-        case 'board': {
-            return (
-                <BoardComponent
-                    boardTree={boardTree}
-                    setSearchText={setSearchText}
-                    showView={showView}
-                    readonly={this.props.readonly}
-                />)
-        }
-
-        case 'table': {
-            return (
-                <TableComponent
-                    boardTree={boardTree}
-                    setSearchText={setSearchText}
-                    showView={showView}
-                    readonly={this.props.readonly}
-                />)
-        }
-
-        default: {
-            Utils.assertFailure(`render() Unhandled viewType: ${activeView.viewType}`)
-            return <div/>
-        }
-        }
+        return (
+            <CenterPanel
+                boardTree={boardTree}
+                setSearchText={setSearchText}
+                showView={showView}
+                readonly={this.props.readonly}
+            />
+        )
     }
 }
 

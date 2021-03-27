@@ -5,6 +5,7 @@ import {FormattedMessage, injectIntl} from 'react-intl'
 
 import {IPropertyTemplate} from '../../blocks/board'
 import {MutableBoardView} from '../../blocks/boardView'
+import {Card} from '../../blocks/card'
 import {Constants} from '../../constants'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
@@ -21,10 +22,12 @@ import TableRow from './tableRow'
 
 type Props = {
     boardTree: BoardTree
+    selectedCardIds: string[]
     readonly: boolean
     cardIdToFocusOnRender: string
     showCard: (cardId?: string) => void
-    addCard: (show?: boolean) => Promise<void>
+    addCard: (show: boolean) => Promise<void>
+    onCardClicked: (e: React.MouseEvent, card: Card) => void
 }
 
 type State = {
@@ -220,11 +223,15 @@ class Table extends React.Component<Props, State> {
                             ref={tableRowRef}
                             boardTree={boardTree}
                             card={card}
+                            isSelected={this.props.selectedCardIds.includes(card.id)}
                             focusOnMount={this.props.cardIdToFocusOnRender === card.id}
                             onSaveWithEnter={() => {
                                 if (cards.length > 0 && cards[cards.length - 1] === card) {
                                     this.props.addCard(false)
                                 }
+                            }}
+                            onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+                                this.props.onCardClicked(e, card)
                             }}
                             showCard={this.props.showCard}
                             readonly={this.props.readonly}
@@ -242,7 +249,7 @@ class Table extends React.Component<Props, State> {
                         <div
                             className='octo-table-cell'
                             onClick={() => {
-                                this.props.addCard()
+                                this.props.addCard(false)
                             }}
                         >
                             <FormattedMessage
