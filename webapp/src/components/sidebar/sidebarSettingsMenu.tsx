@@ -8,8 +8,6 @@ import {darkTheme, defaultTheme, lightTheme, setTheme, Theme} from '../../theme'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 
-import './sidebar.scss'
-
 type Props = {
     setLanguage: (lang: string) => void
     intl: IntlShape

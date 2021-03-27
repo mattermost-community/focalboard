@@ -3,20 +3,17 @@
 import React from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
-import {Archiver} from '../../archiver'
 import {Board, MutableBoard} from '../../blocks/board'
 import {BoardView, IViewType, MutableBoardView} from '../../blocks/boardView'
 import {Constants} from '../../constants'
 import mutator from '../../mutator'
 import octoClient from '../../octoClient'
-import {darkTheme, defaultTheme, lightTheme, loadTheme, setTheme, Theme} from '../../theme'
+import {loadTheme, setTheme, Theme} from '../../theme'
 import {IUser, UserContext} from '../../user'
 import {WorkspaceTree} from '../../viewModel/workspaceTree'
-import Button from '../../widgets/buttons/button'
 import IconButton from '../../widgets/buttons/iconButton'
 import BoardIcon from '../../widgets/icons/board'
 import DeleteIcon from '../../widgets/icons/delete'
-import EditIcon from '../../widgets/icons/edit'
 import DisclosureTriangle from '../../widgets/icons/disclosureTriangle'
 import DuplicateIcon from '../../widgets/icons/duplicate'
 import HamburgerIcon from '../../widgets/icons/hamburger'
@@ -33,6 +30,7 @@ import ModalWrapper from '../modalWrapper'
 import RegistrationLink from '../registrationLink'
 
 import SidebarSettingsMenu from './sidebarSettingsMenu'
+import SidebarAddBoardMenu from './sidebarAddBoardMenu'
 import './sidebar.scss'
 
 type Props = {
@@ -221,80 +219,12 @@ class Sidebar extends React.Component<Props, State> {
 
                 <div className='octo-spacer'/>
 
-                <MenuWrapper>
-                    <Button>
-                        <FormattedMessage
-                            id='Sidebar.add-board'
-                            defaultMessage='+ Add Board'
-                        />
-                    </Button>
-                    <Menu position='top'>
-                        {workspaceTree.boardTemplates.length > 0 && <>
-                            <Menu.Label>
-                                <b>
-                                    <FormattedMessage
-                                        id='Sidebar.select-a-template'
-                                        defaultMessage='Select a template'
-                                    />
-                                </b>
-                            </Menu.Label>
 
-                            <Menu.Separator/>
-                        </>}
-
-                        {workspaceTree.boardTemplates.map((boardTemplate) => {
-                            const displayName = boardTemplate.title || intl.formatMessage({id: 'Sidebar.untitled', defaultMessage: 'Untitled'})
-
-                            return (
-                                <Menu.Text
-                                    key={boardTemplate.id}
-                                    id={boardTemplate.id}
-                                    name={displayName}
-                                    icon={<div className='Icon'>{boardTemplate.icon}</div>}
-                                    onClick={() => {
-                                        this.addBoardFromTemplate(boardTemplate.id)
-                                    }}
-                                    rightIcon={
-                                        <MenuWrapper stopPropagationOnToggle={true}>
-                                            <IconButton icon={<OptionsIcon/>}/>
-                                            <Menu position='left'>
-                                                <Menu.Text
-                                                    icon={<EditIcon/>}
-                                                    id='edit'
-                                                    name={intl.formatMessage({id: 'Sidebar.edit-template', defaultMessage: 'Edit'})}
-                                                    onClick={() => {
-                                                        this.props.showBoard(boardTemplate.id)
-                                                    }}
-                                                />
-                                                <Menu.Text
-                                                    icon={<DeleteIcon/>}
-                                                    id='delete'
-                                                    name={intl.formatMessage({id: 'Sidebar.delete-template', defaultMessage: 'Delete'})}
-                                                    onClick={async () => {
-                                                        await mutator.deleteBlock(boardTemplate, 'delete board template')
-                                                    }}
-                                                />
-                                            </Menu>
-                                        </MenuWrapper>
-                                    }
-                                />
-                            )
-                        })}
-
-                        <Menu.Text
-                            id='empty-template'
-                            name={intl.formatMessage({id: 'Sidebar.empty-board', defaultMessage: 'Empty board'})}
-                            icon={<BoardIcon/>}
-                            onClick={this.addBoardClicked}
-                        />
-
-                        <Menu.Text
-                            id='add-template'
-                            name={intl.formatMessage({id: 'Sidebar.add-template', defaultMessage: '+ New template'})}
-                            onClick={this.addBoardTemplateClicked}
-                        />
-                    </Menu>
-                </MenuWrapper>
+                <SidebarAddBoardMenu
+                    showBoard={this.props.showBoard}
+                    workspaceTree={this.props.workspaceTree}
+                    activeBoardId={this.props.activeBoardId}
+                />
 
                 <SidebarSettingsMenu
                     setLanguage={this.props.setLanguage}
