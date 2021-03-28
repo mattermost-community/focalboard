@@ -4,10 +4,10 @@
 import React from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
-import {BoardTree} from '../viewModel/boardTree'
-import ButtonWithMenu from '../widgets/buttons/buttonWithMenu'
-import CardIcon from '../widgets/icons/card'
-import Menu from '../widgets/menu'
+import {BoardTree} from '../../viewModel/boardTree'
+import ButtonWithMenu from '../../widgets/buttons/buttonWithMenu'
+import CardIcon from '../../widgets/icons/card'
+import Menu from '../../widgets/menu'
 
 import NewCardButtonTemplateItem from './newCardButtonTemplateItem'
 

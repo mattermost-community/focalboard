@@ -27,9 +27,11 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import Editable from '../editable'
 import FilterComponent from '../filterComponent'
 import ModalWrapper from '../modalWrapper'
-import NewCardButton from '../newCardButton'
 import ShareBoardComponent from '../shareBoardComponent'
 import {sendFlashMessage} from '../flashMessages'
+
+import NewCardButton from './newCardButton'
+import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'
 
 import './viewHeader.scss'
 
@@ -121,33 +123,10 @@ class ViewHeader extends React.Component<Props, State> {
                 <>
                     {/* Card properties */}
 
-                    <MenuWrapper>
-                        <Button>
-                            <FormattedMessage
-                                id='ViewHeader.properties'
-                                defaultMessage='Properties'
-                            />
-                        </Button>
-                        <Menu>
-                            {boardTree.board.cardProperties.map((option: IPropertyTemplate) => (
-                                <Menu.Switch
-                                    key={option.id}
-                                    id={option.id}
-                                    name={option.name}
-                                    isOn={activeView.visiblePropertyIds.includes(option.id)}
-                                    onClick={(propertyId: string) => {
-                                        let newVisiblePropertyIds = []
-                                        if (activeView.visiblePropertyIds.includes(propertyId)) {
-                                            newVisiblePropertyIds = activeView.visiblePropertyIds.filter((o: string) => o !== propertyId)
-                                        } else {
-                                            newVisiblePropertyIds = [...activeView.visiblePropertyIds, propertyId]
-                                        }
-                                        mutator.changeViewVisibleProperties(activeView, newVisiblePropertyIds)
-                                    }}
-                                />
-                            ))}
-                        </Menu>
-                    </MenuWrapper>
+                    <ViewHeaderPropertiesMenu
+                        properties={boardTree.board.cardProperties}
+                        activeView={boardTree.activeView}
+                    />
 
                     {/* Group by */}
 
