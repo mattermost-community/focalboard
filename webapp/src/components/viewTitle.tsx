@@ -78,7 +78,7 @@ const ViewTitle = React.memo((props: Props) => {
                     className='title'
                     value={title}
                     placeholderText={intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled board'})}
-                    onChange={(title) => setTitle(title)}
+                    onChange={(newTitle) => setTitle(newTitle)}
                     saveOnEsc={true}
                     onSave={() => mutator.changeTitle(board, title)}
                     onCancel={() => setTitle(props.board.title)}

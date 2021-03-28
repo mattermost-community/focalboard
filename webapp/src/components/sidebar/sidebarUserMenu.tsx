@@ -14,6 +14,8 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import ModalWrapper from '../modalWrapper'
 import RegistrationLink from '../registrationLink'
 
+import './sidebarUserMenu.scss'
+
 type Props = {
     whiteLogo: boolean
     intl: IntlShape
@@ -23,68 +25,70 @@ const SidebarUserMenu = React.memo((props: Props) => {
     const [showRegistrationLinkDialog, setShowRegistrationLinkDialog] = useState(false)
     const {intl, whiteLogo} = props
     return (
-        <ModalWrapper>
-            <MenuWrapper>
-                <div className='logo'>
-                    {whiteLogo ? <LogoWithNameWhiteIcon/> : <LogoWithNameIcon/>}
-                    <div className='octo-spacer'/>
-                    <div className='version'>
-                        {`v${Constants.versionString}`}
+        <div className='SidebarUserMenu'>
+            <ModalWrapper>
+                <MenuWrapper>
+                    <div className='logo'>
+                        {whiteLogo ? <LogoWithNameWhiteIcon/> : <LogoWithNameIcon/>}
+                        <div className='octo-spacer'/>
+                        <div className='version'>
+                            {`v${Constants.versionString}`}
+                        </div>
                     </div>
-                </div>
-                <UserContext.Consumer>
-                    {(user) => {
-                        return (
-                            <Menu>
-                                {user && user.username !== 'single-user' && <>
-                                    <Menu.Label><b>{user.username}</b></Menu.Label>
+                    <UserContext.Consumer>
+                        {(user) => {
+                            return (
+                                <Menu>
+                                    {user && user.username !== 'single-user' && <>
+                                        <Menu.Label><b>{user.username}</b></Menu.Label>
+                                        <Menu.Text
+                                            id='logout'
+                                            name={intl.formatMessage({id: 'Sidebar.logout', defaultMessage: 'Log out'})}
+                                            onClick={async () => {
+                                                octoClient.logout()
+                                                window.location.href = '/login'
+                                            }}
+                                        />
+                                        <Menu.Text
+                                            id='changePassword'
+                                            name={intl.formatMessage({id: 'Sidebar.changePassword', defaultMessage: 'Change password'})}
+                                            onClick={async () => {
+                                                window.location.href = '/change_password'
+                                            }}
+                                        />
+                                        <Menu.Text
+                                            id='invite'
+                                            name={intl.formatMessage({id: 'Sidebar.invite-users', defaultMessage: 'Invite Users'})}
+                                            onClick={async () => {
+                                                setShowRegistrationLinkDialog(true)
+                                            }}
+                                        />
+
+                                        <Menu.Separator/>
+                                    </>}
+
                                     <Menu.Text
-                                        id='logout'
-                                        name={intl.formatMessage({id: 'Sidebar.logout', defaultMessage: 'Log out'})}
+                                        id='about'
+                                        name={intl.formatMessage({id: 'Sidebar.about', defaultMessage: 'About Focalboard'})}
                                         onClick={async () => {
-                                            octoClient.logout()
-                                            window.location.href = '/login'
+                                            window.open('https://www.focalboard.com?utm_source=webapp', '_blank')
                                         }}
                                     />
-                                    <Menu.Text
-                                        id='changePassword'
-                                        name={intl.formatMessage({id: 'Sidebar.changePassword', defaultMessage: 'Change password'})}
-                                        onClick={async () => {
-                                            window.location.href = '/change_password'
-                                        }}
-                                    />
-                                    <Menu.Text
-                                        id='invite'
-                                        name={intl.formatMessage({id: 'Sidebar.invite-users', defaultMessage: 'Invite Users'})}
-                                        onClick={async () => {
-                                            setShowRegistrationLinkDialog(true)
-                                        }}
-                                    />
+                                </Menu>
+                            )
+                        }}
+                    </UserContext.Consumer>
+                </MenuWrapper>
 
-                                    <Menu.Separator/>
-                                </>}
-
-                                <Menu.Text
-                                    id='about'
-                                    name={intl.formatMessage({id: 'Sidebar.about', defaultMessage: 'About Focalboard'})}
-                                    onClick={async () => {
-                                        window.open('https://www.focalboard.com?utm_source=webapp', '_blank')
-                                    }}
-                                />
-                            </Menu>
-                        )
-                    }}
-                </UserContext.Consumer>
-            </MenuWrapper>
-
-            {showRegistrationLinkDialog &&
-                <RegistrationLink
-                    onClose={() => {
-                        setShowRegistrationLinkDialog(false)
-                    }}
-                />
-            }
-        </ModalWrapper>
+                {showRegistrationLinkDialog &&
+                    <RegistrationLink
+                        onClose={() => {
+                            setShowRegistrationLinkDialog(false)
+                        }}
+                    />
+                }
+            </ModalWrapper>
+        </div>
     )
 })
 

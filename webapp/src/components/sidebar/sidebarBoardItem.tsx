@@ -16,6 +16,8 @@ import TableIcon from '../../widgets/icons/table'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 
+import './sidebarBoardItem.scss'
+
 type Props = {
     views: readonly BoardView[]
     board: Board
@@ -78,7 +80,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
     const boardViews = views.filter((view) => view.parentId === board.id)
 
     return (
-        <div key={board.id}>
+        <div className='SidebarBoardItem'>
             <div className={'octo-sidebar-item ' + (collapsed ? 'collapsed' : 'expanded')}>
                 <IconButton
                     icon={<DisclosureTriangle/>}

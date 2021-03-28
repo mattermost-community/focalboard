@@ -1,7 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useEffect} from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
 
 import {loadTheme} from '../../theme'
 import {WorkspaceTree} from '../../viewModel/workspaceTree'
@@ -68,7 +67,7 @@ const Sidebar = React.memo((props: Props) => {
         <div className='Sidebar octo-sidebar'>
             <div className='octo-sidebar-header'>
                 <div className='heading'>
-                    <SidebarUserMenu whiteLogo={whiteLogo} />
+                    <SidebarUserMenu whiteLogo={whiteLogo}/>
                 </div>
 
                 <div className='octo-spacer'/>
@@ -98,7 +97,6 @@ const Sidebar = React.memo((props: Props) => {
 
             <div className='octo-spacer'/>
 
-
             <SidebarAddBoardMenu
                 showBoard={props.showBoard}
                 workspaceTree={props.workspaceTree}
@@ -107,8 +105,8 @@ const Sidebar = React.memo((props: Props) => {
 
             <SidebarSettingsMenu
                 setLanguage={props.setLanguage}
-                setWhiteLogo={(whiteLogo: boolean) => setWhiteLogo(whiteLogo)}
-            /> 
+                setWhiteLogo={(newWhiteLogo: boolean) => setWhiteLogo(newWhiteLogo)}
+            />
         </div>
     )
 })
