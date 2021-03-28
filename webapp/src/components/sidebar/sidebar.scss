@@ -30,6 +30,15 @@
         flex: 0 0 auto;
     }
 
+    .IconButton {
+        padding: 0;
+        .Icon {
+            width: 24px;
+            height: 24px;
+            margin: 0;
+        }
+    }
+
     .octo-sidebar-list {
         flex: 1 1 auto;
         overflow-y: auto;
@@ -112,5 +121,6 @@
 
     .Button {
         min-height: 30px;
+        min-width: 30px;
     }
 }
