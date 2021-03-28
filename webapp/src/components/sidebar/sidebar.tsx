@@ -3,26 +3,17 @@
 import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
-import {Constants} from '../../constants'
-import octoClient from '../../octoClient'
 import {loadTheme} from '../../theme'
-import {IUser, UserContext} from '../../user'
 import {WorkspaceTree} from '../../viewModel/workspaceTree'
 import IconButton from '../../widgets/buttons/iconButton'
 import HamburgerIcon from '../../widgets/icons/hamburger'
 import HideSidebarIcon from '../../widgets/icons/hideSidebar'
-import LogoWithNameIcon from '../../widgets/icons/logoWithName'
-import LogoWithNameWhiteIcon from '../../widgets/icons/logoWithNameWhite'
 import ShowSidebarIcon from '../../widgets/icons/showSidebar'
-import Menu from '../../widgets/menu'
-import MenuWrapper from '../../widgets/menuWrapper'
-
-import ModalWrapper from '../modalWrapper'
-import RegistrationLink from '../registrationLink'
 
 import SidebarSettingsMenu from './sidebarSettingsMenu'
 import SidebarAddBoardMenu from './sidebarAddBoardMenu'
 import SidebarBoardItem from './sidebarBoardItem'
+import SidebarUserMenu from './sidebarUserMenu'
 import './sidebar.scss'
 
 type Props = {
@@ -36,7 +27,6 @@ type Props = {
 
 type State = {
     isHidden: boolean
-    showRegistrationLinkDialog?: boolean
     whiteLogo: boolean
 }
 
@@ -95,11 +85,9 @@ class Sidebar extends React.Component<Props, State> {
             <div className='Sidebar octo-sidebar'>
                 <div className='octo-sidebar-header'>
                     <div className='heading'>
-                        <UserContext.Consumer>
-                            {(user) => {
-                                return this.renderUserMenu(user)
-                            }}
-                        </UserContext.Consumer>
+                        <SidebarUserMenu
+                            whiteLogo={this.state.whiteLogo}
+                        />
                     </div>
 
                     <div className='octo-spacer'/>
@@ -144,80 +132,12 @@ class Sidebar extends React.Component<Props, State> {
         )
     }
 
-    private renderUserMenu(user?: IUser): JSX.Element {
-        const {intl} = this.props
-
-        return (
-            <ModalWrapper>
-                <MenuWrapper>
-                    <div className='logo'>
-                        {this.state.whiteLogo ? <LogoWithNameWhiteIcon/> : <LogoWithNameIcon/>}
-                        <div className='octo-spacer'/>
-                        <div className='version'>
-                            {`v${Constants.versionString}`}
-                        </div>
-                    </div>
-                    <Menu>
-                        {user && user.username !== 'single-user' && <>
-                            <Menu.Label><b>{user.username}</b></Menu.Label>
-                            <Menu.Text
-                                id='logout'
-                                name={intl.formatMessage({id: 'Sidebar.logout', defaultMessage: 'Log out'})}
-                                onClick={async () => {
-                                    octoClient.logout()
-                                    window.location.href = '/login'
-                                }}
-                            />
-                            <Menu.Text
-                                id='changePassword'
-                                name={intl.formatMessage({id: 'Sidebar.changePassword', defaultMessage: 'Change password'})}
-                                onClick={async () => {
-                                    window.location.href = '/change_password'
-                                }}
-                            />
-                            <Menu.Text
-                                id='invite'
-                                name={intl.formatMessage({id: 'Sidebar.invite-users', defaultMessage: 'Invite Users'})}
-                                onClick={async () => {
-                                    this.setState({showRegistrationLinkDialog: true})
-                                }}
-                            />
-
-                            <Menu.Separator/>
-                        </>}
-
-                        <Menu.Text
-                            id='about'
-                            name={intl.formatMessage({id: 'Sidebar.about', defaultMessage: 'About Focalboard'})}
-                            onClick={async () => {
-                                this.showAbout()
-                            }}
-                        />
-                    </Menu>
-                </MenuWrapper>
-
-                {this.state.showRegistrationLinkDialog &&
-                    <RegistrationLink
-                        onClose={() => {
-                            this.setState({showRegistrationLinkDialog: false})
-                        }}
-                    />
-                }
-            </ModalWrapper>
-        )
-    }
-
     private hideClicked = () => {
         this.setState({isHidden: true})
     }
 
     private showClicked = () => {
         this.setState({isHidden: false})
-    }
-
-    private showAbout = () => {
-        const url = 'https://www.focalboard.com?utm_source=webapp'
-        window.open(url, '_blank')
     }
 }
 
