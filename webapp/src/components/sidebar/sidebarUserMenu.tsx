@@ -12,7 +12,8 @@ import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 
 import ModalWrapper from '../modalWrapper'
-import RegistrationLink from '../registrationLink'
+
+import RegistrationLink from './registrationLink'
 
 import './sidebarUserMenu.scss'
 

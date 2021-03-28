@@ -3,13 +3,14 @@
 import React, {useEffect, useState} from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
-import {IWorkspace} from '../blocks/workspace'
-import {sendFlashMessage} from '../components/flashMessages'
-import client from '../octoClient'
-import {Utils} from '../utils'
-import Button from '../widgets/buttons/button'
+import {IWorkspace} from '../../blocks/workspace'
+import {sendFlashMessage} from '../../components/flashMessages'
+import client from '../../octoClient'
+import {Utils} from '../../utils'
+import Button from '../../widgets/buttons/button'
 
-import Modal from './modal'
+import Modal from '../modal'
+
 import './registrationLink.scss'
 
 type Props = {
