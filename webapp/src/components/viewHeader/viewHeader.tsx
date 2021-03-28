@@ -4,8 +4,6 @@ import React from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {BlockIcons} from '../../blockIcons'
-import {IPropertyTemplate} from '../../blocks/board'
-import {ISortOption, MutableBoardView} from '../../blocks/boardView'
 import {MutableCard} from '../../blocks/card'
 import {CardFilter} from '../../cardFilter'
 import ViewMenu from '../../components/viewMenu'
@@ -16,11 +14,8 @@ import {UserContext} from '../../user'
 import {BoardTree} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
 import IconButton from '../../widgets/buttons/iconButton'
-import CheckIcon from '../../widgets/icons/check'
 import DropdownIcon from '../../widgets/icons/dropdown'
 import OptionsIcon from '../../widgets/icons/options'
-import SortDownIcon from '../../widgets/icons/sortDown'
-import SortUpIcon from '../../widgets/icons/sortUp'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 
@@ -32,6 +27,8 @@ import {sendFlashMessage} from '../flashMessages'
 
 import NewCardButton from './newCardButton'
 import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'
+import ViewHeaderGroupByMenu from './viewHeaderGroupByMenu'
+import ViewHeaderSortMenu from './viewHeaderSortMenu'
 
 import './viewHeader.scss'
 
@@ -94,7 +91,6 @@ class ViewHeader extends React.Component<Props, State> {
         const {board, activeView} = boardTree
 
         const hasFilter = activeView.filter && activeView.filter.filters?.length > 0
-        const hasSort = activeView.sortOptions.length > 0
 
         return (
             <div className='ViewHeader'>
@@ -131,41 +127,11 @@ class ViewHeader extends React.Component<Props, State> {
                     {/* Group by */}
 
                     {withGroupBy &&
-                    <MenuWrapper>
-                        <Button>
-                            <FormattedMessage
-                                id='ViewHeader.group-by'
-                                defaultMessage='Group by: {property}'
-                                values={{
-                                    property: (
-                                        <span
-                                            style={{color: 'rgb(var(--main-fg))'}}
-                                            id='groupByLabel'
-                                        >
-                                            {boardTree.groupByProperty?.name}
-                                        </span>
-                                    ),
-                                }}
-                            />
-                        </Button>
-                        <Menu>
-                            {boardTree.board.cardProperties.filter((o: IPropertyTemplate) => o.type === 'select').map((option: IPropertyTemplate) => (
-                                <Menu.Text
-                                    key={option.id}
-                                    id={option.id}
-                                    name={option.name}
-                                    rightIcon={boardTree.activeView.groupById === option.id ? <CheckIcon/> : undefined}
-                                    onClick={(id) => {
-                                        if (boardTree.activeView.groupById === id) {
-                                            return
-                                        }
-
-                                        mutator.changeViewGroupById(boardTree.activeView, id)
-                                    }}
-                                />
-                            ))}
-                        </Menu>
-                    </MenuWrapper>}
+                        <ViewHeaderGroupByMenu
+                            properties={boardTree.board.cardProperties}
+                            activeView={boardTree.activeView}
+                            groupByPropertyName={boardTree.groupByProperty?.name}
+                        />}
 
                     {/* Filter */}
 
@@ -188,74 +154,11 @@ class ViewHeader extends React.Component<Props, State> {
 
                     {/* Sort */}
 
-                    <MenuWrapper>
-                        <Button active={hasSort}>
-                            <FormattedMessage
-                                id='ViewHeader.sort'
-                                defaultMessage='Sort'
-                            />
-                        </Button>
-                        <Menu>
-                            {(activeView.sortOptions.length > 0) &&
-                            <>
-                                <Menu.Text
-                                    id='manual'
-                                    name='Manual'
-                                    onClick={() => {
-                                        // This sets the manual card order to the currently displayed order
-                                        // Note: Perform this as a single update to change both properties correctly
-                                        const newView = new MutableBoardView(activeView)
-                                        newView.cardOrder = boardTree.orderedCards().map((o) => o.id)
-                                        newView.sortOptions = []
-                                        mutator.updateBlock(newView, activeView, 'reorder')
-                                    }}
-                                />
-
-                                <Menu.Text
-                                    id='revert'
-                                    name='Revert'
-                                    onClick={() => {
-                                        mutator.changeViewSortOptions(activeView, [])
-                                    }}
-                                />
-
-                                <Menu.Separator/>
-                            </>
-                            }
-
-                            {this.sortDisplayOptions().map((option) => {
-                                let rightIcon: JSX.Element | undefined
-                                if (activeView.sortOptions.length > 0) {
-                                    const sortOption = activeView.sortOptions[0]
-                                    if (sortOption.propertyId === option.id) {
-                                        rightIcon = sortOption.reversed ? <SortUpIcon/> : <SortDownIcon/>
-                                    }
-                                }
-                                return (
-                                    <Menu.Text
-                                        key={option.id}
-                                        id={option.id}
-                                        name={option.name}
-                                        rightIcon={rightIcon}
-                                        onClick={(propertyId: string) => {
-                                            let newSortOptions: ISortOption[] = []
-                                            if (activeView.sortOptions[0] && activeView.sortOptions[0].propertyId === propertyId) {
-                                                // Already sorting by name, so reverse it
-                                                newSortOptions = [
-                                                    {propertyId, reversed: !activeView.sortOptions[0].reversed},
-                                                ]
-                                            } else {
-                                                newSortOptions = [
-                                                    {propertyId, reversed: false},
-                                                ]
-                                            }
-                                            mutator.changeViewSortOptions(activeView, newSortOptions)
-                                        }}
-                                    />
-                                )
-                            })}
-                        </Menu>
-                    </MenuWrapper>
+                    <ViewHeaderSortMenu
+                        properties={boardTree.board.cardProperties}
+                        activeView={boardTree.activeView}
+                        orderedCards={boardTree.orderedCards()}
+                    />
                 </>
                 }
 
