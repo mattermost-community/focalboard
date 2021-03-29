@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useState} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import ViewMenu from '../../components/viewMenu'
@@ -36,133 +36,112 @@ type Props = {
     readonly: boolean
 }
 
-type State = {
-    showFilter: boolean
-}
+const ViewHeader = React.memo((props: Props) => {
+    const [showFilter, setShowFilter] = useState(false)
 
-class ViewHeader extends React.Component<Props, State> {
-    shouldComponentUpdate(): boolean {
-        return true
-    }
+    const {boardTree, showView, withGroupBy} = props
+    const {board, activeView} = boardTree
 
-    constructor(props: Props) {
-        super(props)
-        this.state = {showFilter: false}
-    }
+    const hasFilter = activeView.filter && activeView.filter.filters?.length > 0
 
-    render(): JSX.Element {
-        const {boardTree, showView, withGroupBy} = this.props
-        const {board, activeView} = boardTree
-
-        const hasFilter = activeView.filter && activeView.filter.filters?.length > 0
-
-        return (
-            <div className='ViewHeader'>
-                <Editable
-                    style={{color: 'rgb(var(--main-fg))', fontWeight: 600}}
-                    text={activeView.title}
-                    placeholderText='Untitled View'
-                    onChanged={(text) => {
-                        mutator.changeTitle(activeView, text)
-                    }}
-                    readonly={this.props.readonly}
+    return (
+        <div className='ViewHeader'>
+            <Editable
+                style={{color: 'rgb(var(--main-fg))', fontWeight: 600}}
+                text={activeView.title}
+                placeholderText='Untitled View'
+                onChanged={(text) => {
+                    mutator.changeTitle(activeView, text)
+                }}
+                readonly={props.readonly}
+            />
+            <MenuWrapper>
+                <IconButton icon={<DropdownIcon/>}/>
+                <ViewMenu
+                    board={board}
+                    boardTree={boardTree}
+                    showView={showView}
+                    readonly={props.readonly}
                 />
-                <MenuWrapper>
-                    <IconButton icon={<DropdownIcon/>}/>
-                    <ViewMenu
-                        board={board}
+            </MenuWrapper>
+
+            <div className='octo-spacer'/>
+
+            {!props.readonly &&
+            <>
+                {/* Card properties */}
+
+                <ViewHeaderPropertiesMenu
+                    properties={board.cardProperties}
+                    activeView={activeView}
+                />
+
+                {/* Group by */}
+
+                {withGroupBy &&
+                    <ViewHeaderGroupByMenu
+                        properties={board.cardProperties}
+                        activeView={activeView}
+                        groupByPropertyName={boardTree.groupByProperty?.name}
+                    />}
+
+                {/* Filter */}
+
+                <ModalWrapper>
+                    <Button
+                        active={hasFilter}
+                        onClick={() => setShowFilter(true)}
+                    >
+                        <FormattedMessage
+                            id='ViewHeader.filter'
+                            defaultMessage='Filter'
+                        />
+                    </Button>
+                    {showFilter &&
+                    <FilterComponent
                         boardTree={boardTree}
-                        showView={showView}
-                        readonly={this.props.readonly}
-                    />
-                </MenuWrapper>
+                        onClose={() => setShowFilter(false)}
+                    />}
+                </ModalWrapper>
 
-                <div className='octo-spacer'/>
+                {/* Sort */}
 
-                {!this.props.readonly &&
-                <>
-                    {/* Card properties */}
+                <ViewHeaderSortMenu
+                    properties={board.cardProperties}
+                    activeView={activeView}
+                    orderedCards={boardTree.orderedCards()}
+                />
+            </>
+            }
 
-                    <ViewHeaderPropertiesMenu
-                        properties={boardTree.board.cardProperties}
-                        activeView={boardTree.activeView}
-                    />
+            {/* Search */}
 
-                    {/* Group by */}
+            <ViewHeaderSearch
+                boardTree={boardTree}
+                setSearchText={props.setSearchText}
+            />
 
-                    {withGroupBy &&
-                        <ViewHeaderGroupByMenu
-                            properties={boardTree.board.cardProperties}
-                            activeView={boardTree.activeView}
-                            groupByPropertyName={boardTree.groupByProperty?.name}
-                        />}
+            {/* Options menu */}
 
-                    {/* Filter */}
-
-                    <ModalWrapper>
-                        <Button
-                            active={hasFilter}
-                            onClick={this.showFilterDialog}
-                        >
-                            <FormattedMessage
-                                id='ViewHeader.filter'
-                                defaultMessage='Filter'
-                            />
-                        </Button>
-                        {this.state.showFilter &&
-                        <FilterComponent
-                            boardTree={boardTree}
-                            onClose={this.hideFilterDialog}
-                        />}
-                    </ModalWrapper>
-
-                    {/* Sort */}
-
-                    <ViewHeaderSortMenu
-                        properties={boardTree.board.cardProperties}
-                        activeView={boardTree.activeView}
-                        orderedCards={boardTree.orderedCards()}
-                    />
-                </>
-                }
-
-                {/* Search */}
-
-                <ViewHeaderSearch
-                    boardTree={this.props.boardTree}
-                    setSearchText={this.props.setSearchText}
+            {!props.readonly &&
+            <>
+                <ViewHeaderActionsMenu
+                    boardTree={boardTree}
                 />
 
-                {/* Options menu */}
+                {/* New card button */}
 
-                {!this.props.readonly &&
-                <>
-                    <ViewHeaderActionsMenu
-                        boardTree={this.props.boardTree}
-                    />
-
-                    {/* New card button */}
-
-                    <NewCardButton
-                        boardTree={this.props.boardTree}
-                        addCard={this.props.addCard}
-                        addCardFromTemplate={this.props.addCardFromTemplate}
-                        addCardTemplate={this.props.addCardTemplate}
-                        editCardTemplate={this.props.editCardTemplate}
-                    />
-                </>
-                }
-            </div>
-        )
-    }
-
-    private showFilterDialog = () => {
-        this.setState({showFilter: true})
-    }
-
-    private hideFilterDialog = () => {
-        this.setState({showFilter: false})
-    }
-}
+                <NewCardButton
+                    boardTree={boardTree}
+                    addCard={props.addCard}
+                    addCardFromTemplate={props.addCardFromTemplate}
+                    addCardTemplate={props.addCardTemplate}
+                    editCardTemplate={props.editCardTemplate}
+                />
+            </>
+            }
+        </div>
+    )
+})
 
 export default ViewHeader
