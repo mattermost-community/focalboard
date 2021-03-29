@@ -3,11 +3,7 @@
 import React, {useState} from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
-import {BlockIcons} from '../../blockIcons'
-import {MutableCard} from '../../blocks/card'
-import {CardFilter} from '../../cardFilter'
 import {CsvExporter} from '../../csvExporter'
-import mutator from '../../mutator'
 import {UserContext} from '../../user'
 import {BoardTree} from '../../viewModel/boardTree'
 import IconButton from '../../widgets/buttons/iconButton'
