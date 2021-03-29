@@ -209,33 +209,33 @@ class BoardPage extends React.Component<Props, State> {
             if (!workspace) {
                 location.href = '/error?id=no_workspace'
             }
-
-            const workspaceTree = await MutableWorkspaceTree.sync()
-            const boardIds = [...workspaceTree.boards.map((o) => o.id), ...workspaceTree.boardTemplates.map((o) => o.id)]
-            this.setState({workspaceTree})
-
-            let boardIdsToListen: string[]
-            if (boardIds.length > 0) {
-                boardIdsToListen = ['', ...boardIds]
-            } else {
-                // Read-only view
-                boardIdsToListen = [this.state.boardId]
-            }
-
-            // Listen to boards plus all blocks at root (Empty string for parentId)
-            this.workspaceListener.open(
-                octoClient.workspaceId,
-                boardIdsToListen,
-                async (blocks) => {
-                    Utils.log(`workspaceListener.onChanged: ${blocks.length}`)
-                    this.incrementalUpdate(blocks)
-                },
-                () => {
-                    Utils.log('workspaceListener.onReconnect')
-                    this.sync()
-                },
-            )
         }
+
+        const workspaceTree = await MutableWorkspaceTree.sync()
+        const boardIds = [...workspaceTree.boards.map((o) => o.id), ...workspaceTree.boardTemplates.map((o) => o.id)]
+        this.setState({workspaceTree})
+
+        let boardIdsToListen: string[]
+        if (boardIds.length > 0) {
+            boardIdsToListen = ['', ...boardIds]
+        } else {
+            // Read-only view
+            boardIdsToListen = [this.state.boardId]
+        }
+
+        // Listen to boards plus all blocks at root (Empty string for parentId)
+        this.workspaceListener.open(
+            octoClient.workspaceId,
+            boardIdsToListen,
+            async (blocks) => {
+                Utils.log(`workspaceListener.onChanged: ${blocks.length}`)
+                this.incrementalUpdate(blocks)
+            },
+            () => {
+                Utils.log('workspaceListener.onReconnect')
+                this.sync()
+            },
+        )
 
         if (boardId) {
             const boardTree = await MutableBoardTree.sync(boardId, viewId)

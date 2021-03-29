@@ -126,7 +126,7 @@ func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request
 		switch command.Action {
 		case "AUTH":
 			log.Printf(`Command: AUTH, client: %s`, client.RemoteAddr())
-			ws.authenticateListener(&wsSession, command.WorkspaceID, command.Token, command.ReadToken)
+			ws.authenticateListener(&wsSession, command.WorkspaceID, command.Token)
 
 		case "ADD":
 			log.Printf(`Command: Add workspaceID: %s, blockIDs: %v, client: %s`, wsSession.workspaceID, command.BlockIDs, client.RemoteAddr())
@@ -162,7 +162,7 @@ func (ws *Server) isValidSessionToken(token, workspaceID string) bool {
 	return true
 }
 
-func (ws *Server) authenticateListener(wsSession *websocketSession, workspaceID, token, readToken string) {
+func (ws *Server) authenticateListener(wsSession *websocketSession, workspaceID, token string) {
 	if wsSession.isAuthenticated {
 		// Do not allow multiple auth calls (for security)
 		log.Printf("authenticateListener: Ignoring already authenticated session")
@@ -187,25 +187,21 @@ func (ws *Server) authenticateListener(wsSession *websocketSession, workspaceID,
 	log.Printf("authenticateListener: Authenticated, workspaceID: %s", workspaceID)
 }
 
-func (ws *Server) getContainer(wsSession *websocketSession) (store.Container, error) {
-	// TODO
-	container := store.Container{
-		WorkspaceID: "",
-	}
-
-	return container, nil
-}
-
-func (ws *Server) checkAuthentication(wsSession *websocketSession, command *WebsocketCommand) bool {
+func (ws *Server) getAuthenticatedWorkspaceID(wsSession *websocketSession, command *WebsocketCommand) string {
 	if wsSession.isAuthenticated {
-		return true
+		return wsSession.workspaceID
 	}
 
-	container, err := ws.getContainer(wsSession)
-	if err != nil {
-		log.Printf("checkAuthentication: No container")
-		sendError(wsSession.client, "No container")
-		return false
+	// If not authenticated, try to authenticate the read token against the supplied workspaceID
+	workspaceID := command.WorkspaceID
+	if len(workspaceID) == 0 {
+		log.Printf("getAuthenticatedWorkspaceID: No workspace")
+		sendError(wsSession.client, "No workspace")
+		return ""
+	}
+
+	container := store.Container{
+		WorkspaceID: workspaceID,
 	}
 
 	if len(command.ReadToken) > 0 {
@@ -213,13 +209,13 @@ func (ws *Server) checkAuthentication(wsSession *websocketSession, command *Webs
 		for _, blockID := range command.BlockIDs {
 			isValid, _ := ws.auth.IsValidReadToken(container, blockID, command.ReadToken)
 			if !isValid {
-				return false
+				return ""
 			}
 		}
-		return true
+		return workspaceID
 	}
 
-	return false
+	return ""
 }
 
 // TODO: Refactor workspace hashing
@@ -229,13 +225,12 @@ func makeItemID(workspaceID, blockID string) string {
 
 // addListener adds a listener for a block's change.
 func (ws *Server) addListener(wsSession *websocketSession, command *WebsocketCommand) {
-	if !ws.checkAuthentication(wsSession, command) {
+	workspaceID := ws.getAuthenticatedWorkspaceID(wsSession, command)
+	if len(workspaceID) == 0 {
 		log.Printf("addListener: NOT AUTHENTICATED")
 		sendError(wsSession.client, "not authenticated")
 		return
 	}
-
-	workspaceID := wsSession.workspaceID
 
 	ws.mu.Lock()
 	for _, blockID := range command.BlockIDs {
@@ -268,13 +263,12 @@ func (ws *Server) removeListener(client *websocket.Conn) {
 
 // removeListenerFromBlocks removes a webSocket listener from a set of block.
 func (ws *Server) removeListenerFromBlocks(wsSession *websocketSession, command *WebsocketCommand) {
-	if !ws.checkAuthentication(wsSession, command) {
-		log.Printf("removeListenerFromBlocks: NOT AUTHENTICATED")
+	workspaceID := ws.getAuthenticatedWorkspaceID(wsSession, command)
+	if len(workspaceID) == 0 {
+		log.Printf("addListener: NOT AUTHENTICATED")
 		sendError(wsSession.client, "not authenticated")
 		return
 	}
-
-	workspaceID := wsSession.workspaceID
 
 	ws.mu.Lock()
 	for _, blockID := range command.BlockIDs {

@@ -29,6 +29,7 @@ class OctoListener {
     }
 
     readonly serverUrl: string
+    private workspaceId?: string
     private token: string
     private readToken: string
     private ws?: WebSocket
@@ -61,6 +62,7 @@ class OctoListener {
         }
 
         this.onChange = onChange
+        this.workspaceId = workspaceId
 
         const url = new URL(this.serverUrl)
         const protocol = (url.protocol === 'https:') ? 'wss:' : 'ws:'
@@ -162,6 +164,7 @@ class OctoListener {
         const command: WSCommand = {
             action: 'ADD',
             blockIds,
+            workspaceId: this.workspaceId,
             readToken: this.readToken,
         }
 
@@ -178,6 +181,7 @@ class OctoListener {
         const command: WSCommand = {
             action: 'REMOVE',
             blockIds,
+            workspaceId: this.workspaceId,
             readToken: this.readToken,
         }
 
