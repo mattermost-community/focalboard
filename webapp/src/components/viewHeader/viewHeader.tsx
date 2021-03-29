@@ -10,25 +10,22 @@ import ViewMenu from '../../components/viewMenu'
 import {Constants} from '../../constants'
 import {CsvExporter} from '../../csvExporter'
 import mutator from '../../mutator'
-import {UserContext} from '../../user'
 import {BoardTree} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
 import IconButton from '../../widgets/buttons/iconButton'
 import DropdownIcon from '../../widgets/icons/dropdown'
-import OptionsIcon from '../../widgets/icons/options'
-import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 
 import Editable from '../editable'
 import FilterComponent from '../filterComponent'
 import ModalWrapper from '../modalWrapper'
-import ShareBoardComponent from '../shareBoardComponent'
 import {sendFlashMessage} from '../flashMessages'
 
 import NewCardButton from './newCardButton'
 import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'
 import ViewHeaderGroupByMenu from './viewHeaderGroupByMenu'
 import ViewHeaderSortMenu from './viewHeaderSortMenu'
+import ViewHeaderActionsMenu from './viewHeaderActionsMenu'
 
 import './viewHeader.scss'
 
@@ -48,7 +45,6 @@ type Props = {
 type State = {
     isSearching: boolean
     showFilter: boolean
-    showShareDialog: boolean
 }
 
 class ViewHeader extends React.Component<Props, State> {
@@ -60,7 +56,7 @@ class ViewHeader extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
-        this.state = {isSearching: Boolean(this.props.boardTree.getSearchText()), showFilter: false, showShareDialog: false}
+        this.state = {isSearching: Boolean(this.props.boardTree.getSearchText()), showFilter: false}
     }
 
     componentDidUpdate(prevPros: Props, prevState: State): void {
@@ -191,65 +187,9 @@ class ViewHeader extends React.Component<Props, State> {
 
                 {!this.props.readonly &&
                 <>
-                    <ModalWrapper>
-                        <MenuWrapper>
-                            <IconButton icon={<OptionsIcon/>}/>
-                            <Menu>
-                                <Menu.Text
-                                    id='exportCsv'
-                                    name={intl.formatMessage({id: 'ViewHeader.export-csv', defaultMessage: 'Export to CSV'})}
-                                    onClick={() => this.onExportCsvTrigger(boardTree)}
-                                />
-                                {/* <Menu.Text
-                                    id='exportBoardArchive'
-                                    name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
-                                    onClick={() => Archiver.exportBoardTree(boardTree)}
-                                /> */}
-                                <UserContext.Consumer>
-                                    {(user) => (user && user.id !== 'single-user' &&
-                                        <Menu.Text
-                                            id='shareBoard'
-                                            name={intl.formatMessage({id: 'ViewHeader.share-board', defaultMessage: 'Share board'})}
-                                            onClick={this.showShareDialog}
-                                        />
-                                    )}
-                                </UserContext.Consumer>
-
-                                {/*
-
-                            <Menu.Separator/>
-
-                            <Menu.Text
-                                id='testAdd100Cards'
-                                name={intl.formatMessage({id: 'ViewHeader.test-add-100-cards', defaultMessage: 'TEST: Add 100 cards'})}
-                                onClick={() => this.testAddCards(100)}
-                            />
-                            <Menu.Text
-                                id='testAdd1000Cards'
-                                name={intl.formatMessage({id: 'ViewHeader.test-add-1000-cards', defaultMessage: 'TEST: Add 1,000 cards'})}
-                                onClick={() => this.testAddCards(1000)}
-                            />
-                            <Menu.Text
-                                id='testDistributeCards'
-                                name={intl.formatMessage({id: 'ViewHeader.test-distribute-cards', defaultMessage: 'TEST: Distribute cards'})}
-                                onClick={() => this.testDistributeCards()}
-                            />
-                            <Menu.Text
-                                id='testRandomizeIcons'
-                                name={intl.formatMessage({id: 'ViewHeader.test-randomize-icons', defaultMessage: 'TEST: Randomize icons'})}
-                                onClick={() => this.testRandomizeIcons()}
-                            />
-
-                            */}
-                            </Menu>
-                        </MenuWrapper>
-                        {this.state.showShareDialog &&
-                            <ShareBoardComponent
-                                boardId={this.props.boardTree.board.id}
-                                onClose={this.hideShareDialog}
-                            />
-                        }
-                    </ModalWrapper>
+                    <ViewHeaderActionsMenu
+                        boardTree={this.props.boardTree}
+                    />
 
                     {/* New card button */}
 
@@ -274,14 +214,6 @@ class ViewHeader extends React.Component<Props, State> {
         this.setState({showFilter: false})
     }
 
-    private showShareDialog = () => {
-        this.setState({showShareDialog: true})
-    }
-
-    private hideShareDialog = () => {
-        this.setState({showShareDialog: false})
-    }
-
     private onSearchKeyDown = (e: React.KeyboardEvent) => {
         if (e.keyCode === 27) { // ESC: Clear search
             if (this.searchFieldRef.current) {
@@ -295,71 +227,6 @@ class ViewHeader extends React.Component<Props, State> {
 
     private searchChanged(text?: string) {
         this.props.setSearchText(text)
-    }
-
-    private async testAddCards(count: number) {
-        const {boardTree} = this.props
-        const {board, activeView} = boardTree
-
-        const startCount = boardTree.cards.length
-        let optionIndex = 0
-
-        mutator.performAsUndoGroup(async () => {
-            for (let i = 0; i < count; i++) {
-                const card = new MutableCard()
-                card.parentId = boardTree.board.id
-                card.rootId = boardTree.board.rootId
-                card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
-                card.title = `Test Card ${startCount + i + 1}`
-                card.icon = BlockIcons.shared.randomIcon()
-
-                if (boardTree.groupByProperty && boardTree.groupByProperty.options.length > 0) {
-                    // Cycle through options
-                    const option = boardTree.groupByProperty.options[optionIndex]
-                    optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
-                    card.properties[boardTree.groupByProperty.id] = option.id
-                }
-                mutator.insertBlock(card, 'test add card')
-            }
-        })
-    }
-
-    private async testDistributeCards() {
-        const {boardTree} = this.props
-        mutator.performAsUndoGroup(async () => {
-            let optionIndex = 0
-            for (const card of boardTree.cards) {
-                if (boardTree.groupByProperty && boardTree.groupByProperty.options.length > 0) {
-                    // Cycle through options
-                    const option = boardTree.groupByProperty.options[optionIndex]
-                    optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
-                    const newCard = new MutableCard(card)
-                    if (newCard.properties[boardTree.groupByProperty.id] !== option.id) {
-                        newCard.properties[boardTree.groupByProperty.id] = option.id
-                        mutator.updateBlock(newCard, card, 'test distribute cards')
-                    }
-                }
-            }
-        })
-    }
-
-    private async testRandomizeIcons() {
-        const {boardTree} = this.props
-
-        mutator.performAsUndoGroup(async () => {
-            for (const card of boardTree.cards) {
-                mutator.changeIcon(card, BlockIcons.shared.randomIcon(), 'randomize icon')
-            }
-        })
-    }
-
-    private sortDisplayOptions() {
-        const {boardTree} = this.props
-
-        const options = boardTree.board.cardProperties.map((o) => ({id: o.id, name: o.name}))
-        options.unshift({id: Constants.titleColumnId, name: 'Name'})
-
-        return options
     }
 }
 
