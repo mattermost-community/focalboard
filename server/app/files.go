@@ -10,7 +10,7 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 )
 
-func (a *App) SaveFile(reader io.Reader, filename string) (string, error) {
+func (a *App) SaveFile(reader io.Reader, workspaceID, rootID, filename string) (string, error) {
 	// NOTE: File extension includes the dot
 	fileExtension := strings.ToLower(filepath.Ext(filename))
 	if fileExtension == ".jpeg" {
@@ -18,8 +18,9 @@ func (a *App) SaveFile(reader io.Reader, filename string) (string, error) {
 	}
 
 	createdFilename := fmt.Sprintf(`%s%s`, utils.CreateGUID(), fileExtension)
+	filePath := fmt.Sprintf(`%s/%s/%s`, workspaceID, rootID, createdFilename)
 
-	_, appErr := a.filesBackend.WriteFile(reader, createdFilename)
+	_, appErr := a.filesBackend.WriteFile(reader, filePath)
 	if appErr != nil {
 		return "", errors.New("unable to store the file in the files storage")
 	}
@@ -27,8 +28,9 @@ func (a *App) SaveFile(reader io.Reader, filename string) (string, error) {
 	return createdFilename, nil
 }
 
-func (a *App) GetFilePath(filename string) string {
+func (a *App) GetFilePath(workspaceID, rootID, filename string) string {
 	folderPath := a.config.FilesPath
+	rootPath := filepath.Join(folderPath, workspaceID, rootID)
 
-	return filepath.Join(folderPath, filename)
+	return filepath.Join(rootPath, filename)
 }

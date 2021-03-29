@@ -34,7 +34,7 @@ function addContentMenu(card: Card, intl: IntlShape, type: BlockTypes): JSX.Elem
 }
 
 async function addBlock(card: Card, intl: IntlShape, handler: ContentHandler) {
-    const newBlock = await handler.createBlock()
+    const newBlock = await handler.createBlock(card.rootId)
     newBlock.parentId = card.id
     newBlock.rootId = card.rootId
 
