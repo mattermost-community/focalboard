@@ -6,7 +6,6 @@ import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 import {BlockIcons} from '../../blockIcons'
 import {BlockTypes} from '../../blocks/block'
 import {PropertyType} from '../../blocks/board'
-import {MutableTextBlock} from '../../blocks/textBlock'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import {BoardTree} from '../../viewModel/boardTree'
@@ -19,12 +18,13 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import PropertyMenu from '../../widgets/propertyMenu'
 
 import BlockIconSelector from '../blockIconSelector'
-import './cardDetail.scss'
 import CommentsList from '../commentsList'
 import {ContentHandler, contentRegistry} from '../content/contentRegistry'
-import ContentBlock from '../contentBlock'
-import {MarkdownEditor} from '../markdownEditor'
 import PropertyValueElement from '../propertyValueElement'
+
+import CardDetailContents from './cardDetailContents'
+
+import './cardDetail.scss'
 
 type Props = {
     boardTree: BoardTree
@@ -75,39 +75,6 @@ class CardDetail extends React.Component<Props, State> {
             return null
         }
         const {card, comments} = cardTree
-
-        let contentElements
-        if (cardTree.contents.length > 0) {
-            contentElements =
-                (<div className='octo-content'>
-                    {cardTree.contents.map((block) => (
-                        <ContentBlock
-                            key={block.id}
-                            block={block}
-                            card={card}
-                            contents={cardTree.contents}
-                            readonly={this.props.readonly}
-                        />
-                    ))}
-                </div>)
-        } else {
-            contentElements = (<div className='octo-content'>
-                <div className='octo-block'>
-                    <div className='octo-block-margin'/>
-                    {!this.props.readonly &&
-                        <MarkdownEditor
-                            text=''
-                            placeholderText='Add a description...'
-                            onBlur={(text) => {
-                                if (text) {
-                                    this.addTextBlock(text)
-                                }
-                            }}
-                        />
-                    }
-                </div>
-            </div>)
-        }
 
         const icon = card.icon
 
@@ -221,7 +188,10 @@ class CardDetail extends React.Component<Props, State> {
                 {/* Content blocks */}
 
                 <div className='CardDetail content fullwidth'>
-                    {contentElements}
+                    <CardDetailContents
+                        cardTree={this.props.cardTree}
+                        readonly={this.props.readonly}
+                    />
                 </div>
 
                 {!this.props.readonly &&
@@ -279,24 +249,6 @@ class CardDetail extends React.Component<Props, State> {
         const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
         mutator.performAsUndoGroup(async () => {
             await mutator.insertBlock(newBlock, description)
-            await mutator.changeCardContentOrder(card, contentOrder, description)
-        })
-    }
-
-    private addTextBlock(text: string): void {
-        const {intl, cardTree} = this.props
-        const {card} = cardTree
-
-        const block = new MutableTextBlock()
-        block.parentId = card.id
-        block.rootId = card.rootId
-        block.title = text
-
-        const contentOrder = card.contentOrder.slice()
-        contentOrder.push(block.id)
-        mutator.performAsUndoGroup(async () => {
-            const description = intl.formatMessage({id: 'CardDetail.addCardText', defaultMessage: 'add card text'})
-            await mutator.insertBlock(block, description)
             await mutator.changeCardContentOrder(card, contentOrder, description)
         })
     }
