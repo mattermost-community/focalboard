@@ -12,7 +12,7 @@ import {CardTree, MutableCardTree} from '../viewModel/cardTree'
 import DeleteIcon from '../widgets/icons/delete'
 import Menu from '../widgets/menu'
 
-import CardDetail from './cardDetail'
+import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
 
 type Props = {
