@@ -3,15 +3,16 @@
 import React, {FC, useEffect, useState} from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
-import {IBlock} from '../blocks/block'
-import mutator from '../mutator'
-import {Utils} from '../utils'
-import IconButton from '../widgets/buttons/iconButton'
-import DeleteIcon from '../widgets/icons/delete'
-import OptionsIcon from '../widgets/icons/options'
-import Menu from '../widgets/menu'
-import MenuWrapper from '../widgets/menuWrapper'
-import {UserCache} from '../userCache'
+import {IBlock} from '../../blocks/block'
+import mutator from '../../mutator'
+import {Utils} from '../../utils'
+import IconButton from '../../widgets/buttons/iconButton'
+import DeleteIcon from '../../widgets/icons/delete'
+import OptionsIcon from '../../widgets/icons/options'
+import Menu from '../../widgets/menu'
+import MenuWrapper from '../../widgets/menuWrapper'
+import {UserCache} from '../../userCache'
+
 import './comment.scss'
 
 type Props = {

@@ -12,8 +12,8 @@ import Editable from '../../widgets/editable'
 import EmojiIcon from '../../widgets/icons/emoji'
 
 import BlockIconSelector from '../blockIconSelector'
-import CommentsList from '../commentsList'
 
+import CommentsList from './commentsList'
 import CardDetailContents from './cardDetailContents'
 import CardDetailContentsMenu from './cardDetailContentsMenu'
 import CardDetailProperties from './cardDetailProperties'

@@ -1,16 +1,17 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useMemo} from 'react'
+import React, {useState} from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
-import {CommentBlock, MutableCommentBlock} from '../blocks/commentBlock'
-import mutator from '../mutator'
-import {Utils} from '../utils'
-import Button from '../widgets/buttons/button'
+import {CommentBlock, MutableCommentBlock} from '../../blocks/commentBlock'
+import mutator from '../../mutator'
+import {Utils} from '../../utils'
+import Button from '../../widgets/buttons/button'
+
+import {MarkdownEditor} from '../markdownEditor'
 
 import Comment from './comment'
 import './commentsList.scss'
-import {MarkdownEditor} from './markdownEditor'
 
 type Props = {
     comments: readonly CommentBlock[]
@@ -22,7 +23,7 @@ type Props = {
 const CommentsList = React.memo((props: Props) => {
     const [newComment, setNewComment] = useState('')
 
-    const onSendClicked = useMemo(() => () => {
+    const onSendClicked = () => {
         const commentText = newComment
         if (commentText) {
             const {rootId, cardId} = props
@@ -36,7 +37,7 @@ const CommentsList = React.memo((props: Props) => {
             mutator.insertBlock(comment, 'add comment')
             setNewComment('')
         }
-    }, [])
+    }
 
     const {comments, intl} = props
 
