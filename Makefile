@@ -38,6 +38,7 @@ ifeq ($(BUILD_ENTERPRISE_READY),true)
     IGNORE:=$(shell ln -s ../$(BUILD_ENTERPRISE_DIR) server/enterprise)
 else
     IGNORE:=$(shell rm -f server/main/imports.go)
+    IGNORE:=$(shell rm -f server/enterprise)
 endif
 
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildNumber=$(BUILD_NUMBER)"
