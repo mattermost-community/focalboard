@@ -36,7 +36,6 @@ type State = {
 
 class Table extends React.Component<Props, State> {
     private draggedHeaderTemplate?: IPropertyTemplate
-    private cardIdToRowMap = new Map<string, React.RefObject<TableRow>>()
     state: State = {}
 
     shouldComponentUpdate(): boolean {
@@ -53,8 +52,6 @@ class Table extends React.Component<Props, State> {
         if (titleSortOption) {
             titleSortIcon = titleSortOption.reversed ? <SortUpIcon/> : <SortDownIcon/>
         }
-
-        this.cardIdToRowMap.clear()
 
         return (
             <div className='octo-table-body Table'>
@@ -215,12 +212,9 @@ class Table extends React.Component<Props, State> {
                 {/* Rows, one per card */}
 
                 {cards.map((card) => {
-                    const tableRowRef = React.createRef<TableRow>()
-
                     const tableRow = (
                         <TableRow
                             key={card.id + card.updateAt}
-                            ref={tableRowRef}
                             boardTree={boardTree}
                             card={card}
                             isSelected={this.props.selectedCardIds.includes(card.id)}
@@ -236,8 +230,6 @@ class Table extends React.Component<Props, State> {
                             showCard={this.props.showCard}
                             readonly={this.props.readonly}
                         />)
-
-                    this.cardIdToRowMap.set(card.id, tableRowRef)
 
                     return tableRow
                 })}
