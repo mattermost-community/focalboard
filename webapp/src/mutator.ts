@@ -6,7 +6,6 @@ import {Board, IPropertyOption, IPropertyTemplate, MutableBoard, PropertyType} f
 import {BoardView, ISortOption, MutableBoardView} from './blocks/boardView'
 import {Card, MutableCard} from './blocks/card'
 import {FilterGroup} from './blocks/filterGroup'
-import {MutableImageBlock} from './blocks/imageBlock'
 import octoClient from './octoClient'
 import {OctoUtils} from './octoUtils'
 import undoManager from './undomanager'
