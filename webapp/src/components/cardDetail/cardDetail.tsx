@@ -5,7 +5,6 @@ import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {BlockIcons} from '../../blockIcons'
 import {BlockTypes} from '../../blocks/block'
-import {PropertyType} from '../../blocks/board'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import {BoardTree} from '../../viewModel/boardTree'
@@ -15,14 +14,13 @@ import Editable from '../../widgets/editable'
 import EmojiIcon from '../../widgets/icons/emoji'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
-import PropertyMenu from '../../widgets/propertyMenu'
 
 import BlockIconSelector from '../blockIconSelector'
 import CommentsList from '../commentsList'
 import {ContentHandler, contentRegistry} from '../content/contentRegistry'
-import PropertyValueElement from '../propertyValueElement'
 
 import CardDetailContents from './cardDetailContents'
+import CardDetailProperties from './cardDetailProperties'
 
 import './cardDetail.scss'
 
@@ -120,55 +118,11 @@ class CardDetail extends React.Component<Props, State> {
 
                     {/* Property list */}
 
-                    <div className='octo-propertylist'>
-                        {board.cardProperties.map((propertyTemplate) => {
-                            const propertyValue = card.properties[propertyTemplate.id]
-                            return (
-                                <div
-                                    key={propertyTemplate.id + '-' + propertyTemplate.type + '-' + propertyValue}
-                                    className='octo-propertyrow'
-                                >
-                                    {this.props.readonly && <div className='octo-propertyname'>{propertyTemplate.name}</div>}
-                                    {!this.props.readonly &&
-                                        <MenuWrapper>
-                                            <div className='octo-propertyname'><Button>{propertyTemplate.name}</Button></div>
-                                            <PropertyMenu
-                                                propertyId={propertyTemplate.id}
-                                                propertyName={propertyTemplate.name}
-                                                propertyType={propertyTemplate.type}
-                                                onNameChanged={(newName: string) => mutator.renameProperty(board, propertyTemplate.id, newName)}
-                                                onTypeChanged={(newType: PropertyType) => mutator.changePropertyType(boardTree, propertyTemplate, newType)}
-                                                onDelete={(id: string) => mutator.deleteProperty(boardTree, id)}
-                                            />
-                                        </MenuWrapper>
-                                    }
-                                    <PropertyValueElement
-                                        readOnly={this.props.readonly}
-                                        card={card}
-                                        boardTree={boardTree}
-                                        propertyTemplate={propertyTemplate}
-                                        emptyDisplayValue='Empty'
-                                    />
-                                </div>
-                            )
-                        })}
-
-                        {!this.props.readonly &&
-                            <div className='octo-propertyname add-property'>
-                                <Button
-                                    onClick={async () => {
-                                        // TODO: Show UI
-                                        await mutator.insertPropertyTemplate(boardTree)
-                                    }}
-                                >
-                                    <FormattedMessage
-                                        id='CardDetail.add-property'
-                                        defaultMessage='+ Add a property'
-                                    />
-                                </Button>
-                            </div>
-                        }
-                    </div>
+                    <CardDetailProperties
+                        boardTree={this.props.boardTree}
+                        cardTree={this.props.cardTree}
+                        readonly={this.props.readonly}
+                    />
 
                     {/* Comments */}
 
