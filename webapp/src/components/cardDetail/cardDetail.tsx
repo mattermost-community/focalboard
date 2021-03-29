@@ -63,8 +63,7 @@ class CardDetail extends React.Component<Props, State> {
     }
 
     render() {
-        const {boardTree, cardTree} = this.props
-        const {board} = boardTree
+        const {cardTree} = this.props
         if (!cardTree) {
             return null
         }
