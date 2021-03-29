@@ -12,7 +12,6 @@ import DropdownIcon from '../../widgets/icons/dropdown'
 import MenuWrapper from '../../widgets/menuWrapper'
 
 import Editable from '../editable'
-import FilterComponent from '../filterComponent'
 import ModalWrapper from '../modalWrapper'
 
 import NewCardButton from './newCardButton'
@@ -21,6 +20,7 @@ import ViewHeaderGroupByMenu from './viewHeaderGroupByMenu'
 import ViewHeaderSortMenu from './viewHeaderSortMenu'
 import ViewHeaderActionsMenu from './viewHeaderActionsMenu'
 import ViewHeaderSearch from './viewHeaderSearch'
+import FilterComponent from './filterComponent'
 
 import './viewHeader.scss'
 

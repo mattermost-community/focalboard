@@ -3,19 +3,20 @@
 import React from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
-import {IPropertyTemplate} from '../blocks/board'
-import {FilterClause, FilterCondition} from '../blocks/filterClause'
-import {FilterGroup} from '../blocks/filterGroup'
-import mutator from '../mutator'
-import {OctoUtils} from '../octoUtils'
-import {Utils} from '../utils'
-import {BoardTree} from '../viewModel/boardTree'
-import Button from '../widgets/buttons/button'
-import Menu from '../widgets/menu'
-import MenuWrapper from '../widgets/menuWrapper'
+import {IPropertyTemplate} from '../../blocks/board'
+import {FilterClause, FilterCondition} from '../../blocks/filterClause'
+import {FilterGroup} from '../../blocks/filterGroup'
+import mutator from '../../mutator'
+import {OctoUtils} from '../../octoUtils'
+import {Utils} from '../../utils'
+import {BoardTree} from '../../viewModel/boardTree'
+import Button from '../../widgets/buttons/button'
+import Menu from '../../widgets/menu'
+import MenuWrapper from '../../widgets/menuWrapper'
+
+import Modal from '../modal'
 
 import './filterComponent.scss'
-import Modal from './modal'
 
 type Props = {
     boardTree: BoardTree
