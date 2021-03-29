@@ -116,7 +116,7 @@ func (a *API) checkCSRFToken(r *http.Request) bool {
 	return false
 }
 
-func (a *API) getContainer(r *http.Request) (*store.Container, error) {
+func (a *API) getContainerAllowingReadTokenForBlock(r *http.Request, blockID string) (*store.Container, error) {
 	if a.WorkspaceAuthenticator == nil {
 		// Native auth: always use root workspace
 		container := store.Container{
@@ -133,17 +133,42 @@ func (a *API) getContainer(r *http.Request) (*store.Container, error) {
 		return nil, errors.New("No workspace specified")
 	}
 
-	ctx := r.Context()
-	session := ctx.Value("session").(*model.Session)
-	if !a.WorkspaceAuthenticator.DoesUserHaveWorkspaceAccess(session, workspaceID) {
-		return nil, errors.New("Access denied to workspace")
-	}
-
 	container := store.Container{
 		WorkspaceID: workspaceID,
 	}
 
+	ctx := r.Context()
+	session, _ := ctx.Value("session").(*model.Session)
+	if session == nil && len(blockID) > 0 {
+		// No session, check for read_token
+		query := r.URL.Query()
+		readToken := query.Get("read_token")
+
+		// Require read token
+		if len(readToken) < 1 {
+			return nil, errors.New("Access denied to workspace")
+		}
+
+		isValid, err := a.app().IsValidReadToken(container, blockID, readToken)
+		if err != nil {
+			log.Printf("IsValidReadToken ERROR: %v", err)
+			return nil, errors.New("Access denied to workspace")
+		}
+
+		if !isValid {
+			return nil, errors.New("Access denied to workspace")
+		}
+	} else {
+		if !a.WorkspaceAuthenticator.DoesUserHaveWorkspaceAccess(session, workspaceID) {
+			return nil, errors.New("Access denied to workspace")
+		}
+	}
+
 	return &container, nil
+}
+
+func (a *API) getContainer(r *http.Request) (*store.Container, error) {
+	return a.getContainerAllowingReadTokenForBlock(r, "")
 }
 
 func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
@@ -499,35 +524,10 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	blockID := vars["blockID"]
 
-	container, err := a.getContainer(r)
+	container, err := a.getContainerAllowingReadTokenForBlock(r, blockID)
 	if err != nil {
 		noContainerErrorResponse(w, err)
 		return
-	}
-
-	// If not authenticated (no session), check that block is publicly shared
-	ctx := r.Context()
-	session, _ := ctx.Value("session").(*model.Session)
-	if session == nil {
-		query := r.URL.Query()
-		readToken := query.Get("read_token")
-
-		// Require read token
-		if len(readToken) < 1 {
-			errorResponse(w, http.StatusBadRequest, "No read_token", nil)
-			return
-		}
-
-		isValid, err := a.app().IsValidReadToken(*container, blockID, readToken)
-		if err != nil {
-			errorResponse(w, http.StatusInternalServerError, "", err)
-			return
-		}
-
-		if !isValid {
-			errorResponse(w, http.StatusUnauthorized, "", nil)
-			return
-		}
 	}
 
 	query := r.URL.Query()

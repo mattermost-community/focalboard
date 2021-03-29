@@ -45,9 +45,19 @@ class ShareBoardComponent extends React.PureComponent<Props, State> {
 
         const isSharing = Boolean(sharing && sharing.id === this.props.boardId && sharing.enabled)
         const readToken = (sharing && isSharing) ? sharing.token : ''
+
         const shareUrl = new URL(window.location.toString())
         shareUrl.searchParams.set('r', readToken)
-        shareUrl.pathname = '/shared'
+
+        const components = shareUrl.pathname.split('/')
+
+        // TODO: Consider passing workspaceId through props instead
+        if (components.length >= 2 && components[1].toLowerCase() === 'workspace') {
+            const workspaceId = components[2]
+            shareUrl.pathname = `/workspace/${workspaceId}/shared`
+        } else {
+            shareUrl.pathname = '/shared'
+        }
 
         let stateDescription: string
         if (isSharing) {
