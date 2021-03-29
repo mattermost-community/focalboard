@@ -1,14 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage} from 'react-intl'
 
-import {BlockIcons} from '../../blockIcons'
-import {MutableCard} from '../../blocks/card'
-import {CardFilter} from '../../cardFilter'
 import ViewMenu from '../../components/viewMenu'
-import {Constants} from '../../constants'
-import {CsvExporter} from '../../csvExporter'
 import mutator from '../../mutator'
 import {BoardTree} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
@@ -19,13 +14,13 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import Editable from '../editable'
 import FilterComponent from '../filterComponent'
 import ModalWrapper from '../modalWrapper'
-import {sendFlashMessage} from '../flashMessages'
 
 import NewCardButton from './newCardButton'
 import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'
 import ViewHeaderGroupByMenu from './viewHeaderGroupByMenu'
 import ViewHeaderSortMenu from './viewHeaderSortMenu'
 import ViewHeaderActionsMenu from './viewHeaderActionsMenu'
+import ViewHeaderSearch from './viewHeaderSearch'
 
 import './viewHeader.scss'
 
@@ -38,52 +33,25 @@ type Props = {
     addCardTemplate: () => void
     editCardTemplate: (cardTemplateId: string) => void
     withGroupBy?: boolean
-    intl: IntlShape
     readonly: boolean
 }
 
 type State = {
-    isSearching: boolean
     showFilter: boolean
 }
 
 class ViewHeader extends React.Component<Props, State> {
-    private searchFieldRef = React.createRef<Editable>()
-
     shouldComponentUpdate(): boolean {
         return true
     }
 
     constructor(props: Props) {
         super(props)
-        this.state = {isSearching: Boolean(this.props.boardTree.getSearchText()), showFilter: false}
-    }
-
-    componentDidUpdate(prevPros: Props, prevState: State): void {
-        if (this.state.isSearching && !prevState.isSearching) {
-            this.searchFieldRef.current?.focus()
-        }
-    }
-
-    onExportCsvTrigger(boardTree: BoardTree) {
-        try {
-            CsvExporter.exportTableCsv(boardTree)
-            const exportCompleteMessage = this.props.intl.formatMessage({
-                id: 'ViewHeader.export-complete',
-                defaultMessage: 'Export complete!',
-            })
-            sendFlashMessage({content: exportCompleteMessage, severity: 'normal'})
-        } catch (e) {
-            const exportFailedMessage = this.props.intl.formatMessage({
-                id: 'ViewHeader.export-failed',
-                defaultMessage: 'Export failed!',
-            })
-            sendFlashMessage({content: exportFailedMessage, severity: 'high'})
-        }
+        this.state = {showFilter: false}
     }
 
     render(): JSX.Element {
-        const {boardTree, showView, withGroupBy, intl} = this.props
+        const {boardTree, showView, withGroupBy} = this.props
         const {board, activeView} = boardTree
 
         const hasFilter = activeView.filter && activeView.filter.filters?.length > 0
@@ -160,28 +128,10 @@ class ViewHeader extends React.Component<Props, State> {
 
                 {/* Search */}
 
-                {this.state.isSearching &&
-                    <Editable
-                        ref={this.searchFieldRef}
-                        text={boardTree.getSearchText()}
-                        placeholderText={intl.formatMessage({id: 'ViewHeader.search-text', defaultMessage: 'Search text'})}
-                        style={{color: 'rgb(var(--main-fg))'}}
-                        onChanged={(text) => {
-                            this.searchChanged(text)
-                        }}
-                        onKeyDown={(e) => {
-                            this.onSearchKeyDown(e)
-                        }}
-                    />
-                }
-
-                {!this.state.isSearching &&
-                    <Button onClick={() => this.setState({isSearching: true})}>
-                        <FormattedMessage
-                            id='ViewHeader.search'
-                            defaultMessage='Search'
-                        />
-                    </Button>}
+                <ViewHeaderSearch
+                    boardTree={this.props.boardTree}
+                    setSearchText={this.props.setSearchText}
+                />
 
                 {/* Options menu */}
 
@@ -213,21 +163,6 @@ class ViewHeader extends React.Component<Props, State> {
     private hideFilterDialog = () => {
         this.setState({showFilter: false})
     }
-
-    private onSearchKeyDown = (e: React.KeyboardEvent) => {
-        if (e.keyCode === 27) { // ESC: Clear search
-            if (this.searchFieldRef.current) {
-                this.searchFieldRef.current.text = ''
-            }
-            this.setState({isSearching: false})
-            this.props.setSearchText(undefined)
-            e.preventDefault()
-        }
-    }
-
-    private searchChanged(text?: string) {
-        this.props.setSearchText(text)
-    }
 }
 
-export default injectIntl(ViewHeader)
+export default ViewHeader
