@@ -1,13 +1,13 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useState} from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
 import {MutableCheckboxBlock} from '../../blocks/checkboxBlock'
 import {IContentBlock} from '../../blocks/contentBlock'
 import CheckIcon from '../../widgets/icons/check'
 import mutator from '../../mutator'
-import {Editable} from '../editable'
+import Editable from '../../widgets/editable'
 
 import {contentRegistry} from './contentRegistry'
 import './checkboxElement.scss'
@@ -18,53 +18,44 @@ type Props = {
     intl: IntlShape
 }
 
-type State = {
-    active: boolean
-    title: string
-}
+const CheckboxElement = React.memo((props: Props) => {
+    const {intl, block, readonly} = props
 
-class CheckboxElement extends React.PureComponent<Props, State> {
-    constructor(props: Props) {
-        super(props)
-        this.state = {active: Boolean(props.block.fields.value), title: props.block.title}
-    }
+    const [active, setActive] = useState(Boolean(block.fields.value))
+    const [title, setTitle] = useState(block.title)
 
-    render(): JSX.Element {
-        const {intl, block, readonly} = this.props
-
-        return (
-            <div className='CheckboxElement'>
-                <input
-                    type='checkbox'
-                    id={`checkbox-${block.id}`}
-                    disabled={readonly}
-                    checked={this.state.active}
-                    value={this.state.active ? 'on' : 'off'}
-                    onChange={(e) => {
-                        e.preventDefault()
-                        const newBlock = new MutableCheckboxBlock(block)
-                        newBlock.fields.value = !this.state.active
-                        newBlock.title = this.state.title
-                        this.setState({active: newBlock.fields.value})
-                        mutator.updateBlock(newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckbox', defaultMessage: 'toggled-checkbox'}))
-                    }}
-                />
-                <Editable
-                    text={block.title}
-                    placeholderText={intl.formatMessage({id: 'ContentBlock.editText', defaultMessage: 'Edit text...'})}
-                    onChanged={(text) => {
-                        this.setState({title: text})
-                        const newBlock = new MutableCheckboxBlock(block)
-                        newBlock.title = text
-                        newBlock.fields.value = this.state.active
-                        mutator.updateBlock(newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckboxText', defaultMessage: 'edit card text'}))
-                    }}
-                    readonly={readonly}
-                />
-            </div>
-        )
-    }
-}
+    return (
+        <div className='CheckboxElement'>
+            <input
+                type='checkbox'
+                id={`checkbox-${block.id}`}
+                disabled={readonly}
+                checked={active}
+                value={active ? 'on' : 'off'}
+                onChange={(e) => {
+                    e.preventDefault()
+                    const newBlock = new MutableCheckboxBlock(block)
+                    newBlock.fields.value = !active
+                    newBlock.title = title
+                    setActive(newBlock.fields.value)
+                    mutator.updateBlock(newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckbox', defaultMessage: 'toggled-checkbox'}))
+                }}
+            />
+            <Editable
+                value={title}
+                placeholderText={intl.formatMessage({id: 'ContentBlock.editText', defaultMessage: 'Edit text...'})}
+                onChange={setTitle}
+                onSave={() => {
+                    const newBlock = new MutableCheckboxBlock(block)
+                    newBlock.title = title
+                    newBlock.fields.value = active
+                    mutator.updateBlock(newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckboxText', defaultMessage: 'edit card text'}))
+                }}
+                readonly={readonly}
+            />
+        </div>
+    )
+})
 
 contentRegistry.registerContentType({
     type: 'checkbox',
