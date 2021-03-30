@@ -3160,7 +3160,7 @@ Type of blocks to return, omit to specify all types
                         <p class="marked">Returns the contents of an uploaded file</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/files/{fileID}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/workspaces/{workspaceID}/{rootID}/{fileID}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -3184,7 +3184,7 @@ Type of blocks to return, omit to specify all types
                             <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json,image/jpg,image/png"\
- "http://localhost/api/v1/files/{fileID}"</code></pre>
+ "http://localhost/api/v1/workspaces/{workspaceID}/{rootID}/{fileID}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-getFile-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -3207,10 +3207,12 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
+        String rootID = rootID_example; // String | ID of the root block
         String fileID = fileID_example; // String | ID of the file
         
         try {
-            apiInstance.getFile(fileID);
+            apiInstance.getFile(workspaceID, rootID, fileID);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getFile");
             e.printStackTrace();
@@ -3226,10 +3228,12 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
+        String rootID = rootID_example; // String | ID of the root block
         String fileID = fileID_example; // String | ID of the file
         
         try {
-            apiInstance.getFile(fileID);
+            apiInstance.getFile(workspaceID, rootID, fileID);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getFile");
             e.printStackTrace();
@@ -3252,9 +3256,13 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *workspaceID = workspaceID_example; // Workspace ID (default to null)
+String *rootID = rootID_example; // ID of the root block (default to null)
 String *fileID = fileID_example; // ID of the file (default to null)
 
-[apiInstance getFileWith:fileID
+[apiInstance getFileWith:workspaceID
+    rootID:rootID
+    fileID:fileID
               completionHandler: ^(NSError* error) {
     if (error) {
         NSLog(@"Error: %@", error);
@@ -3275,6 +3283,8 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new FocalboardServer.DefaultApi()
+var workspaceID = workspaceID_example; // {String} Workspace ID
+var rootID = rootID_example; // {String} ID of the root block
 var fileID = fileID_example; // {String} ID of the file
 
 var callback = function(error, data, response) {
@@ -3284,7 +3294,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully.');
   }
 };
-api.getFile(fileID, callback);
+api.getFile(workspaceID, rootID, fileID, callback);
 </code></pre>
                             </div>
 
@@ -3311,10 +3321,12 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
+            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
+            var rootID = rootID_example;  // String | ID of the root block (default to null)
             var fileID = fileID_example;  // String | ID of the file (default to null)
 
             try {
-                apiInstance.getFile(fileID);
+                apiInstance.getFile(workspaceID, rootID, fileID);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.getFile: " + e.Message );
             }
@@ -3335,10 +3347,12 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$workspaceID = workspaceID_example; // String | Workspace ID
+$rootID = rootID_example; // String | ID of the root block
 $fileID = fileID_example; // String | ID of the file
 
 try {
-    $api_instance->getFile($fileID);
+    $api_instance->getFile($workspaceID, $rootID, $fileID);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->getFile: ', $e->getMessage(), PHP_EOL;
 }
@@ -3357,10 +3371,12 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $workspaceID = workspaceID_example; # String | Workspace ID
+my $rootID = rootID_example; # String | ID of the root block
 my $fileID = fileID_example; # String | ID of the file
 
 eval { 
-    $api_instance->getFile(fileID => $fileID);
+    $api_instance->getFile(workspaceID => $workspaceID, rootID => $rootID, fileID => $fileID);
 };
 if ($@) {
     warn "Exception when calling DefaultApi->getFile: $@\n";
@@ -3381,10 +3397,12 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
+workspaceID = workspaceID_example # String | Workspace ID (default to null)
+rootID = rootID_example # String | ID of the root block (default to null)
 fileID = fileID_example # String | ID of the file (default to null)
 
 try: 
-    api_instance.get_file(fileID)
+    api_instance.get_file(workspaceID, rootID, fileID)
 except ApiException as e:
     print("Exception when calling DefaultApi->getFile: %s\n" % e)</code></pre>
                             </div>
@@ -3393,10 +3411,12 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
+    let workspaceID = workspaceID_example; // String
+    let rootID = rootID_example; // String
     let fileID = fileID_example; // String
 
     let mut context = DefaultApi::Context::default();
-    let result = client.getFile(fileID, &context).wait();
+    let result = client.getFile(workspaceID, rootID, fileID, &context).wait();
 
     println!("{:?}", result);
 }
@@ -3417,6 +3437,52 @@ pub fn main() {
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
+                                  <tr><td style="width:150px;">workspaceID*</td>
+<td>
+
+
+    <div id="d2e199_getFile_workspaceID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Workspace ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                                  <tr><td style="width:150px;">rootID*</td>
+<td>
+
+
+    <div id="d2e199_getFile_rootID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+ID of the root block
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
                                   <tr><td style="width:150px;">fileID*</td>
 <td>
 
@@ -8490,10 +8556,10 @@ $(document).ready(function() {
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Upload a binary file</p>
+                        <p class="marked">Upload a binary file, attached to a root block</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/files</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/workspaces/{workspaceID}/{rootID}/files</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -8518,7 +8584,7 @@ $(document).ready(function() {
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
  -H "Content-Type: multipart/form-data"\
- "http://localhost/api/v1/api/v1/files"</code></pre>
+ "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/{rootID}/files"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-uploadFile-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -8541,10 +8607,12 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
+        String rootID = rootID_example; // String | ID of the root block
         File uploaded file = BINARY_DATA_HERE; // File | The file to upload
         
         try {
-            FileUploadResponse result = apiInstance.uploadFile(uploaded file);
+            FileUploadResponse result = apiInstance.uploadFile(workspaceID, rootID, uploaded file);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#uploadFile");
@@ -8561,10 +8629,12 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
+        String rootID = rootID_example; // String | ID of the root block
         File uploaded file = BINARY_DATA_HERE; // File | The file to upload
         
         try {
-            FileUploadResponse result = apiInstance.uploadFile(uploaded file);
+            FileUploadResponse result = apiInstance.uploadFile(workspaceID, rootID, uploaded file);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#uploadFile");
@@ -8588,9 +8658,13 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *workspaceID = workspaceID_example; // Workspace ID (default to null)
+String *rootID = rootID_example; // ID of the root block (default to null)
 File *uploaded file = BINARY_DATA_HERE; // The file to upload (optional) (default to null)
 
-[apiInstance uploadFileWith:uploaded file
+[apiInstance uploadFileWith:workspaceID
+    rootID:rootID
+    uploaded file:uploaded file
               completionHandler: ^(FileUploadResponse output, NSError* error) {
     if (output) {
         NSLog(@"%@", output);
@@ -8614,6 +8688,8 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new FocalboardServer.DefaultApi()
+var workspaceID = workspaceID_example; // {String} Workspace ID
+var rootID = rootID_example; // {String} ID of the root block
 var opts = {
   'uploaded file': BINARY_DATA_HERE // {File} The file to upload
 };
@@ -8625,7 +8701,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.uploadFile(opts, callback);
+api.uploadFile(workspaceID, rootID, opts, callback);
 </code></pre>
                             </div>
 
@@ -8652,10 +8728,12 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
+            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
+            var rootID = rootID_example;  // String | ID of the root block (default to null)
             var uploaded file = BINARY_DATA_HERE;  // File | The file to upload (optional)  (default to null)
 
             try {
-                FileUploadResponse result = apiInstance.uploadFile(uploaded file);
+                FileUploadResponse result = apiInstance.uploadFile(workspaceID, rootID, uploaded file);
                 Debug.WriteLine(result);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.uploadFile: " + e.Message );
@@ -8677,10 +8755,12 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$workspaceID = workspaceID_example; // String | Workspace ID
+$rootID = rootID_example; // String | ID of the root block
 $uploaded file = BINARY_DATA_HERE; // File | The file to upload
 
 try {
-    $result = $api_instance->uploadFile($uploaded file);
+    $result = $api_instance->uploadFile($workspaceID, $rootID, $uploaded file);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->uploadFile: ', $e->getMessage(), PHP_EOL;
@@ -8700,10 +8780,12 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $workspaceID = workspaceID_example; # String | Workspace ID
+my $rootID = rootID_example; # String | ID of the root block
 my $uploaded file = BINARY_DATA_HERE; # File | The file to upload
 
 eval { 
-    my $result = $api_instance->uploadFile(uploaded file => $uploaded file);
+    my $result = $api_instance->uploadFile(workspaceID => $workspaceID, rootID => $rootID, uploaded file => $uploaded file);
     print Dumper($result);
 };
 if ($@) {
@@ -8725,10 +8807,12 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
+workspaceID = workspaceID_example # String | Workspace ID (default to null)
+rootID = rootID_example # String | ID of the root block (default to null)
 uploaded file = BINARY_DATA_HERE # File | The file to upload (optional) (default to null)
 
 try: 
-    api_response = api_instance.upload_file(uploaded file=uploaded file)
+    api_response = api_instance.upload_file(workspaceID, rootID, uploaded file=uploaded file)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DefaultApi->uploadFile: %s\n" % e)</code></pre>
@@ -8738,10 +8822,12 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
+    let workspaceID = workspaceID_example; // String
+    let rootID = rootID_example; // String
     let uploaded file = BINARY_DATA_HERE; // File
 
     let mut context = DefaultApi::Context::default();
-    let result = client.uploadFile(uploaded file, &context).wait();
+    let result = client.uploadFile(workspaceID, rootID, uploaded file, &context).wait();
 
     println!("{:?}", result);
 }
@@ -8756,6 +8842,59 @@ pub fn main() {
 
                           <h2>Parameters</h2>
 
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">workspaceID*</td>
+<td>
+
+
+    <div id="d2e199_uploadFile_workspaceID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Workspace ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                                  <tr><td style="width:150px;">rootID*</td>
+<td>
+
+
+    <div id="d2e199_uploadFile_rootID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+ID of the root block
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
 
 
 

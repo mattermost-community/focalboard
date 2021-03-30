@@ -6,7 +6,6 @@ import {Board, IPropertyOption, IPropertyTemplate, MutableBoard, PropertyType} f
 import {BoardView, ISortOption, MutableBoardView} from './blocks/boardView'
 import {Card, MutableCard} from './blocks/card'
 import {FilterGroup} from './blocks/filterGroup'
-import {MutableImageBlock} from './blocks/imageBlock'
 import octoClient from './octoClient'
 import {OctoUtils} from './octoUtils'
 import undoManager from './undomanager'
@@ -590,31 +589,6 @@ class Mutator {
     // Not a mutator, but convenient to put here since Mutator wraps OctoClient
     async importFullArchive(blocks: readonly IBlock[]): Promise<Response> {
         return octoClient.importFullArchive(blocks)
-    }
-
-    async createImageBlock(parent: IBlock, file: File, description = 'add image'): Promise<IBlock | undefined> {
-        const fileId = await octoClient.uploadFile(file)
-        if (!fileId) {
-            return undefined
-        }
-
-        const block = new MutableImageBlock()
-        block.parentId = parent.id
-        block.rootId = parent.rootId
-        block.fileId = fileId
-
-        await undoManager.perform(
-            async () => {
-                await octoClient.insertBlock(block)
-            },
-            async () => {
-                await octoClient.deleteBlock(block.id)
-            },
-            description,
-            this.undoGroupId,
-        )
-
-        return block
     }
 
     get canUndo(): boolean {
