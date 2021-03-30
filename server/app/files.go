@@ -18,7 +18,7 @@ func (a *App) SaveFile(reader io.Reader, workspaceID, rootID, filename string) (
 	}
 
 	createdFilename := fmt.Sprintf(`%s%s`, utils.CreateGUID(), fileExtension)
-	filePath := fmt.Sprintf(`%s/%s/%s`, workspaceID, rootID, createdFilename)
+	filePath := filepath.Join(workspaceID, rootID, createdFilename)
 
 	_, appErr := a.filesBackend.WriteFile(reader, filePath)
 	if appErr != nil {
