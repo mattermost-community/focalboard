@@ -19,11 +19,12 @@ type Props = {
 const SidebarSettingsMenu = React.memo((props: Props) => {
     const {intl} = props
 
-    const updateTheme = (theme: Theme) => {
-        setTheme(theme)
-        const whiteLogo = (theme.sidebarWhiteLogo === 'true')
+    const updateTheme = (theme: Theme | null) => {
+        const consolidatedTheme = setTheme(theme)
+        const whiteLogo = (consolidatedTheme.sidebarWhiteLogo === 'true')
         props.setWhiteLogo(whiteLogo)
     }
+
     return (
         <div className='SidebarSettingsMenu'>
             <MenuWrapper>
@@ -119,6 +120,11 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
                             id='light-theme'
                             name={intl.formatMessage({id: 'Sidebar.light-theme', defaultMessage: 'Light theme'})}
                             onClick={async () => updateTheme(lightTheme)}
+                        />
+                        <Menu.Text
+                            id='system-theme'
+                            name={intl.formatMessage({id: 'Sidebar.system-theme', defaultMessage: 'System theme'})}
+                            onClick={async () => updateTheme(null)}
                         />
                     </Menu.SubMenu>
                 </Menu>

@@ -4,11 +4,11 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import App from './app'
-import {loadTheme} from './theme'
+import {initThemes} from './theme'
 
 import './styles/variables.scss'
 import './styles/main.scss'
 import './styles/labels.scss'
 
-loadTheme()
+initThemes()
 ReactDOM.render(<App/>, document.getElementById('main-app'))
