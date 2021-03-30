@@ -19,6 +19,7 @@ import ViewHeader from './viewHeader/viewHeader'
 import ViewTitle from './viewTitle'
 import Kanban from './kanban/kanban'
 import Table from './table/table'
+import Gallery from './gallery/gallery'
 
 type Props = {
     boardTree: BoardTree
@@ -154,6 +155,13 @@ class CenterPanel extends React.Component<Props, State> {
                                 showCard={this.showCard}
                                 addCard={(show) => this.addCard('', show)}
                                 onCardClicked={this.cardClicked}
+                            />}
+                        {activeView.viewType === 'gallery' &&
+                            <Gallery
+                                boardTree={boardTree}
+                                readonly={this.props.readonly}
+                                showCard={this.showCard}
+                                addCard={(show) => this.addCard('', show)}
                             />}
                     </div>
                 </div>

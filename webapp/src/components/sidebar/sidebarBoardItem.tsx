@@ -13,6 +13,7 @@ import DisclosureTriangle from '../../widgets/icons/disclosureTriangle'
 import DuplicateIcon from '../../widgets/icons/duplicate'
 import OptionsIcon from '../../widgets/icons/options'
 import TableIcon from '../../widgets/icons/table'
+import GalleryIcon from '../../widgets/icons/gallery'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 
@@ -35,6 +36,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
         switch (viewType) {
         case 'board': return <BoardIcon/>
         case 'table': return <TableIcon/>
+        case 'gallery': return <GalleryIcon/>
         default: return <div/>
         }
     }
