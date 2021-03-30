@@ -8,6 +8,7 @@ import {IPropertyTemplate, MutableBoard} from './blocks/board'
 import {MutableBoardView} from './blocks/boardView'
 import {MutableCard} from './blocks/card'
 import {MutableCommentBlock} from './blocks/commentBlock'
+import {MutableCheckboxBlock} from './blocks/checkboxBlock'
 import {MutableDividerBlock} from './blocks/dividerBlock'
 import {MutableImageBlock} from './blocks/imageBlock'
 import {MutableTextBlock} from './blocks/textBlock'
@@ -76,6 +77,7 @@ class OctoUtils {
         case 'image': { return new MutableImageBlock(block) }
         case 'divider': { return new MutableDividerBlock(block) }
         case 'comment': { return new MutableCommentBlock(block) }
+        case 'checkbox': { return new MutableCheckboxBlock(block) }
         default: {
             Utils.assertFailure(`Can't hydrate unknown block type: ${block.type}`)
             return new MutableBlock(block)

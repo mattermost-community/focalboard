@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import {Utils} from '../utils'
 
-const contentBlockTypes = ['text', 'image', 'divider'] as const
+const contentBlockTypes = ['text', 'image', 'divider', 'checkbox'] as const
 const blockTypes = [...contentBlockTypes, 'board', 'view', 'card', 'comment'] as const
 type ContentBlockTypes = typeof contentBlockTypes[number]
 type BlockTypes = typeof blockTypes[number]
