@@ -7,6 +7,8 @@ import {Card} from '../../blocks/card'
 import {CardTree, MutableCardTree} from '../../viewModel/cardTree'
 import {IContentBlock} from '../../blocks/contentBlock'
 
+import useCardListener from '../../hooks/cardListener'
+
 import ImageElement from '../content/imageElement'
 import ContentElement from '../content/contentElement'
 
@@ -20,6 +22,17 @@ type Props = {
 const GalleryCard = React.memo((props: Props) => {
     const {card} = props
     const [cardTree, setCardTree] = useState<CardTree>()
+    useCardListener(
+        card.id,
+        async (blocks) => {
+            const newCardTree = cardTree ? MutableCardTree.incrementalUpdate(cardTree, blocks) : await MutableCardTree.sync(card.id)
+            setCardTree(newCardTree)
+        },
+        async () => {
+            const newCardTree = await MutableCardTree.sync(card.id)
+            setCardTree(newCardTree)
+        },
+    )
 
     useEffect(() => {
         const f = async () => setCardTree(await MutableCardTree.sync(card.id))
