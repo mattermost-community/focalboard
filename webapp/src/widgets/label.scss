@@ -1,0 +1,12 @@
+.Label {
+	display: inline-flex;
+	align-items: center;
+	padding: 2px 8px;
+	border-radius: 3px;
+	line-height: 20px;
+	color: rgba(var(--body-color), .8);
+	white-space: nowrap;
+	text-transform: uppercase;
+	font-weight: 600;
+	font-size: 13px;
+}

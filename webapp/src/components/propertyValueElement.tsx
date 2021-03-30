@@ -11,6 +11,7 @@ import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
 import Editable from '../widgets/editable'
 import ValueSelector from '../widgets/valueSelector'
+import Label from '../widgets/label'
 
 type Props = {
     boardTree?: BoardTree
@@ -35,18 +36,13 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             propertyColorCssClassName = cardPropertyValue.color
         }
 
-        let className = 'octo-propertyvalue octo-label'
-        if (!displayValue) {
-            className += ' empty'
-        }
-
         if (readOnly || !boardTree) {
             return (
                 <div
-                    className={`${className} ${propertyColorCssClassName}`}
+                    className='octo-property-value'
                     tabIndex={0}
                 >
-                    {finalDisplayValue}
+                    <Label color={displayValue ? propertyColorCssClassName : 'empty'}>{finalDisplayValue}</Label>
                 </div>
             )
         }

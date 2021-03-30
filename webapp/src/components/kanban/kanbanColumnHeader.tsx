@@ -17,6 +17,7 @@ import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import Editable from '../../widgets/editable'
+import Label from '../../widgets/label'
 
 type Props = {
     boardTree: BoardTree
@@ -72,8 +73,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
             }}
         >
             {!group.option.id &&
-                <div
-                    className='octo-label'
+                <Label
                     title={intl.formatMessage({
                         id: 'BoardComponent.no-property-title',
                         defaultMessage: 'Items with an empty {property} property will go here. This column cannot be removed.',
@@ -86,24 +86,25 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                             property: boardTree.groupByProperty!.name,
                         }}
                     />
-                </div>}
+                </Label>}
             {group.option.id &&
-                <Editable
-                    className={`octo-label ${group.option.color}`}
-                    value={groupTitle}
-                    placeholderText='New Select'
-                    onChange={setGroupTitle}
-                    onSave={() => {
-                        if (groupTitle.trim() === '') {
+                <Label color={group.option.color}>
+                    <Editable
+                        value={groupTitle}
+                        placeholderText='New Select'
+                        onChange={setGroupTitle}
+                        onSave={() => {
+                            if (groupTitle.trim() === '') {
+                                setGroupTitle(group.option.value)
+                            }
+                            props.propertyNameChanged(group.option, groupTitle)
+                        }}
+                        onCancel={() => {
                             setGroupTitle(group.option.value)
-                        }
-                        props.propertyNameChanged(group.option, groupTitle)
-                    }}
-                    onCancel={() => {
-                        setGroupTitle(group.option.value)
-                    }}
-                    readonly={props.readonly}
-                />}
+                        }}
+                        readonly={props.readonly}
+                    />
+                </Label>}
             <Button>{`${group.cards.length}`}</Button>
             <div className='octo-spacer'/>
             {!props.readonly &&

@@ -11,6 +11,7 @@ import Button from '../../widgets/buttons/button'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import ShowIcon from '../../widgets/icons/show'
+import Label from '../../widgets/label'
 
 type Props = {
     boardTree: BoardTree
@@ -60,12 +61,12 @@ export default function KanbanHiddenColumnItem(props: Props): JSX.Element {
             <MenuWrapper
                 disabled={props.readonly}
             >
-                <div
+                <Label
                     key={group.option.id || 'empty'}
-                    className={`octo-label ${group.option.color}`}
+                    color={group.option.color}
                 >
                     {group.option.value}
-                </div>
+                </Label>
                 <Menu>
                     <Menu.Text
                         id='show'

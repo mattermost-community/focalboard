@@ -13,6 +13,7 @@ import {BoardTree} from '../../viewModel/boardTree'
 import SortDownIcon from '../../widgets/icons/sortDown'
 import SortUpIcon from '../../widgets/icons/sortUp'
 import MenuWrapper from '../../widgets/menuWrapper'
+import Label from '../../widgets/label'
 
 import {HorizontalGrip} from '../horizontalGrip'
 
@@ -69,15 +70,13 @@ class Table extends React.Component<Props, State> {
                         style={{overflow: 'unset', width: this.columnWidth(Constants.titleColumnId)}}
                     >
                         <MenuWrapper disabled={this.props.readonly}>
-                            <div
-                                className='octo-label'
-                            >
+                            <Label>
                                 <FormattedMessage
                                     id='TableComponent.name'
                                     defaultMessage='Name'
                                 />
                                 {titleSortIcon}
-                            </div>
+                            </Label>
                             <TableHeaderMenu
                                 boardTree={boardTree}
                                 templateId={Constants.titleColumnId}
@@ -157,7 +156,6 @@ class Table extends React.Component<Props, State> {
                                         disabled={this.props.readonly}
                                     >
                                         <div
-                                            className='octo-label'
                                             draggable={!this.props.readonly}
                                             onDragStart={() => {
                                                 this.draggedHeaderTemplate = template
@@ -166,8 +164,10 @@ class Table extends React.Component<Props, State> {
                                                 this.draggedHeaderTemplate = undefined
                                             }}
                                         >
-                                            {template.name}
-                                            {sortIcon}
+                                            <Label>
+                                                {template.name}
+                                                {sortIcon}
+                                            </Label>
                                         </div>
                                         <TableHeaderMenu
                                             boardTree={boardTree}
