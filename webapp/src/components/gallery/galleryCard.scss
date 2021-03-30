@@ -8,16 +8,26 @@
     margin-right: 10px;
     margin-bottom: 10px;
 
-    &.selected {
-        background-color: rgba(90, 200, 255, 0.2);
-    }
-
     &:hover {
         background-color: rgba(var(--body-color), 0.05);
     }
 
     .gallery-item {
+        background-color: rgba(var(--body-color), 0.03);
+
         flex-grow: 1;
+        overflow: hidden;
+        padding: 0 10px;
+        font-size: 0.9em;
+    }
+
+    .gallery-image {
+        flex-grow: 1;
+        overflow: hidden;
+
+        .ImageElement {
+            width: 100%;
+        }
     }
 
     .gallery-title {

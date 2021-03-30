@@ -36,6 +36,10 @@
             width: 14px;
             margin-right: 8px;
             flex-shrink: 0;
+            &.ImageIcon {
+                fill: rgba(var(--sidebar-fg), 0.3);
+                stroke: unset;
+            }
         }
 
         >.IconButton {

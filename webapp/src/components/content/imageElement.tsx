@@ -35,6 +35,7 @@ const ImageElement = React.memo((props: Props): JSX.Element|null => {
 
     return (
         <img
+            className='ImageElement'
             src={imageDataUrl}
             alt={block.title}
         />
