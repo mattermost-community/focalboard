@@ -5,7 +5,7 @@ on: workflow_dispatch
 jobs:
 
   ubuntu:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
     steps:
     - name: Checkout
@@ -128,8 +128,14 @@ jobs:
       env:
         BUILD_NUMBER: ${{ github.run_id }}
 
-    - name: Upload app package
+    - name: Upload app msix package
       uses: actions/upload-artifact@v1
       with:
         name: focalboard.msix
         path: ${{ github.workspace }}/win-wpf/focalboard.msix
+
+    - name: Upload app zip package
+      uses: actions/upload-artifact@v1
+      with:
+        name: focalboard-win.zip
+        path: ${{ github.workspace }}/win-wpf/dist/focalboard-win.zip

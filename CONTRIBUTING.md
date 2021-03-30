@@ -4,9 +4,17 @@ Thank you for your interest in contributing! Please see the [Focalboard Contribu
 
 When you submit a pull request, it goes through a [code review process outlined here](https://www.focalboard.com/contribute/getting-started/code-review/).
 
+# Updating Changelog
+
+After a noteable bug fix or an improvement you've submitted is merged, please consider making a pull request to the [CHANGELOG.md](https://github.com/mattermost/focalboard/blob/main/CHANGELOG.md) under the next release section. 
+
 # Bug reports
 
 Please file a [GitHub issue](https://github.com/mattermost/focalboard/issues) if anything isn't working the way you expect.
+
+# Documentation 
+
+You can contribute to our documentation and website in the [/website](/website) folder.
 
 # Contributors
 

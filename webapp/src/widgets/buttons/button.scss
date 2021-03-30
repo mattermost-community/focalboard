@@ -5,7 +5,6 @@
 	text-align: center;
     justify-content: center;
 	border-radius: var(--default-rad);
-	padding: 4px 8px;
 	min-width: 20px;
 	cursor: pointer;
 	overflow: hidden;
@@ -36,6 +35,6 @@
     .Icon {
         width: 14px;
         height: 14px;
-        margin-right: 5px;
+        margin-right: 0px;
     }
 }

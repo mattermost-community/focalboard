@@ -5,7 +5,7 @@ section: "guide"
 weight: 1
 ---
 
-If you haven't alrady, first follow the [install guide](/download/personal-edition/ubuntu/) to install the Focalboard server.
+If you haven't already, first follow the [install guide](/download/personal-edition/ubuntu/) to install the Focalboard server.
 
 ## Registering the first user
 

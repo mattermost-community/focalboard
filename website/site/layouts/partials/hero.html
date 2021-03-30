@@ -1,33 +1,37 @@
-<div class="homepage__intro text-center">
+<div class="homepage__intro">
     <div class="container-fluid">
-		<p>
+		<div class="homepage-intro__text text-left mt-4 mb-4">
+			<h2>
+				Focalboard is an open source, self-hosted alternative to Trello, Notion, and Asana.
+			</h2>
+
+			<p>
+				It helps define, organize, track and manage work across individuals and teams. Focalboard comes in two editions:
+			</p>
+
+			<div class="text-left">
+				<ul >
+					<li><b><a href="https://www.focalboard.com/download/personal-edition/desktop/">Focalboard Personal Desktop</a></b>: A stand-alone desktop app for your todos and personal projects</li>
+					<li><b><a href="https://www.focalboard.com/download/personal-edition/ubuntu/">Focalboard Personal Server</a></b>: A self-hosted server for your team to collaborate</li>
+				</ul>
+			</div>
+		</div>
+
+		<p class="text-center">
 			<a href="download/personal-edition">
 				<img src="img/hero.jpg" style="width: 100%; max-width: 1000px" />
 			</a>
 		</p>
 
-		<p>
-            Focalboard is an open source, self-hosted alternative to Trello, Notion, and Asana.
-		</p>
+		<div class="homepage-intro__text">
+			<p>
+				We're currently in early-access beta, and are looking for feedback. So please <a href="download/personal-edition/">download it today</a> and <a href="https://docs.google.com/forms/d/e/1FAIpQLSdTq7M69Pdlz71CwucaSEG0FCK1M_WRvIbZbPr2imfT2QvUCQ/viewform?usp=sf_link" target="_blank" rel="noopener">let us know what you think</a>.
+			</p>
 
-		<p>
-            It helps define, organize, track and manage work across individuals and teams. Focalboard comes in two editions:
-		</p>
-
-        <div class="text-left" style="max-width: 800px; margin: 0 auto;">
-            <ul >
-                <li><b><a href="https://www.focalboard.com/download/personal-edition/desktop/">Focalboard Personal Desktop</a></b>: A stand-alone desktop app for your todos and personal projects</li>
-                <li><b><a href="https://www.focalboard.com/download/personal-edition/ubuntu/">Focalboard Personal Server</a></b>: A self-hosted server for your team to collaborate</li>
-            </ul>
-        </div>
-
-		<p>
-			We're currently in early-access beta, and are looking for feedback. So please <a href="download/personal-edition/">download it today</a> and <a href="https://docs.google.com/forms/d/e/1FAIpQLSdTq7M69Pdlz71CwucaSEG0FCK1M_WRvIbZbPr2imfT2QvUCQ/viewform?usp=sf_link" target="_blank" rel="noopener">let us know what you think</a>.
-		</p>
-
-		<p>
-			Focalboard is open source! <a href="https://github.com/mattermost/focalboard" target='_blank'>Check out the source code here</a>, and contribute to the future of this project.
-		</p>
+			<p>
+				Focalboard is open source! <a href="https://github.com/mattermost/focalboard" target='_blank'>Check out the source code here</a>, and contribute to the future of this project.
+			</p>
+		</div>
 
 		{{ if .Site.Params.search.enable }}
 			<div class="homepage-search row">

@@ -3,23 +3,29 @@ package store
 
 import "github.com/mattermost/focalboard/server/model"
 
+// Conainer represents a container in a store
+// Using a struct to make extending this easier in the future
+type Container struct {
+	WorkspaceID string
+}
+
 // Store represents the abstraction of the data storage.
 type Store interface {
-	GetBlocksWithParentAndType(parentID string, blockType string) ([]model.Block, error)
-	GetBlocksWithParent(parentID string) ([]model.Block, error)
-	GetBlocksWithType(blockType string) ([]model.Block, error)
-	GetSubTree2(blockID string) ([]model.Block, error)
-	GetSubTree3(blockID string) ([]model.Block, error)
-	GetAllBlocks() ([]model.Block, error)
-	GetRootID(blockID string) (string, error)
-	GetParentID(blockID string) (string, error)
-	InsertBlock(block model.Block) error
-	DeleteBlock(blockID string, modifiedBy string) error
+	GetBlocksWithParentAndType(c Container, parentID string, blockType string) ([]model.Block, error)
+	GetBlocksWithParent(c Container, parentID string) ([]model.Block, error)
+	GetBlocksWithType(c Container, blockType string) ([]model.Block, error)
+	GetSubTree2(c Container, blockID string) ([]model.Block, error)
+	GetSubTree3(c Container, blockID string) ([]model.Block, error)
+	GetAllBlocks(c Container) ([]model.Block, error)
+	GetRootID(c Container, blockID string) (string, error)
+	GetParentID(c Container, blockID string) (string, error)
+	InsertBlock(c Container, block model.Block) error
+	DeleteBlock(c Container, blockID string, modifiedBy string) error
 
 	Shutdown() error
 
 	GetSystemSettings() (map[string]string, error)
-	SetSystemSetting(key string, value string) error
+	SetSystemSetting(key, value string) error
 
 	GetRegisteredUserCount() (int, error)
 	GetUserById(userID string) (*model.User, error)
@@ -27,8 +33,8 @@ type Store interface {
 	GetUserByUsername(username string) (*model.User, error)
 	CreateUser(user *model.User) error
 	UpdateUser(user *model.User) error
-	UpdateUserPassword(username string, password string) error
-	UpdateUserPasswordByID(userID string, password string) error
+	UpdateUserPassword(username, password string) error
+	UpdateUserPasswordByID(userID, password string) error
 
 	GetActiveUserCount(updatedSecondsAgo int64) (int, error)
 	GetSession(token string, expireTime int64) (*model.Session, error)
@@ -38,8 +44,8 @@ type Store interface {
 	DeleteSession(sessionId string) error
 	CleanUpSessions(expireTime int64) error
 
-	UpsertSharing(sharing model.Sharing) error
-	GetSharing(rootID string) (*model.Sharing, error)
+	UpsertSharing(c Container, sharing model.Sharing) error
+	GetSharing(c Container, rootID string) (*model.Sharing, error)
 
 	UpsertWorkspaceSignupToken(workspace model.Workspace) error
 	UpsertWorkspaceSettings(workspace model.Workspace) error

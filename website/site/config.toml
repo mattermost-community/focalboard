@@ -17,7 +17,7 @@ pygmentsStyle = "manni"
   author = ""
   description = ""
   email = ""
-  ghrepo = "https://github.com/mattermost/focalboard/tree/main/website"
+  ghrepo = "https://github.com/mattermost/focalboard/"
 
   [params.mailinglist]
     enable = false
@@ -77,14 +77,9 @@ pygmentsStyle = "manni"
       weight = 3
 
     [[menu.postpend]]
-      url = "/blog"
-      name = "Blog"
-      weight = 4
-
-    [[menu.postpend]]
       url = "/feedback"
       name = "Feedback"
-      weight = 5
+      weight = 4
 
     # Workaround to add draft status to menu items
     [[params.navigation.drafts]]

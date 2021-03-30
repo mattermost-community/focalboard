@@ -8,11 +8,7 @@ import DividerIcon from '../../widgets/icons/divider'
 import {contentRegistry} from './contentRegistry'
 import './dividerElement.scss'
 
-class DividerElement extends React.PureComponent {
-    render(): JSX.Element {
-        return <div className='DividerElement'/>
-    }
-}
+const DividerElement = React.memo((): JSX.Element => <div className='DividerElement'/>)
 
 contentRegistry.registerContentType({
     type: 'divider',

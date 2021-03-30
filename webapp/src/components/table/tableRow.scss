@@ -1,0 +1,27 @@
+.TableRow {
+    .open-button {
+        display: none;
+
+        .Button {
+            padding: 2px 4px;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: rgba(var(--body-color), .64);
+            background-color: rgba(var(--body-color), 0.1);
+            box-shadow: rgba(var(--body-color), 0.1) 0px 0px 0px 1px, rgba(var(--body-color), 0.1) 0px 2px 4px;
+        }
+    }
+
+    &.selected {
+        background-color: rgba(90, 200, 255, 0.2);
+    }
+
+    &:hover {
+        background-color: rgba(var(--body-color), 0.05);
+
+        .open-button {
+            display: block;
+        }
+    }
+}

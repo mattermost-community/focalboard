@@ -11,9 +11,10 @@ import {
 
 import {FlashMessages} from './components/flashMessages'
 import {getCurrentLanguage, getMessages, storeLanguage} from './i18n'
-import client from './octoClient'
+import {default as client} from './octoClient'
 import BoardPage from './pages/boardPage'
 import ChangePasswordPage from './pages/changePasswordPage'
+import ErrorPage from './pages/errorPage'
 import LoginPage from './pages/loginPage'
 import RegisterPage from './pages/registerPage'
 import {IUser, UserContext} from './user'
@@ -56,6 +57,9 @@ export default class App extends React.PureComponent<unknown, State> {
                         <div id='frame'>
                             <div id='main'>
                                 <Switch>
+                                    <Route path='/error'>
+                                        <ErrorPage/>
+                                    </Route>
                                     <Route path='/login'>
                                         <LoginPage/>
                                     </Route>
@@ -67,17 +71,52 @@ export default class App extends React.PureComponent<unknown, State> {
                                     </Route>
                                     <Route path='/shared'>
                                         <BoardPage
+                                            workspaceId='0'
                                             readonly={true}
                                             setLanguage={this.setAndStoreLanguage}
                                         />
                                     </Route>
                                     <Route path='/board'>
-                                        {this.state.initialLoad && !this.state.user && <Redirect to='login'/>}
-                                        <BoardPage setLanguage={this.setAndStoreLanguage}/>
+                                        {this.state.initialLoad && !this.state.user && <Redirect to='/login'/>}
+                                        <BoardPage
+                                            workspaceId='0'
+                                            setLanguage={this.setAndStoreLanguage}
+                                        />
                                     </Route>
+                                    <Route
+                                        path='/workspace/:workspaceId/shared'
+                                        render={({match}) => {
+                                            return (
+                                                <BoardPage
+                                                    workspaceId={match.params.workspaceId}
+                                                    readonly={true}
+                                                    setLanguage={this.setAndStoreLanguage}
+                                                />
+                                            )
+                                        }}
+                                    />
+                                    <Route
+                                        path='/workspace/:workspaceId/'
+                                        render={({match}) => {
+                                            if (this.state.initialLoad && !this.state.user) {
+                                                const redirectUrl = `/workspace/${match.params.workspaceId}/`
+                                                const loginUrl = `/login?r=${encodeURIComponent(redirectUrl)}`
+                                                return <Redirect to={loginUrl}/>
+                                            }
+                                            return (
+                                                <BoardPage
+                                                    workspaceId={match.params.workspaceId}
+                                                    setLanguage={this.setAndStoreLanguage}
+                                                />
+                                            )
+                                        }}
+                                    />
                                     <Route path='/'>
-                                        {this.state.initialLoad && !this.state.user && <Redirect to='login'/>}
-                                        <BoardPage setLanguage={this.setAndStoreLanguage}/>
+                                        {this.state.initialLoad && !this.state.user && <Redirect to='/login'/>}
+                                        <BoardPage
+                                            workspaceId='0'
+                                            setLanguage={this.setAndStoreLanguage}
+                                        />
                                     </Route>
                                 </Switch>
                             </div>

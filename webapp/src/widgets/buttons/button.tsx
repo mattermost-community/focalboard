@@ -13,17 +13,17 @@ type Props = {
     active?: boolean
 }
 
-export default class Button extends React.PureComponent<Props> {
-    render(): JSX.Element {
-        return (
-            <button
-                type='button'
-                onClick={this.props.onClick}
-                className={`Button ${this.props.active ? 'active' : ''} ${this.props.filled ? 'filled' : ''}`}
-                title={this.props.title}
-            >
-                {this.props.icon}
-                {this.props.children}
-            </button>)
-    }
+function Button(props: Props): JSX.Element {
+    return (
+        <button
+            type='button'
+            onClick={props.onClick}
+            className={`Button ${props.active ? 'active' : ''} ${props.filled ? 'filled' : ''}`}
+            title={props.title}
+        >
+            {props.icon}
+            {props.children}
+        </button>)
 }
+
+export default React.memo(Button)

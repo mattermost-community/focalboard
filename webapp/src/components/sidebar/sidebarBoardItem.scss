@@ -1,0 +1,81 @@
+.SidebarBoardItem {
+    .octo-sidebar-item {
+        display: flex;
+        flex-direction: row;
+        font-weight: 500;
+        padding: 0 16px 0 8px;
+        height: 36px;
+        align-items: center;
+
+        &:hover {
+            background-color: rgba(var(--sidebar-fg), 0.08);
+            display: flex;
+
+            .MenuWrapper {
+                display: block;
+            }
+        }
+
+        &.subitem {
+            padding-left: 20px;
+            color: rgba(var(--sidebar-fg), 0.64);
+            font-weight: 400;
+        }
+
+        &.no-views {
+            color: rgba(var(--sidebar-fg), 0.4);
+
+            &:hover {
+                background-color: rgba(var(--sidebar-bg));
+            }
+        }
+
+        >.Icon {
+            stroke: rgba(var(--sidebar-fg), 0.3);
+            height: 14px;
+            width: 14px;
+            margin-right: 8px;
+            flex-shrink: 0;
+            &.GalleryIcon {
+                fill: rgba(var(--sidebar-fg), 0.3);
+                stroke: unset;
+            }
+        }
+
+        >.IconButton {
+            background-color: var(--sidebar-bg);
+
+            &:hover {
+                background-color: rgba(var(--sidebar-fg), 0.1);
+            }
+        }
+
+        .MenuWrapper {
+            display: none;
+        }
+
+        .Menu.left {
+            right: -32px;
+        }
+
+        &.expanded {
+            .DisclosureTriangleIcon {
+                transform: rotate(90deg);
+            }
+        }
+
+        .DisclosureTriangleIcon {
+            transition: 200ms ease-in-out;
+            transform: rotate(0deg);
+        }
+    }
+
+    .octo-sidebar-title {
+        font-weight: 600;
+        cursor: pointer;
+        flex-grow: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}

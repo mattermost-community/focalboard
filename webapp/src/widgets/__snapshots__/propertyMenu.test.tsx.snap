@@ -1,0 +1,226 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`widgets/PropertyMenu should match snapshot 1`] = `
+<div>
+  <div
+    class="Menu noselect bottom"
+  >
+    <div
+      class="menu-contents"
+    >
+      <div
+        class="menu-options"
+      >
+        <input
+          class="PropertyMenu menu-textbox"
+          type="text"
+          value="test-property"
+        />
+        <div
+          class="MenuOption SubMenuOption menu-option"
+          id="type"
+        >
+          <div
+            class="noicon"
+          />
+          <div
+            class="menu-name"
+          >
+            Type: Text
+          </div>
+          <svg
+            class="SubmenuTriangleIcon Icon"
+            viewBox="0 0 100 100"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <polygon
+              points="50,35 75,50 50,65"
+            />
+          </svg>
+          <div
+            class="SubMenu Menu noselect bottom"
+          >
+            <div
+              class="menu-contents"
+            >
+              <div
+                class="menu-options"
+              >
+                <div
+                  class="MenuOption LabelOption menu-option"
+                >
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    <b>
+                      Change property type
+                    </b>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="MenuOption MenuSeparator menu-separator"
+                />
+                <div
+                  class="MenuOption TextOption menu-option"
+                >
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Text
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="MenuOption TextOption menu-option"
+                >
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Number
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="MenuOption TextOption menu-option"
+                >
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Email
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="MenuOption TextOption menu-option"
+                >
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Select
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="MenuOption TextOption menu-option"
+                >
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Created Time
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="MenuOption TextOption menu-option"
+                >
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Updated Time
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+              </div>
+              <div
+                class="menu-spacer hideOnWidescreen"
+              />
+              <div
+                class="menu-options hideOnWidescreen"
+              >
+                <div
+                  class="MenuOption TextOption menu-option menu-cancel"
+                >
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Cancel
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="MenuOption TextOption menu-option"
+        >
+          <div
+            class="noicon"
+          />
+          <div
+            class="menu-name"
+          >
+            Delete
+          </div>
+          <div
+            class="noicon"
+          />
+        </div>
+      </div>
+      <div
+        class="menu-spacer hideOnWidescreen"
+      />
+      <div
+        class="menu-options hideOnWidescreen"
+      >
+        <div
+          class="MenuOption TextOption menu-option menu-cancel"
+        >
+          <div
+            class="noicon"
+          />
+          <div
+            class="menu-name"
+          >
+            Cancel
+          </div>
+          <div
+            class="noicon"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -10,19 +10,21 @@ import (
 	sq "github.com/Masterminds/squirrel"
 	_ "github.com/lib/pq"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/store"
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func (s *SQLStore) latestsBlocksSubquery() sq.SelectBuilder {
+func (s *SQLStore) latestsBlocksSubquery(c store.Container) sq.SelectBuilder {
 	internalQuery := sq.Select("*", "ROW_NUMBER() OVER (PARTITION BY id ORDER BY insert_at DESC) AS rn").From("blocks")
 
 	return sq.Select("*").
 		FromSelect(internalQuery, "a").
 		Where(sq.Eq{"rn": 1}).
-		Where(sq.Eq{"delete_at": 0})
+		Where(sq.Eq{"delete_at": 0}).
+		Where(sq.Eq{"coalesce(workspace_id, '')": c.WorkspaceID})
 }
 
-func (s *SQLStore) GetBlocksWithParentAndType(parentID string, blockType string) ([]model.Block, error) {
+func (s *SQLStore) GetBlocksWithParentAndType(c store.Container, parentID string, blockType string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
 		Select(
 			"id",
@@ -37,7 +39,7 @@ func (s *SQLStore) GetBlocksWithParentAndType(parentID string, blockType string)
 			"update_at",
 			"delete_at",
 		).
-		FromSelect(s.latestsBlocksSubquery(), "latest").
+		FromSelect(s.latestsBlocksSubquery(c), "latest").
 		Where(sq.Eq{"parent_id": parentID}).
 		Where(sq.Eq{"type": blockType})
 
@@ -51,7 +53,7 @@ func (s *SQLStore) GetBlocksWithParentAndType(parentID string, blockType string)
 	return blocksFromRows(rows)
 }
 
-func (s *SQLStore) GetBlocksWithParent(parentID string) ([]model.Block, error) {
+func (s *SQLStore) GetBlocksWithParent(c store.Container, parentID string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
 		Select(
 			"id",
@@ -66,7 +68,7 @@ func (s *SQLStore) GetBlocksWithParent(parentID string) ([]model.Block, error) {
 			"update_at",
 			"delete_at",
 		).
-		FromSelect(s.latestsBlocksSubquery(), "latest").
+		FromSelect(s.latestsBlocksSubquery(c), "latest").
 		Where(sq.Eq{"parent_id": parentID})
 
 	rows, err := query.Query()
@@ -79,7 +81,7 @@ func (s *SQLStore) GetBlocksWithParent(parentID string) ([]model.Block, error) {
 	return blocksFromRows(rows)
 }
 
-func (s *SQLStore) GetBlocksWithType(blockType string) ([]model.Block, error) {
+func (s *SQLStore) GetBlocksWithType(c store.Container, blockType string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
 		Select(
 			"id",
@@ -94,7 +96,7 @@ func (s *SQLStore) GetBlocksWithType(blockType string) ([]model.Block, error) {
 			"update_at",
 			"delete_at",
 		).
-		FromSelect(s.latestsBlocksSubquery(), "latest").
+		FromSelect(s.latestsBlocksSubquery(c), "latest").
 		Where(sq.Eq{"type": blockType})
 
 	rows, err := query.Query()
@@ -108,7 +110,7 @@ func (s *SQLStore) GetBlocksWithType(blockType string) ([]model.Block, error) {
 }
 
 // GetSubTree2 returns blocks within 2 levels of the given blockID
-func (s *SQLStore) GetSubTree2(blockID string) ([]model.Block, error) {
+func (s *SQLStore) GetSubTree2(c store.Container, blockID string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
 		Select(
 			"id",
@@ -123,7 +125,7 @@ func (s *SQLStore) GetSubTree2(blockID string) ([]model.Block, error) {
 			"update_at",
 			"delete_at",
 		).
-		FromSelect(s.latestsBlocksSubquery(), "latest").
+		FromSelect(s.latestsBlocksSubquery(c), "latest").
 		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}})
 
 	rows, err := query.Query()
@@ -137,7 +139,7 @@ func (s *SQLStore) GetSubTree2(blockID string) ([]model.Block, error) {
 }
 
 // GetSubTree3 returns blocks within 3 levels of the given blockID
-func (s *SQLStore) GetSubTree3(blockID string) ([]model.Block, error) {
+func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block, error) {
 	// This first subquery returns repeated blocks
 	subquery1 := sq.Select(
 		"l3.id",
@@ -152,9 +154,9 @@ func (s *SQLStore) GetSubTree3(blockID string) ([]model.Block, error) {
 		"l3.update_at",
 		"l3.delete_at",
 	).
-		FromSelect(s.latestsBlocksSubquery(), "l1").
-		JoinClause(s.latestsBlocksSubquery().Prefix("JOIN (").Suffix(") l2 on l2.parent_id = l1.id or l2.id = l1.id")).
-		JoinClause(s.latestsBlocksSubquery().Prefix("JOIN (").Suffix(") l3 on l3.parent_id = l2.id or l3.id = l2.id")).
+		FromSelect(s.latestsBlocksSubquery(c), "l1").
+		JoinClause(s.latestsBlocksSubquery(c).Prefix("JOIN (").Suffix(") l2 on l2.parent_id = l1.id or l2.id = l1.id")).
+		JoinClause(s.latestsBlocksSubquery(c).Prefix("JOIN (").Suffix(") l3 on l3.parent_id = l2.id or l3.id = l2.id")).
 		Where(sq.Eq{"l1.id": blockID})
 
 	// This second subquery is used to return distinct blocks
@@ -188,7 +190,7 @@ func (s *SQLStore) GetSubTree3(blockID string) ([]model.Block, error) {
 	return blocksFromRows(rows)
 }
 
-func (s *SQLStore) GetAllBlocks() ([]model.Block, error) {
+func (s *SQLStore) GetAllBlocks(c store.Container) ([]model.Block, error) {
 	query := s.getQueryBuilder().
 		Select(
 			"id",
@@ -203,7 +205,7 @@ func (s *SQLStore) GetAllBlocks() ([]model.Block, error) {
 			"update_at",
 			"delete_at",
 		).
-		FromSelect(s.latestsBlocksSubquery(), "latest")
+		FromSelect(s.latestsBlocksSubquery(c), "latest")
 
 	rows, err := query.Query()
 	if err != nil {
@@ -218,7 +220,7 @@ func (s *SQLStore) GetAllBlocks() ([]model.Block, error) {
 func blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 	defer rows.Close()
 
-	var results = []model.Block{}
+	results := []model.Block{}
 
 	for rows.Next() {
 		var block model.Block
@@ -262,9 +264,9 @@ func blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 	return results, nil
 }
 
-func (s *SQLStore) GetRootID(blockID string) (string, error) {
+func (s *SQLStore) GetRootID(c store.Container, blockID string) (string, error) {
 	query := s.getQueryBuilder().Select("root_id").
-		FromSelect(s.latestsBlocksSubquery(), "latest").
+		FromSelect(s.latestsBlocksSubquery(c), "latest").
 		Where(sq.Eq{"id": blockID})
 
 	row := query.QueryRow()
@@ -279,9 +281,9 @@ func (s *SQLStore) GetRootID(blockID string) (string, error) {
 	return rootID, nil
 }
 
-func (s *SQLStore) GetParentID(blockID string) (string, error) {
+func (s *SQLStore) GetParentID(c store.Container, blockID string) (string, error) {
 	query := s.getQueryBuilder().Select("parent_id").
-		FromSelect(s.latestsBlocksSubquery(), "latest").
+		FromSelect(s.latestsBlocksSubquery(c), "latest").
 		Where(sq.Eq{"id": blockID})
 
 	row := query.QueryRow()
@@ -296,7 +298,7 @@ func (s *SQLStore) GetParentID(blockID string) (string, error) {
 	return parentID, nil
 }
 
-func (s *SQLStore) InsertBlock(block model.Block) error {
+func (s *SQLStore) InsertBlock(c store.Container, block model.Block) error {
 	if block.RootID == "" {
 		return errors.New("rootId is nil")
 	}
@@ -308,6 +310,7 @@ func (s *SQLStore) InsertBlock(block model.Block) error {
 
 	query := s.getQueryBuilder().Insert("blocks").
 		Columns(
+			"workspace_id",
 			"id",
 			"parent_id",
 			"root_id",
@@ -320,6 +323,7 @@ func (s *SQLStore) InsertBlock(block model.Block) error {
 			"update_at",
 			"delete_at",
 		).Values(
+		c.WorkspaceID,
 		block.ID,
 		block.ParentID,
 		block.RootID,
@@ -341,16 +345,18 @@ func (s *SQLStore) InsertBlock(block model.Block) error {
 	return nil
 }
 
-func (s *SQLStore) DeleteBlock(blockID string, modifiedBy string) error {
+func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy string) error {
 	now := time.Now().Unix()
 	query := s.getQueryBuilder().Insert("blocks").
 		Columns(
+			"workspace_id",
 			"id",
 			"modified_by",
 			"update_at",
 			"delete_at",
 		).
 		Values(
+			c.WorkspaceID,
 			blockID,
 			modifiedBy,
 			now,

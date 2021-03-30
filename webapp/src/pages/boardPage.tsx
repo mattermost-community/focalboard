@@ -5,8 +5,9 @@ import {injectIntl, IntlShape} from 'react-intl'
 
 import {IBlock} from '../blocks/block'
 import {sendFlashMessage} from '../components/flashMessages'
-import {WorkspaceComponent} from '../components/workspaceComponent'
+import Workspace from '../components/workspace'
 import mutator from '../mutator'
+import octoClient from '../octoClient'
 import {OctoListener} from '../octoListener'
 import {Utils} from '../utils'
 import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
@@ -15,6 +16,7 @@ import './boardPage.scss'
 
 type Props = {
     readonly?: boolean
+    workspaceId: string
     setLanguage: (lang: string) => void
     intl: IntlShape
 }
@@ -32,6 +34,7 @@ class BoardPage extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
+
         const queryString = new URLSearchParams(window.location.search)
         let boardId = queryString.get('id') || ''
         let viewId = queryString.get('v') || ''
@@ -142,7 +145,10 @@ class BoardPage extends React.Component<Props, State> {
         const {intl} = this.props
         const {workspaceTree} = this.state
 
-        Utils.log(`BoardPage.render ${this.state.boardTree?.board?.title}`)
+        Utils.log(`BoardPage.render (workspace ${this.props.workspaceId}) ${this.state.boardTree?.board?.title}`)
+
+        // TODO: Make this less brittle. This only works because this is the root render function
+        octoClient.workspaceId = this.props.workspaceId
 
         if (this.props.readonly && this.state.syncFailed) {
             Utils.log('BoardPage.render: sync failed')
@@ -157,7 +163,7 @@ class BoardPage extends React.Component<Props, State> {
 
         return (
             <div className='BoardPage'>
-                <WorkspaceComponent
+                <Workspace
                     workspaceTree={workspaceTree}
                     boardTree={this.state.boardTree}
                     showView={(id, boardId) => {
@@ -196,6 +202,15 @@ class BoardPage extends React.Component<Props, State> {
     private async sync(boardId: string = this.state.boardId, viewId: string | undefined = this.state.viewId) {
         Utils.log(`sync start: ${boardId}`)
 
+        if (!this.props.readonly) {
+            // Require workspace for editing, not for sharing (readonly)
+
+            const workspace = await octoClient.getWorkspace()
+            if (!workspace) {
+                location.href = '/error?id=no_workspace'
+            }
+        }
+
         const workspaceTree = await MutableWorkspaceTree.sync()
         const boardIds = [...workspaceTree.boards.map((o) => o.id), ...workspaceTree.boardTemplates.map((o) => o.id)]
         this.setState({workspaceTree})
@@ -210,6 +225,7 @@ class BoardPage extends React.Component<Props, State> {
 
         // Listen to boards plus all blocks at root (Empty string for parentId)
         this.workspaceListener.open(
+            octoClient.workspaceId,
             boardIdsToListen,
             async (blocks) => {
                 Utils.log(`workspaceListener.onChanged: ${blocks.length}`)

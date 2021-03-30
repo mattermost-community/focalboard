@@ -1,0 +1,63 @@
+.KanbanCard {
+	flex: 0 0 auto;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+
+	border-radius: 3px;
+	margin-bottom: 10px;
+	padding: 8px 16px;
+	box-shadow: rgba(var(--body-color), 0.1) 0px 0px 0px 1px, rgba(var(--body-color), 0.1) 0px 2px 4px;
+
+	cursor: pointer;
+	color: rgb(var(--body-color));
+
+	transition: background 100ms ease-out 0s;
+
+    &:hover {
+        background-color: rgba(var(--body-color), 0.1);
+        .optionsMenu {
+            display: block;
+        }
+    }
+
+    &.selected {
+        background-color: rgba(90, 200, 255, 0.2);
+    }
+
+    .optionsMenu {
+        display: none;
+        position: absolute;
+        right: 0;
+    }
+
+    > .octo-propertyvalue {
+        margin: 4px 0 0;
+        font-size: 12px;
+        line-height: 18px;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    .octo-icontitle {
+        flex: 1 1 auto;
+        font-weight: 500;
+
+        .octo-icon {
+            font-size: 16px;
+            margin-right: 5px;
+        }
+    }
+    .IconButton {
+        border-radius: 3px;
+        margin-right: 6px;
+        padding: 0;
+        background: rgb(var(--body-color), 0.1);
+        box-shadow: rgba(var(--body-color), 0.1) 0px 0px 0px 1px, rgba(var(--body-color), 0.1) 0px 2px 4px;
+        height: 24px;
+        width: 24px;
+    }
+}

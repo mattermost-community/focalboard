@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -15,6 +16,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/app"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 )
 
@@ -23,18 +25,30 @@ const (
 	HEADER_REQUESTED_WITH_XML = "XMLHttpRequest"
 )
 
+const (
+	ERROR_NO_WORKSPACE_CODE    = 1000
+	ERROR_NO_WORKSPACE_MESSAGE = "No workspace"
+)
+
 // ----------------------------------------------------------------------------------------------------
 // REST APIs
 
-type API struct {
-	appBuilder      func() *app.App
-	singleUserToken string
+type WorkspaceAuthenticator interface {
+	DoesUserHaveWorkspaceAccess(session *model.Session, workspaceID string) bool
 }
 
-func NewAPI(appBuilder func() *app.App, singleUserToken string) *API {
+type API struct {
+	appBuilder             func() *app.App
+	authService            string
+	singleUserToken        string
+	WorkspaceAuthenticator WorkspaceAuthenticator
+}
+
+func NewAPI(appBuilder func() *app.App, singleUserToken string, authService string) *API {
 	return &API{
 		appBuilder:      appBuilder,
 		singleUserToken: singleUserToken,
+		authService:     authService,
 	}
 }
 
@@ -46,11 +60,21 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1 := r.PathPrefix("/api/v1").Subrouter()
 	apiv1.Use(a.requireCSRFToken)
 
-	apiv1.HandleFunc("/blocks", a.sessionRequired(a.handleGetBlocks)).Methods("GET")
-	apiv1.HandleFunc("/blocks", a.sessionRequired(a.handlePostBlocks)).Methods("POST")
-	apiv1.HandleFunc("/blocks/{blockID}", a.sessionRequired(a.handleDeleteBlock)).Methods("DELETE")
-	apiv1.HandleFunc("/blocks/{blockID}/subtree", a.attachSession(a.handleGetSubTree, false)).Methods("GET")
+	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks", a.sessionRequired(a.handleGetBlocks)).Methods("GET")
+	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks", a.sessionRequired(a.handlePostBlocks)).Methods("POST")
+	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/{blockID}", a.sessionRequired(a.handleDeleteBlock)).Methods("DELETE")
+	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/{blockID}/subtree", a.attachSession(a.handleGetSubTree, false)).Methods("GET")
 
+	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/export", a.sessionRequired(a.handleExport)).Methods("GET")
+	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/import", a.sessionRequired(a.handleImport)).Methods("POST")
+
+	apiv1.HandleFunc("/workspaces/{workspaceID}/sharing/{rootID}", a.sessionRequired(a.handlePostSharing)).Methods("POST")
+	apiv1.HandleFunc("/workspaces/{workspaceID}/sharing/{rootID}", a.sessionRequired(a.handleGetSharing)).Methods("GET")
+
+	apiv1.HandleFunc("/workspaces/{workspaceID}", a.sessionRequired(a.handleGetWorkspace)).Methods("GET")
+	apiv1.HandleFunc("/workspaces/{workspaceID}/regenerate_signup_token", a.sessionRequired(a.handlePostWorkspaceRegenerateSignupToken)).Methods("POST")
+
+	// User APIs
 	apiv1.HandleFunc("/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
 	apiv1.HandleFunc("/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
 	apiv1.HandleFunc("/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
@@ -58,21 +82,12 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/login", a.handleLogin).Methods("POST")
 	apiv1.HandleFunc("/register", a.handleRegister).Methods("POST")
 
-	apiv1.HandleFunc("/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
-
-	apiv1.HandleFunc("/blocks/export", a.sessionRequired(a.handleExport)).Methods("GET")
-	apiv1.HandleFunc("/blocks/import", a.sessionRequired(a.handleImport)).Methods("POST")
-
-	apiv1.HandleFunc("/sharing/{rootID}", a.sessionRequired(a.handlePostSharing)).Methods("POST")
-	apiv1.HandleFunc("/sharing/{rootID}", a.sessionRequired(a.handleGetSharing)).Methods("GET")
-
-	apiv1.HandleFunc("/workspace", a.sessionRequired(a.handleGetWorkspace)).Methods("GET")
-	apiv1.HandleFunc("/workspace/regenerate_signup_token", a.sessionRequired(a.handlePostWorkspaceRegenerateSignupToken)).Methods("POST")
+	apiv1.HandleFunc("/workspaces/{workspaceID}/{rootID}/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
 
 	// Get Files API
 
 	files := r.PathPrefix("/files").Subrouter()
-	files.HandleFunc("/{filename}", a.sessionRequired(a.handleServeFile)).Methods("GET")
+	files.HandleFunc("/workspaces/{workspaceID}/{rootID}/{filename}", a.attachSession(a.handleServeFile, false)).Methods("GET")
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
@@ -101,8 +116,78 @@ func (a *API) checkCSRFToken(r *http.Request) bool {
 	return false
 }
 
+func (a *API) hasValidReadTokenForBlock(r *http.Request, container store.Container, blockID string) bool {
+	query := r.URL.Query()
+	readToken := query.Get("read_token")
+
+	if len(readToken) < 1 {
+		return false
+	}
+
+	isValid, err := a.app().IsValidReadToken(container, blockID, readToken)
+	if err != nil {
+		log.Printf("IsValidReadToken ERROR: %v", err)
+		return false
+	}
+
+	return isValid
+}
+
+func (a *API) getContainerAllowingReadTokenForBlock(r *http.Request, blockID string) (*store.Container, error) {
+	ctx := r.Context()
+	session, _ := ctx.Value("session").(*model.Session)
+
+	if a.WorkspaceAuthenticator == nil {
+		// Native auth: always use root workspace
+		container := store.Container{
+			WorkspaceID: "",
+		}
+
+		// Has session
+		if session != nil {
+			return &container, nil
+		}
+
+		// No session, but has valid read token (read-only mode)
+		if len(blockID) > 0 && a.hasValidReadTokenForBlock(r, container, blockID) {
+			return &container, nil
+		}
+
+		return nil, errors.New("Access denied to workspace")
+	}
+
+	// Workspace auth
+	vars := mux.Vars(r)
+	workspaceID := vars["workspaceID"]
+
+	if workspaceID == "" || workspaceID == "0" {
+		// When authenticating, a workspace is required
+		return nil, errors.New("No workspace specified")
+	}
+
+	container := store.Container{
+		WorkspaceID: workspaceID,
+	}
+
+	// Has session and access to workspace
+	if session != nil && a.WorkspaceAuthenticator.DoesUserHaveWorkspaceAccess(session, container.WorkspaceID) {
+		return &container, nil
+	}
+
+	// No session, but has valid read token (read-only mode)
+	if len(blockID) > 0 && a.hasValidReadTokenForBlock(r, container, blockID) {
+		return &container, nil
+	}
+
+	return nil, errors.New("Access denied to workspace")
+}
+
+func (a *API) getContainer(r *http.Request) (*store.Container, error) {
+	return a.getContainerAllowingReadTokenForBlock(r, "")
+}
+
 func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/blocks getBlocks
+	// swagger:operation GET /api/v1/workspaces/{workspaceID}/blocks getBlocks
 	//
 	// Returns blocks
 	//
@@ -110,6 +195,11 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
+	// - name: workspaceID
+	//   in: path
+	//   description: Workspace ID
+	//   required: true
+	//   type: string
 	// - name: parent_id
 	//   in: query
 	//   description: ID of parent block, omit to specify all blocks
@@ -137,8 +227,13 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	parentID := query.Get("parent_id")
 	blockType := query.Get("type")
+	container, err := a.getContainer(r)
+	if err != nil {
+		noContainerErrorResponse(w, err)
+		return
+	}
 
-	blocks, err := a.app().GetBlocks(parentID, blockType)
+	blocks, err := a.app().GetBlocks(*container, parentID, blockType)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -169,7 +264,7 @@ func stampModifiedByUser(r *http.Request, blocks []model.Block) {
 }
 
 func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/blocks updateBlocks
+	// swagger:operation POST /api/v1/workspaces/{workspaceID}/blocks updateBlocks
 	//
 	// Insert or update blocks
 	//
@@ -177,6 +272,11 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
+	// - name: workspaceID
+	//   in: path
+	//   description: Workspace ID
+	//   required: true
+	//   type: string
 	// - name: Body
 	//   in: body
 	//   description: array of blocks to insert or update
@@ -194,6 +294,12 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+
+	container, err := a.getContainer(r)
+	if err != nil {
+		noContainerErrorResponse(w, err)
+		return
+	}
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -232,7 +338,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	stampModifiedByUser(r, blocks)
 
-	err = a.app().InsertBlocks(blocks)
+	err = a.app().InsertBlocks(*container, blocks)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -338,7 +444,7 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation DELETE /api/v1/blocks/{blockID} deleteBlock
+	// swagger:operation DELETE /api/v1/workspaces/{workspaceID}/blocks/{blockID} deleteBlock
 	//
 	// Deletes a block
 	//
@@ -346,6 +452,11 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
+	// - name: workspaceID
+	//   in: path
+	//   description: Workspace ID
+	//   required: true
+	//   type: string
 	// - name: blockID
 	//   in: path
 	//   description: ID of block to delete
@@ -368,7 +479,13 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	blockID := vars["blockID"]
 
-	err := a.app().DeleteBlock(blockID, userID)
+	container, err := a.getContainer(r)
+	if err != nil {
+		noContainerErrorResponse(w, err)
+		return
+	}
+
+	err = a.app().DeleteBlock(*container, blockID, userID)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 
@@ -380,7 +497,7 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/blocks/{blockID}/subtree getSubTree
+	// swagger:operation GET /api/v1/workspaces/{workspaceID}/blocks/{blockID}/subtree getSubTree
 	//
 	// Returns the blocks of a subtree
 	//
@@ -388,6 +505,11 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
+	// - name: workspaceID
+	//   in: path
+	//   description: Workspace ID
+	//   required: true
+	//   type: string
 	// - name: blockID
 	//   in: path
 	//   description: The ID of the root block of the subtree
@@ -417,29 +539,10 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	blockID := vars["blockID"]
 
-	// If not authenticated (no session), check that block is publicly shared
-	ctx := r.Context()
-	session, _ := ctx.Value("session").(*model.Session)
-	if session == nil {
-		query := r.URL.Query()
-		readToken := query.Get("read_token")
-
-		// Require read token
-		if len(readToken) < 1 {
-			errorResponse(w, http.StatusBadRequest, "No read_token", nil)
-			return
-		}
-
-		isValid, err := a.app().IsValidReadToken(blockID, readToken)
-		if err != nil {
-			errorResponse(w, http.StatusInternalServerError, "", err)
-			return
-		}
-
-		if !isValid {
-			errorResponse(w, http.StatusUnauthorized, "", nil)
-			return
-		}
+	container, err := a.getContainerAllowingReadTokenForBlock(r, blockID)
+	if err != nil {
+		noContainerErrorResponse(w, err)
+		return
 	}
 
 	query := r.URL.Query()
@@ -454,7 +557,7 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	blocks, err := a.app().GetSubTree(blockID, int(levels))
+	blocks, err := a.app().GetSubTree(*container, blockID, int(levels))
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -471,13 +574,19 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/blocks/export exportBlocks
+	// swagger:operation GET /api/v1/workspaces/{workspaceID}/blocks/export exportBlocks
 	//
 	// Returns all blocks
 	//
 	// ---
 	// produces:
 	// - application/json
+	// parameters:
+	// - name: workspaceID
+	//   in: path
+	//   description: Workspace ID
+	//   required: true
+	//   type: string
 	// security:
 	// - BearerAuth: []
 	// responses:
@@ -492,7 +601,13 @@ func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
-	blocks, err := a.app().GetAllBlocks()
+	container, err := a.getContainer(r)
+	if err != nil {
+		noContainerErrorResponse(w, err)
+		return
+	}
+
+	blocks, err := a.app().GetAllBlocks(*container)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -513,7 +628,7 @@ func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
 
 func filterOrphanBlocks(blocks []model.Block) (ret []model.Block) {
 	queue := make([]model.Block, 0)
-	var childrenOfBlockWithID = make(map[string]*[]model.Block)
+	childrenOfBlockWithID := make(map[string]*[]model.Block)
 
 	// Build the trees from nodes
 	for _, block := range blocks {
@@ -556,7 +671,7 @@ func arrayContainsBlockWithID(array []model.Block, blockID string) bool {
 }
 
 func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/blocks/import importBlocks
+	// swagger:operation POST /api/v1/workspaces/{workspaceID}/blocks/import importBlocks
 	//
 	// Import blocks
 	//
@@ -564,6 +679,11 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
+	// - name: workspaceID
+	//   in: path
+	//   description: Workspace ID
+	//   required: true
+	//   type: string
 	// - name: Body
 	//   in: body
 	//   description: array of blocks to import
@@ -582,6 +702,12 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
+	container, err := a.getContainer(r)
+	if err != nil {
+		noContainerErrorResponse(w, err)
+		return
+	}
+
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
@@ -598,7 +724,7 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 
 	stampModifiedByUser(r, blocks)
 
-	err = a.app().InsertBlocks(blocks)
+	err = a.app().InsertBlocks(*container, blocks)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -611,7 +737,7 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 // Sharing
 
 func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/sharing/{rootID} getSharing
+	// swagger:operation GET /api/v1/workspaces/{workspaceID}/sharing/{rootID} getSharing
 	//
 	// Returns sharing information for a root block
 	//
@@ -619,6 +745,11 @@ func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
+	// - name: workspaceID
+	//   in: path
+	//   description: Workspace ID
+	//   required: true
+	//   type: string
 	// - name: rootID
 	//   in: path
 	//   description: ID of the root block
@@ -639,7 +770,13 @@ func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	rootID := vars["rootID"]
 
-	sharing, err := a.app().GetSharing(rootID)
+	container, err := a.getContainer(r)
+	if err != nil {
+		noContainerErrorResponse(w, err)
+		return
+	}
+
+	sharing, err := a.app().GetSharing(*container, rootID)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -656,7 +793,7 @@ func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/sharing/{rootID} postSharing
+	// swagger:operation POST /api/v1/workspaces/{workspaceID}/sharing/{rootID} postSharing
 	//
 	// Sets sharing information for a root block
 	//
@@ -664,6 +801,11 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
+	// - name: workspaceID
+	//   in: path
+	//   description: Workspace ID
+	//   required: true
+	//   type: string
 	// - name: rootID
 	//   in: path
 	//   description: ID of the root block
@@ -684,6 +826,12 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+
+	container, err := a.getContainer(r)
+	if err != nil {
+		noContainerErrorResponse(w, err)
+		return
+	}
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -708,7 +856,7 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 	}
 	sharing.ModifiedBy = userID
 
-	err = a.app().UpsertSharing(sharing)
+	err = a.app().UpsertSharing(*container, sharing)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -721,13 +869,19 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 // Workspace
 
 func (a *API) handleGetWorkspace(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/workspace getWorkspace
+	// swagger:operation GET /api/v1/workspaces/{workspaceID} getWorkspace
 	//
 	// Returns information of the root workspace
 	//
 	// ---
 	// produces:
 	// - application/json
+	// parameters:
+	// - name: workspaceID
+	//   in: path
+	//   description: Workspace ID
+	//   required: true
+	//   type: string
 	// security:
 	// - BearerAuth: []
 	// responses:
@@ -740,10 +894,28 @@ func (a *API) handleGetWorkspace(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
-	workspace, err := a.app().GetRootWorkspace()
-	if err != nil {
-		errorResponse(w, http.StatusInternalServerError, "", err)
-		return
+	var workspace *model.Workspace
+	var err error
+
+	if a.WorkspaceAuthenticator != nil {
+		vars := mux.Vars(r)
+		workspaceID := vars["workspaceID"]
+
+		ctx := r.Context()
+		session := ctx.Value("session").(*model.Session)
+		if !a.WorkspaceAuthenticator.DoesUserHaveWorkspaceAccess(session, workspaceID) {
+			errorResponse(w, http.StatusUnauthorized, "", nil)
+			return
+		}
+		workspace = &model.Workspace{
+			ID: workspaceID,
+		}
+	} else {
+		workspace, err = a.app().GetRootWorkspace()
+		if err != nil {
+			errorResponse(w, http.StatusInternalServerError, "", err)
+			return
+		}
 	}
 
 	workspaceData, err := json.Marshal(workspace)
@@ -756,13 +928,19 @@ func (a *API) handleGetWorkspace(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handlePostWorkspaceRegenerateSignupToken(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/workspace/regenerate_signup_token regenerateSignupToken
+	// swagger:operation POST /api/v1/workspaces/{workspaceID}/regenerate_signup_token regenerateSignupToken
 	//
 	// Regenerates the signup token for the root workspace
 	//
 	// ---
 	// produces:
 	// - application/json
+	// parameters:
+	// - name: workspaceID
+	//   in: path
+	//   description: Workspace ID
+	//   required: true
+	//   type: string
 	// security:
 	// - BearerAuth: []
 	// responses:
@@ -793,7 +971,7 @@ func (a *API) handlePostWorkspaceRegenerateSignupToken(w http.ResponseWriter, r 
 // File upload
 
 func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /files/{fileID} getFile
+	// swagger:operation GET /workspaces/{workspaceID}/{rootID}/{fileID} getFile
 	//
 	// Returns the contents of an uploaded file
 	//
@@ -803,6 +981,16 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	// - image/jpg
 	// - image/png
 	// parameters:
+	// - name: workspaceID
+	//   in: path
+	//   description: Workspace ID
+	//   required: true
+	//   type: string
+	// - name: rootID
+	//   in: path
+	//   description: ID of the root block
+	//   required: true
+	//   type: string
 	// - name: fileID
 	//   in: path
 	//   description: ID of the file
@@ -819,7 +1007,16 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 
 	vars := mux.Vars(r)
+	workspaceID := vars["workspaceID"]
+	rootID := vars["rootID"]
 	filename := vars["filename"]
+
+	// Caller must have access to the root block's container
+	_, err := a.getContainerAllowingReadTokenForBlock(r, rootID)
+	if err != nil {
+		noContainerErrorResponse(w, err)
+		return
+	}
 
 	contentType := "image/jpg"
 
@@ -830,7 +1027,7 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", contentType)
 
-	filePath := a.app().GetFilePath(filename)
+	filePath := a.app().GetFilePath(workspaceID, rootID, filename)
 	http.ServeFile(w, r, filePath)
 }
 
@@ -843,9 +1040,9 @@ type FileUploadResponse struct {
 }
 
 func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/files uploadFile
+	// swagger:operation POST /api/v1/workspaces/{workspaceID}/{rootID}/files uploadFile
 	//
-	// Upload a binary file
+	// Upload a binary file, attached to a root block
 	//
 	// ---
 	// consumes:
@@ -853,6 +1050,16 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
+	// - name: workspaceID
+	//   in: path
+	//   description: Workspace ID
+	//   required: true
+	//   type: string
+	// - name: rootID
+	//   in: path
+	//   description: ID of the root block
+	//   required: true
+	//   type: string
 	// - name: uploaded file
 	//   in: formData
 	//   type: file
@@ -869,6 +1076,17 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
+	vars := mux.Vars(r)
+	workspaceID := vars["workspaceID"]
+	rootID := vars["rootID"]
+
+	// Caller must have access to the root block's container
+	_, err := a.getContainerAllowingReadTokenForBlock(r, rootID)
+	if err != nil {
+		noContainerErrorResponse(w, err)
+		return
+	}
+
 	file, handle, err := r.FormFile("file")
 	if err != nil {
 		fmt.Fprintf(w, "%v", err)
@@ -877,7 +1095,7 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	fileId, err := a.app().SaveFile(file, handle.Filename)
+	fileId, err := a.app().SaveFile(file, workspaceID, rootID, handle.Filename)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -910,12 +1128,27 @@ func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) {
 func errorResponse(w http.ResponseWriter, code int, message string, sourceError error) {
 	log.Printf("API ERROR %d, err: %v\n", code, sourceError)
 	w.Header().Set("Content-Type", "application/json")
-	data, err := json.Marshal(model.ErrorResponse{Error: message})
+	data, err := json.Marshal(model.ErrorResponse{Error: message, ErrorCode: code})
 	if err != nil {
 		data = []byte("{}")
 	}
 	w.WriteHeader(code)
 	w.Write(data)
+}
+
+func errorResponseWithCode(w http.ResponseWriter, statusCode int, errorCode int, message string, sourceError error) {
+	log.Printf("API ERROR status %d, errorCode: %d, err: %v\n", statusCode, errorCode, sourceError)
+	w.Header().Set("Content-Type", "application/json")
+	data, err := json.Marshal(model.ErrorResponse{Error: message, ErrorCode: errorCode})
+	if err != nil {
+		data = []byte("{}")
+	}
+	w.WriteHeader(statusCode)
+	w.Write(data)
+}
+
+func noContainerErrorResponse(w http.ResponseWriter, sourceError error) {
+	errorResponseWithCode(w, http.StatusBadRequest, ERROR_NO_WORKSPACE_CODE, ERROR_NO_WORKSPACE_MESSAGE, sourceError)
 }
 
 func addUserID(rw http.ResponseWriter, req *http.Request, next http.Handler) {

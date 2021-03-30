@@ -38,7 +38,7 @@ func HashPassword(password string) string {
 }
 
 // ComparePassword compares the hash
-func ComparePassword(hash string, password string) bool {
+func ComparePassword(hash, password string) bool {
 	if len(password) == 0 || len(hash) == 0 {
 		return false
 	}

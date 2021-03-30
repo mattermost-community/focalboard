@@ -9,9 +9,26 @@ Like what you see? :eyes: Give us a GitHub Star! :star:
 It helps define, organize, track and manage work across individuals and teams. Focalboard comes in two editions:
 
 * **Focalboard Personal Desktop**: A stand-alone desktop app for your todos and personal projects. This is a single-tenant locally run server running Focalboard for optimal speed and performance. 
-* **Focalboard Personal Server**: A self-hosted server for your team to collaborate
 
-The same server binary powers both editions.
+* **Focalboard Personal Server**: A self-hosted server for your team to collaborate.
+
+The same MIT-licensed binary powers both desktop and server editions.
+
+## Try out Focalboard 
+
+**Focalboard Personal Desktop (Windows, Mac or Linux Desktop)**
+
+Try out **Focalboard Personal Desktop** by going to the Windows Store or the Apple AppStore, searching for `Focalboard` and installing to run the compiled version locally. 
+
+If you're running a Linux Desktop, [download the latest `focalboard-linux.tar.gz` release](https://github.com/mattermost/focalboard/releases), unpack the `.tar.gz` archive, and open `focalboard-app` from the `focalboard-app` folder.
+
+Note: For Windows and Mac users, while we don't yet offer **Focalboard Personal Desktop** outside of Store-based installs, it is in [consideration for the future](https://github.com/mattermost/focalboard/issues/99) (please upvote the ticket if you're interested in this addition). 
+
+**Focalboard Personal Server (Ubuntu)**
+
+You can download and run the compiled **Focalboard Personal Server** by following [our latest install guide](https://www.focalboard.com/download/personal-edition/ubuntu/).
+
+To download the latest server release, see: https://github.com/mattermost/focalboard/releases
 
 ## Building the server
 
@@ -70,7 +87,8 @@ Before checking-in commits, run: `make ci`, which is simlar to the ci.yml workfl
 ## Stay informed on progress
 
 * **Changelog**: See [CHANGELOG.md](CHANGELOG.md) for the latest updates
-* **Chat**: Join the [Focalboard community channel](https://community.mattermost.com/core/channels/focalboard)
+* **Developer Discussion**: Join the [Developer Discussion](https://github.com/mattermost/focalboard/discussions) board
+* **Chat**: Join the [Focalboard community channel](https://community.mattermost.com/core/channels/focalboard) 
 
 ## Share your feedback 
 

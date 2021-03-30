@@ -29,7 +29,7 @@ type Server struct {
 }
 
 // NewServer creates a new instance of the webserver.
-func NewServer(rootPath string, port int, ssl bool, localOnly bool) *Server {
+func NewServer(rootPath string, port int, ssl, localOnly bool) *Server {
 	r := mux.NewRouter()
 
 	var addr string
