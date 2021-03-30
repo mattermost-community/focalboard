@@ -27,7 +27,7 @@ func TestGetParentID(t *testing.T) {
 	app := New(&cfg, store, auth, wsserver, &mocks.FileBackend{}, webhook)
 
 	container := st.Container{
-		WorkspaceID: "",
+		WorkspaceID: "0",
 	}
 	t.Run("success query", func(t *testing.T) {
 		store.EXPECT().GetParentID(gomock.Eq(container), gomock.Eq("test-id")).Return("test-parent-id", nil)

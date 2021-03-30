@@ -6,7 +6,7 @@ import {Board, IPropertyOption, IPropertyTemplate, MutableBoard, PropertyType} f
 import {BoardView, ISortOption, MutableBoardView} from './blocks/boardView'
 import {Card, MutableCard} from './blocks/card'
 import {FilterGroup} from './blocks/filterGroup'
-import octoClient from './octoClient'
+import octoClient, {OctoClient} from './octoClient'
 import {OctoUtils} from './octoUtils'
 import undoManager from './undomanager'
 import {Utils} from './utils'
@@ -555,6 +555,39 @@ class Mutator {
         beforeUndo?: () => Promise<void>,
     ): Promise<[IBlock[], string]> {
         const blocks = await octoClient.getSubtree(boardId, 3)
+        const [newBlocks1, newBoard] = OctoUtils.duplicateBlockTree(blocks, boardId) as [IBlock[], MutableBoard, Record<string, string>]
+        const newBlocks = newBlocks1.filter((o) => o.type !== 'comment')
+        Utils.log(`duplicateBoard: duplicating ${newBlocks.length} blocks`)
+
+        if (asTemplate === newBoard.isTemplate) {
+            newBoard.title = `${newBoard.title} copy`
+        } else if (asTemplate) {
+            // Template from board
+            newBoard.title = 'New board template'
+        } else {
+            // Board from template
+        }
+        newBoard.isTemplate = asTemplate
+        await this.insertBlocks(
+            newBlocks,
+            description,
+            async () => {
+                await afterRedo?.(newBoard.id)
+            },
+            beforeUndo,
+        )
+        return [newBlocks, newBoard.id]
+    }
+
+    async duplicateFromRootBoard(
+        boardId: string,
+        description = 'duplicate board',
+        asTemplate = false,
+        afterRedo?: (newBoardId: string) => Promise<void>,
+        beforeUndo?: () => Promise<void>,
+    ): Promise<[IBlock[], string]> {
+        const rootClient = new OctoClient(octoClient.serverUrl, '0')
+        const blocks = await rootClient.getSubtree(boardId, 3)
         const [newBlocks1, newBoard] = OctoUtils.duplicateBlockTree(blocks, boardId) as [IBlock[], MutableBoard, Record<string, string>]
         const newBlocks = newBlocks1.filter((o) => o.type !== 'comment')
         Utils.log(`duplicateBoard: duplicating ${newBlocks.length} blocks`)

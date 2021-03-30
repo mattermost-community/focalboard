@@ -140,7 +140,7 @@ func (a *API) getContainerAllowingReadTokenForBlock(r *http.Request, blockID str
 	if a.WorkspaceAuthenticator == nil {
 		// Native auth: always use root workspace
 		container := store.Container{
-			WorkspaceID: "",
+			WorkspaceID: "0",
 		}
 
 		// Has session
@@ -159,11 +159,6 @@ func (a *API) getContainerAllowingReadTokenForBlock(r *http.Request, blockID str
 	// Workspace auth
 	vars := mux.Vars(r)
 	workspaceID := vars["workspaceID"]
-
-	if workspaceID == "" || workspaceID == "0" {
-		// When authenticating, a workspace is required
-		return nil, errors.New("No workspace specified")
-	}
 
 	container := store.Container{
 		WorkspaceID: workspaceID,

@@ -3,9 +3,11 @@
 import React from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
-import {MutableBoard} from '../../blocks/board'
+import {Board, MutableBoard} from '../../blocks/board'
 import {MutableBoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
+import octoClient from '../../octoClient'
+import {GlobalTemplateTree, MutableGlobalTemplateTree} from '../../viewModel/globalTemplateTree'
 import {WorkspaceTree} from '../../viewModel/workspaceTree'
 import IconButton from '../../widgets/buttons/iconButton'
 import BoardIcon from '../../widgets/icons/board'
@@ -24,13 +26,32 @@ type Props = {
     intl: IntlShape
 }
 
-class SidebarAddBoardMenu extends React.Component<Props> {
+type State = {
+    globalTemplateTree?: GlobalTemplateTree,
+}
+
+class SidebarAddBoardMenu extends React.Component<Props, State> {
+    state: State = {}
+
     shouldComponentUpdate(): boolean {
         return true
     }
 
+    componentDidMount(): void {
+        this.syncGlobalTemplates()
+    }
+
+    private async syncGlobalTemplates() {
+        if (octoClient.workspaceId !== '0' && !this.state.globalTemplateTree) {
+            const globalTemplateTree = await MutableGlobalTemplateTree.sync()
+            this.setState({globalTemplateTree})
+        }
+    }
+
     render(): JSX.Element {
         const {workspaceTree, intl} = this.props
+        const {globalTemplateTree} = this.state
+
         if (!workspaceTree) {
             return <div/>
         }
@@ -58,44 +79,9 @@ class SidebarAddBoardMenu extends React.Component<Props> {
                             <Menu.Separator/>
                         </>}
 
-                        {workspaceTree.boardTemplates.map((boardTemplate) => {
-                            const displayName = boardTemplate.title || intl.formatMessage({id: 'Sidebar.untitled', defaultMessage: 'Untitled'})
+                        {workspaceTree.boardTemplates.map((boardTemplate) => this.renderBoardTemplate(boardTemplate))}
 
-                            return (
-                                <Menu.Text
-                                    key={boardTemplate.id}
-                                    id={boardTemplate.id}
-                                    name={displayName}
-                                    icon={<div className='Icon'>{boardTemplate.icon}</div>}
-                                    onClick={() => {
-                                        this.addBoardFromTemplate(boardTemplate.id)
-                                    }}
-                                    rightIcon={
-                                        <MenuWrapper stopPropagationOnToggle={true}>
-                                            <IconButton icon={<OptionsIcon/>}/>
-                                            <Menu position='left'>
-                                                <Menu.Text
-                                                    icon={<EditIcon/>}
-                                                    id='edit'
-                                                    name={intl.formatMessage({id: 'Sidebar.edit-template', defaultMessage: 'Edit'})}
-                                                    onClick={() => {
-                                                        this.props.showBoard(boardTemplate.id)
-                                                    }}
-                                                />
-                                                <Menu.Text
-                                                    icon={<DeleteIcon/>}
-                                                    id='delete'
-                                                    name={intl.formatMessage({id: 'Sidebar.delete-template', defaultMessage: 'Delete'})}
-                                                    onClick={async () => {
-                                                        await mutator.deleteBlock(boardTemplate, 'delete board template')
-                                                    }}
-                                                />
-                                            </Menu>
-                                        </MenuWrapper>
-                                    }
-                                />
-                            )
-                        })}
+                        {globalTemplateTree && globalTemplateTree.boardTemplates.map((boardTemplate) => this.renderBoardTemplate(boardTemplate, true))}
 
                         <Menu.Text
                             id='empty-template'
@@ -112,6 +98,51 @@ class SidebarAddBoardMenu extends React.Component<Props> {
                     </Menu>
                 </MenuWrapper>
             </div>
+        )
+    }
+
+    private renderBoardTemplate(boardTemplate: Board, isGlobal = false): JSX.Element {
+        const {intl} = this.props
+
+        const displayName = boardTemplate.title || intl.formatMessage({id: 'Sidebar.untitled', defaultMessage: 'Untitled'})
+
+        return (
+            <Menu.Text
+                key={boardTemplate.id}
+                id={boardTemplate.id}
+                name={displayName}
+                icon={<div className='Icon'>{boardTemplate.icon}</div>}
+                onClick={() => {
+                    if (isGlobal) {
+                        this.addBoardFromGlobalTemplate(boardTemplate.id)
+                    } else {
+                        this.addBoardFromTemplate(boardTemplate.id)
+                    }
+                }}
+                rightIcon={!isGlobal &&
+                    <MenuWrapper stopPropagationOnToggle={true}>
+                        <IconButton icon={<OptionsIcon/>}/>
+                        <Menu position='left'>
+                            <Menu.Text
+                                icon={<EditIcon/>}
+                                id='edit'
+                                name={intl.formatMessage({id: 'Sidebar.edit-template', defaultMessage: 'Edit'})}
+                                onClick={() => {
+                                    this.props.showBoard(boardTemplate.id)
+                                }}
+                            />
+                            <Menu.Text
+                                icon={<DeleteIcon/>}
+                                id='delete'
+                                name={intl.formatMessage({id: 'Sidebar.delete-template', defaultMessage: 'Delete'})}
+                                onClick={async () => {
+                                    await mutator.deleteBlock(boardTemplate, 'delete board template')
+                                }}
+                            />
+                        </Menu>
+                    </MenuWrapper>
+                }
+            />
         )
     }
 
@@ -138,6 +169,24 @@ class SidebarAddBoardMenu extends React.Component<Props> {
             async () => {
                 if (oldBoardId) {
                     showBoard(oldBoardId)
+                }
+            },
+        )
+    }
+
+    private async addBoardFromGlobalTemplate(boardTemplateId: string) {
+        const oldBoardId = this.props.activeBoardId
+
+        await mutator.duplicateFromRootBoard(
+            boardTemplateId,
+            this.props.intl.formatMessage({id: 'Mutator.new-board-from-template', defaultMessage: 'new board from template'}),
+            false,
+            async (newBoardId) => {
+                this.props.showBoard(newBoardId)
+            },
+            async () => {
+                if (oldBoardId) {
+                    this.props.showBoard(oldBoardId)
                 }
             },
         )
