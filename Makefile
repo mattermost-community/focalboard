@@ -11,6 +11,36 @@ ifeq ($(BUILD_NUMBER),)
 	BUILD_NUMBER := dev
 endif
 
+BUILD_ENTERPRISE_DIR ?= ../focalboard-enterprise
+BUILD_ENTERPRISE ?= true
+BUILD_ENTERPRISE_READY = false
+BUILD_TYPE_NAME = team
+BUILD_HASH_ENTERPRISE = none
+ifneq ($(wildcard $(BUILD_ENTERPRISE_DIR)/.),)
+    ifeq ($(BUILD_ENTERPRISE),true)
+        BUILD_ENTERPRISE_READY = true
+        BUILD_TYPE_NAME = enterprise
+        BUILD_HASH_ENTERPRISE = $(shell cd $(BUILD_ENTERPRISE_DIR) && git rev-parse HEAD)
+    else
+        BUILD_ENTERPRISE_READY = false
+        BUILD_TYPE_NAME = team
+    endif
+else
+    BUILD_ENTERPRISE_READY = false
+    BUILD_TYPE_NAME = team
+endif
+
+ifeq ($(BUILD_ENTERPRISE_READY),true)
+    IGNORE:=$(shell echo Enterprise build selected, preparing)
+    IGNORE:=$(shell rm -f server/main/imports.go)
+    IGNORE:=$(shell cp $(BUILD_ENTERPRISE_DIR)/imports/imports.go server/main/)
+    IGNORE:=$(shell rm -f server/enterprise)
+    IGNORE:=$(shell ln -s ../$(BUILD_ENTERPRISE_DIR) server/enterprise)
+else
+    IGNORE:=$(shell rm -f server/main/imports.go)
+    IGNORE:=$(shell rm -f server/enterprise)
+endif
+
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildNumber=$(BUILD_NUMBER)"
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildDate=$(BUILD_DATE)"
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildHash=$(BUILD_HASH)"

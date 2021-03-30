@@ -34,13 +34,13 @@ describe('Create and delete board / card', () => {
         // Rename board view
         const boardViewTitle = `Test board (${timestamp})`;
         cy.get('.ViewHeader').
-            contains('.octo-editable', 'Board view').
+            contains('.Editable', 'Board view').
             clear().
             type(boardViewTitle).
             type('{esc}');
 
         cy.get('.ViewHeader').
-            contains('.octo-editable', boardViewTitle).
+            contains('.Editable', boardViewTitle).
             should('exist');
     });
 
@@ -72,7 +72,7 @@ describe('Create and delete board / card', () => {
         // cy.wait('@insertBlocks');
 
         // Wait for round-trip to complete and DOM to update
-        cy.contains('.octo-editable', 'Table view').should('exist');
+        cy.contains('.Editable', 'Table view').should('exist');
 
         // Card should exist in table
         cy.get(`.TableRow [value='${cardTitle}']`).should('exist');
@@ -82,13 +82,13 @@ describe('Create and delete board / card', () => {
         // Rename table view
         const tableViewTitle = `Test table (${timestamp})`;
         cy.get('.ViewHeader').
-            contains('.octo-editable', 'Table view').
+            contains('.Editable', 'Table view').
             clear().
             type(tableViewTitle).
             type('{esc}');
 
         cy.get('.ViewHeader').
-            contains('.octo-editable', tableViewTitle).
+            contains('.Editable', tableViewTitle).
             should('exist');
     });
 

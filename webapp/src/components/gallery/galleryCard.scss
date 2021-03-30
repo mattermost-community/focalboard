@@ -1,0 +1,44 @@
+.GalleryCard {
+    border: 1px solid rgba(var(--body-color), 0.09);
+    border-radius: var(--default-rad);
+    width: 280px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+    margin-bottom: 10px;
+
+    &:hover {
+        background-color: rgba(var(--body-color), 0.05);
+    }
+
+    .gallery-item {
+        background-color: rgba(var(--body-color), 0.03);
+
+        flex-grow: 1;
+        overflow: hidden;
+        padding: 0 10px;
+        font-size: 0.7em;
+        opacity: 0.7;
+    }
+
+    .gallery-image {
+        flex-grow: 1;
+        overflow: hidden;
+
+        .ImageElement {
+            width: 100%;
+        }
+    }
+
+    .gallery-title {
+        flex-grow: 0;
+        border-top: 1px solid rgba(var(--body-color), 0.09);
+        margin: 0;
+        padding: 5px 10px;
+        display: flex;
+        .octo-icon {
+            margin-right: 5px;
+        }
+    }
+}

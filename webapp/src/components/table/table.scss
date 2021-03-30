@@ -49,13 +49,13 @@
             border: 1px solid rgba(46, 170, 220, 0.6);
         }
 
-        .octo-editable {
+        .Editable {
             padding: 0 5px;
             display: relative;
             left: -5px;
         }
 
-        .octo-editable.octo-editable.active {
+        .Editable.Editable.active {
             overflow: hidden;
         }
 
@@ -65,7 +65,7 @@
             text-overflow: ellipsis;
         }
 
-        .octo-editable,
+        .Editable,
         .octo-propertyvalue {
             text-align: left;
             white-space: nowrap;
