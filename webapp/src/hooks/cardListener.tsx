@@ -1,10 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect} from 'react'
+import {useEffect} from 'react'
 
 import octoClient from '../octoClient'
 import {OctoListener} from '../octoListener'
-import {MutableCardTree} from '../viewModel/cardTree'
 import {Utils} from '../utils'
 import {IBlock} from '../blocks/block'
 

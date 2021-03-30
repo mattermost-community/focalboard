@@ -14,7 +14,7 @@ import BoardIcon from '../widgets/icons/board'
 import DeleteIcon from '../widgets/icons/delete'
 import DuplicateIcon from '../widgets/icons/duplicate'
 import TableIcon from '../widgets/icons/table'
-import ImageIcon from '../widgets/icons/image'
+import GalleryIcon from '../widgets/icons/gallery'
 import Menu from '../widgets/menu'
 
 type Props = {
@@ -200,7 +200,7 @@ export class ViewMenu extends React.PureComponent<Props> {
                         <Menu.Text
                             id='gallery'
                             name='Gallery'
-                            icon={<ImageIcon/>}
+                            icon={<GalleryIcon/>}
                             onClick={this.handleAddViewGallery}
                         />
                     </Menu.SubMenu>
@@ -213,7 +213,7 @@ export class ViewMenu extends React.PureComponent<Props> {
         switch (viewType) {
         case 'board': return <BoardIcon/>
         case 'table': return <TableIcon/>
-        case 'gallery': return <ImageIcon/>
+        case 'gallery': return <GalleryIcon/>
         default: return <div/>
         }
     }
