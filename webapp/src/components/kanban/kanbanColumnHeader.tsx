@@ -94,7 +94,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                     placeholderText='New Select'
                     onChange={setGroupTitle}
                     onSave={() => {
-                        if(groupTitle.trim() === '') {
+                        if (groupTitle.trim() === '') {
                             setGroupTitle(group.option.value)
                         }
                         props.propertyNameChanged(group.option, groupTitle)
