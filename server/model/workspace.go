@@ -7,6 +7,10 @@ type Workspace struct {
 	// required: true
 	ID string `json:"id"`
 
+	// Title of the workspace
+	// required: false
+	Title string `json:"title"`
+
 	// Token required to register new users
 	// required: true
 	SignupToken string `json:"signupToken"`

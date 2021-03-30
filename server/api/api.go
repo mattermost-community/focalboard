@@ -35,6 +35,7 @@ const (
 
 type WorkspaceAuthenticator interface {
 	DoesUserHaveWorkspaceAccess(session *model.Session, workspaceID string) bool
+	GetWorkspace(session *model.Session, workspaceID string) *model.Workspace
 }
 
 type API struct {
@@ -902,8 +903,11 @@ func (a *API) handleGetWorkspace(w http.ResponseWriter, r *http.Request) {
 			errorResponse(w, http.StatusUnauthorized, "", nil)
 			return
 		}
-		workspace = &model.Workspace{
-			ID: workspaceID,
+
+		workspace = a.WorkspaceAuthenticator.GetWorkspace(session, workspaceID)
+		if workspace == nil {
+			errorResponse(w, http.StatusUnauthorized, "", nil)
+			return
 		}
 	} else {
 		workspace, err = a.app().GetRootWorkspace()

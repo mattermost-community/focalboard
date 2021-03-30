@@ -3,15 +3,17 @@
 import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
+import {IWorkspace} from '../blocks/workspace'
 import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
 
-import Sidebar from './sidebar/sidebar'
 import CenterPanel from './centerPanel'
+import Sidebar from './sidebar/sidebar'
 import './workspace.scss'
 
 type Props = {
+    workspace?: IWorkspace
     workspaceTree: WorkspaceTree
     boardTree?: BoardTree
     showBoard: (id?: string) => void
@@ -22,7 +24,7 @@ type Props = {
 }
 
 const Workspace = React.memo((props: Props) => {
-    const {boardTree, setSearchText, workspaceTree, showBoard, showView, setLanguage} = props
+    const {workspace, boardTree, setSearchText, workspaceTree, showBoard, showView, setLanguage} = props
     const {activeView} = boardTree || {}
 
     Utils.assert(workspaceTree || !props.readonly)
@@ -31,6 +33,7 @@ const Workspace = React.memo((props: Props) => {
         <div className='Workspace'>
             {!props.readonly &&
                 <Sidebar
+                    workspace={workspace}
                     showBoard={showBoard}
                     showView={showView}
                     workspaceTree={workspaceTree}
