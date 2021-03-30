@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import ViewMenu from '../../components/viewMenu'
@@ -10,8 +10,8 @@ import Button from '../../widgets/buttons/button'
 import IconButton from '../../widgets/buttons/iconButton'
 import DropdownIcon from '../../widgets/icons/dropdown'
 import MenuWrapper from '../../widgets/menuWrapper'
+import Editable from '../../widgets/editable'
 
-import Editable from '../editable'
 import ModalWrapper from '../modalWrapper'
 
 import NewCardButton from './newCardButton'
@@ -42,17 +42,26 @@ const ViewHeader = React.memo((props: Props) => {
     const {boardTree, showView, withGroupBy} = props
     const {board, activeView} = boardTree
 
+    const [viewTitle, setViewTitle] = useState(activeView.title)
+
+    useEffect(() => {
+        setViewTitle(activeView.title)
+    }, [activeView.title])
+
     const hasFilter = activeView.filter && activeView.filter.filters?.length > 0
 
     return (
         <div className='ViewHeader'>
             <Editable
-                style={{color: 'rgb(var(--main-fg))', fontWeight: 600}}
-                text={activeView.title}
+                value={viewTitle}
                 placeholderText='Untitled View'
-                onChanged={(text) => {
-                    mutator.changeTitle(activeView, text)
+                onSave={(): void => {
+                    mutator.changeTitle(activeView, viewTitle)
                 }}
+                onCancel={(): void => {
+                    setViewTitle(activeView.title)
+                }}
+                onChange={setViewTitle}
                 readonly={props.readonly}
             />
             <MenuWrapper>

@@ -177,7 +177,7 @@ class Kanban extends React.Component<Props> {
         )
     }
 
-    private async propertyNameChanged(option: IPropertyOption, text: string): Promise<void> {
+    private propertyNameChanged = async (option: IPropertyOption, text: string): Promise<void> => {
         const {boardTree} = this.props
 
         await mutator.changePropertyOptionValue(boardTree, boardTree.groupByProperty!, option, text)

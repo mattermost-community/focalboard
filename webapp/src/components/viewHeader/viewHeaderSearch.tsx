@@ -5,8 +5,7 @@ import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {BoardTree} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
-
-import Editable from '../editable'
+import Editable from '../../widgets/editable'
 
 type Props = {
     boardTree: BoardTree
@@ -15,41 +14,37 @@ type Props = {
 }
 
 const ViewHeaderSearch = React.memo((props: Props) => {
+    const {boardTree, intl} = props
+
     const searchFieldRef = useRef<Editable>(null)
     const [isSearching, setIsSearching] = useState(Boolean(props.boardTree.getSearchText()))
+    const [searchValue, setSearchValue] = useState(boardTree.getSearchText())
 
     useEffect(() => {
         searchFieldRef.current?.focus()
     }, [isSearching])
 
-    const onSearchKeyDown = (e: React.KeyboardEvent) => {
-        if (e.keyCode === 27) { // ESC: Clear search
-            if (searchFieldRef.current) {
-                searchFieldRef.current.text = ''
-            }
-            setIsSearching(false)
-            props.setSearchText(undefined)
-            e.preventDefault()
-        }
-        if (e.keyCode === 13 && searchFieldRef.current?.text.trim() === '') { // ENTER: with empty string clear search
-            setIsSearching(false)
-            props.setSearchText(undefined)
-            e.preventDefault()
-        }
-    }
-
-    const {boardTree, intl} = props
+    useEffect(() => {
+        setSearchValue(boardTree.getSearchText())
+    }, [boardTree])
 
     if (isSearching) {
         return (
             <Editable
                 ref={searchFieldRef}
-                text={boardTree.getSearchText()}
+                value={searchValue}
                 placeholderText={intl.formatMessage({id: 'ViewHeader.search-text', defaultMessage: 'Search text'})}
-                style={{color: 'rgb(var(--main-fg))'}}
-                onChanged={props.setSearchText}
-                onKeyDown={(e) => {
-                    onSearchKeyDown(e)
+                onChange={setSearchValue}
+                onCancel={() => {
+                    setSearchValue('')
+                    setIsSearching(false)
+                    props.setSearchText('')
+                }}
+                onSave={() => {
+                    if (searchValue === '') {
+                        setIsSearching(false)
+                    }
+                    props.setSearchText(searchValue)
                 }}
             />
         )
