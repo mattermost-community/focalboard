@@ -21,13 +21,10 @@ const Gallery = (props: Props): JSX.Element => {
 
     return (
         <div className='octo-table-body Gallery'>
-            {/* Rows, one per card */}
-
             {cards.map((card) => {
                 const tableRow = (
                     <GalleryCard
                         key={card.id + card.updateAt}
-                        boardTree={boardTree}
                         card={card}
                         showCard={props.showCard}
                     />)

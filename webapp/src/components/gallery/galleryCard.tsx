@@ -19,7 +19,7 @@ type Props = {
 
 const GalleryCard = React.memo((props: Props) => {
     const {card} = props
-    const [cardTree, setCardTree] = useState<CardTree|null>(null)
+    const [cardTree, setCardTree] = useState<CardTree>()
 
     useEffect(() => {
         const f = async () => setCardTree(await MutableCardTree.sync(card.id))
