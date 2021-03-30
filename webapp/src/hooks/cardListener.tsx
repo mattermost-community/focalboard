@@ -1,12 +1,11 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect} from 'react'
+import {useEffect} from 'react'
 
+import {IBlock} from '../blocks/block'
 import octoClient from '../octoClient'
 import {OctoListener} from '../octoListener'
-import {MutableCardTree} from '../viewModel/cardTree'
 import {Utils} from '../utils'
-import {IBlock} from '../blocks/block'
 
 export default function useCardListener(cardId:string, onChange: (blocks: IBlock[]) => void, onReconnect: () => void): void {
     let cardListener: OctoListener | null = null
