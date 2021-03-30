@@ -124,7 +124,7 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
                         <Menu.Text
                             id='system-theme'
                             name={intl.formatMessage({id: 'Sidebar.system-theme', defaultMessage: 'System theme'})}
-                            onClick={async () => this.updateTheme(null)}
+                            onClick={async () => updateTheme(null)}
                         />
                     </Menu.SubMenu>
                 </Menu>
