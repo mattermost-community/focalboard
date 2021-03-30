@@ -10,13 +10,12 @@ exports[`components/content/CheckboxElement should match snapshot 1`] = `
       type="checkbox"
       value="off"
     />
-    <div
-      class="octo-editable"
-      contenteditable="true"
+    <input
+      class="Editable undefined"
       placeholder="Edit text..."
-    >
-      test-title
-    </div>
+      title="test-title"
+      value="test-title"
+    />
   </div>
 </div>
 `;
@@ -31,13 +30,14 @@ exports[`components/content/CheckboxElement should match snapshot on change titl
       type="checkbox"
       value="off"
     />
-    <div
-      class="octo-editable"
-      contenteditable="true"
+    <input
+      class="Editable undefined"
       placeholder="Edit text..."
+      title="test-title"
+      value="test-title"
     >
       changed name
-    </div>
+    </input>
   </div>
 </div>
 `;
@@ -53,13 +53,13 @@ exports[`components/content/CheckboxElement should match snapshot on read only 1
       type="checkbox"
       value="off"
     />
-    <div
-      class="octo-editable"
-      contenteditable="false"
+    <input
+      class="Editable undefined"
       placeholder="Edit text..."
-    >
-      test-title
-    </div>
+      readonly=""
+      title="test-title"
+      value="test-title"
+    />
   </div>
 </div>
 `;
@@ -74,13 +74,12 @@ exports[`components/content/CheckboxElement should match snapshot on toggle 1`] 
       type="checkbox"
       value="on"
     />
-    <div
-      class="octo-editable"
-      contenteditable="true"
+    <input
+      class="Editable undefined"
       placeholder="Edit text..."
-    >
-      test-title
-    </div>
+      title="test-title"
+      value="test-title"
+    />
   </div>
 </div>
 `;

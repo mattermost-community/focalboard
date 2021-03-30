@@ -56,8 +56,8 @@ describe('components/content/CheckboxElement', () => {
                 readonly={false}
             />,
         )
-        const {container, getByText} = render(component)
-        const input = getByText(/test-title/i)
+        const {container, getByTitle} = render(component)
+        const input = getByTitle(/test-title/i)
         fireEvent.blur(input, {target: {textContent: 'changed name'}})
         expect(container).toMatchSnapshot()
     })
