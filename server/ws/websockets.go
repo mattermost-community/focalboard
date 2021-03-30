@@ -179,11 +179,6 @@ func (ws *Server) authenticateListener(wsSession *websocketSession, workspaceID,
 
 	// Authenticated
 
-	// Special case: Default workspace is blank
-	if workspaceID == "0" {
-		workspaceID = ""
-	}
-
 	wsSession.workspaceID = workspaceID
 	wsSession.isAuthenticated = true
 	log.Printf("authenticateListener: Authenticated, workspaceID: %s", workspaceID)
@@ -199,11 +194,6 @@ func (ws *Server) getAuthenticatedWorkspaceID(wsSession *websocketSession, comma
 	if len(workspaceID) == 0 {
 		log.Printf("getAuthenticatedWorkspaceID: No workspace")
 		return "", errors.New("No workspace")
-	}
-
-	// Special case: Default workspace is blank
-	if workspaceID == "0" {
-		workspaceID = ""
 	}
 
 	container := store.Container{

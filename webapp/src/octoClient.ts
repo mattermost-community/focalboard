@@ -24,9 +24,7 @@ class OctoClient {
         return readToken
     }
 
-    workspaceId = '0'
-
-    constructor(serverUrl?: string) {
+    constructor(serverUrl?: string, public workspaceId = '0') {
         this.serverUrl = serverUrl || window.location.origin
         Utils.log(`OctoClient serverUrl: ${this.serverUrl}`)
     }
@@ -362,6 +360,7 @@ class OctoClient {
     }
 }
 
-const client = new OctoClient()
+const octoClient = new OctoClient()
 
-export default client
+export {OctoClient}
+export default octoClient

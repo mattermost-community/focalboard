@@ -21,7 +21,7 @@ func (s *SQLStore) latestsBlocksSubquery(c store.Container) sq.SelectBuilder {
 		FromSelect(internalQuery, "a").
 		Where(sq.Eq{"rn": 1}).
 		Where(sq.Eq{"delete_at": 0}).
-		Where(sq.Eq{"coalesce(workspace_id, '')": c.WorkspaceID})
+		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
 }
 
 func (s *SQLStore) GetBlocksWithParentAndType(c store.Container, parentID string, blockType string) ([]model.Block, error) {

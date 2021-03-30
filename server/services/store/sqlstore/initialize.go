@@ -34,7 +34,7 @@ func (s *SQLStore) importInitialTemplates() error {
 	}
 
 	globalContainer := store.Container{
-		WorkspaceID: "",
+		WorkspaceID: "0",
 	}
 
 	log.Printf("Inserting %d blocks", len(archive.Blocks))
