@@ -62,6 +62,7 @@ const ViewHeader = React.memo((props: Props) => {
                     setViewTitle(activeView.title)
                 }}
                 onChange={setViewTitle}
+                saveOnEsc={true}
                 readonly={props.readonly}
             />
             <MenuWrapper>
