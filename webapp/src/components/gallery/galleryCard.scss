@@ -1,0 +1,33 @@
+.GalleryCard {
+    border: 1px solid rgba(var(--body-color), 0.09);
+    border-radius: var(--default-rad);
+    width: 280px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+    margin-bottom: 10px;
+
+    &.selected {
+        background-color: rgba(90, 200, 255, 0.2);
+    }
+
+    &:hover {
+        background-color: rgba(var(--body-color), 0.05);
+    }
+
+    .gallery-item {
+        flex-grow: 1;
+    }
+
+    .gallery-title {
+        flex-grow: 0;
+        border-top: 1px solid rgba(var(--body-color), 0.09);
+        margin: 0;
+        padding: 5px 10px;
+        display: flex;
+        .octo-icon {
+            margin-right: 5px;
+        }
+    }
+}

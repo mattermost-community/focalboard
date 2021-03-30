@@ -122,6 +122,33 @@ export class ViewMenu extends React.PureComponent<Props> {
             })
     }
 
+    private handleAddViewGallery = async () => {
+        const {board, boardTree, showView, intl} = this.props
+
+        Utils.log('addview-gallery')
+        const view = new MutableBoardView()
+        view.title = intl.formatMessage({id: 'View.NewGalleryTitle', defaultMessage: 'Gallery view'})
+        view.viewType = 'gallery'
+        view.parentId = board.id
+        view.rootId = board.rootId
+
+        const oldViewId = boardTree.activeView.id
+
+        await mutator.insertBlock(
+            view,
+            'add view',
+            async () => {
+                // This delay is needed because OctoListener has a default 100 ms notification delay before updates
+                setTimeout(() => {
+                    Utils.log(`showView: ${view.id}`)
+                    showView(view.id)
+                }, 120)
+            },
+            async () => {
+                showView(oldViewId)
+            })
+    }
+
     render(): JSX.Element {
         const {boardTree} = this.props
         return (
@@ -168,6 +195,12 @@ export class ViewMenu extends React.PureComponent<Props> {
                             name='Table'
                             icon={<TableIcon/>}
                             onClick={this.handleAddViewTable}
+                        />
+                        <Menu.Text
+                            id='gallery'
+                            name='Gallery'
+                            icon={<TableIcon/>}
+                            onClick={this.handleAddViewGallery}
                         />
                     </Menu.SubMenu>
                 }
