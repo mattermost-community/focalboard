@@ -31,6 +31,7 @@
   "ContentBlock.moveDown": "Move down",
   "ContentBlock.moveUp": "Move up",
   "ContentBlock.text": "text",
+  "Dialog.closeDialog": "Close dialog",
   "EmptyCenterPanel.no-content": "Add or select a board from the sidebar to get started.",
   "EmptyCenterPanel.workspace": "This is the workspace for:",
   "Filter.includes": "includes",

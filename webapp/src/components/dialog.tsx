@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
+import {injectIntl, IntlShape} from 'react-intl'
 
 import IconButton from '../widgets/buttons/iconButton'
 import CloseIcon from '../widgets/icons/close'
@@ -11,10 +12,11 @@ import './dialog.scss'
 type Props = {
     children: React.ReactNode
     toolsMenu: React.ReactNode
-    onClose: () => void
+    onClose: () => void,
+    intl: IntlShape
 }
 
-export default class Dialog extends React.PureComponent<Props> {
+class Dialog extends React.PureComponent<Props> {
     public componentDidMount(): void {
         document.addEventListener('keydown', this.keydownHandler)
     }
@@ -35,7 +37,12 @@ export default class Dialog extends React.PureComponent<Props> {
     }
 
     public render(): JSX.Element {
-        const {toolsMenu} = this.props
+        const {toolsMenu, intl} = this.props
+
+        const closeDialogText = intl.formatMessage({
+            id: 'Dialog.closeDialog',
+            defaultMessage: 'Close dialog',
+        })
 
         return (
             <div
@@ -53,7 +60,7 @@ export default class Dialog extends React.PureComponent<Props> {
                             <IconButton
                                 onClick={this.closeClicked}
                                 icon={<CloseIcon/>}
-                                title={'Close dialog'}
+                                title={closeDialogText}
                                 className='IconButton--large'
                             />
                             <div className='octo-spacer'/>
@@ -77,3 +84,5 @@ export default class Dialog extends React.PureComponent<Props> {
         this.props.onClose()
     }
 }
+
+export default injectIntl(Dialog)
