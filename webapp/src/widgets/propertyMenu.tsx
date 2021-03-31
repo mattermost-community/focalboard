@@ -49,6 +49,11 @@ const PropertyMenu = React.memo((props: Props) => {
     const nameTextbox = useRef<HTMLInputElement>(null)
     const [name, setName] = useState(props.propertyName)
 
+    const deleteText = intl.formatMessage({
+        id: 'PropertyType.Delete',
+        defaultMessage: 'Delete',
+    })
+
     useEffect(() => {
         nameTextbox.current?.focus()
         nameTextbox.current?.setSelectionRange(0, name.length)
@@ -85,38 +90,38 @@ const PropertyMenu = React.memo((props: Props) => {
 
                 <Menu.Text
                     id='text'
-                    name='Text'
+                    name={typeDisplayName(intl, 'text')}
                     onClick={() => props.onTypeChanged('text')}
                 />
                 <Menu.Text
                     id='number'
-                    name='Number'
+                    name={typeDisplayName(intl, 'number')}
                     onClick={() => props.onTypeChanged('number')}
                 />
                 <Menu.Text
                     id='email'
-                    name='Email'
+                    name={typeDisplayName(intl, 'email')}
                     onClick={() => props.onTypeChanged('email')}
                 />
                 <Menu.Text
                     id='select'
-                    name='Select'
+                    name={typeDisplayName(intl, 'select')}
                     onClick={() => props.onTypeChanged('select')}
                 />
                 <Menu.Text
                     id='createdTime'
-                    name='Created Time'
+                    name={typeDisplayName(intl, 'createdTime')}
                     onClick={() => props.onTypeChanged('createdTime')}
                 />
                 <Menu.Text
                     id='updatedTime'
-                    name='Updated Time'
+                    name={typeDisplayName(intl, 'updatedTime')}
                     onClick={() => props.onTypeChanged('updatedTime')}
                 />
             </Menu.SubMenu>
             <Menu.Text
                 id='delete'
-                name='Delete'
+                name={deleteText}
                 onClick={() => props.onDelete(props.propertyId)}
             />
         </Menu>
