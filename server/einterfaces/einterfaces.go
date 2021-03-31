@@ -8,6 +8,7 @@ import (
 type MattermostAuth interface {
 	RegisterRoutes(*mux.Router)
 	DoesUserHaveWorkspaceAccess(session *model.Session, workspaceID string) bool
+	GetWorkspace(session *model.Session, workspaceID string) *model.Workspace
 }
 
 type MattermostAuthParameters struct {

@@ -4,6 +4,7 @@ import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
 import {IBlock} from '../blocks/block'
+import {IWorkspace} from '../blocks/workspace'
 import {sendFlashMessage} from '../components/flashMessages'
 import Workspace from '../components/workspace'
 import mutator from '../mutator'
@@ -24,6 +25,7 @@ type Props = {
 type State = {
     boardId: string
     viewId: string
+    workspace?: IWorkspace,
     workspaceTree: WorkspaceTree
     boardTree?: BoardTree
     syncFailed?: boolean
@@ -143,7 +145,7 @@ class BoardPage extends React.Component<Props, State> {
 
     render(): JSX.Element {
         const {intl} = this.props
-        const {workspaceTree} = this.state
+        const {workspace, workspaceTree} = this.state
 
         Utils.log(`BoardPage.render (workspace ${this.props.workspaceId}) ${this.state.boardTree?.board?.title}`)
 
@@ -164,6 +166,7 @@ class BoardPage extends React.Component<Props, State> {
         return (
             <div className='BoardPage'>
                 <Workspace
+                    workspace={workspace}
                     workspaceTree={workspaceTree}
                     boardTree={this.state.boardTree}
                     showView={(id, boardId) => {
@@ -202,10 +205,10 @@ class BoardPage extends React.Component<Props, State> {
     private async sync(boardId: string = this.state.boardId, viewId: string | undefined = this.state.viewId) {
         Utils.log(`sync start: ${boardId}`)
 
+        let workspace: IWorkspace | undefined
         if (!this.props.readonly) {
             // Require workspace for editing, not for sharing (readonly)
-
-            const workspace = await octoClient.getWorkspace()
+            workspace = await octoClient.getWorkspace()
             if (!workspace) {
                 location.href = '/error?id=no_workspace'
             }
@@ -213,7 +216,7 @@ class BoardPage extends React.Component<Props, State> {
 
         const workspaceTree = await MutableWorkspaceTree.sync()
         const boardIds = [...workspaceTree.boards.map((o) => o.id), ...workspaceTree.boardTemplates.map((o) => o.id)]
-        this.setState({workspaceTree})
+        this.setState({workspace, workspaceTree})
 
         let boardIdsToListen: string[]
         if (boardIds.length > 0) {

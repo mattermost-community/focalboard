@@ -3,15 +3,18 @@
 import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
+import {IWorkspace} from '../blocks/workspace'
 import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
 import {WorkspaceTree} from '../viewModel/workspaceTree'
 
-import Sidebar from './sidebar/sidebar'
 import CenterPanel from './centerPanel'
+import EmptyCenterPanel from './emptyCenterPanel'
+import Sidebar from './sidebar/sidebar'
 import './workspace.scss'
 
 type Props = {
+    workspace?: IWorkspace
     workspaceTree: WorkspaceTree
     boardTree?: BoardTree
     showBoard: (id?: string) => void
@@ -21,9 +24,28 @@ type Props = {
     readonly: boolean
 }
 
-const Workspace = React.memo((props: Props) => {
-    const {boardTree, setSearchText, workspaceTree, showBoard, showView, setLanguage} = props
+function centerContent(props: Props) {
+    const {workspace, boardTree, setSearchText, showView} = props
     const {activeView} = boardTree || {}
+
+    if (boardTree && activeView) {
+        return (
+            <CenterPanel
+                boardTree={boardTree}
+                setSearchText={setSearchText}
+                showView={showView}
+                readonly={props.readonly}
+            />
+        )
+    }
+
+    return (
+        <EmptyCenterPanel workspace={workspace}/>
+    )
+}
+
+const Workspace = React.memo((props: Props) => {
+    const {workspace, boardTree, workspaceTree, showBoard, showView, setLanguage} = props
 
     Utils.assert(workspaceTree || !props.readonly)
 
@@ -31,6 +53,7 @@ const Workspace = React.memo((props: Props) => {
         <div className='Workspace'>
             {!props.readonly &&
                 <Sidebar
+                    workspace={workspace}
                     showBoard={showBoard}
                     showView={showView}
                     workspaceTree={workspaceTree}
@@ -46,13 +69,7 @@ const Workspace = React.memo((props: Props) => {
                         defaultMessage="You're editing a board template"
                     />
                 </div>}
-                {boardTree && activeView &&
-                    <CenterPanel
-                        boardTree={boardTree}
-                        setSearchText={setSearchText}
-                        showView={showView}
-                        readonly={props.readonly}
-                    />}
+                {centerContent(props)}
             </div>
         </div>
     )

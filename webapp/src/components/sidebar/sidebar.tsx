@@ -1,7 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 
+import {IWorkspace} from '../../blocks/workspace'
 import {loadTheme} from '../../theme'
 import {WorkspaceTree} from '../../viewModel/workspaceTree'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -9,13 +10,14 @@ import HamburgerIcon from '../../widgets/icons/hamburger'
 import HideSidebarIcon from '../../widgets/icons/hideSidebar'
 import ShowSidebarIcon from '../../widgets/icons/showSidebar'
 
-import SidebarSettingsMenu from './sidebarSettingsMenu'
+import './sidebar.scss'
 import SidebarAddBoardMenu from './sidebarAddBoardMenu'
 import SidebarBoardItem from './sidebarBoardItem'
+import SidebarSettingsMenu from './sidebarSettingsMenu'
 import SidebarUserMenu from './sidebarUserMenu'
-import './sidebar.scss'
 
 type Props = {
+    workspace?: IWorkspace
     showBoard: (id?: string) => void
     showView: (id: string, boardId?: string) => void
     workspaceTree: WorkspaceTree,
@@ -35,7 +37,7 @@ const Sidebar = React.memo((props: Props) => {
         }
     }, [])
 
-    const {workspaceTree} = props
+    const {workspace, workspaceTree} = props
     if (!workspaceTree) {
         return <div/>
     }
@@ -76,6 +78,11 @@ const Sidebar = React.memo((props: Props) => {
                     icon={<HideSidebarIcon/>}
                 />
             </div>
+            {workspace && workspace.id !== '0' &&
+                <div className='WorkspaceTitle'>
+                    {workspace.title}
+                </div>
+            }
             <div className='octo-sidebar-list'>
                 {
                     boards.map((board) => {
