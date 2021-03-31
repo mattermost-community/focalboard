@@ -1,0 +1,131 @@
+.Sidebar {
+    flex: 0 0 240px;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 100%;
+    color: rgb(var(--sidebar-fg));
+    background-color: rgb(var(--sidebar-bg));
+    padding: 12px 0;
+
+    &.hidden {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 5;
+        min-height: 0;
+        height: 50px;
+        width: 50px;
+        background: none;
+        padding: 0;
+
+        >div {
+            padding: 0;
+            margin: auto;
+        }
+    }
+
+    >* {
+        flex: 0 0 auto;
+    }
+
+    .IconButton {
+        padding: 0;
+        .Icon {
+            width: 24px;
+            height: 24px;
+            margin: 0;
+        }
+    }
+
+    .WorkspaceTitle {
+        padding: 0 16px;
+        font-weight: 600;
+    }
+
+    .octo-sidebar-list {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        max-width: 250px;
+
+        >div {
+            margin-bottom: 16px;
+        }
+    }
+
+    .octo-sidebar-header {
+        display: flex;
+        flex-direction: row;
+
+        font-weight: 600;
+        padding: 3px 20px;
+        margin-bottom: 16px;
+        height: 48px;
+        align-items: center;
+
+        &:hover {
+            background-color: rgba(var(--sidebar-fg), 0.08);
+        }
+
+        button {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        >.heading {
+            line-height: 30px;
+            cursor: default;
+            flex-grow: 1;
+        }
+
+        >.IconButton {
+            background-color: var(--sidebar-bg);
+
+            &:hover {
+                background-color: rgba(var(--sidebar-fg), 0.1);
+            }
+        }
+
+        &.show-button {
+            .hamburger-icon {
+                display: block;
+            }
+
+            .show-icon {
+                display: none;
+            }
+
+            &:hover {
+                .hamburger-icon {
+                    display: none;
+                }
+
+                .show-icon {
+                    display: block;
+                }
+            }
+        }
+    }
+
+    .OptionsIcon,
+    .DisclosureTriangleIcon,
+    .DotIcon {
+        fill: rgba(var(--sidebar-fg), 0.5);
+        flex-shrink: 0;
+    }
+
+    .Menu .OptionsIcon {
+        fill: unset;
+    }
+
+    .HideSidebarIcon {
+        stroke: rgba(var(--sidebar-fg), 0.5);
+        stroke-width: 6px;
+    }
+
+    .Button {
+        min-height: 30px;
+        min-width: 30px;
+    }
+}

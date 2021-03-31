@@ -35,6 +35,7 @@ const (
 
 type WorkspaceAuthenticator interface {
 	DoesUserHaveWorkspaceAccess(session *model.Session, workspaceID string) bool
+	GetWorkspace(session *model.Session, workspaceID string) *model.Workspace
 }
 
 type API struct {
@@ -82,12 +83,12 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/login", a.handleLogin).Methods("POST")
 	apiv1.HandleFunc("/register", a.handleRegister).Methods("POST")
 
-	apiv1.HandleFunc("/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
+	apiv1.HandleFunc("/workspaces/{workspaceID}/{rootID}/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
 
 	// Get Files API
 
 	files := r.PathPrefix("/files").Subrouter()
-	files.HandleFunc("/{filename}", a.sessionRequired(a.handleServeFile)).Methods("GET")
+	files.HandleFunc("/workspaces/{workspaceID}/{rootID}/{filename}", a.attachSession(a.handleServeFile, false)).Methods("GET")
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
@@ -116,34 +117,69 @@ func (a *API) checkCSRFToken(r *http.Request) bool {
 	return false
 }
 
-func (a *API) getContainer(r *http.Request) (*store.Container, error) {
+func (a *API) hasValidReadTokenForBlock(r *http.Request, container store.Container, blockID string) bool {
+	query := r.URL.Query()
+	readToken := query.Get("read_token")
+
+	if len(readToken) < 1 {
+		return false
+	}
+
+	isValid, err := a.app().IsValidReadToken(container, blockID, readToken)
+	if err != nil {
+		log.Printf("IsValidReadToken ERROR: %v", err)
+		return false
+	}
+
+	return isValid
+}
+
+func (a *API) getContainerAllowingReadTokenForBlock(r *http.Request, blockID string) (*store.Container, error) {
+	ctx := r.Context()
+	session, _ := ctx.Value("session").(*model.Session)
+
 	if a.WorkspaceAuthenticator == nil {
 		// Native auth: always use root workspace
 		container := store.Container{
-			WorkspaceID: "",
+			WorkspaceID: "0",
 		}
-		return &container, nil
-	}
 
-	vars := mux.Vars(r)
-	workspaceID := vars["workspaceID"]
+		// Has session
+		if session != nil {
+			return &container, nil
+		}
 
-	if workspaceID == "" || workspaceID == "0" {
-		// When authenticating, a workspace is required
-		return nil, errors.New("No workspace specified")
-	}
+		// No session, but has valid read token (read-only mode)
+		if len(blockID) > 0 && a.hasValidReadTokenForBlock(r, container, blockID) {
+			return &container, nil
+		}
 
-	ctx := r.Context()
-	session := ctx.Value("session").(*model.Session)
-	if !a.WorkspaceAuthenticator.DoesUserHaveWorkspaceAccess(session, workspaceID) {
 		return nil, errors.New("Access denied to workspace")
 	}
+
+	// Workspace auth
+	vars := mux.Vars(r)
+	workspaceID := vars["workspaceID"]
 
 	container := store.Container{
 		WorkspaceID: workspaceID,
 	}
 
-	return &container, nil
+	// Has session and access to workspace
+	if session != nil && a.WorkspaceAuthenticator.DoesUserHaveWorkspaceAccess(session, container.WorkspaceID) {
+		return &container, nil
+	}
+
+	// No session, but has valid read token (read-only mode)
+	if len(blockID) > 0 && a.hasValidReadTokenForBlock(r, container, blockID) {
+		return &container, nil
+	}
+
+	return nil, errors.New("Access denied to workspace")
+}
+
+func (a *API) getContainer(r *http.Request) (*store.Container, error) {
+	return a.getContainerAllowingReadTokenForBlock(r, "")
 }
 
 func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
@@ -499,35 +535,10 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	blockID := vars["blockID"]
 
-	container, err := a.getContainer(r)
+	container, err := a.getContainerAllowingReadTokenForBlock(r, blockID)
 	if err != nil {
 		noContainerErrorResponse(w, err)
 		return
-	}
-
-	// If not authenticated (no session), check that block is publicly shared
-	ctx := r.Context()
-	session, _ := ctx.Value("session").(*model.Session)
-	if session == nil {
-		query := r.URL.Query()
-		readToken := query.Get("read_token")
-
-		// Require read token
-		if len(readToken) < 1 {
-			errorResponse(w, http.StatusBadRequest, "No read_token", nil)
-			return
-		}
-
-		isValid, err := a.app().IsValidReadToken(*container, blockID, readToken)
-		if err != nil {
-			errorResponse(w, http.StatusInternalServerError, "", err)
-			return
-		}
-
-		if !isValid {
-			errorResponse(w, http.StatusUnauthorized, "", nil)
-			return
-		}
 	}
 
 	query := r.URL.Query()
@@ -892,8 +903,11 @@ func (a *API) handleGetWorkspace(w http.ResponseWriter, r *http.Request) {
 			errorResponse(w, http.StatusUnauthorized, "", nil)
 			return
 		}
-		workspace = &model.Workspace{
-			ID: workspaceID,
+
+		workspace = a.WorkspaceAuthenticator.GetWorkspace(session, workspaceID)
+		if workspace == nil {
+			errorResponse(w, http.StatusUnauthorized, "", nil)
+			return
 		}
 	} else {
 		workspace, err = a.app().GetRootWorkspace()
@@ -956,7 +970,7 @@ func (a *API) handlePostWorkspaceRegenerateSignupToken(w http.ResponseWriter, r 
 // File upload
 
 func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /files/{fileID} getFile
+	// swagger:operation GET /workspaces/{workspaceID}/{rootID}/{fileID} getFile
 	//
 	// Returns the contents of an uploaded file
 	//
@@ -966,6 +980,16 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	// - image/jpg
 	// - image/png
 	// parameters:
+	// - name: workspaceID
+	//   in: path
+	//   description: Workspace ID
+	//   required: true
+	//   type: string
+	// - name: rootID
+	//   in: path
+	//   description: ID of the root block
+	//   required: true
+	//   type: string
 	// - name: fileID
 	//   in: path
 	//   description: ID of the file
@@ -982,7 +1006,16 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 
 	vars := mux.Vars(r)
+	workspaceID := vars["workspaceID"]
+	rootID := vars["rootID"]
 	filename := vars["filename"]
+
+	// Caller must have access to the root block's container
+	_, err := a.getContainerAllowingReadTokenForBlock(r, rootID)
+	if err != nil {
+		noContainerErrorResponse(w, err)
+		return
+	}
 
 	contentType := "image/jpg"
 
@@ -993,7 +1026,7 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", contentType)
 
-	filePath := a.app().GetFilePath(filename)
+	filePath := a.app().GetFilePath(workspaceID, rootID, filename)
 	http.ServeFile(w, r, filePath)
 }
 
@@ -1006,9 +1039,9 @@ type FileUploadResponse struct {
 }
 
 func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/files uploadFile
+	// swagger:operation POST /api/v1/workspaces/{workspaceID}/{rootID}/files uploadFile
 	//
-	// Upload a binary file
+	// Upload a binary file, attached to a root block
 	//
 	// ---
 	// consumes:
@@ -1016,6 +1049,16 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
+	// - name: workspaceID
+	//   in: path
+	//   description: Workspace ID
+	//   required: true
+	//   type: string
+	// - name: rootID
+	//   in: path
+	//   description: ID of the root block
+	//   required: true
+	//   type: string
 	// - name: uploaded file
 	//   in: formData
 	//   type: file
@@ -1032,6 +1075,17 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
+	vars := mux.Vars(r)
+	workspaceID := vars["workspaceID"]
+	rootID := vars["rootID"]
+
+	// Caller must have access to the root block's container
+	_, err := a.getContainerAllowingReadTokenForBlock(r, rootID)
+	if err != nil {
+		noContainerErrorResponse(w, err)
+		return
+	}
+
 	file, handle, err := r.FormFile("file")
 	if err != nil {
 		fmt.Fprintf(w, "%v", err)
@@ -1040,7 +1094,7 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	fileId, err := a.app().SaveFile(file, handle.Filename)
+	fileId, err := a.app().SaveFile(file, workspaceID, rootID, handle.Filename)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 		return

@@ -17,17 +17,17 @@ type Props = {
 const ImageElement = React.memo((props: Props): JSX.Element|null => {
     const [imageDataUrl, setImageDataUrl] = useState<string|null>(null)
 
+    const {block} = props
+
     useEffect(() => {
         if (!imageDataUrl) {
             const loadImage = async () => {
-                const url = await octoClient.getFileAsDataUrl(props.block.fields.fileId)
+                const url = await octoClient.getFileAsDataUrl(block.rootId, props.block.fields.fileId)
                 setImageDataUrl(url)
             }
             loadImage()
         }
     })
-
-    const {block} = props
 
     if (!imageDataUrl) {
         return null
@@ -35,6 +35,7 @@ const ImageElement = React.memo((props: Props): JSX.Element|null => {
 
     return (
         <img
+            className='ImageElement'
             src={imageDataUrl}
             alt={block.title}
         />
@@ -45,11 +46,11 @@ contentRegistry.registerContentType({
     type: 'image',
     getDisplayText: (intl) => intl.formatMessage({id: 'ContentBlock.image', defaultMessage: 'image'}),
     getIcon: () => <ImageIcon/>,
-    createBlock: async () => {
+    createBlock: async (rootId: string) => {
         return new Promise<MutableImageBlock>(
             (resolve) => {
                 Utils.selectLocalFile(async (file) => {
-                    const fileId = await octoClient.uploadFile(file)
+                    const fileId = await octoClient.uploadFile(rootId, file)
 
                     const block = new MutableImageBlock()
                     block.fileId = fileId || ''

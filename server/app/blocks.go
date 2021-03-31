@@ -49,7 +49,7 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block) error {
 			return err
 		}
 
-		a.wsServer.BroadcastBlockChange(block)
+		a.wsServer.BroadcastBlockChange(c.WorkspaceID, block)
 		go a.webhook.NotifyUpdate(block)
 	}
 
@@ -84,7 +84,7 @@ func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) 
 		return err
 	}
 
-	a.wsServer.BroadcastBlockDelete(blockID, parentID)
+	a.wsServer.BroadcastBlockDelete(c.WorkspaceID, blockID, parentID)
 
 	return nil
 }

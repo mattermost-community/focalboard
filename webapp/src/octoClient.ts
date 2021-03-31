@@ -17,15 +17,14 @@ class OctoClient {
     set token(value: string) {
         localStorage.setItem('sessionId', value)
     }
-    get readToken(): string {
+
+    private readToken(): string {
         const queryString = new URLSearchParams(window.location.search)
         const readToken = queryString.get('r') || ''
         return readToken
     }
 
-    workspaceId = '0'
-
-    constructor(serverUrl?: string) {
+    constructor(serverUrl?: string, public workspaceId = '0') {
         this.serverUrl = serverUrl || window.location.origin
         Utils.log(`OctoClient serverUrl: ${this.serverUrl}`)
     }
@@ -123,8 +122,9 @@ class OctoClient {
 
     async getSubtree(rootId?: string, levels = 2): Promise<IBlock[]> {
         let path = this.workspacePath() + `/blocks/${encodeURIComponent(rootId || '')}/subtree?l=${levels}`
-        if (this.readToken) {
-            path += `&read_token=${this.readToken}`
+        const readToken = this.readToken()
+        if (readToken) {
+            path += `&read_token=${readToken}`
         }
         const response = await fetch(this.serverUrl + path, {headers: this.headers()})
         if (response.status !== 200) {
@@ -308,7 +308,7 @@ class OctoClient {
     // Files
 
     // Returns fileId of uploaded file, or undefined on failure
-    async uploadFile(file: File): Promise<string | undefined> {
+    async uploadFile(rootID: string, file: File): Promise<string | undefined> {
         // IMPORTANT: We need to post the image as a form. The browser will convert this to a application/x-www-form-urlencoded POST
         const formData = new FormData()
         formData.append('file', file)
@@ -319,7 +319,7 @@ class OctoClient {
             // TIPTIP: Leave out Content-Type here, it will be automatically set by the browser
             delete headers['Content-Type']
 
-            const response = await fetch(this.serverUrl + '/api/v1/files', {
+            const response = await fetch(this.serverUrl + this.workspacePath() + '/' + rootID + '/files', {
                 method: 'POST',
                 headers,
                 body: formData,
@@ -345,8 +345,12 @@ class OctoClient {
         return undefined
     }
 
-    async getFileAsDataUrl(fileId: string): Promise<string> {
-        const path = '/files/' + fileId
+    async getFileAsDataUrl(rootId: string, fileId: string): Promise<string> {
+        let path = '/files/workspaces/' + this.workspaceId + '/' + rootId + '/' + fileId
+        const readToken = this.readToken()
+        if (readToken) {
+            path += `?read_token=${readToken}`
+        }
         const response = await fetch(this.serverUrl + path, {headers: this.headers()})
         if (response.status !== 200) {
             return ''
@@ -356,6 +360,7 @@ class OctoClient {
     }
 }
 
-const client = new OctoClient()
+const octoClient = new OctoClient()
 
-export default client
+export {OctoClient}
+export default octoClient

@@ -1,0 +1,86 @@
+.GalleryCard {
+    position: relative;
+    border: 1px solid rgba(var(--body-color), 0.09);
+    border-radius: var(--default-rad);
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+
+    &.selected{
+        background-color: rgba(90, 200, 255, 0.2);
+    }
+
+    &:hover {
+        background-color: rgba(var(--body-color), 0.05);
+        .optionsMenu {
+            display: block;
+        }
+    }
+
+    .optionsMenu {
+        background-color: rgb(var(--main-bg));
+        border-radius: var(--default-rad);
+        display: none;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        z-index: 3000;
+        .IconButton {
+            background-color: rgba(var(--body-color), 0.13);
+        }
+    }
+
+    .gallery-item {
+        background-color: rgba(var(--body-color), 0.03);
+
+        flex-grow: 1;
+        overflow: hidden;
+        padding: 0 10px;
+        font-size: 0.7em;
+        opacity: 0.7;
+        max-height: 160px;
+        min-height: 160px;
+
+        .CheckboxElement {
+            .Editable {
+                background: transparent;
+            }
+        }
+    }
+
+    .gallery-image {
+        flex-grow: 1;
+        overflow: hidden;
+        max-height: 160px;
+        min-height: 160px;
+
+        .ImageElement {
+            width: 100%;
+        }
+    }
+
+    .gallery-title {
+        flex-grow: 0;
+        border-top: 1px solid rgba(var(--body-color), 0.09);
+        margin: 0;
+        padding: 5px 10px;
+        display: flex;
+        overflow-wrap: anywhere;
+        .octo-icon {
+            margin-right: 5px;
+        }
+    }
+
+    .gallery-props {
+        flex-grow: 0;
+        margin: 0;
+        padding: 5px 10px;
+        overflow-wrap: anywhere;
+        .octo-icon {
+            margin-right: 5px;
+        }
+    }
+}

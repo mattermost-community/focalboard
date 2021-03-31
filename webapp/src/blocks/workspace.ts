@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 interface IWorkspace {
     readonly id: string,
+    readonly title: string,
     readonly signupToken: string,
     readonly settings: Readonly<Record<string, any>>
     readonly modifiedBy?: string,

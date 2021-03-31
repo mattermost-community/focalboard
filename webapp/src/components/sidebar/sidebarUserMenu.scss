@@ -1,0 +1,18 @@
+.SidebarUserMenu {
+    .logo {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .LogoWithNameIcon, .LogoWithNameWhiteIcon {
+            max-height: 24px;
+            width: auto;
+        }
+
+        .version {
+            font-size: 11px;
+            font-weight: 500;
+            color: rgba(var(--sidebar-fg), 0.8);
+        }
+    }
+}

@@ -291,30 +291,6 @@ info:
   title: Focalboard Server
   version: 1.0.0
 paths:
-  /api/v1/files:
-    post:
-      consumes:
-      - multipart/form-data
-      description: Upload a binary file
-      operationId: uploadFile
-      parameters:
-      - description: The file to upload
-        in: formData
-        name: uploaded file
-        type: file
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/FileUploadResponse'
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
   /api/v1/login:
     post:
       description: Login user
@@ -451,6 +427,40 @@ paths:
           description: success
           schema:
             $ref: '#/definitions/Workspace'
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspaceID}/{rootID}/files:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload a binary file, attached to a root block
+      operationId: uploadFile
+      parameters:
+      - description: Workspace ID
+        in: path
+        name: workspaceID
+        required: true
+        type: string
+      - description: ID of the root block
+        in: path
+        name: rootID
+        required: true
+        type: string
+      - description: The file to upload
+        in: formData
+        name: uploaded file
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/FileUploadResponse'
         default:
           description: internal error
           schema:
@@ -714,11 +724,21 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       security:
       - BearerAuth: []
-  /files/{fileID}:
+  /workspaces/{workspaceID}/{rootID}/{fileID}:
     get:
       description: Returns the contents of an uploaded file
       operationId: getFile
       parameters:
+      - description: Workspace ID
+        in: path
+        name: workspaceID
+        required: true
+        type: string
+      - description: ID of the root block
+        in: path
+        name: rootID
+        required: true
+        type: string
       - description: ID of the file
         in: path
         name: fileID

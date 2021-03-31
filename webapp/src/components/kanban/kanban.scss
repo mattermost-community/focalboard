@@ -35,6 +35,12 @@
                 background-color: rgba(var(--body-color), 0.1);
             }
         }
+
+        .Label{
+            .Editable {
+                background: transparent;
+            }
+        }
     }
 
 

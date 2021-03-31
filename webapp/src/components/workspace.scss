@@ -1,0 +1,19 @@
+.Workspace {
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: row;
+    overflow: auto;
+
+    > .mainFrame {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+
+        > .banner {
+            background-color: rgba(230, 220, 192, 0.9);
+            text-align: center;
+            padding: 10px;
+        }
+    }
+}

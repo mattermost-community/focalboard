@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useState} from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
 import {IPropertyTemplate} from '../../blocks/board'
@@ -16,7 +16,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import './kanbanCard.scss'
 import PropertyValueElement from '../propertyValueElement'
 
-type KanbanCardProps = {
+type Props = {
     card: Card
     visiblePropertyTemplates: IPropertyTemplate[]
     isSelected: boolean
@@ -29,104 +29,92 @@ type KanbanCardProps = {
     readonly: boolean
 }
 
-type KanbanCardState = {
-    isDragged?: boolean
-    isDragOver?: boolean
-}
+const KanbanCard = (props: Props) => {
+    const [isDragged, setIsDragged] = useState(false)
+    const [isDragOver, setIsDragOver] = useState(false)
 
-class KanbanCard extends React.Component<KanbanCardProps, KanbanCardState> {
-    state: KanbanCardState = {}
-
-    shouldComponentUpdate(): boolean {
-        return true
+    const {card, intl} = props
+    const visiblePropertyTemplates = props.visiblePropertyTemplates || []
+    let className = props.isSelected ? 'KanbanCard selected' : 'KanbanCard'
+    if (props.isDropZone && isDragOver) {
+        className += ' dragover'
     }
 
-    render(): JSX.Element {
-        const {card, intl} = this.props
-        const visiblePropertyTemplates = this.props.visiblePropertyTemplates || []
-        let className = this.props.isSelected ? 'KanbanCard selected' : 'KanbanCard'
-        if (this.props.isDropZone && this.state.isDragOver) {
-            className += ' dragover'
-        }
+    return (
+        <div
+            className={className}
+            draggable={!props.readonly}
+            style={{opacity: isDragged ? 0.5 : 1}}
+            onClick={props.onClick}
+            onDragStart={(e) => {
+                setIsDragged(true)
+                props.onDragStart(e)
+            }}
+            onDragEnd={(e) => {
+                setIsDragged(false)
+                props.onDragEnd(e)
+            }}
 
-        const element = (
-            <div
-                className={className}
-                draggable={!this.props.readonly}
-                style={{opacity: this.state.isDragged ? 0.5 : 1}}
-                onClick={this.props.onClick}
-                onDragStart={(e) => {
-                    this.setState({isDragged: true})
-                    this.props.onDragStart(e)
-                }}
-                onDragEnd={(e) => {
-                    this.setState({isDragged: false})
-                    this.props.onDragEnd(e)
-                }}
-
-                onDragOver={() => {
-                    if (!this.state.isDragOver) {
-                        this.setState({isDragOver: true})
-                    }
-                }}
-                onDragEnter={() => {
-                    if (!this.state.isDragOver) {
-                        this.setState({isDragOver: true})
-                    }
-                }}
-                onDragLeave={() => {
-                    this.setState({isDragOver: false})
-                }}
-                onDrop={(e) => {
-                    this.setState({isDragOver: false})
-                    if (this.props.isDropZone) {
-                        this.props.onDrop(e)
-                    }
-                }}
-            >
-                {!this.props.readonly &&
-                    <MenuWrapper
-                        className='optionsMenu'
-                        stopPropagationOnToggle={true}
-                    >
-                        <IconButton icon={<OptionsIcon/>}/>
-                        <Menu position='left'>
-                            <Menu.Text
-                                icon={<DeleteIcon/>}
-                                id='delete'
-                                name={intl.formatMessage({id: 'KanbanCard.delete', defaultMessage: 'Delete'})}
-                                onClick={() => mutator.deleteBlock(card, 'delete card')}
-                            />
-                            <Menu.Text
-                                icon={<DuplicateIcon/>}
-                                id='duplicate'
-                                name={intl.formatMessage({id: 'KanbanCard.duplicate', defaultMessage: 'Duplicate'})}
-                                onClick={() => {
-                                    mutator.duplicateCard(card.id)
-                                }}
-                            />
-                        </Menu>
-                    </MenuWrapper>
+            onDragOver={() => {
+                if (!isDragOver) {
+                    setIsDragOver(true)
                 }
+            }}
+            onDragEnter={() => {
+                if (!isDragOver) {
+                    setIsDragOver(true)
+                }
+            }}
+            onDragLeave={() => {
+                setIsDragOver(false)
+            }}
+            onDrop={(e) => {
+                setIsDragOver(false)
+                if (props.isDropZone) {
+                    props.onDrop(e)
+                }
+            }}
+        >
+            {!props.readonly &&
+                <MenuWrapper
+                    className='optionsMenu'
+                    stopPropagationOnToggle={true}
+                >
+                    <IconButton icon={<OptionsIcon/>}/>
+                    <Menu position='left'>
+                        <Menu.Text
+                            icon={<DeleteIcon/>}
+                            id='delete'
+                            name={intl.formatMessage({id: 'KanbanCard.delete', defaultMessage: 'Delete'})}
+                            onClick={() => mutator.deleteBlock(card, 'delete card')}
+                        />
+                        <Menu.Text
+                            icon={<DuplicateIcon/>}
+                            id='duplicate'
+                            name={intl.formatMessage({id: 'KanbanCard.duplicate', defaultMessage: 'Duplicate'})}
+                            onClick={() => {
+                                mutator.duplicateCard(card.id)
+                            }}
+                        />
+                    </Menu>
+                </MenuWrapper>
+            }
 
-                <div className='octo-icontitle'>
-                    { card.icon ? <div className='octo-icon'>{card.icon}</div> : undefined }
-                    <div key='__title'>{card.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}</div>
-                </div>
-                {visiblePropertyTemplates.map((template) => (
-                    <PropertyValueElement
-                        key={template.id}
-                        readOnly={true}
-                        card={card}
-                        propertyTemplate={template}
-                        emptyDisplayValue=''
-                    />
-                ))}
+            <div className='octo-icontitle'>
+                { card.icon ? <div className='octo-icon'>{card.icon}</div> : undefined }
+                <div key='__title'>{card.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}</div>
             </div>
-        )
-
-        return element
-    }
+            {visiblePropertyTemplates.map((template) => (
+                <PropertyValueElement
+                    key={template.id}
+                    readOnly={true}
+                    card={card}
+                    propertyTemplate={template}
+                    emptyDisplayValue=''
+                />
+            ))}
+        </div>
+    )
 }
 
 export default injectIntl(KanbanCard)

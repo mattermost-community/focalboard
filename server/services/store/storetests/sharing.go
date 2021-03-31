@@ -10,7 +10,7 @@ import (
 
 func StoreTestSharingStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
 	container := store.Container{
-		WorkspaceID: "",
+		WorkspaceID: "0",
 	}
 
 	t.Run("UpsertSharingAndGetSharing", func(t *testing.T) {
