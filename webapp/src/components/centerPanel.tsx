@@ -159,7 +159,8 @@ class CenterPanel extends React.Component<Props, State> {
                             <Gallery
                                 boardTree={boardTree}
                                 readonly={this.props.readonly}
-                                showCard={this.showCard}
+                                onCardClicked={this.cardClicked}
+                                selectedCardIds={this.state.selectedCardIds}
                                 addCard={(show) => this.addCard('', show)}
                             />}
                     </div>
@@ -277,7 +278,7 @@ class CenterPanel extends React.Component<Props, State> {
                 }
                 this.setState({selectedCardIds})
             }
-        } else if (activeView.viewType === 'board') {
+        } else if (activeView.viewType === 'board' || activeView.viewType === 'gallery') {
             this.showCard(card.id)
         }
 

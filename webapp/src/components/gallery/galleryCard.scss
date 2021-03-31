@@ -6,6 +6,11 @@
     flex-direction: column;
     margin-right: 10px;
     margin-bottom: 10px;
+    cursor: pointer;
+
+    &.selected{
+        background-color: rgba(90, 200, 255, 0.2);
+    }
 
     &:hover {
         background-color: rgba(var(--body-color), 0.05);

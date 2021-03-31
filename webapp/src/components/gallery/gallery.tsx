@@ -3,6 +3,7 @@
 import React, {useState, useEffect} from 'react'
 import {FormattedMessage} from 'react-intl'
 
+import {Card} from '../../blocks/card'
 import {BoardTree} from '../../viewModel/boardTree'
 import {CardTree, MutableCardTree} from '../../viewModel/cardTree'
 import useCardListener from '../../hooks/cardListener'
@@ -13,8 +14,9 @@ import GalleryCard from './galleryCard'
 type Props = {
     boardTree: BoardTree
     readonly: boolean
-    showCard: (cardId?: string) => void
     addCard: (show: boolean) => Promise<void>
+    selectedCardIds: string[]
+    onCardClicked: (e: React.MouseEvent, card: Card) => void
 }
 
 const Gallery = (props: Props): JSX.Element => {
@@ -56,8 +58,9 @@ const Gallery = (props: Props): JSX.Element => {
                         <GalleryCard
                             key={card.id + card.updateAt}
                             cardTree={cardTree}
-                            showCard={props.showCard}
+                            onClick={props.onCardClicked}
                             visiblePropertyTemplates={visiblePropertyTemplates}
+                            isSelected={props.selectedCardIds.includes(card.id)}
                         />
                     )
                 }

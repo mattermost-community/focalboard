@@ -4,6 +4,7 @@ import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {IPropertyTemplate} from '../../blocks/board'
+import {Card} from '../../blocks/card'
 import {CardTree} from '../../viewModel/cardTree'
 import {IContentBlock} from '../../blocks/contentBlock'
 
@@ -15,8 +16,9 @@ import './galleryCard.scss'
 
 type Props = {
     cardTree: CardTree
-    showCard: (cardId: string) => void
+    onClick: (e: React.MouseEvent, card: Card) => void
     visiblePropertyTemplates: IPropertyTemplate[]
+    isSelected: boolean
 }
 
 const GalleryCard = React.memo((props: Props) => {
@@ -29,8 +31,8 @@ const GalleryCard = React.memo((props: Props) => {
 
     return (
         <div
-            className='GalleryCard'
-            onClick={() => props.showCard(cardTree.card.id)}
+            className={`GalleryCard ${props.isSelected ? 'selected' : ''}`}
+            onClick={(e: React.MouseEvent) => props.onClick(e, cardTree.card)}
         >
             {images?.length > 0 &&
                 <div className='gallery-image'>
