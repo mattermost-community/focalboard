@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -32,5 +34,25 @@ func (a *App) GetFilePath(workspaceID, rootID, filename string) string {
 	folderPath := a.config.FilesPath
 	rootPath := filepath.Join(folderPath, workspaceID, rootID)
 
-	return filepath.Join(rootPath, filename)
+	filePath := filepath.Join(rootPath, filename)
+
+	// FIXUP: Check the deprecated old location
+	if workspaceID == "0" && !fileExists(filePath) {
+		oldFilePath := filepath.Join(folderPath, filename)
+		if fileExists(oldFilePath) {
+			err := os.Rename(oldFilePath, filePath)
+			if err != nil {
+				log.Printf("ERROR moving old file from '%s' to '%s'", oldFilePath, filePath)
+			} else {
+				log.Printf("Moved old file from '%s' to '%s'", oldFilePath, filePath)
+			}
+		}
+	}
+
+	return filePath
+}
+
+func fileExists(path string) bool {
+	_, err := os.Stat(path)
+	return !os.IsNotExist(err)
 }
