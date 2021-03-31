@@ -50,7 +50,7 @@ const PropertyMenu = React.memo((props: Props) => {
     const [name, setName] = useState(props.propertyName)
 
     const deleteText = intl.formatMessage({
-        id: 'PropertyType.Delete',
+        id: 'PropertyMenu.Delete',
         defaultMessage: 'Delete',
     })
 
