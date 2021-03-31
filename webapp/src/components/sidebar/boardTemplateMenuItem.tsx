@@ -22,7 +22,7 @@ type Props = {
 
 const addBoardFromTemplate = async (intl: IntlShape, showBoard: (id: string) => void, boardTemplateId: string, activeBoardId?: string, global = false) => {
     const oldBoardId = activeBoardId
-    const afterRedo = async (newBoardId) => {
+    const afterRedo = async (newBoardId: string) => {
         showBoard(newBoardId)
     }
     const beforeUndo = async () => {
