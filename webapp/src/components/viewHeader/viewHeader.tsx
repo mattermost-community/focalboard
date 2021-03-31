@@ -6,6 +6,7 @@ import {FormattedMessage} from 'react-intl'
 import ViewMenu from '../../components/viewMenu'
 import mutator from '../../mutator'
 import {BoardTree} from '../../viewModel/boardTree'
+import {IViewType} from '../../blocks/boardView'
 import Button from '../../widgets/buttons/button'
 import IconButton from '../../widgets/buttons/iconButton'
 import DropdownIcon from '../../widgets/icons/dropdown'
@@ -32,15 +33,16 @@ type Props = {
     addCardFromTemplate: (cardTemplateId: string) => void
     addCardTemplate: () => void
     editCardTemplate: (cardTemplateId: string) => void
-    withGroupBy?: boolean
     readonly: boolean
 }
 
 const ViewHeader = React.memo((props: Props) => {
     const [showFilter, setShowFilter] = useState(false)
 
-    const {boardTree, showView, withGroupBy} = props
+    const {boardTree, showView} = props
     const {board, activeView} = boardTree
+
+    const withGroupBy = activeView.type === 'board'
 
     const [viewTitle, setViewTitle] = useState(activeView.title)
 

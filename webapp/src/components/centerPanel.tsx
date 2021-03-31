@@ -135,7 +135,6 @@ class CenterPanel extends React.Component<Props, State> {
                             addCardFromTemplate={this.addCardFromTemplate}
                             addCardTemplate={this.addCardTemplate}
                             editCardTemplate={this.editCardTemplate}
-                            withGroupBy={activeView.viewType === 'board'}
                             readonly={this.props.readonly}
                         />
                         {activeView.viewType === 'board' &&
