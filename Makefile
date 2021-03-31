@@ -90,6 +90,19 @@ server-linux-package: server-linux webapp
 	cd package && tar -czvf ../dist/focalboard-server-linux-amd64.tar.gz ${PACKAGE_FOLDER}
 	rm -rf package
 
+server-enterprise-linux-package: server-linux webapp
+	rm -rf package
+	mkdir -p package/${PACKAGE_FOLDER}/bin
+	cp bin/linux/focalboard-server package/${PACKAGE_FOLDER}/bin
+	cp -R webapp/pack package/${PACKAGE_FOLDER}/pack
+	cp server-config.json package/${PACKAGE_FOLDER}/config.json
+	cp NOTICE.txt package/${PACKAGE_FOLDER}
+	cp webapp/NOTICE.txt package/${PACKAGE_FOLDER}/webapp-NOTICE.txt
+	cp $(BUILD_ENTERPRISE_DIR)/ENTERPRISE-EDITION-LICENSE.txt package/${PACKAGE_FOLDER}
+	mkdir -p dist
+	cd package && tar -czvf ../dist/focalboard-enterprise-server-linux-amd64.tar.gz ${PACKAGE_FOLDER}
+	rm -rf package
+
 generate:
 	cd server; go get -modfile=go.tools.mod github.com/golang/mock/mockgen
 	cd server; go get -modfile=go.tools.mod github.com/jteeuwen/go-bindata
