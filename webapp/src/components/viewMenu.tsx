@@ -151,7 +151,29 @@ export class ViewMenu extends React.PureComponent<Props> {
     }
 
     render(): JSX.Element {
-        const {boardTree} = this.props
+        const {boardTree, intl} = this.props
+
+        const duplicateViewText = intl.formatMessage({
+            id: 'View.DuplicateView',
+            defaultMessage: 'Duplicate View',
+        })
+        const deleteViewText = intl.formatMessage({
+            id: 'View.DeleteView',
+            defaultMessage: 'Delete View',
+        })
+        const addViewText = intl.formatMessage({
+            id: 'View.AddView',
+            defaultMessage: 'Add View',
+        })
+        const boardText = intl.formatMessage({
+            id: 'View.Board',
+            defaultMessage: 'Board',
+        })
+        const tableText = intl.formatMessage({
+            id: 'View.Table',
+            defaultMessage: 'Table',
+        })
+
         return (
             <Menu>
                 {boardTree.views.map((view) => (
@@ -166,7 +188,7 @@ export class ViewMenu extends React.PureComponent<Props> {
                 {!this.props.readonly &&
                     <Menu.Text
                         id='__duplicateView'
-                        name='Duplicate View'
+                        name={duplicateViewText}
                         icon={<DuplicateIcon/>}
                         onClick={this.handleDuplicateView}
                     />
@@ -174,7 +196,7 @@ export class ViewMenu extends React.PureComponent<Props> {
                 {!this.props.readonly && boardTree.views.length > 1 &&
                     <Menu.Text
                         id='__deleteView'
-                        name='Delete View'
+                        name={deleteViewText}
                         icon={<DeleteIcon/>}
                         onClick={this.handleDeleteView}
                     />
@@ -182,18 +204,18 @@ export class ViewMenu extends React.PureComponent<Props> {
                 {!this.props.readonly &&
                     <Menu.SubMenu
                         id='__addView'
-                        name='Add View'
+                        name={addViewText}
                         icon={<AddIcon/>}
                     >
                         <Menu.Text
                             id='board'
-                            name='Board'
+                            name={boardText}
                             icon={<BoardIcon/>}
                             onClick={this.handleAddViewBoard}
                         />
                         <Menu.Text
                             id='table'
-                            name='Table'
+                            name={tableText}
                             icon={<TableIcon/>}
                             onClick={this.handleAddViewTable}
                         />
