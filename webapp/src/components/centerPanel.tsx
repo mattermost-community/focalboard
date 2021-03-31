@@ -55,6 +55,13 @@ class CenterPanel extends React.Component<Props, State> {
             this.deleteSelectedCards()
             e.stopPropagation()
         }
+
+        if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && e.keyCode === 68 && this.state.selectedCardIds.length > 0) {
+            // CTRL+D: Duplicate selected cards
+            this.duplicateSelectedCards()
+            e.stopPropagation()
+            e.preventDefault()
+        }
     }
 
     componentDidMount(): void {
@@ -301,6 +308,26 @@ class CenterPanel extends React.Component<Props, State> {
                 const card = this.props.boardTree.allCards.find((o) => o.id === cardId)
                 if (card) {
                     mutator.deleteBlock(card, selectedCardIds.length > 1 ? `delete ${selectedCardIds.length} cards` : 'delete card')
+                } else {
+                    Utils.assertFailure(`Selected card not found: ${cardId}`)
+                }
+            }
+        })
+
+        this.setState({selectedCardIds: []})
+    }
+
+    private async duplicateSelectedCards() {
+        const {selectedCardIds} = this.state
+        if (selectedCardIds.length < 1) {
+            return
+        }
+
+        mutator.performAsUndoGroup(async () => {
+            for (const cardId of selectedCardIds) {
+                const card = this.props.boardTree.allCards.find((o) => o.id === cardId)
+                if (card) {
+                    mutator.duplicateCard(cardId)
                 } else {
                     Utils.assertFailure(`Selected card not found: ${cardId}`)
                 }
