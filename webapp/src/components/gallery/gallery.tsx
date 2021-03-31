@@ -49,11 +49,12 @@ const Gallery = (props: Props): JSX.Element => {
     return (
         <div className='octo-table-body Gallery'>
             {cards.map((card) => {
-                if (cardTrees[card.id]) {
+                const cardTree = cardTrees[card.id]
+                if (cardTree) {
                     return (
                         <GalleryCard
                             key={card.id + card.updateAt}
-                            cardTree={cardTrees[card.id]}
+                            cardTree={cardTree}
                             showCard={props.showCard}
                         />
                     )
