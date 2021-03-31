@@ -2,7 +2,6 @@
     border: 1px solid rgba(var(--body-color), 0.09);
     border-radius: var(--default-rad);
     width: 280px;
-    height: 200px;
     display: flex;
     flex-direction: column;
     margin-right: 10px;
@@ -20,11 +19,15 @@
         padding: 0 10px;
         font-size: 0.7em;
         opacity: 0.7;
+        max-height: 160px;
+        min-height: 160px;
     }
 
     .gallery-image {
         flex-grow: 1;
         overflow: hidden;
+        max-height: 160px;
+        min-height: 160px;
 
         .ImageElement {
             width: 100%;
@@ -37,6 +40,16 @@
         margin: 0;
         padding: 5px 10px;
         display: flex;
+        overflow-wrap: anywhere;
+        .octo-icon {
+            margin-right: 5px;
+        }
+    }
+
+    .gallery-props {
+        flex-grow: 0;
+        margin: 0;
+        padding: 5px 10px;
         overflow-wrap: anywhere;
         .octo-icon {
             margin-right: 5px;

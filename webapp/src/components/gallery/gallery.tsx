@@ -20,6 +20,7 @@ type Props = {
 const Gallery = (props: Props): JSX.Element => {
     const {boardTree} = props
     const {cards} = boardTree
+    const visiblePropertyTemplates = boardTree.board.cardProperties.filter((template) => boardTree.activeView.visiblePropertyIds.includes(template.id))
     const [cardTrees, setCardTrees] = useState<{[key: string]: CardTree | undefined}>({})
 
     useCardListener(
@@ -56,6 +57,7 @@ const Gallery = (props: Props): JSX.Element => {
                             key={card.id + card.updateAt}
                             cardTree={cardTree}
                             showCard={props.showCard}
+                            visiblePropertyTemplates={visiblePropertyTemplates}
                         />
                     )
                 }
