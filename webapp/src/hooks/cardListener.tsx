@@ -7,7 +7,7 @@ import octoClient from '../octoClient'
 import {OctoListener} from '../octoListener'
 import {Utils} from '../utils'
 
-export default function useCardListener(cardId:string, onChange: (blocks: IBlock[]) => void, onReconnect: () => void): void {
+export default function useCardListener(cardIds: string[], onChange: (blocks: IBlock[]) => void, onReconnect: () => void): void {
     let cardListener: OctoListener | null = null
 
     const deleteListener = () => {
@@ -21,7 +21,7 @@ export default function useCardListener(cardId:string, onChange: (blocks: IBlock
         cardListener = new OctoListener()
         cardListener.open(
             octoClient.workspaceId,
-            [cardId],
+            cardIds,
             onChange,
             onReconnect,
         )
@@ -33,11 +33,11 @@ export default function useCardListener(cardId:string, onChange: (blocks: IBlock
     }
 
     useEffect(() => {
-        Utils.log(`useCardListener.connect: ${cardId}`)
+        Utils.log(`useCardListener.connect: ${cardIds}`)
         createCardTreeAndSync()
         return () => {
-            Utils.log(`useCardListener.disconnect: ${cardId}`)
+            Utils.log(`useCardListener.disconnect: ${cardIds}`)
             deleteListener()
         }
-    }, [cardId])
+    }, [cardIds.join('-')])
 }
