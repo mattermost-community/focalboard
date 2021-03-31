@@ -198,7 +198,13 @@ class MutableBoardTree implements BoardTree {
             return cards.slice()
         }
 
-        return cards.filter((card) => card.title?.toLocaleLowerCase().indexOf(searchText) !== -1)
+        return cards.filter((card: Card) => {
+            const searchTextInCardTitle: boolean = card.title?.toLocaleLowerCase().includes(searchText)
+            const searchTextInProperties: boolean = Object.values(card.properties).
+                map((el: string) => el.toLowerCase().includes(searchText)).
+                some((el: boolean) => el)
+            return searchTextInCardTitle || searchTextInProperties
+        })
     }
 
     private setGroupByProperty(propertyId: string) {
