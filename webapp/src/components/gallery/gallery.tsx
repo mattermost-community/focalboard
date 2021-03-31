@@ -61,6 +61,7 @@ const Gallery = (props: Props): JSX.Element => {
                             onClick={props.onCardClicked}
                             visiblePropertyTemplates={visiblePropertyTemplates}
                             isSelected={props.selectedCardIds.includes(card.id)}
+                            readonly={props.readonly}
                         />
                     )
                 }

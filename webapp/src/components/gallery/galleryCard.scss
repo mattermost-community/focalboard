@@ -1,4 +1,5 @@
 .GalleryCard {
+    position: relative;
     border: 1px solid rgba(var(--body-color), 0.09);
     border-radius: var(--default-rad);
     width: 280px;
@@ -14,6 +15,22 @@
 
     &:hover {
         background-color: rgba(var(--body-color), 0.05);
+        .optionsMenu {
+            display: block;
+        }
+    }
+
+    .optionsMenu {
+        background-color: rgb(var(--main-bg));
+        border-radius: var(--default-rad);
+        display: none;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        z-index: 3000;
+        .IconButton {
+            background-color: rgba(var(--body-color), 0.13);
+        }
     }
 
     .gallery-item {

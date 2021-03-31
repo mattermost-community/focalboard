@@ -1,12 +1,20 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {CardTree} from '../../viewModel/cardTree'
 import {IContentBlock} from '../../blocks/contentBlock'
+import mutator from '../../mutator'
+
+import IconButton from '../../widgets/buttons/iconButton'
+import DeleteIcon from '../../widgets/icons/delete'
+import DuplicateIcon from '../../widgets/icons/duplicate'
+import OptionsIcon from '../../widgets/icons/options'
+import Menu from '../../widgets/menu'
+import MenuWrapper from '../../widgets/menuWrapper'
 
 import ImageElement from '../content/imageElement'
 import ContentElement from '../content/contentElement'
@@ -19,6 +27,8 @@ type Props = {
     onClick: (e: React.MouseEvent, card: Card) => void
     visiblePropertyTemplates: IPropertyTemplate[]
     isSelected: boolean
+    intl: IntlShape
+    readonly: boolean
 }
 
 const GalleryCard = React.memo((props: Props) => {
@@ -34,6 +44,31 @@ const GalleryCard = React.memo((props: Props) => {
             className={`GalleryCard ${props.isSelected ? 'selected' : ''}`}
             onClick={(e: React.MouseEvent) => props.onClick(e, cardTree.card)}
         >
+            {!props.readonly &&
+                <MenuWrapper
+                    className='optionsMenu'
+                    stopPropagationOnToggle={true}
+                >
+                    <IconButton icon={<OptionsIcon/>}/>
+                    <Menu position='left'>
+                        <Menu.Text
+                            icon={<DeleteIcon/>}
+                            id='delete'
+                            name={props.intl.formatMessage({id: 'GalleryCard.delete', defaultMessage: 'Delete'})}
+                            onClick={() => mutator.deleteBlock(cardTree.card, 'delete card')}
+                        />
+                        <Menu.Text
+                            icon={<DuplicateIcon/>}
+                            id='duplicate'
+                            name={props.intl.formatMessage({id: 'GalleryCard.duplicate', defaultMessage: 'Duplicate'})}
+                            onClick={() => {
+                                mutator.duplicateCard(cardTree.card.id)
+                            }}
+                        />
+                    </Menu>
+                </MenuWrapper>
+            }
+
             {images?.length > 0 &&
                 <div className='gallery-image'>
                     <ImageElement block={images[0]}/>
@@ -74,4 +109,4 @@ const GalleryCard = React.memo((props: Props) => {
     )
 })
 
-export default GalleryCard
+export default injectIntl(GalleryCard)
