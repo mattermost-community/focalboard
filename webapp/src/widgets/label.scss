@@ -9,4 +9,12 @@
 	text-transform: uppercase;
 	font-weight: 600;
 	font-size: 13px;
+
+    input {
+        line-height: 20px;
+        color: rgba(var(--body-color), .8);
+        text-transform: uppercase;
+        font-weight: 600;
+        font-size: 13px;
+    }
 }
