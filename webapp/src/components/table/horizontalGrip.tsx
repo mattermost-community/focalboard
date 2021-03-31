@@ -54,4 +54,4 @@ class HorizontalGrip extends React.PureComponent<Props, State> {
     }
 }
 
-export {HorizontalGrip}
+export default HorizontalGrip

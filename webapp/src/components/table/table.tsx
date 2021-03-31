@@ -15,7 +15,7 @@ import SortUpIcon from '../../widgets/icons/sortUp'
 import MenuWrapper from '../../widgets/menuWrapper'
 import Label from '../../widgets/label'
 
-import {HorizontalGrip} from '../horizontalGrip'
+import HorizontalGrip from './horizontalGrip'
 
 import './table.scss'
 import TableHeaderMenu from './tableHeaderMenu'
