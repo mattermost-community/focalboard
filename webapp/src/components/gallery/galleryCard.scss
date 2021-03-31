@@ -21,6 +21,12 @@
         opacity: 0.7;
         max-height: 160px;
         min-height: 160px;
+
+        .CheckboxElement {
+            .Editable {
+                background: transparent;
+            }
+        }
     }
 
     .gallery-image {
