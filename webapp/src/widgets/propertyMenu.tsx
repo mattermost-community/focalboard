@@ -65,6 +65,10 @@ class PropertyMenu extends React.PureComponent<Props, State> {
     }
 
     public render(): JSX.Element {
+        const deleteText = this.props.intl.formatMessage({
+            id: 'PropertyMenu.delete',
+            defaultMessage: 'Delete',
+        })
         return (
             <Menu>
                 <input
@@ -96,38 +100,38 @@ class PropertyMenu extends React.PureComponent<Props, State> {
 
                     <Menu.Text
                         id='text'
-                        name='Text'
+                        name={this.typeMenuTitle('text')}
                         onClick={() => this.props.onTypeChanged('text')}
                     />
                     <Menu.Text
                         id='number'
-                        name='Number'
+                        name={this.typeMenuTitle('number')}
                         onClick={() => this.props.onTypeChanged('number')}
                     />
                     <Menu.Text
                         id='email'
-                        name='Email'
+                        name={this.typeMenuTitle('email')}
                         onClick={() => this.props.onTypeChanged('email')}
                     />
                     <Menu.Text
                         id='select'
-                        name='Select'
+                        name={this.typeMenuTitle('select')}
                         onClick={() => this.props.onTypeChanged('select')}
                     />
                     <Menu.Text
                         id='createdTime'
-                        name='Created Time'
+                        name={this.typeMenuTitle('createdTime')}
                         onClick={() => this.props.onTypeChanged('createdTime')}
                     />
                     <Menu.Text
                         id='updatedTime'
-                        name='Updated Time'
+                        name={this.typeMenuTitle('updatedTime')}
                         onClick={() => this.props.onTypeChanged('updatedTime')}
                     />
                 </Menu.SubMenu>
                 <Menu.Text
                     id='delete'
-                    name='Delete'
+                    name={deleteText}
                     onClick={() => this.props.onDelete(this.props.propertyId)}
                 />
             </Menu>
