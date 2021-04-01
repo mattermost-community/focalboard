@@ -75,7 +75,12 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         )
     }
 
-    if (propertyTemplate.type === 'text' || propertyTemplate.type === 'number' || propertyTemplate.type === 'email') {
+    if (
+        propertyTemplate.type === 'text' ||
+        propertyTemplate.type === 'number' ||
+        propertyTemplate.type === 'email' ||
+        propertyTemplate.type === 'url'
+    ) {
         if (!readOnly) {
             return (
                 <Editable
