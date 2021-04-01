@@ -1,7 +1,4 @@
 {
-  "BoardCard.delete": "Suprimir",
-  "BoardCard.duplicate": "Duplicar",
-  "BoardCard.untitled": "Sens títol",
   "BoardComponent.add-a-group": "+ Apondre un grop",
   "BoardComponent.delete": "Suprimir",
   "BoardComponent.hidden-columns": "Colomnas rescondudas",
@@ -136,6 +133,5 @@
   "ViewTitle.random-icon": "Aleatòria",
   "ViewTitle.remove-icon": "Suprimir l'icòna",
   "ViewTitle.show-description": "mostrar la descripcion",
-  "ViewTitle.untitled-board": "Tablèu sens títol",
-  "WorkspaceComponent.editing-board-template": "Sètz a modificar un modèl de tablèu"
+  "ViewTitle.untitled-board": "Tablèu sens títol"
 }

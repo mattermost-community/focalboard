@@ -1,7 +1,4 @@
 {
-  "BoardCard.delete": "Удалить",
-  "BoardCard.duplicate": "Дубликат",
-  "BoardCard.untitled": "Без названия",
   "BoardComponent.add-a-group": "+ Добавить группу",
   "BoardComponent.delete": "Удалить",
   "BoardComponent.hidden-columns": "Скрытые колонки",
@@ -136,6 +133,5 @@
   "ViewTitle.random-icon": "Случайным образом",
   "ViewTitle.remove-icon": "Убрать иконку",
   "ViewTitle.show-description": "показать описание",
-  "ViewTitle.untitled-board": "Доска без названия",
-  "WorkspaceComponent.editing-board-template": "Вы редактируете шаблон доски"
+  "ViewTitle.untitled-board": "Доска без названия"
 }

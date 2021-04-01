@@ -1,7 +1,4 @@
 {
-  "BoardCard.delete": "Sil",
-  "BoardCard.duplicate": "Kopya Oluştur",
-  "BoardCard.untitled": "Başlıksız",
   "BoardComponent.add-a-group": "+ Grup ekle",
   "BoardComponent.delete": "Sil",
   "BoardComponent.hidden-columns": "Gizli sütunlar",
@@ -136,6 +133,5 @@
   "ViewTitle.random-icon": "Rastgele",
   "ViewTitle.remove-icon": "Simgeyi kaldır",
   "ViewTitle.show-description": "açıklamayı göster",
-  "ViewTitle.untitled-board": "Başlıksız pano",
-  "WorkspaceComponent.editing-board-template": "Bir pano şablonunu düzenliyorsun"
+  "ViewTitle.untitled-board": "Başlıksız pano"
 }

@@ -1,7 +1,4 @@
 {
-  "BoardCard.delete": "删除",
-  "BoardCard.duplicate": "制作副本",
-  "BoardCard.untitled": "无标题",
   "BoardComponent.add-a-group": "+ 新增群组",
   "BoardComponent.delete": "删除",
   "BoardComponent.hidden-columns": "隐藏列",
@@ -136,6 +133,5 @@
   "ViewTitle.random-icon": "随机",
   "ViewTitle.remove-icon": "移除图标",
   "ViewTitle.show-description": "显示叙述",
-  "ViewTitle.untitled-board": "无标题版面",
-  "WorkspaceComponent.editing-board-template": "您正在编辑版面范本"
+  "ViewTitle.untitled-board": "无标题版面"
 }

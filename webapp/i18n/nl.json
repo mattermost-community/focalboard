@@ -1,7 +1,4 @@
 {
-  "BoardCard.delete": "Verwijderen",
-  "BoardCard.duplicate": "Kopiëren",
-  "BoardCard.untitled": "Zonder titel",
   "BoardComponent.add-a-group": "+ Een groep toevoegen",
   "BoardComponent.delete": "Verwijderen",
   "BoardComponent.hidden-columns": "Verborgen kolommen",
@@ -136,6 +133,5 @@
   "ViewTitle.random-icon": "Willekeurig",
   "ViewTitle.remove-icon": "Verwijder pictogram",
   "ViewTitle.show-description": "beschrijving tonen",
-  "ViewTitle.untitled-board": "Titelloze bord",
-  "WorkspaceComponent.editing-board-template": "Je bent een bordsjabloon aan het bewerken"
+  "ViewTitle.untitled-board": "Titelloze bord"
 }

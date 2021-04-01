@@ -1,7 +1,4 @@
 {
-  "BoardCard.delete": "削除",
-  "BoardCard.duplicate": "複製",
-  "BoardCard.untitled": "名無し",
   "BoardComponent.add-a-group": "+ グループを追加する",
   "BoardComponent.delete": "削除",
   "BoardComponent.hidden-columns": "非表示",
@@ -136,6 +133,5 @@
   "ViewTitle.random-icon": "ランダム",
   "ViewTitle.remove-icon": "アイコンを削除する",
   "ViewTitle.show-description": "説明を表示",
-  "ViewTitle.untitled-board": "Untitled board",
-  "WorkspaceComponent.editing-board-template": "ボードテンプレートを編集しています"
+  "ViewTitle.untitled-board": "Untitled board"
 }
