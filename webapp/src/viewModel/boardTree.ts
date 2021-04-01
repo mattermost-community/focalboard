@@ -203,14 +203,25 @@ class MutableBoardTree implements BoardTree {
             if (searchTextInCardTitle) {
                 return true
             }
-            for (const property in card.properties) {
-                if (
-                    Object.prototype.hasOwnProperty.call(card.properties, property) &&
-                    card.properties[property].toLowerCase().includes(searchText)
-                ) {
-                    return true
+
+            // Search for text in properties
+            const {board} = this
+            for (const [propertyId, propertyValue] of Object.entries(card.properties)) {
+                // TODO: Refactor to a shared function that returns the display value of a property
+                const propertyTemplate = board.cardProperties.find((o) => o.id === propertyId)
+                if (propertyTemplate) {
+                    if (propertyTemplate.type === 'select') {
+                        // Look up the value of the select option
+                        const option = propertyTemplate.options.find((o) => o.id === propertyValue)
+                        if (option?.value.toLowerCase().includes(searchText)) {
+                            return true
+                        }
+                    } else if (propertyValue.toLowerCase().includes(searchText)) {
+                        return true
+                    }
                 }
             }
+
             return false
         })
     }
