@@ -22,6 +22,7 @@ This changelog summarizes updates to our open source project. You can also find 
   * Added Gallery view.
   * Added Checkbox content type.
   * Added Selected cards duplication with CTRL+D.
+  * Added Search shortcut (ctrl+shift+f).
 * Requested Contributions
   * Add more frontend unit test coverage. [#126](https://github.com/mattermost/focalboard/pull/126) Thanks @renjithgr!
   * [GH-40](https://github.com/mattermost/focalboard/issues/40) - Add property type email [#84](https://github.com/mattermost/focalboard/pull/84). Thanks @renjithgr!
