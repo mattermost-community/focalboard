@@ -142,11 +142,17 @@ export function loadTheme(): Theme {
 
 export function initThemes(): void {
     const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)')
-    darkThemeMq.addEventListener('change', () => {
+    const changeHandler = () => {
         const themeStr = localStorage.getItem('theme')
         if (!themeStr) {
             setTheme(null)
         }
-    })
+    }
+    if (darkThemeMq.addEventListener) {
+        darkThemeMq.addEventListener('change', changeHandler)
+    } else if (darkThemeMq.addListener) {
+        // Safari and Mac app support
+        darkThemeMq.addListener(changeHandler)
+    }
     loadTheme()
 }
