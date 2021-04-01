@@ -29,7 +29,7 @@ const ViewHeaderSearch = (props: Props) => {
         setSearchValue(boardTree.getSearchText())
     }, [boardTree])
 
-    useHotkeys('ctrl+shift+f', () => {
+    useHotkeys('ctrl+shift+f,cmd+shift+f', () => {
         setIsSearching(true)
         searchFieldRef.current?.focus(true)
     })

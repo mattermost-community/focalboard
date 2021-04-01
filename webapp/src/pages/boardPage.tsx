@@ -96,7 +96,7 @@ class BoardPage extends React.Component<Props, State> {
             return
         }
 
-        if (keyName === 'ctrl+z') { // Cmd+Z
+        if (keyName === 'ctrl+z' || keyName === 'cmd+z') { // Cmd+Z
             Utils.log('Undo')
             if (mutator.canUndo) {
                 const description = mutator.undoDescription
@@ -109,7 +109,7 @@ class BoardPage extends React.Component<Props, State> {
             } else {
                 sendFlashMessage({content: 'Nothing to Undo', severity: 'low'})
             }
-        } else if (keyName === 'shift+ctrl+z') { // Shift+Cmd+Z
+        } else if (keyName === 'shift+ctrl+z' || keyName === 'shift+cmd+z') { // Shift+Cmd+Z
             Utils.log('Redo')
             if (mutator.canRedo) {
                 const description = mutator.redoDescription
@@ -161,7 +161,7 @@ class BoardPage extends React.Component<Props, State> {
         return (
             <div className='BoardPage'>
                 <HotKeys
-                    keyName='shift+ctrl+z,ctrl+z'
+                    keyName='shift+ctrl+z,shift+cmd+z,ctrl+z,cmd+z'
                     onKeyDown={this.undoRedoHandler}
                 />
                 <Workspace

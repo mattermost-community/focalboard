@@ -58,6 +58,7 @@ class CenterPanel extends React.Component<Props, State> {
                 e.stopPropagation()
             }
 
+            // TODO: Might need a different hotkey, as Cmd+D is save bookmark on Chrome
             if (keyName === 'ctrl+d') {
                 // CTRL+D: Duplicate selected cards
                 this.duplicateSelectedCards()
