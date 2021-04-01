@@ -27,9 +27,18 @@ type Props = {
     addCard: (groupByOptionId?: string) => Promise<void>
 }
 
-class Kanban extends React.Component<Props> {
-    private draggedCards: Card[] = []
-    private draggedHeaderOption?: IPropertyOption
+type State = {
+    draggedCards: Card[]
+    draggedHeaderOption?: IPropertyOption
+}
+
+class Kanban extends React.Component<Props, State> {
+    constructor(props: Props) {
+        super(props)
+        this.state = {
+            draggedCards: [],
+        }
+    }
 
     shouldComponentUpdate(): boolean {
         return true
@@ -70,7 +79,7 @@ class Kanban extends React.Component<Props> {
                             propertyNameChanged={this.propertyNameChanged}
                             onDropToColumn={this.onDropToColumn}
                             setDraggedHeaderOption={(draggedHeaderOption?: IPropertyOption) => {
-                                this.draggedHeaderOption = draggedHeaderOption
+                                this.setState({draggedHeaderOption})
                             }}
                         />
                     ))}
@@ -126,13 +135,13 @@ class Kanban extends React.Component<Props> {
                                     }}
                                     onDragStart={() => {
                                         if (this.props.selectedCardIds.includes(card.id)) {
-                                            this.draggedCards = this.props.selectedCardIds.map((id) => boardTree.allCards.find((o) => o.id === id)!)
+                                            this.setState({draggedCards: this.props.selectedCardIds.map((id) => boardTree.allCards.find((o) => o.id === id)!)})
                                         } else {
-                                            this.draggedCards = [card]
+                                            this.setState({draggedCards: [card]})
                                         }
                                     }}
                                     onDragEnd={() => {
-                                        this.draggedCards = []
+                                        this.setState({draggedCards: []})
                                     }}
 
                                     isDropZone={isManualSort}
@@ -168,7 +177,7 @@ class Kanban extends React.Component<Props> {
                                     intl={this.props.intl}
                                     readonly={this.props.readonly}
                                     onDropToColumn={this.onDropToColumn}
-                                    hasDraggedCards={this.draggedCards.length > 0}
+                                    hasDraggedCards={this.state.draggedCards.length > 0}
                                 />
                             ))}
                         </div>}
@@ -199,7 +208,7 @@ class Kanban extends React.Component<Props> {
 
     private onDropToColumn = async (option: IPropertyOption) => {
         const {boardTree} = this.props
-        const {draggedCards, draggedHeaderOption} = this
+        const {draggedCards, draggedHeaderOption} = this.state
         const optionId = option ? option.id : undefined
 
         Utils.assertValue(boardTree)
@@ -237,7 +246,7 @@ class Kanban extends React.Component<Props> {
         Utils.log(`onDropToCard: ${card.title}`)
         const {boardTree} = this.props
         const {activeView} = boardTree
-        const {draggedCards} = this
+        const {draggedCards} = this.state
         const optionId = card.properties[activeView.groupById!]
 
         if (draggedCards.length < 1 || draggedCards.includes(card)) {

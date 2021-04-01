@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
-import React from 'react'
+import React, {useRef, useState} from 'react'
 import {IntlShape} from 'react-intl'
 
 import {IPropertyOption} from '../../blocks/board'
@@ -26,32 +26,34 @@ export default function KanbanHiddenColumnItem(props: Props): JSX.Element {
     const {boardTree, intl, group} = props
     const {activeView} = boardTree
 
-    const ref = React.createRef<HTMLDivElement>()
+    const ref = useRef<HTMLDivElement>(null)
+    const [dragClass, setDragClass] = useState('')
+
     return (
         <div
             ref={ref}
             key={group.option.id || 'empty'}
-            className='octo-board-hidden-item'
+            className={`octo-board-hidden-item ${dragClass}`}
             onDragOver={(e) => {
                 if (props.hasDraggedCards) {
-                    ref.current?.classList.add('dragover')
+                    setDragClass('dragover')
                     e.preventDefault()
                 }
             }}
             onDragEnter={(e) => {
                 if (props.hasDraggedCards) {
-                    ref.current?.classList.add('dragover')
+                    setDragClass('dragover')
                     e.preventDefault()
                 }
             }}
             onDragLeave={(e) => {
                 if (props.hasDraggedCards) {
-                    ref.current?.classList.remove('dragover')
+                    setDragClass('')
                     e.preventDefault()
                 }
             }}
             onDrop={(e) => {
-                ref.current?.classList.remove('dragover')
+                setDragClass('')
                 e.preventDefault()
                 if (props.hasDraggedCards) {
                     props.onDropToColumn(group.option)
