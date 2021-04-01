@@ -88,7 +88,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return "su-" + randomNumber
     }
 
+	private func getFreePort() {
+		if PortUtils.isPortFree(in_port_t(serverPort)) {
+			return
+		}
+
+		serverPort = Int(PortUtils.getFreePort())
+	}
+
 	private func startServer() {
+		getFreePort()
 		sessionToken = generateSessionToken()
 
 		let cwdUrl = webFolder()
