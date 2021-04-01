@@ -24,11 +24,15 @@ export default class Editable extends React.Component<Props> {
         return true
     }
 
-    public focus(): void {
+    public focus(selectAll = false): void {
         if (this.elementRef.current) {
             const valueLength = this.elementRef.current.value.length
             this.elementRef.current.focus()
-            this.elementRef.current.setSelectionRange(valueLength, valueLength)
+            if (selectAll) {
+                this.elementRef.current.setSelectionRange(0, valueLength)
+            } else {
+                this.elementRef.current.setSelectionRange(valueLength, valueLength)
+            }
         }
     }
 

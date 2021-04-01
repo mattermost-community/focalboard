@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useState, useRef, useEffect} from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {useHotkeys} from 'react-hotkeys-hook'
 
 import {BoardTree} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
@@ -13,7 +14,7 @@ type Props = {
     intl: IntlShape
 }
 
-const ViewHeaderSearch = React.memo((props: Props) => {
+const ViewHeaderSearch = (props: Props) => {
     const {boardTree, intl} = props
 
     const searchFieldRef = useRef<Editable>(null)
@@ -27,6 +28,11 @@ const ViewHeaderSearch = React.memo((props: Props) => {
     useEffect(() => {
         setSearchValue(boardTree.getSearchText())
     }, [boardTree])
+
+    useHotkeys('ctrl+shift+f', () => {
+        setIsSearching(true)
+        searchFieldRef.current?.focus(true)
+    })
 
     if (isSearching) {
         return (
@@ -57,6 +63,6 @@ const ViewHeaderSearch = React.memo((props: Props) => {
             />
         </Button>
     )
-})
+}
 
 export default injectIntl(ViewHeaderSearch)
