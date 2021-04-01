@@ -3,6 +3,7 @@
 /* eslint-disable max-lines */
 import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
+import Hotkeys from 'react-hot-keys'
 
 import {BlockIcons} from '../blockIcons'
 import {Card, MutableCard} from '../blocks/card'
@@ -38,39 +39,36 @@ type State = {
 class CenterPanel extends React.Component<Props, State> {
     private backgroundRef = React.createRef<HTMLDivElement>()
 
-    private keydownHandler = (e: KeyboardEvent) => {
-        if (e.target !== document.body) {
+    private keydownHandler = (keyName: string, e: KeyboardEvent) => {
+        if (e.target !== document.body || this.props.readonly) {
             return
         }
 
-        if (e.keyCode === 27) {
+        if (keyName === 'esc') {
             if (this.state.selectedCardIds.length > 0) {
                 this.setState({selectedCardIds: []})
                 e.stopPropagation()
             }
         }
 
-        if (e.keyCode === 8 || e.keyCode === 46) {
-            // Backspace or Del: Delete selected cards
-            this.deleteSelectedCards()
-            e.stopPropagation()
-        }
+        if (this.state.selectedCardIds.length > 0) {
+            if (keyName === 'del' || keyName === 'backspace') {
+                // Backspace or Del: Delete selected cards
+                this.deleteSelectedCards()
+                e.stopPropagation()
+            }
 
-        if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && e.keyCode === 68 && this.state.selectedCardIds.length > 0) {
-            // CTRL+D: Duplicate selected cards
-            this.duplicateSelectedCards()
-            e.stopPropagation()
-            e.preventDefault()
+            if (keyName === 'ctrl+d') {
+                // CTRL+D: Duplicate selected cards
+                this.duplicateSelectedCards()
+                e.stopPropagation()
+                e.preventDefault()
+            }
         }
     }
 
     componentDidMount(): void {
         this.showCardInUrl()
-        document.addEventListener('keydown', this.keydownHandler)
-    }
-
-    componentWillUnmount(): void {
-        document.removeEventListener('keydown', this.keydownHandler)
     }
 
     constructor(props: Props) {
@@ -113,6 +111,10 @@ class CenterPanel extends React.Component<Props, State> {
                     this.backgroundClicked(e)
                 }}
             >
+                <Hotkeys
+                    keyName='ctrl+d,del,esc,backspace'
+                    onKeyDown={this.keydownHandler}
+                />
                 {this.state.shownCardId &&
                 <RootPortal>
                     <CardDialog
