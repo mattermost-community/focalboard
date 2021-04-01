@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
+import HotKeys from 'react-hot-keys'
 
 import {IBlock} from '../blocks/block'
 import {IWorkspace} from '../blocks/workspace'
@@ -90,16 +91,12 @@ class BoardPage extends React.Component<Props, State> {
         }
     }
 
-    private undoRedoHandler = async (e: KeyboardEvent) => {
-        if (e.target !== document.body) {
+    private undoRedoHandler = async (keyName: string, e: KeyboardEvent) => {
+        if (e.target !== document.body || this.props.readonly) {
             return
         }
 
-        if (this.props.readonly) {
-            return
-        }
-
-        if (e.keyCode === 90 && !e.shiftKey && (e.ctrlKey || e.metaKey) && !e.altKey) { // Cmd+Z
+        if (keyName === 'ctrl+z') { // Cmd+Z
             Utils.log('Undo')
             if (mutator.canUndo) {
                 const description = mutator.undoDescription
@@ -112,7 +109,7 @@ class BoardPage extends React.Component<Props, State> {
             } else {
                 sendFlashMessage({content: 'Nothing to Undo', severity: 'low'})
             }
-        } else if (e.keyCode === 90 && e.shiftKey && (e.ctrlKey || e.metaKey) && !e.altKey) { // Shift+Cmd+Z
+        } else if (keyName === 'shift+ctrl+z') { // Shift+Cmd+Z
             Utils.log('Redo')
             if (mutator.canRedo) {
                 const description = mutator.redoDescription
@@ -129,7 +126,6 @@ class BoardPage extends React.Component<Props, State> {
     }
 
     componentDidMount(): void {
-        document.addEventListener('keydown', this.undoRedoHandler)
         if (this.state.boardId) {
             this.attachToBoard(this.state.boardId, this.state.viewId)
         } else {
@@ -140,7 +136,6 @@ class BoardPage extends React.Component<Props, State> {
     componentWillUnmount(): void {
         Utils.log(`boardPage.componentWillUnmount: ${this.state.boardId}`)
         this.workspaceListener.close()
-        document.removeEventListener('keydown', this.undoRedoHandler)
     }
 
     render(): JSX.Element {
@@ -165,6 +160,10 @@ class BoardPage extends React.Component<Props, State> {
 
         return (
             <div className='BoardPage'>
+                <HotKeys
+                    keyName='shift+ctrl+z,ctrl+z'
+                    onKeyDown={this.undoRedoHandler}
+                />
                 <Workspace
                     workspace={workspace}
                     workspaceTree={workspaceTree}
