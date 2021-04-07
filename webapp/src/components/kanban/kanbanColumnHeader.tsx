@@ -1,11 +1,13 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import {FormattedMessage, IntlShape} from 'react-intl'
+import {useDrop, useDrag} from 'react-dnd'
 
 import {Constants} from '../../constants'
 import {IPropertyOption} from '../../blocks/board'
+import {Card} from '../../blocks/card'
 import mutator from '../../mutator'
 import {BoardTree, BoardTreeGroup} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
@@ -26,8 +28,7 @@ type Props = {
     readonly: boolean
     addCard: (groupByOptionId?: string) => Promise<void>
     propertyNameChanged: (option: IPropertyOption, text: string) => Promise<void>
-    onDropToColumn: (option: IPropertyOption) => void
-    setDraggedHeaderOption: (draggedHeaderOption?: IPropertyOption) => void
+    onDropToColumn: (srcOption: IPropertyOption, card?: Card, dstOption?: IPropertyOption) => void
 }
 
 export default function KanbanColumnHeader(props: Props): JSX.Element {
@@ -35,42 +36,42 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
     const {activeView} = boardTree
     const [groupTitle, setGroupTitle] = useState(group.option.value)
 
+    const headerRef = useRef<HTMLDivElement>(null)
+
+    const [{isDragging}, drag] = useDrag(() => ({
+        type: 'column',
+        item: group.option,
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging(),
+        }),
+    }))
+    const [{isOver}, drop] = useDrop(() => ({
+        accept: 'column',
+        collect: (monitor) => ({
+            isOver: monitor.isOver(),
+        }),
+        drop: (item: IPropertyOption) => {
+            props.onDropToColumn(item, undefined, group.option)
+        },
+    }))
+
     useEffect(() => {
         setGroupTitle(group.option.value)
     }, [group.option.value])
 
-    const ref = React.createRef<HTMLDivElement>()
+    drop(drag(headerRef))
+    let className = 'octo-board-header-cell KanbanColumnHeader'
+    if (isOver) {
+        className += ' dragover'
+    }
+
     return (
         <div
             key={group.option.id || 'empty'}
-            ref={ref}
-            className='octo-board-header-cell KanbanColumnHeader'
-
+            ref={headerRef}
+            style={{opacity: isDragging ? 0.5 : 1}}
+            className={className}
             draggable={!props.readonly}
-            onDragStart={() => {
-                props.setDraggedHeaderOption(group.option)
-            }}
-            onDragEnd={() => {
-                props.setDraggedHeaderOption(undefined)
-            }}
-
-            onDragOver={(e) => {
-                ref.current?.classList.add('dragover')
-                e.preventDefault()
-            }}
-            onDragEnter={(e) => {
-                ref.current?.classList.add('dragover')
-                e.preventDefault()
-            }}
-            onDragLeave={(e) => {
-                ref.current?.classList.remove('dragover')
-                e.preventDefault()
-            }}
-            onDrop={(e) => {
-                ref.current?.classList.remove('dragover')
-                e.preventDefault()
-                props.onDropToColumn(group.option)
-            }}
         >
             {!group.option.id &&
                 <Label

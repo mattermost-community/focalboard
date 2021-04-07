@@ -8,6 +8,8 @@ import {
     Route,
     Switch,
 } from 'react-router-dom'
+import {DndProvider} from 'react-dnd'
+import {HTML5Backend} from 'react-dnd-html5-backend'
 
 import {FlashMessages} from './components/flashMessages'
 import {getCurrentLanguage, getMessages, storeLanguage} from './i18n'
@@ -51,78 +53,80 @@ export default class App extends React.PureComponent<unknown, State> {
                 locale={this.state.language}
                 messages={getMessages(this.state.language)}
             >
-                <UserContext.Provider value={this.state.user}>
-                    <FlashMessages milliseconds={2000}/>
-                    <Router forceRefresh={true}>
-                        <div id='frame'>
-                            <div id='main'>
-                                <Switch>
-                                    <Route path='/error'>
-                                        <ErrorPage/>
-                                    </Route>
-                                    <Route path='/login'>
-                                        <LoginPage/>
-                                    </Route>
-                                    <Route path='/register'>
-                                        <RegisterPage/>
-                                    </Route>
-                                    <Route path='/change_password'>
-                                        <ChangePasswordPage/>
-                                    </Route>
-                                    <Route path='/shared'>
-                                        <BoardPage
-                                            workspaceId='0'
-                                            readonly={true}
-                                            setLanguage={this.setAndStoreLanguage}
+                <DndProvider backend={HTML5Backend}>
+                    <UserContext.Provider value={this.state.user}>
+                        <FlashMessages milliseconds={2000}/>
+                        <Router forceRefresh={true}>
+                            <div id='frame'>
+                                <div id='main'>
+                                    <Switch>
+                                        <Route path='/error'>
+                                            <ErrorPage/>
+                                        </Route>
+                                        <Route path='/login'>
+                                            <LoginPage/>
+                                        </Route>
+                                        <Route path='/register'>
+                                            <RegisterPage/>
+                                        </Route>
+                                        <Route path='/change_password'>
+                                            <ChangePasswordPage/>
+                                        </Route>
+                                        <Route path='/shared'>
+                                            <BoardPage
+                                                workspaceId='0'
+                                                readonly={true}
+                                                setLanguage={this.setAndStoreLanguage}
+                                            />
+                                        </Route>
+                                        <Route path='/board'>
+                                            {this.state.initialLoad && !this.state.user && <Redirect to='/login'/>}
+                                            <BoardPage
+                                                workspaceId='0'
+                                                setLanguage={this.setAndStoreLanguage}
+                                            />
+                                        </Route>
+                                        <Route
+                                            path='/workspace/:workspaceId/shared'
+                                            render={({match}) => {
+                                                return (
+                                                    <BoardPage
+                                                        workspaceId={match.params.workspaceId}
+                                                        readonly={true}
+                                                        setLanguage={this.setAndStoreLanguage}
+                                                    />
+                                                )
+                                            }}
                                         />
-                                    </Route>
-                                    <Route path='/board'>
-                                        {this.state.initialLoad && !this.state.user && <Redirect to='/login'/>}
-                                        <BoardPage
-                                            workspaceId='0'
-                                            setLanguage={this.setAndStoreLanguage}
+                                        <Route
+                                            path='/workspace/:workspaceId/'
+                                            render={({match}) => {
+                                                if (this.state.initialLoad && !this.state.user) {
+                                                    const redirectUrl = `/workspace/${match.params.workspaceId}/`
+                                                    const loginUrl = `/login?r=${encodeURIComponent(redirectUrl)}`
+                                                    return <Redirect to={loginUrl}/>
+                                                }
+                                                return (
+                                                    <BoardPage
+                                                        workspaceId={match.params.workspaceId}
+                                                        setLanguage={this.setAndStoreLanguage}
+                                                    />
+                                                )
+                                            }}
                                         />
-                                    </Route>
-                                    <Route
-                                        path='/workspace/:workspaceId/shared'
-                                        render={({match}) => {
-                                            return (
-                                                <BoardPage
-                                                    workspaceId={match.params.workspaceId}
-                                                    readonly={true}
-                                                    setLanguage={this.setAndStoreLanguage}
-                                                />
-                                            )
-                                        }}
-                                    />
-                                    <Route
-                                        path='/workspace/:workspaceId/'
-                                        render={({match}) => {
-                                            if (this.state.initialLoad && !this.state.user) {
-                                                const redirectUrl = `/workspace/${match.params.workspaceId}/`
-                                                const loginUrl = `/login?r=${encodeURIComponent(redirectUrl)}`
-                                                return <Redirect to={loginUrl}/>
-                                            }
-                                            return (
-                                                <BoardPage
-                                                    workspaceId={match.params.workspaceId}
-                                                    setLanguage={this.setAndStoreLanguage}
-                                                />
-                                            )
-                                        }}
-                                    />
-                                    <Route path='/'>
-                                        {this.state.initialLoad && !this.state.user && <Redirect to='/login'/>}
-                                        <BoardPage
-                                            workspaceId='0'
-                                            setLanguage={this.setAndStoreLanguage}
-                                        />
-                                    </Route>
-                                </Switch>
+                                        <Route path='/'>
+                                            {this.state.initialLoad && !this.state.user && <Redirect to='/login'/>}
+                                            <BoardPage
+                                                workspaceId='0'
+                                                setLanguage={this.setAndStoreLanguage}
+                                            />
+                                        </Route>
+                                    </Switch>
+                                </div>
                             </div>
-                        </div>
-                    </Router>
-                </UserContext.Provider>
+                        </Router>
+                    </UserContext.Provider>
+                </DndProvider>
             </IntlProvider>
         )
     }
