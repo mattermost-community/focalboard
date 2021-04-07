@@ -22,6 +22,8 @@ type Props = {
     onSaveWithEnter: () => void
     showCard: (cardId: string) => void
     readonly: boolean
+    offset: number
+    resizingColumn: string
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
     onDrop: (srcCard: Card, dstCard: Card) => void
 }
@@ -39,6 +41,9 @@ const TableRow = React.memo((props: Props) => {
     }, [])
 
     const columnWidth = (templateId: string): number => {
+        if (props.resizingColumn === templateId) {
+            return Math.max(Constants.minColumnWidth, (props.boardTree.activeView.columnWidths[templateId] || 0) + props.offset)
+        }
         return Math.max(Constants.minColumnWidth, props.boardTree.activeView.columnWidths[templateId] || 0)
     }
 

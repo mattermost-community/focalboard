@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
 import {FormattedMessage} from 'react-intl'
-import {useDrop} from 'react-dnd'
+import {useDrop, useDragLayer} from 'react-dnd'
 
 import {IPropertyTemplate} from '../../blocks/board'
 import {MutableBoardView} from '../../blocks/boardView'
@@ -29,14 +29,22 @@ type Props = {
 const Table = (props: Props) => {
     const {boardTree} = props
     const {board, cards, activeView} = boardTree
-    const [changed, triggerChanged] = useState<number>(0)
 
-    const [{offset, resizingColumn}, drop] = useDrop(() => ({
+    const {offset, resizingColumn} = useDragLayer((monitor) => {
+        if (monitor.getItemType() === 'horizontalGrip') {
+            return {
+                offset: monitor.getDifferenceFromInitialOffset()?.x || 0,
+                resizingColumn: monitor.getItem()?.id,
+            }
+        }
+        return {
+            offset: 0,
+            resizingColumn: '',
+        }
+    })
+
+    const [, drop] = useDrop(() => ({
         accept: 'horizontalGrip',
-        collect: (monitor) => ({
-            offset: monitor.getDifferenceFromInitialOffset()?.x || 0,
-            resizingColumn: monitor.getItem<{id: string}>()?.id,
-        }),
         drop: (item: {id: string}, monitor) => {
             const columnWidths = {...activeView.columnWidths}
             const finalOffset = monitor.getDifferenceFromInitialOffset()?.x || 0
@@ -49,14 +57,10 @@ const Table = (props: Props) => {
                 mutator.updateBlock(newView, activeView, 'resize column')
             }
         },
-        hover: () => {
-            triggerChanged(changed + 1)
-        },
-    }), [changed])
+    }), [activeView])
 
     const onDropToCard = (srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)
-        const {activeView} = boardTree
         const {selectedCardIds} = props
 
         const draggedCardIds = Array.from(new Set(selectedCardIds).add(srcCard.id))
@@ -163,6 +167,8 @@ const Table = (props: Props) => {
                         showCard={props.showCard}
                         readonly={props.readonly}
                         onDrop={onDropToCard}
+                        offset={offset}
+                        resizingColumn={resizingColumn}
                     />)
 
                 return tableRow
