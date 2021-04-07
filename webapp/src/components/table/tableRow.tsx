@@ -2,7 +2,6 @@
 // See LICENSE.txt for license information.
 import React, {useState, useRef, useEffect} from 'react'
 import {FormattedMessage} from 'react-intl'
-import {useDrop, useDrag} from 'react-dnd'
 
 import {Card} from '../../blocks/card'
 import {Constants} from '../../constants'
@@ -10,6 +9,7 @@ import mutator from '../../mutator'
 import {BoardTree} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
+import useSortable from '../../hooks/sortable'
 
 import PropertyValueElement from '../propertyValueElement'
 import './tableRow.scss'
@@ -29,25 +29,8 @@ type Props = {
 const TableRow = React.memo((props: Props) => {
     const titleRef = useRef<Editable>(null)
     const [title, setTitle] = useState(props.card.title)
-    const cardRef = useRef<HTMLDivElement>(null)
     const {card} = props
-    const [{isDragging}, drag] = useDrag(() => ({
-        type: 'card',
-        item: card,
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging(),
-        }),
-    }), [card])
-
-    const [{isOver}, drop] = useDrop(() => ({
-        accept: 'card',
-        collect: (monitor) => ({
-            isOver: monitor.isOver(),
-        }),
-        drop: (item: Card) => {
-            props.onDrop(item, card)
-        },
-    }), [card, props.onDrop])
+    const [isDragging, isOver, cardRef] = useSortable('card', card, props.onDrop)
 
     useEffect(() => {
         if (props.focusOnMount) {
@@ -66,8 +49,6 @@ const TableRow = React.memo((props: Props) => {
     if (isOver) {
         className += ' dragover'
     }
-
-    drop(drag(cardRef))
 
     return (
         <div

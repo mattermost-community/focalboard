@@ -1,8 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useRef} from 'react'
+import React from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
-import {useDrag, useDrop} from 'react-dnd'
 
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
@@ -16,6 +15,7 @@ import DuplicateIcon from '../../widgets/icons/duplicate'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
+import useSortable from '../../hooks/sortable'
 
 import ImageElement from '../content/imageElement'
 import ContentElement from '../content/contentElement'
@@ -35,23 +35,7 @@ type Props = {
 
 const GalleryCard = React.memo((props: Props) => {
     const {cardTree} = props
-    const cardRef = useRef<HTMLDivElement>(null)
-    const [{isDragging}, drag] = useDrag(() => ({
-        type: 'card',
-        item: cardTree.card,
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging(),
-        }),
-    }), [cardTree, props.onDrop])
-    const [{isOver}, drop] = useDrop(() => ({
-        accept: 'card',
-        collect: (monitor) => ({
-            isOver: monitor.isOver(),
-        }),
-        drop: (item: Card) => {
-            props.onDrop(item, cardTree.card)
-        },
-    }), [cardTree, props.onDrop])
+    const [isDragging, isOver, cardRef] = useSortable('card', cardTree.card, props.onDrop)
 
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
 
@@ -61,8 +45,6 @@ const GalleryCard = React.memo((props: Props) => {
     if (isOver) {
         className += ' dragover'
     }
-
-    drop(drag(cardRef))
 
     return (
         <div

@@ -1,8 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useRef} from 'react'
+import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
-import {useDrag, useDrop} from 'react-dnd'
 
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
@@ -13,6 +12,7 @@ import DuplicateIcon from '../../widgets/icons/duplicate'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
+import useSortable from '../../hooks/sortable'
 
 import './kanbanCard.scss'
 import PropertyValueElement from '../propertyValueElement'
@@ -28,32 +28,13 @@ type Props = {
 }
 
 const KanbanCard = React.memo((props: Props) => {
-    const cardRef = useRef<HTMLDivElement>(null)
     const {card, intl} = props
-    const [{isDragging}, drag] = useDrag(() => ({
-        type: 'card',
-        item: card,
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging(),
-        }),
-    }), [card])
-    const [{isOver}, drop] = useDrop(() => ({
-        accept: 'card',
-        collect: (monitor) => ({
-            isOver: monitor.isOver(),
-        }),
-        drop: (item: Card) => {
-            props.onDrop(item, card)
-        },
-    }), [card, props.onDrop])
-
+    const [isDragging, isOver, cardRef] = useSortable('card', card, props.onDrop)
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
     let className = props.isSelected ? 'KanbanCard selected' : 'KanbanCard'
     if (isOver) {
         className += ' dragover'
     }
-
-    drop(drag(cardRef))
 
     return (
         <div
