@@ -1,7 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useRef} from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {useDrag, useDrop} from 'react-dnd'
 
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
@@ -29,20 +30,46 @@ type Props = {
     isSelected: boolean
     intl: IntlShape
     readonly: boolean
+    onDrop: (srcCard: Card, dstCard: Card) => void
 }
 
 const GalleryCard = React.memo((props: Props) => {
     const {cardTree} = props
+    const cardRef = useRef<HTMLDivElement>(null)
+    const [{isDragging}, drag] = useDrag(() => ({
+        type: 'card',
+        item: cardTree.card,
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging(),
+        }),
+    }), [cardTree])
+    const [{isOver}, drop] = useDrop(() => ({
+        accept: 'card',
+        collect: (monitor) => ({
+            isOver: monitor.isOver(),
+        }),
+        drop: (item: Card) => {
+            props.onDrop(item, cardTree.card)
+        },
+    }), [cardTree])
 
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
 
     let images: IContentBlock[] = []
     images = cardTree.contents.filter((content) => content.type === 'image')
+    let className = props.isSelected ? 'GalleryCard selected' : 'GalleryCard'
+    if (isOver) {
+        className += ' dragover'
+    }
+
+    drop(drag(cardRef))
 
     return (
         <div
-            className={`GalleryCard ${props.isSelected ? 'selected' : ''}`}
+            className={className}
             onClick={(e: React.MouseEvent) => props.onClick(e, cardTree.card)}
+            style={{opacity: isDragging ? 0.5 : 1}}
+            ref={cardRef}
         >
             {!props.readonly &&
                 <MenuWrapper

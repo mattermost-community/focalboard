@@ -4,6 +4,8 @@ import React, {useState, useEffect} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {Card} from '../../blocks/card'
+import mutator from '../../mutator'
+import {Utils} from '../../utils'
 import {BoardTree} from '../../viewModel/boardTree'
 import {CardTree, MutableCardTree} from '../../viewModel/cardTree'
 import useCardListener from '../../hooks/cardListener'
@@ -24,6 +26,26 @@ const Gallery = (props: Props): JSX.Element => {
     const {cards} = boardTree
     const visiblePropertyTemplates = boardTree.board.cardProperties.filter((template) => boardTree.activeView.visiblePropertyIds.includes(template.id))
     const [cardTrees, setCardTrees] = useState<{[key: string]: CardTree | undefined}>({})
+
+    const onDropToCard = async (srcCard: Card, dstCard: Card) => {
+        Utils.log(`onDropToCard: ${dstCard.title}`)
+        const {selectedCardIds} = props
+        const {activeView} = boardTree
+
+        const draggedCardIds = Array.from(new Set(selectedCardIds).add(srcCard.id))
+
+        const description = draggedCardIds.length > 1 ? `drag ${draggedCardIds.length} cards` : 'drag card'
+
+        // Update dstCard order
+        let cardOrder = [...activeView.cardOrder]
+        cardOrder = cardOrder.filter((id) => !draggedCardIds.includes(id))
+        const destIndex = cardOrder.indexOf(dstCard.id)
+        cardOrder.splice(destIndex, 0, ...draggedCardIds)
+
+        await mutator.performAsUndoGroup(async () => {
+            await mutator.changeViewCardOrder(activeView, cardOrder, description)
+        })
+    }
 
     useCardListener(
         cards.map((c) => c.id),
@@ -62,6 +84,7 @@ const Gallery = (props: Props): JSX.Element => {
                             visiblePropertyTemplates={visiblePropertyTemplates}
                             isSelected={props.selectedCardIds.includes(card.id)}
                             readonly={props.readonly}
+                            onDrop={onDropToCard}
                         />
                     )
                 }
