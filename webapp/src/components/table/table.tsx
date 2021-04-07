@@ -54,6 +54,29 @@ const Table = (props: Props) => {
         },
     }), [changed])
 
+    const onDropToCard = (srcCard: Card, dstCard: Card) => {
+        Utils.log(`onDropToCard: ${dstCard.title}`)
+        const {activeView} = boardTree
+        const {selectedCardIds} = props
+
+        const draggedCardIds = Array.from(new Set(selectedCardIds).add(srcCard.id))
+        const description = draggedCardIds.length > 1 ? `drag ${draggedCardIds.length} cards` : 'drag card'
+
+        // Update dstCard order
+        let cardOrder = Array.from(new Set([...activeView.cardOrder, ...boardTree.cards.map((o) => o.id)]))
+        const isDraggingDown = cardOrder.indexOf(srcCard.id) <= cardOrder.indexOf(dstCard.id)
+        cardOrder = cardOrder.filter((id) => !draggedCardIds.includes(id))
+        let destIndex = cardOrder.indexOf(dstCard.id)
+        if (isDraggingDown) {
+            destIndex += 1
+        }
+        cardOrder.splice(destIndex, 0, ...draggedCardIds)
+
+        mutator.performAsUndoGroup(async () => {
+            await mutator.changeViewCardOrder(activeView, cardOrder, description)
+        })
+    }
+
     const onDropToColumn = async (template: IPropertyTemplate, container: IPropertyTemplate) => {
         Utils.log(`ondrop. Source column: ${template.name}, dest column: ${container.name}`)
 
@@ -139,6 +162,7 @@ const Table = (props: Props) => {
                         }}
                         showCard={props.showCard}
                         readonly={props.readonly}
+                        onDrop={onDropToCard}
                     />)
 
                 return tableRow

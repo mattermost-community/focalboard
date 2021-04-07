@@ -29,7 +29,7 @@ type Props = {
 
 const KanbanCard = React.memo((props: Props) => {
     const cardRef = useRef<HTMLDivElement>(null)
-    const {card, intl, isSelected} = props
+    const {card, intl} = props
     const [{isDragging}, drag] = useDrag(() => ({
         type: 'card',
         item: card,

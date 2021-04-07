@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useState, useRef, useEffect} from 'react'
 import {FormattedMessage} from 'react-intl'
+import {useDrop, useDrag} from 'react-dnd'
 
 import {Card} from '../../blocks/card'
 import {Constants} from '../../constants'
@@ -22,11 +23,31 @@ type Props = {
     showCard: (cardId: string) => void
     readonly: boolean
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
+    onDrop: (srcCard: Card, dstCard: Card) => void
 }
 
 const TableRow = React.memo((props: Props) => {
     const titleRef = useRef<Editable>(null)
     const [title, setTitle] = useState(props.card.title)
+    const cardRef = useRef<HTMLDivElement>(null)
+    const {card} = props
+    const [{isDragging}, drag] = useDrag(() => ({
+        type: 'card',
+        item: card,
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging(),
+        }),
+    }), [card])
+
+    const [{isOver}, drop] = useDrop(() => ({
+        accept: 'card',
+        collect: (monitor) => ({
+            isOver: monitor.isOver(),
+        }),
+        drop: (item: Card) => {
+            props.onDrop(item, card)
+        },
+    }), [card, props.onDrop])
 
     useEffect(() => {
         if (props.focusOnMount) {
@@ -38,15 +59,22 @@ const TableRow = React.memo((props: Props) => {
         return Math.max(Constants.minColumnWidth, props.boardTree.activeView.columnWidths[templateId] || 0)
     }
 
-    const {boardTree, card, onSaveWithEnter} = props
+    const {boardTree, onSaveWithEnter} = props
     const {board, activeView} = boardTree
 
-    const className = props.isSelected ? 'TableRow octo-table-row selected' : 'TableRow octo-table-row'
+    let className = props.isSelected ? 'TableRow octo-table-row selected' : 'TableRow octo-table-row'
+    if (isOver) {
+        className += ' dragover'
+    }
+
+    drop(drag(cardRef))
 
     return (
         <div
             className={className}
             onClick={props.onClick}
+            ref={cardRef}
+            style={{opacity: isDragging ? 0.5 : 1}}
         >
 
             {/* Name / title */}
