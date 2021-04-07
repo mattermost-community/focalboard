@@ -251,11 +251,10 @@ class Kanban extends React.Component<Props, State> {
         }, {})
         const draggedCards: Card[] = draggedCardIds.map((o: string) => cardsById[o])
         let cardOrder = orderedCards.map((o) => o.id)
-        const firstDraggedCard = draggedCards[0]
-        const isDraggingDown = cardOrder.indexOf(firstDraggedCard.id) <= cardOrder.indexOf(dstCard.id)
+        const isDraggingDown = cardOrder.indexOf(srcCard.id) <= cardOrder.indexOf(dstCard.id)
         cardOrder = cardOrder.filter((id) => !draggedCardIds.includes(id))
         let destIndex = cardOrder.indexOf(dstCard.id)
-        if (firstDraggedCard.properties[boardTree.groupByProperty!.id] === optionId && isDraggingDown) {
+        if (srcCard.properties[boardTree.groupByProperty!.id] === optionId && isDraggingDown) {
             // If the cards are in the same column and dragging down, drop after the target dstCard
             destIndex += 1
         }

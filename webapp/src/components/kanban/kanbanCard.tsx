@@ -29,14 +29,14 @@ type Props = {
 
 const KanbanCard = React.memo((props: Props) => {
     const cardRef = useRef<HTMLDivElement>(null)
-    const {card, intl} = props
+    const {card, intl, isSelected} = props
     const [{isDragging}, drag] = useDrag(() => ({
         type: 'card',
         item: card,
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
         }),
-    }))
+    }), [card])
     const [{isOver}, drop] = useDrop(() => ({
         accept: 'card',
         collect: (monitor) => ({
@@ -45,7 +45,7 @@ const KanbanCard = React.memo((props: Props) => {
         drop: (item: Card) => {
             props.onDrop(item, card)
         },
-    }))
+    }), [card, props.onDrop])
 
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
     let className = props.isSelected ? 'KanbanCard selected' : 'KanbanCard'

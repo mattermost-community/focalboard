@@ -27,22 +27,25 @@ const Gallery = (props: Props): JSX.Element => {
     const visiblePropertyTemplates = boardTree.board.cardProperties.filter((template) => boardTree.activeView.visiblePropertyIds.includes(template.id))
     const [cardTrees, setCardTrees] = useState<{[key: string]: CardTree | undefined}>({})
 
-    const onDropToCard = async (srcCard: Card, dstCard: Card) => {
+    const onDropToCard = (srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)
-        const {selectedCardIds} = props
         const {activeView} = boardTree
+        const {selectedCardIds} = props
 
         const draggedCardIds = Array.from(new Set(selectedCardIds).add(srcCard.id))
-
         const description = draggedCardIds.length > 1 ? `drag ${draggedCardIds.length} cards` : 'drag card'
 
         // Update dstCard order
-        let cardOrder = [...activeView.cardOrder]
+        let cardOrder = Array.from(new Set([...activeView.cardOrder, ...boardTree.cards.map((o) => o.id)]))
+        const isDraggingDown = cardOrder.indexOf(srcCard.id) <= cardOrder.indexOf(dstCard.id)
         cardOrder = cardOrder.filter((id) => !draggedCardIds.includes(id))
-        const destIndex = cardOrder.indexOf(dstCard.id)
+        let destIndex = cardOrder.indexOf(dstCard.id)
+        if (isDraggingDown) {
+            destIndex += 1
+        }
         cardOrder.splice(destIndex, 0, ...draggedCardIds)
 
-        await mutator.performAsUndoGroup(async () => {
+        mutator.performAsUndoGroup(async () => {
             await mutator.changeViewCardOrder(activeView, cardOrder, description)
         })
     }

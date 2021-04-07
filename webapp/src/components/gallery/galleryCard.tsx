@@ -42,7 +42,7 @@ const GalleryCard = React.memo((props: Props) => {
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
         }),
-    }), [cardTree])
+    }), [cardTree, props.onDrop])
     const [{isOver}, drop] = useDrop(() => ({
         accept: 'card',
         collect: (monitor) => ({
@@ -51,7 +51,7 @@ const GalleryCard = React.memo((props: Props) => {
         drop: (item: Card) => {
             props.onDrop(item, cardTree.card)
         },
-    }), [cardTree])
+    }), [cardTree, props.onDrop])
 
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
 
