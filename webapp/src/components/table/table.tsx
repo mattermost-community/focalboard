@@ -96,14 +96,15 @@ const Table = (props: Props) => {
     }
 
     return (
-        <div className='octo-table-body Table'>
-
+        <div
+            className='octo-table-body Table'
+            ref={drop}
+        >
             {/* Headers */}
 
             <div
                 className='octo-table-header'
                 id='mainBoardHeader'
-                ref={drop}
             >
                 <TableHeader
                     name={
