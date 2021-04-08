@@ -3,6 +3,7 @@
 import React, {useState, useEffect} from 'react'
 import {FormattedMessage} from 'react-intl'
 
+import {Constants} from '../../constants'
 import {Card} from '../../blocks/card'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
@@ -50,6 +51,8 @@ const Gallery = (props: Props): JSX.Element => {
         })
     }
 
+    const visibleTitle = boardTree.activeView.visiblePropertyIds.includes(Constants.titleColumnId)
+
     useCardListener(
         cards.map((c) => c.id),
         async (blocks) => {
@@ -85,6 +88,7 @@ const Gallery = (props: Props): JSX.Element => {
                             cardTree={cardTree}
                             onClick={props.onCardClicked}
                             visiblePropertyTemplates={visiblePropertyTemplates}
+                            visibleTitle={visibleTitle}
                             isSelected={props.selectedCardIds.includes(card.id)}
                             readonly={props.readonly}
                             onDrop={onDropToCard}

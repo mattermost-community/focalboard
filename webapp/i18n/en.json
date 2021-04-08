@@ -158,5 +158,6 @@
   "ViewTitle.remove-icon": "Remove icon",
   "ViewTitle.show-description": "show description",
   "ViewTitle.untitled-board": "Untitled board",
-  "Workspace.editing-board-template": "You're editing a board template"
+  "Workspace.editing-board-template": "You're editing a board template",
+  "default-properties.title": "Title"
 }

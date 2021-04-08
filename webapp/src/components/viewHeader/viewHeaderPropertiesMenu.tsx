@@ -1,8 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
+import {Constants} from '../../constants'
 import {IPropertyTemplate} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
@@ -13,6 +14,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 type Props = {
     properties: readonly IPropertyTemplate[]
     activeView: BoardView
+    intl: IntlShape
 }
 const ViewHeaderPropertiesMenu = React.memo((props: Props) => {
     const {properties, activeView} = props
@@ -25,6 +27,22 @@ const ViewHeaderPropertiesMenu = React.memo((props: Props) => {
                 />
             </Button>
             <Menu>
+                {activeView.viewType === 'gallery' &&
+                    <Menu.Switch
+                        key={Constants.titleColumnId}
+                        id={Constants.titleColumnId}
+                        name={props.intl.formatMessage({id: 'default-properties.title', defaultMessage: 'Title'})}
+                        isOn={activeView.visiblePropertyIds.includes(Constants.titleColumnId)}
+                        onClick={(propertyId: string) => {
+                            let newVisiblePropertyIds = []
+                            if (activeView.visiblePropertyIds.includes(propertyId)) {
+                                newVisiblePropertyIds = activeView.visiblePropertyIds.filter((o: string) => o !== propertyId)
+                            } else {
+                                newVisiblePropertyIds = [...activeView.visiblePropertyIds, propertyId]
+                            }
+                            mutator.changeViewVisibleProperties(activeView, newVisiblePropertyIds)
+                        }}
+                    />}
                 {properties.map((option: IPropertyTemplate) => (
                     <Menu.Switch
                         key={option.id}
@@ -47,4 +65,4 @@ const ViewHeaderPropertiesMenu = React.memo((props: Props) => {
     )
 })
 
-export default ViewHeaderPropertiesMenu
+export default injectIntl(ViewHeaderPropertiesMenu)

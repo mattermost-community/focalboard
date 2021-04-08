@@ -3,6 +3,7 @@
 import React from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
+import {Constants} from '../../constants'
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {CardTree} from '../../viewModel/cardTree'
@@ -27,6 +28,7 @@ type Props = {
     cardTree: CardTree
     onClick: (e: React.MouseEvent, card: Card) => void
     visiblePropertyTemplates: IPropertyTemplate[]
+    visibleTitle: boolean
     isSelected: boolean
     intl: IntlShape
     readonly: boolean
@@ -93,16 +95,17 @@ const GalleryCard = React.memo((props: Props) => {
                         />
                     ))}
                 </div>}
-            <div className='gallery-title'>
-                { cardTree.card.icon ? <div className='octo-icon'>{cardTree.card.icon}</div> : undefined }
-                <div key='__title'>
-                    {cardTree.card.title ||
-                        <FormattedMessage
-                            id='KanbanCard.untitled'
-                            defaultMessage='Untitled'
-                        />}
-                </div>
-            </div>
+            {props.visibleTitle &&
+                <div className='gallery-title'>
+                    { cardTree.card.icon ? <div className='octo-icon'>{cardTree.card.icon}</div> : undefined }
+                    <div key='__title'>
+                        {cardTree.card.title ||
+                            <FormattedMessage
+                                id='KanbanCard.untitled'
+                                defaultMessage='Untitled'
+                            />}
+                    </div>
+                </div>}
             {visiblePropertyTemplates.length > 0 &&
                 <div className='gallery-props'>
                     {visiblePropertyTemplates.map((template) => (
