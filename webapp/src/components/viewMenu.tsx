@@ -132,6 +132,7 @@ export class ViewMenu extends React.PureComponent<Props> {
         view.viewType = 'gallery'
         view.parentId = board.id
         view.rootId = board.rootId
+        view.visiblePropertyIds = [Constants.titleColumnId]
 
         const oldViewId = boardTree.activeView.id
 
