@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 import {useDrop} from 'react-dnd'
+
 import {Card} from '../../blocks/card'
 
 type Props = {
