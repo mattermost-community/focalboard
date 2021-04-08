@@ -3,7 +3,6 @@
 import React from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
-import {Constants} from '../../constants'
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {CardTree} from '../../viewModel/cardTree'
@@ -16,6 +15,7 @@ import DuplicateIcon from '../../widgets/icons/duplicate'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
+import useSortable from '../../hooks/sortable'
 
 import ImageElement from '../content/imageElement'
 import ContentElement from '../content/contentElement'
@@ -31,20 +31,29 @@ type Props = {
     isSelected: boolean
     intl: IntlShape
     readonly: boolean
+    isManualSort: boolean
+    onDrop: (srcCard: Card, dstCard: Card) => void
 }
 
 const GalleryCard = React.memo((props: Props) => {
     const {cardTree} = props
+    const [isDragging, isOver, cardRef] = useSortable('card', cardTree.card, props.isManualSort, props.onDrop)
 
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
 
     let images: IContentBlock[] = []
     images = cardTree.contents.filter((content) => content.type === 'image')
+    let className = props.isSelected ? 'GalleryCard selected' : 'GalleryCard'
+    if (isOver) {
+        className += ' dragover'
+    }
 
     return (
         <div
-            className={`GalleryCard ${props.isSelected ? 'selected' : ''}`}
+            className={className}
             onClick={(e: React.MouseEvent) => props.onClick(e, cardTree.card)}
+            style={{opacity: isDragging ? 0.5 : 1}}
+            ref={cardRef}
         >
             {!props.readonly &&
                 <MenuWrapper

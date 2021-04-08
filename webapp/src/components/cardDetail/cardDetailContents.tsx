@@ -3,6 +3,7 @@
 import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
+import {IContentBlock} from '../../blocks/contentBlock'
 import {MutableTextBlock} from '../../blocks/textBlock'
 import mutator from '../../mutator'
 import {CardTree} from '../../viewModel/cardTree'
@@ -32,6 +33,22 @@ function addTextBlock(card: Card, intl: IntlShape, text: string): void {
     })
 }
 
+function moveBlock(card: Card, srcBlock: IContentBlock, dstBlock: IContentBlock, intl: IntlShape): void {
+    let contentOrder = card.contentOrder.slice()
+    const isDraggingDown = contentOrder.indexOf(srcBlock.id) <= contentOrder.indexOf(dstBlock.id)
+    contentOrder = contentOrder.filter((id) => srcBlock.id !== id)
+    let destIndex = contentOrder.indexOf(dstBlock.id)
+    if (isDraggingDown) {
+        destIndex += 1
+    }
+    contentOrder.splice(destIndex, 0, srcBlock.id)
+
+    mutator.performAsUndoGroup(async () => {
+        const description = intl.formatMessage({id: 'CardDetail.moveContent', defaultMessage: 'move card content'})
+        await mutator.changeCardContentOrder(card, contentOrder, description)
+    })
+}
+
 const CardDetailContents = React.memo((props: Props) => {
     const {cardTree} = props
     if (!cardTree) {
@@ -49,6 +66,7 @@ const CardDetailContents = React.memo((props: Props) => {
                         card={card}
                         contents={cardTree.contents}
                         readonly={props.readonly}
+                        onDrop={(src, dst) => moveBlock(card, src, dst, props.intl)}
                     />
                 ))}
             </div>

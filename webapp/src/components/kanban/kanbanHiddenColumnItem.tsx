@@ -1,10 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
-import React, {useRef, useState} from 'react'
+import React from 'react'
 import {IntlShape} from 'react-intl'
+import {useDrop} from 'react-dnd'
 
-import {IPropertyOption} from '../../blocks/board'
 import mutator from '../../mutator'
 import {BoardTree, BoardTreeGroup} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
@@ -12,53 +12,39 @@ import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import ShowIcon from '../../widgets/icons/show'
 import Label from '../../widgets/label'
+import {Card} from '../../blocks/card'
 
 type Props = {
     boardTree: BoardTree
     group: BoardTreeGroup
     intl: IntlShape
     readonly: boolean
-    onDropToColumn: (option: IPropertyOption) => void
-    hasDraggedCards: boolean
+    onDrop: (card: Card) => void
 }
 
 export default function KanbanHiddenColumnItem(props: Props): JSX.Element {
     const {boardTree, intl, group} = props
     const {activeView} = boardTree
+    const [{isOver}, drop] = useDrop(() => ({
+        accept: 'card',
+        collect: (monitor) => ({
+            isOver: monitor.isOver(),
+        }),
+        drop: (item: Card) => {
+            props.onDrop(item)
+        },
+    }))
 
-    const ref = useRef<HTMLDivElement>(null)
-    const [dragClass, setDragClass] = useState('')
+    let className = 'octo-board-hidden-item'
+    if (isOver) {
+        className += ' dragover'
+    }
 
     return (
         <div
-            ref={ref}
+            ref={drop}
             key={group.option.id || 'empty'}
-            className={`octo-board-hidden-item ${dragClass}`}
-            onDragOver={(e) => {
-                if (props.hasDraggedCards) {
-                    setDragClass('dragover')
-                    e.preventDefault()
-                }
-            }}
-            onDragEnter={(e) => {
-                if (props.hasDraggedCards) {
-                    setDragClass('dragover')
-                    e.preventDefault()
-                }
-            }}
-            onDragLeave={(e) => {
-                if (props.hasDraggedCards) {
-                    setDragClass('')
-                    e.preventDefault()
-                }
-            }}
-            onDrop={(e) => {
-                setDragClass('')
-                e.preventDefault()
-                if (props.hasDraggedCards) {
-                    props.onDropToColumn(group.option)
-                }
-            }}
+            className={className}
         >
             <MenuWrapper
                 disabled={props.readonly}

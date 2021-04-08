@@ -9,6 +9,7 @@ import mutator from '../../mutator'
 import {BoardTree} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
+import useSortable from '../../hooks/sortable'
 
 import PropertyValueElement from '../propertyValueElement'
 import './tableRow.scss'
@@ -21,12 +22,21 @@ type Props = {
     onSaveWithEnter: () => void
     showCard: (cardId: string) => void
     readonly: boolean
+    offset: number
+    resizingColumn: string
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
+    onDrop: (srcCard: Card, dstCard: Card) => void
 }
 
 const TableRow = React.memo((props: Props) => {
+    const {boardTree, onSaveWithEnter} = props
+    const {board, activeView} = boardTree
+
     const titleRef = useRef<Editable>(null)
     const [title, setTitle] = useState(props.card.title)
+    const {card} = props
+    const isManualSort = activeView.sortOptions.length < 1
+    const [isDragging, isOver, cardRef] = useSortable('card', card, isManualSort, props.onDrop)
 
     useEffect(() => {
         if (props.focusOnMount) {
@@ -35,18 +45,23 @@ const TableRow = React.memo((props: Props) => {
     }, [])
 
     const columnWidth = (templateId: string): number => {
+        if (props.resizingColumn === templateId) {
+            return Math.max(Constants.minColumnWidth, (props.boardTree.activeView.columnWidths[templateId] || 0) + props.offset)
+        }
         return Math.max(Constants.minColumnWidth, props.boardTree.activeView.columnWidths[templateId] || 0)
     }
 
-    const {boardTree, card, onSaveWithEnter} = props
-    const {board, activeView} = boardTree
-
-    const className = props.isSelected ? 'TableRow octo-table-row selected' : 'TableRow octo-table-row'
+    let className = props.isSelected ? 'TableRow octo-table-row selected' : 'TableRow octo-table-row'
+    if (isOver) {
+        className += ' dragover'
+    }
 
     return (
         <div
             className={className}
             onClick={props.onClick}
+            ref={cardRef}
+            style={{opacity: isDragging ? 0.5 : 1}}
         >
 
             {/* Name / title */}
