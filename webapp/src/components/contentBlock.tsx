@@ -16,6 +16,7 @@ import SortDownIcon from '../widgets/icons/sortDown'
 import SortUpIcon from '../widgets/icons/sortUp'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
+import useSortable from '../hooks/sortable'
 
 import ContentElement from './content/contentElement'
 import AddContentMenuItem from './addContentMenuItem'
@@ -28,14 +29,24 @@ type Props = {
     contents: readonly IContentBlock[]
     readonly: boolean
     intl: IntlShape
+    onDrop: (srctBlock: IContentBlock, dstBlock: IContentBlock) => void
 }
 
 const ContentBlock = React.memo((props: Props): JSX.Element => {
     const {intl, card, contents, block, readonly} = props
+    const [isDragging, isOver, contentRef] = useSortable('content', block, true, props.onDrop)
 
     const index = contents.indexOf(block)
+    let className = 'ContentBlock octo-block'
+    if (isOver) {
+        className += ' dragover'
+    }
     return (
-        <div className='ContentBlock octo-block'>
+        <div
+            className={className}
+            style={{opacity: isDragging ? 0.5 : 1}}
+            ref={contentRef}
+        >
             <div className='octo-block-margin'>
                 {!props.readonly &&
                     <MenuWrapper>
