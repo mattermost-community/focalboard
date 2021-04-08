@@ -3,6 +3,7 @@
 import React, {useState, useEffect} from 'react'
 import {FormattedMessage} from 'react-intl'
 
+import {Constants} from '../../constants'
 import {Card} from '../../blocks/card'
 import {BoardTree} from '../../viewModel/boardTree'
 import {CardTree, MutableCardTree} from '../../viewModel/cardTree'
@@ -24,6 +25,7 @@ const Gallery = (props: Props): JSX.Element => {
     const {cards} = boardTree
     const visiblePropertyTemplates = boardTree.board.cardProperties.filter((template) => boardTree.activeView.visiblePropertyIds.includes(template.id))
     const [cardTrees, setCardTrees] = useState<{[key: string]: CardTree | undefined}>({})
+    const visibleTitle = boardTree.activeView.visiblePropertyIds.includes(Constants.titleColumnId)
 
     useCardListener(
         cards.map((c) => c.id),
@@ -60,6 +62,7 @@ const Gallery = (props: Props): JSX.Element => {
                             cardTree={cardTree}
                             onClick={props.onCardClicked}
                             visiblePropertyTemplates={visiblePropertyTemplates}
+                            visibleTitle={visibleTitle}
                             isSelected={props.selectedCardIds.includes(card.id)}
                             readonly={props.readonly}
                         />
