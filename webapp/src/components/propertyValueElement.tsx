@@ -103,7 +103,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                     onChange={setValue}
                     onSave={() => mutator.changePropertyValue(card, propertyTemplate.id, value)}
                     onCancel={() => setValue(propertyValue)}
-                    validator={(value) => validateProp(propertyTemplate.type, value)}
+                    validator={(newValue) => validateProp(propertyTemplate.type, newValue)}
                 />
             )
         }

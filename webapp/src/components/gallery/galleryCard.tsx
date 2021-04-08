@@ -3,7 +3,6 @@
 import React from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
-import {Constants} from '../../constants'
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {CardTree} from '../../viewModel/cardTree'
