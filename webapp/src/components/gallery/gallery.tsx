@@ -23,13 +23,13 @@ type Props = {
 
 const Gallery = (props: Props): JSX.Element => {
     const {boardTree} = props
-    const {cards} = boardTree
+    const {cards, activeView} = boardTree
     const visiblePropertyTemplates = boardTree.board.cardProperties.filter((template) => boardTree.activeView.visiblePropertyIds.includes(template.id))
     const [cardTrees, setCardTrees] = useState<{[key: string]: CardTree | undefined}>({})
+    const isManualSort = activeView.sortOptions.length < 1
 
     const onDropToCard = (srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)
-        const {activeView} = boardTree
         const {selectedCardIds} = props
 
         const draggedCardIds = Array.from(new Set(selectedCardIds).add(srcCard.id))
@@ -88,6 +88,7 @@ const Gallery = (props: Props): JSX.Element => {
                             isSelected={props.selectedCardIds.includes(card.id)}
                             readonly={props.readonly}
                             onDrop={onDropToCard}
+                            isManualSort={isManualSort}
                         />
                     )
                 }

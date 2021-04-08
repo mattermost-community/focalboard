@@ -28,7 +28,8 @@ type Props = {
 }
 
 const TableHeader = React.memo((props: Props): JSX.Element => {
-    const [isDragging, isOver, columnRef] = useSortable('column', props.template, props.onDrop)
+    const isManualSort = props.boardTree.activeView.sortOptions.length < 1
+    const [isDragging, isOver, columnRef] = useSortable('column', props.template, isManualSort, props.onDrop)
 
     const columnWidth = (templateId: string): number => {
         return Math.max(Constants.minColumnWidth, (props.boardTree.activeView.columnWidths[templateId] || 0) + props.offset)

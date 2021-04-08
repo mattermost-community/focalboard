@@ -29,10 +29,14 @@ type Props = {
 }
 
 const TableRow = React.memo((props: Props) => {
+    const {boardTree, onSaveWithEnter} = props
+    const {board, activeView} = boardTree
+
     const titleRef = useRef<Editable>(null)
     const [title, setTitle] = useState(props.card.title)
     const {card} = props
-    const [isDragging, isOver, cardRef] = useSortable('card', card, props.onDrop)
+    const isManualSort = activeView.sortOptions.length < 1
+    const [isDragging, isOver, cardRef] = useSortable('card', card, isManualSort, props.onDrop)
 
     useEffect(() => {
         if (props.focusOnMount) {
@@ -46,9 +50,6 @@ const TableRow = React.memo((props: Props) => {
         }
         return Math.max(Constants.minColumnWidth, props.boardTree.activeView.columnWidths[templateId] || 0)
     }
-
-    const {boardTree, onSaveWithEnter} = props
-    const {board, activeView} = boardTree
 
     let className = props.isSelected ? 'TableRow octo-table-row selected' : 'TableRow octo-table-row'
     if (isOver) {

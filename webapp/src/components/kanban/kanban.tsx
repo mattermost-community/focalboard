@@ -130,6 +130,7 @@ class Kanban extends React.Component<Props, State> {
                                         this.props.onCardClicked(e, card)
                                     }}
                                     onDrop={this.onDropToCard}
+                                    isManualSort={isManualSort}
                                 />
                             ))}
                             {!this.props.readonly &&

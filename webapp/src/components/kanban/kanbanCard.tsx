@@ -25,11 +25,12 @@ type Props = {
     intl: IntlShape
     readonly: boolean
     onDrop: (srcCard: Card, dstCard: Card) => void
+    isManualSort: boolean
 }
 
 const KanbanCard = React.memo((props: Props) => {
     const {card, intl} = props
-    const [isDragging, isOver, cardRef] = useSortable('card', card, props.onDrop)
+    const [isDragging, isOver, cardRef] = useSortable('card', card, props.isManualSort, props.onDrop)
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
     let className = props.isSelected ? 'KanbanCard selected' : 'KanbanCard'
     if (isOver) {
