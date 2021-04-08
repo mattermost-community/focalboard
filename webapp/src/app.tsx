@@ -10,6 +10,7 @@ import {
 } from 'react-router-dom'
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
+import {TouchBackend} from 'react-dnd-touch-backend'
 
 import {FlashMessages} from './components/flashMessages'
 import {getCurrentLanguage, getMessages, storeLanguage} from './i18n'
@@ -20,6 +21,7 @@ import ErrorPage from './pages/errorPage'
 import LoginPage from './pages/loginPage'
 import RegisterPage from './pages/registerPage'
 import {IUser, UserContext} from './user'
+import {Utils} from './utils'
 
 type State = {
     language: string,
@@ -53,7 +55,7 @@ export default class App extends React.PureComponent<unknown, State> {
                 locale={this.state.language}
                 messages={getMessages(this.state.language)}
             >
-                <DndProvider backend={HTML5Backend}>
+                <DndProvider backend={Utils.isMobile() ? TouchBackend : HTML5Backend}>
                     <UserContext.Provider value={this.state.user}>
                         <FlashMessages milliseconds={2000}/>
                         <Router forceRefresh={true}>
