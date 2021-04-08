@@ -107,14 +107,19 @@ function ValueSelector(props: Props): JSX.Element {
                 }),
                 control: (): CSSObject => ({
                     border: 0,
+                    width: '100%',
+                    margin: '4px 0 0 0',
                 }),
                 valueContainer: (provided: CSSObject): CSSObject => ({
                     ...provided,
                     padding: '0 8px',
+                    overflow: 'unset',
                 }),
                 singleValue: (provided: CSSObject): CSSObject => ({
                     ...provided,
                     color: 'rgb(var(--main-fg))',
+                    overflow: 'unset',
+                    maxWidth: 'calc(100% - 20px)',
                 }),
                 input: (provided: CSSObject): CSSObject => ({
                     ...provided,
