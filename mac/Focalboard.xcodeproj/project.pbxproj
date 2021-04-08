@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8014951C261598D600A51700 /* PortUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8014951B261598D600A51700 /* PortUtils.swift */; };
 		80D6DEBB252E13CB00AEED9E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D6DEBA252E13CB00AEED9E /* AppDelegate.swift */; };
 		80D6DEBD252E13CB00AEED9E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D6DEBC252E13CB00AEED9E /* ViewController.swift */; };
 		80D6DEBF252E13CD00AEED9E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 80D6DEBE252E13CD00AEED9E /* Assets.xcassets */; };
@@ -35,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8014951B261598D600A51700 /* PortUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortUtils.swift; sourceTree = "<group>"; };
 		80D6DEB7252E13CB00AEED9E /* Focalboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Focalboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		80D6DEBA252E13CB00AEED9E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		80D6DEBC252E13CB00AEED9E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				80D6DEBA252E13CB00AEED9E /* AppDelegate.swift */,
+				8014951B261598D600A51700 /* PortUtils.swift */,
 				80D6DEBC252E13CB00AEED9E /* ViewController.swift */,
 				80D6DF17252F9BDE00AEED9E /* AutoSaveWindowController.swift */,
 				80D6DEBE252E13CD00AEED9E /* Assets.xcassets */,
@@ -283,6 +286,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8014951C261598D600A51700 /* PortUtils.swift in Sources */,
 				80D6DF18252F9BDE00AEED9E /* AutoSaveWindowController.swift in Sources */,
 				80D6DEBD252E13CB00AEED9E /* ViewController.swift in Sources */,
 				80D6DEBB252E13CB00AEED9E /* AppDelegate.swift in Sources */,

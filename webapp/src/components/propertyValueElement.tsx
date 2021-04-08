@@ -29,6 +29,24 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate)
     const finalDisplayValue = displayValue || emptyDisplayValue
 
+    const validateProp = (propType: string, val: string): boolean => {
+        if (val === '') {
+            return true
+        }
+        switch (propType) {
+        case 'number':
+            return !isNaN(parseInt(val, 10))
+        case 'email': {
+            const emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            return emailRegexp.test(val.toLowerCase())
+        }
+        case 'text':
+            return true
+        default:
+            return false
+        }
+    }
+
     if (propertyTemplate.type === 'select') {
         let propertyColorCssClassName = ''
         const cardPropertyValue = propertyTemplate.options.find((o) => o.id === propertyValue)
@@ -90,6 +108,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                     onChange={setValue}
                     onSave={() => mutator.changePropertyValue(card, propertyTemplate.id, value)}
                     onCancel={() => setValue(propertyValue)}
+                    validator={(newValue) => validateProp(propertyTemplate.type, newValue)}
                 />
             )
         }

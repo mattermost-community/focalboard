@@ -1,45 +1,36 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React from 'react'
+import {useDrop} from 'react-dnd'
+
+import {Card} from '../../blocks/card'
 
 type Props = {
-    onDrop: (e: React.DragEvent<HTMLDivElement>) => void
-    isDropZone: boolean
+    onDrop: (card: Card) => void
     children: React.ReactNode
 }
 
 const KanbanColumn = React.memo((props: Props) => {
-    const [isDragOver, setIsDragOver] = useState(false)
+    const [{isOver}, drop] = useDrop(() => ({
+        accept: 'card',
+        collect: (monitor) => ({
+            isOver: monitor.isOver({shallow: true}),
+        }),
+        drop: (item: Card, monitor) => {
+            if (monitor.isOver({shallow: true})) {
+                props.onDrop(item)
+            }
+        },
+    }))
 
     let className = 'octo-board-column'
-    if (props.isDropZone && isDragOver) {
+    if (isOver) {
         className += ' dragover'
     }
     return (
         <div
+            ref={drop}
             className={className}
-            onDragOver={(e) => {
-                e.preventDefault()
-                if (!isDragOver) {
-                    setIsDragOver(true)
-                }
-            }}
-            onDragEnter={(e) => {
-                e.preventDefault()
-                if (!isDragOver) {
-                    setIsDragOver(true)
-                }
-            }}
-            onDragLeave={(e) => {
-                e.preventDefault()
-                setIsDragOver(false)
-            }}
-            onDrop={(e) => {
-                setIsDragOver(false)
-                if (props.isDropZone) {
-                    props.onDrop(e)
-                }
-            }}
         >
             {props.children}
         </div>

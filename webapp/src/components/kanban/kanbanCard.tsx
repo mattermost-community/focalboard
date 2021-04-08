@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 
 import {IPropertyTemplate} from '../../blocks/board'
@@ -12,6 +12,7 @@ import DuplicateIcon from '../../widgets/icons/duplicate'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
+import useSortable from '../../hooks/sortable'
 
 import './kanbanCard.scss'
 import PropertyValueElement from '../propertyValueElement'
@@ -20,60 +21,29 @@ type Props = {
     card: Card
     visiblePropertyTemplates: IPropertyTemplate[]
     isSelected: boolean
-    isDropZone?: boolean
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
-    onDragStart: (e: React.DragEvent<HTMLDivElement>) => void
-    onDragEnd: (e: React.DragEvent<HTMLDivElement>) => void
-    onDrop: (e: React.DragEvent<HTMLDivElement>) => void
     intl: IntlShape
     readonly: boolean
+    onDrop: (srcCard: Card, dstCard: Card) => void
+    isManualSort: boolean
 }
 
-const KanbanCard = (props: Props) => {
-    const [isDragged, setIsDragged] = useState(false)
-    const [isDragOver, setIsDragOver] = useState(false)
-
+const KanbanCard = React.memo((props: Props) => {
     const {card, intl} = props
+    const [isDragging, isOver, cardRef] = useSortable('card', card, props.isManualSort, props.onDrop)
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
     let className = props.isSelected ? 'KanbanCard selected' : 'KanbanCard'
-    if (props.isDropZone && isDragOver) {
+    if (isOver) {
         className += ' dragover'
     }
 
     return (
         <div
+            ref={props.readonly ? () => null : cardRef}
             className={className}
             draggable={!props.readonly}
-            style={{opacity: isDragged ? 0.5 : 1}}
+            style={{opacity: isDragging ? 0.5 : 1}}
             onClick={props.onClick}
-            onDragStart={(e) => {
-                setIsDragged(true)
-                props.onDragStart(e)
-            }}
-            onDragEnd={(e) => {
-                setIsDragged(false)
-                props.onDragEnd(e)
-            }}
-
-            onDragOver={() => {
-                if (!isDragOver) {
-                    setIsDragOver(true)
-                }
-            }}
-            onDragEnter={() => {
-                if (!isDragOver) {
-                    setIsDragOver(true)
-                }
-            }}
-            onDragLeave={() => {
-                setIsDragOver(false)
-            }}
-            onDrop={(e) => {
-                setIsDragOver(false)
-                if (props.isDropZone) {
-                    props.onDrop(e)
-                }
-            }}
         >
             {!props.readonly &&
                 <MenuWrapper
@@ -115,6 +85,6 @@ const KanbanCard = (props: Props) => {
             ))}
         </div>
     )
-}
+})
 
 export default injectIntl(KanbanCard)

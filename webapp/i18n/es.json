@@ -1,7 +1,4 @@
 {
-  "BoardCard.delete": "Borrar",
-  "BoardCard.duplicate": "Duplicar",
-  "BoardCard.untitled": "Sin título",
   "BoardComponent.add-a-group": "+ Añadir un grupo",
   "BoardComponent.delete": "Borrar",
   "BoardComponent.hidden-columns": "Columnas Ocultas",
@@ -133,6 +130,5 @@
   "ViewTitle.random-icon": "Aleatorio",
   "ViewTitle.remove-icon": "Quitar Icono",
   "ViewTitle.show-description": "mostrar descripción",
-  "ViewTitle.untitled-board": "Panel sin título",
-  "WorkspaceComponent.editing-board-template": "Está editando un plantilla de panel"
+  "ViewTitle.untitled-board": "Panel sin título"
 }

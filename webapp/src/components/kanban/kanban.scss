@@ -37,9 +37,17 @@
         }
 
         .Label{
+            max-width: 165px;
+            margin-right: 5px;
             .Editable {
                 background: transparent;
             }
+        }
+        >.Button {
+            &.IconButton {
+                cursor: pointer;
+            }
+            cursor: auto;
         }
     }
 

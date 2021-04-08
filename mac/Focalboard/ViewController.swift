@@ -45,6 +45,17 @@ class ViewController:
 		WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes as! Set<String>, modifiedSince: date, completionHandler:{ })
 	}
 
+	@IBAction func showDiagnosticsInfo(_ sender: NSObject) {
+		let appDelegate = NSApplication.shared.delegate as! AppDelegate
+
+		let alert: NSAlert = NSAlert()
+		alert.messageText = "Diagnostics info"
+		alert.informativeText = "Port: \(appDelegate.serverPort)"
+		alert.alertStyle = .informational
+		alert.addButton(withTitle: "OK")
+		alert.runModal()
+	}
+
 	@objc func onServerStarted() {
 		NSLog("onServerStarted")
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {

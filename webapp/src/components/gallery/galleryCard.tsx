@@ -15,6 +15,7 @@ import DuplicateIcon from '../../widgets/icons/duplicate'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
+import useSortable from '../../hooks/sortable'
 
 import ImageElement from '../content/imageElement'
 import ContentElement from '../content/contentElement'
@@ -26,23 +27,33 @@ type Props = {
     cardTree: CardTree
     onClick: (e: React.MouseEvent, card: Card) => void
     visiblePropertyTemplates: IPropertyTemplate[]
+    visibleTitle: boolean
     isSelected: boolean
     intl: IntlShape
     readonly: boolean
+    isManualSort: boolean
+    onDrop: (srcCard: Card, dstCard: Card) => void
 }
 
 const GalleryCard = React.memo((props: Props) => {
     const {cardTree} = props
+    const [isDragging, isOver, cardRef] = useSortable('card', cardTree.card, props.isManualSort, props.onDrop)
 
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
 
     let images: IContentBlock[] = []
     images = cardTree.contents.filter((content) => content.type === 'image')
+    let className = props.isSelected ? 'GalleryCard selected' : 'GalleryCard'
+    if (isOver) {
+        className += ' dragover'
+    }
 
     return (
         <div
-            className={`GalleryCard ${props.isSelected ? 'selected' : ''}`}
+            className={className}
             onClick={(e: React.MouseEvent) => props.onClick(e, cardTree.card)}
+            style={{opacity: isDragging ? 0.5 : 1}}
+            ref={cardRef}
         >
             {!props.readonly &&
                 <MenuWrapper
@@ -83,16 +94,17 @@ const GalleryCard = React.memo((props: Props) => {
                         />
                     ))}
                 </div>}
-            <div className='gallery-title'>
-                { cardTree.card.icon ? <div className='octo-icon'>{cardTree.card.icon}</div> : undefined }
-                <div key='__title'>
-                    {cardTree.card.title ||
-                        <FormattedMessage
-                            id='KanbanCard.untitled'
-                            defaultMessage='Untitled'
-                        />}
-                </div>
-            </div>
+            {props.visibleTitle &&
+                <div className='gallery-title'>
+                    { cardTree.card.icon ? <div className='octo-icon'>{cardTree.card.icon}</div> : undefined }
+                    <div key='__title'>
+                        {cardTree.card.title ||
+                            <FormattedMessage
+                                id='KanbanCard.untitled'
+                                defaultMessage='Untitled'
+                            />}
+                    </div>
+                </div>}
             {visiblePropertyTemplates.length > 0 &&
                 <div className='gallery-props'>
                     {visiblePropertyTemplates.map((template) => (

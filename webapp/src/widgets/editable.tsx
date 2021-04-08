@@ -12,6 +12,7 @@ type Props = {
     saveOnEsc?: boolean
     readonly?: boolean
 
+    validator?: (value: string) => boolean
     onCancel?: () => void
     onSave?: (saveType: 'onEnter'|'onEsc'|'onBlur') => void
 }
@@ -22,6 +23,22 @@ export default class Editable extends React.Component<Props> {
 
     shouldComponentUpdate(): boolean {
         return true
+    }
+
+    save = (saveType: 'onEnter'|'onEsc'|'onBlur'): void => {
+        if (this.props.validator && !this.props.validator(this.props.value || '')) {
+            return
+        }
+        if (!this.props.onSave) {
+            return
+        }
+        if (saveType === 'onBlur' && !this.saveOnBlur) {
+            return
+        }
+        if (saveType === 'onEsc' && !this.props.saveOnEsc) {
+            return
+        }
+        this.props.onSave(saveType)
     }
 
     public focus(selectAll = false): void {
@@ -44,30 +61,34 @@ export default class Editable extends React.Component<Props> {
 
     public render(): JSX.Element {
         const {value, onChange, className, placeholderText} = this.props
+        let error = false
+        if (this.props.validator) {
+            error = !this.props.validator(value || '')
+        }
 
         return (
             <input
                 ref={this.elementRef}
-                className={'Editable ' + className}
+                className={'Editable ' + (error ? 'error ' : '') + className}
                 placeholder={placeholderText}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     onChange(e.target.value)
                 }}
                 value={value}
                 title={value}
-                onBlur={() => this.saveOnBlur && this.props.onSave && this.props.onSave('onBlur')}
+                onBlur={() => this.save('onBlur')}
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>): void => {
                     if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
                         e.stopPropagation()
                         if (this.props.saveOnEsc) {
-                            this.props.onSave?.('onEsc')
+                            this.save('onEsc')
                         } else {
                             this.props.onCancel?.()
                         }
                         this.blur()
                     } else if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // Return
                         e.stopPropagation()
-                        this.props.onSave?.('onEnter')
+                        this.save('onEnter')
                         this.blur()
                     }
                 }}
