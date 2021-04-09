@@ -31,7 +31,12 @@ const LoginPage = React.memo(() => {
                     handleLogin()
                 }}
             >
-                <div className='title'>{'Log in'}</div>
+                <div className='title'>{'Log in'}
+                    <FormattedMessage
+                        id='login.log-in-title'
+                        defaultMessage='Log in'
+                    />
+                </div>
                 <div className='username'>
                     <input
                         id='login-username'

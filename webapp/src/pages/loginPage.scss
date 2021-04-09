@@ -15,7 +15,7 @@
         flex-direction: column;
         align-items: flex-start;
         justify-content: center;
-        margin: 60px auto;
+        margin: 50px auto;
     }
 
     @media screen and (max-width: 430px) {
@@ -53,7 +53,7 @@
         }
     }
 
-    > .Button {
+    form > .Button {
         margin-top: 10px;
         margin-bottom: 20px;
         min-height: 38px;

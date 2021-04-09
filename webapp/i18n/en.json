@@ -12,6 +12,7 @@
   "CardDetail.add-icon": "Add icon",
   "CardDetail.add-property": "+ Add a property",
   "CardDetail.addCardText": "add card text",
+  "CardDetail.moveContent": "move card content",
   "CardDetail.new-comment-placeholder": "Add a comment...",
   "CardDialog.editing-template": "You're editing a template",
   "CardDialog.nocard": "This card doesn't exist or is inaccessible",
@@ -159,5 +160,10 @@
   "ViewTitle.show-description": "show description",
   "ViewTitle.untitled-board": "Untitled board",
   "Workspace.editing-board-template": "You're editing a board template",
-  "default-properties.title": "Title"
+  "default-properties.title": "Title",
+  "login.log-in-button": "Log in",
+  "login.log-in-title": "Log in",
+  "login.register-button": "or create an account if you don't have one",
+  "register.login-button": "or login if you already have an account",
+  "register.signup-title": "Sign up for your account"
 }
