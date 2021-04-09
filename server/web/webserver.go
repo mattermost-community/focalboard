@@ -74,8 +74,7 @@ func (ws *Server) registerRoutes() {
 			w.WriteHeader(500)
 			return
 		}
-		injectedCode := fmt.Sprintf("<script>window.baseURL = '%s'</script>", ws.baseURL)
-		err = indexTemplate.ExecuteTemplate(w, "index.html", struct{ InjectedCode string }{injectedCode})
+		err = indexTemplate.ExecuteTemplate(w, "index.html", map[string]string{"BaseURL": ws.baseURL})
 		if err != nil {
 			log.Printf("Unable to serve the index.html fil, err: %v\n", err)
 			w.WriteHeader(500)

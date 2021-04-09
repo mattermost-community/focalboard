@@ -89,6 +89,7 @@ function makeCommonConfig() {
                 chunks: ['main'],
                 template: 'html-templates/page.ejs',
                 filename: 'index.html',
+                publicPath: '{{.BaseURL}}/',
             }),
         ],
         entry: {
