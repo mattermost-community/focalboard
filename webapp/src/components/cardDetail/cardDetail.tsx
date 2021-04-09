@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useState, useRef, useEffect} from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {BlockIcons} from '../../blockIcons'
@@ -27,128 +27,113 @@ type Props = {
     readonly: boolean
 }
 
-type State = {
-    title: string
-}
+const CardDetail = (props: Props): JSX.Element|null => {
+    const {cardTree} = props
+    const [title, setTitle] = useState(cardTree.card.title)
+    const titleRef = useRef<Editable>(null)
+    const titleValueRef = useRef(title)
+    titleValueRef.current = title
 
-class CardDetail extends React.Component<Props, State> {
-    private titleRef = React.createRef<Editable>()
+    useEffect(() => {
+        if (!title) {
+            titleRef.current?.focus()
+        }
+    }, [])
 
-    shouldComponentUpdate(): boolean {
-        return true
+    useEffect(() => {
+        return () => {
+            if (titleValueRef.current !== cardTree?.card.title) {
+                mutator.changeTitle(card, titleValueRef.current)
+            }
+        }
+    }, [])
+
+    if (!cardTree) {
+        return null
     }
 
-    componentDidMount(): void {
-        if (!this.state.title) {
-            this.titleRef.current?.focus()
-        }
-    }
+    const {card, comments} = cardTree
 
-    componentWillUnmount(): void {
-        const {cardTree} = this.props
-        if (!cardTree) {
-            return
-        }
-        const {card} = cardTree
-        if (this.state.title !== card.title) {
-            mutator.changeTitle(card, this.state.title)
-        }
-    }
+    // componentWillUnmount(): void {
+    // }
 
-    constructor(props: Props) {
-        super(props)
-        this.state = {
-            title: props.cardTree.card.title,
-        }
-    }
+    return (
+        <>
+            <div className='CardDetail content'>
+                <BlockIconSelector
+                    block={card}
+                    size='l'
+                    readonly={props.readonly}
+                />
+                {!props.readonly && !card.icon &&
+                    <div className='add-buttons'>
+                        <Button
+                            onClick={() => {
+                                const newIcon = BlockIcons.shared.randomIcon()
+                                mutator.changeIcon(card, newIcon)
+                            }}
+                            icon={<EmojiIcon/>}
+                        >
+                            <FormattedMessage
+                                id='CardDetail.add-icon'
+                                defaultMessage='Add icon'
+                            />
+                        </Button>
+                    </div>}
 
-    render() {
-        const {cardTree} = this.props
-        if (!cardTree) {
-            return null
-        }
-        const {card, comments} = cardTree
+                <Editable
+                    ref={titleRef}
+                    className='title'
+                    value={title}
+                    placeholderText='Untitled'
+                    onChange={(title: string) => setTitle(title)}
+                    saveOnEsc={true}
+                    onSave={() => {
+                        if (title !== props.cardTree.card.title) {
+                            mutator.changeTitle(card, title)
+                        }
+                    }}
+                    onCancel={() => setTitle(props.cardTree.card.title)}
+                    readonly={props.readonly}
+                />
 
-        const icon = card.icon
+                {/* Property list */}
 
-        return (
-            <>
-                <div className='CardDetail content'>
-                    <BlockIconSelector
-                        block={card}
-                        size='l'
-                        readonly={this.props.readonly}
+                <CardDetailProperties
+                    boardTree={props.boardTree}
+                    cardTree={props.cardTree}
+                    readonly={props.readonly}
+                />
+
+                {/* Comments */}
+
+                {!props.readonly &&
+                <>
+                    <hr/>
+                    <CommentsList
+                        comments={comments}
+                        rootId={card.rootId}
+                        cardId={card.id}
                     />
-                    {!this.props.readonly && !icon &&
-                        <div className='add-buttons'>
-                            <Button
-                                onClick={() => {
-                                    const newIcon = BlockIcons.shared.randomIcon()
-                                    mutator.changeIcon(card, newIcon)
-                                }}
-                                icon={<EmojiIcon/>}
-                            >
-                                <FormattedMessage
-                                    id='CardDetail.add-icon'
-                                    defaultMessage='Add icon'
-                                />
-                            </Button>
-                        </div>}
-
-                    <Editable
-                        ref={this.titleRef}
-                        className='title'
-                        value={this.state.title}
-                        placeholderText='Untitled'
-                        onChange={(title: string) => this.setState({title})}
-                        saveOnEsc={true}
-                        onSave={() => {
-                            if (this.state.title !== this.props.cardTree.card.title) {
-                                mutator.changeTitle(card, this.state.title)
-                            }
-                        }}
-                        onCancel={() => this.setState({title: this.props.cardTree.card.title})}
-                        readonly={this.props.readonly}
-                    />
-
-                    {/* Property list */}
-
-                    <CardDetailProperties
-                        boardTree={this.props.boardTree}
-                        cardTree={this.props.cardTree}
-                        readonly={this.props.readonly}
-                    />
-
-                    {/* Comments */}
-
-                    {!this.props.readonly &&
-                    <>
-                        <hr/>
-                        <CommentsList
-                            comments={comments}
-                            rootId={card.rootId}
-                            cardId={card.id}
-                        />
-                        <hr/>
-                    </>
-                    }
-                </div>
-
-                {/* Content blocks */}
-
-                <div className='CardDetail content fullwidth'>
-                    <CardDetailContents
-                        cardTree={this.props.cardTree}
-                        readonly={this.props.readonly}
-                    />
-                </div>
-
-                {!this.props.readonly &&
-                    <CardDetailContentsMenu card={this.props.cardTree.card}/>
+                    <hr/>
+                </>
                 }
-            </>
-        )
-    }
+            </div>
+
+            {/* Content blocks */}
+
+            <div className='CardDetail content fullwidth'>
+                <CardDetailContents
+                    cardTree={props.cardTree}
+                    readonly={props.readonly}
+                />
+            </div>
+
+            {!props.readonly &&
+                <CardDetailContentsMenu card={props.cardTree.card}/>
+            }
+        </>
+    )
 }
 
 export default injectIntl(CardDetail)
