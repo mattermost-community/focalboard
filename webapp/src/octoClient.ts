@@ -25,7 +25,7 @@ class OctoClient {
     }
 
     constructor(serverUrl?: string, public workspaceId = '0') {
-        this.serverUrl = serverUrl || window.location.origin
+        this.serverUrl = serverUrl || Utils.getBaseURL(true)
         Utils.log(`OctoClient serverUrl: ${this.serverUrl}`)
     }
 

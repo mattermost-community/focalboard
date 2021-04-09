@@ -58,7 +58,10 @@ export default class App extends React.PureComponent<unknown, State> {
                 <DndProvider backend={Utils.isMobile() ? TouchBackend : HTML5Backend}>
                     <UserContext.Provider value={this.state.user}>
                         <FlashMessages milliseconds={2000}/>
-                        <Router forceRefresh={true}>
+                        <Router
+                            forceRefresh={true}
+                            basename={Utils.getBaseURL()}
+                        >
                             <div id='frame'>
                                 <div id='main'>
                                     <Switch>
@@ -76,30 +79,20 @@ export default class App extends React.PureComponent<unknown, State> {
                                         </Route>
                                         <Route path='/shared'>
                                             <BoardPage
-                                                workspaceId='0'
                                                 readonly={true}
                                                 setLanguage={this.setAndStoreLanguage}
                                             />
                                         </Route>
                                         <Route path='/board'>
                                             {this.state.initialLoad && !this.state.user && <Redirect to='/login'/>}
+                                            <BoardPage setLanguage={this.setAndStoreLanguage}/>
+                                        </Route>
+                                        <Route path='/workspace/:workspaceId/shared'>
                                             <BoardPage
-                                                workspaceId='0'
+                                                readonly={true}
                                                 setLanguage={this.setAndStoreLanguage}
                                             />
                                         </Route>
-                                        <Route
-                                            path='/workspace/:workspaceId/shared'
-                                            render={({match}) => {
-                                                return (
-                                                    <BoardPage
-                                                        workspaceId={match.params.workspaceId}
-                                                        readonly={true}
-                                                        setLanguage={this.setAndStoreLanguage}
-                                                    />
-                                                )
-                                            }}
-                                        />
                                         <Route
                                             path='/workspace/:workspaceId/'
                                             render={({match}) => {
@@ -109,19 +102,13 @@ export default class App extends React.PureComponent<unknown, State> {
                                                     return <Redirect to={loginUrl}/>
                                                 }
                                                 return (
-                                                    <BoardPage
-                                                        workspaceId={match.params.workspaceId}
-                                                        setLanguage={this.setAndStoreLanguage}
-                                                    />
+                                                    <BoardPage setLanguage={this.setAndStoreLanguage}/>
                                                 )
                                             }}
                                         />
                                         <Route path='/'>
                                             {this.state.initialLoad && !this.state.user && <Redirect to='/login'/>}
-                                            <BoardPage
-                                                workspaceId='0'
-                                                setLanguage={this.setAndStoreLanguage}
-                                            />
+                                            <BoardPage setLanguage={this.setAndStoreLanguage}/>
                                         </Route>
                                     </Switch>
                                 </div>

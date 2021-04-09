@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
+import {withRouter, RouteComponentProps} from 'react-router-dom'
 
 import {ISharing} from '../blocks/sharing'
 
@@ -16,7 +17,7 @@ import Switch from '../widgets/switch'
 import Modal from './modal'
 import './shareBoardComponent.scss'
 
-type Props = {
+type Props = RouteComponentProps<{workspaceId?: string}> & {
     boardId: string
     onClose: () => void
     intl: IntlShape
@@ -49,14 +50,10 @@ class ShareBoardComponent extends React.PureComponent<Props, State> {
         const shareUrl = new URL(window.location.toString())
         shareUrl.searchParams.set('r', readToken)
 
-        const components = shareUrl.pathname.split('/')
-
-        // TODO: Consider passing workspaceId through props instead
-        if (components.length >= 2 && components[1].toLowerCase() === 'workspace') {
-            const workspaceId = components[2]
-            shareUrl.pathname = `/workspace/${workspaceId}/shared`
+        if (this.props.match.params.workspaceId) {
+            shareUrl.pathname = Utils.buildURL(`/workspace/${this.props.match.params.workspaceId}/shared`)
         } else {
-            shareUrl.pathname = '/shared'
+            shareUrl.pathname = Utils.buildURL('/shared')
         }
 
         let stateDescription: string
@@ -142,4 +139,4 @@ class ShareBoardComponent extends React.PureComponent<Props, State> {
     }
 }
 
-export default injectIntl(ShareBoardComponent)
+export default withRouter(injectIntl(ShareBoardComponent))

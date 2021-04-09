@@ -19,5 +19,6 @@
 	"authMode": "native",
 	"mattermostURL": "",
 	"mattermostClientID": "",
-	"mattermostClientSecret": ""
+	"mattermostClientSecret": "",
+	"baseUrl": "/focalboard/"
 }
