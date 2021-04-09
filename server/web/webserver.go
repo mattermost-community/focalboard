@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 	"path/filepath"
@@ -31,7 +32,7 @@ type Server struct {
 }
 
 // NewServer creates a new instance of the webserver.
-func NewServer(rootPath string, baseURL string, port int, ssl, localOnly bool) *Server {
+func NewServer(rootPath string, serverRoot string, port int, ssl, localOnly bool) *Server {
 	r := mux.NewRouter()
 
 	var addr string
@@ -40,6 +41,13 @@ func NewServer(rootPath string, baseURL string, port int, ssl, localOnly bool) *
 	} else {
 		addr = fmt.Sprintf(`:%d`, port)
 	}
+
+	baseURL := ""
+	url, err := url.Parse(serverRoot)
+	if err != nil {
+		log.Printf("Invalid ServerRoot setting: %v\n", err)
+	}
+	baseURL = url.Path
 
 	ws := &Server{
 		Server: http.Server{

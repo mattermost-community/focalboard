@@ -97,7 +97,7 @@ export default class App extends React.PureComponent<unknown, State> {
                                             path='/workspace/:workspaceId/'
                                             render={({match}) => {
                                                 if (this.state.initialLoad && !this.state.user) {
-                                                    const redirectUrl = `/workspace/${match.params.workspaceId}/`
+                                                    const redirectUrl = '/' + Utils.buildURL(`/workspace/${match.params.workspaceId}/`)
                                                     const loginUrl = `/login?r=${encodeURIComponent(redirectUrl)}`
                                                     return <Redirect to={loginUrl}/>
                                                 }
