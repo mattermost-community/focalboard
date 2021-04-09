@@ -25,7 +25,7 @@ type Props = {
 
 const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
     const [wasCopied, setWasCopied] = useState(false)
-    const [sharing, setSharing] = useState<ISharing|null>(null)
+    const [sharing, setSharing] = useState<ISharing|undefined>(undefined)
     const match = useRouteMatch<{workspaceId?: string}>()
 
     const loadData = async () => {
