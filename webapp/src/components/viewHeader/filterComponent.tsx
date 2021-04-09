@@ -3,7 +3,6 @@
 import React from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
-import {IPropertyTemplate} from '../../blocks/board'
 import {FilterClause, FilterCondition} from '../../blocks/filterClause'
 import {FilterGroup} from '../../blocks/filterGroup'
 import mutator from '../../mutator'
@@ -15,6 +14,8 @@ import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 
 import Modal from '../modal'
+
+import FilterValue from './filterValue'
 
 import './filterComponent.scss'
 
@@ -117,9 +118,12 @@ class FilterComponent extends React.Component<Props> {
                                         />
                                     </Menu>
                                 </MenuWrapper>
-                                {
-                                    template && this.filterValue(filter, template)
-                                }
+                                {template &&
+                                    <FilterValue
+                                        filter={filter}
+                                        template={template}
+                                        view={activeView}
+                                    />}
                                 <div className='octo-spacer'/>
                                 <Button onClick={() => this.deleteClicked(filter)}>
                                     <FormattedMessage
@@ -141,56 +145,6 @@ class FilterComponent extends React.Component<Props> {
                 </div>
             </Modal>
         )
-    }
-
-    private filterValue(filter: FilterClause, template: IPropertyTemplate): JSX.Element | undefined {
-        const {boardTree} = this.props
-        const {activeView: view} = boardTree
-
-        if (filter.condition === 'includes' || filter.condition === 'notIncludes') {
-            let displayValue: string
-            if (filter.values.length > 0) {
-                displayValue = filter.values.map((id) => {
-                    const option = template.options.find((o) => o.id === id)
-                    return option?.value || '(Unknown)'
-                }).join(', ')
-            } else {
-                displayValue = '(empty)'
-            }
-
-            return (
-                <MenuWrapper>
-                    <Button>{displayValue}</Button>
-                    <Menu>
-                        {template.options.map((o) => (
-                            <Menu.Switch
-                                key={o.id}
-                                id={o.id}
-                                name={o.value}
-                                isOn={filter.values.includes(o.id)}
-                                onClick={(optionId) => {
-                                    const filterIndex = view.filter.filters.indexOf(filter)
-                                    Utils.assert(filterIndex >= 0, "Can't find filter")
-
-                                    const filterGroup = new FilterGroup(view.filter)
-                                    const newFilter = filterGroup.filters[filterIndex] as FilterClause
-                                    Utils.assert(newFilter, `No filter at index ${filterIndex}`)
-                                    if (filter.values.includes(o.id)) {
-                                        newFilter.values = newFilter.values.filter((id) => id !== optionId)
-                                        mutator.changeViewFilter(view, filterGroup)
-                                    } else {
-                                        newFilter.values.push(optionId)
-                                        mutator.changeViewFilter(view, filterGroup)
-                                    }
-                                }}
-                            />
-                        ))}
-                    </Menu>
-                </MenuWrapper>
-            )
-        }
-
-        return undefined
     }
 
     private deleteClicked(filter: FilterClause) {
