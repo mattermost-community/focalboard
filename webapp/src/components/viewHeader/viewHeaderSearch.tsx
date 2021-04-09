@@ -17,7 +17,7 @@ type Props = {
 const ViewHeaderSearch = (props: Props) => {
     const {boardTree, intl} = props
 
-    const searchFieldRef = useRef<Editable>(null)
+    const searchFieldRef = useRef<{focus(selectAll?: boolean): void}>(null)
     const [isSearching, setIsSearching] = useState(Boolean(props.boardTree.getSearchText()))
     const [searchValue, setSearchValue] = useState(boardTree.getSearchText())
 

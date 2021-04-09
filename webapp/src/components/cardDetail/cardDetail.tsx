@@ -30,7 +30,7 @@ type Props = {
 const CardDetail = (props: Props): JSX.Element|null => {
     const {cardTree} = props
     const [title, setTitle] = useState(cardTree.card.title)
-    const titleRef = useRef<Editable>(null)
+    const titleRef = useRef<{focus(selectAll?: boolean): void}>(null)
     const titleValueRef = useRef(title)
     titleValueRef.current = title
 
