@@ -11,12 +11,13 @@ type Props = {
     icon?: React.ReactNode
     filled?: boolean
     active?: boolean
+    submit?: boolean
 }
 
 function Button(props: Props): JSX.Element {
     return (
         <button
-            type='button'
+            type={props.submit ? 'submit' : 'button'}
             onClick={props.onClick}
             className={`Button ${props.active ? 'active' : ''} ${props.filled ? 'filled' : ''}`}
             title={props.title}
