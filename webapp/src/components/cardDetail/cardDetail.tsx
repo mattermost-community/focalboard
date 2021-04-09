@@ -86,7 +86,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     className='title'
                     value={title}
                     placeholderText='Untitled'
-                    onChange={(title: string) => setTitle(title)}
+                    onChange={(newTitle: string) => setTitle(newTitle)}
                     saveOnEsc={true}
                     onSave={() => {
                         if (title !== props.cardTree.card.title) {
