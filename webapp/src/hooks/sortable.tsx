@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useRef} from 'react'
-import {useDrag, useDrop, DragElementWrapper, DragPreviewOptions} from 'react-dnd'
+import {useDrag, useDrop} from 'react-dnd'
 
 export default function useSortable(itemType: string, item: any, enabled: boolean, handler: (src: any, st: any) => void): [boolean, boolean, React.RefObject<HTMLDivElement>, React.RefObject<HTMLDivElement>] {
     const ref = useRef<HTMLDivElement>(null)
