@@ -16,6 +16,8 @@
 		80D6DED9252E13CD00AEED9E /* FocalboardUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D6DED8252E13CD00AEED9E /* FocalboardUITests.swift */; };
 		80D6DEEA252E15D100AEED9E /* resources in Resources */ = {isa = PBXBuildFile; fileRef = 80D6DEE9252E15D100AEED9E /* resources */; };
 		80D6DF18252F9BDE00AEED9E /* AutoSaveWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D6DF17252F9BDE00AEED9E /* AutoSaveWindowController.swift */; };
+		80F8BF502624E1BB00FF3943 /* WhatsNewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F8BF4F2624E1BB00FF3943 /* WhatsNewViewController.swift */; };
+		80F8BF582624EB0C00FF3943 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F8BF572624EB0C00FF3943 /* Globals.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,8 @@
 		80D6DEE9252E15D100AEED9E /* resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = resources; sourceTree = "<group>"; };
 		80D6DF17252F9BDE00AEED9E /* AutoSaveWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoSaveWindowController.swift; sourceTree = "<group>"; };
 		80D6DF1C25324A4F00AEED9E /* Inherit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Inherit.entitlements; sourceTree = "<group>"; };
+		80F8BF4F2624E1BB00FF3943 /* WhatsNewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatsNewViewController.swift; sourceTree = "<group>"; };
+		80F8BF572624EB0C00FF3943 /* Globals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,8 +109,10 @@
 			isa = PBXGroup;
 			children = (
 				80D6DEBA252E13CB00AEED9E /* AppDelegate.swift */,
+				80F8BF572624EB0C00FF3943 /* Globals.swift */,
 				8014951B261598D600A51700 /* PortUtils.swift */,
 				80D6DEBC252E13CB00AEED9E /* ViewController.swift */,
+				80F8BF4F2624E1BB00FF3943 /* WhatsNewViewController.swift */,
 				80D6DF17252F9BDE00AEED9E /* AutoSaveWindowController.swift */,
 				80D6DEBE252E13CD00AEED9E /* Assets.xcassets */,
 				80D6DEC0252E13CD00AEED9E /* Main.storyboard */,
@@ -287,6 +293,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8014951C261598D600A51700 /* PortUtils.swift in Sources */,
+				80F8BF502624E1BB00FF3943 /* WhatsNewViewController.swift in Sources */,
+				80F8BF582624EB0C00FF3943 /* Globals.swift in Sources */,
 				80D6DF18252F9BDE00AEED9E /* AutoSaveWindowController.swift in Sources */,
 				80D6DEBD252E13CB00AEED9E /* ViewController.swift in Sources */,
 				80D6DEBB252E13CB00AEED9E /* AppDelegate.swift in Sources */,

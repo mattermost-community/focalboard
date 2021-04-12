@@ -8,6 +8,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	static let serverStartedNotification = NSNotification.Name("serverStarted")
 
 	private var serverProcess: Process?
+	private weak var whatsnewWindow: NSWindow?
 
 	var isServerStarted: Bool {
 		get { return serverProcess != nil }
@@ -19,6 +20,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		copyResources()
 		startServer()
+
+		showWhatsNewDialogIfNeeded()
 
 		NotificationCenter.default.post(name: AppDelegate.serverStartedNotification, object: nil)
 	}
@@ -33,6 +36,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		let windowController = mainStoryBoard.instantiateController(withIdentifier: "WindowController") as! NSWindowController
 		windowController.showWindow(self)
 		windowController.contentViewController = tabViewController
+	}
+
+	private func showWhatsNewDialogIfNeeded() {
+		if Globals.currentWhatsNewVersion < Globals.WhatsNewVersion {
+			Globals.currentWhatsNewVersion = Globals.WhatsNewVersion
+			showWhatsNew(self)
+		}
+	}
+
+	@IBAction func showWhatsNew(_: AnyObject) {
+		if let whatsnewWindow = self.whatsnewWindow {
+			whatsnewWindow.close()
+			self.whatsnewWindow = nil
+		}
+
+		let controller: WhatsNewViewController = NSStoryboard.main!.instantiateController(withIdentifier: "WhatsNewViewController") as! WhatsNewViewController
+		let window = NSWindow(contentViewController: controller)
+		self.whatsnewWindow = window
+
+		window.makeKeyAndOrderFront(self)
+		let vc = NSWindowController(window: window)
+		vc.showWindow(self)
 	}
 
 	private func webFolder() -> URL {
