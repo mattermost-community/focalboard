@@ -12,6 +12,7 @@
   "CardDetail.add-icon": "Добавить иконку",
   "CardDetail.add-property": "+ Добавить свойство",
   "CardDetail.addCardText": "добавить текст карточки",
+  "CardDetail.moveContent": "переместить содержимое карты",
   "CardDetail.new-comment-placeholder": "Добавить комментарий...",
   "CardDialog.editing-template": "Вы редактируете шаблон",
   "CardDialog.nocard": "Карточка не существует или недоступна",
@@ -158,5 +159,11 @@
   "ViewTitle.remove-icon": "Убрать иконку",
   "ViewTitle.show-description": "показать описание",
   "ViewTitle.untitled-board": "Доска без названия",
-  "Workspace.editing-board-template": "Вы редактируете шаблон доски"
+  "Workspace.editing-board-template": "Вы редактируете шаблон доски",
+  "default-properties.title": "Заголовок",
+  "login.log-in-button": "Вход в систему",
+  "login.log-in-title": "Вход в систему",
+  "login.register-button": "или создать аккаунт, если у вас его нет",
+  "register.login-button": "или войти в систему, если у вас уже есть аккаунт",
+  "register.signup-title": "Зарегистрируйте свой аккаунт"
 }
