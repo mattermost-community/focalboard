@@ -1,37 +1,29 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage} from 'react-intl'
 
 import {FilterClause, FilterCondition} from '../../blocks/filterClause'
 import {FilterGroup} from '../../blocks/filterGroup'
 import mutator from '../../mutator'
-import {OctoUtils} from '../../octoUtils'
 import {Utils} from '../../utils'
 import {BoardTree} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
-import Menu from '../../widgets/menu'
-import MenuWrapper from '../../widgets/menuWrapper'
 
 import Modal from '../modal'
 
-import FilterValue from './filterValue'
+import FilterEntry from './filterEntry'
 
 import './filterComponent.scss'
 
 type Props = {
     boardTree: BoardTree
     onClose: () => void
-    intl: IntlShape
 }
 
-class FilterComponent extends React.Component<Props> {
-    public shouldComponentUpdate(): boolean {
-        return true
-    }
-
-    private conditionClicked = (optionId: string, filter: FilterClause): void => {
-        const {boardTree} = this.props
+const FilterComponent = React.memo((props: Props): JSX.Element => {
+    const conditionClicked = (optionId: string, filter: FilterClause): void => {
+        const {boardTree} = props
         const {activeView: view} = boardTree
 
         const filterIndex = view.filter.filters.indexOf(filter)
@@ -47,118 +39,8 @@ class FilterComponent extends React.Component<Props> {
         }
     }
 
-    render(): JSX.Element {
-        const {boardTree, intl} = this.props
-        const {board, activeView} = boardTree
-
-        // TODO: Handle FilterGroups (compound filter statements)
-        const filters: FilterClause[] = activeView.filter?.filters.filter((o) => !FilterGroup.isAnInstanceOf(o)) as FilterClause[] || []
-
-        return (
-            <Modal
-                onClose={this.props.onClose}
-            >
-                <div
-                    className='FilterComponent'
-                >
-                    {filters.map((filter) => {
-                        const template = board.cardProperties.find((o) => o.id === filter.propertyId)
-                        const propertyName = template ? template.name : '(unknown)'		// TODO: Handle error
-                        const key = `${filter.propertyId}-${filter.condition}-${filter.values.join(',')}`
-                        return (
-                            <div
-                                className='octo-filterclause'
-                                key={key}
-                            >
-                                <MenuWrapper>
-                                    <Button>{propertyName}</Button>
-                                    <Menu>
-                                        {board.cardProperties.filter((o) => o.type === 'select').map((o) => (
-                                            <Menu.Text
-                                                key={o.id}
-                                                id={o.id}
-                                                name={o.name}
-                                                onClick={(optionId: string) => {
-                                                    const filterIndex = activeView.filter.filters.indexOf(filter)
-                                                    Utils.assert(filterIndex >= 0, "Can't find filter")
-                                                    const filterGroup = new FilterGroup(activeView.filter)
-                                                    const newFilter = filterGroup.filters[filterIndex] as FilterClause
-                                                    Utils.assert(newFilter, `No filter at index ${filterIndex}`)
-                                                    if (newFilter.propertyId !== optionId) {
-                                                        newFilter.propertyId = optionId
-                                                        newFilter.values = []
-                                                        mutator.changeViewFilter(activeView, filterGroup)
-                                                    }
-                                                }}
-                                            />))}
-                                    </Menu>
-                                </MenuWrapper>
-                                <MenuWrapper>
-                                    <Button>{OctoUtils.filterConditionDisplayString(filter.condition, intl)}</Button>
-                                    <Menu>
-                                        <Menu.Text
-                                            id='includes'
-                                            name={intl.formatMessage({id: 'Filter.includes', defaultMessage: 'includes'})}
-                                            onClick={(id) => this.conditionClicked(id, filter)}
-                                        />
-                                        <Menu.Text
-                                            id='notIncludes'
-                                            name={intl.formatMessage({id: 'Filter.not-includes', defaultMessage: 'doesn\'t include'})}
-                                            onClick={(id) => this.conditionClicked(id, filter)}
-                                        />
-                                        <Menu.Text
-                                            id='isEmpty'
-                                            name={intl.formatMessage({id: 'Filter.is-empty', defaultMessage: 'is empty'})}
-                                            onClick={(id) => this.conditionClicked(id, filter)}
-                                        />
-                                        <Menu.Text
-                                            id='isNotEmpty'
-                                            name={intl.formatMessage({id: 'Filter.is-not-empty', defaultMessage: 'is not empty'})}
-                                            onClick={(id) => this.conditionClicked(id, filter)}
-                                        />
-                                    </Menu>
-                                </MenuWrapper>
-                                {template &&
-                                    <FilterValue
-                                        filter={filter}
-                                        template={template}
-                                        view={activeView}
-                                    />}
-                                <div className='octo-spacer'/>
-                                <Button onClick={() => this.deleteClicked(filter)}>
-                                    <FormattedMessage
-                                        id='FilterComponent.delete'
-                                        defaultMessage='Delete'
-                                    />
-                                </Button>
-                            </div>)
-                    })}
-
-                    <br/>
-
-                    <Button onClick={() => this.addFilterClicked()}>
-                        <FormattedMessage
-                            id='FilterComponent.add-filter'
-                            defaultMessage='+ Add filter'
-                        />
-                    </Button>
-                </div>
-            </Modal>
-        )
-    }
-
-    private deleteClicked(filter: FilterClause) {
-        const {boardTree} = this.props
-        const {activeView: view} = boardTree
-
-        const filterGroup = new FilterGroup(view.filter)
-        filterGroup.filters = filterGroup.filters.filter((o) => FilterGroup.isAnInstanceOf(o) || !o.isEqual(filter))
-
-        mutator.changeViewFilter(view, filterGroup)
-    }
-
-    private addFilterClicked() {
-        const {boardTree} = this.props
+    const addFilterClicked = () => {
+        const {boardTree} = props
         const {board, activeView: view} = boardTree
 
         const filters = view.filter?.filters.filter((o) => !FilterGroup.isAnInstanceOf(o)) as FilterClause[] || []
@@ -176,6 +58,41 @@ class FilterComponent extends React.Component<Props> {
 
         mutator.changeViewFilter(view, filterGroup)
     }
-}
 
-export default injectIntl(FilterComponent)
+    const {boardTree} = props
+    const {board, activeView} = boardTree
+
+    // TODO: Handle FilterGroups (compound filter statements)
+    const filters: FilterClause[] = activeView.filter?.filters.filter((o) => !FilterGroup.isAnInstanceOf(o)) as FilterClause[] || []
+
+    return (
+        <Modal
+            onClose={props.onClose}
+        >
+            <div
+                className='FilterComponent'
+            >
+                {filters.map((filter) => (
+                    <FilterEntry
+                        key={`${filter.propertyId}-${filter.condition}-${filter.values.join(',')}`}
+                        board={board}
+                        view={activeView}
+                        conditionClicked={conditionClicked}
+                        filter={filter}
+                    />
+                ))}
+
+                <br/>
+
+                <Button onClick={() => addFilterClicked()}>
+                    <FormattedMessage
+                        id='FilterComponent.add-filter'
+                        defaultMessage='+ Add filter'
+                    />
+                </Button>
+            </div>
+        </Modal>
+    )
+})
+
+export default FilterComponent
