@@ -14,6 +14,7 @@ import DeleteIcon from '../widgets/icons/delete'
 import OptionsIcon from '../widgets/icons/options'
 import SortDownIcon from '../widgets/icons/sortDown'
 import SortUpIcon from '../widgets/icons/sortUp'
+import GripIcon from '../widgets/icons/grip'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 import useSortable from '../hooks/sortable'
@@ -34,7 +35,7 @@ type Props = {
 
 const ContentBlock = React.memo((props: Props): JSX.Element => {
     const {intl, card, contents, block, readonly} = props
-    const [isDragging, isOver, contentRef] = useSortable('content', block, true, props.onDrop)
+    const [isDragging, isOver, dragRef, previewRef] = useSortable('content', block, true, props.onDrop)
 
     const index = contents.indexOf(block)
     let className = 'ContentBlock octo-block'
@@ -45,7 +46,7 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
         <div
             className={className}
             style={{opacity: isDragging ? 0.5 : 1}}
-            ref={contentRef}
+            ref={previewRef}
         >
             <div className='octo-block-margin'>
                 {!props.readonly &&
@@ -105,6 +106,12 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
                         </Menu>
                     </MenuWrapper>
                 }
+                <div
+                    ref={dragRef}
+                    className='dnd-handle'
+                >
+                    <GripIcon/>
+                </div>
             </div>
             <ContentElement
                 block={block}
