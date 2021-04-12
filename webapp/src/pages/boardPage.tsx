@@ -19,7 +19,6 @@ import './boardPage.scss'
 type Props = {
     readonly?: boolean
     workspaceId: string
-    setLanguage: (lang: string) => void
     intl: IntlShape
 }
 
@@ -177,7 +176,6 @@ class BoardPage extends React.Component<Props, State> {
                     setSearchText={(text) => {
                         this.setSearchText(text)
                     }}
-                    setLanguage={this.props.setLanguage}
                     readonly={this.props.readonly || false}
                 />
             </div>

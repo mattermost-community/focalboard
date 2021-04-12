@@ -20,7 +20,6 @@ type Props = {
     showBoard: (id?: string) => void
     showView: (id: string, boardId?: string) => void
     setSearchText: (text?: string) => void
-    setLanguage: (lang: string) => void
     readonly: boolean
 }
 
@@ -45,7 +44,7 @@ function centerContent(props: Props) {
 }
 
 const Workspace = React.memo((props: Props) => {
-    const {workspace, boardTree, workspaceTree, showBoard, showView, setLanguage} = props
+    const {workspace, boardTree, workspaceTree, showBoard, showView} = props
 
     Utils.assert(workspaceTree || !props.readonly)
 
@@ -58,7 +57,6 @@ const Workspace = React.memo((props: Props) => {
                     showView={showView}
                     workspaceTree={workspaceTree}
                     activeBoardId={boardTree?.board.id}
-                    setLanguage={setLanguage}
                 />
             }
             <div className='mainFrame'>
