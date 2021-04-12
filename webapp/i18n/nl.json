@@ -12,6 +12,7 @@
   "CardDetail.add-icon": "Pictogram toevoegen",
   "CardDetail.add-property": "+ Een eigenschap toevoegen",
   "CardDetail.addCardText": "kaarttekst toevoegen",
+  "CardDetail.moveContent": "inhoud van de kaart verplaatsen",
   "CardDetail.new-comment-placeholder": "Voeg commentaar toe...",
   "CardDialog.editing-template": "Je bent een sjabloon aan het bewerken",
   "CardDialog.nocard": "Deze kaart bestaat niet of is ontoegankelijk",
@@ -55,7 +56,7 @@
   "PropertyMenu.typeTitle": "Type",
   "PropertyType.Checkbox": "Selectievakje",
   "PropertyType.CreatedBy": "Gemaakt door",
-  "PropertyType.CreatedTime": "Created Time",
+  "PropertyType.CreatedTime": "Aangemaakt op",
   "PropertyType.Email": "E-mail",
   "PropertyType.File": "Bestand of Media",
   "PropertyType.MultiSelect": "Multiselect",
@@ -158,5 +159,11 @@
   "ViewTitle.remove-icon": "Verwijder pictogram",
   "ViewTitle.show-description": "beschrijving tonen",
   "ViewTitle.untitled-board": "Titelloze bord",
-  "Workspace.editing-board-template": "Je bent een bordsjabloon aan het bewerken"
+  "Workspace.editing-board-template": "Je bent een bordsjabloon aan het bewerken",
+  "default-properties.title": "Titel",
+  "login.log-in-button": "Aanmelden",
+  "login.log-in-title": "Aanmelden",
+  "login.register-button": "of maak een account aan als je er nog geen hebt",
+  "register.login-button": "of meldt je aan als je al een account hebt",
+  "register.signup-title": "Maak een nieuw account"
 }
