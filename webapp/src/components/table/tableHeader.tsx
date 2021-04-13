@@ -9,7 +9,7 @@ import SortDownIcon from '../../widgets/icons/sortDown'
 import SortUpIcon from '../../widgets/icons/sortUp'
 import MenuWrapper from '../../widgets/menuWrapper'
 import Label from '../../widgets/label'
-import useSortable from '../../hooks/sortable'
+import {useSortable} from '../../hooks/sortable'
 
 import HorizontalGrip from './horizontalGrip'
 

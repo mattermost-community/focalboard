@@ -9,7 +9,7 @@ import mutator from '../../mutator'
 import {BoardTree} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
-import useSortable from '../../hooks/sortable'
+import {useSortable} from '../../hooks/sortable'
 
 import PropertyValueElement from '../propertyValueElement'
 import './tableRow.scss'
@@ -32,7 +32,7 @@ const TableRow = React.memo((props: Props) => {
     const {boardTree, onSaveWithEnter} = props
     const {board, activeView} = boardTree
 
-    const titleRef = useRef<Editable>(null)
+    const titleRef = useRef<{focus(selectAll?: boolean): void}>(null)
     const [title, setTitle] = useState(props.card.title)
     const {card} = props
     const isManualSort = activeView.sortOptions.length < 1

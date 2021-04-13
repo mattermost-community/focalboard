@@ -22,7 +22,6 @@ type Props = {
     showView: (id: string, boardId?: string) => void
     workspaceTree: WorkspaceTree,
     activeBoardId?: string
-    setLanguage: (lang: string) => void,
 }
 
 const Sidebar = React.memo((props: Props) => {
@@ -111,7 +110,6 @@ const Sidebar = React.memo((props: Props) => {
             />
 
             <SidebarSettingsMenu
-                setLanguage={props.setLanguage}
                 setWhiteLogo={(newWhiteLogo: boolean) => setWhiteLogo(newWhiteLogo)}
             />
         </div>

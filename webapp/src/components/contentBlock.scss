@@ -1,10 +1,15 @@
 .ContentBlock {
-    .MenuWrapper {
+    .MenuWrapper, .dnd-handle {
         display: none;
     }
     &:hover {
         .MenuWrapper {
             display: flex;
+        }
+        .dnd-handle {
+            display: flex;
+            opacity: 0.8;
+            height: 18px;
         }
     }
     > * {

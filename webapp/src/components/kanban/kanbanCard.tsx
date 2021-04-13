@@ -12,7 +12,7 @@ import DuplicateIcon from '../../widgets/icons/duplicate'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
-import useSortable from '../../hooks/sortable'
+import {useSortable} from '../../hooks/sortable'
 
 import './kanbanCard.scss'
 import PropertyValueElement from '../propertyValueElement'

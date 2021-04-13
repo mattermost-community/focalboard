@@ -1,51 +1,51 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
-
-import {
-    withRouter,
-    RouteComponentProps,
-    Link,
-} from 'react-router-dom'
+import React, {useState} from 'react'
+import {useHistory, Link} from 'react-router-dom'
+import {FormattedMessage} from 'react-intl'
 
 import Button from '../widgets/buttons/button'
 import client from '../octoClient'
 import './loginPage.scss'
 
-type Props = RouteComponentProps
+const LoginPage = React.memo(() => {
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
+    const history = useHistory()
 
-type State = {
-    username: string
-    password: string
-    errorMessage?: string
-}
-
-class LoginPage extends React.PureComponent<Props, State> {
-    state: State = {
-        username: '',
-        password: '',
-    }
-
-    private handleLogin = async (): Promise<void> => {
-        const logged = await client.login(this.state.username, this.state.password)
+    const handleLogin = async (): Promise<void> => {
+        const logged = await client.login(username, password)
         if (logged) {
-            this.props.history.push('/')
+            history.push('/')
         } else {
-            this.setState({errorMessage: 'Login failed'})
+            setErrorMessage('Login failed')
         }
     }
 
-    render(): React.ReactNode {
-        return (
-            <div className='LoginPage'>
-                <div className='title'>{'Log in'}</div>
+    return (
+        <div className='LoginPage'>
+            <form
+                onSubmit={(e: React.FormEvent) => {
+                    e.preventDefault()
+                    handleLogin()
+                }}
+            >
+                <div className='title'>{'Log in'}
+                    <FormattedMessage
+                        id='login.log-in-title'
+                        defaultMessage='Log in'
+                    />
+                </div>
                 <div className='username'>
                     <input
                         id='login-username'
                         placeholder={'Enter username'}
-                        value={this.state.username}
-                        onChange={(e) => this.setState({username: e.target.value, errorMessage: undefined})}
-                        onKeyPress={this.onKeyPress}
+                        value={username}
+                        onChange={(e) => {
+                            setUsername(e.target.value)
+                            setErrorMessage('')
+                        }}
                     />
                 </div>
                 <div className='password'>
@@ -53,36 +53,36 @@ class LoginPage extends React.PureComponent<Props, State> {
                         id='login-password'
                         type='password'
                         placeholder={'Enter password'}
-                        value={this.state.password}
-                        onChange={(e) => this.setState({password: e.target.value, errorMessage: undefined})}
-                        onKeyPress={this.onKeyPress}
+                        value={password}
+                        onChange={(e) => {
+                            setPassword(e.target.value)
+                            setErrorMessage('')
+                        }}
                     />
                 </div>
                 <Button
                     filled={true}
-                    onClick={this.handleLogin}
+                    submit={true}
                 >
-                    {'Log in'}
+                    <FormattedMessage
+                        id='login.log-in-button'
+                        defaultMessage='Log in'
+                    />
                 </Button>
-                <Link to='/register'>{'or create an account if you don\'t have one'}</Link>
-                {this.state.errorMessage &&
-                    <div className='error'>
-                        {this.state.errorMessage}
-                    </div>
-                }
-            </div>
-        )
-    }
+            </form>
+            <Link to='/register'>
+                <FormattedMessage
+                    id='login.register-button'
+                    defaultMessage={'or create an account if you don\'t have one'}
+                />
+            </Link>
+            {errorMessage &&
+                <div className='error'>
+                    {errorMessage}
+                </div>
+            }
+        </div>
+    )
+})
 
-    private onKeyPress = (e: React.KeyboardEvent) => {
-        if (!(e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'Enter') {
-            this.handleLogin()
-            e.preventDefault()
-            return false
-        }
-
-        return true
-    }
-}
-
-export default withRouter(LoginPage)
+export default LoginPage
