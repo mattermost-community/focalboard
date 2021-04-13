@@ -4,6 +4,7 @@ import React from 'react'
 import {useDrop} from 'react-dnd'
 
 import {Card} from '../../blocks/card'
+import './kanbanColumn.scss'
 
 type Props = {
     onDrop: (card: Card) => void
@@ -14,7 +15,7 @@ const KanbanColumn = React.memo((props: Props) => {
     const [{isOver}, drop] = useDrop(() => ({
         accept: 'card',
         collect: (monitor) => ({
-            isOver: monitor.isOver({shallow: true}),
+            isOver: monitor.isOver(),
         }),
         drop: (item: Card, monitor) => {
             if (monitor.isOver({shallow: true})) {
