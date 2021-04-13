@@ -14,13 +14,20 @@ import (
 )
 
 var sessionToken string = "su-" + uuid.New().String()
-var serverExecutable string = filepath.Join(filepath.Dir(os.Executable()), "focalboard-server")
 
 func runServer(ctx context.Context) {
+	executable, err := os.Executable()
+	if err != nil {
+		log.Println("Failed to get os.Executable()")
+		log.Fatal(err)
+	}
+
+	serverExecutable := filepath.Join(filepath.Dir(executable), "focalboard-server")
+
 	cmd := exec.CommandContext(ctx, serverExecutable, "--monitorpid", strconv.FormatInt(int64(os.Getpid()), 10), "-single-user")
 	cmd.Env = []string{fmt.Sprintf("FOCALBOARD_SINGLE_USER_TOKEN=%s", sessionToken)}
 	cmd.Stdout = os.Stdout
-	err := cmd.Run()
+	err = cmd.Run()
 	if err != nil {
 		log.Println("Failed to start server")
 		log.Fatal(err)
