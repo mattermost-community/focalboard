@@ -7,7 +7,7 @@ weight: 2
 
 Focalboard Personal Server allows your team to work together on shared project boards.
 
-Follow these steps it up on an Ubuntu server.
+Follow these steps it up on an Ubuntu server. To upgrade an existing installation, see [the upgrade guide](../ubuntu-upgrade).
 
 ## Set up Ubuntu Server 18.04
 
