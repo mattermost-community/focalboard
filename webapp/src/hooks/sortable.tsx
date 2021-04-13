@@ -1,11 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useRef} from 'react'
-import {useDrag, useDrop} from 'react-dnd'
+import {useDrag, useDrop, DragElementWrapper, DragSourceOptions, DragPreviewOptions} from 'react-dnd'
 
-export default function useSortable(itemType: string, item: any, enabled: boolean, handler: (src: any, st: any) => void): [boolean, boolean, React.RefObject<HTMLDivElement>, React.RefObject<HTMLDivElement>] {
-    const ref = useRef<HTMLDivElement>(null)
-    const previewRef = useRef<HTMLDivElement>(null)
+function useSortableBase(itemType: string, item: any, enabled: boolean, handler: (src: any, st: any) => void): [boolean, boolean, DragElementWrapper<DragSourceOptions>, DragElementWrapper<any>, DragElementWrapper<DragPreviewOptions>] {
     const [{isDragging}, drag, preview] = useDrag(() => ({
         type: itemType,
         item,
@@ -25,7 +23,21 @@ export default function useSortable(itemType: string, item: any, enabled: boolea
         canDrop: () => enabled,
     }), [item, handler, enabled])
 
+    return [isDragging, isOver, drag, drop, preview]
+}
+
+export function useSortable(itemType: string, item: any, enabled: boolean, handler: (src: any, st: any) => void): [boolean, boolean, React.RefObject<HTMLDivElement>] {
+    const ref = useRef<HTMLDivElement>(null)
+    const [isDragging, isOver, drag, drop] = useSortableBase(itemType, item, enabled, handler)
     drop(drag(ref))
+    return [isDragging, isOver, ref]
+}
+
+export function useSortableWithGrip(itemType: string, item: any, enabled: boolean, handler: (src: any, st: any) => void): [boolean, boolean, React.RefObject<HTMLDivElement>, React.RefObject<HTMLDivElement>] {
+    const ref = useRef<HTMLDivElement>(null)
+    const previewRef = useRef<HTMLDivElement>(null)
+    const [isDragging, isOver, drag, drop, preview] = useSortableBase(itemType, item, enabled, handler)
+    drag(ref)
     drop(preview(previewRef))
     return [isDragging, isOver, ref, previewRef]
 }

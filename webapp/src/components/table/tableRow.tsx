@@ -9,7 +9,7 @@ import mutator from '../../mutator'
 import {BoardTree} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
-import useSortable from '../../hooks/sortable'
+import {useSortable} from '../../hooks/sortable'
 
 import PropertyValueElement from '../propertyValueElement'
 import './tableRow.scss'
