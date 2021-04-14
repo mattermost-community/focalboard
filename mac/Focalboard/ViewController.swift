@@ -67,7 +67,7 @@ class ViewController:
 	private func updateSessionToken() {
 		let appDelegate = NSApplication.shared.delegate as! AppDelegate
 		let script = WKUserScript(
-			source: "localStorage.setItem('sessionId', '\(appDelegate.sessionToken)');",
+			source: "localStorage.setItem('focalboardSessionId', '\(appDelegate.sessionToken)');",
 			injectionTime: .atDocumentStart,
 			forMainFrameOnly: true
 		)

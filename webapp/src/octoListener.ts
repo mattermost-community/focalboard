@@ -45,7 +45,7 @@ class OctoListener {
 
     constructor(serverUrl?: string, token?: string, readToken?: string) {
         this.serverUrl = serverUrl || Utils.buildURL('', true)
-        this.token = token || localStorage.getItem('sessionId') || ''
+        this.token = token || localStorage.getItem('focalboardSessionId') || ''
         this.readToken = readToken || OctoListener.getReadToken()
         Utils.log(`OctoListener serverUrl: ${this.serverUrl}`)
     }

@@ -13,7 +13,6 @@ const (
 
 // Configuration is the app configuration stored in a json file.
 type Configuration struct {
-	BaseURL                 string   `json:"baseURL" mapstructure:"baseURL"`
 	ServerRoot              string   `json:"serverRoot" mapstructure:"serverRoot"`
 	Port                    int      `json:"port" mapstructure:"port"`
 	DBType                  string   `json:"dbtype" mapstructure:"dbtype"`
