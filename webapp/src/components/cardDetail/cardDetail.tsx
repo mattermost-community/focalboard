@@ -29,6 +29,7 @@ type Props = {
 
 const CardDetail = (props: Props): JSX.Element|null => {
     const {cardTree} = props
+    const {card, comments} = cardTree
     const [title, setTitle] = useState(cardTree.card.title)
     const titleRef = useRef<{focus(selectAll?: boolean): void}>(null)
     const titleValueRef = useRef(title)
@@ -46,13 +47,11 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 mutator.changeTitle(card, titleValueRef.current)
             }
         }
-    }, [])
+    }, [cardTree])
 
     if (!cardTree) {
         return null
     }
-
-    const {card, comments} = cardTree
 
     // componentWillUnmount(): void {
     // }
