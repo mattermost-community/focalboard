@@ -258,3 +258,7 @@ func (s *Server) stopLocalModeServer() {
 		s.localModeServer = nil
 	}
 }
+
+func (s *Server) GetRootRouter() *mux.Router {
+	return s.webServer.Router()
+}
