@@ -161,6 +161,8 @@
   "ViewTitle.untitled-board": "Untitled board",
   "Workspace.editing-board-template": "You're editing a board template",
   "default-properties.title": "Title",
+  "error.no-workspace": "Your session may have expired or you may not have access to this workspace.",
+  "error.relogin": "Log in again",
   "login.log-in-button": "Log in",
   "login.log-in-title": "Log in",
   "login.register-button": "or create an account if you don't have one",
