@@ -16,6 +16,7 @@
     }
 
     .comment-header {
+        align-items: center;
         display: flex;
         flex-direction: row;
 
@@ -31,7 +32,7 @@
 
     .comment-username {
         font-weight: bold;
-        margin: 0 5px;
+        margin: 0 6px 0 8px;
     }
 
     .comment-date {
@@ -42,7 +43,13 @@
     .comment-text {
         color: rgb(var(--body-color));
         width: 100%;
-        padding-left: 25px;
+        padding-left: 28px;
+
+        p {
+            &:first-child {
+                margin-top: 0;
+            }
+        }
     }
 
     .comment-text * {
