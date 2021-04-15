@@ -39,7 +39,10 @@
     }
 
     .octo-editor-preview {
-        min-height: 30px;
+        p {
+            margin: 0;
+            min-height: 32px;
+        }
     }
 
     /* .dialog .octo-editor-preview {
@@ -48,7 +51,6 @@
 
     .octo-editor-activeEditor {
         overflow: hidden;
-        border: solid 1px #aaccff;
         border-radius: 5px;
     }
 }

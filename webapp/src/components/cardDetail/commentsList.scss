@@ -1,4 +1,5 @@
 .CommentsList {
+    padding: 8px 0;
 	display: flex;
 	flex-direction: column;
 
@@ -14,13 +15,21 @@
     .commentrow {
         display: flex;
         flex-direction: row;
-        align-items: center;
+        align-items: flex-start;
+
+        .comment-avatar {
+            margin-top: 6px;
+        }
     }
 
     .newcomment {
         color: rgba(var(--body-color), 0.8);
         flex-grow: 1;
-        margin-left: 5px;
+        margin: 4px 0 0 8px;
+
+        & + button {
+            margin-left: 8px;
+        }
     }
 }
 
