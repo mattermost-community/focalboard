@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
-import { useHistory } from "react-router-dom";
+import {useHistory} from 'react-router-dom'
 
 import {Constants} from '../../constants'
 import octoClient from '../../octoClient'
