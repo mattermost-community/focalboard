@@ -36,7 +36,7 @@ const TableRow = React.memo((props: Props) => {
     const [title, setTitle] = useState(props.card.title)
     const {card} = props
     const isManualSort = activeView.sortOptions.length < 1
-    const [isDragging, isOver, cardRef] = useSortable('card', card, isManualSort, props.onDrop)
+    const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly && isManualSort, props.onDrop)
 
     useEffect(() => {
         if (props.focusOnMount) {
