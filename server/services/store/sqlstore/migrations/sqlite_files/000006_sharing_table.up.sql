@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS sharing (
+CREATE TABLE IF NOT EXISTS fb_sharing (
 	id VARCHAR(36),
 	enabled BOOLEAN,
 	token VARCHAR(100),

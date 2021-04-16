@@ -1,1 +1,1 @@
-DROP TABLE system_settings;
+DROP TABLE fb_system_settings;

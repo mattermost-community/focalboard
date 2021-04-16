@@ -145,6 +145,7 @@ class OctoListener {
         }
 
         if (!this.token) {
+            Utils.assertFailure('OctoListener.authenticate: no token')
             return
         }
         const command = {

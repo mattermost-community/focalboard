@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS fb_users (
 	id VARCHAR(100),
 	username VARCHAR(100),
 	email VARCHAR(255),
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
 	PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS sessions (
+CREATE TABLE IF NOT EXISTS fb_sessions (
 	id VARCHAR(100),
 	token VARCHAR(100),
 	user_id VARCHAR(100),

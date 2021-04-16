@@ -1,1 +1,1 @@
-DROP TABLE sharing;
+DROP TABLE fb_sharing;

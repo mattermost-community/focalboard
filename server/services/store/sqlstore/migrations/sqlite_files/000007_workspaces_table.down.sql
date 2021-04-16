@@ -1,1 +1,1 @@
-DROP TABLE workspaces;
+DROP TABLE fb_workspaces;

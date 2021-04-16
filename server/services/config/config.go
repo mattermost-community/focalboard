@@ -46,7 +46,7 @@ func ReadConfigFile() (*Configuration, error) {
 	viper.SetDefault("ServerRoot", DefaultServerRoot)
 	viper.SetDefault("Port", DefaultPort)
 	viper.SetDefault("DBType", "sqlite3")
-	viper.SetDefault("DBConfigString", "./octo.db")
+	viper.SetDefault("DBConfigString", "./focalboard.db")
 	viper.SetDefault("SecureCookie", false)
 	viper.SetDefault("WebPath", "./pack")
 	viper.SetDefault("FilesPath", "./files")

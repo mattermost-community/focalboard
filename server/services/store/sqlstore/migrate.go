@@ -21,7 +21,7 @@ func (s *SQLStore) Migrate() error {
 	var err error
 
 	if s.dbType == "sqlite3" {
-		driver, err = sqlite3.WithInstance(s.db, &sqlite3.Config{})
+		driver, err = sqlite3.WithInstance(s.db, &sqlite3.Config{MigrationsTable: "fb_schema_migrations"})
 		if err != nil {
 			return err
 		}
@@ -29,7 +29,7 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	if s.dbType == "postgres" {
-		driver, err = postgres.WithInstance(s.db, &postgres.Config{})
+		driver, err = postgres.WithInstance(s.db, &postgres.Config{MigrationsTable: "fb_schema_migrations"})
 		if err != nil {
 			return err
 		}

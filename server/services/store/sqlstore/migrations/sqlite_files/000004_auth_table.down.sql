@@ -1,2 +1,2 @@
-DROP TABLE users;
-DROP TABLE sessions;
+DROP TABLE fb_users;
+DROP TABLE fb_sessions;

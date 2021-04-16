@@ -15,12 +15,12 @@ type SQLStore struct {
 
 // New creates a new SQL implementation of the store.
 func New(dbType, connectionString string) (*SQLStore, error) {
-	log.Println("connectDatabase")
+	log.Println("connectDatabase", dbType, connectionString)
 	var err error
 
 	db, err := sql.Open(dbType, connectionString)
 	if err != nil {
-		log.Fatal("connectDatabase: ", err)
+		log.Print("connectDatabase: ", err)
 
 		return nil, err
 	}

@@ -1,2 +1,2 @@
-ALTER TABLE blocks
+ALTER TABLE fb_blocks
 DROP COLUMN modified_by;
