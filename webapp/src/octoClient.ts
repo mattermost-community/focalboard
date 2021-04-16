@@ -25,7 +25,7 @@ class OctoClient {
     }
 
     constructor(serverUrl?: string, public workspaceId = '0') {
-        this.serverUrl = serverUrl || Utils.getBaseURL(true)
+        this.serverUrl = (serverUrl || Utils.getBaseURL(true)).replace(/\/$/, '')
         Utils.log(`OctoClient serverUrl: ${this.serverUrl}`)
     }
 
