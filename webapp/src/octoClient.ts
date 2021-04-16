@@ -12,10 +12,10 @@ import {Utils} from './utils'
 class OctoClient {
     readonly serverUrl: string
     get token(): string {
-        return localStorage.getItem('sessionId') || ''
+        return localStorage.getItem('focalboardSessionId') || ''
     }
     set token(value: string) {
-        localStorage.setItem('sessionId', value)
+        localStorage.setItem('focalboardSessionId', value)
     }
 
     private readToken(): string {
@@ -25,7 +25,7 @@ class OctoClient {
     }
 
     constructor(serverUrl?: string, public workspaceId = '0') {
-        this.serverUrl = serverUrl || window.location.origin
+        this.serverUrl = (serverUrl || Utils.getBaseURL(true)).replace(/\/$/, '')
         Utils.log(`OctoClient serverUrl: ${this.serverUrl}`)
     }
 
@@ -53,14 +53,14 @@ class OctoClient {
 
         const responseJson = (await this.getJson(response, {})) as {token?: string}
         if (responseJson.token) {
-            localStorage.setItem('sessionId', responseJson.token)
+            localStorage.setItem('focalboardSessionId', responseJson.token)
             return true
         }
         return false
     }
 
     logout() {
-        localStorage.removeItem('sessionId')
+        localStorage.removeItem('focalboardSessionId')
     }
 
     async register(email: string, username: string, password: string, token?: string): Promise<{code: number, json: any}> {

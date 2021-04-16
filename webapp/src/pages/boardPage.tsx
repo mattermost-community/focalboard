@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
+import {withRouter, RouteComponentProps} from 'react-router-dom'
 import HotKeys from 'react-hot-keys'
 
 import {IBlock} from '../blocks/block'
@@ -16,9 +17,8 @@ import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
 import {MutableWorkspaceTree, WorkspaceTree} from '../viewModel/workspaceTree'
 import './boardPage.scss'
 
-type Props = {
+type Props = RouteComponentProps<{workspaceId?: string}> & {
     readonly?: boolean
-    workspaceId: string
     intl: IntlShape
 }
 
@@ -141,10 +141,10 @@ class BoardPage extends React.Component<Props, State> {
         const {intl} = this.props
         const {workspace, workspaceTree} = this.state
 
-        Utils.log(`BoardPage.render (workspace ${this.props.workspaceId}) ${this.state.boardTree?.board?.title}`)
+        Utils.log(`BoardPage.render (workspace ${this.props.match.params.workspaceId || '0'}) ${this.state.boardTree?.board?.title}`)
 
         // TODO: Make this less brittle. This only works because this is the root render function
-        octoClient.workspaceId = this.props.workspaceId
+        octoClient.workspaceId = this.props.match.params.workspaceId || '0'
 
         if (this.props.readonly && this.state.syncFailed) {
             Utils.log('BoardPage.render: sync failed')
@@ -207,7 +207,7 @@ class BoardPage extends React.Component<Props, State> {
             // Require workspace for editing, not for sharing (readonly)
             workspace = await octoClient.getWorkspace()
             if (!workspace) {
-                location.href = '/error?id=no_workspace'
+                this.props.history.push(Utils.buildURL('/error?id=no_workspace'))
             }
         }
 
@@ -342,4 +342,4 @@ class BoardPage extends React.Component<Props, State> {
     }
 }
 
-export default injectIntl(BoardPage)
+export default withRouter(injectIntl(BoardPage))

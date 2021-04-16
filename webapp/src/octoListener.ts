@@ -44,8 +44,8 @@ class OctoListener {
     reopenDelay = 3000
 
     constructor(serverUrl?: string, token?: string, readToken?: string) {
-        this.serverUrl = serverUrl || window.location.origin
-        this.token = token || localStorage.getItem('sessionId') || ''
+        this.serverUrl = serverUrl || Utils.buildURL('', true)
+        this.token = token || localStorage.getItem('focalboardSessionId') || ''
         this.readToken = readToken || OctoListener.getReadToken()
         Utils.log(`OctoListener serverUrl: ${this.serverUrl}`)
     }
@@ -66,7 +66,7 @@ class OctoListener {
 
         const url = new URL(this.serverUrl)
         const protocol = (url.protocol === 'https:') ? 'wss:' : 'ws:'
-        const wsServerUrl = `${protocol}//${url.host}${url.pathname}ws/onchange`
+        const wsServerUrl = `${protocol}//${url.host}${url.pathname}/ws/onchange`
         Utils.log(`OctoListener open: ${wsServerUrl}`)
         const ws = new WebSocket(wsServerUrl)
         this.ws = ws

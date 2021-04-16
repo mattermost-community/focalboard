@@ -85,7 +85,7 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 	// Init workspace
 	appBuilder().GetRootWorkspace()
 
-	webServer := web.NewServer(cfg.WebPath, cfg.Port, cfg.UseSSL, cfg.LocalOnly)
+	webServer := web.NewServer(cfg.WebPath, cfg.ServerRoot, cfg.Port, cfg.UseSSL, cfg.LocalOnly)
 	webServer.AddRoutes(wsServer)
 	webServer.AddRoutes(api)
 
@@ -257,4 +257,8 @@ func (s *Server) stopLocalModeServer() {
 		s.localModeServer.Close()
 		s.localModeServer = nil
 	}
+}
+
+func (s *Server) GetRootRouter() *mux.Router {
+	return s.webServer.Router()
 }

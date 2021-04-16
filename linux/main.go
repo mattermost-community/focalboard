@@ -45,7 +45,7 @@ func main() {
 	w.SetTitle("Focalboard")
 	w.SetSize(1024, 768, webview.HintNone)
 
-	script := fmt.Sprintf("localStorage.setItem('sessionId', '%s');", sessionToken)
+	script := fmt.Sprintf("localStorage.setItem('focalboardSessionId', '%s');", sessionToken)
 	w.Init(script)
 
 	w.Navigate("http://localhost:8088")

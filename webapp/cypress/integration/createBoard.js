@@ -11,9 +11,9 @@ describe('Create and delete board / card', () => {
     const cardTitle = `Test Card (${timestamp})`;
 
     beforeEach(() => {
-        localStorage.setItem('sessionId', 'TESTTOKEN');
+        localStorage.setItem('focalboardSessionId', 'TESTTOKEN');
         localStorage.setItem('language', 'en');
-        cy.expect(localStorage.getItem('sessionId')).to.eq('TESTTOKEN');
+        cy.expect(localStorage.getItem('focalboardSessionId')).to.eq('TESTTOKEN');
     });
 
     it('Can create and delete a board and card', () => {

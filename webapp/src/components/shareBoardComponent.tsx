@@ -3,6 +3,7 @@
 import React, {useState, useEffect} from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 import {useRouteMatch} from 'react-router'
+import {withRouter, RouteComponentProps} from 'react-router-dom'
 
 import {ISharing} from '../blocks/sharing'
 
@@ -17,7 +18,7 @@ import Switch from '../widgets/switch'
 import Modal from './modal'
 import './shareBoardComponent.scss'
 
-type Props = {
+type Props = RouteComponentProps<{workspaceId?: string}> & {
     boardId: string
     onClose: () => void
     intl: IntlShape
@@ -77,9 +78,9 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
     shareUrl.searchParams.set('r', readToken)
 
     if (match.params.workspaceId) {
-        shareUrl.pathname = `/workspace/${match.params.workspaceId}/shared`
+        shareUrl.pathname = Utils.buildURL(`/workspace/${match.params.workspaceId}/shared`)
     } else {
-        shareUrl.pathname = '/shared'
+        shareUrl.pathname = Utils.buildURL('/shared')
     }
 
     return (
@@ -149,4 +150,4 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
     )
 })
 
-export default injectIntl(ShareBoardComponent)
+export default withRouter(injectIntl(ShareBoardComponent))

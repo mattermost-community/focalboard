@@ -17,6 +17,7 @@ import ErrorPage from './pages/errorPage'
 import LoginPage from './pages/loginPage'
 import RegisterPage from './pages/registerPage'
 import {IUser} from './user'
+import {Utils} from './utils'
 import CombinedProviders from './combinedProviders'
 
 const App = React.memo((): JSX.Element => {
@@ -43,7 +44,10 @@ const App = React.memo((): JSX.Element => {
             setLanguage={setAndStoreLanguage}
         >
             <FlashMessages milliseconds={2000}/>
-            <Router forceRefresh={true}>
+            <Router
+                forceRefresh={true}
+                basename={Utils.getBaseURL()}
+            >
                 <div id='frame'>
                     <div id='main'>
                         <Switch>
@@ -60,42 +64,31 @@ const App = React.memo((): JSX.Element => {
                                 <ChangePasswordPage/>
                             </Route>
                             <Route path='/shared'>
-                                <BoardPage
-                                    workspaceId='0'
-                                    readonly={true}
-                                />
+                                <BoardPage readonly={true}/>
                             </Route>
                             <Route path='/board'>
                                 {initialLoad && !user && <Redirect to='/login'/>}
-                                <BoardPage workspaceId='0'/>
+                                <BoardPage/>
                             </Route>
-                            <Route
-                                path='/workspace/:workspaceId/shared'
-                                render={({match}) => {
-                                    return (
-                                        <BoardPage
-                                            workspaceId={match.params.workspaceId}
-                                            readonly={true}
-                                        />
-                                    )
-                                }}
-                            />
+                            <Route path='/workspace/:workspaceId/shared'>
+                                <BoardPage readonly={true}/>
+                            </Route>
                             <Route
                                 path='/workspace/:workspaceId/'
                                 render={({match}) => {
                                     if (initialLoad && !user) {
-                                        const redirectUrl = `/workspace/${match.params.workspaceId}/`
+                                        const redirectUrl = '/' + Utils.buildURL(`/workspace/${match.params.workspaceId}/`)
                                         const loginUrl = `/login?r=${encodeURIComponent(redirectUrl)}`
                                         return <Redirect to={loginUrl}/>
                                     }
                                     return (
-                                        <BoardPage workspaceId={match.params.workspaceId}/>
+                                        <BoardPage/>
                                     )
                                 }}
                             />
                             <Route path='/'>
                                 {initialLoad && !user && <Redirect to='/login'/>}
-                                <BoardPage workspaceId='0'/>
+                                <BoardPage/>
                             </Route>
                         </Switch>
                     </div>

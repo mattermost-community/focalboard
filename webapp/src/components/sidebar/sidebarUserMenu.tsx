@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
+import {useHistory} from 'react-router-dom'
 
 import {Constants} from '../../constants'
 import octoClient from '../../octoClient'
@@ -23,6 +24,7 @@ type Props = {
 }
 
 const SidebarUserMenu = React.memo((props: Props) => {
+    const history = useHistory()
     const [showRegistrationLinkDialog, setShowRegistrationLinkDialog] = useState(false)
     const {intl, whiteLogo} = props
     return (
@@ -47,14 +49,14 @@ const SidebarUserMenu = React.memo((props: Props) => {
                                             name={intl.formatMessage({id: 'Sidebar.logout', defaultMessage: 'Log out'})}
                                             onClick={async () => {
                                                 octoClient.logout()
-                                                window.location.href = '/login'
+                                                history.push('/login')
                                             }}
                                         />
                                         <Menu.Text
                                             id='changePassword'
                                             name={intl.formatMessage({id: 'Sidebar.changePassword', defaultMessage: 'Change password'})}
                                             onClick={async () => {
-                                                window.location.href = '/change_password'
+                                                history.push('/change_password')
                                             }}
                                         />
                                         <Menu.Text
