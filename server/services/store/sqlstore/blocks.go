@@ -18,7 +18,7 @@ import (
 func (s *SQLStore) latestsBlocksSubquery(c store.Container) sq.SelectBuilder {
 	internalQuery := sq.Select("*", "ROW_NUMBER() OVER (PARTITION BY id ORDER BY insert_at DESC) AS rn").From(s.tablePrefix + "blocks")
 	if s.dbType == "mysql" {
-		internalQuery = sq.Select("*", "(@row_number := @row_number + 1) AS rn").From(s.tablePrefix + "blocks, (SELECT @row_number:=0) AS t").OrderBy("insert_at DESC")
+		internalQuery = sq.Select("*", "(@row_number := @row_number + 1) AS rn").From(s.tablePrefix + "blocks, (SELECT @row_number:=1) AS t").OrderBy("insert_at DESC")
 	}
 
 	return sq.Select("*").
@@ -170,7 +170,7 @@ func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block
 	// We can't use DISTINCT because JSON columns in Postgres don't support it, and SQLite doesn't support DISTINCT ON
 	subquery2 := sq.Select("*", "ROW_NUMBER() OVER (PARTITION BY id) AS rn").FromSelect(subquery1, "sub1")
 	if s.dbType == "mysql" {
-		subquery2 = sq.Select("*", "(@row_number := @row_number + 1) AS rn").FromSelect(subquery1, "sub1").Join("(SELECT @row_number:=0) AS t")
+		subquery2 = sq.Select("*", "(@row_number := @row_number + 1) AS rn").FromSelect(subquery1, "sub1").Join("(SELECT @row_number:=1) AS t")
 	}
 
 	query := s.getQueryBuilder().Select(
