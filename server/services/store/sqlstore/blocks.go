@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"time"
 
@@ -16,6 +17,9 @@ import (
 
 func (s *SQLStore) latestsBlocksSubquery(c store.Container) sq.SelectBuilder {
 	internalQuery := sq.Select("*", "ROW_NUMBER() OVER (PARTITION BY id ORDER BY insert_at DESC) AS rn").From(s.tablePrefix + "blocks")
+	if s.dbType == "mysql" {
+		internalQuery = sq.Select("*", "(@row_number := @row_number + 1) AS rn").From(s.tablePrefix + "blocks, (SELECT @row_number:=0) AS t").OrderBy("insert_at DESC")
+	}
 
 	return sq.Select("*").
 		FromSelect(internalQuery, "a").
@@ -31,10 +35,10 @@ func (s *SQLStore) GetBlocksWithParentAndType(c store.Container, parentID string
 			"parent_id",
 			"root_id",
 			"modified_by",
-			"schema",
+			"`schema`",
 			"type",
 			"title",
-			"COALESCE(\"fields\", '{}')",
+			"COALESCE(`fields`, '{}')",
 			"create_at",
 			"update_at",
 			"delete_at",
@@ -43,6 +47,7 @@ func (s *SQLStore) GetBlocksWithParentAndType(c store.Container, parentID string
 		Where(sq.Eq{"parent_id": parentID}).
 		Where(sq.Eq{"type": blockType})
 
+	log.Print(query.ToSql())
 	rows, err := query.Query()
 	if err != nil {
 		log.Printf(`getBlocksWithParentAndType ERROR: %v`, err)
@@ -60,10 +65,10 @@ func (s *SQLStore) GetBlocksWithParent(c store.Container, parentID string) ([]mo
 			"parent_id",
 			"root_id",
 			"modified_by",
-			"schema",
+			"`schema`",
 			"type",
 			"title",
-			"COALESCE(\"fields\", '{}')",
+			"COALESCE(`fields`, '{}')",
 			"create_at",
 			"update_at",
 			"delete_at",
@@ -71,6 +76,7 @@ func (s *SQLStore) GetBlocksWithParent(c store.Container, parentID string) ([]mo
 		FromSelect(s.latestsBlocksSubquery(c), "latest").
 		Where(sq.Eq{"parent_id": parentID})
 
+	log.Print(query.ToSql())
 	rows, err := query.Query()
 	if err != nil {
 		log.Printf(`getBlocksWithParent ERROR: %v`, err)
@@ -88,10 +94,10 @@ func (s *SQLStore) GetBlocksWithType(c store.Container, blockType string) ([]mod
 			"parent_id",
 			"root_id",
 			"modified_by",
-			"schema",
+			"`schema`",
 			"type",
 			"title",
-			"COALESCE(\"fields\", '{}')",
+			"COALESCE(`fields`, '{}')",
 			"create_at",
 			"update_at",
 			"delete_at",
@@ -117,10 +123,10 @@ func (s *SQLStore) GetSubTree2(c store.Container, blockID string) ([]model.Block
 			"parent_id",
 			"root_id",
 			"modified_by",
-			"schema",
+			"`schema`",
 			"type",
 			"title",
-			"COALESCE(\"fields\", '{}')",
+			"COALESCE(`fields`, '{}')",
 			"create_at",
 			"update_at",
 			"delete_at",
@@ -128,6 +134,7 @@ func (s *SQLStore) GetSubTree2(c store.Container, blockID string) ([]model.Block
 		FromSelect(s.latestsBlocksSubquery(c), "latest").
 		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}})
 
+	log.Print(query.ToSql())
 	rows, err := query.Query()
 	if err != nil {
 		log.Printf(`getSubTree ERROR: %v`, err)
@@ -146,7 +153,7 @@ func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block
 		"l3.parent_id",
 		"l3.root_id",
 		"l3.modified_by",
-		"l3.schema",
+		"l3.`schema`",
 		"l3.type",
 		"l3.title",
 		"l3.fields",
@@ -161,18 +168,20 @@ func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block
 
 	// This second subquery is used to return distinct blocks
 	// We can't use DISTINCT because JSON columns in Postgres don't support it, and SQLite doesn't support DISTINCT ON
-	subquery2 := sq.Select("*", "ROW_NUMBER() OVER (PARTITION BY id) AS rn").
-		FromSelect(subquery1, "sub1")
+	subquery2 := sq.Select("*", "ROW_NUMBER() OVER (PARTITION BY id) AS rn").FromSelect(subquery1, "sub1")
+	if s.dbType == "mysql" {
+		subquery2 = sq.Select("*", "(@row_number := @row_number + 1) AS rn").FromSelect(subquery1, "sub1").Join("(SELECT @row_number:=0) AS t")
+	}
 
 	query := s.getQueryBuilder().Select(
 		"id",
 		"parent_id",
 		"root_id",
 		"modified_by",
-		"schema",
+		"`schema`",
 		"type",
 		"title",
-		"COALESCE(\"fields\", '{}')",
+		"COALESCE(`fields`, '{}')",
 		"create_at",
 		"update_at",
 		"delete_at",
@@ -180,6 +189,7 @@ func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block
 		FromSelect(subquery2, "sub2").
 		Where(sq.Eq{"rn": 1})
 
+	log.Print(query.ToSql())
 	rows, err := query.Query()
 	if err != nil {
 		log.Printf(`getSubTree3 ERROR: %v`, err)
@@ -197,10 +207,10 @@ func (s *SQLStore) GetAllBlocks(c store.Container) ([]model.Block, error) {
 			"parent_id",
 			"root_id",
 			"modified_by",
-			"schema",
+			"`schema`",
 			"type",
 			"title",
-			"COALESCE(\"fields\", '{}')",
+			"COALESCE(`fields`, '{}')",
 			"create_at",
 			"update_at",
 			"delete_at",
@@ -249,6 +259,7 @@ func blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 		if modifiedBy.Valid {
 			block.ModifiedBy = modifiedBy.String
 		}
+		fmt.Println(fieldsJSON)
 
 		err = json.Unmarshal([]byte(fieldsJSON), &block.Fields)
 		if err != nil {
@@ -315,7 +326,7 @@ func (s *SQLStore) InsertBlock(c store.Container, block model.Block) error {
 			"parent_id",
 			"root_id",
 			"modified_by",
-			"schema",
+			"`schema`",
 			"type",
 			"title",
 			"fields",

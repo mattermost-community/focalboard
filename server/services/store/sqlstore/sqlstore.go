@@ -62,7 +62,10 @@ func (s *SQLStore) Shutdown() error {
 }
 
 func (s *SQLStore) getQueryBuilder() sq.StatementBuilderType {
-	builder := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+	builder := sq.StatementBuilder
+	if s.dbType == "postgres" || s.dbType == "sqlite3" {
+		builder = builder.PlaceholderFormat(sq.Dollar)
+	}
 
 	return builder.RunWith(s.db)
 }

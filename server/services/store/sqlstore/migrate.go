@@ -11,12 +11,14 @@ import (
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database"
+	"github.com/golang-migrate/migrate/v4/database/mysql"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	"github.com/golang-migrate/migrate/v4/database/sqlite3"
 	"github.com/golang-migrate/migrate/v4/source"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
 	_ "github.com/lib/pq"
+	mysqlmigrations "github.com/mattermost/focalboard/server/services/store/sqlstore/migrations/mysql"
 	pgmigrations "github.com/mattermost/focalboard/server/services/store/sqlstore/migrations/postgres"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore/migrations/sqlite"
 )
@@ -92,6 +94,14 @@ func (s *SQLStore) Migrate() error {
 			return err
 		}
 		bresource = bindata.Resource(pgmigrations.AssetNames(), pgmigrations.Asset)
+	}
+
+	if s.dbType == "mysql" {
+		driver, err = mysql.WithInstance(s.db, &mysql.Config{MigrationsTable: migrationsTable})
+		if err != nil {
+			return err
+		}
+		bresource = bindata.Resource(mysqlmigrations.AssetNames(), mysqlmigrations.Asset)
 	}
 
 	d, err := bindata.WithInstance(bresource)
