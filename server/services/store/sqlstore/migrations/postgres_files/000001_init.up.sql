@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS blocks (
+CREATE TABLE IF NOT EXISTS {{.prefix}}blocks (
 	id VARCHAR(36),
 	insert_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 	parent_id VARCHAR(36),

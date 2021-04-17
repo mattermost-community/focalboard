@@ -53,9 +53,9 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 		return nil, err
 	}
 
-	store, err := sqlstore.New(cfg.DBType, cfg.DBConfigString)
+	store, err := sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix)
 	if err != nil {
-		log.Fatal("Unable to start the database", err)
+		log.Print("Unable to start the database", err)
 		return nil, err
 	}
 
@@ -68,7 +68,7 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 	filesBackendSettings.Directory = cfg.FilesPath
 	filesBackend, appErr := filesstore.NewFileBackend(filesBackendSettings)
 	if appErr != nil {
-		log.Fatal("Unable to initialize the files storage")
+		log.Print("Unable to initialize the files storage")
 
 		return nil, errors.New("unable to initialize the files storage")
 	}
@@ -245,7 +245,7 @@ func (s *Server) startLocalModeServer() error {
 		log.Println("Starting unix socket server")
 		err = s.localModeServer.Serve(unixListener)
 		if err != nil && err != http.ErrServerClosed {
-			log.Fatalf("Error starting unix socket server: %v", err)
+			log.Printf("Error starting unix socket server: %v", err)
 		}
 	}()
 

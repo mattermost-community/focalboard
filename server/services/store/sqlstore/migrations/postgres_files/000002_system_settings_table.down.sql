@@ -1,1 +1,1 @@
-DROP TABLE system_settings;
+DROP TABLE {{.prefix}}system_settings;

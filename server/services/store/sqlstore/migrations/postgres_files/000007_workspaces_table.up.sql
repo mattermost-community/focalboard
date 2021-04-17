@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS workspaces (
+CREATE TABLE IF NOT EXISTS {{.prefix}}workspaces (
 	id VARCHAR(36),
 	signup_token VARCHAR(100) NOT NULL,
     settings JSON,

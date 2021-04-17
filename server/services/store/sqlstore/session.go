@@ -12,7 +12,7 @@ import (
 func (s *SQLStore) GetActiveUserCount(updatedSecondsAgo int64) (int, error) {
 	query := s.getQueryBuilder().
 		Select("count(distinct user_id)").
-		From("sessions").
+		From(s.tablePrefix + "sessions").
 		Where(sq.Gt{"update_at": time.Now().Unix() - updatedSecondsAgo})
 
 	row := query.QueryRow()
@@ -29,7 +29,7 @@ func (s *SQLStore) GetActiveUserCount(updatedSecondsAgo int64) (int, error) {
 func (s *SQLStore) GetSession(token string, expireTime int64) (*model.Session, error) {
 	query := s.getQueryBuilder().
 		Select("id", "token", "user_id", "auth_service", "props").
-		From("sessions").
+		From(s.tablePrefix + "sessions").
 		Where(sq.Eq{"token": token}).
 		Where(sq.Gt{"update_at": time.Now().Unix() - expireTime})
 
@@ -58,7 +58,7 @@ func (s *SQLStore) CreateSession(session *model.Session) error {
 		return err
 	}
 
-	query := s.getQueryBuilder().Insert("sessions").
+	query := s.getQueryBuilder().Insert(s.tablePrefix+"sessions").
 		Columns("id", "token", "user_id", "auth_service", "props", "create_at", "update_at").
 		Values(session.ID, session.Token, session.UserID, session.AuthService, propsBytes, now, now)
 
@@ -69,7 +69,7 @@ func (s *SQLStore) CreateSession(session *model.Session) error {
 func (s *SQLStore) RefreshSession(session *model.Session) error {
 	now := time.Now().Unix()
 
-	query := s.getQueryBuilder().Update("sessions").
+	query := s.getQueryBuilder().Update(s.tablePrefix+"sessions").
 		Where(sq.Eq{"token": session.Token}).
 		Set("update_at", now)
 
@@ -85,7 +85,7 @@ func (s *SQLStore) UpdateSession(session *model.Session) error {
 		return err
 	}
 
-	query := s.getQueryBuilder().Update("sessions").
+	query := s.getQueryBuilder().Update(s.tablePrefix+"sessions").
 		Where(sq.Eq{"token": session.Token}).
 		Set("update_at", now).
 		Set("props", propsBytes)
@@ -95,7 +95,7 @@ func (s *SQLStore) UpdateSession(session *model.Session) error {
 }
 
 func (s *SQLStore) DeleteSession(sessionId string) error {
-	query := s.getQueryBuilder().Delete("sessions").
+	query := s.getQueryBuilder().Delete(s.tablePrefix+"sessions").
 		Where("id", sessionId)
 
 	_, err := query.Exec()
@@ -103,7 +103,7 @@ func (s *SQLStore) DeleteSession(sessionId string) error {
 }
 
 func (s *SQLStore) CleanUpSessions(expireTime int64) error {
-	query := s.getQueryBuilder().Delete("sessions").
+	query := s.getQueryBuilder().Delete(s.tablePrefix + "sessions").
 		Where(sq.Lt{"update_at": time.Now().Unix() - expireTime})
 
 	_, err := query.Exec()

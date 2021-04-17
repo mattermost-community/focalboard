@@ -53,7 +53,7 @@ func (s *SQLStore) importInitialTemplates() error {
 func (s *SQLStore) isInitializationNeeded() (bool, error) {
 	query := s.getQueryBuilder().
 		Select("count(*)").
-		From("blocks")
+		From(s.tablePrefix + "blocks")
 
 	row := query.QueryRow()
 

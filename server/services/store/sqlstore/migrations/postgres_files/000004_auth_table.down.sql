@@ -1,2 +1,2 @@
-DROP TABLE users;
-DROP TABLE sessions;
+DROP TABLE {{.prefix}}users;
+DROP TABLE {{.prefix}}sessions;

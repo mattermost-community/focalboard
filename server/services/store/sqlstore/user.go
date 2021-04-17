@@ -13,7 +13,7 @@ import (
 func (s *SQLStore) GetRegisteredUserCount() (int, error) {
 	query := s.getQueryBuilder().
 		Select("count(*)").
-		From("users").
+		From(s.tablePrefix + "users").
 		Where(sq.Eq{"delete_at": 0})
 	row := query.QueryRow()
 
@@ -29,7 +29,7 @@ func (s *SQLStore) GetRegisteredUserCount() (int, error) {
 func (s *SQLStore) getUserByCondition(condition sq.Eq) (*model.User, error) {
 	query := s.getQueryBuilder().
 		Select("id", "username", "email", "password", "mfa_secret", "auth_service", "auth_data", "props", "create_at", "update_at", "delete_at").
-		From("users").
+		From(s.tablePrefix + "users").
 		Where(sq.Eq{"delete_at": 0}).
 		Where(condition)
 	row := query.QueryRow()
@@ -69,7 +69,7 @@ func (s *SQLStore) CreateUser(user *model.User) error {
 		return err
 	}
 
-	query := s.getQueryBuilder().Insert("users").
+	query := s.getQueryBuilder().Insert(s.tablePrefix+"users").
 		Columns("id", "username", "email", "password", "mfa_secret", "auth_service", "auth_data", "props", "create_at", "update_at", "delete_at").
 		Values(user.ID, user.Username, user.Email, user.Password, user.MfaSecret, user.AuthService, user.AuthData, propsBytes, now, now, 0)
 
@@ -85,7 +85,7 @@ func (s *SQLStore) UpdateUser(user *model.User) error {
 		return err
 	}
 
-	query := s.getQueryBuilder().Update("users").
+	query := s.getQueryBuilder().Update(s.tablePrefix+"users").
 		Set("username", user.Username).
 		Set("email", user.Email).
 		Set("props", propsBytes).
@@ -112,7 +112,7 @@ func (s *SQLStore) UpdateUser(user *model.User) error {
 func (s *SQLStore) UpdateUserPassword(username, password string) error {
 	now := time.Now().Unix()
 
-	query := s.getQueryBuilder().Update("users").
+	query := s.getQueryBuilder().Update(s.tablePrefix+"users").
 		Set("password", password).
 		Set("update_at", now).
 		Where(sq.Eq{"username": username})
@@ -137,7 +137,7 @@ func (s *SQLStore) UpdateUserPassword(username, password string) error {
 func (s *SQLStore) UpdateUserPasswordByID(userID, password string) error {
 	now := time.Now().Unix()
 
-	query := s.getQueryBuilder().Update("users").
+	query := s.getQueryBuilder().Update(s.tablePrefix+"users").
 		Set("password", password).
 		Set("update_at", now).
 		Where(sq.Eq{"id": userID})

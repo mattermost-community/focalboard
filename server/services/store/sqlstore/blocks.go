@@ -15,7 +15,7 @@ import (
 )
 
 func (s *SQLStore) latestsBlocksSubquery(c store.Container) sq.SelectBuilder {
-	internalQuery := sq.Select("*", "ROW_NUMBER() OVER (PARTITION BY id ORDER BY insert_at DESC) AS rn").From("blocks")
+	internalQuery := sq.Select("*", "ROW_NUMBER() OVER (PARTITION BY id ORDER BY insert_at DESC) AS rn").From(s.tablePrefix + "blocks")
 
 	return sq.Select("*").
 		FromSelect(internalQuery, "a").
@@ -308,7 +308,7 @@ func (s *SQLStore) InsertBlock(c store.Container, block model.Block) error {
 		return err
 	}
 
-	query := s.getQueryBuilder().Insert("blocks").
+	query := s.getQueryBuilder().Insert(s.tablePrefix+"blocks").
 		Columns(
 			"workspace_id",
 			"id",
@@ -347,7 +347,7 @@ func (s *SQLStore) InsertBlock(c store.Container, block model.Block) error {
 
 func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy string) error {
 	now := time.Now().Unix()
-	query := s.getQueryBuilder().Insert("blocks").
+	query := s.getQueryBuilder().Insert(s.tablePrefix+"blocks").
 		Columns(
 			"workspace_id",
 			"id",

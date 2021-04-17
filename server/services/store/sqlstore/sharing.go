@@ -13,7 +13,7 @@ func (s *SQLStore) UpsertSharing(c store.Container, sharing model.Sharing) error
 	now := time.Now().Unix()
 
 	query := s.getQueryBuilder().
-		Insert("sharing").
+		Insert(s.tablePrefix+"sharing").
 		Columns(
 			"id",
 			"enabled",
@@ -43,7 +43,7 @@ func (s *SQLStore) GetSharing(c store.Container, rootID string) (*model.Sharing,
 			"modified_by",
 			"update_at",
 		).
-		From("sharing").
+		From(s.tablePrefix + "sharing").
 		Where(sq.Eq{"id": rootID})
 	row := query.QueryRow()
 	sharing := model.Sharing{}

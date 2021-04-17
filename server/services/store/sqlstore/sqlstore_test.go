@@ -10,17 +10,17 @@ import (
 )
 
 func SetupTests(t *testing.T) (store.Store, func()) {
-	dbType := os.Getenv("OT_STORE_TEST_DB_TYPE")
+	dbType := os.Getenv("FB_STORE_TEST_DB_TYPE")
 	if dbType == "" {
 		dbType = "sqlite3"
 	}
 
-	connectionString := os.Getenv("OT_STORE_TEST_CONN_STRING")
+	connectionString := os.Getenv("FB_STORE_TEST_CONN_STRING")
 	if connectionString == "" {
 		connectionString = ":memory:"
 	}
 
-	store, err := New(dbType, connectionString)
+	store, err := New(dbType, connectionString, "test_")
 	require.Nil(t, err)
 
 	tearDown := func() {

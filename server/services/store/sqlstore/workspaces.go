@@ -14,7 +14,7 @@ func (s *SQLStore) UpsertWorkspaceSignupToken(workspace model.Workspace) error {
 	now := time.Now().Unix()
 
 	query := s.getQueryBuilder().
-		Insert("workspaces").
+		Insert(s.tablePrefix+"workspaces").
 		Columns(
 			"id",
 			"signup_token",
@@ -42,7 +42,7 @@ func (s *SQLStore) UpsertWorkspaceSettings(workspace model.Workspace) error {
 	}
 
 	query := s.getQueryBuilder().
-		Insert("workspaces").
+		Insert(s.tablePrefix+"workspaces").
 		Columns(
 			"id",
 			"settings",
@@ -72,7 +72,7 @@ func (s *SQLStore) GetWorkspace(ID string) (*model.Workspace, error) {
 			"modified_by",
 			"update_at",
 		).
-		From("workspaces").
+		From(s.tablePrefix + "workspaces").
 		Where(sq.Eq{"id": ID})
 	row := query.QueryRow()
 	workspace := model.Workspace{}
