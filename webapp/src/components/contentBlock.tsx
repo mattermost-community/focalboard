@@ -106,12 +106,14 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
                         </Menu>
                     </MenuWrapper>
                 }
-                <div
-                    ref={gripRef}
-                    className='dnd-handle'
-                >
-                    <GripIcon/>
-                </div>
+                {!props.readonly &&
+                    <div
+                        ref={gripRef}
+                        className='dnd-handle'
+                    >
+                        <GripIcon/>
+                    </div>
+                }
             </div>
             <ContentElement
                 block={block}
