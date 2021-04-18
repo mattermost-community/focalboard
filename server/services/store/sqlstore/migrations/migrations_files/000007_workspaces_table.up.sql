@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS {{.prefix}}workspaces (
 	id VARCHAR(36),
 	signup_token VARCHAR(100) NOT NULL,
-    settings TEXT,
+	settings {{if .postgres}}JSON{{else}}TEXT{{end}},
 	modified_by VARCHAR(36),
 	update_at BIGINT,
 	PRIMARY KEY (id)
