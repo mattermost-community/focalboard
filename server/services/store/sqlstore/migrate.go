@@ -17,13 +17,14 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
 	_ "github.com/lib/pq"
-	pgmigrations "github.com/mattermost/focalboard/server/services/store/sqlstore/migrations/postgres"
-	"github.com/mattermost/focalboard/server/services/store/sqlstore/migrations/sqlite"
+	"github.com/mattermost/focalboard/server/services/store/sqlstore/migrations"
 )
 
 type PrefixedMigration struct {
 	*bindata.Bindata
-	prefix string
+	prefix   string
+	postgres bool
+	sqlite   bool
 }
 
 func init() {
@@ -44,7 +45,7 @@ func (pm *PrefixedMigration) ReadUp(version uint) (io.ReadCloser, string, error)
 		return nil, "", err
 	}
 	buffer := bytes.NewBufferString("")
-	err = tmpl.Execute(buffer, map[string]string{"prefix": pm.prefix})
+	err = tmpl.Execute(buffer, map[string]interface{}{"prefix": pm.prefix, "postgres": pm.postgres, "sqlite": pm.sqlite})
 	if err != nil {
 		return nil, "", err
 	}
@@ -65,7 +66,7 @@ func (pm *PrefixedMigration) ReadDown(version uint) (io.ReadCloser, string, erro
 		return nil, "", err
 	}
 	buffer := bytes.NewBufferString("")
-	err = tmpl.Execute(buffer, map[string]string{"prefix": pm.prefix})
+	err = tmpl.Execute(buffer, map[string]interface{}{"prefix": pm.prefix, "postgres": pm.postgres, "sqlite": pm.sqlite})
 	if err != nil {
 		return nil, "", err
 	}
@@ -73,7 +74,6 @@ func (pm *PrefixedMigration) ReadDown(version uint) (io.ReadCloser, string, erro
 }
 
 func (s *SQLStore) Migrate() error {
-	var bresource *bindata.AssetSource
 	var driver database.Driver
 	var err error
 	migrationsTable := fmt.Sprintf("%sschema_migrations", s.tablePrefix)
@@ -83,7 +83,6 @@ func (s *SQLStore) Migrate() error {
 		if err != nil {
 			return err
 		}
-		bresource = bindata.Resource(sqlite.AssetNames(), sqlite.Asset)
 	}
 
 	if s.dbType == "postgres" {
@@ -91,23 +90,25 @@ func (s *SQLStore) Migrate() error {
 		if err != nil {
 			return err
 		}
-		bresource = bindata.Resource(pgmigrations.AssetNames(), pgmigrations.Asset)
 	}
+
+	bresource := bindata.Resource(migrations.AssetNames(), migrations.Asset)
 
 	d, err := bindata.WithInstance(bresource)
 	if err != nil {
 		return err
 	}
 	prefixedData := &PrefixedMigration{
-		Bindata: d.(*bindata.Bindata),
-		prefix:  s.tablePrefix,
+		Bindata:  d.(*bindata.Bindata),
+		prefix:   s.tablePrefix,
+		postgres: s.dbType == "postgres",
+		sqlite:   s.dbType == "sqlite3",
 	}
 
 	m, err := migrate.NewWithInstance("prefixed-migration", prefixedData, s.dbType, driver)
 	if err != nil {
 		return err
 	}
-
 	err = m.Up()
 	if err != nil && !errors.Is(err, migrate.ErrNoChange) && !errors.Is(err, os.ErrNotExist) {
 		return err
