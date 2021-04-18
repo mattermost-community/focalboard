@@ -16,6 +16,8 @@
 // postgres_files/000007_workspaces_table.up.sql (190B)
 // postgres_files/000008_teams.down.sql (173B)
 // postgres_files/000008_teams.up.sql (304B)
+// postgres_files/000009_blocks_history.down.sql (97B)
+// postgres_files/000009_blocks_history.up.sql (430B)
 
 package postgres
 
@@ -404,6 +406,46 @@ func _000008_teamsUpSql() (*asset, error) {
 	return a, nil
 }
 
+var __000009_blocks_historyDownSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\x09\xf2\x0f\x50\x08\x71\x74\xf2\x71\x55\xa8\xae\xd6\x2b\x28\x4a\x4d\xcb\xac\xa8\xad\x4d\xca\xc9\x4f\xce\x2e\xb6\xe6\x72\xf4\x09\x71\x0d\xc2\x25\x1d\x9f\x91\x59\x5c\x92\x5f\x54\xa9\x10\xe4\xea\xe7\xe8\xeb\xaa\x10\xe2\x8f\xcd\x08\x40\x00\x00\x00\xff\xff\x38\xe5\xec\x7a\x61\x00\x00\x00")
+
+func _000009_blocks_historyDownSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__000009_blocks_historyDownSql,
+		"000009_blocks_history.down.sql",
+	)
+}
+
+func _000009_blocks_historyDownSql() (*asset, error) {
+	bytes, err := _000009_blocks_historyDownSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "000009_blocks_history.down.sql", size: 97, mode: os.FileMode(0644), modTime: time.Unix(1618733934, 0)}
+	a := &asset{bytes: bytes, info: info, digest: [32]uint8{0x78, 0x56, 0x8b, 0xdc, 0x49, 0x6, 0xe2, 0x3a, 0x1f, 0x77, 0xd4, 0xb3, 0xd0, 0x8e, 0xac, 0xb9, 0xfe, 0xa0, 0x69, 0x42, 0x7c, 0xb2, 0x25, 0xa7, 0x1e, 0x29, 0xce, 0xe0, 0x27, 0x38, 0x2, 0x45}}
+	return a, nil
+}
+
+var __000009_blocks_historyUpSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x6c\x90\x41\x6f\xfa\x30\x0c\xc5\xcf\xcd\xa7\xf0\xb1\x48\xd5\xff\xf2\x97\x76\xe1\x14\x58\xd8\xb2\xb5\x29\x4a\xcd\x06\xbb\x54\xa5\x31\x22\xa2\x90\x2a\xc9\xb4\x21\xc4\x77\x9f\x40\x13\x87\x8e\x9b\xfd\x9e\xdf\x4f\xb6\x79\x8e\x42\x03\xf2\x49\x2e\xe0\x74\xfa\xd7\x7b\xda\xd8\xef\xf3\x79\xdd\xb9\x76\x17\x40\x0b\xc5\x0b\x01\x58\xfe\xf5\xea\xad\x0d\xd1\xf9\xe3\x98\x4d\xb5\xe0\x28\x7e\x19\x72\x06\xaa\x44\x10\x4b\x59\x61\x75\x87\x98\xb2\xc4\x1a\x78\xe3\x7a\xfa\xcc\x75\xfa\xff\x61\x94\xb1\xc4\x1e\x02\xf9\x58\x37\x11\x50\x16\xa2\x42\x5e\xcc\xf1\xe3\x8a\x51\x8b\x3c\x87\x47\x31\xe3\x8b\x1c\x41\x95\xef\xe9\x65\xbc\x6f\x3c\x1d\x62\x3d\xc4\x00\x00\x7c\x39\xbf\x0b\x7d\xd3\xd2\x5d\xd7\x3b\x77\x3f\xb6\x77\xc6\x6e\x2c\x99\x7a\x7d\x1c\xac\x16\xda\x2d\xed\x1b\x98\xc8\x27\xa9\x30\x63\x49\x3c\xf6\x04\x28\x96\xd7\xda\xc6\xee\xd6\x6c\x2c\x75\x26\xc0\x4b\x55\xaa\x8c\x25\xad\xa7\x26\xd2\xe5\xa2\x5b\xf2\xb3\x37\x43\xc9\x50\x47\x03\x69\xae\x65\xc1\xf5\x0a\x5e\xc5\x0a\x52\x6b\x32\xb8\xfd\x66\xc4\x46\x63\xf6\x13\x00\x00\xff\xff\xe8\xcb\xbd\x52\xae\x01\x00\x00")
+
+func _000009_blocks_historyUpSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__000009_blocks_historyUpSql,
+		"000009_blocks_history.up.sql",
+	)
+}
+
+func _000009_blocks_historyUpSql() (*asset, error) {
+	bytes, err := _000009_blocks_historyUpSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "000009_blocks_history.up.sql", size: 430, mode: os.FileMode(0644), modTime: time.Unix(1618741527, 0)}
+	a := &asset{bytes: bytes, info: info, digest: [32]uint8{0x94, 0xe, 0xdd, 0xd8, 0x86, 0xad, 0x69, 0x8d, 0x7b, 0x4c, 0x5d, 0xdc, 0x4a, 0x62, 0x6e, 0x47, 0xb1, 0xc3, 0x46, 0x8b, 0xd, 0xe6, 0x50, 0x4a, 0xc0, 0x81, 0xcc, 0x18, 0x9e, 0x56, 0x5f, 0x76}}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -511,6 +553,8 @@ var _bindata = map[string]func() (*asset, error){
 	"000007_workspaces_table.up.sql":        _000007_workspaces_tableUpSql,
 	"000008_teams.down.sql":                 _000008_teamsDownSql,
 	"000008_teams.up.sql":                   _000008_teamsUpSql,
+	"000009_blocks_history.down.sql":        _000009_blocks_historyDownSql,
+	"000009_blocks_history.up.sql":          _000009_blocks_historyUpSql,
 }
 
 // AssetDebug is true if the assets were built with the debug flag enabled.
@@ -573,6 +617,8 @@ var _bintree = &bintree{nil, map[string]*bintree{
 	"000007_workspaces_table.up.sql": {_000007_workspaces_tableUpSql, map[string]*bintree{}},
 	"000008_teams.down.sql": {_000008_teamsDownSql, map[string]*bintree{}},
 	"000008_teams.up.sql": {_000008_teamsUpSql, map[string]*bintree{}},
+	"000009_blocks_history.down.sql": {_000009_blocks_historyDownSql, map[string]*bintree{}},
+	"000009_blocks_history.up.sql": {_000009_blocks_historyUpSql, map[string]*bintree{}},
 }}
 
 // RestoreAsset restores an asset under the given directory.

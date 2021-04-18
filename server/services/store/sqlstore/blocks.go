@@ -1,10 +1,10 @@
 package sqlstore
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"time"
 
@@ -14,19 +14,6 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 	_ "github.com/mattn/go-sqlite3"
 )
-
-func (s *SQLStore) latestsBlocksSubquery(c store.Container) sq.SelectBuilder {
-	internalQuery := sq.Select("*", "ROW_NUMBER() OVER (PARTITION BY id ORDER BY insert_at DESC) AS rn").From(s.tablePrefix + "blocks")
-	if s.dbType == "mysql" {
-		internalQuery = sq.Select("*", "(@row_number := @row_number + 1) AS rn").From(s.tablePrefix + "blocks, (SELECT @row_number:=0) AS t").OrderBy("insert_at DESC")
-	}
-
-	return sq.Select("*").
-		FromSelect(internalQuery, "a").
-		Where(sq.Eq{"rn": 1}).
-		Where(sq.Eq{"delete_at": 0}).
-		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
-}
 
 func (s *SQLStore) GetBlocksWithParentAndType(c store.Container, parentID string, blockType string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
@@ -43,7 +30,8 @@ func (s *SQLStore) GetBlocksWithParentAndType(c store.Container, parentID string
 			"update_at",
 			"delete_at",
 		).
-		FromSelect(s.latestsBlocksSubquery(c), "latest").
+		From(s.tablePrefix + "blocks").
+		Where(sq.Eq{"COALESCE(workspace_id, '0')": c.WorkspaceID}).
 		Where(sq.Eq{"parent_id": parentID}).
 		Where(sq.Eq{"type": blockType})
 
@@ -73,8 +61,9 @@ func (s *SQLStore) GetBlocksWithParent(c store.Container, parentID string) ([]mo
 			"update_at",
 			"delete_at",
 		).
-		FromSelect(s.latestsBlocksSubquery(c), "latest").
-		Where(sq.Eq{"parent_id": parentID})
+		From(s.tablePrefix + "blocks").
+		Where(sq.Eq{"parent_id": parentID}).
+		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
 
 	log.Print(query.ToSql())
 	rows, err := query.Query()
@@ -102,8 +91,9 @@ func (s *SQLStore) GetBlocksWithType(c store.Container, blockType string) ([]mod
 			"update_at",
 			"delete_at",
 		).
-		FromSelect(s.latestsBlocksSubquery(c), "latest").
-		Where(sq.Eq{"type": blockType})
+		From(s.tablePrefix + "blocks").
+		Where(sq.Eq{"type": blockType}).
+		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -131,8 +121,9 @@ func (s *SQLStore) GetSubTree2(c store.Container, blockID string) ([]model.Block
 			"update_at",
 			"delete_at",
 		).
-		FromSelect(s.latestsBlocksSubquery(c), "latest").
-		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}})
+		From(s.tablePrefix + "blocks").
+		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}}).
+		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
 
 	log.Print(query.ToSql())
 	rows, err := query.Query()
@@ -161,35 +152,35 @@ func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block
 		"l3.update_at",
 		"l3.delete_at",
 	).
-		FromSelect(s.latestsBlocksSubquery(c), "l1").
-		JoinClause(s.latestsBlocksSubquery(c).Prefix("JOIN (").Suffix(") l2 on l2.parent_id = l1.id or l2.id = l1.id")).
-		JoinClause(s.latestsBlocksSubquery(c).Prefix("JOIN (").Suffix(") l3 on l3.parent_id = l2.id or l3.id = l2.id")).
-		Where(sq.Eq{"l1.id": blockID})
+		From(s.tablePrefix + "blocks as l1").
+		Join(s.tablePrefix + "blocks as l2 on l2.parent_id = l1.id").
+		Join(s.tablePrefix + "blocks as l3 on l3.parent_id = l2.id").
+		Where(sq.Eq{"l1.id": blockID}).
+		Where(sq.Eq{"COALESCE(workspace_id, '0')": c.WorkspaceID})
 
-	// This second subquery is used to return distinct blocks
-	// We can't use DISTINCT because JSON columns in Postgres don't support it, and SQLite doesn't support DISTINCT ON
-	subquery2 := sq.Select("*", "ROW_NUMBER() OVER (PARTITION BY id) AS rn").FromSelect(subquery1, "sub1")
-	if s.dbType == "mysql" {
-		subquery2 = sq.Select("*", "(@row_number := @row_number + 1) AS rn").FromSelect(subquery1, "sub1").Join("(SELECT @row_number:=0) AS t")
+	query := subquery1.Distinct()
+
+	if s.dbType == "sqlite3" {
+		// This second subquery is used to return distinct blocks
+		// We can't use DISTINCT because JSON columns in Postgres don't support it, and SQLite doesn't support DISTINCT ON
+		subquery2 := sq.Select("*", "ROW_NUMBER() OVER (PARTITION BY id) AS rn").FromSelect(subquery1, "sub1")
+		query = s.getQueryBuilder().Select(
+			"id",
+			"parent_id",
+			"root_id",
+			"modified_by",
+			"`schema`",
+			"type",
+			"title",
+			"COALESCE(`fields`, '{}')",
+			"create_at",
+			"update_at",
+			"delete_at",
+		).
+			FromSelect(subquery2, "sub2").
+			Where(sq.Eq{"rn": 1})
 	}
 
-	query := s.getQueryBuilder().Select(
-		"id",
-		"parent_id",
-		"root_id",
-		"modified_by",
-		"`schema`",
-		"type",
-		"title",
-		"COALESCE(`fields`, '{}')",
-		"create_at",
-		"update_at",
-		"delete_at",
-	).
-		FromSelect(subquery2, "sub2").
-		Where(sq.Eq{"rn": 1})
-
-	log.Print(query.ToSql())
 	rows, err := query.Query()
 	if err != nil {
 		log.Printf(`getSubTree3 ERROR: %v`, err)
@@ -215,7 +206,7 @@ func (s *SQLStore) GetAllBlocks(c store.Container) ([]model.Block, error) {
 			"update_at",
 			"delete_at",
 		).
-		FromSelect(s.latestsBlocksSubquery(c), "latest")
+		From(s.tablePrefix + "blocks")
 
 	rows, err := query.Query()
 	if err != nil {
@@ -259,7 +250,6 @@ func blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 		if modifiedBy.Valid {
 			block.ModifiedBy = modifiedBy.String
 		}
-		fmt.Println(fieldsJSON)
 
 		err = json.Unmarshal([]byte(fieldsJSON), &block.Fields)
 		if err != nil {
@@ -276,9 +266,7 @@ func blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 }
 
 func (s *SQLStore) GetRootID(c store.Container, blockID string) (string, error) {
-	query := s.getQueryBuilder().Select("root_id").
-		FromSelect(s.latestsBlocksSubquery(c), "latest").
-		Where(sq.Eq{"id": blockID})
+	query := s.getQueryBuilder().Select("root_id").Where(sq.Eq{"id": blockID}).Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
 
 	row := query.QueryRow()
 
@@ -293,9 +281,7 @@ func (s *SQLStore) GetRootID(c store.Container, blockID string) (string, error) 
 }
 
 func (s *SQLStore) GetParentID(c store.Container, blockID string) (string, error) {
-	query := s.getQueryBuilder().Select("parent_id").
-		FromSelect(s.latestsBlocksSubquery(c), "latest").
-		Where(sq.Eq{"id": blockID})
+	query := s.getQueryBuilder().Select("parent_id").Where(sq.Eq{"id": blockID}).Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
 
 	row := query.QueryRow()
 
@@ -319,7 +305,13 @@ func (s *SQLStore) InsertBlock(c store.Container, block model.Block) error {
 		return err
 	}
 
-	query := s.getQueryBuilder().Insert(s.tablePrefix+"blocks").
+	ctx := context.Background()
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+
+	query := s.getQueryBuilder().Insert("").
 		Columns(
 			"workspace_id",
 			"id",
@@ -348,7 +340,27 @@ func (s *SQLStore) InsertBlock(c store.Container, block model.Block) error {
 		block.DeleteAt,
 	)
 
-	_, err = query.Exec()
+	// TODO: migrate this delete/insert to an upsert
+	deleteQuery := s.getQueryBuilder().Delete(s.tablePrefix + "blocks").Where(sq.Eq{"id": block.ID})
+	_, err = sq.ExecContextWith(ctx, tx, deleteQuery)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	_, err = sq.ExecContextWith(ctx, tx, query.Into(s.tablePrefix+"blocks"))
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	_, err = sq.ExecContextWith(ctx, tx, query.Into(s.tablePrefix+"blocks_history"))
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	err = tx.Commit()
 	if err != nil {
 		return err
 	}
@@ -357,8 +369,14 @@ func (s *SQLStore) InsertBlock(c store.Container, block model.Block) error {
 }
 
 func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy string) error {
+	ctx := context.Background()
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+
 	now := time.Now().Unix()
-	query := s.getQueryBuilder().Insert(s.tablePrefix+"blocks").
+	insertQuery := s.getQueryBuilder().Insert(s.tablePrefix+"blocks_history").
 		Columns(
 			"workspace_id",
 			"id",
@@ -374,7 +392,21 @@ func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy str
 			now,
 		)
 
-	_, err := query.Exec()
+	_, err = sq.ExecContextWith(ctx, tx, insertQuery)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	deleteQuery := s.getQueryBuilder().Delete(s.tablePrefix + "blocks").Where(sq.Eq{"id": blockID})
+
+	_, err = sq.ExecContextWith(ctx, tx, deleteQuery)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	err = tx.Commit()
 	if err != nil {
 		return err
 	}
