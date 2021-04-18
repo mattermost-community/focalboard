@@ -3,7 +3,7 @@
 
 import React, {useState} from 'react'
 
-import {IPropertyOption, IPropertyTemplate} from '../blocks/board'
+import {IPropertyOption, IPropertyTemplate, PropertyType} from '../blocks/board'
 import {Card} from '../blocks/card'
 import mutator from '../mutator'
 import {OctoUtils} from '../octoUtils'
@@ -30,6 +30,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     const finalDisplayValue = displayValue || emptyDisplayValue
 
     const validateProp = (propType: string, val: string): boolean => {
+        const lowerCaseVal = val.toLowerCase()
         if (val === '') {
             return true
         }
@@ -38,11 +39,15 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             return !isNaN(parseInt(val, 10))
         case 'email': {
             const emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            return emailRegexp.test(val.toLowerCase())
+            return emailRegexp.test(lowerCaseVal)
         }
         case 'url': {
             const urlRegexp = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/
-            return urlRegexp.test(val.toLowerCase())
+            return urlRegexp.test(lowerCaseVal)
+        }
+        case 'phone': {
+            const phoneRegexp = /[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}/
+            return phoneRegexp.test(lowerCaseVal)
         }
         case 'text':
             return true
@@ -97,11 +102,10 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         )
     }
 
+    const editableFields: Array<PropertyType> = ['text', 'number', 'email', 'url', 'phone']
+
     if (
-        propertyTemplate.type === 'text' ||
-        propertyTemplate.type === 'number' ||
-        propertyTemplate.type === 'email' ||
-        propertyTemplate.type === 'url'
+        editableFields.includes(propertyTemplate.type)
     ) {
         if (!readOnly) {
             return (

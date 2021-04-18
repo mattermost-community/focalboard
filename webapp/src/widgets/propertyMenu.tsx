@@ -104,6 +104,11 @@ const PropertyMenu = React.memo((props: Props) => {
                     onClick={() => props.onTypeChanged('email')}
                 />
                 <Menu.Text
+                    id='phone'
+                    name={typeDisplayName(intl, 'phone')}
+                    onClick={() => props.onTypeChanged('phone')}
+                />
+                <Menu.Text
                     id='url'
                     name={typeDisplayName(intl, 'url')}
                     onClick={() => props.onTypeChanged('url')}
