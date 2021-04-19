@@ -37,7 +37,7 @@ type Props = {
 
 const GalleryCard = React.memo((props: Props) => {
     const {cardTree} = props
-    const [isDragging, isOver, cardRef] = useSortable('card', cardTree.card, props.isManualSort, props.onDrop)
+    const [isDragging, isOver, cardRef] = useSortable('card', cardTree.card, props.isManualSort && !props.readonly, props.onDrop)
 
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
 

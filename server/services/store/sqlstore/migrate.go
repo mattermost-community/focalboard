@@ -51,7 +51,7 @@ func (pm *PrefixedMigration) ReadUp(version uint) (io.ReadCloser, string, error)
 	if err != nil {
 		return nil, "", err
 	}
-	return io.NopCloser(bytes.NewReader(buffer.Bytes())), identifier, nil
+	return ioutil.NopCloser(bytes.NewReader(buffer.Bytes())), identifier, nil
 }
 
 func (pm *PrefixedMigration) ReadDown(version uint) (io.ReadCloser, string, error) {
@@ -72,7 +72,7 @@ func (pm *PrefixedMigration) ReadDown(version uint) (io.ReadCloser, string, erro
 	if err != nil {
 		return nil, "", err
 	}
-	return io.NopCloser(bytes.NewReader(buffer.Bytes())), identifier, nil
+	return ioutil.NopCloser(bytes.NewReader(buffer.Bytes())), identifier, nil
 }
 
 func (s *SQLStore) Migrate() error {
