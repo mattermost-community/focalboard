@@ -139,7 +139,7 @@ func (s *SQLStore) GetSubTree2(c store.Container, blockID string) ([]model.Block
 // GetSubTree3 returns blocks within 3 levels of the given blockID
 func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block, error) {
 	// This first subquery returns repeated blocks
-	subquery1 := sq.Select(
+	subquery1 := s.getQueryBuilder().Select(
 		"l3.id",
 		"l3.parent_id",
 		"l3.root_id",
@@ -153,10 +153,10 @@ func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block
 		"l3.delete_at",
 	).
 		From(s.tablePrefix + "blocks as l1").
-		Join(s.tablePrefix + "blocks as l2 on l2.parent_id = l1.id").
-		Join(s.tablePrefix + "blocks as l3 on l3.parent_id = l2.id").
+		Join(s.tablePrefix + "blocks as l2 on l2.parent_id = l1.id or l2.id = l1.id").
+		Join(s.tablePrefix + "blocks as l3 on l3.parent_id = l2.id or l3.id = l2.id").
 		Where(sq.Eq{"l1.id": blockID}).
-		Where(sq.Eq{"COALESCE(workspace_id, '0')": c.WorkspaceID})
+		Where(sq.Eq{"COALESCE(l3.workspace_id, '0')": c.WorkspaceID})
 
 	query := subquery1.Distinct()
 
@@ -266,7 +266,7 @@ func blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 }
 
 func (s *SQLStore) GetRootID(c store.Container, blockID string) (string, error) {
-	query := s.getQueryBuilder().Select("root_id").Where(sq.Eq{"id": blockID}).Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
+	query := s.getQueryBuilder().Select("root_id").From(s.tablePrefix + "blocks").Where(sq.Eq{"id": blockID}).Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
 
 	row := query.QueryRow()
 
@@ -281,7 +281,7 @@ func (s *SQLStore) GetRootID(c store.Container, blockID string) (string, error) 
 }
 
 func (s *SQLStore) GetParentID(c store.Container, blockID string) (string, error) {
-	query := s.getQueryBuilder().Select("parent_id").Where(sq.Eq{"id": blockID}).Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
+	query := s.getQueryBuilder().Select("parent_id").From(s.tablePrefix + "blocks").Where(sq.Eq{"id": blockID}).Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
 
 	row := query.QueryRow()
 
