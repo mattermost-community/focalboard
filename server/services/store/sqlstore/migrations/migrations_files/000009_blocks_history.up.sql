@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}blocks (
 	update_at BIGINT,
 	delete_at BIGINT,
 	PRIMARY KEY (id)
-);
+){{if .mysql}}CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci{{end}};
 
 {{if .mysql}}
 INSERT IGNORE INTO {{.prefix}}blocks (SELECT * FROM {{.prefix}}blocks_history ORDER BY insert_at DESC);
@@ -27,3 +27,4 @@ INSERT INTO {{.prefix}}blocks (SELECT * FROM {{.prefix}}blocks_history ORDER BY 
 {{if .sqlite}}
 INSERT OR IGNORE INTO {{.prefix}}blocks SELECT * FROM {{.prefix}}blocks_history ORDER BY insert_at DESC;
 {{end}}
+
