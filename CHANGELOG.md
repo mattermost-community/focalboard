@@ -6,6 +6,8 @@ This changelog summarizes updates to our open source project. You can also find 
 
 ## [Work In Progress] - v0.7 Release - [Date TBD]
 
+## v0.6.5 Release - April 19, 2021
+
 * Key Updates:
   * Focalboard now available on DockerHub at https://hub.docker.com/r/mattermost/focalboard. [#91](https://github.com/mattermost/focalboard/issues/91) Thanks @jwilander @obbardc!
   * You can now contribute translations to Focalboard on https://translate.mattermost.com/. Thanks @jespino!
@@ -21,13 +23,13 @@ This changelog summarizes updates to our open source project. You can also find 
   * Add docker-compose to run the whole service in containers. [#105](https://github.com/mattermost/focalboard/pull/105) Thanks @jbutler992!
   * Added Gallery view.
   * Added Checkbox content type.
-  * Added Selected cards duplication with CTRL+D.
-  * Added Search shortcut (ctrl+shift+f).
+  * Added Selected cards duplication with Ctrl+D.
+  * Added Search shortcut (Ctrl+Shift+F).
 * Requested Contributions
   * Add more frontend unit test coverage. [#126](https://github.com/mattermost/focalboard/pull/126) Thanks @renjithgr!
   * [GH-40](https://github.com/mattermost/focalboard/issues/40) - Add property type email [#84](https://github.com/mattermost/focalboard/pull/84). Thanks @renjithgr!
 
-## v0.6 Release - March 15, 2021
+## v0.6.1 Release - March 15, 2021
 
 * Focalboard Personal Desktop is now live in the App Stores:
     * [Mac App Store](https://apps.apple.com/app/apple-store/id1556908618?pt=2114704&ct=changelog&mt=8)
