@@ -78,7 +78,7 @@ Cross-compilation currently isn't fully supported, so please build on the approp
 
 ## Unit tests
 
-Before checking-in commits, run: `make ci`, which is simlar to the ci.yml workflow and includes:
+Before checking-in commits, run: `make ci`, which is similar to the ci.yml workflow and includes:
 * Server unit tests: `make server-test`
 * Webapp eslint: `cd webapp; npm run check`
 * Webapp unit tests: `cd webapp; npm run test`
