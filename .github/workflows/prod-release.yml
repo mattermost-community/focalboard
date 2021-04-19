@@ -79,7 +79,7 @@ jobs:
     - name: Build macOS
       run: make mac-app
       env:
-        DEVELOPER_DIR: /Applications/Xcode_12.3.app/Contents/Developer
+        DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
         BUILD_NUMBER: ${{ github.run_id }}
 
     - name: Upload macOS package
