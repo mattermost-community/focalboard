@@ -123,7 +123,6 @@ func (s *SQLStore) GetSubTree2(c store.Container, blockID string) ([]model.Block
 		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}}).
 		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
 
-	log.Print(query.ToSql())
 	rows, err := query.Query()
 	if err != nil {
 		log.Printf(`getSubTree ERROR: %v`, err)
