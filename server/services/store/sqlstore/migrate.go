@@ -33,11 +33,7 @@ func init() {
 	source.Register("prefixed-migrations", &PrefixedMigration{})
 }
 
-func (pm *PrefixedMigration) ReadUp(version uint) (io.ReadCloser, string, error) {
-	r, identifier, err := pm.Bindata.ReadUp(version)
-	if err != nil {
-		return nil, "", err
-	}
+func (pm *PrefixedMigration) executeTemplate(r io.ReadCloser, identifier string) (io.ReadCloser, string, error) {
 	data, err := ioutil.ReadAll(r)
 	if err != nil {
 		return nil, "", err
@@ -54,25 +50,20 @@ func (pm *PrefixedMigration) ReadUp(version uint) (io.ReadCloser, string, error)
 	return ioutil.NopCloser(bytes.NewReader(buffer.Bytes())), identifier, nil
 }
 
+func (pm *PrefixedMigration) ReadUp(version uint) (io.ReadCloser, string, error) {
+	r, identifier, err := pm.Bindata.ReadUp(version)
+	if err != nil {
+		return nil, "", err
+	}
+	return pm.executeTemplate(r, identifier)
+}
+
 func (pm *PrefixedMigration) ReadDown(version uint) (io.ReadCloser, string, error) {
 	r, identifier, err := pm.Bindata.ReadDown(version)
 	if err != nil {
 		return nil, "", err
 	}
-	data, err := ioutil.ReadAll(r)
-	if err != nil {
-		return nil, "", err
-	}
-	tmpl, err := template.New("sql").Parse(string(data))
-	if err != nil {
-		return nil, "", err
-	}
-	buffer := bytes.NewBufferString("")
-	err = tmpl.Execute(buffer, map[string]interface{}{"prefix": pm.prefix, "postgres": pm.postgres, "sqlite": pm.sqlite, "mysql": pm.mysql})
-	if err != nil {
-		return nil, "", err
-	}
-	return ioutil.NopCloser(bytes.NewReader(buffer.Bytes())), identifier, nil
+	return pm.executeTemplate(r, identifier)
 }
 
 func (s *SQLStore) Migrate() error {
