@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 CREATE TABLE IF NOT EXISTS {{.prefix}}blocks (
 	id VARCHAR(36),
     {{if .postgres}}insert_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),{{end}}

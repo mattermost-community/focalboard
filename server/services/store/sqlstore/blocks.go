@@ -35,7 +35,6 @@ func (s *SQLStore) GetBlocksWithParentAndType(c store.Container, parentID string
 		Where(sq.Eq{"parent_id": parentID}).
 		Where(sq.Eq{"type": blockType})
 
-	log.Print(query.ToSql())
 	rows, err := query.Query()
 	if err != nil {
 		log.Printf(`getBlocksWithParentAndType ERROR: %v`, err)
@@ -65,7 +64,6 @@ func (s *SQLStore) GetBlocksWithParent(c store.Container, parentID string) ([]mo
 		Where(sq.Eq{"parent_id": parentID}).
 		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
 
-	log.Print(query.ToSql())
 	rows, err := query.Query()
 	if err != nil {
 		log.Printf(`getBlocksWithParent ERROR: %v`, err)
@@ -139,7 +137,7 @@ func (s *SQLStore) GetSubTree2(c store.Container, blockID string) ([]model.Block
 // GetSubTree3 returns blocks within 3 levels of the given blockID
 func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block, error) {
 	// This first subquery returns repeated blocks
-	subquery1 := s.getQueryBuilder().Select(
+	query := s.getQueryBuilder().Select(
 		"l3.id",
 		"l3.parent_id",
 		"l3.root_id",
@@ -158,27 +156,10 @@ func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block
 		Where(sq.Eq{"l1.id": blockID}).
 		Where(sq.Eq{"COALESCE(l3.workspace_id, '0')": c.WorkspaceID})
 
-	query := subquery1.Distinct()
-
-	if s.dbType == "sqlite3" {
-		// This second subquery is used to return distinct blocks
-		// We can't use DISTINCT because JSON columns in Postgres don't support it, and SQLite doesn't support DISTINCT ON
-		subquery2 := sq.Select("*", "ROW_NUMBER() OVER (PARTITION BY id) AS rn").FromSelect(subquery1, "sub1")
-		query = s.getQueryBuilder().Select(
-			"id",
-			"parent_id",
-			"root_id",
-			"modified_by",
-			"`schema`",
-			"type",
-			"title",
-			"COALESCE(`fields`, '{}')",
-			"create_at",
-			"update_at",
-			"delete_at",
-		).
-			FromSelect(subquery2, "sub2").
-			Where(sq.Eq{"rn": 1})
+	if s.dbType == "postgres" {
+		query = query.Options("DISTINCT ON (l3.id)")
+	} else {
+		query = query.Distinct()
 	}
 
 	rows, err := query.Query()
