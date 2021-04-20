@@ -12,7 +12,7 @@ import (
 func SetupTests(t *testing.T) (store.Store, func()) {
 	dbType := os.Getenv("FB_STORE_TEST_DB_TYPE")
 	if dbType == "" {
-		dbType = "sqlite3"
+		dbType = sqliteDBType
 	}
 
 	connectionString := os.Getenv("FB_STORE_TEST_CONN_STRING")

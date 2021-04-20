@@ -80,21 +80,21 @@ func (s *SQLStore) Migrate() error {
 	var err error
 	migrationsTable := fmt.Sprintf("%sschema_migrations", s.tablePrefix)
 
-	if s.dbType == "sqlite3" {
+	if s.dbType == sqliteDBType {
 		driver, err = sqlite3.WithInstance(s.db, &sqlite3.Config{MigrationsTable: migrationsTable})
 		if err != nil {
 			return err
 		}
 	}
 
-	if s.dbType == "postgres" {
+	if s.dbType == postgresDBType {
 		driver, err = postgres.WithInstance(s.db, &postgres.Config{MigrationsTable: migrationsTable})
 		if err != nil {
 			return err
 		}
 	}
 
-	if s.dbType == "mysql" {
+	if s.dbType == mysqlDBType {
 		driver, err = mysql.WithInstance(s.db, &mysql.Config{MigrationsTable: migrationsTable})
 		if err != nil {
 			return err
@@ -110,9 +110,9 @@ func (s *SQLStore) Migrate() error {
 	prefixedData := &PrefixedMigration{
 		Bindata:  d.(*bindata.Bindata),
 		prefix:   s.tablePrefix,
-		postgres: s.dbType == "postgres",
-		sqlite:   s.dbType == "sqlite3",
-		mysql:    s.dbType == "mysql",
+		postgres: s.dbType == postgresDBType,
+		sqlite:   s.dbType == sqliteDBType,
+		mysql:    s.dbType == mysqlDBType,
 	}
 
 	m, err := migrate.NewWithInstance("prefixed-migration", prefixedData, s.dbType, driver)

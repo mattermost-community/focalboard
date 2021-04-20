@@ -156,7 +156,7 @@ func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block
 		Where(sq.Eq{"l1.id": blockID}).
 		Where(sq.Eq{"COALESCE(l3.workspace_id, '0')": c.WorkspaceID})
 
-	if s.dbType == "postgres" {
+	if s.dbType == postgresDBType {
 		query = query.Options("DISTINCT ON (l3.id)")
 	} else {
 		query = query.Distinct()

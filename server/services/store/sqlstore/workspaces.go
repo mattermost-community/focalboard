@@ -27,7 +27,7 @@ func (s *SQLStore) UpsertWorkspaceSignupToken(workspace model.Workspace) error {
 			workspace.ModifiedBy,
 			now,
 		)
-	if s.dbType == "mysql" {
+	if s.dbType == mysqlDBType {
 		query = query.Suffix("ON DUPLICATE KEY UPDATE signup_token = ?, modified_by = ?, update_at = ?", workspace.SignupToken, workspace.ModifiedBy, now)
 	} else {
 		query = query.Suffix("ON CONFLICT (id) DO UPDATE SET signup_token = EXCLUDED.signup_token, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at")
@@ -59,7 +59,7 @@ func (s *SQLStore) UpsertWorkspaceSettings(workspace model.Workspace) error {
 			workspace.ModifiedBy,
 			now,
 		)
-	if s.dbType == "mysql" {
+	if s.dbType == mysqlDBType {
 		query = query.Suffix("ON DUPLICATE KEY UPDATE settings = ?, modified_by = ?, update_at = ?", settingsJSON, workspace.ModifiedBy, now)
 	} else {
 		query = query.Suffix("ON CONFLICT (id) DO UPDATE SET settings = EXCLUDED.settings, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at")
