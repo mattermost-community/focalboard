@@ -247,7 +247,10 @@ func blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 }
 
 func (s *SQLStore) GetRootID(c store.Container, blockID string) (string, error) {
-	query := s.getQueryBuilder().Select("root_id").From(s.tablePrefix + "blocks").Where(sq.Eq{"id": blockID}).Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
+	query := s.getQueryBuilder().Select("root_id").
+		From(s.tablePrefix + "blocks").
+		Where(sq.Eq{"id": blockID}).
+		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
 
 	row := query.QueryRow()
 
@@ -262,7 +265,10 @@ func (s *SQLStore) GetRootID(c store.Container, blockID string) (string, error) 
 }
 
 func (s *SQLStore) GetParentID(c store.Container, blockID string) (string, error) {
-	query := s.getQueryBuilder().Select("parent_id").From(s.tablePrefix + "blocks").Where(sq.Eq{"id": blockID}).Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
+	query := s.getQueryBuilder().Select("parent_id").
+		From(s.tablePrefix + "blocks").
+		Where(sq.Eq{"id": blockID}).
+		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
 
 	row := query.QueryRow()
 
