@@ -27,4 +27,4 @@ INSERT INTO {{.prefix}}blocks (SELECT * FROM {{.prefix}}blocks_history ORDER BY 
 {{if .sqlite}}
 INSERT OR IGNORE INTO {{.prefix}}blocks SELECT * FROM {{.prefix}}blocks_history ORDER BY insert_at DESC;
 {{end}}
-
+DELETE FROM {{.prefix}}blocks where delete_at > 0;
