@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}blocks (
 	{{if .sqlite}}insert_at DATETIME NOT NULL DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),{{end}}
 	{{if .mysql}}insert_at DATETIME(6) NOT NULL DEFAULT NOW(6),{{end}}
 	parent_id VARCHAR(36),
-	`schema` BIGINT,
+	{{if .mysql}}`schema`{{else}}schema{{end}} BIGINT,
 	type TEXT,
 	title TEXT,
 	fields {{if .postgres}}JSON{{else}}TEXT{{end}},

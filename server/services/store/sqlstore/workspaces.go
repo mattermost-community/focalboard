@@ -76,7 +76,7 @@ func (s *SQLStore) GetWorkspace(ID string) (*model.Workspace, error) {
 		Select(
 			"id",
 			"signup_token",
-			"COALESCE(`settings`, '{}')",
+			"COALESCE(settings, '{}')",
 			"modified_by",
 			"update_at",
 		).

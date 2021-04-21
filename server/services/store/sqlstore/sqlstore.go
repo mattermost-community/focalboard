@@ -75,3 +75,13 @@ func (s *SQLStore) getQueryBuilder() sq.StatementBuilderType {
 
 	return builder.RunWith(s.db)
 }
+
+func (s *SQLStore) escapeField(fieldName string) string {
+	if s.dbType == mysqlDBType {
+		return "`" + fieldName + "`"
+	}
+	if s.dbType == postgresDBType || s.dbType == sqliteDBType {
+		return "\"" + fieldName + "\""
+	}
+	return fieldName
+}
