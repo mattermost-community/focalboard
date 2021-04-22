@@ -6,6 +6,12 @@ This changelog summarizes updates to our open source project. You can also find 
 
 ## [Work In Progress] - v0.7 Release - [Date TBD]
 
+* Key Updates:
+    * Added Todoist import script. Thanks @harshilsharma63!
+    * Added MySql database support. Thanks @jespino!
+    * Added URL and phone number properties. Thanks @BharatKalluri!
+    * Added documentation for share board. Thanks @haardikdharma10!
+
 ## v0.6.5 Release - April 19, 2021
 
 * Key Updates:
