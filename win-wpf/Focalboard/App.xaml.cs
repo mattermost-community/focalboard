@@ -83,18 +83,28 @@ namespace Focalboard {
 			var appFolder = Utils.GetAppFolder();
 			Directory.SetCurrentDirectory(appFolder);
 
-			string tempFolder;
+			string appDataFolder;
             try {
-                tempFolder = ApplicationData.Current.LocalFolder.Path;
+                appDataFolder = ApplicationData.Current.LocalFolder.Path;
             } catch {
                 var documentsFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                tempFolder = documentsFolder;
+                appDataFolder = Path.Combine(documentsFolder, "Focalboard");
+                Directory.CreateDirectory(appDataFolder);
                 // Not a UWP app, store in Documents
+
+                // FIXUP code: Copy from old DB location
+                var oldDBPath = Path.Combine(documentsFolder, "focalboard.db");
+                var newDBPath = Path.Combine(appDataFolder, "focalboard.db");
+                if (File.Exists(oldDBPath)) {
+                    Debug.WriteLine($"Moving DB file from: {oldDBPath} to {newDBPath}");
+                    File.Move(oldDBPath, newDBPath);
+				}
             }
-            var dbPath = Path.Combine(tempFolder, "focalboard.db");
+
+            var dbPath = Path.Combine(appDataFolder, "focalboard.db");
             Debug.WriteLine($"dbPath: {dbPath}");
 
-            var filesPath = Path.Combine(tempFolder, "files");
+            var filesPath = Path.Combine(appDataFolder, "files");
             Debug.WriteLine($"filesPath: {filesPath}");
 
             var cwd = Directory.GetCurrentDirectory();
