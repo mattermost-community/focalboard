@@ -95,7 +95,7 @@ namespace Focalboard {
                 // FIXUP code: Copy from old DB location
                 var oldDBPath = Path.Combine(documentsFolder, "focalboard.db");
                 var newDBPath = Path.Combine(appDataFolder, "focalboard.db");
-                if (File.Exists(oldDBPath)) {
+                if (!File.Exists(newDBPath) && File.Exists(oldDBPath)) {
                     Debug.WriteLine($"Moving DB file from: {oldDBPath} to {newDBPath}");
                     File.Move(oldDBPath, newDBPath);
 				}
