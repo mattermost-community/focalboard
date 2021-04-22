@@ -3,6 +3,7 @@ package integrationtests
 import (
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/mattermost/focalboard/server/client"
@@ -16,11 +17,22 @@ type TestHelper struct {
 }
 
 func getTestConfig() *config.Configuration {
+	dbType := os.Getenv("FB_STORE_TEST_DB_TYPE")
+	if dbType == "" {
+		dbType = "sqlite3"
+	}
+
+	connectionString := os.Getenv("FB_STORE_TEST_CONN_STRING")
+	if connectionString == "" {
+		connectionString = ":memory:"
+	}
+
 	return &config.Configuration{
 		ServerRoot:     "http://localhost:8888",
 		Port:           8888,
-		DBType:         "sqlite3",
-		DBConfigString: ":memory:",
+		DBType:         dbType,
+		DBConfigString: connectionString,
+		DBTablePrefix:  "test_",
 		WebPath:        "./pack",
 		FilesPath:      "./files",
 	}

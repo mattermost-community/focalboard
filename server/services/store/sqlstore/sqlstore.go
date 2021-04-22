@@ -7,6 +7,12 @@ import (
 	sq "github.com/Masterminds/squirrel"
 )
 
+const (
+	mysqlDBType    = "mysql"
+	sqliteDBType   = "sqlite3"
+	postgresDBType = "postgres"
+)
+
 // SQLStore is a SQL database.
 type SQLStore struct {
 	db          *sql.DB
@@ -62,7 +68,20 @@ func (s *SQLStore) Shutdown() error {
 }
 
 func (s *SQLStore) getQueryBuilder() sq.StatementBuilderType {
-	builder := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+	builder := sq.StatementBuilder
+	if s.dbType == postgresDBType || s.dbType == sqliteDBType {
+		builder = builder.PlaceholderFormat(sq.Dollar)
+	}
 
 	return builder.RunWith(s.db)
+}
+
+func (s *SQLStore) escapeField(fieldName string) string {
+	if s.dbType == mysqlDBType {
+		return "`" + fieldName + "`"
+	}
+	if s.dbType == postgresDBType || s.dbType == sqliteDBType {
+		return "\"" + fieldName + "\""
+	}
+	return fieldName
 }

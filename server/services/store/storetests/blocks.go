@@ -146,6 +146,7 @@ func testGetSubTree2(t *testing.T, store store.Store, container store.Container)
 	}
 
 	InsertBlocks(t, store, container, blocksToInsert)
+	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
 	blocks, err = store.GetAllBlocks(container)
 	require.NoError(t, err)
@@ -221,6 +222,7 @@ func testGetSubTree3(t *testing.T, store store.Store, container store.Container)
 	}
 
 	InsertBlocks(t, store, container, blocksToInsert)
+	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
 	blocks, err = store.GetAllBlocks(container)
 	require.NoError(t, err)
@@ -299,6 +301,7 @@ func testGetRootID(t *testing.T, store store.Store, container store.Container) {
 	}
 
 	InsertBlocks(t, store, container, blocksToInsert)
+	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
 	blocks, err = store.GetAllBlocks(container)
 	require.NoError(t, err)
@@ -368,6 +371,7 @@ func testGetParentID(t *testing.T, store store.Store, container store.Container)
 	}
 
 	InsertBlocks(t, store, container, blocksToInsert)
+	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
 	blocks, err = store.GetAllBlocks(container)
 	require.NoError(t, err)
@@ -416,6 +420,7 @@ func testDeleteBlock(t *testing.T, store store.Store, container store.Container)
 		},
 	}
 	InsertBlocks(t, store, container, blocksToInsert)
+	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
 	blocks, err = store.GetAllBlocks(container)
 	require.NoError(t, err)
