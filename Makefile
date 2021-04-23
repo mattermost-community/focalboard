@@ -153,12 +153,11 @@ win-wpf-app: server-dll webapp
 	cd win-wpf && ./build.bat && ./package.bat
 	cd win-wpf && ./package-zip.bat
 
-linux-app: server-linux webapp
+linux-app: webapp
 	rm -rf linux/temp
 	rm -rf linux/dist
 	mkdir -p linux/dist
 	mkdir -p linux/temp/focalboard-app
-	cp bin/linux/focalboard-server linux/temp/focalboard-app/
 	cp app-config.json linux/temp/focalboard-app/config.json
 	cp build/MIT-COMPILED-LICENSE.md linux/temp/focalboard-app/
 	cp NOTICE.txt linux/temp/focalboard-app/

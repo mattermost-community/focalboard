@@ -33,6 +33,11 @@ class ViewController:
 		NotificationCenter.default.addObserver(self, selector: #selector(onServerStarted), name: AppDelegate.serverStartedNotification, object: nil)
 	}
 
+	override func viewDidAppear() {
+		super.viewDidAppear()
+		self.view.window?.makeFirstResponder(self.webView)
+	}
+
 	override var representedObject: Any? {
 		didSet {
 			// Update the view, if already loaded.

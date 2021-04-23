@@ -83,25 +83,40 @@ namespace Focalboard {
 			var appFolder = Utils.GetAppFolder();
 			Directory.SetCurrentDirectory(appFolder);
 
-			string tempFolder;
+			string appDataFolder;
             try {
-                tempFolder = ApplicationData.Current.LocalFolder.Path;
+                appDataFolder = ApplicationData.Current.LocalFolder.Path;
             } catch {
                 var documentsFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                tempFolder = documentsFolder;
+                appDataFolder = Path.Combine(documentsFolder, "Focalboard");
+                Directory.CreateDirectory(appDataFolder);
                 // Not a UWP app, store in Documents
+
+                // FIXUP code: Copy from old DB location
+                var oldDBPath = Path.Combine(documentsFolder, "focalboard.db");
+                var newDBPath = Path.Combine(appDataFolder, "focalboard.db");
+                if (!File.Exists(newDBPath) && File.Exists(oldDBPath)) {
+                    Debug.WriteLine($"Moving DB file from: {oldDBPath} to {newDBPath}");
+                    File.Move(oldDBPath, newDBPath);
+				}
             }
-            var dbPath = Path.Combine(tempFolder, "focalboard.db");
+
+            var dbPath = Path.Combine(appDataFolder, "focalboard.db");
             Debug.WriteLine($"dbPath: {dbPath}");
+
+            var filesPath = Path.Combine(appDataFolder, "files");
+            Debug.WriteLine($"filesPath: {filesPath}");
 
             var cwd = Directory.GetCurrentDirectory();
             var webFolder = Path.Combine(cwd, @"pack");
             webFolder = webFolder.Replace(@"\", @"/");
+            filesPath = filesPath.Replace(@"\", @"/");
             dbPath = dbPath.Replace(@"\", @"/");
             byte[] webFolderBytes = Encoding.UTF8.GetBytes(webFolder);
+            byte[] filesPathBytes = Encoding.UTF8.GetBytes(filesPath);
             byte[] sessionTokenBytes = Encoding.UTF8.GetBytes(sessionToken);
             byte[] dbPathBytes = Encoding.UTF8.GetBytes(dbPath);
-            GoFunctions.StartServer(webFolderBytes, port, sessionTokenBytes, dbPathBytes);
+            GoFunctions.StartServer(webFolderBytes, filesPathBytes, port, sessionTokenBytes, dbPathBytes);
 
             Debug.WriteLine("Server started");
         }
@@ -133,7 +148,7 @@ namespace Focalboard {
 
     static class GoFunctions {
         [DllImport(@"focalboard-server.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
-        public static extern void StartServer(byte[] webPath, int port, byte[] singleUserToken, byte[] dbConfigString);
+        public static extern void StartServer(byte[] webPath, byte[] filesPath, int port, byte[] singleUserToken, byte[] dbConfigString);
 
         [DllImport(@"focalboard-server.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
         public static extern void StopServer();

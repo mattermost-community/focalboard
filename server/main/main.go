@@ -159,9 +159,10 @@ func main() {
 
 // StartServer starts the server
 //export StartServer
-func StartServer(webPath *C.char, port int, singleUserToken, dbConfigString *C.char) {
+func StartServer(webPath *C.char, filesPath *C.char, port int, singleUserToken, dbConfigString *C.char) {
 	startServer(
 		C.GoString(webPath),
+		C.GoString(filesPath),
 		port,
 		C.GoString(singleUserToken),
 		C.GoString(dbConfigString),
@@ -174,7 +175,7 @@ func StopServer() {
 	stopServer()
 }
 
-func startServer(webPath string, port int, singleUserToken, dbConfigString string) {
+func startServer(webPath string, filesPath string, port int, singleUserToken, dbConfigString string) {
 	logInfo()
 
 	if pServer != nil {
@@ -187,6 +188,10 @@ func startServer(webPath string, port int, singleUserToken, dbConfigString strin
 	if err != nil {
 		log.Fatal("Unable to read the config file: ", err)
 		return
+	}
+
+	if len(filesPath) > 0 {
+		config.FilesPath = filesPath
 	}
 
 	if len(webPath) > 0 {

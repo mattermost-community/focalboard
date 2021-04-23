@@ -4,6 +4,7 @@ package model
 // It should be maintained in chronological order with most current
 // release at the front of the list.
 var versions = []string{
+	"0.6.6",
 	"0.6.5",
 	"0.6.2",
 	"0.6.1",
