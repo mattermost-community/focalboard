@@ -77,7 +77,10 @@ const App = React.memo((): JSX.Element => {
                                 path='/workspace/:workspaceId/'
                                 render={({match}) => {
                                     if (initialLoad && !user) {
-                                        const redirectUrl = '/' + Utils.buildURL(`/workspace/${match.params.workspaceId}/`)
+                                        let redirectUrl = '/' + Utils.buildURL(`/workspace/${match.params.workspaceId}/`)
+                                        if (redirectUrl.indexOf('//') === 0) {
+                                            redirectUrl = redirectUrl.slice(1)
+                                        }
                                         const loginUrl = `/login?r=${encodeURIComponent(redirectUrl)}`
                                         return <Redirect to={loginUrl}/>
                                     }
