@@ -28,8 +28,8 @@ const ViewTitle = React.memo((props: Props) => {
     const {board, intl} = props
 
     return (
-        <>
-            <div className='ViewTitle add-buttons add-visible'>
+        <div className='ViewTitle'>
+            <div className='add-buttons add-visible'>
                 {!props.readonly && !board.icon &&
                     <Button
                         onClick={() => {
@@ -72,7 +72,7 @@ const ViewTitle = React.memo((props: Props) => {
                 }
             </div>
 
-            <div className='ViewTitle'>
+            <div className='title'>
                 <BlockIconSelector block={board}/>
                 <Editable
                     className='title'
@@ -87,7 +87,7 @@ const ViewTitle = React.memo((props: Props) => {
             </div>
 
             {board.showDescription &&
-                <div className='ViewTitle description'>
+                <div className='description'>
                     <MarkdownEditor
                         text={board.description}
                         placeholderText='Add a description...'
@@ -98,7 +98,7 @@ const ViewTitle = React.memo((props: Props) => {
                     />
                 </div>
             }
-        </>
+        </div>
     )
 })
 

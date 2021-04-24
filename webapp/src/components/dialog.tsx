@@ -36,28 +36,30 @@ const Dialog = React.memo((props: Props) => {
                 }
             }}
         >
-            <div className='dialog' >
-                <div className='toolbar'>
-                    {toolsMenu &&
-                    <>
-                        <IconButton
-                            onClick={props.onClose}
-                            icon={<CloseIcon/>}
-                            title={closeDialogText}
-                            className='IconButton--large'
-                        />
-                        <div className='octo-spacer'/>
-                        <MenuWrapper>
+            <div className='wrapper' >
+                <div className='dialog' >
+                    <div className='toolbar'>
+                        {toolsMenu &&
+                        <>
                             <IconButton
+                                onClick={props.onClose}
+                                icon={<CloseIcon/>}
+                                title={closeDialogText}
                                 className='IconButton--large'
-                                icon={<OptionsIcon/>}
                             />
-                            {toolsMenu}
-                        </MenuWrapper>
-                    </>
-                    }
+                            <div className='octo-spacer'/>
+                            <MenuWrapper>
+                                <IconButton
+                                    className='IconButton--large'
+                                    icon={<OptionsIcon/>}
+                                />
+                                {toolsMenu}
+                            </MenuWrapper>
+                        </>
+                        }
+                    </div>
+                    {props.children}
                 </div>
-                {props.children}
             </div>
         </div>
     )

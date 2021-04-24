@@ -103,26 +103,6 @@ button {
 
 /* Main app */
 
-.octo-app {
-	flex: 1 1 auto;
-	display: flex;
-	flex-direction: column;
-	overflow: auto;
-}
-
-.octo-frame {
-	flex: 1 1 auto;
-	display: flex;
-	flex-direction: column;
-	overflow: scroll;
-
-    padding: 24px 80px 8px;
-
-    @media screen and (max-width: 768px) {
-        padding: 8px 40px;
-    }
-}
-
 .dragover {
 	background-color: rgba(128, 192, 255, 0.4);
 }
@@ -137,7 +117,7 @@ button {
 	font-family: "Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji, "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols;
 	line-height: 1.5em;
     align-self: baseline;
-    overflow: visible;
+    overflow: visiblee;
 }
 
 .octo-icontitle {
