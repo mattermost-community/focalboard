@@ -51,7 +51,6 @@ octo*.db
 focalboard*.db
 .eslintcache
 .vscode/settings.json
-.prettierrc.json
 # config.json is copied from app-config.json in the Makefile
 mac/resources/config.json
 mac/temp

@@ -1,49 +1,54 @@
 * {
-	box-sizing: border-box;
+    box-sizing: border-box;
     outline: 0;
-    -webkit-user-select: none;  /* Chrome all / Safari all */
-    -moz-user-select: none;     /* Firefox all */
-    -ms-user-select: none;      /* IE 10+ */
-	user-select: none;          /* Likely future */
-	font-family: 'Open Sans', sans-serif;
+    -webkit-user-select: none; /* Chrome all / Safari all */
+    -moz-user-select: none; /* Firefox all */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none; /* Likely future */
+    font-family: "Open Sans", sans-serif;
 }
 
-html, body {
-	display: flex;
-	flex-direction: column;
+html,
+body {
+    display: flex;
+    flex-direction: column;
 
-	width: 100%;
-	height: 100%;
-	color: rgb(var(--body-color));
+    width: 100%;
+    height: 100%;
+    color: rgb(var(--body-color));
     background: rgb(var(--main-bg));
 }
 
-input, textarea, select, button {
-    font-size: 100%;        /* Normalize */
+input,
+textarea,
+select,
+button {
+    font-size: 100%; /* Normalize */
 }
 
-input, textarea {
+input,
+textarea {
     background: rgb(var(--main-bg));
-	color: rgb(var(--body-color));
+    color: rgb(var(--body-color));
 
-    -webkit-user-select: auto;  /* Chrome all / Safari all */
-    -moz-user-select: auto;     /* Firefox all */
-    -ms-user-select: auto;      /* IE 10+ */
-    user-select: auto;          /* Likely future */
+    -webkit-user-select: auto; /* Chrome all / Safari all */
+    -moz-user-select: auto; /* Firefox all */
+    -ms-user-select: auto; /* IE 10+ */
+    user-select: auto; /* Likely future */
 }
 
 body {
-	padding: 0;
-	margin: 0;
-	font-family: 'Open Sans', sans-serif;
+    padding: 0;
+    margin: 0;
+    font-family: "Open Sans", sans-serif;
     /* -webkit-font-smoothing: auto; */
-	font-size: 14px;
-	line-height: 24px;
-	--cursor-color: rgb(var(--body-color));
+    font-size: 14px;
+    line-height: 24px;
+    --cursor-color: rgb(var(--body-color));
 }
 
 a {
-	text-decoration: none;
+    text-decoration: none;
     color: var(--link-color);
 
     &:visited {
@@ -56,66 +61,67 @@ a {
 }
 
 hr {
-	width: 100%;
-	height: 1px;
-	border: none;
-	color: rgba(var(--body-color), 0.09);
-	background-color: rgba(var(--body-color), 0.09);
-	margin-bottom: 8px;
+    width: 100%;
+    height: 1px;
+    border: none;
+    color: rgba(var(--body-color), 0.09);
+    background-color: rgba(var(--body-color), 0.09);
+    margin-bottom: 8px;
 }
 
 button {
-	&.style--none {
+    &.style--none {
         background: transparent;
         border: none;
-		padding: 0;
-	}
+        padding: 0;
+    }
 }
 
 .page-loading {
-	margin: 50px auto;
+    margin: 50px auto;
 }
 
-.title, h1 {
-	font-size: 40px;
-	line-height: 40px;
-	margin: 0 0 10px 0;
-	font-weight: 600;
-	display: inline-block;
+.title,
+h1 {
+    font-size: 40px;
+    line-height: 40px;
+    margin: 0 0 10px 0;
+    font-weight: 600;
+    display: inline-block;
 }
 
 /* App frame */
 
 #main-app {
-	flex: 1 1 auto;
-	display: flex;
-	flex-direction: column;
-	overflow: auto;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
 }
 
 #main-app #frame,
 #main-app #main,
 #main-app .BoardPage {
-	flex: 1 1 auto;
-	display: flex;
-	flex-direction: column;
-	overflow: auto;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
 }
 
 /* Main app */
 
 .octo-app {
-	flex: 1 1 auto;
-	display: flex;
-	flex-direction: column;
-	overflow: auto;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
 }
 
 .octo-frame {
-	flex: 1 1 auto;
-	display: flex;
-	flex-direction: column;
-	overflow: scroll;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
 
     padding: 24px 80px 8px;
 
@@ -125,92 +131,93 @@ button {
 }
 
 .dragover {
-	background-color: rgba(128, 192, 255, 0.4);
+    background-color: rgba(128, 192, 255, 0.4);
 }
 
 .octo-spacer {
-	flex: 1;
+    flex: 1;
 }
 
 /* Icons */
 
 .octo-icon {
-	font-family: "Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji, "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols;
-	line-height: 1.5em;
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji,
+        "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols;
+    line-height: 1.5em;
     align-self: baseline;
     overflow: visible;
 }
 
 .octo-icontitle {
-	flex: 0 0 auto;
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	min-width: 0;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-width: 0;
 }
 
 /*-- Property list --*/
 
 .octo-propertyvalue {
-	color: rgb(var(--body-color));
-	padding: 0 5px;
+    color: rgb(var(--body-color));
+    padding: 0 5px;
     &.empty {
-	    color: rgba(var(--body-color), 0.4);
+        color: rgba(var(--body-color), 0.4);
     }
 }
 
 /*-- Editable --*/
 
 .Editable {
-	cursor: text;
+    cursor: text;
 }
 
 .Editable.active {
-	min-width: 100px;
+    min-width: 100px;
 }
 
 .octo-placeholder {
-	color: rgba(var(--body-color), 0.4);
+    color: rgba(var(--body-color), 0.4);
 }
 
-[contentEditable=true] {
-    -webkit-user-select: auto;  /* Chrome all / Safari all */
-    -moz-user-select: auto;     /* Firefox all */
-    -ms-user-select: auto;      /* IE 10+ */
-    user-select: auto;          /* Likely future */
+[contentEditable="true"] {
+    -webkit-user-select: auto; /* Chrome all / Safari all */
+    -moz-user-select: auto; /* Firefox all */
+    -ms-user-select: auto; /* IE 10+ */
+    user-select: auto; /* Likely future */
 }
 
-[contentEditable=true]:empty:before{
-	content: attr(placeholder);
-	display: block;
-	color: rgba(var(--body-color), 0.4);
+[contentEditable="true"]:empty:before {
+    content: attr(placeholder);
+    display: block;
+    color: rgba(var(--body-color), 0.4);
 }
-
 
 .octo-propertyvalue.Editable.active,
 .octo-table-cell .Editable.active {
-	border-radius: 3px;
-	box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+    border-radius: 3px;
+    box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px,
+        rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
 }
 
 .octo-block img {
     width: calc(100% - 20px);
-	max-width: 500px;
-	max-height: 500px;
-	margin: 5px 0;
+    max-width: 500px;
+    max-height: 500px;
+    margin: 5px 0;
 }
 
 .octo-content {
-	width: 100%;
-	margin-right: 50px;
+    width: 100%;
+    margin-right: 50px;
 }
 
 .octo-block {
-	display: flex;
-	flex-direction: row;
-	align-items: flex-start;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
 
-	width: 100%;
+    width: 100%;
 
     @media not screen and (max-width: 975px) {
         padding-right: 126px;
@@ -228,12 +235,12 @@ button {
 }
 
 .octo-block-margin {
-	display: flex;
-	flex-direction: row;
-	align-items: flex-start;
-	justify-content: flex-end;
-	padding-top: 10px;
-	padding-right: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding-top: 10px;
+    padding-right: 10px;
 
     @media not screen and (max-width: 975px) {
         width: 126px;

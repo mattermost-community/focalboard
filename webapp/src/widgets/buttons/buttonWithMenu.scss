@@ -1,21 +1,21 @@
 .ButtonWithMenu {
     display: flex;
     align-items: stretch;
-	text-align: center;
-	min-width: 20px;
-	cursor: pointer;
+    text-align: center;
+    min-width: 20px;
+    cursor: pointer;
     overflow: visible;
     padding: 0;
 
     .button-text {
-	    padding: 3px 10px;
+        padding: 3px 10px;
         background-color: rgb(var(--button-bg));
         color: rgb(var(--button-fg));
-	    border-radius: 5px 0 0 5px;
-	    transition: background 100ms ease-out 0s;
+        border-radius: 5px 0 0 5px;
+        transition: background 100ms ease-out 0s;
         height: 100%;
 
-	    &:hover {
+        &:hover {
             background-color: rgba(var(--button-bg), 0.8);
         }
     }
@@ -26,8 +26,8 @@
         display: flex;
         padding: 0 3px;
         align-items: center;
-	    border-radius: 0 5px 5px 0;
-	    transition: background 100ms ease-out 0s;
+        border-radius: 0 5px 5px 0;
+        transition: background 100ms ease-out 0s;
         height: 100%;
 
         &:hover {

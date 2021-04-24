@@ -29,7 +29,7 @@
 
         color: rgb(var(--body-color));
 
-        >.menu-option {
+        > .menu-option {
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -43,32 +43,32 @@
                 background: rgba(var(--button-bg), 0.08);
             }
 
-            >* {
+            > * {
                 margin-left: 16px;
             }
 
-            >*:first-child {
+            > *:first-child {
                 margin-left: 0;
             }
 
-            >.menu-name {
+            > .menu-name {
                 display: flex;
                 flex-grow: 1;
                 white-space: nowrap;
             }
 
-            >.SubmenuTriangleIcon {
+            > .SubmenuTriangleIcon {
                 fill: rgba(var(--body-color), 0.7);
             }
 
-            >.Icon {
+            > .Icon {
                 opacity: 0.56;
                 width: 16px;
                 height: 16px;
                 line-height: 16px;
             }
 
-            >.IconButton .Icon {
+            > .IconButton .Icon {
                 margin-right: 0;
             }
         }
@@ -119,22 +119,22 @@
 
             flex: 0 0 auto;
 
-            >.menu-option {
+            > .menu-option {
                 min-height: 44px;
                 width: 100%;
                 padding: 0 20px;
                 background-color: rgb(var(--main-bg));
 
-                >* {
+                > * {
                     flex: 0 0 auto;
                 }
 
-                >.noicon {
+                > .noicon {
                     width: 16px;
                     height: 16px;
                 }
 
-                >.menu-name {
+                > .menu-name {
                     font-size: 16px;
                     justify-content: center;
                 }

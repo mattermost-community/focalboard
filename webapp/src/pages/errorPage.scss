@@ -9,7 +9,8 @@
     align-items: center;
     justify-content: flex-start;
     flex-direction: column;
-    box-shadow: rgba(var(--body-color), 0.1) 0px 0px 0px 1px, rgba(var(--body-color), 0.3) 0px 4px 8px;
+    box-shadow: rgba(var(--body-color), 0.1) 0px 0px 0px 1px,
+        rgba(var(--body-color), 0.3) 0px 4px 8px;
 
     @media screen and (max-width: 430px) {
         position: fixed;
