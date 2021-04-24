@@ -28,7 +28,7 @@ Note: For Windows and Mac users, while we don't yet offer **Focalboard Personal 
 
 You can download and run the compiled **Focalboard Personal Server** by following [our latest install guide](https://www.focalboard.com/download/personal-edition/ubuntu/).
 
-To download the latest server release, see: https://github.com/mattermost/focalboard/releases
+Download the latest server release from [GitHub releases](https://github.com/mattermost/focalboard/releases)
 
 ## Building the server
 
@@ -92,7 +92,7 @@ Before checking-in commits, run: `make ci`, which is similar to the ci.yml workf
 
 ## Share your feedback 
 
-File bugs, suggest features, join our forum, learn more here: https://github.com/mattermost/focalboard/wiki/Share-your-feedback!
+File bugs, suggest features, join our forum, learn more [here](https://github.com/mattermost/focalboard/wiki/Share-your-feedback)!
 
 ## Contributing
 
