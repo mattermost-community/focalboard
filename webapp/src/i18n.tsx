@@ -36,8 +36,11 @@ export function getMessages(lang: string): {[key: string]: string} {
     return messages_en
 }
 
-export function getCurrentLanguage(): string {
-    let lang = localStorage.getItem('language')
+export function getCurrentLanguage(initialLang: string|null): string {
+    let lang = initialLang
+    if (!lang) {
+        lang = localStorage.getItem('language')
+    }
     if (!lang) {
         lang = navigator.language.split(/[-_]/)[0]
     }
@@ -45,5 +48,8 @@ export function getCurrentLanguage(): string {
 }
 
 export function storeLanguage(lang: string): void {
+    // webkit is only available on wkwebviews
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).webkit?.messageHandlers?.Desktop?.postMessage({type: 'setLanguage', args: JSON.stringify({lang})})
     localStorage.setItem('language', lang)
 }

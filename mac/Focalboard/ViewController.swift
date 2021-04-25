@@ -7,9 +7,12 @@ import WebKit
 class ViewController:
 	NSViewController,
 	WKUIDelegate,
+    WKScriptMessageHandler,
 	WKNavigationDelegate {
 	@IBOutlet var webView: WKWebView!
 	private var refreshWebViewOnLoad = true
+
+    let messageHandler = "Desktop"
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -78,12 +81,19 @@ class ViewController:
 		)
 		webView.configuration.userContentController.removeAllUserScripts()
 		webView.configuration.userContentController.addUserScript(script)
+        webView.configuration.userContentController.add(self, name: messageHandler)
 	}
 
 	private func loadHomepage() {
+        let lang = UserDefaults.standard.string(forKey: "Language")
+        var queryLang = ""
+        if lang != nil {
+            queryLang = "?lang=\(lang!)"
+        }
+
 		let appDelegate = NSApplication.shared.delegate as! AppDelegate
 		let port = appDelegate.serverPort
-		let url = URL(string: "http://localhost:\(port)/")!
+		let url = URL(string: "http://localhost:\(port)/\(queryLang)")!
 		let request = URLRequest(url: url)
 		refreshWebViewOnLoad = true
 		webView.load(request)
@@ -190,6 +200,41 @@ class ViewController:
 			})
 		}
 	}
+    
+    func getJsonFromString(stringMessage: String) -> Dictionary<String, Any> {
+        let data: Data = stringMessage.data(using: .utf8)!
+        do {
+            let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+            return json!
+        } catch _ {
+            NSLog("could not deserialize json")
+            return [String: Any]()
+        }
+    }
+    
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        if message.name == messageHandler {
+            guard let params = message.body as? [String: Any],
+                  let messageType = params["type"] as? String,
+                  let stringArgs = params["args"] as? String else {
+                NSLog("Received a message but it was not in the expected format")
+                return
+            }
+
+            let messageArgs = getJsonFromString(stringMessage: stringArgs)
+            switch messageType {
+            case "setLanguage":
+                guard let lang = messageArgs["lang"] as? String else {
+                    NSLog("Invalid set language parameters")
+                    return
+                }
+                NSLog("Saving current language %@", lang)
+                UserDefaults.standard.set(lang, forKey: "Language")
+            default:
+                NSLog("Unknown message type %@", messageType)
+            }
+        }
+    }
 
 	// HACKHACK: Fix WebView initial rendering artifacts
 	private func refreshWebView() {
@@ -215,6 +260,7 @@ class ViewController:
 		}
 		return nil
 	}
+    
 
 	@IBAction func navigateToHome(_ sender: NSObject) {
 		loadHomepage()

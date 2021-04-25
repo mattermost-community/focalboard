@@ -21,7 +21,8 @@ import {Utils} from './utils'
 import CombinedProviders from './combinedProviders'
 
 const App = React.memo((): JSX.Element => {
-    const [language, setLanguage] = useState(getCurrentLanguage())
+    const params = (new URL(window.location.toString())).searchParams
+    const [language, setLanguage] = useState(getCurrentLanguage(params.get('lang')))
     const [user, setUser] = useState<IUser|undefined>(undefined)
     const [initialLoad, setInitialLoad] = useState(false)
 
