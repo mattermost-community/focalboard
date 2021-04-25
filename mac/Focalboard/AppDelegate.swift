@@ -32,10 +32,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	@IBAction func openNewWindow(_ sender: Any?) {
 		let mainStoryBoard = NSStoryboard(name: "Main", bundle: nil)
-		let tabViewController = mainStoryBoard.instantiateController(withIdentifier: "ViewController") as? ViewController
 		let windowController = mainStoryBoard.instantiateController(withIdentifier: "WindowController") as! NSWindowController
 		windowController.showWindow(self)
-		windowController.contentViewController = tabViewController
 	}
 
 	private func showWhatsNewDialogIfNeeded() {
