@@ -4,6 +4,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
     border: 1px solid transparent;
+    min-height: 24px;
+
     &.active {
 	    min-width: 100px;
     }
