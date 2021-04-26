@@ -161,6 +161,8 @@
   "ViewTitle.untitled-board": "Titelloze bord",
   "Workspace.editing-board-template": "Je bent een bordsjabloon aan het bewerken",
   "default-properties.title": "Titel",
+  "error.no-workspace": "Het kan zijn dat je sessie is verlopen of dat je geen toegang hebt tot deze werkruimte.",
+  "error.relogin": "Log opnieuw in",
   "login.log-in-button": "Aanmelden",
   "login.log-in-title": "Aanmelden",
   "login.register-button": "of maak een account aan als je er nog geen hebt",
