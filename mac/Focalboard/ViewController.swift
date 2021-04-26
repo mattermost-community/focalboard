@@ -111,9 +111,9 @@ class ViewController:
 			injectionTime: .atDocumentStart,
 			forMainFrameOnly: true
 		)
-		let base64 = UserDefaults.standard.string(forKey: "localStorage") ?? ""
+		let blob = UserDefaults.standard.string(forKey: "localStorage") ?? ""
 		let userSettingsScript = WKUserScript(
-			source: "const NativeApp = { settingsBlob: \"\(base64)\" };",
+			source: "const NativeApp = { settingsBlob: \"\(blob)\" };",
 			injectionTime: .atDocumentStart,
 			forMainFrameOnly: true
 		)
