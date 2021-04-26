@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"strings"
 	"time"
@@ -179,7 +178,7 @@ func (s *MattermostAuthLayer) GetWorkspace(ID string) (*model.Workspace, error) 
 	query := s.getQueryBuilder().
 		Select("DisplayName, Type").
 		From("Channels").
-		Where(sq.Gt{"ID": ID})
+		Where(sq.Eq{"ID": ID})
 
 	row := query.QueryRow()
 	var displayName string
@@ -197,7 +196,7 @@ func (s *MattermostAuthLayer) GetWorkspace(ID string) (*model.Workspace, error) 
 		Select("Username").
 		From("ChannelMembers").
 		Join("Users ON Users.ID=ChannelMembers.UserID").
-		Where(sq.Gt{"ChannelID": ID})
+		Where(sq.Eq{"ChannelID": ID})
 
 	var sb strings.Builder
 	rows, err := query.Query()
@@ -220,12 +219,11 @@ func (s *MattermostAuthLayer) GetWorkspace(ID string) (*model.Workspace, error) 
 }
 
 func (s *MattermostAuthLayer) HasWorkspaceAccess(userID string, workspaceID string) (bool, error) {
-	fmt.Println("HAS ACCESS? USER: ", userID, " WORKSPACE: ", workspaceID)
 	query := s.getQueryBuilder().
 		Select("count(*)").
 		From("ChannelMembers").
-		Where(sq.Gt{"ChannelID": workspaceID}).
-		Where(sq.Gt{"UserID": userID})
+		Where(sq.Eq{"ChannelID": workspaceID}).
+		Where(sq.Eq{"UserID": userID})
 
 	row := query.QueryRow()
 
