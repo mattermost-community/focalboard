@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}blocks (
 	root_id VARCHAR(36),
 	modified_by VARCHAR(36),
 	workspace_id VARCHAR(36),
-	PRIMARY KEY (id)
+	PRIMARY KEY (workspace_id,id)
 ){{if .mysql}}CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci{{end}};
 
 {{if .mysql}}
