@@ -1,4 +1,3 @@
-//go:generate mockgen -destination=mockstore/mockstore.go -package mockstore . Store
 package mattermostauthlayer
 
 import (
