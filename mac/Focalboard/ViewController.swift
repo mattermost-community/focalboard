@@ -4,13 +4,6 @@
 import Cocoa
 import WebKit
 
-private let messageHandlerName = "callback"
-
-private enum MessageType: String {
-    case didImportUserSettings
-	case didNotImportUserSettings
-}
-
 class ViewController:
 	NSViewController,
 	WKUIDelegate,
@@ -27,7 +20,7 @@ class ViewController:
 		webView.navigationDelegate = self
 		webView.uiDelegate = self
 		webView.isHidden = true
-		webView.configuration.userContentController.add(self, name: messageHandlerName)
+		webView.configuration.userContentController.add(self, name: "nativeApp")
 
 		clearWebViewCache()
 
@@ -86,15 +79,14 @@ class ViewController:
 	private func persistUserSettings() {
 		let semaphore = DispatchSemaphore(value: 0)
 
-		// Convert to base64 to avoid escaping issues when later inserting the exported settings into the import script
-		webView.evaluateJavaScript("window.btoa(Focalboard.exportUserSettings())") { result, error in
+		webView.evaluateJavaScript("Focalboard.exportUserSettingsBlob();") { result, error in
 			defer { semaphore.signal() }
-			guard let base64 = result as? String, let data = Data(base64Encoded: base64), let decoded = String(data: data, encoding: .utf8) else {
+			guard let blob = result as? String else {
 				NSLog("Failed to export user settings: \(error?.localizedDescription ?? "?")")
 				return
 			}
-			UserDefaults.standard.set(base64, forKey: "localStorage")
-			NSLog("Persisted user settings: \(decoded)")
+			UserDefaults.standard.set(blob, forKey: "localStorage")
+			NSLog("Persisted user settings: \(Data(base64Encoded: blob).flatMap { String(data: $0, encoding: .utf8) } ?? blob)")
 		}
 
 		// During shutdown the system grants us about 5 seconds to clean up and store user data
@@ -121,22 +113,8 @@ class ViewController:
 		)
 		let base64 = UserDefaults.standard.string(forKey: "localStorage") ?? ""
 		let userSettingsScript = WKUserScript(
-			source: """
-				const settings = window.atob("\(base64)");
-				if (typeof(Focalboard) !== 'undefined') {
-					if (Focalboard.importUserSettings(settings)) {
-						window.webkit.messageHandlers.\(messageHandlerName).postMessage({
-							type: '\(MessageType.didImportUserSettings.rawValue)',
-							settings: settings
-						});
-					} else {
-						window.webkit.messageHandlers.\(messageHandlerName).postMessage({
-							type: '\(MessageType.didNotImportUserSettings.rawValue)'
-						});
-					}
-				}
-				""",
-			injectionTime: .atDocumentEnd,
+			source: "const NativeApp = { settingsBlob: \"\(base64)\" };",
+			injectionTime: .atDocumentStart,
 			forMainFrameOnly: true
 		)
 		webView.configuration.userContentController.removeAllUserScripts()
@@ -285,15 +263,11 @@ class ViewController:
 	}
 
 	func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-		guard let body = message.body as? [String: Any], let rawType = body["type"] as? String, let type = MessageType(rawValue: rawType) else {
+		guard let body = message.body as? [String: String], let type = body["type"], let blob = body["settingsBlob"] else {
+			NSLog("Received unexpected script message \(message.body)")
 			return
 		}
-		switch type {
-		case .didImportUserSettings:
-			NSLog("Imported user settings: \(body["settings"] ?? "?")")
-		case .didNotImportUserSettings:
-			NSLog("Skipped importing stale, empty or invalid user settings")
-		}
+		NSLog("Received script message \(type): \(Data(base64Encoded: blob).flatMap { String(data: $0, encoding: .utf8) } ?? blob)")
 	}
 }
 

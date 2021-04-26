@@ -19,8 +19,11 @@ import RegisterPage from './pages/registerPage'
 import {IUser} from './user'
 import {Utils} from './utils'
 import CombinedProviders from './combinedProviders'
+import {importNativeAppSettings} from './nativeApp'
 
 const App = React.memo((): JSX.Element => {
+    importNativeAppSettings()
+
     const [language, setLanguage] = useState(getCurrentLanguage())
     const [user, setUser] = useState<IUser|undefined>(undefined)
     const [initialLoad, setInitialLoad] = useState(false)

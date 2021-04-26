@@ -3,13 +3,21 @@
 
 const keys = ['language', 'theme', 'lastBoardId', 'lastViewId', 'emoji-mart.last', 'emoji-mart.frequently']
 
-export function exportUserSettings(): string {
+export function exportUserSettingsBlob(): string {
+    return window.btoa(exportUserSettings())
+}
+
+function exportUserSettings(): string {
     const settings = Object.fromEntries(keys.map((key) => [key, localStorage.getItem(key)]))
     settings.timestamp = `${Date.now()}`
     return JSON.stringify(settings)
 }
 
-export function importUserSettings(json: string): boolean {
+export function importUserSettingsBlob(blob: string): boolean {
+    return importUserSettings(window.atob(blob))
+}
+
+function importUserSettings(json: string): boolean {
     const settings = parseUserSettings(json)
     const timestamp = settings.timestamp
     const lastTimestamp = localStorage.getItem('timestamp')
@@ -19,7 +27,6 @@ export function importUserSettings(json: string): boolean {
     for (const [key, value] of Object.entries(settings)) {
         localStorage.setItem(key, value as string)
     }
-    location.reload()
     return true
 }
 
