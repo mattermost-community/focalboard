@@ -22,6 +22,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/scheduler"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 	"github.com/mattermost/focalboard/server/services/telemetry"
 	"github.com/mattermost/focalboard/server/services/webhook"
@@ -53,10 +54,19 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 		return nil, err
 	}
 
-	store, err := sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix)
+	var store store.Store
+	store, err = sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix)
 	if err != nil {
 		log.Print("Unable to start the database", err)
 		return nil, err
+	}
+	if cfg.AuthMode == "mattermost" {
+		layeredStore, err := mattermostauthlayer.New(cfg.DBType, cfg.DBConfigString, store)
+		if err != nil {
+			log.Print("Unable to start the database", err)
+			return nil, err
+		}
+		store = layeredStore
 	}
 
 	auth := auth.New(cfg, store)

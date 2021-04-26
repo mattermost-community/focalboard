@@ -35,12 +35,12 @@ func TestParseAuthTokenFromRequest(t *testing.T) {
 		}
 		if tc.cookie != "" {
 			req.AddCookie(&http.Cookie{
-				Name:  SESSION_COOKIE_TOKEN,
+				Name:  "TEST_TOKEN",
 				Value: tc.cookie,
 			})
 		}
 
-		token, location := ParseAuthTokenFromRequest(req)
+		token, location := ParseAuthTokenFromRequest(req, "TEST_TOKEN")
 
 		require.Equal(t, tc.expectedToken, token, "Wrong token on test "+strconv.Itoa(testnum))
 		require.Equal(t, tc.expectedLocation, location, "Wrong location on test "+strconv.Itoa(testnum))

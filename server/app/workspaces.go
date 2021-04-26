@@ -45,11 +45,7 @@ func (a *App) GetWorkspace(ID string) (*model.Workspace, error) {
 }
 
 func (a *App) DoesUserHaveWorkspaceAccess(userID string, workspaceID string) bool {
-	hasAccess, err := a.store.HasWorkspaceAccess(userID, workspaceID)
-	if err != nil {
-		return false
-	}
-	return hasAccess
+	return a.auth.DoesUserHaveWorkspaceAccess(userID, workspaceID)
 }
 
 func (a *App) UpsertWorkspaceSettings(workspace model.Workspace) error {

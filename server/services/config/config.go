@@ -24,17 +24,13 @@ type Configuration struct {
 	FilesPath               string   `json:"filespath" mapstructure:"filespath"`
 	Telemetry               bool     `json:"telemetry" mapstructure:"telemetry"`
 	WebhookUpdate           []string `json:"webhook_update" mapstructure:"webhook_update"`
-	Secret                  string   `json:"secret" mapstructure:"secret"`
 	SessionExpireTime       int64    `json:"session_expire_time" mapstructure:"session_expire_time"`
 	SessionRefreshTime      int64    `json:"session_refresh_time" mapstructure:"session_refresh_time"`
 	LocalOnly               bool     `json:"localonly" mapstructure:"localonly"`
 	EnableLocalMode         bool     `json:"enableLocalMode" mapstructure:"enableLocalMode"`
 	LocalModeSocketLocation string   `json:"localModeSocketLocation" mapstructure:"localModeSocketLocation"`
 
-	AuthMode               string `json:"authMode" mapstructure:"authMode"`
-	MattermostURL          string `json:"mattermostURL" mapstructure:"mattermostURL"`
-	MattermostClientID     string `json:"mattermostClientID" mapstructure:"mattermostClientID"`
-	MattermostClientSecret string `json:"mattermostClientSecret" mapstructure:"mattermostClientSecret"`
+	AuthMode string `json:"authMode" mapstructure:"authMode"`
 }
 
 // ReadConfigFile read the configuration from the filesystem.
@@ -82,9 +78,5 @@ func ReadConfigFile() (*Configuration, error) {
 
 func removeSecurityData(config Configuration) Configuration {
 	clean := config
-	clean.Secret = "hidden"
-	clean.MattermostClientID = "hidden"
-	clean.MattermostClientSecret = "hidden"
-
 	return clean
 }

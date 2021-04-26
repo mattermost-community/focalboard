@@ -12,24 +12,20 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/model"
+	authService "github.com/mattermost/focalboard/server/services/auth"
 	"github.com/mattermost/focalboard/server/services/store"
 )
-
-type WorkspaceAuthenticator interface {
-	DoesUserHaveWorkspaceAccess(session *model.Session, workspaceID string) bool
-}
 
 // IsValidSessionToken authenticates session tokens
 type IsValidSessionToken func(token string) bool
 
 // Server is a WebSocket server.
 type Server struct {
-	upgrader               websocket.Upgrader
-	listeners              map[string][]*websocket.Conn
-	mu                     sync.RWMutex
-	auth                   *auth.Auth
-	singleUserToken        string
-	WorkspaceAuthenticator WorkspaceAuthenticator
+	upgrader        websocket.Upgrader
+	listeners       map[string][]*websocket.Conn
+	mu              sync.RWMutex
+	auth            *auth.Auth
+	singleUserToken string
 }
 
 // UpdateMsg is sent on block updates
@@ -85,10 +81,6 @@ func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	// TODO: Auth
-
-	log.Printf("CONNECT WebSocket onChange, client: %s", client.RemoteAddr())
-
 	// Make sure we close the connection when the function returns
 	defer func() {
 		log.Printf("DISCONNECT WebSocket onChange, client: %s", client.RemoteAddr())
@@ -102,6 +94,12 @@ func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request
 	wsSession := websocketSession{
 		client:          client,
 		isAuthenticated: false,
+	}
+
+	sessionToken := ""
+	token, location := authService.ParseAuthTokenFromRequest(r, "MMAUTHTOKEN")
+	if location == authService.TokenLocationCookie {
+		sessionToken = token
 	}
 
 	// Simple message handling loop
@@ -127,14 +125,24 @@ func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request
 		switch command.Action {
 		case "AUTH":
 			log.Printf(`Command: AUTH, client: %s`, client.RemoteAddr())
+			authToken := command.Token
+			if authToken == "" {
+				authToken = sessionToken
+			}
 			ws.authenticateListener(&wsSession, command.WorkspaceID, command.Token)
 
 		case "ADD":
 			log.Printf(`Command: Add workspaceID: %s, blockIDs: %v, client: %s`, wsSession.workspaceID, command.BlockIDs, client.RemoteAddr())
+			if sessionToken != "" {
+				ws.authenticateListener(&wsSession, command.WorkspaceID, sessionToken)
+			}
 			ws.addListener(&wsSession, &command)
 
 		case "REMOVE":
 			log.Printf(`Command: Remove workspaceID: %s, blockID: %v, client: %s`, wsSession.workspaceID, command.BlockIDs, client.RemoteAddr())
+			if sessionToken != "" {
+				ws.authenticateListener(&wsSession, command.WorkspaceID, sessionToken)
+			}
 			ws.removeListenerFromBlocks(&wsSession, &command)
 
 		default:
@@ -154,13 +162,7 @@ func (ws *Server) isValidSessionToken(token, workspaceID string) bool {
 	}
 
 	// Check workspace permission
-	if ws.WorkspaceAuthenticator != nil {
-		if !ws.WorkspaceAuthenticator.DoesUserHaveWorkspaceAccess(session, workspaceID) {
-			return false
-		}
-	}
-
-	return true
+	return ws.auth.DoesUserHaveWorkspaceAccess(session.UserID, workspaceID)
 }
 
 func (ws *Server) authenticateListener(wsSession *websocketSession, workspaceID, token string) {

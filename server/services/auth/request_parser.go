@@ -9,10 +9,9 @@ import (
 )
 
 const (
-	HEADER_TOKEN         = "token"
-	HEADER_AUTH          = "Authorization"
-	HEADER_BEARER        = "BEARER"
-	SESSION_COOKIE_TOKEN = "FOCALBOARDAUTHTOKEN"
+	HEADER_TOKEN  = "token"
+	HEADER_AUTH   = "Authorization"
+	HEADER_BEARER = "BEARER"
 )
 
 type TokenLocation int
@@ -39,11 +38,11 @@ func (tl TokenLocation) String() string {
 	}
 }
 
-func ParseAuthTokenFromRequest(r *http.Request) (string, TokenLocation) {
+func ParseAuthTokenFromRequest(r *http.Request, sessionCookieToken string) (string, TokenLocation) {
 	authHeader := r.Header.Get(HEADER_AUTH)
 
 	// Attempt to parse the token from the cookie
-	if cookie, err := r.Cookie(SESSION_COOKIE_TOKEN); err == nil {
+	if cookie, err := r.Cookie(sessionCookieToken); err == nil {
 		return cookie.Value, TokenLocationCookie
 	}
 

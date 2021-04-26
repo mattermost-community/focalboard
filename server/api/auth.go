@@ -347,7 +347,11 @@ func (a *API) sessionRequired(handler func(w http.ResponseWriter, r *http.Reques
 
 func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request), required bool) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		token, _ := auth.ParseAuthTokenFromRequest(r)
+		sessionCookieToken := "FOCALBOARDAUTHTOKEN"
+		if a.MattermostAuth {
+			sessionCookieToken = "MMAUTHTOKEN"
+		}
+		token, _ := auth.ParseAuthTokenFromRequest(r, sessionCookieToken)
 
 		log.Printf(`Single User: %v`, len(a.singleUserToken) > 0)
 		if len(a.singleUserToken) > 0 {

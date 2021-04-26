@@ -5,7 +5,9 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	sq "github.com/Masterminds/squirrel"
@@ -60,7 +62,7 @@ func (s *MattermostAuthLayer) GetRegisteredUserCount() (int, error) {
 	query := s.getQueryBuilder().
 		Select("count(*)").
 		From("users").
-		Where(sq.Eq{"delete_at": 0})
+		Where(sq.Eq{"deleteAt": 0})
 	row := query.QueryRow()
 
 	var count int
@@ -74,9 +76,9 @@ func (s *MattermostAuthLayer) GetRegisteredUserCount() (int, error) {
 
 func (s *MattermostAuthLayer) getUserByCondition(condition sq.Eq) (*model.User, error) {
 	query := s.getQueryBuilder().
-		Select("id", "username", "email", "password", "mfa_secret", "auth_service", "auth_data", "props", "create_at", "update_at", "delete_at").
+		Select("id", "username", "email", "password", "MFASecret as mfa_secret", "AuthService as auth_service", "COALESCE(AuthData, '') as auth_data", "props", "CreateAt as create_at", "UpdateAt as update_at", "DeleteAt as delete_at").
 		From("users").
-		Where(sq.Eq{"delete_at": 0}).
+		Where(sq.Eq{"deleteAt": 0}).
 		Where(condition)
 	row := query.QueryRow()
 	user := model.User{}
@@ -126,9 +128,9 @@ func (s *MattermostAuthLayer) UpdateUserPasswordByID(userID, password string) er
 // GetActiveUserCount returns the number of users with active sessions within N seconds ago
 func (s *MattermostAuthLayer) GetActiveUserCount(updatedSecondsAgo int64) (int, error) {
 	query := s.getQueryBuilder().
-		Select("count(distinct user_id)").
+		Select("count(distinct userId)").
 		From("sessions").
-		Where(sq.Gt{"update_at": time.Now().Unix() - updatedSecondsAgo})
+		Where(sq.Gt{"LastActivityAt": time.Now().Unix() - updatedSecondsAgo})
 
 	row := query.QueryRow()
 
@@ -143,10 +145,10 @@ func (s *MattermostAuthLayer) GetActiveUserCount(updatedSecondsAgo int64) (int, 
 
 func (s *MattermostAuthLayer) GetSession(token string, expireTime int64) (*model.Session, error) {
 	query := s.getQueryBuilder().
-		Select("id", "token", "user_id", "auth_service", "props").
+		Select("id", "token", "UserID as user_id", "'mattermost' as auth_service", "props").
 		From("sessions").
 		Where(sq.Eq{"token": token}).
-		Where(sq.Gt{"update_at": time.Now().Unix() - expireTime})
+		Where(sq.Gt{"LastActivityAt": time.Now().Unix() - expireTime})
 
 	row := query.QueryRow()
 	session := model.Session{}
@@ -183,6 +185,78 @@ func (s *MattermostAuthLayer) DeleteSession(sessionId string) error {
 
 func (s *MattermostAuthLayer) CleanUpSessions(expireTime int64) error {
 	return errors.New("no update allowed from focalboard, update it using mattermost")
+}
+
+func (s *MattermostAuthLayer) GetWorkspace(ID string) (*model.Workspace, error) {
+	if ID == "0" {
+		workspace := model.Workspace{
+			ID:    ID,
+			Title: "",
+		}
+
+		return &workspace, nil
+	}
+
+	query := s.getQueryBuilder().
+		Select("DisplayName, Type").
+		From("Channels").
+		Where(sq.Gt{"ID": ID})
+
+	row := query.QueryRow()
+	var displayName string
+	var channelType string
+	err := row.Scan(&displayName, &channelType)
+	if err != nil {
+		return nil, err
+	}
+
+	if channelType != "D" && channelType != "G" {
+		return &model.Workspace{ID: ID, Title: displayName}, nil
+	}
+
+	query = s.getQueryBuilder().
+		Select("Username").
+		From("ChannelMembers").
+		Join("Users ON Users.ID=ChannelMembers.UserID").
+		Where(sq.Gt{"ChannelID": ID})
+
+	var sb strings.Builder
+	rows, err := query.Query()
+	if err != nil {
+		return nil, err
+	}
+	first := true
+	for rows.Next() {
+		if first {
+			sb.WriteString(", ")
+			first = false
+		}
+		var name string
+		if err := rows.Scan(&name); err != nil {
+			log.Fatal(err)
+		}
+		sb.WriteString(name)
+	}
+	return &model.Workspace{ID: ID, Title: sb.String()}, nil
+}
+
+func (s *MattermostAuthLayer) HasWorkspaceAccess(userID string, workspaceID string) (bool, error) {
+	fmt.Println("HAS ACCESS? USER: ", userID, " WORKSPACE: ", workspaceID)
+	query := s.getQueryBuilder().
+		Select("count(*)").
+		From("ChannelMembers").
+		Where(sq.Gt{"ChannelID": workspaceID}).
+		Where(sq.Gt{"UserID": userID})
+
+	row := query.QueryRow()
+
+	var count int
+	err := row.Scan(&count)
+	if err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
 }
 
 func (s *MattermostAuthLayer) getQueryBuilder() sq.StatementBuilderType {
