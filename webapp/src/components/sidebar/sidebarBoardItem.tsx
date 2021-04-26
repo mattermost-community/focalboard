@@ -79,7 +79,19 @@ const SidebarBoardItem = React.memo((props: Props) => {
 
     const {board, intl, views} = props
     const displayTitle: string = board.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})
-    const boardViews = views.filter((view) => view.parentId === board.id)
+
+    // Sort views alphabetically after stripping leading emoji
+    const boardViews = views.filter((view) => view.parentId === board.id).map((v) => {
+        return {view: v, title: v.title.replace(/^\p{Emoji}*\s*/u, '')}
+    }).sort((v1, v2) => {
+        if (v1.title < v2.title) {
+            return -1
+        }
+        if (v1.title > v2.title) {
+            return 1
+        }
+        return 0
+    }).map((v) => v.view)
 
     return (
         <div className='SidebarBoardItem'>
