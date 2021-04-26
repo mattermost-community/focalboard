@@ -5,7 +5,7 @@ export class UserSettings {
     static get prefillRandomIcons(): boolean {
         return localStorage.getItem('randomIcons') !== 'false'
     }
-    
+
     static set prefillRandomIcons(newValue: boolean) {
         localStorage.setItem('randomIcons', JSON.stringify(newValue))
     }
