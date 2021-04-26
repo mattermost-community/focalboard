@@ -1,9 +1,9 @@
 {
 	"serverRoot": "http://localhost:8000",
 	"port": 8000,
-	"dbtype": "postgres",
-	"dbconfig": "postgres://mmuser:mostest@localhost/mattermost_test?sslmode=disable\u0026connect_timeout=10",
-	"dbtableprefix": "fb_",
+	"dbtype": "sqlite3",
+	"dbconfig": "./focalboard.db",
+	"dbtableprefix": "",
 	"postgres_dbconfig": "dbname=focalboard sslmode=disable",
 	"test_dbconfig": "file::memory:?cache=shared",
 	"useSSL": false,
