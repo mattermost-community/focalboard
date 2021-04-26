@@ -347,11 +347,7 @@ func (a *API) sessionRequired(handler func(w http.ResponseWriter, r *http.Reques
 
 func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request), required bool) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		sessionCookieToken := "FOCALBOARDAUTHTOKEN"
-		if a.MattermostAuth {
-			sessionCookieToken = "MMAUTHTOKEN"
-		}
-		token, _ := auth.ParseAuthTokenFromRequest(r, sessionCookieToken)
+		token, _ := auth.ParseAuthTokenFromRequest(r)
 
 		log.Printf(`Single User: %v`, len(a.singleUserToken) > 0)
 		if len(a.singleUserToken) > 0 {
@@ -365,6 +361,23 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 				ID:          "single-user",
 				Token:       token,
 				UserID:      "single-user",
+				AuthService: a.authService,
+				Props:       map[string]interface{}{},
+				CreateAt:    now,
+				UpdateAt:    now,
+			}
+			ctx := context.WithValue(r.Context(), "session", session)
+			handler(w, r.WithContext(ctx))
+			return
+		}
+
+		if a.MattermostAuth && r.Header.Get("Mattermost-User-Id") != "" {
+			userID := r.Header.Get("Mattermost-User-Id")
+			now := time.Now().Unix()
+			session := &model.Session{
+				ID:          userID,
+				Token:       userID,
+				UserID:      userID,
 				AuthService: a.authService,
 				Props:       map[string]interface{}{},
 				CreateAt:    now,

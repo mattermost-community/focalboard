@@ -143,27 +143,7 @@ func (s *MattermostAuthLayer) GetActiveUserCount(updatedSecondsAgo int64) (int, 
 }
 
 func (s *MattermostAuthLayer) GetSession(token string, expireTime int64) (*model.Session, error) {
-	query := s.getQueryBuilder().
-		Select("id", "token", "UserID as user_id", "'mattermost' as auth_service", "props").
-		From("sessions").
-		Where(sq.Eq{"token": token}).
-		Where(sq.Gt{"LastActivityAt": time.Now().Unix() - expireTime})
-
-	row := query.QueryRow()
-	session := model.Session{}
-
-	var propsBytes []byte
-	err := row.Scan(&session.ID, &session.Token, &session.UserID, &session.AuthService, &propsBytes)
-	if err != nil {
-		return nil, err
-	}
-
-	err = json.Unmarshal(propsBytes, &session.Props)
-	if err != nil {
-		return nil, err
-	}
-
-	return &session, nil
+	return nil, errors.New("sessions not used when using mattermost")
 }
 
 func (s *MattermostAuthLayer) CreateSession(session *model.Session) error {

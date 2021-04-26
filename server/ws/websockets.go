@@ -12,7 +12,6 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/model"
-	authService "github.com/mattermost/focalboard/server/services/auth"
 	"github.com/mattermost/focalboard/server/services/store"
 )
 
@@ -91,15 +90,11 @@ func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request
 		client.Close()
 	}()
 
+	userID := r.Header.Get("Mattermost-User-Id")
+
 	wsSession := websocketSession{
 		client:          client,
-		isAuthenticated: false,
-	}
-
-	sessionToken := ""
-	token, location := authService.ParseAuthTokenFromRequest(r, "MMAUTHTOKEN")
-	if location == authService.TokenLocationCookie {
-		sessionToken = token
+		isAuthenticated: userID != "",
 	}
 
 	// Simple message handling loop
@@ -122,29 +117,25 @@ func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request
 			continue
 		}
 
+		if userID != "" {
+			if ws.auth.DoesUserHaveWorkspaceAccess(userID, command.WorkspaceID) {
+				wsSession.workspaceID = command.WorkspaceID
+			} else {
+				log.Printf(`ERROR User doesn't have permissions to read the workspace: %s`, command.WorkspaceID)
+				continue
+			}
+		}
+
 		switch command.Action {
 		case "AUTH":
 			log.Printf(`Command: AUTH, client: %s`, client.RemoteAddr())
-			authToken := command.Token
-			if authToken == "" {
-				authToken = sessionToken
-			}
 			ws.authenticateListener(&wsSession, command.WorkspaceID, command.Token)
-
 		case "ADD":
 			log.Printf(`Command: Add workspaceID: %s, blockIDs: %v, client: %s`, wsSession.workspaceID, command.BlockIDs, client.RemoteAddr())
-			if sessionToken != "" {
-				ws.authenticateListener(&wsSession, command.WorkspaceID, sessionToken)
-			}
 			ws.addListener(&wsSession, &command)
-
 		case "REMOVE":
 			log.Printf(`Command: Remove workspaceID: %s, blockID: %v, client: %s`, wsSession.workspaceID, command.BlockIDs, client.RemoteAddr())
-			if sessionToken != "" {
-				ws.authenticateListener(&wsSession, command.WorkspaceID, sessionToken)
-			}
 			ws.removeListenerFromBlocks(&wsSession, &command)
-
 		default:
 			log.Printf(`ERROR webSocket command, invalid action: %v`, command.Action)
 		}
