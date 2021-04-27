@@ -10,7 +10,9 @@ import {Card} from '../../blocks/card'
 import {Constants} from '../../constants'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
+
 import {BoardTree} from '../../viewModel/boardTree'
+
 import {OctoUtils} from './../../octoUtils'
 
 import './table.scss'
@@ -31,33 +33,33 @@ type Props = {
 // Currently, the theme doesn't change any padding or font descriptor
 const header = {
     fontDescriptor: 'bolder 14px sans-serif',
-    padding: 22
+    padding: 22,
 }
 const select = {
     fontDescriptor: 'bolder 13px sans-serif',
-    padding: 56
+    padding: 56,
 }
 const text = {
     fontDescriptor: '14px sans-serif',
-    padding: 30
+    padding: 30,
 }
 const title = {
     fontDescriptor: '14px sans-serif',
-    padding: 57
+    padding: 57,
 }
 
 // re-use canvas object for better performance
-const canvas =  document.createElement('canvas') as HTMLCanvasElement;
-function getTextWidth(text: string, font_descriptor: string) {
-    if( text != '') {
-        var context = canvas.getContext('2d');
-        if( context ){
-            context.font = font_descriptor;
-            var metrics = context.measureText(text);
-            return Math.ceil(metrics.width);
-        }    
+const canvas = document.createElement('canvas') as HTMLCanvasElement
+function getTextWidth(displayText: string, fontDescriptor: string) {
+    if (displayText !== '') {
+        const context = canvas.getContext('2d')
+        if (context) {
+            context.font = fontDescriptor
+            const metrics = context.measureText(displayText)
+            return Math.ceil(metrics.width)
+        }
     }
-    return 0;
+    return 0
 }
 
 const Table = (props: Props) => {
@@ -94,27 +96,29 @@ const Table = (props: Props) => {
     }), [activeView])
 
     const onAutoSizeColumn = ((columnID: string) => {
-        var longestSize = 0;
+        let longestSize = 0
 
-        const visibleProperties = board.cardProperties.filter((template) => activeView.visiblePropertyIds.includes(columnID))
+        const visibleProperties = board.cardProperties.filter(() => activeView.visiblePropertyIds.includes(columnID))
 
-        if(columnID == Constants.titleColumnId){
+        if (columnID === Constants.titleColumnId) {
             cards.forEach((card) => {
                 const thisLen = getTextWidth(card.title, title.fontDescriptor)
-                if( thisLen > longestSize){
+                if (thisLen > longestSize) {
                     longestSize = thisLen
                 }
             })
             longestSize += title.padding
-        } else{
-            const template = visibleProperties.find((t) => t.id == columnID)
-            if(!template) return
+        } else {
+            const template = visibleProperties.find((t) => t.id === columnID)
+            if (!template) {
+                return
+            }
 
             // Set to Header size initally
             longestSize = getTextWidth(template.name.toUpperCase(), header.fontDescriptor) + header.padding
 
-            var padding = text.padding
-            var fontDescriptor = text.fontDescriptor
+            let padding = text.padding
+            let fontDescriptor = text.fontDescriptor
             if (template.type === 'select') {
                 padding = select.padding
                 fontDescriptor = select.fontDescriptor
@@ -122,21 +126,23 @@ const Table = (props: Props) => {
 
             cards.forEach((card) => {
                 const propertyValue = card.properties[columnID]
-                var displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, template!) || ''
+                let displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, template!) || ''
                 if (template.type === 'select') {
                     displayValue = displayValue.toUpperCase()
                 }
 
                 const thisLen = getTextWidth(displayValue, fontDescriptor) + padding
-                if( thisLen > longestSize){
+                if (thisLen > longestSize) {
                     longestSize = thisLen
                 }
             })
         }
 
-        if( longestSize == 0 ) return
+        if (longestSize === 0) {
+            return
+        }
         const columnWidths = {...activeView.columnWidths}
-        columnWidths[columnID] = longestSize;
+        columnWidths[columnID] = longestSize
         const newView = new MutableBoardView(activeView)
         newView.columnWidths = columnWidths
         mutator.updateBlock(newView, activeView, 'autosize column')

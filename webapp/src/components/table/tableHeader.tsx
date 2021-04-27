@@ -60,7 +60,10 @@ const TableHeader = React.memo((props: Props): JSX.Element => {
             <div className='octo-spacer'/>
 
             {!props.readonly &&
-                <HorizontalGrip templateId={props.template.id} onAutoSizeColumn={props.onAutoSizeColumn}/>
+                <HorizontalGrip
+                    templateId={props.template.id}
+                    onAutoSizeColumn={props.onAutoSizeColumn}
+                />
             }
         </div>
     )
