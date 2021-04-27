@@ -79,7 +79,6 @@ const SidebarBoardItem = React.memo((props: Props) => {
 
     const {board, intl, views} = props
     const displayTitle: string = board.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})
-
     const boardViews = sortBoardViewsAlphabetically(views.filter((view) => view.parentId === board.id))
 
     return (
