@@ -69,6 +69,7 @@
         .octo-propertyvalue {
             text-align: left;
             white-space: nowrap;
+            width: inherit;
         }
     }
 
@@ -108,6 +109,18 @@
             &:hover {
                 background-color: rgba(var(--body-color), 0.08);
             }
+        }
+    }
+
+    .MenuWrapper {  
+        width: 100%;
+        max-width: calc(100% - 5px);
+
+        .Label {
+            width: 100%;
+            display: inline-block;
+            text-overflow: ellipsis;
+            overflow: hidden;
         }
     }
 }
