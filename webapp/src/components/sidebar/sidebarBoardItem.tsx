@@ -4,7 +4,7 @@ import React, {useState} from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {Board} from '../../blocks/board'
-import {BoardView, IViewType} from '../../blocks/boardView'
+import {BoardView, IViewType, sortBoardViewsAlphabetically} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import IconButton from '../../widgets/buttons/iconButton'
 import BoardIcon from '../../widgets/icons/board'
@@ -80,18 +80,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
     const {board, intl, views} = props
     const displayTitle: string = board.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})
 
-    // Sort views alphabetically after stripping leading emoji
-    const boardViews = views.filter((view) => view.parentId === board.id).map((v) => {
-        return {view: v, title: v.title.replace(/^\p{Emoji}*\s*/u, '')}
-    }).sort((v1, v2) => {
-        if (v1.title < v2.title) {
-            return -1
-        }
-        if (v1.title > v2.title) {
-            return 1
-        }
-        return 0
-    }).map((v) => v.view)
+    const boardViews = sortBoardViewsAlphabetically(views.filter((view) => view.parentId === board.id))
 
     return (
         <div className='SidebarBoardItem'>
