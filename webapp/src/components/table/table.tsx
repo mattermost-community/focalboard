@@ -11,6 +11,7 @@ import {Constants} from '../../constants'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import {BoardTree} from '../../viewModel/boardTree'
+import {OctoUtils} from './../../octoUtils'
 
 import './table.scss'
 import TableHeader from './tableHeader'
@@ -24,6 +25,39 @@ type Props = {
     showCard: (cardId?: string) => void
     addCard: (show: boolean) => Promise<void>
     onCardClicked: (e: React.MouseEvent, card: Card) => void
+}
+
+// Eventually, these will need to come from the theme.
+// Currently, the theme doesn't change any padding or font descriptor
+const header = {
+    fontDescriptor: 'bolder 14px sans-serif',
+    padding: 22
+}
+const select = {
+    fontDescriptor: 'bolder 13px sans-serif',
+    padding: 56
+}
+const text = {
+    fontDescriptor: '14px sans-serif',
+    padding: 30
+}
+const title = {
+    fontDescriptor: '14px sans-serif',
+    padding: 57
+}
+
+// re-use canvas object for better performance
+const canvas =  document.createElement('canvas') as HTMLCanvasElement;
+function getTextWidth(text: string, font_descriptor: string) {
+    if( text != '') {
+        var context = canvas.getContext('2d');
+        if( context ){
+            context.font = font_descriptor;
+            var metrics = context.measureText(text);
+            return Math.ceil(metrics.width);
+        }    
+    }
+    return 0;
 }
 
 const Table = (props: Props) => {
@@ -58,6 +92,55 @@ const Table = (props: Props) => {
             }
         },
     }), [activeView])
+
+    const onAutoSizeColumn = ((columnID: string) => {
+        var longestSize = 0;
+
+        const visibleProperties = board.cardProperties.filter((template) => activeView.visiblePropertyIds.includes(columnID))
+
+        if(columnID == Constants.titleColumnId){
+            cards.forEach((card) => {
+                const thisLen = getTextWidth(card.title, title.fontDescriptor)
+                if( thisLen > longestSize){
+                    longestSize = thisLen
+                }
+            })
+            longestSize += title.padding
+        } else{
+            const template = visibleProperties.find((t) => t.id == columnID)
+            if(!template) return
+
+            // Set to Header size initally
+            longestSize = getTextWidth(template.name.toUpperCase(), header.fontDescriptor) + header.padding
+
+            var padding = text.padding
+            var fontDescriptor = text.fontDescriptor
+            if (template.type === 'select') {
+                padding = select.padding
+                fontDescriptor = select.fontDescriptor
+            }
+
+            cards.forEach((card) => {
+                const propertyValue = card.properties[columnID]
+                var displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, template!) || ''
+                if (template.type === 'select') {
+                    displayValue = displayValue.toUpperCase()
+                }
+
+                const thisLen = getTextWidth(displayValue, fontDescriptor) + padding
+                if( thisLen > longestSize){
+                    longestSize = thisLen
+                }
+            })
+        }
+
+        if( longestSize == 0 ) return
+        const columnWidths = {...activeView.columnWidths}
+        columnWidths[columnID] = longestSize;
+        const newView = new MutableBoardView(activeView)
+        newView.columnWidths = columnWidths
+        mutator.updateBlock(newView, activeView, 'autosize column')
+    })
 
     const onDropToCard = (srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)
@@ -119,6 +202,7 @@ const Table = (props: Props) => {
                     template={{id: Constants.titleColumnId, name: 'title', type: 'text', options: []}}
                     offset={resizingColumn === Constants.titleColumnId ? offset : 0}
                     onDrop={onDropToColumn}
+                    onAutoSizeColumn={onAutoSizeColumn}
                 />
 
                 {/* Table header row */}
@@ -142,6 +226,7 @@ const Table = (props: Props) => {
                                 key={template.id}
                                 offset={resizingColumn === template.id ? offset : 0}
                                 onDrop={onDropToColumn}
+                                onAutoSizeColumn={onAutoSizeColumn}
                             />
                         )
                     })}

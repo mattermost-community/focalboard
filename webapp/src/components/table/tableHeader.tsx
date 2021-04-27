@@ -24,6 +24,7 @@ type Props = {
     template: IPropertyTemplate
     offset: number
     onDrop: (template: IPropertyTemplate, container: IPropertyTemplate) => void
+    onAutoSizeColumn: (columnID: string) => void
 }
 
 const TableHeader = React.memo((props: Props): JSX.Element => {
@@ -59,7 +60,7 @@ const TableHeader = React.memo((props: Props): JSX.Element => {
             <div className='octo-spacer'/>
 
             {!props.readonly &&
-                <HorizontalGrip templateId={props.template.id}/>
+                <HorizontalGrip templateId={props.template.id} onAutoSizeColumn={props.onAutoSizeColumn}/>
             }
         </div>
     )
