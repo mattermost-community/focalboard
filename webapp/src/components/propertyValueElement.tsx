@@ -46,6 +46,8 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         }
         case 'text':
             return true
+        case 'phone':
+            return true
         default:
             return false
         }
