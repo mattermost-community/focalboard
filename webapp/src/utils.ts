@@ -43,6 +43,20 @@ class Utils {
         return String(text).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
     }
 
+    // re-use canvas object for better performance
+    static canvas = document.createElement('canvas') as HTMLCanvasElement
+    static getTextWidth(displayText: string, fontDescriptor: string) {
+        if (displayText !== '') {
+            const context = this.canvas.getContext('2d')
+            if (context) {
+                context.font = fontDescriptor
+                const metrics = context.measureText(displayText)
+                return Math.ceil(metrics.width)
+            }
+        }
+        return 0
+    }
+
     // Markdown
 
     static htmlFromMarkdown(text: string): string {

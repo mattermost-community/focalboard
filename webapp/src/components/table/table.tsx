@@ -48,20 +48,6 @@ const title = {
     padding: 57,
 }
 
-// re-use canvas object for better performance
-const canvas = document.createElement('canvas') as HTMLCanvasElement
-function getTextWidth(displayText: string, fontDescriptor: string) {
-    if (displayText !== '') {
-        const context = canvas.getContext('2d')
-        if (context) {
-            context.font = fontDescriptor
-            const metrics = context.measureText(displayText)
-            return Math.ceil(metrics.width)
-        }
-    }
-    return 0
-}
-
 const Table = (props: Props) => {
     const {boardTree} = props
     const {board, cards, activeView} = boardTree
@@ -102,7 +88,7 @@ const Table = (props: Props) => {
 
         if (columnID === Constants.titleColumnId) {
             cards.forEach((card) => {
-                const thisLen = getTextWidth(card.title, title.fontDescriptor)
+                const thisLen = Utils.getTextWidth(card.title, title.fontDescriptor)
                 if (thisLen > longestSize) {
                     longestSize = thisLen
                 }
@@ -115,7 +101,7 @@ const Table = (props: Props) => {
             }
 
             // Set to Header size initally
-            longestSize = getTextWidth(template.name.toUpperCase(), header.fontDescriptor) + header.padding
+            longestSize = Utils.getTextWidth(template.name.toUpperCase(), header.fontDescriptor) + header.padding
 
             let padding = text.padding
             let fontDescriptor = text.fontDescriptor
@@ -131,7 +117,7 @@ const Table = (props: Props) => {
                     displayValue = displayValue.toUpperCase()
                 }
 
-                const thisLen = getTextWidth(displayValue, fontDescriptor) + padding
+                const thisLen = Utils.getTextWidth(displayValue, fontDescriptor) + padding
                 if (thisLen > longestSize) {
                     longestSize = thisLen
                 }
