@@ -2,8 +2,9 @@
 // See LICENSE.txt for license information.
 
 import React, {useState} from 'react'
+import {injectIntl, IntlShape} from 'react-intl'
 
-import {IPropertyOption, IPropertyTemplate} from '../blocks/board'
+import {IPropertyOption, IPropertyTemplate, PropertyType} from '../blocks/board'
 import {Card} from '../blocks/card'
 import mutator from '../mutator'
 import {OctoUtils} from '../octoUtils'
@@ -19,14 +20,15 @@ type Props = {
     card: Card
     propertyTemplate: IPropertyTemplate
     emptyDisplayValue: string
+    intl: IntlShape
 }
 
 const PropertyValueElement = (props:Props): JSX.Element => {
     const [value, setValue] = useState(props.card.properties[props.propertyTemplate.id])
 
-    const {card, propertyTemplate, readOnly, emptyDisplayValue, boardTree} = props
+    const {card, propertyTemplate, readOnly, emptyDisplayValue, boardTree, intl} = props
     const propertyValue = card.properties[propertyTemplate.id]
-    const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate)
+    const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate, intl)
     const finalDisplayValue = displayValue || emptyDisplayValue
 
     const validateProp = (propType: string, val: string): boolean => {
@@ -38,13 +40,15 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             return !isNaN(parseInt(val, 10))
         case 'email': {
             const emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            return emailRegexp.test(val.toLowerCase())
+            return emailRegexp.test(val)
         }
         case 'url': {
             const urlRegexp = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/
-            return urlRegexp.test(val.toLowerCase())
+            return urlRegexp.test(val)
         }
         case 'text':
+            return true
+        case 'phone':
             return true
         default:
             return false
@@ -97,11 +101,10 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         )
     }
 
+    const editableFields: Array<PropertyType> = ['text', 'number', 'email', 'url', 'phone']
+
     if (
-        propertyTemplate.type === 'text' ||
-        propertyTemplate.type === 'number' ||
-        propertyTemplate.type === 'email' ||
-        propertyTemplate.type === 'url'
+        editableFields.includes(propertyTemplate.type)
     ) {
         if (!readOnly) {
             return (
@@ -121,4 +124,4 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     return <div className='octo-propertyvalue'>{finalDisplayValue}</div>
 }
 
-export default PropertyValueElement
+export default injectIntl(PropertyValueElement)

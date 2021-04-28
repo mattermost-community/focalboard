@@ -74,7 +74,7 @@ type Props = {
 
 function onExportCsvTrigger(boardTree: BoardTree, intl: IntlShape) {
     try {
-        CsvExporter.exportTableCsv(boardTree)
+        CsvExporter.exportTableCsv(boardTree, intl)
         const exportCompleteMessage = intl.formatMessage({
             id: 'ViewHeader.export-complete',
             defaultMessage: 'Export complete!',

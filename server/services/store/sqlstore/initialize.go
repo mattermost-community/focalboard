@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 
+	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore/initializations"
@@ -53,7 +54,8 @@ func (s *SQLStore) importInitialTemplates() error {
 func (s *SQLStore) isInitializationNeeded() (bool, error) {
 	query := s.getQueryBuilder().
 		Select("count(*)").
-		From(s.tablePrefix + "blocks")
+		From(s.tablePrefix + "blocks").
+		Where(sq.Eq{"COALESCE(workspace_id, '0')": "0"})
 
 	row := query.QueryRow()
 

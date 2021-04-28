@@ -19,8 +19,11 @@ import RegisterPage from './pages/registerPage'
 import {IUser} from './user'
 import {Utils} from './utils'
 import CombinedProviders from './combinedProviders'
+import {importNativeAppSettings} from './nativeApp'
 
 const App = React.memo((): JSX.Element => {
+    importNativeAppSettings()
+
     const [language, setLanguage] = useState(getCurrentLanguage())
     const [user, setUser] = useState<IUser|undefined>(undefined)
     const [initialLoad, setInitialLoad] = useState(false)
@@ -77,7 +80,10 @@ const App = React.memo((): JSX.Element => {
                                 path='/workspace/:workspaceId/'
                                 render={({match}) => {
                                     if (initialLoad && !user) {
-                                        const redirectUrl = '/' + Utils.buildURL(`/workspace/${match.params.workspaceId}/`)
+                                        let redirectUrl = '/' + Utils.buildURL(`/workspace/${match.params.workspaceId}/`)
+                                        if (redirectUrl.indexOf('//') === 0) {
+                                            redirectUrl = redirectUrl.slice(1)
+                                        }
                                         const loginUrl = `/login?r=${encodeURIComponent(redirectUrl)}`
                                         return <Redirect to={loginUrl}/>
                                     }
