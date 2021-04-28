@@ -34,7 +34,7 @@
             cursor: pointer;
         }
 
-        >.Icon {
+        > .Icon {
             stroke: rgba(var(--sidebar-fg), 0.3);
             height: 14px;
             width: 14px;
@@ -46,7 +46,7 @@
             }
         }
 
-        >.IconButton {
+        > .IconButton {
             background-color: var(--sidebar-bg);
 
             &:hover {
