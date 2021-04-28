@@ -83,16 +83,16 @@ const SidebarBoardItem = React.memo((props: Props) => {
 
     return (
         <div className='SidebarBoardItem'>
-            <div className={'octo-sidebar-item ' + (collapsed ? 'collapsed' : 'expanded')}>
+            <div
+                className={'octo-sidebar-item ' + (collapsed ? 'collapsed' : 'expanded')}
+                onClick={() => props.showBoard(board.id)}
+            >
                 <IconButton
                     icon={<DisclosureTriangle/>}
                     onClick={() => setCollapsed(!collapsed)}
                 />
                 <div
                     className='octo-sidebar-title'
-                    onClick={() => {
-                        props.showBoard(board.id)
-                    }}
                     title={displayTitle}
                 >
                     {board.icon ? `${board.icon} ${displayTitle}` : displayTitle}
@@ -151,13 +151,11 @@ const SidebarBoardItem = React.memo((props: Props) => {
                 <div
                     key={view.id}
                     className='octo-sidebar-item subitem'
+                    onClick={() => props.showView(view.id, board.id)}
                 >
                     {iconForViewType(view.viewType)}
                     <div
                         className='octo-sidebar-title'
-                        onClick={() => {
-                            props.showView(view.id, board.id)
-                        }}
                         title={view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}
                     >
                         {view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}

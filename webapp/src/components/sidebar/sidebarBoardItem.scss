@@ -30,6 +30,10 @@
             }
         }
 
+        &:not(.no-views) {
+            cursor: pointer;
+        }
+
         >.Icon {
             stroke: rgba(var(--sidebar-fg), 0.3);
             height: 14px;
@@ -72,7 +76,6 @@
 
     .octo-sidebar-title {
         font-weight: 600;
-        cursor: pointer;
         flex-grow: 1;
         white-space: nowrap;
         overflow: hidden;
