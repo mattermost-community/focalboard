@@ -11,6 +11,9 @@ This changelog summarizes updates to our open source project. You can also find 
     * Added MySql database support. Thanks @jespino!
     * Added URL and phone number properties. Thanks @BharatKalluri!
     * Added documentation for share board. Thanks @haardikdharma10!
+    * Persist Mac app settings. Thanks @Johennes!
+    * Improved board sorting without leading emoji. Thanks @Johennes!
+    * Added Dutch language translation. Thanks Tom De Moor!
 
 ## v0.6.5 Release - April 19, 2021
 
