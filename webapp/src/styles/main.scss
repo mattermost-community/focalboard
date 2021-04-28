@@ -201,10 +201,11 @@ h1 {
 }
 
 .octo-block img {
-    width: calc(100% - 20px);
     max-width: 500px;
     max-height: 500px;
     margin: 5px 0;
+    object-fit: contain;
+    flex: none;
 }
 
 .octo-content {
