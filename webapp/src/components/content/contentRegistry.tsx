@@ -11,7 +11,7 @@ type ContentHandler = {
     type: BlockTypes,
     getDisplayText: (intl: IntlShape) => string,
     getIcon: () => JSX.Element,
-    createBlock: () => Promise<MutableContentBlock>,
+    createBlock: (rootId: string) => Promise<MutableContentBlock>,
     createComponent: (block: IContentBlock, intl: IntlShape, readonly: boolean) => JSX.Element,
 }
 

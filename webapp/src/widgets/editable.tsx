@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useRef, useImperativeHandle, forwardRef} from 'react'
 
 import './editable.scss'
 
@@ -12,63 +12,86 @@ type Props = {
     saveOnEsc?: boolean
     readonly?: boolean
 
+    validator?: (value: string) => boolean
     onCancel?: () => void
     onSave?: (saveType: 'onEnter'|'onEsc'|'onBlur') => void
 }
 
-export default class Editable extends React.Component<Props> {
-    private elementRef = React.createRef<HTMLInputElement>()
-    private saveOnBlur = true
+const Editable = (props: Props, ref: React.Ref<{focus: (selectAll?: boolean) => void}>): JSX.Element => {
+    const elementRef = useRef<HTMLInputElement>(null)
+    const saveOnBlur = useRef<boolean>(true)
 
-    shouldComponentUpdate(): boolean {
-        return true
-    }
-
-    public focus(): void {
-        if (this.elementRef.current) {
-            const valueLength = this.elementRef.current.value.length
-            this.elementRef.current.focus()
-            this.elementRef.current.setSelectionRange(valueLength, valueLength)
+    const save = (saveType: 'onEnter'|'onEsc'|'onBlur'): void => {
+        if (props.validator && !props.validator(props.value || '')) {
+            return
         }
+        if (!props.onSave) {
+            return
+        }
+        if (saveType === 'onBlur' && !saveOnBlur.current) {
+            return
+        }
+        if (saveType === 'onEsc' && !props.saveOnEsc) {
+            return
+        }
+        props.onSave(saveType)
     }
 
-    public blur = (): void => {
-        this.saveOnBlur = false
-        this.elementRef.current?.blur()
-        this.saveOnBlur = true
+    useImperativeHandle(ref, () => ({
+        focus: (selectAll = false): void => {
+            if (elementRef.current) {
+                const valueLength = elementRef.current.value.length
+                elementRef.current.focus()
+                if (selectAll) {
+                    elementRef.current.setSelectionRange(0, valueLength)
+                } else {
+                    elementRef.current.setSelectionRange(valueLength, valueLength)
+                }
+            }
+        },
+    }))
+
+    const blur = (): void => {
+        saveOnBlur.current = false
+        elementRef.current?.blur()
+        saveOnBlur.current = true
     }
 
-    public render(): JSX.Element {
-        const {value, onChange, className, placeholderText} = this.props
+    const {value, onChange, className, placeholderText} = props
+    let error = false
+    if (props.validator) {
+        error = !props.validator(value || '')
+    }
 
-        return (
-            <input
-                ref={this.elementRef}
-                className={'Editable ' + className}
-                placeholder={placeholderText}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    onChange(e.target.value)
-                }}
-                value={value}
-                title={value}
-                onBlur={() => this.saveOnBlur && this.props.onSave && this.props.onSave('onBlur')}
-                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>): void => {
-                    if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
-                        e.stopPropagation()
-                        if (this.props.saveOnEsc) {
-                            this.props.onSave?.('onEsc')
-                        } else {
-                            this.props.onCancel?.()
-                        }
-                        this.blur()
-                    } else if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // Return
-                        e.stopPropagation()
-                        this.props.onSave?.('onEnter')
-                        this.blur()
+    return (
+        <input
+            ref={elementRef}
+            className={'Editable ' + (error ? 'error ' : '') + className}
+            placeholder={placeholderText}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                onChange(e.target.value)
+            }}
+            value={value}
+            title={value}
+            onBlur={() => save('onBlur')}
+            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>): void => {
+                if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
+                    e.stopPropagation()
+                    if (props.saveOnEsc) {
+                        save('onEsc')
+                    } else {
+                        props.onCancel?.()
                     }
-                }}
-                readOnly={this.props.readonly}
-            />
-        )
-    }
+                    blur()
+                } else if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // Return
+                    e.stopPropagation()
+                    save('onEnter')
+                    blur()
+                }
+            }}
+            readOnly={props.readonly}
+        />
+    )
 }
+
+export default forwardRef(Editable)

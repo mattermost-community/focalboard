@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {createNanoEvents} from 'nanoevents'
 
 import './flashMessages.scss'
@@ -20,59 +20,50 @@ type Props = {
     milliseconds: number
 }
 
-type State = {
-    message?: FlashMessage
-    fadeOut: boolean
-}
+export const FlashMessages = React.memo((props: Props) => {
+    const [message, setMessage] = useState<FlashMessage|null>(null)
+    const [fadeOut, setFadeOut] = useState(false)
+    const [timeoutId, setTimeoutId] = useState<ReturnType<typeof setTimeout>|null>(null)
 
-export class FlashMessages extends React.PureComponent<Props, State> {
-    private timeout?: ReturnType<typeof setTimeout>
-
-    constructor(props: Props) {
-        super(props)
-        this.state = {fadeOut: false}
-
-        emitter.on('message', (message: FlashMessage) => {
-            if (this.timeout) {
-                clearTimeout(this.timeout)
-                this.timeout = undefined
+    useEffect(() => {
+        emitter.on('message', (newMessage: FlashMessage) => {
+            if (timeoutId) {
+                clearTimeout(timeoutId)
+                setTimeoutId(null)
             }
-            this.timeout = setTimeout(this.handleFadeOut, this.props.milliseconds - 200)
-            this.setState({message})
+            setTimeoutId(setTimeout(handleFadeOut, props.milliseconds - 200))
+            setMessage(newMessage)
         })
+    }, [])
+
+    const handleFadeOut = (): void => {
+        setFadeOut(true)
+        setTimeoutId(setTimeout(handleTimeout, 200))
     }
 
-    handleFadeOut = (): void => {
-        this.setState({fadeOut: true})
-        this.timeout = setTimeout(this.handleTimeout, 200)
+    const handleTimeout = (): void => {
+        setMessage(null)
+        setFadeOut(false)
     }
 
-    handleTimeout = (): void => {
-        this.setState({message: undefined, fadeOut: false})
-    }
-
-    handleClick = (): void => {
-        if (this.timeout) {
-            clearTimeout(this.timeout)
-            this.timeout = undefined
+    const handleClick = (): void => {
+        if (timeoutId) {
+            clearTimeout(timeoutId)
+            setTimeoutId(null)
         }
-        this.handleFadeOut()
+        handleFadeOut()
     }
 
-    public render(): JSX.Element | null {
-        if (!this.state.message) {
-            return null
-        }
-
-        const {message, fadeOut} = this.state
-
-        return (
-            <div
-                className={'FlashMessages ' + message.severity + (fadeOut ? ' flashOut' : ' flashIn')}
-                onClick={this.handleClick}
-            >
-                {message.content}
-            </div>
-        )
+    if (!message) {
+        return null
     }
-}
+
+    return (
+        <div
+            className={'FlashMessages ' + message.severity + (fadeOut ? ' flashOut' : ' flashIn')}
+            onClick={handleClick}
+        >
+            {message.content}
+        </div>
+    )
+})

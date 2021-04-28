@@ -14,6 +14,7 @@ import BoardIcon from '../widgets/icons/board'
 import DeleteIcon from '../widgets/icons/delete'
 import DuplicateIcon from '../widgets/icons/duplicate'
 import TableIcon from '../widgets/icons/table'
+import GalleryIcon from '../widgets/icons/gallery'
 import Menu from '../widgets/menu'
 
 type Props = {
@@ -122,8 +123,58 @@ export class ViewMenu extends React.PureComponent<Props> {
             })
     }
 
+    private handleAddViewGallery = async () => {
+        const {board, boardTree, showView, intl} = this.props
+
+        Utils.log('addview-gallery')
+        const view = new MutableBoardView()
+        view.title = intl.formatMessage({id: 'View.NewGalleryTitle', defaultMessage: 'Gallery view'})
+        view.viewType = 'gallery'
+        view.parentId = board.id
+        view.rootId = board.rootId
+        view.visiblePropertyIds = [Constants.titleColumnId]
+
+        const oldViewId = boardTree.activeView.id
+
+        await mutator.insertBlock(
+            view,
+            'add view',
+            async () => {
+                // This delay is needed because OctoListener has a default 100 ms notification delay before updates
+                setTimeout(() => {
+                    Utils.log(`showView: ${view.id}`)
+                    showView(view.id)
+                }, 120)
+            },
+            async () => {
+                showView(oldViewId)
+            })
+    }
+
     render(): JSX.Element {
-        const {boardTree} = this.props
+        const {boardTree, intl} = this.props
+
+        const duplicateViewText = intl.formatMessage({
+            id: 'View.DuplicateView',
+            defaultMessage: 'Duplicate View',
+        })
+        const deleteViewText = intl.formatMessage({
+            id: 'View.DeleteView',
+            defaultMessage: 'Delete View',
+        })
+        const addViewText = intl.formatMessage({
+            id: 'View.AddView',
+            defaultMessage: 'Add View',
+        })
+        const boardText = intl.formatMessage({
+            id: 'View.Board',
+            defaultMessage: 'Board',
+        })
+        const tableText = intl.formatMessage({
+            id: 'View.Table',
+            defaultMessage: 'Table',
+        })
+
         return (
             <Menu>
                 {boardTree.views.map((view) => (
@@ -138,7 +189,7 @@ export class ViewMenu extends React.PureComponent<Props> {
                 {!this.props.readonly &&
                     <Menu.Text
                         id='__duplicateView'
-                        name='Duplicate View'
+                        name={duplicateViewText}
                         icon={<DuplicateIcon/>}
                         onClick={this.handleDuplicateView}
                     />
@@ -146,7 +197,7 @@ export class ViewMenu extends React.PureComponent<Props> {
                 {!this.props.readonly && boardTree.views.length > 1 &&
                     <Menu.Text
                         id='__deleteView'
-                        name='Delete View'
+                        name={deleteViewText}
                         icon={<DeleteIcon/>}
                         onClick={this.handleDeleteView}
                     />
@@ -154,20 +205,26 @@ export class ViewMenu extends React.PureComponent<Props> {
                 {!this.props.readonly &&
                     <Menu.SubMenu
                         id='__addView'
-                        name='Add View'
+                        name={addViewText}
                         icon={<AddIcon/>}
                     >
                         <Menu.Text
                             id='board'
-                            name='Board'
+                            name={boardText}
                             icon={<BoardIcon/>}
                             onClick={this.handleAddViewBoard}
                         />
                         <Menu.Text
                             id='table'
-                            name='Table'
+                            name={tableText}
                             icon={<TableIcon/>}
                             onClick={this.handleAddViewTable}
+                        />
+                        <Menu.Text
+                            id='gallery'
+                            name='Gallery'
+                            icon={<GalleryIcon/>}
+                            onClick={this.handleAddViewGallery}
                         />
                     </Menu.SubMenu>
                 }
@@ -179,6 +236,7 @@ export class ViewMenu extends React.PureComponent<Props> {
         switch (viewType) {
         case 'board': return <BoardIcon/>
         case 'table': return <TableIcon/>
+        case 'gallery': return <GalleryIcon/>
         default: return <div/>
         }
     }

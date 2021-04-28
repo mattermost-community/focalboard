@@ -7,7 +7,8 @@ import WebKit
 class ViewController:
 	NSViewController,
 	WKUIDelegate,
-	WKNavigationDelegate {
+	WKNavigationDelegate,
+	WKScriptMessageHandler {
 	@IBOutlet var webView: WKWebView!
 	private var refreshWebViewOnLoad = true
 
@@ -19,19 +20,30 @@ class ViewController:
 		webView.navigationDelegate = self
 		webView.uiDelegate = self
 		webView.isHidden = true
+		webView.configuration.userContentController.add(self, name: "nativeApp")
 
 		clearWebViewCache()
 
 		// Load the home page if the server was started, otherwise wait until it has
 		let appDelegate = NSApplication.shared.delegate as! AppDelegate
 		if (appDelegate.isServerStarted) {
-			self.updateSessionToken()
-			self.loadHomepage()
+			updateSessionTokenAndUserSettings()
+			loadHomepage()
 		}
 
 		// Do any additional setup after loading the view.
 		NotificationCenter.default.addObserver(self, selector: #selector(onServerStarted), name: AppDelegate.serverStartedNotification, object: nil)
 	}
+
+	override func viewDidAppear() {
+		super.viewDidAppear()
+		self.view.window?.makeFirstResponder(self.webView)
+	}
+
+    override func viewWillDisappear() {
+        super.viewWillDisappear()
+        persistUserSettings()
+    }
 
 	override var representedObject: Any? {
 		didSet {
@@ -45,23 +57,69 @@ class ViewController:
 		WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes as! Set<String>, modifiedSince: date, completionHandler:{ })
 	}
 
+	@IBAction func showDiagnosticsInfo(_ sender: NSObject) {
+		let appDelegate = NSApplication.shared.delegate as! AppDelegate
+
+		let alert: NSAlert = NSAlert()
+		alert.messageText = "Diagnostics info"
+		alert.informativeText = "Port: \(appDelegate.serverPort)"
+		alert.alertStyle = .informational
+		alert.addButton(withTitle: "OK")
+		alert.runModal()
+	}
+
 	@objc func onServerStarted() {
 		NSLog("onServerStarted")
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-			self.updateSessionToken()
+			self.updateSessionTokenAndUserSettings()
 			self.loadHomepage()
 		}
 	}
 
-	private func updateSessionToken() {
+	private func persistUserSettings() {
+		let semaphore = DispatchSemaphore(value: 0)
+
+		webView.evaluateJavaScript("Focalboard.exportUserSettingsBlob();") { result, error in
+			defer { semaphore.signal() }
+			guard let blob = result as? String else {
+				NSLog("Failed to export user settings: \(error?.localizedDescription ?? "?")")
+				return
+			}
+			UserDefaults.standard.set(blob, forKey: "localStorage")
+			NSLog("Persisted user settings: \(Data(base64Encoded: blob).flatMap { String(data: $0, encoding: .utf8) } ?? blob)")
+		}
+
+		// During shutdown the system grants us about 5 seconds to clean up and store user data
+		let timeout = DispatchTime.now() + .seconds(3)
+		var result: DispatchTimeoutResult?
+
+		// Busy wait because evaluateJavaScript can only be called from *and* signals on the main thread
+		while (result != .success && .now() < timeout) {
+			result = semaphore.wait(timeout: .now())
+			RunLoop.current.run(mode: .default, before: Date())
+		}
+
+		if result == .timedOut {
+			NSLog("Timed out trying to persist user settings")
+		}
+	}
+
+	private func updateSessionTokenAndUserSettings() {
 		let appDelegate = NSApplication.shared.delegate as! AppDelegate
-		let script = WKUserScript(
-			source: "localStorage.setItem('sessionId', '\(appDelegate.sessionToken)');",
+		let sessionTokenScript = WKUserScript(
+			source: "localStorage.setItem('focalboardSessionId', '\(appDelegate.sessionToken)');",
+			injectionTime: .atDocumentStart,
+			forMainFrameOnly: true
+		)
+		let blob = UserDefaults.standard.string(forKey: "localStorage") ?? ""
+		let userSettingsScript = WKUserScript(
+			source: "const NativeApp = { settingsBlob: \"\(blob)\" };",
 			injectionTime: .atDocumentStart,
 			forMainFrameOnly: true
 		)
 		webView.configuration.userContentController.removeAllUserScripts()
-		webView.configuration.userContentController.addUserScript(script)
+		webView.configuration.userContentController.addUserScript(sessionTokenScript)
+		webView.configuration.userContentController.addUserScript(userSettingsScript)
 	}
 
 	private func loadHomepage() {
@@ -202,6 +260,14 @@ class ViewController:
 
 	@IBAction func navigateToHome(_ sender: NSObject) {
 		loadHomepage()
+	}
+
+	func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+		guard let body = message.body as? [String: String], let type = body["type"], let blob = body["settingsBlob"] else {
+			NSLog("Received unexpected script message \(message.body)")
+			return
+		}
+		NSLog("Received script message \(type): \(Data(base64Encoded: blob).flatMap { String(data: $0, encoding: .utf8) } ?? blob)")
 	}
 }
 

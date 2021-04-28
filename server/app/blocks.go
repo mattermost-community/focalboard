@@ -2,33 +2,34 @@ package app
 
 import (
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/store"
 )
 
-func (a *App) GetBlocks(parentID string, blockType string) ([]model.Block, error) {
+func (a *App) GetBlocks(c store.Container, parentID string, blockType string) ([]model.Block, error) {
 	if len(blockType) > 0 && len(parentID) > 0 {
-		return a.store.GetBlocksWithParentAndType(parentID, blockType)
+		return a.store.GetBlocksWithParentAndType(c, parentID, blockType)
 	}
 
 	if len(blockType) > 0 {
-		return a.store.GetBlocksWithType(blockType)
+		return a.store.GetBlocksWithType(c, blockType)
 	}
 
-	return a.store.GetBlocksWithParent(parentID)
+	return a.store.GetBlocksWithParent(c, parentID)
 }
 
-func (a *App) GetRootID(blockID string) (string, error) {
-	return a.store.GetRootID(blockID)
+func (a *App) GetRootID(c store.Container, blockID string) (string, error) {
+	return a.store.GetRootID(c, blockID)
 }
 
-func (a *App) GetParentID(blockID string) (string, error) {
-	return a.store.GetParentID(blockID)
+func (a *App) GetParentID(c store.Container, blockID string) (string, error) {
+	return a.store.GetParentID(c, blockID)
 }
 
-func (a *App) InsertBlock(block model.Block) error {
-	return a.store.InsertBlock(block)
+func (a *App) InsertBlock(c store.Container, block model.Block) error {
+	return a.store.InsertBlock(c, block)
 }
 
-func (a *App) InsertBlocks(blocks []model.Block) error {
+func (a *App) InsertBlocks(c store.Container, blocks []model.Block) error {
 	blockIDsToNotify := []string{}
 
 	uniqueBlockIDs := make(map[string]bool)
@@ -43,33 +44,33 @@ func (a *App) InsertBlocks(blocks []model.Block) error {
 			blockIDsToNotify = append(blockIDsToNotify, block.ParentID)
 		}
 
-		err := a.store.InsertBlock(block)
+		err := a.store.InsertBlock(c, block)
 		if err != nil {
 			return err
 		}
 
-		a.wsServer.BroadcastBlockChange(block)
+		a.wsServer.BroadcastBlockChange(c.WorkspaceID, block)
 		go a.webhook.NotifyUpdate(block)
 	}
 
 	return nil
 }
 
-func (a *App) GetSubTree(blockID string, levels int) ([]model.Block, error) {
+func (a *App) GetSubTree(c store.Container, blockID string, levels int) ([]model.Block, error) {
 	// Only 2 or 3 levels are supported for now
 	if levels >= 3 {
-		return a.store.GetSubTree3(blockID)
+		return a.store.GetSubTree3(c, blockID)
 	}
-	return a.store.GetSubTree2(blockID)
+	return a.store.GetSubTree2(c, blockID)
 }
 
-func (a *App) GetAllBlocks() ([]model.Block, error) {
-	return a.store.GetAllBlocks()
+func (a *App) GetAllBlocks(c store.Container) ([]model.Block, error) {
+	return a.store.GetAllBlocks(c)
 }
 
-func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
+func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) error {
 	blockIDsToNotify := []string{blockID}
-	parentID, err := a.GetParentID(blockID)
+	parentID, err := a.GetParentID(c, blockID)
 	if err != nil {
 		return err
 	}
@@ -78,12 +79,12 @@ func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
 		blockIDsToNotify = append(blockIDsToNotify, parentID)
 	}
 
-	err = a.store.DeleteBlock(blockID, modifiedBy)
+	err = a.store.DeleteBlock(c, blockID, modifiedBy)
 	if err != nil {
 		return err
 	}
 
-	a.wsServer.BroadcastBlockDelete(blockID, parentID)
+	a.wsServer.BroadcastBlockDelete(c.WorkspaceID, blockID, parentID)
 
 	return nil
 }

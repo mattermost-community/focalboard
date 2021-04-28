@@ -8,6 +8,7 @@ import {IPropertyTemplate, MutableBoard} from './blocks/board'
 import {MutableBoardView} from './blocks/boardView'
 import {MutableCard} from './blocks/card'
 import {MutableCommentBlock} from './blocks/commentBlock'
+import {MutableCheckboxBlock} from './blocks/checkboxBlock'
 import {MutableDividerBlock} from './blocks/dividerBlock'
 import {MutableImageBlock} from './blocks/imageBlock'
 import {MutableTextBlock} from './blocks/textBlock'
@@ -15,7 +16,7 @@ import {FilterCondition} from './blocks/filterClause'
 import {Utils} from './utils'
 
 class OctoUtils {
-    static propertyDisplayValue(block: IBlock, propertyValue: string | undefined, propertyTemplate: IPropertyTemplate): string | undefined {
+    static propertyDisplayValue(block: IBlock, propertyValue: string | undefined, propertyTemplate: IPropertyTemplate, intl: IntlShape): string | undefined {
         let displayValue: string | undefined
         switch (propertyTemplate.type) {
         case 'select': {
@@ -30,11 +31,11 @@ class OctoUtils {
             break
         }
         case 'createdTime': {
-            displayValue = Utils.displayDateTime(new Date(block.createAt))
+            displayValue = Utils.displayDateTime(new Date(block.createAt), intl)
             break
         }
         case 'updatedTime': {
-            displayValue = Utils.displayDateTime(new Date(block.updateAt))
+            displayValue = Utils.displayDateTime(new Date(block.updateAt), intl)
             break
         }
         default:
@@ -76,6 +77,7 @@ class OctoUtils {
         case 'image': { return new MutableImageBlock(block) }
         case 'divider': { return new MutableDividerBlock(block) }
         case 'comment': { return new MutableCommentBlock(block) }
+        case 'checkbox': { return new MutableCheckboxBlock(block) }
         default: {
             Utils.assertFailure(`Can't hydrate unknown block type: ${block.type}`)
             return new MutableBlock(block)

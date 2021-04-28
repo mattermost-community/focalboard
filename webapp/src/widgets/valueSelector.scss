@@ -2,22 +2,28 @@
     width: 100%;
     border-radius: var(--default-rad);
     color: rgb(var(--body-color));
+    display: flex;
 
-    &:hover {
-        background-color: rgba(var(--body-color), 0.1),
-    }
-
-    > .octo-label {
+    > .Label {
         margin: 0 10px;
+        max-width: calc(100% - 10px);
         &.empty {
             color: rgba(var(--body-color), 0.6);
         }
     }
 
+    .Label {
+        display: inline-block;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        border-radius: var(--default-rad);
+        max-width: 100%;
+    }
+
     .value-menu-option {
         display: flex;
         width: 100%;
-        .octo-label-container {
+        .label-container {
             flex-grow: 1;
         }
         .MenuWrapper {

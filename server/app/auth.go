@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/auth"
+	"github.com/mattermost/focalboard/server/services/store"
 
 	"github.com/pkg/errors"
 )
@@ -16,8 +17,8 @@ func (a *App) GetSession(token string) (*model.Session, error) {
 }
 
 // IsValidReadToken validates the read token for a block
-func (a *App) IsValidReadToken(blockID string, readToken string) (bool, error) {
-	return a.auth.IsValidReadToken(blockID, readToken)
+func (a *App) IsValidReadToken(c store.Container, blockID string, readToken string) (bool, error) {
+	return a.auth.IsValidReadToken(c, blockID, readToken)
 }
 
 // GetRegisteredUserCount returns the number of registered users
@@ -57,7 +58,7 @@ func (a *App) GetUser(ID string) (*model.User, error) {
 }
 
 // Login create a new user session if the authentication data is valid
-func (a *App) Login(username string, email string, password string, mfaToken string) (string, error) {
+func (a *App) Login(username, email, password, mfaToken string) (string, error) {
 	var user *model.User
 	if username != "" {
 		var err error
@@ -83,11 +84,17 @@ func (a *App) Login(username string, email string, password string, mfaToken str
 		return "", errors.New("invalid username or password")
 	}
 
+	authService := user.AuthService
+	if authService == "" {
+		authService = "native"
+	}
+
 	session := model.Session{
-		ID:     uuid.New().String(),
-		Token:  uuid.New().String(),
-		UserID: user.ID,
-		Props:  map[string]interface{}{},
+		ID:          uuid.New().String(),
+		Token:       uuid.New().String(),
+		UserID:      user.ID,
+		AuthService: authService,
+		Props:       map[string]interface{}{},
 	}
 	err := a.store.CreateSession(&session)
 	if err != nil {
@@ -99,7 +106,7 @@ func (a *App) Login(username string, email string, password string, mfaToken str
 }
 
 // RegisterUser create a new user if the provided data is valid
-func (a *App) RegisterUser(username string, email string, password string) error {
+func (a *App) RegisterUser(username, email, password string) error {
 	var user *model.User
 	if username != "" {
 		var err error
@@ -133,7 +140,7 @@ func (a *App) RegisterUser(username string, email string, password string) error
 		Email:       email,
 		Password:    auth.HashPassword(password),
 		MfaSecret:   "",
-		AuthService: "",
+		AuthService: a.config.AuthMode,
 		AuthData:    "",
 		Props:       map[string]interface{}{},
 	})
@@ -144,7 +151,7 @@ func (a *App) RegisterUser(username string, email string, password string) error
 	return nil
 }
 
-func (a *App) UpdateUserPassword(username string, password string) error {
+func (a *App) UpdateUserPassword(username, password string) error {
 	err := a.store.UpdateUserPassword(username, auth.HashPassword(password))
 	if err != nil {
 		return err
@@ -153,7 +160,7 @@ func (a *App) UpdateUserPassword(username string, password string) error {
 	return nil
 }
 
-func (a *App) ChangePassword(userID string, oldPassword string, newPassword string) error {
+func (a *App) ChangePassword(userID, oldPassword, newPassword string) error {
 	var user *model.User
 	if userID != "" {
 		var err error

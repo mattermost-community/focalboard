@@ -1,7 +1,4 @@
 {
-  "BoardCard.delete": "Löschen",
-  "BoardCard.duplicate": "Duplizieren",
-  "BoardCard.untitled": "Unbenannt",
   "BoardComponent.add-a-group": "+ Hinzufügen einer Gruppe",
   "BoardComponent.delete": "Löschen",
   "BoardComponent.hidden-columns": "Versteckte Spalten",
@@ -75,10 +72,12 @@
   "Sidebar.delete-board": "Board löschen",
   "Sidebar.delete-template": "Löschen",
   "Sidebar.duplicate-board": "Board duplizieren",
+  "Sidebar.dutch": "Niederländisch",
   "Sidebar.edit-template": "Bearbeiten",
   "Sidebar.empty-board": "Leeres Board",
   "Sidebar.english": "Englisch",
   "Sidebar.export-archive": "Archiv exportieren",
+  "Sidebar.french": "Französisch",
   "Sidebar.german": "Deutsch",
   "Sidebar.import-archive": "Archiv importieren",
   "Sidebar.invite-users": "Nutzer einladen",
@@ -86,6 +85,7 @@
   "Sidebar.light-theme": "Helles Theme",
   "Sidebar.logout": "Ausloggen",
   "Sidebar.no-views-in-board": "Keine Seiten enthalten",
+  "Sidebar.russian": "Russisch",
   "Sidebar.select-a-template": "Vorlage auswählen",
   "Sidebar.set-language": "Sprache übernehmen",
   "Sidebar.set-theme": "Theme übernehmen",
@@ -128,6 +128,5 @@
   "ViewTitle.random-icon": "Zufällig",
   "ViewTitle.remove-icon": "Symbol entfernen",
   "ViewTitle.show-description": "Beschreibung anzeigen",
-  "ViewTitle.untitled-board": "Unbenanntes Board",
-  "WorkspaceComponent.editing-board-template": "Sie bearbeiten eine Board Vorlage"
+  "ViewTitle.untitled-board": "Unbenanntes Board"
 }

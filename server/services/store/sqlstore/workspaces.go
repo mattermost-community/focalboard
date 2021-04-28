@@ -14,7 +14,7 @@ func (s *SQLStore) UpsertWorkspaceSignupToken(workspace model.Workspace) error {
 	now := time.Now().Unix()
 
 	query := s.getQueryBuilder().
-		Insert("workspaces").
+		Insert(s.tablePrefix+"workspaces").
 		Columns(
 			"id",
 			"signup_token",
@@ -26,8 +26,12 @@ func (s *SQLStore) UpsertWorkspaceSignupToken(workspace model.Workspace) error {
 			workspace.SignupToken,
 			workspace.ModifiedBy,
 			now,
-		).
-		Suffix("ON CONFLICT (id) DO UPDATE SET signup_token = EXCLUDED.signup_token, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at")
+		)
+	if s.dbType == mysqlDBType {
+		query = query.Suffix("ON DUPLICATE KEY UPDATE signup_token = ?, modified_by = ?, update_at = ?", workspace.SignupToken, workspace.ModifiedBy, now)
+	} else {
+		query = query.Suffix("ON CONFLICT (id) DO UPDATE SET signup_token = EXCLUDED.signup_token, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at")
+	}
 
 	_, err := query.Exec()
 	return err
@@ -42,7 +46,7 @@ func (s *SQLStore) UpsertWorkspaceSettings(workspace model.Workspace) error {
 	}
 
 	query := s.getQueryBuilder().
-		Insert("workspaces").
+		Insert(s.tablePrefix+"workspaces").
 		Columns(
 			"id",
 			"settings",
@@ -54,8 +58,12 @@ func (s *SQLStore) UpsertWorkspaceSettings(workspace model.Workspace) error {
 			settingsJSON,
 			workspace.ModifiedBy,
 			now,
-		).
-		Suffix("ON CONFLICT (id) DO UPDATE SET settings = EXCLUDED.settings, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at")
+		)
+	if s.dbType == mysqlDBType {
+		query = query.Suffix("ON DUPLICATE KEY UPDATE settings = ?, modified_by = ?, update_at = ?", settingsJSON, workspace.ModifiedBy, now)
+	} else {
+		query = query.Suffix("ON CONFLICT (id) DO UPDATE SET settings = EXCLUDED.settings, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at")
+	}
 
 	_, err = query.Exec()
 	return err
@@ -68,11 +76,11 @@ func (s *SQLStore) GetWorkspace(ID string) (*model.Workspace, error) {
 		Select(
 			"id",
 			"signup_token",
-			"COALESCE(\"settings\", '{}')",
+			"COALESCE(settings, '{}')",
 			"modified_by",
 			"update_at",
 		).
-		From("workspaces").
+		From(s.tablePrefix + "workspaces").
 		Where(sq.Eq{"id": ID})
 	row := query.QueryRow()
 	workspace := model.Workspace{}

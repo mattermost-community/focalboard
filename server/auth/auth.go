@@ -38,13 +38,13 @@ func (a *Auth) GetSession(token string) (*model.Session, error) {
 }
 
 // IsValidReadToken validates the read token for a block
-func (a *Auth) IsValidReadToken(blockID string, readToken string) (bool, error) {
-	rootID, err := a.store.GetRootID(blockID)
+func (a *Auth) IsValidReadToken(c store.Container, blockID string, readToken string) (bool, error) {
+	rootID, err := a.store.GetRootID(c, blockID)
 	if err != nil {
 		return false, err
 	}
 
-	sharing, err := a.store.GetSharing(rootID)
+	sharing, err := a.store.GetSharing(c, rootID)
 	if err == sql.ErrNoRows {
 		return false, nil
 	}

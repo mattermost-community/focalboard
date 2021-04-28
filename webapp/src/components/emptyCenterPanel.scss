@@ -1,0 +1,14 @@
+.EmptyCenterPanel {
+    display: flex;
+    flex-direction: column;
+
+    padding: 80px;
+    font-size: 15px;
+    color: rgba(var(--body-color), 0.7);
+
+    .WorkspaceInfo {
+        b {
+            padding-left: 5px;
+        }
+    }
+}

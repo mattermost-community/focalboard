@@ -8,16 +8,16 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func InsertBlocks(t *testing.T, s store.Store, blocks []model.Block) {
+func InsertBlocks(t *testing.T, s store.Store, container store.Container, blocks []model.Block) {
 	for _, block := range blocks {
-		err := s.InsertBlock(block)
+		err := s.InsertBlock(container, block)
 		require.NoError(t, err)
 	}
 }
 
-func DeleteBlocks(t *testing.T, s store.Store, blocks []model.Block, modifiedBy string) {
+func DeleteBlocks(t *testing.T, s store.Store, container store.Container, blocks []model.Block, modifiedBy string) {
 	for _, block := range blocks {
-		err := s.DeleteBlock(block.ID, modifiedBy)
+		err := s.DeleteBlock(container, block.ID, modifiedBy)
 		require.NoError(t, err)
 	}
 }

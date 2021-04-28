@@ -1,13 +1,20 @@
 .Editable {
-	cursor: text;
+    cursor: text;
     border: 0;
     overflow: hidden;
     text-overflow: ellipsis;
+    border: 1px solid transparent;
+    min-height: 24px;
+
     &.active {
-	    min-width: 100px;
+        min-width: 100px;
     }
-    &::placeholder{
+    &::placeholder {
         color: rgba(var(--body-color), 0.4);
         opacity: 1;
+    }
+    &.error {
+        border: 1px solid var(--error-color);
+        border-radius: var(--default-rad);
     }
 }

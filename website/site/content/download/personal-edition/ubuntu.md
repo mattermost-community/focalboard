@@ -7,7 +7,7 @@ weight: 2
 
 Focalboard Personal Server allows your team to work together on shared project boards.
 
-Follow these steps it up on an Ubuntu server.
+Follow these steps it up on an Ubuntu server. To upgrade an existing installation, see [the upgrade guide](../ubuntu-upgrade).
 
 ## Set up Ubuntu Server 18.04
 
@@ -17,10 +17,10 @@ Popular hosted options include:
 
 ## Install Focalboard
 
-Download the Ubuntu archive package from the appropriate [release in GitHub](https://github.com/mattermost/focalboard/releases). E.g. this is the link for v0.6.1:
+Download the Ubuntu archive package from the appropriate [release in GitHub](https://github.com/mattermost/focalboard/releases). E.g. this is the link for v0.6.5 (which may no longer be the latest one):
 
 ```
-wget https://github.com/mattermost/focalboard/releases/download/v0.6.1/focalboard-server-linux-amd64.tar.gz
+wget https://github.com/mattermost/focalboard/releases/download/v0.6.5/focalboard-server-linux-amd64.tar.gz
 tar -xvzf focalboard-server-linux-amd64.tar.gz
 sudo mv focalboard /opt
 ```

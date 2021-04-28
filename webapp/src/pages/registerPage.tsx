@@ -1,73 +1,68 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
-
-import {
-    withRouter,
-    RouteComponentProps,
-    Link,
-} from 'react-router-dom'
+import React, {useState} from 'react'
+import {useHistory, Link} from 'react-router-dom'
+import {FormattedMessage} from 'react-intl'
 
 import Button from '../widgets/buttons/button'
 import client from '../octoClient'
 import './registerPage.scss'
 
-type Props = RouteComponentProps
+const RegisterPage = React.memo(() => {
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [email, setEmail] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
+    const history = useHistory()
 
-type State = {
-    email: string
-    username: string
-    password: string
-    errorMessage?: string
-}
-
-class RegisterPage extends React.PureComponent<Props, State> {
-    state: State = {
-        email: '',
-        username: '',
-        password: '',
-    }
-
-    private handleRegister = async (): Promise<void> => {
+    const handleRegister = async (): Promise<void> => {
         const queryString = new URLSearchParams(window.location.search)
         const signupToken = queryString.get('t') || ''
 
-        const response = await client.register(this.state.email, this.state.username, this.state.password, signupToken)
+        const response = await client.register(email, username, password, signupToken)
         if (response.code === 200) {
-            const logged = await client.login(this.state.username, this.state.password)
+            const logged = await client.login(username, password)
             if (logged) {
-                this.props.history.push('/')
+                history.push('/')
 
                 // HACKHACK: react-router-dom seems to require a refresh to navigate correctly
                 // this.setState({email: '', username: '', password: ''})
             }
         } else if (response.code === 401) {
-            this.setState({errorMessage: 'Invalid registration link, please contact your administrator'})
+            setErrorMessage('Invalid registration link, please contact your administrator')
         } else {
-            this.setState({errorMessage: response.json?.error})
+            setErrorMessage(response.json?.error)
         }
     }
 
-    render(): React.ReactNode {
-        return (
-            <div className='RegisterPage'>
-                <div className='title'>{'Sign up for your account'}</div>
+    return (
+        <div className='RegisterPage'>
+            <form
+                onSubmit={(e: React.FormEvent) => {
+                    e.preventDefault()
+                    handleRegister()
+                }}
+            >
+                <div className='title'>
+                    <FormattedMessage
+                        id='register.signup-title'
+                        defaultMessage='Sign up for your account'
+                    />
+                </div>
                 <div className='email'>
                     <input
                         id='login-email'
                         placeholder={'Enter email'}
-                        value={this.state.email}
-                        onChange={(e) => this.setState({email: e.target.value})}
-                        onKeyPress={this.onKeyPress}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
                 <div className='username'>
                     <input
                         id='login-username'
                         placeholder={'Enter username'}
-                        value={this.state.username}
-                        onChange={(e) => this.setState({username: e.target.value})}
-                        onKeyPress={this.onKeyPress}
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                     />
                 </div>
                 <div className='password'>
@@ -75,35 +70,30 @@ class RegisterPage extends React.PureComponent<Props, State> {
                         id='login-password'
                         type='password'
                         placeholder={'Enter password'}
-                        value={this.state.password}
-                        onChange={(e) => this.setState({password: e.target.value})}
-                        onKeyPress={this.onKeyPress}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
                 <Button
                     filled={true}
-                    onClick={this.handleRegister}
+                    submit={true}
                 >
                     {'Register'}
                 </Button>
-                <Link to='/login'>{'or login if you already have an account'}</Link>
-                {this.state.errorMessage &&
-                    <div className='error'>
-                        {this.state.errorMessage}
-                    </div>
-                }
-            </div>
-        )
-    }
+            </form>
+            <Link to='/login'>
+                <FormattedMessage
+                    id='register.login-button'
+                    defaultMessage={'or login if you already have an account'}
+                />
+            </Link>
+            {errorMessage &&
+                <div className='error'>
+                    {errorMessage}
+                </div>
+            }
+        </div>
+    )
+})
 
-    private onKeyPress = (e: React.KeyboardEvent) => {
-        if (!(e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'Enter') {
-            this.handleRegister()
-            e.preventDefault()
-            return false
-        }
-
-        return true
-    }
-}
-export default withRouter(RegisterPage)
+export default RegisterPage

@@ -18,6 +18,7 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
         />
         <div
           class="MenuOption SubMenuOption menu-option"
+          id="type"
         >
           <div
             class="noicon"
@@ -105,6 +106,36 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                     class="menu-name"
                   >
                     Email
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="MenuOption TextOption menu-option"
+                >
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Phone
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="MenuOption TextOption menu-option"
+                >
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    URL
                   </div>
                   <div
                     class="noicon"
