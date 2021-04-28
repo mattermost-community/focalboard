@@ -2,26 +2,30 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
+import {withRouter, RouteComponentProps} from 'react-router-dom'
+import HotKeys from 'react-hot-keys'
 
 import {IBlock} from '../blocks/block'
+import {IWorkspace} from '../blocks/workspace'
 import {sendFlashMessage} from '../components/flashMessages'
-import {WorkspaceComponent} from '../components/workspaceComponent'
+import Workspace from '../components/workspace'
 import mutator from '../mutator'
+import octoClient from '../octoClient'
 import {OctoListener} from '../octoListener'
 import {Utils} from '../utils'
 import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
 import {MutableWorkspaceTree, WorkspaceTree} from '../viewModel/workspaceTree'
 import './boardPage.scss'
 
-type Props = {
+type Props = RouteComponentProps<{workspaceId?: string}> & {
     readonly?: boolean
-    setLanguage: (lang: string) => void
     intl: IntlShape
 }
 
 type State = {
     boardId: string
     viewId: string
+    workspace?: IWorkspace,
     workspaceTree: WorkspaceTree
     boardTree?: BoardTree
     syncFailed?: boolean
@@ -32,6 +36,7 @@ class BoardPage extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
+
         const queryString = new URLSearchParams(window.location.search)
         let boardId = queryString.get('id') || ''
         let viewId = queryString.get('v') || ''
@@ -85,16 +90,12 @@ class BoardPage extends React.Component<Props, State> {
         }
     }
 
-    private undoRedoHandler = async (e: KeyboardEvent) => {
-        if (e.target !== document.body) {
+    private undoRedoHandler = async (keyName: string, e: KeyboardEvent) => {
+        if (e.target !== document.body || this.props.readonly) {
             return
         }
 
-        if (this.props.readonly) {
-            return
-        }
-
-        if (e.keyCode === 90 && !e.shiftKey && (e.ctrlKey || e.metaKey) && !e.altKey) { // Cmd+Z
+        if (keyName === 'ctrl+z' || keyName === 'cmd+z') { // Cmd+Z
             Utils.log('Undo')
             if (mutator.canUndo) {
                 const description = mutator.undoDescription
@@ -107,7 +108,7 @@ class BoardPage extends React.Component<Props, State> {
             } else {
                 sendFlashMessage({content: 'Nothing to Undo', severity: 'low'})
             }
-        } else if (e.keyCode === 90 && e.shiftKey && (e.ctrlKey || e.metaKey) && !e.altKey) { // Shift+Cmd+Z
+        } else if (keyName === 'shift+ctrl+z' || keyName === 'shift+cmd+z') { // Shift+Cmd+Z
             Utils.log('Redo')
             if (mutator.canRedo) {
                 const description = mutator.redoDescription
@@ -124,7 +125,6 @@ class BoardPage extends React.Component<Props, State> {
     }
 
     componentDidMount(): void {
-        document.addEventListener('keydown', this.undoRedoHandler)
         if (this.state.boardId) {
             this.attachToBoard(this.state.boardId, this.state.viewId)
         } else {
@@ -135,14 +135,16 @@ class BoardPage extends React.Component<Props, State> {
     componentWillUnmount(): void {
         Utils.log(`boardPage.componentWillUnmount: ${this.state.boardId}`)
         this.workspaceListener.close()
-        document.removeEventListener('keydown', this.undoRedoHandler)
     }
 
     render(): JSX.Element {
         const {intl} = this.props
-        const {workspaceTree} = this.state
+        const {workspace, workspaceTree} = this.state
 
-        Utils.log(`BoardPage.render ${this.state.boardTree?.board?.title}`)
+        Utils.log(`BoardPage.render (workspace ${this.props.match.params.workspaceId || '0'}) ${this.state.boardTree?.board?.title}`)
+
+        // TODO: Make this less brittle. This only works because this is the root render function
+        octoClient.workspaceId = this.props.match.params.workspaceId || '0'
 
         if (this.props.readonly && this.state.syncFailed) {
             Utils.log('BoardPage.render: sync failed')
@@ -157,7 +159,12 @@ class BoardPage extends React.Component<Props, State> {
 
         return (
             <div className='BoardPage'>
-                <WorkspaceComponent
+                <HotKeys
+                    keyName='shift+ctrl+z,shift+cmd+z,ctrl+z,cmd+z'
+                    onKeyDown={this.undoRedoHandler}
+                />
+                <Workspace
+                    workspace={workspace}
                     workspaceTree={workspaceTree}
                     boardTree={this.state.boardTree}
                     showView={(id, boardId) => {
@@ -169,7 +176,6 @@ class BoardPage extends React.Component<Props, State> {
                     setSearchText={(text) => {
                         this.setSearchText(text)
                     }}
-                    setLanguage={this.props.setLanguage}
                     readonly={this.props.readonly || false}
                 />
             </div>
@@ -196,9 +202,18 @@ class BoardPage extends React.Component<Props, State> {
     private async sync(boardId: string = this.state.boardId, viewId: string | undefined = this.state.viewId) {
         Utils.log(`sync start: ${boardId}`)
 
+        let workspace: IWorkspace | undefined
+        if (!this.props.readonly) {
+            // Require workspace for editing, not for sharing (readonly)
+            workspace = await octoClient.getWorkspace()
+            if (!workspace) {
+                this.props.history.push(Utils.buildURL('/error?id=no_workspace'))
+            }
+        }
+
         const workspaceTree = await MutableWorkspaceTree.sync()
         const boardIds = [...workspaceTree.boards.map((o) => o.id), ...workspaceTree.boardTemplates.map((o) => o.id)]
-        this.setState({workspaceTree})
+        this.setState({workspace, workspaceTree})
 
         let boardIdsToListen: string[]
         if (boardIds.length > 0) {
@@ -210,6 +225,7 @@ class BoardPage extends React.Component<Props, State> {
 
         // Listen to boards plus all blocks at root (Empty string for parentId)
         this.workspaceListener.open(
+            octoClient.workspaceId,
             boardIdsToListen,
             async (blocks) => {
                 Utils.log(`workspaceListener.onChanged: ${blocks.length}`)
@@ -326,4 +342,4 @@ class BoardPage extends React.Component<Props, State> {
     }
 }
 
-export default injectIntl(BoardPage)
+export default withRouter(injectIntl(BoardPage))

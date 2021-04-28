@@ -6,8 +6,7 @@ import {Board, IPropertyOption, IPropertyTemplate, MutableBoard, PropertyType} f
 import {BoardView, ISortOption, MutableBoardView} from './blocks/boardView'
 import {Card, MutableCard} from './blocks/card'
 import {FilterGroup} from './blocks/filterGroup'
-import {MutableImageBlock} from './blocks/imageBlock'
-import octoClient from './octoClient'
+import octoClient, {OctoClient} from './octoClient'
 import {OctoUtils} from './octoUtils'
 import undoManager from './undomanager'
 import {Utils} from './utils'
@@ -580,6 +579,39 @@ class Mutator {
         return [newBlocks, newBoard.id]
     }
 
+    async duplicateFromRootBoard(
+        boardId: string,
+        description = 'duplicate board',
+        asTemplate = false,
+        afterRedo?: (newBoardId: string) => Promise<void>,
+        beforeUndo?: () => Promise<void>,
+    ): Promise<[IBlock[], string]> {
+        const rootClient = new OctoClient(octoClient.serverUrl, '0')
+        const blocks = await rootClient.getSubtree(boardId, 3)
+        const [newBlocks1, newBoard] = OctoUtils.duplicateBlockTree(blocks, boardId) as [IBlock[], MutableBoard, Record<string, string>]
+        const newBlocks = newBlocks1.filter((o) => o.type !== 'comment')
+        Utils.log(`duplicateBoard: duplicating ${newBlocks.length} blocks`)
+
+        if (asTemplate === newBoard.isTemplate) {
+            newBoard.title = `${newBoard.title} copy`
+        } else if (asTemplate) {
+            // Template from board
+            newBoard.title = 'New board template'
+        } else {
+            // Board from template
+        }
+        newBoard.isTemplate = asTemplate
+        await this.insertBlocks(
+            newBlocks,
+            description,
+            async () => {
+                await afterRedo?.(newBoard.id)
+            },
+            beforeUndo,
+        )
+        return [newBlocks, newBoard.id]
+    }
+
     // Other methods
 
     // Not a mutator, but convenient to put here since Mutator wraps OctoClient
@@ -590,31 +622,6 @@ class Mutator {
     // Not a mutator, but convenient to put here since Mutator wraps OctoClient
     async importFullArchive(blocks: readonly IBlock[]): Promise<Response> {
         return octoClient.importFullArchive(blocks)
-    }
-
-    async createImageBlock(parent: IBlock, file: File, description = 'add image'): Promise<IBlock | undefined> {
-        const fileId = await octoClient.uploadFile(file)
-        if (!fileId) {
-            return undefined
-        }
-
-        const block = new MutableImageBlock()
-        block.parentId = parent.id
-        block.rootId = parent.rootId
-        block.fileId = fileId
-
-        await undoManager.perform(
-            async () => {
-                await octoClient.insertBlock(block)
-            },
-            async () => {
-                await octoClient.deleteBlock(block.id)
-            },
-            description,
-            this.undoGroupId,
-        )
-
-        return block
     }
 
     get canUndo(): boolean {

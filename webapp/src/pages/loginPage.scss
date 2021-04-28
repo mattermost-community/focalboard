@@ -4,12 +4,20 @@
     width: 450px;
     height: 400px;
     margin: 150px auto;
-    padding: 40px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     flex-direction: column;
-    box-shadow: rgba(var(--body-color), 0.1) 0px 0px 0px 1px, rgba(var(--body-color), 0.3) 0px 4px 8px;
+    box-shadow: rgba(var(--body-color), 0.1) 0px 0px 0px 1px,
+        rgba(var(--body-color), 0.3) 0px 4px 8px;
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        margin: 50px auto;
+    }
 
     @media screen and (max-width: 430px) {
         position: fixed;
@@ -28,7 +36,8 @@
         font-weight: 500;
     }
 
-    .username, .password {
+    .username,
+    .password {
         margin-bottom: 10px;
 
         label {
@@ -46,7 +55,7 @@
         }
     }
 
-    > .Button {
+    form > .Button {
         margin-top: 10px;
         margin-bottom: 20px;
         min-height: 38px;

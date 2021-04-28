@@ -11,20 +11,20 @@ type Props = {
     className?: string
 }
 
-export default class IconButton extends React.PureComponent<Props> {
-    render(): JSX.Element {
-        let className = 'Button IconButton'
-        if (this.props.className) {
-            className += ' ' + this.props.className
-        }
-        return (
-            <div
-                onClick={this.props.onClick}
-                className={className}
-                title={this.props.title}
-            >
-                {this.props.icon}
-            </div>
-        )
+function IconButton(props: Props): JSX.Element {
+    let className = 'Button IconButton'
+    if (props.className) {
+        className += ' ' + props.className
     }
+    return (
+        <div
+            onClick={props.onClick}
+            className={className}
+            title={props.title}
+        >
+            {props.icon}
+        </div>
+    )
 }
+
+export default React.memo(IconButton)

@@ -1,7 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import React, {useEffect, useState} from 'react'
 
 import {IContentBlock} from '../../blocks/contentBlock'
 import {MutableImageBlock} from '../../blocks/imageBlock'
@@ -13,53 +12,45 @@ import {contentRegistry} from './contentRegistry'
 
 type Props = {
     block: IContentBlock
-    intl: IntlShape
 }
 
-type State = {
-    imageDataUrl?: string
-}
+const ImageElement = React.memo((props: Props): JSX.Element|null => {
+    const [imageDataUrl, setImageDataUrl] = useState<string|null>(null)
 
-class ImageElement extends React.PureComponent<Props> {
-    state: State = {}
+    const {block} = props
 
-    componentDidMount(): void {
-        if (!this.state.imageDataUrl) {
-            this.loadImage()
-        }
-    }
-
-    private async loadImage() {
-        const imageDataUrl = await octoClient.getFileAsDataUrl(this.props.block.fields.fileId)
-        this.setState({imageDataUrl})
-    }
-
-    public render(): JSX.Element | null {
-        const {block} = this.props
-        const {imageDataUrl} = this.state
-
+    useEffect(() => {
         if (!imageDataUrl) {
-            return null
+            const loadImage = async () => {
+                const url = await octoClient.getFileAsDataUrl(block.rootId, props.block.fields.fileId)
+                setImageDataUrl(url)
+            }
+            loadImage()
         }
+    })
 
-        return (
-            <img
-                src={imageDataUrl}
-                alt={block.title}
-            />
-        )
+    if (!imageDataUrl) {
+        return null
     }
-}
+
+    return (
+        <img
+            className='ImageElement'
+            src={imageDataUrl}
+            alt={block.title}
+        />
+    )
+})
 
 contentRegistry.registerContentType({
     type: 'image',
     getDisplayText: (intl) => intl.formatMessage({id: 'ContentBlock.image', defaultMessage: 'image'}),
     getIcon: () => <ImageIcon/>,
-    createBlock: async () => {
+    createBlock: async (rootId: string) => {
         return new Promise<MutableImageBlock>(
             (resolve) => {
                 Utils.selectLocalFile(async (file) => {
-                    const fileId = await octoClient.uploadFile(file)
+                    const fileId = await octoClient.uploadFile(rootId, file)
 
                     const block = new MutableImageBlock()
                     block.fileId = fileId || ''
@@ -71,14 +62,7 @@ contentRegistry.registerContentType({
 
         // return new MutableImageBlock()
     },
-    createComponent: (block, intl) => {
-        return (
-            <ImageElement
-                block={block}
-                intl={intl}
-            />
-        )
-    },
+    createComponent: (block) => <ImageElement block={block}/>,
 })
 
-export default injectIntl(ImageElement)
+export default ImageElement

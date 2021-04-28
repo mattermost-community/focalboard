@@ -12,7 +12,7 @@ const (
 	HEADER_TOKEN         = "token"
 	HEADER_AUTH          = "Authorization"
 	HEADER_BEARER        = "BEARER"
-	SESSION_COOKIE_TOKEN = "OCTOTASKSAUTHTOKEN"
+	SESSION_COOKIE_TOKEN = "FOCALBOARDAUTHTOKEN"
 )
 
 type TokenLocation int

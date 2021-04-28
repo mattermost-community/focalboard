@@ -27,7 +27,6 @@ import (
 	"github.com/mattermost/focalboard/server/services/webhook"
 	"github.com/mattermost/focalboard/server/web"
 	"github.com/mattermost/focalboard/server/ws"
-	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/services/filesstore"
 	"github.com/mattermost/mattermost-server/v5/utils"
 )
@@ -44,6 +43,8 @@ type Server struct {
 
 	localRouter     *mux.Router
 	localModeServer *http.Server
+	api             *api.API
+	appBuilder      func() *app.App
 }
 
 func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
@@ -52,9 +53,9 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 		return nil, err
 	}
 
-	store, err := sqlstore.New(cfg.DBType, cfg.DBConfigString)
+	store, err := sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix)
 	if err != nil {
-		log.Fatal("Unable to start the database", err)
+		log.Print("Unable to start the database", err)
 		return nil, err
 	}
 
@@ -62,12 +63,12 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 
 	wsServer := ws.NewServer(auth, singleUserToken)
 
-	filesBackendSettings := model.FileSettings{}
-	filesBackendSettings.SetDefaults(false)
-	filesBackendSettings.Directory = &cfg.FilesPath
-	filesBackend, appErr := filesstore.NewFileBackend(&filesBackendSettings, false)
+	filesBackendSettings := filesstore.FileBackendSettings{}
+	filesBackendSettings.DriverName = "local"
+	filesBackendSettings.Directory = cfg.FilesPath
+	filesBackend, appErr := filesstore.NewFileBackend(filesBackendSettings)
 	if appErr != nil {
-		log.Fatal("Unable to initialize the files storage")
+		log.Print("Unable to initialize the files storage")
 
 		return nil, errors.New("unable to initialize the files storage")
 	}
@@ -75,7 +76,7 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 	webhookClient := webhook.NewClient(cfg)
 
 	appBuilder := func() *app.App { return app.New(cfg, store, auth, wsServer, filesBackend, webhookClient) }
-	api := api.NewAPI(appBuilder, singleUserToken)
+	api := api.NewAPI(appBuilder, singleUserToken, cfg.AuthMode)
 
 	// Local router for admin APIs
 	localRouter := mux.NewRouter()
@@ -84,7 +85,7 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 	// Init workspace
 	appBuilder().GetRootWorkspace()
 
-	webServer := web.NewServer(cfg.WebPath, cfg.Port, cfg.UseSSL, cfg.LocalOnly)
+	webServer := web.NewServer(cfg.WebPath, cfg.ServerRoot, cfg.Port, cfg.UseSSL, cfg.LocalOnly)
 	webServer.AddRoutes(wsServer)
 	webServer.AddRoutes(api)
 
@@ -151,7 +152,7 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 		}
 	})
 
-	return &Server{
+	server := Server{
 		config:       cfg,
 		wsServer:     wsServer,
 		webServer:    webServer,
@@ -160,7 +161,13 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 		telemetry:    telemetryService,
 		logger:       logger,
 		localRouter:  localRouter,
-	}, nil
+		api:          api,
+		appBuilder:   appBuilder,
+	}
+
+	server.initHandlers()
+
+	return &server, nil
 }
 
 func (s *Server) Start() error {
@@ -238,7 +245,7 @@ func (s *Server) startLocalModeServer() error {
 		log.Println("Starting unix socket server")
 		err = s.localModeServer.Serve(unixListener)
 		if err != nil && err != http.ErrServerClosed {
-			log.Fatalf("Error starting unix socket server: %v", err)
+			log.Printf("Error starting unix socket server: %v", err)
 		}
 	}()
 
@@ -250,4 +257,8 @@ func (s *Server) stopLocalModeServer() {
 		s.localModeServer.Close()
 		s.localModeServer = nil
 	}
+}
+
+func (s *Server) GetRootRouter() *mux.Router {
+	return s.webServer.Router()
 }

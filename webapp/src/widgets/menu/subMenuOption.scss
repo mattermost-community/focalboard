@@ -10,7 +10,9 @@
         margin: 0 !important;
 
         border-radius: 3px;
-        box-shadow: rgba(var(--body-color), 0.05) 0px 0px 0px 1px, rgba(var(--body-color), 0.1) 0px 3px 6px, rgba(var(--body-color), 0.2) 0px 9px 24px;
+        box-shadow: rgba(var(--body-color), 0.05) 0px 0px 0px 1px,
+            rgba(var(--body-color), 0.1) 0px 3px 6px,
+            rgba(var(--body-color), 0.2) 0px 9px 24px;
         left: 100%;
         &.top {
             bottom: 0;

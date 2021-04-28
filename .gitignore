@@ -34,6 +34,10 @@ coverage
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
+# Enterprise files
+server/main/imports.go
+server/enterprise
+
 # Dependency directory
 # https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
 node_modules
@@ -47,11 +51,11 @@ octo*.db
 focalboard*.db
 .eslintcache
 .vscode/settings.json
-.prettierrc.json
 # config.json is copied from app-config.json in the Makefile
 mac/resources/config.json
 mac/temp
 mac/dist
+mac/*.xcodeproj/**/xcuserdata
 linux/bin
 linux/dist
 linux/temp

@@ -1,7 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
-import {IntlProvider} from 'react-intl'
+import React, {useState, useEffect} from 'react'
 import {
     BrowserRouter as Router,
     Redirect,
@@ -10,81 +9,99 @@ import {
 } from 'react-router-dom'
 
 import {FlashMessages} from './components/flashMessages'
-import {getCurrentLanguage, getMessages, storeLanguage} from './i18n'
-import client from './octoClient'
+import {getCurrentLanguage, storeLanguage} from './i18n'
+import {default as client} from './octoClient'
 import BoardPage from './pages/boardPage'
 import ChangePasswordPage from './pages/changePasswordPage'
+import ErrorPage from './pages/errorPage'
 import LoginPage from './pages/loginPage'
 import RegisterPage from './pages/registerPage'
-import {IUser, UserContext} from './user'
+import {IUser} from './user'
+import {Utils} from './utils'
+import CombinedProviders from './combinedProviders'
+import {importNativeAppSettings} from './nativeApp'
 
-type State = {
-    language: string,
-    user?: IUser
-    initialLoad: boolean,
-}
+const App = React.memo((): JSX.Element => {
+    importNativeAppSettings()
 
-export default class App extends React.PureComponent<unknown, State> {
-    constructor(props: unknown) {
-        super(props)
-        this.state = {
-            language: getCurrentLanguage(),
-            initialLoad: false,
-        }
-    }
+    const [language, setLanguage] = useState(getCurrentLanguage())
+    const [user, setUser] = useState<IUser|undefined>(undefined)
+    const [initialLoad, setInitialLoad] = useState(false)
 
-    public componentDidMount(): void {
-        client.getMe().then((user?: IUser) => {
-            this.setState({user, initialLoad: true})
+    useEffect(() => {
+        client.getMe().then((loadedUser?: IUser) => {
+            setUser(loadedUser)
+            setInitialLoad(true)
         })
-    }
+    }, [])
 
-    setAndStoreLanguage = (lang: string): void => {
+    const setAndStoreLanguage = (lang: string): void => {
         storeLanguage(lang)
-        this.setState({language: lang})
+        setLanguage(lang)
     }
 
-    public render(): JSX.Element {
-        return (
-            <IntlProvider
-                locale={this.state.language}
-                messages={getMessages(this.state.language)}
+    return (
+        <CombinedProviders
+            language={language}
+            user={user}
+            setLanguage={setAndStoreLanguage}
+        >
+            <FlashMessages milliseconds={2000}/>
+            <Router
+                forceRefresh={true}
+                basename={Utils.getBaseURL()}
             >
-                <UserContext.Provider value={this.state.user}>
-                    <FlashMessages milliseconds={2000}/>
-                    <Router forceRefresh={true}>
-                        <div id='frame'>
-                            <div id='main'>
-                                <Switch>
-                                    <Route path='/login'>
-                                        <LoginPage/>
-                                    </Route>
-                                    <Route path='/register'>
-                                        <RegisterPage/>
-                                    </Route>
-                                    <Route path='/change_password'>
-                                        <ChangePasswordPage/>
-                                    </Route>
-                                    <Route path='/shared'>
-                                        <BoardPage
-                                            readonly={true}
-                                            setLanguage={this.setAndStoreLanguage}
-                                        />
-                                    </Route>
-                                    <Route path='/board'>
-                                        {this.state.initialLoad && !this.state.user && <Redirect to='login'/>}
-                                        <BoardPage setLanguage={this.setAndStoreLanguage}/>
-                                    </Route>
-                                    <Route path='/'>
-                                        {this.state.initialLoad && !this.state.user && <Redirect to='login'/>}
-                                        <BoardPage setLanguage={this.setAndStoreLanguage}/>
-                                    </Route>
-                                </Switch>
-                            </div>
-                        </div>
-                    </Router>
-                </UserContext.Provider>
-            </IntlProvider>
-        )
-    }
-}
+                <div id='frame'>
+                    <div id='main'>
+                        <Switch>
+                            <Route path='/error'>
+                                <ErrorPage/>
+                            </Route>
+                            <Route path='/login'>
+                                <LoginPage/>
+                            </Route>
+                            <Route path='/register'>
+                                <RegisterPage/>
+                            </Route>
+                            <Route path='/change_password'>
+                                <ChangePasswordPage/>
+                            </Route>
+                            <Route path='/shared'>
+                                <BoardPage readonly={true}/>
+                            </Route>
+                            <Route path='/board'>
+                                {initialLoad && !user && <Redirect to='/login'/>}
+                                <BoardPage/>
+                            </Route>
+                            <Route path='/workspace/:workspaceId/shared'>
+                                <BoardPage readonly={true}/>
+                            </Route>
+                            <Route
+                                path='/workspace/:workspaceId/'
+                                render={({match}) => {
+                                    if (initialLoad && !user) {
+                                        let redirectUrl = '/' + Utils.buildURL(`/workspace/${match.params.workspaceId}/`)
+                                        if (redirectUrl.indexOf('//') === 0) {
+                                            redirectUrl = redirectUrl.slice(1)
+                                        }
+                                        const loginUrl = `/login?r=${encodeURIComponent(redirectUrl)}`
+                                        return <Redirect to={loginUrl}/>
+                                    }
+                                    return (
+                                        <BoardPage/>
+                                    )
+                                }}
+                            />
+                            <Route path='/'>
+                                {initialLoad && !user && <Redirect to='/login'/>}
+                                <BoardPage/>
+                            </Route>
+                        </Switch>
+                    </div>
+                </div>
+            </Router>
+        </CombinedProviders>
+    )
+})
+
+export default App

@@ -1,7 +1,4 @@
 {
-  "BoardCard.delete": "Löschen",
-  "BoardCard.duplicate": "Duplizieren",
-  "BoardCard.untitled": "Unbenannt",
   "BoardComponent.add-a-group": "+ Hinzufügen einer Gruppe",
   "BoardComponent.delete": "Löschen",
   "BoardComponent.hidden-columns": "Versteckte Spalten",
@@ -131,6 +128,5 @@
   "ViewTitle.random-icon": "Zufällig",
   "ViewTitle.remove-icon": "Symbol entfernen",
   "ViewTitle.show-description": "Beschreibung anzeigen",
-  "ViewTitle.untitled-board": "Unbenanntes Board",
-  "WorkspaceComponent.editing-board-template": "Sie bearbeiten eine Board Vorlage"
+  "ViewTitle.untitled-board": "Unbenanntes Board"
 }

@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 	"path/filepath"
+	"text/template"
 
 	"github.com/gorilla/mux"
 )
@@ -22,6 +24,7 @@ type RoutedService interface {
 type Server struct {
 	http.Server
 
+	baseURL   string
 	rootPath  string
 	port      int
 	ssl       bool
@@ -29,7 +32,7 @@ type Server struct {
 }
 
 // NewServer creates a new instance of the webserver.
-func NewServer(rootPath string, port int, ssl, localOnly bool) *Server {
+func NewServer(rootPath string, serverRoot string, port int, ssl, localOnly bool) *Server {
 	r := mux.NewRouter()
 
 	var addr string
@@ -39,11 +42,19 @@ func NewServer(rootPath string, port int, ssl, localOnly bool) *Server {
 		addr = fmt.Sprintf(`:%d`, port)
 	}
 
+	baseURL := ""
+	url, err := url.Parse(serverRoot)
+	if err != nil {
+		log.Printf("Invalid ServerRoot setting: %v\n", err)
+	}
+	baseURL = url.Path
+
 	ws := &Server{
 		Server: http.Server{
 			Addr:    addr,
 			Handler: r,
 		},
+		baseURL:  baseURL,
 		rootPath: rootPath,
 		port:     port,
 		ssl:      ssl,
@@ -65,7 +76,18 @@ func (ws *Server) registerRoutes() {
 	ws.Router().PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(filepath.Join(ws.rootPath, "static")))))
 	ws.Router().PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		http.ServeFile(w, r, path.Join(ws.rootPath, "index.html"))
+		indexTemplate, err := template.New("index").ParseFiles(path.Join(ws.rootPath, "index.html"))
+		if err != nil {
+			log.Printf("Unable to serve the index.html fil, err: %v\n", err)
+			w.WriteHeader(500)
+			return
+		}
+		err = indexTemplate.ExecuteTemplate(w, "index.html", map[string]string{"BaseURL": ws.baseURL})
+		if err != nil {
+			log.Printf("Unable to serve the index.html fil, err: %v\n", err)
+			w.WriteHeader(500)
+			return
+		}
 	})
 }
 

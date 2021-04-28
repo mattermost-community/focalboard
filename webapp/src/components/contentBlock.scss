@@ -1,10 +1,16 @@
 .ContentBlock {
-    .MenuWrapper {
+    .MenuWrapper,
+    .dnd-handle {
         display: none;
     }
     &:hover {
         .MenuWrapper {
             display: flex;
+        }
+        .dnd-handle {
+            display: flex;
+            opacity: 0.8;
+            height: 18px;
         }
     }
     > * {
@@ -12,5 +18,8 @@
     }
     > .octo-block-margin {
         flex: 0 0 auto;
+    }
+    .ImageElement {
+        pointer-events: none;
     }
 }

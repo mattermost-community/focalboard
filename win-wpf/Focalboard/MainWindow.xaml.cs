@@ -145,8 +145,8 @@ namespace Focalboard {
 		}
 
 		private void WebView_ContentLoading(object sender, CoreWebView2ContentLoadingEventArgs e) {
-			// Set sessionId
-			string script = $"localStorage.setItem('sessionId', '{sessionToken}');";
+			// Set focalboardSessionId
+			string script = $"localStorage.setItem('focalboardSessionId', '{sessionToken}');";
 			webView.ExecuteScriptAsync(script);
 		}
 	}

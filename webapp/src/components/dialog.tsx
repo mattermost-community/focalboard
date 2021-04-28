@@ -1,6 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
+import {injectIntl, IntlShape} from 'react-intl'
+import {useHotkeys} from 'react-hotkeys-hook'
 
 import IconButton from '../widgets/buttons/iconButton'
 import CloseIcon from '../widgets/icons/close'
@@ -11,69 +13,54 @@ import './dialog.scss'
 type Props = {
     children: React.ReactNode
     toolsMenu: React.ReactNode
-    onClose: () => void
+    onClose: () => void,
+    intl: IntlShape
 }
 
-export default class Dialog extends React.PureComponent<Props> {
-    public componentDidMount(): void {
-        document.addEventListener('keydown', this.keydownHandler)
-    }
+const Dialog = React.memo((props: Props) => {
+    const {toolsMenu, intl} = props
 
-    public componentWillUnmount(): void {
-        document.removeEventListener('keydown', this.keydownHandler)
-    }
+    const closeDialogText = intl.formatMessage({
+        id: 'Dialog.closeDialog',
+        defaultMessage: 'Close dialog',
+    })
 
-    private keydownHandler = (e: KeyboardEvent): void => {
-        if (e.target !== document.body) {
-            return
-        }
+    useHotkeys('esc', () => props.onClose())
 
-        if (e.keyCode === 27) {
-            this.closeClicked()
-            e.stopPropagation()
-        }
-    }
-
-    public render(): JSX.Element {
-        const {toolsMenu} = this.props
-
-        return (
-            <div
-                className='Dialog dialog-back'
-                onMouseDown={(e) => {
-                    if (e.target === e.currentTarget) {
-                        this.closeClicked()
-                    }
-                }}
-            >
-                <div className='dialog' >
-                    <div className='toolbar'>
-                        {toolsMenu &&
-                        <>
+    return (
+        <div
+            className='Dialog dialog-back'
+            onMouseDown={(e) => {
+                if (e.target === e.currentTarget) {
+                    props.onClose()
+                }
+            }}
+        >
+            <div className='dialog' >
+                <div className='toolbar'>
+                    {toolsMenu &&
+                    <>
+                        <IconButton
+                            onClick={props.onClose}
+                            icon={<CloseIcon/>}
+                            title={closeDialogText}
+                            className='IconButton--large'
+                        />
+                        <div className='octo-spacer'/>
+                        <MenuWrapper>
                             <IconButton
-                                onClick={this.closeClicked}
-                                icon={<CloseIcon/>}
-                                title={'Close dialog'}
                                 className='IconButton--large'
+                                icon={<OptionsIcon/>}
                             />
-                            <div className='octo-spacer'/>
-                            <MenuWrapper>
-                                <IconButton
-                                    className='IconButton--large'
-                                    icon={<OptionsIcon/>}
-                                />
-                                {toolsMenu}
-                            </MenuWrapper>
-                        </>
-                        }
-                    </div>
-                    {this.props.children}
+                            {toolsMenu}
+                        </MenuWrapper>
+                    </>
+                    }
                 </div>
+                {props.children}
             </div>
-        )
-    }
+        </div>
+    )
+})
 
-    private closeClicked = () => {
-        this.props.onClose()
-    }
-}
+export default injectIntl(Dialog)

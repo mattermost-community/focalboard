@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import marked from 'marked'
+import {IntlShape} from 'react-intl'
 
 declare global {
     interface Window {
@@ -55,24 +56,20 @@ class Utils {
 
     // Date and Time
 
-    static displayDate(date: Date): string {
-        const dateTimeFormat = new Intl.DateTimeFormat('en', {year: 'numeric', month: 'short', day: '2-digit'})
-        const text = dateTimeFormat.format(date)
+    static displayDate(date: Date, intl: IntlShape): string {
+        const text = intl.formatDate(date, {year: 'numeric', month: 'short', day: '2-digit'})
 
         return text
     }
 
-    static displayDateTime(date: Date): string {
-        const dateTimeFormat = new Intl.DateTimeFormat(
-            'en',
-            {
-                year: 'numeric',
-                month: 'short',
-                day: '2-digit',
-                hour: 'numeric',
-                minute: 'numeric',
-            })
-        const text = dateTimeFormat.format(date)
+    static displayDateTime(date: Date, intl: IntlShape): string {
+        const text = intl.formatDate(date, {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit',
+            hour: 'numeric',
+            minute: 'numeric',
+        })
         return text
     }
 
@@ -230,6 +227,46 @@ class Utils {
         textField.remove()
 
         return result
+    }
+
+    static isMobile(): boolean {
+        const toMatch = [
+            /Android/i,
+            /webOS/i,
+            /iPhone/i,
+            /iPad/i,
+            /iPod/i,
+            /BlackBerry/i,
+            /Windows Phone/i,
+        ]
+
+        return toMatch.some((toMatchItem) => {
+            return navigator.userAgent.match(toMatchItem)
+        })
+    }
+
+    static getBaseURL(absolute?: boolean): string {
+        let baseURL = (window as any).baseURL || ''
+        baseURL = baseURL.replace(/\/+$/, '')
+        if (baseURL.indexOf('/') === 0) {
+            baseURL = baseURL.slice(1)
+        }
+        if (absolute) {
+            return window.location.origin + '/' + baseURL
+        }
+        return baseURL
+    }
+
+    static buildURL(path: string, absolute?: boolean): string {
+        const baseURL = this.getBaseURL()
+        let finalPath = baseURL + path
+        if (path.indexOf('/') !== 0) {
+            finalPath = baseURL + '/' + path
+        }
+        if (absolute) {
+            return window.location.origin + '/' + finalPath
+        }
+        return finalPath
     }
 }
 

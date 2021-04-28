@@ -8,6 +8,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	static let serverStartedNotification = NSNotification.Name("serverStarted")
 
 	private var serverProcess: Process?
+	private weak var whatsnewWindow: NSWindow?
 
 	var isServerStarted: Bool {
 		get { return serverProcess != nil }
@@ -20,6 +21,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		copyResources()
 		startServer()
 
+		showWhatsNewDialogIfNeeded()
+
 		NotificationCenter.default.post(name: AppDelegate.serverStartedNotification, object: nil)
 	}
 
@@ -29,10 +32,30 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	@IBAction func openNewWindow(_ sender: Any?) {
 		let mainStoryBoard = NSStoryboard(name: "Main", bundle: nil)
-		let tabViewController = mainStoryBoard.instantiateController(withIdentifier: "ViewController") as? ViewController
 		let windowController = mainStoryBoard.instantiateController(withIdentifier: "WindowController") as! NSWindowController
 		windowController.showWindow(self)
-		windowController.contentViewController = tabViewController
+	}
+
+	private func showWhatsNewDialogIfNeeded() {
+		if Globals.currentWhatsNewVersion < Globals.WhatsNewVersion {
+			Globals.currentWhatsNewVersion = Globals.WhatsNewVersion
+			showWhatsNew(self)
+		}
+	}
+
+	@IBAction func showWhatsNew(_: AnyObject) {
+		if let whatsnewWindow = self.whatsnewWindow {
+			whatsnewWindow.close()
+			self.whatsnewWindow = nil
+		}
+
+		let controller: WhatsNewViewController = NSStoryboard.main!.instantiateController(withIdentifier: "WhatsNewViewController") as! WhatsNewViewController
+		let window = NSWindow(contentViewController: controller)
+		self.whatsnewWindow = window
+
+		window.makeKeyAndOrderFront(self)
+		let vc = NSWindowController(window: window)
+		vc.showWindow(self)
 	}
 
 	private func webFolder() -> URL {
@@ -88,7 +111,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return "su-" + randomNumber
     }
 
+	private func getFreePort() {
+		if PortUtils.isPortFree(in_port_t(serverPort)) {
+			return
+		}
+
+		serverPort = Int(PortUtils.getFreePort())
+	}
+
 	private func startServer() {
+		getFreePort()
 		sessionToken = generateSessionToken()
 
 		let cwdUrl = webFolder()

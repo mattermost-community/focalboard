@@ -1,7 +1,7 @@
 package sqlstore
 
 func (s *SQLStore) GetSystemSettings() (map[string]string, error) {
-	query := s.getQueryBuilder().Select("*").From("system_settings")
+	query := s.getQueryBuilder().Select("*").From(s.tablePrefix + "system_settings")
 
 	rows, err := query.Query()
 	if err != nil {
@@ -27,7 +27,7 @@ func (s *SQLStore) GetSystemSettings() (map[string]string, error) {
 }
 
 func (s *SQLStore) SetSystemSetting(id, value string) error {
-	query := s.getQueryBuilder().Insert("system_settings").Columns("id", "value").Values(id, value)
+	query := s.getQueryBuilder().Insert(s.tablePrefix+"system_settings").Columns("id", "value").Values(id, value)
 
 	_, err := query.Exec()
 	if err != nil {

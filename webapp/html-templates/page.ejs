@@ -7,8 +7,9 @@
 
     <title><%= htmlWebpackPlugin.options.title %></title>
 
-    <link rel="icon" href="/static/favicon.svg?v=1" />
-    <link rel="stylesheet" href="/static/easymde.min.css">
+    <script>window.baseURL = '{{.BaseURL}}'</script>
+    <link rel="icon" href="{{.BaseURL}}/static/favicon.svg?v=1" />
+    <link rel="stylesheet" href="{{.BaseURL}}/static/easymde.min.css">
 </head>
 
 <body>

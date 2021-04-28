@@ -5,7 +5,7 @@ import {Utils} from '../utils'
 import {IBlock, MutableBlock} from './block'
 import {FilterGroup} from './filterGroup'
 
-type IViewType = 'board' | 'table' // | 'calendar' | 'list' | 'gallery'
+type IViewType = 'board' | 'table' | 'gallery' // | 'calendar' | 'list'
 type ISortOption = { propertyId: '__title' | string, reversed: boolean }
 
 interface BoardView extends IBlock {
@@ -111,4 +111,11 @@ class MutableBoardView extends MutableBlock implements BoardView {
     }
 }
 
-export {BoardView, MutableBoardView, IViewType, ISortOption}
+function sortBoardViewsAlphabetically(views: BoardView[]): BoardView[] {
+    // Strip leading emoji to prevent unintuitive results
+    return views.map((v) => {
+        return {view: v, title: v.title.replace(/^\p{Emoji}*\s*/u, '')}
+    }).sort((v1, v2) => v1.title.localeCompare(v2.title)).map((v) => v.view)
+}
+
+export {BoardView, MutableBoardView, IViewType, ISortOption, sortBoardViewsAlphabetically}

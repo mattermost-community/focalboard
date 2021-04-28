@@ -84,6 +84,18 @@ Similarly, you can create board templates from the "+ Add board" menu. To turn a
 
 ![image](./board%20sidebar%20menu.png)
 
+### Sharing Boards
+
+1. Hover over the right-hand side of the board menu.
+2. Click on the options menu (…) and select "Share board".
+![image](./share%20board.png)
+3. Turn the switch on which says "Publish to web and share this board with anyone".
+![image](./share%20board%20menu.png)
+4. Copy the given link.
+5. You can now share the copied link with others. (Anyone with the link will be able to view the board).
+6. Click on "Regenerate Token" if you want to invalidate all the previously shared links.
+7. A message asking "This will invalidate previously shared links. Continue?" will pop up. Click "OK" and the token will be regenerated.
+
 ### Archives
 
 You can export an archive of all your boards from the settings menu.

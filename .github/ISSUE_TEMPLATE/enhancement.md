@@ -1,7 +1,7 @@
 ---
-name: Enhancement / Feature Request
+name: Enhancement / Feature Idea
 about: Suggest a new capability
-title: 'Feature Request: '
+title: 'Feature Idea: '
 labels: enhancement
 assignees: ''
 

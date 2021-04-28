@@ -12,7 +12,7 @@ It helps define, organize, track and manage work across individuals and teams. F
 
 * **Focalboard Personal Server**: A self-hosted server for your team to collaborate.
 
-The same server binary powers both editions.
+The same MIT-licensed binary powers both desktop and server editions.
 
 ## Try out Focalboard 
 
@@ -28,7 +28,7 @@ Note: For Windows and Mac users, while we don't yet offer **Focalboard Personal 
 
 You can download and run the compiled **Focalboard Personal Server** by following [our latest install guide](https://www.focalboard.com/download/personal-edition/ubuntu/).
 
-To download the latest server release, see: https://github.com/mattermost/focalboard/releases
+Download the latest server release from [GitHub releases](https://github.com/mattermost/focalboard/releases)
 
 ## Building the server
 
@@ -78,7 +78,7 @@ Cross-compilation currently isn't fully supported, so please build on the approp
 
 ## Unit tests
 
-Before checking-in commits, run: `make ci`, which is simlar to the ci.yml workflow and includes:
+Before checking-in commits, run: `make ci`, which is similar to the ci.yml workflow and includes:
 * Server unit tests: `make server-test`
 * Webapp eslint: `cd webapp; npm run check`
 * Webapp unit tests: `cd webapp; npm run test`
@@ -92,7 +92,7 @@ Before checking-in commits, run: `make ci`, which is simlar to the ci.yml workfl
 
 ## Share your feedback 
 
-File bugs, suggest features, join our forum, learn more here: https://github.com/mattermost/focalboard/wiki/Share-your-feedback!
+File bugs, suggest features, join our forum, learn more [here](https://github.com/mattermost/focalboard/wiki/Share-your-feedback)!
 
 ## Contributing
 
