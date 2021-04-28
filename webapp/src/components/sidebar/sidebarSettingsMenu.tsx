@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useContext} from 'react'
+import React, {useContext, useState} from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {Archiver} from '../../archiver'
@@ -8,6 +8,7 @@ import {darkTheme, defaultTheme, lightTheme, setTheme, Theme} from '../../theme'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {SetLanguageContext} from '../../setLanguageContext'
+import {UserSettings} from '../../userSettings'
 
 import './sidebarSettingsMenu.scss'
 
@@ -24,6 +25,12 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
         const consolidatedTheme = setTheme(theme)
         const whiteLogo = (consolidatedTheme.sidebarWhiteLogo === 'true')
         props.setWhiteLogo(whiteLogo)
+    }
+
+    const [randomIcons, setRandomIcons] = useState(UserSettings.prefillRandomIcons)
+    const toggleRandomIcons = () => {
+        UserSettings.prefillRandomIcons = !UserSettings.prefillRandomIcons
+        setRandomIcons(!randomIcons)
     }
 
     return (
@@ -128,6 +135,12 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
                             onClick={async () => updateTheme(null)}
                         />
                     </Menu.SubMenu>
+                    <Menu.Switch
+                        id='random-icons'
+                        name={intl.formatMessage({id: 'Sidebar.random-icons', defaultMessage: 'Random icons'})}
+                        isOn={randomIcons}
+                        onClick={async () => toggleRandomIcons()}
+                    />
                 </Menu>
             </MenuWrapper>
         </div>
