@@ -142,6 +142,10 @@ func (a *API) getContainerAllowingReadTokenForBlock(r *http.Request, blockID str
 			WorkspaceID: workspaceID,
 		}
 
+		if workspaceID == "0" {
+			return &container, nil
+		}
+
 		// Has session and access to workspace
 		if session != nil && a.app().DoesUserHaveWorkspaceAccess(session.UserID, container.WorkspaceID) {
 			return &container, nil
