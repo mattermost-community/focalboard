@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os/exec"
+	"runtime"
 
 	"github.com/google/uuid"
 	"github.com/mattermost/focalboard/server/server"
@@ -62,6 +64,24 @@ func runServer(port int) (*server.Server, error) {
 
 }
 
+func openBrowser(url string) {
+	var err error
+
+	switch runtime.GOOS {
+	case "linux":
+		err = exec.Command("xdg-open", url).Start()
+	case "windows":
+		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+	case "darwin":
+		err = exec.Command("open", url).Start()
+	default:
+		err = fmt.Errorf("unsupported platform")
+	}
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func main() {
 	debug := true
 	w := webview.New(debug)
@@ -84,6 +104,15 @@ func main() {
 	w.Init(script)
 
 	w.Navigate(fmt.Sprintf("http://localhost:%d", port))
+	w.Bind("openInNewBrowser", openBrowser)
+	w.Init(`
+document.addEventListener('click', function (e) {
+    let a = e.target.closest('a[target="_blank"]');
+    if (a) {
+	    openInNewBrowser(a.getAttribute('href'));
+	}
+});
+`)
 	w.Run()
 	server.Shutdown()
 }

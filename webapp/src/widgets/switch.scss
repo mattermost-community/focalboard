@@ -1,14 +1,14 @@
 .Switch {
-	display: flex;
-	flex-shrink: 0;
+    display: flex;
+    flex-shrink: 0;
 
     box-sizing: content-box;
-	height: 14px;
-	width: 26px;
-	border-radius: 44px;
-	padding: 2px;
-	background-color: rgba(var(--body-color), 0.24);
-	transition: background 200ms ease 0s, box-shadow 200ms ease 0s;
+    height: 14px;
+    width: 26px;
+    border-radius: 44px;
+    padding: 2px;
+    background-color: rgba(var(--body-color), 0.24);
+    transition: background 200ms ease 0s, box-shadow 200ms ease 0s;
 
     &.on {
         background-color: rgb(var(--button-bg));
@@ -26,5 +26,3 @@
         transform: translateX(0px) translateY(0px);
     }
 }
-
-

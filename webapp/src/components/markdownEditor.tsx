@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import EasyMDE from 'easymde'
 import SimpleMDE from 'react-simplemde-editor'
 
@@ -47,6 +47,17 @@ const MarkdownEditor = (props: Props): JSX. Element => {
             setText(props.text)
         }
     }, [props.text])
+
+    const stateAndPropsValue = {
+        isEditing,
+        setIsEditing,
+        setActive,
+        onBlur,
+        onChange,
+        onFocus,
+    }
+    const stateAndPropsRef = useRef(stateAndPropsValue)
+    stateAndPropsRef.current = stateAndPropsValue
 
     const html: string = Utils.htmlFromMarkdown(text || placeholderText || '')
 
@@ -99,32 +110,33 @@ const MarkdownEditor = (props: Props): JSX. Element => {
 
                 events={{
                     change: (instance: any) => {
-                        if (isEditing) {
+                        if (stateAndPropsRef.current.isEditing) {
                             const newText = instance.getValue()
-                            onChange?.(newText)
+                            stateAndPropsRef.current.onChange?.(newText)
                         }
                     },
                     blur: (instance: any) => {
                         const newText = instance.getValue()
                         const oldText = text || ''
-                        if (newText !== oldText && onChange) {
-                            onChange(newText)
+                        if (newText !== oldText && stateAndPropsRef.current.onChange) {
+                            stateAndPropsRef.current.onChange(newText)
                         }
 
-                        setActive(false)
+                        stateAndPropsRef.current.setActive(false)
 
-                        if (onBlur) {
-                            onBlur(newText)
+                        if (stateAndPropsRef.current.onBlur) {
+                            stateAndPropsRef.current.onBlur(newText)
                         }
 
                         instance.getInputField()?.blur()
-                        setIsEditing(false)
+                        stateAndPropsRef.current.setIsEditing(false)
                     },
                     focus: () => {
-                        setActive(true)
+                        stateAndPropsRef.current.setActive(true)
+                        stateAndPropsRef.current.setIsEditing(true)
 
-                        if (onFocus) {
-                            onFocus()
+                        if (stateAndPropsRef.current.onFocus) {
+                            stateAndPropsRef.current.onFocus()
                         }
                     },
                 }}

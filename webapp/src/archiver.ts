@@ -34,6 +34,11 @@ class Archiver {
 
         link.click()
 
+        // TODO: Review if this is needed in the future, this is to fix the problem with linux webview links
+        if ((window as any).openInNewBrowser) {
+            (window as any).openInNewBrowser(link.href)
+        }
+
         // TODO: Remove or reuse link
     }
 

@@ -1,12 +1,14 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+import {IntlShape} from 'react-intl'
+
 import {BoardView} from './blocks/boardView'
 import {BoardTree} from './viewModel/boardTree'
 import {OctoUtils} from './octoUtils'
 import {Utils} from './utils'
 
 class CsvExporter {
-    static exportTableCsv(boardTree: BoardTree, view?: BoardView): void {
+    static exportTableCsv(boardTree: BoardTree, intl: IntlShape, view?: BoardView): void {
         const {activeView} = boardTree
         const viewToExport = view ?? activeView
 
@@ -14,7 +16,7 @@ class CsvExporter {
             return
         }
 
-        const rows = CsvExporter.generateTableArray(boardTree, viewToExport)
+        const rows = CsvExporter.generateTableArray(boardTree, viewToExport, intl)
 
         let csvContent = 'data:text/csv;charset=utf-8,'
 
@@ -33,6 +35,11 @@ class CsvExporter {
 
         link.click()
 
+        // TODO: Review if this is needed in the future, this is to fix the problem with linux webview links
+        if ((window as any).openInNewBrowser) {
+            (window as any).openInNewBrowser(encodedUri)
+        }
+
         // TODO: Remove or reuse link
     }
 
@@ -40,7 +47,7 @@ class CsvExporter {
         return text.replace(/"/g, '""')
     }
 
-    private static generateTableArray(boardTree: BoardTree, viewToExport: BoardView): string[][] {
+    private static generateTableArray(boardTree: BoardTree, viewToExport: BoardView, intl: IntlShape): string[][] {
         const {board, cards} = boardTree
 
         const rows: string[][] = []
@@ -60,7 +67,7 @@ class CsvExporter {
             row.push(`"${this.encodeText(card.title)}"`)
             visibleProperties.forEach((template) => {
                 const propertyValue = card.properties[template.id]
-                const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, template) || ''
+                const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, template, intl) || ''
                 if (template.type === 'number') {
                     const numericValue = propertyValue ? Number(propertyValue).toString() : ''
                     row.push(numericValue)

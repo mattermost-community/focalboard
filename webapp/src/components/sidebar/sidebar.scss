@@ -20,13 +20,13 @@
         background: none;
         padding: 0;
 
-        >div {
+        > div {
             padding: 0;
             margin: auto;
         }
     }
 
-    >* {
+    > * {
         flex: 0 0 auto;
     }
 
@@ -49,7 +49,7 @@
         overflow-y: auto;
         width: 250px;
 
-        >div {
+        > div {
             margin-bottom: 16px;
         }
     }
@@ -73,13 +73,13 @@
             font-weight: 600;
         }
 
-        >.heading {
+        > .heading {
             line-height: 30px;
             cursor: default;
             flex-grow: 1;
         }
 
-        >.IconButton {
+        > .IconButton {
             background-color: var(--sidebar-bg);
 
             &:hover {

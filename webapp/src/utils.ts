@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import marked from 'marked'
+import {IntlShape} from 'react-intl'
 
 declare global {
     interface Window {
@@ -62,31 +63,27 @@ class Utils {
     static htmlFromMarkdown(text: string): string {
         // HACKHACK: Somehow, marked doesn't encode angle brackets
         const renderer = new marked.Renderer()
-        renderer.link = (href, title, contents) => `<a target="_blank" rel="noreferrer" href="${href}" title="${title || ''}" onclick="event.stopPropagation();">${contents}</a>`
+        renderer.link = (href, title, contents) => `<a target="_blank" rel="noreferrer" href="${href}" title="${title || ''}" onclick="event.stopPropagation(); openInNewBrowser && openInNewBrowser('${href}');">${contents}</a>`
         const html = marked(text.replace(/</g, '&lt;'), {renderer, breaks: true})
         return html
     }
 
     // Date and Time
 
-    static displayDate(date: Date): string {
-        const dateTimeFormat = new Intl.DateTimeFormat('en', {year: 'numeric', month: 'short', day: '2-digit'})
-        const text = dateTimeFormat.format(date)
+    static displayDate(date: Date, intl: IntlShape): string {
+        const text = intl.formatDate(date, {year: 'numeric', month: 'short', day: '2-digit'})
 
         return text
     }
 
-    static displayDateTime(date: Date): string {
-        const dateTimeFormat = new Intl.DateTimeFormat(
-            'en',
-            {
-                year: 'numeric',
-                month: 'short',
-                day: '2-digit',
-                hour: 'numeric',
-                minute: 'numeric',
-            })
-        const text = dateTimeFormat.format(date)
+    static displayDateTime(date: Date, intl: IntlShape): string {
+        const text = intl.formatDate(date, {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit',
+            hour: 'numeric',
+            minute: 'numeric',
+        })
         return text
     }
 
