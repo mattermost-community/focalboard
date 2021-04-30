@@ -7,7 +7,7 @@ COPY ./docker/get_sources.sh .
 
 RUN apk update && \
     apk add ca-certificates gcc git make musl-dev && \
- 		./get_sources.sh && \
+    ./get_sources.sh && \
     cd focalboard && \
     make server-linux
 
@@ -20,7 +20,7 @@ COPY ./docker/get_sources.sh .
 
 RUN apk update && \
     apk add ca-certificates git && \
- 		./get_sources.sh && \
+    ./get_sources.sh && \
     cd focalboard/webapp && \
     npm install && npm run pack
 
