@@ -11,6 +11,9 @@ import messages_ru from '../i18n/ru.json'
 import messages_oc from '../i18n/oc.json'
 import messages_tr from '../i18n/tr.json'
 import messages_zhHant from '../i18n/zh_Hant.json'
+import messages_zhHans from '../i18n/zh_Hans.json'
+
+const supportedLanguages = ['de', 'fr', 'ja', 'nl', 'ru', 'es', 'oc', 'tr', 'zh', 'zh_Hant', 'zh_Hans'];
 
 export function getMessages(lang: string): {[key: string]: string} {
     switch (lang) {
@@ -32,6 +35,10 @@ export function getMessages(lang: string): {[key: string]: string} {
         return messages_tr
     case 'zh':
         return messages_zhHant
+    case 'zh_Hant':
+        return messages_zhHant
+    case 'zh_Hans':
+        return messages_zhHans
     }
     return messages_en
 }
@@ -39,7 +46,13 @@ export function getMessages(lang: string): {[key: string]: string} {
 export function getCurrentLanguage(): string {
     let lang = localStorage.getItem('language')
     if (!lang) {
-        lang = navigator.language.split(/[-_]/)[0]
+        if (supportedLanguages.includes(navigator.language)) {
+            lang = navigator.language
+        } else if (supportedLanguages.includes(navigator.language.split(/[-_]/)[0])) {
+            lang = navigator.language.split(/[-_]/)[0]
+        } else {
+            lang = 'en'
+        }
     }
     return lang
 }

@@ -95,8 +95,13 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
                         />
                         <Menu.Text
                             id='chinese-lang'
-                            name={intl.formatMessage({id: 'Sidebar.chinese', defaultMessage: 'Chinese'})}
+                            name={intl.formatMessage({id: 'Sidebar.chinese', defaultMessage: 'Traditional Chinese'})}
                             onClick={async () => setLanguage('zh')}
+                        />
+                        <Menu.Text
+                            id='simplified-chinese-lang'
+                            name={intl.formatMessage({id: 'Sidebar.simplified-chinese', defaultMessage: 'Simplified Chinese'})}
+                            onClick={async () => setLanguage('zh_Hans')}
                         />
                         <Menu.Text
                             id='turkish-lang'
