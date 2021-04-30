@@ -13,7 +13,7 @@ import messages_tr from '../i18n/tr.json'
 import messages_zhHant from '../i18n/zh_Hant.json'
 import messages_zhHans from '../i18n/zh_Hans.json'
 
-const supportedLanguages = ['de', 'fr', 'ja', 'nl', 'ru', 'es', 'oc', 'tr', 'zh', 'zh_Hant', 'zh_Hans'];
+const supportedLanguages = ['de', 'fr', 'ja', 'nl', 'ru', 'es', 'oc', 'tr', 'zh', 'zh_Hant', 'zh_Hans']
 
 export function getMessages(lang: string): {[key: string]: string} {
     switch (lang) {
