@@ -52,6 +52,7 @@ const CheckboxElement = React.memo((props: Props) => {
                     mutator.updateBlock(newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckboxText', defaultMessage: 'edit card text'}))
                 }}
                 readonly={readonly}
+                spellCheck={true}
             />
         </div>
     )

@@ -83,6 +83,7 @@ const ViewTitle = React.memo((props: Props) => {
                     onSave={() => mutator.changeTitle(board, title)}
                     onCancel={() => setTitle(props.board.title)}
                     readonly={props.readonly}
+                    spellCheck={true}
                 />
             </div>
 

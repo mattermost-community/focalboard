@@ -86,6 +86,7 @@ const TableRow = React.memo((props: Props) => {
                         }}
                         onCancel={() => setTitle(card.title)}
                         readonly={props.readonly}
+                        spellCheck={true}
                     />
                 </div>
 
