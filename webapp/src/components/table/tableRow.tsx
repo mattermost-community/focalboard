@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useRef, useEffect} from 'react'
+import React, {useState, useRef, useEffect, useImperativeHandle} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {Card} from '../../blocks/card'
@@ -37,7 +37,7 @@ const TableRow = React.memo((props: Props) => {
     const {card} = props
     const isManualSort = activeView.sortOptions.length < 1
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly && isManualSort, props.onDrop)
-
+  
     useEffect(() => {
         if (props.focusOnMount) {
             setTimeout(() => titleRef.current?.focus(), 10)
@@ -115,7 +115,7 @@ const TableRow = React.memo((props: Props) => {
                                 card={card}
                                 boardTree={boardTree}
                                 propertyTemplate={template}
-                                emptyDisplayValue='Empty'
+                                emptyDisplayValue=''
                             />
                         </div>)
                 })}

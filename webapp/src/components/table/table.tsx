@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
-import {FormattedMessage} from 'react-intl'
+import React, {useRef} from 'react'
+import {FormattedMessage, IntlShape} from 'react-intl'
 import {useDrop, useDragLayer} from 'react-dnd'
 
 import {IPropertyTemplate} from '../../blocks/board'
@@ -24,6 +24,7 @@ type Props = {
     selectedCardIds: string[]
     readonly: boolean
     cardIdToFocusOnRender: string
+    intl: IntlShape
     showCard: (cardId?: string) => void
     addCard: (show: boolean) => Promise<void>
     onCardClicked: (e: React.MouseEvent, card: Card) => void
@@ -31,10 +32,6 @@ type Props = {
 
 // Eventually, these will need to come from the theme.
 // Currently, the theme doesn't change any padding or font descriptor
-const header = {
-    fontDescriptor: 'bolder 14px sans-serif',
-    padding: 22,
-}
 const select = {
     fontDescriptor: 'bolder 13px sans-serif',
     padding: 56,
@@ -64,6 +61,14 @@ const Table = (props: Props) => {
             resizingColumn: '',
         }
     })
+    // const containerRef = useRef()
+
+    // const columnRefs: Map<string, React.RefObject<HTMLDivElement>> = new Map()
+
+    // // const columnRefs: React.MutableRefObject<HTMLDivElement>[] =
+    // //     activeView.visiblePropertyIds.map(() => ({
+    // //         useRef<HTMLDivElement>(null)
+    // //     })
 
     const [, drop] = useDrop(() => ({
         accept: 'horizontalGrip',
@@ -81,8 +86,39 @@ const Table = (props: Props) => {
         },
     }), [activeView])
 
-    const onAutoSizeColumn = ((columnID: string) => {
+    const onAutoSizeColumn = ((columnID: string, headerWidth: number) => {
         let longestSize = 0
+
+        // const columnRef = columnRefs.get(columnID)
+        // if(!columnRef?.current) return
+
+        // const width = columnRef.current.children[0].clientWidth
+        // console.log("child width " + width)
+        // // console.log("owidth " + columnRef.current.offsetWidth)
+
+        // if(!columnRef?.current.lastElementChild) return
+        
+        // const computed = getComputedStyle(columnRef.current!.lastElementChild)
+        // const fontDescriptor = computed.font
+        // console.log(columnRef.current!.lastElementChild)
+
+        // const textWidth = Utils.getTextWidth(columnRef.current.innerText, computed.font)
+        // console.log("Text width " + textWidth)
+
+        // const cellPadding = width - textWidth
+        // console.log(cellPadding)
+
+        // console.log(parseInt(computed.paddingLeft) + parseInt(computed.paddingRight))
+
+        // const padding = parseInt(computed.paddingLeft) + parseInt(computed.paddingRight) + cellPadding
+        // console.log(padding)
+        // console.log("P " + computed.paddingLeft + computed.paddingRight)
+        // console.log("P1 " + computed.paddingInlineEnd + computed.paddingInlineStart)
+        // console.log("P2 " + computed.paddingBlockEnd + computed.paddingBlockStart)
+
+        // console.log("M " + computed.marginLeft + computed.marginRight)
+        // console.log("M1 " + computed.marginInlineEnd + computed.marginInlineStart)
+        // console.log("M2 " + computed.marginBlockEnd + computed.marginBlockStart)
 
         const visibleProperties = board.cardProperties.filter(() => activeView.visiblePropertyIds.includes(columnID))
 
@@ -100,8 +136,8 @@ const Table = (props: Props) => {
                 return
             }
 
-            // Set to Header size initally
-            longestSize = Utils.getTextWidth(template.name.toUpperCase(), header.fontDescriptor) + header.padding
+            longestSize = headerWidth;
+            console.log('header ' + headerWidth)
 
             let padding = text.padding
             let fontDescriptor = text.fontDescriptor
@@ -112,7 +148,7 @@ const Table = (props: Props) => {
 
             cards.forEach((card) => {
                 const propertyValue = card.properties[columnID]
-                let displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, template!) || ''
+                let displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, template!, props.intl) || ''
                 if (template.type === 'select') {
                     displayValue = displayValue.toUpperCase()
                 }

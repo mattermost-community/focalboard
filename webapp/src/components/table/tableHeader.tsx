@@ -10,6 +10,7 @@ import SortUpIcon from '../../widgets/icons/sortUp'
 import MenuWrapper from '../../widgets/menuWrapper'
 import Label from '../../widgets/label'
 import {useSortable} from '../../hooks/sortable'
+import {Utils} from '../../utils'
 
 import HorizontalGrip from './horizontalGrip'
 
@@ -24,7 +25,7 @@ type Props = {
     template: IPropertyTemplate
     offset: number
     onDrop: (template: IPropertyTemplate, container: IPropertyTemplate) => void
-    onAutoSizeColumn: (columnID: string) => void
+    onAutoSizeColumn: (columnID: string, headerWidth: number) => void
 }
 
 const TableHeader = React.memo((props: Props): JSX.Element => {
@@ -32,6 +33,21 @@ const TableHeader = React.memo((props: Props): JSX.Element => {
 
     const columnWidth = (templateId: string): number => {
         return Math.max(Constants.minColumnWidth, (props.boardTree.activeView.columnWidths[templateId] || 0) + props.offset)
+    }
+
+    const onAutoSizeColumn = (templateId: string) => {
+        let textWidth = Constants.minColumnWidth
+        if(columnRef.current){
+
+            const width = columnRef.current.children[0].clientWidth
+            const computed = getComputedStyle(columnRef.current)
+    
+            let textWidth = Utils.getTextWidth(columnRef.current.innerText, computed.font)
+            const cellPadding = width - textWidth
+            const padding = parseInt(computed.paddingLeft) + parseInt(computed.paddingRight) + cellPadding
+            textWidth += padding
+        }
+        props.onAutoSizeColumn(templateId, textWidth)
     }
 
     let className = 'octo-table-cell header-cell'
@@ -62,7 +78,7 @@ const TableHeader = React.memo((props: Props): JSX.Element => {
             {!props.readonly &&
                 <HorizontalGrip
                     templateId={props.template.id}
-                    onAutoSizeColumn={props.onAutoSizeColumn}
+                    onAutoSizeColumn={onAutoSizeColumn}
                 />
             }
         </div>
