@@ -1,23 +1,94 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
+import {notifySettingsChanged} from './nativeApp'
+import {Utils} from './utils'
+
+enum UserSettingKey {
+    Language = 'language',
+    Theme = 'theme',
+    LastBoardId = 'lastBoardId',
+    LastViewId = 'lastViewId',
+    EmojiMartSkin = 'emoji-mart.skin',
+    EmojiMartLast = 'emoji-mart.last',
+    EmojiMartFrequently = 'emoji-mart.frequently',
+    RandomIcons = 'randomIcons'
+}
+
 export class UserSettings {
+    static get(key: UserSettingKey): string | null {
+        return localStorage.getItem(key)
+    }
+
+    static set(key: UserSettingKey, value: string | null) {
+        if (value === null) {
+            localStorage.removeItem(key)
+        } else {
+            localStorage.setItem(key, value)
+        }
+        notifySettingsChanged(key)
+    }
+
+    static get language(): string | null {
+        return UserSettings.get(UserSettingKey.Language)
+    }
+
+    static set language(newValue: string | null) {
+        UserSettings.set(UserSettingKey.Language, newValue)
+    }
+
+    static get theme(): string | null {
+        return UserSettings.get(UserSettingKey.Theme)
+    }
+
+    static set theme(newValue: string | null) {
+        UserSettings.set(UserSettingKey.Theme, newValue)
+    }
+
+    static get lastBoardId(): string | null {
+        return UserSettings.get(UserSettingKey.LastBoardId)
+    }
+
+    static set lastBoardId(newValue: string | null) {
+        UserSettings.set(UserSettingKey.LastBoardId, newValue)
+    }
+
+    static get lastViewId(): string | null {
+        return UserSettings.get(UserSettingKey.LastViewId)
+    }
+
+    static set lastViewId(newValue: string | null) {
+        UserSettings.set(UserSettingKey.LastViewId, newValue)
+    }
+
     static get prefillRandomIcons(): boolean {
-        return localStorage.getItem('randomIcons') !== 'false'
+        return UserSettings.get(UserSettingKey.RandomIcons) !== 'false'
     }
 
     static set prefillRandomIcons(newValue: boolean) {
-        localStorage.setItem('randomIcons', JSON.stringify(newValue))
+        UserSettings.set(UserSettingKey.RandomIcons, JSON.stringify(newValue))
+    }
+
+    static getEmojiMartSetting(key: string): any {
+        const prefixed = `emoji-mart.${key}`
+        Utils.assert((Object as any).values(UserSettingKey).includes(prefixed))
+        const json = UserSettings.get(prefixed as UserSettingKey)
+        return json ? JSON.parse(json) : null
+    }
+
+    static setEmojiMartSetting(key: string, value: any) {
+        const prefixed = `emoji-mart.${key}`
+        Utils.assert((Object as any).values(UserSettingKey).includes(prefixed))
+        UserSettings.set(prefixed as UserSettingKey, JSON.stringify(value))
     }
 }
-
-const keys = ['language', 'theme', 'lastBoardId', 'lastViewId', 'emoji-mart.last', 'emoji-mart.frequently']
 
 export function exportUserSettingsBlob(): string {
     return window.btoa(exportUserSettings())
 }
 
 function exportUserSettings(): string {
+    const keys = Object.values(UserSettingKey)
     const settings = Object.fromEntries(keys.map((key) => [key, localStorage.getItem(key)]))
     settings.timestamp = `${Date.now()}`
     return JSON.stringify(settings)

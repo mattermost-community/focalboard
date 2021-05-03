@@ -40,11 +40,6 @@ class ViewController:
 		self.view.window?.makeFirstResponder(self.webView)
 	}
 
-    override func viewWillDisappear() {
-        super.viewWillDisappear()
-        persistUserSettings()
-    }
-
 	override var representedObject: Any? {
 		didSet {
 			// Update the view, if already loaded.
@@ -73,34 +68,6 @@ class ViewController:
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
 			self.updateSessionTokenAndUserSettings()
 			self.loadHomepage()
-		}
-	}
-
-	private func persistUserSettings() {
-		let semaphore = DispatchSemaphore(value: 0)
-
-		webView.evaluateJavaScript("Focalboard.exportUserSettingsBlob();") { result, error in
-			defer { semaphore.signal() }
-			guard let blob = result as? String else {
-				NSLog("Failed to export user settings: \(error?.localizedDescription ?? "?")")
-				return
-			}
-			UserDefaults.standard.set(blob, forKey: "localStorage")
-			NSLog("Persisted user settings: \(Data(base64Encoded: blob).flatMap { String(data: $0, encoding: .utf8) } ?? blob)")
-		}
-
-		// During shutdown the system grants us about 5 seconds to clean up and store user data
-		let timeout = DispatchTime.now() + .seconds(3)
-		var result: DispatchTimeoutResult?
-
-		// Busy wait because evaluateJavaScript can only be called from *and* signals on the main thread
-		while (result != .success && .now() < timeout) {
-			result = semaphore.wait(timeout: .now())
-			RunLoop.current.run(mode: .default, before: Date())
-		}
-
-		if result == .timedOut {
-			NSLog("Timed out trying to persist user settings")
 		}
 	}
 
@@ -263,11 +230,20 @@ class ViewController:
 	}
 
 	func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-		guard let body = message.body as? [String: String], let type = body["type"], let blob = body["settingsBlob"] else {
+		guard
+			let body = message.body as? [String: String],
+			let type = body["type"],
+			let blob = body["settingsBlob"],
+			let settings = Data(base64Encoded: blob).flatMap({ String(data: $0, encoding: .utf8) })
+		else {
 			NSLog("Received unexpected script message \(message.body)")
 			return
 		}
-		NSLog("Received script message \(type): \(Data(base64Encoded: blob).flatMap { String(data: $0, encoding: .utf8) } ?? blob)")
+		NSLog("Received script message \(type): \(settings)")
+		if type == "didChangeUserSettings" {
+			UserDefaults.standard.set(blob, forKey: "localStorage")
+			NSLog("Persisted user settings after change for key \(body["key"] ?? "?")")
+		}
 	}
 }
 

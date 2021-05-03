@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {importUserSettingsBlob} from './userSettings'
+import {exportUserSettingsBlob, importUserSettingsBlob} from './userSettings'
 
 declare interface INativeApp {
     settingsBlob: string | null;
@@ -19,14 +19,10 @@ export function importNativeAppSettings() {
     NativeApp.settingsBlob = null
 }
 
+export function notifySettingsChanged(key: string) {
+    postWebKitMessage({type: 'didChangeUserSettings', key, settingsBlob: exportUserSettingsBlob()})
+}
+
 function postWebKitMessage(message: any) {
-    const webkit = (window as any).webkit
-    if (typeof webkit === 'undefined') {
-        return
-    }
-    const handler = webkit.messageHandlers.nativeApp
-    if (typeof handler === 'undefined') {
-        return
-    }
-    handler.postMessage(message)
+    (window as any).webkit?.messageHandlers.nativeApp?.postMessage(message)
 }
