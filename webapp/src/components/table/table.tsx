@@ -30,21 +30,6 @@ type Props = {
     onCardClicked: (e: React.MouseEvent, card: Card) => void
 }
 
-// Eventually, these will need to come from the theme.
-// Currently, the theme doesn't change any padding or font descriptor
-const select = {
-    fontDescriptor: 'bolder 13px sans-serif',
-    padding: 56,
-}
-const text = {
-    fontDescriptor: '14px sans-serif',
-    padding: 30,
-}
-const title = {
-    fontDescriptor: '14px sans-serif',
-    padding: 57,
-}
-
 const Table = (props: Props) => {
     const {boardTree} = props
     const {board, cards, activeView} = boardTree
@@ -61,14 +46,8 @@ const Table = (props: Props) => {
             resizingColumn: '',
         }
     })
-    // const containerRef = useRef()
 
-    // const columnRefs: Map<string, React.RefObject<HTMLDivElement>> = new Map()
-
-    // // const columnRefs: React.MutableRefObject<HTMLDivElement>[] =
-    // //     activeView.visiblePropertyIds.map(() => ({
-    // //         useRef<HTMLDivElement>(null)
-    // //     })
+    const columnRefs: Map<string, React.RefObject<HTMLDivElement>> = new Map()
 
     const [, drop] = useDrop(() => ({
         accept: 'horizontalGrip',
@@ -86,79 +65,40 @@ const Table = (props: Props) => {
         },
     }), [activeView])
 
+
     const onAutoSizeColumn = ((columnID: string, headerWidth: number) => {
-        let longestSize = 0
-
-        // const columnRef = columnRefs.get(columnID)
-        // if(!columnRef?.current) return
-
-        // const width = columnRef.current.children[0].clientWidth
-        // console.log("child width " + width)
-        // // console.log("owidth " + columnRef.current.offsetWidth)
-
-        // if(!columnRef?.current.lastElementChild) return
-        
-        // const computed = getComputedStyle(columnRef.current!.lastElementChild)
-        // const fontDescriptor = computed.font
-        // console.log(columnRef.current!.lastElementChild)
-
-        // const textWidth = Utils.getTextWidth(columnRef.current.innerText, computed.font)
-        // console.log("Text width " + textWidth)
-
-        // const cellPadding = width - textWidth
-        // console.log(cellPadding)
-
-        // console.log(parseInt(computed.paddingLeft) + parseInt(computed.paddingRight))
-
-        // const padding = parseInt(computed.paddingLeft) + parseInt(computed.paddingRight) + cellPadding
-        // console.log(padding)
-        // console.log("P " + computed.paddingLeft + computed.paddingRight)
-        // console.log("P1 " + computed.paddingInlineEnd + computed.paddingInlineStart)
-        // console.log("P2 " + computed.paddingBlockEnd + computed.paddingBlockStart)
-
-        // console.log("M " + computed.marginLeft + computed.marginRight)
-        // console.log("M1 " + computed.marginInlineEnd + computed.marginInlineStart)
-        // console.log("M2 " + computed.marginBlockEnd + computed.marginBlockStart)
-
+        let longestSize = headerWidth
         const visibleProperties = board.cardProperties.filter(() => activeView.visiblePropertyIds.includes(columnID))
+        const columnRef = columnRefs.get(columnID);
+        if(!columnRef!.current) return
 
-        if (columnID === Constants.titleColumnId) {
-            cards.forEach((card) => {
-                const thisLen = Utils.getTextWidth(card.title, title.fontDescriptor)
-                if (thisLen > longestSize) {
-                    longestSize = thisLen
+        let style = getComputedStyle(columnRef!.current)
+        let padding = Utils.getPadding(style)
+
+        const childResults = Utils.getFontPaddingFromChildren(columnRef!.current.children, padding)
+        let fontDescriptor = childResults.font
+        padding = childResults.padding
+
+
+        cards.forEach((card) => {
+            let displayValue = card.title
+            if(columnID != Constants.titleColumnId){
+                const template = visibleProperties.find((t) => t.id === columnID)
+                if (!template) {
+                    return
                 }
-            })
-            longestSize += title.padding
-        } else {
-            const template = visibleProperties.find((t) => t.id === columnID)
-            if (!template) {
-                return
-            }
-
-            longestSize = headerWidth;
-            console.log('header ' + headerWidth)
-
-            let padding = text.padding
-            let fontDescriptor = text.fontDescriptor
-            if (template.type === 'select') {
-                padding = select.padding
-                fontDescriptor = select.fontDescriptor
-            }
-
-            cards.forEach((card) => {
-                const propertyValue = card.properties[columnID]
-                let displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, template!, props.intl) || ''
+                let propertyValue = card.properties[columnID]
+            
+                displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, template!, props.intl) || ''
                 if (template.type === 'select') {
                     displayValue = displayValue.toUpperCase()
                 }
-
-                const thisLen = Utils.getTextWidth(displayValue, fontDescriptor) + padding
-                if (thisLen > longestSize) {
-                    longestSize = thisLen
-                }
-            })
-        }
+            }
+            const thisLen = Utils.getTextWidth(displayValue, fontDescriptor) + padding
+            if (thisLen > longestSize) {
+                longestSize = thisLen
+            }
+        })
 
         if (longestSize === 0) {
             return
@@ -283,6 +223,7 @@ const Table = (props: Props) => {
                         onDrop={onDropToCard}
                         offset={offset}
                         resizingColumn={resizingColumn}
+                        columnRefs={columnRefs}
                     />)
 
                 return tableRow

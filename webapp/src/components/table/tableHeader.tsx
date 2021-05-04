@@ -36,18 +36,16 @@ const TableHeader = React.memo((props: Props): JSX.Element => {
     }
 
     const onAutoSizeColumn = (templateId: string) => {
-        let textWidth = Constants.minColumnWidth
+        let columnWidth = Constants.minColumnWidth
         if(columnRef.current){
-
-            const width = columnRef.current.children[0].clientWidth
-            const computed = getComputedStyle(columnRef.current)
-    
-            let textWidth = Utils.getTextWidth(columnRef.current.innerText, computed.font)
-            const cellPadding = width - textWidth
-            const padding = parseInt(computed.paddingLeft) + parseInt(computed.paddingRight) + cellPadding
-            textWidth += padding
+            const computed = getComputedStyle(columnRef.current)    
+            const padding = Utils.getPadding(computed)
+            const childResult = Utils.getFontPaddingFromChildren(columnRef.current.children, padding)
+            let textWidth = Utils.getTextWidth(columnRef.current.innerText.toUpperCase(), childResult.font)    
+            textWidth += childResult.padding
+            columnWidth = textWidth
         }
-        props.onAutoSizeColumn(templateId, textWidth)
+        props.onAutoSizeColumn(templateId, columnWidth)
     }
 
     let className = 'octo-table-cell header-cell'
