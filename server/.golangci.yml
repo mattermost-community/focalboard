@@ -18,7 +18,6 @@ linters:
   presets:
     - format
     - unused
-    - complexity
     - bugs
     - performance
 
@@ -27,8 +26,6 @@ linters:
     - depguard
     - dogsled
     - dupl
-    - funlen
-    - gochecknoglobals
     - gochecknoinits
     - goconst
     - gocritic
@@ -42,10 +39,9 @@ linters:
     - gosimple
     - lll
     - misspell
-    - nlreturn
     - nolintlint
     - stylecheck
     - unconvert
     - whitespace
-    - wsl
+    - gocyclo
 
