@@ -12,7 +12,7 @@ declare global {
 const IconClass = 'octo-icon'
 const OpenButtonClass = 'open-button'
 const SpacerClass = 'octo-spacer'
-const HorizontalGrip = 'HorizontalGrip'
+const HorizontalGripClass = 'HorizontalGrip'
 
 class Utils {
     static createGuid(): string {
@@ -65,35 +65,37 @@ class Utils {
 
     // recursive routine to determine the padding and font from its children
     // specifically for the table view
-    static getFontPaddingFromChildren = (children: HTMLCollection, padding: number) : {font: string, padding: number} => {
-        let myResults = {font: '', padding: padding}
-        Array.from(children).forEach(element => {
+    static getFontAndPaddingFromChildren = (children: HTMLCollection, pad: number) : {font: string, padding: number} => {
+        const myResults = {
+            font: '',
+            padding: pad,
+        }
+        Array.from(children).forEach((element) => {
             switch (element.className) {
-                case IconClass:
-                case SpacerClass:
-                case HorizontalGrip:
-                    myResults.padding += element.clientWidth
-                    break
-                case OpenButtonClass:
-                    break
-                default: 
-                    let style = getComputedStyle(element)
-                    let myPadding = Utils.getPadding(style)
-                    myResults.font = style.font
-                    myResults.padding += myPadding
-                    let childResults = Utils.getFontPaddingFromChildren(element.children, myResults.padding)
-                    if( childResults.font !== ''){
-                        myResults.font = childResults.font
-                        myResults.padding = childResults.padding
-                    }
+            case IconClass:
+            case SpacerClass:
+            case HorizontalGripClass:
+                myResults.padding += element.clientWidth
+                break
+            case OpenButtonClass:
+                break
+            default: {
+                const style = getComputedStyle(element)
+                myResults.font = style.font
+                myResults.padding += Utils.getHorizontalPadding(style)
+                const childResults = Utils.getFontAndPaddingFromChildren(element.children, myResults.padding)
+                if (childResults.font !== '') {
+                    myResults.font = childResults.font
+                    myResults.padding = childResults.padding
+                }
+            }
             }
         })
         return myResults
     }
 
-    static getPadding = (style: CSSStyleDeclaration): number => {
-        let l = parseInt(style.paddingLeft) + parseInt(style.paddingRight) + parseInt(style.marginLeft) + parseInt(style.marginRight) + parseInt(style.borderLeft) + parseInt(style.borderRight)
-        return l
+    static getHorizontalPadding = (style: CSSStyleDeclaration): number => {
+        return parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10) + parseInt(style.marginLeft, 10) + parseInt(style.marginRight, 10) + parseInt(style.borderLeft, 10) + parseInt(style.borderRight, 10)
     }
 
     // Markdown

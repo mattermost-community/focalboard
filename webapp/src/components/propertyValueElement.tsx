@@ -110,7 +110,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             return (
                 <Editable
                     className='octo-propertyvalue'
-                    placeholderText={emptyDisplayValue}
+                    placeholderText='Empty'
                     value={value}
                     onChange={setValue}
                     onSave={() => mutator.changePropertyValue(card, propertyTemplate.id, value)}

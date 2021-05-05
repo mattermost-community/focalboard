@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useRef} from 'react'
+import React from 'react'
 import {FormattedMessage, IntlShape} from 'react-intl'
 import {useDrop, useDragLayer} from 'react-dnd'
 
@@ -65,31 +65,30 @@ const Table = (props: Props) => {
         },
     }), [activeView])
 
-
     const onAutoSizeColumn = ((columnID: string, headerWidth: number) => {
         let longestSize = headerWidth
         const visibleProperties = board.cardProperties.filter(() => activeView.visiblePropertyIds.includes(columnID))
-        const columnRef = columnRefs.get(columnID);
-        if(!columnRef!.current) return
+        const columnRef = columnRefs.get(columnID)
+        if (!columnRef!.current) {
+            return
+        }
 
-        let style = getComputedStyle(columnRef!.current)
-        let padding = Utils.getPadding(style)
+        const style = getComputedStyle(columnRef!.current)
+        let padding = Utils.getHorizontalPadding(style)
 
-        const childResults = Utils.getFontPaddingFromChildren(columnRef!.current.children, padding)
-        let fontDescriptor = childResults.font
+        const childResults = Utils.getFontAndPaddingFromChildren(columnRef!.current.children, padding)
+        const fontDescriptor = childResults.font
         padding = childResults.padding
-
 
         cards.forEach((card) => {
             let displayValue = card.title
-            if(columnID != Constants.titleColumnId){
+            if (columnID !== Constants.titleColumnId) {
                 const template = visibleProperties.find((t) => t.id === columnID)
                 if (!template) {
                     return
                 }
-                let propertyValue = card.properties[columnID]
-            
-                displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, template!, props.intl) || ''
+
+                displayValue = OctoUtils.propertyDisplayValue(card, card.properties[columnID], template!, props.intl) || ''
                 if (template.type === 'select') {
                     displayValue = displayValue.toUpperCase()
                 }

@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useRef, useEffect, useImperativeHandle} from 'react'
+import React, {useState, useRef, useEffect} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {Card} from '../../blocks/card'
@@ -38,7 +38,7 @@ const TableRow = React.memo((props: Props) => {
     const {card} = props
     const isManualSort = activeView.sortOptions.length < 1
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly && isManualSort, props.onDrop)
-  
+
     useEffect(() => {
         if (props.focusOnMount) {
             setTimeout(() => titleRef.current?.focus(), 10)
@@ -57,7 +57,7 @@ const TableRow = React.memo((props: Props) => {
         className += ' dragover'
     }
 
-    if(!columnRefs.get(Constants.titleColumnId)){
+    if (!columnRefs.get(Constants.titleColumnId)) {
         columnRefs.set(Constants.titleColumnId, React.createRef())
     }
 
@@ -110,7 +110,7 @@ const TableRow = React.memo((props: Props) => {
             {board.cardProperties.
                 filter((template) => activeView.visiblePropertyIds.includes(template.id)).
                 map((template) => {
-                    if(!columnRefs.get(template.id)){
+                    if (!columnRefs.get(template.id)) {
                         columnRefs.set(template.id, React.createRef())
                     }
                     return (
