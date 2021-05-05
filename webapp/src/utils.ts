@@ -63,11 +63,17 @@ class Utils {
         return 0
     }
 
+    static getFontAndPaddingFromCell = (cell: Element) : {fontDescriptor: string, padding: number} => {
+        const style = getComputedStyle(cell)
+        const padding = Utils.getHorizontalPadding(style)
+        return Utils.getFontAndPaddingFromChildren(cell.children, padding)
+    }
+
     // recursive routine to determine the padding and font from its children
     // specifically for the table view
-    static getFontAndPaddingFromChildren = (children: HTMLCollection, pad: number) : {font: string, padding: number} => {
+    static getFontAndPaddingFromChildren = (children: HTMLCollection, pad: number) : {fontDescriptor: string, padding: number} => {
         const myResults = {
-            font: '',
+            fontDescriptor: '',
             padding: pad,
         }
         Array.from(children).forEach((element) => {
@@ -81,11 +87,11 @@ class Utils {
                 break
             default: {
                 const style = getComputedStyle(element)
-                myResults.font = style.font
+                myResults.fontDescriptor = style.font
                 myResults.padding += Utils.getHorizontalPadding(style)
                 const childResults = Utils.getFontAndPaddingFromChildren(element.children, myResults.padding)
-                if (childResults.font !== '') {
-                    myResults.font = childResults.font
+                if (childResults.fontDescriptor !== '') {
+                    myResults.fontDescriptor = childResults.fontDescriptor
                     myResults.padding = childResults.padding
                 }
             }

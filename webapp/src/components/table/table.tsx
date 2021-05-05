@@ -69,16 +69,10 @@ const Table = (props: Props) => {
         let longestSize = headerWidth
         const visibleProperties = board.cardProperties.filter(() => activeView.visiblePropertyIds.includes(columnID))
         const columnRef = columnRefs.get(columnID)
-        if (!columnRef!.current) {
+        if (!columnRef?.current) {
             return
         }
-
-        const style = getComputedStyle(columnRef!.current)
-        let padding = Utils.getHorizontalPadding(style)
-
-        const childResults = Utils.getFontAndPaddingFromChildren(columnRef!.current.children, padding)
-        const fontDescriptor = childResults.font
-        padding = childResults.padding
+        const {fontDescriptor, padding} = Utils.getFontAndPaddingFromCell(columnRef.current)
 
         cards.forEach((card) => {
             let displayValue = card.title
