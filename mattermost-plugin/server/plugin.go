@@ -1,12 +1,15 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"sync"
 
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
+	"github.com/mattermost/focalboard/server/ws"
+	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/plugin"
 )
 
@@ -50,7 +53,27 @@ func (p *Plugin) OnActivate() error {
 		return err
 	}
 	p.server = server
+	p.server.PublishClusterEvent = func(msg ws.UpdateMsg) {
+		data, err := json.Marshal(msg)
+		if err != nil {
+			return
+		}
+
+		p.API.PublishPluginClusterEvent(model.PluginClusterEvent{
+			Id:   "websocket_event",
+			Data: data,
+		}, model.PluginClusterEventSendOptions{
+			SendType: model.PluginClusterEventSendTypeReliable,
+		})
+	}
 	return server.Start()
+}
+
+func (p *Plugin) OnPluginClusterEvent(c *plugin.Context, ev model.PluginClusterEvent) {
+	if ev.Id == "websocket_event" {
+		var msg ws.UpdateMsg
+		json.Unmarshal(ev.Data, &msg)
+	}
 }
 
 func (p *Plugin) OnDeactivate() error {
