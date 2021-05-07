@@ -6,7 +6,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/webhook"
 	"github.com/mattermost/focalboard/server/ws"
-	"github.com/mattermost/mattermost-server/v5/services/filesstore"
+	"github.com/mattermost/mattermost-server/v5/shared/filestore"
 )
 
 type App struct {
@@ -14,7 +14,7 @@ type App struct {
 	store        store.Store
 	auth         *auth.Auth
 	wsServer     *ws.Server
-	filesBackend filesstore.FileBackend
+	filesBackend filestore.FileBackend
 	webhook      *webhook.Client
 }
 
@@ -23,7 +23,7 @@ func New(
 	store store.Store,
 	auth *auth.Auth,
 	wsServer *ws.Server,
-	filesBackend filesstore.FileBackend,
+	filesBackend filestore.FileBackend,
 	webhook *webhook.Client,
 ) *App {
 	return &App{
