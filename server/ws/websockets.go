@@ -18,12 +18,18 @@ import (
 // IsValidSessionToken authenticates session tokens
 type IsValidSessionToken func(token string) bool
 
+type Hub interface {
+	SendWSMessage(data []byte)
+	SetReceiveWSMessage(func(data []byte))
+}
+
 // Server is a WebSocket server.
 type Server struct {
 	upgrader        websocket.Upgrader
 	listeners       map[string][]*websocket.Conn
 	mu              sync.RWMutex
 	auth            *auth.Auth
+	hub             Hub
 	singleUserToken string
 }
 
@@ -31,6 +37,13 @@ type Server struct {
 type UpdateMsg struct {
 	Action string      `json:"action"`
 	Block  model.Block `json:"block"`
+}
+
+// clusterUpdateMsg is sent on block updates
+type clusterUpdateMsg struct {
+	UpdateMsg
+	BlockID     string `json:"block_id"`
+	WorkspaceID string `json:"workspace_id"`
 }
 
 // ErrorMsg is sent on errors
@@ -294,6 +307,38 @@ func sendError(conn *websocket.Conn, message string) {
 	}
 }
 
+func (ws *Server) SetHub(hub Hub) {
+	ws.hub = hub
+	ws.hub.SetReceiveWSMessage(func(data []byte) {
+		var msg clusterUpdateMsg
+		err := json.Unmarshal(data, &msg)
+		if err != nil {
+			log.Printf("unable to unmarshal cluster message")
+			return
+		}
+
+		listeners := ws.getListeners(msg.WorkspaceID, msg.BlockID)
+		log.Printf("%d listener(s) for blockID: %s", len(listeners), msg.BlockID)
+
+		message := UpdateMsg{
+			Action: msg.Action,
+			Block:  msg.Block,
+		}
+
+		if listeners != nil {
+			for _, listener := range listeners {
+				log.Printf("Broadcast change, workspaceID: %s, blockID: %s, remoteAddr: %s", msg.WorkspaceID, msg.BlockID, listener.RemoteAddr())
+
+				err := listener.WriteJSON(message)
+				if err != nil {
+					log.Printf("broadcast error: %v", err)
+					listener.Close()
+				}
+			}
+		}
+	})
+}
+
 // getListeners returns the listeners to a blockID's changes.
 func (ws *Server) getListeners(workspaceID string, blockID string) []*websocket.Conn {
 	ws.mu.Lock()
@@ -324,12 +369,19 @@ func (ws *Server) BroadcastBlockChange(workspaceID string, block model.Block) {
 		listeners := ws.getListeners(workspaceID, blockID)
 		log.Printf("%d listener(s) for blockID: %s", len(listeners), blockID)
 
-		if listeners != nil {
-			message := UpdateMsg{
-				Action: "UPDATE_BLOCK",
-				Block:  block,
+		message := UpdateMsg{
+			Action: "UPDATE_BLOCK",
+			Block:  block,
+		}
+		if ws.hub != nil {
+			data, err := json.Marshal(clusterUpdateMsg{UpdateMsg: message, WorkspaceID: workspaceID, BlockID: blockID})
+			if err != nil {
+				log.Printf("unable to serialize websocket message %v with the error: %v", message, err)
 			}
+			ws.hub.SendWSMessage(data)
+		}
 
+		if listeners != nil {
 			for _, listener := range listeners {
 				log.Printf("Broadcast change, workspaceID: %s, blockID: %s, remoteAddr: %s", workspaceID, blockID, listener.RemoteAddr())
 
