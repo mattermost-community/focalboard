@@ -38,6 +38,12 @@ class OctoUtils {
             displayValue = Utils.displayDateTime(new Date(block.updateAt), intl)
             break
         }
+        case 'date': {
+            if (propertyValue) {
+                displayValue = Utils.displayDate(new Date(parseInt(propertyValue, 10)), intl)
+            }
+            break
+        }
         default:
             displayValue = propertyValue
         }
