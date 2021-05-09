@@ -4,6 +4,7 @@
 import {notifySettingsChanged} from './nativeApp'
 import {Utils} from './utils'
 
+// eslint-disable-next-line no-shadow
 enum UserSettingKey {
     Language = 'language',
     Theme = 'theme',
