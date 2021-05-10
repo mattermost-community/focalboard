@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useRef, useEffect} from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {useIntl, IntlShape} from 'react-intl'
 
 import {PropertyType} from '../blocks/board'
 import {Utils} from '../utils'
@@ -15,7 +15,6 @@ type Props = {
     onNameChanged: (newName: string) => void
     onTypeChanged: (newType: PropertyType) => void
     onDelete: (id: string) => void
-    intl: IntlShape
 }
 
 function typeDisplayName(intl: IntlShape, type: PropertyType): string {
@@ -46,7 +45,7 @@ function typeMenuTitle(intl: IntlShape, type: PropertyType): string {
 }
 
 const PropertyMenu = React.memo((props: Props) => {
-    const {intl} = props
+    const intl = useIntl()
     const nameTextbox = useRef<HTMLInputElement>(null)
     const [name, setName] = useState(props.propertyName)
 
@@ -83,7 +82,7 @@ const PropertyMenu = React.memo((props: Props) => {
             >
                 <Menu.Label>
                     <b>
-                        {props.intl.formatMessage({id: 'PropertyMenu.changeType', defaultMessage: 'Change property type'})}
+                        {intl.formatMessage({id: 'PropertyMenu.changeType', defaultMessage: 'Change property type'})}
                     </b>
                 </Menu.Label>
 
@@ -144,4 +143,4 @@ const PropertyMenu = React.memo((props: Props) => {
     )
 })
 
-export default injectIntl(PropertyMenu)
+export default PropertyMenu
