@@ -15,13 +15,26 @@ linters-settings:
 
 linters:
   disable-all: true
-  presets:
-    - format
-    - unused
-    - bugs
-    - performance
 
   enable:
+    - gofmt
+    - goimports
+    - deadcode
+    - ineffassign
+    - structcheck
+    - varcheck
+    - unparam
+    - errcheck
+    - govet
+    - bodyclose
+    - durationcheck
+    - errorlint
+    - exhaustive
+    - exportloopref
+    - gosec
+    - makezero
+    - staticcheck
+    - prealloc
     - asciicheck
     - depguard
     - dogsled
@@ -44,4 +57,3 @@ linters:
     - unconvert
     - whitespace
     - gocyclo
-
