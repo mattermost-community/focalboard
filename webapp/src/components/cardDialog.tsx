@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
-import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import mutator from '../mutator'
 import {Utils} from '../utils'
@@ -20,13 +20,13 @@ type Props = {
     cardId: string
     onClose: () => void
     showCard: (cardId?: string) => void
-    intl: IntlShape
     readonly: boolean
 }
 
 const CardDialog = (props: Props) => {
     const [syncComplete, setSyncComplete] = useState(false)
     const [cardTree, setCardTree] = useState<CardTree>()
+    const intl = useIntl()
     useCardListener(
         [props.cardId],
         async (blocks) => {
@@ -51,7 +51,7 @@ const CardDialog = (props: Props) => {
 
         await mutator.duplicateCard(
             cardTree.card.id,
-            props.intl.formatMessage({id: 'Mutator.new-template-from-card', defaultMessage: 'new template from card'}),
+            intl.formatMessage({id: 'Mutator.new-template-from-card', defaultMessage: 'new template from card'}),
             true,
             async (newCardId) => {
                 props.showCard(newCardId)
@@ -119,4 +119,4 @@ const CardDialog = (props: Props) => {
     )
 }
 
-export default injectIntl(CardDialog)
+export default CardDialog

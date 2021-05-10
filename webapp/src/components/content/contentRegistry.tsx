@@ -12,7 +12,7 @@ type ContentHandler = {
     getDisplayText: (intl: IntlShape) => string,
     getIcon: () => JSX.Element,
     createBlock: (rootId: string) => Promise<MutableContentBlock>,
-    createComponent: (block: IContentBlock, intl: IntlShape, readonly: boolean) => JSX.Element,
+    createComponent: (block: IContentBlock, readonly: boolean) => JSX.Element,
 }
 
 class ContentRegistry {

@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useRef, useEffect} from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {useIntl, IntlShape} from 'react-intl'
 
 import {PropertyType} from '../blocks/board'
 import {Utils} from '../utils'
@@ -15,7 +15,6 @@ type Props = {
     onNameChanged: (newName: string) => void
     onTypeChanged: (newType: PropertyType) => void
     onDelete: (id: string) => void
-    intl: IntlShape
 }
 
 function typeDisplayName(intl: IntlShape, type: PropertyType): string {
@@ -34,6 +33,7 @@ function typeDisplayName(intl: IntlShape, type: PropertyType): string {
     case 'createdBy': return intl.formatMessage({id: 'PropertyType.CreatedBy', defaultMessage: 'Created By'})
     case 'updatedTime': return intl.formatMessage({id: 'PropertyType.UpdatedTime', defaultMessage: 'Updated Time'})
     case 'updatedBy': return intl.formatMessage({id: 'PropertyType.UpdatedBy', defaultMessage: 'Updated By'})
+    case 'date': return intl.formatMessage({id: 'PropertyType.Date', defaultMessage: 'Date'})
     default: {
         Utils.assertFailure(`typeDisplayName, unhandled type: ${type}`)
         return type
@@ -45,7 +45,7 @@ function typeMenuTitle(intl: IntlShape, type: PropertyType): string {
 }
 
 const PropertyMenu = React.memo((props: Props) => {
-    const {intl} = props
+    const intl = useIntl()
     const nameTextbox = useRef<HTMLInputElement>(null)
     const [name, setName] = useState(props.propertyName)
 
@@ -75,6 +75,7 @@ const PropertyMenu = React.memo((props: Props) => {
                         e.stopPropagation()
                     }
                 }}
+                spellCheck={true}
             />
             <Menu.SubMenu
                 id='type'
@@ -82,7 +83,7 @@ const PropertyMenu = React.memo((props: Props) => {
             >
                 <Menu.Label>
                     <b>
-                        {props.intl.formatMessage({id: 'PropertyMenu.changeType', defaultMessage: 'Change property type'})}
+                        {intl.formatMessage({id: 'PropertyMenu.changeType', defaultMessage: 'Change property type'})}
                     </b>
                 </Menu.Label>
 
@@ -119,6 +120,11 @@ const PropertyMenu = React.memo((props: Props) => {
                     onClick={() => props.onTypeChanged('select')}
                 />
                 <Menu.Text
+                    id='date'
+                    name={typeDisplayName(intl, 'date')}
+                    onClick={() => props.onTypeChanged('date')}
+                />
+                <Menu.Text
                     id='createdTime'
                     name={typeDisplayName(intl, 'createdTime')}
                     onClick={() => props.onTypeChanged('createdTime')}
@@ -138,4 +144,4 @@ const PropertyMenu = React.memo((props: Props) => {
     )
 })
 
-export default injectIntl(PropertyMenu)
+export default PropertyMenu

@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {useIntl} from 'react-intl'
 import {ActionMeta, ValueType, FormatOptionLabelMeta} from 'react-select'
 import CreatableSelect from 'react-select/creatable'
 import {CSSObject} from '@emotion/serialize'
@@ -26,7 +26,6 @@ type Props = {
     onChange: (value: string) => void
     onChangeColor: (option: IPropertyOption, color: string) => void
     onDeleteOption: (option: IPropertyOption) => void
-    intl: IntlShape
 }
 
 type LabelProps = {
@@ -34,11 +33,11 @@ type LabelProps = {
     meta: FormatOptionLabelMeta<IPropertyOption, false>
     onChangeColor: (option: IPropertyOption, color: string) => void
     onDeleteOption: (option: IPropertyOption) => void
-    intl: IntlShape
 }
 
 const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
     const {option, meta} = props
+    const intl = useIntl()
     if (meta.context === 'value') {
         return <Label color={option.color}>{option.value}</Label>
     }
@@ -53,7 +52,7 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
                     <Menu.Text
                         id='delete'
                         icon={<DeleteIcon/>}
-                        name={props.intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
+                        name={intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
                         onClick={() => props.onDeleteOption(option)}
                     />
                     <Menu.Separator/>
@@ -138,7 +137,6 @@ function ValueSelector(props: Props): JSX.Element {
                     option={option}
                     meta={meta}
                     onChangeColor={props.onChangeColor}
-                    intl={props.intl}
                     onDeleteOption={props.onDeleteOption}
                 />
             )}
@@ -163,4 +161,4 @@ function ValueSelector(props: Props): JSX.Element {
     )
 }
 
-export default injectIntl(ValueSelector)
+export default ValueSelector

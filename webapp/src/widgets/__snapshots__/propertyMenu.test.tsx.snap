@@ -13,6 +13,7 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
       >
         <input
           class="PropertyMenu menu-textbox"
+          spellcheck="true"
           type="text"
           value="test-property"
         />
@@ -151,6 +152,21 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                     class="menu-name"
                   >
                     Select
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="MenuOption TextOption menu-option"
+                >
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Date
                   </div>
                   <div
                     class="noicon"

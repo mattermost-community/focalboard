@@ -1,0 +1,59 @@
+run:
+  timeout: 5m
+  modules-download-mode: readonly
+  skip-dirs:
+    - services/store/sqlstore/migrations/
+
+linters-settings:
+  gofmt:
+    simplify: true
+  govet:
+    check-shadowing: true
+    enable-all: true
+    disable:
+      - fieldalignment
+
+linters:
+  disable-all: true
+
+  enable:
+    - gofmt
+    - goimports
+    - deadcode
+    - ineffassign
+    - structcheck
+    - varcheck
+    - unparam
+    - errcheck
+    - govet
+    - bodyclose
+    - durationcheck
+    - errorlint
+    - exhaustive
+    - exportloopref
+    - gosec
+    - makezero
+    - staticcheck
+    - prealloc
+    - asciicheck
+    - depguard
+    - dogsled
+    - dupl
+    - gochecknoinits
+    - goconst
+    - gocritic
+    - godot
+    - goerr113
+    - goheader
+    - golint
+    - gomnd
+    - gomodguard
+    - goprintffuncname
+    - gosimple
+    - lll
+    - misspell
+    - nolintlint
+    - stylecheck
+    - unconvert
+    - whitespace
+    - gocyclo
