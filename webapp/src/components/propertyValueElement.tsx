@@ -13,8 +13,10 @@ import {BoardTree} from '../viewModel/boardTree'
 import Editable from '../widgets/editable'
 import ValueSelector from '../widgets/valueSelector'
 import Label from '../widgets/label'
-import URLProperty from "./properties/link/link";
+
 import EditableDayPicker from '../widgets/editableDayPicker'
+
+import URLProperty from './properties/link/link'
 
 type Props = {
     boardTree?: BoardTree
