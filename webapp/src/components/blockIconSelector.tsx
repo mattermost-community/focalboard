@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useMemo} from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {useIntl} from 'react-intl'
 
 import {BlockIcons} from '../blockIcons'
 import {Board} from '../blocks/board'
@@ -17,12 +17,12 @@ import './blockIconSelector.scss'
 type Props = {
     block: Board|Card
     size?: 's' | 'm' | 'l'
-    intl: IntlShape
     readonly?: boolean
 }
 
 const BlockIconSelector = React.memo((props: Props) => {
-    const {block, intl, size} = props
+    const {block, size} = props
+    const intl = useIntl()
 
     const onSelectEmoji = useMemo(() => (emoji: string) => {
         mutator.changeIcon(props.block, emoji)
@@ -72,4 +72,4 @@ const BlockIconSelector = React.memo((props: Props) => {
     )
 })
 
-export default injectIntl(BlockIconSelector)
+export default BlockIconSelector

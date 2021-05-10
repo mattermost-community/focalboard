@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
-import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {BlockIcons} from '../blockIcons'
 import {Board} from '../blocks/board'
@@ -18,14 +18,14 @@ import './viewTitle.scss'
 
 type Props = {
     board: Board
-    intl: IntlShape
     readonly: boolean
 }
 
 const ViewTitle = React.memo((props: Props) => {
     const [title, setTitle] = useState(props.board.title)
 
-    const {board, intl} = props
+    const {board} = props
+    const intl = useIntl()
 
     return (
         <>
@@ -102,4 +102,4 @@ const ViewTitle = React.memo((props: Props) => {
     )
 })
 
-export default injectIntl(ViewTitle)
+export default ViewTitle

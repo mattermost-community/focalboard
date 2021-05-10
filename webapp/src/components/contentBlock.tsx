@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {useIntl} from 'react-intl'
 
 import {Card} from '../blocks/card'
 import {IContentBlock} from '../blocks/contentBlock'
@@ -29,12 +29,12 @@ type Props = {
     card: Card
     contents: readonly IContentBlock[]
     readonly: boolean
-    intl: IntlShape
     onDrop: (srctBlock: IContentBlock, dstBlock: IContentBlock) => void
 }
 
 const ContentBlock = React.memo((props: Props): JSX.Element => {
-    const {intl, card, contents, block, readonly} = props
+    const {card, contents, block, readonly} = props
+    const intl = useIntl()
     const [isDragging, isOver, gripRef, itemRef] = useSortableWithGrip('content', block, true, props.onDrop)
 
     const index = contents.indexOf(block)
@@ -123,4 +123,4 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
     )
 })
 
-export default injectIntl(ContentBlock)
+export default ContentBlock

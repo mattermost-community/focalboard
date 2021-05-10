@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {useIntl} from 'react-intl'
 
 import {IContentBlock} from '../../blocks/contentBlock'
 import {MutableTextBlock} from '../../blocks/textBlock'
@@ -14,11 +14,11 @@ import {contentRegistry} from './contentRegistry'
 type Props = {
     block: IContentBlock
     readonly: boolean
-    intl: IntlShape
 }
 
 const TextElement = React.memo((props: Props): JSX.Element => {
-    const {intl, block, readonly} = props
+    const {block, readonly} = props
+    const intl = useIntl()
 
     return (
         <MarkdownEditor
@@ -39,15 +39,14 @@ contentRegistry.registerContentType({
     createBlock: async () => {
         return new MutableTextBlock()
     },
-    createComponent: (block, intl, readonly) => {
+    createComponent: (block, readonly) => {
         return (
             <TextElement
                 block={block}
-                intl={intl}
                 readonly={readonly}
             />
         )
     },
 })
 
-export default injectIntl(TextElement)
+export default TextElement

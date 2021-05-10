@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
@@ -29,7 +29,6 @@ type Props = {
     visiblePropertyTemplates: IPropertyTemplate[]
     visibleTitle: boolean
     isSelected: boolean
-    intl: IntlShape
     readonly: boolean
     isManualSort: boolean
     onDrop: (srcCard: Card, dstCard: Card) => void
@@ -37,6 +36,7 @@ type Props = {
 
 const GalleryCard = React.memo((props: Props) => {
     const {cardTree} = props
+    const intl = useIntl()
     const [isDragging, isOver, cardRef] = useSortable('card', cardTree.card, props.isManualSort && !props.readonly, props.onDrop)
 
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
@@ -65,13 +65,13 @@ const GalleryCard = React.memo((props: Props) => {
                         <Menu.Text
                             icon={<DeleteIcon/>}
                             id='delete'
-                            name={props.intl.formatMessage({id: 'GalleryCard.delete', defaultMessage: 'Delete'})}
+                            name={intl.formatMessage({id: 'GalleryCard.delete', defaultMessage: 'Delete'})}
                             onClick={() => mutator.deleteBlock(cardTree.card, 'delete card')}
                         />
                         <Menu.Text
                             icon={<DuplicateIcon/>}
                             id='duplicate'
-                            name={props.intl.formatMessage({id: 'GalleryCard.duplicate', defaultMessage: 'Duplicate'})}
+                            name={intl.formatMessage({id: 'GalleryCard.duplicate', defaultMessage: 'Duplicate'})}
                             onClick={() => {
                                 mutator.duplicateCard(cardTree.card.id)
                             }}
@@ -121,4 +121,4 @@ const GalleryCard = React.memo((props: Props) => {
     )
 })
 
-export default injectIntl(GalleryCard)
+export default GalleryCard

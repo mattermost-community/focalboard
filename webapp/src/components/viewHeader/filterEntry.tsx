@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {FilterClause} from '../../blocks/filterClause'
 import {FilterGroup} from '../../blocks/filterGroup'
@@ -22,12 +22,12 @@ type Props = {
     board: Board
     view: BoardView
     conditionClicked: (optionId: string, filter: FilterClause) => void
-    intl: IntlShape
     filter: FilterClause
 }
 
 const FilterEntry = React.memo((props: Props): JSX.Element => {
-    const {board, view, intl, filter} = props
+    const {board, view, filter} = props
+    const intl = useIntl()
 
     const template = board.cardProperties.find((o) => o.id === filter.propertyId)
     const propertyName = template ? template.name : '(unknown)'		// TODO: Handle error
@@ -108,4 +108,4 @@ const FilterEntry = React.memo((props: Props): JSX.Element => {
     )
 })
 
-export default injectIntl(FilterEntry)
+export default FilterEntry

@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Constants} from '../../constants'
 import {IPropertyTemplate} from '../../blocks/board'
@@ -14,10 +14,10 @@ import MenuWrapper from '../../widgets/menuWrapper'
 type Props = {
     properties: readonly IPropertyTemplate[]
     activeView: BoardView
-    intl: IntlShape
 }
 const ViewHeaderPropertiesMenu = React.memo((props: Props) => {
     const {properties, activeView} = props
+    const intl = useIntl()
     return (
         <MenuWrapper>
             <Button>
@@ -31,7 +31,7 @@ const ViewHeaderPropertiesMenu = React.memo((props: Props) => {
                     <Menu.Switch
                         key={Constants.titleColumnId}
                         id={Constants.titleColumnId}
-                        name={props.intl.formatMessage({id: 'default-properties.title', defaultMessage: 'Title'})}
+                        name={intl.formatMessage({id: 'default-properties.title', defaultMessage: 'Title'})}
                         isOn={activeView.visiblePropertyIds.includes(Constants.titleColumnId)}
                         onClick={(propertyId: string) => {
                             let newVisiblePropertyIds = []
@@ -65,4 +65,4 @@ const ViewHeaderPropertiesMenu = React.memo((props: Props) => {
     )
 })
 
-export default injectIntl(ViewHeaderPropertiesMenu)
+export default ViewHeaderPropertiesMenu

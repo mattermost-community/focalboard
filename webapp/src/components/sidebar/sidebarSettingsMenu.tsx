@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useContext, useState} from 'react'
-import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Archiver} from '../../archiver'
 import {darkTheme, defaultTheme, lightTheme, setTheme, Theme} from '../../theme'
@@ -13,12 +13,11 @@ import {UserSettings} from '../../userSettings'
 import './sidebarSettingsMenu.scss'
 
 type Props = {
-    intl: IntlShape
     setWhiteLogo: (whiteLogo: boolean) => void
 }
 
 const SidebarSettingsMenu = React.memo((props: Props) => {
-    const {intl} = props
+    const intl = useIntl()
     const setLanguage = useContext(SetLanguageContext)
 
     const updateTheme = (theme: Theme | null) => {
@@ -152,4 +151,4 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
     )
 })
 
-export default injectIntl(SidebarSettingsMenu)
+export default SidebarSettingsMenu

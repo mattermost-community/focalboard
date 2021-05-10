@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
-import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Board} from '../../blocks/board'
 import {BoardView, IViewType, sortBoardViewsAlphabetically} from '../../blocks/boardView'
@@ -25,12 +25,12 @@ type Props = {
     showBoard: (id?: string) => void
     showView: (id: string, boardId?: string) => void
     activeBoardId?: string
-    intl: IntlShape
     nextBoardId?: string
 }
 
 const SidebarBoardItem = React.memo((props: Props) => {
     const [collapsed, setCollapsed] = useState(false)
+    const intl = useIntl()
 
     const iconForViewType = (viewType: IViewType): JSX.Element => {
         switch (viewType) {
@@ -46,7 +46,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
 
         await mutator.duplicateBoard(
             boardId,
-            props.intl.formatMessage({id: 'Mutator.duplicate-board', defaultMessage: 'duplicate board'}),
+            intl.formatMessage({id: 'Mutator.duplicate-board', defaultMessage: 'duplicate board'}),
             false,
             async (newBoardId) => {
                 props.showBoard(newBoardId)
@@ -64,7 +64,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
 
         await mutator.duplicateBoard(
             boardId,
-            props.intl.formatMessage({id: 'Mutator.new-template-from-board', defaultMessage: 'new template from board'}),
+            intl.formatMessage({id: 'Mutator.new-template-from-board', defaultMessage: 'new template from board'}),
             true,
             async (newBoardId) => {
                 props.showBoard(newBoardId)
@@ -77,7 +77,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
         )
     }
 
-    const {board, intl, views} = props
+    const {board, views} = props
     const displayTitle: string = board.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})
     const boardViews = sortBoardViewsAlphabetically(views.filter((view) => view.parentId === board.id))
 
@@ -166,4 +166,4 @@ const SidebarBoardItem = React.memo((props: Props) => {
     )
 })
 
-export default injectIntl(SidebarBoardItem)
+export default SidebarBoardItem

@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {FC, useEffect, useState} from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {useIntl} from 'react-intl'
 
 import {IBlock} from '../../blocks/block'
 import mutator from '../../mutator'
@@ -19,11 +19,11 @@ type Props = {
     comment: IBlock
     userId: string
     userImageUrl: string
-    intl: IntlShape
 }
 
 const Comment: FC<Props> = (props: Props) => {
-    const {comment, userId, userImageUrl, intl} = props
+    const {comment, userId, userImageUrl} = props
+    const intl = useIntl()
     const html = Utils.htmlFromMarkdown(comment.title)
 
     const [username, setUsername] = useState('')
@@ -68,4 +68,4 @@ const Comment: FC<Props> = (props: Props) => {
     )
 }
 
-export default injectIntl(Comment)
+export default Comment

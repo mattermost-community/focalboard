@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
-import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {CommentBlock, MutableCommentBlock} from '../../blocks/commentBlock'
 import mutator from '../../mutator'
@@ -17,7 +17,6 @@ type Props = {
     comments: readonly CommentBlock[]
     rootId: string
     cardId: string
-    intl: IntlShape
 }
 
 const CommentsList = React.memo((props: Props) => {
@@ -39,7 +38,8 @@ const CommentsList = React.memo((props: Props) => {
         }
     }
 
-    const {comments, intl} = props
+    const {comments} = props
+    const intl = useIntl()
 
     // TODO: Replace this placeholder
     const userImageUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="fill: rgb(192, 192, 192);"><rect width="100" height="100" /></svg>'
@@ -90,4 +90,4 @@ const CommentsList = React.memo((props: Props) => {
     )
 })
 
-export default injectIntl(CommentsList)
+export default CommentsList
