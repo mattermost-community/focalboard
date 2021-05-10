@@ -66,21 +66,6 @@ function makeCommonConfig() {
                     ],
                     exclude: [/node_modules/],
                 },
-                {
-                    test: /\.(png|eot|tiff|svg|woff2|woff|ttf|gif|mp3|jpg)$/,
-                    use: [
-                        {
-                            loader: 'file-loader',
-                            options: {
-                                name: 'files/[contenthash].[ext]',
-                            },
-                        },
-                        {
-                            loader: 'image-webpack-loader',
-                            options: {},
-                        },
-                    ],
-                },
             ],
         },
         resolve: {
