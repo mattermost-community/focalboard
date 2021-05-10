@@ -3,7 +3,6 @@
 import React, {useState, useEffect} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {useRouteMatch} from 'react-router'
-import {withRouter, RouteComponentProps} from 'react-router-dom'
 
 import {ISharing} from '../blocks/sharing'
 
@@ -18,7 +17,7 @@ import Switch from '../widgets/switch'
 import Modal from './modal'
 import './shareBoardComponent.scss'
 
-type Props = RouteComponentProps<{workspaceId?: string}> & {
+type Props = {
     boardId: string
     onClose: () => void
 }
@@ -149,4 +148,4 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
     )
 })
 
-export default withRouter(ShareBoardComponent)
+export default ShareBoardComponent
