@@ -145,6 +145,8 @@ const MarkdownEditor = (props: Props): JSX. Element => {
                     toolbar: false,
                     status: false,
                     spellChecker: false,
+                    inputStyle: 'contenteditable',
+                    nativeSpellcheck: true,
                     minHeight: '10px',
                     shortcuts: {
                         toggleStrikethrough: 'Cmd-.',

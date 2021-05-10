@@ -75,6 +75,7 @@ const PropertyMenu = React.memo((props: Props) => {
                         e.stopPropagation()
                     }
                 }}
+                spellCheck={true}
             />
             <Menu.SubMenu
                 id='type'

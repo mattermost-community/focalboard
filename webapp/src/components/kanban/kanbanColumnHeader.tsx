@@ -104,6 +104,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                             setGroupTitle(group.option.value)
                         }}
                         readonly={props.readonly}
+                        spellCheck={true}
                     />
                 </Label>}
             <Button>{`${group.cards.length}`}</Button>

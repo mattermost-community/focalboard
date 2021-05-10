@@ -93,6 +93,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     }}
                     onCancel={() => setTitle(props.cardTree.card.title)}
                     readonly={props.readonly}
+                    spellCheck={true}
                 />
 
                 {/* Property list */}
