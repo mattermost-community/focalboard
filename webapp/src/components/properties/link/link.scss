@@ -1,14 +1,21 @@
 .property-link {
+    &.url {
+        padding-right: 2rem;
+    }
+
     a {
         color: rgb(var(--body-color));
-        //display: none;
-        animation: fadeOut 0.6s;
+        padding: 8px; // increases clickable area for better UX
+        display: none;
+    }
+
+    a:hover {
+        background:  unset;
     }
 
     &:hover {
         a {
             display: inline;
-            animation: fadeIn 0.6s;
         }
     }
 }
