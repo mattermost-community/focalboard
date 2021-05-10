@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useRef, useEffect} from 'react'
-import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage} from 'react-intl'
 
 import {BlockIcons} from '../../blockIcons'
 import mutator from '../../mutator'
@@ -23,7 +23,6 @@ import './cardDetail.scss'
 type Props = {
     boardTree: BoardTree
     cardTree: CardTree
-    intl: IntlShape
     readonly: boolean
 }
 
@@ -135,4 +134,4 @@ const CardDetail = (props: Props): JSX.Element|null => {
     )
 }
 
-export default injectIntl(CardDetail)
+export default CardDetail

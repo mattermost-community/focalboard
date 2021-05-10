@@ -6,10 +6,10 @@
     .add-buttons {
         display: flex;
         flex-direction: column;
-	    min-height: 30px;
-	    color:rgba(var(--body-color), 0.4);
-	    width: 100%;
-	    align-items: flex-start;
+        min-height: 30px;
+        color: rgba(var(--body-color), 0.4);
+        width: 100%;
+        align-items: flex-start;
         .Button {
             display: none;
         }

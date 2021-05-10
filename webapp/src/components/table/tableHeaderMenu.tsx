@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 //
 import React, {FC} from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {useIntl} from 'react-intl'
 
 import {Constants} from '../../constants'
 import mutator from '../../mutator'
@@ -12,12 +12,12 @@ import Menu from '../../widgets/menu'
 type Props = {
     templateId: string
     boardTree: BoardTree
-    intl: IntlShape
 }
 
 const TableHeaderMenu: FC<Props> = (props: Props): JSX.Element => {
-    const {boardTree, templateId, intl} = props
+    const {boardTree, templateId} = props
     const {board, activeView} = boardTree
+    const intl = useIntl()
     return (
         <Menu>
             <Menu.Text
@@ -76,4 +76,4 @@ const TableHeaderMenu: FC<Props> = (props: Props): JSX.Element => {
     )
 }
 
-export default injectIntl(TableHeaderMenu)
+export default TableHeaderMenu

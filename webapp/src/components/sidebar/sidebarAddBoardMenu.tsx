@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useEffect} from 'react'
-import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage, useIntl, IntlShape} from 'react-intl'
 
 import {MutableBoard} from '../../blocks/board'
 import {MutableBoardView} from '../../blocks/boardView'
@@ -21,7 +21,6 @@ type Props = {
     showBoard: (id?: string) => void
     workspaceTree: WorkspaceTree,
     activeBoardId?: string
-    intl: IntlShape
 }
 
 const addBoardClicked = async (showBoard: (id: string) => void, intl: IntlShape, activeBoardId?: string) => {
@@ -79,7 +78,8 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
         }
     }, [])
 
-    const {workspaceTree, intl} = props
+    const {workspaceTree} = props
+    const intl = useIntl()
 
     if (!workspaceTree) {
         return <div/>
@@ -132,7 +132,7 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
                         id='empty-template'
                         name={intl.formatMessage({id: 'Sidebar.empty-board', defaultMessage: 'Empty board'})}
                         icon={<BoardIcon/>}
-                        onClick={() => addBoardClicked(props.showBoard, props.intl, props.activeBoardId)}
+                        onClick={() => addBoardClicked(props.showBoard, intl, props.activeBoardId)}
                     />
 
                     <Menu.Text
@@ -146,4 +146,4 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
     )
 }
 
-export default injectIntl(SidebarAddBoardMenu)
+export default SidebarAddBoardMenu

@@ -44,6 +44,21 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		defer tearDown()
 		testGetRootID(t, store, container)
 	})
+	t.Run("GetBlocksWithParentAndType", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testGetBlocksWithParentAndType(t, store, container)
+	})
+	t.Run("GetBlocksWithParent", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testGetBlocksWithParent(t, store, container)
+	})
+	t.Run("GetBlocksWithType", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testGetBlocksWithType(t, store, container)
+	})
 }
 
 func testInsertBlock(t *testing.T, store store.Store, container store.Container) {
@@ -449,5 +464,195 @@ func testDeleteBlock(t *testing.T, store store.Store, container store.Container)
 		time.Sleep(1 * time.Millisecond)
 		err := store.DeleteBlock(container, "not-exists", userID)
 		require.NoError(t, err)
+	})
+}
+
+func testGetBlocksWithParentAndType(t *testing.T, store store.Store, container store.Container) {
+	userID := "user-id"
+
+	blocks, err := store.GetAllBlocks(container)
+	require.NoError(t, err)
+
+	blocksToInsert := []model.Block{
+		{
+			ID:         "block1",
+			ParentID:   "",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test",
+		},
+		{
+			ID:         "block2",
+			ParentID:   "block1",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test",
+		},
+		{
+			ID:         "block3",
+			ParentID:   "block1",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test",
+		},
+		{
+			ID:         "block4",
+			ParentID:   "block1",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test2",
+		},
+		{
+			ID:         "block5",
+			ParentID:   "block2",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test",
+		},
+	}
+	InsertBlocks(t, store, container, blocksToInsert)
+	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
+
+	t.Run("not existing parent", func(t *testing.T) {
+		time.Sleep(1 * time.Millisecond)
+		blocks, err = store.GetBlocksWithParentAndType(container, "not-exists", "test")
+		require.NoError(t, err)
+		require.Len(t, blocks, 0)
+	})
+
+	t.Run("not existing type", func(t *testing.T) {
+		time.Sleep(1 * time.Millisecond)
+		blocks, err = store.GetBlocksWithParentAndType(container, "block1", "not-existing")
+		require.NoError(t, err)
+		require.Len(t, blocks, 0)
+	})
+
+	t.Run("valid parent and type", func(t *testing.T) {
+		time.Sleep(1 * time.Millisecond)
+		blocks, err = store.GetBlocksWithParentAndType(container, "block1", "test")
+		require.NoError(t, err)
+		require.Len(t, blocks, 2)
+	})
+}
+
+func testGetBlocksWithParent(t *testing.T, store store.Store, container store.Container) {
+	userID := "user-id"
+
+	blocks, err := store.GetAllBlocks(container)
+	require.NoError(t, err)
+
+	blocksToInsert := []model.Block{
+		{
+			ID:         "block1",
+			ParentID:   "",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test",
+		},
+		{
+			ID:         "block2",
+			ParentID:   "block1",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test",
+		},
+		{
+			ID:         "block3",
+			ParentID:   "block1",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test",
+		},
+		{
+			ID:         "block4",
+			ParentID:   "block1",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test2",
+		},
+		{
+			ID:         "block5",
+			ParentID:   "block2",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test",
+		},
+	}
+	InsertBlocks(t, store, container, blocksToInsert)
+	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
+
+	t.Run("not existing parent", func(t *testing.T) {
+		time.Sleep(1 * time.Millisecond)
+		blocks, err = store.GetBlocksWithParent(container, "not-exists")
+		require.NoError(t, err)
+		require.Len(t, blocks, 0)
+	})
+
+	t.Run("valid parent", func(t *testing.T) {
+		time.Sleep(1 * time.Millisecond)
+		blocks, err = store.GetBlocksWithParent(container, "block1")
+		require.NoError(t, err)
+		require.Len(t, blocks, 3)
+	})
+}
+
+func testGetBlocksWithType(t *testing.T, store store.Store, container store.Container) {
+	userID := "user-id"
+
+	blocks, err := store.GetAllBlocks(container)
+	require.NoError(t, err)
+
+	blocksToInsert := []model.Block{
+		{
+			ID:         "block1",
+			ParentID:   "",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test",
+		},
+		{
+			ID:         "block2",
+			ParentID:   "block1",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test",
+		},
+		{
+			ID:         "block3",
+			ParentID:   "block1",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test",
+		},
+		{
+			ID:         "block4",
+			ParentID:   "block1",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test2",
+		},
+		{
+			ID:         "block5",
+			ParentID:   "block2",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test",
+		},
+	}
+	InsertBlocks(t, store, container, blocksToInsert)
+	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
+
+	t.Run("not existing type", func(t *testing.T) {
+		time.Sleep(1 * time.Millisecond)
+		blocks, err = store.GetBlocksWithType(container, "not-exists")
+		require.NoError(t, err)
+		require.Len(t, blocks, 0)
+	})
+
+	t.Run("valid type", func(t *testing.T) {
+		time.Sleep(1 * time.Millisecond)
+		blocks, err = store.GetBlocksWithType(container, "test")
+		require.NoError(t, err)
+		require.Len(t, blocks, 4)
 	})
 }

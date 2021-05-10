@@ -16,7 +16,7 @@ import {FilterCondition} from './blocks/filterClause'
 import {Utils} from './utils'
 
 class OctoUtils {
-    static propertyDisplayValue(block: IBlock, propertyValue: string | undefined, propertyTemplate: IPropertyTemplate): string | undefined {
+    static propertyDisplayValue(block: IBlock, propertyValue: string | undefined, propertyTemplate: IPropertyTemplate, intl: IntlShape): string | undefined {
         let displayValue: string | undefined
         switch (propertyTemplate.type) {
         case 'select': {
@@ -31,11 +31,17 @@ class OctoUtils {
             break
         }
         case 'createdTime': {
-            displayValue = Utils.displayDateTime(new Date(block.createAt))
+            displayValue = Utils.displayDateTime(new Date(block.createAt), intl)
             break
         }
         case 'updatedTime': {
-            displayValue = Utils.displayDateTime(new Date(block.updateAt))
+            displayValue = Utils.displayDateTime(new Date(block.updateAt), intl)
+            break
+        }
+        case 'date': {
+            if (propertyValue) {
+                displayValue = Utils.displayDate(new Date(parseInt(propertyValue, 10)), intl)
+            }
             break
         }
         default:

@@ -327,7 +327,10 @@ func (s *SQLStore) InsertBlock(c store.Container, block model.Block) error {
 	)
 
 	// TODO: migrate this delete/insert to an upsert
-	deleteQuery := s.getQueryBuilder().Delete(s.tablePrefix + "blocks").Where(sq.Eq{"id": block.ID})
+	deleteQuery := s.getQueryBuilder().
+		Delete(s.tablePrefix + "blocks").
+		Where(sq.Eq{"id": block.ID}).
+		Where(sq.Eq{"COALESCE(workspace_id, '0')": c.WorkspaceID})
 	_, err = sq.ExecContextWith(ctx, tx, deleteQuery)
 	if err != nil {
 		tx.Rollback()
@@ -384,7 +387,10 @@ func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy str
 		return err
 	}
 
-	deleteQuery := s.getQueryBuilder().Delete(s.tablePrefix + "blocks").Where(sq.Eq{"id": blockID})
+	deleteQuery := s.getQueryBuilder().
+		Delete(s.tablePrefix + "blocks").
+		Where(sq.Eq{"id": blockID}).
+		Where(sq.Eq{"COALESCE(workspace_id, '0')": c.WorkspaceID})
 
 	_, err = sq.ExecContextWith(ctx, tx, deleteQuery)
 	if err != nil {

@@ -8,7 +8,7 @@
         color: #909090;
     }
 
-    .octo-board-header-cell{
+    .octo-board-header-cell {
         display: flex;
         flex-shrink: 0;
         align-items: center;
@@ -29,28 +29,27 @@
             }
         }
 
-        .IconButton{
+        .IconButton {
             background-color: unset;
             &:hover {
                 background-color: rgba(var(--body-color), 0.1);
             }
         }
 
-        .Label{
+        .Label {
             max-width: 165px;
             margin-right: 5px;
             .Editable {
                 background: transparent;
             }
         }
-        >.Button {
+        > .Button {
             &.IconButton {
                 cursor: pointer;
             }
             cursor: auto;
         }
     }
-
 
     .octo-board-body {
         display: flex;

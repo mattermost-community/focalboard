@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {useIntl} from 'react-intl'
 
 import {MutableCheckboxBlock} from '../../blocks/checkboxBlock'
 import {IContentBlock} from '../../blocks/contentBlock'
@@ -15,11 +15,11 @@ import './checkboxElement.scss'
 type Props = {
     block: IContentBlock
     readonly: boolean
-    intl: IntlShape
 }
 
 const CheckboxElement = React.memo((props: Props) => {
-    const {intl, block, readonly} = props
+    const {block, readonly} = props
+    const intl = useIntl()
 
     const [active, setActive] = useState(Boolean(block.fields.value))
     const [title, setTitle] = useState(block.title)
@@ -64,15 +64,14 @@ contentRegistry.registerContentType({
     createBlock: async () => {
         return new MutableCheckboxBlock()
     },
-    createComponent: (block, intl, readonly) => {
+    createComponent: (block, readonly) => {
         return (
             <CheckboxElement
                 block={block}
-                intl={intl}
                 readonly={readonly}
             />
         )
     },
 })
 
-export default injectIntl(CheckboxElement)
+export default CheckboxElement

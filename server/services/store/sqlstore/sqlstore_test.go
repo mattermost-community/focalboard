@@ -34,4 +34,5 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 func TestBlocksStore(t *testing.T) {
 	t.Run("BlocksStore", func(t *testing.T) { storetests.StoreTestBlocksStore(t, SetupTests) })
 	t.Run("SharingStore", func(t *testing.T) { storetests.StoreTestSharingStore(t, SetupTests) })
+	t.Run("SystemStore", func(t *testing.T) { storetests.StoreTestSystemStore(t, SetupTests) })
 }

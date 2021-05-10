@@ -24,12 +24,13 @@ type Props = {
     readonly: boolean
     offset: number
     resizingColumn: string
+    columnRefs: Map<string, React.RefObject<HTMLDivElement>>
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
     onDrop: (srcCard: Card, dstCard: Card) => void
 }
 
 const TableRow = React.memo((props: Props) => {
-    const {boardTree, onSaveWithEnter} = props
+    const {boardTree, onSaveWithEnter, columnRefs} = props
     const {board, activeView} = boardTree
 
     const titleRef = useRef<{focus(selectAll?: boolean): void}>(null)
@@ -56,6 +57,10 @@ const TableRow = React.memo((props: Props) => {
         className += ' dragover'
     }
 
+    if (!columnRefs.get(Constants.titleColumnId)) {
+        columnRefs.set(Constants.titleColumnId, React.createRef())
+    }
+
     return (
         <div
             className={className}
@@ -70,6 +75,7 @@ const TableRow = React.memo((props: Props) => {
                 className='octo-table-cell title-cell'
                 id='mainBoardHeader'
                 style={{width: columnWidth(Constants.titleColumnId)}}
+                ref={columnRefs.get(Constants.titleColumnId)}
             >
                 <div className='octo-icontitle'>
                     <div className='octo-icon'>{card.icon}</div>
@@ -104,18 +110,22 @@ const TableRow = React.memo((props: Props) => {
             {board.cardProperties.
                 filter((template) => activeView.visiblePropertyIds.includes(template.id)).
                 map((template) => {
+                    if (!columnRefs.get(template.id)) {
+                        columnRefs.set(template.id, React.createRef())
+                    }
                     return (
                         <div
                             className='octo-table-cell'
                             key={template.id}
                             style={{width: columnWidth(template.id)}}
+                            ref={columnRefs.get(template.id)}
                         >
                             <PropertyValueElement
                                 readOnly={props.readonly}
                                 card={card}
                                 boardTree={boardTree}
                                 propertyTemplate={template}
-                                emptyDisplayValue='Empty'
+                                emptyDisplayValue=''
                             />
                         </div>)
                 })}

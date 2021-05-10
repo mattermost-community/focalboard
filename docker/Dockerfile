@@ -1,16 +1,38 @@
-FROM ubuntu:20.04
+FROM golang:alpine as gobuild
 
-# Make sure that the underlying container is patched to the latest versions
-RUN apt-get update && \
-    apt-get install -y gzip tar wget
+RUN apk update && \
+    apk add ca-certificates gcc git make musl-dev && \
+    git clone https://github.com/mattermost/focalboard && \
+    cd focalboard && \
+    make server-linux
 
-# Now install Focalboard as a seperate layer
-RUN wget https://github.com/mattermost/focalboard/releases/download/v0.6.5/focalboard-server-linux-amd64.tar.gz && \
-    tar -xvzf focalboard-server-linux-amd64.tar.gz && \
-    mv focalboard /opt
+FROM node:alpine as nodebuild
 
-EXPOSE 8000
+RUN apk update && \
+    apk add ca-certificates git && \
+    git clone https://github.com/mattermost/focalboard && \
+    cd focalboard/webapp && \
+    npm install && npm run pack
+
+FROM alpine:latest
+
+ARG PUID=2000
+ARG PGID=2000
+
+EXPOSE 8000/tcp
+
+RUN addgroup -g ${PGID} focalboard && \
+    adduser -H -D -u ${PUID} -G focalboard focalboard
 
 WORKDIR /opt/focalboard
 
-CMD /opt/focalboard/bin/focalboard-server
+COPY --from=gobuild /go/focalboard/bin/linux/focalboard-server bin/
+COPY --from=nodebuild /focalboard/webapp/pack pack/
+COPY --from=nodebuild /focalboard/LICENSE.txt LICENSE.txt
+COPY --from=nodebuild /focalboard/server-config.json config.json
+
+RUN chown -R ${PUID}:${PGID} /opt/focalboard
+
+USER focalboard
+
+CMD ["/opt/focalboard/bin/focalboard-server"]

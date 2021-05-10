@@ -1,12 +1,18 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import marked from 'marked'
+import {IntlShape} from 'react-intl'
 
 declare global {
     interface Window {
         msCrypto: Crypto
     }
 }
+
+const IconClass = 'octo-icon'
+const OpenButtonClass = 'open-button'
+const SpacerClass = 'octo-spacer'
+const HorizontalGripClass = 'HorizontalGrip'
 
 class Utils {
     static createGuid(): string {
@@ -43,36 +49,87 @@ class Utils {
         return String(text).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
     }
 
+    // re-use canvas object for better performance
+    static canvas = document.createElement('canvas') as HTMLCanvasElement
+    static getTextWidth(displayText: string, fontDescriptor: string) {
+        if (displayText !== '') {
+            const context = this.canvas.getContext('2d')
+            if (context) {
+                context.font = fontDescriptor
+                const metrics = context.measureText(displayText)
+                return Math.ceil(metrics.width)
+            }
+        }
+        return 0
+    }
+
+    static getFontAndPaddingFromCell = (cell: Element) : {fontDescriptor: string, padding: number} => {
+        const style = getComputedStyle(cell)
+        const padding = Utils.getHorizontalPadding(style)
+        return Utils.getFontAndPaddingFromChildren(cell.children, padding)
+    }
+
+    // recursive routine to determine the padding and font from its children
+    // specifically for the table view
+    static getFontAndPaddingFromChildren = (children: HTMLCollection, pad: number) : {fontDescriptor: string, padding: number} => {
+        const myResults = {
+            fontDescriptor: '',
+            padding: pad,
+        }
+        Array.from(children).forEach((element) => {
+            switch (element.className) {
+            case IconClass:
+            case SpacerClass:
+            case HorizontalGripClass:
+                myResults.padding += element.clientWidth
+                break
+            case OpenButtonClass:
+                break
+            default: {
+                const style = getComputedStyle(element)
+                myResults.fontDescriptor = style.font
+                myResults.padding += Utils.getHorizontalPadding(style)
+                const childResults = Utils.getFontAndPaddingFromChildren(element.children, myResults.padding)
+                if (childResults.fontDescriptor !== '') {
+                    myResults.fontDescriptor = childResults.fontDescriptor
+                    myResults.padding = childResults.padding
+                }
+            }
+            }
+        })
+        return myResults
+    }
+
+    static getHorizontalPadding = (style: CSSStyleDeclaration): number => {
+        return parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10) + parseInt(style.marginLeft, 10) + parseInt(style.marginRight, 10) + parseInt(style.borderLeft, 10) + parseInt(style.borderRight, 10)
+    }
+
     // Markdown
 
     static htmlFromMarkdown(text: string): string {
         // HACKHACK: Somehow, marked doesn't encode angle brackets
         const renderer = new marked.Renderer()
-        renderer.link = (href, title, contents) => `<a target="_blank" rel="noreferrer" href="${href}" title="${title || ''}" onclick="event.stopPropagation();">${contents}</a>`
+        renderer.link = (href, title, contents) => `<a target="_blank" rel="noreferrer" href="${href}" title="${title || ''}" onclick="event.stopPropagation(); openInNewBrowser && openInNewBrowser('${href}');">${contents}</a>`
         const html = marked(text.replace(/</g, '&lt;'), {renderer, breaks: true})
         return html
     }
 
     // Date and Time
 
-    static displayDate(date: Date): string {
-        const dateTimeFormat = new Intl.DateTimeFormat('en', {year: 'numeric', month: 'short', day: '2-digit'})
-        const text = dateTimeFormat.format(date)
+    static displayDate(date: Date, intl: IntlShape): string {
+        const text = intl.formatDate(date, {year: 'numeric', month: 'short', day: '2-digit'})
 
         return text
     }
 
-    static displayDateTime(date: Date): string {
-        const dateTimeFormat = new Intl.DateTimeFormat(
-            'en',
-            {
-                year: 'numeric',
-                month: 'short',
-                day: '2-digit',
-                hour: 'numeric',
-                minute: 'numeric',
-            })
-        const text = dateTimeFormat.format(date)
+    static displayDateTime(date: Date, intl: IntlShape): string {
+        const text = intl.formatDate(date, {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit',
+            hour: 'numeric',
+            minute: 'numeric',
+        })
         return text
     }
 

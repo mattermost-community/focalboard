@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {BoardTree} from '../../viewModel/boardTree'
 import ButtonWithMenu from '../../widgets/buttons/buttonWithMenu'
@@ -17,11 +17,11 @@ type Props = {
     addCardFromTemplate: (cardTemplateId: string) => void
     addCardTemplate: () => void
     editCardTemplate: (cardTemplateId: string) => void
-    intl: IntlShape
 }
 
 const NewCardButton = React.memo((props: Props): JSX.Element => {
-    const {intl, boardTree} = props
+    const {boardTree} = props
+    const intl = useIntl()
 
     return (
         <ButtonWithMenu
@@ -77,4 +77,4 @@ const NewCardButton = React.memo((props: Props): JSX.Element => {
     )
 })
 
-export default injectIntl(NewCardButton)
+export default NewCardButton

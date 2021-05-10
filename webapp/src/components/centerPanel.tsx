@@ -11,6 +11,7 @@ import {CardFilter} from '../cardFilter'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
+import {UserSettings} from '../userSettings'
 
 import './centerPanel.scss'
 import CardDialog from './cardDialog'
@@ -164,6 +165,7 @@ class CenterPanel extends React.Component<Props, State> {
                                 showCard={this.showCard}
                                 addCard={(show) => this.addCard('', show)}
                                 onCardClicked={this.cardClicked}
+                                intl={this.props.intl}
                             />}
                         {activeView.viewType === 'gallery' &&
                             <Gallery
@@ -217,7 +219,7 @@ class CenterPanel extends React.Component<Props, State> {
             }
         }
         card.properties = {...card.properties, ...propertiesThatMeetFilters}
-        if (!card.icon) {
+        if (!card.icon && UserSettings.prefillRandomIcons) {
             card.icon = BlockIcons.shared.randomIcon()
         }
         await mutator.insertBlock(

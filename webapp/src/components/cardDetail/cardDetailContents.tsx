@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {useIntl, IntlShape} from 'react-intl'
 
 import {IContentBlock} from '../../blocks/contentBlock'
 import {MutableTextBlock} from '../../blocks/textBlock'
@@ -14,7 +14,6 @@ import {MarkdownEditor} from '../markdownEditor'
 
 type Props = {
     cardTree: CardTree
-    intl: IntlShape
     readonly: boolean
 }
 
@@ -50,6 +49,7 @@ function moveBlock(card: Card, srcBlock: IContentBlock, dstBlock: IContentBlock,
 }
 
 const CardDetailContents = React.memo((props: Props) => {
+    const intl = useIntl()
     const {cardTree} = props
     if (!cardTree) {
         return null
@@ -66,7 +66,7 @@ const CardDetailContents = React.memo((props: Props) => {
                         card={card}
                         contents={cardTree.contents}
                         readonly={props.readonly}
-                        onDrop={(src, dst) => moveBlock(card, src, dst, props.intl)}
+                        onDrop={(src, dst) => moveBlock(card, src, dst, intl)}
                     />
                 ))}
             </div>
@@ -82,7 +82,7 @@ const CardDetailContents = React.memo((props: Props) => {
                         placeholderText='Add a description...'
                         onBlur={(text) => {
                             if (text) {
-                                addTextBlock(card, props.intl, text)
+                                addTextBlock(card, intl, text)
                             }
                         }}
                     />
@@ -92,4 +92,4 @@ const CardDetailContents = React.memo((props: Props) => {
     )
 })
 
-export default injectIntl(CardDetailContents)
+export default CardDetailContents

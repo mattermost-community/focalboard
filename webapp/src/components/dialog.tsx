@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {useIntl} from 'react-intl'
 import {useHotkeys} from 'react-hotkeys-hook'
 
 import IconButton from '../widgets/buttons/iconButton'
@@ -14,11 +14,11 @@ type Props = {
     children: React.ReactNode
     toolsMenu: React.ReactNode
     onClose: () => void,
-    intl: IntlShape
 }
 
 const Dialog = React.memo((props: Props) => {
-    const {toolsMenu, intl} = props
+    const {toolsMenu} = props
+    const intl = useIntl()
 
     const closeDialogText = intl.formatMessage({
         id: 'Dialog.closeDialog',
@@ -63,4 +63,4 @@ const Dialog = React.memo((props: Props) => {
     )
 })
 
-export default injectIntl(Dialog)
+export default Dialog

@@ -7,6 +7,7 @@ import './horizontalGrip.scss'
 
 type Props = {
     templateId: string
+    onAutoSizeColumn: (columnID: string) => void;
 }
 
 const HorizontalGrip = React.memo((props: Props): JSX.Element => {
@@ -19,6 +20,7 @@ const HorizontalGrip = React.memo((props: Props): JSX.Element => {
         <div
             ref={drag}
             className='HorizontalGrip'
+            onDoubleClick={() => props.onAutoSizeColumn(props.templateId)}
         />
     )
 })

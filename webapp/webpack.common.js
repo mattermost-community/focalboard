@@ -92,10 +92,9 @@ function makeCommonConfig() {
                 publicPath: '{{.BaseURL}}/',
             }),
         ],
-        entry: {
-            main: './src/main.tsx',
-        },
+        entry: ['./src/main.tsx', './src/userSettings.ts'],
         output: {
+            library: 'Focalboard',
             filename: 'static/[name].js',
             path: outpath,
         },

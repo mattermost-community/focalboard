@@ -2,20 +2,20 @@
     display: flex;
     flex: 0 0 auto;
     align-items: center;
-	text-align: center;
+    text-align: center;
     justify-content: center;
-	border-radius: var(--default-rad);
-	min-width: 20px;
-	cursor: pointer;
-	overflow: hidden;
+    border-radius: var(--default-rad);
+    min-width: 20px;
+    cursor: pointer;
+    overflow: hidden;
     background: transparent;
     border: none;
     transition: background 100ms ease-out 0s;
     color: inherit;
 
-	&:hover {
+    &:hover {
         background-color: rgba(var(--body-color), 0.1);
-	}
+    }
 
     &.filled {
         color: #ffffff;
@@ -23,7 +23,7 @@
         padding: 6px 12px;
 
         &:hover {
-            background-color:  rgb(var(--button-bg), 0.8);
+            background-color: rgb(var(--button-bg), 0.8);
         }
     }
 
