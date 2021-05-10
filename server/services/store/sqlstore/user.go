@@ -158,3 +158,28 @@ func (s *SQLStore) UpdateUserPasswordByID(userID, password string) error {
 
 	return nil
 }
+
+func (s *SQLStore) GetUsersByWorkspace(workspaceID string) ([]*model.User, error) {
+	return []*model.User{
+		{
+			ID:       "id_1",
+			Username: "jean.luc.picard",
+			Email:    "jean.luc.picard@mattermost.com",
+		},
+		{
+			ID:       "id_2",
+			Username: "william.riker",
+			Email:    "william.riker@mattermost.com",
+		},
+		{
+			ID:       "id_3",
+			Username: "data",
+			Email:    "data@mattermost.com",
+		},
+		{
+			ID:       "id_4",
+			Username: "worf",
+			Email:    "worf@mattermost.com",
+		},
+	}, nil
+}
