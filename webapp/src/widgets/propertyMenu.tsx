@@ -34,6 +34,7 @@ function typeDisplayName(intl: IntlShape, type: PropertyType): string {
     case 'createdBy': return intl.formatMessage({id: 'PropertyType.CreatedBy', defaultMessage: 'Created By'})
     case 'updatedTime': return intl.formatMessage({id: 'PropertyType.UpdatedTime', defaultMessage: 'Updated Time'})
     case 'updatedBy': return intl.formatMessage({id: 'PropertyType.UpdatedBy', defaultMessage: 'Updated By'})
+    case 'date': return intl.formatMessage({id: 'PropertyType.Date', defaultMessage: 'Date'})
     default: {
         Utils.assertFailure(`typeDisplayName, unhandled type: ${type}`)
         return type
@@ -117,6 +118,11 @@ const PropertyMenu = React.memo((props: Props) => {
                     id='select'
                     name={typeDisplayName(intl, 'select')}
                     onClick={() => props.onTypeChanged('select')}
+                />
+                <Menu.Text
+                    id='date'
+                    name={typeDisplayName(intl, 'date')}
+                    onClick={() => props.onTypeChanged('date')}
                 />
                 <Menu.Text
                     id='createdTime'

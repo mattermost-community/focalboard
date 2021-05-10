@@ -13,6 +13,7 @@ import {BoardTree} from '../viewModel/boardTree'
 import Editable from '../widgets/editable'
 import ValueSelector from '../widgets/valueSelector'
 import Label from '../widgets/label'
+import EditableDayPicker from '../widgets/editableDayPicker'
 
 type Props = {
     boardTree?: BoardTree
@@ -97,6 +98,19 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                         mutator.changePropertyValue(card, propertyTemplate.id, option.id)
                     }
                 }
+            />
+        )
+    }
+
+    if (propertyTemplate.type === 'date') {
+        if (readOnly) {
+            return <div className='octo-propertyvalue'>{displayValue}</div>
+        }
+        return (
+            <EditableDayPicker
+                className='octo-propertyvalue'
+                value={value}
+                onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
             />
         )
     }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
-        <plugIn identifier="com.apple.WebKit2IBPlugin" version="17701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17506"/>
+        <plugIn identifier="com.apple.WebKit2IBPlugin" version="17506"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -659,7 +659,7 @@
         <scene sceneID="R2V-B0-nI4">
             <objects>
                 <windowController storyboardIdentifier="WindowController" id="B8D-0N-5wS" customClass="AutoSaveWindowController" customModule="Focalboard" customModuleProvider="target" sceneMemberID="viewController">
-                    <window key="window" title="Focalboard" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
+                    <window key="window" title="Focalboard" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" tabbingMode="disallowed" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="240" width="800" height="600"/>
@@ -717,17 +717,17 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="baY-7A-lBA">
-                                <rect key="frame" x="20" y="55" width="574" height="417"/>
+                                <rect key="frame" x="20" y="54" width="574" height="418"/>
                                 <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="qB2-dj-jVl">
-                                    <rect key="frame" x="0.0" y="0.0" width="559" height="417"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="574" height="418"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textView editable="NO" importsGraphics="NO" verticallyResizable="YES" smartInsertDelete="YES" id="f3s-Q5-6IG">
-                                            <rect key="frame" x="0.0" y="0.0" width="559" height="417"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="574" height="418"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            <size key="minSize" width="559" height="417"/>
+                                            <size key="minSize" width="574" height="418"/>
                                             <size key="maxSize" width="636" height="10000000"/>
                                             <attributedString key="textStorage">
                                                 <fragment content="Welcome to Focalboard v0.6.5!">
@@ -896,17 +896,17 @@ Thanks so much,
                                         </textView>
                                     </subviews>
                                 </clipView>
-                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="tBj-g3-APN">
+                                <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="tBj-g3-APN">
                                     <rect key="frame" x="-100" y="-100" width="225" height="15"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
-                                <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="7bj-hR-AiH">
-                                    <rect key="frame" x="559" y="0.0" width="15" height="417"/>
+                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="7bj-hR-AiH">
+                                    <rect key="frame" x="558" y="0.0" width="16" height="418"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eyp-ee-dxf">
-                                <rect key="frame" x="8" y="7" width="287" height="32"/>
+                                <rect key="frame" x="7" y="7" width="289" height="32"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="275" id="Zzi-QI-UrX"/>
                                 </constraints>
@@ -919,7 +919,7 @@ Thanks so much,
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dYB-Yp-UHf">
-                                <rect key="frame" x="501" y="7" width="87" height="32"/>
+                                <rect key="frame" x="500" y="7" width="89" height="32"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="75" id="vxR-kQ-YQg"/>
                                 </constraints>
