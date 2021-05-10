@@ -128,7 +128,6 @@ const MarkdownEditor = (props: Props): JSX. Element => {
                             stateAndPropsRef.current.onBlur(newText)
                         }
 
-                        instance.getInputField()?.blur()
                         stateAndPropsRef.current.setIsEditing(false)
                     },
                     focus: () => {
