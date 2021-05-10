@@ -8,6 +8,15 @@ jobs:
     runs-on: ubuntu-18.04
 
     steps:
+    - name: List versions
+      run: node -v; npm -v
+
+    - name: Upgrade npm
+      run: npm install -g npm@latest
+
+    - name: List versions 2
+      run: node -v; npm -v
+
     - name: Checkout
       uses: actions/checkout@v2
 
