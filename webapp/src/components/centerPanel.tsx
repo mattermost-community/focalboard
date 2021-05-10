@@ -165,6 +165,7 @@ class CenterPanel extends React.Component<Props, State> {
                                 showCard={this.showCard}
                                 addCard={(show) => this.addCard('', show)}
                                 onCardClicked={this.cardClicked}
+                                intl={this.props.intl}
                             />}
                         {activeView.viewType === 'gallery' &&
                             <Gallery

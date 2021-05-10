@@ -9,6 +9,11 @@ declare global {
     }
 }
 
+const IconClass = 'octo-icon'
+const OpenButtonClass = 'open-button'
+const SpacerClass = 'octo-spacer'
+const HorizontalGripClass = 'HorizontalGrip'
+
 class Utils {
     static createGuid(): string {
         const crypto = window.crypto || window.msCrypto
@@ -42,6 +47,61 @@ class Utils {
 
     static htmlDecode(text: string): string {
         return String(text).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
+    }
+
+    // re-use canvas object for better performance
+    static canvas = document.createElement('canvas') as HTMLCanvasElement
+    static getTextWidth(displayText: string, fontDescriptor: string) {
+        if (displayText !== '') {
+            const context = this.canvas.getContext('2d')
+            if (context) {
+                context.font = fontDescriptor
+                const metrics = context.measureText(displayText)
+                return Math.ceil(metrics.width)
+            }
+        }
+        return 0
+    }
+
+    static getFontAndPaddingFromCell = (cell: Element) : {fontDescriptor: string, padding: number} => {
+        const style = getComputedStyle(cell)
+        const padding = Utils.getHorizontalPadding(style)
+        return Utils.getFontAndPaddingFromChildren(cell.children, padding)
+    }
+
+    // recursive routine to determine the padding and font from its children
+    // specifically for the table view
+    static getFontAndPaddingFromChildren = (children: HTMLCollection, pad: number) : {fontDescriptor: string, padding: number} => {
+        const myResults = {
+            fontDescriptor: '',
+            padding: pad,
+        }
+        Array.from(children).forEach((element) => {
+            switch (element.className) {
+            case IconClass:
+            case SpacerClass:
+            case HorizontalGripClass:
+                myResults.padding += element.clientWidth
+                break
+            case OpenButtonClass:
+                break
+            default: {
+                const style = getComputedStyle(element)
+                myResults.fontDescriptor = style.font
+                myResults.padding += Utils.getHorizontalPadding(style)
+                const childResults = Utils.getFontAndPaddingFromChildren(element.children, myResults.padding)
+                if (childResults.fontDescriptor !== '') {
+                    myResults.fontDescriptor = childResults.fontDescriptor
+                    myResults.padding = childResults.padding
+                }
+            }
+            }
+        })
+        return myResults
+    }
+
+    static getHorizontalPadding = (style: CSSStyleDeclaration): number => {
+        return parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10) + parseInt(style.marginLeft, 10) + parseInt(style.marginRight, 10) + parseInt(style.borderLeft, 10) + parseInt(style.borderRight, 10)
     }
 
     // Markdown
