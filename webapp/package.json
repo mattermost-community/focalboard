@@ -22,6 +22,9 @@
 		"cypress:open": "cypress open"
 	},
 	"dependencies": {
+		"@fortawesome/fontawesome-svg-core": "^1.2.35",
+		"@fortawesome/free-solid-svg-icons": "^5.15.3",
+		"@fortawesome/react-fontawesome": "^0.1.14",
 		"emoji-mart": "^3.0.1",
 		"marked": ">=2.0.1",
 		"nanoevents": "^5.1.13",

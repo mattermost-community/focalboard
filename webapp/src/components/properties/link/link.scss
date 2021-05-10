@@ -1,0 +1,16 @@
+.property-link {
+    a {
+        color: rgb(var(--body-color));
+        //display: none;
+        animation: fadeOut 0.6s;
+    }
+
+    &:hover {
+        a {
+            display: inline;
+            animation: fadeIn 0.6s;
+        }
+    }
+}
+
+

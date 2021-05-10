@@ -13,6 +13,7 @@ import {BoardTree} from '../viewModel/boardTree'
 import Editable from '../widgets/editable'
 import ValueSelector from '../widgets/valueSelector'
 import Label from '../widgets/label'
+import URLProperty from "./properties/link/link";
 
 type Props = {
     boardTree?: BoardTree
@@ -97,6 +98,16 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                         mutator.changePropertyValue(card, propertyTemplate.id, option.id)
                     }
                 }
+            />
+        )
+    } else if (propertyTemplate.type === 'url') {
+        return (
+            <URLProperty
+                value={value}
+                onChange={setValue}
+                onSave={() => mutator.changePropertyValue(card, propertyTemplate.id, value)}
+                onCancel={() => setValue(propertyValue)}
+                validator={(newValue) => validateProp(propertyTemplate.type, newValue)}
             />
         )
     }
