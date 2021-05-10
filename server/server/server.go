@@ -223,7 +223,7 @@ func (s *Server) Shutdown() error {
 	}
 
 	if err := s.telemetry.Shutdown(); err != nil {
-		return err
+		s.logger.Warn("Error occurred when shutting down telemetry", zap.Error(err))
 	}
 
 	defer s.logger.Info("Server.Shutdown")
