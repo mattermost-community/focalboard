@@ -8,6 +8,7 @@ import mutator from '../../mutator'
 import {Card} from '../../blocks/card'
 import IconButton from '../../widgets/buttons/iconButton'
 import DeleteIcon from '../../widgets/icons/delete'
+import EditIcon from '../../widgets/icons/edit'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
@@ -36,6 +37,7 @@ const NewCardButtonTemplateItem = React.memo((props: Props) => {
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu position='left'>
                         <Menu.Text
+                            icon={<EditIcon/>}
                             id='edit'
                             name={intl.formatMessage({id: 'ViewHeader.edit-template', defaultMessage: 'Edit'})}
                             onClick={() => {
