@@ -1,14 +1,13 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage} from 'react-intl'
 
 import {IWorkspace} from '../blocks/workspace'
 import './emptyCenterPanel.scss'
 
 type Props = {
     workspace?: IWorkspace
-    intl: IntlShape
 }
 
 const EmptyCenterPanel = React.memo((props: Props) => {
@@ -37,4 +36,4 @@ const EmptyCenterPanel = React.memo((props: Props) => {
     )
 })
 
-export default injectIntl(EmptyCenterPanel)
+export default EmptyCenterPanel

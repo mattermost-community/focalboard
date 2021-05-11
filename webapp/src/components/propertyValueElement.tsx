@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import React, {useState} from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {useIntl} from 'react-intl'
 
 import {IPropertyOption, IPropertyTemplate, PropertyType} from '../blocks/board'
 import {Card} from '../blocks/card'
@@ -21,13 +21,13 @@ type Props = {
     card: Card
     propertyTemplate: IPropertyTemplate
     emptyDisplayValue: string
-    intl: IntlShape
 }
 
 const PropertyValueElement = (props:Props): JSX.Element => {
     const [value, setValue] = useState(props.card.properties[props.propertyTemplate.id])
 
-    const {card, propertyTemplate, readOnly, emptyDisplayValue, boardTree, intl} = props
+    const {card, propertyTemplate, readOnly, emptyDisplayValue, boardTree} = props
+    const intl = useIntl()
     const propertyValue = card.properties[propertyTemplate.id]
     const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate, intl)
     const finalDisplayValue = displayValue || emptyDisplayValue
@@ -130,6 +130,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                     onSave={() => mutator.changePropertyValue(card, propertyTemplate.id, value)}
                     onCancel={() => setValue(propertyValue)}
                     validator={(newValue) => validateProp(propertyTemplate.type, newValue)}
+                    spellCheck={propertyTemplate.type === 'text'}
                 />
             )
         }
@@ -138,4 +139,4 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     return <div className='octo-propertyvalue'>{finalDisplayValue}</div>
 }
 
-export default injectIntl(PropertyValueElement)
+export default PropertyValueElement

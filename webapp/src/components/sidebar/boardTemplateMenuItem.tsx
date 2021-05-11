@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {useIntl, IntlShape} from 'react-intl'
 
 import {Board} from '../../blocks/board'
 import mutator from '../../mutator'
@@ -17,7 +17,6 @@ type Props = {
     isGlobal: boolean
     showBoard: (id: string) => void
     activeBoardId?: string
-    intl: IntlShape
 }
 
 const addBoardFromTemplate = async (intl: IntlShape, showBoard: (id: string) => void, boardTemplateId: string, activeBoardId?: string, global = false) => {
@@ -41,7 +40,8 @@ const addBoardFromTemplate = async (intl: IntlShape, showBoard: (id: string) => 
 }
 
 const BoardTemplateMenuItem = React.memo((props: Props) => {
-    const {intl, boardTemplate, isGlobal, activeBoardId} = props
+    const {boardTemplate, isGlobal, activeBoardId} = props
+    const intl = useIntl()
 
     const displayName = boardTemplate.title || intl.formatMessage({id: 'Sidebar.untitled', defaultMessage: 'Untitled'})
 
@@ -81,4 +81,4 @@ const BoardTemplateMenuItem = React.memo((props: Props) => {
     )
 })
 
-export default injectIntl(BoardTemplateMenuItem)
+export default BoardTemplateMenuItem

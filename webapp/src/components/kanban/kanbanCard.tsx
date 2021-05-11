@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {useIntl} from 'react-intl'
 
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
@@ -22,14 +22,14 @@ type Props = {
     visiblePropertyTemplates: IPropertyTemplate[]
     isSelected: boolean
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
-    intl: IntlShape
     readonly: boolean
     onDrop: (srcCard: Card, dstCard: Card) => void
     isManualSort: boolean
 }
 
 const KanbanCard = React.memo((props: Props) => {
-    const {card, intl} = props
+    const {card} = props
+    const intl = useIntl()
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly, props.onDrop)
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
     let className = props.isSelected ? 'KanbanCard selected' : 'KanbanCard'
@@ -87,4 +87,4 @@ const KanbanCard = React.memo((props: Props) => {
     )
 })
 
-export default injectIntl(KanbanCard)
+export default KanbanCard

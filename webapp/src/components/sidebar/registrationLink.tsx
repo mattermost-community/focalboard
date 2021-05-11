@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useEffect, useState} from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {useIntl} from 'react-intl'
 
 import {IWorkspace} from '../../blocks/workspace'
 import {sendFlashMessage} from '../../components/flashMessages'
@@ -15,11 +15,11 @@ import './registrationLink.scss'
 
 type Props = {
     onClose: () => void
-    intl: IntlShape
 }
 
 const RegistrationLink = React.memo((props: Props) => {
-    const {intl, onClose} = props
+    const {onClose} = props
+    const intl = useIntl()
 
     const [wasCopied, setWasCopied] = useState(false)
     const [workspace, setWorkspace] = useState<IWorkspace>()
@@ -88,4 +88,4 @@ const RegistrationLink = React.memo((props: Props) => {
     )
 })
 
-export default injectIntl(RegistrationLink)
+export default RegistrationLink

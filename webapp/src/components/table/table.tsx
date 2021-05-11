@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, IntlShape} from 'react-intl'
 import {useDrop, useDragLayer} from 'react-dnd'
 
 import {IPropertyTemplate} from '../../blocks/board'
@@ -10,7 +10,10 @@ import {Card} from '../../blocks/card'
 import {Constants} from '../../constants'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
+
 import {BoardTree} from '../../viewModel/boardTree'
+
+import {OctoUtils} from './../../octoUtils'
 
 import './table.scss'
 import TableHeader from './tableHeader'
@@ -21,6 +24,7 @@ type Props = {
     selectedCardIds: string[]
     readonly: boolean
     cardIdToFocusOnRender: string
+    intl: IntlShape
     showCard: (cardId?: string) => void
     addCard: (show: boolean) => Promise<void>
     onCardClicked: (e: React.MouseEvent, card: Card) => void
@@ -43,6 +47,8 @@ const Table = (props: Props) => {
         }
     })
 
+    const columnRefs: Map<string, React.RefObject<HTMLDivElement>> = new Map()
+
     const [, drop] = useDrop(() => ({
         accept: 'horizontalGrip',
         drop: (item: {id: string}, monitor) => {
@@ -58,6 +64,44 @@ const Table = (props: Props) => {
             }
         },
     }), [activeView])
+
+    const onAutoSizeColumn = ((columnID: string, headerWidth: number) => {
+        let longestSize = headerWidth
+        const visibleProperties = board.cardProperties.filter(() => activeView.visiblePropertyIds.includes(columnID))
+        const columnRef = columnRefs.get(columnID)
+        if (!columnRef?.current) {
+            return
+        }
+        const {fontDescriptor, padding} = Utils.getFontAndPaddingFromCell(columnRef.current)
+
+        cards.forEach((card) => {
+            let displayValue = card.title
+            if (columnID !== Constants.titleColumnId) {
+                const template = visibleProperties.find((t) => t.id === columnID)
+                if (!template) {
+                    return
+                }
+
+                displayValue = OctoUtils.propertyDisplayValue(card, card.properties[columnID], template!, props.intl) || ''
+                if (template.type === 'select') {
+                    displayValue = displayValue.toUpperCase()
+                }
+            }
+            const thisLen = Utils.getTextWidth(displayValue, fontDescriptor) + padding
+            if (thisLen > longestSize) {
+                longestSize = thisLen
+            }
+        })
+
+        if (longestSize === 0) {
+            return
+        }
+        const columnWidths = {...activeView.columnWidths}
+        columnWidths[columnID] = longestSize
+        const newView = new MutableBoardView(activeView)
+        newView.columnWidths = columnWidths
+        mutator.updateBlock(newView, activeView, 'autosize column')
+    })
 
     const onDropToCard = (srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)
@@ -119,6 +163,7 @@ const Table = (props: Props) => {
                     template={{id: Constants.titleColumnId, name: 'title', type: 'text', options: []}}
                     offset={resizingColumn === Constants.titleColumnId ? offset : 0}
                     onDrop={onDropToColumn}
+                    onAutoSizeColumn={onAutoSizeColumn}
                 />
 
                 {/* Table header row */}
@@ -142,6 +187,7 @@ const Table = (props: Props) => {
                                 key={template.id}
                                 offset={resizingColumn === template.id ? offset : 0}
                                 onDrop={onDropToColumn}
+                                onAutoSizeColumn={onAutoSizeColumn}
                             />
                         )
                     })}
@@ -170,6 +216,7 @@ const Table = (props: Props) => {
                         onDrop={onDropToCard}
                         offset={offset}
                         resizingColumn={resizingColumn}
+                        columnRefs={columnRefs}
                     />)
 
                 return tableRow

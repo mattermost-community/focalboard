@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {useIntl} from 'react-intl'
 import {useHistory} from 'react-router-dom'
 
 import {Constants} from '../../constants'
@@ -20,13 +20,13 @@ import './sidebarUserMenu.scss'
 
 type Props = {
     whiteLogo: boolean
-    intl: IntlShape
 }
 
 const SidebarUserMenu = React.memo((props: Props) => {
     const history = useHistory()
     const [showRegistrationLinkDialog, setShowRegistrationLinkDialog] = useState(false)
-    const {intl, whiteLogo} = props
+    const {whiteLogo} = props
+    const intl = useIntl()
     return (
         <div className='SidebarUserMenu'>
             <ModalWrapper>
@@ -100,4 +100,4 @@ const SidebarUserMenu = React.memo((props: Props) => {
     )
 })
 
-export default injectIntl(SidebarUserMenu)
+export default SidebarUserMenu
