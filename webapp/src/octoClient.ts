@@ -137,7 +137,7 @@ class OctoClient {
 
     // If no boardID is provided, it will export the entire archive
     async exportArchive(boardID = ''): Promise<IBlock[]> {
-        const path = `${this.workspacePath()}/blocks/export?parent_id=${boardID}`
+        const path = `${this.workspacePath()}/blocks/export?root_id=${boardID}`
         const response = await fetch(this.serverUrl + path, {headers: this.headers()})
         if (response.status !== 200) {
             return []

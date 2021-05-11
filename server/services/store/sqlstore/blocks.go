@@ -15,7 +15,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func (s *SQLStore) GetBlocksWithParentAndType(c store.Container, parentID string, blockType string, includeParentBlock bool) ([]model.Block, error) {
+func (s *SQLStore) GetBlocksWithParentAndType(c store.Container, parentID string, blockType string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
 		Select(
 			"id",
@@ -32,13 +32,8 @@ func (s *SQLStore) GetBlocksWithParentAndType(c store.Container, parentID string
 		).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Eq{"COALESCE(workspace_id, '0')": c.WorkspaceID}).
+		Where(sq.Eq{"parent_id": parentID}).
 		Where(sq.Eq{"type": blockType})
-
-	if includeParentBlock {
-		query = query.Where(sq.Or{sq.Eq{"parent_id": parentID}, sq.Eq{"id": parentID}})
-	} else {
-		query = query.Where(sq.Eq{"parent_id": parentID})
-	}
 
 	rows, err := query.Query()
 	if err != nil {
@@ -50,7 +45,7 @@ func (s *SQLStore) GetBlocksWithParentAndType(c store.Container, parentID string
 	return blocksFromRows(rows)
 }
 
-func (s *SQLStore) GetBlocksWithParent(c store.Container, parentID string, includeParentBlock bool) ([]model.Block, error) {
+func (s *SQLStore) GetBlocksWithParent(c store.Container, parentID string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
 		Select(
 			"id",
@@ -66,17 +61,41 @@ func (s *SQLStore) GetBlocksWithParent(c store.Container, parentID string, inclu
 			"delete_at",
 		).
 		From(s.tablePrefix + "blocks").
+		Where(sq.Eq{"parent_id": parentID}).
 		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
-
-	if includeParentBlock {
-		query = query.Where(sq.Or{sq.Eq{"parent_id": parentID}, sq.Eq{"id": parentID}})
-	} else {
-		query = query.Where(sq.Eq{"parent_id": parentID})
-	}
 
 	rows, err := query.Query()
 	if err != nil {
 		log.Printf(`getBlocksWithParent ERROR: %v`, err)
+
+		return nil, err
+	}
+
+	return blocksFromRows(rows)
+}
+
+func (s *SQLStore) GetBlocksWithRootID(c store.Container, rootID string) ([]model.Block, error) {
+	query := s.getQueryBuilder().
+		Select(
+			"id",
+			"parent_id",
+			"root_id",
+			"modified_by",
+			s.escapeField("schema"),
+			"type",
+			"title",
+			"COALESCE(fields, '{}')",
+			"create_at",
+			"update_at",
+			"delete_at",
+		).
+		From(s.tablePrefix + "blocks").
+		Where(sq.Eq{"root_id": rootID}).
+		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
+
+	rows, err := query.Query()
+	if err != nil {
+		log.Printf(`GetBlocksWithRootID ERROR: %v`, err)
 
 		return nil, err
 	}

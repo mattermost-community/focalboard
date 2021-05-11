@@ -229,7 +229,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	blocks, err := a.app().GetBlocks(*container, parentID, blockType, false)
+	blocks, err := a.app().GetBlocks(*container, parentID, blockType)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -596,8 +596,9 @@ func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+
 	query := r.URL.Query()
-	parentID := query.Get("parent_id")
+	rootID := query.Get("root_id")
 	container, err := a.getContainer(r)
 	if err != nil {
 		noContainerErrorResponse(w, err)
@@ -605,15 +606,10 @@ func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
 	}
 
 	blocks := []model.Block{}
-	if parentID == "" {
+	if rootID == "" {
 		blocks, err = a.app().GetAllBlocks(*container)
 	} else {
-		blocks, err = a.app().GetBlocks(*container, parentID, "", true)
-	}
-
-	if err != nil {
-		errorResponse(w, http.StatusInternalServerError, "", err)
-		return
+		blocks, err = a.app().GetBlocksWithRootID(*container, rootID)
 	}
 
 	log.Printf("%d raw block(s)", len(blocks))

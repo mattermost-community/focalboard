@@ -11,8 +11,9 @@ type Container struct {
 
 // Store represents the abstraction of the data storage.
 type Store interface {
-	GetBlocksWithParentAndType(c Container, parentID string, blockType string, includeParentBlock bool) ([]model.Block, error)
-	GetBlocksWithParent(c Container, parentID string, includeParentBlock bool) ([]model.Block, error)
+	GetBlocksWithParentAndType(c Container, parentID string, blockType string) ([]model.Block, error)
+	GetBlocksWithParent(c Container, parentID string) ([]model.Block, error)
+	GetBlocksWithRootID(c Container, rootID string) ([]model.Block, error)
 	GetBlocksWithType(c Container, blockType string) ([]model.Block, error)
 	GetSubTree2(c Container, blockID string) ([]model.Block, error)
 	GetSubTree3(c Container, blockID string) ([]model.Block, error)

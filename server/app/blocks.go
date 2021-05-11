@@ -5,16 +5,20 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 )
 
-func (a *App) GetBlocks(c store.Container, parentID string, blockType string, includeParentBlock bool) ([]model.Block, error) {
+func (a *App) GetBlocks(c store.Container, parentID string, blockType string) ([]model.Block, error) {
 	if len(blockType) > 0 && len(parentID) > 0 {
-		return a.store.GetBlocksWithParentAndType(c, parentID, blockType, includeParentBlock)
+		return a.store.GetBlocksWithParentAndType(c, parentID, blockType)
 	}
 
 	if len(blockType) > 0 {
 		return a.store.GetBlocksWithType(c, blockType)
 	}
 
-	return a.store.GetBlocksWithParent(c, parentID, includeParentBlock)
+	return a.store.GetBlocksWithParent(c, parentID)
+}
+
+func (a *App) GetBlocksWithRootID(c store.Container, rootID string) ([]model.Block, error) {
+	return a.store.GetBlocksWithRootID(c, rootID)
 }
 
 func (a *App) GetRootID(c store.Container, blockID string) (string, error) {
