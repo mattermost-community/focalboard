@@ -3,7 +3,6 @@
   "BoardComponent.delete": "Suprimir",
   "BoardComponent.hidden-columns": "Colomnas rescondudas",
   "BoardComponent.hide": "Rescondre",
-  "BoardComponent.neww": "+ Novèl",
   "BoardComponent.no-property": "Cap de {property}",
   "BoardComponent.no-property-title": "Los elements sens proprietats {property} seràn plaçats aquí. Se pòt pas suprimir aquesta colomna.",
   "BoardComponent.show": "Mostrar",

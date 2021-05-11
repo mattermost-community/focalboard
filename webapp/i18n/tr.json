@@ -3,7 +3,6 @@
   "BoardComponent.delete": "Sil",
   "BoardComponent.hidden-columns": "Gizli sütunlar",
   "BoardComponent.hide": "Gizle",
-  "BoardComponent.neww": "+ Yeni",
   "BoardComponent.no-property": "{property} yok",
   "BoardComponent.no-property-title": "Boş {property} alanına sahip öğeler buraya atanır. Bu sütun silinemez.",
   "BoardComponent.show": "Göster",

@@ -3,7 +3,6 @@
   "BoardComponent.delete": "删除",
   "BoardComponent.hidden-columns": "隐藏列",
   "BoardComponent.hide": "隐藏",
-  "BoardComponent.neww": "+ 新增",
   "BoardComponent.no-property": "无 {property}",
   "BoardComponent.no-property-title": "{property} 属性为空的项目将转到此处。该列无法删除。",
   "BoardComponent.show": "显示",
