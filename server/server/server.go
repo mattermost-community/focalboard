@@ -82,8 +82,19 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 	wsServer := ws.NewServer(authenticator, singleUserToken)
 
 	filesBackendSettings := filestore.FileBackendSettings{}
-	filesBackendSettings.DriverName = "local"
+	filesBackendSettings.DriverName = cfg.FilesDriver
 	filesBackendSettings.Directory = cfg.FilesPath
+	filesBackendSettings.AmazonS3AccessKeyId = cfg.FilesS3Config.AccessKeyId
+	filesBackendSettings.AmazonS3SecretAccessKey = cfg.FilesS3Config.SecretAccessKey
+	filesBackendSettings.AmazonS3Bucket = cfg.FilesS3Config.Bucket
+	filesBackendSettings.AmazonS3PathPrefix = cfg.FilesS3Config.PathPrefix
+	filesBackendSettings.AmazonS3Region = cfg.FilesS3Config.Region
+	filesBackendSettings.AmazonS3Endpoint = cfg.FilesS3Config.Endpoint
+	filesBackendSettings.AmazonS3SSL = cfg.FilesS3Config.SSL
+	filesBackendSettings.AmazonS3SignV2 = cfg.FilesS3Config.SignV2
+	filesBackendSettings.AmazonS3SSE = cfg.FilesS3Config.SSE
+	filesBackendSettings.AmazonS3Trace = cfg.FilesS3Config.Trace
+
 	filesBackend, appErr := filestore.NewFileBackend(filesBackendSettings)
 	if appErr != nil {
 		log.Print("Unable to initialize the files storage")

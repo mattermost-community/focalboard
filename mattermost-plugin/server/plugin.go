@@ -46,6 +46,38 @@ func (h *WSHub) SetReceiveWSMessage(handler func(data []byte)) {
 
 func (p *Plugin) OnActivate() error {
 	mmconfig := p.API.GetUnsanitizedConfig()
+	filesS3Config := config.AmazonS3Config{}
+	if mmconfig.FileSettings.AmazonS3AccessKeyId != nil {
+		filesS3Config.AccessKeyId = *mmconfig.FileSettings.AmazonS3AccessKeyId
+	}
+	if mmconfig.FileSettings.AmazonS3SecretAccessKey != nil {
+		filesS3Config.SecretAccessKey = *mmconfig.FileSettings.AmazonS3SecretAccessKey
+	}
+	if mmconfig.FileSettings.AmazonS3Bucket != nil {
+		filesS3Config.Bucket = *mmconfig.FileSettings.AmazonS3Bucket
+	}
+	if mmconfig.FileSettings.AmazonS3PathPrefix != nil {
+		filesS3Config.PathPrefix = *mmconfig.FileSettings.AmazonS3PathPrefix
+	}
+	if mmconfig.FileSettings.AmazonS3Region != nil {
+		filesS3Config.Region = *mmconfig.FileSettings.AmazonS3Region
+	}
+	if mmconfig.FileSettings.AmazonS3Endpoint != nil {
+		filesS3Config.Endpoint = *mmconfig.FileSettings.AmazonS3Endpoint
+	}
+	if mmconfig.FileSettings.AmazonS3SSL != nil {
+		filesS3Config.SSL = *mmconfig.FileSettings.AmazonS3SSL
+	}
+	if mmconfig.FileSettings.AmazonS3SignV2 != nil {
+		filesS3Config.SignV2 = *mmconfig.FileSettings.AmazonS3SignV2
+	}
+	if mmconfig.FileSettings.AmazonS3SSE != nil {
+		filesS3Config.SSE = *mmconfig.FileSettings.AmazonS3SSE
+	}
+	if mmconfig.FileSettings.AmazonS3Trace != nil {
+		filesS3Config.Trace = *mmconfig.FileSettings.AmazonS3Trace
+	}
+
 	server, err := server.New(&config.Configuration{
 		ServerRoot:              *mmconfig.ServiceSettings.SiteURL + "/plugins/focalboard",
 		Port:                    0,
@@ -55,7 +87,9 @@ func (p *Plugin) OnActivate() error {
 		UseSSL:                  false,
 		SecureCookie:            true,
 		WebPath:                 "./plugins/focalboard/pack",
-		FilesPath:               "./focalboard_files",
+		FilesDriver:             *mmconfig.FileSettings.DriverName,
+		FilesPath:               *mmconfig.FileSettings.Directory,
+		FilesS3Config:           filesS3Config,
 		Telemetry:               true,
 		WebhookUpdate:           []string{},
 		SessionExpireTime:       2592000,

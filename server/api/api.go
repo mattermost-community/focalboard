@@ -1028,8 +1028,13 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", contentType)
 
-	filePath := a.app().GetFilePath(workspaceID, rootID, filename)
-	http.ServeFile(w, r, filePath)
+	fileReader, err := a.app().GetFileReader(workspaceID, rootID, filename)
+	if err != nil {
+		errorResponse(w, http.StatusInternalServerError, "", err)
+		return
+	}
+	defer fileReader.Close()
+	http.ServeContent(w, r, filename, time.Now(), fileReader)
 }
 
 // FileUploadResponse is the response to a file upload
