@@ -68,7 +68,10 @@ const Sidebar = React.memo((props: Props) => {
         <div className='Sidebar octo-sidebar'>
             <div className='octo-sidebar-header'>
                 <div className='heading'>
-                    <SidebarUserMenu whiteLogo={whiteLogo}/>
+                    <SidebarUserMenu
+                        whiteLogo={whiteLogo}
+                        showVersionBadge={Boolean(workspace && workspace.id !== '0')}
+                    />
                 </div>
 
                 <div className='octo-spacer'/>
