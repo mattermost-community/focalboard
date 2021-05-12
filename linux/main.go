@@ -38,6 +38,7 @@ func runServer(port int) (*server.Server, error) {
 		UseSSL:                  false,
 		SecureCookie:            true,
 		WebPath:                 "./pack",
+		FilesDriver:             "local",
 		FilesPath:               "./focalboard_files",
 		Telemetry:               true,
 		WebhookUpdate:           []string{},

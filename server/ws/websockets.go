@@ -25,12 +25,13 @@ type Hub interface {
 
 // Server is a WebSocket server.
 type Server struct {
-	upgrader        websocket.Upgrader
-	listeners       map[string][]*websocket.Conn
-	mu              sync.RWMutex
-	auth            *auth.Auth
-	hub             Hub
-	singleUserToken string
+	upgrader         websocket.Upgrader
+	listeners        map[string][]*websocket.Conn
+	mu               sync.RWMutex
+	auth             *auth.Auth
+	hub              Hub
+	singleUserToken  string
+	isMattermostAuth bool
 }
 
 // UpdateMsg is sent on block updates
@@ -67,7 +68,7 @@ type websocketSession struct {
 }
 
 // NewServer creates a new Server.
-func NewServer(auth *auth.Auth, singleUserToken string) *Server {
+func NewServer(auth *auth.Auth, singleUserToken string, isMattermostAuth bool) *Server {
 	return &Server{
 		listeners: make(map[string][]*websocket.Conn),
 		upgrader: websocket.Upgrader{
@@ -75,8 +76,9 @@ func NewServer(auth *auth.Auth, singleUserToken string) *Server {
 				return true
 			},
 		},
-		auth:            auth,
-		singleUserToken: singleUserToken,
+		auth:             auth,
+		singleUserToken:  singleUserToken,
+		isMattermostAuth: isMattermostAuth,
 	}
 }
 
@@ -103,7 +105,10 @@ func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request
 		client.Close()
 	}()
 
-	userID := r.Header.Get("Mattermost-User-Id")
+	userID := ""
+	if ws.isMattermostAuth {
+		userID = r.Header.Get("Mattermost-User-Id")
+	}
 
 	wsSession := websocketSession{
 		client:          client,

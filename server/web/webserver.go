@@ -94,7 +94,7 @@ func (ws *Server) registerRoutes() {
 // Start runs the web server and start listening for charsetnnections.
 func (ws *Server) Start() {
 	ws.registerRoutes()
-	if ws.port == 0 {
+	if ws.port == -1 {
 		log.Print("server not bind to any port\n")
 		return
 	}

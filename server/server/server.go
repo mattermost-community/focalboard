@@ -79,7 +79,7 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 
 	authenticator := auth.New(cfg, db)
 
-	wsServer := ws.NewServer(authenticator, singleUserToken)
+	wsServer := ws.NewServer(authenticator, singleUserToken, cfg.AuthMode == "mattermost")
 
 	filesBackendSettings := filestore.FileBackendSettings{}
 	filesBackendSettings.DriverName = cfg.FilesDriver

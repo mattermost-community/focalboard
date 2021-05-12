@@ -80,7 +80,7 @@ func (p *Plugin) OnActivate() error {
 
 	server, err := server.New(&config.Configuration{
 		ServerRoot:              *mmconfig.ServiceSettings.SiteURL + "/plugins/focalboard",
-		Port:                    0,
+		Port:                    -1,
 		DBType:                  *mmconfig.SqlSettings.DriverName,
 		DBConfigString:          *mmconfig.SqlSettings.DataSource,
 		DBTablePrefix:           "focalboard_",

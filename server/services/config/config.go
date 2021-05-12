@@ -35,7 +35,7 @@ type Configuration struct {
 	SecureCookie            bool           `json:"secureCookie" mapstructure:"secureCookie"`
 	WebPath                 string         `json:"webpath" mapstructure:"webpath"`
 	FilesDriver             string         `json:"filesdriver" mapstructure:"filesdriver"`
-	FilesS3Config           AmazonS3Config `json:"filesS3Config" mapstructure:"filesS3Config"`
+	FilesS3Config           AmazonS3Config `json:"filess3config" mapstructure:"filess3config"`
 	FilesPath               string         `json:"filespath" mapstructure:"filespath"`
 	Telemetry               bool           `json:"telemetry" mapstructure:"telemetry"`
 	WebhookUpdate           []string       `json:"webhook_update" mapstructure:"webhook_update"`

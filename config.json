@@ -8,6 +8,7 @@
 	"test_dbconfig": "file::memory:?cache=shared",
 	"useSSL": false,
 	"webpath": "./webapp/pack",
+	"filesdriver": "local",
 	"filespath": "./files",
 	"telemetry": true,
 	"webhook_update": [],
@@ -16,5 +17,5 @@
 	"localOnly": false,
 	"enableLocalMode": true,
 	"localModeSocketLocation": "/var/tmp/focalboard_local.socket",
-	"authMode": "mattermost"
+	"authMode": "native"
 }
