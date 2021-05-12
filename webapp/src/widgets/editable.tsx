@@ -11,6 +11,7 @@ type Props = {
     className?: string
     saveOnEsc?: boolean
     readonly?: boolean
+    spellCheck?: boolean
 
     validator?: (value: string) => boolean
     onCancel?: () => void
@@ -90,6 +91,7 @@ const Editable = (props: Props, ref: React.Ref<{focus: (selectAll?: boolean) => 
                 }
             }}
             readOnly={props.readonly}
+            spellCheck={props.spellCheck}
         />
     )
 }

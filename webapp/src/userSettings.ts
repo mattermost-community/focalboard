@@ -11,7 +11,7 @@ export class UserSettings {
     }
 }
 
-const keys = ['language', 'theme', 'lastBoardId', 'lastViewId', 'emoji-mart.last', 'emoji-mart.frequently']
+const keys = ['language', 'theme', 'lastBoardId', 'lastViewId', 'emoji-mart.last', 'emoji-mart.frequently', 'randomIcons']
 
 export function exportUserSettingsBlob(): string {
     return window.btoa(exportUserSettings())

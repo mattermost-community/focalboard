@@ -13,6 +13,7 @@ exports[`components/content/CheckboxElement should match snapshot 1`] = `
     <input
       class="Editable undefined"
       placeholder="Edit text..."
+      spellcheck="true"
       title="test-title"
       value="test-title"
     />
@@ -33,6 +34,7 @@ exports[`components/content/CheckboxElement should match snapshot on change titl
     <input
       class="Editable undefined"
       placeholder="Edit text..."
+      spellcheck="true"
       title="test-title"
       value="test-title"
     >
@@ -57,6 +59,7 @@ exports[`components/content/CheckboxElement should match snapshot on read only 1
       class="Editable undefined"
       placeholder="Edit text..."
       readonly=""
+      spellcheck="true"
       title="test-title"
       value="test-title"
     />
@@ -77,6 +80,7 @@ exports[`components/content/CheckboxElement should match snapshot on toggle 1`] 
     <input
       class="Editable undefined"
       placeholder="Edit text..."
+      spellcheck="true"
       title="test-title"
       value="test-title"
     />

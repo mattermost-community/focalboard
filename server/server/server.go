@@ -9,10 +9,11 @@ import (
 	"syscall"
 	"time"
 
+	"go.uber.org/zap"
+
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 
 	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/app"
@@ -30,6 +31,13 @@ import (
 	"github.com/mattermost/focalboard/server/ws"
 	"github.com/mattermost/mattermost-server/v5/shared/filestore"
 	"github.com/mattermost/mattermost-server/v5/utils"
+)
+
+const (
+	cleanupSessionTaskFrequency = 10 * time.Minute
+
+	//nolint:gomnd
+	minSessionExpiryTime = int64(60 * 60 * 24 * 31) // 31 days
 )
 
 type Server struct {
@@ -54,24 +62,24 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 		return nil, err
 	}
 
-	var store store.Store
-	store, err = sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix)
+	var db store.Store
+	db, err = sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix)
 	if err != nil {
 		log.Print("Unable to start the database", err)
 		return nil, err
 	}
 	if cfg.AuthMode == "mattermost" {
-		layeredStore, err := mattermostauthlayer.New(cfg.DBType, cfg.DBConfigString, store)
+		layeredStore, err := mattermostauthlayer.New(cfg.DBType, cfg.DBConfigString, db)
 		if err != nil {
 			log.Print("Unable to start the database", err)
 			return nil, err
 		}
-		store = layeredStore
+		db = layeredStore
 	}
 
-	auth := auth.New(cfg, store)
+	authenticator := auth.New(cfg, db)
 
-	wsServer := ws.NewServer(auth, singleUserToken)
+	wsServer := ws.NewServer(authenticator, singleUserToken)
 
 	filesBackendSettings := filestore.FileBackendSettings{}
 	filesBackendSettings.DriverName = "local"
@@ -85,31 +93,34 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 
 	webhookClient := webhook.NewClient(cfg)
 
-	appBuilder := func() *app.App { return app.New(cfg, store, auth, wsServer, filesBackend, webhookClient) }
-	api := api.NewAPI(appBuilder, singleUserToken, cfg.AuthMode)
+	appBuilder := func() *app.App { return app.New(cfg, db, authenticator, wsServer, filesBackend, webhookClient) }
+	focalboardAPI := api.NewAPI(appBuilder, singleUserToken, cfg.AuthMode)
 
 	// Local router for admin APIs
 	localRouter := mux.NewRouter()
-	api.RegisterAdminRoutes(localRouter)
+	focalboardAPI.RegisterAdminRoutes(localRouter)
 
 	// Init workspace
-	appBuilder().GetRootWorkspace()
+	if _, err = appBuilder().GetRootWorkspace(); err != nil {
+		log.Print("Unable to get root workspace", err)
+		return nil, err
+	}
 
 	webServer := web.NewServer(cfg.WebPath, cfg.ServerRoot, cfg.Port, cfg.UseSSL, cfg.LocalOnly)
 	webServer.AddRoutes(wsServer)
-	webServer.AddRoutes(api)
+	webServer.AddRoutes(focalboardAPI)
 
 	// Init telemetry
-	settings, err := store.GetSystemSettings()
+	settings, err := db.GetSystemSettings()
 	if err != nil {
 		return nil, err
 	}
 
 	telemetryID := settings["TelemetryID"]
+
 	if len(telemetryID) == 0 {
 		telemetryID = uuid.New().String()
-		err := store.SetSystemSetting("TelemetryID", uuid.New().String())
-		if err != nil {
+		if err = db.SetSystemSetting("TelemetryID", uuid.New().String()); err != nil {
 			return nil, err
 		}
 	}
@@ -166,12 +177,12 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 		config:       cfg,
 		wsServer:     wsServer,
 		webServer:    webServer,
-		store:        store,
+		store:        db,
 		filesBackend: filesBackend,
 		telemetry:    telemetryService,
 		logger:       logger,
 		localRouter:  localRouter,
-		api:          api,
+		api:          focalboardAPI,
 		appBuilder:   appBuilder,
 	}
 
@@ -192,14 +203,15 @@ func (s *Server) Start() error {
 	}
 
 	s.cleanUpSessionsTask = scheduler.CreateRecurringTask("cleanUpSessions", func() {
-		secondsAgo := int64(60 * 60 * 24 * 31)
+		secondsAgo := minSessionExpiryTime
 		if secondsAgo < s.config.SessionExpireTime {
 			secondsAgo = s.config.SessionExpireTime
 		}
+
 		if err := s.store.CleanUpSessions(secondsAgo); err != nil {
 			s.logger.Error("Unable to clean up the sessions", zap.Error(err))
 		}
-	}, 10*time.Minute)
+	}, cleanupSessionTaskFrequency)
 
 	if s.config.Telemetry {
 		firstRun := utils.MillisFromTime(time.Now())
@@ -220,7 +232,9 @@ func (s *Server) Shutdown() error {
 		s.cleanUpSessionsTask.Cancel()
 	}
 
-	s.telemetry.Shutdown()
+	if err := s.telemetry.Shutdown(); err != nil {
+		s.logger.Warn("Error occurred when shutting down telemetry", zap.Error(err))
+	}
 
 	defer s.logger.Info("Server.Shutdown")
 
@@ -240,7 +254,9 @@ func (s *Server) startLocalModeServer() error {
 	}
 
 	// TODO: Close and delete socket file on shutdown
-	syscall.Unlink(s.config.LocalModeSocketLocation)
+	if err := syscall.Unlink(s.config.LocalModeSocketLocation); err != nil {
+		log.Print("Unable to unlink socket.", err)
+	}
 
 	socket := s.config.LocalModeSocketLocation
 	unixListener, err := net.Listen("unix", socket)
@@ -254,7 +270,7 @@ func (s *Server) startLocalModeServer() error {
 	go func() {
 		log.Println("Starting unix socket server")
 		err = s.localModeServer.Serve(unixListener)
-		if err != nil && err != http.ErrServerClosed {
+		if err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Printf("Error starting unix socket server: %v", err)
 		}
 	}()
@@ -264,7 +280,7 @@ func (s *Server) startLocalModeServer() error {
 
 func (s *Server) stopLocalModeServer() {
 	if s.localModeServer != nil {
-		s.localModeServer.Close()
+		_ = s.localModeServer.Close()
 		s.localModeServer = nil
 	}
 }

@@ -9,6 +9,7 @@ import mutator from '../../mutator'
 import octoClient from '../../octoClient'
 import {GlobalTemplateTree, MutableGlobalTemplateTree} from '../../viewModel/globalTemplateTree'
 import {WorkspaceTree} from '../../viewModel/workspaceTree'
+import AddIcon from '../../widgets/icons/add'
 import BoardIcon from '../../widgets/icons/board'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
@@ -136,8 +137,9 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
                     />
 
                     <Menu.Text
+                        icon={<AddIcon/>}
                         id='add-template'
-                        name={intl.formatMessage({id: 'Sidebar.add-template', defaultMessage: '+ New template'})}
+                        name={intl.formatMessage({id: 'Sidebar.add-template', defaultMessage: 'New template'})}
                         onClick={() => addBoardTemplateClicked(props.showBoard, props.activeBoardId)}
                     />
                 </Menu>
