@@ -160,6 +160,7 @@ func (s *SQLStore) UpdateUserPasswordByID(userID, password string) error {
 }
 
 func (s *SQLStore) GetUsersByWorkspace(workspaceID string) ([]*model.User, error) {
+	// TODO: implement this to fetch users from Mattermost
 	return []*model.User{
 		{
 			ID:       "id_1",
