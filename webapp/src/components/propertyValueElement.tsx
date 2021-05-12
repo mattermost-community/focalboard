@@ -15,6 +15,8 @@ import ValueSelector from '../widgets/valueSelector'
 import Label from '../widgets/label'
 import EditableDayPicker from '../widgets/editableDayPicker'
 
+import UserProperty from './properties/user/user'
+
 type Props = {
     boardTree?: BoardTree
     readOnly: boolean
@@ -100,9 +102,14 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 }
             />
         )
-    }
-
-    if (propertyTemplate.type === 'date') {
+    } else if (propertyTemplate.type === 'person') {
+        return (
+            <UserProperty
+                value={propertyValue}
+                onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
+            />
+        )
+    } else if (propertyTemplate.type === 'date') {
         if (readOnly) {
             return <div className='octo-propertyvalue'>{displayValue}</div>
         }
