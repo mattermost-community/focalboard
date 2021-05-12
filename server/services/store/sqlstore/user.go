@@ -1,8 +1,10 @@
 package sqlstore
 
 import (
+	"database/sql"
 	"encoding/json"
 	"errors"
+	"log"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -27,26 +29,33 @@ func (s *SQLStore) GetRegisteredUserCount() (int, error) {
 }
 
 func (s *SQLStore) getUserByCondition(condition sq.Eq) (*model.User, error) {
+	users, err := s.getUsersByCondition(condition)
+	if err != nil {
+		return nil, err
+	}
+
+	var user *model.User
+
+	if len(users) > 0 {
+		user = users[0]
+	}
+
+	return user, nil
+}
+
+func (s *SQLStore) getUsersByCondition(condition sq.Eq) ([]*model.User, error) {
 	query := s.getQueryBuilder().
 		Select("id", "username", "email", "password", "mfa_secret", "auth_service", "auth_data", "props", "create_at", "update_at", "delete_at").
 		From(s.tablePrefix + "users").
 		Where(sq.Eq{"delete_at": 0}).
 		Where(condition)
-	row := query.QueryRow()
-	user := model.User{}
-
-	var propsBytes []byte
-	err := row.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.MfaSecret, &user.AuthService, &user.AuthData, &propsBytes, &user.CreateAt, &user.UpdateAt, &user.DeleteAt)
+	rows, err := query.Query()
 	if err != nil {
+		log.Printf("getUsersByCondition ERROR: %v", err)
 		return nil, err
 	}
 
-	err = json.Unmarshal(propsBytes, &user.Props)
-	if err != nil {
-		return nil, err
-	}
-
-	return &user, nil
+	return s.usersFromRows(rows)
 }
 
 func (s *SQLStore) GetUserById(userID string) (*model.User, error) {
@@ -160,27 +169,42 @@ func (s *SQLStore) UpdateUserPasswordByID(userID, password string) error {
 }
 
 func (s *SQLStore) GetUsersByWorkspace(workspaceID string) ([]*model.User, error) {
-	// TODO: implement this to fetch users from Mattermost
-	return []*model.User{
-		{
-			ID:       "id_1",
-			Username: "jean.luc.picard",
-			Email:    "jean.luc.picard@mattermost.com",
-		},
-		{
-			ID:       "id_2",
-			Username: "william.riker",
-			Email:    "william.riker@mattermost.com",
-		},
-		{
-			ID:       "id_3",
-			Username: "data",
-			Email:    "data@mattermost.com",
-		},
-		{
-			ID:       "id_4",
-			Username: "worf",
-			Email:    "worf@mattermost.com",
-		},
-	}, nil
+	return s.getUsersByCondition(nil)
+}
+
+func (s *SQLStore) usersFromRows(rows *sql.Rows) ([]*model.User, error) {
+	defer rows.Close()
+
+	users := []*model.User{}
+
+	for rows.Next() {
+		var user model.User
+		var propsBytes []byte
+
+		err := rows.Scan(
+			&user.ID,
+			&user.Username,
+			&user.Email,
+			&user.Password,
+			&user.MfaSecret,
+			&user.AuthService,
+			&user.AuthData,
+			&propsBytes,
+			&user.CreateAt,
+			&user.UpdateAt,
+			&user.DeleteAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		err = json.Unmarshal(propsBytes, &user.Props)
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, &user)
+	}
+
+	return users, nil
 }
