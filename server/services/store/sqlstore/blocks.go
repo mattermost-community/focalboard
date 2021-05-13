@@ -74,6 +74,35 @@ func (s *SQLStore) GetBlocksWithParent(c store.Container, parentID string) ([]mo
 	return blocksFromRows(rows)
 }
 
+func (s *SQLStore) GetBlocksWithRootID(c store.Container, rootID string) ([]model.Block, error) {
+	query := s.getQueryBuilder().
+		Select(
+			"id",
+			"parent_id",
+			"root_id",
+			"modified_by",
+			s.escapeField("schema"),
+			"type",
+			"title",
+			"COALESCE(fields, '{}')",
+			"create_at",
+			"update_at",
+			"delete_at",
+		).
+		From(s.tablePrefix + "blocks").
+		Where(sq.Eq{"root_id": rootID}).
+		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
+
+	rows, err := query.Query()
+	if err != nil {
+		log.Printf(`GetBlocksWithRootID ERROR: %v`, err)
+
+		return nil, err
+	}
+
+	return blocksFromRows(rows)
+}
+
 func (s *SQLStore) GetBlocksWithType(c store.Container, blockType string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
 		Select(
