@@ -18,6 +18,8 @@ import {OctoUtils} from './../../octoUtils'
 import './table.scss'
 import TableHeader from './tableHeader'
 import TableRow from './tableRow'
+import BoardIcon from '../../widgets/icons/board'
+import TableGroup from './tableGroup'
 
 type Props = {
     boardTree: BoardTree
@@ -32,7 +34,7 @@ type Props = {
 
 const Table = (props: Props) => {
     const {boardTree} = props
-    const {board, cards, activeView} = boardTree
+    const {board, cards, activeView, visibleGroups} = boardTree
 
     const {offset, resizingColumn} = useDragLayer((monitor) => {
         if (monitor.getItemType() === 'horizontalGrip') {
@@ -82,7 +84,7 @@ const Table = (props: Props) => {
                     return
                 }
 
-                displayValue = OctoUtils.propertyDisplayValue(card, card.properties[columnID], template!, props.intl) || ''
+                displayValue = OctoUtils.propertyDisplayValue(card, card.properties[columnID], template, props.intl) || ''
                 if (template.type === 'select') {
                     displayValue = displayValue.toUpperCase()
                 }
@@ -93,9 +95,6 @@ const Table = (props: Props) => {
             }
         })
 
-        if (longestSize === 0) {
-            return
-        }
         const columnWidths = {...activeView.columnWidths}
         columnWidths[columnID] = longestSize
         const newView = new MutableBoardView(activeView)
@@ -194,34 +193,48 @@ const Table = (props: Props) => {
             </div>
 
             {/* Rows, one per card */}
+            
+            {visibleGroups.map((group) => {
+                return (
+                (group.cards.length > 0 ) &&
+                        <div>
+                            <div>
+                               {group.option.value}
+                            </div>
 
-            {cards.map((card) => {
-                const tableRow = (
-                    <TableRow
-                        key={card.id + card.updateAt}
+                            <TableGroup
+                                boardTree={boardTree}
+                                columnRefs={columnRefs}
+                                cards={group.cards}
+                                selectedCardIds={props.selectedCardIds}
+                                readonly={props.readonly}
+                                cardIdToFocusOnRender={props.cardIdToFocusOnRender}
+                                intl={props.intl}
+                                showCard={props.showCard}
+                                addCard= {props.addCard}
+                                onCardClicked = {props.onCardClicked}
+                            />
+                        </div>
+                )
+                })
+            }
+
+            {(visibleGroups.length === 0 ) &&
+                <div>
+                    <TableGroup
                         boardTree={boardTree}
-                        card={card}
-                        isSelected={props.selectedCardIds.includes(card.id)}
-                        focusOnMount={props.cardIdToFocusOnRender === card.id}
-                        onSaveWithEnter={() => {
-                            if (cards.length > 0 && cards[cards.length - 1] === card) {
-                                props.addCard(false)
-                            }
-                        }}
-                        onClick={(e: React.MouseEvent<HTMLDivElement>) => {
-                            props.onCardClicked(e, card)
-                        }}
-                        showCard={props.showCard}
-                        readonly={props.readonly}
-                        onDrop={onDropToCard}
-                        offset={offset}
-                        resizingColumn={resizingColumn}
                         columnRefs={columnRefs}
-                    />)
-
-                return tableRow
-            })}
-
+                        cards={boardTree.cards}
+                        selectedCardIds={props.selectedCardIds}
+                        readonly={props.readonly}
+                        cardIdToFocusOnRender={props.cardIdToFocusOnRender}
+                        intl={props.intl}
+                        showCard={props.showCard}
+                        addCard= {props.addCard}
+                        onCardClicked = {props.onCardClicked}
+                    />
+                </div>
+            }
             {/* Add New row */}
 
             <div className='octo-table-footer'>
