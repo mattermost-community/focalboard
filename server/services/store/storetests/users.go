@@ -1,12 +1,17 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 package storetests
 
 import (
-	"github.com/google/uuid"
-	"github.com/mattermost/focalboard/server/model"
 	"time"
 
-	"github.com/stretchr/testify/require"
+	"github.com/google/uuid"
+	"github.com/mattermost/focalboard/server/model"
+
 	"testing"
+
+	"github.com/stretchr/testify/require"
 
 	"github.com/mattermost/focalboard/server/services/store"
 )
