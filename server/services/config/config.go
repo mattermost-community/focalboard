@@ -23,6 +23,7 @@ type Configuration struct {
 	WebPath                 string   `json:"webpath" mapstructure:"webpath"`
 	FilesPath               string   `json:"filespath" mapstructure:"filespath"`
 	Telemetry               bool     `json:"telemetry" mapstructure:"telemetry"`
+	PrometheusAddress       string   `json:"prometheus_address" mapstructure:"prometheus_address"`
 	WebhookUpdate           []string `json:"webhook_update" mapstructure:"webhook_update"`
 	Secret                  string   `json:"secret" mapstructure:"secret"`
 	SessionExpireTime       int64    `json:"session_expire_time" mapstructure:"session_expire_time"`
