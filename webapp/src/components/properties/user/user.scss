@@ -1,24 +1,4 @@
 .user-picker {
     margin-right: 20px;
     min-width: 120px;
-
-    &:hover {
-        margin-right: 0;
-
-        div {
-            div {
-                &:nth-child(2) {
-                    display: block;
-                }
-            }
-        }
-    }
-
-    div {
-        div {
-            &:nth-child(2) {
-                display: none;
-            }
-        }
-    }
 }

@@ -2,12 +2,13 @@
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
-import {ActionMeta, ValueType, FormatOptionLabelMeta} from 'react-select'
+import {ActionMeta, FormatOptionLabelMeta, ValueType} from 'react-select'
 import CreatableSelect from 'react-select/creatable'
-import {CSSObject} from '@emotion/serialize'
 
 import {IPropertyOption} from '../blocks/board'
 import {Constants} from '../constants'
+
+import {getSelectBaseStyle} from '../theme'
 
 import Menu from './menu'
 import MenuWrapper from './menuWrapper'
@@ -88,50 +89,7 @@ function ValueSelector(props: Props): JSX.Element {
     return (
         <CreatableSelect
             isClearable={true}
-            styles={{
-                indicatorsContainer: (provided: CSSObject): CSSObject => ({
-                    ...provided,
-                    display: 'none',
-                }),
-                menu: (provided: CSSObject): CSSObject => ({
-                    ...provided,
-                    width: 'unset',
-                    background: 'rgb(var(--main-bg))',
-                }),
-                option: (provided: CSSObject, state: {isFocused: boolean}): CSSObject => ({
-                    ...provided,
-                    background: state.isFocused ? 'rgba(var(--main-fg), 0.1)' : 'rgb(var(--main-bg))',
-                    color: state.isFocused ? 'rgb(var(--main-fg))' : 'rgb(var(--main-fg))',
-                    padding: '2px 8px',
-                }),
-                control: (): CSSObject => ({
-                    border: 0,
-                    width: '100%',
-                    margin: '4px 0 0 0',
-                }),
-                valueContainer: (provided: CSSObject): CSSObject => ({
-                    ...provided,
-                    padding: '0 8px',
-                    overflow: 'unset',
-                }),
-                singleValue: (provided: CSSObject): CSSObject => ({
-                    ...provided,
-                    color: 'rgb(var(--main-fg))',
-                    overflow: 'unset',
-                    maxWidth: 'calc(100% - 20px)',
-                }),
-                input: (provided: CSSObject): CSSObject => ({
-                    ...provided,
-                    paddingBottom: 0,
-                    paddingTop: 0,
-                    marginBottom: 0,
-                    marginTop: 0,
-                }),
-                menuList: (provided: CSSObject): CSSObject => ({
-                    ...provided,
-                    overflowY: 'unset',
-                }),
-            }}
+            styles={getSelectBaseStyle()}
             formatOptionLabel={(option: IPropertyOption, meta: FormatOptionLabelMeta<IPropertyOption, false>) => (
                 <ValueSelectorLabel
                     option={option}

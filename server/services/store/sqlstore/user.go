@@ -45,7 +45,19 @@ func (s *SQLStore) getUserByCondition(condition sq.Eq) (*model.User, error) {
 
 func (s *SQLStore) getUsersByCondition(condition sq.Eq) ([]*model.User, error) {
 	query := s.getQueryBuilder().
-		Select("id", "username", "email", "password", "mfa_secret", "auth_service", "auth_data", "props", "create_at", "update_at", "delete_at").
+		Select(
+			"id",
+			"username",
+			"email",
+			"password",
+			"mfa_secret",
+			"auth_service",
+			"auth_data",
+			"props",
+			"create_at",
+			"update_at",
+			"delete_at",
+		).
 		From(s.tablePrefix + "users").
 		Where(sq.Eq{"delete_at": 0}).
 		Where(condition)
