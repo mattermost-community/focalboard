@@ -57,11 +57,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     }
     
     if (propertyTemplate.type === 'multiSelect') {
-        let propertyColorCssClassName = ''
-        const cardPropertyValue = propertyTemplate.options.find((o) => o.id === propertyValue)
-        if (cardPropertyValue) {
-            propertyColorCssClassName = cardPropertyValue.color
-        }
+        const values = propertyValue ? (propertyValue as string[]).map(value => propertyTemplate.options.find((o) => o.id === value)) : []
 
         if (readOnly || !boardTree) {
             return (
@@ -69,15 +65,17 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                     className='octo-property-value'
                     tabIndex={0}
                 >
-                    <Label color={displayValue ? propertyColorCssClassName : 'empty'}>{finalDisplayValue}</Label>
+                    {values.map(value => <Label color={value ? value.color : 'empty'}>{value.value}</Label>)}
                 </div>
             )
         }
+
         return (
             <ValueSelector
+                isMulti={true}
                 emptyValue={emptyDisplayValue}
                 options={propertyTemplate.options}
-                value={propertyTemplate.options.find((p) => p.id === propertyValue)}
+                value={values}
                 onChange={(newValue) => {
                     mutator.changePropertyValue(card, propertyTemplate.id, newValue)
                 }}
@@ -89,13 +87,15 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 }}
                 onCreate={
                     async (newValue) => {
+                        console.log("onCreate", newValue)
                         const option: IPropertyOption = {
                             id: Utils.createGuid(),
                             value: newValue,
                             color: 'propColorDefault',
                         }
+                        values.push(option)
                         await mutator.insertPropertyOption(boardTree, propertyTemplate, option, 'add property option')
-                        mutator.changePropertyValue(card, propertyTemplate.id, option.id)
+                        mutator.changePropertyValue(card, propertyTemplate.id, values.map(value => value.id))
                     }
                 }
             />
@@ -155,7 +155,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         return (
             <EditableDayPicker
                 className='octo-propertyvalue'
-                value={value}
+                value={value as string}
                 onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
             />
         )
@@ -171,7 +171,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 <Editable
                     className='octo-propertyvalue'
                     placeholderText='Empty'
-                    value={value}
+                    value={value as string}
                     onChange={setValue}
                     onSave={() => mutator.changePropertyValue(card, propertyTemplate.id, value)}
                     onCancel={() => setValue(propertyValue)}

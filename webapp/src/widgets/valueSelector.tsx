@@ -20,12 +20,13 @@ import './valueSelector.scss'
 
 type Props = {
     options: IPropertyOption[]
-    value?: IPropertyOption
+    value?: IPropertyOption | IPropertyOption[]
     emptyValue: string
     onCreate: (value: string) => void
-    onChange: (value: string) => void
+    onChange: (value: string | string[]) => void
     onChangeColor: (option: IPropertyOption, color: string) => void
     onDeleteOption: (option: IPropertyOption) => void
+    isMulti?: boolean
 }
 
 type LabelProps = {
@@ -71,22 +72,9 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
 })
 
 function ValueSelector(props: Props): JSX.Element {
-    const [activated, setActivated] = useState(false)
-
-    if (!activated) {
-        return (
-            <div
-                className='ValueSelector'
-                onClick={() => setActivated(true)}
-            >
-                <Label color={props.value ? props.value.color : 'empty'}>
-                    {props.value ? props.value.value : props.emptyValue}
-                </Label>
-            </div>
-        )
-    }
     return (
         <CreatableSelect
+            isMulti={props.isMulti}
             isClearable={true}
             styles={{
                 indicatorsContainer: (provided: CSSObject): CSSObject => ({
@@ -131,6 +119,17 @@ function ValueSelector(props: Props): JSX.Element {
                     ...provided,
                     overflowY: 'unset',
                 }),
+                multiValue:  (provided: CSSObject): CSSObject => ({
+                    ...provided,
+                    margin: 0,
+                    padding: 0,
+                    background: 'rgb(var(--main-bg))',
+                }),
+                multiValueLabel:  (provided: CSSObject): CSSObject => ({
+                    ...provided,
+                    display: 'flex',
+                    paddingLeft: 0,
+                })
             }}
             formatOptionLabel={(option: IPropertyOption, meta: FormatOptionLabelMeta<IPropertyOption, false>) => (
                 <ValueSelectorLabel
@@ -145,8 +144,13 @@ function ValueSelector(props: Props): JSX.Element {
             getOptionLabel={(o: IPropertyOption) => o.value}
             getOptionValue={(o: IPropertyOption) => o.id}
             onChange={(value: ValueType<IPropertyOption, false>, action: ActionMeta<IPropertyOption>): void => {
+                console.log("onchange value", value)
+                console.log("onchange action", action)
                 if (action.action === 'select-option') {
-                    props.onChange((value as IPropertyOption).id)
+                    if (Array.isArray(value)) props.onChange((value as IPropertyOption[]).map(option => option.id))
+                    else props.onChange((value as IPropertyOption).id)
+                } else if (action.action === 'remove-value') {
+                    props.onChange((value as IPropertyOption[]).map(option => option.id))
                 } else if (action.action === 'clear') {
                     props.onChange('')
                 }
@@ -156,7 +160,7 @@ function ValueSelector(props: Props): JSX.Element {
             value={props.value}
             closeMenuOnSelect={true}
             placeholder={props.emptyValue}
-            defaultMenuIsOpen={true}
+            defaultMenuIsOpen={false}
         />
     )
 }

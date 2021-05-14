@@ -372,7 +372,7 @@ class Mutator {
         await this.updateBlock(newBoard, board, 'change option color')
     }
 
-    async changePropertyValue(card: Card, propertyId: string, value?: string, description = 'change property') {
+    async changePropertyValue(card: Card, propertyId: string, value?: string | string[], description = 'change property') {
         const newCard = new MutableCard(card)
         if (value) {
             newCard.properties[propertyId] = value
@@ -412,7 +412,7 @@ class Mutator {
         } else if (type === 'select') {
             // Map values to new template option IDs
             for (const card of boardTree.allCards) {
-                const oldValue = card.properties[propertyTemplate.id]
+                const oldValue = card.properties[propertyTemplate.id] as string
                 if (oldValue) {
                     let option = newTemplate.options.find((o) => o.value === oldValue)
                     if (!option) {
