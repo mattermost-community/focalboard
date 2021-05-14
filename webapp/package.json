@@ -19,7 +19,8 @@
 		"cypress:run:firefox": "cypress run --browser firefox",
 		"cypress:run:edge": "cypress run --browser edge",
 		"cypress:run:electron": "cypress run --browser electron",
-		"cypress:open": "cypress open"
+		"cypress:open": "cypress open",
+    "updatesnapshots": "jest --updateSnapshot"
 	},
 	"dependencies": {
 		"emoji-mart": "^3.0.1",
