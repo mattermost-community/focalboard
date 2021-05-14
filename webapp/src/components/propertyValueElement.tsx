@@ -55,6 +55,52 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             return false
         }
     }
+    
+    if (propertyTemplate.type === 'multiSelect') {
+        let propertyColorCssClassName = ''
+        const cardPropertyValue = propertyTemplate.options.find((o) => o.id === propertyValue)
+        if (cardPropertyValue) {
+            propertyColorCssClassName = cardPropertyValue.color
+        }
+
+        if (readOnly || !boardTree) {
+            return (
+                <div
+                    className='octo-property-value'
+                    tabIndex={0}
+                >
+                    <Label color={displayValue ? propertyColorCssClassName : 'empty'}>{finalDisplayValue}</Label>
+                </div>
+            )
+        }
+        return (
+            <ValueSelector
+                emptyValue={emptyDisplayValue}
+                options={propertyTemplate.options}
+                value={propertyTemplate.options.find((p) => p.id === propertyValue)}
+                onChange={(newValue) => {
+                    mutator.changePropertyValue(card, propertyTemplate.id, newValue)
+                }}
+                onChangeColor={(option: IPropertyOption, colorId: string): void => {
+                    mutator.changePropertyOptionColor(boardTree.board, propertyTemplate, option, colorId)
+                }}
+                onDeleteOption={(option: IPropertyOption): void => {
+                    mutator.deletePropertyOption(boardTree, propertyTemplate, option)
+                }}
+                onCreate={
+                    async (newValue) => {
+                        const option: IPropertyOption = {
+                            id: Utils.createGuid(),
+                            value: newValue,
+                            color: 'propColorDefault',
+                        }
+                        await mutator.insertPropertyOption(boardTree, propertyTemplate, option, 'add property option')
+                        mutator.changePropertyValue(card, propertyTemplate.id, option.id)
+                    }
+                }
+            />
+        )
+    }
 
     if (propertyTemplate.type === 'select') {
         let propertyColorCssClassName = ''
