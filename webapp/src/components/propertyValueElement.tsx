@@ -56,8 +56,8 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         }
     }
 
-    if (propertyTemplate.type === 'multiSelect' && Array.isArray(propertyValue)) {
-        const values = propertyValue.map((v) => propertyTemplate.options.find((o) => o!.id === v)).filter((v): v is IPropertyOption => Boolean(v))
+    if (propertyTemplate.type === 'multiSelect') {
+        const values = Array.isArray(propertyValue) ? propertyValue.map((v) => propertyTemplate.options.find((o) => o!.id === v)).filter((v): v is IPropertyOption => Boolean(v)) : []
 
         if (readOnly || !boardTree) {
             return (
