@@ -20,7 +20,7 @@ func NewInstrumentor(version string) *Instrumentor {
 // ExposeBuildInfo exposes a gauge in prometheus for build info
 func (i *Instrumentor) ExposeBuildInfo() {
 	promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name: "focalboard_build_nfo",
+		Name: "focalboard_build_info",
 		Help: "Build information of Focalboard",
 	}, []string{"Version"},
 	).WithLabelValues(i.Version).Set(1)
