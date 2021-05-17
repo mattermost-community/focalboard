@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React from 'react'
 import {useIntl} from 'react-intl'
 import {ActionMeta, ValueType, FormatOptionLabelMeta} from 'react-select'
 import CreatableSelect from 'react-select/creatable'
@@ -119,17 +119,17 @@ function ValueSelector(props: Props): JSX.Element {
                     ...provided,
                     overflowY: 'unset',
                 }),
-                multiValue:  (provided: CSSObject): CSSObject => ({
+                multiValue: (provided: CSSObject): CSSObject => ({
                     ...provided,
                     margin: 0,
                     padding: 0,
                     background: 'rgb(var(--main-bg))',
                 }),
-                multiValueLabel:  (provided: CSSObject): CSSObject => ({
+                multiValueLabel: (provided: CSSObject): CSSObject => ({
                     ...provided,
                     display: 'flex',
                     paddingLeft: 0,
-                })
+                }),
             }}
             formatOptionLabel={(option: IPropertyOption, meta: FormatOptionLabelMeta<IPropertyOption, false>) => (
                 <ValueSelectorLabel
@@ -144,13 +144,16 @@ function ValueSelector(props: Props): JSX.Element {
             getOptionLabel={(o: IPropertyOption) => o.value}
             getOptionValue={(o: IPropertyOption) => o.id}
             onChange={(value: ValueType<IPropertyOption, false>, action: ActionMeta<IPropertyOption>): void => {
-                console.log("onchange value", value)
-                console.log("onchange action", action)
                 if (action.action === 'select-option') {
-                    if (Array.isArray(value)) props.onChange((value as IPropertyOption[]).map(option => option.id))
-                    else props.onChange((value as IPropertyOption).id)
+                    if (Array.isArray(value)) {
+                        props.onChange((value as IPropertyOption[]).map((option) => option.id))
+                    } else {
+                        props.onChange((value as IPropertyOption).id)
+                    }
                 } else if (action.action === 'remove-value') {
-                    props.onChange((value as IPropertyOption[]).map(option => option.id))
+                    if (Array.isArray(value)) {
+                        props.onChange((value as IPropertyOption[]).map((option) => option.id))
+                    }
                 } else if (action.action === 'clear') {
                     props.onChange('')
                 }

@@ -55,9 +55,9 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             return false
         }
     }
-    
+
     if (propertyTemplate.type === 'multiSelect') {
-        const values = propertyValue ? (propertyValue as string[]).map(value => propertyTemplate.options.find((o) => o.id === value)) : []
+        const values = propertyValue ? (propertyValue as string[]).map((v) => propertyTemplate.options.find((o) => o.id === v)) : []
 
         if (readOnly || !boardTree) {
             return (
@@ -65,7 +65,14 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                     className='octo-property-value'
                     tabIndex={0}
                 >
-                    {values.map(value => <Label color={value ? value.color : 'empty'}>{value.value}</Label>)}
+                    {values.map((v) => (
+                        <Label
+                            key={v.id}
+                            color={v ? v.color : 'empty'}
+                        >
+                            {v.value}
+                        </Label>
+                    ))}
                 </div>
             )
         }
@@ -87,7 +94,6 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 }}
                 onCreate={
                     async (newValue) => {
-                        console.log("onCreate", newValue)
                         const option: IPropertyOption = {
                             id: Utils.createGuid(),
                             value: newValue,
@@ -95,7 +101,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                         }
                         values.push(option)
                         await mutator.insertPropertyOption(boardTree, propertyTemplate, option, 'add property option')
-                        mutator.changePropertyValue(card, propertyTemplate.id, values.map(value => value.id))
+                        mutator.changePropertyValue(card, propertyTemplate.id, values.map((v) => v.id))
                     }
                 }
             />
