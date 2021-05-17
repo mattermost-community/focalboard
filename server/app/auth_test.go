@@ -132,9 +132,7 @@ func TestUpdateUserPassword(t *testing.T) {
 		isError  bool
 	}{
 		{"fail, missing login information", "", "", true},
-		{"fail, missing username", "badUsername", "", true},
-		// Todo: this should be checking password length, but code currently doesn't
-		// {"fail, invalid password", "testUsername", "test", true},
+		{"fail, invalid username", "badUsername", "", true},
 		{"success, username", "testUsername", "testPassword", false},
 	}
 
@@ -167,9 +165,7 @@ func TestChangePassword(t *testing.T) {
 		{"fail, missing login information", "", "", "", true},
 		{"fail, invalid userId", "badID", "", "", true},
 		{"fail, invalid password", mockUser.ID, "wrongPassword", "newPassword", true},
-		// Todo: this should be checking password length, but code currently doesn't
-		// {"fail, invalid password", mockUser.ID, "testPassword", "test", true},
-		{"success, username", mockUser.ID, "testPassword", "newPassword", false},
+		{"success, using username", mockUser.ID, "testPassword", "newPassword", false},
 	}
 
 	th.Store.EXPECT().GetUserById(gomock.Eq("badID")).Return(nil, errors.New("userID not found"))

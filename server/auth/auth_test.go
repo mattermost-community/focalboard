@@ -83,11 +83,16 @@ func TestGetSession(t *testing.T) {
 func TestIsValidReadToken(t *testing.T) {
 	th := setupTestHelper(t)
 
+	validBlockID := "testBlockID"
 	mockContainer := store.Container{
 		WorkspaceID: "testWorkspaceID",
 	}
-	readToken := "testReadToken"
-	blockID := "testBlockID"
+	validReadToken := "testReadToken"
+	mockSharing := model.Sharing{
+		ID:      "testRootID",
+		Enabled: true,
+		Token:   validReadToken,
+	}
 
 	testcases := []struct {
 		title     string
@@ -98,22 +103,16 @@ func TestIsValidReadToken(t *testing.T) {
 		isSuccess bool
 	}{
 		{"fail, error GetRootID", mockContainer, "badBlock", "", true, false},
-		{"fail, noRows", mockContainer, "goodBlockID", "", false, false},
-		{"fail, noRows", mockContainer, "goodBlockID2", "", true, false},
-		{"fail, bad readToken", mockContainer, blockID, "readToken2", false, false},
-		{"success", mockContainer, blockID, readToken, false, true},
-	}
-
-	mockSharing := model.Sharing{
-		ID:      "testRootID",
-		Enabled: true,
-		Token:   readToken,
+		{"fail, rootID not found", mockContainer, "goodBlockID", "", false, false},
+		{"fail, sharing throws error", mockContainer, "goodBlockID2", "", true, false},
+		{"fail, bad readToken", mockContainer, validBlockID, "invalidReadToken", false, false},
+		{"success", mockContainer, validBlockID, validReadToken, false, true},
 	}
 
 	th.Store.EXPECT().GetRootID(gomock.Eq(mockContainer), gomock.Eq("badBlock")).Return("", errors.New("invalid block"))
 	th.Store.EXPECT().GetRootID(gomock.Eq(mockContainer), gomock.Eq("goodBlockID")).Return("rootNotFound", nil)
 	th.Store.EXPECT().GetRootID(gomock.Eq(mockContainer), gomock.Eq("goodBlockID2")).Return("rootError", nil)
-	th.Store.EXPECT().GetRootID(gomock.Eq(mockContainer), gomock.Eq(blockID)).Return("testRootID", nil).Times(2)
+	th.Store.EXPECT().GetRootID(gomock.Eq(mockContainer), gomock.Eq(validBlockID)).Return("testRootID", nil).Times(2)
 	th.Store.EXPECT().GetSharing(gomock.Eq(mockContainer), gomock.Eq("rootNotFound")).Return(nil, sql.ErrNoRows)
 	th.Store.EXPECT().GetSharing(gomock.Eq(mockContainer), gomock.Eq("rootError")).Return(nil, errors.New("another error"))
 	th.Store.EXPECT().GetSharing(gomock.Eq(mockContainer), gomock.Eq("testRootID")).Return(&mockSharing, nil).Times(2)
