@@ -107,6 +107,31 @@ const TableGroup = (props: Props) => {
         const draggedCardIds = Array.from(new Set(selectedCardIds).add(srcCard.id))
         const description = draggedCardIds.length > 1 ? `drag ${draggedCardIds.length} cards` : 'drag card'
 
+
+        if (activeView.groupById != undefined) {
+            const optionId = dstCard.properties[activeView.groupById!]
+            const orderedCards = boardTree.orderedCards()
+            const cardsById: {[key: string]: Card} = orderedCards.reduce((acc: {[key: string]: Card}, card: Card): {[key: string]: Card} => {
+                acc[card.id] = card
+                return acc
+            }, {})
+            const draggedCards: Card[] = draggedCardIds.map((o: string) => cardsById[o])
+    
+            mutator.performAsUndoGroup(async () => {
+                // Update properties of dragged cards
+                const awaits = []
+                for (const draggedCard of draggedCards) {
+                    Utils.log(`draggedCard: ${draggedCard.title}, column: ${optionId}`)
+                    const oldOptionId = draggedCard.properties[boardTree.groupByProperty!.id]
+                    if (optionId !== oldOptionId) {
+                        awaits.push(mutator.changePropertyValue(draggedCard, boardTree.groupByProperty!.id, optionId, description))
+                    }
+                }
+                await Promise.all(awaits)
+                // await mutator.changeViewCardOrder(activeView, cardOrder, description)
+            })
+        }
+
         // Update dstCard order
         let cardOrder = Array.from(new Set([...activeView.cardOrder, ...boardTree.cards.map((o) => o.id)]))
         const isDraggingDown = cardOrder.indexOf(srcCard.id) <= cardOrder.indexOf(dstCard.id)

@@ -14,6 +14,9 @@ import {useSortable} from '../../hooks/sortable'
 import PropertyValueElement from '../propertyValueElement'
 import './tableRow.scss'
 
+import {Utils} from '../../utils'
+
+
 type Props = {
     boardTree: BoardTree
     card: Card
@@ -30,6 +33,7 @@ type Props = {
 }
 
 const TableRow = React.memo((props: Props) => {
+    Utils.log('TableRow')
     const {boardTree, onSaveWithEnter, columnRefs} = props
     const {board, activeView} = boardTree
 
@@ -58,10 +62,16 @@ const TableRow = React.memo((props: Props) => {
         className += ' dragover'
     }
 
+    const gbID = activeView.groupById || ''
+    if (isGrouped && activeView.collapsedOptionIds.indexOf(card.properties[gbID]) > -1) {
+        className += ' hidden'
+    }
+
     if (!columnRefs.get(Constants.titleColumnId)) {
         columnRefs.set(Constants.titleColumnId, React.createRef())
     }
 
+    
     return (
         <div
             className={className}

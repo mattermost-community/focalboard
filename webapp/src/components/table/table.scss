@@ -1,4 +1,50 @@
 .Table {
+    .octo-group-header-cell {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+
+        width: 100%;
+        margin-right: 15px;
+        vertical-align: middle;
+
+        &.narrow {
+            width: 220px;
+        }
+
+        > div {
+            margin-right: 8px;
+
+            &:last-child {
+                margin: 0;
+            }
+        }
+
+        .IconButton {
+            background-color: unset;
+            &:hover {
+                background-color: rgba(var(--body-color), 0.1);
+            }
+        }
+
+        .Label {
+            display: flex;
+            max-width: 90%;
+            margin-right: 5px;
+            width: 100%;
+            .Editable {
+                background: transparent;
+                width: 100%;
+            }
+        }
+        > .Button {
+            &.IconButton {
+                cursor: pointer;
+            }
+            cursor: auto;
+        }
+    }
+
     .octo-table-cell {
         flex: 0 0 auto;
         display: flex;
@@ -85,6 +131,9 @@
         flex-direction: row;
 
         border-bottom: solid 1px rgba(var(--body-color), 0.09);
+        &.hidden {
+            display: none;
+        }
     }
 
     .octo-table-header {
@@ -113,7 +162,7 @@
     }
 
     .MenuWrapper {  
-        width: 100%;
+        // width: 100%;
         max-width: calc(100% - 5px);
 
         .Label {

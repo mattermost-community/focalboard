@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useState} from 'react'
+
 import {FormattedMessage, IntlShape} from 'react-intl'
 import {useDrop, useDragLayer} from 'react-dnd'
 
@@ -20,6 +21,8 @@ import TableHeader from './tableHeader'
 import TableRow from './tableRow'
 import BoardIcon from '../../widgets/icons/board'
 import TableGroup from './tableGroup'
+import TableGroupHeader from './tableGroupHeader'
+import {GroupHeading} from 'react-select/src/components/Group'
 
 type Props = {
     boardTree: BoardTree
@@ -124,6 +127,22 @@ const Table = (props: Props) => {
         })
     }
 
+    const hideGroup = (groupById: string): void => {
+        const index : number = activeView.collapsedOptionIds.indexOf(groupById)
+        let newValue : string[] = [...activeView.collapsedOptionIds]
+        if (index > -1) {
+            newValue.splice(index)
+        } else if(groupById !== '') {
+            newValue.push(groupById)
+        }
+
+        const newView = new MutableBoardView(activeView)
+        newView.collapsedOptionIds = newValue
+        mutator.performAsUndoGroup(async () => {
+            await mutator.updateBlock(newView, activeView, 'hide group')
+        })
+    }
+
     const onDropToColumn = async (template: IPropertyTemplate, container: IPropertyTemplate) => {
         Utils.log(`ondrop. Source column: ${template.name}, dest column: ${container.name}`)
 
@@ -193,14 +212,20 @@ const Table = (props: Props) => {
             </div>
 
             {/* Rows, one per card */}
-            
             {visibleGroups.map((group) => {
                 return (
                 (group.cards.length > 0 ) &&
-                        <div>
-                            <div>
-                               {group.option.value}
-                            </div>
+                        <div key={group.option.value}>
+                            <TableGroupHeader
+                                group={group}
+                                boardTree={boardTree}
+                                intl={props.intl}
+                                hideGroup={hideGroup}
+                                // addCard={props.addCard}
+                                readonly={props.readonly}
+                                // propertyNameChanged={this.propertyNameChanged}
+                                // onDropToColumn={this.onDropToColumn}
+                            />
 
                             <TableGroup
                                 boardTree={boardTree}
