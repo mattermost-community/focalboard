@@ -50,9 +50,12 @@ class Utils {
     }
 
     // re-use canvas object for better performance
-    static canvas = document.createElement('canvas') as HTMLCanvasElement
-    static getTextWidth(displayText: string, fontDescriptor: string) {
+    static canvas : HTMLCanvasElement | undefined
+    static getTextWidth(displayText: string, fontDescriptor: string): number {
         if (displayText !== '') {
+            if (!this.canvas) {
+                this.canvas = document.createElement('canvas') as HTMLCanvasElement
+            }
             const context = this.canvas.getContext('2d')
             if (context) {
                 context.font = fontDescriptor

@@ -247,7 +247,6 @@ func (s *Server) startLocalModeServer() error {
 	// TODO: Close and delete socket file on shutdown
 	if err := syscall.Unlink(s.config.LocalModeSocketLocation); err != nil {
 		log.Print("Unable to unlink socket.", err)
-		return err
 	}
 
 	socket := s.config.LocalModeSocketLocation

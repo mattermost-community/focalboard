@@ -59,6 +59,11 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		defer tearDown()
 		testGetBlocksWithType(t, store, container)
 	})
+	t.Run("GetBlocksWithRootID", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testGetBlocksWithRootID(t, store, container)
+	})
 }
 
 func testInsertBlock(t *testing.T, store store.Store, container store.Container) {
@@ -652,6 +657,67 @@ func testGetBlocksWithType(t *testing.T, store store.Store, container store.Cont
 	t.Run("valid type", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
 		blocks, err = store.GetBlocksWithType(container, "test")
+		require.NoError(t, err)
+		require.Len(t, blocks, 4)
+	})
+}
+
+func testGetBlocksWithRootID(t *testing.T, store store.Store, container store.Container) {
+	userID := "user-id"
+
+	blocks, err := store.GetAllBlocks(container)
+	require.NoError(t, err)
+
+	blocksToInsert := []model.Block{
+		{
+			ID:         "block1",
+			ParentID:   "",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test",
+		},
+		{
+			ID:         "block2",
+			ParentID:   "block1",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test",
+		},
+		{
+			ID:         "block3",
+			ParentID:   "block1",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test",
+		},
+		{
+			ID:         "block4",
+			ParentID:   "block1",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test2",
+		},
+		{
+			ID:         "block5",
+			ParentID:   "block2",
+			RootID:     "block2",
+			ModifiedBy: userID,
+			Type:       "test",
+		},
+	}
+	InsertBlocks(t, store, container, blocksToInsert)
+	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
+
+	t.Run("not existing parent", func(t *testing.T) {
+		time.Sleep(1 * time.Millisecond)
+		blocks, err = store.GetBlocksWithRootID(container, "not-exists")
+		require.NoError(t, err)
+		require.Len(t, blocks, 0)
+	})
+
+	t.Run("valid parent", func(t *testing.T) {
+		time.Sleep(1 * time.Millisecond)
+		blocks, err = store.GetBlocksWithRootID(container, "block1")
 		require.NoError(t, err)
 		require.Len(t, blocks, 4)
 	})

@@ -140,7 +140,7 @@ class Kanban extends React.Component<Props, State> {
                                     }}
                                 >
                                     <FormattedMessage
-                                        id='BoardComponent.neww'
+                                        id='BoardComponent.new'
                                         defaultMessage='+ New'
                                     />
                                 </Button>

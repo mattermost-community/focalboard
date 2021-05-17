@@ -20,12 +20,13 @@ import './sidebarUserMenu.scss'
 
 type Props = {
     whiteLogo: boolean
+    showVersionBadge: boolean
 }
 
 const SidebarUserMenu = React.memo((props: Props) => {
     const history = useHistory()
     const [showRegistrationLinkDialog, setShowRegistrationLinkDialog] = useState(false)
-    const {whiteLogo} = props
+    const {whiteLogo, showVersionBadge} = props
     const intl = useIntl()
     return (
         <div className='SidebarUserMenu'>
@@ -34,8 +35,13 @@ const SidebarUserMenu = React.memo((props: Props) => {
                     <div className='logo'>
                         {whiteLogo ? <LogoWithNameWhiteIcon/> : <LogoWithNameIcon/>}
                         <div className='octo-spacer'/>
-                        <div className='version'>
-                            {`v${Constants.versionString}`}
+                        <div className='versionFrame'>
+                            <div className='version'>
+                                {`v${Constants.versionString}`}
+                            </div>
+                            <div className='versionBadge'>
+                            &nbsp;{showVersionBadge ? 'BETA' : ''}&nbsp;
+                            </div>
                         </div>
                     </div>
                     <UserContext.Consumer>
