@@ -216,6 +216,7 @@ class MutableBoardTree implements BoardTree {
                         if (option?.value.toLowerCase().includes(searchText)) {
                             return true
                         }
+
                     // TODO: Add search capability for multi-select values BIG BOYY
                     } else if ((propertyValue as string).toLowerCase().includes(searchText)) {
                         return true
