@@ -152,7 +152,7 @@ function ValueSelector(props: Props): JSX.Element {
                     }
                 } else if (action.action === 'remove-value') {
                     if (Array.isArray(value)) {
-                        props.onChange((value as IPropertyOption[]).map((option) => option.id))
+                        props.onChange(value.map((option) => option.id))
                     }
                 } else if (action.action === 'clear') {
                     props.onChange('')
