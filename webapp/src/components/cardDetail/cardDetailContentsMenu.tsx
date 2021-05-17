@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage, useIntl, IntlShape} from 'react-intl'
 
 import {BlockTypes} from '../../blocks/block'
 import mutator from '../../mutator'
@@ -50,10 +50,10 @@ async function addBlock(card: Card, intl: IntlShape, handler: ContentHandler) {
 
 type Props = {
     card: Card
-    intl: IntlShape
 }
 
 const CardDetailContentsMenu = React.memo((props: Props) => {
+    const intl = useIntl()
     return (
         <div className='CardDetail content add-content'>
             <MenuWrapper>
@@ -64,11 +64,11 @@ const CardDetailContentsMenu = React.memo((props: Props) => {
                     />
                 </Button>
                 <Menu position='top'>
-                    {contentRegistry.contentTypes.map((type) => addContentMenu(props.card, props.intl, type))}
+                    {contentRegistry.contentTypes.map((type) => addContentMenu(props.card, intl, type))}
                 </Menu>
             </MenuWrapper>
         </div>
     )
 })
 
-export default injectIntl(CardDetailContentsMenu)
+export default CardDetailContentsMenu

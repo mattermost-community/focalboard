@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useRef, useEffect} from 'react'
-import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 import {useHotkeys} from 'react-hotkeys-hook'
 
 import {BoardTree} from '../../viewModel/boardTree'
@@ -11,11 +11,11 @@ import Editable from '../../widgets/editable'
 type Props = {
     boardTree: BoardTree
     setSearchText: (text?: string) => void
-    intl: IntlShape
 }
 
 const ViewHeaderSearch = (props: Props) => {
-    const {boardTree, intl} = props
+    const {boardTree} = props
+    const intl = useIntl()
 
     const searchFieldRef = useRef<{focus(selectAll?: boolean): void}>(null)
     const [isSearching, setIsSearching] = useState(Boolean(props.boardTree.getSearchText()))
@@ -65,4 +65,4 @@ const ViewHeaderSearch = (props: Props) => {
     )
 }
 
-export default injectIntl(ViewHeaderSearch)
+export default ViewHeaderSearch

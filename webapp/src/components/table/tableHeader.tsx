@@ -10,6 +10,7 @@ import SortUpIcon from '../../widgets/icons/sortUp'
 import MenuWrapper from '../../widgets/menuWrapper'
 import Label from '../../widgets/label'
 import {useSortable} from '../../hooks/sortable'
+import {Utils} from '../../utils'
 
 import HorizontalGrip from './horizontalGrip'
 
@@ -24,6 +25,7 @@ type Props = {
     template: IPropertyTemplate
     offset: number
     onDrop: (template: IPropertyTemplate, container: IPropertyTemplate) => void
+    onAutoSizeColumn: (columnID: string, headerWidth: number) => void
 }
 
 const TableHeader = React.memo((props: Props): JSX.Element => {
@@ -31,6 +33,16 @@ const TableHeader = React.memo((props: Props): JSX.Element => {
 
     const columnWidth = (templateId: string): number => {
         return Math.max(Constants.minColumnWidth, (props.boardTree.activeView.columnWidths[templateId] || 0) + props.offset)
+    }
+
+    const onAutoSizeColumn = (templateId: string) => {
+        let width = Constants.minColumnWidth
+        if (columnRef.current) {
+            const {fontDescriptor, padding} = Utils.getFontAndPaddingFromCell(columnRef.current)
+            const textWidth = Utils.getTextWidth(columnRef.current.innerText.toUpperCase(), fontDescriptor)
+            width = textWidth + padding
+        }
+        props.onAutoSizeColumn(templateId, width)
     }
 
     let className = 'octo-table-cell header-cell'
@@ -59,7 +71,10 @@ const TableHeader = React.memo((props: Props): JSX.Element => {
             <div className='octo-spacer'/>
 
             {!props.readonly &&
-                <HorizontalGrip templateId={props.template.id}/>
+                <HorizontalGrip
+                    templateId={props.template.id}
+                    onAutoSizeColumn={onAutoSizeColumn}
+                />
             }
         </div>
     )

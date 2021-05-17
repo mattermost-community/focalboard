@@ -1,9 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useEffect} from 'react'
-import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 import {useRouteMatch} from 'react-router'
-import {withRouter, RouteComponentProps} from 'react-router-dom'
 
 import {ISharing} from '../blocks/sharing'
 
@@ -18,15 +17,15 @@ import Switch from '../widgets/switch'
 import Modal from './modal'
 import './shareBoardComponent.scss'
 
-type Props = RouteComponentProps<{workspaceId?: string}> & {
+type Props = {
     boardId: string
     onClose: () => void
-    intl: IntlShape
 }
 
 const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
     const [wasCopied, setWasCopied] = useState(false)
     const [sharing, setSharing] = useState<ISharing|undefined>(undefined)
+    const intl = useIntl()
     const match = useRouteMatch<{workspaceId?: string}>()
 
     const loadData = async () => {
@@ -53,7 +52,6 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
     }
 
     const onRegenerateToken = async () => {
-        const {intl} = props
         // eslint-disable-next-line no-alert
         const accept = window.confirm(intl.formatMessage({id: 'ShareBoard.confirmRegenerateToken', defaultMessage: 'This will invalidate previously shared links. Continue?'}))
         if (accept) {
@@ -150,4 +148,4 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
     )
 })
 
-export default withRouter(injectIntl(ShareBoardComponent))
+export default ShareBoardComponent

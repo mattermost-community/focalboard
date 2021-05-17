@@ -1,8 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {injectIntl, IntlShape} from 'react-intl'
-
 import {IContentBlock} from '../../blocks/contentBlock'
 import {Utils} from '../../utils'
 
@@ -18,11 +16,10 @@ import './checkboxElement'
 type Props = {
     block: IContentBlock
     readonly: boolean
-    intl: IntlShape
 }
 
-function ContentElement(props: Props): JSX.Element|null {
-    const {block, intl, readonly} = props
+export default function ContentElement(props: Props): JSX.Element|null {
+    const {block, readonly} = props
 
     const handler = contentRegistry.getHandler(block.type)
     if (!handler) {
@@ -30,7 +27,5 @@ function ContentElement(props: Props): JSX.Element|null {
         return null
     }
 
-    return handler.createComponent(block, intl, readonly)
+    return handler.createComponent(block, readonly)
 }
-
-export default injectIntl(ContentElement)

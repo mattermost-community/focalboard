@@ -2,11 +2,12 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {BoardTree} from '../../viewModel/boardTree'
 import ButtonWithMenu from '../../widgets/buttons/buttonWithMenu'
 import CardIcon from '../../widgets/icons/card'
+import AddIcon from '../../widgets/icons/add'
 import Menu from '../../widgets/menu'
 
 import NewCardButtonTemplateItem from './newCardButtonTemplateItem'
@@ -17,11 +18,11 @@ type Props = {
     addCardFromTemplate: (cardTemplateId: string) => void
     addCardTemplate: () => void
     editCardTemplate: (cardTemplateId: string) => void
-    intl: IntlShape
 }
 
 const NewCardButton = React.memo((props: Props): JSX.Element => {
-    const {intl, boardTree} = props
+    const {boardTree} = props
+    const intl = useIntl()
 
     return (
         <ButtonWithMenu
@@ -59,17 +60,18 @@ const NewCardButton = React.memo((props: Props): JSX.Element => {
                 ))}
 
                 <Menu.Text
+                    icon={<CardIcon/>}
                     id='empty-template'
                     name={intl.formatMessage({id: 'ViewHeader.empty-card', defaultMessage: 'Empty card'})}
-                    icon={<CardIcon/>}
                     onClick={() => {
                         props.addCard()
                     }}
                 />
 
                 <Menu.Text
+                    icon={<AddIcon/>}
                     id='add-template'
-                    name={intl.formatMessage({id: 'ViewHeader.add-template', defaultMessage: '+ New template'})}
+                    name={intl.formatMessage({id: 'ViewHeader.add-template', defaultMessage: 'New template'})}
                     onClick={() => props.addCardTemplate()}
                 />
             </Menu>
@@ -77,4 +79,4 @@ const NewCardButton = React.memo((props: Props): JSX.Element => {
     )
 })
 
-export default injectIntl(NewCardButton)
+export default NewCardButton

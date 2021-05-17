@@ -1,9 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {useIntl, IntlShape} from 'react-intl'
 
 import {CsvExporter} from '../../csvExporter'
+import {Archiver} from '../../archiver'
 import {UserContext} from '../../user'
 import {BoardTree} from '../../viewModel/boardTree'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -17,7 +18,6 @@ import {sendFlashMessage} from '../flashMessages'
 
 type Props = {
     boardTree: BoardTree
-    intl: IntlShape
 }
 
 // async function testAddCards(boardTree: BoardTree, count: number) {
@@ -92,7 +92,8 @@ function onExportCsvTrigger(boardTree: BoardTree, intl: IntlShape) {
 const ViewHeaderActionsMenu = React.memo((props: Props) => {
     const [showShareDialog, setShowShareDialog] = useState(false)
 
-    const {boardTree, intl} = props
+    const {boardTree} = props
+    const intl = useIntl()
 
     return (
         <ModalWrapper>
@@ -104,11 +105,11 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
                         name={intl.formatMessage({id: 'ViewHeader.export-csv', defaultMessage: 'Export to CSV'})}
                         onClick={() => onExportCsvTrigger(boardTree, intl)}
                     />
-                    {/* <Menu.Text
+                    <Menu.Text
                         id='exportBoardArchive'
                         name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
-                        onClick={() => Archiver.exportBoardTree(boardTree)}
-                    /> */}
+                        onClick={() => Archiver.exportBoardArchive(boardTree)}
+                    />
                     <UserContext.Consumer>
                         {(user) => (user && user.id !== 'single-user' &&
                             <Menu.Text
@@ -157,4 +158,4 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
     )
 })
 
-export default injectIntl(ViewHeaderActionsMenu)
+export default ViewHeaderActionsMenu

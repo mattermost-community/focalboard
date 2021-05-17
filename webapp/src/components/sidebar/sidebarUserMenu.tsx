@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {useIntl} from 'react-intl'
 import {useHistory} from 'react-router-dom'
 
 import {Constants} from '../../constants'
@@ -20,13 +20,14 @@ import './sidebarUserMenu.scss'
 
 type Props = {
     whiteLogo: boolean
-    intl: IntlShape
+    showVersionBadge: boolean
 }
 
 const SidebarUserMenu = React.memo((props: Props) => {
     const history = useHistory()
     const [showRegistrationLinkDialog, setShowRegistrationLinkDialog] = useState(false)
-    const {intl, whiteLogo} = props
+    const {whiteLogo, showVersionBadge} = props
+    const intl = useIntl()
     return (
         <div className='SidebarUserMenu'>
             <ModalWrapper>
@@ -34,8 +35,13 @@ const SidebarUserMenu = React.memo((props: Props) => {
                     <div className='logo'>
                         {whiteLogo ? <LogoWithNameWhiteIcon/> : <LogoWithNameIcon/>}
                         <div className='octo-spacer'/>
-                        <div className='version'>
-                            {`v${Constants.versionString}`}
+                        <div className='versionFrame'>
+                            <div className='version'>
+                                {`v${Constants.versionString}`}
+                            </div>
+                            <div className='versionBadge'>
+                            &nbsp;{showVersionBadge ? 'BETA' : ''}&nbsp;
+                            </div>
                         </div>
                     </div>
                     <UserContext.Consumer>
@@ -100,4 +106,4 @@ const SidebarUserMenu = React.memo((props: Props) => {
     )
 })
 
-export default injectIntl(SidebarUserMenu)
+export default SidebarUserMenu

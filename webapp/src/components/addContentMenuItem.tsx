@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {useIntl} from 'react-intl'
 
 import {BlockTypes} from '../blocks/block'
 import {Card} from '../blocks/card'
@@ -16,14 +16,14 @@ import {contentRegistry} from './content/contentRegistry'
 type Props = {
     type: BlockTypes
     block: IContentBlock
-    intl: IntlShape,
     card: Card
     contents: readonly IContentBlock[]
 }
 
 const AddContentMenuItem = React.memo((props:Props): JSX.Element => {
-    const {intl, card, contents, block, type} = props
+    const {card, contents, block, type} = props
     const index = contents.indexOf(block)
+    const intl = useIntl()
 
     const handler = contentRegistry.getHandler(type)
     if (!handler) {
@@ -55,4 +55,4 @@ const AddContentMenuItem = React.memo((props:Props): JSX.Element => {
     )
 })
 
-export default injectIntl(AddContentMenuItem)
+export default AddContentMenuItem
