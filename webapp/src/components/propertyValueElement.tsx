@@ -57,7 +57,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     }
 
     if (propertyTemplate.type === 'multiSelect') {
-        const values = propertyValue ? (propertyValue as string[]).map((v) => propertyTemplate.options.find((o) => o.id === v)) : []
+        const values = propertyValue ? (propertyValue as string[]).map((v) => propertyTemplate.options.find((o) => o!.id === v)).filter((v): v is IPropertyOption => !!v): []
 
         if (readOnly || !boardTree) {
             return (

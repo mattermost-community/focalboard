@@ -31,7 +31,7 @@ type Props = {
 
 type LabelProps = {
     option: IPropertyOption
-    meta: FormatOptionLabelMeta<IPropertyOption, false>
+    meta: FormatOptionLabelMeta<IPropertyOption, true | false>
     onChangeColor: (option: IPropertyOption, color: string) => void
     onDeleteOption: (option: IPropertyOption) => void
 }
@@ -131,7 +131,7 @@ function ValueSelector(props: Props): JSX.Element {
                     paddingLeft: 0,
                 }),
             }}
-            formatOptionLabel={(option: IPropertyOption, meta: FormatOptionLabelMeta<IPropertyOption, false>) => (
+            formatOptionLabel={(option: IPropertyOption, meta: FormatOptionLabelMeta<IPropertyOption, true | false>) => (
                 <ValueSelectorLabel
                     option={option}
                     meta={meta}
@@ -143,7 +143,7 @@ function ValueSelector(props: Props): JSX.Element {
             options={props.options}
             getOptionLabel={(o: IPropertyOption) => o.value}
             getOptionValue={(o: IPropertyOption) => o.id}
-            onChange={(value: ValueType<IPropertyOption, false>, action: ActionMeta<IPropertyOption>): void => {
+            onChange={(value: ValueType<IPropertyOption, true | false>, action: ActionMeta<IPropertyOption>): void => {
                 if (action.action === 'select-option') {
                     if (Array.isArray(value)) {
                         props.onChange((value as IPropertyOption[]).map((option) => option.id))
