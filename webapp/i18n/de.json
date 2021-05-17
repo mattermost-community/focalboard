@@ -3,7 +3,6 @@
   "BoardComponent.delete": "Löschen",
   "BoardComponent.hidden-columns": "Versteckte Spalten",
   "BoardComponent.hide": "Ausblenden",
-  "BoardComponent.neww": "+ Neu",
   "BoardComponent.no-property": "Keine {property}",
   "BoardComponent.no-property-title": "Elemente mit einer leeren {property} Eigenschaft erscheinen hier. Diese Spalte kann nicht entfernt werden.",
   "BoardComponent.show": "Anzeigen",

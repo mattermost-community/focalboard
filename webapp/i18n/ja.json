@@ -3,7 +3,6 @@
   "BoardComponent.delete": "削除",
   "BoardComponent.hidden-columns": "非表示",
   "BoardComponent.hide": "非表示",
-  "BoardComponent.neww": "+ 新規",
   "BoardComponent.no-property": "{property} がありません",
   "BoardComponent.no-property-title": "{property}が空のアイテムがここに表示されます。このカラムは削除できません。",
   "BoardComponent.show": "表示",

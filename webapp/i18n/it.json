@@ -3,7 +3,6 @@
   "BoardComponent.delete": "Elimina",
   "BoardComponent.hidden-columns": "Campi nascosti",
   "BoardComponent.hide": "Nascondi",
-  "BoardComponent.neww": "+ Nuovo",
   "BoardComponent.no-property": "No {proprietà}",
   "BoardComponent.no-property-title": "Gli oggetti senza alcuna proprietà {property} andranno qui. Questo campo non può essere rimosso.",
   "BoardComponent.show": "Mostra",

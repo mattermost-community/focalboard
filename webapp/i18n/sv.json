@@ -3,7 +3,6 @@
   "BoardComponent.delete": "Radera",
   "BoardComponent.hidden-columns": "Dolda kolumner",
   "BoardComponent.hide": "Dölj",
-  "BoardComponent.neww": "+ Ny",
   "BoardComponent.no-property": "Ingen {property}",
   "BoardComponent.no-property-title": "Objekt med en tom {property} egenskap grupperas här. Denna kolumn kan ej tas bort.",
   "BoardComponent.show": "Visa",
