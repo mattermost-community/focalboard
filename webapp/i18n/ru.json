@@ -3,7 +3,6 @@
   "BoardComponent.delete": "Удалить",
   "BoardComponent.hidden-columns": "Скрытые колонки",
   "BoardComponent.hide": "Скрыть",
-  "BoardComponent.neww": "+ Создать",
   "BoardComponent.no-property": "{property} пусто",
   "BoardComponent.no-property-title": "Здесь будут элементы с пустым свойством {property}. Эта колонка не может быть удалена.",
   "BoardComponent.show": "Показать",
