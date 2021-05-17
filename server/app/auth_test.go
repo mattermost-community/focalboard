@@ -34,8 +34,8 @@ func TestLogin(t *testing.T) {
 		{"fail, invalid username", "badUsername", "", "", "", true},
 		{"fail, invalid email", "", "badEmail", "", "", true},
 		{"fail, invalid password", "testUsername", "", "badPassword", "", true},
-		{"success, username", "testUsername", "", "testPassword", "", false},
-		{"success, email", "", "testEmail", "testPassword", "", false},
+		{"success, using username", "testUsername", "", "testPassword", "", false},
+		{"success, using email", "", "testEmail", "testPassword", "", false},
 	}
 
 	th.Store.EXPECT().GetUserByUsername(gomock.Eq("badUsername")).Return(nil, errors.New("Bad Username"))
@@ -100,7 +100,7 @@ func TestRegisterUser(t *testing.T) {
 		{"fail, username exists", "existingUsername", "", "", true},
 		{"fail, email exists", "", "existingEmail", "", true},
 		{"fail, invalid password", "newUsername", "", "test", true},
-		{"success, email", "", "newEmail", "testPassword", false},
+		{"success, using email", "", "newEmail", "testPassword", false},
 	}
 
 	th.Store.EXPECT().GetUserByUsername(gomock.Eq("existingUsername")).Return(mockUser, nil)
