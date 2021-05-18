@@ -119,10 +119,10 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     if (propertyTemplate.type === 'checkbox') {
         return (
             <Switch
-                isOn={Boolean(propertyValue) && propertyValue != 'false'}
-                onChanged={(newValue) => {
-                    mutator.changePropertyValue(card, propertyTemplate.id, newValue + '')
-                    setValue(newValue + '')
+                isOn={Boolean(propertyValue)}
+                onChanged={(newBool) => {
+                    const newValue = newBool ? 'true' : '';
+                    mutator.changePropertyValue(card, propertyTemplate.id, newValue)
                 }}
                 readOnly={readOnly}
             />
