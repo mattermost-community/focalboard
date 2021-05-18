@@ -16,5 +16,9 @@ const config = merge.merge(commonConfig, {
 
 module.exports = [
     merge.merge(config, {
+        devtool: 'source-map',
+        output: {
+            devtoolNamespace: 'focalboard',
+        },
     }),
 ];
