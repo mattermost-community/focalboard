@@ -21,6 +21,7 @@ import (
 	"github.com/mattermost/focalboard/server/context"
 	appModel "github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/config"
+	"github.com/mattermost/focalboard/server/services/prometheus"
 	"github.com/mattermost/focalboard/server/services/scheduler"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
@@ -30,6 +31,7 @@ import (
 	"github.com/mattermost/focalboard/server/ws"
 	"github.com/mattermost/mattermost-server/v5/services/filesstore"
 	"github.com/mattermost/mattermost-server/v5/utils"
+	"github.com/oklog/run"
 )
 
 const (
@@ -48,6 +50,8 @@ type Server struct {
 	telemetry           *telemetry.Service
 	logger              *zap.Logger
 	cleanUpSessionsTask *scheduler.ScheduledTask
+	promServer          *prometheus.Service
+	promInstrumentor    *prometheus.Instrumentor
 
 	localRouter     *mux.Router
 	localModeServer *http.Server
@@ -165,16 +169,18 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 	})
 
 	server := Server{
-		config:       cfg,
-		wsServer:     wsServer,
-		webServer:    webServer,
-		store:        db,
-		filesBackend: filesBackend,
-		telemetry:    telemetryService,
-		logger:       logger,
-		localRouter:  localRouter,
-		api:          focalboardAPI,
-		appBuilder:   appBuilder,
+		config:           cfg,
+		wsServer:         wsServer,
+		webServer:        webServer,
+		store:            db,
+		filesBackend:     filesBackend,
+		telemetry:        telemetryService,
+		promServer:       prometheus.New(cfg.PrometheusAddress),
+		promInstrumentor: prometheus.NewInstrumentor(appModel.CurrentVersion),
+		logger:           logger,
+		localRouter:      localRouter,
+		api:              focalboardAPI,
+		appBuilder:       appBuilder,
 	}
 
 	server.initHandlers()
@@ -209,6 +215,23 @@ func (s *Server) Start() error {
 		s.telemetry.RunTelemetryJob(firstRun)
 	}
 
+	var group run.Group
+	if s.config.PrometheusAddress != "" {
+		group.Add(func() error {
+			if err := s.promServer.Run(); err != nil {
+				return errors.Wrap(err, "PromServer Run")
+			}
+			return nil
+		}, func(error) {
+			s.promServer.Shutdown()
+		})
+		// expose the build info as metric
+		s.promInstrumentor.ExposeBuildInfo()
+
+		if err := group.Run(); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
