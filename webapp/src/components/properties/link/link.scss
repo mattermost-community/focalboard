@@ -4,9 +4,12 @@
     }
 
     a {
-        color: rgb(var(--body-color));
         padding: 8px; // increases clickable area for better UX
         display: none;
+    }
+
+    a, a:visited {
+        color: rgb(var(--body-color));
     }
 
     a:hover {

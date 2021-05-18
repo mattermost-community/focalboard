@@ -3,9 +3,6 @@
 
 import React, {ReactNode} from 'react'
 
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faExternalLinkAlt} from '@fortawesome/free-solid-svg-icons'
-
 import Editable from '../../../widgets/editable'
 
 import './link.scss'
@@ -23,12 +20,11 @@ const URLProperty = (props: Props): JSX.Element => {
     if (props.value?.trim()) {
         link = (
             <a
+                className={'icon-link-variant'}
                 href={props.value.trim()}
                 target={'_blank'}
                 rel='noreferrer'
-            >
-                <FontAwesomeIcon icon={faExternalLinkAlt}/>
-            </a>
+            />
         )
     }
 
