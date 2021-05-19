@@ -6,6 +6,7 @@ import React, {ReactNode} from 'react'
 import Editable from '../../../widgets/editable'
 
 import './link.scss'
+import {Utils} from '../../../utils'
 
 type Props = {
     value: string
@@ -20,9 +21,9 @@ const URLProperty = (props: Props): JSX.Element => {
     if (props.value?.trim()) {
         link = (
             <a
-                className={'icon-link-variant'}
-                href={props.value.trim()}
-                target={'_blank'}
+                className='icon-link-variant'
+                href={Utils.assureProtocol(props.value.trim())}
+                target='_blank'
                 rel='noreferrer'
             />
         )

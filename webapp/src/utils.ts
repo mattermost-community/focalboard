@@ -211,6 +211,10 @@ class Utils {
         }
     }
 
+    static assureProtocol(url: string): string {
+        return url.match(/^.{3,9}:\/\//) ? url : `https://${url}`
+    }
+
     // File names
 
     static sanitizeFilename(filename: string): string {
