@@ -26,6 +26,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		NotificationCenter.default.post(name: AppDelegate.serverStartedNotification, object: nil)
 	}
 
+	func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+		if !flag {
+			openNewWindow(nil)
+		}
+		return true
+	}
+
 	func applicationWillTerminate(_ aNotification: Notification) {
 		stopServer()
 	}
