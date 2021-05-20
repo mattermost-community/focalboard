@@ -18,6 +18,7 @@ Personal Server settings are stored in `config.json` and is read when the server
 | webpath       | Path to web files         | "./webapp/pack"
 | filespath     | Path to uploaded files folder | "./files"
 | telemetry     | Enable health diagnostics telemetry | true
+| prometheus_address | Enables prometheus metrics, if it's empty is disabled | ":9092"
 | session_expire_time | Session expiration time in seconds | 2592000
 | session_refresh_time  | Session refresh time in seconds | 18000
 | localOnly | Only allow connections from localhost | false
