@@ -22,6 +22,9 @@ export class UserSettings {
     }
 
     static set(key: UserSettingKey, value: string | null) {
+        if (!Object.values(UserSettingKey).includes(key)) {
+            return
+        }
         if (value === null) {
             localStorage.removeItem(key)
         } else {
@@ -107,7 +110,9 @@ function importUserSettings(json: string): boolean {
         return false
     }
     for (const [key, value] of Object.entries(settings)) {
-        localStorage.setItem(key, value as string)
+        if (Object.values(UserSettings).includes(key)) {
+            localStorage.setItem(key, value as string)
+        }
     }
     return true
 }
