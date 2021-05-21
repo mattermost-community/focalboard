@@ -597,16 +597,19 @@ func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
+	query := r.URL.Query()
+	rootID := query.Get("root_id")
 	container, err := a.getContainer(r)
 	if err != nil {
 		noContainerErrorResponse(w, err)
 		return
 	}
 
-	blocks, err := a.app().GetAllBlocks(*container)
-	if err != nil {
-		errorResponse(w, http.StatusInternalServerError, "", err)
-		return
+	blocks := []model.Block{}
+	if rootID == "" {
+		blocks, err = a.app().GetAllBlocks(*container)
+	} else {
+		blocks, err = a.app().GetBlocksWithRootID(*container, rootID)
 	}
 
 	log.Printf("%d raw block(s)", len(blocks))

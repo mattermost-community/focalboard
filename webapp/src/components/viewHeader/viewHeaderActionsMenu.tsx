@@ -4,6 +4,7 @@ import React, {useState} from 'react'
 import {useIntl, IntlShape} from 'react-intl'
 
 import {CsvExporter} from '../../csvExporter'
+import {Archiver} from '../../archiver'
 import {UserContext} from '../../user'
 import {BoardTree} from '../../viewModel/boardTree'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -104,11 +105,11 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
                         name={intl.formatMessage({id: 'ViewHeader.export-csv', defaultMessage: 'Export to CSV'})}
                         onClick={() => onExportCsvTrigger(boardTree, intl)}
                     />
-                    {/* <Menu.Text
+                    <Menu.Text
                         id='exportBoardArchive'
                         name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
-                        onClick={() => Archiver.exportBoardTree(boardTree)}
-                    /> */}
+                        onClick={() => Archiver.exportBoardArchive(boardTree)}
+                    />
                     <UserContext.Consumer>
                         {(user) => (user && user.id !== 'single-user' &&
                             <Menu.Text

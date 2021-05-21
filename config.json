@@ -10,6 +10,7 @@
 	"webpath": "./webapp/pack",
 	"filespath": "./files",
 	"telemetry": true,
+	"prometheus_address": ":9092",
 	"webhook_update": [],
 	"secret": "this-is-a-secret-string",
 	"session_expire_time": 2592000,
