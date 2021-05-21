@@ -3,9 +3,15 @@
         display: flex;
         flex-shrink: 0;
         align-items: center;
+        // border-bottom: solid 1px rgba(var(--body-color), 0.09);
+        // &.hidden {
+        //     display: none;
+        // }
 
-        width: 100%;
+        // width: 100%;
+        height: 50px;
         margin-right: 15px;
+        margin-top: 15px;
         vertical-align: middle;
 
         &.narrow {
@@ -28,20 +34,50 @@
         }
 
         .Label {
-            display: flex;
-            max-width: 90%;
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 3px;
+            line-height: 20px;
             margin-right: 5px;
-            width: 100%;
-            .Editable {
+            color: rgba(var(--body-color), 1);
+            white-space: nowrap;
+            text-transform: none;
+            font-weight: normal;
+            font-size: 16px;
+        
+            input {
                 background: transparent;
                 width: 100%;
+                text-transform: none;
+                font-weight: normal;
+                font-size: 16px;
+                //     line-height: 20px;
+                color: rgba(var(--body-color), 1);
             }
         }
+        
+
+        // .Label {
+        //     display: flex;
+        //     // max-width: 90%;
+        //     margin-right: 5px;
+        //     width: 100%;
+        //     .Editable {
+        //         background: transparent;
+        //         width: 100%;
+        //     }
+        // }
         > .Button {
             &.IconButton {
                 cursor: pointer;
             }
             cursor: auto;
+        }
+        &.expanded {
+            .DisclosureTriangleIcon {
+                transform: rotate(90deg);
+            }
         }
     }
 

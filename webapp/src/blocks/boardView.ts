@@ -72,7 +72,7 @@ class MutableBoardView extends MutableBlock implements BoardView {
     set collapsedOptionIds(value: string[]) {
         this.fields.collapsedOptionIds = value
     }
-    
+
     get filter(): FilterGroup {
         return this.fields.filter
     }

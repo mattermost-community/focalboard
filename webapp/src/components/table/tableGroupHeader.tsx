@@ -1,26 +1,25 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect} from 'react'
 import {FormattedMessage, IntlShape} from 'react-intl'
-import {useDrop, useDrag} from 'react-dnd'
 
 import {Constants} from '../../constants'
 import {IPropertyOption} from '../../blocks/board'
-import {Card} from '../../blocks/card'
+import {useSortable} from '../../hooks/sortable'
 import mutator from '../../mutator'
 import {BoardTree, BoardTreeGroup} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
 import IconButton from '../../widgets/buttons/iconButton'
 import AddIcon from '../../widgets/icons/add'
 import DeleteIcon from '../../widgets/icons/delete'
+import DisclosureTriangle from '../../widgets/icons/disclosureTriangle'
 import HideIcon from '../../widgets/icons/hide'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import Editable from '../../widgets/editable'
 import Label from '../../widgets/label'
-import {Utils} from '../../utils'
 
 type Props = {
     boardTree: BoardTree
@@ -28,58 +27,49 @@ type Props = {
     intl: IntlShape
     readonly: boolean
     hideGroup: (groupByOptionId: string) => void
-    // addCard: (groupByOptionId?: string) => Promise<void>
-    // propertyNameChanged: (option: IPropertyOption, text: string) => Promise<void>
+    addCard: (groupByOptionId?: string) => Promise<void>
+    propertyNameChanged: (option: IPropertyOption, text: string) => Promise<void>
+
     // onDropToColumn: (srcOption: IPropertyOption, card?: Card, dstOption?: IPropertyOption) => void
+    onDrop: (srcOption: IPropertyOption, dstOption?: IPropertyOption) => void
 }
 
-export default function TableGroupHeader(props: Props): JSX.Element {
-    Utils.log('TableGroupHeader')
-
+const TableGroupHeader = React.memo((props: Props): JSX.Element => {
     const {boardTree, intl, group} = props
     const {activeView} = boardTree
     const [groupTitle, setGroupTitle] = useState(group.option.value)
 
-    const headerRef = useRef<HTMLDivElement>(null)
-
-    const [{isDragging}, drag] = useDrag(() => ({
-        type: 'column',
-        item: group.option,
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging(),
-        }),
-    }))
-    // const [{isOver}, drop] = useDrop(() => ({
-    //     accept: 'column',
-    //     collect: (monitor) => ({
-    //         isOver: monitor.isOver(),
-    //     }),
-    //     drop: (item: IPropertyOption) => {
-    //         props.onDropToColumn(item, undefined, group.option)
-    //     },
-    // }))
+    const [isDragging, isOver, groupHeaderRef] = useSortable('groupHeader', group.option, true, props.onDrop)
 
     useEffect(() => {
         setGroupTitle(group.option.value)
     }, [group.option.value])
-
-    // drop(drag(headerRef))
     let className = 'octo-group-header-cell'
-    // if (isOver) {
-    //     className += ' dragover'
-    // }
+    if (isOver) {
+        className += ' dragover'
+    }
+    if (activeView.collapsedOptionIds.indexOf(group.option.id || 'undefined') < 0) {
+        className += ' expanded'
+    }
 
     return (
         <div
             key={group.option.id || 'empty'}
-            ref={headerRef}
+            ref={groupHeaderRef}
             style={{opacity: isDragging ? 0.5 : 1}}
             className={className}
             draggable={!props.readonly}
         >
-            <Button
-                onClick={() => props.hideGroup(group.option.id)}>{`${group.cards.length}`}</Button>
+            <IconButton
+                icon={<DisclosureTriangle/>}
+                onClick={() => props.hideGroup(group.option.id || 'undefined')}
+            />
 
+            {/* <div
+                className='octo-icon'
+                onClick={() => props.hideGroup(group.option.id || 'undefined')}>
+                    {activeView.collapsedOptionIds.indexOf(group.option.id || 'undefined') > -1 ? String.fromCodePoint(0x2795) : String.fromCodePoint(0x2796)}
+            </div> */}
             {!group.option.id &&
                 <Label
                     title={intl.formatMessage({
@@ -97,6 +87,7 @@ export default function TableGroupHeader(props: Props): JSX.Element {
                 </Label>}
             {group.option.id &&
                 <Label color={group.option.color}>
+                    {/* <Label> */}
                     <Editable
                         value={groupTitle}
                         placeholderText='New Select'
@@ -105,7 +96,7 @@ export default function TableGroupHeader(props: Props): JSX.Element {
                             if (groupTitle.trim() === '') {
                                 setGroupTitle(group.option.value)
                             }
-                            // props.propertyNameChanged(group.option, groupTitle)
+                            props.propertyNameChanged(group.option, groupTitle)
                         }}
                         onCancel={() => {
                             setGroupTitle(group.option.value)
@@ -114,7 +105,7 @@ export default function TableGroupHeader(props: Props): JSX.Element {
                         spellCheck={true}
                     />
                 </Label>}
-                <div className='octo-spacer'/>
+            {/* <div className='octo-spacer'/> */}
             <Button>{`${group.cards.length}`}</Button>
             {!props.readonly &&
                 <>
@@ -149,10 +140,12 @@ export default function TableGroupHeader(props: Props): JSX.Element {
                     </MenuWrapper>
                     <IconButton
                         icon={<AddIcon/>}
-                        // onClick={() => props.addCard(group.option.id)}
+                        onClick={() => props.addCard(group.option.id)}
                     />
                 </>
             }
         </div>
     )
-}
+})
+
+export default TableGroupHeader

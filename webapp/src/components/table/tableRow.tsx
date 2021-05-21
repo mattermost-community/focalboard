@@ -12,10 +12,8 @@ import Editable from '../../widgets/editable'
 import {useSortable} from '../../hooks/sortable'
 
 import PropertyValueElement from '../propertyValueElement'
-import './tableRow.scss'
-
 import {Utils} from '../../utils'
-
+import './tableRow.scss'
 
 type Props = {
     boardTree: BoardTree
@@ -33,7 +31,6 @@ type Props = {
 }
 
 const TableRow = React.memo((props: Props) => {
-    Utils.log('TableRow')
     const {boardTree, onSaveWithEnter, columnRefs} = props
     const {board, activeView} = boardTree
 
@@ -41,7 +38,7 @@ const TableRow = React.memo((props: Props) => {
     const [title, setTitle] = useState(props.card.title)
     const {card} = props
     const isManualSort = activeView.sortOptions.length < 1
-    const isGrouped = activeView.groupById != undefined
+    const isGrouped = activeView.groupById !== undefined
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly && (isManualSort || isGrouped), props.onDrop)
 
     useEffect(() => {
@@ -50,6 +47,7 @@ const TableRow = React.memo((props: Props) => {
         }
     }, [])
 
+    Utils.log('Here')
     const columnWidth = (templateId: string): number => {
         if (props.resizingColumn === templateId) {
             return Math.max(Constants.minColumnWidth, (props.boardTree.activeView.columnWidths[templateId] || 0) + props.offset)
@@ -58,21 +56,26 @@ const TableRow = React.memo((props: Props) => {
     }
 
     let className = props.isSelected ? 'TableRow octo-table-row selected' : 'TableRow octo-table-row'
+    Utils.log('Here')
     if (isOver) {
         className += ' dragover'
     }
-
-    const gbID = activeView.groupById || ''
-    if (isGrouped && activeView.collapsedOptionIds.indexOf(card.properties[gbID]) > -1) {
-        className += ' hidden'
+    if (isGrouped) {
+        const gbID = activeView.groupById || ''
+        const groupValue = card.properties[gbID] || 'undefined'
+        if (activeView.collapsedOptionIds.indexOf(groupValue) > -1) {
+            className += ' hidden'
+        }
     }
+    Utils.log('Here')
 
     if (!columnRefs.get(Constants.titleColumnId)) {
         columnRefs.set(Constants.titleColumnId, React.createRef())
     }
 
-    
+    Utils.log('return')
     return (
+
         <div
             className={className}
             onClick={props.onClick}

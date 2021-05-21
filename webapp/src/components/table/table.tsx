@@ -1,11 +1,11 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React from 'react'
 
 import {FormattedMessage, IntlShape} from 'react-intl'
 import {useDrop, useDragLayer} from 'react-dnd'
 
-import {IPropertyTemplate} from '../../blocks/board'
+import {IPropertyOption, IPropertyTemplate} from '../../blocks/board'
 import {MutableBoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
 import {Constants} from '../../constants'
@@ -18,11 +18,8 @@ import {OctoUtils} from './../../octoUtils'
 
 import './table.scss'
 import TableHeader from './tableHeader'
-import TableRow from './tableRow'
-import BoardIcon from '../../widgets/icons/board'
+import TableRows from './tableRows'
 import TableGroup from './tableGroup'
-import TableGroupHeader from './tableGroupHeader'
-import {GroupHeading} from 'react-select/src/components/Group'
 
 type Props = {
     boardTree: BoardTree
@@ -31,7 +28,7 @@ type Props = {
     cardIdToFocusOnRender: string
     intl: IntlShape
     showCard: (cardId?: string) => void
-    addCard: (show: boolean) => Promise<void>
+    addCard: (groupByOptionId?: string) => Promise<void>
     onCardClicked: (e: React.MouseEvent, card: Card) => void
 }
 
@@ -105,34 +102,12 @@ const Table = (props: Props) => {
         mutator.updateBlock(newView, activeView, 'autosize column')
     })
 
-    const onDropToCard = (srcCard: Card, dstCard: Card) => {
-        Utils.log(`onDropToCard: ${dstCard.title}`)
-        const {selectedCardIds} = props
-
-        const draggedCardIds = Array.from(new Set(selectedCardIds).add(srcCard.id))
-        const description = draggedCardIds.length > 1 ? `drag ${draggedCardIds.length} cards` : 'drag card'
-
-        // Update dstCard order
-        let cardOrder = Array.from(new Set([...activeView.cardOrder, ...boardTree.cards.map((o) => o.id)]))
-        const isDraggingDown = cardOrder.indexOf(srcCard.id) <= cardOrder.indexOf(dstCard.id)
-        cardOrder = cardOrder.filter((id) => !draggedCardIds.includes(id))
-        let destIndex = cardOrder.indexOf(dstCard.id)
-        if (isDraggingDown) {
-            destIndex += 1
-        }
-        cardOrder.splice(destIndex, 0, ...draggedCardIds)
-
-        mutator.performAsUndoGroup(async () => {
-            await mutator.changeViewCardOrder(activeView, cardOrder, description)
-        })
-    }
-
     const hideGroup = (groupById: string): void => {
         const index : number = activeView.collapsedOptionIds.indexOf(groupById)
-        let newValue : string[] = [...activeView.collapsedOptionIds]
+        const newValue : string[] = [...activeView.collapsedOptionIds]
         if (index > -1) {
-            newValue.splice(index)
-        } else if(groupById !== '') {
+            newValue.splice(index, 1)
+        } else if (groupById !== '') {
             newValue.push(groupById)
         }
 
@@ -149,6 +124,27 @@ const Table = (props: Props) => {
         // Move template to new index
         const destIndex = container ? board.cardProperties.indexOf(container) : 0
         await mutator.changePropertyTemplateOrder(board, template, destIndex >= 0 ? destIndex : 0)
+    }
+
+    const onDropToGroupHeader = async (option: IPropertyOption, dstOption?: IPropertyOption) => {
+        if (dstOption) {
+            Utils.log(`ondrop. Header target: ${dstOption.value}, source: ${option?.value}`)
+
+            // Move option to new index
+            const visibleOptionIds = boardTree.visibleGroups.map((o) => o.option.id)
+            const srcIndex = visibleOptionIds.indexOf(dstOption.id)
+            const destIndex = visibleOptionIds.indexOf(option.id)
+
+            visibleOptionIds.splice(srcIndex, 0, visibleOptionIds.splice(destIndex, 1)[0])
+            Utils.log(`ondrop. updated visibleoptionids: ${visibleOptionIds}`)
+
+            await mutator.changeViewVisibleOptionIds(activeView, visibleOptionIds)
+        }
+    }
+
+    const propertyNameChanged = async (option: IPropertyOption, text: string): Promise<void> => {
+        // const {boardTree} = props
+        await mutator.changePropertyOptionValue(boardTree, boardTree.groupByProperty!, option, text)
     }
 
     const titleSortOption = activeView.sortOptions.find((o) => o.propertyId === Constants.titleColumnId)
@@ -211,63 +207,84 @@ const Table = (props: Props) => {
                     })}
             </div>
 
-            {/* Rows, one per card */}
-            {visibleGroups.map((group) => {
-                return (
-                (group.cards.length > 0 ) &&
-                        <div key={group.option.value}>
-                            <TableGroupHeader
-                                group={group}
-                                boardTree={boardTree}
-                                intl={props.intl}
-                                hideGroup={hideGroup}
-                                // addCard={props.addCard}
-                                readonly={props.readonly}
-                                // propertyNameChanged={this.propertyNameChanged}
-                                // onDropToColumn={this.onDropToColumn}
-                            />
-
+            {activeView.groupById &&
+                <div>
+                    {visibleGroups.map((group) => {
+                        return (
                             <TableGroup
+                                key={group.option.id}
                                 boardTree={boardTree}
-                                columnRefs={columnRefs}
-                                cards={group.cards}
-                                selectedCardIds={props.selectedCardIds}
-                                readonly={props.readonly}
-                                cardIdToFocusOnRender={props.cardIdToFocusOnRender}
+                                group={group}
                                 intl={props.intl}
+                                readonly={props.readonly}
+                                columnRefs={columnRefs}
+                                selectedCardIds={props.selectedCardIds}
+                                cardIdToFocusOnRender={props.cardIdToFocusOnRender}
+                                hideGroup={hideGroup}
+                                addCard={props.addCard}
                                 showCard={props.showCard}
-                                addCard= {props.addCard}
-                                onCardClicked = {props.onCardClicked}
-                            />
+                                propertyNameChanged={propertyNameChanged}
+                                onCardClicked={props.onCardClicked}
+                                onDropToGroupHeader={onDropToGroupHeader}
+                            />)
+                    })}
+
+                    {/* {hiddenGroups.length > 0 &&
+                        <div>
+                            <div className='octo-board-header-cell narrow'>
+                                <FormattedMessage
+                                    id='BoardComponent.hidden-columns'
+                                    defaultMessage='Hidden columns'
+                                />
+                            </div>
+                            <div className='octo-board-column narrow'>
+                                {hiddenGroups.map((group) => (
+                                    <Label
+                                        key={group.option.id || 'empty'}
+                                        color={group.option.color}
+                                    >
+                                        {group.option.value}
+                                    </Label>
+
+                                    // <KanbanHiddenColumnItem
+                                    //     key={group.option.id}
+                                    //     group={group}
+                                    //     boardTree={boardTree}
+                                    //     intl={this.props.intl}
+                                    //     readonly={this.props.readonly}
+                                    //     onDrop={(card: Card) => this.onDropToColumn(group.option, card)}
+                                    // />
+                                ))}
+                            </div>
                         </div>
-                )
-                })
+                    } */}
+                </div>
             }
 
-            {(visibleGroups.length === 0 ) &&
-                <div>
-                    <TableGroup
-                        boardTree={boardTree}
-                        columnRefs={columnRefs}
-                        cards={boardTree.cards}
-                        selectedCardIds={props.selectedCardIds}
-                        readonly={props.readonly}
-                        cardIdToFocusOnRender={props.cardIdToFocusOnRender}
-                        intl={props.intl}
-                        showCard={props.showCard}
-                        addCard= {props.addCard}
-                        onCardClicked = {props.onCardClicked}
-                    />
-                </div>
+            {/* Rows, one per card */}
+            {!activeView.groupById &&
+                <TableRows
+                    boardTree={boardTree}
+                    columnRefs={columnRefs}
+                    cards={boardTree.cards}
+                    selectedCardIds={props.selectedCardIds}
+                    readonly={props.readonly}
+                    cardIdToFocusOnRender={props.cardIdToFocusOnRender}
+                    intl={props.intl}
+                    showCard={props.showCard}
+
+                    addCard={props.addCard}
+                    onCardClicked={props.onCardClicked}
+                />
             }
             {/* Add New row */}
 
             <div className='octo-table-footer'>
-                {!props.readonly &&
+                {!props.readonly && !activeView.groupById &&
                     <div
                         className='octo-table-cell'
                         onClick={() => {
-                            props.addCard(false)
+                            props.addCard('')
                         }}
                     >
                         <FormattedMessage
