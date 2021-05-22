@@ -12,8 +12,11 @@ import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
 import Editable from '../widgets/editable'
 import ValueSelector from '../widgets/valueSelector'
+
 import Label from '../widgets/label'
 import EditableDayPicker from '../widgets/editableDayPicker'
+
+import MultiSelectProperty from './properties/multiSelect'
 
 type Props = {
     boardTree?: BoardTree
@@ -57,7 +60,9 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     }
 
     if (propertyTemplate.type === 'multiSelect') {
-        const values = Array.isArray(propertyValue) ? propertyValue.map((v) => propertyTemplate.options.find((o) => o!.id === v)).filter((v): v is IPropertyOption => Boolean(v)) : []
+        const values = Array.isArray(propertyValue) ?
+            propertyValue.map((v) => propertyTemplate.options.find((o) => o!.id === v)).filter((v): v is IPropertyOption => Boolean(v)) :
+            []
 
         if (readOnly || !boardTree) {
             return (
@@ -78,20 +83,13 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         }
 
         return (
-            <ValueSelector
-                isMulti={true}
+            <MultiSelectProperty
                 emptyValue={emptyDisplayValue}
                 options={propertyTemplate.options}
-                value={values}
-                onChange={(newValue) => {
-                    mutator.changePropertyValue(card, propertyTemplate.id, newValue)
-                }}
-                onChangeColor={(option: IPropertyOption, colorId: string): void => {
-                    mutator.changePropertyOptionColor(boardTree.board, propertyTemplate, option, colorId)
-                }}
-                onDeleteOption={(option: IPropertyOption): void => {
-                    mutator.deletePropertyOption(boardTree, propertyTemplate, option)
-                }}
+                values={values}
+                onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
+                onChangeColor={(option: IPropertyOption, colorId: string) => mutator.changePropertyOptionColor(boardTree.board, propertyTemplate, option, colorId)}
+                onDeleteOption={(option: IPropertyOption) => mutator.deletePropertyOption(boardTree, propertyTemplate, option)}
                 onCreate={
                     async (newValue) => {
                         const option: IPropertyOption = {

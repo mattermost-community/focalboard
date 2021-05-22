@@ -130,6 +130,11 @@ function ValueSelector(props: Props): JSX.Element {
                     display: 'flex',
                     paddingLeft: 0,
                 }),
+                multiValueRemove: (provided: CSSObject): CSSObject => ({
+                    ...provided,
+                    display: 'flex',
+                    paddingLeft: 0,
+                }),
             }}
             formatOptionLabel={(option: IPropertyOption, meta: FormatOptionLabelMeta<IPropertyOption, true | false>) => (
                 <ValueSelectorLabel
@@ -163,6 +168,7 @@ function ValueSelector(props: Props): JSX.Element {
             value={props.value}
             closeMenuOnSelect={true}
             placeholder={props.emptyValue}
+            hideSelectedOptions={false}
             defaultMenuIsOpen={false}
         />
     )
