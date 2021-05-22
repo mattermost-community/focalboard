@@ -102,7 +102,8 @@ func main() {
 	}
 	defer logger.Shutdown()
 
-	logger.RedirectStdLog(mlog.Info, mlog.String("src", "stdlog"))
+	restore := logger.RedirectStdLog(mlog.Info, mlog.String("src", "stdlog"))
+	defer restore()
 
 	logInfo(logger)
 
