@@ -1,7 +1,6 @@
 package integrationtests
 
 import (
-	"log"
 	"net/http"
 	"os"
 	"time"
@@ -9,6 +8,7 @@ import (
 	"github.com/mattermost/focalboard/server/client"
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
+	"github.com/mattermost/focalboard/server/services/mlog"
 )
 
 type TestHelper struct {
@@ -27,6 +27,28 @@ func getTestConfig() *config.Configuration {
 		connectionString = ":memory:"
 	}
 
+	logging := []byte(`
+	{
+		"testing": {
+			"type": "console",
+			"options": {
+				"out": "stdout"
+			},
+			"format": "plain",
+			"format_options": {
+				"delim": "  "
+			},
+			"levels": [
+				{"id": 5, "name": "debug"},
+				{"id": 4, "name": "info"},
+				{"id": 3, "name": "warn"},
+				{"id": 2, "name": "error", "stacktrace": true},
+				{"id": 1, "name": "fatal", "stacktrace": true},
+				{"id": 0, "name": "panic", "stacktrace": true}
+			]
+		}
+	}`)
+
 	return &config.Configuration{
 		ServerRoot:     "http://localhost:8888",
 		Port:           8888,
@@ -35,13 +57,16 @@ func getTestConfig() *config.Configuration {
 		DBTablePrefix:  "test_",
 		WebPath:        "./pack",
 		FilesPath:      "./files",
+		Logging:        logging,
 	}
 }
 
 func SetupTestHelper() *TestHelper {
 	sessionToken := "TESTTOKEN"
 	th := &TestHelper{}
-	srv, err := server.New(getTestConfig(), sessionToken)
+	logger := mlog.NewLogger()
+	logger.Configure(getTestConfig().Logging)
+	srv, err := server.New(getTestConfig(), sessionToken, logger)
 	if err != nil {
 		panic(err)
 	}
@@ -60,10 +85,10 @@ func (th *TestHelper) InitBasic() *TestHelper {
 
 	for {
 		URL := th.Server.Config().ServerRoot
-		log.Printf("Polling server at %v", URL)
+		th.Server.Logger().Info("Polling server", mlog.String("url", URL))
 		resp, err := http.Get(URL)
 		if err != nil {
-			log.Println("Polling failed:", err)
+			th.Server.Logger().Error("Polling failed", mlog.Err(err))
 			time.Sleep(100 * time.Millisecond)
 			continue
 		}
@@ -71,12 +96,12 @@ func (th *TestHelper) InitBasic() *TestHelper {
 
 		// Currently returns 404
 		// if resp.StatusCode != http.StatusOK {
-		// 	log.Println("Not OK:", resp.StatusCode)
+		// 	th.Server.Logger().Error("Not OK", mlog.Int("statusCode", resp.StatusCode))
 		// 	continue
 		// }
 
 		// Reached this point: server is up and running!
-		log.Println("Server ping OK, statusCode:", resp.StatusCode)
+		th.Server.Logger().Info("Server ping OK", mlog.Int("statusCode", resp.StatusCode))
 
 		break
 	}
@@ -85,6 +110,8 @@ func (th *TestHelper) InitBasic() *TestHelper {
 }
 
 func (th *TestHelper) TearDown() {
+	defer th.Server.Logger().Shutdown()
+
 	err := th.Server.Shutdown()
 	if err != nil {
 		panic(err)

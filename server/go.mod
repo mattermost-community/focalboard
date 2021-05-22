@@ -15,7 +15,8 @@ require (
 	github.com/hashicorp/go-plugin v1.4.0 // indirect
 	github.com/lib/pq v1.10.0
 	github.com/magiconair/properties v1.8.5 // indirect
-	github.com/mattermost/logr/v2 v2.0.0-20210520042608-0513c50d541b
+	github.com/mattermost/logr v1.0.13
+	github.com/mattermost/logr/v2 v2.0.0-20210522052547-bef99571163e
 	github.com/mattermost/mattermost-server v5.11.1+incompatible // indirect
 	github.com/mattermost/mattermost-server/v5 v5.33.2
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
@@ -29,7 +30,7 @@ require (
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.7.0
 	github.com/tidwall/gjson v1.7.3 // indirect
-	go.uber.org/zap v1.16.0
+	go.uber.org/zap v1.16.0 // indirect
 	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d // indirect
 	golang.org/x/sys v0.0.0-20210324051608-47abb6519492 // indirect

@@ -2,10 +2,10 @@ package sqlstore
 
 import (
 	"encoding/json"
-	"log"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/mlog"
 
 	sq "github.com/Masterminds/squirrel"
 )
@@ -98,7 +98,7 @@ func (s *SQLStore) GetWorkspace(ID string) (*model.Workspace, error) {
 
 	err = json.Unmarshal([]byte(settingsJSON), &workspace.Settings)
 	if err != nil {
-		log.Printf(`ERROR GetWorkspace settings json.Unmarshal: %v`, err)
+		s.logger.Error(`ERROR GetWorkspace settings json.Unmarshal`, mlog.Err(err))
 		return nil, err
 	}
 

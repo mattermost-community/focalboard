@@ -610,6 +610,12 @@ github.com/mattermost/logr/v2 v2.0.0-20210519223430-471eeab91f25 h1:ih0880PLr78P
 github.com/mattermost/logr/v2 v2.0.0-20210519223430-471eeab91f25/go.mod h1:mpPp935r5dIkFDo2y9Q87cQWhFR/4xXpNh0k/y8Hmwg=
 github.com/mattermost/logr/v2 v2.0.0-20210520042608-0513c50d541b h1:zRBdlpsFGth7Qd7Hv3WyM5Lqmws6fRAKO23BPJI9sro=
 github.com/mattermost/logr/v2 v2.0.0-20210520042608-0513c50d541b/go.mod h1:mpPp935r5dIkFDo2y9Q87cQWhFR/4xXpNh0k/y8Hmwg=
+github.com/mattermost/logr/v2 v2.0.0-20210521044454-0674638ea5c8 h1:/6UqLLNKspA1peZ8DjfxArwJnKxugcuDmOI847Agdw4=
+github.com/mattermost/logr/v2 v2.0.0-20210521044454-0674638ea5c8/go.mod h1:mpPp935r5dIkFDo2y9Q87cQWhFR/4xXpNh0k/y8Hmwg=
+github.com/mattermost/logr/v2 v2.0.0-20210521184147-a44627a2b7bb h1:JB+Uy03ZYYWGr1AJAZ5YBYxGkro2CeZzwIgngy40ghw=
+github.com/mattermost/logr/v2 v2.0.0-20210521184147-a44627a2b7bb/go.mod h1:mpPp935r5dIkFDo2y9Q87cQWhFR/4xXpNh0k/y8Hmwg=
+github.com/mattermost/logr/v2 v2.0.0-20210522052547-bef99571163e h1:z8C7QSyZGEIKUXgcFowGsHF+CtRVATuT9g7oYis41NQ=
+github.com/mattermost/logr/v2 v2.0.0-20210522052547-bef99571163e/go.mod h1:mpPp935r5dIkFDo2y9Q87cQWhFR/4xXpNh0k/y8Hmwg=
 github.com/mattermost/mattermost-server v5.11.1+incompatible h1:LPzKY0+2Tic/ik67qIg6VrydRCgxNXZQXOeaiJ2rMBY=
 github.com/mattermost/mattermost-server v5.11.1+incompatible/go.mod h1:5L6MjAec+XXQwMIt791Ganu45GKsSiM+I0tLR9wUj8Y=
 github.com/mattermost/mattermost-server/v5 v5.33.2 h1:67pG6GAQ+jGU2HZkMu5uexLjeExt6rqIhovv6ksKgpk=

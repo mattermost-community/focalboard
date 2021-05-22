@@ -2,11 +2,20 @@
 package mlog
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+	"time"
 
 	"github.com/mattermost/logr/v2"
 	logrcfg "github.com/mattermost/logr/v2/config"
+)
+
+const (
+	ShutdownTimeout = time.Second * 15
 )
 
 // Type and function aliases from Logr to limit the spread of dependencies throughout Focalboard.
@@ -45,6 +54,10 @@ var Float32 = logr.Float32
 
 // String constructs a field containing a key and String value.
 var String = logr.String
+
+// Stringer constructs a field containing a key and a fmt.Stringer value.
+// The fmt.Stringer's `String` method is called lazily.
+var Stringer = logr.Stringer
 
 // Err constructs a field containing a default key ("error") and error value.
 var Err = logr.Err
@@ -89,7 +102,9 @@ func NewLogger() *Logger {
 	}
 }
 
-// Configure provides a new configuration for this logger,
+// Configure provides a new configuration for this logger.
+// `cfg` may be JSON, a filename pointing to a file containing JSON, or an embedded string
+// containing JSON.
 func (l *Logger) Configure(cfg json.RawMessage) error {
 	if len(cfg) == 0 {
 		return nil
@@ -97,12 +112,48 @@ func (l *Logger) Configure(cfg json.RawMessage) error {
 
 	var cfgMap map[string]logrcfg.TargetCfg
 
+	// first try JSON decoding
 	err := json.Unmarshal(cfg, &cfgMap)
+	if err != nil {
+		var b []byte
+
+		// next try treating as filename
+		if b, err = ioutil.ReadFile(string(cfg)); err == nil {
+			return l.Configure(b)
+		}
+
+		// treat as escaped JSON in a string (e.g. JSON embedded in ENV var)
+		if b, err = decodeEscapedJSONString(string(cfg)); err == nil {
+			err = json.Unmarshal(b, &cfgMap)
+		}
+	}
+
 	if err != nil {
 		return fmt.Errorf("invalid logger config: %w", err)
 	}
 
 	return logrcfg.ConfigureTargets(l.log.Logr(), cfgMap, nil)
+}
+
+func decodeEscapedJSONString(s string) ([]byte, error) {
+	type wrapper struct {
+		wrap string
+	}
+	var wrapped wrapper
+	ss := fmt.Sprintf("{\"wrap\":%s}", s)
+	if err := json.Unmarshal([]byte(ss), &wrapped); err != nil {
+		return nil, err
+	}
+	return []byte(wrapped.wrap), nil
+}
+
+// With creates a new Logger with the specified fields. This is a light-weight
+// operation and can be called on demand.
+func (l *Logger) With(fields ...Field) *Logger {
+	logWith := l.log.With(fields...)
+	return &Logger{
+		log: &logWith,
+	}
 }
 
 // IsLevelEnabled returns true only if at least one log target is
@@ -115,28 +166,70 @@ func (l *Logger) IsLevelEnabled(level Level) bool {
 	return l.IsLevelEnabled(level)
 }
 
-// Log emits the log record for any targets configured for the specified
-// level.
+// Log emits the log record for any targets configured for the specified level.
 func (l *Logger) Log(level Level, msg string, fields ...Field) {
 	l.log.Log(level, msg, fields...)
 }
 
+// LogM emits the log record for any targets configured for the specified levels.
+// Equivalent to calling `Log` once for each level.
 func (l *Logger) LogM(levels []Level, msg string, fields ...Field) {
 	l.log.LogM(levels, msg, fields...)
 }
 
+// Convenience method equivalent to calling `Log` with the `Trace` level.
+func (l *Logger) Trace(msg string, fields ...Field) {
+	l.log.Trace(msg, fields...)
+}
+
+// Convenience method equivalent to calling `Log` with the `Debug` level.
 func (l *Logger) Debug(msg string, fields ...Field) {
 	l.log.Debug(msg, fields...)
 }
 
+// Convenience method equivalent to calling `Log` with the `Info` level.
 func (l *Logger) Info(msg string, fields ...Field) {
 	l.log.Info(msg, fields...)
 }
 
+// Convenience method equivalent to calling `Log` with the `Warn` level.
 func (l *Logger) Warn(msg string, fields ...Field) {
 	l.log.Warn(msg, fields...)
 }
 
+// Convenience method equivalent to calling `Log` with the `Error` level.
 func (l *Logger) Error(msg string, fields ...Field) {
 	l.log.Error(msg, fields...)
+}
+
+// Convenience method equivalent to calling `Log` with the `Fatal` level,
+// followed by `os.Exit(1)`.
+func (l *Logger) Fatal(msg string, fields ...Field) {
+	l.log.Log(logr.Fatal, msg, fields...)
+	l.Shutdown()
+	os.Exit(1)
+}
+
+// StdLogger creates a standard logger backed by this logger.
+// All log records are output with the specified level.
+func (l *Logger) StdLogger(level Level) *log.Logger {
+	return l.log.StdLogger(level)
+}
+
+// RedirectStdLog redirects output from the standard library's package-global logger
+// to this logger at the specified level and with zero or more Field's. Since this logger already
+// handles caller annotations, timestamps, etc., it automatically disables the standard
+// library's annotations and prefixing.
+// A function is returned that restores the original prefix and flags and resets the standard
+// library's output to os.Stdout.
+func (l *Logger) RedirectStdLog(level Level, fields ...Field) func() {
+	return l.log.Logr().RedirectStdLog(level, fields...)
+}
+
+// Shutdown shuts down the logger after making best efforts to flush any
+// remaining records.
+func (l *Logger) Shutdown() error {
+	ctx, cancel := context.WithTimeout(context.Background(), ShutdownTimeout)
+	defer cancel()
+	return l.log.Logr().ShutdownWithTimeout(ctx)
 }

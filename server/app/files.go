@@ -4,11 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
 
+	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/utils"
 )
 
@@ -42,9 +42,9 @@ func (a *App) GetFilePath(workspaceID, rootID, filename string) string {
 		if fileExists(oldFilePath) {
 			err := os.Rename(oldFilePath, filePath)
 			if err != nil {
-				log.Printf("ERROR moving old file from '%s' to '%s'", oldFilePath, filePath)
+				a.logger.Error("ERROR moving file", mlog.String("old", oldFilePath), mlog.String("new", filePath))
 			} else {
-				log.Printf("Moved old file from '%s' to '%s'", oldFilePath, filePath)
+				a.logger.Debug("Moved file", mlog.String("old", oldFilePath), mlog.String("new", filePath))
 			}
 		}
 	}

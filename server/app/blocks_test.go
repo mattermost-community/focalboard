@@ -7,24 +7,28 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/services/config"
+	"github.com/mattermost/focalboard/server/services/mlog"
 	st "github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/mockstore"
 	"github.com/mattermost/focalboard/server/services/webhook"
 	"github.com/mattermost/focalboard/server/ws"
-	"github.com/mattermost/mattermost-server/v5/services/filesstore/mocks"
 	"github.com/stretchr/testify/require"
+
+	"github.com/mattermost/mattermost-server/v5/services/filesstore/mocks"
 )
 
 func TestGetParentID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	cfg := config.Configuration{}
+	logger := mlog.CreateTestLogger(t)
+	defer logger.Shutdown()
 	store := mockstore.NewMockStore(ctrl)
 	auth := auth.New(&cfg, store)
 	sessionToken := "TESTTOKEN"
-	wsserver := ws.NewServer(auth, sessionToken)
-	webhook := webhook.NewClient(&cfg)
-	app := New(&cfg, store, auth, wsserver, &mocks.FileBackend{}, webhook)
+	wsserver := ws.NewServer(auth, sessionToken, logger)
+	webhook := webhook.NewClient(&cfg, logger)
+	app := New(&cfg, store, auth, wsserver, &mocks.FileBackend{}, webhook, logger)
 
 	container := st.Container{
 		WorkspaceID: "0",

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"encoding/json"
 	"log"
 
 	"github.com/spf13/viper"
@@ -35,6 +36,8 @@ type Configuration struct {
 	MattermostURL          string `json:"mattermostURL" mapstructure:"mattermostURL"`
 	MattermostClientID     string `json:"mattermostClientID" mapstructure:"mattermostClientID"`
 	MattermostClientSecret string `json:"mattermostClientSecret" mapstructure:"mattermostClientSecret"`
+
+	Logging json.RawMessage `json:"logging" mapstructure:"logging"`
 }
 
 // ReadConfigFile read the configuration from the filesystem.
