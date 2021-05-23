@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/golang/mock/gomock"
+	"github.com/google/uuid"
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/config"
@@ -71,5 +72,43 @@ func TestGetSharing(t *testing.T) {
 
 		require.Nil(t, result)
 		require.NoError(t, err)
+	})
+}
+
+func TestUpsertSharing(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	cfg := config.Configuration{}
+	store := mockstore.NewMockStore(ctrl)
+	auth := auth.New(&cfg, store)
+	sessionToken := "TESTTOKEN"
+	wsserver := ws.NewServer(auth, sessionToken)
+	webhook := webhook.NewClient(&cfg)
+	app := New(&cfg, store, auth, wsserver, &mocks.FileBackend{}, webhook)
+
+	container := st.Container{
+		WorkspaceID: "0",
+	}
+	sharing := model.Sharing{
+		ID:         uuid.NewString(),
+		Enabled:    true,
+		Token:      "token",
+		ModifiedBy: "otherid",
+		UpdateAt:   time.Now().Unix(),
+	}
+
+	t.Run("should success to upsert sharing", func(t *testing.T) {
+		store.EXPECT().UpsertSharing(gomock.Eq(container), gomock.Eq(sharing)).Return(nil)
+		err := app.UpsertSharing(container, sharing)
+
+		require.NoError(t, err)
+	})
+
+	t.Run("should fail to upsert a sharing", func(t *testing.T) {
+		store.EXPECT().UpsertSharing(gomock.Eq(container), gomock.Eq(sharing)).Return(errors.New("sharing not found"))
+		err := app.UpsertSharing(container, sharing)
+
+		require.Error(t, err)
+		require.Equal(t, "sharing not found", err.Error())
 	})
 }
