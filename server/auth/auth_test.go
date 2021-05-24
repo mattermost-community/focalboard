@@ -59,8 +59,8 @@ func TestGetSession(t *testing.T) {
 		{"sucess, good token", "goodToken", 1000, false},
 	}
 
-	th.Store.EXPECT().GetSession(gomock.Eq("badToken"), gomock.Any()).Return(nil, errors.New("Invalid Token"))
-	th.Store.EXPECT().GetSession(gomock.Eq("goodToken"), gomock.Any()).Return(mockSession, nil)
+	th.Store.EXPECT().GetSession("badToken", gomock.Any()).Return(nil, errors.New("Invalid Token"))
+	th.Store.EXPECT().GetSession("goodToken", gomock.Any()).Return(mockSession, nil)
 	th.Store.EXPECT().RefreshSession(gomock.Any()).Return(nil)
 
 	for _, test := range testcases {
@@ -109,13 +109,13 @@ func TestIsValidReadToken(t *testing.T) {
 		{"success", mockContainer, validBlockID, validReadToken, false, true},
 	}
 
-	th.Store.EXPECT().GetRootID(gomock.Eq(mockContainer), gomock.Eq("badBlock")).Return("", errors.New("invalid block"))
-	th.Store.EXPECT().GetRootID(gomock.Eq(mockContainer), gomock.Eq("goodBlockID")).Return("rootNotFound", nil)
-	th.Store.EXPECT().GetRootID(gomock.Eq(mockContainer), gomock.Eq("goodBlockID2")).Return("rootError", nil)
-	th.Store.EXPECT().GetRootID(gomock.Eq(mockContainer), gomock.Eq(validBlockID)).Return("testRootID", nil).Times(2)
-	th.Store.EXPECT().GetSharing(gomock.Eq(mockContainer), gomock.Eq("rootNotFound")).Return(nil, sql.ErrNoRows)
-	th.Store.EXPECT().GetSharing(gomock.Eq(mockContainer), gomock.Eq("rootError")).Return(nil, errors.New("another error"))
-	th.Store.EXPECT().GetSharing(gomock.Eq(mockContainer), gomock.Eq("testRootID")).Return(&mockSharing, nil).Times(2)
+	th.Store.EXPECT().GetRootID(gomock.Eq(mockContainer), "badBlock").Return("", errors.New("invalid block"))
+	th.Store.EXPECT().GetRootID(gomock.Eq(mockContainer), "goodBlockID").Return("rootNotFound", nil)
+	th.Store.EXPECT().GetRootID(gomock.Eq(mockContainer), "goodBlockID2").Return("rootError", nil)
+	th.Store.EXPECT().GetRootID(gomock.Eq(mockContainer), validBlockID).Return("testRootID", nil).Times(2)
+	th.Store.EXPECT().GetSharing(gomock.Eq(mockContainer), "rootNotFound").Return(nil, sql.ErrNoRows)
+	th.Store.EXPECT().GetSharing(gomock.Eq(mockContainer), "rootError").Return(nil, errors.New("another error"))
+	th.Store.EXPECT().GetSharing(gomock.Eq(mockContainer), "testRootID").Return(&mockSharing, nil).Times(2)
 
 	for _, test := range testcases {
 		t.Run(test.title, func(t *testing.T) {
