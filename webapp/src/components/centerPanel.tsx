@@ -129,17 +129,6 @@ class CenterPanel extends React.Component<Props, State> {
                     />
                 </RootPortal>}
 
-                {/*<ViewHeader*/}
-                {/*    boardTree={boardTree}*/}
-                {/*    showView={showView}*/}
-                {/*    setSearchText={this.props.setSearchText}*/}
-                {/*    addCard={() => this.addCard('', true)}*/}
-                {/*    addCardFromTemplate={this.addCardFromTemplate}*/}
-                {/*    addCardTemplate={this.addCardTemplate}*/}
-                {/*    editCardTemplate={this.editCardTemplate}*/}
-                {/*    readonly={this.props.readonly}*/}
-                {/*/>*/}
-
                 <div className='top-head'>
                     <TopBar/>
                     <ViewTitle
