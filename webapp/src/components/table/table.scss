@@ -3,12 +3,6 @@
         display: flex;
         flex-shrink: 0;
         align-items: center;
-        // border-bottom: solid 1px rgba(var(--body-color), 0.09);
-        // &.hidden {
-        //     display: none;
-        // }
-
-        // width: 100%;
         height: 50px;
         margin-right: 15px;
         margin-top: 15px;
@@ -57,17 +51,6 @@
             }
         }
         
-
-        // .Label {
-        //     display: flex;
-        //     // max-width: 90%;
-        //     margin-right: 5px;
-        //     width: 100%;
-        //     .Editable {
-        //         background: transparent;
-        //         width: 100%;
-        //     }
-        // }
         > .Button {
             &.IconButton {
                 cursor: pointer;
@@ -197,8 +180,7 @@
         }
     }
 
-    .MenuWrapper {  
-        // width: 100%;
+    .MenuWrapper {
         max-width: calc(100% - 5px);
 
         .Label {

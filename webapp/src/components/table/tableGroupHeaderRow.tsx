@@ -29,12 +29,10 @@ type Props = {
     hideGroup: (groupByOptionId: string) => void
     addCard: (groupByOptionId?: string) => Promise<void>
     propertyNameChanged: (option: IPropertyOption, text: string) => Promise<void>
-
-    // onDropToColumn: (srcOption: IPropertyOption, card?: Card, dstOption?: IPropertyOption) => void
     onDrop: (srcOption: IPropertyOption, dstOption?: IPropertyOption) => void
 }
 
-const TableGroupHeader = React.memo((props: Props): JSX.Element => {
+const TableGroupHeaderRow = React.memo((props: Props): JSX.Element => {
     const {boardTree, intl, group} = props
     const {activeView} = boardTree
     const [groupTitle, setGroupTitle] = useState(group.option.value)
@@ -65,11 +63,6 @@ const TableGroupHeader = React.memo((props: Props): JSX.Element => {
                 onClick={() => props.hideGroup(group.option.id || 'undefined')}
             />
 
-            {/* <div
-                className='octo-icon'
-                onClick={() => props.hideGroup(group.option.id || 'undefined')}>
-                    {activeView.collapsedOptionIds.indexOf(group.option.id || 'undefined') > -1 ? String.fromCodePoint(0x2795) : String.fromCodePoint(0x2796)}
-            </div> */}
             {!group.option.id &&
                 <Label
                     title={intl.formatMessage({
@@ -87,7 +80,6 @@ const TableGroupHeader = React.memo((props: Props): JSX.Element => {
                 </Label>}
             {group.option.id &&
                 <Label color={group.option.color}>
-                    {/* <Label> */}
                     <Editable
                         value={groupTitle}
                         placeholderText='New Select'
@@ -148,4 +140,4 @@ const TableGroupHeader = React.memo((props: Props): JSX.Element => {
     )
 })
 
-export default TableGroupHeader
+export default TableGroupHeaderRow

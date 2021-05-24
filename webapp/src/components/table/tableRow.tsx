@@ -47,7 +47,6 @@ const TableRow = React.memo((props: Props) => {
         }
     }, [])
 
-    Utils.log('Here')
     const columnWidth = (templateId: string): number => {
         if (props.resizingColumn === templateId) {
             return Math.max(Constants.minColumnWidth, (props.boardTree.activeView.columnWidths[templateId] || 0) + props.offset)
@@ -56,26 +55,22 @@ const TableRow = React.memo((props: Props) => {
     }
 
     let className = props.isSelected ? 'TableRow octo-table-row selected' : 'TableRow octo-table-row'
-    Utils.log('Here')
     if (isOver) {
         className += ' dragover'
     }
     if (isGrouped) {
-        const gbID = activeView.groupById || ''
-        const groupValue = card.properties[gbID] || 'undefined'
+        const groupID = activeView.groupById || ''
+        const groupValue = card.properties[groupID] || 'undefined'
         if (activeView.collapsedOptionIds.indexOf(groupValue) > -1) {
             className += ' hidden'
         }
     }
-    Utils.log('Here')
 
     if (!columnRefs.get(Constants.titleColumnId)) {
         columnRefs.set(Constants.titleColumnId, React.createRef())
     }
 
-    Utils.log('return')
     return (
-
         <div
             className={className}
             onClick={props.onClick}
@@ -84,7 +79,6 @@ const TableRow = React.memo((props: Props) => {
         >
 
             {/* Name / title */}
-
             <div
                 className='octo-table-cell title-cell'
                 id='mainBoardHeader'

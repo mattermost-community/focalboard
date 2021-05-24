@@ -8,7 +8,7 @@ import {IPropertyOption} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {BoardTree, BoardTreeGroup} from '../../viewModel/boardTree'
 
-import TableGroupHeader from './tableGroupHeader'
+import TableGroupHeaderRow from './tableGroupHeaderRow'
 import TableRows from './tableRows'
 
 type Props = {
@@ -19,15 +19,11 @@ type Props = {
     columnRefs: Map<string, React.RefObject<HTMLDivElement>>
     selectedCardIds: string[]
     cardIdToFocusOnRender: string
-
     hideGroup: (groupByOptionId: string) => void
     addCard: (groupByOptionId?: string) => Promise<void>
     showCard: (cardId?: string) => void
     propertyNameChanged: (option: IPropertyOption, text: string) => Promise<void>
-
-    // onDropToColumn: (srcOption: IPropertyOption, card?: Card, dstOption?: IPropertyOption) => void
     onCardClicked: (e: React.MouseEvent, card: Card) => void
-
     onDropToGroupHeader: (srcOption: IPropertyOption, dstOption?: IPropertyOption) => void
 }
 
@@ -36,7 +32,7 @@ const TableGroup = React.memo((props: Props): JSX.Element => {
 
     return (
         <div>
-            <TableGroupHeader
+            <TableGroupHeaderRow
                 group={group}
                 boardTree={boardTree}
                 intl={props.intl}

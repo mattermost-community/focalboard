@@ -143,7 +143,6 @@ const Table = (props: Props) => {
     }
 
     const propertyNameChanged = async (option: IPropertyOption, text: string): Promise<void> => {
-        // const {boardTree} = props
         await mutator.changePropertyOptionValue(boardTree, boardTree.groupByProperty!, option, text)
     }
 
@@ -207,6 +206,8 @@ const Table = (props: Props) => {
                     })}
             </div>
 
+
+            {/* Table header row */}
             {activeView.groupById &&
                 <div>
                     {visibleGroups.map((group) => {
@@ -228,40 +229,10 @@ const Table = (props: Props) => {
                                 onDropToGroupHeader={onDropToGroupHeader}
                             />)
                     })}
-
-                    {/* {hiddenGroups.length > 0 &&
-                        <div>
-                            <div className='octo-board-header-cell narrow'>
-                                <FormattedMessage
-                                    id='BoardComponent.hidden-columns'
-                                    defaultMessage='Hidden columns'
-                                />
-                            </div>
-                            <div className='octo-board-column narrow'>
-                                {hiddenGroups.map((group) => (
-                                    <Label
-                                        key={group.option.id || 'empty'}
-                                        color={group.option.color}
-                                    >
-                                        {group.option.value}
-                                    </Label>
-
-                                    // <KanbanHiddenColumnItem
-                                    //     key={group.option.id}
-                                    //     group={group}
-                                    //     boardTree={boardTree}
-                                    //     intl={this.props.intl}
-                                    //     readonly={this.props.readonly}
-                                    //     onDrop={(card: Card) => this.onDropToColumn(group.option, card)}
-                                    // />
-                                ))}
-                            </div>
-                        </div>
-                    } */}
                 </div>
             }
 
-            {/* Rows, one per card */}
+            {/* No Grouping, Rows, one per card */}
             {!activeView.groupById &&
                 <TableRows
                     boardTree={boardTree}
@@ -272,13 +243,12 @@ const Table = (props: Props) => {
                     cardIdToFocusOnRender={props.cardIdToFocusOnRender}
                     intl={props.intl}
                     showCard={props.showCard}
-
                     addCard={props.addCard}
                     onCardClicked={props.onCardClicked}
                 />
             }
-            {/* Add New row */}
 
+            {/* Add New row */}
             <div className='octo-table-footer'>
                 {!props.readonly && !activeView.groupById &&
                     <div
