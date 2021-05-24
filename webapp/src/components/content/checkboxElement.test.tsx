@@ -27,6 +27,20 @@ describe('components/content/CheckboxElement', () => {
         deleteAt: 0,
     }
 
+    const unmockedFetch = global.fetch
+
+    beforeAll(() => {
+        global.fetch = () => {
+            const response = new Response()
+            response.json = () => Promise.resolve(new Response())
+            return Promise.resolve(response)
+        }
+    })
+
+    afterAll(() => {
+        global.fetch = unmockedFetch
+    })
+
     test('should match snapshot', () => {
         const component = wrapIntl(
             <CheckboxElement
