@@ -31,7 +31,7 @@ describe('components/content/CheckboxElement', () => {
 
     beforeAll(() => {
         global.fetch = () => {
-            const response = new Response()
+            const response = new global.Response()
             response.json = () => Promise.resolve(new Response())
             return Promise.resolve(response)
         }
