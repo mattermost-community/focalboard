@@ -10,6 +10,7 @@ class ViewController:
 	WKNavigationDelegate,
 	WKScriptMessageHandler {
 	@IBOutlet var webView: WKWebView!
+	private var didLoad = false
 	private var refreshWebViewOnLoad = true
 
 	override func viewDidLoad() {
@@ -123,6 +124,7 @@ class ViewController:
 	}
 
 	private func loadHomepage() {
+		NSLog("loadHomepage")
 		let appDelegate = NSApplication.shared.delegate as! AppDelegate
 		let port = appDelegate.serverPort
 		let url = URL(string: "http://localhost:\(port)/")!
@@ -223,6 +225,7 @@ class ViewController:
 		// Disable right-click menu
 		webView.evaluateJavaScript("document.body.setAttribute('oncontextmenu', 'event.preventDefault();');", completionHandler: nil)
 		webView.isHidden = false
+		didLoad = true
 
 		// HACKHACK: Fix WebView initial rendering artifacts
 		if (refreshWebViewOnLoad) {
@@ -240,6 +243,16 @@ class ViewController:
 		frame2.size.height += 1
 		self.webView.frame = frame2
 		self.webView.frame = frame
+	}
+
+	func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+		NSLog("webView didFailProvisionalNavigation, error: \(error.localizedDescription)")
+		if (!didLoad) {
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+				self.updateSessionTokenAndUserSettings()
+				self.loadHomepage()
+			}
+		}
 	}
 
 	func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
