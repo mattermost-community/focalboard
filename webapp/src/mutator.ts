@@ -615,8 +615,8 @@ class Mutator {
     // Other methods
 
     // Not a mutator, but convenient to put here since Mutator wraps OctoClient
-    async exportFullArchive(): Promise<IBlock[]> {
-        return octoClient.exportFullArchive()
+    async exportArchive(boardID?: string): Promise<IBlock[]> {
+        return octoClient.exportArchive(boardID)
     }
 
     // Not a mutator, but convenient to put here since Mutator wraps OctoClient

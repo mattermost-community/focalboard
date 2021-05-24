@@ -3,7 +3,6 @@
   "BoardComponent.delete": "Verwijderen",
   "BoardComponent.hidden-columns": "Verborgen kolommen",
   "BoardComponent.hide": "Verberg",
-  "BoardComponent.neww": "+ Nieuw",
   "BoardComponent.no-property": "Geen {property}",
   "BoardComponent.no-property-title": "Items met een lege {property} eigenschap komen hier te staan. Deze kolom kan niet worden verwijderd.",
   "BoardComponent.show": "Toon",

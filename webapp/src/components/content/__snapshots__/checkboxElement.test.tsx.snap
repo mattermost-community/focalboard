@@ -56,7 +56,7 @@ exports[`components/content/CheckboxElement should match snapshot on read only 1
       value="off"
     />
     <input
-      class="Editable undefined"
+      class="Editable readonly undefined"
       placeholder="Edit text..."
       readonly=""
       spellcheck="true"

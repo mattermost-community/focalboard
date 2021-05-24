@@ -8,13 +8,13 @@ import {Utils} from './utils'
 import {BoardTree} from './viewModel/boardTree'
 
 class Archiver {
-    static async exportBoardTree(boardTree: BoardTree): Promise<void> {
-        const blocks = boardTree.allBlocks
+    static async exportBoardArchive(boardTree: BoardTree): Promise<void> {
+        const blocks = await mutator.exportArchive(boardTree.board.id)
         this.exportArchive(blocks)
     }
 
     static async exportFullArchive(): Promise<void> {
-        const blocks = await mutator.exportFullArchive()
+        const blocks = await mutator.exportArchive()
         this.exportArchive(blocks)
     }
 
