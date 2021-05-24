@@ -8,7 +8,7 @@
 		"packdev": "NODE_ENV=dev webpack --config webpack.dev.js",
 		"watchdev": "NODE_ENV=dev webpack --watch --config webpack.dev.js",
 		"test": "jest",
-    "updatesnapshot": "jest --updateSnapshot",
+		"updatesnapshot": "jest --updateSnapshot",
 		"check": "eslint --ext .tsx,.ts . --quiet --cache",
 		"fix": "eslint --ext .tsx,.ts . --quiet --fix --cache",
 		"fix:scss": "prettier --write './src/**/*.scss'",
@@ -25,6 +25,7 @@
 	"dependencies": {
 		"emoji-mart": "^3.0.1",
 		"marked": ">=2.0.1",
+		"moment": "^2.29.1",
 		"nanoevents": "^5.1.13",
 		"react": "^17.0.2",
 		"react-day-picker": "^7.4.10",
