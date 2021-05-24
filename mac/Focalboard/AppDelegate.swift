@@ -27,8 +27,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-		if !flag {
+		guard flag else {
 			openNewWindow(nil)
+			return false
 		}
 		return true
 	}
