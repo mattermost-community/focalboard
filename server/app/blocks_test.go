@@ -22,7 +22,7 @@ func TestGetParentID(t *testing.T) {
 	store := mockstore.NewMockStore(ctrl)
 	auth := auth.New(&cfg, store)
 	sessionToken := "TESTTOKEN"
-	wsserver := ws.NewServer(auth, sessionToken)
+	wsserver := ws.NewServer(auth, sessionToken, false)
 	webhook := webhook.NewClient(&cfg)
 	app := New(&cfg, store, auth, wsserver, &mocks.FileBackend{}, webhook)
 
