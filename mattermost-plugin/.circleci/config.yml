@@ -1,0 +1,12 @@
+version: 2.1
+
+orbs:
+  plugin-ci: mattermost/plugin-ci@0.1.0
+
+workflows:
+  version: 2
+  ci:
+    jobs:
+      - plugin-ci/lint
+      - plugin-ci/test
+      - plugin-ci/build
