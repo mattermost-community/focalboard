@@ -10,6 +10,8 @@ import {IContentBlock} from '../../blocks/contentBlock'
 
 import CheckboxElement from './checkboxElement'
 
+const fetchMock = require('fetch-mock-jest')
+
 const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
 
 describe('components/content/CheckboxElement', () => {
@@ -27,18 +29,12 @@ describe('components/content/CheckboxElement', () => {
         deleteAt: 0,
     }
 
-    const unmockedFetch = global.fetch
-
     beforeAll(() => {
-        global.fetch = () => {
-            const response = new global.Response()
-            response.json = () => Promise.resolve(new Response())
-            return Promise.resolve(response)
-        }
+        fetchMock.post('*', {})
     })
 
     afterAll(() => {
-        global.fetch = unmockedFetch
+        fetchMock.mockClear()
     })
 
     test('should match snapshot', () => {
