@@ -22,8 +22,11 @@
 
         .IconButton {
             background-color: unset;
-            &:hover {
+            &:hover:not(.readonly) {
                 background-color: rgba(var(--body-color), 0.1);
+            }
+            &.readonly {
+                opacity: .5;
             }
         }
 
@@ -52,7 +55,7 @@
         }
         
         > .Button {
-            &.IconButton {
+            &.IconButton:not(.readonly) {
                 cursor: pointer;
             }
             cursor: auto;

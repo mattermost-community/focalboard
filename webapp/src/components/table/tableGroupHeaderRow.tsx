@@ -37,7 +37,7 @@ const TableGroupHeaderRow = React.memo((props: Props): JSX.Element => {
     const {activeView} = boardTree
     const [groupTitle, setGroupTitle] = useState(group.option.value)
 
-    const [isDragging, isOver, groupHeaderRef] = useSortable('groupHeader', group.option, true, props.onDrop)
+    const [isDragging, isOver, groupHeaderRef] = useSortable('groupHeader', group.option, !props.readonly, props.onDrop)
 
     useEffect(() => {
         setGroupTitle(group.option.value)
@@ -56,11 +56,11 @@ const TableGroupHeaderRow = React.memo((props: Props): JSX.Element => {
             ref={groupHeaderRef}
             style={{opacity: isDragging ? 0.5 : 1}}
             className={className}
-            draggable={!props.readonly}
         >
             <IconButton
                 icon={<DisclosureTriangle/>}
-                onClick={() => props.hideGroup(group.option.id || 'undefined')}
+                onClick={() => props.readonly ? null : props.hideGroup(group.option.id || 'undefined')}
+                className = {props.readonly ? 'readonly' : ''}
             />
 
             {!group.option.id &&
