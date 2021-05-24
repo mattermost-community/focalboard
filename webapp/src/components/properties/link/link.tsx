@@ -22,7 +22,7 @@ const URLProperty = (props: Props): JSX.Element => {
         link = (
             <a
                 className='icon-link-variant'
-                href={Utils.assureProtocol(props.value.trim())}
+                href={Utils.ensureProtocol(props.value.trim())}
                 target='_blank'
                 rel='noreferrer'
             />

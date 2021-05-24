@@ -211,8 +211,8 @@ class Utils {
         }
     }
 
-    static assureProtocol(url: string): string {
-        return url.match(/^.{3,9}:\/\//) ? url : `https://${url}`
+    static ensureProtocol(url: string): string {
+        return url.match(/^(http|https):\/\//) ? url : `https://${url}`
     }
 
     // File names
