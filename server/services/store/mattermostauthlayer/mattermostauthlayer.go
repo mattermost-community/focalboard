@@ -14,10 +14,17 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 )
 
+const (
+	mysqlDBType    = "mysql"
+	sqliteDBType   = "sqlite3"
+	postgresDBType = "postgres"
+)
+
 // Store represents the abstraction of the data storage.
 type MattermostAuthLayer struct {
 	store.Store
-	mmDB *sql.DB
+	dbType string
+	mmDB   *sql.DB
 }
 
 // New creates a new SQL implementation of the store.
@@ -40,8 +47,9 @@ func New(dbType, connectionString string, store store.Store) (*MattermostAuthLay
 	}
 
 	layer := &MattermostAuthLayer{
-		Store: store,
-		mmDB:  db,
+		Store:  store,
+		dbType: dbType,
+		mmDB:   db,
 	}
 
 	return layer, nil
@@ -59,7 +67,7 @@ func (l *MattermostAuthLayer) Shutdown() error {
 func (s *MattermostAuthLayer) GetRegisteredUserCount() (int, error) {
 	query := s.getQueryBuilder().
 		Select("count(*)").
-		From("users").
+		From("Users").
 		Where(sq.Eq{"deleteAt": 0})
 	row := query.QueryRow()
 
@@ -75,7 +83,7 @@ func (s *MattermostAuthLayer) GetRegisteredUserCount() (int, error) {
 func (s *MattermostAuthLayer) getUserByCondition(condition sq.Eq) (*model.User, error) {
 	query := s.getQueryBuilder().
 		Select("id", "username", "email", "password", "MFASecret as mfa_secret", "AuthService as auth_service", "COALESCE(AuthData, '') as auth_data", "props", "CreateAt as create_at", "UpdateAt as update_at", "DeleteAt as delete_at").
-		From("users").
+		From("Users").
 		Where(sq.Eq{"deleteAt": 0}).
 		Where(condition)
 	row := query.QueryRow()
@@ -127,7 +135,7 @@ func (s *MattermostAuthLayer) UpdateUserPasswordByID(userID, password string) er
 func (s *MattermostAuthLayer) GetActiveUserCount(updatedSecondsAgo int64) (int, error) {
 	query := s.getQueryBuilder().
 		Select("count(distinct userId)").
-		From("sessions").
+		From("Sessions").
 		Where(sq.Gt{"LastActivityAt": time.Now().Unix() - updatedSecondsAgo})
 
 	row := query.QueryRow()
@@ -237,7 +245,10 @@ func (s *MattermostAuthLayer) HasWorkspaceAccess(userID string, workspaceID stri
 }
 
 func (s *MattermostAuthLayer) getQueryBuilder() sq.StatementBuilderType {
-	builder := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+	builder := sq.StatementBuilder
+	if s.dbType == postgresDBType || s.dbType == sqliteDBType {
+		builder = builder.PlaceholderFormat(sq.Dollar)
+	}
 
 	return builder.RunWith(s.mmDB)
 }

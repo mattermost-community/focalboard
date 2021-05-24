@@ -36,13 +36,13 @@ export default class Plugin {
         this.registry = registry;
         this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(focalboardIcon, () => {
             const currentChannel = store.getState().entities.channels.currentChannelId;
-            window.open(`${window.location.origin}/plugins/focalboard/workspace/${currentChannel}`)
+            window.open(`${window.location.origin}/plugins/focalboard/workspace/${currentChannel}`);
         }, '', 'Focalboard Workspace');
     }
 
     public uninitialize() {
         if (this.channelHeaderButtonId) {
-            this.registry.unregisterComponent(this.channelHeaderButtonId)
+            this.registry.unregisterComponent(this.channelHeaderButtonId);
         }
     }
 }
