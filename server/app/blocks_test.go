@@ -11,7 +11,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store/mockstore"
 	"github.com/mattermost/focalboard/server/services/webhook"
 	"github.com/mattermost/focalboard/server/ws"
-	"github.com/mattermost/mattermost-server/v5/services/filesstore/mocks"
+	"github.com/mattermost/mattermost-server/v5/shared/filestore/mocks"
 	"github.com/stretchr/testify/require"
 )
 
@@ -22,7 +22,7 @@ func TestGetParentID(t *testing.T) {
 	store := mockstore.NewMockStore(ctrl)
 	auth := auth.New(&cfg, store)
 	sessionToken := "TESTTOKEN"
-	wsserver := ws.NewServer(auth, sessionToken)
+	wsserver := ws.NewServer(auth, sessionToken, false)
 	webhook := webhook.NewClient(&cfg)
 	app := New(&cfg, store, auth, wsserver, &mocks.FileBackend{}, webhook)
 

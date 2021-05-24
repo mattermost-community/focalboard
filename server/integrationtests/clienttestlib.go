@@ -34,6 +34,7 @@ func getTestConfig() *config.Configuration {
 		DBConfigString: connectionString,
 		DBTablePrefix:  "test_",
 		WebPath:        "./pack",
+		FilesDriver:    "local",
 		FilesPath:      "./files",
 	}
 }

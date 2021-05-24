@@ -24,12 +24,13 @@ import (
 	"github.com/mattermost/focalboard/server/services/prometheus"
 	"github.com/mattermost/focalboard/server/services/scheduler"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 	"github.com/mattermost/focalboard/server/services/telemetry"
 	"github.com/mattermost/focalboard/server/services/webhook"
 	"github.com/mattermost/focalboard/server/web"
 	"github.com/mattermost/focalboard/server/ws"
-	"github.com/mattermost/mattermost-server/v5/services/filesstore"
+	"github.com/mattermost/mattermost-server/v5/shared/filestore"
 	"github.com/mattermost/mattermost-server/v5/utils"
 	"github.com/oklog/run"
 )
@@ -46,7 +47,7 @@ type Server struct {
 	wsServer            *ws.Server
 	webServer           *web.Server
 	store               store.Store
-	filesBackend        filesstore.FileBackend
+	filesBackend        filestore.FileBackend
 	telemetry           *telemetry.Service
 	logger              *zap.Logger
 	cleanUpSessionsTask *scheduler.ScheduledTask
@@ -65,21 +66,40 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 		return nil, err
 	}
 
-	db, err := sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix)
+	var db store.Store
+	db, err = sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix)
 	if err != nil {
 		log.Print("Unable to start the database", err)
 		return nil, err
 	}
+	if cfg.AuthMode == "mattermost" {
+		layeredStore, err := mattermostauthlayer.New(cfg.DBType, cfg.DBConfigString, db)
+		if err != nil {
+			log.Print("Unable to start the database", err)
+			return nil, err
+		}
+		db = layeredStore
+	}
 
 	authenticator := auth.New(cfg, db)
 
-	wsServer := ws.NewServer(authenticator, singleUserToken)
+	wsServer := ws.NewServer(authenticator, singleUserToken, cfg.AuthMode == "mattermost")
 
-	filesBackendSettings := filesstore.FileBackendSettings{}
-	filesBackendSettings.DriverName = "local"
+	filesBackendSettings := filestore.FileBackendSettings{}
+	filesBackendSettings.DriverName = cfg.FilesDriver
 	filesBackendSettings.Directory = cfg.FilesPath
-	filesBackend, appErr := filesstore.NewFileBackend(filesBackendSettings)
+	filesBackendSettings.AmazonS3AccessKeyId = cfg.FilesS3Config.AccessKeyId
+	filesBackendSettings.AmazonS3SecretAccessKey = cfg.FilesS3Config.SecretAccessKey
+	filesBackendSettings.AmazonS3Bucket = cfg.FilesS3Config.Bucket
+	filesBackendSettings.AmazonS3PathPrefix = cfg.FilesS3Config.PathPrefix
+	filesBackendSettings.AmazonS3Region = cfg.FilesS3Config.Region
+	filesBackendSettings.AmazonS3Endpoint = cfg.FilesS3Config.Endpoint
+	filesBackendSettings.AmazonS3SSL = cfg.FilesS3Config.SSL
+	filesBackendSettings.AmazonS3SignV2 = cfg.FilesS3Config.SignV2
+	filesBackendSettings.AmazonS3SSE = cfg.FilesS3Config.SSE
+	filesBackendSettings.AmazonS3Trace = cfg.FilesS3Config.Trace
 
+	filesBackend, appErr := filestore.NewFileBackend(filesBackendSettings)
 	if appErr != nil {
 		log.Print("Unable to initialize the files storage")
 
@@ -301,4 +321,8 @@ func (s *Server) stopLocalModeServer() {
 
 func (s *Server) GetRootRouter() *mux.Router {
 	return s.webServer.Router()
+}
+
+func (s *Server) SetWSHub(hub ws.Hub) {
+	s.wsServer.SetHub(hub)
 }

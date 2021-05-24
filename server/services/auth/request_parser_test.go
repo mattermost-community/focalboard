@@ -35,7 +35,7 @@ func TestParseAuthTokenFromRequest(t *testing.T) {
 		}
 		if tc.cookie != "" {
 			req.AddCookie(&http.Cookie{
-				Name:  SESSION_COOKIE_TOKEN,
+				Name:  "FOCALBOARDAUTHTOKEN",
 				Value: tc.cookie,
 			})
 		}
