@@ -41,8 +41,10 @@ const TableGroup = React.memo((props: Props): JSX.Element => {
         collect: (monitor) => ({
             isOver: monitor.isOver(),
         }),
-        drop: (item: Card) => {
-            onDropToGroup(item, groupId, '')
+        drop: (item: Card, monitor) => {
+            if (monitor.isOver({shallow: true})) {
+                onDropToGroup(item, groupId, '')
+            }
         },
     }), [onDropToGroup, groupId])
 

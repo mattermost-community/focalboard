@@ -149,7 +149,7 @@ const Table = (props: Props) => {
     }
 
     const onDropToGroup = (srcCard: Card, groupID: string, dstCardID: string) => {
-        Utils.log(`onDropToGroup: ${srcCard.title} ${srcCard.properties[boardTree.groupByProperty!.id]}`)
+        Utils.log(`onDropToGroup: ${srcCard.title}`)
         const {selectedCardIds} = props
 
         const draggedCardIds = Array.from(new Set(selectedCardIds).add(srcCard.id))
@@ -181,12 +181,11 @@ const Table = (props: Props) => {
                 await Promise.all(awaits)
             })
         }
-        
+
         // Update dstCard order
         if (isManualSort) {
-            let cardOrder = Array.from(new Set([...boardTree.cards.map((o) => o.id),...activeView.cardOrder]))
+            let cardOrder = Array.from(new Set([...activeView.cardOrder, ...boardTree.cards.map((o) => o.id)]))
             if(dstCardID){
-                cardOrder = Array.from(new Set([...activeView.cardOrder, ...boardTree.cards.map((o) => o.id)]))
                 const isDraggingDown = cardOrder.indexOf(srcCard.id) <= cardOrder.indexOf(dstCardID)
                 cardOrder = cardOrder.filter((id) => !draggedCardIds.includes(id))
                 let destIndex = cardOrder.indexOf(dstCardID)
@@ -194,6 +193,16 @@ const Table = (props: Props) => {
                     destIndex += 1
                 }
                 cardOrder.splice(destIndex, 0, ...draggedCardIds)    
+            } else {
+                // Find index of first group item
+                const firstCard = boardTree.orderedCards().find((card) => card.properties[activeView.groupById!] == groupID)
+                if (firstCard) {
+                    const destIndex = cardOrder.indexOf(firstCard.id)
+                    cardOrder.splice(destIndex, 0, ...draggedCardIds)    
+                } else {
+                    // if not found, this is the only item in group.
+                    return
+                }
             }
 
             mutator.performAsUndoGroup(async () => {
