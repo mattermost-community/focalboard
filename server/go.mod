@@ -10,15 +10,14 @@ require (
 	github.com/google/uuid v1.2.0
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/websocket v1.4.2
-	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/lib/pq v1.10.0
 	github.com/magiconair/properties v1.8.5 // indirect
-	github.com/mattermost/mattermost-server/v5 v5.34.2
+	github.com/mattermost/mattermost-server/v5 v5.3.2-0.20210524045451-a4f7df6f6e3c
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
 	github.com/oklog/run v1.1.0
 	github.com/pkg/errors v0.9.1
-	github.com/prometheus/client_golang v1.9.0
+	github.com/prometheus/client_golang v1.10.0
 	github.com/rudderlabs/analytics-go v3.3.1+incompatible
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
