@@ -58,7 +58,7 @@ const Editable = (props: Props, ref: React.Ref<{focus: (selectAll?: boolean) => 
         saveOnBlur.current = true
     }
 
-    const {value, onChange, className, placeholderText} = props
+    const {value, onChange, className, placeholderText, readonly} = props
     let error = false
     if (props.validator) {
         error = !props.validator(value || '')
@@ -67,7 +67,7 @@ const Editable = (props: Props, ref: React.Ref<{focus: (selectAll?: boolean) => 
     return (
         <input
             ref={elementRef}
-            className={'Editable ' + (error ? 'error ' : '') + className}
+            className={'Editable ' + (error ? 'error ' : '') + (readonly ? 'readonly ' : '') + className}
             placeholder={placeholderText}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 onChange(e.target.value)
@@ -90,7 +90,7 @@ const Editable = (props: Props, ref: React.Ref<{focus: (selectAll?: boolean) => 
                     blur()
                 }
             }}
-            readOnly={props.readonly}
+            readOnly={readonly}
             spellCheck={props.spellCheck}
         />
     )

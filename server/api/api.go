@@ -33,16 +33,11 @@ const (
 // ----------------------------------------------------------------------------------------------------
 // REST APIs
 
-type WorkspaceAuthenticator interface {
-	DoesUserHaveWorkspaceAccess(session *model.Session, workspaceID string) bool
-	GetWorkspace(session *model.Session, workspaceID string) *model.Workspace
-}
-
 type API struct {
-	appBuilder             func() *app.App
-	authService            string
-	singleUserToken        string
-	WorkspaceAuthenticator WorkspaceAuthenticator
+	appBuilder      func() *app.App
+	authService     string
+	singleUserToken string
+	MattermostAuth  bool
 }
 
 func NewAPI(appBuilder func() *app.App, singleUserToken string, authService string) *API {
@@ -138,14 +133,21 @@ func (a *API) getContainerAllowingReadTokenForBlock(r *http.Request, blockID str
 	ctx := r.Context()
 	session, _ := ctx.Value("session").(*model.Session)
 
-	if a.WorkspaceAuthenticator == nil {
-		// Native auth: always use root workspace
+	if a.MattermostAuth {
+		// Workspace auth
+		vars := mux.Vars(r)
+		workspaceID := vars["workspaceID"]
+
 		container := store.Container{
-			WorkspaceID: "0",
+			WorkspaceID: workspaceID,
 		}
 
-		// Has session
-		if session != nil {
+		if workspaceID == "0" {
+			return &container, nil
+		}
+
+		// Has session and access to workspace
+		if session != nil && a.app().DoesUserHaveWorkspaceAccess(session.UserID, container.WorkspaceID) {
 			return &container, nil
 		}
 
@@ -157,16 +159,13 @@ func (a *API) getContainerAllowingReadTokenForBlock(r *http.Request, blockID str
 		return nil, errors.New("Access denied to workspace")
 	}
 
-	// Workspace auth
-	vars := mux.Vars(r)
-	workspaceID := vars["workspaceID"]
-
+	// Native auth: always use root workspace
 	container := store.Container{
-		WorkspaceID: workspaceID,
+		WorkspaceID: "0",
 	}
 
-	// Has session and access to workspace
-	if session != nil && a.WorkspaceAuthenticator.DoesUserHaveWorkspaceAccess(session, container.WorkspaceID) {
+	// Has session
+	if session != nil {
 		return &container, nil
 	}
 
@@ -896,18 +895,21 @@ func (a *API) handleGetWorkspace(w http.ResponseWriter, r *http.Request) {
 	var workspace *model.Workspace
 	var err error
 
-	if a.WorkspaceAuthenticator != nil {
+	if a.MattermostAuth {
 		vars := mux.Vars(r)
 		workspaceID := vars["workspaceID"]
 
 		ctx := r.Context()
 		session := ctx.Value("session").(*model.Session)
-		if !a.WorkspaceAuthenticator.DoesUserHaveWorkspaceAccess(session, workspaceID) {
+		if !a.app().DoesUserHaveWorkspaceAccess(session.UserID, workspaceID) {
 			errorResponse(w, http.StatusUnauthorized, "", nil)
 			return
 		}
 
-		workspace = a.WorkspaceAuthenticator.GetWorkspace(session, workspaceID)
+		workspace, err = a.app().GetWorkspace(workspaceID)
+		if err != nil {
+			errorResponse(w, http.StatusInternalServerError, "", err)
+		}
 		if workspace == nil {
 			errorResponse(w, http.StatusUnauthorized, "", nil)
 			return
@@ -1029,8 +1031,13 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", contentType)
 
-	filePath := a.app().GetFilePath(workspaceID, rootID, filename)
-	http.ServeFile(w, r, filePath)
+	fileReader, err := a.app().GetFileReader(workspaceID, rootID, filename)
+	if err != nil {
+		errorResponse(w, http.StatusInternalServerError, "", err)
+		return
+	}
+	defer fileReader.Close()
+	http.ServeContent(w, r, filename, time.Now(), fileReader)
 }
 
 // FileUploadResponse is the response to a file upload

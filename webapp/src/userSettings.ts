@@ -111,7 +111,11 @@ function importUserSettings(json: string): boolean {
     }
     for (const [key, value] of Object.entries(settings)) {
         if (Object.values(UserSettings).includes(key)) {
-            localStorage.setItem(key, value as string)
+            if (value) {
+                localStorage.setItem(key, value as string)
+            } else {
+                localStorage.removeItem(key)
+            }
         }
     }
     return true

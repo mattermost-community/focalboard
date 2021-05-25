@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"math/rand"
 	"strings"
 	"testing"
 
@@ -14,28 +13,6 @@ func TestPasswordHash(t *testing.T) {
 
 	assert.True(t, ComparePassword(hash, "Test"), "Passwords don't match")
 	assert.False(t, ComparePassword(hash, "Test2"), "Passwords should not have matched")
-}
-
-func TestGeneratePassword(t *testing.T) {
-	passwordRandomSource = rand.NewSource(12345)
-
-	t.Run("Should be the minimum length or 4, whichever is less", func(t *testing.T) {
-		password1 := GeneratePassword(5)
-		assert.Len(t, password1, 5)
-		password2 := GeneratePassword(10)
-		assert.Len(t, password2, 10)
-		password3 := GeneratePassword(1)
-		assert.Len(t, password3, 4)
-	})
-
-	t.Run("Should contain at least one of symbols, upper case, lower case and numbers", func(t *testing.T) {
-		password := GeneratePassword(4)
-		require.Len(t, password, 4)
-		assert.Contains(t, []rune(PasswordUpperCaseLetters), []rune(password)[0])
-		assert.Contains(t, []rune(PasswordNumbers), []rune(password)[1])
-		assert.Contains(t, []rune(PasswordLowerCaseLetters), []rune(password)[2])
-		assert.Contains(t, []rune(PasswordSpecialChars), []rune(password)[3])
-	})
 }
 
 func TestIsPasswordValidWithSettings(t *testing.T) {

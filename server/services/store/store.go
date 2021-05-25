@@ -51,4 +51,5 @@ type Store interface {
 	UpsertWorkspaceSignupToken(workspace model.Workspace) error
 	UpsertWorkspaceSettings(workspace model.Workspace) error
 	GetWorkspace(ID string) (*model.Workspace, error)
+	HasWorkspaceAccess(userID string, workspaceID string) (bool, error)
 }
