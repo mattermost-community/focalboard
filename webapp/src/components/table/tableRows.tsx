@@ -5,8 +5,6 @@ import {IntlShape} from 'react-intl'
 import {useDragLayer} from 'react-dnd'
 
 import {Card} from '../../blocks/card'
-import mutator from '../../mutator'
-import {Utils} from '../../utils'
 
 import {BoardTree} from '../../viewModel/boardTree'
 

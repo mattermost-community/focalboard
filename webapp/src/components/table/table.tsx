@@ -155,7 +155,6 @@ const Table = (props: Props) => {
         const draggedCardIds = Array.from(new Set(selectedCardIds).add(srcCard.id))
         const description = draggedCardIds.length > 1 ? `drag ${draggedCardIds.length} cards` : 'drag card'
 
-
         if (activeView.groupById !== undefined) {
             const orderedCards = boardTree.orderedCards()
             const cardsById: {[key: string]: Card} = orderedCards.reduce((acc: {[key: string]: Card}, card: Card): {[key: string]: Card} => {
@@ -163,7 +162,6 @@ const Table = (props: Props) => {
                 return acc
             }, {})
             const draggedCards: Card[] = draggedCardIds.map((o: string) => cardsById[o])
-            Utils.log("BoardTree " + boardTree.visibleGroups[3].cards.length)
 
             mutator.performAsUndoGroup(async () => {
                 // Update properties of dragged cards
@@ -185,20 +183,20 @@ const Table = (props: Props) => {
         // Update dstCard order
         if (isManualSort) {
             let cardOrder = Array.from(new Set([...activeView.cardOrder, ...boardTree.cards.map((o) => o.id)]))
-            if(dstCardID){
+            if (dstCardID) {
                 const isDraggingDown = cardOrder.indexOf(srcCard.id) <= cardOrder.indexOf(dstCardID)
                 cardOrder = cardOrder.filter((id) => !draggedCardIds.includes(id))
                 let destIndex = cardOrder.indexOf(dstCardID)
                 if (isDraggingDown) {
                     destIndex += 1
                 }
-                cardOrder.splice(destIndex, 0, ...draggedCardIds)    
+                cardOrder.splice(destIndex, 0, ...draggedCardIds)
             } else {
                 // Find index of first group item
-                const firstCard = boardTree.orderedCards().find((card) => card.properties[activeView.groupById!] == groupID)
+                const firstCard = boardTree.orderedCards().find((card) => card.properties[activeView.groupById!] === groupID)
                 if (firstCard) {
                     const destIndex = cardOrder.indexOf(firstCard.id)
-                    cardOrder.splice(destIndex, 0, ...draggedCardIds)    
+                    cardOrder.splice(destIndex, 0, ...draggedCardIds)
                 } else {
                     // if not found, this is the only item in group.
                     return
@@ -274,7 +272,6 @@ const Table = (props: Props) => {
                         )
                     })}
             </div>
-
 
             {/* Table header row */}
             {activeView.groupById &&

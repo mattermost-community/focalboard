@@ -12,7 +12,6 @@ import Editable from '../../widgets/editable'
 import {useSortable} from '../../hooks/sortable'
 
 import PropertyValueElement from '../propertyValueElement'
-import {Utils} from '../../utils'
 import './tableRow.scss'
 
 type Props = {

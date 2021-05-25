@@ -59,8 +59,8 @@ const TableGroupHeaderRow = React.memo((props: Props): JSX.Element => {
         >
             <IconButton
                 icon={<DisclosureTriangle/>}
-                onClick={() => props.readonly ? null : props.hideGroup(group.option.id || 'undefined')}
-                className = {props.readonly ? 'readonly' : ''}
+                onClick={() => (props.readonly ? {} : props.hideGroup(group.option.id || 'undefined'))}
+                className={props.readonly ? 'readonly' : ''}
             />
 
             {!group.option.id &&

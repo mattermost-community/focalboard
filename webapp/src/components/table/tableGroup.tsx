@@ -12,7 +12,6 @@ import {BoardTree, BoardTreeGroup} from '../../viewModel/boardTree'
 
 import TableGroupHeaderRow from './tableGroupHeaderRow'
 import TableRows from './tableRows'
-import {Utils} from '../../utils'
 
 type Props = {
     boardTree: BoardTree
@@ -52,7 +51,6 @@ const TableGroup = React.memo((props: Props): JSX.Element => {
     if (isOver) {
         className += ' dragover'
     }
-
 
     return (
         <div
