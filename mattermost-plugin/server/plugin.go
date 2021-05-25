@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/blang/semver/v4"
+
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/mattermost-server/v5/model"
@@ -104,8 +106,12 @@ func (p *Plugin) OnActivate() error {
 		return err
 	}
 
-	p.wsHub = &WSHub{API: p.API}
-	server.SetWSHub(p.wsHub)
+	currentVersion := semver.MustParse(p.API.GetServerVersion())
+	requiredVersion := semver.MustParse("5.36.0")
+	if currentVersion.GTE(requiredVersion) {
+		p.wsHub = &WSHub{API: p.API}
+		server.SetWSHub(p.wsHub)
+	}
 	p.server = server
 	return server.Start()
 }
