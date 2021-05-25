@@ -26,6 +26,11 @@ jobs:
       with:
         go-version: 1.15
 
+    - name: Setup Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: 16.1.0
+
     - name: List Xcode versions
       run: ls -n /Applications/ | grep Xcode*
 
