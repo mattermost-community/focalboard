@@ -48,7 +48,7 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
                 {option.value}
                 {onDeleteValue &&
                     <IconButton
-                        onClick={() => props.onDeleteValue(option)}
+                        onClick={() => onDeleteValue(option)}
                         icon={<CloseIcon/>}
                         title='Close'
                         className='margin-left'
