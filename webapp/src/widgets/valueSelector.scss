@@ -13,7 +13,7 @@
     }
 
     .Label {
-        display: inline-block;
+        display: flex;
         text-overflow: ellipsis;
         overflow: hidden;
         border-radius: var(--default-rad);

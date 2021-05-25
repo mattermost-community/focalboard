@@ -14,6 +14,7 @@ import MenuWrapper from './menuWrapper'
 import IconButton from './buttons/iconButton'
 import OptionsIcon from './icons/options'
 import DeleteIcon from './icons/delete'
+import CloseIcon from './icons/close'
 import Label from './label'
 
 import './valueSelector.scss'
@@ -27,6 +28,7 @@ type Props = {
     onChangeColor: (option: IPropertyOption, color: string) => void
     onDeleteOption: (option: IPropertyOption) => void
     isMulti?: boolean
+    onDeleteValue?: (value: IPropertyOption) => void
 }
 
 type LabelProps = {
@@ -34,13 +36,26 @@ type LabelProps = {
     meta: FormatOptionLabelMeta<IPropertyOption, true | false>
     onChangeColor: (option: IPropertyOption, color: string) => void
     onDeleteOption: (option: IPropertyOption) => void
+    onDeleteValue?: (value: IPropertyOption) => void
 }
 
 const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
-    const {option, meta} = props
+    const {option, onDeleteValue, meta} = props
     const intl = useIntl()
     if (meta.context === 'value') {
-        return <Label color={option.color}>{option.value}</Label>
+        return (
+            <Label color={option.color}>
+                {option.value}
+                {onDeleteValue && 
+                    <IconButton
+                        onClick={() => props.onDeleteValue(option)}
+                        icon={<CloseIcon/>}
+                        title='Close'
+                        className='margin-left'
+                    />
+                }
+            </Label>
+        )
     }
     return (
         <div className='value-menu-option'>
@@ -130,10 +145,8 @@ function ValueSelector(props: Props): JSX.Element {
                     display: 'flex',
                     paddingLeft: 0,
                 }),
-                multiValueRemove: (provided: CSSObject): CSSObject => ({
-                    ...provided,
-                    display: 'flex',
-                    paddingLeft: 0,
+                multiValueRemove: (): CSSObject => ({
+                    display: 'none',
                 }),
             }}
             formatOptionLabel={(option: IPropertyOption, meta: FormatOptionLabelMeta<IPropertyOption, true | false>) => (
@@ -142,6 +155,7 @@ function ValueSelector(props: Props): JSX.Element {
                     meta={meta}
                     onChangeColor={props.onChangeColor}
                     onDeleteOption={props.onDeleteOption}
+                    onDeleteValue={props.onDeleteValue}
                 />
             )}
             className='ValueSelector'
@@ -154,10 +168,6 @@ function ValueSelector(props: Props): JSX.Element {
                         props.onChange((value as IPropertyOption[]).map((option) => option.id))
                     } else {
                         props.onChange((value as IPropertyOption).id)
-                    }
-                } else if (action.action === 'remove-value') {
-                    if (Array.isArray(value)) {
-                        props.onChange(value.map((option) => option.id))
                     }
                 } else if (action.action === 'clear') {
                     props.onChange('')
