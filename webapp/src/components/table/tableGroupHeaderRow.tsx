@@ -52,7 +52,7 @@ const TableGroupHeaderRow = React.memo((props: Props): JSX.Element => {
 
     return (
         <div
-            key={group.option.id || 'empty'}
+            key={group.option.id + 'header' || 'empty'}
             ref={groupHeaderRef}
             style={{opacity: isDragging ? 0.5 : 1}}
             className={className}

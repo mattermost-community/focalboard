@@ -35,6 +35,7 @@ type Props = {
 const Table = (props: Props) => {
     const {boardTree} = props
     const {board, cards, activeView, visibleGroups} = boardTree
+    const isManualSort = activeView.sortOptions.length < 1
 
     const {offset, resizingColumn} = useDragLayer((monitor) => {
         if (monitor.getItemType() === 'horizontalGrip') {
@@ -142,6 +143,65 @@ const Table = (props: Props) => {
         }
     }
 
+    const onDropToCard = (srcCard: Card, dstCard: Card) => {
+        Utils.log(`onDropToCard: ${dstCard.title}`)
+        onDropToGroup(srcCard, dstCard.properties[activeView.groupById!], dstCard.id)
+    }
+
+    const onDropToGroup = (srcCard: Card, groupID: string, dstCardID: string) => {
+        Utils.log(`onDropToGroup: ${srcCard.title} ${srcCard.properties[boardTree.groupByProperty!.id]}`)
+        const {selectedCardIds} = props
+
+        const draggedCardIds = Array.from(new Set(selectedCardIds).add(srcCard.id))
+        const description = draggedCardIds.length > 1 ? `drag ${draggedCardIds.length} cards` : 'drag card'
+
+
+        if (activeView.groupById !== undefined) {
+            const orderedCards = boardTree.orderedCards()
+            const cardsById: {[key: string]: Card} = orderedCards.reduce((acc: {[key: string]: Card}, card: Card): {[key: string]: Card} => {
+                acc[card.id] = card
+                return acc
+            }, {})
+            const draggedCards: Card[] = draggedCardIds.map((o: string) => cardsById[o])
+            Utils.log("BoardTree " + boardTree.visibleGroups[3].cards.length)
+
+            mutator.performAsUndoGroup(async () => {
+                // Update properties of dragged cards
+                const awaits = []
+                for (const draggedCard of draggedCards) {
+                    Utils.log(`draggedCard: ${draggedCard.title}, column: ${draggedCard.properties}`)
+                    Utils.log(`droppedColumn:  ${groupID}`)
+                    const oldOptionId = draggedCard.properties[boardTree.groupByProperty!.id]
+                    Utils.log(`ondrop. oldValue: ${oldOptionId}`)
+
+                    if (groupID !== oldOptionId) {
+                        awaits.push(mutator.changePropertyValue(draggedCard, boardTree.groupByProperty!.id, groupID, description))
+                    }
+                }
+                await Promise.all(awaits)
+            })
+        }
+        
+        // Update dstCard order
+        if (isManualSort) {
+            let cardOrder = Array.from(new Set([...boardTree.cards.map((o) => o.id),...activeView.cardOrder]))
+            if(dstCardID){
+                cardOrder = Array.from(new Set([...activeView.cardOrder, ...boardTree.cards.map((o) => o.id)]))
+                const isDraggingDown = cardOrder.indexOf(srcCard.id) <= cardOrder.indexOf(dstCardID)
+                cardOrder = cardOrder.filter((id) => !draggedCardIds.includes(id))
+                let destIndex = cardOrder.indexOf(dstCardID)
+                if (isDraggingDown) {
+                    destIndex += 1
+                }
+                cardOrder.splice(destIndex, 0, ...draggedCardIds)    
+            }
+
+            mutator.performAsUndoGroup(async () => {
+                await mutator.changeViewCardOrder(activeView, cardOrder, description)
+            })
+        }
+    }
+
     const propertyNameChanged = async (option: IPropertyOption, text: string): Promise<void> => {
         await mutator.changePropertyOptionValue(boardTree, boardTree.groupByProperty!, option, text)
     }
@@ -227,6 +287,8 @@ const Table = (props: Props) => {
                                 propertyNameChanged={propertyNameChanged}
                                 onCardClicked={props.onCardClicked}
                                 onDropToGroupHeader={onDropToGroupHeader}
+                                onDropToCard={onDropToCard}
+                                onDropToGroup={onDropToGroup}
                             />)
                     })}
                 </div>
@@ -245,6 +307,7 @@ const Table = (props: Props) => {
                     showCard={props.showCard}
                     addCard={props.addCard}
                     onCardClicked={props.onCardClicked}
+                    onDrop={onDropToCard}
                 />
             }
 

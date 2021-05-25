@@ -24,12 +24,11 @@ type Props = {
     showCard: (cardId?: string) => void
     addCard: (groupByOptionId?: string) => Promise<void>
     onCardClicked: (e: React.MouseEvent, card: Card) => void
-}
+    onDrop: (srcCard: Card, dstCard: Card) => void}
 
 const TableRows = (props: Props) => {
     const {boardTree, cards} = props
     const {activeView} = boardTree
-    const isManualSort = activeView.sortOptions.length < 1
 
     const {offset, resizingColumn} = useDragLayer((monitor) => {
         if (monitor.getItemType() === 'horizontalGrip') {
@@ -43,55 +42,6 @@ const TableRows = (props: Props) => {
             resizingColumn: '',
         }
     })
-
-    const onDropToCard = (srcCard: Card, dstCard: Card) => {
-        Utils.log(`onDropToCard: ${dstCard.title}`)
-        const {selectedCardIds} = props
-
-        const draggedCardIds = Array.from(new Set(selectedCardIds).add(srcCard.id))
-        const description = draggedCardIds.length > 1 ? `drag ${draggedCardIds.length} cards` : 'drag card'
-
-        if (activeView.groupById !== undefined) {
-            const optionId = dstCard.properties[activeView.groupById!]
-            const orderedCards = boardTree.orderedCards()
-            const cardsById: {[key: string]: Card} = orderedCards.reduce((acc: {[key: string]: Card}, card: Card): {[key: string]: Card} => {
-                acc[card.id] = card
-                return acc
-            }, {})
-            const draggedCards: Card[] = draggedCardIds.map((o: string) => cardsById[o])
-
-            mutator.performAsUndoGroup(async () => {
-                // Update properties of dragged cards
-                const awaits = []
-                for (const draggedCard of draggedCards) {
-                    Utils.log(`draggedCard: ${draggedCard.title}, column: ${optionId}`)
-                    const oldOptionId = draggedCard.properties[boardTree.groupByProperty!.id]
-                    Utils.log(`ondrop. oldValue: ${oldOptionId}`)
-
-                    if (optionId !== oldOptionId) {
-                        awaits.push(mutator.changePropertyValue(draggedCard, boardTree.groupByProperty!.id, optionId, description))
-                    }
-                }
-                await Promise.all(awaits)
-            })
-        }
-
-        // Update dstCard order
-        if (isManualSort) {
-            let cardOrder = Array.from(new Set([...activeView.cardOrder, ...boardTree.cards.map((o) => o.id)]))
-            const isDraggingDown = cardOrder.indexOf(srcCard.id) <= cardOrder.indexOf(dstCard.id)
-            cardOrder = cardOrder.filter((id) => !draggedCardIds.includes(id))
-            let destIndex = cardOrder.indexOf(dstCard.id)
-            if (isDraggingDown) {
-                destIndex += 1
-            }
-            cardOrder.splice(destIndex, 0, ...draggedCardIds)
-
-            mutator.performAsUndoGroup(async () => {
-                await mutator.changeViewCardOrder(activeView, cardOrder, description)
-            })
-        }
-    }
 
     return (
         <div>
@@ -113,7 +63,7 @@ const TableRows = (props: Props) => {
                         }}
                         showCard={props.showCard}
                         readonly={props.readonly}
-                        onDrop={onDropToCard}
+                        onDrop={props.onDrop}
                         offset={offset}
                         resizingColumn={resizingColumn}
                         columnRefs={props.columnRefs}
