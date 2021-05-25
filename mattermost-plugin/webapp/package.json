@@ -1,0 +1,115 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "webpack --mode=production",
+    "build:watch": "webpack --mode=production --watch",
+    "debug": "webpack --mode=none",
+    "debug:watch": "webpack --mode=development --watch",
+    "lint": "eslint --ignore-pattern node_modules --ignore-pattern dist --ext .js --ext .jsx --ext tsx --ext ts . --quiet --cache",
+    "fix": "eslint --ignore-pattern node_modules --ignore-pattern dist --ext .js --ext .jsx --ext tsx --ext ts . --quiet --fix --cache",
+    "test": "jest --forceExit --detectOpenHandles --verbose",
+    "test:watch": "jest --watch",
+    "test-ci": "jest --forceExit --detectOpenHandles --maxWorkers=2",
+    "check-types": "tsc"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.10.4",
+    "@babel/core": "7.10.4",
+    "@babel/plugin-proposal-class-properties": "7.10.4",
+    "@babel/plugin-proposal-object-rest-spread": "7.10.4",
+    "@babel/plugin-proposal-optional-chaining": "7.10.4",
+    "@babel/plugin-syntax-dynamic-import": "7.8.3",
+    "@babel/polyfill": "7.10.4",
+    "@babel/preset-env": "7.10.4",
+    "@babel/preset-react": "7.10.4",
+    "@babel/preset-typescript": "7.10.4",
+    "@babel/runtime": "7.10.4",
+    "@emotion/babel-preset-css-prop": "10.0.27",
+    "@emotion/core": "10.0.28",
+    "@types/enzyme": "3.10.5",
+    "@types/jest": "26.0.4",
+    "@types/node": "14.0.20",
+    "@types/react": "16.9.41",
+    "@types/react-dom": "16.9.8",
+    "@types/react-intl": "3.0.0",
+    "@types/react-redux": "7.1.9",
+    "@types/react-router-dom": "5.1.5",
+    "@types/react-transition-group": "4.4.0",
+    "@typescript-eslint/eslint-plugin": "3.6.0",
+    "@typescript-eslint/parser": "3.6.0",
+    "babel-eslint": "10.1.0",
+    "babel-jest": "26.1.0",
+    "babel-loader": "8.1.0",
+    "babel-plugin-typescript-to-proptypes": "1.3.2",
+    "css-loader": "3.6.0",
+    "enzyme": "3.11.0",
+    "enzyme-adapter-react-16": "1.15.2",
+    "enzyme-to-json": "3.5.0",
+    "eslint": "7.4.0",
+    "eslint-import-resolver-webpack": "0.12.2",
+    "eslint-plugin-import": "2.22.0",
+    "eslint-plugin-react": "7.20.3",
+    "eslint-plugin-react-hooks": "4.0.6",
+    "file-loader": "6.0.0",
+    "identity-obj-proxy": "3.0.0",
+    "jest": "26.1.0",
+    "jest-canvas-mock": "2.2.0",
+    "jest-junit": "11.0.1",
+    "mattermost-webapp": "github:mattermost/mattermost-webapp#23f5f93d9f12a7e2b5623e5cee6814366abd9a0f",
+    "node-sass": "4.14.1",
+    "sass-loader": "9.0.2",
+    "style-loader": "1.2.1",
+    "webpack": "4.43.0",
+    "webpack-cli": "3.3.12"
+  },
+  "dependencies": {
+    "core-js": "3.6.5",
+    "mattermost-redux": "5.27.0",
+    "react": "16.13.1",
+    "react-redux": "7.2.0",
+    "redux": "4.0.5",
+    "typescript": "3.9.6"
+  },
+  "jest": {
+    "snapshotSerializers": [
+      "<rootDir>/node_modules/enzyme-to-json/serializer"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/non_npm_dependencies/"
+    ],
+    "clearMocks": true,
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
+    ],
+    "coverageReporters": [
+      "lcov",
+      "text-summary"
+    ],
+    "moduleNameMapper": {
+      "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "identity-obj-proxy",
+      "^.+\\.(css|less|scss)$": "identity-obj-proxy",
+      "^.*i18n.*\\.(json)$": "<rootDir>/tests/i18n_mock.json",
+      "^bundle-loader\\?lazy\\!(.*)$": "$1"
+    },
+    "moduleDirectories": [
+      "",
+      "node_modules",
+      "non_npm_dependencies"
+    ],
+    "reporters": [
+      "default",
+      "jest-junit"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!react-native|react-router|mattermost-webapp)"
+    ],
+    "setupFiles": [
+      "jest-canvas-mock"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/setup.tsx"
+    ],
+    "testURL": "http://localhost:8065"
+  }
+}

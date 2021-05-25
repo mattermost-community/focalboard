@@ -4,6 +4,7 @@ go 1.15
 
 require (
 	github.com/Masterminds/squirrel v1.5.0
+	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang-migrate/migrate/v4 v4.14.1
 	github.com/golang/mock v1.5.0
 	github.com/google/uuid v1.2.0
@@ -12,7 +13,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/lib/pq v1.10.0
 	github.com/magiconair/properties v1.8.5 // indirect
-	github.com/mattermost/mattermost-server/v5 v5.33.2
+	github.com/mattermost/mattermost-server/v5 v5.34.2
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
 	github.com/oklog/run v1.1.0

@@ -375,6 +375,21 @@ func (mr *MockStoreMockRecorder) GetWorkspace(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetWorkspace", reflect.TypeOf((*MockStore)(nil).GetWorkspace), arg0)
 }
 
+// HasWorkspaceAccess mocks base method.
+func (m *MockStore) HasWorkspaceAccess(arg0, arg1 string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "HasWorkspaceAccess", arg0, arg1)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// HasWorkspaceAccess indicates an expected call of HasWorkspaceAccess.
+func (mr *MockStoreMockRecorder) HasWorkspaceAccess(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasWorkspaceAccess", reflect.TypeOf((*MockStore)(nil).HasWorkspaceAccess), arg0, arg1)
+}
+
 // InsertBlock mocks base method.
 func (m *MockStore) InsertBlock(arg0 store.Container, arg1 model.Block) error {
 	m.ctrl.T.Helper()
