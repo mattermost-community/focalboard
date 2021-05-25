@@ -90,7 +90,7 @@ function ValueSelector(props: Props): JSX.Element {
                     ...provided,
                     background: state.isFocused ? 'rgba(var(--main-fg), 0.1)' : 'rgb(var(--main-bg))',
                     color: state.isFocused ? 'rgb(var(--main-fg))' : 'rgb(var(--main-fg))',
-                    padding: '2px 8px',
+                    padding: '8px',
                 }),
                 control: (): CSSObject => ({
                     border: 0,

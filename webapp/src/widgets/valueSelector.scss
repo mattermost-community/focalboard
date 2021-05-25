@@ -18,13 +18,17 @@
         overflow: hidden;
         border-radius: var(--default-rad);
         max-width: 100%;
+        margin-bottom: 0;
     }
 
     .value-menu-option {
         display: flex;
         width: 100%;
+        justify-content: center;
+        align-items: center;
         .label-container {
             flex-grow: 1;
+            display: flex;
         }
         .MenuWrapper {
             display: flex;
