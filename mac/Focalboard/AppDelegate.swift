@@ -37,7 +37,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	private func showWhatsNewDialogIfNeeded() {
-		if Globals.currentWhatsNewVersion < Globals.WhatsNewVersion {
+		if Globals.currentWhatsNewVersion > 0 && Globals.currentWhatsNewVersion < Globals.WhatsNewVersion {
 			Globals.currentWhatsNewVersion = Globals.WhatsNewVersion
 			showWhatsNew(self)
 		}

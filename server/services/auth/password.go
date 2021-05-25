@@ -2,14 +2,10 @@ package auth
 
 import (
 	"fmt"
-	"math/rand"
 	"strings"
-	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
-
-var passwordRandomSource = rand.NewSource(time.Now().Unix())
 
 const (
 	PasswordMaximumLength    = 64
@@ -45,23 +41,6 @@ func ComparePassword(hash, password string) bool {
 
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
-}
-
-func GeneratePassword(minimumLength int) string {
-	r := rand.New(passwordRandomSource)
-
-	// Make sure we are guaranteed at least one of each type to meet any possible password complexity requirements.
-	password := string([]rune(PasswordUpperCaseLetters)[r.Intn(len(PasswordUpperCaseLetters))]) +
-		string([]rune(PasswordNumbers)[r.Intn(len(PasswordNumbers))]) +
-		string([]rune(PasswordLowerCaseLetters)[r.Intn(len(PasswordLowerCaseLetters))]) +
-		string([]rune(PasswordSpecialChars)[r.Intn(len(PasswordSpecialChars))])
-
-	for len(password) < minimumLength {
-		i := r.Intn(len(PasswordAllChars))
-		password = password + string([]rune(PasswordAllChars)[i])
-	}
-
-	return password
 }
 
 type InvalidPasswordError struct {

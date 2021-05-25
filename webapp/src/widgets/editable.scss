@@ -17,4 +17,7 @@
         border: 1px solid var(--error-color);
         border-radius: var(--default-rad);
     }
+    &.readonly {
+        background-color: transparent;
+    }
 }
