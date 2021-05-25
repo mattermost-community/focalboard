@@ -15,10 +15,11 @@ const (
 
 // SQLStore is a SQL database.
 type SQLStore struct {
-	db          *sql.DB
-	dbType      string
-	tablePrefix string
-	logger      *mlog.Logger
+	db               *sql.DB
+	dbType           string
+	tablePrefix      string
+	connectionString string
+	logger           *mlog.Logger
 }
 
 // New creates a new SQL implementation of the store.
@@ -41,10 +42,11 @@ func New(dbType, connectionString string, tablePrefix string, logger *mlog.Logge
 	}
 
 	store := &SQLStore{
-		db:          db,
-		dbType:      dbType,
-		tablePrefix: tablePrefix,
-		logger:      logger,
+		db:               db,
+		dbType:           dbType,
+		tablePrefix:      tablePrefix,
+		connectionString: connectionString,
+		logger:           logger,
 	}
 
 	err = store.Migrate()

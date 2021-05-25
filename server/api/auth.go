@@ -371,6 +371,23 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 			return
 		}
 
+		if a.MattermostAuth && r.Header.Get("Mattermost-User-Id") != "" {
+			userID := r.Header.Get("Mattermost-User-Id")
+			now := time.Now().Unix()
+			session := &model.Session{
+				ID:          userID,
+				Token:       userID,
+				UserID:      userID,
+				AuthService: a.authService,
+				Props:       map[string]interface{}{},
+				CreateAt:    now,
+				UpdateAt:    now,
+			}
+			ctx := context.WithValue(r.Context(), "session", session)
+			handler(w, r.WithContext(ctx))
+			return
+		}
+
 		session, err := a.app().GetSession(token)
 		if err != nil {
 			if required {

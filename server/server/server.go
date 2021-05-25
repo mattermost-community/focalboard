@@ -1,6 +1,7 @@
 package server
 
 import (
+	"log"
 	"net"
 	"net/http"
 	"os"
@@ -19,15 +20,18 @@ import (
 	appModel "github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/mlog"
+	"github.com/mattermost/focalboard/server/services/prometheus"
 	"github.com/mattermost/focalboard/server/services/scheduler"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 	"github.com/mattermost/focalboard/server/services/telemetry"
 	"github.com/mattermost/focalboard/server/services/webhook"
 	"github.com/mattermost/focalboard/server/web"
 	"github.com/mattermost/focalboard/server/ws"
+	"github.com/oklog/run"
 
-	"github.com/mattermost/mattermost-server/v5/services/filesstore"
+	"github.com/mattermost/mattermost-server/v5/shared/filestore"
 	"github.com/mattermost/mattermost-server/v5/utils"
 )
 
@@ -43,10 +47,12 @@ type Server struct {
 	wsServer            *ws.Server
 	webServer           *web.Server
 	store               store.Store
-	filesBackend        filesstore.FileBackend
+	filesBackend        filestore.FileBackend
 	telemetry           *telemetry.Service
 	logger              *mlog.Logger
 	cleanUpSessionsTask *scheduler.ScheduledTask
+	promServer          *prometheus.Service
+	promInstrumentor    *prometheus.Instrumentor
 
 	localRouter     *mux.Router
 	localModeServer *http.Server
@@ -55,21 +61,40 @@ type Server struct {
 }
 
 func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger) (*Server, error) {
+	var db store.Store
 	db, err := sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger)
 	if err != nil {
 		logger.Error("Unable to start the database", mlog.Err(err))
 		return nil, err
 	}
+	if cfg.AuthMode == "mattermost" {
+		layeredStore, err := mattermostauthlayer.New(cfg.DBType, cfg.DBConfigString, db)
+		if err != nil {
+			log.Print("Unable to start the database", err)
+			return nil, err
+		}
+		db = layeredStore
+	}
 
 	authenticator := auth.New(cfg, db)
 
-	wsServer := ws.NewServer(authenticator, singleUserToken, logger)
+	wsServer := ws.NewServer(authenticator, singleUserToken, cfg.AuthMode == "mattermost", logger)
 
-	filesBackendSettings := filesstore.FileBackendSettings{}
-	filesBackendSettings.DriverName = "local"
+	filesBackendSettings := filestore.FileBackendSettings{}
+	filesBackendSettings.DriverName = cfg.FilesDriver
 	filesBackendSettings.Directory = cfg.FilesPath
-	filesBackend, appErr := filesstore.NewFileBackend(filesBackendSettings)
+	filesBackendSettings.AmazonS3AccessKeyId = cfg.FilesS3Config.AccessKeyId
+	filesBackendSettings.AmazonS3SecretAccessKey = cfg.FilesS3Config.SecretAccessKey
+	filesBackendSettings.AmazonS3Bucket = cfg.FilesS3Config.Bucket
+	filesBackendSettings.AmazonS3PathPrefix = cfg.FilesS3Config.PathPrefix
+	filesBackendSettings.AmazonS3Region = cfg.FilesS3Config.Region
+	filesBackendSettings.AmazonS3Endpoint = cfg.FilesS3Config.Endpoint
+	filesBackendSettings.AmazonS3SSL = cfg.FilesS3Config.SSL
+	filesBackendSettings.AmazonS3SignV2 = cfg.FilesS3Config.SignV2
+	filesBackendSettings.AmazonS3SSE = cfg.FilesS3Config.SSE
+	filesBackendSettings.AmazonS3Trace = cfg.FilesS3Config.Trace
 
+	filesBackend, appErr := filestore.NewFileBackend(filesBackendSettings)
 	if appErr != nil {
 		logger.Error("Unable to initialize the files storage", mlog.Err(appErr))
 
@@ -159,16 +184,18 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 	})
 
 	server := Server{
-		config:       cfg,
-		wsServer:     wsServer,
-		webServer:    webServer,
-		store:        db,
-		filesBackend: filesBackend,
-		telemetry:    telemetryService,
-		logger:       logger,
-		localRouter:  localRouter,
-		api:          focalboardAPI,
-		appBuilder:   appBuilder,
+		config:           cfg,
+		wsServer:         wsServer,
+		webServer:        webServer,
+		store:            db,
+		filesBackend:     filesBackend,
+		telemetry:        telemetryService,
+		promServer:       prometheus.New(cfg.PrometheusAddress),
+		promInstrumentor: prometheus.NewInstrumentor(appModel.CurrentVersion),
+		logger:           logger,
+		localRouter:      localRouter,
+		api:              focalboardAPI,
+		appBuilder:       appBuilder,
 	}
 
 	server.initHandlers()
@@ -203,6 +230,23 @@ func (s *Server) Start() error {
 		s.telemetry.RunTelemetryJob(firstRun)
 	}
 
+	var group run.Group
+	if s.config.PrometheusAddress != "" {
+		group.Add(func() error {
+			if err := s.promServer.Run(); err != nil {
+				return errors.Wrap(err, "PromServer Run")
+			}
+			return nil
+		}, func(error) {
+			s.promServer.Shutdown()
+		})
+		// expose the build info as metric
+		s.promInstrumentor.ExposeBuildInfo()
+
+		if err := group.Run(); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -276,4 +320,8 @@ func (s *Server) stopLocalModeServer() {
 
 func (s *Server) GetRootRouter() *mux.Router {
 	return s.webServer.Router()
+}
+
+func (s *Server) SetWSHub(hub ws.Hub) {
+	s.wsServer.SetHub(hub)
 }

@@ -96,6 +96,10 @@ func (ws *Server) registerRoutes() {
 // Start runs the web server and start listening for charsetnnections.
 func (ws *Server) Start() {
 	ws.registerRoutes()
+	if ws.port == -1 {
+		ws.logger.Error("server not bind to any port")
+		return
+	}
 
 	isSSL := ws.ssl && fileExists("./cert/cert.pem") && fileExists("./cert/key.pem")
 	if isSSL {

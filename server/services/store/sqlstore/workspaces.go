@@ -104,3 +104,7 @@ func (s *SQLStore) GetWorkspace(ID string) (*model.Workspace, error) {
 
 	return &workspace, nil
 }
+
+func (s *SQLStore) HasWorkspaceAccess(userID string, workspaceID string) (bool, error) {
+	return true, nil
+}

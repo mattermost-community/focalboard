@@ -215,7 +215,8 @@ func (s *SQLStore) GetAllBlocks(c store.Container) ([]model.Block, error) {
 			"update_at",
 			"delete_at",
 		).
-		From(s.tablePrefix + "blocks")
+		From(s.tablePrefix + "blocks").
+		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
 
 	rows, err := query.Query()
 	if err != nil {

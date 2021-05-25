@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"bytes"
+	"database/sql"
 	"errors"
 	"fmt"
 	"io"
@@ -9,6 +10,7 @@ import (
 	"os"
 	"text/template"
 
+	mysqldriver "github.com/go-sql-driver/mysql"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database"
 	"github.com/golang-migrate/migrate/v4/database/mysql"
@@ -66,6 +68,29 @@ func (pm *PrefixedMigration) ReadDown(version uint) (io.ReadCloser, string, erro
 	return pm.executeTemplate(r, identifier)
 }
 
+// migrations in MySQL need to run with the multiStatements flag
+// enabled, so this method creates a new connection ensuring that it's
+// enabled
+func (s *SQLStore) getMySQLMigrationConnection() (*sql.DB, error) {
+	config, err := mysqldriver.ParseDSN(s.connectionString)
+	if err != nil {
+		return nil, err
+	}
+	config.Params["multiStatements"] = "true"
+	connectionString := config.FormatDSN()
+
+	db, err := sql.Open(s.dbType, connectionString)
+	if err != nil {
+		return nil, err
+	}
+
+	if err = db.Ping(); err != nil {
+		return nil, err
+	}
+
+	return db, nil
+}
+
 func (s *SQLStore) Migrate() error {
 	var driver database.Driver
 	var err error
@@ -86,7 +111,13 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	if s.dbType == mysqlDBType {
-		driver, err = mysql.WithInstance(s.db, &mysql.Config{MigrationsTable: migrationsTable})
+		db, err := s.getMySQLMigrationConnection()
+		if err != nil {
+			return err
+		}
+		defer db.Close()
+
+		driver, err = mysql.WithInstance(db, &mysql.Config{MigrationsTable: migrationsTable})
 		if err != nil {
 			return err
 		}
