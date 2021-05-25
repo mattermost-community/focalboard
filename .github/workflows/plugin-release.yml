@@ -42,10 +42,10 @@ jobs:
         BUILD_NUMBER: ${{ github.run_id }}
 
     - name: Rename plugin file
-      run: cd mattermost-plugin/dist; mv focalboard-0.6.7.tar.gz mattermost-plugin-focalboard-0.6.7.tar.gz
+      run: cd mattermost-plugin/dist; mv focalboard-*.tar.gz mattermost-plugin-focalboard.tar.gz
 
     - name: Upload plugin artifact
       uses: actions/upload-artifact@v1
       with:
-        name: mattermost-plugin-focalboard-v0.6.7.tar.gz
-        path: ${{ github.workspace }}/mattermost-plugin/dist/mattermost-plugin-focalboard-0.6.7.tar.gz
+        name: mattermost-plugin-focalboard.tar.gz
+        path: ${{ github.workspace }}/mattermost-plugin/dist/mattermost-plugin-focalboard.tar.gz
