@@ -16,7 +16,7 @@ require (
 	github.com/lib/pq v1.10.0
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/mattermost/logr v1.0.13
-	github.com/mattermost/logr/v2 v2.0.0-20210522052547-bef99571163e
+	github.com/mattermost/logr/v2 v2.0.0-20210525034931-179e4b3c986d
 	github.com/mattermost/mattermost-server v5.11.1+incompatible // indirect
 	github.com/mattermost/mattermost-server/v5 v5.33.2
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible

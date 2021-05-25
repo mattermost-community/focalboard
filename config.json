@@ -20,5 +20,6 @@
 	"authMode": "native",
 	"mattermostURL": "",
 	"mattermostClientID": "",
-	"mattermostClientSecret": ""
+	"mattermostClientSecret": "",
+    "logging_file": "logging.json"
 }

@@ -237,7 +237,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	a.logger.Debug("GetBlocks parentID: %s, type: %s, %d result(s)",
+	a.logger.Debug("GetBlocks",
 		mlog.String("parentID", parentID),
 		mlog.String("blockType", blockType),
 		mlog.Int("block_count", len(blocks)),
@@ -565,7 +565,7 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	a.logger.Debug("GetSubTree (%v) blockID: %s, %d result(s)",
+	a.logger.Debug("GetSubTree",
 		mlog.Int64("levels", levels),
 		mlog.String("blockID", blockID),
 		mlog.Int("block_count", len(blocks)),

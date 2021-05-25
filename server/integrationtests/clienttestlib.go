@@ -50,14 +50,14 @@ func getTestConfig() *config.Configuration {
 	}`)
 
 	return &config.Configuration{
-		ServerRoot:     "http://localhost:8888",
-		Port:           8888,
-		DBType:         dbType,
-		DBConfigString: connectionString,
-		DBTablePrefix:  "test_",
-		WebPath:        "./pack",
-		FilesPath:      "./files",
-		Logging:        logging,
+		ServerRoot:         "http://localhost:8888",
+		Port:               8888,
+		DBType:             dbType,
+		DBConfigString:     connectionString,
+		DBTablePrefix:      "test_",
+		WebPath:            "./pack",
+		FilesPath:          "./files",
+		LoggingEscapedJson: string(logging),
 	}
 }
 
@@ -65,7 +65,7 @@ func SetupTestHelper() *TestHelper {
 	sessionToken := "TESTTOKEN"
 	th := &TestHelper{}
 	logger := mlog.NewLogger()
-	logger.Configure(getTestConfig().Logging)
+	logger.Configure("", getTestConfig().LoggingEscapedJson)
 	srv, err := server.New(getTestConfig(), sessionToken, logger)
 	if err != nil {
 		panic(err)

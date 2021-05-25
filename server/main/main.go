@@ -95,15 +95,17 @@ func main() {
 	}
 
 	logger := mlog.NewLogger()
-	err = logger.Configure(config.Logging)
+	err = logger.Configure(config.LoggingFile, config.LoggingEscapedJson)
 	if err != nil {
 		log.Fatal("Error in config file for logger: ", err)
 		return
 	}
 	defer logger.Shutdown()
 
-	restore := logger.RedirectStdLog(mlog.Info, mlog.String("src", "stdlog"))
-	defer restore()
+	if logger.HasTargets() {
+		restore := logger.RedirectStdLog(mlog.Info, mlog.String("src", "stdlog"))
+		defer restore()
+	}
 
 	logInfo(logger)
 
@@ -204,7 +206,7 @@ func startServer(webPath string, filesPath string, port int, singleUserToken, db
 	}
 
 	logger := mlog.NewLogger()
-	err = logger.Configure(config.Logging)
+	err = logger.Configure(config.LoggingFile, config.LoggingEscapedJson)
 	if err != nil {
 		log.Fatal("Error in config file for logger: ", err)
 		return

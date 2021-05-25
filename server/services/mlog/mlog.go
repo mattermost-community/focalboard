@@ -84,6 +84,15 @@ var Array = logr.Array
 // Map constructs a field containing a key and map value.
 var Map = logr.Map
 
+// LoggerConfig is a map of LogTarget configurations.
+type LoggerConfig map[string]logrcfg.TargetCfg
+
+func (lc LoggerConfig) append(cfg LoggerConfig) {
+	for k, v := range cfg {
+		lc[k] = v
+	}
+}
+
 // Logger provides a thin wrapper around a Logr instance. This is a struct instead of an interface
 // so that there are no allocations on the heap each interface method invocation. Normally not
 // something to be concerned about, but logging calls for disabled levels should have as little CPU
@@ -103,33 +112,40 @@ func NewLogger() *Logger {
 }
 
 // Configure provides a new configuration for this logger.
-// `cfg` may be JSON, a filename pointing to a file containing JSON, or an embedded string
-// containing JSON.
-func (l *Logger) Configure(cfg json.RawMessage) error {
-	if len(cfg) == 0 {
+// Zero or more sources of config can be provided, with target name collisions resolved using the
+// following precedence:
+//     cfgFile > cfgJson
+func (l *Logger) Configure(cfgFile string, cfgEscaped string) error {
+	cfgMap := make(LoggerConfig)
+
+	// Add config from file
+	if cfgFile != "" {
+		if b, err := ioutil.ReadFile(string(cfgFile)); err != nil {
+			return fmt.Errorf("error reading logger config file %s: %w", cfgFile, err)
+		} else {
+			var mapCfgFile LoggerConfig
+			if err := json.Unmarshal(b, &mapCfgFile); err != nil {
+				return fmt.Errorf("error decoding logger config file %s: %w", cfgFile, err)
+			}
+			cfgMap.append(mapCfgFile)
+		}
+	}
+
+	// Add config from escaped json string
+	if cfgEscaped != "" {
+		if b, err := decodeEscapedJSONString(string(cfgEscaped)); err != nil {
+			return fmt.Errorf("error unescaping logger config as escaped json: %w", err)
+		} else {
+			var mapCfgEscaped LoggerConfig
+			if err := json.Unmarshal(b, &mapCfgEscaped); err != nil {
+				return fmt.Errorf("error decoding logger config as escaped json: %w", err)
+			}
+			cfgMap.append(mapCfgEscaped)
+		}
+	}
+
+	if len(cfgMap) == 0 {
 		return nil
-	}
-
-	var cfgMap map[string]logrcfg.TargetCfg
-
-	// first try JSON decoding
-	err := json.Unmarshal(cfg, &cfgMap)
-	if err != nil {
-		var b []byte
-
-		// next try treating as filename
-		if b, err = ioutil.ReadFile(string(cfg)); err == nil {
-			return l.Configure(b)
-		}
-
-		// treat as escaped JSON in a string (e.g. JSON embedded in ENV var)
-		if b, err = decodeEscapedJSONString(string(cfg)); err == nil {
-			err = json.Unmarshal(b, &cfgMap)
-		}
-	}
-
-	if err != nil {
-		return fmt.Errorf("invalid logger config: %w", err)
 	}
 
 	return logrcfg.ConfigureTargets(l.log.Logr(), cfgMap, nil)
@@ -208,6 +224,11 @@ func (l *Logger) Fatal(msg string, fields ...Field) {
 	l.log.Log(logr.Fatal, msg, fields...)
 	l.Shutdown()
 	os.Exit(1)
+}
+
+// HasTargets returns true if at least one log target has been added.
+func (l *Logger) HasTargets() bool {
+	return l.log.Logr().HasTargets()
 }
 
 // StdLogger creates a standard logger backed by this logger.
