@@ -38,19 +38,16 @@ func runServer(port int) (*server.Server, error) {
 		UseSSL:                  false,
 		SecureCookie:            true,
 		WebPath:                 "./pack",
+		FilesDriver:             "local",
 		FilesPath:               "./focalboard_files",
 		Telemetry:               true,
 		WebhookUpdate:           []string{},
-		Secret:                  "",
 		SessionExpireTime:       259200000000,
 		SessionRefreshTime:      18000,
 		LocalOnly:               false,
 		EnableLocalMode:         false,
 		LocalModeSocketLocation: "",
 		AuthMode:                "native",
-		MattermostURL:           "",
-		MattermostClientID:      "",
-		MattermostClientSecret:  "",
 	}, sessionToken)
 	if err != nil {
 		fmt.Println("ERROR INITIALIZING THE SERVER", err)
