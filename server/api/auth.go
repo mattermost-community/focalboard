@@ -154,32 +154,32 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
-		errorResponse(a, w, http.StatusUnauthorized, "", nil)
+		a.errorResponse(w, http.StatusUnauthorized, "", nil)
 		return
 	}
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		errorResponse(a, w, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	var loginData LoginRequest
 	err = json.Unmarshal(requestBody, &loginData)
 	if err != nil {
-		errorResponse(a, w, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	if loginData.Type == "normal" {
 		token, err := a.app().Login(loginData.Username, loginData.Email, loginData.Password, loginData.MfaToken)
 		if err != nil {
-			errorResponse(a, w, http.StatusUnauthorized, "incorrect login", err)
+			a.errorResponse(w, http.StatusUnauthorized, "incorrect login", err)
 			return
 		}
 		json, err := json.Marshal(LoginResponse{Token: token})
 		if err != nil {
-			errorResponse(a, w, http.StatusInternalServerError, "", err)
+			a.errorResponse(w, http.StatusInternalServerError, "", err)
 			return
 		}
 
@@ -187,7 +187,7 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	errorResponse(a, w, http.StatusBadRequest, "invalid login type", nil)
+	a.errorResponse(w, http.StatusBadRequest, "invalid login type", nil)
 }
 
 func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
@@ -217,20 +217,20 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
-		errorResponse(a, w, http.StatusUnauthorized, "", nil)
+		a.errorResponse(w, http.StatusUnauthorized, "", nil)
 		return
 	}
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		errorResponse(a, w, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	var registerData RegisterRequest
 	err = json.Unmarshal(requestBody, &registerData)
 	if err != nil {
-		errorResponse(a, w, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
 	}
 
@@ -238,35 +238,35 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 	if len(registerData.Token) > 0 {
 		workspace, err := a.app().GetRootWorkspace()
 		if err != nil {
-			errorResponse(a, w, http.StatusInternalServerError, "", err)
+			a.errorResponse(w, http.StatusInternalServerError, "", err)
 			return
 		}
 
 		if registerData.Token != workspace.SignupToken {
-			errorResponse(a, w, http.StatusUnauthorized, "", nil)
+			a.errorResponse(w, http.StatusUnauthorized, "", nil)
 			return
 		}
 	} else {
 		// No signup token, check if no active users
 		userCount, err := a.app().GetRegisteredUserCount()
 		if err != nil {
-			errorResponse(a, w, http.StatusInternalServerError, "", err)
+			a.errorResponse(w, http.StatusInternalServerError, "", err)
 			return
 		}
 		if userCount > 0 {
-			errorResponse(a, w, http.StatusUnauthorized, "", nil)
+			a.errorResponse(w, http.StatusUnauthorized, "", nil)
 			return
 		}
 	}
 
 	if err = registerData.IsValid(); err != nil {
-		errorResponse(a, w, http.StatusBadRequest, err.Error(), err)
+		a.errorResponse(w, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
 	err = a.app().RegisterUser(registerData.Username, registerData.Email, registerData.Password)
 	if err != nil {
-		errorResponse(a, w, http.StatusBadRequest, err.Error(), err)
+		a.errorResponse(w, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
@@ -309,7 +309,7 @@ func (a *API) handleChangePassword(w http.ResponseWriter, r *http.Request) {
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
-		errorResponse(a, w, http.StatusUnauthorized, "", nil)
+		a.errorResponse(w, http.StatusUnauthorized, "", nil)
 		return
 	}
 
@@ -318,23 +318,23 @@ func (a *API) handleChangePassword(w http.ResponseWriter, r *http.Request) {
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		errorResponse(a, w, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	var requestData ChangePasswordRequest
 	if err := json.Unmarshal(requestBody, &requestData); err != nil {
-		errorResponse(a, w, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	if err = requestData.IsValid(); err != nil {
-		errorResponse(a, w, http.StatusBadRequest, err.Error(), err)
+		a.errorResponse(w, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
 	if err = a.app().ChangePassword(userID, requestData.OldPassword, requestData.NewPassword); err != nil {
-		errorResponse(a, w, http.StatusBadRequest, err.Error(), err)
+		a.errorResponse(w, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
@@ -352,7 +352,7 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 		a.logger.Debug(`attachSession`, mlog.Bool("single_user", len(a.singleUserToken) > 0))
 		if len(a.singleUserToken) > 0 {
 			if required && (token != a.singleUserToken) {
-				errorResponse(a, w, http.StatusUnauthorized, "", nil)
+				a.errorResponse(w, http.StatusUnauthorized, "", nil)
 				return
 			}
 
@@ -391,7 +391,7 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 		session, err := a.app().GetSession(token)
 		if err != nil {
 			if required {
-				errorResponse(a, w, http.StatusUnauthorized, "", err)
+				a.errorResponse(w, http.StatusUnauthorized, "", err)
 				return
 			}
 
@@ -406,7 +406,7 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 				mlog.String("want", a.authService),
 				mlog.String("got", authService),
 			)
-			errorResponse(a, w, http.StatusUnauthorized, "", err)
+			a.errorResponse(w, http.StatusUnauthorized, "", err)
 			return
 		}
 
@@ -420,7 +420,7 @@ func (a *API) adminRequired(handler func(w http.ResponseWriter, r *http.Request)
 		// Currently, admin APIs require local unix connections
 		conn := serverContext.GetContextConn(r)
 		if _, isUnix := conn.(*net.UnixConn); !isUnix {
-			errorResponse(a, w, http.StatusUnauthorized, "", nil)
+			a.errorResponse(w, http.StatusUnauthorized, "", nil)
 			return
 		}
 
