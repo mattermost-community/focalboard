@@ -29,7 +29,7 @@ const MultiSelectProperty = (props: Props): JSX.Element => {
             onChange={onChange}
             onChangeColor={onChangeColor}
             onDeleteOption={onDeleteOption}
-            onDeleteValue={(valueToRemove) => onChange(values.filter(value => value.id !== valueToRemove.id).map(value => value.id))}
+            onDeleteValue={(valueToRemove) => onChange(values.filter((value) => value.id !== valueToRemove.id).map((value) => value.id))}
             onCreate={onCreate}
         />
     )
