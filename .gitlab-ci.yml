@@ -1,0 +1,11 @@
+stages:
+  - build
+  - s3
+
+variables:
+  BUILD: "yes"
+
+include:
+  - project: mattermost/ci/focalboard
+    ref: main
+    file: private.yml
