@@ -212,7 +212,7 @@ class Utils {
     }
 
     static ensureProtocol(url: string): string {
-        return url.match(/^(http|https):\/\//) ? url : `https://${url}`
+        return url.match(/^.+:\/\//) ? url : `https://${url}`
     }
 
     // File names
