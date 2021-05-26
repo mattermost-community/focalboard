@@ -64,11 +64,8 @@ const Editable = (props: Props, ref: React.Ref<{focus: (selectAll?: boolean) => 
         error = !props.validator(value || '')
     }
 
-    const size = (value?.length || 20) * 1.20
-
     return (
         <input
-            size={size}
             ref={elementRef}
             className={'Editable ' + (error ? 'error ' : '') + (readonly ? 'readonly ' : '') + className}
             placeholder={placeholderText}

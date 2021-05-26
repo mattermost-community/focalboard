@@ -50,54 +50,62 @@ const TableGroupHeaderRow = React.memo((props: Props): JSX.Element => {
         className += ' expanded'
     }
 
+    const columnWidth = (templateId: string): number => {
+        return Math.max(Constants.minColumnWidth, props.boardTree.activeView.columnWidths[templateId] || 0)
+    }
+
     return (
         <div
-            key={group.option.id + 'header' || 'empty'}
+            key={group.option.id + 'header'}
             ref={groupHeaderRef}
             style={{opacity: isDragging ? 0.5 : 1}}
             className={className}
         >
-            <IconButton
-                icon={<DisclosureTriangle/>}
-                onClick={() => (props.readonly ? {} : props.hideGroup(group.option.id || 'undefined'))}
-                className={props.readonly ? 'readonly' : ''}
-            />
+            <div 
+                className='octo-table-cell'
+                style={{width: columnWidth(Constants.titleColumnId)}}
+            >
+                <IconButton
+                    icon={<DisclosureTriangle/>}
+                    onClick={() => (props.readonly ? {} : props.hideGroup(group.option.id || 'undefined'))}
+                    className={props.readonly ? 'readonly' : ''}
+                />
 
-            {!group.option.id &&
-                <Label
-                    title={intl.formatMessage({
-                        id: 'BoardComponent.no-property-title',
-                        defaultMessage: 'Items with an empty {property} property will go here. This column cannot be removed.',
-                    }, {property: boardTree.groupByProperty!.name})}
-                >
-                    <FormattedMessage
-                        id='BoardComponent.no-property'
-                        defaultMessage='No {property}'
-                        values={{
-                            property: boardTree.groupByProperty!.name,
-                        }}
-                    />
-                </Label>}
-            {group.option.id &&
-                <Label color={group.option.color}>
-                    <Editable
-                        value={groupTitle}
-                        placeholderText='New Select'
-                        onChange={setGroupTitle}
-                        onSave={() => {
-                            if (groupTitle.trim() === '') {
+                {!group.option.id &&
+                    <Label
+                        title={intl.formatMessage({
+                            id: 'BoardComponent.no-property-title',
+                            defaultMessage: 'Items with an empty {property} property will go here. This column cannot be removed.',
+                        }, {property: boardTree.groupByProperty!.name})}
+                    >
+                        <FormattedMessage
+                            id='BoardComponent.no-property'
+                            defaultMessage='No {property}'
+                            values={{
+                                property: boardTree.groupByProperty!.name,
+                            }}
+                        />
+                    </Label>}
+                {group.option.id &&
+                    <Label color={group.option.color}>
+                        <Editable
+                            value={groupTitle}
+                            placeholderText='New Select'
+                            onChange={setGroupTitle}
+                            onSave={() => {
+                                if (groupTitle.trim() === '') {
+                                    setGroupTitle(group.option.value)
+                                }
+                                props.propertyNameChanged(group.option, groupTitle)
+                            }}
+                            onCancel={() => {
                                 setGroupTitle(group.option.value)
-                            }
-                            props.propertyNameChanged(group.option, groupTitle)
-                        }}
-                        onCancel={() => {
-                            setGroupTitle(group.option.value)
-                        }}
-                        readonly={props.readonly}
-                        spellCheck={true}
-                    />
-                </Label>}
-            {/* <div className='octo-spacer'/> */}
+                            }}
+                            readonly={props.readonly || !group.option.id}
+                            spellCheck={true}
+                        />
+                    </Label>}
+            </div>
             <Button>{`${group.cards.length}`}</Button>
             {!props.readonly &&
                 <>
