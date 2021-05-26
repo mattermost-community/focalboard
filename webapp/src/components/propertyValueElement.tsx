@@ -83,6 +83,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                         mutator.changePropertyValue(card, propertyTemplate.id, currentValues.map((v) => v.id))
                     }
                 }
+                onDeleteValue={(valueToDelete, currentValues) => mutator.changePropertyValue(card, propertyTemplate.id, currentValues.filter((value) => value.id !== valueToDelete.id).map((value) => value.id))}
             />
         )
     }

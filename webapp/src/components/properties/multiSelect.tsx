@@ -17,11 +17,12 @@ type Props = {
     onChangeColor: (option: IPropertyOption, color: string) => void;
     onDeleteOption: (option: IPropertyOption) => void;
     onCreate: (newValue: string, currentValues: IPropertyOption[]) => void;
+    onDeleteValue: (valueToDelete: IPropertyOption, currentValues: IPropertyOption[]) => void;
     isEditable: boolean;
 }
 
 const MultiSelectProperty = (props: Props): JSX.Element => {
-    const {propertyTemplate, emptyValue, propertyValue, isEditable, onChange, onChangeColor, onDeleteOption, onCreate} = props
+    const {propertyTemplate, emptyValue, propertyValue, isEditable, onChange, onChangeColor, onDeleteOption, onCreate, onDeleteValue} = props
 
     const values = Array.isArray(propertyValue) ?
         propertyValue.map((v) => propertyTemplate.options.find((o) => o!.id === v)).filter((v): v is IPropertyOption => Boolean(v)) :
@@ -54,7 +55,7 @@ const MultiSelectProperty = (props: Props): JSX.Element => {
             onChange={onChange}
             onChangeColor={onChangeColor}
             onDeleteOption={onDeleteOption}
-            onDeleteValue={(valueToRemove) => onChange(values.filter((value) => value.id !== valueToRemove.id).map((value) => value.id))}
+            onDeleteValue={(valueToRemove) => onDeleteValue(valueToRemove, values)}
             onCreate={(newValue) => onCreate(newValue, values)}
         />
     )
