@@ -61,7 +61,7 @@ const TableGroupHeaderRow = React.memo((props: Props): JSX.Element => {
             style={{opacity: isDragging ? 0.5 : 1}}
             className={className}
         >
-            <div 
+            <div
                 className='octo-table-cell'
                 style={{width: columnWidth(Constants.titleColumnId)}}
             >
