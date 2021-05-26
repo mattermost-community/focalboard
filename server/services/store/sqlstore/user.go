@@ -67,7 +67,16 @@ func (s *SQLStore) getUsersByCondition(condition sq.Eq) ([]*model.User, error) {
 		return nil, err
 	}
 
-	return s.usersFromRows(rows)
+	users, err := s.usersFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(users) == 0 {
+		return nil, sql.ErrNoRows
+	}
+
+	return users, nil
 }
 
 func (s *SQLStore) GetUserById(userID string) (*model.User, error) {

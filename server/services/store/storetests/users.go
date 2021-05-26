@@ -4,6 +4,7 @@
 package storetests
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/google/uuid"
@@ -28,7 +29,7 @@ func testGetWorkspaceUsers(t *testing.T, store store.Store) {
 	t.Run("GetWorkspaceUSers", func(t *testing.T) {
 		users, err := store.GetUsersByWorkspace("workspace_1")
 		require.Equal(t, 0, len(users))
-		require.Nil(t, err)
+		require.Equal(t, sql.ErrNoRows, err)
 
 		userID := uuid.New().String()
 
