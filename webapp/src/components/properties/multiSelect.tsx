@@ -3,34 +3,59 @@
 
 import React from 'react'
 
-import {IPropertyOption} from '../../blocks/board'
+import {IPropertyOption, IPropertyTemplate} from '../../blocks/board'
+
+import Label from '../../widgets/label'
 
 import ValueSelector from '../../widgets/valueSelector'
 
 type Props = {
     emptyValue: string;
-    options: IPropertyOption[];
-    values: IPropertyOption[];
+    propertyTemplate: IPropertyTemplate;
+    propertyValue: string | string[];
     onChange: (value: string | string[]) => void;
     onChangeColor: (option: IPropertyOption, color: string) => void;
     onDeleteOption: (option: IPropertyOption) => void;
-    onCreate: (value: string) => void;
+    onCreate: (newValue: string, currentValues: IPropertyOption[]) => void;
+    isEditable: boolean;
 }
 
 const MultiSelectProperty = (props: Props): JSX.Element => {
-    const {emptyValue, options, values, onChange, onChangeColor, onDeleteOption, onCreate} = props
+    const {propertyTemplate, emptyValue, propertyValue, isEditable, onChange, onChangeColor, onDeleteOption, onCreate} = props
+
+    const values = Array.isArray(propertyValue) ?
+        propertyValue.map((v) => propertyTemplate.options.find((o) => o!.id === v)).filter((v): v is IPropertyOption => Boolean(v)) :
+        []
+
+    if (!isEditable) {
+        return (
+            <div
+                className='octo-property-value'
+                tabIndex={0}
+            >
+                {values.map((v) => (
+                    <Label
+                        key={v.id}
+                        color={v ? v.color : 'empty'}
+                    >
+                        {v.value}
+                    </Label>
+                ))}
+            </div>
+        )
+    }
 
     return (
         <ValueSelector
             isMulti={true}
             emptyValue={emptyValue}
-            options={options}
+            options={propertyTemplate.options}
             value={values}
             onChange={onChange}
             onChangeColor={onChangeColor}
             onDeleteOption={onDeleteOption}
             onDeleteValue={(valueToRemove) => onChange(values.filter((value) => value.id !== valueToRemove.id).map((value) => value.id))}
-            onCreate={onCreate}
+            onCreate={(newValue) => onCreate(newValue, values)}
         />
     )
 }

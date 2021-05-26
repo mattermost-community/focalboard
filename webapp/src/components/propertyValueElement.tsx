@@ -62,46 +62,25 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     }
 
     if (propertyTemplate.type === 'multiSelect') {
-        const values = Array.isArray(propertyValue) ?
-            propertyValue.map((v) => propertyTemplate.options.find((o) => o!.id === v)).filter((v): v is IPropertyOption => Boolean(v)) :
-            []
-
-        if (readOnly || !boardTree) {
-            return (
-                <div
-                    className='octo-property-value'
-                    tabIndex={0}
-                >
-                    {values.map((v) => (
-                        <Label
-                            key={v.id}
-                            color={v ? v.color : 'empty'}
-                        >
-                            {v.value}
-                        </Label>
-                    ))}
-                </div>
-            )
-        }
-
         return (
             <MultiSelectProperty
+                isEditable={!readOnly && Boolean(boardTree)}
                 emptyValue={emptyDisplayValue}
-                options={propertyTemplate.options}
-                values={values}
+                propertyTemplate={propertyTemplate}
+                propertyValue={propertyValue}
                 onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
-                onChangeColor={(option: IPropertyOption, colorId: string) => mutator.changePropertyOptionColor(boardTree.board, propertyTemplate, option, colorId)}
-                onDeleteOption={(option: IPropertyOption) => mutator.deletePropertyOption(boardTree, propertyTemplate, option)}
+                onChangeColor={(option: IPropertyOption, colorId: string) => mutator.changePropertyOptionColor(boardTree!.board, propertyTemplate, option, colorId)}
+                onDeleteOption={(option: IPropertyOption) => mutator.deletePropertyOption(boardTree!, propertyTemplate, option)}
                 onCreate={
-                    async (newValue) => {
+                    async (newValue, currentValues) => {
                         const option: IPropertyOption = {
                             id: Utils.createGuid(),
                             value: newValue,
                             color: 'propColorDefault',
                         }
-                        values.push(option)
-                        await mutator.insertPropertyOption(boardTree, propertyTemplate, option, 'add property option')
-                        mutator.changePropertyValue(card, propertyTemplate.id, values.map((v) => v.id))
+                        currentValues.push(option)
+                        await mutator.insertPropertyOption(boardTree!, propertyTemplate, option, 'add property option')
+                        mutator.changePropertyValue(card, propertyTemplate.id, currentValues.map((v) => v.id))
                     }
                 }
             />
