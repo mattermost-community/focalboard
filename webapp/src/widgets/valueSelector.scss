@@ -21,6 +21,13 @@
         margin-bottom: 0;
     }
 
+    .Label-text {
+        display: inline-block;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        max-width: 250px;
+    }
+
     .value-menu-option {
         display: flex;
         width: 100%;
@@ -41,4 +48,11 @@
             }
         }
     }
+}
+
+.label-container > .Label {
+    max-width: 600px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
 }
