@@ -64,7 +64,7 @@ func TestUpsertSharing(t *testing.T) {
 	th := SetupTestHelper(t)
 
 	container := st.Container{
-		WorkspaceID: "0",
+		WorkspaceID: utils.CreateGUID(),
 	}
 	sharing := model.Sharing{
 		ID:         utils.CreateGUID(),
