@@ -397,14 +397,18 @@ class Mutator {
         const oldBlocks: IBlock[] = [board]
         const newBlocks: IBlock[] = [newBoard]
 
-        // We are going from a select to a multiSelect or multiSelect to select
-        if ((propertyTemplate.type === 'select' && type === 'multiSelect') || (propertyTemplate.type === 'multiSelect' && type === 'select')) {
+        if (propertyTemplate.type === 'select' || propertyTemplate.type === 'multiSelect') { // If the old type was either select or multiselect
+            const isNewTypeSelectOrMulti = type === 'select' || type === 'multiSelect'
+
             for (const card of boardTree.allCards) {
                 const oldValue = Array.isArray(card.properties[propertyTemplate.id]) ?
                     (card.properties[propertyTemplate.id].length > 0 && card.properties[propertyTemplate.id][0]) :
                     card.properties[propertyTemplate.id]
+
                 if (oldValue) {
-                    const newValue = propertyTemplate.options.find((o) => o.id === oldValue)?.id
+                    const newValue = isNewTypeSelectOrMulti ?
+                        propertyTemplate.options.find((o) => o.id === oldValue)?.id :
+                        propertyTemplate.options.find((o) => o.id === oldValue)?.value
                     const newCard = new MutableCard(card)
 
                     if (newValue) {
@@ -417,24 +421,9 @@ class Mutator {
                     newBlocks.push(newCard)
                     oldBlocks.push(card)
                 }
-                newTemplate.options = propertyTemplate.options
-            }
-        } else if (propertyTemplate.type === 'select' || propertyTemplate.type === 'multiSelect') { // If the old type was either select or multiselect
-            // Map select to their values
-            for (const card of boardTree.allCards) {
-                const oldValue = Array.isArray(card.properties[propertyTemplate.id]) ? card.properties[propertyTemplate.id][0] : card.properties[propertyTemplate.id]
-                if (oldValue) {
-                    const newValue = propertyTemplate.options.find((o) => o.id === oldValue)?.value
-                    const newCard = new MutableCard(card)
-                    if (newValue) {
-                        newCard.properties[propertyTemplate.id] = newValue
-                    } else {
-                        // This was an invalid select option, so delete it
-                        delete newCard.properties[propertyTemplate.id]
-                    }
 
-                    newBlocks.push(newCard)
-                    oldBlocks.push(card)
+                if (isNewTypeSelectOrMulti) {
+                    newTemplate.options = propertyTemplate.options
                 }
             }
         } else if (type === 'select' || type === 'multiSelect') { // if the new type is either select or multiselect
