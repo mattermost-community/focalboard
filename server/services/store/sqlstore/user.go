@@ -34,13 +34,11 @@ func (s *SQLStore) getUserByCondition(condition sq.Eq) (*model.User, error) {
 		return nil, err
 	}
 
-	var user *model.User
-
-	if len(users) > 0 {
-		user = users[0]
+	if len(users) == 0 {
+		return nil, nil
 	}
 
-	return user, nil
+	return users[0], nil
 }
 
 func (s *SQLStore) getUsersByCondition(condition sq.Eq) ([]*model.User, error) {

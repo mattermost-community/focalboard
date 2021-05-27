@@ -1152,6 +1152,13 @@ func (a *API) getWorkspaceUsers(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	workspaceID := vars["workspaceID"]
 
+	ctx := r.Context()
+	session := ctx.Value("session").(*model.Session)
+	if !a.app().DoesUserHaveWorkspaceAccess(session.UserID, workspaceID) {
+		errorResponse(w, http.StatusForbidden, "Access denied to workspace", errors.New("Access denied to workspace"))
+		return
+	}
+
 	users, err := a.app().GetWorkspaceUsers(workspaceID)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, "", err)
