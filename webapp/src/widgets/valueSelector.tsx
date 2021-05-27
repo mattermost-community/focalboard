@@ -138,7 +138,7 @@ function ValueSelector(props: Props): JSX.Element {
                     ...provided,
                     margin: 0,
                     padding: 0,
-                    background: 'rgb(var(--main-bg))',
+                    backgroundColor: 'transparent',
                 }),
                 multiValueLabel: (provided: CSSObject): CSSObject => ({
                     ...provided,

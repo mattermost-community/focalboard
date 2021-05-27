@@ -55,4 +55,13 @@
     overflow: hidden;
     text-overflow: ellipsis;
     display: inline-block;
+
+    
+}
+
+.octo-property-value > .Label {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
 }
