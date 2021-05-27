@@ -24,6 +24,12 @@
 	},
 	"dependencies": {
 		"emoji-mart": "^3.0.1",
+		"imagemin-gifsicle": "^7.0.0",
+		"imagemin-mozjpeg": "^9.0.0",
+		"imagemin-optipng": "^8.0.0",
+		"imagemin-pngquant": "^9.0.2",
+		"imagemin-svgo": "^8.0.0",
+		"imagemin-webp": "^6.0.0",
 		"marked": ">=2.0.1",
 		"moment": "^2.29.1",
 		"nanoevents": "^5.1.13",
