@@ -101,7 +101,6 @@ h1 {
     line-height: 40px;
     margin: 0 0 10px 0;
     font-weight: 600;
-    display: inline-block;
 }
 
 /* App frame */
@@ -123,26 +122,6 @@ h1 {
 }
 
 /* Main app */
-
-.octo-app {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    overflow: auto;
-}
-
-.octo-frame {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    overflow: scroll;
-
-    padding: 24px 80px 8px;
-
-    @media screen and (max-width: 768px) {
-        padding: 8px 40px;
-    }
-}
 
 .dragover {
     background-color: rgba(128, 192, 255, 0.4);
