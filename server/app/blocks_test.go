@@ -28,7 +28,16 @@ func TestGetParentID(t *testing.T) {
 	sessionToken := "TESTTOKEN"
 	wsserver := ws.NewServer(auth, sessionToken, false, logger)
 	webhook := webhook.NewClient(&cfg, logger)
-	app := New(&cfg, store, auth, wsserver, &mocks.FileBackend{}, webhook, logger)
+
+	appServices := AppServices{
+		Auth:         auth,
+		Store:        store,
+		FilesBackend: &mocks.FileBackend{},
+		Webhook:      webhook,
+		Logger:       logger,
+	}
+
+	app := New(&cfg, wsserver, appServices)
 
 	container := st.Container{
 		WorkspaceID: "0",

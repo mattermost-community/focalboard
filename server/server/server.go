@@ -103,7 +103,24 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 
 	webhookClient := webhook.NewClient(cfg, logger)
 
-	appBuilder := func() *app.App { return app.New(cfg, db, authenticator, wsServer, filesBackend, webhookClient, logger) }
+	instanceInfo := metrics.InstanceInfo{
+		Version:        appModel.CurrentVersion,
+		BuildNum:       appModel.BuildNumber,
+		Edition:        appModel.Edition,
+		InstallationID: os.Getenv("MM_CLOUD_INSTALLATION_ID"),
+	}
+	metricsInstrumentor := metrics.NewMetrics(instanceInfo)
+
+	appServices := app.AppServices{
+		Auth:         authenticator,
+		Store:        db,
+		FilesBackend: filesBackend,
+		Webhook:      webhookClient,
+		Metrics:      metricsInstrumentor,
+		Logger:       logger,
+	}
+
+	appBuilder := func() *app.App { return app.New(cfg, wsServer, appServices) }
 	focalboardAPI := api.NewAPI(appBuilder, singleUserToken, cfg.AuthMode, logger)
 
 	// Local router for admin APIs
@@ -183,13 +200,6 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 		}
 	})
 
-	instanceInfo := metrics.InstanceInfo{
-		Version:        appModel.CurrentVersion,
-		BuildNum:       appModel.BuildNumber,
-		Edition:        appModel.Edition,
-		InstallationID: os.Getenv("MM_CLOUD_INSTALLATION_ID"),
-	}
-
 	server := Server{
 		config:              cfg,
 		wsServer:            wsServer,
@@ -198,7 +208,7 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 		filesBackend:        filesBackend,
 		telemetry:           telemetryService,
 		metricsServer:       metrics.NewMetricsServer(cfg.PrometheusAddress),
-		metricsInstrumentor: metrics.NewMetrics(instanceInfo),
+		metricsInstrumentor: metricsInstrumentor,
 		logger:              logger,
 		localRouter:         localRouter,
 		api:                 focalboardAPI,

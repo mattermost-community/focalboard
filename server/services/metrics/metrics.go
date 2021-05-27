@@ -45,7 +45,7 @@ type Metrics struct {
 	blockLastActivity *prometheus.GaugeVec
 }
 
-// NewMetrics Factory method to create a new instrumentator
+// NewMetrics Factory method to create a new metrics collector
 func NewMetrics(info InstanceInfo) *Metrics {
 	m := &Metrics{}
 
