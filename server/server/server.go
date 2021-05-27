@@ -19,8 +19,8 @@ import (
 	"github.com/mattermost/focalboard/server/context"
 	appModel "github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/config"
+	"github.com/mattermost/focalboard/server/services/metrics"
 	"github.com/mattermost/focalboard/server/services/mlog"
-	"github.com/mattermost/focalboard/server/services/prometheus"
 	"github.com/mattermost/focalboard/server/services/scheduler"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
@@ -51,8 +51,8 @@ type Server struct {
 	telemetry           *telemetry.Service
 	logger              *mlog.Logger
 	cleanUpSessionsTask *scheduler.ScheduledTask
-	promServer          *prometheus.Service
-	promInstrumentor    *prometheus.Instrumentor
+	metricsServer       *metrics.Service
+	metricsInstrumentor *metrics.Metrics
 
 	localRouter     *mux.Router
 	localModeServer *http.Server
@@ -183,19 +183,26 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 		}
 	})
 
+	instanceInfo := metrics.InstanceInfo{
+		Version:        appModel.CurrentVersion,
+		BuildNum:       appModel.BuildNumber,
+		Edition:        appModel.Edition,
+		InstallationID: os.Getenv("MM_CLOUD_INSTALLATION_ID"),
+	}
+
 	server := Server{
-		config:           cfg,
-		wsServer:         wsServer,
-		webServer:        webServer,
-		store:            db,
-		filesBackend:     filesBackend,
-		telemetry:        telemetryService,
-		promServer:       prometheus.New(cfg.PrometheusAddress),
-		promInstrumentor: prometheus.NewInstrumentor(appModel.CurrentVersion),
-		logger:           logger,
-		localRouter:      localRouter,
-		api:              focalboardAPI,
-		appBuilder:       appBuilder,
+		config:              cfg,
+		wsServer:            wsServer,
+		webServer:           webServer,
+		store:               db,
+		filesBackend:        filesBackend,
+		telemetry:           telemetryService,
+		metricsServer:       metrics.NewMetricsServer(cfg.PrometheusAddress),
+		metricsInstrumentor: metrics.NewMetrics(instanceInfo),
+		logger:              logger,
+		localRouter:         localRouter,
+		api:                 focalboardAPI,
+		appBuilder:          appBuilder,
 	}
 
 	server.initHandlers()
@@ -233,15 +240,13 @@ func (s *Server) Start() error {
 	var group run.Group
 	if s.config.PrometheusAddress != "" {
 		group.Add(func() error {
-			if err := s.promServer.Run(); err != nil {
+			if err := s.metricsServer.Run(); err != nil {
 				return errors.Wrap(err, "PromServer Run")
 			}
 			return nil
 		}, func(error) {
-			s.promServer.Shutdown()
+			s.metricsServer.Shutdown()
 		})
-		// expose the build info as metric
-		s.promInstrumentor.ExposeBuildInfo()
 
 		if err := group.Run(); err != nil {
 			return err

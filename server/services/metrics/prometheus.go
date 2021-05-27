@@ -1,4 +1,4 @@
-package prometheus
+package metrics
 
 import (
 	"net/http"
@@ -12,8 +12,8 @@ type Service struct {
 	*http.Server
 }
 
-// New Factory method to create a new prometheus server
-func New(address string) *Service {
+// NewMetricsServer factory method to create a new prometheus server
+func NewMetricsServer(address string) *Service {
 	return &Service{
 		&http.Server{
 			Addr:    address,
