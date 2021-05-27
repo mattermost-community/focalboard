@@ -108,6 +108,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         return (
             <UserProperty
                 value={propertyValue}
+                readonly={readOnly}
                 onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
             />
         )

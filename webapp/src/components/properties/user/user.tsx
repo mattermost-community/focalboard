@@ -12,6 +12,7 @@ import {getSelectBaseStyle} from '../../../theme'
 
 type Props = {
     value: string,
+    readonly: boolean,
     onChange: (value: string) => void,
 }
 
@@ -35,13 +36,17 @@ const UserProperty = (props: Props): JSX.Element => {
         value = users.find((user) => user.id === props.value)
     }
 
+    if (props.readonly) {
+        return (<div className='UserProperty octo-propertyvalue'>{value ? value.username : props.value}</div>)
+    }
+
     return (
         <Select
             options={users}
             isSearchable={true}
             isClearable={true}
             backspaceRemovesValue={true}
-            className={'user-picker'}
+            className={'UserProperty'}
             styles={getSelectBaseStyle()}
             getOptionLabel={(o: IUser) => o.username}
             getOptionValue={(a: IUser) => a.id}
