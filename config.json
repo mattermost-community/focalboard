@@ -8,18 +8,15 @@
 	"test_dbconfig": "file::memory:?cache=shared",
 	"useSSL": false,
 	"webpath": "./webapp/pack",
+	"filesdriver": "local",
 	"filespath": "./files",
 	"telemetry": true,
 	"prometheus_address": ":9092",
 	"webhook_update": [],
-	"secret": "this-is-a-secret-string",
 	"session_expire_time": 2592000,
 	"session_refresh_time": 18000,
 	"localOnly": false,
 	"enableLocalMode": true,
 	"localModeSocketLocation": "/var/tmp/focalboard_local.socket",
-	"authMode": "native",
-	"mattermostURL": "",
-	"mattermostClientID": "",
-	"mattermostClientSecret": ""
+	"authMode": "native"
 }

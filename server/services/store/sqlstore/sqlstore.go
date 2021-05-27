@@ -18,6 +18,7 @@ type SQLStore struct {
 	db          *sql.DB
 	dbType      string
 	tablePrefix string
+	connectionString string
 }
 
 // New creates a new SQL implementation of the store.
@@ -40,9 +41,10 @@ func New(dbType, connectionString string, tablePrefix string) (*SQLStore, error)
 	}
 
 	store := &SQLStore{
-		db:          db,
-		dbType:      dbType,
-		tablePrefix: tablePrefix,
+		db:               db,
+		dbType:           dbType,
+		tablePrefix:      tablePrefix,
+		connectionString: connectionString,
 	}
 
 	err = store.Migrate()

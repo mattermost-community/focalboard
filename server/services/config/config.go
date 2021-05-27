@@ -11,31 +11,43 @@ const (
 	DefaultPort       = 8000
 )
 
+type AmazonS3Config struct {
+	AccessKeyId     string
+	SecretAccessKey string
+	Bucket          string
+	PathPrefix      string
+	Region          string
+	Endpoint        string
+	SSL             bool
+	SignV2          bool
+	SSE             bool
+	Trace           bool
+}
+
 // Configuration is the app configuration stored in a json file.
 type Configuration struct {
-	ServerRoot              string   `json:"serverRoot" mapstructure:"serverRoot"`
-	Port                    int      `json:"port" mapstructure:"port"`
-	DBType                  string   `json:"dbtype" mapstructure:"dbtype"`
-	DBConfigString          string   `json:"dbconfig" mapstructure:"dbconfig"`
-	DBTablePrefix           string   `json:"dbtableprefix" mapstructure:"dbtableprefix"`
-	UseSSL                  bool     `json:"useSSL" mapstructure:"useSSL"`
-	SecureCookie            bool     `json:"secureCookie" mapstructure:"secureCookie"`
-	WebPath                 string   `json:"webpath" mapstructure:"webpath"`
-	FilesPath               string   `json:"filespath" mapstructure:"filespath"`
-	Telemetry               bool     `json:"telemetry" mapstructure:"telemetry"`
-	PrometheusAddress       string   `json:"prometheus_address" mapstructure:"prometheus_address"`
-	WebhookUpdate           []string `json:"webhook_update" mapstructure:"webhook_update"`
-	Secret                  string   `json:"secret" mapstructure:"secret"`
-	SessionExpireTime       int64    `json:"session_expire_time" mapstructure:"session_expire_time"`
-	SessionRefreshTime      int64    `json:"session_refresh_time" mapstructure:"session_refresh_time"`
-	LocalOnly               bool     `json:"localonly" mapstructure:"localonly"`
-	EnableLocalMode         bool     `json:"enableLocalMode" mapstructure:"enableLocalMode"`
-	LocalModeSocketLocation string   `json:"localModeSocketLocation" mapstructure:"localModeSocketLocation"`
+	ServerRoot              string         `json:"serverRoot" mapstructure:"serverRoot"`
+	Port                    int            `json:"port" mapstructure:"port"`
+	DBType                  string         `json:"dbtype" mapstructure:"dbtype"`
+	DBConfigString          string         `json:"dbconfig" mapstructure:"dbconfig"`
+	DBTablePrefix           string         `json:"dbtableprefix" mapstructure:"dbtableprefix"`
+	UseSSL                  bool           `json:"useSSL" mapstructure:"useSSL"`
+	SecureCookie            bool           `json:"secureCookie" mapstructure:"secureCookie"`
+	WebPath                 string         `json:"webpath" mapstructure:"webpath"`
+	FilesDriver             string         `json:"filesdriver" mapstructure:"filesdriver"`
+	FilesS3Config           AmazonS3Config `json:"filess3config" mapstructure:"filess3config"`
+	FilesPath               string         `json:"filespath" mapstructure:"filespath"`
+	Telemetry               bool           `json:"telemetry" mapstructure:"telemetry"`
+	PrometheusAddress       string         `json:"prometheus_address" mapstructure:"prometheus_address"`
+	WebhookUpdate           []string       `json:"webhook_update" mapstructure:"webhook_update"`
+	Secret                  string         `json:"secret" mapstructure:"secret"`
+	SessionExpireTime       int64          `json:"session_expire_time" mapstructure:"session_expire_time"`
+	SessionRefreshTime      int64          `json:"session_refresh_time" mapstructure:"session_refresh_time"`
+	LocalOnly               bool           `json:"localonly" mapstructure:"localonly"`
+	EnableLocalMode         bool           `json:"enableLocalMode" mapstructure:"enableLocalMode"`
+	LocalModeSocketLocation string         `json:"localModeSocketLocation" mapstructure:"localModeSocketLocation"`
 
-	AuthMode               string `json:"authMode" mapstructure:"authMode"`
-	MattermostURL          string `json:"mattermostURL" mapstructure:"mattermostURL"`
-	MattermostClientID     string `json:"mattermostClientID" mapstructure:"mattermostClientID"`
-	MattermostClientSecret string `json:"mattermostClientSecret" mapstructure:"mattermostClientSecret"`
+	AuthMode string `json:"authMode" mapstructure:"authMode"`
 }
 
 // ReadConfigFile read the configuration from the filesystem.
@@ -53,6 +65,7 @@ func ReadConfigFile() (*Configuration, error) {
 	viper.SetDefault("SecureCookie", false)
 	viper.SetDefault("WebPath", "./pack")
 	viper.SetDefault("FilesPath", "./files")
+	viper.SetDefault("FilesDriver", "local")
 	viper.SetDefault("Telemetry", true)
 	viper.SetDefault("WebhookUpdate", nil)
 	viper.SetDefault("SessionExpireTime", 60*60*24*30) // 30 days session lifetime
@@ -83,9 +96,5 @@ func ReadConfigFile() (*Configuration, error) {
 
 func removeSecurityData(config Configuration) Configuration {
 	clean := config
-	clean.Secret = "hidden"
-	clean.MattermostClientID = "hidden"
-	clean.MattermostClientSecret = "hidden"
-
 	return clean
 }

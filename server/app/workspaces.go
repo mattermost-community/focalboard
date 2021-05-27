@@ -33,7 +33,7 @@ func (a *App) GetRootWorkspace() (*model.Workspace, error) {
 	return workspace, nil
 }
 
-func (a *App) getWorkspace(ID string) (*model.Workspace, error) {
+func (a *App) GetWorkspace(ID string) (*model.Workspace, error) {
 	workspace, err := a.store.GetWorkspace(ID)
 	if err == sql.ErrNoRows {
 		return nil, nil
@@ -42,6 +42,10 @@ func (a *App) getWorkspace(ID string) (*model.Workspace, error) {
 		return nil, err
 	}
 	return workspace, nil
+}
+
+func (a *App) DoesUserHaveWorkspaceAccess(userID string, workspaceID string) bool {
+	return a.auth.DoesUserHaveWorkspaceAccess(userID, workspaceID)
 }
 
 func (a *App) UpsertWorkspaceSettings(workspace model.Workspace) error {

@@ -15,27 +15,36 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 )
 
-type WorkspaceAuthenticator interface {
-	DoesUserHaveWorkspaceAccess(session *model.Session, workspaceID string) bool
-}
-
 // IsValidSessionToken authenticates session tokens
 type IsValidSessionToken func(token string) bool
 
+type Hub interface {
+	SendWSMessage(data []byte)
+	SetReceiveWSMessage(func(data []byte))
+}
+
 // Server is a WebSocket server.
 type Server struct {
-	upgrader               websocket.Upgrader
-	listeners              map[string][]*websocket.Conn
-	mu                     sync.RWMutex
-	auth                   *auth.Auth
-	singleUserToken        string
-	WorkspaceAuthenticator WorkspaceAuthenticator
+	upgrader         websocket.Upgrader
+	listeners        map[string][]*websocket.Conn
+	mu               sync.RWMutex
+	auth             *auth.Auth
+	hub              Hub
+	singleUserToken  string
+	isMattermostAuth bool
 }
 
 // UpdateMsg is sent on block updates
 type UpdateMsg struct {
 	Action string      `json:"action"`
 	Block  model.Block `json:"block"`
+}
+
+// clusterUpdateMsg is sent on block updates
+type clusterUpdateMsg struct {
+	UpdateMsg
+	BlockID     string `json:"block_id"`
+	WorkspaceID string `json:"workspace_id"`
 }
 
 // ErrorMsg is sent on errors
@@ -59,7 +68,7 @@ type websocketSession struct {
 }
 
 // NewServer creates a new Server.
-func NewServer(auth *auth.Auth, singleUserToken string) *Server {
+func NewServer(auth *auth.Auth, singleUserToken string, isMattermostAuth bool) *Server {
 	return &Server{
 		listeners: make(map[string][]*websocket.Conn),
 		upgrader: websocket.Upgrader{
@@ -67,8 +76,9 @@ func NewServer(auth *auth.Auth, singleUserToken string) *Server {
 				return true
 			},
 		},
-		auth:            auth,
-		singleUserToken: singleUserToken,
+		auth:             auth,
+		singleUserToken:  singleUserToken,
+		isMattermostAuth: isMattermostAuth,
 	}
 }
 
@@ -85,10 +95,6 @@ func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	// TODO: Auth
-
-	log.Printf("CONNECT WebSocket onChange, client: %s", client.RemoteAddr())
-
 	// Make sure we close the connection when the function returns
 	defer func() {
 		log.Printf("DISCONNECT WebSocket onChange, client: %s", client.RemoteAddr())
@@ -99,9 +105,14 @@ func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request
 		client.Close()
 	}()
 
+	userID := ""
+	if ws.isMattermostAuth {
+		userID = r.Header.Get("Mattermost-User-Id")
+	}
+
 	wsSession := websocketSession{
 		client:          client,
-		isAuthenticated: false,
+		isAuthenticated: userID != "",
 	}
 
 	// Simple message handling loop
@@ -124,19 +135,25 @@ func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request
 			continue
 		}
 
+		if userID != "" {
+			if ws.auth.DoesUserHaveWorkspaceAccess(userID, command.WorkspaceID) {
+				wsSession.workspaceID = command.WorkspaceID
+			} else {
+				log.Printf(`ERROR User doesn't have permissions to read the workspace: %s`, command.WorkspaceID)
+				continue
+			}
+		}
+
 		switch command.Action {
 		case "AUTH":
 			log.Printf(`Command: AUTH, client: %s`, client.RemoteAddr())
 			ws.authenticateListener(&wsSession, command.WorkspaceID, command.Token)
-
 		case "ADD":
 			log.Printf(`Command: Add workspaceID: %s, blockIDs: %v, client: %s`, wsSession.workspaceID, command.BlockIDs, client.RemoteAddr())
 			ws.addListener(&wsSession, &command)
-
 		case "REMOVE":
 			log.Printf(`Command: Remove workspaceID: %s, blockID: %v, client: %s`, wsSession.workspaceID, command.BlockIDs, client.RemoteAddr())
 			ws.removeListenerFromBlocks(&wsSession, &command)
-
 		default:
 			log.Printf(`ERROR webSocket command, invalid action: %v`, command.Action)
 		}
@@ -154,13 +171,7 @@ func (ws *Server) isValidSessionToken(token, workspaceID string) bool {
 	}
 
 	// Check workspace permission
-	if ws.WorkspaceAuthenticator != nil {
-		if !ws.WorkspaceAuthenticator.DoesUserHaveWorkspaceAccess(session, workspaceID) {
-			return false
-		}
-	}
-
-	return true
+	return ws.auth.DoesUserHaveWorkspaceAccess(session.UserID, workspaceID)
 }
 
 func (ws *Server) authenticateListener(wsSession *websocketSession, workspaceID, token string) {
@@ -301,6 +312,38 @@ func sendError(conn *websocket.Conn, message string) {
 	}
 }
 
+func (ws *Server) SetHub(hub Hub) {
+	ws.hub = hub
+	ws.hub.SetReceiveWSMessage(func(data []byte) {
+		var msg clusterUpdateMsg
+		err := json.Unmarshal(data, &msg)
+		if err != nil {
+			log.Printf("unable to unmarshal cluster message")
+			return
+		}
+
+		listeners := ws.getListeners(msg.WorkspaceID, msg.BlockID)
+		log.Printf("%d listener(s) for blockID: %s", len(listeners), msg.BlockID)
+
+		message := UpdateMsg{
+			Action: msg.Action,
+			Block:  msg.Block,
+		}
+
+		if listeners != nil {
+			for _, listener := range listeners {
+				log.Printf("Broadcast change, workspaceID: %s, blockID: %s, remoteAddr: %s", msg.WorkspaceID, msg.BlockID, listener.RemoteAddr())
+
+				err := listener.WriteJSON(message)
+				if err != nil {
+					log.Printf("broadcast error: %v", err)
+					listener.Close()
+				}
+			}
+		}
+	})
+}
+
 // getListeners returns the listeners to a blockID's changes.
 func (ws *Server) getListeners(workspaceID string, blockID string) []*websocket.Conn {
 	ws.mu.Lock()
@@ -331,12 +374,19 @@ func (ws *Server) BroadcastBlockChange(workspaceID string, block model.Block) {
 		listeners := ws.getListeners(workspaceID, blockID)
 		log.Printf("%d listener(s) for blockID: %s", len(listeners), blockID)
 
-		if listeners != nil {
-			message := UpdateMsg{
-				Action: "UPDATE_BLOCK",
-				Block:  block,
+		message := UpdateMsg{
+			Action: "UPDATE_BLOCK",
+			Block:  block,
+		}
+		if ws.hub != nil {
+			data, err := json.Marshal(clusterUpdateMsg{UpdateMsg: message, WorkspaceID: workspaceID, BlockID: blockID})
+			if err != nil {
+				log.Printf("unable to serialize websocket message %v with the error: %v", message, err)
 			}
+			ws.hub.SendWSMessage(data)
+		}
 
+		if listeners != nil {
 			for _, listener := range listeners {
 				log.Printf("Broadcast change, workspaceID: %s, blockID: %s, remoteAddr: %s", workspaceID, blockID, listener.RemoteAddr())
 
