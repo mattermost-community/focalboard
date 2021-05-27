@@ -45,7 +45,7 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
     if (meta.context === 'value') {
         return (
             <Label color={option.color}>
-                <span className="Label-text">{option.value}</span>
+                <span className='Label-text'>{option.value}</span>
                 {onDeleteValue &&
                     <IconButton
                         onClick={() => onDeleteValue(option)}
