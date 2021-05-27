@@ -18,7 +18,15 @@
         overflow: hidden;
         border-radius: var(--default-rad);
         max-width: 100%;
-        margin-bottom: 0;
+    }
+
+    .Label-no-padding {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .Label-single-select {
+        margin-bottom: 0px;
     }
 
     .Label-text {
