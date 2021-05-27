@@ -44,7 +44,10 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
     const intl = useIntl()
     if (meta.context === 'value') {
         return (
-            <Label color={option.color} classNames={`${onDeleteValue ? 'Label-no-padding' : 'Label-single-select'}`}>
+            <Label
+                color={option.color}
+                classNames={`${onDeleteValue ? 'Label-no-padding' : 'Label-single-select'}`}
+            >
                 <span className='Label-text'>{option.value}</span>
                 {onDeleteValue &&
                     <IconButton
