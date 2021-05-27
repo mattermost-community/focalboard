@@ -1,8 +1,48 @@
 .CenterPanel {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+
     .octo-board {
         flex: 0 1 auto;
 
         display: flex;
         flex-direction: column;
+    }
+}
+
+
+.BoardComponent {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+
+    > * {
+                
+        padding: 0 80px;
+
+        @media screen and (max-width: 768px) {
+            padding: 0 40px;
+        }
+
+        &:first-child {
+            padding-top: 24px;
+            @media screen and (max-width: 768px) {
+                padding: 0 8px;
+            }
+        }
+
+        &:last-child {
+            padding-bottom: 8px;
+        }
+    }
+
+    > .top-head {
+        position: sticky;
+        top: 0;
+        left: 0;
+        background: rgb(var(--main-bg));
+        z-index: 100;
     }
 }
