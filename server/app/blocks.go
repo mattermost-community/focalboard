@@ -98,3 +98,7 @@ func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) 
 
 	return nil
 }
+
+func (a *App) GetBlockCountsByType() (map[string]int64, error) {
+	return a.store.GetBlockCountsByType()
+}

@@ -119,8 +119,8 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 		Metrics:      metricsInstrumentor,
 		Logger:       logger,
 	}
-
 	appBuilder := func() *app.App { return app.New(cfg, wsServer, appServices) }
+
 	focalboardAPI := api.NewAPI(appBuilder, singleUserToken, cfg.AuthMode, logger)
 
 	// Local router for admin APIs
@@ -137,68 +137,27 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 	webServer.AddRoutes(wsServer)
 	webServer.AddRoutes(focalboardAPI)
 
-	// Init telemetry
 	settings, err := db.GetSystemSettings()
 	if err != nil {
 		return nil, err
 	}
 
+	// Init telemetry
 	telemetryID := settings["TelemetryID"]
-
 	if len(telemetryID) == 0 {
 		telemetryID = uuid.New().String()
 		if err = db.SetSystemSetting("TelemetryID", uuid.New().String()); err != nil {
 			return nil, err
 		}
 	}
-
-	registeredUserCount, err := appBuilder().GetRegisteredUserCount()
-	if err != nil {
-		return nil, err
+	telemetryOpts := telemetryOptions{
+		app:         appBuilder(),
+		cfg:         cfg,
+		telemetryID: telemetryID,
+		logger:      logger,
+		singleUser:  len(singleUserToken) > 0,
 	}
-
-	dailyActiveUsers, err := appBuilder().GetDailyActiveUsers()
-	if err != nil {
-		return nil, err
-	}
-
-	weeklyActiveUsers, err := appBuilder().GetWeeklyActiveUsers()
-	if err != nil {
-		return nil, err
-	}
-
-	monthlyActiveUsers, err := appBuilder().GetMonthlyActiveUsers()
-	if err != nil {
-		return nil, err
-	}
-
-	telemetryService := telemetry.New(telemetryID, logger.StdLogger(mlog.Telemetry))
-	telemetryService.RegisterTracker("server", func() map[string]interface{} {
-		return map[string]interface{}{
-			"version":          appModel.CurrentVersion,
-			"build_number":     appModel.BuildNumber,
-			"build_hash":       appModel.BuildHash,
-			"edition":          appModel.Edition,
-			"operating_system": runtime.GOOS,
-		}
-	})
-	telemetryService.RegisterTracker("config", func() map[string]interface{} {
-		return map[string]interface{}{
-			"serverRoot":  cfg.ServerRoot == config.DefaultServerRoot,
-			"port":        cfg.Port == config.DefaultPort,
-			"useSSL":      cfg.UseSSL,
-			"dbType":      cfg.DBType,
-			"single_user": len(singleUserToken) > 0,
-		}
-	})
-	telemetryService.RegisterTracker("activity", func() map[string]interface{} {
-		return map[string]interface{}{
-			"registered_users":     registeredUserCount,
-			"daily_active_users":   dailyActiveUsers,
-			"weekly_active_users":  weeklyActiveUsers,
-			"monthly_active_users": monthlyActiveUsers,
-		}
-	})
+	telemetryService := initTelemetry(telemetryOpts)
 
 	server := Server{
 		config:              cfg,
@@ -339,4 +298,82 @@ func (s *Server) GetRootRouter() *mux.Router {
 
 func (s *Server) SetWSHub(hub ws.Hub) {
 	s.wsServer.SetHub(hub)
+}
+
+type telemetryOptions struct {
+	app         *app.App
+	cfg         *config.Configuration
+	telemetryID string
+	logger      *mlog.Logger
+	singleUser  bool
+}
+
+func initTelemetry(opts telemetryOptions) *telemetry.Service {
+	telemetryService := telemetry.New(opts.telemetryID, opts.logger)
+
+	telemetryService.RegisterTracker("server", func() (telemetry.Tracker, error) {
+		return map[string]interface{}{
+			"version":          appModel.CurrentVersion,
+			"build_number":     appModel.BuildNumber,
+			"build_hash":       appModel.BuildHash,
+			"edition":          appModel.Edition,
+			"operating_system": runtime.GOOS,
+		}, nil
+	})
+	telemetryService.RegisterTracker("config", func() (telemetry.Tracker, error) {
+		return map[string]interface{}{
+			"serverRoot":  opts.cfg.ServerRoot == config.DefaultServerRoot,
+			"port":        opts.cfg.Port == config.DefaultPort,
+			"useSSL":      opts.cfg.UseSSL,
+			"dbType":      opts.cfg.DBType,
+			"single_user": opts.singleUser,
+		}, nil
+	})
+	telemetryService.RegisterTracker("activity", func() (telemetry.Tracker, error) {
+		m := make(map[string]interface{})
+		var count int
+		var err error
+		if count, err = opts.app.GetRegisteredUserCount(); err != nil {
+			return nil, err
+		}
+		m["registered_users"] = count
+
+		if count, err = opts.app.GetDailyActiveUsers(); err != nil {
+			return nil, err
+		}
+		m["daily_active_users"] = count
+
+		if count, err = opts.app.GetWeeklyActiveUsers(); err != nil {
+			return nil, err
+		}
+		m["weekly_active_users"] = count
+
+		if count, err = opts.app.GetMonthlyActiveUsers(); err != nil {
+			return nil, err
+		}
+		m["monthly_active_users"] = count
+		return m, nil
+	})
+	telemetryService.RegisterTracker("blocks", func() (telemetry.Tracker, error) {
+		blockCounts, err := opts.app.GetBlockCountsByType()
+		if err != nil {
+			return nil, err
+		}
+		m := make(map[string]interface{})
+		for k, v := range blockCounts {
+			m[k] = v
+		}
+		return m, nil
+	})
+	telemetryService.RegisterTracker("workspaces", func() (telemetry.Tracker, error) {
+		count, err := opts.app.GetWorkspaceCount()
+		if err != nil {
+			return nil, err
+		}
+		m := map[string]interface{}{
+			"workspaces": count,
+		}
+		return m, nil
+	})
+	return telemetryService
 }
