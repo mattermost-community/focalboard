@@ -37,6 +37,7 @@ import (
 
 const (
 	cleanupSessionTaskFrequency = 10 * time.Minute
+	updateMetricsTaskFrequency  = 1 * time.Hour
 
 	//nolint:gomnd
 	minSessionExpiryTime = int64(60 * 60 * 24 * 31) // 31 days
@@ -52,7 +53,8 @@ type Server struct {
 	logger              *mlog.Logger
 	cleanUpSessionsTask *scheduler.ScheduledTask
 	metricsServer       *metrics.Service
-	metricsInstrumentor *metrics.Metrics
+	metricsService      *metrics.Metrics
+	metricsUpdaterTask  *scheduler.ScheduledTask
 
 	localRouter     *mux.Router
 	localModeServer *http.Server
@@ -103,20 +105,21 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 
 	webhookClient := webhook.NewClient(cfg, logger)
 
+	// Init metrics
 	instanceInfo := metrics.InstanceInfo{
 		Version:        appModel.CurrentVersion,
 		BuildNum:       appModel.BuildNumber,
 		Edition:        appModel.Edition,
 		InstallationID: os.Getenv("MM_CLOUD_INSTALLATION_ID"),
 	}
-	metricsInstrumentor := metrics.NewMetrics(instanceInfo)
+	metricsService := metrics.NewMetrics(instanceInfo)
 
 	appServices := app.AppServices{
 		Auth:         authenticator,
 		Store:        db,
 		FilesBackend: filesBackend,
 		Webhook:      webhookClient,
-		Metrics:      metricsInstrumentor,
+		Metrics:      metricsService,
 		Logger:       logger,
 	}
 	appBuilder := func() *app.App { return app.New(cfg, wsServer, appServices) }
@@ -160,18 +163,18 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 	telemetryService := initTelemetry(telemetryOpts)
 
 	server := Server{
-		config:              cfg,
-		wsServer:            wsServer,
-		webServer:           webServer,
-		store:               db,
-		filesBackend:        filesBackend,
-		telemetry:           telemetryService,
-		metricsServer:       metrics.NewMetricsServer(cfg.PrometheusAddress),
-		metricsInstrumentor: metricsInstrumentor,
-		logger:              logger,
-		localRouter:         localRouter,
-		api:                 focalboardAPI,
-		appBuilder:          appBuilder,
+		config:         cfg,
+		wsServer:       wsServer,
+		webServer:      webServer,
+		store:          db,
+		filesBackend:   filesBackend,
+		telemetry:      telemetryService,
+		metricsServer:  metrics.NewMetricsServer(cfg.PrometheusAddress),
+		metricsService: metricsService,
+		logger:         logger,
+		localRouter:    localRouter,
+		api:            focalboardAPI,
+		appBuilder:     appBuilder,
 	}
 
 	server.initHandlers()
@@ -200,6 +203,24 @@ func (s *Server) Start() error {
 			s.logger.Error("Unable to clean up the sessions", mlog.Err(err))
 		}
 	}, cleanupSessionTaskFrequency)
+
+	s.metricsUpdaterTask = scheduler.CreateRecurringTask("updateMetrics", func() {
+		blockCounts, err := s.appBuilder().GetBlockCountsByType()
+		if err != nil {
+			s.logger.Error("Error updating metrics", mlog.String("group", "blocks"), mlog.Err(err))
+			return
+		}
+		for blockType, count := range blockCounts {
+			s.metricsService.ObserveBlockCount(blockType, count)
+		}
+		workspaceCount, err := s.appBuilder().GetWorkspaceCount()
+		if err != nil {
+			s.logger.Error("Error updating metrics", mlog.String("group", "workspaces"), mlog.Err(err))
+			return
+		}
+		s.metricsService.ObserveWorkspaceCount(workspaceCount)
+
+	}, updateMetricsTaskFrequency)
 
 	if s.config.Telemetry {
 		firstRun := utils.MillisFromTime(time.Now())
@@ -233,6 +254,10 @@ func (s *Server) Shutdown() error {
 
 	if s.cleanUpSessionsTask != nil {
 		s.cleanUpSessionsTask.Cancel()
+	}
+
+	if s.metricsUpdaterTask != nil {
+		s.metricsUpdaterTask.Cancel()
 	}
 
 	if err := s.telemetry.Shutdown(); err != nil {
