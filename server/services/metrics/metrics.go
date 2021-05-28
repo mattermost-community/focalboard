@@ -32,17 +32,13 @@ type Metrics struct {
 	loginCount     prometheus.Counter
 	loginFailCount prometheus.Counter
 
-	blocksInsertedCount *prometheus.CounterVec
-	blocksUpdatedCount  *prometheus.CounterVec
-	blocksDeletedCount  *prometheus.CounterVec
-
-	workspaceAdded   prometheus.Counter
-	workspaceRemoved prometheus.Counter
+	blocksInsertedCount prometheus.Counter
+	blocksDeletedCount  prometheus.Counter
 
 	blockCount     *prometheus.GaugeVec
 	workspaceCount prometheus.Gauge
 
-	blockLastActivity *prometheus.GaugeVec
+	blockLastActivity prometheus.Gauge
 }
 
 // NewMetrics Factory method to create a new metrics collector
@@ -99,50 +95,23 @@ func NewMetrics(info InstanceInfo) *Metrics {
 	m.startTime.SetToCurrentTime()
 	m.registry.MustRegister(m.startTime)
 
-	m.blocksInsertedCount = prometheus.NewCounterVec(prometheus.CounterOpts{
+	m.blocksInsertedCount = prometheus.NewCounter(prometheus.CounterOpts{
 		Namespace:   MetricsNamespace,
 		Subsystem:   MetricsSubsystemBlocks,
-		Name:        "block_inserted_total",
+		Name:        "blocks_inserted_total",
 		Help:        "Total number of blocks inserted.",
 		ConstLabels: additionalLabels,
-	}, []string{"BlockType"})
+	})
 	m.registry.MustRegister(m.blocksInsertedCount)
 
-	m.blocksUpdatedCount = prometheus.NewCounterVec(prometheus.CounterOpts{
+	m.blocksDeletedCount = prometheus.NewCounter(prometheus.CounterOpts{
 		Namespace:   MetricsNamespace,
 		Subsystem:   MetricsSubsystemBlocks,
-		Name:        "block_updated_total",
-		Help:        "Total number of blocks updated.",
-		ConstLabels: additionalLabels,
-	}, []string{"BlockType"})
-	m.registry.MustRegister(m.blocksUpdatedCount)
-
-	m.blocksDeletedCount = prometheus.NewCounterVec(prometheus.CounterOpts{
-		Namespace:   MetricsNamespace,
-		Subsystem:   MetricsSubsystemBlocks,
-		Name:        "block_deleted_total",
+		Name:        "blocks_deleted_total",
 		Help:        "Total number of blocks deleted.",
 		ConstLabels: additionalLabels,
-	}, []string{"BlockType"})
+	})
 	m.registry.MustRegister(m.blocksDeletedCount)
-
-	m.workspaceAdded = prometheus.NewCounter(prometheus.CounterOpts{
-		Namespace:   MetricsNamespace,
-		Subsystem:   MetricsSubsystemWorkspaces,
-		Name:        "workspace_added_total",
-		Help:        "Total number of workspaces added.",
-		ConstLabels: additionalLabels,
-	})
-	m.registry.MustRegister(m.workspaceAdded)
-
-	m.workspaceRemoved = prometheus.NewCounter(prometheus.CounterOpts{
-		Namespace:   MetricsNamespace,
-		Subsystem:   MetricsSubsystemWorkspaces,
-		Name:        "workspace_removed_total",
-		Help:        "Total number of workspaces removed.",
-		ConstLabels: additionalLabels,
-	})
-	m.registry.MustRegister(m.workspaceRemoved)
 
 	m.blockCount = prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Namespace:   MetricsNamespace,
@@ -162,13 +131,13 @@ func NewMetrics(info InstanceInfo) *Metrics {
 	})
 	m.registry.MustRegister(m.workspaceCount)
 
-	m.blockLastActivity = prometheus.NewGaugeVec(prometheus.GaugeOpts{
+	m.blockLastActivity = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace:   MetricsNamespace,
 		Subsystem:   MetricsSubsystemBlocks,
 		Name:        "blocks_last_activity",
 		Help:        "Time of last block insert, update, delete.",
 		ConstLabels: additionalLabels,
-	}, []string{"BlockType"})
+	})
 	m.registry.MustRegister(m.blockLastActivity)
 
 	return m
@@ -182,24 +151,14 @@ func (m *Metrics) IncrementLoginFailCount(num int) {
 	m.loginFailCount.Add(float64(num))
 }
 
-func (m *Metrics) IncrementBlocksInserted(blockType string, num int) {
-	m.blocksInsertedCount.WithLabelValues(blockType).Add(float64(num))
+func (m *Metrics) IncrementBlocksInserted(num int) {
+	m.blocksInsertedCount.Add(float64(num))
+	m.blockLastActivity.SetToCurrentTime()
 }
 
-func (m *Metrics) IncrementBlocksUpdated(blockType string, num int) {
-	m.blocksUpdatedCount.WithLabelValues(blockType).Add(float64(num))
-}
-
-func (m *Metrics) IncrementBlocksDeleted(blockType string, num int) {
-	m.blocksDeletedCount.WithLabelValues(blockType).Add(float64(num))
-}
-
-func (m *Metrics) IncrementWorkspaceAdded(num int) {
-	m.workspaceAdded.Add(float64(num))
-}
-
-func (m *Metrics) IncrementWorkspaceRemoved(num int) {
-	m.workspaceRemoved.Add(float64(num))
+func (m *Metrics) IncrementBlocksDeleted(num int) {
+	m.blocksDeletedCount.Add(float64(num))
+	m.blockLastActivity.SetToCurrentTime()
 }
 
 func (m *Metrics) ObserveBlockCount(blockType string, count int64) {
@@ -208,8 +167,4 @@ func (m *Metrics) ObserveBlockCount(blockType string, count int64) {
 
 func (m *Metrics) ObserveWorkspaceCount(count int64) {
 	m.workspaceCount.Set(float64(count))
-}
-
-func (m *Metrics) ObserveBlockActivity(blockType string, count int64) {
-	m.blockLastActivity.WithLabelValues(blockType).SetToCurrentTime()
 }
