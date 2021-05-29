@@ -3,6 +3,7 @@ package metrics
 import (
 	"net/http"
 
+	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
@@ -13,11 +14,13 @@ type Service struct {
 }
 
 // NewMetricsServer factory method to create a new prometheus server
-func NewMetricsServer(address string) *Service {
+func NewMetricsServer(address string, metricsService *Metrics, logger *mlog.Logger) *Service {
 	return &Service{
 		&http.Server{
-			Addr:    address,
-			Handler: promhttp.Handler(),
+			Addr: address,
+			Handler: promhttp.HandlerFor(metricsService.registry, promhttp.HandlerOpts{
+				ErrorLog: logger.StdLogger(mlog.Error),
+			}),
 		},
 	}
 }

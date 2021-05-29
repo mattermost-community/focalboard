@@ -37,7 +37,7 @@ import (
 
 const (
 	cleanupSessionTaskFrequency = 10 * time.Minute
-	updateMetricsTaskFrequency  = 1 * time.Hour
+	updateMetricsTaskFrequency  = 15 * time.Minute
 
 	//nolint:gomnd
 	minSessionExpiryTime = int64(60 * 60 * 24 * 31) // 31 days
@@ -169,7 +169,7 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 		store:          db,
 		filesBackend:   filesBackend,
 		telemetry:      telemetryService,
-		metricsServer:  metrics.NewMetricsServer(cfg.PrometheusAddress),
+		metricsServer:  metrics.NewMetricsServer(cfg.PrometheusAddress, metricsService, logger),
 		metricsService: metricsService,
 		logger:         logger,
 		localRouter:    localRouter,
@@ -204,12 +204,13 @@ func (s *Server) Start() error {
 		}
 	}, cleanupSessionTaskFrequency)
 
-	s.metricsUpdaterTask = scheduler.CreateRecurringTask("updateMetrics", func() {
+	metricsUpdater := func() {
 		blockCounts, err := s.appBuilder().GetBlockCountsByType()
 		if err != nil {
 			s.logger.Error("Error updating metrics", mlog.String("group", "blocks"), mlog.Err(err))
 			return
 		}
+		s.logger.Debug("Block metrics collected", mlog.Map("block_counts", blockCounts))
 		for blockType, count := range blockCounts {
 			s.metricsService.ObserveBlockCount(blockType, count)
 		}
@@ -218,9 +219,12 @@ func (s *Server) Start() error {
 			s.logger.Error("Error updating metrics", mlog.String("group", "workspaces"), mlog.Err(err))
 			return
 		}
+		s.logger.Debug("Workspace metrics collected", mlog.Int64("workspace_count", workspaceCount))
 		s.metricsService.ObserveWorkspaceCount(workspaceCount)
 
-	}, updateMetricsTaskFrequency)
+	}
+	metricsUpdater()
+	s.metricsUpdaterTask = scheduler.CreateRecurringTask("updateMetrics", metricsUpdater, updateMetricsTaskFrequency)
 
 	if s.config.Telemetry {
 		firstRun := utils.MillisFromTime(time.Now())
