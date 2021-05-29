@@ -4,12 +4,13 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
 
+	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/utils"
+
 	"github.com/mattermost/mattermost-server/v5/shared/filestore"
 )
 
@@ -46,9 +47,9 @@ func (a *App) GetFileReader(workspaceID, rootID, filename string) (filestore.Rea
 		if oldExists {
 			err := a.filesBackend.MoveFile(filename, filePath)
 			if err != nil {
-				log.Printf("ERROR moving old file from '%s' to '%s'", filename, filePath)
+				a.logger.Error("ERROR moving file", mlog.String("old", filename), mlog.String("new", filePath))
 			} else {
-				log.Printf("Moved old file from '%s' to '%s'", filename, filePath)
+				a.logger.Debug("Moved file", mlog.String("old", filename), mlog.String("new", filePath))
 			}
 		}
 	}

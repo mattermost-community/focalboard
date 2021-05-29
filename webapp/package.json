@@ -23,6 +23,7 @@
 		"cypress:open": "cypress open"
 	},
 	"dependencies": {
+		"cypress": "^6.8.0",
 		"emoji-mart": "^3.0.1",
 		"imagemin-gifsicle": "^7.0.0",
 		"imagemin-mozjpeg": "^9.0.0",

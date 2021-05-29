@@ -38,6 +38,9 @@ import (
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
 )
+import (
+	"github.com/mattermost/focalboard/server/services/mlog"
+)
 
 // Active server used with shared code (dll)
 var pServer *server.Server
@@ -58,13 +61,13 @@ func isProcessRunning(pid int) bool {
 }
 
 // monitorPid is used to keep the server lifetime in sync with another (client app) process
-func monitorPid(pid int) {
-	log.Printf("Monitoring PID: %d", pid)
+func monitorPid(pid int, logger *mlog.Logger) {
+	logger.Info("Monitoring PID", mlog.Int("pid", pid))
 
 	go func() {
 		for {
 			if !isProcessRunning(pid) {
-				log.Printf("Monitored process not found, exiting.")
+				logger.Info("Monitored process not found, exiting.")
 				os.Exit(1)
 			}
 
@@ -73,24 +76,38 @@ func monitorPid(pid int) {
 	}()
 }
 
-func logInfo() {
-	log.Println("Focalboard Server")
-	log.Println("Version: " + model.CurrentVersion)
-	log.Println("Edition: " + model.Edition)
-	log.Println("Build Number: " + model.BuildNumber)
-	log.Println("Build Date: " + model.BuildDate)
-	log.Println("Build Hash: " + model.BuildHash)
+func logInfo(logger *mlog.Logger) {
+	logger.Info("FocalBoard Server",
+		mlog.String("version", model.CurrentVersion),
+		mlog.String("edition", model.Edition),
+		mlog.String("build_number", model.BuildNumber),
+		mlog.String("build_date", model.BuildDate),
+		mlog.String("build_hash", model.BuildHash),
+	)
 }
 
 func main() {
-	logInfo()
-
 	// config.json file
 	config, err := config.ReadConfigFile()
 	if err != nil {
 		log.Fatal("Unable to read the config file: ", err)
 		return
 	}
+
+	logger := mlog.NewLogger()
+	err = logger.Configure(config.LoggingFile, config.LoggingEscapedJson)
+	if err != nil {
+		log.Fatal("Error in config file for logger: ", err)
+		return
+	}
+	defer logger.Shutdown()
+
+	if logger.HasTargets() {
+		restore := logger.RedirectStdLog(mlog.Info, mlog.String("src", "stdlog"))
+		defer restore()
+	}
+
+	logInfo(logger)
 
 	// Command line args
 	pMonitorPid := flag.Int("monitorpid", -1, "a process ID")
@@ -109,42 +126,42 @@ func main() {
 	if singleUser {
 		singleUserToken = os.Getenv("FOCALBOARD_SINGLE_USER_TOKEN")
 		if len(singleUserToken) < 1 {
-			log.Fatal("The FOCALBOARD_SINGLE_USER_TOKEN environment variable must be set for single user mode ")
+			logger.Fatal("The FOCALBOARD_SINGLE_USER_TOKEN environment variable must be set for single user mode ")
 			return
 		}
-		log.Printf("Single user mode")
+		logger.Info("Single user mode")
 	}
 
 	if pMonitorPid != nil && *pMonitorPid > 0 {
-		monitorPid(*pMonitorPid)
+		monitorPid(*pMonitorPid, logger)
 	}
 
 	// Override config from commandline
 
 	if pDBType != nil && len(*pDBType) > 0 {
 		config.DBType = *pDBType
-		log.Printf("DBType from commandline: %s", *pDBType)
+		logger.Info("DBType from commandline", mlog.String("DBType", *pDBType))
 	}
 
 	if pDBConfig != nil && len(*pDBConfig) > 0 {
 		config.DBConfigString = *pDBConfig
 		// Don't echo, as the confix string may contain passwords
-		log.Printf("DBConfigString overriden from commandline")
+		logger.Info("DBConfigString overriden from commandline")
 	}
 
 	if pPort != nil && *pPort > 0 && *pPort != config.Port {
 		// Override port
-		log.Printf("Port from commandline: %d", *pPort)
+		logger.Info("Port from commandline", mlog.Int("port", *pPort))
 		config.Port = *pPort
 	}
 
-	server, err := server.New(config, singleUserToken)
+	server, err := server.New(config, singleUserToken, logger)
 	if err != nil {
-		log.Fatal("server.New ERROR: ", err)
+		logger.Fatal("server.New ERROR", mlog.Err(err))
 	}
 
 	if err := server.Start(); err != nil {
-		log.Fatal("server.Start ERROR: ", err)
+		logger.Fatal("server.Start ERROR", mlog.Err(err))
 	}
 
 	// Setting up signal capturing
@@ -176,8 +193,6 @@ func StopServer() {
 }
 
 func startServer(webPath string, filesPath string, port int, singleUserToken, dbConfigString string) {
-	logInfo()
-
 	if pServer != nil {
 		stopServer()
 		pServer = nil
@@ -189,6 +204,15 @@ func startServer(webPath string, filesPath string, port int, singleUserToken, db
 		log.Fatal("Unable to read the config file: ", err)
 		return
 	}
+
+	logger := mlog.NewLogger()
+	err = logger.Configure(config.LoggingFile, config.LoggingEscapedJson)
+	if err != nil {
+		log.Fatal("Error in config file for logger: ", err)
+		return
+	}
+
+	logInfo(logger)
 
 	if len(filesPath) > 0 {
 		config.FilesPath = filesPath
@@ -206,13 +230,13 @@ func startServer(webPath string, filesPath string, port int, singleUserToken, db
 		config.DBConfigString = dbConfigString
 	}
 
-	pServer, err = server.New(config, singleUserToken)
+	pServer, err = server.New(config, singleUserToken, logger)
 	if err != nil {
-		log.Fatal("server.New ERROR: ", err)
+		logger.Fatal("server.New ERROR", mlog.Err(err))
 	}
 
 	if err := pServer.Start(); err != nil {
-		log.Fatal("server.Start ERROR: ", err)
+		logger.Fatal("server.Start ERROR", mlog.Err(err))
 	}
 }
 
@@ -223,6 +247,8 @@ func stopServer() {
 
 	err := pServer.Shutdown()
 	if err != nil {
-		log.Fatal("server.Shutdown ERROR: ", err)
+		pServer.Logger().Error("server.Shutdown ERROR", mlog.Err(err))
 	}
+	pServer.Logger().Shutdown()
+	pServer = nil
 }
