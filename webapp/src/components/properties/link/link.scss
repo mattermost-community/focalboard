@@ -1,0 +1,22 @@
+.property-link {
+    &.url {
+        padding-right: 2rem;
+    }
+
+    a {
+        padding: 8px; // increases clickable area for better UX
+        display: none;
+    }
+
+    a:hover {
+        background:  unset;
+    }
+
+    &:hover {
+        a {
+            display: inline;
+        }
+    }
+}
+
+
