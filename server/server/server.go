@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"runtime"
+	"sync"
 	"syscall"
 	"time"
 
@@ -44,17 +45,18 @@ const (
 )
 
 type Server struct {
-	config              *config.Configuration
-	wsServer            *ws.Server
-	webServer           *web.Server
-	store               store.Store
-	filesBackend        filestore.FileBackend
-	telemetry           *telemetry.Service
-	logger              *mlog.Logger
-	cleanUpSessionsTask *scheduler.ScheduledTask
-	metricsServer       *metrics.Service
-	metricsService      *metrics.Metrics
-	metricsUpdaterTask  *scheduler.ScheduledTask
+	config                 *config.Configuration
+	wsServer               *ws.Server
+	webServer              *web.Server
+	store                  store.Store
+	filesBackend           filestore.FileBackend
+	telemetry              *telemetry.Service
+	logger                 *mlog.Logger
+	cleanUpSessionsTask    *scheduler.ScheduledTask
+	metricsServer          *metrics.Service
+	metricsService         *metrics.Metrics
+	metricsUpdaterTask     *scheduler.ScheduledTask
+	servicesStartStopMutex sync.Mutex
 
 	localRouter     *mux.Router
 	localModeServer *http.Server
@@ -187,6 +189,9 @@ func (s *Server) Start() error {
 
 	s.webServer.Start()
 
+	s.servicesStartStopMutex.Lock()
+	defer s.servicesStartStopMutex.Unlock()
+
 	if s.config.EnableLocalMode {
 		if err := s.startLocalModeServer(); err != nil {
 			return err
@@ -255,6 +260,9 @@ func (s *Server) Shutdown() error {
 	}
 
 	s.stopLocalModeServer()
+
+	s.servicesStartStopMutex.Lock()
+	defer s.servicesStartStopMutex.Unlock()
 
 	if s.cleanUpSessionsTask != nil {
 		s.cleanUpSessionsTask.Cancel()

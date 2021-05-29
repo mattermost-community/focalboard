@@ -30,8 +30,7 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 	cfg := config.Configuration{}
 	store := mockstore.NewMockStore(ctrl)
 	auth := auth.New(&cfg, store)
-	logger := mlog.NewLogger()
-	logger.Configure("", cfg.LoggingEscapedJson)
+	logger := mlog.CreateTestLogger(t)
 	sessionToken := "TESTTOKEN"
 	wsserver := ws.NewServer(auth, sessionToken, false, logger)
 	webhook := webhook.NewClient(&cfg, logger)
