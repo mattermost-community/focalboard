@@ -1,16 +1,21 @@
 .ViewTitle {
-    flex: 0 0 auto;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    min-width: 300px;
+    > div {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        min-width: 300px;
+    }
 
-    &.add-buttons {
+    > .add-buttons {
         flex-direction: row;
         min-height: 30px;
         color: rgba(var(--body-color), 0.4);
         width: 100%;
         align-items: flex-start;
+        .Icon {
+            margin-left: 0.5em;
+        }
         .Button {
             display: none;
         }
@@ -30,7 +35,7 @@
         flex-grow: 1;
     }
 
-    &.description > * {
+    > .description > * {
         flex-grow: 1;
     }
 }

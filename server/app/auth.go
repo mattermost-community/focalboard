@@ -82,8 +82,8 @@ func (a *App) Login(username, email, password, mfaToken string) (string, error) 
 	}
 
 	if !auth.ComparePassword(user.Password, password) {
-		a.logger.Debug("Invalid password for user", mlog.String("userID", user.ID))
 		a.metrics.IncrementLoginFailCount(1)
+		a.logger.Debug("Invalid password for user", mlog.String("userID", user.ID))
 		return "", errors.New("invalid username or password")
 	}
 
