@@ -178,6 +178,12 @@ h1 {
     -moz-user-select: auto; /* Firefox all */
     -ms-user-select: auto; /* IE 10+ */
     user-select: auto; /* Likely future */
+    * {
+        -webkit-user-select: auto; /* Chrome all / Safari all */
+        -moz-user-select: auto; /* Firefox all */
+        -ms-user-select: auto; /* IE 10+ */
+        user-select: auto; /* Likely future */
+    }
 }
 
 [contentEditable="true"]:empty:before {
