@@ -210,7 +210,7 @@ func (s *Server) Start() error {
 			s.logger.Error("Error updating metrics", mlog.String("group", "blocks"), mlog.Err(err))
 			return
 		}
-		s.logger.Debug("Block metrics collected", mlog.Map("block_counts", blockCounts))
+		s.logger.Log(mlog.Metrics, "Block metrics collected", mlog.Map("block_counts", blockCounts))
 		for blockType, count := range blockCounts {
 			s.metricsService.ObserveBlockCount(blockType, count)
 		}
@@ -219,7 +219,7 @@ func (s *Server) Start() error {
 			s.logger.Error("Error updating metrics", mlog.String("group", "workspaces"), mlog.Err(err))
 			return
 		}
-		s.logger.Debug("Workspace metrics collected", mlog.Int64("workspace_count", workspaceCount))
+		s.logger.Log(mlog.Metrics, "Workspace metrics collected", mlog.Int64("workspace_count", workspaceCount))
 		s.metricsService.ObserveWorkspaceCount(workspaceCount)
 
 	}
