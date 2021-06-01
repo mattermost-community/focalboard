@@ -18,5 +18,6 @@
 	"localOnly": false,
 	"enableLocalMode": true,
 	"localModeSocketLocation": "/var/tmp/focalboard_local.socket",
-	"authMode": "native"
+	"authMode": "native",
+    "logging_file": "logging.json"
 }

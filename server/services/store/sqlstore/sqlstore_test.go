@@ -4,6 +4,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/storetests"
 	"github.com/stretchr/testify/require"
@@ -20,10 +21,13 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 		connectionString = ":memory:"
 	}
 
-	store, err := New(dbType, connectionString, "test_")
+	logger := mlog.CreateTestLogger(t)
+
+	store, err := New(dbType, connectionString, "test_", logger)
 	require.Nil(t, err)
 
 	tearDown := func() {
+		defer logger.Shutdown()
 		err = store.Shutdown()
 		require.Nil(t, err)
 	}

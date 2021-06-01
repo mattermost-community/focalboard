@@ -3,11 +3,11 @@ package api
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 
 	"github.com/gorilla/mux"
+	"github.com/mattermost/focalboard/server/services/mlog"
 )
 
 type AdminSetPasswordData struct {
@@ -20,29 +20,29 @@ func (a *API) handleAdminSetPassword(w http.ResponseWriter, r *http.Request) {
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		errorResponse(w, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	var requestData AdminSetPasswordData
 	err = json.Unmarshal(requestBody, &requestData)
 	if err != nil {
-		errorResponse(w, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	if !strings.Contains(requestData.Password, "") {
-		errorResponse(w, http.StatusBadRequest, "password is required", err)
+		a.errorResponse(w, http.StatusBadRequest, "password is required", err)
 		return
 	}
 
 	err = a.app().UpdateUserPassword(username, requestData.Password)
 	if err != nil {
-		errorResponse(w, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
 	}
 
-	log.Printf("AdminSetPassword, username: %s", username)
+	a.logger.Debug("AdminSetPassword, username: %s", mlog.String("username", username))
 
 	jsonStringResponse(w, http.StatusOK, "{}")
 }

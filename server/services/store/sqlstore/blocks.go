@@ -5,12 +5,12 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"log"
 	"time"
 
 	sq "github.com/Masterminds/squirrel"
 	_ "github.com/lib/pq"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/store"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -37,12 +37,12 @@ func (s *SQLStore) GetBlocksWithParentAndType(c store.Container, parentID string
 
 	rows, err := query.Query()
 	if err != nil {
-		log.Printf(`getBlocksWithParentAndType ERROR: %v`, err)
+		s.logger.Error(`getBlocksWithParentAndType ERROR`, mlog.Err(err))
 
 		return nil, err
 	}
 
-	return blocksFromRows(rows)
+	return s.blocksFromRows(rows)
 }
 
 func (s *SQLStore) GetBlocksWithParent(c store.Container, parentID string) ([]model.Block, error) {
@@ -66,12 +66,12 @@ func (s *SQLStore) GetBlocksWithParent(c store.Container, parentID string) ([]mo
 
 	rows, err := query.Query()
 	if err != nil {
-		log.Printf(`getBlocksWithParent ERROR: %v`, err)
+		s.logger.Error(`getBlocksWithParent ERROR`, mlog.Err(err))
 
 		return nil, err
 	}
 
-	return blocksFromRows(rows)
+	return s.blocksFromRows(rows)
 }
 
 func (s *SQLStore) GetBlocksWithRootID(c store.Container, rootID string) ([]model.Block, error) {
@@ -95,12 +95,12 @@ func (s *SQLStore) GetBlocksWithRootID(c store.Container, rootID string) ([]mode
 
 	rows, err := query.Query()
 	if err != nil {
-		log.Printf(`GetBlocksWithRootID ERROR: %v`, err)
+		s.logger.Error(`GetBlocksWithRootID ERROR`, mlog.Err(err))
 
 		return nil, err
 	}
 
-	return blocksFromRows(rows)
+	return s.blocksFromRows(rows)
 }
 
 func (s *SQLStore) GetBlocksWithType(c store.Container, blockType string) ([]model.Block, error) {
@@ -124,12 +124,12 @@ func (s *SQLStore) GetBlocksWithType(c store.Container, blockType string) ([]mod
 
 	rows, err := query.Query()
 	if err != nil {
-		log.Printf(`getBlocksWithParentAndType ERROR: %v`, err)
+		s.logger.Error(`getBlocksWithParentAndType ERROR`, mlog.Err(err))
 
 		return nil, err
 	}
 
-	return blocksFromRows(rows)
+	return s.blocksFromRows(rows)
 }
 
 // GetSubTree2 returns blocks within 2 levels of the given blockID
@@ -154,12 +154,12 @@ func (s *SQLStore) GetSubTree2(c store.Container, blockID string) ([]model.Block
 
 	rows, err := query.Query()
 	if err != nil {
-		log.Printf(`getSubTree ERROR: %v`, err)
+		s.logger.Error(`getSubTree ERROR`, mlog.Err(err))
 
 		return nil, err
 	}
 
-	return blocksFromRows(rows)
+	return s.blocksFromRows(rows)
 }
 
 // GetSubTree3 returns blocks within 3 levels of the given blockID
@@ -192,12 +192,12 @@ func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block
 
 	rows, err := query.Query()
 	if err != nil {
-		log.Printf(`getSubTree3 ERROR: %v`, err)
+		s.logger.Error(`getSubTree3 ERROR`, mlog.Err(err))
 
 		return nil, err
 	}
 
-	return blocksFromRows(rows)
+	return s.blocksFromRows(rows)
 }
 
 func (s *SQLStore) GetAllBlocks(c store.Container) ([]model.Block, error) {
@@ -220,15 +220,15 @@ func (s *SQLStore) GetAllBlocks(c store.Container) ([]model.Block, error) {
 
 	rows, err := query.Query()
 	if err != nil {
-		log.Printf(`getAllBlocks ERROR: %v`, err)
+		s.logger.Error(`getAllBlocks ERROR`, mlog.Err(err))
 
 		return nil, err
 	}
 
-	return blocksFromRows(rows)
+	return s.blocksFromRows(rows)
 }
 
-func blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
+func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 	defer rows.Close()
 
 	results := []model.Block{}
@@ -252,7 +252,7 @@ func blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 			&block.DeleteAt)
 		if err != nil {
 			// handle this error
-			log.Printf(`ERROR blocksFromRows: %v`, err)
+			s.logger.Error(`ERROR blocksFromRows`, mlog.Err(err))
 
 			return nil, err
 		}
@@ -264,7 +264,7 @@ func blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 		err = json.Unmarshal([]byte(fieldsJSON), &block.Fields)
 		if err != nil {
 			// handle this error
-			log.Printf(`ERROR blocksFromRows fields: %v`, err)
+			s.logger.Error(`ERROR blocksFromRows fields`, mlog.Err(err))
 
 			return nil, err
 		}
