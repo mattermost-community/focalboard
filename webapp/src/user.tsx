@@ -5,6 +5,8 @@ import React from 'react'
 
 const UserContext = React.createContext(undefined as IUser|undefined)
 
+const WorkspaceUsersContext = React.createContext(undefined as Array<IUser>|undefined)
+
 interface IUser {
     id: string,
     username: string,
@@ -14,4 +16,4 @@ interface IUser {
     updateAt: number,
 }
 
-export {IUser, UserContext}
+export {IUser, UserContext, WorkspaceUsersContext}

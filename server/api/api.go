@@ -1168,19 +1168,19 @@ func (a *API) getWorkspaceUsers(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	session := ctx.Value("session").(*model.Session)
 	if !a.app().DoesUserHaveWorkspaceAccess(session.UserID, workspaceID) {
-		errorResponse(w, http.StatusForbidden, "Access denied to workspace", errors.New("Access denied to workspace"))
+		a.errorResponse(w, http.StatusForbidden, "Access denied to workspace", errors.New("Access denied to workspace"))
 		return
 	}
 
 	users, err := a.app().GetWorkspaceUsers(workspaceID)
 	if err != nil {
-		errorResponse(w, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	data, err := json.Marshal(users)
 	if err != nil {
-		errorResponse(w, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
 	}
 
