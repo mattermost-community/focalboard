@@ -77,6 +77,7 @@ class MutableBoardTree implements BoardTree {
         }
         const rawBlocks = OctoUtils.mergeBlocks(boardTree.allBlocks, relevantBlocks)
         const newBoardTree = this.buildTree(boardTree.board.id, rawBlocks)
+        newBoardTree?.setSearchText(boardTree.getSearchText())
         if (newBoardTree && boardTree.activeView) {
             newBoardTree.setActiveView(boardTree.activeView.id)
         }
