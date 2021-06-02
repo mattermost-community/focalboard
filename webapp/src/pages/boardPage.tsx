@@ -16,7 +16,7 @@ import {Utils} from '../utils'
 import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
 import {MutableWorkspaceTree, WorkspaceTree} from '../viewModel/workspaceTree'
 import './boardPage.scss'
-import {IUser, WorkspaceUsersContext} from '../user'
+import {IUser, WorkspaceUsersByIDContext, WorkspaceUsersContext} from '../user'
 
 type Props = RouteComponentProps<{workspaceId?: string}> & {
     readonly?: boolean
@@ -31,6 +31,7 @@ type State = {
     boardTree?: BoardTree
     syncFailed?: boolean
     workspaceUsers?: Array<IUser>
+    workspaceUsersById?: Map<string, IUser>
 }
 
 class BoardPage extends React.Component<Props, State> {
@@ -98,9 +99,19 @@ class BoardPage extends React.Component<Props, State> {
 
     async setWorkspaceUsers() {
         const workspaceUsers = await octoClient.getWorkspaceUsers()
+
+        // storing workspaceUsersById in state to avoid re-computation in each render cycle
         this.setState({
             workspaceUsers,
+            workspaceUsersById: this.getIdToWorkspaceUsers(workspaceUsers),
         })
+    }
+
+    getIdToWorkspaceUsers(users: Array<IUser>): Map<string, IUser> {
+        return users.reduce((acc: Map<string, IUser>, user: IUser) => {
+            acc.set(user.id, user)
+            return acc
+        }, new Map())
     }
 
     private undoRedoHandler = async (keyName: string, e: KeyboardEvent) => {
@@ -172,27 +183,29 @@ class BoardPage extends React.Component<Props, State> {
 
         return (
             <WorkspaceUsersContext.Provider value={this.state.workspaceUsers}>
-                <div className='BoardPage'>
-                    <HotKeys
-                        keyName='shift+ctrl+z,shift+cmd+z,ctrl+z,cmd+z'
-                        onKeyDown={this.undoRedoHandler}
-                    />
-                    <Workspace
-                        workspace={workspace}
-                        workspaceTree={workspaceTree}
-                        boardTree={this.state.boardTree}
-                        showView={(id, boardId) => {
-                            this.showView(id, boardId)
-                        }}
-                        showBoard={(id) => {
-                            this.showBoard(id)
-                        }}
-                        setSearchText={(text) => {
-                            this.setSearchText(text)
-                        }}
-                        readonly={this.props.readonly || false}
-                    />
-                </div>
+                <WorkspaceUsersByIDContext.Provider value={this.state.workspaceUsersById}>
+                    <div className='BoardPage'>
+                        <HotKeys
+                            keyName='shift+ctrl+z,shift+cmd+z,ctrl+z,cmd+z'
+                            onKeyDown={this.undoRedoHandler}
+                        />
+                        <Workspace
+                            workspace={workspace}
+                            workspaceTree={workspaceTree}
+                            boardTree={this.state.boardTree}
+                            showView={(id, boardId) => {
+                                this.showView(id, boardId)
+                            }}
+                            showBoard={(id) => {
+                                this.showBoard(id)
+                            }}
+                            setSearchText={(text) => {
+                                this.setSearchText(text)
+                            }}
+                            readonly={this.props.readonly || false}
+                        />
+                    </div>
+                </WorkspaceUsersByIDContext.Provider>
             </WorkspaceUsersContext.Provider>
         )
     }
