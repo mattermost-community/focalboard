@@ -144,27 +144,39 @@ func NewMetrics(info InstanceInfo) *Metrics {
 }
 
 func (m *Metrics) IncrementLoginCount(num int) {
-	m.loginCount.Add(float64(num))
+	if m != nil {
+		m.loginCount.Add(float64(num))
+	}
 }
 
 func (m *Metrics) IncrementLoginFailCount(num int) {
-	m.loginFailCount.Add(float64(num))
+	if m != nil {
+		m.loginFailCount.Add(float64(num))
+	}
 }
 
 func (m *Metrics) IncrementBlocksInserted(num int) {
-	m.blocksInsertedCount.Add(float64(num))
-	m.blockLastActivity.SetToCurrentTime()
+	if m != nil {
+		m.blocksInsertedCount.Add(float64(num))
+		m.blockLastActivity.SetToCurrentTime()
+	}
 }
 
 func (m *Metrics) IncrementBlocksDeleted(num int) {
-	m.blocksDeletedCount.Add(float64(num))
-	m.blockLastActivity.SetToCurrentTime()
+	if m != nil {
+		m.blocksDeletedCount.Add(float64(num))
+		m.blockLastActivity.SetToCurrentTime()
+	}
 }
 
 func (m *Metrics) ObserveBlockCount(blockType string, count int64) {
-	m.blockCount.WithLabelValues(blockType).Set(float64(count))
+	if m != nil {
+		m.blockCount.WithLabelValues(blockType).Set(float64(count))
+	}
 }
 
 func (m *Metrics) ObserveWorkspaceCount(count int64) {
-	m.workspaceCount.Set(float64(count))
+	if m != nil {
+		m.workspaceCount.Set(float64(count))
+	}
 }
