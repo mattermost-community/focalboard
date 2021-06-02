@@ -2,10 +2,10 @@ package sqlstore
 
 import (
 	"encoding/json"
-	"log"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore/initializations"
 )
@@ -25,7 +25,7 @@ func (s *SQLStore) InitializeTemplates() error {
 }
 
 func (s *SQLStore) importInitialTemplates() error {
-	log.Printf("importInitialTemplates")
+	s.logger.Debug("importInitialTemplates")
 	blocksJSON := initializations.MustAsset("templates.json")
 
 	var archive model.Archive
@@ -38,9 +38,13 @@ func (s *SQLStore) importInitialTemplates() error {
 		WorkspaceID: "0",
 	}
 
-	log.Printf("Inserting %d blocks", len(archive.Blocks))
+	s.logger.Debug("Inserting blocks", mlog.Int("block_count", len(archive.Blocks)))
 	for _, block := range archive.Blocks {
-		// log.Printf("\t%v %v %v", block.ID, block.Type, block.Title)
+		s.logger.Trace("insert block",
+			mlog.String("blockID", block.ID),
+			mlog.String("block_type", block.Type),
+			mlog.String("block_title", block.Title),
+		)
 		err := s.InsertBlock(globalContainer, block)
 		if err != nil {
 			return err
@@ -62,7 +66,7 @@ func (s *SQLStore) isInitializationNeeded() (bool, error) {
 	var count int
 	err := row.Scan(&count)
 	if err != nil {
-		log.Fatal(err)
+		s.logger.Fatal("isInitializationNeeded", mlog.Err(err))
 		return false, err
 	}
 

@@ -9,8 +9,6 @@ import (
 	"syscall"
 	"time"
 
-	"go.uber.org/zap"
-
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
@@ -21,14 +19,19 @@ import (
 	"github.com/mattermost/focalboard/server/context"
 	appModel "github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/config"
+	"github.com/mattermost/focalboard/server/services/mlog"
+	"github.com/mattermost/focalboard/server/services/prometheus"
 	"github.com/mattermost/focalboard/server/services/scheduler"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 	"github.com/mattermost/focalboard/server/services/telemetry"
 	"github.com/mattermost/focalboard/server/services/webhook"
 	"github.com/mattermost/focalboard/server/web"
 	"github.com/mattermost/focalboard/server/ws"
-	"github.com/mattermost/mattermost-server/v5/services/filesstore"
+	"github.com/oklog/run"
+
+	"github.com/mattermost/mattermost-server/v5/shared/filestore"
 	"github.com/mattermost/mattermost-server/v5/utils"
 )
 
@@ -44,10 +47,12 @@ type Server struct {
 	wsServer            *ws.Server
 	webServer           *web.Server
 	store               store.Store
-	filesBackend        filesstore.FileBackend
+	filesBackend        filestore.FileBackend
 	telemetry           *telemetry.Service
-	logger              *zap.Logger
+	logger              *mlog.Logger
 	cleanUpSessionsTask *scheduler.ScheduledTask
+	promServer          *prometheus.Service
+	promInstrumentor    *prometheus.Instrumentor
 
 	localRouter     *mux.Router
 	localModeServer *http.Server
@@ -55,37 +60,51 @@ type Server struct {
 	appBuilder      func() *app.App
 }
 
-func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
-	logger, err := zap.NewProduction()
+func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger) (*Server, error) {
+	var db store.Store
+	db, err := sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger)
 	if err != nil {
+		logger.Error("Unable to start the database", mlog.Err(err))
 		return nil, err
 	}
-
-	db, err := sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix)
-	if err != nil {
-		log.Print("Unable to start the database", err)
-		return nil, err
+	if cfg.AuthMode == "mattermost" {
+		layeredStore, err := mattermostauthlayer.New(cfg.DBType, cfg.DBConfigString, db)
+		if err != nil {
+			log.Print("Unable to start the database", err)
+			return nil, err
+		}
+		db = layeredStore
 	}
 
 	authenticator := auth.New(cfg, db)
 
-	wsServer := ws.NewServer(authenticator, singleUserToken)
+	wsServer := ws.NewServer(authenticator, singleUserToken, cfg.AuthMode == "mattermost", logger)
 
-	filesBackendSettings := filesstore.FileBackendSettings{}
-	filesBackendSettings.DriverName = "local"
+	filesBackendSettings := filestore.FileBackendSettings{}
+	filesBackendSettings.DriverName = cfg.FilesDriver
 	filesBackendSettings.Directory = cfg.FilesPath
-	filesBackend, appErr := filesstore.NewFileBackend(filesBackendSettings)
+	filesBackendSettings.AmazonS3AccessKeyId = cfg.FilesS3Config.AccessKeyId
+	filesBackendSettings.AmazonS3SecretAccessKey = cfg.FilesS3Config.SecretAccessKey
+	filesBackendSettings.AmazonS3Bucket = cfg.FilesS3Config.Bucket
+	filesBackendSettings.AmazonS3PathPrefix = cfg.FilesS3Config.PathPrefix
+	filesBackendSettings.AmazonS3Region = cfg.FilesS3Config.Region
+	filesBackendSettings.AmazonS3Endpoint = cfg.FilesS3Config.Endpoint
+	filesBackendSettings.AmazonS3SSL = cfg.FilesS3Config.SSL
+	filesBackendSettings.AmazonS3SignV2 = cfg.FilesS3Config.SignV2
+	filesBackendSettings.AmazonS3SSE = cfg.FilesS3Config.SSE
+	filesBackendSettings.AmazonS3Trace = cfg.FilesS3Config.Trace
 
+	filesBackend, appErr := filestore.NewFileBackend(filesBackendSettings)
 	if appErr != nil {
-		log.Print("Unable to initialize the files storage")
+		logger.Error("Unable to initialize the files storage", mlog.Err(appErr))
 
 		return nil, errors.New("unable to initialize the files storage")
 	}
 
-	webhookClient := webhook.NewClient(cfg)
+	webhookClient := webhook.NewClient(cfg, logger)
 
-	appBuilder := func() *app.App { return app.New(cfg, db, authenticator, wsServer, filesBackend, webhookClient) }
-	focalboardAPI := api.NewAPI(appBuilder, singleUserToken, cfg.AuthMode)
+	appBuilder := func() *app.App { return app.New(cfg, db, authenticator, wsServer, filesBackend, webhookClient, logger) }
+	focalboardAPI := api.NewAPI(appBuilder, singleUserToken, cfg.AuthMode, logger)
 
 	// Local router for admin APIs
 	localRouter := mux.NewRouter()
@@ -93,11 +112,11 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 
 	// Init workspace
 	if _, err = appBuilder().GetRootWorkspace(); err != nil {
-		log.Print("Unable to get root workspace", err)
+		logger.Error("Unable to get root workspace", mlog.Err(err))
 		return nil, err
 	}
 
-	webServer := web.NewServer(cfg.WebPath, cfg.ServerRoot, cfg.Port, cfg.UseSSL, cfg.LocalOnly)
+	webServer := web.NewServer(cfg.WebPath, cfg.ServerRoot, cfg.Port, cfg.UseSSL, cfg.LocalOnly, logger)
 	webServer.AddRoutes(wsServer)
 	webServer.AddRoutes(focalboardAPI)
 
@@ -136,7 +155,7 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 		return nil, err
 	}
 
-	telemetryService := telemetry.New(telemetryID, zap.NewStdLog(logger))
+	telemetryService := telemetry.New(telemetryID, logger.StdLogger(mlog.Telemetry))
 	telemetryService.RegisterTracker("server", func() map[string]interface{} {
 		return map[string]interface{}{
 			"version":          appModel.CurrentVersion,
@@ -165,16 +184,18 @@ func New(cfg *config.Configuration, singleUserToken string) (*Server, error) {
 	})
 
 	server := Server{
-		config:       cfg,
-		wsServer:     wsServer,
-		webServer:    webServer,
-		store:        db,
-		filesBackend: filesBackend,
-		telemetry:    telemetryService,
-		logger:       logger,
-		localRouter:  localRouter,
-		api:          focalboardAPI,
-		appBuilder:   appBuilder,
+		config:           cfg,
+		wsServer:         wsServer,
+		webServer:        webServer,
+		store:            db,
+		filesBackend:     filesBackend,
+		telemetry:        telemetryService,
+		promServer:       prometheus.New(cfg.PrometheusAddress),
+		promInstrumentor: prometheus.NewInstrumentor(appModel.CurrentVersion),
+		logger:           logger,
+		localRouter:      localRouter,
+		api:              focalboardAPI,
+		appBuilder:       appBuilder,
 	}
 
 	server.initHandlers()
@@ -200,7 +221,7 @@ func (s *Server) Start() error {
 		}
 
 		if err := s.store.CleanUpSessions(secondsAgo); err != nil {
-			s.logger.Error("Unable to clean up the sessions", zap.Error(err))
+			s.logger.Error("Unable to clean up the sessions", mlog.Err(err))
 		}
 	}, cleanupSessionTaskFrequency)
 
@@ -209,6 +230,23 @@ func (s *Server) Start() error {
 		s.telemetry.RunTelemetryJob(firstRun)
 	}
 
+	var group run.Group
+	if s.config.PrometheusAddress != "" {
+		group.Add(func() error {
+			if err := s.promServer.Run(); err != nil {
+				return errors.Wrap(err, "PromServer Run")
+			}
+			return nil
+		}, func(error) {
+			s.promServer.Shutdown()
+		})
+		// expose the build info as metric
+		s.promInstrumentor.ExposeBuildInfo()
+
+		if err := group.Run(); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -224,7 +262,7 @@ func (s *Server) Shutdown() error {
 	}
 
 	if err := s.telemetry.Shutdown(); err != nil {
-		s.logger.Warn("Error occurred when shutting down telemetry", zap.Error(err))
+		s.logger.Warn("Error occurred when shutting down telemetry", mlog.Err(err))
 	}
 
 	defer s.logger.Info("Server.Shutdown")
@@ -234,6 +272,10 @@ func (s *Server) Shutdown() error {
 
 func (s *Server) Config() *config.Configuration {
 	return s.config
+}
+
+func (s *Server) Logger() *mlog.Logger {
+	return s.logger
 }
 
 // Local server
@@ -246,7 +288,7 @@ func (s *Server) startLocalModeServer() error {
 
 	// TODO: Close and delete socket file on shutdown
 	if err := syscall.Unlink(s.config.LocalModeSocketLocation); err != nil {
-		log.Print("Unable to unlink socket.", err)
+		s.logger.Error("Unable to unlink socket.", mlog.Err(err))
 	}
 
 	socket := s.config.LocalModeSocketLocation
@@ -259,10 +301,10 @@ func (s *Server) startLocalModeServer() error {
 	}
 
 	go func() {
-		log.Println("Starting unix socket server")
+		s.logger.Info("Starting unix socket server")
 		err = s.localModeServer.Serve(unixListener)
 		if err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Printf("Error starting unix socket server: %v", err)
+			s.logger.Error("Error starting unix socket server", mlog.Err(err))
 		}
 	}()
 
@@ -278,4 +320,8 @@ func (s *Server) stopLocalModeServer() {
 
 func (s *Server) GetRootRouter() *mux.Router {
 	return s.webServer.Router()
+}
+
+func (s *Server) SetWSHub(hub ws.Hub) {
+	s.wsServer.SetHub(hub)
 }

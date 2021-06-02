@@ -4,8 +4,8 @@
 import Foundation
 
 class Globals {
-	static let ProductVersion = 00605
-	static let WhatsNewVersion = 00605
+	static let ProductVersion = 00607
+	static let WhatsNewVersion = 00607
 
 	static var currentWhatsNewVersion: Int {
 		get { return UserDefaults.standard.integer(forKey: "whatsNewVersion") }

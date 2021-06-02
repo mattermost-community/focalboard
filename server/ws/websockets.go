@@ -12,30 +12,41 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/store"
 )
-
-type WorkspaceAuthenticator interface {
-	DoesUserHaveWorkspaceAccess(session *model.Session, workspaceID string) bool
-}
 
 // IsValidSessionToken authenticates session tokens
 type IsValidSessionToken func(token string) bool
 
+type Hub interface {
+	SendWSMessage(data []byte)
+	SetReceiveWSMessage(func(data []byte))
+}
+
 // Server is a WebSocket server.
 type Server struct {
-	upgrader               websocket.Upgrader
-	listeners              map[string][]*websocket.Conn
-	mu                     sync.RWMutex
-	auth                   *auth.Auth
-	singleUserToken        string
-	WorkspaceAuthenticator WorkspaceAuthenticator
+	upgrader         websocket.Upgrader
+	listeners        map[string][]*websocket.Conn
+	mu               sync.RWMutex
+	auth             *auth.Auth
+	hub              Hub
+	singleUserToken  string
+	isMattermostAuth bool
+	logger           *mlog.Logger
 }
 
 // UpdateMsg is sent on block updates
 type UpdateMsg struct {
 	Action string      `json:"action"`
 	Block  model.Block `json:"block"`
+}
+
+// clusterUpdateMsg is sent on block updates
+type clusterUpdateMsg struct {
+	UpdateMsg
+	BlockID     string `json:"block_id"`
+	WorkspaceID string `json:"workspace_id"`
 }
 
 // ErrorMsg is sent on errors
@@ -59,7 +70,7 @@ type websocketSession struct {
 }
 
 // NewServer creates a new Server.
-func NewServer(auth *auth.Auth, singleUserToken string) *Server {
+func NewServer(auth *auth.Auth, singleUserToken string, isMattermostAuth bool, logger *mlog.Logger) *Server {
 	return &Server{
 		listeners: make(map[string][]*websocket.Conn),
 		upgrader: websocket.Upgrader{
@@ -67,8 +78,10 @@ func NewServer(auth *auth.Auth, singleUserToken string) *Server {
 				return true
 			},
 		},
-		auth:            auth,
-		singleUserToken: singleUserToken,
+		auth:             auth,
+		singleUserToken:  singleUserToken,
+		isMattermostAuth: isMattermostAuth,
+		logger:           logger,
 	}
 }
 
@@ -81,17 +94,13 @@ func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request
 	// Upgrade initial GET request to a websocket
 	client, err := ws.upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Printf("ERROR upgrading to websocket: %v", err)
+		ws.logger.Error("ERROR upgrading to websocket", mlog.Err(err))
 		return
 	}
 
-	// TODO: Auth
-
-	log.Printf("CONNECT WebSocket onChange, client: %s", client.RemoteAddr())
-
 	// Make sure we close the connection when the function returns
 	defer func() {
-		log.Printf("DISCONNECT WebSocket onChange, client: %s", client.RemoteAddr())
+		ws.logger.Debug("DISCONNECT WebSocket onChange", mlog.Stringer("client", client.RemoteAddr()))
 
 		// Remove client from listeners
 		ws.removeListener(client)
@@ -99,16 +108,24 @@ func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request
 		client.Close()
 	}()
 
+	userID := ""
+	if ws.isMattermostAuth {
+		userID = r.Header.Get("Mattermost-User-Id")
+	}
+
 	wsSession := websocketSession{
 		client:          client,
-		isAuthenticated: false,
+		isAuthenticated: userID != "",
 	}
 
 	// Simple message handling loop
 	for {
 		_, p, err := client.ReadMessage()
 		if err != nil {
-			log.Printf("ERROR WebSocket onChange, client: %s, err: %v", client.RemoteAddr(), err)
+			ws.logger.Error("ERROR WebSocket onChange",
+				mlog.Stringer("client", client.RemoteAddr()),
+				mlog.Err(err),
+			)
 			ws.removeListener(client)
 
 			break
@@ -119,26 +136,41 @@ func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request
 		err = json.Unmarshal(p, &command)
 		if err != nil {
 			// handle this error
-			log.Printf(`ERROR webSocket parsing command JSON: %v`, string(p))
+			ws.logger.Error(`ERROR webSocket parsing command`, mlog.String("json", string(p)))
 
 			continue
 		}
 
+		if userID != "" {
+			if ws.auth.DoesUserHaveWorkspaceAccess(userID, command.WorkspaceID) {
+				wsSession.workspaceID = command.WorkspaceID
+			} else {
+				ws.logger.Error(`ERROR User doesn't have permissions to read the workspace`, mlog.String("workspaceID", command.WorkspaceID))
+				continue
+			}
+		}
+
 		switch command.Action {
 		case "AUTH":
-			log.Printf(`Command: AUTH, client: %s`, client.RemoteAddr())
+			ws.logger.Debug(`Command: AUTH`, mlog.Stringer("client", client.RemoteAddr()))
 			ws.authenticateListener(&wsSession, command.WorkspaceID, command.Token)
-
 		case "ADD":
-			log.Printf(`Command: Add workspaceID: %s, blockIDs: %v, client: %s`, wsSession.workspaceID, command.BlockIDs, client.RemoteAddr())
+			ws.logger.Debug(`Command: ADD`,
+				mlog.String("workspaceID", wsSession.workspaceID),
+				mlog.Array("blockIDs", command.BlockIDs),
+				mlog.Stringer("client", client.RemoteAddr()),
+			)
 			ws.addListener(&wsSession, &command)
-
 		case "REMOVE":
-			log.Printf(`Command: Remove workspaceID: %s, blockID: %v, client: %s`, wsSession.workspaceID, command.BlockIDs, client.RemoteAddr())
-			ws.removeListenerFromBlocks(&wsSession, &command)
+			ws.logger.Debug(`Command: REMOVE`,
+				mlog.String("workspaceID", wsSession.workspaceID),
+				mlog.Array("blockIDs", command.BlockIDs),
+				mlog.Stringer("client", client.RemoteAddr()),
+			)
 
+			ws.removeListenerFromBlocks(&wsSession, &command)
 		default:
-			log.Printf(`ERROR webSocket command, invalid action: %v`, command.Action)
+			ws.logger.Error(`ERROR webSocket command, invalid action`, mlog.String("action", command.Action))
 		}
 	}
 }
@@ -154,19 +186,13 @@ func (ws *Server) isValidSessionToken(token, workspaceID string) bool {
 	}
 
 	// Check workspace permission
-	if ws.WorkspaceAuthenticator != nil {
-		if !ws.WorkspaceAuthenticator.DoesUserHaveWorkspaceAccess(session, workspaceID) {
-			return false
-		}
-	}
-
-	return true
+	return ws.auth.DoesUserHaveWorkspaceAccess(session.UserID, workspaceID)
 }
 
 func (ws *Server) authenticateListener(wsSession *websocketSession, workspaceID, token string) {
 	if wsSession.isAuthenticated {
 		// Do not allow multiple auth calls (for security)
-		log.Printf("authenticateListener: Ignoring already authenticated session")
+		ws.logger.Debug("authenticateListener: Ignoring already authenticated session", mlog.String("workspaceID", workspaceID))
 		return
 	}
 
@@ -181,7 +207,7 @@ func (ws *Server) authenticateListener(wsSession *websocketSession, workspaceID,
 
 	wsSession.workspaceID = workspaceID
 	wsSession.isAuthenticated = true
-	log.Printf("authenticateListener: Authenticated, workspaceID: %s", workspaceID)
+	ws.logger.Debug("authenticateListener: Authenticated", mlog.String("workspaceID", workspaceID))
 }
 
 func (ws *Server) getAuthenticatedWorkspaceID(wsSession *websocketSession, command *WebsocketCommand) (string, error) {
@@ -192,7 +218,7 @@ func (ws *Server) getAuthenticatedWorkspaceID(wsSession *websocketSession, comma
 	// If not authenticated, try to authenticate the read token against the supplied workspaceID
 	workspaceID := command.WorkspaceID
 	if len(workspaceID) == 0 {
-		log.Printf("getAuthenticatedWorkspaceID: No workspace")
+		ws.logger.Error("getAuthenticatedWorkspaceID: No workspace")
 		return "", errors.New("No workspace")
 	}
 
@@ -223,8 +249,8 @@ func makeItemID(workspaceID, blockID string) string {
 func (ws *Server) addListener(wsSession *websocketSession, command *WebsocketCommand) {
 	workspaceID, err := ws.getAuthenticatedWorkspaceID(wsSession, command)
 	if err != nil {
-		log.Printf("addListener: NOT AUTHENTICATED, ERROR: %v", err)
-		sendError(wsSession.client, "not authenticated")
+		ws.logger.Error("addListener: NOT AUTHENTICATED", mlog.Err(err))
+		ws.sendError(wsSession.client, "not authenticated")
 		return
 	}
 
@@ -261,8 +287,8 @@ func (ws *Server) removeListener(client *websocket.Conn) {
 func (ws *Server) removeListenerFromBlocks(wsSession *websocketSession, command *WebsocketCommand) {
 	workspaceID, err := ws.getAuthenticatedWorkspaceID(wsSession, command)
 	if err != nil {
-		log.Printf("addListener: NOT AUTHENTICATED, ERROR: %v", err)
-		sendError(wsSession.client, "not authenticated")
+		ws.logger.Error("addListener: NOT AUTHENTICATED", mlog.Err(err))
+		ws.sendError(wsSession.client, "not authenticated")
 		return
 	}
 
@@ -289,16 +315,48 @@ func (ws *Server) removeListenerFromBlocks(wsSession *websocketSession, command 
 	ws.mu.Unlock()
 }
 
-func sendError(conn *websocket.Conn, message string) {
+func (ws *Server) sendError(conn *websocket.Conn, message string) {
 	errorMsg := ErrorMsg{
 		Error: message,
 	}
 
 	err := conn.WriteJSON(errorMsg)
 	if err != nil {
-		log.Printf("sendError error: %v", err)
+		ws.logger.Error("sendError error", mlog.Err(err))
 		conn.Close()
 	}
+}
+
+func (ws *Server) SetHub(hub Hub) {
+	ws.hub = hub
+	ws.hub.SetReceiveWSMessage(func(data []byte) {
+		var msg clusterUpdateMsg
+		err := json.Unmarshal(data, &msg)
+		if err != nil {
+			log.Printf("unable to unmarshal cluster message")
+			return
+		}
+
+		listeners := ws.getListeners(msg.WorkspaceID, msg.BlockID)
+		log.Printf("%d listener(s) for blockID: %s", len(listeners), msg.BlockID)
+
+		message := UpdateMsg{
+			Action: msg.Action,
+			Block:  msg.Block,
+		}
+
+		if listeners != nil {
+			for _, listener := range listeners {
+				log.Printf("Broadcast change, workspaceID: %s, blockID: %s, remoteAddr: %s", msg.WorkspaceID, msg.BlockID, listener.RemoteAddr())
+
+				err := listener.WriteJSON(message)
+				if err != nil {
+					log.Printf("broadcast error: %v", err)
+					listener.Close()
+				}
+			}
+		}
+	})
 }
 
 // getListeners returns the listeners to a blockID's changes.
@@ -329,20 +387,34 @@ func (ws *Server) BroadcastBlockChange(workspaceID string, block model.Block) {
 
 	for _, blockID := range blockIDsToNotify {
 		listeners := ws.getListeners(workspaceID, blockID)
-		log.Printf("%d listener(s) for blockID: %s", len(listeners), blockID)
+		ws.logger.Debug("listener(s) for blockID",
+			mlog.Int("listener_count", len(listeners)),
+			mlog.String("blockID", blockID),
+		)
+
+		message := UpdateMsg{
+			Action: "UPDATE_BLOCK",
+			Block:  block,
+		}
+		if ws.hub != nil {
+			data, err := json.Marshal(clusterUpdateMsg{UpdateMsg: message, WorkspaceID: workspaceID, BlockID: blockID})
+			if err != nil {
+				log.Printf("unable to serialize websocket message %v with the error: %v", message, err)
+			}
+			ws.hub.SendWSMessage(data)
+		}
 
 		if listeners != nil {
-			message := UpdateMsg{
-				Action: "UPDATE_BLOCK",
-				Block:  block,
-			}
-
 			for _, listener := range listeners {
-				log.Printf("Broadcast change, workspaceID: %s, blockID: %s, remoteAddr: %s", workspaceID, blockID, listener.RemoteAddr())
+				ws.logger.Debug("Broadcast change",
+					mlog.String("workspaceID", workspaceID),
+					mlog.String("blockID", blockID),
+					mlog.Stringer("remoteAddr", listener.RemoteAddr()),
+				)
 
 				err := listener.WriteJSON(message)
 				if err != nil {
-					log.Printf("broadcast error: %v", err)
+					ws.logger.Error("broadcast error", mlog.Err(err))
 					listener.Close()
 				}
 			}

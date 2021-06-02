@@ -20,8 +20,8 @@ function makeCommonConfig() {
                 {
                     test: /\.m?js/,
                     resolve: {
-                        fullySpecified: false
-                    }
+                        fullySpecified: false,
+                    },
                 },
                 {
                     test: /\.tsx?$/,
@@ -65,6 +65,22 @@ function makeCommonConfig() {
                     use: [
                     ],
                     exclude: [/node_modules/],
+                },
+                {
+                    test: /\.(png|eot|tiff|svg|woff2|woff|ttf|jpg)$/,
+                    use: [
+                        {
+                            loader: 'file-loader',
+                            options: {
+                                name: '[name].[ext]',
+                                outputPath: 'static',
+                            },
+                        },
+                        {
+                            loader: 'image-webpack-loader',
+                            options: {},
+                        },
+                    ],
                 },
             ],
         },
