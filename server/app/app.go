@@ -32,11 +32,7 @@ type App struct {
 	logger       *mlog.Logger
 }
 
-func New(
-	config *config.Configuration,
-	wsServer *ws.Server,
-	services AppServices,
-) *App {
+func New(config *config.Configuration, wsServer *ws.Server, services AppServices) *App {
 	return &App{
 		config:       config,
 		store:        services.Store,
