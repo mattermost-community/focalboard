@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {IPropertyTemplate} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
@@ -20,6 +20,7 @@ type Props = {
 
 const ViewHeaderGroupByMenu = React.memo((props: Props) => {
     const {properties, activeView, groupByPropertyName} = props
+    const intl = useIntl()
     return (
         <MenuWrapper>
             <Button>
@@ -39,6 +40,22 @@ const ViewHeaderGroupByMenu = React.memo((props: Props) => {
                 />
             </Button>
             <Menu>
+                {activeView.viewType === 'table' && activeView.groupById &&
+                <>
+                    <Menu.Text
+                        key={'ungroup'}
+                        id={''}
+                        name={intl.formatMessage({id: 'GroupBy.ungroup', defaultMessage: 'Ungroup'})}
+                        rightIcon={activeView.groupById === '' ? <CheckIcon/> : undefined}
+                        onClick={(id) => {
+                            if (activeView.groupById === id) {
+                                return
+                            }
+                            mutator.changeViewGroupById(activeView, id)
+                        }}
+                    />
+                    <Menu.Separator/>
+                </>}
                 {properties.filter((o: IPropertyTemplate) => o.type === 'select').map((option: IPropertyTemplate) => (
                     <Menu.Text
                         key={option.id}
