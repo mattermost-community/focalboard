@@ -15,7 +15,7 @@ import ValueSelector from '../widgets/valueSelector'
 import Label from '../widgets/label'
 
 import EditableDayPicker from '../widgets/editableDayPicker'
-import Switch from '../widgets/switch';
+import Switch from '../widgets/switch'
 
 import URLProperty from './properties/link/link'
 
@@ -134,7 +134,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             <Switch
                 isOn={Boolean(propertyValue)}
                 onChanged={(newBool) => {
-                    const newValue = newBool ? 'true' : '';
+                    const newValue = newBool ? 'true' : ''
                     mutator.changePropertyValue(card, propertyTemplate.id, newValue)
                 }}
                 readOnly={readOnly}
