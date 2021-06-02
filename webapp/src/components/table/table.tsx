@@ -274,9 +274,9 @@ const Table = (props: Props) => {
             </div>
 
             {/* Table header row */}
-            {activeView.groupById &&
-                <div>
-                    {visibleGroups.map((group) => {
+            <div className='table-row-container'>
+                {activeView.groupById &&
+                    visibleGroups.map((group) => {
                         return (
                             <TableGroup
                                 key={group.option.id}
@@ -296,26 +296,26 @@ const Table = (props: Props) => {
                                 onDropToCard={onDropToCard}
                                 onDropToGroup={onDropToGroup}
                             />)
-                    })}
-                </div>
-            }
+                    })
+                }
 
-            {/* No Grouping, Rows, one per card */}
-            {!activeView.groupById &&
-                <TableRows
-                    boardTree={boardTree}
-                    columnRefs={columnRefs}
-                    cards={boardTree.cards}
-                    selectedCardIds={props.selectedCardIds}
-                    readonly={props.readonly}
-                    cardIdToFocusOnRender={props.cardIdToFocusOnRender}
-                    intl={props.intl}
-                    showCard={props.showCard}
-                    addCard={props.addCard}
-                    onCardClicked={props.onCardClicked}
-                    onDrop={onDropToCard}
-                />
-            }
+                {/* No Grouping, Rows, one per card */}
+                {!activeView.groupById &&
+                    <TableRows
+                        boardTree={boardTree}
+                        columnRefs={columnRefs}
+                        cards={boardTree.cards}
+                        selectedCardIds={props.selectedCardIds}
+                        readonly={props.readonly}
+                        cardIdToFocusOnRender={props.cardIdToFocusOnRender}
+                        intl={props.intl}
+                        showCard={props.showCard}
+                        addCard={props.addCard}
+                        onCardClicked={props.onCardClicked}
+                        onDrop={onDropToCard}
+                    />
+                }
+            </div>
 
             {/* Add New row */}
             <div className='octo-table-footer'>

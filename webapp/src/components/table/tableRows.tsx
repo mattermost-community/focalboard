@@ -42,7 +42,7 @@ const TableRows = (props: Props) => {
     })
 
     return (
-        <div>
+        <>
             {cards.map((card) => {
                 const tableRow = (
                     <TableRow
@@ -69,7 +69,7 @@ const TableRows = (props: Props) => {
 
                 return tableRow
             })}
-        </div>
+        </>
     )
 }
 
