@@ -4,7 +4,7 @@ services:
     build:
       context: ./
     container_name: focalboard
-    ports: 
+    ports:
       - 80:8000
     environment:
       - VIRTUAL_HOST=focalboard.local

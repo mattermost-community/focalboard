@@ -19,7 +19,7 @@ FROM alpine:latest
 ARG PUID=2000
 ARG PGID=2000
 
-EXPOSE 8000/tcp
+EXPOSE 8000/tcp 9092/tcp
 
 RUN addgroup -g ${PGID} focalboard && \
     adduser -H -D -u ${PUID} -G focalboard focalboard
