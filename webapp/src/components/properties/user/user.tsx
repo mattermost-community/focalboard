@@ -4,7 +4,7 @@
 import React, {useContext} from 'react'
 import Select from 'react-select'
 
-import {IUser, WorkspaceUsersByIDContext, WorkspaceUsersContext} from '../../../user'
+import {IUser, WorkspaceUsersContext, WorkspaceUsersContextData} from '../../../user'
 
 import './user.scss'
 import {getSelectBaseStyle} from '../../../theme'
@@ -16,16 +16,15 @@ type Props = {
 }
 
 const UserProperty = (props: Props): JSX.Element => {
-    const workspaceUsers = useContext(WorkspaceUsersContext) as Array<IUser>|undefined
-    const workspaceUsersById = useContext(WorkspaceUsersByIDContext) as Map<string, IUser>|undefined
+    const workspaceUsers = useContext(WorkspaceUsersContext) as WorkspaceUsersContextData
 
     if (props.readonly) {
-        return (<div className='UserProperty octo-propertyvalue'>{workspaceUsersById?.get(props.value)?.username || props.value}</div>)
+        return (<div className='UserProperty octo-propertyvalue'>{workspaceUsers.usersById?.get(props.value)?.username || props.value}</div>)
     }
 
     return (
         <Select
-            options={workspaceUsers}
+            options={workspaceUsers.users}
             isSearchable={true}
             isClearable={true}
             backspaceRemovesValue={true}
@@ -33,7 +32,7 @@ const UserProperty = (props: Props): JSX.Element => {
             styles={getSelectBaseStyle()}
             getOptionLabel={(o: IUser) => o.username}
             getOptionValue={(a: IUser) => a.id}
-            value={workspaceUsersById?.get(props.value) || null}
+            value={workspaceUsers.usersById?.get(props.value) || null}
             onChange={(item, action) => {
                 if (action.action === 'select-option') {
                     props.onChange(item?.id || '')

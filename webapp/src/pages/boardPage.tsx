@@ -16,7 +16,7 @@ import {Utils} from '../utils'
 import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
 import {MutableWorkspaceTree, WorkspaceTree} from '../viewModel/workspaceTree'
 import './boardPage.scss'
-import {IUser, WorkspaceUsersByIDContext, WorkspaceUsersContext} from '../user'
+import {IUser, WorkspaceUsersContext, WorkspaceUsersContextData} from '../user'
 
 type Props = RouteComponentProps<{workspaceId?: string}> & {
     readonly?: boolean
@@ -30,8 +30,7 @@ type State = {
     workspaceTree: WorkspaceTree
     boardTree?: BoardTree
     syncFailed?: boolean
-    workspaceUsers?: Array<IUser>
-    workspaceUsersById?: Map<string, IUser>
+    workspaceUsers: WorkspaceUsersContextData
 }
 
 class BoardPage extends React.Component<Props, State> {
@@ -60,6 +59,10 @@ class BoardPage extends React.Component<Props, State> {
             boardId,
             viewId,
             workspaceTree: new MutableWorkspaceTree(),
+            workspaceUsers: {
+                users: new Array<IUser>(),
+                usersById: new Map<string, IUser>(),
+            },
         }
 
         this.setWorkspaceUsers()
@@ -102,8 +105,10 @@ class BoardPage extends React.Component<Props, State> {
 
         // storing workspaceUsersById in state to avoid re-computation in each render cycle
         this.setState({
-            workspaceUsers,
-            workspaceUsersById: this.getIdToWorkspaceUsers(workspaceUsers),
+            workspaceUsers: {
+                users: workspaceUsers,
+                usersById: this.getIdToWorkspaceUsers(workspaceUsers),
+            },
         })
     }
 
@@ -183,29 +188,27 @@ class BoardPage extends React.Component<Props, State> {
 
         return (
             <WorkspaceUsersContext.Provider value={this.state.workspaceUsers}>
-                <WorkspaceUsersByIDContext.Provider value={this.state.workspaceUsersById}>
-                    <div className='BoardPage'>
-                        <HotKeys
-                            keyName='shift+ctrl+z,shift+cmd+z,ctrl+z,cmd+z'
-                            onKeyDown={this.undoRedoHandler}
-                        />
-                        <Workspace
-                            workspace={workspace}
-                            workspaceTree={workspaceTree}
-                            boardTree={this.state.boardTree}
-                            showView={(id, boardId) => {
-                                this.showView(id, boardId)
-                            }}
-                            showBoard={(id) => {
-                                this.showBoard(id)
-                            }}
-                            setSearchText={(text) => {
-                                this.setSearchText(text)
-                            }}
-                            readonly={this.props.readonly || false}
-                        />
-                    </div>
-                </WorkspaceUsersByIDContext.Provider>
+                <div className='BoardPage'>
+                    <HotKeys
+                        keyName='shift+ctrl+z,shift+cmd+z,ctrl+z,cmd+z'
+                        onKeyDown={this.undoRedoHandler}
+                    />
+                    <Workspace
+                        workspace={workspace}
+                        workspaceTree={workspaceTree}
+                        boardTree={this.state.boardTree}
+                        showView={(id, boardId) => {
+                            this.showView(id, boardId)
+                        }}
+                        showBoard={(id) => {
+                            this.showBoard(id)
+                        }}
+                        setSearchText={(text) => {
+                            this.setSearchText(text)
+                        }}
+                        readonly={this.props.readonly || false}
+                    />
+                </div>
             </WorkspaceUsersContext.Provider>
         )
     }
