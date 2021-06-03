@@ -88,6 +88,10 @@
     }
 
     .octo-table-header {
+        position: fixed;
+        z-index: 1;
+        background: rgb(var(--main-bg));
+
         .octo-table-cell {
             color: rgba(var(--body-color), 0.6);
 
@@ -112,7 +116,7 @@
         }
     }
 
-    .MenuWrapper {  
+    .MenuWrapper {
         width: 100%;
         max-width: calc(100% - 5px);
 

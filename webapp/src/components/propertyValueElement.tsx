@@ -16,6 +16,7 @@ import ValueSelector from '../widgets/valueSelector'
 import Label from '../widgets/label'
 
 import EditableDayPicker from '../widgets/editableDayPicker'
+import Switch from '../widgets/switch'
 
 import MultiSelectProperty from './properties/multiSelect'
 import URLProperty from './properties/link/link'
@@ -153,6 +154,19 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 className='octo-propertyvalue'
                 value={value as string}
                 onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
+            />
+        )
+    }
+
+    if (propertyTemplate.type === 'checkbox') {
+        return (
+            <Switch
+                isOn={Boolean(propertyValue)}
+                onChanged={(newBool) => {
+                    const newValue = newBool ? 'true' : ''
+                    mutator.changePropertyValue(card, propertyTemplate.id, newValue)
+                }}
+                readOnly={readOnly}
             />
         )
     }

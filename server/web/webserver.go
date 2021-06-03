@@ -2,7 +2,6 @@ package web
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -11,6 +10,7 @@ import (
 	"text/template"
 
 	"github.com/gorilla/mux"
+	"github.com/mattermost/focalboard/server/services/mlog"
 )
 
 // RoutedService defines the interface that is needed for any service to
@@ -29,10 +29,11 @@ type Server struct {
 	port      int
 	ssl       bool
 	localOnly bool
+	logger    *mlog.Logger
 }
 
 // NewServer creates a new instance of the webserver.
-func NewServer(rootPath string, serverRoot string, port int, ssl, localOnly bool) *Server {
+func NewServer(rootPath string, serverRoot string, port int, ssl, localOnly bool, logger *mlog.Logger) *Server {
 	r := mux.NewRouter()
 
 	var addr string
@@ -45,7 +46,7 @@ func NewServer(rootPath string, serverRoot string, port int, ssl, localOnly bool
 	baseURL := ""
 	url, err := url.Parse(serverRoot)
 	if err != nil {
-		log.Printf("Invalid ServerRoot setting: %v\n", err)
+		logger.Error("Invalid ServerRoot setting", mlog.Err(err))
 	}
 	baseURL = url.Path
 
@@ -58,6 +59,7 @@ func NewServer(rootPath string, serverRoot string, port int, ssl, localOnly bool
 		rootPath: rootPath,
 		port:     port,
 		ssl:      ssl,
+		logger:   logger,
 	}
 
 	return ws
@@ -78,13 +80,13 @@ func (ws *Server) registerRoutes() {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		indexTemplate, err := template.New("index").ParseFiles(path.Join(ws.rootPath, "index.html"))
 		if err != nil {
-			log.Printf("Unable to serve the index.html fil, err: %v\n", err)
+			ws.logger.Error("Unable to serve the index.html file", mlog.Err(err))
 			w.WriteHeader(500)
 			return
 		}
 		err = indexTemplate.ExecuteTemplate(w, "index.html", map[string]string{"BaseURL": ws.baseURL})
 		if err != nil {
-			log.Printf("Unable to serve the index.html fil, err: %v\n", err)
+			ws.logger.Error("Unable to serve the index.html file", mlog.Err(err))
 			w.WriteHeader(500)
 			return
 		}
@@ -95,28 +97,28 @@ func (ws *Server) registerRoutes() {
 func (ws *Server) Start() {
 	ws.registerRoutes()
 	if ws.port == -1 {
-		log.Print("server not bind to any port\n")
+		ws.logger.Error("server not bind to any port")
 		return
 	}
 
 	isSSL := ws.ssl && fileExists("./cert/cert.pem") && fileExists("./cert/key.pem")
 	if isSSL {
-		log.Printf("https server started on :%d\n", ws.port)
+		ws.logger.Info("https server started", mlog.Int("port", ws.port))
 		go func() {
 			if err := ws.ListenAndServeTLS("./cert/cert.pem", "./cert/key.pem"); err != nil {
-				log.Fatalf("ListenAndServeTLS: %v", err)
+				ws.logger.Fatal("ListenAndServeTLS", mlog.Err(err))
 			}
 		}()
 
 		return
 	}
 
-	log.Printf("http server started on :%d\n", ws.port)
+	ws.logger.Info("http server started", mlog.Int("port", ws.port))
 	go func() {
 		if err := ws.ListenAndServe(); err != http.ErrServerClosed {
-			log.Fatalf("ListenAndServe: %v", err)
+			ws.logger.Fatal("ListenAndServeTLS", mlog.Err(err))
 		}
-		log.Println("http server stopped")
+		ws.logger.Info("http server stopped")
 	}()
 }
 

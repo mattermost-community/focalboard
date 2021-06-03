@@ -48,6 +48,9 @@ type Configuration struct {
 	LocalModeSocketLocation string         `json:"localModeSocketLocation" mapstructure:"localModeSocketLocation"`
 
 	AuthMode string `json:"authMode" mapstructure:"authMode"`
+
+	LoggingFile        string `json:"logging_file" mapstructure:"logging_file"`
+	LoggingEscapedJson string `json:"logging_escaped_json" mapstructure:"logging_escaped_json"`
 }
 
 // ReadConfigFile read the configuration from the filesystem.
