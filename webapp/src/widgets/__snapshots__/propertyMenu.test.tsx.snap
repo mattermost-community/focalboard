@@ -181,6 +181,21 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   <div
                     class="menu-name"
                   >
+                    Checkbox
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="MenuOption TextOption menu-option"
+                >
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
                     Created Time
                   </div>
                   <div
