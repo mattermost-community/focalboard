@@ -1,11 +1,10 @@
 package app
 
 import (
-	"log"
-
 	"github.com/google/uuid"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/auth"
+	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/store"
 
 	"github.com/pkg/errors"
@@ -80,7 +79,7 @@ func (a *App) Login(username, email, password, mfaToken string) (string, error) 
 	}
 
 	if !auth.ComparePassword(user.Password, password) {
-		log.Printf("Invalid password for userID: %s\n", user.ID)
+		a.logger.Debug("Invalid password for user", mlog.String("userID", user.ID))
 		return "", errors.New("invalid username or password")
 	}
 
@@ -175,7 +174,7 @@ func (a *App) ChangePassword(userID, oldPassword, newPassword string) error {
 	}
 
 	if !auth.ComparePassword(user.Password, oldPassword) {
-		log.Printf("Invalid password for userID: %s\n", user.ID)
+		a.logger.Debug("Invalid password for user", mlog.String("userID", user.ID))
 		return errors.New("invalid username or password")
 	}
 
