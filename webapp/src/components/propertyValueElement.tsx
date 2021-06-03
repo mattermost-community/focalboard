@@ -15,6 +15,7 @@ import ValueSelector from '../widgets/valueSelector'
 import Label from '../widgets/label'
 
 import EditableDayPicker from '../widgets/editableDayPicker'
+import Switch from '../widgets/switch'
 
 import UserProperty from './properties/user/user'
 import URLProperty from './properties/link/link'
@@ -131,6 +132,19 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 onSave={() => mutator.changePropertyValue(card, propertyTemplate.id, value)}
                 onCancel={() => setValue(propertyValue)}
                 validator={(newValue) => validateProp(propertyTemplate.type, newValue)}
+            />
+        )
+    }
+
+    if (propertyTemplate.type === 'checkbox') {
+        return (
+            <Switch
+                isOn={Boolean(propertyValue)}
+                onChanged={(newBool) => {
+                    const newValue = newBool ? 'true' : ''
+                    mutator.changePropertyValue(card, propertyTemplate.id, newValue)
+                }}
+                readOnly={readOnly}
             />
         )
     }
