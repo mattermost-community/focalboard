@@ -147,6 +147,44 @@ Change the dbconfig setting to use the postgres database you created:
 "dbconfig": "postgres://boardsuser:boardsuser-password@localhost/boards?sslmode=disable&connect_timeout=10",
 ```
 
+## Install MySQL 
+
+Alternate to Postgress you also can store your data in a MySQL/MariaDB database.
+16). To install, run:
+
+```
+sudo apt install mariadb-server mariadb-client
+```
+
+Log in as root in your database:
+```
+sudo mysql 
+```
+
+On the MySQL prompt, run the following commands (**change the user/password** to your own values):
+<pre>
+CREATE DATABASE boards;
+GRANT ALL on boards.* to <b>'boardsuser'@'localhost'</b> identified by '<b>boardsuser-password</b>';
+
+</pre>
+
+Exit the mysql-prompt:
+```
+exit
+```
+
+Edit the Focalboard config.json:
+
+```
+nano /opt/focalboard/config.json
+```
+
+Change the dbconfig setting to use the MySQL database you created:
+```
+"dbtype": "mysql",
+"dbconfig": "mysql://boardsuser:boardsuser-password@tcp(127.0.0.1:3306)/boards",
+```,
+
 ## Configure Focalboard to run as a service
 
 This will keep the server running across reboots. First, create a new service config file:
