@@ -1,8 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {UserSettings} from './userSettings'
 import {CSSObject} from '@emotion/serialize'
+
+import {UserSettings} from './userSettings'
 
 export type Theme = {
     mainBg: string,
