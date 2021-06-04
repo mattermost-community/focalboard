@@ -84,10 +84,7 @@ const Table = (props: Props) => {
                 if (!template) {
                     return
                 }
-
                 displayValue = (OctoUtils.propertyDisplayValue(card, card.properties[columnID], template, props.intl) || '') as string
-
-                // displayValue = (OctoUtils.propertyDisplayValue(card, card.properties[columnID], template!, props.intl) || '') as string
                 if (template.type === 'select') {
                     displayValue = displayValue.toUpperCase()
                 }

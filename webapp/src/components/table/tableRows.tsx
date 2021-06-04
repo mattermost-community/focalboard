@@ -53,7 +53,7 @@ const TableRows = (props: Props) => {
                         focusOnMount={props.cardIdToFocusOnRender === card.id}
                         onSaveWithEnter={() => {
                             if (cards.length > 0 && cards[cards.length - 1] === card) {
-                                props.addCard(activeView.groupById ? card.properties[activeView.groupById!] : '')
+                                props.addCard(activeView.groupById ? card.properties[activeView.groupById!] as string : '')
                             }
                         }}
                         onClick={(e: React.MouseEvent<HTMLDivElement>) => {

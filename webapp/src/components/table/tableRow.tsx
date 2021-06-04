@@ -59,7 +59,7 @@ const TableRow = React.memo((props: Props) => {
     }
     if (isGrouped) {
         const groupID = activeView.groupById || ''
-        const groupValue = card.properties[groupID] || 'undefined'
+        const groupValue = card.properties[groupID] as string || 'undefined'
         if (activeView.collapsedOptionIds.indexOf(groupValue) > -1) {
             className += ' hidden'
         }
