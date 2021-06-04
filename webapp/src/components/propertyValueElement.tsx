@@ -18,6 +18,7 @@ import Label from '../widgets/label'
 import EditableDayPicker from '../widgets/editableDayPicker'
 import Switch from '../widgets/switch'
 
+import UserProperty from './properties/user/user'
 import MultiSelectProperty from './properties/multiSelect'
 import URLProperty from './properties/link/link'
 
@@ -133,19 +134,15 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 }
             />
         )
-    } else if (propertyTemplate.type === 'url') {
+    } else if (propertyTemplate.type === 'person') {
         return (
-            <URLProperty
-                value={value as string}
-                onChange={setValue}
-                onSave={() => mutator.changePropertyValue(card, propertyTemplate.id, value)}
-                onCancel={() => setValue(propertyValue)}
-                validator={(newValue) => validateProp(propertyTemplate.type, newValue)}
+            <UserProperty
+                value={propertyValue as string}
+                readonly={readOnly}
+                onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
             />
         )
-    }
-
-    if (propertyTemplate.type === 'date') {
+    } else if (propertyTemplate.type === 'date') {
         if (readOnly) {
             return <div className='octo-propertyvalue'>{displayValue}</div>
         }
@@ -154,6 +151,16 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 className='octo-propertyvalue'
                 value={value as string}
                 onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
+            />
+        )
+    } else if (propertyTemplate.type === 'url') {
+        return (
+            <URLProperty
+                value={value as string}
+                onChange={setValue}
+                onSave={() => mutator.changePropertyValue(card, propertyTemplate.id, value)}
+                onCancel={() => setValue(propertyValue)}
+                validator={(newValue) => validateProp(propertyTemplate.type, newValue)}
             />
         )
     }

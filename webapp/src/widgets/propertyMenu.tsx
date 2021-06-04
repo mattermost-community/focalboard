@@ -130,6 +130,11 @@ const PropertyMenu = React.memo((props: Props) => {
                     onClick={() => props.onTypeChanged('date')}
                 />
                 <Menu.Text
+                    id='person'
+                    name={typeDisplayName(intl, 'person')}
+                    onClick={() => props.onTypeChanged('person')}
+                />
+                <Menu.Text
                     id='checkbox'
                     name={typeDisplayName(intl, 'checkbox')}
                     onClick={() => props.onTypeChanged('checkbox')}
