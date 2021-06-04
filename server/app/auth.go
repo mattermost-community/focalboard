@@ -1,11 +1,10 @@
 package app
 
 import (
-	"log"
-
 	"github.com/google/uuid"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/auth"
+	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/store"
 
 	"github.com/pkg/errors"
@@ -64,6 +63,7 @@ func (a *App) Login(username, email, password, mfaToken string) (string, error) 
 		var err error
 		user, err = a.store.GetUserByUsername(username)
 		if err != nil {
+			a.metrics.IncrementLoginFailCount(1)
 			return "", errors.Wrap(err, "invalid username or password")
 		}
 	}
@@ -72,15 +72,18 @@ func (a *App) Login(username, email, password, mfaToken string) (string, error) 
 		var err error
 		user, err = a.store.GetUserByEmail(email)
 		if err != nil {
+			a.metrics.IncrementLoginFailCount(1)
 			return "", errors.Wrap(err, "invalid username or password")
 		}
 	}
 	if user == nil {
+		a.metrics.IncrementLoginFailCount(1)
 		return "", errors.New("invalid username or password")
 	}
 
 	if !auth.ComparePassword(user.Password, password) {
-		log.Printf("Invalid password for userID: %s\n", user.ID)
+		a.metrics.IncrementLoginFailCount(1)
+		a.logger.Debug("Invalid password for user", mlog.String("userID", user.ID))
 		return "", errors.New("invalid username or password")
 	}
 
@@ -100,6 +103,8 @@ func (a *App) Login(username, email, password, mfaToken string) (string, error) 
 	if err != nil {
 		return "", errors.Wrap(err, "unable to create session")
 	}
+
+	a.metrics.IncrementLoginCount(1)
 
 	// TODO: MFA verification
 	return session.Token, nil
@@ -175,7 +180,7 @@ func (a *App) ChangePassword(userID, oldPassword, newPassword string) error {
 	}
 
 	if !auth.ComparePassword(user.Password, oldPassword) {
-		log.Printf("Invalid password for userID: %s\n", user.ID)
+		a.logger.Debug("Invalid password for user", mlog.String("userID", user.ID))
 		return errors.New("invalid username or password")
 	}
 

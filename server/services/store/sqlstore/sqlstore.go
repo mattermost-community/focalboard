@@ -2,9 +2,9 @@ package sqlstore
 
 import (
 	"database/sql"
-	"log"
 
 	sq "github.com/Masterminds/squirrel"
+	"github.com/mattermost/focalboard/server/services/mlog"
 )
 
 const (
@@ -15,27 +15,28 @@ const (
 
 // SQLStore is a SQL database.
 type SQLStore struct {
-	db          *sql.DB
-	dbType      string
-	tablePrefix string
+	db               *sql.DB
+	dbType           string
+	tablePrefix      string
 	connectionString string
+	logger           *mlog.Logger
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType, connectionString string, tablePrefix string) (*SQLStore, error) {
-	log.Println("connectDatabase", dbType, connectionString)
+func New(dbType, connectionString string, tablePrefix string, logger *mlog.Logger) (*SQLStore, error) {
+	logger.Info("connectDatabase", mlog.String("dbType", dbType), mlog.String("connStr", connectionString))
 	var err error
 
 	db, err := sql.Open(dbType, connectionString)
 	if err != nil {
-		log.Print("connectDatabase: ", err)
+		logger.Error("connectDatabase failed", mlog.Err(err))
 
 		return nil, err
 	}
 
 	err = db.Ping()
 	if err != nil {
-		log.Printf(`Database Ping failed: %v`, err)
+		logger.Error(`Database Ping failed`, mlog.Err(err))
 
 		return nil, err
 	}
@@ -45,18 +46,19 @@ func New(dbType, connectionString string, tablePrefix string) (*SQLStore, error)
 		dbType:           dbType,
 		tablePrefix:      tablePrefix,
 		connectionString: connectionString,
+		logger:           logger,
 	}
 
 	err = store.Migrate()
 	if err != nil {
-		log.Printf(`Table creation / migration failed: %v`, err)
+		logger.Error(`Table creation / migration failed`, mlog.Err(err))
 
 		return nil, err
 	}
 
 	err = store.InitializeTemplates()
 	if err != nil {
-		log.Printf(`InitializeTemplates failed: %v`, err)
+		logger.Error(`InitializeTemplates failed`, mlog.Err(err))
 
 		return nil, err
 	}

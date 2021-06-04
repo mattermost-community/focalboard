@@ -4,8 +4,11 @@
         flex-direction: row;
 
         min-height: 30px;
-        margin-bottom: 16px;
+        padding-bottom: 16px;
         color: #909090;
+        position: fixed;
+        z-index: 1;
+        background: rgb(var(--main-bg));
     }
 
     .octo-board-header-cell {
@@ -55,6 +58,7 @@
         display: flex;
         flex-direction: row;
         flex: 0 1 auto;
+        margin-top: 50px;
     }
 
     .octo-board-column {

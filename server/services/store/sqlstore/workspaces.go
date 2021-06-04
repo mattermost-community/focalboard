@@ -2,10 +2,10 @@ package sqlstore
 
 import (
 	"encoding/json"
-	"log"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/mlog"
 
 	sq "github.com/Masterminds/squirrel"
 )
@@ -98,7 +98,7 @@ func (s *SQLStore) GetWorkspace(ID string) (*model.Workspace, error) {
 
 	err = json.Unmarshal([]byte(settingsJSON), &workspace.Settings)
 	if err != nil {
-		log.Printf(`ERROR GetWorkspace settings json.Unmarshal: %v`, err)
+		s.logger.Error(`ERROR GetWorkspace settings json.Unmarshal`, mlog.Err(err))
 		return nil, err
 	}
 
@@ -107,4 +107,28 @@ func (s *SQLStore) GetWorkspace(ID string) (*model.Workspace, error) {
 
 func (s *SQLStore) HasWorkspaceAccess(userID string, workspaceID string) (bool, error) {
 	return true, nil
+}
+
+func (s *SQLStore) GetWorkspaceCount() (int64, error) {
+	query := s.getQueryBuilder().
+		Select(
+			"COUNT(*) AS count",
+		).
+		From(s.tablePrefix + "workspaces")
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error("ERROR GetWorkspaceCount", mlog.Err(err))
+		return 0, err
+	}
+
+	var count int64
+
+	rows.Next()
+	err = rows.Scan(&count)
+	if err != nil {
+		s.logger.Error("Failed to fetch workspace count", mlog.Err(err))
+		return 0, err
+	}
+	return count, nil
 }

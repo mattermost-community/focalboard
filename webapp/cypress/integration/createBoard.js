@@ -25,7 +25,7 @@ describe('Create and delete board / card', () => {
 
     it('Can set the board title', () => {
         // Board title
-        cy.get('.ViewTitle>.Editable.title').
+        cy.get('.Editable.title').
             type(boardTitle).
             type('{enter}').
             should('have.value', boardTitle);
