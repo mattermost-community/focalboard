@@ -22,6 +22,7 @@ type Store interface {
 	GetParentID(c Container, blockID string) (string, error)
 	InsertBlock(c Container, block model.Block) error
 	DeleteBlock(c Container, blockID string, modifiedBy string) error
+	GetBlockCountsByType() (map[string]int64, error)
 
 	Shutdown() error
 
@@ -53,4 +54,5 @@ type Store interface {
 	UpsertWorkspaceSettings(workspace model.Workspace) error
 	GetWorkspace(ID string) (*model.Workspace, error)
 	HasWorkspaceAccess(userID string, workspaceID string) (bool, error)
+	GetWorkspaceCount() (int64, error)
 }
