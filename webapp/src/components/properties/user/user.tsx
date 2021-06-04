@@ -16,10 +16,10 @@ type Props = {
 }
 
 const UserProperty = (props: Props): JSX.Element => {
-    const workspaceUsers = useContext(WorkspaceUsersContext) as WorkspaceUsersContextData
+    const workspaceUsers = useContext<WorkspaceUsersContextData>(WorkspaceUsersContext)
 
     if (props.readonly) {
-        return (<div className='UserProperty octo-propertyvalue'>{workspaceUsers.usersById?.get(props.value)?.username || props.value}</div>)
+        return (<div className='UserProperty octo-propertyvalue'>{workspaceUsers.usersById.get(props.value)?.username || props.value}</div>)
     }
 
     return (
@@ -32,7 +32,7 @@ const UserProperty = (props: Props): JSX.Element => {
             styles={getSelectBaseStyle()}
             getOptionLabel={(o: IUser) => o.username}
             getOptionValue={(a: IUser) => a.id}
-            value={workspaceUsers.usersById?.get(props.value) || null}
+            value={workspaceUsers.usersById.get(props.value) || null}
             onChange={(item, action) => {
                 if (action.action === 'select-option') {
                     props.onChange(item?.id || '')
