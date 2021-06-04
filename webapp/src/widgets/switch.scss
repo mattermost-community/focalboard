@@ -9,6 +9,7 @@
     padding: 2px;
     background-color: rgba(var(--body-color), 0.24);
     transition: background 200ms ease 0s, box-shadow 200ms ease 0s;
+    cursor: pointer;
 
     &.on {
         background-color: rgb(var(--button-bg));

@@ -85,7 +85,9 @@ const Table = (props: Props) => {
                     return
                 }
 
-                displayValue = OctoUtils.propertyDisplayValue(card, card.properties[columnID], template, props.intl) || ''
+                displayValue = (OctoUtils.propertyDisplayValue(card, card.properties[columnID], template, props.intl) || '') as string
+
+                // displayValue = (OctoUtils.propertyDisplayValue(card, card.properties[columnID], template!, props.intl) || '') as string
                 if (template.type === 'select') {
                     displayValue = displayValue.toUpperCase()
                 }
@@ -145,7 +147,7 @@ const Table = (props: Props) => {
 
     const onDropToCard = (srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)
-        onDropToGroup(srcCard, dstCard.properties[activeView.groupById!], dstCard.id)
+        onDropToGroup(srcCard, dstCard.properties[activeView.groupById!] as string, dstCard.id)
     }
 
     const onDropToGroup = (srcCard: Card, groupID: string, dstCardID: string) => {

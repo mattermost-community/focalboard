@@ -77,6 +77,7 @@ class MutableBoardTree implements BoardTree {
         }
         const rawBlocks = OctoUtils.mergeBlocks(boardTree.allBlocks, relevantBlocks)
         const newBoardTree = this.buildTree(boardTree.board.id, rawBlocks)
+        newBoardTree?.setSearchText(boardTree.getSearchText())
         if (newBoardTree && boardTree.activeView) {
             newBoardTree.setActiveView(boardTree.activeView.id)
         }
@@ -216,7 +217,9 @@ class MutableBoardTree implements BoardTree {
                         if (option?.value.toLowerCase().includes(searchText)) {
                             return true
                         }
-                    } else if (propertyValue.toLowerCase().includes(searchText)) {
+
+                    // TODO: Add search capability for multi-select values BIG BOYY
+                    } else if ((propertyValue as string).toLowerCase().includes(searchText)) {
                         return true
                     }
                 }
@@ -426,7 +429,7 @@ class MutableBoardTree implements BoardTree {
                             return this.titleOrCreatedOrder(a, b)
                         }
 
-                        result = aValue.localeCompare(bValue)
+                        result = (aValue as string).localeCompare(bValue as string)
                     }
 
                     if (result === 0) {

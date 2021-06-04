@@ -143,6 +143,9 @@ watch-server-single-user:
 webapp:
 	cd webapp; npm run pack
 
+watch-webapp:
+	cd webapp; npm run watchdev
+
 mac-app: server-mac webapp
 	rm -rf mac/temp
 	rm -rf mac/dist

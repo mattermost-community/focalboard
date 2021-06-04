@@ -2,9 +2,9 @@ package app
 
 import (
 	"database/sql"
-	"log"
 
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/utils"
 )
 
@@ -18,16 +18,16 @@ func (a *App) GetRootWorkspace() (*model.Workspace, error) {
 		}
 		err := a.store.UpsertWorkspaceSignupToken(*workspace)
 		if err != nil {
-			log.Fatal("Unable to initialize workspace", err)
+			a.logger.Fatal("Unable to initialize workspace", mlog.Err(err))
 			return nil, err
 		}
 		workspace, err = a.store.GetWorkspace(workspaceID)
 		if err != nil {
-			log.Fatal("Unable to get initialized workspace", err)
+			a.logger.Fatal("Unable to get initialized workspace", mlog.Err(err))
 			return nil, err
 		}
 
-		log.Println("initialized workspace")
+		a.logger.Info("initialized workspace")
 	}
 
 	return workspace, nil
