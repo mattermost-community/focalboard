@@ -37,7 +37,7 @@ const TableRow = React.memo((props: Props) => {
     const [title, setTitle] = useState(props.card.title)
     const {card} = props
     const isManualSort = activeView.sortOptions.length < 1
-    const isGrouped = activeView.groupById !== undefined
+    const isGrouped = Boolean(activeView.groupById)
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly && (isManualSort || isGrouped), props.onDrop)
 
     useEffect(() => {
