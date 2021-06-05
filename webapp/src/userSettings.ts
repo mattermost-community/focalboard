@@ -113,7 +113,7 @@ function importUserSettings(json: string): boolean {
         return false
     }
     for (const [key, value] of Object.entries(settings)) {
-        if (Object.values(UserSettings).includes(key)) {
+        if (Object.values(UserSettingKey).includes(key as UserSettingKey)) {
             if (value) {
                 localStorage.setItem(key, value as string)
             } else {
