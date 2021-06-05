@@ -13,14 +13,14 @@ export function importNativeAppSettings() {
     if (typeof NativeApp === 'undefined' || !NativeApp.settingsBlob) {
         return
     }
-    const success = importUserSettingsBlob(NativeApp.settingsBlob)
-    const messageType = success ? 'didImportUserSettings' : 'didNotImportUserSettings'
-    postWebKitMessage({type: messageType, settingsBlob: NativeApp.settingsBlob})
+    const importedKeys = importUserSettingsBlob(NativeApp.settingsBlob)
+    const messageType = importedKeys.length ? 'didImportUserSettings' : 'didNotImportUserSettings'
+    postWebKitMessage({type: messageType, settingsBlob: exportUserSettingsBlob(), keys: importedKeys})
     NativeApp.settingsBlob = null
 }
 
 export function notifySettingsChanged(key: string) {
-    postWebKitMessage({type: 'didChangeUserSettings', key, settingsBlob: exportUserSettingsBlob()})
+    postWebKitMessage({type: 'didChangeUserSettings', settingsBlob: exportUserSettingsBlob(), key})
 }
 
 function postWebKitMessage(message: any) {

@@ -244,18 +244,27 @@ class ViewController:
 
 	func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
 		guard
-			let body = message.body as? [String: String],
-			let type = body["type"],
-			let blob = body["settingsBlob"],
-			let settings = Data(base64Encoded: blob).flatMap({ String(data: $0, encoding: .utf8) })
+			let body = message.body as? [AnyHashable: Any],
+			let type = body["type"] as? String,
+			let blob = body["settingsBlob"] as? String
 		else {
 			NSLog("Received unexpected script message \(message.body)")
 			return
 		}
-		NSLog("Received script message \(type): \(settings)")
-		if type == "didChangeUserSettings" {
+		NSLog("Received script message \(type)")
+		switch type {
+		case "didImportUserSettings":
+			NSLog("Imported user settings keys \(body["keys"] ?? "?")")
+		case "didNotImportUserSettings":
+			break
+		case "didChangeUserSettings":
 			UserDefaults.standard.set(blob, forKey: "localStorage")
 			NSLog("Persisted user settings after change for key \(body["key"] ?? "?")")
+		default:
+			NSLog("Received script message of unknown type \(type)")
+		}
+		if let settings = Data(base64Encoded: blob).flatMap({ try? JSONSerialization.jsonObject(with: $0, options: []) }) {
+			NSLog("Current user settings: \(settings)")
 		}
 	}
 }

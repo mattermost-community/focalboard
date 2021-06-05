@@ -98,20 +98,21 @@ function exportUserSettings(): string {
     return JSON.stringify(settings)
 }
 
-export function importUserSettingsBlob(blob: string): boolean {
+export function importUserSettingsBlob(blob: string): string[] {
     return importUserSettings(window.atob(blob))
 }
 
-function importUserSettings(json: string): boolean {
+function importUserSettings(json: string): string[] {
     const settings = parseUserSettings(json)
     if (!settings) {
-        return false
+        return []
     }
     const timestamp = settings.timestamp
     const lastTimestamp = localStorage.getItem('timestamp')
     if (!timestamp || (lastTimestamp && Number(timestamp) <= Number(lastTimestamp))) {
-        return false
+        return []
     }
+    const importedKeys = []
     for (const [key, value] of Object.entries(settings)) {
         if (Object.values(UserSettingKey).includes(key as UserSettingKey)) {
             if (value) {
@@ -119,9 +120,10 @@ function importUserSettings(json: string): boolean {
             } else {
                 localStorage.removeItem(key)
             }
+            importedKeys.push(key)
         }
     }
-    return true
+    return importedKeys
 }
 
 function parseUserSettings(json: string): any {
