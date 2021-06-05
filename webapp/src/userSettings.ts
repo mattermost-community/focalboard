@@ -104,6 +104,9 @@ export function importUserSettingsBlob(blob: string): boolean {
 
 function importUserSettings(json: string): boolean {
     const settings = parseUserSettings(json)
+    if (!settings) {
+        return false
+    }
     const timestamp = settings.timestamp
     const lastTimestamp = localStorage.getItem('timestamp')
     if (!timestamp || (lastTimestamp && Number(timestamp) <= Number(lastTimestamp))) {
@@ -125,6 +128,6 @@ function parseUserSettings(json: string): any {
     try {
         return JSON.parse(json)
     } catch (e) {
-        return {}
+        return undefined
     }
 }
