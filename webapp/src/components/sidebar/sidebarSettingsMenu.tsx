@@ -25,18 +25,16 @@ import CheckIcon from '../../widgets/icons/check'
 type Props = {
     setWhiteLogo: (whiteLogo: boolean) => void
     activeTheme: string
-    activeLanguage: string
 }
 
 const SidebarSettingsMenu = React.memo((props: Props) => {
     const intl = useIntl()
-    const setLanguage = useContext(SetLanguageContext)
+    const setLanguage = useContext<(lang: string) => void>(SetLanguageContext)
 
     // we need this as the sidebar doesn't always need to re-render
     // on theme change. This can cause props and the actual
     // active theme can go out of sync
     const [themeName, setThemeName] = useState(props.activeTheme)
-    const [lang, setLang] = useState(props.activeLanguage)
 
     const updateTheme = (theme: Theme | null, name: string) => {
         const consolidatedTheme = setTheme(theme)
@@ -163,11 +161,8 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
                                     key={language.code}
                                     id={`${language.name}-lang`}
                                     name={intl.formatMessage({id: `Sidebar.${language.name}`, defaultMessage: language.displayName})}
-                                    onClick={async () => {
-                                        setLang(language.code)
-                                        setLanguage(language.code)
-                                    }}
-                                    rightIcon={lang === language.code ? <CheckIcon/> : null}
+                                    onClick={async () => setLanguage(language.code)}
+                                    rightIcon={intl.locale.toLowerCase() === language.code ? <CheckIcon/> : null}
                                 />
                             ))
                         }

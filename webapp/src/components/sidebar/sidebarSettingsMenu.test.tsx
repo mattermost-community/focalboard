@@ -21,7 +21,6 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
             <SidebarSettingsMenu
                 setWhiteLogo={() => {}}
                 activeTheme={defaultThemeName}
-                activeLanguage={'en'}
             />,
         )
 
@@ -34,7 +33,6 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
             <SidebarSettingsMenu
                 setWhiteLogo={() => {}}
                 activeTheme={defaultThemeName}
-                activeLanguage={'en'}
             />,
         )
 
@@ -48,7 +46,6 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
             <SidebarSettingsMenu
                 setWhiteLogo={() => {}}
                 activeTheme={defaultThemeName}
-                activeLanguage={'en'}
             />,
         )
 
@@ -63,7 +60,6 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
             <SidebarSettingsMenu
                 setWhiteLogo={() => {}}
                 activeTheme={defaultThemeName}
-                activeLanguage={'en'}
             />,
         )
 
