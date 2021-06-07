@@ -30,9 +30,9 @@ export type Theme = {
     propRed: string,
 }
 
-export const systemThemeName = 'system'
+export const systemThemeName = 'system-theme'
 
-export const defaultThemeName = 'default'
+export const defaultThemeName = 'default-theme'
 
 export const defaultTheme = {
     mainBg: '255, 255, 255',
@@ -58,7 +58,7 @@ export const defaultTheme = {
     propRed: '#ffa9a9',
 }
 
-export const darkThemeName = 'dark'
+export const darkThemeName = 'dark-theme'
 
 export const darkTheme = {
     ...defaultTheme,
@@ -86,7 +86,7 @@ export const darkTheme = {
     propRed: 'hsla(4, 100%, 70%, 0.4)',
 }
 
-export const lightThemeName = 'light'
+export const lightThemeName = 'light-theme'
 
 export const lightTheme = {
     ...defaultTheme,

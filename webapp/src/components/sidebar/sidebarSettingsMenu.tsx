@@ -25,6 +25,7 @@ import CheckIcon from '../../widgets/icons/check'
 type Props = {
     setWhiteLogo: (whiteLogo: boolean) => void
     activeTheme: string
+    activeLanguage: string
 }
 
 const SidebarSettingsMenu = React.memo((props: Props) => {
@@ -35,6 +36,7 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
     // on theme change. This can cause props and the actual
     // active theme can go out of sync
     const [themeName, setThemeName] = useState(props.activeTheme)
+    const [lang, setLang] = useState(props.activeLanguage)
 
     const updateTheme = (theme: Theme | null, name: string) => {
         const consolidatedTheme = setTheme(theme)
@@ -48,6 +50,87 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
         UserSettings.prefillRandomIcons = !UserSettings.prefillRandomIcons
         setRandomIcons(!randomIcons)
     }
+
+    const languages = [
+        {
+            code: 'en',
+            name: 'english',
+            displayName: 'English',
+        },
+        {
+            code: 'es',
+            name: 'spanish',
+            displayName: 'Spanish',
+        },
+        {
+            code: 'de',
+            name: 'german',
+            displayName: 'German',
+        },
+        {
+            code: 'ja',
+            name: 'japanese',
+            displayName: 'Japanese',
+        },
+        {
+            code: 'fr',
+            name: 'french',
+            displayName: 'French',
+        },
+        {
+            code: 'nl',
+            name: 'dutch',
+            displayName: 'Dutch',
+        },
+        {
+            code: 'ru',
+            name: 'russian',
+            displayName: 'Russian',
+        },
+        {
+            code: 'chinese',
+            name: 'zh',
+            displayName: 'Traditional Chinese',
+        },
+        {
+            code: 'zh_Hans',
+            name: 'simplified-chinese',
+            displayName: 'Simplified Chinese',
+        },
+        {
+            code: 'tr',
+            name: 'turkish',
+            displayName: 'Turkish',
+        },
+        {
+            code: 'oc',
+            name: 'occitan',
+            displayName: 'Occitan',
+        },
+    ]
+
+    const themes = [
+        {
+            id: defaultThemeName,
+            displayName: 'Default theme',
+            theme: defaultTheme,
+        },
+        {
+            id: darkThemeName,
+            displayName: 'Dark theme',
+            theme: darkTheme,
+        },
+        {
+            id: lightThemeName,
+            displayName: 'Light theme',
+            theme: lightTheme,
+        },
+        {
+            id: systemThemeName,
+            displayName: 'System theme',
+            theme: null,
+        },
+    ]
 
     return (
         <div className='SidebarSettingsMenu'>
@@ -74,91 +157,39 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
                         name={intl.formatMessage({id: 'Sidebar.set-language', defaultMessage: 'Set language'})}
                         position='top'
                     >
-                        <Menu.Text
-                            id='english-lang'
-                            name={intl.formatMessage({id: 'Sidebar.english', defaultMessage: 'English'})}
-                            onClick={async () => setLanguage('en')}
-                        />
-                        <Menu.Text
-                            id='spanish-lang'
-                            name={intl.formatMessage({id: 'Sidebar.spanish', defaultMessage: 'Spanish'})}
-                            onClick={async () => setLanguage('es')}
-                        />
-                        <Menu.Text
-                            id='german-lang'
-                            name={intl.formatMessage({id: 'Sidebar.german', defaultMessage: 'German'})}
-                            onClick={async () => setLanguage('de')}
-                        />
-                        <Menu.Text
-                            id='japanese-lang'
-                            name={intl.formatMessage({id: 'Sidebar.japanese', defaultMessage: 'Japanese'})}
-                            onClick={async () => setLanguage('ja')}
-                        />
-                        <Menu.Text
-                            id='french-lang'
-                            name={intl.formatMessage({id: 'Sidebar.french', defaultMessage: 'French'})}
-                            onClick={async () => setLanguage('fr')}
-                        />
-                        <Menu.Text
-                            id='dutch-lang'
-                            name={intl.formatMessage({id: 'Sidebar.dutch', defaultMessage: 'Dutch'})}
-                            onClick={async () => setLanguage('nl')}
-                        />
-                        <Menu.Text
-                            id='russian-lang'
-                            name={intl.formatMessage({id: 'Sidebar.russian', defaultMessage: 'Russian'})}
-                            onClick={async () => setLanguage('ru')}
-                        />
-                        <Menu.Text
-                            id='chinese-lang'
-                            name={intl.formatMessage({id: 'Sidebar.chinese', defaultMessage: 'Traditional Chinese'})}
-                            onClick={async () => setLanguage('zh')}
-                        />
-                        <Menu.Text
-                            id='simplified-chinese-lang'
-                            name={intl.formatMessage({id: 'Sidebar.simplified-chinese', defaultMessage: 'Simplified Chinese'})}
-                            onClick={async () => setLanguage('zh_Hans')}
-                        />
-                        <Menu.Text
-                            id='turkish-lang'
-                            name={intl.formatMessage({id: 'Sidebar.turkish', defaultMessage: 'Turkish'})}
-                            onClick={async () => setLanguage('tr')}
-                        />
-                        <Menu.Text
-                            id='occitan-lang'
-                            name={intl.formatMessage({id: 'Sidebar.occitan', defaultMessage: 'Occitan'})}
-                            onClick={async () => setLanguage('oc')}
-                        />
+                        {
+                            languages.map((language) => (
+                                <Menu.Text
+                                    key={language.code}
+                                    id={`${language.name}-lang`}
+                                    name={intl.formatMessage({id: `Sidebar.${language.name}`, defaultMessage: language.displayName})}
+                                    onClick={async () => {
+                                        setLang(language.code)
+                                        setLanguage(language.code)
+                                    }}
+                                    rightIcon={lang === language.code ? <CheckIcon/> : null}
+                                />
+                            ))
+                        }
                     </Menu.SubMenu>
                     <Menu.SubMenu
                         id='theme'
                         name={intl.formatMessage({id: 'Sidebar.set-theme', defaultMessage: 'Set theme'})}
                         position='top'
                     >
-                        <Menu.Text
-                            id='default-theme'
-                            name={intl.formatMessage({id: 'Sidebar.default-theme', defaultMessage: 'Default theme'})}
-                            onClick={async () => updateTheme(defaultTheme, defaultThemeName)}
-                            rightIcon={themeName === defaultThemeName ? <CheckIcon/> : null}
-                        />
-                        <Menu.Text
-                            id='dark-theme'
-                            name={intl.formatMessage({id: 'Sidebar.dark-theme', defaultMessage: 'Dark theme'})}
-                            onClick={async () => updateTheme(darkTheme, darkThemeName)}
-                            rightIcon={themeName === darkThemeName ? <CheckIcon/> : null}
-                        />
-                        <Menu.Text
-                            id='light-theme'
-                            name={intl.formatMessage({id: 'Sidebar.light-theme', defaultMessage: 'Light theme'})}
-                            onClick={async () => updateTheme(lightTheme, lightThemeName)}
-                            rightIcon={themeName === lightThemeName ? <CheckIcon/> : null}
-                        />
-                        <Menu.Text
-                            id='system-theme'
-                            name={intl.formatMessage({id: 'Sidebar.system-theme', defaultMessage: 'System theme'})}
-                            onClick={async () => updateTheme(null, systemThemeName)}
-                            rightIcon={themeName === systemThemeName ? <CheckIcon/> : null}
-                        />
+                        {
+                            themes.map((theme) =>
+                                (
+                                    <Menu.Text
+                                        key={theme.id}
+                                        id={theme.id}
+                                        name={intl.formatMessage({id: `Sidebar.${theme.id}`, defaultMessage: theme.displayName})}
+                                        onClick={async () => updateTheme(theme.theme, theme.id)}
+                                        rightIcon={themeName === theme.id ? <CheckIcon/> : null}
+                                    />
+                                ),
+                            )
+                        }
                     </Menu.SubMenu>
                     <Menu.Switch
                         id='random-icons'

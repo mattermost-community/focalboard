@@ -11,6 +11,8 @@ import HideSidebarIcon from '../../widgets/icons/hideSidebar'
 import ShowSidebarIcon from '../../widgets/icons/showSidebar'
 
 import './sidebar.scss'
+import {getCurrentLanguage} from '../../i18n'
+
 import SidebarAddBoardMenu from './sidebarAddBoardMenu'
 import SidebarBoardItem from './sidebarBoardItem'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
@@ -115,6 +117,7 @@ const Sidebar = React.memo((props: Props) => {
             <SidebarSettingsMenu
                 setWhiteLogo={(newWhiteLogo: boolean) => setWhiteLogo(newWhiteLogo)}
                 activeTheme={getActiveThemeName()}
+                activeLanguage={getCurrentLanguage()}
             />
         </div>
     )
