@@ -513,24 +513,6 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
 </div>
 `;
 
-exports[`components/sidebar/SidebarSettingsMenu should match snapshot 1`] = `
-<div>
-  <div
-    class="SidebarSettingsMenu"
-  >
-    <div
-      class="MenuWrapper"
-    >
-      <div
-        class="menu-entry"
-      >
-        Settings
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
 exports[`components/sidebar/SidebarSettingsMenu theme menu open should match snapshot 1`] = `
 <div>
   <div
