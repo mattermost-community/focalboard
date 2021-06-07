@@ -2,6 +2,9 @@
 // See LICENSE.txt for license information.
 
 import {CSSObject} from '@emotion/serialize'
+import {isEqual} from 'lodash'
+
+let activeThemeName: string
 
 export type Theme = {
     mainBg: string,
@@ -27,6 +30,10 @@ export type Theme = {
     propRed: string,
 }
 
+export const systemThemeName = 'system-theme'
+
+export const defaultThemeName = 'default-theme'
+
 export const defaultTheme = {
     mainBg: '255, 255, 255',
     mainFg: '55, 53, 47',
@@ -50,6 +57,8 @@ export const defaultTheme = {
     propPink: '#ffd6e9',
     propRed: '#ffa9a9',
 }
+
+export const darkThemeName = 'dark-theme'
 
 export const darkTheme = {
     ...defaultTheme,
@@ -77,6 +86,8 @@ export const darkTheme = {
     propRed: 'hsla(4, 100%, 70%, 0.4)',
 }
 
+export const lightThemeName = 'light-theme'
+
 export const lightTheme = {
     ...defaultTheme,
 
@@ -101,6 +112,8 @@ export function setTheme(theme: Theme | null): Theme {
             consolidatedTheme = {...defaultTheme, ...darkTheme}
         }
     }
+
+    setActiveThemeName(consolidatedTheme, theme)
 
     document.documentElement.style.setProperty('--main-bg', consolidatedTheme.mainBg)
     document.documentElement.style.setProperty('--main-fg', consolidatedTheme.mainFg)
@@ -128,12 +141,26 @@ export function setTheme(theme: Theme | null): Theme {
     return consolidatedTheme
 }
 
+function setActiveThemeName(consolidatedTheme: Theme, theme: Theme | null) {
+    if (theme === null) {
+        activeThemeName = systemThemeName
+    } else if (isEqual(consolidatedTheme, darkTheme)) {
+        activeThemeName = darkThemeName
+    } else if (isEqual(consolidatedTheme, lightTheme)) {
+        activeThemeName = lightThemeName
+    } else {
+        activeThemeName = defaultThemeName
+    }
+}
+
 export function loadTheme(): Theme {
     const themeStr = localStorage.getItem('theme')
     if (themeStr) {
         try {
             const theme = JSON.parse(themeStr)
-            return setTheme(theme)
+            const consolidatedTheme = setTheme(theme)
+            setActiveThemeName(consolidatedTheme, theme)
+            return consolidatedTheme
         } catch (e) {
             return setTheme(null)
         }
@@ -221,4 +248,8 @@ export function getSelectBaseStyle() {
             overflowY: 'unset',
         }),
     }
+}
+
+export function getActiveThemeName(): string {
+    return activeThemeName || defaultThemeName
 }
