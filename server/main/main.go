@@ -95,7 +95,7 @@ func main() {
 	}
 
 	logger := mlog.NewLogger()
-	err = logger.Configure(config.LoggingFile, config.LoggingEscapedJson)
+	err = logger.Configure(config.LoggingFile, config.LoggingJSON)
 	if err != nil {
 		log.Fatal("Error in config file for logger: ", err)
 		return
@@ -206,7 +206,7 @@ func startServer(webPath string, filesPath string, port int, singleUserToken, db
 	}
 
 	logger := mlog.NewLogger()
-	err = logger.Configure(config.LoggingFile, config.LoggingEscapedJson)
+	err = logger.Configure(config.LoggingFile, config.LoggingJSON)
 	if err != nil {
 		log.Fatal("Error in config file for logger: ", err)
 		return

@@ -15,6 +15,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/app"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/audit"
 	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
@@ -39,14 +40,16 @@ type API struct {
 	singleUserToken string
 	MattermostAuth  bool
 	logger          *mlog.Logger
+	audit           *audit.Audit
 }
 
-func NewAPI(appBuilder func() *app.App, singleUserToken string, authService string, logger *mlog.Logger) *API {
+func NewAPI(appBuilder func() *app.App, singleUserToken string, authService string, logger *mlog.Logger, audit *audit.Audit) *API {
 	return &API{
 		appBuilder:      appBuilder,
 		singleUserToken: singleUserToken,
 		authService:     authService,
 		logger:          logger,
+		audit:           audit,
 	}
 }
 
@@ -231,6 +234,11 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	auditRec := a.makeAuditRecord(r, "getBlocks", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+	auditRec.AddMeta("parentID", parentID)
+	auditRec.AddMeta("blockType", blockType)
+
 	blocks, err := a.app().GetBlocks(*container, parentID, blockType)
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
@@ -250,6 +258,9 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jsonBytesResponse(w, http.StatusOK, json)
+
+	auditRec.AddMeta("blockCount", len(blocks))
+	auditRec.Success()
 }
 
 func stampModifiedByUser(r *http.Request, blocks []model.Block) {
@@ -340,6 +351,9 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	stampModifiedByUser(r, blocks)
 
+	auditRec := a.makeAuditRecord(r, "postBlocks", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+
 	err = a.app().InsertBlocks(*container, blocks)
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
@@ -348,6 +362,10 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	a.logger.Debug("POST Blocks", mlog.Int("block_count", len(blocks)))
 	jsonStringResponse(w, http.StatusOK, "{}")
+
+	auditRec.AddMeta("blocks", blocks)
+	auditRec.AddMeta("blockCount", len(blocks))
+	auditRec.Success()
 }
 
 func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {

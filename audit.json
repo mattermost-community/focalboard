@@ -1,0 +1,37 @@
+{
+    "console": {
+        "type": "console",
+        "options": {
+            "out": "stdout"
+        },
+        "format": "plain",
+        "format_options": {
+            "min_level_len": 5,
+            "min_msg_len": 40,
+            "enable_color": true
+        },
+        "levels": [
+            {"id": 1000, "name": "auth", "color": 33},
+            {"id": 1001, "name": "mod", "color": 33},
+            {"id": 1002, "name": "read", "color": 33}
+        ],
+        "maxqueuesize": 1000
+    },
+    "file": {
+        "type": "file",
+        "options": {
+            "filename": "focalboard-audit.log",
+            "max_size": 1000000,
+            "max_age": 1,
+            "max_backups": 10,
+            "compress": true
+        },
+        "format": "json",
+        "levels": [
+            {"id": 1000, "name": "auth"},
+            {"id": 1001, "name": "mod"},
+            {"id": 1002, "name": "read"}
+        ],
+        "maxqueuesize": 1000
+    }
+}
