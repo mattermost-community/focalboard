@@ -383,13 +383,13 @@ class MutableBoardTree implements BoardTree {
                     let result = 0
                     if (template.type === 'select' || template.type === 'multiSelect') {
                         // Always put empty values at the bottom
-                        if (aValue && !bValue) {
+                        if (aValue.length > 0  && bValue.length <= 0) {
                             return -1
                         }
-                        if (bValue && !aValue) {
+                        if (bValue.length > 0 && aValue.length <= 0) {
                             return 1
                         }
-                        if (!aValue && !bValue) {
+                        if (aValue.length <= 0 && bValue.length <= 0) {
                             return this.titleOrCreatedOrder(a, b)
                         }
 
