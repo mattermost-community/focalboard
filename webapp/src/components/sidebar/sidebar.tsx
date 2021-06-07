@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react'
 
 import {IWorkspace} from '../../blocks/workspace'
-import {loadTheme} from '../../theme'
+import {getActiveThemeName, loadTheme} from '../../theme'
 import {WorkspaceTree} from '../../viewModel/workspaceTree'
 import IconButton from '../../widgets/buttons/iconButton'
 import HamburgerIcon from '../../widgets/icons/hamburger'
@@ -114,6 +114,7 @@ const Sidebar = React.memo((props: Props) => {
 
             <SidebarSettingsMenu
                 setWhiteLogo={(newWhiteLogo: boolean) => setWhiteLogo(newWhiteLogo)}
+                activeTheme={getActiveThemeName()}
             />
         </div>
     )

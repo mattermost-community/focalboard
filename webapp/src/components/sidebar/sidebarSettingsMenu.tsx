@@ -4,26 +4,43 @@ import React, {useContext, useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Archiver} from '../../archiver'
-import {darkTheme, defaultTheme, lightTheme, setTheme, Theme} from '../../theme'
+import {
+    darkTheme,
+    darkThemeName,
+    defaultTheme,
+    defaultThemeName,
+    lightTheme,
+    lightThemeName,
+    setTheme, systemThemeName,
+    Theme,
+} from '../../theme'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {SetLanguageContext} from '../../setLanguageContext'
 import {UserSettings} from '../../userSettings'
 
 import './sidebarSettingsMenu.scss'
+import CheckIcon from '../../widgets/icons/check'
 
 type Props = {
     setWhiteLogo: (whiteLogo: boolean) => void
+    activeTheme: string
 }
 
 const SidebarSettingsMenu = React.memo((props: Props) => {
     const intl = useIntl()
     const setLanguage = useContext(SetLanguageContext)
 
-    const updateTheme = (theme: Theme | null) => {
+    // we need this as the sidebar doesn't always need to re-render
+    // on theme change. This can cause props and the actual
+    // active theme can go out of sync
+    const [themeName, setThemeName] = useState(props.activeTheme)
+
+    const updateTheme = (theme: Theme | null, name: string) => {
         const consolidatedTheme = setTheme(theme)
         const whiteLogo = (consolidatedTheme.sidebarWhiteLogo === 'true')
         props.setWhiteLogo(whiteLogo)
+        setThemeName(name)
     }
 
     const [randomIcons, setRandomIcons] = useState(UserSettings.prefillRandomIcons)
@@ -121,22 +138,26 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
                         <Menu.Text
                             id='default-theme'
                             name={intl.formatMessage({id: 'Sidebar.default-theme', defaultMessage: 'Default theme'})}
-                            onClick={async () => updateTheme(defaultTheme)}
+                            onClick={async () => updateTheme(defaultTheme, defaultThemeName)}
+                            rightIcon={themeName === defaultThemeName ? <CheckIcon/> : null}
                         />
                         <Menu.Text
                             id='dark-theme'
                             name={intl.formatMessage({id: 'Sidebar.dark-theme', defaultMessage: 'Dark theme'})}
-                            onClick={async () => updateTheme(darkTheme)}
+                            onClick={async () => updateTheme(darkTheme, darkThemeName)}
+                            rightIcon={themeName === darkThemeName ? <CheckIcon/> : null}
                         />
                         <Menu.Text
                             id='light-theme'
                             name={intl.formatMessage({id: 'Sidebar.light-theme', defaultMessage: 'Light theme'})}
-                            onClick={async () => updateTheme(lightTheme)}
+                            onClick={async () => updateTheme(lightTheme, lightThemeName)}
+                            rightIcon={themeName === lightThemeName ? <CheckIcon/> : null}
                         />
                         <Menu.Text
                             id='system-theme'
                             name={intl.formatMessage({id: 'Sidebar.system-theme', defaultMessage: 'System theme'})}
-                            onClick={async () => updateTheme(null)}
+                            onClick={async () => updateTheme(null, systemThemeName)}
+                            rightIcon={themeName === systemThemeName ? <CheckIcon/> : null}
                         />
                     </Menu.SubMenu>
                     <Menu.Switch
