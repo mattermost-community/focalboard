@@ -37,7 +37,8 @@ const TableRow = React.memo((props: Props) => {
     const [title, setTitle] = useState(props.card.title)
     const {card} = props
     const isManualSort = activeView.sortOptions.length < 1
-    const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly && isManualSort, props.onDrop)
+    const isGrouped = Boolean(activeView.groupById)
+    const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly && (isManualSort || isGrouped), props.onDrop)
 
     useEffect(() => {
         if (props.focusOnMount) {
@@ -56,6 +57,13 @@ const TableRow = React.memo((props: Props) => {
     if (isOver) {
         className += ' dragover'
     }
+    if (isGrouped) {
+        const groupID = activeView.groupById || ''
+        const groupValue = card.properties[groupID] as string || 'undefined'
+        if (activeView.collapsedOptionIds.indexOf(groupValue) > -1) {
+            className += ' hidden'
+        }
+    }
 
     if (!columnRefs.get(Constants.titleColumnId)) {
         columnRefs.set(Constants.titleColumnId, React.createRef())
@@ -70,7 +78,6 @@ const TableRow = React.memo((props: Props) => {
         >
 
             {/* Name / title */}
-
             <div
                 className='octo-table-cell title-cell'
                 id='mainBoardHeader'

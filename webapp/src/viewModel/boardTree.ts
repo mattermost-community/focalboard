@@ -241,6 +241,7 @@ class MutableBoardTree implements BoardTree {
             Utils.assertValue(property)
         }
         this.groupByProperty = property
+        this.activeView.groupById = property?.id
 
         this.groupCards()
     }

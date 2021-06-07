@@ -82,10 +82,10 @@ class Utils {
         Array.from(children).forEach((element) => {
             switch (element.className) {
             case IconClass:
-            case SpacerClass:
             case HorizontalGripClass:
                 myResults.padding += element.clientWidth
                 break
+            case SpacerClass:
             case OpenButtonClass:
                 break
             default: {

@@ -41,7 +41,7 @@ const ViewHeader = React.memo((props: Props) => {
     const {boardTree, showView} = props
     const {board, activeView} = boardTree
 
-    const withGroupBy = activeView.viewType === 'board'
+    const withGroupBy = activeView.viewType === 'board' || activeView.viewType === 'table'
 
     const [viewTitle, setViewTitle] = useState(activeView.title)
 
