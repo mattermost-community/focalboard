@@ -21,6 +21,8 @@ ARG PGID=2000
 
 EXPOSE 8000/tcp
 
+VOLUME /data
+
 RUN addgroup -g ${PGID} focalboard && \
     adduser -H -D -u ${PUID} -G focalboard focalboard
 
@@ -29,7 +31,7 @@ WORKDIR /opt/focalboard
 COPY --from=gobuild /go/focalboard/bin/linux/focalboard-server bin/
 COPY --from=nodebuild /focalboard/webapp/pack pack/
 COPY --from=nodebuild /focalboard/LICENSE.txt LICENSE.txt
-COPY --from=nodebuild /focalboard/server-config.json config.json
+COPY --from=nodebuild /focalboard/docker/server_config.json config.json
 
 RUN chown -R ${PUID}:${PGID} /opt/focalboard
 
