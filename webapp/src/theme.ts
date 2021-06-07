@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import {CSSObject} from '@emotion/serialize'
-import * as _ from 'lodash'
+import {isEqual} from 'lodash'
 
 let activeThemeName: string
 
@@ -144,9 +144,9 @@ export function setTheme(theme: Theme | null): Theme {
 function setActiveThemeName(consolidatedTheme: Theme, theme: Theme | null) {
     if (theme === null) {
         activeThemeName = systemThemeName
-    } else if (_.isEqual(consolidatedTheme, darkTheme)) {
+    } else if (isEqual(consolidatedTheme, darkTheme)) {
         activeThemeName = darkThemeName
-    } else if (_.isEqual(consolidatedTheme, lightTheme)) {
+    } else if (isEqual(consolidatedTheme, lightTheme)) {
         activeThemeName = lightThemeName
     } else {
         activeThemeName = defaultThemeName
