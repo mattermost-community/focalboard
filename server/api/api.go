@@ -863,6 +863,9 @@ func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
 
 	jsonBytesResponse(w, http.StatusOK, sharingData)
 
+	if sharing == nil {
+		sharing = &model.Sharing{}
+	}
 	a.logger.Debug("GET sharing",
 		mlog.String("rootID", rootID),
 		mlog.String("shareID", sharing.ID),
