@@ -228,7 +228,8 @@ class Kanban extends React.Component<Props, State> {
             const srcIndex = visibleOptionIds.indexOf(dstOption.id)
             const destIndex = visibleOptionIds.indexOf(option.id)
 
-            visibleOptionIds.splice(destIndex, 0, visibleOptionIds.splice(srcIndex, 1)[0])
+            visibleOptionIds[srcIndex] = option.id
+            visibleOptionIds[destIndex] = dstOption.id
 
             await mutator.changeViewVisibleOptionIds(activeView, visibleOptionIds)
         }
