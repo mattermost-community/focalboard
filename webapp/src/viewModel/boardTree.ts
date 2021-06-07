@@ -381,7 +381,8 @@ class MutableBoardTree implements BoardTree {
                     const aValue = a.properties[sortPropertyId] || ''
                     const bValue = b.properties[sortPropertyId] || ''
                     let result = 0
-                    if (template.type === 'select') {
+                    if (template.type === 'select' || template.type === 'multiSelect') {
+       
                         // Always put empty values at the bottom
                         if (aValue && !bValue) {
                             return -1
@@ -394,8 +395,8 @@ class MutableBoardTree implements BoardTree {
                         }
 
                         // Sort by the option order (not alphabetically by value)
-                        const aOrder = template.options.findIndex((o) => o.id === aValue)
-                        const bOrder = template.options.findIndex((o) => o.id === bValue)
+                        const aOrder = template.options.findIndex((o) => o.id === (Array.isArray(aValue) ? aValue[0] : aValue))
+                        const bOrder = template.options.findIndex((o) => o.id === (Array.isArray(bValue) ? bValue[0] : bValue))
 
                         result = aOrder - bOrder
                     } else if (template.type === 'number' || template.type === 'date') {
