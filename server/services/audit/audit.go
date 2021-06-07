@@ -76,5 +76,5 @@ func (a *Audit) LogRecord(level mlog.Level, rec *Record) {
 		fields = append(fields, mlog.Any(meta.K, meta.V))
 	}
 
-	a.auditLogger.Log(level, "audit", fields...)
+	a.auditLogger.Log(level, "audit "+rec.Event, fields...)
 }

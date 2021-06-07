@@ -21,9 +21,8 @@ type wilted struct {
 }
 
 func conv(val interface{}) (interface{}, bool) {
-	switch v := val.(type) {
-	case *bloated:
-		return &wilted{wilt1: v.fld1}, true
+	if b, ok := val.(*bloated); ok {
+		return &wilted{wilt1: b.fld1}, true
 	}
 	return val, false
 }

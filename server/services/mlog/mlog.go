@@ -24,6 +24,7 @@ type Level = logr.Level
 type Option = logr.Option
 type Target = logr.Target
 type LogRec = logr.LogRec
+type LogCloner = logr.LogCloner
 type MetricsCollector = logr.MetricsCollector
 
 // Any picks the best supported field type based on type of val.

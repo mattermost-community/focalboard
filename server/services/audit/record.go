@@ -3,6 +3,8 @@
 
 package audit
 
+import "github.com/mattermost/focalboard/server/services/mlog"
+
 // Meta represents metadata that can be added to a audit record as name/value pairs.
 type Meta struct {
 	K string
@@ -44,13 +46,19 @@ func (rec *Record) AddMeta(name string, val interface{}) {
 
 	// possibly convert val to something better suited for serializing
 	// via zero or more conversion functions.
-	var converted bool
 	for _, conv := range rec.metaConv {
-		val, converted = conv(val)
-		if converted {
+		converted, wasConverted := conv(val)
+		if wasConverted {
+			val = converted
 			break
 		}
 	}
+
+	lc, ok := val.(mlog.LogCloner)
+	if ok {
+		val = lc.LogClone()
+	}
+
 	rec.Meta = append(rec.Meta, Meta{K: name, V: val})
 }
 

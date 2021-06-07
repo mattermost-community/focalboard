@@ -10,8 +10,12 @@ import (
 // makeAuditRecord creates an audit record pre-populated with data from the request.
 func (a *API) makeAuditRecord(r *http.Request, event string, initialStatus string) *audit.Record {
 	ctx := r.Context()
-	session := ctx.Value("session").(*model.Session)
-	userID := session.UserID
+	var sessionID string
+	var userID string
+	if session, ok := ctx.Value("session").(*model.Session); ok {
+		sessionID = session.ID
+		userID = session.UserID
+	}
 
 	workspaceID := "unknown"
 	container, err := a.getContainer(r)
@@ -24,7 +28,7 @@ func (a *API) makeAuditRecord(r *http.Request, event string, initialStatus strin
 		Event:     event,
 		Status:    initialStatus,
 		UserID:    userID,
-		SessionID: session.ID,
+		SessionID: sessionID,
 		Client:    r.UserAgent(),
 		IPAddress: r.RemoteAddr,
 		Meta:      []audit.Meta{{K: audit.KeyWorkspaceID, V: workspaceID}},
