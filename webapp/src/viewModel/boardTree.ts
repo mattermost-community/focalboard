@@ -382,7 +382,6 @@ class MutableBoardTree implements BoardTree {
                     const bValue = b.properties[sortPropertyId] || ''
                     let result = 0
                     if (template.type === 'select' || template.type === 'multiSelect') {
-       
                         // Always put empty values at the bottom
                         if (aValue && !bValue) {
                             return -1

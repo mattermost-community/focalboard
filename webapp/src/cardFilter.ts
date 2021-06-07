@@ -50,13 +50,13 @@ class CardFilter {
             if (filter.values.length < 1) {
                 break
             }		// No values = ignore clause (always met)
-            return (filter.values.find((cValue) => Array.isArray(value) ? value.includes(cValue) : cValue === value) !== undefined)
+            return (filter.values.find((cValue) => (Array.isArray(value) ? value.includes(cValue) : cValue === value)) !== undefined)
         }
         case 'notIncludes': {
             if (filter.values.length < 1) {
                 break
             }		// No values = ignore clause (always met)
-            return (filter.values.find((cValue) => Array.isArray(value) ? value.includes(cValue) : cValue === value) === undefined)
+            return (filter.values.find((cValue) => (Array.isArray(value) ? value.includes(cValue) : cValue === value)) === undefined)
         }
         case 'isEmpty': {
             return value.length <= 0
