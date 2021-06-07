@@ -150,7 +150,7 @@ Change the dbconfig setting to use the postgres database you created:
 ## Install MySQL 
 
 Alternate to Postgress you also can store your data in a MySQL/MariaDB database.
-16). To install, run:
+To install, run:
 
 ```
 sudo apt install mariadb-server mariadb-client
