@@ -15,6 +15,7 @@ interface BoardView extends IBlock {
     readonly visiblePropertyIds: readonly string[]
     readonly visibleOptionIds: readonly string[]
     readonly hiddenOptionIds: readonly string[]
+    readonly collapsedOptionIds: readonly string[]
     readonly filter: FilterGroup
     readonly cardOrder: readonly string[]
     readonly columnWidths: Readonly<Record<string, number>>
@@ -65,6 +66,13 @@ class MutableBoardView extends MutableBlock implements BoardView {
         this.fields.hiddenOptionIds = value
     }
 
+    get collapsedOptionIds(): string[] {
+        return this.fields.collapsedOptionIds
+    }
+    set collapsedOptionIds(value: string[]) {
+        this.fields.collapsedOptionIds = value
+    }
+
     get filter(): FilterGroup {
         return this.fields.filter
     }
@@ -95,6 +103,7 @@ class MutableBoardView extends MutableBlock implements BoardView {
         this.visiblePropertyIds = block.fields?.visiblePropertyIds?.slice() || []
         this.visibleOptionIds = block.fields?.visibleOptionIds?.slice() || []
         this.hiddenOptionIds = block.fields?.hiddenOptionIds?.slice() || []
+        this.collapsedOptionIds = block.fields?.collapsedOptionIds?.slice() || []
         this.filter = new FilterGroup(block.fields?.filter)
         this.cardOrder = block.fields?.cardOrder?.slice() || []
         this.columnWidths = {...(block.fields?.columnWidths || {})}

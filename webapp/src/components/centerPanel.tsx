@@ -164,7 +164,7 @@ class CenterPanel extends React.Component<Props, State> {
                     readonly={this.props.readonly}
                     cardIdToFocusOnRender={this.state.cardIdToFocusOnRender}
                     showCard={this.showCard}
-                    addCard={(show) => this.addCard('', show)}
+                    addCard={this.addCard}
                     onCardClicked={this.cardClicked}
                     intl={this.props.intl}
                 />}
@@ -212,7 +212,7 @@ class CenterPanel extends React.Component<Props, State> {
         card.parentId = boardTree.board.id
         card.rootId = boardTree.board.rootId
         const propertiesThatMeetFilters = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
-        if (activeView.viewType === 'board' && boardTree.groupByProperty) {
+        if ((activeView.viewType === 'board' || activeView.viewType === 'table') && boardTree.groupByProperty) {
             if (groupByOptionId) {
                 propertiesThatMeetFilters[boardTree.groupByProperty.id] = groupByOptionId
             } else {

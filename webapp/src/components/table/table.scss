@@ -1,4 +1,76 @@
 .Table {
+    .table-row-container {
+        margin-top: 48px;
+    }
+    .octo-group-header-cell {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        height: 50px;
+        margin-right: 15px;
+        margin-top: 15px;
+        vertical-align: middle;
+
+        &.narrow {
+            width: 220px;
+        }
+
+        > div {
+            margin-right: 8px;
+
+            &:last-child {
+                margin: 0;
+            }
+        }
+
+        .IconButton {
+            background-color: unset;
+            &:hover:not(.readonly) {
+                background-color: rgba(var(--body-color), 0.1);
+            }
+            &.readonly {
+                opacity: .5;
+            }
+        }
+
+        .Label {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 3px;
+            line-height: 20px;
+            margin-right: 5px;
+            color: rgba(var(--body-color), 1);
+            white-space: nowrap;
+            text-transform: none;
+            font-weight: normal;
+            font-size: 16px;
+            width: 100%;
+        
+            input {
+                background: transparent;
+                width: 100%;
+                text-transform: none;
+                font-weight: normal;
+                font-size: 16px;
+                //     line-height: 20px;
+                color: rgba(var(--body-color), 1);
+            }
+        }
+        
+        > .Button {
+            &.IconButton:not(.readonly) {
+                cursor: pointer;
+            }
+            cursor: auto;
+        }
+        &.expanded {
+            .DisclosureTriangleIcon {
+                transform: rotate(90deg);
+            }
+        }
+    }
+
     .octo-table-cell {
         flex: 0 0 auto;
         display: flex;
@@ -85,6 +157,9 @@
         flex-direction: row;
 
         border-bottom: solid 1px rgba(var(--body-color), 0.09);
+        &.hidden {
+            display: none;
+        }
     }
 
     .octo-table-header {
@@ -117,7 +192,6 @@
     }
 
     .MenuWrapper {
-        width: 100%;
         max-width: calc(100% - 5px);
 
         .Label {
