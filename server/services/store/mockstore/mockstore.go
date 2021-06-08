@@ -150,6 +150,21 @@ func (mr *MockStoreMockRecorder) GetBlockCountsByType() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlockCountsByType", reflect.TypeOf((*MockStore)(nil).GetBlockCountsByType))
 }
 
+// GetBlocks mocks base method.
+func (m *MockStore) GetBlocks(ids []string) ([]model.Block, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBlocks", ids)
+	ret0, _ := ret[0].([]model.Block)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBlocks indicates an expected call of GetBlocks.
+func (mr *MockStoreMockRecorder) GetBlocks(ids interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlocks", reflect.TypeOf((*MockStore)(nil).GetBlocks), ids)
+}
+
 // GetBlocksWithParent mocks base method.
 func (m *MockStore) GetBlocksWithParent(c store.Container, parentID string) ([]model.Block, error) {
 	m.ctrl.T.Helper()
@@ -181,18 +196,18 @@ func (mr *MockStoreMockRecorder) GetBlocksWithParentAndType(c, parentID, blockTy
 }
 
 // GetBlocksWithRootID mocks base method.
-func (m *MockStore) GetBlocksWithRootID(arg0 store.Container, arg1 string) ([]model.Block, error) {
+func (m *MockStore) GetBlocksWithRootID(c store.Container, rootID string) ([]model.Block, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetBlocksWithRootID", arg0, arg1)
+	ret := m.ctrl.Call(m, "GetBlocksWithRootID", c, rootID)
 	ret0, _ := ret[0].([]model.Block)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetBlocksWithRootID indicates an expected call of GetBlocksWithRootID.
-func (mr *MockStoreMockRecorder) GetBlocksWithRootID(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) GetBlocksWithRootID(c, rootID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlocksWithRootID", reflect.TypeOf((*MockStore)(nil).GetBlocksWithRootID), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlocksWithRootID", reflect.TypeOf((*MockStore)(nil).GetBlocksWithRootID), c, rootID)
 }
 
 // GetBlocksWithType mocks base method.
@@ -421,18 +436,18 @@ func (mr *MockStoreMockRecorder) GetWorkspaceCount() *gomock.Call {
 }
 
 // HasWorkspaceAccess mocks base method.
-func (m *MockStore) HasWorkspaceAccess(arg0, arg1 string) (bool, error) {
+func (m *MockStore) HasWorkspaceAccess(userID, workspaceID string) (bool, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "HasWorkspaceAccess", arg0, arg1)
+	ret := m.ctrl.Call(m, "HasWorkspaceAccess", userID, workspaceID)
 	ret0, _ := ret[0].(bool)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // HasWorkspaceAccess indicates an expected call of HasWorkspaceAccess.
-func (mr *MockStoreMockRecorder) HasWorkspaceAccess(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) HasWorkspaceAccess(userID, workspaceID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasWorkspaceAccess", reflect.TypeOf((*MockStore)(nil).HasWorkspaceAccess), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasWorkspaceAccess", reflect.TypeOf((*MockStore)(nil).HasWorkspaceAccess), userID, workspaceID)
 }
 
 // InsertBlock mocks base method.

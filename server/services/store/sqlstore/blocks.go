@@ -467,3 +467,31 @@ func (s *SQLStore) GetBlockCountsByType() (map[string]int64, error) {
 	}
 	return m, nil
 }
+
+func (s *SQLStore) GetBlocks(ids []string) ([]model.Block, error) {
+	query := s.getQueryBuilder().
+		Select(
+			"id",
+			"parent_id",
+			"root_id",
+			"modified_by",
+			s.escapeField("schema"),
+			"type",
+			"title",
+			"COALESCE(fields, '{}')",
+			"create_at",
+			"update_at",
+			"delete_at",
+		).
+		From(s.tablePrefix + "blocks").
+		Where(sq.Eq{"id": ids})
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`GetBlocks ERROR`, mlog.Err(err))
+
+		return nil, err
+	}
+
+	return s.blocksFromRows(rows)
+}

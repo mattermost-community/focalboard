@@ -64,6 +64,11 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		defer tearDown()
 		testGetBlocksWithRootID(t, store, container)
 	})
+	t.Run("TestGetBlocks", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		TestGetBlocks(t, store, container)
+	})
 }
 
 func testInsertBlock(t *testing.T, store store.Store, container store.Container) {
@@ -720,5 +725,67 @@ func testGetBlocksWithRootID(t *testing.T, store store.Store, container store.Co
 		blocks, err = store.GetBlocksWithRootID(container, "block1")
 		require.NoError(t, err)
 		require.Len(t, blocks, 4)
+	})
+}
+
+func TestGetBlocks(t *testing.T, store store.Store, container store.Container) {
+	userID := "user-id"
+	blocksToInsert := []model.Block{
+		{
+			ID:         "block1",
+			ParentID:   "",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test",
+		},
+		{
+			ID:         "block2",
+			ParentID:   "block1",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test",
+		},
+		{
+			ID:         "block3",
+			ParentID:   "block1",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test",
+		},
+		{
+			ID:         "block4",
+			ParentID:   "block1",
+			RootID:     "block1",
+			ModifiedBy: userID,
+			Type:       "test2",
+		},
+		{
+			ID:         "block5",
+			ParentID:   "block2",
+			RootID:     "block2",
+			ModifiedBy: userID,
+			Type:       "test",
+		},
+	}
+	InsertBlocks(t, store, container, blocksToInsert)
+	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
+
+	t.Run("success scenario", func(t *testing.T) {
+		blocks, err := store.GetBlocks([]string{
+			"block1",
+			"block2",
+			"block3",
+			"block4",
+			"block5",
+		})
+
+		require.NoError(t, err)
+		require.Equal(t, 5, len(blocks))
+	})
+
+	t.Run("fetch non-existing block", func(t *testing.T) {
+		blocks, err := store.GetBlocks([]string{"block_non_existing"})
+		require.NoError(t, err)
+		require.Equal(t, 0, len(blocks))
 	})
 }

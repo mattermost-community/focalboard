@@ -102,3 +102,18 @@ func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) 
 func (a *App) GetBlockCountsByType() (map[string]int64, error) {
 	return a.store.GetBlockCountsByType()
 }
+
+func (a *App) GetParentBlocks(blocks []model.Block) ([]model.Block, error) {
+	var parentBlockIDs []string
+	for _, block := range blocks {
+		if block.ParentID != "" && block.ParentID != block.ID {
+			parentBlockIDs = append(parentBlockIDs, block.ParentID)
+		}
+
+		if block.RootID != "" && block.RootID != block.ID {
+			parentBlockIDs = append(parentBlockIDs, block.RootID)
+		}
+	}
+
+	return a.store.GetBlocks(parentBlockIDs)
+}

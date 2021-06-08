@@ -252,7 +252,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	jsonBytesResponse(w, http.StatusOK, json)
 }
 
-func stampModifiedByUser(r *http.Request, blocks []model.Block) {
+func stampModified(r *http.Request, blocks []model.Block) {
 	ctx := r.Context()
 	session := ctx.Value("session").(*model.Session)
 	userID := session.UserID
@@ -260,8 +260,10 @@ func stampModifiedByUser(r *http.Request, blocks []model.Block) {
 		userID = ""
 	}
 
+	now := utils.GetMillis()
 	for i := range blocks {
 		blocks[i].ModifiedBy = userID
+		blocks[i].UpdateAt = now
 	}
 }
 
@@ -318,27 +320,22 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, block := range blocks {
-		// Error checking
-		if len(block.Type) < 1 {
-			message := fmt.Sprintf("missing type for block id %s", block.ID)
-			a.errorResponse(w, http.StatusBadRequest, message, nil)
-			return
-		}
-
-		if block.CreateAt < 1 {
-			message := fmt.Sprintf("invalid createAt for block id %s", block.ID)
-			a.errorResponse(w, http.StatusBadRequest, message, nil)
-			return
-		}
-
-		if block.UpdateAt < 1 {
-			message := fmt.Sprintf("invalid UpdateAt for block id %s", block.ID)
-			a.errorResponse(w, http.StatusBadRequest, message, nil)
+		if validationErr := block.IsValid(); validationErr != nil {
+			a.errorResponse(w, http.StatusBadRequest, validationErr.Error(), nil)
 			return
 		}
 	}
 
-	stampModifiedByUser(r, blocks)
+	// we need to update the updated at/by
+	// fields of parent blocks.
+	parentBlocks, err := a.app().GetParentBlocks(blocks)
+	if err != nil {
+		a.errorResponse(w, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	blocks = append(blocks, parentBlocks...)
+	stampModified(r, blocks)
 
 	err = a.app().InsertBlocks(*container, blocks)
 	if err != nil {
@@ -731,7 +728,7 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stampModifiedByUser(r, blocks)
+	stampModified(r, blocks)
 
 	err = a.app().InsertBlocks(*container, blocks)
 	if err != nil {

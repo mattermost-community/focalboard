@@ -2,6 +2,7 @@ package model
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 )
 
@@ -51,6 +52,22 @@ type Block struct {
 	// The deleted time. Set to indicate this block is deleted
 	// required: false
 	DeleteAt int64 `json:"deleteAt"`
+}
+
+func (block Block) IsValid() error {
+	if len(block.Type) < 1 {
+		return fmt.Errorf("missing type for block id %s", block.ID)
+	}
+
+	if block.CreateAt < 1 {
+		return fmt.Errorf("invalid createAt for block id %s", block.ID)
+	}
+
+	if block.UpdateAt < 1 {
+		return fmt.Errorf("invalid UpdateAt for block id %s", block.ID)
+	}
+
+	return nil
 }
 
 // Archive is an import / export archive
