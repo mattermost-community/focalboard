@@ -10,6 +10,27 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+      
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.16
+      
+    - name: Setup Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: 16.3.0
+  
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
+      
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v1
+      with:
+        nuget-version: '5.x'
+        
+    - name: win-node-env
+      run: npm install -g win-node-env
 
     - name: Replace token 1
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
@@ -17,29 +38,8 @@ jobs:
     - name: Replace token 2
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
 
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.2
-
-    - name: win-node-env
-      run: npm install -g win-node-env
-
     - name: npm install
       run: cd webapp; npm install --no-optional
-
-    - name: Set up Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.16
-
-    - name: Setup Node
-      uses: actions/setup-node@v2
-      with:
-        node-version: 16.1.0
-
-    - name: Setup NuGet
-      uses: nuget/setup-nuget@v1
-      with:
-        nuget-version: '5.x'
 
     - name: NuGet Restore
       run: nuget restore win-wpf\Focalboard.sln
