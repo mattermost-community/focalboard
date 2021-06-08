@@ -77,7 +77,6 @@ const TableGroup = React.memo((props: Props): JSX.Element => {
                 selectedCardIds={props.selectedCardIds}
                 readonly={props.readonly}
                 cardIdToFocusOnRender={props.cardIdToFocusOnRender}
-                intl={props.intl}
                 showCard={props.showCard}
                 addCard={props.addCard}
                 onCardClicked={props.onCardClicked}
