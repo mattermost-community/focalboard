@@ -10,7 +10,7 @@ assignees: ''
 **Summary:**
 Concisely summarize improvement to documentation requested. 
 
-**Link to documentation page**
+**Link to documentation page:**
 If applicable, link to the documentation page and/or section where you feel the improvement could be added. E.g. `https://www.focalboard.com/guide/user/#renaming-boards`
 
 **(Optional) Additional context and/or screenshot:**
