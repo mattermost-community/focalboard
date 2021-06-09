@@ -63,7 +63,7 @@ describe('widgets/PropertyMenu', () => {
         const input = getByDisplayValue(/test-property/i)
         fireEvent.change(input, {target: {value: 'changed name'}})
         fireEvent.blur(input)
-        expect(callback).toHaveBeenCalledWith('changed name')
+        expect(callback).toHaveBeenCalledWith('text', 'changed name')
     })
 
     test('handles type change event', () => {
@@ -81,7 +81,7 @@ describe('widgets/PropertyMenu', () => {
         const menuOpen = getByText(/Type: Text/i)
         fireEvent.click(menuOpen)
         fireEvent.click(getByText('Select'))
-        expect(callback).toHaveBeenCalledWith('select')
+        expect(callback).toHaveBeenCalledWith('select', 'test-property')
     })
 
     test('should match snapshot', () => {
