@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useRef, useEffect} from 'react'
+import {debounce} from 'lodash'
 import {useIntl, IntlShape} from 'react-intl'
 
 import {PropertyType} from '../blocks/board'
@@ -53,6 +54,8 @@ const PropertyMenu = React.memo((props: Props) => {
         defaultMessage: 'Delete',
     })
 
+    const debouncedOnTypeAndNameChanged = (newType: PropertyType) => debounce(() => props.onTypeAndNameChanged(newType, name), 150)
+
     useEffect(() => {
         nameTextbox.current?.focus()
         nameTextbox.current?.setSelectionRange(0, name.length)
@@ -91,62 +94,62 @@ const PropertyMenu = React.memo((props: Props) => {
                 <Menu.Text
                     id='text'
                     name={typeDisplayName(intl, 'text')}
-                    onClick={() => props.onTypeAndNameChanged('text', name)}
+                    onClick={() => debouncedOnTypeAndNameChanged('text')()}
                 />
                 <Menu.Text
                     id='number'
                     name={typeDisplayName(intl, 'number')}
-                    onClick={() => props.onTypeAndNameChanged('number', name)}
+                    onClick={() => debouncedOnTypeAndNameChanged('number')()}
                 />
                 <Menu.Text
                     id='email'
                     name={typeDisplayName(intl, 'email')}
-                    onClick={() => props.onTypeAndNameChanged('email', name)}
+                    onClick={() => debouncedOnTypeAndNameChanged('email')()}
                 />
                 <Menu.Text
                     id='phone'
                     name={typeDisplayName(intl, 'phone')}
-                    onClick={() => props.onTypeAndNameChanged('phone', name)}
+                    onClick={() => debouncedOnTypeAndNameChanged('phone')()}
                 />
                 <Menu.Text
                     id='url'
                     name={typeDisplayName(intl, 'url')}
-                    onClick={() => props.onTypeAndNameChanged('url', name)}
+                    onClick={() => debouncedOnTypeAndNameChanged('url')()}
                 />
                 <Menu.Text
                     id='select'
                     name={typeDisplayName(intl, 'select')}
-                    onClick={() => props.onTypeAndNameChanged('select', name)}
+                    onClick={() => debouncedOnTypeAndNameChanged('select')()}
                 />
                 <Menu.Text
                     id='multiSelect'
                     name={typeDisplayName(intl, 'multiSelect')}
-                    onClick={() => props.onTypeAndNameChanged('multiSelect', name)}
+                    onClick={() => debouncedOnTypeAndNameChanged('multiSelect')()}
                 />
                 <Menu.Text
                     id='date'
                     name={typeDisplayName(intl, 'date')}
-                    onClick={() => props.onTypeAndNameChanged('date', name)}
+                    onClick={() => debouncedOnTypeAndNameChanged('date')()}
                 />
                 <Menu.Text
                     id='person'
                     name={typeDisplayName(intl, 'person')}
-                    onClick={() => props.onTypeAndNameChanged('person', name)}
+                    onClick={() => debouncedOnTypeAndNameChanged('person')()}
                 />
                 <Menu.Text
                     id='checkbox'
                     name={typeDisplayName(intl, 'checkbox')}
-                    onClick={() => props.onTypeAndNameChanged('checkbox', name)}
+                    onClick={() => debouncedOnTypeAndNameChanged('checkbox')()}
                 />
                 <Menu.Text
                     id='createdTime'
                     name={typeDisplayName(intl, 'createdTime')}
-                    onClick={() => props.onTypeAndNameChanged('createdTime', name)}
+                    onClick={() => debouncedOnTypeAndNameChanged('createdTime')()}
                 />
                 <Menu.Text
                     id='updatedTime'
                     name={typeDisplayName(intl, 'updatedTime')}
-                    onClick={() => props.onTypeAndNameChanged('updatedTime', name)}
+                    onClick={() => debouncedOnTypeAndNameChanged('updatedTime')()}
                 />
             </Menu.SubMenu>
             <Menu.Text

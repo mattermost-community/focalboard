@@ -23,10 +23,6 @@ function TextOption(props:TextOptionProps): JSX.Element {
                 e.target.dispatchEvent(new Event('menuItemClicked'))
                 props.onClick(props.id)
             }}
-            onMouseDown={(e: React.MouseEvent) => {
-                e.target.dispatchEvent(new Event('menuItemClicked'))
-                props.onClick(props.id)
-            }}
         >
             {icon ?? <div className='noicon'/>}
             <div className='menu-name'>{name}</div>
