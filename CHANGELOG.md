@@ -6,6 +6,21 @@ This changelog summarizes updates to our open source project. You can also find 
 
 ## [Work In Progress] - vNext Release - [Date TBD]
 
+## v0.7.0 Release - June, 2021
+* Multi-select property type. Thanks @hahmadia!
+* Checkbox property type. Thanks @mickmister!
+* Person property type. Thanks @harshilsharma63!
+* Grouped table view. Thanks @sbishel!
+* Export individual boards. Thanks @hahmadia!
+* Focalboard can now be built as a Mattermost plugin! Thanks @mgdelacroix and @jespino!
+* Improved read-only fields display. Thanks @Johennes!
+* Improved logging. Thanks @wiggin77!
+* Prometheus metrics. Thanks @spirosoik!
+* Mac: Open window by clicking on the dock icon. Thanks @Johennes!
+* Additional unit tests. Thanks @matheusmosca!
+* Fixed Linux app caret display. Thanks @fritsstegmann!
+* Added CodeQL check. Thanks @srkgupta!
+
 ## v0.6.7 Release - May, 2021
 
 * Key Updates:

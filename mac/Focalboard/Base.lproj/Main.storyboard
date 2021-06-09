@@ -723,14 +723,14 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textView editable="NO" importsGraphics="NO" verticallyResizable="YES" smartInsertDelete="YES" id="f3s-Q5-6IG">
-                                            <rect key="frame" x="0.0" y="0.0" width="559" height="417"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="559" height="447"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <size key="minSize" width="559" height="417"/>
                                             <size key="maxSize" width="636" height="10000000"/>
                                             <attributedString key="textStorage">
-                                                <fragment content="Welcome to Focalboard v0.6.7!">
+                                                <fragment content="Welcome to Focalboard v0.7.0!">
                                                     <attributes>
                                                         <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                         <font key="NSFont" size="18" name="Helvetica-Bold"/>
@@ -827,11 +827,7 @@ Cg
                                                 </fragment>
                                                 <fragment>
                                                     <string key="content">
-Thank you contributors! There are a number of new features and improvements in this release:
-
-    * Added URL and phone number properties. Thanks @BharatKalluri!
-    * Persist Mac app settings. Thanks @Johennes!
-</string>
+Thank you contributors! There are a number of new features and improvements in this release:</string>
                                                     <attributes>
                                                         <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                         <font key="NSFont" size="14" name="Helvetica"/>
@@ -878,11 +874,13 @@ Thank you contributors! There are a number of new features and improvements in t
                                                     </attributes>
                                                 </fragment>
                                                 <fragment>
-                                                    <string key="content">    * Disable unused Mac tab menu. Thanks @@haardikdharma10!
+                                                    <string key="content" base64-UTF8="YES">
+Cg
 </string>
                                                     <attributes>
-                                                        <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                        <font key="NSFont" size="14" name="Helvetica"/>
+                                                        <color key="NSColor" red="0.83137254901960789" green="0.83137254901960789" blue="0.83137254901960789" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <font key="NSFont" size="13" name="Menlo-Regular"/>
+                                                        <real key="NSKern" value="0.0"/>
                                                         <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                             <tabStops>
                                                                 <textTab alignment="left" location="36">
@@ -923,16 +921,29 @@ Thank you contributors! There are a number of new features and improvements in t
                                                                 </textTab>
                                                             </tabStops>
                                                         </paragraphStyle>
+                                                        <color key="NSStrokeColor" red="0.83137254901960789" green="0.83137254901960789" blue="0.83137254901960789" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <real key="NSStrokeWidth" value="0.0"/>
                                                     </attributes>
                                                 </fragment>
                                                 <fragment>
-                                                    <string key="content">    * Improved board sorting without leading emoji. Thanks @Johennes!
-    * Improved table headers. Thanks @sbishel!
-    * Updated open button. Thanks @arjitc!
-</string>
+                                                    <mutableString key="content">
+* Multi-select property type. Thanks @hahmadia!
+* Checkbox property type. Thanks @mickmister!
+* Person property type. Thanks @harshilsharma63!
+* Grouped table view. Thanks @sbishel!
+* Export individual boards. Thanks @hahmadia!
+* Focalboard can now be built as a Mattermost plugin! Thanks @mgdelacroix and @jespino!
+* Improved logging. Thanks @wiggin77!
+* Prometheus metrics. Thanks @spirosoik!
+* Mac app improvements. Thanks @Johennes!
+* Additional unit tests. Thanks @matheusmosca!
+* Fixed Linux app caret display. Thanks @fritsstegmann!
+* Added CodeQL check. Thanks @srkgupta!
+</mutableString>
                                                     <attributes>
                                                         <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                         <font key="NSFont" size="14" name="Helvetica"/>
+                                                        <real key="NSKern" value="0.0"/>
                                                         <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                             <tabStops>
                                                                 <textTab alignment="left" location="36">
@@ -973,56 +984,8 @@ Thank you contributors! There are a number of new features and improvements in t
                                                                 </textTab>
                                                             </tabStops>
                                                         </paragraphStyle>
-                                                    </attributes>
-                                                </fragment>
-                                                <fragment>
-                                                    <string key="content">    * Added documentation for share board. Thanks @haardikdharma10!
-    * Added Todoist import script. Thanks @harshilsharma63!
-    * Added Prettier linting for SCSS. Thanks @signalwerk!
-</string>
-                                                    <attributes>
-                                                        <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                        <font key="NSFont" size="14" name="Helvetica"/>
-                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                            <tabStops>
-                                                                <textTab alignment="left" location="36">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="72">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="108">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="144">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="180">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="216">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="252">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="288">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="324">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="360">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="396">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="432">
-                                                                    <options/>
-                                                                </textTab>
-                                                            </tabStops>
-                                                        </paragraphStyle>
+                                                        <color key="NSStrokeColor" red="0.83137254901960789" green="0.83137254901960789" blue="0.83137254901960789" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <real key="NSStrokeWidth" value="0.0"/>
                                                     </attributes>
                                                 </fragment>
                                                 <fragment>
