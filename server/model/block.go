@@ -21,6 +21,10 @@ type Block struct {
 	// required: true
 	RootID string `json:"rootId"`
 
+	// The id for user who created the block
+	// required: true
+	CreatedBy string `json:"CreatedBy"`
+
 	// The id for user who last modified this block
 	// required: true
 	ModifiedBy string `json:"modifiedBy"`
@@ -57,6 +61,10 @@ type Block struct {
 func (block Block) IsValid() error {
 	if len(block.Type) < 1 {
 		return fmt.Errorf("missing type for block id %s", block.ID)
+	}
+
+	if len(block.CreatedBy) == 0 {
+		return fmt.Errorf("invalid createdBy for block id %s", block.ID)
 	}
 
 	if block.CreateAt < 1 {
