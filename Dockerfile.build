@@ -7,7 +7,7 @@
 # docker cp test:/dist/focalboard-server-linux-amd64.tar.gz .
 
 # build frontend
-FROM node:16.1.0 AS frontend
+FROM node:16.3.0 AS frontend
 
 WORKDIR /webapp
 COPY webapp .
@@ -16,7 +16,7 @@ RUN npm install --no-optional
 RUN npm run pack
 
 # build backend and package
-FROM golang:1.16.4 AS backend
+FROM golang:1.16.5 AS backend
 
 COPY . .
 COPY --from=frontend /webapp/pack webapp/pack
