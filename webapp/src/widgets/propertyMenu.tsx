@@ -12,7 +12,7 @@ type Props = {
     propertyId: string
     propertyName: string
     propertyType: PropertyType
-    onTypeAndNameChanged: (newType?: PropertyType, newName?: string) => void
+    onTypeAndNameChanged: (newType: PropertyType, newName: string) => void
     onDelete: (id: string) => void
 }
 
@@ -67,10 +67,10 @@ const PropertyMenu = React.memo((props: Props) => {
                 onClick={(e) => e.stopPropagation()}
                 onChange={(e) => setName(e.target.value)}
                 value={name}
-                onBlur={() => props.onTypeAndNameChanged(undefined, name)}
+                onBlur={() => props.onTypeAndNameChanged(props.propertyType, name)}
                 onKeyDown={(e) => {
                     if (e.keyCode === 13 || e.keyCode === 27) {
-                        props.onTypeAndNameChanged(undefined, name)
+                        props.onTypeAndNameChanged(props.propertyType, name)
                         e.stopPropagation()
                     }
                 }}
@@ -91,62 +91,62 @@ const PropertyMenu = React.memo((props: Props) => {
                 <Menu.Text
                     id='text'
                     name={typeDisplayName(intl, 'text')}
-                    onClick={() => props.onTypeAndNameChanged('text')}
+                    onClick={() => props.onTypeAndNameChanged('text', name)}
                 />
                 <Menu.Text
                     id='number'
                     name={typeDisplayName(intl, 'number')}
-                    onClick={() => props.onTypeAndNameChanged('number')}
+                    onClick={() => props.onTypeAndNameChanged('number', name)}
                 />
                 <Menu.Text
                     id='email'
                     name={typeDisplayName(intl, 'email')}
-                    onClick={() => props.onTypeAndNameChanged('email')}
+                    onClick={() => props.onTypeAndNameChanged('email', name)}
                 />
                 <Menu.Text
                     id='phone'
                     name={typeDisplayName(intl, 'phone')}
-                    onClick={() => props.onTypeAndNameChanged('phone')}
+                    onClick={() => props.onTypeAndNameChanged('phone', name)}
                 />
                 <Menu.Text
                     id='url'
                     name={typeDisplayName(intl, 'url')}
-                    onClick={() => props.onTypeAndNameChanged('url')}
+                    onClick={() => props.onTypeAndNameChanged('url', name)}
                 />
                 <Menu.Text
                     id='select'
                     name={typeDisplayName(intl, 'select')}
-                    onClick={() => props.onTypeAndNameChanged('select')}
+                    onClick={() => props.onTypeAndNameChanged('select', name)}
                 />
                 <Menu.Text
                     id='multiSelect'
                     name={typeDisplayName(intl, 'multiSelect')}
-                    onClick={() => props.onTypeAndNameChanged('multiSelect')}
+                    onClick={() => props.onTypeAndNameChanged('multiSelect', name)}
                 />
                 <Menu.Text
                     id='date'
                     name={typeDisplayName(intl, 'date')}
-                    onClick={() => props.onTypeAndNameChanged('date')}
+                    onClick={() => props.onTypeAndNameChanged('date', name)}
                 />
                 <Menu.Text
                     id='person'
                     name={typeDisplayName(intl, 'person')}
-                    onClick={() => props.onTypeAndNameChanged('person')}
+                    onClick={() => props.onTypeAndNameChanged('person', name)}
                 />
                 <Menu.Text
                     id='checkbox'
                     name={typeDisplayName(intl, 'checkbox')}
-                    onClick={() => props.onTypeAndNameChanged('checkbox')}
+                    onClick={() => props.onTypeAndNameChanged('checkbox', name)}
                 />
                 <Menu.Text
                     id='createdTime'
                     name={typeDisplayName(intl, 'createdTime')}
-                    onClick={() => props.onTypeAndNameChanged('createdTime')}
+                    onClick={() => props.onTypeAndNameChanged('createdTime', name)}
                 />
                 <Menu.Text
                     id='updatedTime'
                     name={typeDisplayName(intl, 'updatedTime')}
-                    onClick={() => props.onTypeAndNameChanged('updatedTime')}
+                    onClick={() => props.onTypeAndNameChanged('updatedTime', name)}
                 />
             </Menu.SubMenu>
             <Menu.Text

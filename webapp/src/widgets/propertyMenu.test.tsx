@@ -24,8 +24,7 @@ describe('widgets/PropertyMenu', () => {
                 propertyId={'id'}
                 propertyName={'email of a person'}
                 propertyType={'email'}
-                onTypeChanged={callback}
-                onNameChanged={callback}
+                onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,
         )
@@ -40,8 +39,7 @@ describe('widgets/PropertyMenu', () => {
                 propertyId={'id'}
                 propertyName={'email of a person'}
                 propertyType={'email'}
-                onTypeChanged={callback}
-                onNameChanged={callback}
+                onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,
         )
@@ -57,8 +55,7 @@ describe('widgets/PropertyMenu', () => {
                 propertyId={'id'}
                 propertyName={'test-property'}
                 propertyType={'text'}
-                onTypeChanged={callback}
-                onNameChanged={callback}
+                onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,
         )
@@ -76,8 +73,7 @@ describe('widgets/PropertyMenu', () => {
                 propertyId={'id'}
                 propertyName={'test-property'}
                 propertyType={'text'}
-                onTypeChanged={callback}
-                onNameChanged={callback}
+                onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,
         )
@@ -95,8 +91,7 @@ describe('widgets/PropertyMenu', () => {
                 propertyId={'id'}
                 propertyName={'test-property'}
                 propertyType={'text'}
-                onTypeChanged={callback}
-                onNameChanged={callback}
+                onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,
         )
