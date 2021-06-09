@@ -1,8 +1,8 @@
 ---
-name: Documentation request 
+name: Documentation Request 
 about: Request improvement to our documentation 
 title: 'Doc: '
-labels: doc
+labels: documentation
 assignees: ''
 
 ---
