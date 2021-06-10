@@ -81,7 +81,7 @@ describe('widgets/PropertyMenu', () => {
         const menuOpen = getByText(/Type: Text/i)
         fireEvent.click(menuOpen)
         fireEvent.click(getByText('Select'))
-        setTimeout(() => expect(callback).toHaveBeenCalledWith('select', 'test-property') , 2000);
+        setTimeout(() => expect(callback).toHaveBeenCalledWith('select', 'test-property'), 2000)
     })
 
     test('should match snapshot', () => {
