@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
 import React, {useState, useEffect} from 'react'
-import {FormattedMessage, IntlShape, useIntl} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Constants} from '../../constants'
 import {IPropertyOption} from '../../blocks/board'
