@@ -92,7 +92,7 @@ class BoardPage extends React.Component<Props, State> {
                 }
                 document.title = title
             } else {
-                document.title = 'OCTO'
+                document.title = 'Focalboard'
             }
         }
         if (this.state.workspace?.id !== prevState.workspace?.id) {
