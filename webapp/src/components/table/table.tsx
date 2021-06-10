@@ -281,7 +281,6 @@ const Table = (props: Props) => {
                                 key={group.option.id}
                                 boardTree={boardTree}
                                 group={group}
-                                intl={intl}
                                 readonly={props.readonly}
                                 columnRefs={columnRefs}
                                 selectedCardIds={props.selectedCardIds}
