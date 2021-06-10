@@ -166,7 +166,8 @@ mac-app: server-mac webapp
 	cd mac/dist; zip -r focalboard-mac.zip Focalboard.app MIT-COMPILED-LICENSE.md NOTICE.txt webapp-NOTICE.txt
 
 win-wpf-app: server-dll webapp
-	cd win-wpf && ./build.bat && ./package.bat
+	cd win-wpf && ./build.bat
+	cd win-wpf && ./package.bat
 	cd win-wpf && ./package-zip.bat
 
 linux-app: webapp
