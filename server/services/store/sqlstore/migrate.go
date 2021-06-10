@@ -68,16 +68,28 @@ func (pm *PrefixedMigration) ReadDown(version uint) (io.ReadCloser, string, erro
 	return pm.executeTemplate(r, identifier)
 }
 
+func appendMultipleStatementsFlag(connectionString string) (string, error) {
+	config, err := mysqldriver.ParseDSN(connectionString)
+	if err != nil {
+		return "", err
+	}
+
+	if config.Params == nil {
+		config.Params = map[string]string{}
+	}
+
+	config.Params["multiStatements"] = "true"
+	return config.FormatDSN(), nil
+}
+
 // migrations in MySQL need to run with the multiStatements flag
 // enabled, so this method creates a new connection ensuring that it's
 // enabled
 func (s *SQLStore) getMySQLMigrationConnection() (*sql.DB, error) {
-	config, err := mysqldriver.ParseDSN(s.connectionString)
+	connectionString, err := appendMultipleStatementsFlag(s.connectionString)
 	if err != nil {
 		return nil, err
 	}
-	config.Params["multiStatements"] = "true"
-	connectionString := config.FormatDSN()
 
 	db, err := sql.Open(s.dbType, connectionString)
 	if err != nil {
