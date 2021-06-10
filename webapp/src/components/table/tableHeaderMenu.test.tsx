@@ -29,22 +29,8 @@ jest.mock('../../mutator', () => ({
     deleteProperty: jest.fn(),
 }))
 
-// jest.mock('mutator', () => {
-//     const m = jest.requireActual('mutator')
-//     return {
-//         ...m,
-//         changeViewSortOptions: () => {
-//             Utils.log('fired')
-//         },
-
-//         // useIntl: () => reactIntl.createIntl({locale: 'en', defaultLocale: 'en', timeZone: 'Etc/UTC', textComponent: 'span'}),
-//     }
-// })
-
 beforeEach(() => {
     jest.resetAllMocks()
-
-    // mutator.changeViewSortOptions.mockReset()
     FetchMock.fn.mockReset()
 })
 
