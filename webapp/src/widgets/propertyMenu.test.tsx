@@ -66,7 +66,7 @@ describe('widgets/PropertyMenu', () => {
         expect(callback).toHaveBeenCalledWith('text', 'changed name')
     })
 
-    test('handles type change event', () => {
+    test('handles type change event', async () => {
         const callback = jest.fn()
         const component = wrapIntl(
             <PropertyMenu
@@ -81,7 +81,7 @@ describe('widgets/PropertyMenu', () => {
         const menuOpen = getByText(/Type: Text/i)
         fireEvent.click(menuOpen)
         fireEvent.click(getByText('Select'))
-        expect(callback).toHaveBeenCalledWith('select', 'test-property')
+        setTimeout(() => expect(callback).toHaveBeenCalledWith('select', 'test-property') , 2000);
     })
 
     test('should match snapshot', () => {
