@@ -45,7 +45,7 @@ func (s *SQLStore) importInitialTemplates() error {
 			mlog.String("block_type", block.Type),
 			mlog.String("block_title", block.Title),
 		)
-		err := s.InsertBlock(globalContainer, block)
+		err := s.InsertBlock(globalContainer, &block, "system")
 		if err != nil {
 			return err
 		}

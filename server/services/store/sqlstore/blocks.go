@@ -311,7 +311,7 @@ func (s *SQLStore) GetParentID(c store.Container, blockID string) (string, error
 	return parentID, nil
 }
 
-func (s *SQLStore) InsertBlock(c store.Container, block model.Block) error {
+func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID string) error {
 	if block.RootID == "" {
 		return errors.New("rootId is nil")
 	}
@@ -327,12 +327,13 @@ func (s *SQLStore) InsertBlock(c store.Container, block model.Block) error {
 		return err
 	}
 
-	query := s.getQueryBuilder().Insert("").
+	insertQuery := s.getQueryBuilder().Insert("").
 		Columns(
 			"workspace_id",
 			"id",
 			"parent_id",
 			"root_id",
+			"created_by",
 			"modified_by",
 			s.escapeField("schema"),
 			"type",
@@ -341,11 +342,82 @@ func (s *SQLStore) InsertBlock(c store.Container, block model.Block) error {
 			"create_at",
 			"update_at",
 			"delete_at",
-		).Values(
+		)
+
+	// TODO: migrate this delete/insert to an upsert
+	deleteQuery := s.getQueryBuilder().
+		Delete(s.tablePrefix + "blocks").
+		Where(sq.Eq{"id": block.ID}).
+		Where(sq.Eq{"COALESCE(workspace_id, '0')": c.WorkspaceID})
+	result, err := sq.ExecContextWith(ctx, tx, deleteQuery)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	rowsDeleted, err := result.RowsAffected()
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// Update for existing block and insert for new block.
+	// This is to prevent updating `CreatedBy` field my a malicious user.
+	// When updating, we'll ignore the `CreatedBy` field, thus making
+	// it set only once at creation time.
+	if rowsDeleted > 0 {
+		// some rows were deleted, i.e., this is an existing block
+		// so we must update it
+		query := s.getQueryBuilder().Update(s.tablePrefix+"blocks").
+			Where(sq.Eq{"id": block.ID}).
+			Set("workspace_id", c.WorkspaceID).
+			Set("parent_id", block.ParentID).
+			Set("root_id", block.RootID).
+			Set("modified_by", block.ModifiedBy).
+			Set(s.escapeField("schema"), block.Schema).
+			Set("type", block.Type).
+			Set("title", block.Title).
+			Set("fields", fieldsJSON).
+			Set("update_at", block.UpdateAt).
+			Set("delete_at", block.DeleteAt)
+
+		if _, err := sq.ExecContextWith(ctx, tx, query); err != nil {
+			tx.Rollback()
+			return err
+		}
+	} else {
+		// no rows were deleted, i.e., this is a new block
+		// so we must insert it
+
+		block.CreatedBy = userID
+		insertQuery = insertQuery.Values(
+			c.WorkspaceID,
+			block.ID,
+			block.ParentID,
+			block.RootID,
+			block.CreatedBy,
+			block.ModifiedBy,
+			block.Schema,
+			block.Type,
+			block.Title,
+			fieldsJSON,
+			block.CreateAt,
+			block.UpdateAt,
+			block.DeleteAt,
+		)
+		_, err = sq.ExecContextWith(ctx, tx, insertQuery.Into(s.tablePrefix+"blocks"))
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	insertQuery = insertQuery.Values(
 		c.WorkspaceID,
 		block.ID,
 		block.ParentID,
 		block.RootID,
+		block.CreatedBy,
 		block.ModifiedBy,
 		block.Schema,
 		block.Type,
@@ -355,25 +427,7 @@ func (s *SQLStore) InsertBlock(c store.Container, block model.Block) error {
 		block.UpdateAt,
 		block.DeleteAt,
 	)
-
-	// TODO: migrate this delete/insert to an upsert
-	deleteQuery := s.getQueryBuilder().
-		Delete(s.tablePrefix + "blocks").
-		Where(sq.Eq{"id": block.ID}).
-		Where(sq.Eq{"COALESCE(workspace_id, '0')": c.WorkspaceID})
-	_, err = sq.ExecContextWith(ctx, tx, deleteQuery)
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	_, err = sq.ExecContextWith(ctx, tx, query.Into(s.tablePrefix+"blocks"))
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	_, err = sq.ExecContextWith(ctx, tx, query.Into(s.tablePrefix+"blocks_history"))
+	_, err = sq.ExecContextWith(ctx, tx, insertQuery.Into(s.tablePrefix+"blocks_history"))
 	if err != nil {
 		tx.Rollback()
 		return err

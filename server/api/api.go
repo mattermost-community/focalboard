@@ -252,7 +252,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	jsonBytesResponse(w, http.StatusOK, json)
 }
 
-func stampModifiedByUser(r *http.Request, blocks []model.Block) {
+func stampModificationMetadata(r *http.Request, blocks []model.Block) {
 	ctx := r.Context()
 	session := ctx.Value("session").(*model.Session)
 	userID := session.UserID
@@ -260,8 +260,10 @@ func stampModifiedByUser(r *http.Request, blocks []model.Block) {
 		userID = ""
 	}
 
+	now := utils.GetMillis()
 	for i := range blocks {
 		blocks[i].ModifiedBy = userID
+		blocks[i].UpdateAt = now
 	}
 }
 
@@ -338,9 +340,12 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	stampModifiedByUser(r, blocks)
+	stampModificationMetadata(r, blocks)
 
-	err = a.app().InsertBlocks(*container, blocks)
+	ctx := r.Context()
+	session := ctx.Value("session").(*model.Session)
+
+	err = a.app().InsertBlocks(*container, blocks, session.UserID)
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -731,9 +736,12 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stampModifiedByUser(r, blocks)
+	stampModificationMetadata(r, blocks)
 
-	err = a.app().InsertBlocks(*container, blocks)
+	ctx := r.Context()
+	session := ctx.Value("session").(*model.Session)
+
+	err = a.app().InsertBlocks(*container, blocks, session.UserID)
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return

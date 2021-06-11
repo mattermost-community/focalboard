@@ -20,6 +20,10 @@ type Block struct {
 	// required: true
 	RootID string `json:"rootId"`
 
+	// The id for user who created this block
+	// required: true
+	CreatedBy string `json:"createdBy"`
+
 	// The id for user who last modified this block
 	// required: true
 	ModifiedBy string `json:"modifiedBy"`

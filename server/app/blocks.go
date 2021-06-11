@@ -29,15 +29,15 @@ func (a *App) GetParentID(c store.Container, blockID string) (string, error) {
 	return a.store.GetParentID(c, blockID)
 }
 
-func (a *App) InsertBlock(c store.Container, block model.Block) error {
-	err := a.store.InsertBlock(c, block)
-	if err == nil {
-		a.metrics.IncrementBlocksInserted(1)
-	}
-	return err
-}
+//func (a *App) InsertBlock(c store.Container, block model.Block) error {
+//	err := a.store.InsertBlock(c, block)
+//	if err == nil {
+//		a.metrics.IncrementBlocksInserted(1)
+//	}
+//	return err
+//}
 
-func (a *App) InsertBlocks(c store.Container, blocks []model.Block) error {
+func (a *App) InsertBlocks(c store.Container, blocks []model.Block, userID string) error {
 	blockIDsToNotify := []string{}
 
 	uniqueBlockIDs := make(map[string]bool)
@@ -52,7 +52,7 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block) error {
 			blockIDsToNotify = append(blockIDsToNotify, block.ParentID)
 		}
 
-		err := a.store.InsertBlock(c, block)
+		err := a.store.InsertBlock(c, &block, userID)
 		if err != nil {
 			return err
 		}
