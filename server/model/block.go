@@ -63,6 +63,10 @@ func (block Block) IsValid() error {
 		return fmt.Errorf("missing type for block id %s", block.ID)
 	}
 
+	if len(block.CreatedBy) == 0 {
+		return fmt.Errorf("invalid createdBy for block id %s", block.ID)
+	}
+
 	if block.CreateAt < 1 {
 		return fmt.Errorf("invalid createAt for block id %s", block.ID)
 	}

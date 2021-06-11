@@ -217,6 +217,7 @@ class CenterPanel extends React.Component<Props, State> {
 
         card.parentId = boardTree.board.id
         card.rootId = boardTree.board.rootId
+        card.createdBy = user?.id || ''
         const propertiesThatMeetFilters = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
         if ((activeView.viewType === 'board' || activeView.viewType === 'table') && boardTree.groupByProperty) {
             if (groupByOptionId) {
