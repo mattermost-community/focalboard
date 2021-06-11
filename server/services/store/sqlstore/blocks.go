@@ -26,6 +26,7 @@ func (s *SQLStore) GetBlocksWithParentAndType(c store.Container, parentID string
 			"type",
 			"title",
 			"COALESCE(fields, '{}')",
+			"created_by",
 			"create_at",
 			"update_at",
 			"delete_at",
@@ -56,6 +57,7 @@ func (s *SQLStore) GetBlocksWithParent(c store.Container, parentID string) ([]mo
 			"type",
 			"title",
 			"COALESCE(fields, '{}')",
+			"created_by",
 			"create_at",
 			"update_at",
 			"delete_at",
@@ -85,6 +87,7 @@ func (s *SQLStore) GetBlocksWithRootID(c store.Container, rootID string) ([]mode
 			"type",
 			"title",
 			"COALESCE(fields, '{}')",
+			"created_by",
 			"create_at",
 			"update_at",
 			"delete_at",
@@ -114,6 +117,7 @@ func (s *SQLStore) GetBlocksWithType(c store.Container, blockType string) ([]mod
 			"type",
 			"title",
 			"COALESCE(fields, '{}')",
+			"created_by",
 			"create_at",
 			"update_at",
 			"delete_at",
@@ -144,6 +148,7 @@ func (s *SQLStore) GetSubTree2(c store.Container, blockID string) ([]model.Block
 			"type",
 			"title",
 			"COALESCE(fields, '{}')",
+			"created_by",
 			"create_at",
 			"update_at",
 			"delete_at",
@@ -174,6 +179,7 @@ func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block
 		"l3.type",
 		"l3.title",
 		"l3.fields",
+		"l3.created_by",
 		"l3.create_at",
 		"l3.update_at",
 		"l3.delete_at",
@@ -211,6 +217,7 @@ func (s *SQLStore) GetAllBlocks(c store.Container) ([]model.Block, error) {
 			"type",
 			"title",
 			"COALESCE(fields, '{}')",
+			"created_by",
 			"create_at",
 			"update_at",
 			"delete_at",
@@ -247,6 +254,7 @@ func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 			&block.Type,
 			&block.Title,
 			&fieldsJSON,
+			&block.CreatedBy,
 			&block.CreateAt,
 			&block.UpdateAt,
 			&block.DeleteAt)
@@ -311,7 +319,7 @@ func (s *SQLStore) GetParentID(c store.Container, blockID string) (string, error
 	return parentID, nil
 }
 
-func (s *SQLStore) InsertBlock(c store.Container, block model.Block) error {
+func (s *SQLStore) InsertBlock(c store.Container, block model.Block, userID string) error {
 	if block.RootID == "" {
 		return errors.New("rootId is nil")
 	}
@@ -327,7 +335,24 @@ func (s *SQLStore) InsertBlock(c store.Container, block model.Block) error {
 		return err
 	}
 
-	query := s.getQueryBuilder().Insert("").
+	// TODO: migrate this delete/insert to an upsert
+	deleteQuery := s.getQueryBuilder().
+		Delete(s.tablePrefix + "blocks").
+		Where(sq.Eq{"id": block.ID}).
+		Where(sq.Eq{"COALESCE(workspace_id, '0')": c.WorkspaceID})
+	deleteResult, err := sq.ExecContextWith(ctx, tx, deleteQuery)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	rowsDeleted, err := deleteResult.RowsAffected()
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	insertQuery := s.getQueryBuilder().Insert("").
 		Columns(
 			"workspace_id",
 			"id",
@@ -338,6 +363,7 @@ func (s *SQLStore) InsertBlock(c store.Container, block model.Block) error {
 			"type",
 			"title",
 			"fields",
+			"created_by",
 			"create_at",
 			"update_at",
 			"delete_at",
@@ -351,29 +377,48 @@ func (s *SQLStore) InsertBlock(c store.Container, block model.Block) error {
 		block.Type,
 		block.Title,
 		fieldsJSON,
+		block.CreatedBy,
 		block.CreateAt,
 		block.UpdateAt,
 		block.DeleteAt,
 	)
 
-	// TODO: migrate this delete/insert to an upsert
-	deleteQuery := s.getQueryBuilder().
-		Delete(s.tablePrefix + "blocks").
-		Where(sq.Eq{"id": block.ID}).
-		Where(sq.Eq{"COALESCE(workspace_id, '0')": c.WorkspaceID})
-	_, err = sq.ExecContextWith(ctx, tx, deleteQuery)
-	if err != nil {
-		tx.Rollback()
-		return err
+	// Update for existing block and insert for new block.
+	// This is to prevent updating `CreatedBy` field my a malicious user.
+	// When updating, we'll ignore the `CreatedBy` field, thus making
+	// it set only once at creation time.
+	if rowsDeleted > 0 {
+		// some rows were deleted, i.e., this is an existing block
+		// so we must update it
+		query := s.getQueryBuilder().Update(s.tablePrefix+"blocks").
+			Where(sq.Eq{"id": block.ID}).
+			Set("workspace_id", c.WorkspaceID).
+			Set("parent_id", block.ParentID).
+			Set("root_id", block.RootID).
+			Set("modified_by", block.ModifiedBy).
+			Set(s.escapeField("schema"), block.Schema).
+			Set("type", block.Type).
+			Set("title", block.Title).
+			Set("fields", fieldsJSON).
+			Set("update_at", block.UpdateAt).
+			Set("delete_at", block.DeleteAt)
+
+		if _, err := sq.ExecContextWith(ctx, tx, query); err != nil {
+			tx.Rollback()
+			return err
+		}
+	} else {
+		block.CreatedBy = userID
+		// no rows were deleted, i.e., this is a new block
+		// so we must insert it
+		_, err = sq.ExecContextWith(ctx, tx, insertQuery.Into(s.tablePrefix+"blocks"))
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
 	}
 
-	_, err = sq.ExecContextWith(ctx, tx, query.Into(s.tablePrefix+"blocks"))
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	_, err = sq.ExecContextWith(ctx, tx, query.Into(s.tablePrefix+"blocks_history"))
+	_, err = sq.ExecContextWith(ctx, tx, insertQuery.Into(s.tablePrefix+"blocks_history"))
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -479,6 +524,7 @@ func (s *SQLStore) GetBlocks(ids []string) ([]model.Block, error) {
 			"type",
 			"title",
 			"COALESCE(fields, '{}')",
+			"created_by",
 			"create_at",
 			"update_at",
 			"delete_at",

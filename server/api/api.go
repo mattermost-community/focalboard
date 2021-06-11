@@ -337,7 +337,10 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	blocks = append(blocks, parentBlocks...)
 	stampModified(r, blocks)
 
-	err = a.app().InsertBlocks(*container, blocks)
+	ctx := r.Context()
+	session, _ := ctx.Value("session").(*model.Session)
+
+	err = a.app().InsertBlocks(*container, blocks, session.UserID)
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -730,7 +733,9 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 
 	stampModified(r, blocks)
 
-	err = a.app().InsertBlocks(*container, blocks)
+	ctx := r.Context()
+	session, _ := ctx.Value("session").(*model.Session)
+	err = a.app().InsertBlocks(*container, blocks, session.UserID)
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return

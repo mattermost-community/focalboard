@@ -35,6 +35,8 @@ const Editable = (props: Props, ref: React.Ref<{focus: (selectAll?: boolean) => 
         if (saveType === 'onEsc' && !props.saveOnEsc) {
             return
         }
+
+        // LOL
         props.onSave(saveType)
     }
 
