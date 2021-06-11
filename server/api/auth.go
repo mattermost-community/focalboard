@@ -13,6 +13,7 @@ import (
 	"github.com/gorilla/mux"
 	serverContext "github.com/mattermost/focalboard/server/context"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/audit"
 	"github.com/mattermost/focalboard/server/services/auth"
 	"github.com/mattermost/focalboard/server/services/mlog"
 )
@@ -171,6 +172,11 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	auditRec := a.makeAuditRecord(r, "login", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelAuth, auditRec)
+	auditRec.AddMeta("username", loginData.Username)
+	auditRec.AddMeta("type", loginData.Type)
+
 	if loginData.Type == "normal" {
 		token, err := a.app().Login(loginData.Username, loginData.Email, loginData.Password, loginData.MfaToken)
 		if err != nil {
@@ -184,6 +190,7 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 		}
 
 		jsonBytesResponse(w, http.StatusOK, json)
+		auditRec.Success()
 		return
 	}
 
@@ -264,6 +271,10 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	auditRec := a.makeAuditRecord(r, "register", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelAuth, auditRec)
+	auditRec.AddMeta("username", registerData.Username)
+
 	err = a.app().RegisterUser(registerData.Username, registerData.Email, registerData.Password)
 	if err != nil {
 		a.errorResponse(w, http.StatusBadRequest, err.Error(), err)
@@ -271,6 +282,7 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jsonStringResponse(w, http.StatusOK, "{}")
+	auditRec.Success()
 }
 
 func (a *API) handleChangePassword(w http.ResponseWriter, r *http.Request) {
@@ -333,12 +345,16 @@ func (a *API) handleChangePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	auditRec := a.makeAuditRecord(r, "changePassword", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelAuth, auditRec)
+
 	if err = a.app().ChangePassword(userID, requestData.OldPassword, requestData.NewPassword); err != nil {
 		a.errorResponse(w, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
 	jsonStringResponse(w, http.StatusOK, "{}")
+	auditRec.Success()
 }
 
 func (a *API) sessionRequired(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {

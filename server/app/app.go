@@ -12,7 +12,7 @@ import (
 	"github.com/mattermost/mattermost-server/v5/shared/filestore"
 )
 
-type AppServices struct {
+type Services struct {
 	Auth         *auth.Auth
 	Store        store.Store
 	FilesBackend filestore.FileBackend
@@ -32,7 +32,7 @@ type App struct {
 	logger       *mlog.Logger
 }
 
-func New(config *config.Configuration, wsServer *ws.Server, services AppServices) *App {
+func New(config *config.Configuration, wsServer *ws.Server, services Services) *App {
 	return &App{
 		config:       config,
 		store:        services.Store,
