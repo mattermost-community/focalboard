@@ -252,3 +252,61 @@ func (s *MattermostAuthLayer) getQueryBuilder() sq.StatementBuilderType {
 
 	return builder.RunWith(s.mmDB)
 }
+
+func (s *MattermostAuthLayer) GetUsersByWorkspace(workspaceID string) ([]*model.User, error) {
+	query := s.getQueryBuilder().
+		Select("id", "username", "email", "password", "MFASecret as mfa_secret", "AuthService as auth_service", "COALESCE(AuthData, '') as auth_data", "props", "CreateAt as create_at", "UpdateAt as update_at", "DeleteAt as delete_at").
+		From("Users").
+		Join("ChannelMembers ON ChannelMembers.UserID = Users.ID").
+		Where(sq.Eq{"deleteAt": 0}).
+		Where(sq.Eq{"ChannelMembers.ChannelId": workspaceID})
+
+	rows, err := query.Query()
+	if err != nil {
+		return nil, err
+	}
+
+	users, err := s.usersFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
+func (s *MattermostAuthLayer) usersFromRows(rows *sql.Rows) ([]*model.User, error) {
+	defer rows.Close()
+
+	users := []*model.User{}
+
+	for rows.Next() {
+		var user model.User
+		var propsBytes []byte
+
+		err := rows.Scan(
+			&user.ID,
+			&user.Username,
+			&user.Email,
+			&user.Password,
+			&user.MfaSecret,
+			&user.AuthService,
+			&user.AuthData,
+			&propsBytes,
+			&user.CreateAt,
+			&user.UpdateAt,
+			&user.DeleteAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		err = json.Unmarshal(propsBytes, &user.Props)
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, &user)
+	}
+
+	return users, nil
+}
