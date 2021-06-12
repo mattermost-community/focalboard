@@ -19,6 +19,7 @@ type WSMessage = {
 }
 
 type OnChangeHandler = (blocks: IBlock[]) => void
+type OnStateChange = (state: 'open' | 'close') => void
 
 //
 // OctoListener calls a handler when a block or any of its children changes
@@ -56,7 +57,7 @@ class OctoListener {
         return readToken
     }
 
-    open(workspaceId: string, blockIds: string[], onChange: OnChangeHandler, onReconnect: () => void): void {
+    open(workspaceId: string, blockIds: string[], onChange: OnChangeHandler, onReconnect: () => void, onStateChange?: OnStateChange): void {
         if (this.ws) {
             this.close()
         }
@@ -76,6 +77,7 @@ class OctoListener {
             this.authenticate(workspaceId)
             this.addBlocks(blockIds)
             this.isInitialized = true
+            onStateChange?.('open')
         }
 
         ws.onerror = (e) => {
@@ -88,6 +90,7 @@ class OctoListener {
                 // Unexpected close, re-open
                 const reopenBlockIds = this.isInitialized ? this.blockIds.slice() : blockIds.slice()
                 Utils.logError(`Unexpected close, re-opening with ${reopenBlockIds.length} blocks...`)
+                onStateChange?.('close')
                 setTimeout(() => {
                     this.open(workspaceId, reopenBlockIds, onChange, onReconnect)
                     onReconnect()
