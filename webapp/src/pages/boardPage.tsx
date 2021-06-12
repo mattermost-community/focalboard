@@ -198,7 +198,7 @@ class BoardPage extends React.Component<Props, State> {
                     {(this.state.websocketClosed) &&
                     <div className='banner error'>
                         <a
-                            href='https://www.focalboard.com/fwlink/setup-536.html'
+                            href='https://www.focalboard.com/fwlink/websocket-connect-error.html'
                             target='_blank'
                             rel='noreferrer'
                         >
