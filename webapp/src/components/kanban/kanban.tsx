@@ -24,7 +24,7 @@ type Props = {
     intl: IntlShape
     readonly: boolean
     onCardClicked: (e: React.MouseEvent, card: Card) => void
-    addCard: (groupByOptionId?: string) => Promise<void>
+    addCard: (groupByOptionId?: string, show?:boolean) => Promise<void>
 }
 
 type State = {
@@ -136,7 +136,7 @@ class Kanban extends React.Component<Props, State> {
                             {!this.props.readonly &&
                                 <Button
                                     onClick={() => {
-                                        this.props.addCard(group.option.id)
+                                        this.props.addCard(group.option.id, true)
                                     }}
                                 >
                                     <FormattedMessage
