@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 import {withRouter, RouteComponentProps} from 'react-router-dom'
 import HotKeys from 'react-hot-keys'
 
@@ -30,6 +30,8 @@ type State = {
     workspaceTree: WorkspaceTree
     boardTree?: BoardTree
     syncFailed?: boolean
+    websocketClosedTimeOutId?: ReturnType<typeof setTimeout>
+    websocketClosed?: boolean
     workspaceUsers: WorkspaceUsersContextData
 }
 
@@ -193,6 +195,21 @@ class BoardPage extends React.Component<Props, State> {
                         keyName='shift+ctrl+z,shift+cmd+z,ctrl+z,cmd+z'
                         onKeyDown={this.undoRedoHandler}
                     />
+                    {(this.state.websocketClosed) &&
+                    <div className='banner error'>
+                        <a
+                            href='https://www.focalboard.com/fwlink/websocket-connect-error.html'
+                            target='_blank'
+                            rel='noreferrer'
+                        >
+                            <FormattedMessage
+                                id='Error.websocket-closed'
+                                defaultMessage='Websocket connection closed, connection interrupted. If this persists, check your server or web proxy configuration.'
+                            />
+                        </a>
+                    </div>
+                    }
+
                     <Workspace
                         workspace={workspace}
                         workspaceTree={workspaceTree}
@@ -265,6 +282,28 @@ class BoardPage extends React.Component<Props, State> {
             () => {
                 Utils.log('workspaceListener.onReconnect')
                 this.sync()
+            },
+            (state) => {
+                switch (state) {
+                case 'close': {
+                    // Show error after a delay to ignore brief interruptions
+                    if (!this.state.websocketClosed && !this.state.websocketClosedTimeOutId) {
+                        const timeoutId = setTimeout(() => {
+                            this.setState({websocketClosed: true, websocketClosedTimeOutId: undefined})
+                        }, 5000)
+                        this.setState({websocketClosedTimeOutId: timeoutId})
+                    }
+                    break
+                }
+                case 'open': {
+                    if (this.state.websocketClosedTimeOutId) {
+                        clearTimeout(this.state.websocketClosedTimeOutId)
+                    }
+                    this.setState({websocketClosed: false, websocketClosedTimeOutId: undefined})
+                    Utils.log('Connection established')
+                    break
+                }
+                }
             },
         )
 
