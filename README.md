@@ -4,7 +4,7 @@ Like what you see? :eyes: Give us a GitHub Star! :star:
 
 [![Focalboard](website/site/static/img/hero.jpg)](https://www.focalboard.com)
 
-[Focalboard](https://www.focalboard.com) is an open source, self-hosted alternative to Trello, Notion, and Asana.
+[Focalboard](httpsdfdscvdfvdfv dfvdfv://www.focalboard.com) is an open source, self-hosted alternative to Trello, Notion, and Asana.
 
 It helps define, organize, track and manage work across individuals and teams. Focalboard comes in two editions:
 
