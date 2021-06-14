@@ -21,6 +21,7 @@ import Switch from '../widgets/switch'
 import UserProperty from './properties/user/user'
 import MultiSelectProperty from './properties/multiSelect'
 import URLProperty from './properties/link/link'
+import LastModifiedBy from './properties/lastModifiedBy/lastModifiedBy'
 
 type Props = {
     boardTree?: BoardTree
@@ -184,11 +185,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         )
     } else if (propertyTemplate.type === 'updatedBy') {
         return (
-            <UserProperty
-                value={card.modifiedBy}
-                readonly={true} // created by is an immutable property, so will always be readonly
-                onChange={() => {}} // since created by is immutable, we don't need to handle onChange
-            />
+            <LastModifiedBy card={card}/>
         )
     }
 

@@ -1,5 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+import React from 'react'
+
 import {ContentBlockTypes, contentBlockTypes, IBlock} from '../blocks/block'
 import {Card, MutableCard} from '../blocks/card'
 import {CommentBlock} from '../blocks/commentBlock'
@@ -67,4 +69,6 @@ class MutableCardTree implements CardTree {
     // }
 }
 
-export {MutableCardTree, CardTree}
+const CardTreeContext = React.createContext<CardTree | undefined>(undefined)
+
+export {MutableCardTree, CardTree, CardTreeContext}
