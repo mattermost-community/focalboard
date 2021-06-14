@@ -59,8 +59,8 @@ const TableHeader = React.memo((props: Props): JSX.Element => {
             <MenuWrapper disabled={props.readonly}>
                 <Label>
                     {props.name}
-                    {props.sorted === 'up' && <SortUpIcon/>}
-                    {props.sorted === 'down' && <SortDownIcon/>}
+                    {props.sorted === 'up' && <SortDownIcon/>}
+                    {props.sorted === 'down' && <SortUpIcon/>}
                 </Label>
                 <TableHeaderMenu
                     boardTree={props.boardTree}
