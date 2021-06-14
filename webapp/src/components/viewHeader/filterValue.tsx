@@ -31,7 +31,7 @@ const filterValue = (props: Props): JSX.Element|null => {
         displayValue = filter.values.map((id) => {
             const option = template.options.find((o) => o.id === id)
             return option?.value || '(Unknown)'
-        }).join(' or ')
+        }).join(', ')
     } else {
         displayValue = '(empty)'
     }
