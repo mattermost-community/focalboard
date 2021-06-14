@@ -49,8 +49,11 @@ type Configuration struct {
 
 	AuthMode string `json:"authMode" mapstructure:"authMode"`
 
-	LoggingFile        string `json:"logging_file" mapstructure:"logging_file"`
-	LoggingEscapedJson string `json:"logging_escaped_json" mapstructure:"logging_escaped_json"`
+	LoggingFile string `json:"logging_file" mapstructure:"logging_file"`
+	LoggingJSON string `json:"logging_json" mapstructure:"logging_json"`
+
+	AuditFile string `json:"audit_file" mapstructure:"audit_file"`
+	AuditJSON string `json:"audit_json" mapstructure:"audit_json"`
 }
 
 // ReadConfigFile read the configuration from the filesystem.

@@ -41,8 +41,7 @@ const CardDetailProperties = React.memo((props: Props) => {
                                     propertyId={propertyTemplate.id}
                                     propertyName={propertyTemplate.name}
                                     propertyType={propertyTemplate.type}
-                                    onNameChanged={(newName: string) => mutator.renameProperty(board, propertyTemplate.id, newName)}
-                                    onTypeChanged={(newType: PropertyType) => mutator.changePropertyType(boardTree, propertyTemplate, newType)}
+                                    onTypeAndNameChanged={(newType: PropertyType, newName: string) => mutator.changePropertyTypeAndName(boardTree, propertyTemplate, newType, newName)}
                                     onDelete={(id: string) => mutator.deleteProperty(boardTree, id)}
                                 />
                             </MenuWrapper>

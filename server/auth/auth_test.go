@@ -56,7 +56,7 @@ func TestGetSession(t *testing.T) {
 	}{
 		{"fail, no token", "", 0, true},
 		{"fail, invalid username", "badToken", 0, true},
-		{"sucess, good token", "goodToken", 1000, false},
+		{"success, good token", "goodToken", 1000, false},
 	}
 
 	th.Store.EXPECT().GetSession("badToken", gomock.Any()).Return(nil, errors.New("Invalid Token"))

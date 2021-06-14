@@ -19,6 +19,7 @@ import (
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/context"
 	appModel "github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/audit"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/metrics"
 	"github.com/mattermost/focalboard/server/services/mlog"
@@ -56,6 +57,7 @@ type Server struct {
 	metricsServer          *metrics.Service
 	metricsService         *metrics.Metrics
 	metricsUpdaterTask     *scheduler.ScheduledTask
+	auditService           *audit.Audit
 	servicesStartStopMutex sync.Mutex
 
 	localRouter     *mux.Router
@@ -116,7 +118,13 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 	}
 	metricsService := metrics.NewMetrics(instanceInfo)
 
-	appServices := app.AppServices{
+	// Init audit
+	auditService := audit.NewAudit()
+	if err := auditService.Configure(cfg.AuditFile, cfg.AuditJSON); err != nil {
+		return nil, errors.New("unable to initialize the audit service")
+	}
+
+	appServices := app.Services{
 		Auth:         authenticator,
 		Store:        db,
 		FilesBackend: filesBackend,
@@ -126,7 +134,7 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 	}
 	appBuilder := func() *app.App { return app.New(cfg, wsServer, appServices) }
 
-	focalboardAPI := api.NewAPI(appBuilder, singleUserToken, cfg.AuthMode, logger)
+	focalboardAPI := api.NewAPI(appBuilder, singleUserToken, cfg.AuthMode, logger, auditService)
 
 	// Local router for admin APIs
 	localRouter := mux.NewRouter()
@@ -173,6 +181,7 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 		telemetry:      telemetryService,
 		metricsServer:  metrics.NewMetricsServer(cfg.PrometheusAddress, metricsService, logger),
 		metricsService: metricsService,
+		auditService:   auditService,
 		logger:         logger,
 		localRouter:    localRouter,
 		api:            focalboardAPI,
@@ -274,6 +283,10 @@ func (s *Server) Shutdown() error {
 
 	if err := s.telemetry.Shutdown(); err != nil {
 		s.logger.Warn("Error occurred when shutting down telemetry", mlog.Err(err))
+	}
+
+	if err := s.auditService.Shutdown(); err != nil {
+		s.logger.Warn("Error occurred when shutting down audit service", mlog.Err(err))
 	}
 
 	defer s.logger.Info("Server.Shutdown")

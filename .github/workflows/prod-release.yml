@@ -144,3 +144,49 @@ jobs:
       with:
         name: focalboard-win.zip
         path: ${{ github.workspace }}/win-wpf/dist/focalboard-win.zip
+
+  plugin-release:
+    runs-on: ubuntu-18.04
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Replace token 1
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
+
+    - name: Replace token 2
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_PROD_KEY }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
+
+    - name: npm install
+      run: cd webapp; npm install --no-optional
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.15
+
+    - name: Set up Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: 16.1.0
+
+    - name: Build webapp
+      run: make webapp
+
+    - name: npm install plugin dependencies
+      run: cd mattermost-plugin/webapp; npm install --no-optional
+
+    - name: Build plugin
+      run: cd mattermost-plugin; make dist
+      env:
+        BUILD_NUMBER: ${{ github.run_id }}
+
+    - name: Rename plugin file
+      run: cd mattermost-plugin/dist; mv focalboard-*.tar.gz mattermost-plugin-focalboard.tar.gz
+
+    - name: Upload plugin artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: mattermost-plugin-focalboard.tar.gz
+        path: ${{ github.workspace }}/mattermost-plugin/dist/mattermost-plugin-focalboard.tar.gz

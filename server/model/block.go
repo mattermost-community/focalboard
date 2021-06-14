@@ -65,3 +65,18 @@ func BlocksFromJSON(data io.Reader) []Block {
 	json.NewDecoder(data).Decode(&blocks)
 	return blocks
 }
+
+// LogClone implements the `mlog.LogCloner` interface to provide a subset of Block fields for logging.
+func (b Block) LogClone() interface{} {
+	return struct {
+		ID       string
+		ParentID string
+		RootID   string
+		Type     string
+	}{
+		ID:       b.ID,
+		ParentID: b.ParentID,
+		RootID:   b.RootID,
+		Type:     b.Type,
+	}
+}

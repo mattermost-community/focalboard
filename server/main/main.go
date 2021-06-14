@@ -95,7 +95,12 @@ func main() {
 	}
 
 	logger := mlog.NewLogger()
-	err = logger.Configure(config.LoggingFile, config.LoggingEscapedJson)
+	cfgJSON := config.LoggingJSON
+	if config.LoggingFile == "" && cfgJSON == "" {
+		// if no logging defined, use default config (console output)
+		cfgJSON = defaultLoggingConfig()
+	}
+	err = logger.Configure(config.LoggingFile, cfgJSON)
 	if err != nil {
 		log.Fatal("Error in config file for logger: ", err)
 		return
@@ -206,7 +211,7 @@ func startServer(webPath string, filesPath string, port int, singleUserToken, db
 	}
 
 	logger := mlog.NewLogger()
-	err = logger.Configure(config.LoggingFile, config.LoggingEscapedJson)
+	err = logger.Configure(config.LoggingFile, config.LoggingJSON)
 	if err != nil {
 		log.Fatal("Error in config file for logger: ", err)
 		return
@@ -251,4 +256,31 @@ func stopServer() {
 	}
 	pServer.Logger().Shutdown()
 	pServer = nil
+}
+
+func defaultLoggingConfig() string {
+	return `
+	{
+		"def": {
+			"type": "console",
+			"options": {
+				"out": "stdout"
+			},
+			"format": "plain",
+			"format_options": {
+				"delim": " ",
+				"min_level_len": 5,
+				"min_msg_len": 40,
+				"enable_color": true				
+			},
+			"levels": [
+				{"id": 5, "name": "debug"},
+				{"id": 4, "name": "info", "color": 36},
+				{"id": 3, "name": "warn"},
+				{"id": 2, "name": "error", "color": 31},
+				{"id": 1, "name": "fatal", "stacktrace": true},
+				{"id": 0, "name": "panic", "stacktrace": true}
+			]
+		}
+	}`
 }
