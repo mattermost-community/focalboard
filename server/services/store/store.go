@@ -23,6 +23,7 @@ type Store interface {
 	InsertBlock(c Container, block *model.Block, userID string) error
 	DeleteBlock(c Container, blockID string, modifiedBy string) error
 	GetBlockCountsByType() (map[string]int64, error)
+	GetBlock(c Container, blockID string) (*model.Block, error)
 
 	Shutdown() error
 
