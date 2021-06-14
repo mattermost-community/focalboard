@@ -163,9 +163,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 validator={(newValue) => validateProp(propertyTemplate.type, newValue)}
             />
         )
-    }
-
-    if (propertyTemplate.type === 'checkbox') {
+    } else if (propertyTemplate.type === 'checkbox') {
         return (
             <Switch
                 isOn={Boolean(propertyValue)}
@@ -174,6 +172,22 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                     mutator.changePropertyValue(card, propertyTemplate.id, newValue)
                 }}
                 readOnly={readOnly}
+            />
+        )
+    } else if (propertyTemplate.type === 'createdBy') {
+        return (
+            <UserProperty
+                value={card.createdBy}
+                readonly={true} // created by is an immutable property, so will always be readonly
+                onChange={() => {}} // since created by is immutable, we don't need to handle onChange
+            />
+        )
+    } else if (propertyTemplate.type === 'updatedBy') {
+        return (
+            <UserProperty
+                value={card.modifiedBy}
+                readonly={true} // created by is an immutable property, so will always be readonly
+                onChange={() => {}} // since created by is immutable, we don't need to handle onChange
             />
         )
     }

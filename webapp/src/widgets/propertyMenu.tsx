@@ -59,6 +59,23 @@ const PropertyMenu = React.memo((props: Props) => {
         nameTextbox.current?.setSelectionRange(0, name.length)
     }, [])
 
+    const propertyTypes = [
+        {type: 'text'},
+        {type: 'number'},
+        {type: 'email'},
+        {type: 'phone'},
+        {type: 'url'},
+        {type: 'select'},
+        {type: 'multiSelect'},
+        {type: 'date'},
+        {type: 'person'},
+        {type: 'checkbox'},
+        {type: 'createdTime'},
+        {type: 'updatedTime'},
+        {type: 'createdBy'},
+        {type: 'updatedBy'},
+    ]
+
     return (
         <Menu>
             <input
@@ -89,66 +106,16 @@ const PropertyMenu = React.memo((props: Props) => {
 
                 <Menu.Separator/>
 
-                <Menu.Text
-                    id='text'
-                    name={typeDisplayName(intl, 'text')}
-                    onClick={() => props.onTypeChanged('text')}
-                />
-                <Menu.Text
-                    id='number'
-                    name={typeDisplayName(intl, 'number')}
-                    onClick={() => props.onTypeChanged('number')}
-                />
-                <Menu.Text
-                    id='email'
-                    name={typeDisplayName(intl, 'email')}
-                    onClick={() => props.onTypeChanged('email')}
-                />
-                <Menu.Text
-                    id='phone'
-                    name={typeDisplayName(intl, 'phone')}
-                    onClick={() => props.onTypeChanged('phone')}
-                />
-                <Menu.Text
-                    id='url'
-                    name={typeDisplayName(intl, 'url')}
-                    onClick={() => props.onTypeChanged('url')}
-                />
-                <Menu.Text
-                    id='select'
-                    name={typeDisplayName(intl, 'select')}
-                    onClick={() => props.onTypeChanged('select')}
-                />
-                <Menu.Text
-                    id='multiSelect'
-                    name={typeDisplayName(intl, 'multiSelect')}
-                    onClick={() => props.onTypeChanged('multiSelect')}
-                />
-                <Menu.Text
-                    id='date'
-                    name={typeDisplayName(intl, 'date')}
-                    onClick={() => props.onTypeChanged('date')}
-                />
-                <Menu.Text
-                    id='person'
-                    name={typeDisplayName(intl, 'person')}
-                    onClick={() => props.onTypeChanged('person')}
-                />
-                <Menu.Text
-                    id='checkbox'
-                    name={typeDisplayName(intl, 'checkbox')}
-                    onClick={() => props.onTypeChanged('checkbox')}
-                />
-                <Menu.Text
-                    id='createdTime'
-                    name={typeDisplayName(intl, 'createdTime')}
-                    onClick={() => props.onTypeChanged('createdTime')}
-                />
-                <Menu.Text
-                    id='updatedTime'
-                    name={typeDisplayName(intl, 'updatedTime')}
-                    onClick={() => props.onTypeChanged('updatedTime')}
-                />
+                {
+                    propertyTypes.map((propertyType) => (
+                        <Menu.Text
+                            key={propertyType.type}
+                            id={propertyType.type}
+                            name={typeDisplayName(intl, propertyType.type as PropertyType)}
+                            onClick={() => props.onTypeChanged(propertyType.type as PropertyType)}
+                        />
+                    ))
+                }
             </Menu.SubMenu>
             <Menu.Text
                 id='delete'
