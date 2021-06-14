@@ -382,27 +382,10 @@ class MutableBoardTree implements BoardTree {
                         return this.titleOrCreatedOrder(a, b)
                     }
 
-                    const aValue = a.properties[sortPropertyId] || ''
-                    const bValue = b.properties[sortPropertyId] || ''
+                    let aValue = a.properties[sortPropertyId] || ''
+                    let bValue = b.properties[sortPropertyId] || ''
                     let result = 0
-                    if (template.type === 'select' || template.type === 'multiSelect') {
-                        // Always put empty values at the bottom
-                        if (aValue.length > 0 && bValue.length <= 0) {
-                            return -1
-                        }
-                        if (bValue.length > 0 && aValue.length <= 0) {
-                            return 1
-                        }
-                        if (aValue.length <= 0 && bValue.length <= 0) {
-                            return this.titleOrCreatedOrder(a, b)
-                        }
-
-                        // Sort by the option order (not alphabetically by value)
-                        const aOrder = template.options.findIndex((o) => o.id === (Array.isArray(aValue) ? aValue[0] : aValue))
-                        const bOrder = template.options.findIndex((o) => o.id === (Array.isArray(bValue) ? bValue[0] : bValue))
-
-                        result = aOrder - bOrder
-                    } else if (template.type === 'number' || template.type === 'date') {
+                    if (template.type === 'number' || template.type === 'date') {
                         // Always put empty values at the bottom
                         if (aValue && !bValue) {
                             return -1
@@ -422,15 +405,19 @@ class MutableBoardTree implements BoardTree {
                     } else {
                         // Text-based sort
 
-                        // Always put empty values at the bottom
-                        if (aValue && !bValue) {
+                        if (aValue.length > 0 && bValue.length <= 0) {
                             return -1
                         }
-                        if (bValue && !aValue) {
+                        if (bValue.length > 0 && aValue.length <= 0) {
                             return 1
                         }
-                        if (!aValue && !bValue) {
+                        if (aValue.length <= 0 && bValue.length <= 0) {
                             return this.titleOrCreatedOrder(a, b)
+                        }
+
+                        if (template.type === 'select' || template.type === 'multiSelect') {
+                            aValue = template.options.find((o) => o.id === (Array.isArray(aValue) ? aValue[0] : aValue))?.value || ''
+                            bValue = template.options.find((o) => o.id === (Array.isArray(bValue) ? bValue[0] : bValue))?.value || ''
                         }
 
                         result = (aValue as string).localeCompare(bValue as string)
