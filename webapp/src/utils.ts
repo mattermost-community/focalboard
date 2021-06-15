@@ -112,9 +112,11 @@ class Utils {
     static htmlFromMarkdown(text: string): string {
         // HACKHACK: Somehow, marked doesn't encode angle brackets
         const renderer = new marked.Renderer()
-        renderer.link = (href, title, contents) => `<a target="_blank" rel="noreferrer" href="${href}" title="${title || ''}" onclick="event.stopPropagation(); openInNewBrowser && openInNewBrowser('${href}');">${contents}</a>`
+        if ((window as any).openInNewBrowser) {
+            renderer.link = (href, title, contents) => `<a target="_blank" rel="noreferrer" href="${encodeURI(href || '')}" title="${title ? encodeURI(title) : ''}" onclick="event.stopPropagation(); openInNewBrowser && openInNewBrowser('${encodeURI(href || '')}');">${contents}</a>`
+        }
         const html = marked(text.replace(/</g, '&lt;'), {renderer, breaks: true})
-        return html
+        return html.trim()
     }
 
     // Date and Time

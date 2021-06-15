@@ -3,15 +3,35 @@
 
 import {Utils} from './utils'
 
-test('assureProtocol', async () => {
-    expect(Utils.ensureProtocol('https://focalboard.com')).toBe('https://focalboard.com')
+describe('utils', () => {
+    describe('assureProtocol', () => {
+        test('should passthrough on valid short protocol', () => {
+            expect(Utils.ensureProtocol('https://focalboard.com')).toBe('https://focalboard.com')
+        })
+        test('should passthrough on valid long protocol', () => {
+            expect(Utils.ensureProtocol('somecustomprotocol://focalboard.com')).toBe('somecustomprotocol://focalboard.com')
+        })
 
-    // long protocol
-    expect(Utils.ensureProtocol('somecustomprotocol://focalboard.com')).toBe('somecustomprotocol://focalboard.com')
+        test('should passthrough on valid short protocol', () => {
+            expect(Utils.ensureProtocol('x://focalboard.com')).toBe('x://focalboard.com')
+        })
 
-    // short protocol
-    expect(Utils.ensureProtocol('x://focalboard.com')).toBe('x://focalboard.com')
+        test('should add a https for empty protocol', () => {
+            expect(Utils.ensureProtocol('focalboard.com')).toBe('https://focalboard.com')
+        })
+    })
 
-    // no protocol
-    expect(Utils.ensureProtocol('focalboard.com')).toBe('https://focalboard.com')
+    describe('htmlFromMarkdown', () => {
+        test('should not allow XSS on links href on the webapp', () => {
+            expect(Utils.htmlFromMarkdown('[]("xss-attack="true"other="whatever)')).toBe('<p><a href="%22xss-attack=%22true%22other=%22whatever"></a></p>')
+        })
+
+        test('should not allow XSS on links href on the desktop app', () => {
+            const windowAsAny = window as any
+            windowAsAny.openInNewBrowser = () => null
+            const expectedHtml = '<p><a target="_blank" rel="noreferrer" href="%22xss-attack=%22true%22other=%22whatever" title="" onclick="event.stopPropagation(); openInNewBrowser && openInNewBrowser(\'%22xss-attack=%22true%22other=%22whatever\');"></a></p>'
+            expect(Utils.htmlFromMarkdown('[]("xss-attack="true"other="whatever)')).toBe(expectedHtml)
+            windowAsAny.openInNewBrowser = null
+        })
+    })
 })
