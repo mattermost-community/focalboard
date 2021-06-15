@@ -81,7 +81,7 @@ In Mattermost, select the Focalboard icon in the channel header to access boards
 ![image](./by%20status%20properties.png)
 
 6. You can likewise change the **Group By**, **Filter**, and **Sort** settings of the view.
-7. In general, all changes you make are saved immediately.
+7. In general, all changes you make are saved immediately and are visible to all other users.
 
 ## Renaming Boards
 
