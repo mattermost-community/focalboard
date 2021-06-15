@@ -29,7 +29,7 @@ describe('utils', () => {
         test('should not allow XSS on links href on the desktop app', () => {
             const windowAsAny = window as any
             windowAsAny.openInNewBrowser = () => null
-            const expectedHtml = '<p><a target="_blank" rel="noreferrer" href="%22xss-attack=%22true%22other=%22whatever" title="" onclick="event.stopPropagation(); openInNewBrowser && openInNewBrowser(\'%22xss-attack=%22true%22other=%22whatever\');"></a></p>'
+            const expectedHtml = '<p><a target="_blank" rel="noreferrer" href="%22xss-attack=%22true%22other=%22whatever" title="" onclick="event.stopPropagation(); openInNewBrowser && openInNewBrowser(&quot;%22xss-attack=%22true%22other=%22whatever&quot;);"></a></p>'
             expect(Utils.htmlFromMarkdown('[]("xss-attack="true"other="whatever)')).toBe(expectedHtml)
             windowAsAny.openInNewBrowser = null
         })
