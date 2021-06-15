@@ -67,7 +67,7 @@ In Mattermost, select the Focalboard icon in the channel header to access boards
 ## Adding new Boards
 
 1. Select **+ Add Board** in the bottom left of the sidebar to add a new board to Focalboard.
-2. Pick **Project Tasks** from the list of templates.
+2. Pick a template, such as **Project Tasks**, from the list.
 3. This shows the first view of the new board, which is a table of all tasks.
 
 ![image](./all%20tasks.png)
