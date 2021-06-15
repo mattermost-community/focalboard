@@ -114,7 +114,7 @@ const PropertyMenu = React.memo((props: Props) => {
                             key={propertyType.type}
                             id={propertyType.type}
                             name={typeDisplayName(intl, propertyType.type as PropertyType)}
-                            onClick={() => props.onTypeChanged(propertyType.type as PropertyType)}
+                            onClick={() => debouncedOnTypeAndNameChanged(propertyType.type as PropertyType)()}
                         />
                     ))
                 }

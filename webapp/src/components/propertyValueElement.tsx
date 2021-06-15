@@ -22,6 +22,9 @@ import UserProperty from './properties/user/user'
 import MultiSelectProperty from './properties/multiSelect'
 import URLProperty from './properties/link/link'
 import LastModifiedBy from './properties/lastModifiedBy/lastModifiedBy'
+import LastModifiedAt from './properties/lastModifiedAt/lastModifiedAt'
+
+const moment = require('moment')
 
 type Props = {
     boardTree?: BoardTree
@@ -185,7 +188,23 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         )
     } else if (propertyTemplate.type === 'updatedBy') {
         return (
-            <LastModifiedBy card={card}/>
+            <LastModifiedBy/>
+        )
+    } else if (propertyTemplate.type === 'createdTime') {
+        return (
+            <Editable
+                className={'octo-propertyvalue'}
+                readonly={true}
+                value={moment(card.createAt).format('llll')}
+                onChange={() => {}}
+                onSave={() => {}}
+                onCancel={() => {}}
+                validator={() => true}
+            />
+        )
+    } else if (propertyTemplate.type === 'updatedTime') {
+        return (
+            <LastModifiedAt/>
         )
     }
 

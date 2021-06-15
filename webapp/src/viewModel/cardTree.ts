@@ -14,12 +14,14 @@ interface CardTree {
     readonly comments: readonly CommentBlock[]
     readonly contents: readonly IContentBlock[]
     readonly allBlocks: readonly IBlock[]
+    readonly latestBlock: IBlock
 }
 
 class MutableCardTree implements CardTree {
     card: MutableCard
     comments: CommentBlock[] = []
     contents: IContentBlock[] = []
+    latestBlock: IBlock
 
     get allBlocks(): IBlock[] {
         return [this.card, ...this.comments, ...this.contents]
@@ -27,6 +29,7 @@ class MutableCardTree implements CardTree {
 
     constructor(card: MutableCard) {
         this.card = card
+        this.latestBlock = card
     }
 
     // Factory methods
@@ -61,12 +64,22 @@ class MutableCardTree implements CardTree {
         const contentBlocks = blocks.filter((block) => contentBlockTypes.includes(block.type as ContentBlockTypes)) as IContentBlock[]
         cardTree.contents = OctoUtils.getBlockOrder(card.contentOrder, contentBlocks)
 
+        cardTree.latestBlock = MutableCardTree.getMostRecentBlock(cardTree)
+
         return cardTree
     }
 
-    // private mutableCopy(): MutableCardTree {
-    //     return MutableCardTree.buildTree(this.card.id, this.allBlocks)!
-    // }
+    public static getMostRecentBlock(cardTree: CardTree): IBlock {
+        let latestBlock: IBlock = cardTree.card
+        cardTree?.allBlocks.forEach((block) => {
+            if (latestBlock) {
+                latestBlock = block.updateAt > latestBlock.updateAt ? block : latestBlock
+            } else {
+                latestBlock = block
+            }
+        })
+        return latestBlock
+    }
 }
 
 const CardTreeContext = React.createContext<CardTree | undefined>(undefined)
