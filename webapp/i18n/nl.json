@@ -44,6 +44,7 @@
   "FilterComponent.delete": "Verwijderen",
   "GalleryCard.delete": "Verwijderen",
   "GalleryCard.duplicate": "Kopiëren",
+  "GroupBy.ungroup": "Groeperen stoppen",
   "KanbanCard.delete": "Verwijderen",
   "KanbanCard.duplicate": "Kopiëren",
   "KanbanCard.untitled": "Titelloos",

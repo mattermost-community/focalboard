@@ -36,7 +36,7 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 	webhook := webhook.NewClient(&cfg, logger)
 	metricsService := metrics.NewMetrics(metrics.InstanceInfo{})
 
-	appServices := AppServices{
+	appServices := Services{
 		Auth:         auth,
 		Store:        store,
 		FilesBackend: &mocks.FileBackend{},

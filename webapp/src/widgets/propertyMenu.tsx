@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useRef, useEffect} from 'react'
+import debounce from 'lodash/debounce'
 import {useIntl, IntlShape} from 'react-intl'
 
 import {PropertyType} from '../blocks/board'
@@ -12,8 +13,7 @@ type Props = {
     propertyId: string
     propertyName: string
     propertyType: PropertyType
-    onNameChanged: (newName: string) => void
-    onTypeChanged: (newType: PropertyType) => void
+    onTypeAndNameChanged: (newType: PropertyType, newName: string) => void
     onDelete: (id: string) => void
 }
 
@@ -54,6 +54,8 @@ const PropertyMenu = React.memo((props: Props) => {
         defaultMessage: 'Delete',
     })
 
+    const debouncedOnTypeAndNameChanged = (newType: PropertyType) => debounce(() => props.onTypeAndNameChanged(newType, name), 150)
+
     useEffect(() => {
         nameTextbox.current?.focus()
         nameTextbox.current?.setSelectionRange(0, name.length)
@@ -85,10 +87,10 @@ const PropertyMenu = React.memo((props: Props) => {
                 onClick={(e) => e.stopPropagation()}
                 onChange={(e) => setName(e.target.value)}
                 value={name}
-                onBlur={() => props.onNameChanged(name)}
+                onBlur={() => props.onTypeAndNameChanged(props.propertyType, name)}
                 onKeyDown={(e) => {
                     if (e.keyCode === 13 || e.keyCode === 27) {
-                        props.onNameChanged(name)
+                        props.onTypeAndNameChanged(props.propertyType, name)
                         e.stopPropagation()
                     }
                 }}

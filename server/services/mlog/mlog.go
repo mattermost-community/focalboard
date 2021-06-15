@@ -21,6 +21,11 @@ const (
 // Type and function aliases from Logr to limit the spread of dependencies throughout Focalboard.
 type Field = logr.Field
 type Level = logr.Level
+type Option = logr.Option
+type Target = logr.Target
+type LogRec = logr.LogRec
+type LogCloner = logr.LogCloner
+type MetricsCollector = logr.MetricsCollector
 
 // Any picks the best supported field type based on type of val.
 // For best performance when passing a struct (or struct pointer),
@@ -102,8 +107,8 @@ type Logger struct {
 }
 
 // NewLogger creates a new Logger instance which can be configured via `(*Logger).Configure`
-func NewLogger() *Logger {
-	lgr, _ := logr.New()
+func NewLogger(options ...Option) *Logger {
+	lgr, _ := logr.New(options...)
 	log := lgr.NewLogger()
 
 	return &Logger{
@@ -112,9 +117,13 @@ func NewLogger() *Logger {
 }
 
 // Configure provides a new configuration for this logger.
-// Zero or more sources of config can be provided, with target name collisions resolved using the
-// following precedence:
-//     cfgFile > cfgJson
+// Zero or more sources of config can be provided:
+//   cfgFile    - path to file containing JSON
+//   cfgEscaped - JSON string probably from ENV var
+//
+// For each case JSON containing log targets is provided. Target name collisions are resolved
+// using the following precedence:
+//     cfgFile > cfgEscaped
 func (l *Logger) Configure(cfgFile string, cfgEscaped string) error {
 	cfgMap := make(LoggerConfig)
 

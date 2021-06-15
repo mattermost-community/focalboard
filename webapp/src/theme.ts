@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import {CSSObject} from '@emotion/serialize'
-import {isEqual} from 'lodash'
+import isEqual from 'lodash/isEqual'
 
 let activeThemeName: string
 

@@ -44,6 +44,7 @@
   "FilterComponent.delete": "Sil",
   "GalleryCard.delete": "Sil",
   "GalleryCard.duplicate": "Kopyala",
+  "GroupBy.ungroup": "Gruplamayı kaldır",
   "KanbanCard.delete": "Sil",
   "KanbanCard.duplicate": "Kopyala",
   "KanbanCard.untitled": "Başlıksız",
