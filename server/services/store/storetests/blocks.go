@@ -138,6 +138,7 @@ func testInsertBlock(t *testing.T, store store.Store, container store.Container)
 		block := model.Block{
 			ID:     "id-2",
 			RootID: "root-id",
+			Title:  "Old Title",
 		}
 
 		// inserting
@@ -152,12 +153,17 @@ func testInsertBlock(t *testing.T, store store.Store, container store.Container)
 		time.Sleep(1 * time.Second)
 
 		// updating
-		block.Title = "New Title"
-		err = store.InsertBlock(container, &block, "user-id-3")
+		newBlock := model.Block{
+			ID:        "id-2",
+			RootID:    "root-id",
+			CreatedBy: "user-id-3",
+			Title:     "New Title",
+		}
+		err = store.InsertBlock(container, &newBlock, "user-id-4")
 		require.NoError(t, err)
 		// created by is not altered for existing blocks
-		require.Equal(t, "user-id-2", block.CreatedBy)
-		require.Equal(t, "New Title", block.Title)
+		require.Equal(t, "user-id-3", newBlock.CreatedBy)
+		require.Equal(t, "New Title", newBlock.Title)
 	})
 }
 
@@ -767,7 +773,7 @@ func testGetBlocksWithRootID(t *testing.T, store store.Store, container store.Co
 func testGetBlock(t *testing.T, store store.Store, container store.Container) {
 	t.Run("get a block", func(t *testing.T) {
 		block := model.Block{
-			ID:         "block-id-1",
+			ID:         "block-id-10",
 			RootID:     "root-id-1",
 			ModifiedBy: "user-id-1",
 		}
@@ -775,13 +781,20 @@ func testGetBlock(t *testing.T, store store.Store, container store.Container) {
 		err := store.InsertBlock(container, &block, "user-id-1")
 		require.NoError(t, err)
 
-		fetchedBlock, err := store.GetBlock(container, "block-id-1")
+		fetchedBlock, err := store.GetBlock(container, "block-id-10")
 		require.NoError(t, err)
 		require.NotNil(t, fetchedBlock)
 		require.Equal(t, &model.Block{
-			ID:         "block-id-1",
+			ID:         "block-id-10",
 			RootID:     "root-id-1",
 			ModifiedBy: "user-id-1",
+			CreatedBy:  "user-id-1",
 		}, fetchedBlock)
+	})
+
+	t.Run("get a non-existing block", func(t *testing.T) {
+		fetchedBlock, err := store.GetBlock(container, "non-existing-id")
+		require.NoError(t, err)
+		require.Nil(t, fetchedBlock)
 	})
 }

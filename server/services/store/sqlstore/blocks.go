@@ -356,21 +356,7 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 			"create_at",
 			"update_at",
 			"delete_at",
-		).Values(
-		c.WorkspaceID,
-		block.ID,
-		block.ParentID,
-		block.RootID,
-		block.CreatedBy,
-		block.ModifiedBy,
-		block.Schema,
-		block.Type,
-		block.Title,
-		fieldsJSON,
-		block.CreateAt,
-		block.UpdateAt,
-		block.DeleteAt,
-	)
+		)
 
 	if existingBlock != nil {
 		// block with ID exists, so this is an update operation
@@ -399,7 +385,22 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 		}
 	} else {
 		block.CreatedBy = userID
-		_, err = sq.ExecContextWith(ctx, tx, insertQuery.Into(s.tablePrefix+"blocks"))
+		query := insertQuery.Values(
+			c.WorkspaceID,
+			block.ID,
+			block.ParentID,
+			block.RootID,
+			block.CreatedBy,
+			block.ModifiedBy,
+			block.Schema,
+			block.Type,
+			block.Title,
+			fieldsJSON,
+			block.CreateAt,
+			block.UpdateAt,
+			block.DeleteAt,
+		)
+		_, err = sq.ExecContextWith(ctx, tx, query.Into(s.tablePrefix+"blocks"))
 		if err != nil {
 			tx.Rollback()
 			return err
@@ -407,7 +408,22 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 	}
 
 	// writing block history
-	_, err = sq.ExecContextWith(ctx, tx, insertQuery.Into(s.tablePrefix+"blocks_history"))
+	query := insertQuery.Values(
+		c.WorkspaceID,
+		block.ID,
+		block.ParentID,
+		block.RootID,
+		block.CreatedBy,
+		block.ModifiedBy,
+		block.Schema,
+		block.Type,
+		block.Title,
+		fieldsJSON,
+		block.CreateAt,
+		block.UpdateAt,
+		block.DeleteAt,
+	)
+	_, err = sq.ExecContextWith(ctx, tx, query.Into(s.tablePrefix+"blocks_history"))
 	if err != nil {
 		tx.Rollback()
 		return err
