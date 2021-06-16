@@ -1,7 +1,6 @@
 package storetests
 
 import (
-	"github.com/mattermost/focalboard/server/utils"
 	"testing"
 	"time"
 
@@ -65,6 +64,11 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		defer tearDown()
 		testGetBlocksWithRootID(t, store, container)
 	})
+	t.Run("GetBlock", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testGetBlock(t, store, container)
+	})
 }
 
 func testInsertBlock(t *testing.T, store store.Store, container store.Container) {
@@ -121,19 +125,39 @@ func testInsertBlock(t *testing.T, store store.Store, container store.Container)
 	})
 
 	t.Run("insert new block", func(t *testing.T) {
-		now := utils.GetMillis()
 		block := model.Block{
-			ID: "new-id",
 			RootID: "root-id",
-			CreateAt: now,
-			CreatedBy: "user-id-1",
-			UpdateAt: now,
-			ModifiedBy: "user-id-1",
 		}
 
 		err := store.InsertBlock(container, &block, "user-id-2")
 		require.NoError(t, err)
 		require.Equal(t, "user-id-2", block.CreatedBy)
+	})
+
+	t.Run("update existing block", func(t *testing.T) {
+		block := model.Block{
+			ID:     "id-2",
+			RootID: "root-id",
+		}
+
+		// inserting
+		err := store.InsertBlock(container, &block, "user-id-2")
+		require.NoError(t, err)
+
+		// created by populated from user id for new blocks
+		require.Equal(t, "user-id-2", block.CreatedBy)
+
+		// hack to avoid multiple, quick updates to a card
+		// violating block_history composite primary key constraint
+		time.Sleep(1 * time.Second)
+
+		// updating
+		block.Title = "New Title"
+		err = store.InsertBlock(container, &block, "user-id-3")
+		require.NoError(t, err)
+		// created by is not altered for existing blocks
+		require.Equal(t, "user-id-2", block.CreatedBy)
+		require.Equal(t, "New Title", block.Title)
 	})
 }
 
@@ -737,5 +761,27 @@ func testGetBlocksWithRootID(t *testing.T, store store.Store, container store.Co
 		blocks, err = store.GetBlocksWithRootID(container, "block1")
 		require.NoError(t, err)
 		require.Len(t, blocks, 4)
+	})
+}
+
+func testGetBlock(t *testing.T, store store.Store, container store.Container) {
+	t.Run("get a block", func(t *testing.T) {
+		block := model.Block{
+			ID:         "block-id-1",
+			RootID:     "root-id-1",
+			ModifiedBy: "user-id-1",
+		}
+
+		err := store.InsertBlock(container, &block, "user-id-1")
+		require.NoError(t, err)
+
+		fetchedBlock, err := store.GetBlock(container, "block-id-1")
+		require.NoError(t, err)
+		require.NotNil(t, fetchedBlock)
+		require.Equal(t, &model.Block{
+			ID:         "block-id-1",
+			RootID:     "root-id-1",
+			ModifiedBy: "user-id-1",
+		}, fetchedBlock)
 	})
 }

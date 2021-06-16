@@ -329,13 +329,13 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 		return err
 	}
 
-	ctx := context.Background()
-	tx, err := s.db.BeginTx(ctx, nil)
+	existingBlock, err := s.GetBlock(c, block.ID)
 	if err != nil {
 		return err
 	}
 
-	existingBlock, err := s.GetBlock(c, block.ID)
+	ctx := context.Background()
+	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}
@@ -387,7 +387,13 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 			Set("update_at", block.UpdateAt).
 			Set("delete_at", block.DeleteAt)
 
-		if _, err := query.Exec(); err != nil {
+		q, args, err := query.ToSql()
+		if err != nil {
+			s.logger.Error("InsertBlock error converting update query object to SQL", mlog.Err(err))
+			return err
+		}
+
+		if _, err := tx.Exec(q, args...); err != nil {
 			s.logger.Error(`InsertBlock error occurred while updating existing block`, mlog.String("blockID", block.ID), mlog.Err(err))
 			return err
 		}
