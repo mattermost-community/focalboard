@@ -1,6 +1,7 @@
 package storetests
 
 import (
+	"github.com/mattermost/focalboard/server/utils"
 	"testing"
 	"time"
 
@@ -80,7 +81,7 @@ func testInsertBlock(t *testing.T, store store.Store, container store.Container)
 			ModifiedBy: userID,
 		}
 
-		err := store.InsertBlock(container, block)
+		err := store.InsertBlock(container, &block, "user-id-1")
 		require.NoError(t, err)
 
 		blocks, err := store.GetAllBlocks(container)
@@ -95,7 +96,7 @@ func testInsertBlock(t *testing.T, store store.Store, container store.Container)
 			ModifiedBy: userID,
 		}
 
-		err := store.InsertBlock(container, block)
+		err := store.InsertBlock(container, &block, "user-id-1")
 		require.Error(t, err)
 
 		blocks, err := store.GetAllBlocks(container)
@@ -111,12 +112,28 @@ func testInsertBlock(t *testing.T, store store.Store, container store.Container)
 			Fields:     map[string]interface{}{"no-serialiable-value": t.Run},
 		}
 
-		err := store.InsertBlock(container, block)
+		err := store.InsertBlock(container, &block, "user-id-1")
 		require.Error(t, err)
 
 		blocks, err := store.GetAllBlocks(container)
 		require.NoError(t, err)
 		require.Len(t, blocks, initialCount+1)
+	})
+
+	t.Run("insert new block", func(t *testing.T) {
+		now := utils.GetMillis()
+		block := model.Block{
+			ID: "new-id",
+			RootID: "root-id",
+			CreateAt: now,
+			CreatedBy: "user-id-1",
+			UpdateAt: now,
+			ModifiedBy: "user-id-1",
+		}
+
+		err := store.InsertBlock(container, &block, "user-id-2")
+		require.NoError(t, err)
+		require.Equal(t, "user-id-2", block.CreatedBy)
 	})
 }
 
@@ -165,7 +182,7 @@ func testGetSubTree2(t *testing.T, store store.Store, container store.Container)
 		},
 	}
 
-	InsertBlocks(t, store, container, blocksToInsert)
+	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
 	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
 	blocks, err = store.GetAllBlocks(container)
@@ -241,7 +258,7 @@ func testGetSubTree3(t *testing.T, store store.Store, container store.Container)
 		},
 	}
 
-	InsertBlocks(t, store, container, blocksToInsert)
+	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
 	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
 	blocks, err = store.GetAllBlocks(container)
@@ -320,7 +337,7 @@ func testGetRootID(t *testing.T, store store.Store, container store.Container) {
 		},
 	}
 
-	InsertBlocks(t, store, container, blocksToInsert)
+	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
 	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
 	blocks, err = store.GetAllBlocks(container)
@@ -390,7 +407,7 @@ func testGetParentID(t *testing.T, store store.Store, container store.Container)
 		},
 	}
 
-	InsertBlocks(t, store, container, blocksToInsert)
+	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
 	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
 	blocks, err = store.GetAllBlocks(container)
@@ -439,7 +456,7 @@ func testDeleteBlock(t *testing.T, store store.Store, container store.Container)
 			ModifiedBy: userID,
 		},
 	}
-	InsertBlocks(t, store, container, blocksToInsert)
+	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
 	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
 	blocks, err = store.GetAllBlocks(container)
@@ -515,7 +532,7 @@ func testGetBlocksWithParentAndType(t *testing.T, store store.Store, container s
 			Type:       "test",
 		},
 	}
-	InsertBlocks(t, store, container, blocksToInsert)
+	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
 	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
 	t.Run("not existing parent", func(t *testing.T) {
@@ -583,7 +600,7 @@ func testGetBlocksWithParent(t *testing.T, store store.Store, container store.Co
 			Type:       "test",
 		},
 	}
-	InsertBlocks(t, store, container, blocksToInsert)
+	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
 	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
 	t.Run("not existing parent", func(t *testing.T) {
@@ -644,7 +661,7 @@ func testGetBlocksWithType(t *testing.T, store store.Store, container store.Cont
 			Type:       "test",
 		},
 	}
-	InsertBlocks(t, store, container, blocksToInsert)
+	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
 	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
 	t.Run("not existing type", func(t *testing.T) {
@@ -705,7 +722,7 @@ func testGetBlocksWithRootID(t *testing.T, store store.Store, container store.Co
 			Type:       "test",
 		},
 	}
-	InsertBlocks(t, store, container, blocksToInsert)
+	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
 	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
 	t.Run("not existing parent", func(t *testing.T) {

@@ -392,6 +392,7 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 			return err
 		}
 	} else {
+		block.CreatedBy = userID
 		_, err = sq.ExecContextWith(ctx, tx, insertQuery.Into(s.tablePrefix+"blocks"))
 		if err != nil {
 			tx.Rollback()
