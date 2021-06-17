@@ -340,7 +340,6 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 		return err
 	}
 
-	// block with ID doesn't exist. This is a new block.
 	insertQuery := s.getQueryBuilder().Insert("").
 		Columns(
 			"workspace_id",
