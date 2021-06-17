@@ -14,10 +14,10 @@ describe('componnets/properties/lastModifiedAt', () => {
     test('should match snapshot', () => {
         const cardTree = new MutableCardTree(
             new MutableCard({
-                updateAt: Date.parse('15 Jun 2021 16:22:00 +05:30'),
+                updateAt: Date.parse('15 Jun 2021 16:22:00'),
             }),
-
         )
+
         const component = (
             <CardTreeContext.Provider value={cardTree}>
                 <LastModifiedAt/>
