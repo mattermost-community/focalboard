@@ -22,10 +22,10 @@ type Services struct {
 }
 
 type App struct {
-	config       *config.Configuration
-	store        store.Store
-	auth         *auth.Auth
-	wsServer     *ws.Server
+	config *config.Configuration
+	store  store.Store
+	auth   *auth.Auth
+	//wsServer     *ws.Server
 	filesBackend filestore.FileBackend
 	webhook      *webhook.Client
 	metrics      *metrics.Metrics
@@ -34,10 +34,10 @@ type App struct {
 
 func New(config *config.Configuration, wsServer *ws.Server, services Services) *App {
 	return &App{
-		config:       config,
-		store:        services.Store,
-		auth:         services.Auth,
-		wsServer:     wsServer,
+		config: config,
+		store:  services.Store,
+		auth:   services.Auth,
+		//wsServer:     wsServer,
 		filesBackend: services.FilesBackend,
 		webhook:      services.Webhook,
 		metrics:      services.Metrics,
