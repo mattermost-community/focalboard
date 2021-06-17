@@ -1,7 +1,4 @@
 .Table {
-    .table-row-container {
-        margin-top: 48px;
-    }
     .octo-group-header-cell {
         display: flex;
         flex-shrink: 0;
@@ -46,7 +43,7 @@
             font-weight: normal;
             font-size: 16px;
             width: 100%;
-        
+
             input {
                 background: transparent;
                 width: 100%;
@@ -57,7 +54,7 @@
                 color: rgba(var(--body-color), 1);
             }
         }
-        
+
         > .Button {
             &.IconButton:not(.readonly) {
                 cursor: pointer;
@@ -145,9 +142,11 @@
         }
     }
 
-    .octo-table-body {
+    &.octo-table-body {
         display: flex;
         flex-direction: column;
+        overflow: auto;
+        position: relative;
     }
 
     .octo-table-header,
@@ -163,12 +162,14 @@
     }
 
     .octo-table-header {
-        position: fixed;
+        position: sticky;
+        top: 0;
         z-index: 1;
         background: rgb(var(--main-bg));
 
         .octo-table-cell {
             color: rgba(var(--body-color), 0.6);
+            background: rgb(var(--main-bg));
 
             .Label {
                 color: rgba(var(--body-color), 0.6);
