@@ -120,7 +120,7 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 
 	// Init audit
 	auditService := audit.NewAudit()
-	if err := auditService.Configure(cfg.AuditFile, cfg.AuditJSON); err != nil {
+	if err := auditService.Configure(cfg.AuditCfgFile, cfg.AuditCfgJSON); err != nil {
 		return nil, errors.New("unable to initialize the audit service")
 	}
 
