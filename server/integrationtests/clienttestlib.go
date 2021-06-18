@@ -58,7 +58,7 @@ func getTestConfig() *config.Configuration {
 		WebPath:        "./pack",
 		FilesDriver:    "local",
 		FilesPath:      "./files",
-		LoggingJSON:    logging,
+		LoggingCfgJSON: logging,
 	}
 }
 
@@ -66,7 +66,7 @@ func SetupTestHelper() *TestHelper {
 	sessionToken := "TESTTOKEN"
 	th := &TestHelper{}
 	logger := mlog.NewLogger()
-	logger.Configure("", getTestConfig().LoggingJSON)
+	logger.Configure("", getTestConfig().LoggingCfgJSON)
 	srv, err := server.New(getTestConfig(), sessionToken, logger)
 	if err != nil {
 		panic(err)

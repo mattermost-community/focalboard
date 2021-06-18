@@ -95,12 +95,12 @@ func main() {
 	}
 
 	logger := mlog.NewLogger()
-	cfgJSON := config.LoggingJSON
-	if config.LoggingFile == "" && cfgJSON == "" {
+	cfgJSON := config.LoggingCfgJSON
+	if config.LoggingCfgFile == "" && cfgJSON == "" {
 		// if no logging defined, use default config (console output)
 		cfgJSON = defaultLoggingConfig()
 	}
-	err = logger.Configure(config.LoggingFile, cfgJSON)
+	err = logger.Configure(config.LoggingCfgFile, cfgJSON)
 	if err != nil {
 		log.Fatal("Error in config file for logger: ", err)
 		return
@@ -211,7 +211,7 @@ func startServer(webPath string, filesPath string, port int, singleUserToken, db
 	}
 
 	logger := mlog.NewLogger()
-	err = logger.Configure(config.LoggingFile, config.LoggingJSON)
+	err = logger.Configure(config.LoggingCfgFile, config.LoggingCfgJSON)
 	if err != nil {
 		log.Fatal("Error in config file for logger: ", err)
 		return
