@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
 import React, {useState, useEffect} from 'react'
-import {FormattedMessage, IntlShape} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Constants} from '../../constants'
 import {IPropertyOption} from '../../blocks/board'
@@ -24,7 +24,6 @@ import Label from '../../widgets/label'
 type Props = {
     boardTree: BoardTree
     group: BoardTreeGroup
-    intl: IntlShape
     readonly: boolean
     hideGroup: (groupByOptionId: string) => void
     addCard: (groupByOptionId?: string) => Promise<void>
@@ -33,11 +32,12 @@ type Props = {
 }
 
 const TableGroupHeaderRow = React.memo((props: Props): JSX.Element => {
-    const {boardTree, intl, group} = props
+    const {boardTree, group} = props
     const {activeView} = boardTree
     const [groupTitle, setGroupTitle] = useState(group.option.value)
 
     const [isDragging, isOver, groupHeaderRef] = useSortable('groupHeader', group.option, !props.readonly, props.onDrop)
+    const intl = useIntl()
 
     useEffect(() => {
         setGroupTitle(group.option.value)

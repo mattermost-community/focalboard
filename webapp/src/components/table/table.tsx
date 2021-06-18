@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {FormattedMessage, IntlShape} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 import {useDrop, useDragLayer} from 'react-dnd'
 
 import {IPropertyOption, IPropertyTemplate} from '../../blocks/board'
@@ -26,7 +26,6 @@ type Props = {
     selectedCardIds: string[]
     readonly: boolean
     cardIdToFocusOnRender: string
-    intl: IntlShape
     showCard: (cardId?: string) => void
     addCard: (groupByOptionId?: string) => Promise<void>
     onCardClicked: (e: React.MouseEvent, card: Card) => void
@@ -36,6 +35,7 @@ const Table = (props: Props) => {
     const {boardTree} = props
     const {board, cards, activeView, visibleGroups} = boardTree
     const isManualSort = activeView.sortOptions.length < 1
+    const intl = useIntl()
 
     const {offset, resizingColumn} = useDragLayer((monitor) => {
         if (monitor.getItemType() === 'horizontalGrip') {
@@ -84,7 +84,7 @@ const Table = (props: Props) => {
                 if (!template) {
                     return
                 }
-                displayValue = (OctoUtils.propertyDisplayValue(card, card.properties[columnID], template, props.intl) || '') as string
+                displayValue = (OctoUtils.propertyDisplayValue(card, card.properties[columnID], template, intl) || '') as string
                 if (template.type === 'select') {
                     displayValue = displayValue.toUpperCase()
                 }
@@ -281,7 +281,6 @@ const Table = (props: Props) => {
                                 key={group.option.id}
                                 boardTree={boardTree}
                                 group={group}
-                                intl={props.intl}
                                 readonly={props.readonly}
                                 columnRefs={columnRefs}
                                 selectedCardIds={props.selectedCardIds}
@@ -307,7 +306,6 @@ const Table = (props: Props) => {
                         selectedCardIds={props.selectedCardIds}
                         readonly={props.readonly}
                         cardIdToFocusOnRender={props.cardIdToFocusOnRender}
-                        intl={props.intl}
                         showCard={props.showCard}
                         addCard={props.addCard}
                         onCardClicked={props.onCardClicked}
