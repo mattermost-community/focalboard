@@ -56,6 +56,12 @@
             }
         }
     }
+
+    div:nth-child(3) {
+        div {
+            max-height: unset;
+        }
+    }
 }
 
 .label-container > .Label {
@@ -64,7 +70,7 @@
     text-overflow: ellipsis;
     display: inline-block;
 
-    
+
 }
 
 .octo-property-value > .Label {
