@@ -8,7 +8,7 @@ import (
 	"github.com/mattermost/logr/v2/formatters"
 )
 
-// CreateTestLogger creates a logger for unit tests. Log records are output to `(*testing.T)Log`
+// CreateTestLogger creates a logger for unit tests. Log records are output to `(*testing.T)Log`.
 func CreateTestLogger(t *testing.T, levels ...Field) (logger *Logger) {
 	logger = NewLogger()
 
@@ -16,7 +16,10 @@ func CreateTestLogger(t *testing.T, levels ...Field) (logger *Logger) {
 	formatter := &formatters.Plain{}
 	target := newTestingTarget(t)
 
-	logger.log.Logr().AddTarget(target, "test", filter, formatter, 1000)
+	if err := logger.log.Logr().AddTarget(target, "test", filter, formatter, 1000); err != nil {
+		t.Fail()
+		return nil
+	}
 	return logger
 }
 

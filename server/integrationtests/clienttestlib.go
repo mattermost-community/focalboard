@@ -66,7 +66,9 @@ func SetupTestHelper() *TestHelper {
 	sessionToken := "TESTTOKEN"
 	th := &TestHelper{}
 	logger := mlog.NewLogger()
-	logger.Configure("", getTestConfig().LoggingCfgJSON)
+	if err := logger.Configure("", getTestConfig().LoggingCfgJSON); err != nil {
+		panic(err)
+	}
 	srv, err := server.New(getTestConfig(), sessionToken, logger)
 	if err != nil {
 		panic(err)
@@ -111,7 +113,7 @@ func (th *TestHelper) InitBasic() *TestHelper {
 }
 
 func (th *TestHelper) TearDown() {
-	defer th.Server.Logger().Shutdown()
+	defer func() { _ = th.Server.Logger().Shutdown() }()
 
 	err := th.Server.Shutdown()
 	if err != nil {

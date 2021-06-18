@@ -16,7 +16,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 )
 
-// IsValidSessionToken authenticates session tokens
+// IsValidSessionToken authenticates session tokens.
 type IsValidSessionToken func(token string) bool
 
 type Hub interface {
@@ -36,20 +36,20 @@ type Server struct {
 	logger           *mlog.Logger
 }
 
-// UpdateMsg is sent on block updates
+// UpdateMsg is sent on block updates.
 type UpdateMsg struct {
 	Action string      `json:"action"`
 	Block  model.Block `json:"block"`
 }
 
-// clusterUpdateMsg is sent on block updates
+// clusterUpdateMsg is sent on block updates.
 type clusterUpdateMsg struct {
 	UpdateMsg
 	BlockID     string `json:"block_id"`
 	WorkspaceID string `json:"workspace_id"`
 }
 
-// ErrorMsg is sent on errors
+// ErrorMsg is sent on errors.
 type ErrorMsg struct {
 	Error string `json:"error"`
 }
@@ -219,7 +219,7 @@ func (ws *Server) getAuthenticatedWorkspaceID(wsSession *websocketSession, comma
 	workspaceID := command.WorkspaceID
 	if len(workspaceID) == 0 {
 		ws.logger.Error("getAuthenticatedWorkspaceID: No workspace")
-		return "", errors.New("No workspace")
+		return "", errors.New("no workspace")
 	}
 
 	container := store.Container{
@@ -231,16 +231,16 @@ func (ws *Server) getAuthenticatedWorkspaceID(wsSession *websocketSession, comma
 		for _, blockID := range command.BlockIDs {
 			isValid, _ := ws.auth.IsValidReadToken(container, blockID, command.ReadToken)
 			if !isValid {
-				return "", errors.New("Invalid read token for workspace")
+				return "", errors.New("invalid read token for workspace")
 			}
 		}
 		return workspaceID, nil
 	}
 
-	return "", errors.New("No read token")
+	return "", errors.New("no read token")
 }
 
-// TODO: Refactor workspace hashing
+// TODO: Refactor workspace hashing.
 func makeItemID(workspaceID, blockID string) string {
 	return workspaceID + "-" + blockID
 }
@@ -283,7 +283,7 @@ func (ws *Server) removeListener(client *websocket.Conn) {
 	ws.mu.Unlock()
 }
 
-// removeListenerFromBlocks removes a webSocket listener from a set of block.
+// removeListenerFromBlocks removes a webSocket listener from a set of blocks.
 func (ws *Server) removeListenerFromBlocks(wsSession *websocketSession, command *WebsocketCommand) {
 	workspaceID, err := ws.getAuthenticatedWorkspaceID(wsSession, command)
 	if err != nil {
@@ -345,15 +345,13 @@ func (ws *Server) SetHub(hub Hub) {
 			Block:  msg.Block,
 		}
 
-		if listeners != nil {
-			for _, listener := range listeners {
-				log.Printf("Broadcast change, workspaceID: %s, blockID: %s, remoteAddr: %s", msg.WorkspaceID, msg.BlockID, listener.RemoteAddr())
+		for _, listener := range listeners {
+			log.Printf("Broadcast change, workspaceID: %s, blockID: %s, remoteAddr: %s", msg.WorkspaceID, msg.BlockID, listener.RemoteAddr())
 
-				err := listener.WriteJSON(message)
-				if err != nil {
-					log.Printf("broadcast error: %v", err)
-					listener.Close()
-				}
+			err := listener.WriteJSON(message)
+			if err != nil {
+				log.Printf("broadcast error: %v", err)
+				listener.Close()
 			}
 		}
 	})
@@ -369,7 +367,7 @@ func (ws *Server) getListeners(workspaceID string, blockID string) []*websocket.
 	return listeners
 }
 
-// BroadcastBlockDelete broadcasts delete messages to clients
+// BroadcastBlockDelete broadcasts delete messages to clients.
 func (ws *Server) BroadcastBlockDelete(workspaceID, blockID, parentID string) {
 	now := time.Now().Unix()
 	block := model.Block{}
@@ -381,7 +379,7 @@ func (ws *Server) BroadcastBlockDelete(workspaceID, blockID, parentID string) {
 	ws.BroadcastBlockChange(workspaceID, block)
 }
 
-// BroadcastBlockChange broadcasts update messages to clients
+// BroadcastBlockChange broadcasts update messages to clients.
 func (ws *Server) BroadcastBlockChange(workspaceID string, block model.Block) {
 	blockIDsToNotify := []string{block.ID, block.ParentID}
 
@@ -404,19 +402,17 @@ func (ws *Server) BroadcastBlockChange(workspaceID string, block model.Block) {
 			ws.hub.SendWSMessage(data)
 		}
 
-		if listeners != nil {
-			for _, listener := range listeners {
-				ws.logger.Debug("Broadcast change",
-					mlog.String("workspaceID", workspaceID),
-					mlog.String("blockID", blockID),
-					mlog.Stringer("remoteAddr", listener.RemoteAddr()),
-				)
+		for _, listener := range listeners {
+			ws.logger.Debug("Broadcast change",
+				mlog.String("workspaceID", workspaceID),
+				mlog.String("blockID", blockID),
+				mlog.Stringer("remoteAddr", listener.RemoteAddr()),
+			)
 
-				err := listener.WriteJSON(message)
-				if err != nil {
-					ws.logger.Error("broadcast error", mlog.Err(err))
-					listener.Close()
-				}
+			err := listener.WriteJSON(message)
+			if err != nil {
+				ws.logger.Error("broadcast error", mlog.Err(err))
+				listener.Close()
 			}
 		}
 	}

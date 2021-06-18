@@ -22,7 +22,7 @@ type InstanceInfo struct {
 	InstallationID string
 }
 
-// Metrics used to instrumentate metrics in prometheus
+// Metrics used to instrumentate metrics in prometheus.
 type Metrics struct {
 	registry *prometheus.Registry
 
@@ -41,7 +41,7 @@ type Metrics struct {
 	blockLastActivity prometheus.Gauge
 }
 
-// NewMetrics Factory method to create a new metrics collector
+// NewMetrics Factory method to create a new metrics collector.
 func NewMetrics(info InstanceInfo) *Metrics {
 	m := &Metrics{}
 

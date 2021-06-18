@@ -105,7 +105,7 @@ func main() {
 		log.Fatal("Error in config file for logger: ", err)
 		return
 	}
-	defer logger.Shutdown()
+	defer func() { _ = logger.Shutdown() }()
 
 	if logger.HasTargets() {
 		restore := logger.RedirectStdLog(mlog.Info, mlog.String("src", "stdlog"))
@@ -176,7 +176,7 @@ func main() {
 	// Waiting for SIGINT (pkill -2)
 	<-stop
 
-	server.Shutdown()
+	_ = server.Shutdown()
 }
 
 // StartServer starts the server
@@ -254,7 +254,7 @@ func stopServer() {
 	if err != nil {
 		pServer.Logger().Error("server.Shutdown ERROR", mlog.Err(err))
 	}
-	pServer.Logger().Shutdown()
+	_ = pServer.Logger().Shutdown()
 	pServer = nil
 }
 
