@@ -7,7 +7,6 @@
     "debug:watch": "webpack --mode=development --watch",
     "lint": "eslint --ignore-pattern node_modules --ignore-pattern dist --ext .js --ext .jsx --ext tsx --ext ts . --quiet --cache",
     "fix": "eslint --ignore-pattern node_modules --ignore-pattern dist --ext .js --ext .jsx --ext tsx --ext ts . --quiet --fix --cache",
-    "fix:scss": "prettier --write './src/**/*.scss'",
     "test": "jest --forceExit --detectOpenHandles --verbose",
     "test:watch": "jest --watch",
     "test-ci": "jest --forceExit --detectOpenHandles --maxWorkers=2",
