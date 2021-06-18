@@ -2,7 +2,6 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 import {Store, Action} from 'redux'
-import {Link} from 'react-router-dom'
 
 import {GlobalState} from 'mattermost-redux/types/store'
 
@@ -48,15 +47,10 @@ export default class Plugin {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
     public async initialize(registry: PluginRegistry, store: Store<GlobalState, Action<Record<string, unknown>>>) {
         this.registry = registry
-        const Icon = () => {
+        this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(focalboardIcon, () => {
             const currentChannel = store.getState().entities.channels.currentChannelId
-            return (
-                <Link to={`/plug/focalboard/workspace/${currentChannel}`}>
-                    {focalboardIcon}
-                </Link>
-            )
-        }
-        this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<Icon/>, () => {}, '', 'Focalboard Workspace')
+            window.open(`${window.location.origin}/plug/focalboard/workspace/${currentChannel}`)
+        }, '', 'Focalboard Workspace')
         this.registry.registerCustomRoute('/', () => (
             <div id='main-app'>
                 <App/>
