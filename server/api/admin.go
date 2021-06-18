@@ -41,7 +41,7 @@ func (a *API) handleAdminSetPassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = a.app().UpdateUserPassword(username, requestData.Password)
+	err = a.app.UpdateUserPassword(username, requestData.Password)
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return

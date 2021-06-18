@@ -63,7 +63,6 @@ type Server struct {
 	localRouter     *mux.Router
 	localModeServer *http.Server
 	api             *api.API
-	appBuilder      func() *app.App
 }
 
 func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger) (*Server, error) {
@@ -132,16 +131,16 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 		Metrics:      metricsService,
 		Logger:       logger,
 	}
-	appBuilder := func() *app.App { return app.New(cfg, wsServer, appServices) }
+	app := app.New(cfg, wsServer, appServices)
 
-	focalboardAPI := api.NewAPI(appBuilder, singleUserToken, cfg.AuthMode, logger, auditService)
+	focalboardAPI := api.NewAPI(app, singleUserToken, cfg.AuthMode, logger, auditService)
 
 	// Local router for admin APIs
 	localRouter := mux.NewRouter()
 	focalboardAPI.RegisterAdminRoutes(localRouter)
 
 	// Init workspace
-	if _, err = appBuilder().GetRootWorkspace(); err != nil {
+	if _, err = app.GetRootWorkspace(); err != nil {
 		logger.Error("Unable to get root workspace", mlog.Err(err))
 		return nil, err
 	}
@@ -164,7 +163,7 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 		}
 	}
 	telemetryOpts := telemetryOptions{
-		appBuilder:  appBuilder,
+		app:         app,
 		cfg:         cfg,
 		telemetryID: telemetryID,
 		logger:      logger,
@@ -185,7 +184,6 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 		logger:         logger,
 		localRouter:    localRouter,
 		api:            focalboardAPI,
-		appBuilder:     appBuilder,
 	}
 
 	server.initHandlers()
@@ -219,8 +217,7 @@ func (s *Server) Start() error {
 	}, cleanupSessionTaskFrequency)
 
 	metricsUpdater := func() {
-		app := s.appBuilder()
-		blockCounts, err := app.GetBlockCountsByType()
+		blockCounts, err := s.store.GetBlockCountsByType()
 		if err != nil {
 			s.logger.Error("Error updating metrics", mlog.String("group", "blocks"), mlog.Err(err))
 			return
@@ -229,7 +226,7 @@ func (s *Server) Start() error {
 		for blockType, count := range blockCounts {
 			s.metricsService.ObserveBlockCount(blockType, count)
 		}
-		workspaceCount, err := app.GetWorkspaceCount()
+		workspaceCount, err := s.store.GetWorkspaceCount()
 		if err != nil {
 			s.logger.Error("Error updating metrics", mlog.String("group", "workspaces"), mlog.Err(err))
 			return
@@ -237,7 +234,7 @@ func (s *Server) Start() error {
 		s.logger.Log(mlog.Metrics, "Workspace metrics collected", mlog.Int64("workspace_count", workspaceCount))
 		s.metricsService.ObserveWorkspaceCount(workspaceCount)
 	}
-	//metricsUpdater()   Calling this immediately causes integration unit tests to fail.
+	// metricsUpdater()   Calling this immediately causes integration unit tests to fail.
 	s.metricsUpdaterTask = scheduler.CreateRecurringTask("updateMetrics", metricsUpdater, updateMetricsTaskFrequency)
 
 	if s.config.Telemetry {
@@ -351,7 +348,7 @@ func (s *Server) SetWSHub(hub ws.Hub) {
 }
 
 type telemetryOptions struct {
-	appBuilder  func() *app.App
+	app         *app.App
 	cfg         *config.Configuration
 	telemetryID string
 	logger      *mlog.Logger
@@ -383,29 +380,29 @@ func initTelemetry(opts telemetryOptions) *telemetry.Service {
 		m := make(map[string]interface{})
 		var count int
 		var err error
-		if count, err = opts.appBuilder().GetRegisteredUserCount(); err != nil {
+		if count, err = opts.app.GetRegisteredUserCount(); err != nil {
 			return nil, err
 		}
 		m["registered_users"] = count
 
-		if count, err = opts.appBuilder().GetDailyActiveUsers(); err != nil {
+		if count, err = opts.app.GetDailyActiveUsers(); err != nil {
 			return nil, err
 		}
 		m["daily_active_users"] = count
 
-		if count, err = opts.appBuilder().GetWeeklyActiveUsers(); err != nil {
+		if count, err = opts.app.GetWeeklyActiveUsers(); err != nil {
 			return nil, err
 		}
 		m["weekly_active_users"] = count
 
-		if count, err = opts.appBuilder().GetMonthlyActiveUsers(); err != nil {
+		if count, err = opts.app.GetMonthlyActiveUsers(); err != nil {
 			return nil, err
 		}
 		m["monthly_active_users"] = count
 		return m, nil
 	})
 	telemetryService.RegisterTracker("blocks", func() (telemetry.Tracker, error) {
-		blockCounts, err := opts.appBuilder().GetBlockCountsByType()
+		blockCounts, err := opts.app.GetBlockCountsByType()
 		if err != nil {
 			return nil, err
 		}
@@ -416,7 +413,7 @@ func initTelemetry(opts telemetryOptions) *telemetry.Service {
 		return m, nil
 	})
 	telemetryService.RegisterTracker("workspaces", func() (telemetry.Tracker, error) {
-		count, err := opts.appBuilder().GetWorkspaceCount()
+		count, err := opts.app.GetWorkspaceCount()
 		if err != nil {
 			return nil, err
 		}
