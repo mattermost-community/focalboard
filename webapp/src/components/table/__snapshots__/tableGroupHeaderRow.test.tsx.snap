@@ -95,44 +95,17 @@ exports[`should match snapshot with Group 1`] = `
       <div
         class="Button IconButton"
       >
-        <svg
-          class="OptionsIcon Icon"
-          viewBox="0 0 100 100"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle
-            cx="30"
-            cy="50"
-            r="5"
-          />
-          <circle
-            cx="50"
-            cy="50"
-            r="5"
-          />
-          <circle
-            cx="70"
-            cy="50"
-            r="5"
-          />
-        </svg>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
       </div>
     </div>
     <div
       class="Button IconButton"
     >
-      <svg
-        class="AddIcon Icon"
-        viewBox="0 0 100 100"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <polyline
-          points="30,50 70,50"
-        />
-        <polyline
-          points="50,30 50,70"
-        />
-      </svg>
+      <i
+        class="CompassIcon icon-plus AddIcon"
+      />
     </div>
   </div>
 </div>
@@ -186,44 +159,17 @@ exports[`should match snapshot, add new 1`] = `
       <div
         class="Button IconButton"
       >
-        <svg
-          class="OptionsIcon Icon"
-          viewBox="0 0 100 100"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle
-            cx="30"
-            cy="50"
-            r="5"
-          />
-          <circle
-            cx="50"
-            cy="50"
-            r="5"
-          />
-          <circle
-            cx="70"
-            cy="50"
-            r="5"
-          />
-        </svg>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
       </div>
     </div>
     <div
       class="Button IconButton"
     >
-      <svg
-        class="AddIcon Icon"
-        viewBox="0 0 100 100"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <polyline
-          points="30,50 70,50"
-        />
-        <polyline
-          points="50,30 50,70"
-        />
-      </svg>
+      <i
+        class="CompassIcon icon-plus AddIcon"
+      />
     </div>
   </div>
 </div>
@@ -277,44 +223,17 @@ exports[`should match snapshot, edit title 1`] = `
       <div
         class="Button IconButton"
       >
-        <svg
-          class="OptionsIcon Icon"
-          viewBox="0 0 100 100"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle
-            cx="30"
-            cy="50"
-            r="5"
-          />
-          <circle
-            cx="50"
-            cy="50"
-            r="5"
-          />
-          <circle
-            cx="70"
-            cy="50"
-            r="5"
-          />
-        </svg>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
       </div>
     </div>
     <div
       class="Button IconButton"
     >
-      <svg
-        class="AddIcon Icon"
-        viewBox="0 0 100 100"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <polyline
-          points="30,50 70,50"
-        />
-        <polyline
-          points="50,30 50,70"
-        />
-      </svg>
+      <i
+        class="CompassIcon icon-plus AddIcon"
+      />
     </div>
   </div>
 </div>
@@ -368,44 +287,17 @@ exports[`should match snapshot, hide group 1`] = `
       <div
         class="Button IconButton"
       >
-        <svg
-          class="OptionsIcon Icon"
-          viewBox="0 0 100 100"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle
-            cx="30"
-            cy="50"
-            r="5"
-          />
-          <circle
-            cx="50"
-            cy="50"
-            r="5"
-          />
-          <circle
-            cx="70"
-            cy="50"
-            r="5"
-          />
-        </svg>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
       </div>
     </div>
     <div
       class="Button IconButton"
     >
-      <svg
-        class="AddIcon Icon"
-        viewBox="0 0 100 100"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <polyline
-          points="30,50 70,50"
-        />
-        <polyline
-          points="50,30 50,70"
-        />
-      </svg>
+      <i
+        class="CompassIcon icon-plus AddIcon"
+      />
     </div>
   </div>
 </div>
@@ -455,44 +347,17 @@ exports[`should match snapshot, no groups 1`] = `
       <div
         class="Button IconButton"
       >
-        <svg
-          class="OptionsIcon Icon"
-          viewBox="0 0 100 100"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle
-            cx="30"
-            cy="50"
-            r="5"
-          />
-          <circle
-            cx="50"
-            cy="50"
-            r="5"
-          />
-          <circle
-            cx="70"
-            cy="50"
-            r="5"
-          />
-        </svg>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
       </div>
     </div>
     <div
       class="Button IconButton"
     >
-      <svg
-        class="AddIcon Icon"
-        viewBox="0 0 100 100"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <polyline
-          points="30,50 70,50"
-        />
-        <polyline
-          points="50,30 50,70"
-        />
-      </svg>
+      <i
+        class="CompassIcon icon-plus AddIcon"
+      />
     </div>
   </div>
 </div>

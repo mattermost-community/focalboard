@@ -189,7 +189,7 @@ test('should match snapshot, add new', async () => {
 
     const {container} = render(component)
 
-    const triangle = container.querySelector('svg.AddIcon')
+    const triangle = container.querySelector('i.AddIcon')
     expect(triangle).not.toBeNull()
 
     act(() => {
