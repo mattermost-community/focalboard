@@ -64,6 +64,7 @@ const ViewTitle = React.memo((props: Props) => {
                         }}
                         icon={<ShowIcon/>}
                     >
+                        &nbsp;
                         <FormattedMessage
                             id='ViewTitle.show-description'
                             defaultMessage='show description'
