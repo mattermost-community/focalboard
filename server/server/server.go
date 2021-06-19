@@ -90,7 +90,7 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 	filesBackendSettings := filestore.FileBackendSettings{}
 	filesBackendSettings.DriverName = cfg.FilesDriver
 	filesBackendSettings.Directory = cfg.FilesPath
-	filesBackendSettings.AmazonS3AccessKeyId = cfg.FilesS3Config.AccessKeyID
+	filesBackendSettings.AmazonS3AccessKeyId = cfg.FilesS3Config.AccessKeyId
 	filesBackendSettings.AmazonS3SecretAccessKey = cfg.FilesS3Config.SecretAccessKey
 	filesBackendSettings.AmazonS3Bucket = cfg.FilesS3Config.Bucket
 	filesBackendSettings.AmazonS3PathPrefix = cfg.FilesS3Config.PathPrefix

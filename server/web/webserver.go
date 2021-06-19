@@ -29,8 +29,7 @@ type Server struct {
 	rootPath string
 	port     int
 	ssl      bool
-	// localOnly bool
-	logger *mlog.Logger
+	logger   *mlog.Logger
 }
 
 // NewServer creates a new instance of the webserver.

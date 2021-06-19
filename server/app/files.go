@@ -67,10 +67,3 @@ func (a *App) GetFileReader(workspaceID, rootID, filename string) (filestore.Rea
 
 	return reader, nil
 }
-
-/*
-func fileExists(path string) bool {
-	_, err := os.Stat(path)
-	return !os.IsNotExist(err)
-}
-*/

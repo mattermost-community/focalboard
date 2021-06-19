@@ -719,17 +719,6 @@ func filterOrphanBlocks(blocks []model.Block) (ret []model.Block) {
 	return blocks
 }
 
-/*
-func arrayContainsBlockWithID(array []model.Block, blockID string) bool {
-	for _, item := range array {
-		if item.ID == blockID {
-			return true
-		}
-	}
-	return false
-}
-*/
-
 func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 	// swagger:operation POST /api/v1/workspaces/{workspaceID}/blocks/import importBlocks
 	//
@@ -1341,11 +1330,3 @@ func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) { //nolint:
 	w.WriteHeader(code)
 	_, _ = w.Write(json)
 }
-
-/*
-func addUserID(rw http.ResponseWriter, req *http.Request, next http.Handler) {
-	ctx := context.WithValue(req.Context(), "userid", req.Header.Get("userid"))
-	req = req.WithContext(ctx)
-	next.ServeHTTP(rw, req)
-}
-*/
