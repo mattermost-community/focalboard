@@ -168,6 +168,10 @@ class OctoUtils {
         }
         }
     }
+
+    static getPropertyColor(propColor: string): string {
+        return propColor.startsWith('propColorCustom') ? propColor.substring(15) : propColor
+    }
 }
 
 export {OctoUtils}

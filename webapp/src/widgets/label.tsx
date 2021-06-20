@@ -3,6 +3,7 @@
 import React from 'react'
 
 import './label.scss'
+import {OctoUtils} from '../octoUtils'
 
 type Props = {
     color?: string
@@ -13,10 +14,12 @@ type Props = {
 
 // Switch is an on-off style switch / checkbox
 function Label(props: Props): JSX.Element {
+    console.log(props.color + ' ' + OctoUtils.getPropertyColor(props.color || ''))
     return (
         <span
-            className={`Label ${props.color || 'empty'} ${props.classNames ? props.classNames : ''}`}
+            className={`Label ${props.color?.startsWith('propColorCustom') ? '' : props.color} ${props.classNames ? props.classNames : ''}`}
             title={props.title}
+            style={props.color?.startsWith('propColorCustom') ? {backgroundColor: OctoUtils.getPropertyColor(props.color)} : {}}
         >
             {props.children}
         </span>

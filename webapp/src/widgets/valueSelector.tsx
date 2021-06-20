@@ -7,10 +7,14 @@ import CreatableSelect from 'react-select/creatable'
 
 import {CSSObject} from '@emotion/serialize'
 
+import {SketchPicker} from 'react-color'
+
 import {IPropertyOption} from '../blocks/board'
 import {Constants} from '../constants'
 
 import {getSelectBaseStyle} from '../theme'
+
+import {OctoUtils} from '../octoUtils'
 
 import Menu from './menu'
 import MenuWrapper from './menuWrapper'
@@ -87,6 +91,20 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
                             onClick={() => props.onChangeColor(option, color.id)}
                         />
                     ))}
+                    <Menu.Separator/>
+                    {/*<Menu.Text*/}
+                    {/*    id='customColor'*/}
+
+                    {/*    // icon={<CustomColorBadge color={OctoUtils.getPropertyColor(props.option.color)}/>}*/}
+                    {/*    icon={<DeleteIcon/>}*/}
+                    {/*    name={intl.formatMessage({id: 'BoardComponent.customColor', defaultMessage: 'Custom'})}*/}
+                    {/*    onClick={() => (<SketchPicker/>)}*/}
+                    {/*/>*/}
+                    <Menu.Color
+                        key='custom'
+                        id='custom-color'
+                        name='Custom'
+                    />
                 </Menu>
             </MenuWrapper>
         </div>
@@ -165,6 +183,19 @@ function ValueSelector(props: Props): JSX.Element {
             placeholder={props.emptyValue}
             hideSelectedOptions={false}
             defaultMenuIsOpen={false}
+        />
+    )
+}
+
+type CustomColorBadgeProps = {
+    color: string
+}
+
+export function CustomColorBadge(props: CustomColorBadgeProps): JSX.Element {
+    return (
+        <div
+            className='CustomColorBadge'
+            style={{backgroundColor: props.color}}
         />
     )
 }
