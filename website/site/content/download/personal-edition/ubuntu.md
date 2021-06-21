@@ -173,7 +173,7 @@ Exit the mysql-prompt:
 exit
 ```
 
-Edit the Focalboard config.json:
+Edit the Focalboard `config.json`:
 
 ```
 nano /opt/focalboard/config.json
