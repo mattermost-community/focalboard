@@ -91,7 +91,7 @@ func (p *Plugin) OnActivate() error {
 		DBTablePrefix:           "focalboard_",
 		UseSSL:                  false,
 		SecureCookie:            true,
-		WebPath:                 path.Join(*mmconfig.PluginSettings.Directory, "/focalboard/pack"),
+		WebPath:                 path.Join(*mmconfig.PluginSettings.Directory, "focalboard", "pack"),
 		FilesDriver:             *mmconfig.FileSettings.DriverName,
 		FilesPath:               *mmconfig.FileSettings.Directory,
 		FilesS3Config:           filesS3Config,
