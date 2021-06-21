@@ -245,7 +245,8 @@ export function getSelectBaseStyle() {
         }),
         menuList: (provided: CSSObject): CSSObject => ({
             ...provided,
-            overflowY: 'unset',
+            overflowY: 'auto',
+            overflowX: 'hidden',
         }),
     }
 }
