@@ -43,7 +43,7 @@ exports[`components/table/Table should match snapshot 1`] = `
           >
             Property 1
             <svg
-              class="SortUpIcon Icon"
+              class="SortDownIcon Icon"
               viewBox="0 0 100 100"
               xmlns="http://www.w3.org/2000/svg"
             >
@@ -51,7 +51,7 @@ exports[`components/table/Table should match snapshot 1`] = `
                 points="50,20 50,80"
               />
               <polyline
-                points="30,40 50,20 70,40"
+                points="30,60 50,80 70,60"
               />
             </svg>
           </span>
@@ -77,7 +77,7 @@ exports[`components/table/Table should match snapshot 1`] = `
           >
             Property 2
             <svg
-              class="SortDownIcon Icon"
+              class="SortUpIcon Icon"
               viewBox="0 0 100 100"
               xmlns="http://www.w3.org/2000/svg"
             >
@@ -85,7 +85,7 @@ exports[`components/table/Table should match snapshot 1`] = `
                 points="50,20 50,80"
               />
               <polyline
-                points="30,60 50,80 70,60"
+                points="30,40 50,20 70,40"
               />
             </svg>
           </span>
@@ -225,7 +225,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           >
             Property 1
             <svg
-              class="SortUpIcon Icon"
+              class="SortDownIcon Icon"
               viewBox="0 0 100 100"
               xmlns="http://www.w3.org/2000/svg"
             >
@@ -233,7 +233,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
                 points="50,20 50,80"
               />
               <polyline
-                points="30,40 50,20 70,40"
+                points="30,60 50,80 70,60"
               />
             </svg>
           </span>
@@ -259,7 +259,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           >
             Property 2
             <svg
-              class="SortDownIcon Icon"
+              class="SortUpIcon Icon"
               viewBox="0 0 100 100"
               xmlns="http://www.w3.org/2000/svg"
             >
@@ -267,7 +267,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
                 points="50,20 50,80"
               />
               <polyline
-                points="30,60 50,80 70,60"
+                points="30,40 50,20 70,40"
               />
             </svg>
           </span>
@@ -390,7 +390,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
           >
             Property 1
             <svg
-              class="SortUpIcon Icon"
+              class="SortDownIcon Icon"
               viewBox="0 0 100 100"
               xmlns="http://www.w3.org/2000/svg"
             >
@@ -398,7 +398,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
                 points="50,20 50,80"
               />
               <polyline
-                points="30,40 50,20 70,40"
+                points="30,60 50,80 70,60"
               />
             </svg>
           </span>
@@ -420,7 +420,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
           >
             Property 2
             <svg
-              class="SortDownIcon Icon"
+              class="SortUpIcon Icon"
               viewBox="0 0 100 100"
               xmlns="http://www.w3.org/2000/svg"
             >
@@ -428,7 +428,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
                 points="50,20 50,80"
               />
               <polyline
-                points="30,60 50,80 70,60"
+                points="30,40 50,20 70,40"
               />
             </svg>
           </span>
