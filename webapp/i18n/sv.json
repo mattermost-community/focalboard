@@ -44,6 +44,7 @@
   "FilterComponent.delete": "Radera",
   "GalleryCard.delete": "Radera",
   "GalleryCard.duplicate": "Duplicera",
+  "GroupBy.ungroup": "Dela upp grupp",
   "KanbanCard.delete": "Radera",
   "KanbanCard.duplicate": "Radera",
   "KanbanCard.untitled": "Saknar titel",
