@@ -144,7 +144,7 @@ exports[`components/table/Table should match snapshot 1`] = `
           style="width: 100px;"
         >
           <div
-            class="octo-property-value"
+            class="octo-propertyvalue"
             tabindex="0"
           >
             <span
@@ -159,7 +159,7 @@ exports[`components/table/Table should match snapshot 1`] = `
           style="width: 100px;"
         >
           <div
-            class="octo-property-value"
+            class="octo-propertyvalue"
             tabindex="0"
           >
             <span
@@ -484,7 +484,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
           style="width: 100px;"
         >
           <div
-            class="octo-property-value"
+            class="octo-propertyvalue"
             tabindex="0"
           >
             <span
@@ -499,7 +499,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
           style="width: 100px;"
         >
           <div
-            class="octo-property-value"
+            class="octo-propertyvalue"
             tabindex="0"
           >
             <span
