@@ -164,7 +164,7 @@ function ValueSelector(props: Props): JSX.Element {
             closeMenuOnSelect={true}
             placeholder={props.emptyValue}
             hideSelectedOptions={false}
-            defaultMenuIsOpen={false}
+            defaultMenuIsOpen={true}
         />
     )
 }
