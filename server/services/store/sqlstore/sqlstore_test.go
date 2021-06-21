@@ -27,7 +27,7 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 	require.Nil(t, err)
 
 	tearDown := func() {
-		defer logger.Shutdown()
+		defer func() { _ = logger.Shutdown() }()
 		err = store.Shutdown()
 		require.Nil(t, err)
 	}

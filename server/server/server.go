@@ -1,7 +1,7 @@
 package server
 
 import (
-	"log"
+	"fmt"
 	"net"
 	"net/http"
 	"os"
@@ -43,6 +43,8 @@ const (
 
 	//nolint:gomnd
 	minSessionExpiryTime = int64(60 * 60 * 24 * 31) // 31 days
+
+	MattermostAuthMod = "mattermost"
 )
 
 type Server struct {
@@ -72,18 +74,18 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 		logger.Error("Unable to start the database", mlog.Err(err))
 		return nil, err
 	}
-	if cfg.AuthMode == "mattermost" {
-		layeredStore, err := mattermostauthlayer.New(cfg.DBType, cfg.DBConfigString, db)
-		if err != nil {
-			log.Print("Unable to start the database", err)
-			return nil, err
+	if cfg.AuthMode == MattermostAuthMod {
+		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, cfg.DBConfigString, db)
+		if err2 != nil {
+			logger.Error("Unable to start the database", mlog.Err(err2))
+			return nil, err2
 		}
 		db = layeredStore
 	}
 
 	authenticator := auth.New(cfg, db)
 
-	wsServer := ws.NewServer(authenticator, singleUserToken, cfg.AuthMode == "mattermost", logger)
+	wsServer := ws.NewServer(authenticator, singleUserToken, cfg.AuthMode == MattermostAuthMod, logger)
 
 	filesBackendSettings := filestore.FileBackendSettings{}
 	filesBackendSettings.DriverName = cfg.FilesDriver
@@ -119,8 +121,8 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 
 	// Init audit
 	auditService := audit.NewAudit()
-	if err := auditService.Configure(cfg.AuditCfgFile, cfg.AuditCfgJSON); err != nil {
-		return nil, errors.New("unable to initialize the audit service")
+	if err2 := auditService.Configure(cfg.AuditCfgFile, cfg.AuditCfgJSON); err2 != nil {
+		return nil, fmt.Errorf("unable to initialize the audit service: %w", err2)
 	}
 
 	appServices := app.Services{
@@ -250,7 +252,7 @@ func (s *Server) Start() error {
 			}
 			return nil
 		}, func(error) {
-			s.metricsServer.Shutdown()
+			_ = s.metricsServer.Shutdown()
 		})
 
 		if err := group.Run(); err != nil {

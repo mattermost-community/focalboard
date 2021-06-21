@@ -24,7 +24,6 @@ type TestHelper struct {
 }
 
 func SetupTestHelper(t *testing.T) *TestHelper {
-
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	cfg := config.Configuration{}

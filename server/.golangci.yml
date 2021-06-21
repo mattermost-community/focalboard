@@ -12,10 +12,14 @@ linters-settings:
     enable-all: true
     disable:
       - fieldalignment
+  lll:
+    line-length: 150
+  gomnd:
+    ignored-numbers: 10
+
 
 linters:
   disable-all: true
-
   enable:
     - gofmt
     - goimports
@@ -43,10 +47,10 @@ linters:
     - goconst
     - gocritic
     - godot
-    - goerr113
+#    - goerr113
     - goheader
     - golint
-    - gomnd
+#    - gomnd
     - gomodguard
     - goprintffuncname
     - gosimple

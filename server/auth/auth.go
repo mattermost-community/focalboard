@@ -10,18 +10,18 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Auth authenticates sessions
+// Auth authenticates sessions.
 type Auth struct {
 	config *config.Configuration
 	store  store.Store
 }
 
-// New returns a new Auth
+// New returns a new Auth.
 func New(config *config.Configuration, store store.Store) *Auth {
 	return &Auth{config: config, store: store}
 }
 
-// GetSession Get a user active session and refresh the session if is needed
+// GetSession Get a user active session and refresh the session if needed.
 func (a *Auth) GetSession(token string) (*model.Session, error) {
 	if len(token) < 1 {
 		return nil, errors.New("no session token")
@@ -32,12 +32,12 @@ func (a *Auth) GetSession(token string) (*model.Session, error) {
 		return nil, errors.Wrap(err, "unable to get the session for the token")
 	}
 	if session.UpdateAt < (time.Now().Unix() - a.config.SessionRefreshTime) {
-		a.store.RefreshSession(session)
+		_ = a.store.RefreshSession(session)
 	}
 	return session, nil
 }
 
-// IsValidReadToken validates the read token for a block
+// IsValidReadToken validates the read token for a block.
 func (a *Auth) IsValidReadToken(c store.Container, blockID string, readToken string) (bool, error) {
 	rootID, err := a.store.GetRootID(c, blockID)
 	if err != nil {
@@ -45,7 +45,7 @@ func (a *Auth) IsValidReadToken(c store.Container, blockID string, readToken str
 	}
 
 	sharing, err := a.store.GetSharing(c, rootID)
-	if err == sql.ErrNoRows {
+	if errors.Is(err, sql.ErrNoRows) {
 		return false, nil
 	}
 	if err != nil {

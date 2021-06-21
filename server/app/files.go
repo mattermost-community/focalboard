@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -40,16 +39,23 @@ func (a *App) GetFileReader(workspaceID, rootID, filename string) (filestore.Rea
 	}
 	// FIXUP: Check the deprecated old location
 	if workspaceID == "0" && !exists {
-		oldExists, err := a.filesBackend.FileExists(filename)
-		if err != nil {
-			return nil, err
+		oldExists, err2 := a.filesBackend.FileExists(filename)
+		if err2 != nil {
+			return nil, err2
 		}
 		if oldExists {
-			err := a.filesBackend.MoveFile(filename, filePath)
-			if err != nil {
-				a.logger.Error("ERROR moving file", mlog.String("old", filename), mlog.String("new", filePath))
+			err2 := a.filesBackend.MoveFile(filename, filePath)
+			if err2 != nil {
+				a.logger.Error("ERROR moving file",
+					mlog.String("old", filename),
+					mlog.String("new", filePath),
+					mlog.Err(err2),
+				)
 			} else {
-				a.logger.Debug("Moved file", mlog.String("old", filename), mlog.String("new", filePath))
+				a.logger.Debug("Moved file",
+					mlog.String("old", filename),
+					mlog.String("new", filePath),
+				)
 			}
 		}
 	}
@@ -60,9 +66,4 @@ func (a *App) GetFileReader(workspaceID, rootID, filename string) (filestore.Rea
 	}
 
 	return reader, nil
-}
-
-func fileExists(path string) bool {
-	_, err := os.Stat(path)
-	return !os.IsNotExist(err)
 }

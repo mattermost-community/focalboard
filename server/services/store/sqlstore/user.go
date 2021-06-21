@@ -77,7 +77,7 @@ func (s *SQLStore) getUsersByCondition(condition sq.Eq) ([]*model.User, error) {
 	return users, nil
 }
 
-func (s *SQLStore) GetUserById(userID string) (*model.User, error) {
+func (s *SQLStore) GetUserByID(userID string) (*model.User, error) {
 	return s.getUserByCondition(sq.Eq{"id": userID})
 }
 

@@ -345,19 +345,19 @@ func (mr *MockStoreMockRecorder) GetUserByEmail(email interface{}) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByEmail", reflect.TypeOf((*MockStore)(nil).GetUserByEmail), email)
 }
 
-// GetUserById mocks base method.
-func (m *MockStore) GetUserById(userID string) (*model.User, error) {
+// GetUserByID mocks base method.
+func (m *MockStore) GetUserByID(userID string) (*model.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetUserById", userID)
+	ret := m.ctrl.Call(m, "GetUserByID", userID)
 	ret0, _ := ret[0].(*model.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetUserById indicates an expected call of GetUserById.
-func (mr *MockStoreMockRecorder) GetUserById(userID interface{}) *gomock.Call {
+// GetUserByID indicates an expected call of GetUserByID.
+func (mr *MockStoreMockRecorder) GetUserByID(userID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserById", reflect.TypeOf((*MockStore)(nil).GetUserById), userID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByID", reflect.TypeOf((*MockStore)(nil).GetUserByID), userID)
 }
 
 // GetUserByUsername mocks base method.
