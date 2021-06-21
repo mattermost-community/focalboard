@@ -38,6 +38,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     const propertyValue = card.properties[propertyTemplate.id]
     const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate, intl)
     const finalDisplayValue = displayValue || emptyDisplayValue
+    const [open, setOpen] = useState(false)
 
     const validateProp = (propType: string, val: string): boolean => {
         if (val === '') {
@@ -97,11 +98,12 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             propertyColorCssClassName = cardPropertyValue.color
         }
 
-        if (readOnly || !boardTree) {
+        if (readOnly || !boardTree || !open) {
             return (
                 <div
-                    className='octo-property-value'
+                    className='octo-propertyvalue'
                     tabIndex={0}
+                    onClick={() => setOpen(true)}
                 >
                     <Label color={displayValue ? propertyColorCssClassName : 'empty'}>{finalDisplayValue}</Label>
                 </div>
