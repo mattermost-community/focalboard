@@ -35,7 +35,7 @@ const (
 // REST APIs
 
 type API struct {
-	appBuilder      func() *app.App
+	app             *app.App
 	authService     string
 	singleUserToken string
 	MattermostAuth  bool
@@ -43,18 +43,14 @@ type API struct {
 	audit           *audit.Audit
 }
 
-func NewAPI(appBuilder func() *app.App, singleUserToken string, authService string, logger *mlog.Logger, audit *audit.Audit) *API {
+func NewAPI(app *app.App, singleUserToken string, authService string, logger *mlog.Logger, audit *audit.Audit) *API {
 	return &API{
-		appBuilder:      appBuilder,
+		app:             app,
 		singleUserToken: singleUserToken,
 		authService:     authService,
 		logger:          logger,
 		audit:           audit,
 	}
-}
-
-func (a *API) app() *app.App {
-	return a.appBuilder()
 }
 
 func (a *API) RegisterRoutes(r *mux.Router) {
@@ -126,7 +122,7 @@ func (a *API) hasValidReadTokenForBlock(r *http.Request, container store.Contain
 		return false
 	}
 
-	isValid, err := a.app().IsValidReadToken(container, blockID, readToken)
+	isValid, err := a.app.IsValidReadToken(container, blockID, readToken)
 	if err != nil {
 		a.logger.Error("IsValidReadToken ERROR", mlog.Err(err))
 		return false
@@ -153,7 +149,7 @@ func (a *API) getContainerAllowingReadTokenForBlock(r *http.Request, blockID str
 		}
 
 		// Has session and access to workspace
-		if session != nil && a.app().DoesUserHaveWorkspaceAccess(session.UserID, container.WorkspaceID) {
+		if session != nil && a.app.DoesUserHaveWorkspaceAccess(session.UserID, container.WorkspaceID) {
 			return &container, nil
 		}
 
@@ -239,7 +235,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("parentID", parentID)
 	auditRec.AddMeta("blockType", blockType)
 
-	blocks, err := a.app().GetBlocks(*container, parentID, blockType)
+	blocks, err := a.app.GetBlocks(*container, parentID, blockType)
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -358,7 +354,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	stampModifiedByUser(r, blocks, auditRec)
 
-	err = a.app().InsertBlocks(*container, blocks)
+	err = a.app.InsertBlocks(*container, blocks)
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -404,7 +400,7 @@ func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("userID", userID)
 
-	user, err := a.app().GetUser(userID)
+	user, err := a.app.GetUser(userID)
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -458,7 +454,7 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 			UpdateAt: now,
 		}
 	} else {
-		user, err = a.app().GetUser(session.UserID)
+		user, err = a.app.GetUser(session.UserID)
 		if err != nil {
 			a.errorResponse(w, http.StatusInternalServerError, "", err)
 			return
@@ -523,7 +519,7 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 	auditRec.AddMeta("blockID", blockID)
 
-	err = a.app().DeleteBlock(*container, blockID, userID)
+	err = a.app.DeleteBlock(*container, blockID, userID)
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -600,7 +596,7 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("blockID", blockID)
 
-	blocks, err := a.app().GetSubTree(*container, blockID, int(levels))
+	blocks, err := a.app.GetSubTree(*container, blockID, int(levels))
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -665,9 +661,9 @@ func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
 
 	blocks := []model.Block{}
 	if rootID == "" {
-		blocks, err = a.app().GetAllBlocks(*container)
+		blocks, err = a.app.GetAllBlocks(*container)
 	} else {
-		blocks, err = a.app().GetBlocksWithRootID(*container, rootID)
+		blocks, err = a.app.GetBlocksWithRootID(*container, rootID)
 	}
 
 	a.logger.Debug("raw blocks", mlog.Int("block_count", len(blocks)))
@@ -790,7 +786,7 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 
 	stampModifiedByUser(r, blocks, auditRec)
 
-	err = a.app().InsertBlocks(*container, blocks)
+	err = a.app.InsertBlocks(*container, blocks)
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -849,7 +845,7 @@ func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("rootID", rootID)
 
-	sharing, err := a.app().GetSharing(*container, rootID)
+	sharing, err := a.app.GetSharing(*container, rootID)
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -945,7 +941,7 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 	}
 	sharing.ModifiedBy = userID
 
-	err = a.app().UpsertSharing(*container, sharing)
+	err = a.app.UpsertSharing(*container, sharing)
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -994,12 +990,12 @@ func (a *API) handleGetWorkspace(w http.ResponseWriter, r *http.Request) {
 
 		ctx := r.Context()
 		session := ctx.Value("session").(*model.Session)
-		if !a.app().DoesUserHaveWorkspaceAccess(session.UserID, workspaceID) {
+		if !a.app.DoesUserHaveWorkspaceAccess(session.UserID, workspaceID) {
 			a.errorResponse(w, http.StatusUnauthorized, "", nil)
 			return
 		}
 
-		workspace, err = a.app().GetWorkspace(workspaceID)
+		workspace, err = a.app.GetWorkspace(workspaceID)
 		if err != nil {
 			a.errorResponse(w, http.StatusInternalServerError, "", err)
 		}
@@ -1008,7 +1004,7 @@ func (a *API) handleGetWorkspace(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	} else {
-		workspace, err = a.app().GetRootWorkspace()
+		workspace, err = a.app.GetRootWorkspace()
 		if err != nil {
 			a.errorResponse(w, http.StatusInternalServerError, "", err)
 			return
@@ -1053,7 +1049,7 @@ func (a *API) handlePostWorkspaceRegenerateSignupToken(w http.ResponseWriter, r 
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
-	workspace, err := a.app().GetRootWorkspace()
+	workspace, err := a.app.GetRootWorkspace()
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -1064,7 +1060,7 @@ func (a *API) handlePostWorkspaceRegenerateSignupToken(w http.ResponseWriter, r 
 
 	workspace.SignupToken = utils.CreateGUID()
 
-	err = a.app().UpsertWorkspaceSignupToken(*workspace)
+	err = a.app.UpsertWorkspaceSignupToken(*workspace)
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -1138,7 +1134,7 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", contentType)
 
-	fileReader, err := a.app().GetFileReader(workspaceID, rootID, filename)
+	fileReader, err := a.app.GetFileReader(workspaceID, rootID, filename)
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -1217,7 +1213,7 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("rootID", rootID)
 	auditRec.AddMeta("filename", handle.Filename)
 
-	fileId, err := a.app().SaveFile(file, workspaceID, rootID, handle.Filename)
+	fileId, err := a.app.SaveFile(file, workspaceID, rootID, handle.Filename)
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -1272,7 +1268,7 @@ func (a *API) getWorkspaceUsers(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 	session := ctx.Value("session").(*model.Session)
-	if !a.app().DoesUserHaveWorkspaceAccess(session.UserID, workspaceID) {
+	if !a.app.DoesUserHaveWorkspaceAccess(session.UserID, workspaceID) {
 		a.errorResponse(w, http.StatusForbidden, "Access denied to workspace", errors.New("Access denied to workspace"))
 		return
 	}
@@ -1280,7 +1276,7 @@ func (a *API) getWorkspaceUsers(w http.ResponseWriter, r *http.Request) {
 	auditRec := a.makeAuditRecord(r, "getUsers", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 
-	users, err := a.app().GetWorkspaceUsers(workspaceID)
+	users, err := a.app.GetWorkspaceUsers(workspaceID)
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return

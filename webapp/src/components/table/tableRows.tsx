@@ -1,7 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {IntlShape} from 'react-intl'
 import {useDragLayer} from 'react-dnd'
 
 import {Card} from '../../blocks/card'
@@ -18,11 +17,11 @@ type Props = {
     selectedCardIds: string[]
     readonly: boolean
     cardIdToFocusOnRender: string
-    intl: IntlShape
     showCard: (cardId?: string) => void
     addCard: (groupByOptionId?: string) => Promise<void>
     onCardClicked: (e: React.MouseEvent, card: Card) => void
-    onDrop: (srcCard: Card, dstCard: Card) => void}
+    onDrop: (srcCard: Card, dstCard: Card) => void
+}
 
 const TableRows = (props: Props) => {
     const {boardTree, cards} = props
