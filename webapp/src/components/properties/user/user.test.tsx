@@ -3,7 +3,7 @@
 
 import React from 'react'
 import {IntlProvider} from 'react-intl'
-import {render, wait} from '@testing-library/react'
+import {render, waitFor} from '@testing-library/react'
 
 import {act} from 'react-dom/test-utils'
 
@@ -55,11 +55,10 @@ describe('components/properties/user', () => {
         )
 
         let container
-        act(() => {
+        await waitFor(() => {
             const renderResult = render(component)
             container = renderResult.container
         })
-        await wait()
         expect(container).toMatchSnapshot()
     })
 
@@ -74,11 +73,10 @@ describe('components/properties/user', () => {
         )
 
         let container
-        act(() => {
+        await waitFor(() => {
             const renderResult = render(component)
             container = renderResult.container
         })
-        await wait()
         expect(container).toMatchSnapshot()
     })
 
@@ -93,11 +91,10 @@ describe('components/properties/user', () => {
         )
 
         let container: Element | DocumentFragment = {} as Element
-        act(() => {
+        await waitFor(() => {
             const renderResult = render(component)
             container = renderResult.container
         })
-        await wait()
 
         if (container) {
             // this is the actual element where the click event triggers
