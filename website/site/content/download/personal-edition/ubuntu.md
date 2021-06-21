@@ -149,7 +149,7 @@ Change the dbconfig setting to use the postgres database you created:
 
 ## Install MySQL 
 
-Alternate to Postgress you also can store your data in a MySQL/MariaDB database.
+As an alternative to Postgres, you also can store your data in a MySQL/MariaDB database.
 To install, run:
 
 ```
