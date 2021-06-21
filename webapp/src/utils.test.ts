@@ -34,4 +34,36 @@ describe('utils', () => {
             windowAsAny.openInNewBrowser = null
         })
     })
+
+    describe('test - buildURL', () => {
+        test('buildURL, no base', () => {
+            expect(Utils.buildURL('test', true)).toBe('http://localhost/test')
+            expect(Utils.buildURL('/test', true)).toBe('http://localhost/test')
+
+            expect(Utils.buildURL('test')).toBe('/test')
+            expect(Utils.buildURL('/test')).toBe('/test')
+        })
+
+        test('buildURL, base no slash', () => {
+            const windowAsAny = window as any
+            windowAsAny.baseURL = 'base'
+
+            expect(Utils.buildURL('test', true)).toBe('http://localhost/base/test')
+            expect(Utils.buildURL('/test', true)).toBe('http://localhost/base/test')
+
+            expect(Utils.buildURL('test')).toBe('base/test')
+            expect(Utils.buildURL('/test')).toBe('base/test')
+        })
+
+        test('buildUrl, base with slash', () => {
+            const windowAsAny = window as any
+            windowAsAny.baseURL = '/base/'
+
+            expect(Utils.buildURL('test', true)).toBe('http://localhost/base/test')
+            expect(Utils.buildURL('/test', true)).toBe('http://localhost/base/test')
+
+            expect(Utils.buildURL('test')).toBe('base/test')
+            expect(Utils.buildURL('/test')).toBe('base/test')
+        })
+    })
 })
