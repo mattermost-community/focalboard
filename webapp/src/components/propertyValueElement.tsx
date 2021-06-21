@@ -101,7 +101,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         if (readOnly || !boardTree || !open) {
             return (
                 <div
-                    className='octo-property-value'
+                    className='octo-propertyvalue'
                     tabIndex={0}
                     onClick={() => setOpen(true)}
                 >
