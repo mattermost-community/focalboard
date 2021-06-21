@@ -180,7 +180,6 @@ nano /opt/focalboard/config.json
 ```
 
 Change the dbconfig setting to use the MySQL database you created:
-```
 "dbtype": "mysql",
 "dbconfig": "boardsuser:boardsuser-password@tcp(127.0.0.1:3306)/boards",
 ```,
