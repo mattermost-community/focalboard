@@ -58,47 +58,47 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
         {
             code: 'es',
             name: 'spanish',
-            displayName: 'Spanish',
+            displayName: 'Español',
         },
         {
             code: 'de',
             name: 'german',
-            displayName: 'German',
+            displayName: 'Deutsch',
         },
         {
             code: 'ja',
             name: 'japanese',
-            displayName: 'Japanese',
+            displayName: '日本語',
         },
         {
             code: 'fr',
             name: 'french',
-            displayName: 'French',
+            displayName: 'Français',
         },
         {
             code: 'nl',
             name: 'dutch',
-            displayName: 'Dutch',
+            displayName: 'Nederlands',
         },
         {
             code: 'ru',
             name: 'russian',
-            displayName: 'Russian',
+            displayName: 'Pусский',
         },
         {
-            code: 'chinese',
-            name: 'zh',
-            displayName: 'Traditional Chinese',
+            code: 'zh-cn',
+            name: 'chinese',
+            displayName: '中文 (繁體)',
         },
         {
-            code: 'zh_Hans',
+            code: 'zh-tx',
             name: 'simplified-chinese',
-            displayName: 'Simplified Chinese',
+            displayName: '中文 (简体)',
         },
         {
             code: 'tr',
             name: 'turkish',
-            displayName: 'Turkish',
+            displayName: 'Türkçe',
         },
         {
             code: 'oc',
@@ -160,7 +160,7 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
                                 <Menu.Text
                                     key={language.code}
                                     id={`${language.name}-lang`}
-                                    name={intl.formatMessage({id: `Sidebar.${language.name}`, defaultMessage: language.displayName})}
+                                    name={language.displayName}
                                     onClick={async () => setLanguage(language.code)}
                                     rightIcon={intl.locale.toLowerCase() === language.code ? <CheckIcon/> : null}
                                 />

@@ -33,7 +33,7 @@ const manifestStr = `
     "bundle_path": "webapp/dist/main.js"
   },
   "settings_schema": {
-    "header": "",
+    "header": "For additional setup steps, please [see here](https://focalboard.com/fwlink/plugin-setup.html)",
     "footer": "",
     "settings": []
   }

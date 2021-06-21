@@ -1,5 +1,14 @@
 # Focalboard
 
+![CI Status](https://github.com/mattermost/focalboard/actions/workflows/ci.yml/badge.svg)
+![Mac Build](https://github.com/mattermost/focalboard/actions/workflows/build-mac.yml/badge.svg)
+![Ubuntu Build](https://github.com/mattermost/focalboard/actions/workflows/build-ubuntu.yml/badge.svg)
+![Windows Build](https://github.com/mattermost/focalboard/actions/workflows/build-win-wpf.yml/badge.svg)
+![CodeQL](https://github.com/mattermost/focalboard/actions/workflows/codeql-analysis.yml/badge.svg)
+![Dev Release](https://github.com/mattermost/focalboard/actions/workflows/dev-release.yml/badge.svg)
+![Plugin Release](https://github.com/mattermost/focalboard/actions/workflows/plugin-release.yml/badge.svg)
+![Prod Release](https://github.com/mattermost/focalboard/actions/workflows/prod-release.yml/badge.svg)
+
 Like what you see? :eyes: Give us a GitHub Star! :star:
 
 [![Focalboard](website/site/static/img/hero.jpg)](https://www.focalboard.com)

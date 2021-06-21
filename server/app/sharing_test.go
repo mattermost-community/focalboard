@@ -19,7 +19,7 @@ func TestGetSharing(t *testing.T) {
 		WorkspaceID: utils.CreateGUID(),
 	}
 
-	t.Run("should get a sharing sucessfully", func(t *testing.T) {
+	t.Run("should get a sharing successfully", func(t *testing.T) {
 		want := &model.Sharing{
 			ID:         utils.CreateGUID(),
 			Enabled:    true,

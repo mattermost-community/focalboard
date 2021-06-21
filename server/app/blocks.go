@@ -78,14 +78,9 @@ func (a *App) GetAllBlocks(c store.Container) ([]model.Block, error) {
 }
 
 func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) error {
-	blockIDsToNotify := []string{blockID}
 	parentID, err := a.GetParentID(c, blockID)
 	if err != nil {
 		return err
-	}
-
-	if len(parentID) > 0 {
-		blockIDsToNotify = append(blockIDsToNotify, parentID)
 	}
 
 	err = a.store.DeleteBlock(c, blockID, modifiedBy)

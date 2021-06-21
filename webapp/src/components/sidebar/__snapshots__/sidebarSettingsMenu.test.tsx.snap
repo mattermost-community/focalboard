@@ -112,7 +112,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       <div
                         class="menu-name"
                       >
-                        Spanish
+                        Español
                       </div>
                       <div
                         class="noicon"
@@ -127,7 +127,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       <div
                         class="menu-name"
                       >
-                        German
+                        Deutsch
                       </div>
                       <div
                         class="noicon"
@@ -142,7 +142,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       <div
                         class="menu-name"
                       >
-                        Japanese
+                        日本語
                       </div>
                       <div
                         class="noicon"
@@ -157,7 +157,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       <div
                         class="menu-name"
                       >
-                        French
+                        Français
                       </div>
                       <div
                         class="noicon"
@@ -172,7 +172,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       <div
                         class="menu-name"
                       >
-                        Dutch
+                        Nederlands
                       </div>
                       <div
                         class="noicon"
@@ -187,7 +187,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       <div
                         class="menu-name"
                       >
-                        Russian
+                        Pусский
                       </div>
                       <div
                         class="noicon"
@@ -202,7 +202,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       <div
                         class="menu-name"
                       >
-                        Traditional Chinese
+                        中文 (繁體)
                       </div>
                       <div
                         class="noicon"
@@ -217,7 +217,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       <div
                         class="menu-name"
                       >
-                        Simplified Chinese
+                        中文 (简体)
                       </div>
                       <div
                         class="noicon"
@@ -232,7 +232,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       <div
                         class="menu-name"
                       >
-                        Turkish
+                        Türkçe
                       </div>
                       <div
                         class="noicon"

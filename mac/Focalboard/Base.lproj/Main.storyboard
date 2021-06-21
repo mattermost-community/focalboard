@@ -1087,7 +1087,7 @@ Thanks so much,
                                     <rect key="frame" x="-100" y="-100" width="225" height="15"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
-                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="7bj-hR-AiH">
+                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="7bj-hR-AiH">
                                     <rect key="frame" x="559" y="0.0" width="15" height="417"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
@@ -1097,7 +1097,7 @@ Thanks so much,
                                 <constraints>
                                     <constraint firstAttribute="width" constant="275" id="Zzi-QI-UrX"/>
                                 </constraints>
-                                <buttonCell key="cell" type="push" title="I like the updates, rate 5 stars" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="7Kt-FU-UP3">
+                                <buttonCell key="cell" type="push" title="Rate Focalboard" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="7Kt-FU-UP3">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>

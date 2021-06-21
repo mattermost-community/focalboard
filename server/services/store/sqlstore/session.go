@@ -8,7 +8,7 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 )
 
-// GetActiveUserCount returns the number of users with active sessions within N seconds ago
+// GetActiveUserCount returns the number of users with active sessions within N seconds ago.
 func (s *SQLStore) GetActiveUserCount(updatedSecondsAgo int64) (int, error) {
 	query := s.getQueryBuilder().
 		Select("count(distinct user_id)").
@@ -94,9 +94,9 @@ func (s *SQLStore) UpdateSession(session *model.Session) error {
 	return err
 }
 
-func (s *SQLStore) DeleteSession(sessionId string) error {
+func (s *SQLStore) DeleteSession(sessionID string) error {
 	query := s.getQueryBuilder().Delete(s.tablePrefix+"sessions").
-		Where("id", sessionId)
+		Where("id", sessionID)
 
 	_, err := query.Exec()
 	return err

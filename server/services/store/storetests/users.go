@@ -39,10 +39,12 @@ func testGetWorkspaceUsers(t *testing.T, store store.Store) {
 		})
 		require.Nil(t, err)
 
-		defer store.UpdateUser(&model.User{
-			ID:       userID,
-			DeleteAt: time.Now().Unix(),
-		})
+		defer func() {
+			_ = store.UpdateUser(&model.User{
+				ID:       userID,
+				DeleteAt: time.Now().Unix(),
+			})
+		}()
 
 		users, err = store.GetUsersByWorkspace("workspace_1")
 		require.Equal(t, 1, len(users))

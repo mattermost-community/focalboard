@@ -22,7 +22,7 @@ const CombinedProviders = React.memo((props: Props): JSX.Element => {
     const {language, setLanguage, user} = props
     return (
         <IntlProvider
-            locale={language.split(/[-_]/)[0]}
+            locale={language.split(/[_]/)[0]}
             messages={getMessages(language)}
         >
             <SetLanguageContext.Provider value={setLanguage}>

@@ -10,7 +10,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store/sqlstore/initializations"
 )
 
-// InitializeTemplates imports default templates if the blocks table is empty
+// InitializeTemplates imports default templates if the blocks table is empty.
 func (s *SQLStore) InitializeTemplates() error {
 	isNeeded, err := s.isInitializationNeeded()
 	if err != nil {
@@ -54,7 +54,7 @@ func (s *SQLStore) importInitialTemplates() error {
 	return nil
 }
 
-// isInitializationNeeded returns true if the blocks table is empty
+// isInitializationNeeded returns true if the blocks table is empty.
 func (s *SQLStore) isInitializationNeeded() (bool, error) {
 	query := s.getQueryBuilder().
 		Select("count(*)").

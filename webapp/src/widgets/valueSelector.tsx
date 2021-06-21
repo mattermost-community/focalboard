@@ -131,6 +131,8 @@ const valueSelectorStyle = {
 function ValueSelector(props: Props): JSX.Element {
     return (
         <CreatableSelect
+            captureMenuScroll={true}
+            maxMenuHeight={580}
             isMulti={props.isMulti}
             isClearable={true}
             styles={valueSelectorStyle}
@@ -164,7 +166,7 @@ function ValueSelector(props: Props): JSX.Element {
             closeMenuOnSelect={true}
             placeholder={props.emptyValue}
             hideSelectedOptions={false}
-            defaultMenuIsOpen={false}
+            defaultMenuIsOpen={true}
         />
     )
 }
