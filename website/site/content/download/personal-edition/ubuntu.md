@@ -161,7 +161,7 @@ Log in as root in your database:
 sudo mysql 
 ```
 
-On the MySQL prompt, run the following commands (**change the user/password** to your own values):
+At the MySQL prompt, run the following commands (change `user/password` to your own values):
 <pre>
 CREATE DATABASE boards;
 GRANT ALL on boards.* to <b>'boardsuser'@'localhost'</b> identified by '<b>boardsuser-password</b>';
