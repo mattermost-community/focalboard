@@ -124,12 +124,11 @@ psql
 ```
 
 On the psql prompt, run the following commands (**change the user/password** to your own values):
-<pre>
+```
 CREATE DATABASE boards;
 CREATE USER <b>boardsuser</b> WITH PASSWORD '<b>boardsuser-password</b>';
 \q
-</pre>
-
+```
 Exit the postgres user session:
 ```
 exit
