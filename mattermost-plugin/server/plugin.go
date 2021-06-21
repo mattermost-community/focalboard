@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"path"
 	"sync"
 
 	"github.com/mattermost/focalboard/server/server"
@@ -90,7 +91,7 @@ func (p *Plugin) OnActivate() error {
 		DBTablePrefix:           "focalboard_",
 		UseSSL:                  false,
 		SecureCookie:            true,
-		WebPath:                 *mmconfig.PluginSettings.Directory + "/focalboard/pack",
+		WebPath:                 path.Join(*mmconfig.PluginSettings.Directory, "focalboard", "pack"),
 		FilesDriver:             *mmconfig.FileSettings.DriverName,
 		FilesPath:               *mmconfig.FileSettings.Directory,
 		FilesS3Config:           filesS3Config,
