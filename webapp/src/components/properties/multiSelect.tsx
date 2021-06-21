@@ -32,7 +32,7 @@ const MultiSelectProperty = (props: Props): JSX.Element => {
     if (!isEditable || !open) {
         return (
             <div
-                className='octo-property-value'
+                className='octo-propertyvalue'
                 tabIndex={0}
                 onClick={() => setOpen(true)}
             >
