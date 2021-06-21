@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
 import {ActionMeta, FormatOptionLabelMeta, ValueType} from 'react-select'
 import CreatableSelect from 'react-select/creatable'
@@ -164,7 +164,7 @@ function ValueSelector(props: Props): JSX.Element {
             closeMenuOnSelect={true}
             placeholder={props.emptyValue}
             hideSelectedOptions={false}
-            defaultMenuIsOpen={false}
+            defaultMenuIsOpen={true}
         />
     )
 }
