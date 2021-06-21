@@ -156,7 +156,7 @@ To install, run:
 sudo apt install mariadb-server mariadb-client
 ```
 
-Log in as root in your database:
+Log in as `root` in your database:
 ```
 sudo mysql 
 ```
