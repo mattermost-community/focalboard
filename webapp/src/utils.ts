@@ -333,6 +333,9 @@ class Utils {
             finalPath = baseURL + '/' + path
         }
         if (absolute) {
+            if (finalPath.indexOf('/') === 0) {
+                finalPath = finalPath.slice(1)
+            }
             return window.location.origin + '/' + finalPath
         }
         return finalPath
