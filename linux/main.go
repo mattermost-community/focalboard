@@ -11,6 +11,9 @@ import (
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/mlog"
+	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
+	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 	"github.com/webview/webview"
 )
 
@@ -33,7 +36,7 @@ func getFreePort() (int, error) {
 func runServer(port int) (*server.Server, error) {
 	logger := mlog.NewLogger()
 
-	server, err := server.New(&config.Configuration{
+	config := &config.Configuration{
 		ServerRoot:              fmt.Sprintf("http://localhost:%d", port),
 		Port:                    port,
 		DBType:                  "sqlite3",
@@ -51,7 +54,17 @@ func runServer(port int) (*server.Server, error) {
 		EnableLocalMode:         false,
 		LocalModeSocketLocation: "",
 		AuthMode:                "native",
-	}, sessionToken, logger)
+	}
+
+	var db store.Store
+	var err error
+	db, err = getStore(config, logger)
+	if err != nil {
+		fmt.Println("ERROR INITIALIZING THE SERVER", err)
+		return nil, err
+	}
+
+	server, err := server.New(config, sessionToken, db, logger)
 	if err != nil {
 		fmt.Println("ERROR INITIALIZING THE SERVER", err)
 		return nil, err
@@ -115,4 +128,22 @@ document.addEventListener('click', function (e) {
 `)
 	w.Run()
 	server.Shutdown()
+}
+
+
+func getStore(config *config.Configuration, logger *mlog.Logger) (store.Store, error) {
+	var db store.Store
+	var err error
+	db, err = sqlstore.New(config.DBType, config.DBConfigString, config.DBTablePrefix, logger, nil)
+	if err != nil {
+		return nil, err
+	}
+	if config.AuthMode == server.MattermostAuthMod {
+		layeredStore, err2 := mattermostauthlayer.New(config.DBType, config.DBConfigString, db)
+		if err2 != nil {
+			return nil, err2
+		}
+		db = layeredStore
+	}
+	return db, nil
 }
