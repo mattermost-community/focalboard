@@ -1,6 +1,7 @@
 package server
 
 import (
+	"database/sql"
 	"fmt"
 	"net"
 	"net/http"
@@ -179,14 +180,25 @@ func New(cfg *config.Configuration, singleUserToken string, db store.Store, logg
 }
 
 func NewStore(config *config.Configuration, logger *mlog.Logger) (store.Store, error) {
+	sqlDB, err := sql.Open(config.DBType, config.DBConfigString)
+	if err != nil {
+		logger.Error("connectDatabase failed", mlog.Err(err))
+		return nil, err
+	}
+
+	err = sqlDB.Ping()
+	if err != nil {
+		logger.Error(`Database Ping failed`, mlog.Err(err))
+		return nil, err
+	}
+
 	var db store.Store
-	var err error
-	db, err = sqlstore.New(config.DBType, config.DBConfigString, config.DBTablePrefix, logger, nil)
+	db, err = sqlstore.New(config.DBType, config.DBConfigString, config.DBTablePrefix, logger, sqlDB)
 	if err != nil {
 		return nil, err
 	}
 	if config.AuthMode == MattermostAuthMod {
-		layeredStore, err2 := mattermostauthlayer.New(config.DBType, config.DBConfigString, db)
+		layeredStore, err2 := mattermostauthlayer.New(config.DBType, db.(*sqlstore.SQLStore).DBHandle(), db)
 		if err2 != nil {
 			return nil, err2
 		}

@@ -120,7 +120,7 @@ func (p *Plugin) OnActivate() error {
 		return fmt.Errorf("error initializing the DB: %v", err)
 	}
 	if cfg.AuthMode == server.MattermostAuthMod {
-		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, cfg.DBConfigString, db)
+		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db)
 		if err2 != nil {
 			return fmt.Errorf("error initializing the DB: %v", err2)
 		}
