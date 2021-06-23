@@ -215,7 +215,7 @@ const Table = (props: Props) => {
     const titleSortOption = activeView.sortOptions.find((o) => o.propertyId === Constants.titleColumnId)
     let titleSorted: 'up' | 'down' | 'none' = 'none'
     if (titleSortOption) {
-        titleSorted = titleSortOption.reversed ? 'up' : 'down'
+        titleSorted = titleSortOption.reversed ? 'down' : 'up'
     }
 
     return (
@@ -253,7 +253,7 @@ const Table = (props: Props) => {
                         let sorted: 'up' | 'down' | 'none' = 'none'
                         const sortOption = activeView.sortOptions.find((o) => o.propertyId === template.id)
                         if (sortOption) {
-                            sorted = sortOption.reversed ? 'up' : 'down'
+                            sorted = sortOption.reversed ? 'down' : 'up'
                         }
 
                         return (
