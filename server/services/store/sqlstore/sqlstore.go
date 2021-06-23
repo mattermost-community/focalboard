@@ -23,25 +23,26 @@ type SQLStore struct {
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType, connectionString string, tablePrefix string, logger *mlog.Logger) (*SQLStore, error) {
+func New(dbType, connectionString, tablePrefix string, logger *mlog.Logger, db *sql.DB) (*SQLStore, error) {
 	logger.Info("connectDatabase", mlog.String("dbType", dbType), mlog.String("connStr", connectionString))
 	var err error
 
-	db, err := sql.Open(dbType, connectionString)
-	if err != nil {
-		logger.Error("connectDatabase failed", mlog.Err(err))
+	if db == nil {
+		db, err = sql.Open(dbType, connectionString)
+		if err != nil {
+			logger.Error("connectDatabase failed", mlog.Err(err))
+			return nil, err
+		}
 
-		return nil, err
-	}
-
-	err = db.Ping()
-	if err != nil {
-		logger.Error(`Database Ping failed`, mlog.Err(err))
-
-		return nil, err
+		err = db.Ping()
+		if err != nil {
+			logger.Error(`Database Ping failed`, mlog.Err(err))
+			return nil, err
+		}
 	}
 
 	store := &SQLStore{
+		// TODO: add replica DB support too.
 		db:               db,
 		dbType:           dbType,
 		tablePrefix:      tablePrefix,

@@ -23,7 +23,7 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 
 	logger := mlog.CreateTestLogger(t)
 
-	store, err := New(dbType, connectionString, "test_", logger)
+	store, err := New(dbType, connectionString, "test_", logger, nil)
 	require.Nil(t, err)
 
 	tearDown := func() {

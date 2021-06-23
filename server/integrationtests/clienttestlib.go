@@ -9,6 +9,9 @@ import (
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/mlog"
+	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
+	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 )
 
 type TestHelper struct {
@@ -69,7 +72,12 @@ func SetupTestHelper() *TestHelper {
 	if err := logger.Configure("", getTestConfig().LoggingCfgJSON); err != nil {
 		panic(err)
 	}
-	srv, err := server.New(getTestConfig(), sessionToken, logger)
+	cfg := getTestConfig()
+	db, err := getStore(cfg, logger)
+	if err != nil {
+		logger.Fatal("server.New ERROR", mlog.Err(err))
+	}
+	srv, err := server.New(cfg, sessionToken, db, logger)
 	if err != nil {
 		panic(err)
 	}
@@ -77,6 +85,24 @@ func SetupTestHelper() *TestHelper {
 	th.Client = client.NewClient(srv.Config().ServerRoot, sessionToken)
 
 	return th
+}
+
+
+func getStore(config *config.Configuration, logger *mlog.Logger) (store.Store, error) {
+	var db store.Store
+	var err error
+	db, err = sqlstore.New(config.DBType, config.DBConfigString, config.DBTablePrefix, logger, nil)
+	if err != nil {
+		return nil, err
+	}
+	if config.AuthMode == server.MattermostAuthMod {
+		layeredStore, err2 := mattermostauthlayer.New(config.DBType, config.DBConfigString, db)
+		if err2 != nil {
+			return nil, err2
+		}
+		db = layeredStore
+	}
+	return db, nil
 }
 
 func (th *TestHelper) InitBasic() *TestHelper {

@@ -25,8 +25,6 @@ import (
 	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/scheduler"
 	"github.com/mattermost/focalboard/server/services/store"
-	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
-	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 	"github.com/mattermost/focalboard/server/services/telemetry"
 	"github.com/mattermost/focalboard/server/services/webhook"
 	"github.com/mattermost/focalboard/server/web"
@@ -67,22 +65,7 @@ type Server struct {
 	api             *api.API
 }
 
-func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger) (*Server, error) {
-	var db store.Store
-	db, err := sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger)
-	if err != nil {
-		logger.Error("Unable to start the database", mlog.Err(err))
-		return nil, err
-	}
-	if cfg.AuthMode == MattermostAuthMod {
-		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, cfg.DBConfigString, db)
-		if err2 != nil {
-			logger.Error("Unable to start the database", mlog.Err(err2))
-			return nil, err2
-		}
-		db = layeredStore
-	}
-
+func New(cfg *config.Configuration, singleUserToken string, db store.Store, logger *mlog.Logger) (*Server, error) {
 	authenticator := auth.New(cfg, db)
 
 	wsServer := ws.NewServer(authenticator, singleUserToken, cfg.AuthMode == MattermostAuthMod, logger)
@@ -142,7 +125,7 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 	focalboardAPI.RegisterAdminRoutes(localRouter)
 
 	// Init workspace
-	if _, err = app.GetRootWorkspace(); err != nil {
+	if _, err := app.GetRootWorkspace(); err != nil {
 		logger.Error("Unable to get root workspace", mlog.Err(err))
 		return nil, err
 	}
