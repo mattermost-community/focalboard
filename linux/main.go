@@ -55,7 +55,7 @@ func runServer(port int) (*server.Server, error) {
 
 	db, err := server.NewStore(config, logger)
 	if err != nil {
-		fmt.Println("ERROR INITIALIZING THE SERVER", err)
+		fmt.Println("ERROR INITIALIZING THE SERVER STORE", err)
 		return nil, err
 	}
 

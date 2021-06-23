@@ -115,7 +115,7 @@ func (p *Plugin) OnActivate() error {
 		AuthMode:                "mattermost",
 	}
 	var db store.Store
-	db, err = sqlstore.New(cfg.DBType, "", cfg.DBTablePrefix, logger, sqlDB)
+	db, err = sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger, sqlDB)
 	if err != nil {
 		return fmt.Errorf("error initializing the DB: %v", err)
 	}

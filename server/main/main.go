@@ -162,7 +162,7 @@ func main() {
 
 	db, err := server.NewStore(config, logger)
 	if err != nil {
-		logger.Fatal("server.New ERROR", mlog.Err(err))
+		logger.Fatal("server.NewStore ERROR", mlog.Err(err))
 	}
 
 	server, err := server.New(config, singleUserToken, db, logger)
@@ -242,7 +242,7 @@ func startServer(webPath string, filesPath string, port int, singleUserToken, db
 
 	db, err := server.NewStore(config, logger)
 	if err != nil {
-		logger.Fatal("server.New ERROR", mlog.Err(err))
+		logger.Fatal("server.NewStore ERROR", mlog.Err(err))
 	}
 
 	pServer, err = server.New(config, singleUserToken, db, logger)
