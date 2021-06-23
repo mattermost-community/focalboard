@@ -11,9 +11,6 @@ import (
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/mlog"
-	"github.com/mattermost/focalboard/server/services/store"
-	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
-	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 	"github.com/webview/webview"
 )
 
@@ -56,9 +53,7 @@ func runServer(port int) (*server.Server, error) {
 		AuthMode:                "native",
 	}
 
-	var db store.Store
-	var err error
-	db, err = getStore(config, logger)
+	db, err := server.NewStore(config, logger)
 	if err != nil {
 		fmt.Println("ERROR INITIALIZING THE SERVER", err)
 		return nil, err
@@ -128,22 +123,4 @@ document.addEventListener('click', function (e) {
 `)
 	w.Run()
 	server.Shutdown()
-}
-
-
-func getStore(config *config.Configuration, logger *mlog.Logger) (store.Store, error) {
-	var db store.Store
-	var err error
-	db, err = sqlstore.New(config.DBType, config.DBConfigString, config.DBTablePrefix, logger, nil)
-	if err != nil {
-		return nil, err
-	}
-	if config.AuthMode == server.MattermostAuthMod {
-		layeredStore, err2 := mattermostauthlayer.New(config.DBType, config.DBConfigString, db)
-		if err2 != nil {
-			return nil, err2
-		}
-		db = layeredStore
-	}
-	return db, nil
 }

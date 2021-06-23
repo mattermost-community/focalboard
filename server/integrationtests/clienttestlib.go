@@ -73,7 +73,7 @@ func SetupTestHelper() *TestHelper {
 		panic(err)
 	}
 	cfg := getTestConfig()
-	db, err := getStore(cfg, logger)
+	db, err := server.NewStore(cfg, logger)
 	if err != nil {
 		logger.Fatal("server.New ERROR", mlog.Err(err))
 	}
@@ -85,24 +85,6 @@ func SetupTestHelper() *TestHelper {
 	th.Client = client.NewClient(srv.Config().ServerRoot, sessionToken)
 
 	return th
-}
-
-
-func getStore(config *config.Configuration, logger *mlog.Logger) (store.Store, error) {
-	var db store.Store
-	var err error
-	db, err = sqlstore.New(config.DBType, config.DBConfigString, config.DBTablePrefix, logger, nil)
-	if err != nil {
-		return nil, err
-	}
-	if config.AuthMode == server.MattermostAuthMod {
-		layeredStore, err2 := mattermostauthlayer.New(config.DBType, config.DBConfigString, db)
-		if err2 != nil {
-			return nil, err2
-		}
-		db = layeredStore
-	}
-	return db, nil
 }
 
 func (th *TestHelper) InitBasic() *TestHelper {

@@ -37,9 +37,6 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
-	"github.com/mattermost/focalboard/server/services/store"
-	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
-	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 )
 import (
 	"github.com/mattermost/focalboard/server/services/mlog"
@@ -163,8 +160,7 @@ func main() {
 		config.Port = *pPort
 	}
 
-	var db store.Store
-	db, err = getStore(config, logger)
+	db, err := server.NewStore(config, logger)
 	if err != nil {
 		logger.Fatal("server.New ERROR", mlog.Err(err))
 	}
@@ -244,8 +240,7 @@ func startServer(webPath string, filesPath string, port int, singleUserToken, db
 		config.DBConfigString = dbConfigString
 	}
 
-	var db store.Store
-	db, err = getStore(config, logger)
+	db, err := server.NewStore(config, logger)
 	if err != nil {
 		logger.Fatal("server.New ERROR", mlog.Err(err))
 	}
@@ -271,23 +266,6 @@ func stopServer() {
 	}
 	_ = pServer.Logger().Shutdown()
 	pServer = nil
-}
-
-func getStore(config *config.Configuration, logger *mlog.Logger) (store.Store, error) {
-	var db store.Store
-	var err error
-	db, err = sqlstore.New(config.DBType, config.DBConfigString, config.DBTablePrefix, logger, nil)
-	if err != nil {
-		return nil, err
-	}
-	if config.AuthMode == server.MattermostAuthMod {
-		layeredStore, err2 := mattermostauthlayer.New(config.DBType, config.DBConfigString, db)
-		if err2 != nil {
-			return nil, err2
-		}
-		db = layeredStore
-	}
-	return db, nil
 }
 
 func defaultLoggingConfig() string {
