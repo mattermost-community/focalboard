@@ -3,17 +3,26 @@
 
 import React, {useContext} from 'react'
 
-import {CardTree, CardTreeContext} from '../../../viewModel/cardTree'
 import {WorkspaceUsersContext, WorkspaceUsersContextData} from '../../../user'
+import {Card} from '../../../blocks/card'
+import {BoardTree} from '../../../viewModel/boardTree'
 
-const LastModifiedBy = (): JSX.Element => {
-    const cardTree = useContext<CardTree | undefined>(CardTreeContext)
+type Props = {
+    card: Card,
+    boardTree?: BoardTree,
+}
+
+// TODO use useMemo here
+const LastModifiedBy = (props: Props): JSX.Element => {
+    let latestBlock = props.boardTree?.allBlocks.filter((block) => block.parentId === props.card.id || block.id === props.card.id).sort((a, b) => b.updateAt - a.updateAt)[0]
+    latestBlock = latestBlock || props.card
+
     const workspaceUsers = useContext<WorkspaceUsersContextData>(WorkspaceUsersContext)
 
     return (
         <div
             className='LastModifiedBy octo-propertyvalue'
-        >{cardTree ? workspaceUsers?.usersById.get(cardTree.latestBlock.modifiedBy)?.username || cardTree.latestBlock.modifiedBy : ''}</div>
+        >{workspaceUsers?.usersById.get(latestBlock.modifiedBy)?.username || latestBlock.modifiedBy}</div>
     )
 }
 

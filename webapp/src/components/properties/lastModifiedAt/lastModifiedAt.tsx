@@ -1,17 +1,24 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useContext} from 'react'
+import React from 'react'
 
-import {CardTree, CardTreeContext} from '../../../viewModel/cardTree'
+import {Card} from '../../../blocks/card'
+import {BoardTree} from '../../../viewModel/boardTree'
 
 const moment = require('moment')
 
-const LastModifiedAt = (): JSX.Element => {
-    const cardTree = useContext<CardTree | undefined>(CardTreeContext)
+type Props = {
+    card: Card,
+    boardTree?: BoardTree,
+}
+
+const LastModifiedAt = (props: Props): JSX.Element => {
+    let latestBlock = props.boardTree?.allBlocks.filter((block) => block.parentId === props.card.id || block.id === props.card.id).sort((a, b) => b.updateAt - a.updateAt)[0]
+    latestBlock = latestBlock || props.card
 
     return (
-        <div className='LastModifiedAt octo-propertyvalue'>{moment(cardTree?.latestBlock.updateAt).format('llll')}</div>
+        <div className='LastModifiedAt octo-propertyvalue'>{moment(latestBlock.updateAt).format('llll')}</div>
     )
 }
 

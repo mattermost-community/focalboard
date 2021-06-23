@@ -19,7 +19,7 @@ const UserProperty = (props: Props): JSX.Element => {
     const workspaceUsers = useContext<WorkspaceUsersContextData>(WorkspaceUsersContext)
 
     if (props.readonly) {
-        return (<div className='UserProperty octo-propertyvalue'>{workspaceUsers.usersById.get(props.value)?.username || props.value}</div>)
+        return (<div className='UserProperty octo-propertyvalue readonly'>{workspaceUsers.usersById.get(props.value)?.username || props.value}</div>)
     }
 
     return (

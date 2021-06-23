@@ -50,8 +50,10 @@ class MutableBoardTree implements BoardTree {
 
     private searchText?: string
     allCards: MutableCard[] = []
+    rawBlocks: IBlock[] = []
+
     get allBlocks(): IBlock[] {
-        return [this.board, ...this.views, ...this.allCards, ...this.cardTemplates]
+        return [this.board, ...this.views, ...this.allCards, ...this.cardTemplates, ...this.rawBlocks]
     }
 
     constructor(board: MutableBoard) {
@@ -61,7 +63,7 @@ class MutableBoardTree implements BoardTree {
     // Factory methods
 
     static async sync(boardId: string, viewId: string): Promise<BoardTree | undefined> {
-        const rawBlocks = await octoClient.getSubtree(boardId)
+        const rawBlocks = await octoClient.getSubtree(boardId, 3)
         const newBoardTree = this.buildTree(boardId, rawBlocks)
         if (newBoardTree) {
             newBoardTree.setActiveView(viewId)
@@ -97,6 +99,7 @@ class MutableBoardTree implements BoardTree {
         boardTree.cardTemplates = blocks.filter((block) => block.type === 'card' && (block as Card).isTemplate).
             sort((a, b) => a.title.localeCompare(b.title)) as MutableCard[]
         boardTree.cards = []
+        boardTree.rawBlocks = blocks.filter((block) => block.type !== 'view' && block.type !== 'card')
 
         boardTree.ensureMinimumSchema()
         return boardTree

@@ -190,7 +190,10 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         )
     } else if (propertyTemplate.type === 'updatedBy') {
         return (
-            <LastModifiedBy/>
+            <LastModifiedBy
+                card={card}
+                boardTree={boardTree}
+            />
         )
     } else if (propertyTemplate.type === 'createdTime') {
         return (
@@ -206,7 +209,10 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         )
     } else if (propertyTemplate.type === 'updatedTime') {
         return (
-            <LastModifiedAt/>
+            <LastModifiedAt
+                card={card}
+                boardTree={boardTree}
+            />
         )
     }
 
