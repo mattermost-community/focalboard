@@ -6,14 +6,14 @@ services:
     container_name: focalboard
     depends_on:
       - focalboard-db
-    expose: 
+    expose:
       - 8000
     environment:
       - VIRTUAL_HOST=focalboard.local
       - VIRTUAL_PORT=8000
     volumes:
       - "./config.json:/opt/focalboard/config.json"
-  
+
   proxy:
     image: jwilder/nginx-proxy:latest
     container_name: focalboard-proxy
