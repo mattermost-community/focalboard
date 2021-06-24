@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import {useIntl} from 'react-intl'
 import DayPicker, {DateUtils} from 'react-day-picker'
 import MomentLocaleUtils from 'react-day-picker/moment'
@@ -52,6 +52,11 @@ function EditableDayPicker(props: Props): JSX.Element {
     const [showDialog, setShowDialog] = useState(false)
     const [fromInput, setFromInput] = useState<string>(rangeValue?.from?.toLocaleDateString() || '')
     const [toInput, setToInput] = useState<string>(rangeValue?.to?.toLocaleDateString() || '')
+
+    // const stateRef = useRef(rangeValue)
+    // useEffect(() => {
+    //     stateRef.current = rangeValue
+    // })
 
     const from = rangeValue.from || new Date()
     const to = rangeValue.to || undefined
@@ -108,12 +113,20 @@ function EditableDayPicker(props: Props): JSX.Element {
     }
 
     const onClose = () => {
-        Utils.log('onClose ' + rangeValue.from)
+        // const current = stateRef.current
+
+        let current = rangeValue
+        setRangeValue((currentRangeValue) => {
+            current = currentRangeValue
+            return current
+        })
+
+        Utils.log('onClose ' + current.from)
         setShowDialog(false)
-        if (rangeValue && rangeValue.to) {
-            onChange([rangeValue.from?.getTime().toString() || '', rangeValue.to?.getTime().toString() || ''])
-        } else if (rangeValue !== undefined && rangeValue.from !== undefined) {
-            onChange(rangeValue!.from!.getTime().toString())
+        if (current && current.to) {
+            onChange([current.from?.getTime().toString() || '', current.to?.getTime().toString() || ''])
+        } else if (current !== undefined && current.from !== undefined) {
+            onChange(current!.from!.getTime().toString())
         }
     }
 
@@ -184,6 +197,7 @@ function EditableDayPicker(props: Props): JSX.Element {
                             </div>
                             <DayPicker
                                 onDayClick={handleDayClick}
+                                initialMonth={from}
 
                                 locale={locale}
                                 localeUtils={MomentLocaleUtils}
