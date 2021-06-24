@@ -16,7 +16,7 @@ import {Utils} from '../utils'
 import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
 import {MutableWorkspaceTree, WorkspaceTree} from '../viewModel/workspaceTree'
 import './boardPage.scss'
-import {IUser, WorkspaceUsersContext, WorkspaceUsersContextData} from '../user'
+import {IUser, WorkspaceUsersContext, WorkspaceUsers} from '../user'
 
 type Props = RouteComponentProps<{workspaceId?: string}> & {
     readonly?: boolean
@@ -32,7 +32,7 @@ type State = {
     syncFailed?: boolean
     websocketClosedTimeOutId?: ReturnType<typeof setTimeout>
     websocketClosed?: boolean
-    workspaceUsers: WorkspaceUsersContextData
+    workspaceUsers: WorkspaceUsers
 }
 
 class BoardPage extends React.Component<Props, State> {
@@ -107,10 +107,7 @@ class BoardPage extends React.Component<Props, State> {
 
         // storing workspaceUsersById in state to avoid re-computation in each render cycle
         this.setState({
-            workspaceUsers: {
-                users: workspaceUsers,
-                usersById: this.getIdToWorkspaceUsers(workspaceUsers),
-            },
+            workspaceUsers,
         })
     }
 

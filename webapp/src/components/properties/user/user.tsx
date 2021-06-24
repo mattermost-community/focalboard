@@ -4,7 +4,7 @@
 import React, {useContext} from 'react'
 import Select from 'react-select'
 
-import {IUser, WorkspaceUsersContext, WorkspaceUsersContextData} from '../../../user'
+import {IUser, WorkspaceUsersContext, WorkspaceUsers} from '../../../user'
 
 import './user.scss'
 import {getSelectBaseStyle} from '../../../theme'
@@ -16,7 +16,7 @@ type Props = {
 }
 
 const UserProperty = (props: Props): JSX.Element => {
-    const workspaceUsers = useContext<WorkspaceUsersContextData>(WorkspaceUsersContext)
+    const workspaceUsers = useContext<WorkspaceUsers>(WorkspaceUsersContext)
 
     if (props.readonly) {
         return (<div className='UserProperty octo-propertyvalue readonly'>{workspaceUsers.usersById.get(props.value)?.username || props.value}</div>)

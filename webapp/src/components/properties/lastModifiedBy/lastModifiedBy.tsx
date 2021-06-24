@@ -3,7 +3,7 @@
 
 import React, {useContext} from 'react'
 
-import {WorkspaceUsersContext, WorkspaceUsersContextData} from '../../../user'
+import {WorkspaceUsersContext, WorkspaceUsers} from '../../../user'
 import {Card} from '../../../blocks/card'
 import {BoardTree} from '../../../viewModel/boardTree'
 
@@ -17,7 +17,7 @@ const LastModifiedBy = (props: Props): JSX.Element => {
     let latestBlock = props.boardTree?.allBlocks.filter((block) => block.parentId === props.card.id || block.id === props.card.id).sort((a, b) => b.updateAt - a.updateAt)[0]
     latestBlock = latestBlock || props.card
 
-    const workspaceUsers = useContext<WorkspaceUsersContextData>(WorkspaceUsersContext)
+    const workspaceUsers = useContext<WorkspaceUsers>(WorkspaceUsersContext)
 
     return (
         <div

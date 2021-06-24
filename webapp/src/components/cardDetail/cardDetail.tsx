@@ -52,8 +52,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
         return null
     }
 
-    // componentWillUnmount(): void {
-    // }
+    console.log(card.properties)
 
     return (
         <>

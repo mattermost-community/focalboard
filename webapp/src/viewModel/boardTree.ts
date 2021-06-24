@@ -9,6 +9,7 @@ import {Constants} from '../constants'
 import octoClient from '../octoClient'
 import {OctoUtils} from '../octoUtils'
 import {Utils} from '../utils'
+import {IUser, WorkspaceUsers} from '../user'
 
 type Group = {
     option: IPropertyOption
@@ -52,12 +53,21 @@ class MutableBoardTree implements BoardTree {
     allCards: MutableCard[] = []
     rawBlocks: IBlock[] = []
 
+    workspaceUsers: WorkspaceUsers = {
+        users: new Array<IUser>(),
+        usersById: new Map<string, IUser>(),
+    }
+
     get allBlocks(): IBlock[] {
         return [this.board, ...this.views, ...this.allCards, ...this.cardTemplates, ...this.rawBlocks]
     }
 
     constructor(board: MutableBoard) {
         this.board = board
+    }
+
+    public async initWorkSpaceUsers() {
+        this.workspaceUsers = await octoClient.getWorkspaceUsers()
     }
 
     // Factory methods
@@ -93,6 +103,7 @@ class MutableBoardTree implements BoardTree {
             return undefined
         }
         const boardTree = new MutableBoardTree(board)
+        boardTree.initWorkSpaceUsers()
         boardTree.views = blocks.filter((block) => block.type === 'view').
             sort((a, b) => a.title.localeCompare(b.title)) as MutableBoardView[]
         boardTree.allCards = blocks.filter((block) => block.type === 'card' && !(block as Card).isTemplate) as MutableCard[]
@@ -351,6 +362,7 @@ class MutableBoardTree implements BoardTree {
     }
 
     private sortCards(cards: Card[]): Card[] {
+        console.log('A')
         const {board, activeView} = this
         if (!activeView) {
             Utils.assertFailure()
@@ -387,6 +399,15 @@ class MutableBoardTree implements BoardTree {
 
                     let aValue = a.properties[sortPropertyId] || ''
                     let bValue = b.properties[sortPropertyId] || ''
+
+                    if (template.type === 'createdBy') {
+                        aValue = this.workspaceUsers.usersById.get(a.createdBy)?.username || 'a'
+                        bValue = this.workspaceUsers.usersById.get(b.createdBy)?.username || 'a'
+                    } else if (template.type === 'updatedBy') {
+                        aValue = this.workspaceUsers.usersById.get(a.modifiedBy)?.username || 'a'
+                        bValue = this.workspaceUsers.usersById.get(b.modifiedBy)?.username || 'a'
+                    }
+
                     let result = 0
                     if (template.type === 'number' || template.type === 'date') {
                         // Always put empty values at the bottom
