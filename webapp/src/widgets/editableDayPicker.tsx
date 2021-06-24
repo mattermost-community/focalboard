@@ -53,9 +53,14 @@ function EditableDayPicker(props: Props): JSX.Element {
     const [fromInput, setFromInput] = useState<string>(rangeValue?.from?.toLocaleDateString() || '')
     const [toInput, setToInput] = useState<string>(rangeValue?.to?.toLocaleDateString() || '')
 
-    // const stateRef = useRef(rangeValue)
+    // use ref will only get created initally
+    // rerenders will need to set current.
+    // could be done with 'useEffect' for clairity but not necessary
+    const stateRef = useRef(rangeValue)
+
     // useEffect(() => {
-    //     stateRef.current = rangeValue
+    stateRef.current = rangeValue
+
     // })
 
     const from = rangeValue.from || new Date()
@@ -113,13 +118,16 @@ function EditableDayPicker(props: Props): JSX.Element {
     }
 
     const onClose = () => {
-        // const current = stateRef.current
+        const current = stateRef.current
 
-        let current = rangeValue
-        setRangeValue((currentRangeValue) => {
-            current = currentRangeValue
-            return current
-        })
+        // You can comment out line above, uncomment below,
+        // and also set current, via setRangeValue.
+
+        // let current = rangeValue
+        // setRangeValue((currentRangeValue) => {
+        //     current = currentRangeValue
+        //     return current
+        // })
 
         Utils.log('onClose ' + current.from)
         setShowDialog(false)
