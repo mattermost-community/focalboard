@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect, useRef, useLayoutEffect} from 'react'
 import {useIntl} from 'react-intl'
 import DayPicker, {DateUtils} from 'react-day-picker'
 import MomentLocaleUtils from 'react-day-picker/moment'
@@ -57,11 +57,18 @@ function EditableDayPicker(props: Props): JSX.Element {
     // rerenders will need to set current.
     // could be done with 'useEffect' for clairity but not necessary
     const stateRef = useRef(rangeValue)
+    useEffect(() => {
+        stateRef.current = rangeValue
+    })
 
-    // useEffect(() => {
-    stateRef.current = rangeValue
-
+    // useLayoutEffect(() => {
+    //     if (!divRef?.current) {
+    //         return
+    //     }
+    //     const {offsetTop} = divRef.current.top
+    //     Utils.log('h' + offsetTop)
     // })
+    // const divRef = useRef<HTMLDivElement>()
 
     const from = rangeValue.from || new Date()
     const to = rangeValue.to || undefined
@@ -104,7 +111,7 @@ function EditableDayPicker(props: Props): JSX.Element {
         saveRangeValue(range)
     }
 
-    let displayValue = rangeValue?.from?.toLocaleDateString()
+    let displayValue = rangeValue?.from?.toLocaleDateString() || 'Empty'
     if (rangeValue.to) {
         displayValue += ' -> ' + rangeValue.to.toLocaleDateString()
     }
@@ -141,23 +148,26 @@ function EditableDayPicker(props: Props): JSX.Element {
     // const dateFormat = 'l'1
 
     return (
-        <ModalWrapper>
-            <div
-                className='octo-propertyvalue'
-                onClick={() => setShowDialog(true)}
-            >
-                {displayValue}
-            </div>
+        <div className={'EditableDayPicker ' + className}>
+            <ModalWrapper>
+                <div
+                    className='octo-propertyvalue'
+                    onClick={() => setShowDialog(true)}
+                >
+                    {displayValue}
+                </div>
 
-            {showDialog &&
+                {showDialog &&
                 <Modal
                     onClose={() => onClose()}
+
+                    // position='top'
                 >
                     <div
                         className={className + '-overlayWrapper'}
                     >
                         <div className={className + '-overlay'}>
-                            <div>
+                            <div style={{display: 'flex'}}>
                                 {rangeValue.from &&
                                     <Editable
                                         value={fromInput}
@@ -206,17 +216,13 @@ function EditableDayPicker(props: Props): JSX.Element {
                             <DayPicker
                                 onDayClick={handleDayClick}
                                 initialMonth={from}
+                                showOutsideDays={true}
 
                                 locale={locale}
                                 localeUtils={MomentLocaleUtils}
                                 todayButton={intl.formatMessage({id: 'EditableDayPicker.today', defaultMessage: 'Today'})}
                                 selectedDays={[from, rangeValue]}
                                 modifiers={modifiers}
-
-                                // formatDate={MomentLocaleUtils.formatDate}
-                                // parseDate={MomentLocaleUtils.parseDate}
-                                // format={dateFormat}
-                                // placeholder={`${MomentLocaleUtils.formatDate(new Date(), dateFormat, locale)}`}
                             />
                             <hr/>
                             <SwitchOption
@@ -226,15 +232,12 @@ function EditableDayPicker(props: Props): JSX.Element {
                                 isOn={isRange}
                                 onClick={onRangeClick}
                             />
-                            <hr/>
-                            <Button onClick={onClose}>
-                                {intl.formatMessage({id: 'EditableDayPicker.save', defaultMessage: 'Save'})}
-                            </Button>
                         </div>
                     </div>
                 </Modal>
-            }
-        </ModalWrapper>
+                }
+            </ModalWrapper>
+        </div>
     )
 }
 

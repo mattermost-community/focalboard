@@ -1,25 +1,88 @@
 .EditableDayPicker {
-    .DayPickerInput {
-        input {
-            cursor: text;
-            border: 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            border: 1px solid transparent;
-            min-height: 24px;
-    
-            &.active {
-                min-width: 100px;
-            }
-            &::placeholder {
-                color: rgba(var(--body-color), 0.4);
-                opacity: 1;
-            }
-            &.error {
-                border: 1px solid var(--error-color);
-                border-radius: var(--default-rad);
-            }
+    input {
+        cursor: text;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        background-color: lightgray;
+        // border: 1px solid black;
+        // border: 1px solid;
+        min-height: 24px;
+        width: 100%;
+        margin: 2px;
+
+        &.active {
+            min-width: 100px;
         }
+        &::placeholder {
+            color: rgba(var(--body-color), 0.4);
+            opacity: 1;
+        }
+        &.error {
+            border: 1px solid var(--error-color);
+            border-radius: var(--default-rad);
+        }
+    }
+
+    .Modal{
+        position: absolute;
+        top: 25px;
+        width: 295px;
+        left: 0px;
+        // bottom: 10px;
+    // z-index: 10;
+    // background-color: rgb(var(--main-bg));
+    // padding: 10px;
+    // border-radius: 3px;
+    // box-shadow: var(--elevation-4);
+    }
+
+    .menu-option {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        font-size: 14px;
+        line-height: 24px;
+        font-weight: 400;
+        height: 32px;
+        padding: 4px 20px;
+        cursor: pointer;
+
+        &:hover {
+            background: rgba(var(--button-bg), 0.08);
+        }
+
+        > * {
+            margin-left: 16px;
+        }
+
+        > *:first-child {
+            margin-left: 0;
+        }
+
+        > .menu-name {
+            display: flex;
+            flex-grow: 1;
+            white-space: nowrap;
+        }
+
+        > .SubmenuTriangleIcon {
+            fill: rgba(var(--body-color), 0.7);
+        }
+
+        > .Icon {
+            opacity: 0.56;
+            width: 16px;
+            height: 16px;
+            line-height: 16px;
+        }
+
+        > .IconButton .Icon {
+            margin-right: 0;
+        }
+    }
+
+    .DayPicker {
     }
     
     .DayPickerInput-Overlay {
