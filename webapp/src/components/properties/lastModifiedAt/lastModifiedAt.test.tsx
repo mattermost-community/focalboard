@@ -8,6 +8,10 @@ import {CardTreeContext, MutableCardTree} from '../../../viewModel/cardTree'
 
 import {MutableCard} from '../../../blocks/card'
 
+import {MutableBoardTree} from '../../../viewModel/boardTree'
+import {MutableBoard} from '../../../blocks/board'
+import {MutableBlock} from '../../../blocks/block'
+
 import LastModifiedAt from './lastModifiedAt'
 
 describe('componnets/properties/lastModifiedAt', () => {
@@ -18,9 +22,25 @@ describe('componnets/properties/lastModifiedAt', () => {
             }),
         )
 
+        const card = new MutableCard()
+        card.id = 'card-id-1'
+        card.modifiedBy = 'user-id-1'
+        card.updateAt = Date.parse('10 Jun 2021 16:22:00')
+
+        const boardTree = new MutableBoardTree(new MutableBoard([]))
+        const block = new MutableBlock()
+        block.modifiedBy = 'user-id-1'
+        block.parentId = 'card-id-1'
+        block.type = 'comment'
+        block.updateAt = Date.parse('15 Jun 2021 16:22:00')
+        boardTree.rawBlocks.push(block)
+
         const component = (
             <CardTreeContext.Provider value={cardTree}>
-                <LastModifiedAt/>
+                <LastModifiedAt
+                    card={card}
+                    boardTree={boardTree}
+                />
             </CardTreeContext.Provider>
         )
 

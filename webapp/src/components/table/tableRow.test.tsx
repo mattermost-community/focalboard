@@ -45,10 +45,11 @@ describe('components/table/TableRow', () => {
     test('should match snapshot', async () => {
         // Sync
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
+        FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify([{username: 'username_1'}, {username: 'username_2'}])))
 
         const boardTree = await MutableBoardTree.sync(board.id, view.id)
         expect(boardTree).toBeDefined()
-        expect(FetchMock.fn).toBeCalledTimes(1)
+        expect(FetchMock.fn).toBeCalledTimes(2)
         const component = wrapProviders(
             <TableRow
                 boardTree={boardTree!}
@@ -72,10 +73,11 @@ describe('components/table/TableRow', () => {
     test('should match snapshot, read-only', async () => {
         // Sync
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
+        FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify([{username: 'username_1'}, {username: 'username_2'}])))
 
         const boardTree = await MutableBoardTree.sync(board.id, view.id)
         expect(boardTree).toBeDefined()
-        expect(FetchMock.fn).toBeCalledTimes(1)
+        expect(FetchMock.fn).toBeCalledTimes(2)
         const component = wrapProviders(
             <TableRow
                 boardTree={boardTree!}
@@ -99,10 +101,11 @@ describe('components/table/TableRow', () => {
     test('should match snapshot, isSelected', async () => {
         // Sync
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
+        FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify([{username: 'username_1'}, {username: 'username_2'}])))
 
         const boardTree = await MutableBoardTree.sync(board.id, view.id)
         expect(boardTree).toBeDefined()
-        expect(FetchMock.fn).toBeCalledTimes(1)
+        expect(FetchMock.fn).toBeCalledTimes(2)
         const component = wrapProviders(
             <TableRow
                 boardTree={boardTree!}
@@ -129,10 +132,11 @@ describe('components/table/TableRow', () => {
         view.hiddenOptionIds = []
 
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
+        FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify([{username: 'username_1'}, {username: 'username_2'}])))
 
         const boardTree = await MutableBoardTree.sync(board.id, view.id)
         expect(boardTree).toBeDefined()
-        expect(FetchMock.fn).toBeCalledTimes(1)
+        expect(FetchMock.fn).toBeCalledTimes(2)
         const component = wrapProviders(
             <TableRow
                 boardTree={boardTree!}
@@ -158,10 +162,11 @@ describe('components/table/TableRow', () => {
         view.visiblePropertyIds = ['property1', 'property2']
 
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
+        FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify([{username: 'username_1'}, {username: 'username_2'}])))
 
         const boardTree = await MutableBoardTree.sync(board.id, view.id)
         expect(boardTree).toBeDefined()
-        expect(FetchMock.fn).toBeCalledTimes(1)
+        expect(FetchMock.fn).toBeCalledTimes(2)
         const component = wrapProviders(
             <TableRow
                 boardTree={boardTree!}
@@ -186,10 +191,11 @@ describe('components/table/TableRow', () => {
         view.visiblePropertyIds = ['property1', 'property2']
 
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
+        FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify([{username: 'username_1'}, {username: 'username_2'}])))
 
         const boardTree = await MutableBoardTree.sync(board.id, view.id)
         expect(boardTree).toBeDefined()
-        expect(FetchMock.fn).toBeCalledTimes(1)
+        expect(FetchMock.fn).toBeCalledTimes(2)
         const component = wrapProviders(
             <TableRow
                 boardTree={boardTree!}

@@ -30,6 +30,8 @@ interface BoardTree {
     readonly activeView: BoardView
     readonly groupByProperty?: IPropertyTemplate
 
+    readonly rawBlocks: IBlock[]
+
     getSearchText(): string | undefined
     orderedCards(): Card[]
 
@@ -110,7 +112,7 @@ class MutableBoardTree implements BoardTree {
         boardTree.cardTemplates = blocks.filter((block) => block.type === 'card' && (block as Card).isTemplate).
             sort((a, b) => a.title.localeCompare(b.title)) as MutableCard[]
         boardTree.cards = []
-        boardTree.rawBlocks = blocks.filter((block) => block.type !== 'view' && block.type !== 'card')
+        boardTree.rawBlocks = blocks.filter((block) => block.type !== 'view' && block.type !== 'card' && block.id !== boardId)
 
         boardTree.ensureMinimumSchema()
         return boardTree
@@ -362,7 +364,6 @@ class MutableBoardTree implements BoardTree {
     }
 
     private sortCards(cards: Card[]): Card[] {
-        console.log('A')
         const {board, activeView} = this
         if (!activeView) {
             Utils.assertFailure()
@@ -403,11 +404,11 @@ class MutableBoardTree implements BoardTree {
                     console.log(this.workspaceUsers ? 'YES' : 'NO')
 
                     if (template.type === 'createdBy') {
-                        aValue = this.workspaceUsers.usersById.get(a.createdBy)?.username || 'a'
-                        bValue = this.workspaceUsers.usersById.get(b.createdBy)?.username || 'a'
+                        aValue = this.workspaceUsers.usersById.get(a.createdBy)?.username || ''
+                        bValue = this.workspaceUsers.usersById.get(b.createdBy)?.username || ''
                     } else if (template.type === 'updatedBy') {
-                        aValue = this.workspaceUsers.usersById.get(a.modifiedBy)?.username || 'a'
-                        bValue = this.workspaceUsers.usersById.get(b.modifiedBy)?.username || 'a'
+                        aValue = this.workspaceUsers.usersById.get(a.modifiedBy)?.username || ''
+                        bValue = this.workspaceUsers.usersById.get(b.modifiedBy)?.username || ''
                     }
 
                     let result = 0

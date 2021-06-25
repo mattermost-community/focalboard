@@ -66,9 +66,10 @@ const boardTreeGroup = {
 test('should match snapshot, no groups', async () => {
     // Sync
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
+    FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify([{username: 'username_1'}, {username: 'username_2'}])))
     const boardTree = await MutableBoardTree.sync(board.id, view.id)
     expect(boardTree).toBeDefined()
-    expect(FetchMock.fn).toBeCalledTimes(1)
+    expect(FetchMock.fn).toBeCalledTimes(2)
 
     const component = wrapProviders(
         <TableGroupHeaderRowElement
@@ -88,10 +89,11 @@ test('should match snapshot, no groups', async () => {
 test('should match snapshot with Group', async () => {
     // Sync
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
+    FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify([{username: 'username_1'}, {username: 'username_2'}])))
 
     const boardTree = await MutableBoardTree.sync(board.id, view.id)
     expect(boardTree).toBeDefined()
-    expect(FetchMock.fn).toBeCalledTimes(1)
+    expect(FetchMock.fn).toBeCalledTimes(2)
 
     const component = wrapProviders(
         <TableGroupHeaderRowElement
@@ -111,10 +113,11 @@ test('should match snapshot with Group', async () => {
 test('should match snapshot on read only', async () => {
     // Sync
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
+    FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify([{username: 'username_1'}, {username: 'username_2'}])))
 
     const boardTree = await MutableBoardTree.sync(board.id, view.id)
     expect(boardTree).toBeDefined()
-    expect(FetchMock.fn).toBeCalledTimes(1)
+    expect(FetchMock.fn).toBeCalledTimes(2)
 
     const component = wrapProviders(
         <TableGroupHeaderRowElement
@@ -134,13 +137,14 @@ test('should match snapshot on read only', async () => {
 test('should match snapshot, hide group', async () => {
     // Sync
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
+    FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify([{username: 'username_1'}, {username: 'username_2'}])))
 
     const hideGroup = jest.fn()
 
     view.collapsedOptionIds = [boardTreeGroup.option.id]
     const boardTree = await MutableBoardTree.sync(board.id, view.id)
     expect(boardTree).toBeDefined()
-    expect(FetchMock.fn).toBeCalledTimes(1)
+    expect(FetchMock.fn).toBeCalledTimes(2)
 
     const component = wrapProviders(
         <TableGroupHeaderRowElement
@@ -168,12 +172,13 @@ test('should match snapshot, hide group', async () => {
 test('should match snapshot, add new', async () => {
     // Sync
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
+    FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify([{username: 'username_1'}, {username: 'username_2'}])))
 
     const addNew = jest.fn()
 
     const boardTree = await MutableBoardTree.sync(board.id, view.id)
     expect(boardTree).toBeDefined()
-    expect(FetchMock.fn).toBeCalledTimes(1)
+    expect(FetchMock.fn).toBeCalledTimes(2)
 
     const component = wrapProviders(
         <TableGroupHeaderRowElement
@@ -202,10 +207,11 @@ test('should match snapshot, add new', async () => {
 test('should match snapshot, edit title', async () => {
     // Sync
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
+    FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify([{username: 'username_1'}, {username: 'username_2'}])))
 
     const boardTree = await MutableBoardTree.sync(board.id, view.id)
     expect(boardTree).toBeDefined()
-    expect(FetchMock.fn).toBeCalledTimes(1)
+    expect(FetchMock.fn).toBeCalledTimes(2)
 
     const component = wrapProviders(
         <TableGroupHeaderRowElement

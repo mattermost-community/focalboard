@@ -9,6 +9,14 @@ import {MutableCardTree, CardTreeContext} from '../../../viewModel/cardTree'
 import {MutableCard} from '../../../blocks/card'
 import {IUser, WorkspaceUsersContext} from '../../../user'
 
+import {MutableBoardTree} from '../../../viewModel/boardTree'
+
+import {MutableBoard} from '../../../blocks/board'
+
+import {MutableBlock} from '../../../blocks/block'
+
+import {FetchMock} from '../../../test/fetchMock'
+
 import LastModifiedBy from './lastModifiedBy'
 
 describe('components/properties/lastModifiedBy', () => {
@@ -27,10 +35,24 @@ describe('components/properties/lastModifiedBy', () => {
         }
         workspaceUsers.usersById.set('user-id-1', {username: 'username_1'} as IUser)
 
+        const card = new MutableCard()
+        card.id = 'card-id-1'
+        card.modifiedBy = 'user-id-1'
+
+        const boardTree = new MutableBoardTree(new MutableBoard([]))
+        const block = new MutableBlock()
+        block.modifiedBy = 'user-id-1'
+        block.parentId = 'card-id-1'
+        block.type = 'comment'
+        boardTree.rawBlocks.push(block)
+
         const component = (
             <WorkspaceUsersContext.Provider value={workspaceUsers}>
                 <CardTreeContext.Provider value={cardTree}>
-                    <LastModifiedBy/>
+                    <LastModifiedBy
+                        card={card}
+                        boardTree={boardTree}
+                    />
                 </CardTreeContext.Provider>
             </WorkspaceUsersContext.Provider>
         )

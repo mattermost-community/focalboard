@@ -19,6 +19,8 @@ import {TestBlockFactory} from '../../test/testBlockFactory'
 import {FetchMock} from '../../test/fetchMock'
 import {MutableBoardTree} from '../../viewModel/boardTree'
 
+import {IUser} from '../../user'
+
 import TableRows from './tableRows'
 
 global.fetch = FetchMock.fn
@@ -49,10 +51,11 @@ describe('components/table/TableRows', () => {
     test('should match snapshot, fire events', async () => {
         // Sync
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
+        FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify([{username: 'username_1'}, {username: 'username_2'}])))
 
         const boardTree = await MutableBoardTree.sync(board.id, view.id)
         expect(boardTree).toBeDefined()
-        expect(FetchMock.fn).toBeCalledTimes(1)
+        expect(FetchMock.fn).toBeCalledTimes(2)
 
         const callback = jest.fn()
         const addCard = jest.fn()
