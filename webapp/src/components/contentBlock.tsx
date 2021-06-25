@@ -125,7 +125,7 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
         <div
             ref={itemRef2}
             className={`addToRow ${isOver2 ? 'dragover' : ''}`}
-            style={{opacity: isDragging ? 0.5 : 1}}
+            style={{opacity: isDragging ? 0.5 : 1, marginRight: '10px'}}
         >
         </div>
         </div>
