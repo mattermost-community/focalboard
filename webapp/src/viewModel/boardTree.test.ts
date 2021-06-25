@@ -55,12 +55,12 @@ test('BoardTree', async () => {
     expect(boardTree.cards).toEqual([card])
 
     // Group / filter without sort
-    boardTree = boardTree.copyWithView(view2.id)
+    boardTree = await boardTree.copyWithView(view2.id)
     expect(boardTree.activeView).toEqual(view2)
     expect(boardTree.cards).toEqual([card])
 
     // Invalid view, defaults to first view
-    boardTree = boardTree.copyWithView('invalid id')
+    boardTree = await boardTree.copyWithView('invalid id')
     expect(boardTree.activeView).toEqual(view)
 
     // Incremental update
@@ -70,7 +70,7 @@ test('BoardTree', async () => {
     cardTemplate2.isTemplate = true
 
     let originalBoardTree = boardTree
-    boardTree = MutableBoardTree.incrementalUpdate(boardTree, [view3, card2, cardTemplate2])
+    boardTree = await MutableBoardTree.incrementalUpdate(boardTree, [view3, card2, cardTemplate2])
     expect(boardTree).not.toBe(originalBoardTree)
     expect(boardTree).not.toBeUndefined()
     if (!boardTree) {
@@ -82,7 +82,7 @@ test('BoardTree', async () => {
 
     // Group / filter with sort
     originalBoardTree = boardTree
-    boardTree = boardTree.copyWithView(view.id)
+    boardTree = await boardTree.copyWithView(view.id)
     expect(boardTree).not.toBe(originalBoardTree)
     expect(boardTree.activeView).toEqual(view)
     expect(boardTree.cards).toEqual([card, card2])
@@ -90,7 +90,7 @@ test('BoardTree', async () => {
 
     // Group / filter without sort
     originalBoardTree = boardTree
-    boardTree = boardTree.copyWithView(view2.id)
+    boardTree = await boardTree.copyWithView(view2.id)
     expect(boardTree).not.toBe(originalBoardTree)
     expect(boardTree.activeView).toEqual(view2)
     expect(boardTree.cards).toEqual([card, card2])
@@ -99,7 +99,7 @@ test('BoardTree', async () => {
     const anotherBoard = TestBlockFactory.createBoard()
     const card4 = TestBlockFactory.createCard(anotherBoard)
     originalBoardTree = boardTree
-    boardTree = MutableBoardTree.incrementalUpdate(boardTree, [anotherBoard, card4])
+    boardTree = await MutableBoardTree.incrementalUpdate(boardTree, [anotherBoard, card4])
     expect(boardTree).toBe(originalBoardTree) // Expect same value on no change
     expect(boardTree).not.toBeUndefined()
     if (!boardTree) {
@@ -117,7 +117,7 @@ test('BoardTree', async () => {
     // Search text
     const searchText = 'search text'
     expect(boardTree.getSearchText()).toBeUndefined()
-    boardTree = boardTree.copyWithSearchText(searchText)
+    boardTree = await boardTree.copyWithSearchText(searchText)
     expect(boardTree.getSearchText()).toBe(searchText)
 })
 
