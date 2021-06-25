@@ -161,11 +161,10 @@ sudo mysql
 ```
 
 At the MySQL prompt, run the following commands (change `user/password` to your own values):
-<pre>
+```
 CREATE DATABASE boards;
 GRANT ALL on boards.* to <b>'boardsuser'@'localhost'</b> identified by '<b>boardsuser-password</b>';
-
-</pre>
+```
 
 Exit the mysql-prompt:
 ```
