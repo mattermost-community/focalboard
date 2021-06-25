@@ -15,8 +15,6 @@ import {MutableBoard} from '../../../blocks/board'
 
 import {MutableBlock} from '../../../blocks/block'
 
-import {FetchMock} from '../../../test/fetchMock'
-
 import LastModifiedBy from './lastModifiedBy'
 
 describe('components/properties/lastModifiedBy', () => {

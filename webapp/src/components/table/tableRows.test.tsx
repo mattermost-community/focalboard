@@ -19,8 +19,6 @@ import {TestBlockFactory} from '../../test/testBlockFactory'
 import {FetchMock} from '../../test/fetchMock'
 import {MutableBoardTree} from '../../viewModel/boardTree'
 
-import {IUser} from '../../user'
-
 import TableRows from './tableRows'
 
 global.fetch = FetchMock.fn

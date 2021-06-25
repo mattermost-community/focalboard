@@ -52,8 +52,6 @@ const CardDetail = (props: Props): JSX.Element|null => {
         return null
     }
 
-    console.log(card.properties)
-
     return (
         <>
             <div className='CardDetail content'>

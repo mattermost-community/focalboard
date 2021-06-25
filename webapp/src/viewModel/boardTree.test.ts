@@ -2,7 +2,6 @@
 // See LICENSE.txt for license information.
 
 // Disable console log
-import {IUser} from '../user'
 
 console.log = jest.fn()
 console.error = jest.fn()

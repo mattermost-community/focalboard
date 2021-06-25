@@ -401,8 +401,6 @@ class MutableBoardTree implements BoardTree {
                     let aValue = a.properties[sortPropertyId] || ''
                     let bValue = b.properties[sortPropertyId] || ''
 
-                    console.log(this.workspaceUsers ? 'YES' : 'NO')
-
                     if (template.type === 'createdBy') {
                         aValue = this.workspaceUsers.usersById.get(a.createdBy)?.username || ''
                         bValue = this.workspaceUsers.usersById.get(b.createdBy)?.username || ''
