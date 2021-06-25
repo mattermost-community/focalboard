@@ -29,13 +29,14 @@ type Props = {
     card: Card
     contents: readonly IContentBlock[]
     readonly: boolean
-    onDrop: (srctBlock: IContentBlock, dstBlock: IContentBlock) => void
+    onDrop: (srctBlock: IContentBlock, dstBlock: IContentBlock, isParallel?: boolean) => void
 }
 
 const ContentBlock = React.memo((props: Props): JSX.Element => {
     const {card, contents, block, readonly} = props
     const intl = useIntl()
     const [isDragging, isOver, gripRef, itemRef] = useSortableWithGrip('content', block, true, props.onDrop)
+    const [isDragging2, isOver2, gripRef2, itemRef2] = useSortableWithGrip('content', block, true, (src, dst) => props.onDrop(src, dst, true))
 
     const index = contents.indexOf(block)
     let className = 'ContentBlock octo-block'
@@ -43,9 +44,10 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
         className += ' dragover'
     }
     return (
+        <div className="rowContents">
         <div
             className={className}
-            style={{opacity: isDragging ? 0.5 : 1}}
+            style={{opacity: isDragging ? 0.5 : 1, marginLeft: -10}}
             ref={itemRef}
         >
             <div className='octo-block-margin'>
@@ -119,6 +121,13 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
                 block={block}
                 readonly={readonly}
             />
+        </div>
+        <div
+            ref={itemRef2}
+            className={`addToRow ${isOver2 ? 'dragover' : ''}`}
+            style={{opacity: isDragging ? 0.5 : 1}}
+        >
+        </div>
         </div>
     )
 })

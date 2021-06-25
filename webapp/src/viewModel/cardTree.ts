@@ -10,7 +10,7 @@ import {OctoUtils} from '../octoUtils'
 interface CardTree {
     readonly card: Card
     readonly comments: readonly CommentBlock[]
-    readonly contents: readonly IContentBlock[]
+    readonly contents: readonly (IContentBlock|IContentBlock[])[]
     readonly allBlocks: readonly IBlock[]
 }
 
@@ -57,7 +57,18 @@ class MutableCardTree implements CardTree {
             sort((a, b) => a.createAt - b.createAt) as CommentBlock[]
 
         const contentBlocks = blocks.filter((block) => contentBlockTypes.includes(block.type as ContentBlockTypes)) as IContentBlock[]
-        cardTree.contents = OctoUtils.getBlockOrder(card.contentOrder, contentBlocks)
+
+
+
+        cardTree.contents = card.contentOrder.map(contentIds => {
+            if (Array.isArray(contentIds)) {
+                return contentIds.map(contentId => contentBlocks.find(content => content.id === contentId))
+            }
+
+            return contentBlocks.find(content => content.id === contentIds)
+        }) as any
+        
+        // OctoUtils.getBlockOrder(card.contentOrder, contentBlocks)
 
         return cardTree
     }

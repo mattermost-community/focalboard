@@ -32,21 +32,40 @@ function addTextBlock(card: Card, intl: IntlShape, text: string): void {
     })
 }
 
-function moveBlock(card: Card, srcBlock: IContentBlock, dstBlock: IContentBlock, intl: IntlShape): void {
-    let contentOrder = card.contentOrder.slice()
-    const isDraggingDown = contentOrder.indexOf(srcBlock.id) <= contentOrder.indexOf(dstBlock.id)
-    contentOrder = contentOrder.filter((id) => srcBlock.id !== id)
-    let destIndex = contentOrder.indexOf(dstBlock.id)
-    if (isDraggingDown) {
-        destIndex += 1
+function moveBlock(card: Card, srcBlock: IContentBlock, dstBlock: IContentBlock, intl: IntlShape, isParallel = false): void {
+    console.log(srcBlock)
+    console.log(dstBlock)
+    console.log(isParallel)
+    let contentOrder;
+    if (isParallel) {
+        if (srcBlock.id === dstBlock.id) {
+            return
+        }
+
+        contentOrder = card.contentOrder.slice()
+        const idxSrcBlock = contentOrder.indexOf(srcBlock.id)
+        const idxDstBlock = contentOrder.indexOf(dstBlock.id)
+        console.log(idxSrcBlock, idxDstBlock)
+        contentOrder.splice(idxDstBlock, 1, [dstBlock.id, srcBlock.id])
+        contentOrder.splice(idxSrcBlock, 1)
+    } else {
+        let contentOrder = card.contentOrder.slice()
+        const isDraggingDown = contentOrder.indexOf(srcBlock.id) <= contentOrder.indexOf(dstBlock.id)
+        contentOrder = contentOrder.filter((id) => srcBlock.id !== id)
+        let destIndex = contentOrder.indexOf(dstBlock.id)
+        if (isDraggingDown) {
+            destIndex += 1
+        }
+        contentOrder.splice(destIndex, 0, srcBlock.id)
     }
-    contentOrder.splice(destIndex, 0, srcBlock.id)
+
 
     mutator.performAsUndoGroup(async () => {
         const description = intl.formatMessage({id: 'CardDetail.moveContent', defaultMessage: 'move card content'})
         await mutator.changeCardContentOrder(card, contentOrder, description)
     })
 }
+
 
 const CardDetailContents = React.memo((props: Props) => {
     const intl = useIntl()
@@ -55,20 +74,39 @@ const CardDetailContents = React.memo((props: Props) => {
         return null
     }
     const {card} = cardTree
-
+    console.log(cardTree.contents)
     if (cardTree.contents.length > 0) {
         return (
             <div className='octo-content'>
-                {cardTree.contents.map((block) => (
-                    <ContentBlock
-                        key={block.id}
-                        block={block}
-                        card={card}
-                        contents={cardTree.contents}
-                        readonly={props.readonly}
-                        onDrop={(src, dst) => moveBlock(card, src, dst, intl)}
-                    />
-                ))}
+                {cardTree.contents.map((block) => {
+                    if (Array.isArray(block)) {
+                        return (
+                            <div key={block[0].id + block[1].id} style={{display: 'flex'}}>
+                                {block.map(block => (
+                                    <ContentBlock
+                                        key={block.id}
+                                        block={block}
+                                        card={card}
+                                        contents={cardTree.contents}
+                                        readonly={props.readonly}
+                                        onDrop={(src, dst, isParallel) => moveBlock(card, src, dst, intl, isParallel)}
+                                    />
+                                ))}
+                            </div>
+                        )
+                    }
+
+                    return (
+                        <ContentBlock
+                            key={block.id}
+                            block={block}
+                            card={card}
+                            contents={cardTree.contents}
+                            readonly={props.readonly}
+                            onDrop={(src, dst, isParallel) => moveBlock(card, src, dst, intl, isParallel)}
+                        />
+                    )
+                })}
             </div>
         )
     }

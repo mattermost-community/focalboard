@@ -70,7 +70,7 @@ class OctoUtils {
         return blockA.createAt - blockB.createAt
     }
 
-    static getBlockOrder(partialOrder: readonly string[], blocks: readonly IBlock[]): IBlock[] {
+    static getBlockOrder(partialOrder: readonly (string|string[])[], blocks: readonly IBlock[]): IBlock[] {
         return blocks.slice().sort((a, b) => this.relativeBlockOrder(partialOrder, blocks, a, b))
     }
 
