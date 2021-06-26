@@ -17,12 +17,20 @@ type Props = {
     type: BlockTypes
     block: IContentBlock
     card: Card
-    contents: readonly IContentBlock[]
 }
 
 const AddContentMenuItem = React.memo((props:Props): JSX.Element => {
-    const {card, contents, block, type} = props
-    const index = contents.indexOf(block)
+    const {card, block, type} = props
+    let index = card.contentOrder.indexOf(block.id)
+    let contentOrder = card.contentOrder.slice()
+    if (index === -1) {
+        contentOrder.find((item, idx) => {
+            if (Array.isArray(item) && item.includes(block.id)) {
+                index = idx
+                return
+            }
+        })    
+    }   
     const intl = useIntl()
 
     const handler = contentRegistry.getHandler(type)
@@ -42,7 +50,6 @@ const AddContentMenuItem = React.memo((props:Props): JSX.Element => {
                 newBlock.parentId = card.id
                 newBlock.rootId = card.rootId
 
-                const contentOrder = contents.map((o) => o.id)
                 contentOrder.splice(index, 0, newBlock.id)
                 const typeName = handler.getDisplayText(intl)
                 const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})

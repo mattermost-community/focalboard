@@ -33,32 +33,50 @@ function addTextBlock(card: Card, intl: IntlShape, text: string): void {
 }
 
 function moveBlock(card: Card, srcBlock: IContentBlock, dstBlock: IContentBlock, intl: IntlShape, isParallel = false): void {
-    console.log(srcBlock)
-    console.log(dstBlock)
-    console.log(isParallel)
-    let contentOrder;
+    let contentOrder = card.contentOrder.slice()
+    let idxSrcBlock = contentOrder.indexOf(srcBlock.id)
+    let idxDstBlock = contentOrder.indexOf(dstBlock.id)
+    let idxSrcBlockColumn = -1
+    let idxDstBlockColumn = -1
+
+    // Block is in a row array with other blocks so we gotta search
+    if (idxSrcBlock === -1) {
+        contentOrder.find((item, idx) => {
+            if (Array.isArray(item) && item.includes(srcBlock.id)) {
+                idxSrcBlock = idx
+                idxSrcBlockColumn = item.indexOf(srcBlock.id)
+                return
+            }
+        })
+    }
+
+    if (idxDstBlock === -1) {
+        contentOrder.find((item, idx) => {
+            if (Array.isArray(item) && item.includes(dstBlock.id)) {
+                idxDstBlock = idx
+                idxDstBlockColumn = item.indexOf(dstBlock.id)
+                return
+            }
+        })    
+    }
+
     if (isParallel) {
         if (srcBlock.id === dstBlock.id) {
             return
         }
 
-        contentOrder = card.contentOrder.slice()
-        const idxSrcBlock = contentOrder.indexOf(srcBlock.id)
-        const idxDstBlock = contentOrder.indexOf(dstBlock.id)
-        console.log(idxSrcBlock, idxDstBlock)
+        idxDstBlockColumn > -1 ? 
+        (contentOrder[idxDstBlock] as string[]).splice(idxDstBlockColumn + 1, 0, srcBlock.id) :
         contentOrder.splice(idxDstBlock, 1, [dstBlock.id, srcBlock.id])
+
+        idxSrcBlockColumn > -1 ? 
+        (contentOrder[idxSrcBlock] as string[]).splice(idxSrcBlockColumn, 1) :
         contentOrder.splice(idxSrcBlock, 1)
     } else {
-        let contentOrder = card.contentOrder.slice()
-        const isDraggingDown = contentOrder.indexOf(srcBlock.id) <= contentOrder.indexOf(dstBlock.id)
-        contentOrder = contentOrder.filter((id) => srcBlock.id !== id)
-        let destIndex = contentOrder.indexOf(dstBlock.id)
-        if (isDraggingDown) {
-            destIndex += 1
-        }
-        contentOrder.splice(destIndex, 0, srcBlock.id)
+        const srcBlockCopy = contentOrder[idxSrcBlock]
+        contentOrder.splice(idxSrcBlock, 1)
+        contentOrder.splice(idxDstBlock, 0, srcBlockCopy)
     }
-
 
     mutator.performAsUndoGroup(async () => {
         const description = intl.formatMessage({id: 'CardDetail.moveContent', defaultMessage: 'move card content'})
@@ -74,7 +92,6 @@ const CardDetailContents = React.memo((props: Props) => {
         return null
     }
     const {card} = cardTree
-    console.log(cardTree.contents)
     if (cardTree.contents.length > 0) {
         return (
             <div className='octo-content'>
@@ -87,7 +104,6 @@ const CardDetailContents = React.memo((props: Props) => {
                                         key={block.id}
                                         block={block}
                                         card={card}
-                                        contents={cardTree.contents}
                                         readonly={props.readonly}
                                         onDrop={(src, dst, isParallel) => moveBlock(card, src, dst, intl, isParallel)}
                                     />
@@ -101,7 +117,6 @@ const CardDetailContents = React.memo((props: Props) => {
                             key={block.id}
                             block={block}
                             card={card}
-                            contents={cardTree.contents}
                             readonly={props.readonly}
                             onDrop={(src, dst, isParallel) => moveBlock(card, src, dst, intl, isParallel)}
                         />

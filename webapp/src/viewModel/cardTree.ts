@@ -68,8 +68,6 @@ class MutableCardTree implements CardTree {
             return contentBlocks.find(content => content.id === contentIds)
         }) as any
         
-        // OctoUtils.getBlockOrder(card.contentOrder, contentBlocks)
-
         return cardTree
     }
 

@@ -70,10 +70,6 @@ class OctoUtils {
         return blockA.createAt - blockB.createAt
     }
 
-    static getBlockOrder(partialOrder: readonly (string|string[])[], blocks: readonly IBlock[]): IBlock[] {
-        return blocks.slice().sort((a, b) => this.relativeBlockOrder(partialOrder, blocks, a, b))
-    }
-
     static hydrateBlock(block: IBlock): MutableBlock {
         switch (block.type) {
         case 'board': { return new MutableBoard(block) }
@@ -148,7 +144,7 @@ class OctoUtils {
             // Remap card content order
             if (newBlock.type === 'card') {
                 const card = newBlock as MutableCard
-                card.contentOrder = card.contentOrder.map((o) => idMap[o])
+                card.contentOrder = card.contentOrder.map((o) => Array.isArray(o) ? o.map(o2 => idMap[o2]) : idMap[o])
             }
         })
 

@@ -27,18 +27,30 @@ import './contentBlock.scss'
 type Props = {
     block: IContentBlock
     card: Card
-    contents: readonly IContentBlock[]
     readonly: boolean
     onDrop: (srctBlock: IContentBlock, dstBlock: IContentBlock, isParallel?: boolean) => void
 }
 
 const ContentBlock = React.memo((props: Props): JSX.Element => {
-    const {card, contents, block, readonly} = props
+    const {card, block, readonly} = props
     const intl = useIntl()
     const [isDragging, isOver, gripRef, itemRef] = useSortableWithGrip('content', block, true, props.onDrop)
-    const [isDragging2, isOver2, gripRef2, itemRef2] = useSortableWithGrip('content', block, true, (src, dst) => props.onDrop(src, dst, true))
+    const [, isOver2,, itemRef2] = useSortableWithGrip('content', block, true, (src, dst) => props.onDrop(src, dst, true))
 
-    const index = contents.indexOf(block)
+    let index = card.contentOrder.indexOf(block.id)
+    let colIndex = -1
+    let contentOrder = card.contentOrder.slice()
+    if (index === -1) {
+        contentOrder.find((item, idx) => {
+            if (Array.isArray(item) && item.includes(block.id)) {
+                index = idx
+                colIndex = item.indexOf(block.id)
+                return
+            }
+        })    
+    }
+
+
     let className = 'ContentBlock octo-block'
     if (isOver) {
         className += ' dragover'
@@ -61,18 +73,16 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
                                     name={intl.formatMessage({id: 'ContentBlock.moveUp', defaultMessage: 'Move up'})}
                                     icon={<SortUpIcon/>}
                                     onClick={() => {
-                                        const contentOrder = contents.map((o) => o.id)
                                         Utils.arrayMove(contentOrder, index, index - 1)
                                         mutator.changeCardContentOrder(card, contentOrder)
                                     }}
                                 />}
-                            {index < (contents.length - 1) &&
+                            {index < (contentOrder.length - 1) &&
                                 <Menu.Text
                                     id='moveDown'
                                     name={intl.formatMessage({id: 'ContentBlock.moveDown', defaultMessage: 'Move down'})}
                                     icon={<SortDownIcon/>}
                                     onClick={() => {
-                                        const contentOrder = contents.map((o) => o.id)
                                         Utils.arrayMove(contentOrder, index, index + 1)
                                         mutator.changeCardContentOrder(card, contentOrder)
                                     }}
@@ -88,7 +98,6 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
                                         type={type}
                                         block={block}
                                         card={card}
-                                        contents={contents}
                                     />
                                 ))}
                             </Menu.SubMenu>
@@ -98,7 +107,12 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
                                 name={intl.formatMessage({id: 'ContentBlock.Delete', defaultMessage: 'Delete'})}
                                 onClick={() => {
                                     const description = intl.formatMessage({id: 'ContentBlock.DeleteAction', defaultMessage: 'delete'})
-                                    const contentOrder = contents.map((o) => o.id).filter((o) => o !== block.id)
+                                    colIndex > -1 ? (contentOrder[index] as string[]).splice(colIndex, 1) : contentOrder.splice(index, 1)
+
+                                    if (Array.isArray(contentOrder[index]) && contentOrder[index].length === 1) {
+                                        contentOrder[index] = contentOrder[index][0]
+                                    }
+
                                     mutator.performAsUndoGroup(async () => {
                                         await mutator.deleteBlock(block, description)
                                         await mutator.changeCardContentOrder(card, contentOrder, description)
@@ -125,7 +139,6 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
         <div
             ref={itemRef2}
             className={`addToRow ${isOver2 ? 'dragover' : ''}`}
-            style={{opacity: isDragging ? 0.5 : 1}}
         >
         </div>
         </div>
