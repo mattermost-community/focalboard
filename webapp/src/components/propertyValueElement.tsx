@@ -40,6 +40,8 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     const finalDisplayValue = displayValue || emptyDisplayValue
     const [open, setOpen] = useState(false)
 
+    // Only set the tooltip if the element is readonly
+    const valueElementClass = props.readOnly ? 'octo-propertyvalue octo-tooltip tooltip-top' : 'octo-propertyvalue'
     const validateProp = (propType: string, val: string): boolean => {
         if (val === '') {
             return true
@@ -101,7 +103,8 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         if (readOnly || !boardTree || !open) {
             return (
                 <div
-                    className='octo-propertyvalue'
+                    className={valueElementClass}
+                    data-tooltip={propertyTemplate.name}
                     tabIndex={0}
                     onClick={() => setOpen(true)}
                 >
@@ -142,11 +145,16 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 value={propertyValue as string}
                 readonly={readOnly}
                 onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
+                tooltip={propertyTemplate.name}
             />
         )
     } else if (propertyTemplate.type === 'date') {
         if (readOnly) {
-            return <div className='octo-propertyvalue'>{displayValue}</div>
+            return (
+                <div
+                    className={valueElementClass}
+                    data-tooltip={propertyTemplate.name}
+                >{displayValue}</div>)
         }
         return (
             <EditableDayPicker
@@ -163,6 +171,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 onSave={() => mutator.changePropertyValue(card, propertyTemplate.id, value)}
                 onCancel={() => setValue(propertyValue)}
                 validator={(newValue) => validateProp(propertyTemplate.type, newValue)}
+                tooltip={props.readOnly ? propertyTemplate.name : undefined}
             />
         )
     }
@@ -176,6 +185,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                     mutator.changePropertyValue(card, propertyTemplate.id, newValue)
                 }}
                 readOnly={readOnly}
+                tooltip={props.readOnly ? propertyTemplate.name : undefined}
             />
         )
     }
@@ -199,9 +209,17 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 />
             )
         }
-        return <div className='octo-propertyvalue'>{displayValue}</div>
+        return (
+            <div
+                className={valueElementClass}
+                data-tooltip={propertyTemplate.name}
+            >{displayValue}</div>)
     }
-    return <div className='octo-propertyvalue'>{finalDisplayValue}</div>
+    return (
+        <div
+            data-tooltip={propertyTemplate.name}
+            className={valueElementClass}
+        >{finalDisplayValue}</div>)
 }
 
 export default PropertyValueElement

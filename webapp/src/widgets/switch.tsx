@@ -8,14 +8,18 @@ type Props = {
     onChanged: (isOn: boolean) => void
     isOn: boolean
     readOnly?: boolean
+    tooltip?: string
 }
 
 // Switch is an on-off style switch / checkbox
 function Switch(props: Props): JSX.Element {
-    const className = props.isOn ? 'Switch on' : 'Switch'
+    const switchClassName = props.isOn ? 'Switch on' : 'Switch'
+    const tooltipClassName = props.tooltip ? 'octo-tooltip tooltip-top' : ''
+    const className = `${switchClassName} ${tooltipClassName}`
     return (
         <div
             className={className}
+            data-tooltip={props.tooltip}
             onClick={() => {
                 if (!props.readOnly) {
                     props.onChanged(!props.isOn)

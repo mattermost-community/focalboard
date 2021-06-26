@@ -15,10 +15,13 @@ type Props = {
     onSave: () => void
     onCancel: () => void
     validator: (newValue: string) => boolean
+    tooltip?: string
 }
 
 const URLProperty = (props: Props): JSX.Element => {
     let link: ReactNode = null
+    const tooltipClassName = props.tooltip ? 'octo-tooltip tooltip-top' : ''
+    const linkClassName = `URLProperty property-link url ${tooltipClassName}`
     if (props.value?.trim()) {
         link = (
             <a
@@ -32,7 +35,10 @@ const URLProperty = (props: Props): JSX.Element => {
     }
 
     return (
-        <div className='URLProperty property-link url'>
+        <div
+            className={linkClassName}
+            data-tooltip={props.tooltip}
+        >
             <Editable
                 className='octo-propertyvalue'
                 placeholderText='Empty'

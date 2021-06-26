@@ -13,13 +13,21 @@ type Props = {
     value: string,
     readonly: boolean,
     onChange: (value: string) => void,
+    tooltip?: string
 }
 
 const UserProperty = (props: Props): JSX.Element => {
     const workspaceUsers = useContext<WorkspaceUsersContextData>(WorkspaceUsersContext)
+    const tooltipClassName = props.tooltip ? 'octo-tooltip tooltip-top' : ''
 
     if (props.readonly) {
-        return (<div className='UserProperty octo-propertyvalue'>{workspaceUsers.usersById.get(props.value)?.username || props.value}</div>)
+        const userClassName = `UserProperty octo-propertyvalue ${tooltipClassName}`
+        return (
+            <div
+                className={userClassName}
+                data-tooltip={props.tooltip}
+            >
+                {workspaceUsers.usersById.get(props.value)?.username || props.value}</div>)
     }
 
     return (
