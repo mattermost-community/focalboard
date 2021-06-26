@@ -58,16 +58,14 @@ class MutableCardTree implements CardTree {
 
         const contentBlocks = blocks.filter((block) => contentBlockTypes.includes(block.type as ContentBlockTypes)) as IContentBlock[]
 
-
-
-        cardTree.contents = card.contentOrder.map(contentIds => {
+        cardTree.contents = card.contentOrder.map((contentIds) => {
             if (Array.isArray(contentIds)) {
-                return contentIds.map(contentId => contentBlocks.find(content => content.id === contentId))
+                return contentIds.map((contentId) => contentBlocks.find((content) => content.id === contentId))
             }
 
-            return contentBlocks.find(content => content.id === contentIds)
+            return contentBlocks.find((content) => content.id === contentIds)
         }) as any
-        
+
         return cardTree
     }
 

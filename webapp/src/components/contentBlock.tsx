@@ -39,31 +39,31 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
 
     let index = card.contentOrder.indexOf(block.id)
     let colIndex = -1
-    let contentOrder = card.contentOrder.slice()
+    const contentOrder = card.contentOrder.slice()
     if (index === -1) {
         contentOrder.find((item, idx) => {
             if (Array.isArray(item) && item.includes(block.id)) {
                 index = idx
                 colIndex = item.indexOf(block.id)
-                return
+                return true
             }
-        })    
+            return false
+        })
     }
-
 
     let className = 'ContentBlock octo-block'
     if (isOver) {
         className += ' dragover'
     }
     return (
-        <div className="rowContents">
-        <div
-            className={className}
-            style={{opacity: isDragging ? 0.5 : 1, marginLeft: -10}}
-            ref={itemRef}
-        >
-            <div className='octo-block-margin'>
-                {!props.readonly &&
+        <div className='rowContents'>
+            <div
+                className={className}
+                style={{opacity: isDragging ? 0.5 : 1, marginLeft: -10}}
+                ref={itemRef}
+            >
+                <div className='octo-block-margin'>
+                    {!props.readonly &&
                     <MenuWrapper>
                         <IconButton icon={<OptionsIcon/>}/>
                         <Menu>
@@ -106,8 +106,11 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
                                 id='delete'
                                 name={intl.formatMessage({id: 'ContentBlock.Delete', defaultMessage: 'Delete'})}
                                 onClick={() => {
-                                    const description = intl.formatMessage({id: 'ContentBlock.DeleteAction', defaultMessage: 'delete'})
-                                    colIndex > -1 ? (contentOrder[index] as string[]).splice(colIndex, 1) : contentOrder.splice(index, 1)
+                                    const description = intl.formatMessage({id: 'ContentBlock.DeleteAction', defaultMessage: 'delete'});
+
+                                    (colIndex > -1 &&
+                                        (contentOrder[index] as string[]).splice(colIndex, 1)) ||
+                                        contentOrder.splice(index, 1)
 
                                     if (Array.isArray(contentOrder[index]) && contentOrder[index].length === 1) {
                                         contentOrder[index] = contentOrder[index][0]
@@ -121,26 +124,25 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
                             />
                         </Menu>
                     </MenuWrapper>
-                }
-                {!props.readonly &&
+                    }
+                    {!props.readonly &&
                     <div
                         ref={gripRef}
                         className='dnd-handle'
                     >
                         <GripIcon/>
                     </div>
-                }
+                    }
+                </div>
+                <ContentElement
+                    block={block}
+                    readonly={readonly}
+                />
             </div>
-            <ContentElement
-                block={block}
-                readonly={readonly}
+            <div
+                ref={itemRef2}
+                className={`addToRow ${isOver2 ? 'dragover' : ''}`}
             />
-        </div>
-        <div
-            ref={itemRef2}
-            className={`addToRow ${isOver2 ? 'dragover' : ''}`}
-        >
-        </div>
         </div>
     )
 })

@@ -33,7 +33,7 @@ function addTextBlock(card: Card, intl: IntlShape, text: string): void {
 }
 
 function moveBlock(card: Card, srcBlock: IContentBlock, dstBlock: IContentBlock, intl: IntlShape, isParallel = false): void {
-    let contentOrder = card.contentOrder.slice()
+    const contentOrder = card.contentOrder.slice()
     let idxSrcBlock = contentOrder.indexOf(srcBlock.id)
     let idxDstBlock = contentOrder.indexOf(dstBlock.id)
     let idxSrcBlockColumn = -1
@@ -45,8 +45,9 @@ function moveBlock(card: Card, srcBlock: IContentBlock, dstBlock: IContentBlock,
             if (Array.isArray(item) && item.includes(srcBlock.id)) {
                 idxSrcBlock = idx
                 idxSrcBlockColumn = item.indexOf(srcBlock.id)
-                return
+                return true
             }
+            return false
         })
     }
 
@@ -55,9 +56,10 @@ function moveBlock(card: Card, srcBlock: IContentBlock, dstBlock: IContentBlock,
             if (Array.isArray(item) && item.includes(dstBlock.id)) {
                 idxDstBlock = idx
                 idxDstBlockColumn = item.indexOf(dstBlock.id)
-                return
+                return true
             }
-        })    
+            return false
+        })
     }
 
     if (isParallel) {
@@ -65,13 +67,13 @@ function moveBlock(card: Card, srcBlock: IContentBlock, dstBlock: IContentBlock,
             return
         }
 
-        idxDstBlockColumn > -1 ? 
-        (contentOrder[idxDstBlock] as string[]).splice(idxDstBlockColumn + 1, 0, srcBlock.id) :
-        contentOrder.splice(idxDstBlock, 1, [dstBlock.id, srcBlock.id])
+        (idxDstBlockColumn > -1 &&
+            (contentOrder[idxDstBlock] as string[]).splice(idxDstBlockColumn + 1, 0, srcBlock.id)) ||
+            contentOrder.splice(idxDstBlock, 1, [dstBlock.id, srcBlock.id]);
 
-        idxSrcBlockColumn > -1 ? 
-        (contentOrder[idxSrcBlock] as string[]).splice(idxSrcBlockColumn, 1) :
-        contentOrder.splice(idxSrcBlock, 1)
+        (idxSrcBlockColumn > -1 &&
+            (contentOrder[idxSrcBlock] as string[]).splice(idxSrcBlockColumn, 1)) ||
+            contentOrder.splice(idxSrcBlock, 1)
     } else {
         const srcBlockCopy = contentOrder[idxSrcBlock]
         contentOrder.splice(idxSrcBlock, 1)
@@ -83,7 +85,6 @@ function moveBlock(card: Card, srcBlock: IContentBlock, dstBlock: IContentBlock,
         await mutator.changeCardContentOrder(card, contentOrder, description)
     })
 }
-
 
 const CardDetailContents = React.memo((props: Props) => {
     const intl = useIntl()
@@ -98,11 +99,14 @@ const CardDetailContents = React.memo((props: Props) => {
                 {cardTree.contents.map((block) => {
                     if (Array.isArray(block)) {
                         return (
-                            <div key={block[0].id + block[1].id} style={{display: 'flex'}}>
-                                {block.map(block => (
+                            <div
+                                key={block[0].id + block[1].id}
+                                style={{display: 'flex'}}
+                            >
+                                {block.map((b) => (
                                     <ContentBlock
-                                        key={block.id}
-                                        block={block}
+                                        key={b.id}
+                                        block={b}
                                         card={card}
                                         readonly={props.readonly}
                                         onDrop={(src, dst, isParallel) => moveBlock(card, src, dst, intl, isParallel)}

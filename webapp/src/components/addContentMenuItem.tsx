@@ -22,15 +22,16 @@ type Props = {
 const AddContentMenuItem = React.memo((props:Props): JSX.Element => {
     const {card, block, type} = props
     let index = card.contentOrder.indexOf(block.id)
-    let contentOrder = card.contentOrder.slice()
+    const contentOrder = card.contentOrder.slice()
     if (index === -1) {
         contentOrder.find((item, idx) => {
             if (Array.isArray(item) && item.includes(block.id)) {
                 index = idx
-                return
+                return true
             }
-        })    
-    }   
+            return false
+        })
+    }
     const intl = useIntl()
 
     const handler = contentRegistry.getHandler(type)
