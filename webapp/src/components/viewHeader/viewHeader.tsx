@@ -1,9 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect} from 'react'
 import {FormattedMessage} from 'react-intl'
-
-import {Utils} from '../../utils'
 
 import ViewMenu from '../../components/viewMenu'
 import mutator from '../../mutator'
@@ -39,9 +37,10 @@ type Props = {
 
 const ViewHeader = React.memo((props: Props) => {
     const [showFilter, setShowFilter] = useState(false)
+
     const {boardTree, showView} = props
     const {board, activeView} = boardTree
-    const button = useRef<HTMLButtonElement>(null)
+
     const withGroupBy = activeView.viewType === 'board' || activeView.viewType === 'table'
 
     const [viewTitle, setViewTitle] = useState(activeView.title)
@@ -51,13 +50,6 @@ const ViewHeader = React.memo((props: Props) => {
     }, [activeView.title])
 
     const hasFilter = activeView.filter && activeView.filter.filters?.length > 0
-    const onCloseFilter = () => {
-        document.body.addEventListener('click', (event: Event) => {
-            if (showFilter && String(event.target) !== '[object HTMLButtonElement]') {
-                setShowFilter(false)
-            }
-        })
-    }
 
     return (
         <div className='ViewHeader'>
@@ -106,10 +98,11 @@ const ViewHeader = React.memo((props: Props) => {
                     />}
 
                 {/* Filter */}
+
                 <ModalWrapper>
                     <Button
                         active={hasFilter}
-                        onClick={() => setShowFilter((prevShowFilter : boolean) => !prevShowFilter)}
+                        onClick={() => setShowFilter(true)}
                     >
                         <FormattedMessage
                             id='ViewHeader.filter'
@@ -119,7 +112,7 @@ const ViewHeader = React.memo((props: Props) => {
                     {showFilter &&
                     <FilterComponent
                         boardTree={boardTree}
-                        onClose={() => onCloseFilter()}
+                        onClose={() => setShowFilter(false)}
                     />}
                 </ModalWrapper>
 
