@@ -1,7 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import {FormattedMessage} from 'react-intl'
+
+import {Utils} from '../../utils'
 
 import ViewMenu from '../../components/viewMenu'
 import mutator from '../../mutator'
@@ -39,7 +41,9 @@ const ViewHeader = React.memo((props: Props) => {
     const [showFilter, setShowFilter] = useState(false)
     const {boardTree, showView} = props
     const {board, activeView} = boardTree
+    const button = useRef<HTMLButtonElement>(null)
     const withGroupBy = activeView.viewType === 'board' || activeView.viewType === 'table'
+
     const [viewTitle, setViewTitle] = useState(activeView.title)
 
     useEffect(() => {
