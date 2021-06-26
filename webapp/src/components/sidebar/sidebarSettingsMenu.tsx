@@ -86,12 +86,12 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
             displayName: 'Pусский',
         },
         {
-            code: 'zh-cn',
+            code: 'zh-tw',
             name: 'chinese',
             displayName: '中文 (繁體)',
         },
         {
-            code: 'zh-tx',
+            code: 'zh-cn',
             name: 'simplified-chinese',
             displayName: '中文 (简体)',
         },
