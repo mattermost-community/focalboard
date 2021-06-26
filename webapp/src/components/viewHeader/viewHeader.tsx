@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import ViewMenu from '../../components/viewMenu'
@@ -37,7 +37,7 @@ type Props = {
 
 const ViewHeader = React.memo((props: Props) => {
     const [showFilter, setShowFilter] = useState(false)
-
+    const buttonRef = useRef<HTMLButtonElement>(null)
     const {boardTree, showView} = props
     const {board, activeView} = boardTree
 
@@ -51,6 +51,15 @@ const ViewHeader = React.memo((props: Props) => {
 
     const hasFilter = activeView.filter && activeView.filter.filters?.length > 0
 
+    const onCloseFilter = () => {
+        const myCall = (event: Event) => {
+            if (showFilter && !buttonRef.current?.contains(event.target as Node)) {
+                setShowFilter(false)
+            }
+        }
+        document.addEventListener('click', myCall)
+        return () => document.removeEventListener('click', myCall)
+    }
     return (
         <div className='ViewHeader'>
             <Editable
@@ -101,8 +110,9 @@ const ViewHeader = React.memo((props: Props) => {
 
                 <ModalWrapper>
                     <Button
+                        ref={buttonRef}
                         active={hasFilter}
-                        onClick={() => setShowFilter(true)}
+                        onClick={() => setShowFilter((preShowFilter : boolean) => !preShowFilter)}
                     >
                         <FormattedMessage
                             id='ViewHeader.filter'
@@ -112,7 +122,7 @@ const ViewHeader = React.memo((props: Props) => {
                     {showFilter &&
                     <FilterComponent
                         boardTree={boardTree}
-                        onClose={() => setShowFilter(false)}
+                        onClose={() => onCloseFilter()}
                     />}
                 </ModalWrapper>
 
