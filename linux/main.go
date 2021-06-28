@@ -33,7 +33,7 @@ func getFreePort() (int, error) {
 func runServer(port int) (*server.Server, error) {
 	logger := mlog.NewLogger()
 
-	server, err := server.New(&config.Configuration{
+	config := &config.Configuration{
 		ServerRoot:              fmt.Sprintf("http://localhost:%d", port),
 		Port:                    port,
 		DBType:                  "sqlite3",
@@ -51,7 +51,15 @@ func runServer(port int) (*server.Server, error) {
 		EnableLocalMode:         false,
 		LocalModeSocketLocation: "",
 		AuthMode:                "native",
-	}, sessionToken, logger)
+	}
+
+	db, err := server.NewStore(config, logger)
+	if err != nil {
+		fmt.Println("ERROR INITIALIZING THE SERVER STORE", err)
+		return nil, err
+	}
+
+	server, err := server.New(config, sessionToken, db, logger)
 	if err != nil {
 		fmt.Println("ERROR INITIALIZING THE SERVER", err)
 		return nil, err

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"database/sql"
 	"fmt"
 	"net"
 	"net/http"
@@ -67,22 +68,7 @@ type Server struct {
 	api             *api.API
 }
 
-func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger) (*Server, error) {
-	var db store.Store
-	db, err := sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger)
-	if err != nil {
-		logger.Error("Unable to start the database", mlog.Err(err))
-		return nil, err
-	}
-	if cfg.AuthMode == MattermostAuthMod {
-		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, cfg.DBConfigString, db)
-		if err2 != nil {
-			logger.Error("Unable to start the database", mlog.Err(err2))
-			return nil, err2
-		}
-		db = layeredStore
-	}
-
+func New(cfg *config.Configuration, singleUserToken string, db store.Store, logger *mlog.Logger) (*Server, error) {
 	authenticator := auth.New(cfg, db)
 
 	wsServer := ws.NewServer(authenticator, singleUserToken, cfg.AuthMode == MattermostAuthMod, logger)
@@ -142,7 +128,7 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 	focalboardAPI.RegisterAdminRoutes(localRouter)
 
 	// Init workspace
-	if _, err = app.GetRootWorkspace(); err != nil {
+	if _, err := app.GetRootWorkspace(); err != nil {
 		logger.Error("Unable to get root workspace", mlog.Err(err))
 		return nil, err
 	}
@@ -191,6 +177,34 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 	server.initHandlers()
 
 	return &server, nil
+}
+
+func NewStore(config *config.Configuration, logger *mlog.Logger) (store.Store, error) {
+	sqlDB, err := sql.Open(config.DBType, config.DBConfigString)
+	if err != nil {
+		logger.Error("connectDatabase failed", mlog.Err(err))
+		return nil, err
+	}
+
+	err = sqlDB.Ping()
+	if err != nil {
+		logger.Error(`Database Ping failed`, mlog.Err(err))
+		return nil, err
+	}
+
+	var db store.Store
+	db, err = sqlstore.New(config.DBType, config.DBConfigString, config.DBTablePrefix, logger, sqlDB)
+	if err != nil {
+		return nil, err
+	}
+	if config.AuthMode == MattermostAuthMod {
+		layeredStore, err2 := mattermostauthlayer.New(config.DBType, db.(*sqlstore.SQLStore).DBHandle(), db)
+		if err2 != nil {
+			return nil, err2
+		}
+		db = layeredStore
+	}
+	return db, nil
 }
 
 func (s *Server) Start() error {

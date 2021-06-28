@@ -9,7 +9,11 @@ import (
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/mlog"
+	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
+	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 
+	pluginapi "github.com/mattermost/mattermost-plugin-api"
 	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/plugin"
 )
@@ -83,7 +87,13 @@ func (p *Plugin) OnActivate() error {
 
 	logger := mlog.NewLogger()
 
-	server, err := server.New(&config.Configuration{
+	client := pluginapi.NewClient(p.API, p.Driver)
+	sqlDB, err := client.Store.GetMasterDB()
+	if err != nil {
+		return fmt.Errorf("error initializing the DB: %v", err)
+	}
+
+	cfg := &config.Configuration{
 		ServerRoot:              *mmconfig.ServiceSettings.SiteURL + "/plugins/focalboard",
 		Port:                    -1,
 		DBType:                  *mmconfig.SqlSettings.DriverName,
@@ -103,7 +113,21 @@ func (p *Plugin) OnActivate() error {
 		EnableLocalMode:         false,
 		LocalModeSocketLocation: "",
 		AuthMode:                "mattermost",
-	}, "", logger)
+	}
+	var db store.Store
+	db, err = sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger, sqlDB)
+	if err != nil {
+		return fmt.Errorf("error initializing the DB: %v", err)
+	}
+	if cfg.AuthMode == server.MattermostAuthMod {
+		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db)
+		if err2 != nil {
+			return fmt.Errorf("error initializing the DB: %v", err2)
+		}
+		db = layeredStore
+	}
+
+	server, err := server.New(cfg, "", db, logger)
 	if err != nil {
 		fmt.Println("ERROR INITIALIZING THE SERVER", err)
 		return err
