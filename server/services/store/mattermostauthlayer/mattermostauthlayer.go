@@ -42,14 +42,24 @@ func New(dbType, connectionString string, store store.Store) (*MattermostAuthLay
 	}
 	maxDBIdleConns, err := strconv.Atoi(os.Getenv("FOCALBOARD_DB_MAX_IDLE_CONNS"))
 	if err != nil {
-		maxDBIdleConns = 0
+		maxDBIdleConns = 20
 	}
 	maxDBOpenConns, err := strconv.Atoi(os.Getenv("FOCALBOARD_DB_MAX_OPEN_CONNS"))
 	if err != nil {
-		maxDBIdleConns = 0
+		maxDBOpenConns = 300
+	}
+	maxDBIdleTime, err := strconv.Atoi(os.Getenv("FOCALBOARD_DB_MAX_IDLE_TIME"))
+	if err != nil {
+		maxDBIdleTime = 300
+	}
+	maxDBLifetime, err := strconv.Atoi(os.Getenv("FOCALBOARD_DB_MAX_LIFETIME"))
+	if err != nil {
+		maxDBLifetime = 3600
 	}
 	db.SetMaxIdleConns(maxDBIdleConns)
 	db.SetMaxOpenConns(maxDBOpenConns)
+	db.SetConnMaxIdleTime(time.Duration(maxDBIdleTime) * time.Second)
+	db.SetConnMaxLifetime(time.Duration(maxDBLifetime) * time.Second)
 
 	err = db.Ping()
 	if err != nil {
