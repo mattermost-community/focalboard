@@ -59,7 +59,7 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
         <div className='rowContents'>
             <div
                 className={className}
-                style={{opacity: isDragging ? 0.5 : 1, marginLeft: -10}}
+                style={{opacity: isDragging ? 0.5 : 1}}
                 ref={itemRef}
             >
                 <div className='octo-block-margin'>
