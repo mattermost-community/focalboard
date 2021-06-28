@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"log"
+	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -38,6 +40,16 @@ func New(dbType, connectionString string, store store.Store) (*MattermostAuthLay
 
 		return nil, err
 	}
+	maxDBIdleConns, err := strconv.Atoi(os.Getenv("FOCALBOARD_DB_MAX_IDLE_CONNS"))
+	if err != nil {
+		maxDBIdleConns = 0
+	}
+	maxDBOpenConns, err := strconv.Atoi(os.Getenv("FOCALBOARD_DB_MAX_OPEN_CONNS"))
+	if err != nil {
+		maxDBIdleConns = 0
+	}
+	db.SetMaxIdleConns(maxDBIdleConns)
+	db.SetMaxOpenConns(maxDBOpenConns)
 
 	err = db.Ping()
 	if err != nil {

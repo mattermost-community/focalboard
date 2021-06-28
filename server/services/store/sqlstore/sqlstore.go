@@ -2,6 +2,8 @@ package sqlstore
 
 import (
 	"database/sql"
+	"os"
+	"strconv"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/services/mlog"
@@ -33,6 +35,16 @@ func New(dbType, connectionString string, tablePrefix string, logger *mlog.Logge
 
 		return nil, err
 	}
+	maxDBIdleConns, err := strconv.Atoi(os.Getenv("FOCALBOARD_DB_MAX_IDLE_CONNS"))
+	if err != nil {
+		maxDBIdleConns = 0
+	}
+	maxDBOpenConns, err := strconv.Atoi(os.Getenv("FOCALBOARD_DB_MAX_OPEN_CONNS"))
+	if err != nil {
+		maxDBIdleConns = 0
+	}
+	db.SetMaxIdleConns(maxDBIdleConns)
+	db.SetMaxOpenConns(maxDBOpenConns)
 
 	err = db.Ping()
 	if err != nil {
