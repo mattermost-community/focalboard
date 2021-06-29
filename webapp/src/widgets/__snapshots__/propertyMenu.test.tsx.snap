@@ -241,21 +241,6 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   <div
                     class="menu-name"
                   >
-                    Updated Time
-                  </div>
-                  <div
-                    class="noicon"
-                  />
-                </div>
-                <div
-                  class="MenuOption TextOption menu-option"
-                >
-                  <div
-                    class="noicon"
-                  />
-                  <div
-                    class="menu-name"
-                  >
                     Created By
                   </div>
                   <div
@@ -271,7 +256,22 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   <div
                     class="menu-name"
                   >
-                    Updated By
+                    Last Updated Time
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="MenuOption TextOption menu-option"
+                >
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Last Updated By
                   </div>
                   <div
                     class="noicon"

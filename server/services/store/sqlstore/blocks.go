@@ -358,6 +358,7 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 		)
 
 	if existingBlock != nil {
+		block.ModifiedBy = userID
 		// block with ID exists, so this is an update operation
 		query := s.getQueryBuilder().Update(s.tablePrefix + "blocks").
 			Where(sq.Eq{"id": block.ID}).
@@ -384,6 +385,7 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 		}
 	} else {
 		block.CreatedBy = userID
+		block.ModifiedBy = userID
 		query := insertQuery.Values(
 			c.WorkspaceID,
 			block.ID,
