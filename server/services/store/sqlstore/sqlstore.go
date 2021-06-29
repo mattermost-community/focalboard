@@ -2,6 +2,9 @@ package sqlstore
 
 import (
 	"database/sql"
+	"os"
+	"strconv"
+	"time"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/services/mlog"
@@ -33,6 +36,26 @@ func New(dbType, connectionString string, tablePrefix string, logger *mlog.Logge
 
 		return nil, err
 	}
+	maxDBIdleConns, err := strconv.Atoi(os.Getenv("FOCALBOARD_DB_MAX_IDLE_CONNS"))
+	if err != nil {
+		maxDBIdleConns = 20
+	}
+	maxDBOpenConns, err := strconv.Atoi(os.Getenv("FOCALBOARD_DB_MAX_OPEN_CONNS"))
+	if err != nil {
+		maxDBOpenConns = 300
+	}
+	maxDBIdleTime, err := strconv.Atoi(os.Getenv("FOCALBOARD_DB_MAX_IDLE_TIME"))
+	if err != nil {
+		maxDBIdleTime = 300
+	}
+	maxDBLifetime, err := strconv.Atoi(os.Getenv("FOCALBOARD_DB_MAX_LIFETIME"))
+	if err != nil {
+		maxDBLifetime = 3600
+	}
+	db.SetMaxIdleConns(maxDBIdleConns)
+	db.SetMaxOpenConns(maxDBOpenConns)
+	db.SetConnMaxIdleTime(time.Duration(maxDBIdleTime) * time.Second)
+	db.SetConnMaxLifetime(time.Duration(maxDBLifetime) * time.Second)
 
 	err = db.Ping()
 	if err != nil {
