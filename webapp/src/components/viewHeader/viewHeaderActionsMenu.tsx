@@ -1,16 +1,18 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
+import {useSelector} from 'react-redux'
 import {useIntl, IntlShape} from 'react-intl'
 
 import {CsvExporter} from '../../csvExporter'
 import {Archiver} from '../../archiver'
-import {UserContext} from '../../user'
+import {IUser} from '../../user'
 import {BoardTree} from '../../viewModel/boardTree'
 import IconButton from '../../widgets/buttons/iconButton'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
+import {getCurrentUser} from '../../store/currentUser'
 
 import ModalWrapper from '../modalWrapper'
 import ShareBoardComponent from '../shareBoardComponent'
@@ -93,6 +95,7 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
     const [showShareDialog, setShowShareDialog] = useState(false)
 
     const {boardTree} = props
+    const user = useSelector<IUser|null>(getCurrentUser)
     const intl = useIntl()
 
     return (
@@ -110,15 +113,13 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
                         name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
                         onClick={() => Archiver.exportBoardArchive(boardTree)}
                     />
-                    <UserContext.Consumer>
-                        {(user) => (user && user.id !== 'single-user' &&
-                            <Menu.Text
-                                id='shareBoard'
-                                name={intl.formatMessage({id: 'ViewHeader.share-board', defaultMessage: 'Share board'})}
-                                onClick={() => setShowShareDialog(true)}
-                            />
-                        )}
-                    </UserContext.Consumer>
+                    {user && (user as IUser).id !== 'single-user' &&
+                        <Menu.Text
+                            id='shareBoard'
+                            name={intl.formatMessage({id: 'ViewHeader.share-board', defaultMessage: 'Share board'})}
+                            onClick={() => setShowShareDialog(true)}
+                        />
+                    }
 
                     {/*
 

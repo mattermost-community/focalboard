@@ -3,8 +3,6 @@
 
 import React from 'react'
 
-const UserContext = React.createContext(undefined as IUser|undefined)
-
 const WorkspaceUsersContext = React.createContext({
     users: new Array<IUser>(),
     usersById: new Map<string, IUser>(),
@@ -24,4 +22,4 @@ type WorkspaceUsersContextData = {
     usersById: Map<string, IUser>
 }
 
-export {IUser, UserContext, WorkspaceUsersContext, WorkspaceUsersContextData}
+export {IUser, WorkspaceUsersContext, WorkspaceUsersContextData}

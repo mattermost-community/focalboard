@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useEffect} from 'react'
+import {useSelector} from 'react-redux'
 import {
     BrowserRouter as Router,
     Redirect,
@@ -10,7 +11,6 @@ import {
 
 import {FlashMessages} from './components/flashMessages'
 import {getCurrentLanguage, storeLanguage} from './i18n'
-import {default as client} from './octoClient'
 import BoardPage from './pages/boardPage'
 import ChangePasswordPage from './pages/changePasswordPage'
 import ErrorPage from './pages/errorPage'
@@ -20,6 +20,8 @@ import {IUser} from './user'
 import {Utils} from './utils'
 import CombinedProviders from './combinedProviders'
 import {importNativeAppSettings} from './nativeApp'
+import store from './store'
+import {fetchCurrentUser, getCurrentUser} from './store/currentUser'
 
 const App = React.memo((): JSX.Element => {
     importNativeAppSettings()
@@ -29,8 +31,8 @@ const App = React.memo((): JSX.Element => {
     const [initialLoad, setInitialLoad] = useState(false)
 
     useEffect(() => {
-        client.getMe().then((loadedUser?: IUser) => {
-            setUser(loadedUser)
+        store.dispatch(fetchCurrentUser()).then((result: any) => {
+            setUser(result.payload)
             setInitialLoad(true)
         })
     }, [])
@@ -43,7 +45,6 @@ const App = React.memo((): JSX.Element => {
     return (
         <CombinedProviders
             language={language}
-            user={user}
             setLanguage={setAndStoreLanguage}
         >
             <FlashMessages milliseconds={2000}/>
