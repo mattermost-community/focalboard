@@ -195,7 +195,7 @@ describe('components/table/Table extended', () => {
         expect(container).toMatchSnapshot()
     })
 
-    test('should match snapshot with UpdatedBy', async () => {
+    test('should match snapshot with UpdatedAt', async () => {
         const board = TestBlockFactory.createBoard()
 
         const dateUpdatedId = Utils.createGuid()
@@ -215,12 +215,12 @@ describe('components/table/Table extended', () => {
         const card2Comment = TestBlockFactory.createCard(board)
         card2Comment.parentId = card2.id
         card2Comment.type = 'comment'
-        card2Comment.updateAt = Date.parse('21 Jun 2021 12:23:00')
+        card2Comment.updateAt = Date.parse('21 Jun 2021 15:23:00')
 
         const card2Text = TestBlockFactory.createCard(board)
         card2Text.parentId = card2.id
         card2Text.type = 'text'
-        card2Text.updateAt = Date.parse('22 Jun 2021 12:23:00')
+        card2Text.updateAt = Date.parse('22 Jun 2021 11:23:00')
 
         const view = TestBlockFactory.createBoardView(board)
         view.viewType = 'table'

@@ -15,6 +15,8 @@ import {TestBlockFactory} from '../../test/testBlockFactory'
 import {FetchMock} from '../../test/fetchMock'
 import {MutableBoardTree} from '../../viewModel/boardTree'
 
+import {CardTree, MutableCardTree} from '../../viewModel/cardTree'
+
 import TableRow from './tableRow'
 
 global.fetch = FetchMock.fn
@@ -50,9 +52,16 @@ describe('components/table/TableRow', () => {
         const boardTree = await MutableBoardTree.sync(board.id, view.id)
         expect(boardTree).toBeDefined()
         expect(FetchMock.fn).toBeCalledTimes(2)
+
+        // const cardTrees:{ [key: string]: CardTree | undefined } = {}
+        // cardTrees[card.id] = new MutableCardTree(card)
+
+        const cardTree = new MutableCardTree(card)
+
         const component = wrapProviders(
             <TableRow
                 boardTree={boardTree!}
+                cardTree={cardTree}
                 card={card}
                 isSelected={false}
                 focusOnMount={false}
@@ -78,9 +87,13 @@ describe('components/table/TableRow', () => {
         const boardTree = await MutableBoardTree.sync(board.id, view.id)
         expect(boardTree).toBeDefined()
         expect(FetchMock.fn).toBeCalledTimes(2)
+
+        const cardTree = new MutableCardTree(card)
+
         const component = wrapProviders(
             <TableRow
                 boardTree={boardTree!}
+                cardTree={cardTree}
                 card={card}
                 isSelected={false}
                 focusOnMount={false}
@@ -106,9 +119,13 @@ describe('components/table/TableRow', () => {
         const boardTree = await MutableBoardTree.sync(board.id, view.id)
         expect(boardTree).toBeDefined()
         expect(FetchMock.fn).toBeCalledTimes(2)
+
+        const cardTree = new MutableCardTree(card)
+
         const component = wrapProviders(
             <TableRow
                 boardTree={boardTree!}
+                cardTree={cardTree}
                 card={card}
                 isSelected={true}
                 focusOnMount={false}
@@ -137,9 +154,12 @@ describe('components/table/TableRow', () => {
         const boardTree = await MutableBoardTree.sync(board.id, view.id)
         expect(boardTree).toBeDefined()
         expect(FetchMock.fn).toBeCalledTimes(2)
+        const cardTree = new MutableCardTree(card)
+
         const component = wrapProviders(
             <TableRow
                 boardTree={boardTree!}
+                cardTree={cardTree}
                 card={card}
                 isSelected={false}
                 focusOnMount={false}
@@ -167,9 +187,11 @@ describe('components/table/TableRow', () => {
         const boardTree = await MutableBoardTree.sync(board.id, view.id)
         expect(boardTree).toBeDefined()
         expect(FetchMock.fn).toBeCalledTimes(2)
+        const cardTree = new MutableCardTree(card)
         const component = wrapProviders(
             <TableRow
                 boardTree={boardTree!}
+                cardTree={cardTree}
                 card={card}
                 isSelected={false}
                 focusOnMount={false}
@@ -196,9 +218,11 @@ describe('components/table/TableRow', () => {
         const boardTree = await MutableBoardTree.sync(board.id, view.id)
         expect(boardTree).toBeDefined()
         expect(FetchMock.fn).toBeCalledTimes(2)
+        const cardTree = new MutableCardTree(card)
         const component = wrapProviders(
             <TableRow
                 boardTree={boardTree!}
+                cardTree={cardTree}
                 card={card}
                 isSelected={false}
                 focusOnMount={false}

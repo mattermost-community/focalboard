@@ -4,7 +4,7 @@
 import React from 'react'
 import {render} from '@testing-library/react'
 
-import {CardTreeContext, MutableCardTree} from '../../../viewModel/cardTree'
+import {CardTree, CardTreeContext, MutableCardTree} from '../../../viewModel/cardTree'
 
 import {MutableCard} from '../../../blocks/card'
 
@@ -35,11 +35,14 @@ describe('componnets/properties/lastModifiedAt', () => {
         block.updateAt = Date.parse('15 Jun 2021 16:22:00')
         boardTree.rawBlocks.push(block)
 
+        const cardTrees:{ [key: string]: CardTree | undefined } = {}
+        cardTrees[card.id] = new MutableCardTree(card)
+
         const component = (
             <CardTreeContext.Provider value={cardTree}>
                 <LastModifiedAt
                     card={card}
-                    boardTree={boardTree}
+                    cardTree={cardTree}
                 />
             </CardTreeContext.Provider>
         )
