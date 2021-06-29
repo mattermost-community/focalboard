@@ -13,10 +13,12 @@ import {useSortable} from '../../hooks/sortable'
 
 import PropertyValueElement from '../propertyValueElement'
 import './tableRow.scss'
+import {CardTree} from '../../viewModel/cardTree'
 
 type Props = {
     boardTree: BoardTree
     card: Card
+    cardTree: CardTree | undefined
     isSelected: boolean
     focusOnMount: boolean
     onSaveWithEnter: () => void
@@ -131,6 +133,7 @@ const TableRow = React.memo((props: Props) => {
                             <PropertyValueElement
                                 readOnly={props.readonly}
                                 card={card}
+                                cardTree={props.cardTree}
                                 boardTree={boardTree}
                                 propertyTemplate={template}
                                 emptyDisplayValue=''

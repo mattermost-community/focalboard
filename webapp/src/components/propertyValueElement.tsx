@@ -18,6 +18,8 @@ import Label from '../widgets/label'
 import EditableDayPicker from '../widgets/editableDayPicker'
 import Switch from '../widgets/switch'
 
+import {CardTree} from '../viewModel/cardTree'
+
 import UserProperty from './properties/user/user'
 import MultiSelectProperty from './properties/multiSelect'
 import URLProperty from './properties/link/link'
@@ -27,6 +29,7 @@ import CreatedAt from './properties/createdAt/createdAt'
 
 type Props = {
     boardTree?: BoardTree
+    cardTree: CardTree | undefined
     readOnly: boolean
     card: Card
     propertyTemplate: IPropertyTemplate
@@ -36,7 +39,7 @@ type Props = {
 const PropertyValueElement = (props:Props): JSX.Element => {
     const [value, setValue] = useState(props.card.properties[props.propertyTemplate.id])
 
-    const {card, propertyTemplate, readOnly, emptyDisplayValue, boardTree} = props
+    const {card, propertyTemplate, readOnly, emptyDisplayValue, boardTree, cardTree} = props
     const intl = useIntl()
     const propertyValue = card.properties[propertyTemplate.id]
     const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate, intl)
@@ -202,7 +205,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         return (
             <LastModifiedAt
                 card={card}
-                boardTree={boardTree}
+                cardTree={cardTree}
             />
         )
     }

@@ -4,17 +4,17 @@
 import React from 'react'
 
 import {Card} from '../../../blocks/card'
-import {BoardTree} from '../../../viewModel/boardTree'
+import {CardTree} from '../../../viewModel/cardTree'
 
 const moment = require('moment')
 
 type Props = {
     card: Card,
-    boardTree?: BoardTree,
+    cardTree: CardTree | undefined
 }
 
 const LastModifiedAt = (props: Props): JSX.Element => {
-    let latestBlock = props.boardTree?.allBlocks.filter((block) => block.parentId === props.card.id || block.id === props.card.id).sort((a, b) => b.updateAt - a.updateAt)[0]
+    let latestBlock = props.cardTree ? props.cardTree.allBlocks.filter((block) => block.parentId === props.card.id || block.id === props.card.id).sort((a, b) => b.updateAt - a.updateAt)[0] : props.cardTree
     latestBlock = latestBlock || props.card
 
     return (

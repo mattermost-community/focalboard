@@ -31,8 +31,8 @@ function typeDisplayName(intl: IntlShape, type: PropertyType): string {
     case 'phone': return intl.formatMessage({id: 'PropertyType.Phone', defaultMessage: 'Phone'})
     case 'createdTime': return intl.formatMessage({id: 'PropertyType.CreatedTime', defaultMessage: 'Created Time'})
     case 'createdBy': return intl.formatMessage({id: 'PropertyType.CreatedBy', defaultMessage: 'Created By'})
-    case 'updatedTime': return intl.formatMessage({id: 'PropertyType.UpdatedTime', defaultMessage: 'Updated Time'})
-    case 'updatedBy': return intl.formatMessage({id: 'PropertyType.UpdatedBy', defaultMessage: 'Updated By'})
+    case 'updatedTime': return intl.formatMessage({id: 'PropertyType.UpdatedTime', defaultMessage: 'Last Updated Time'})
+    case 'updatedBy': return intl.formatMessage({id: 'PropertyType.UpdatedBy', defaultMessage: 'Last Updated By'})
     case 'date': return intl.formatMessage({id: 'PropertyType.Date', defaultMessage: 'Date'})
     default: {
         Utils.assertFailure(`typeDisplayName, unhandled type: ${type}`)
@@ -73,8 +73,8 @@ const PropertyMenu = React.memo((props: Props) => {
         {type: 'person'},
         {type: 'checkbox'},
         {type: 'createdTime'},
-        {type: 'updatedTime'},
         {type: 'createdBy'},
+        {type: 'updatedTime'},
         {type: 'updatedBy'},
     ]
 
