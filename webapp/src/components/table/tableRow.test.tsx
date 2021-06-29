@@ -15,7 +15,7 @@ import {TestBlockFactory} from '../../test/testBlockFactory'
 import {FetchMock} from '../../test/fetchMock'
 import {MutableBoardTree} from '../../viewModel/boardTree'
 
-import {CardTree, MutableCardTree} from '../../viewModel/cardTree'
+import {MutableCardTree} from '../../viewModel/cardTree'
 
 import TableRow from './tableRow'
 
