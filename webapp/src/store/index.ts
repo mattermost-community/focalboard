@@ -4,10 +4,12 @@
 import {configureStore} from '@reduxjs/toolkit'
 
 import {reducer as currentUserReducer} from './currentUser'
+import {reducer as currentWorkspaceReducer} from './currentWorkspace'
 
 const store = configureStore({
     reducer: {
         currentUser: currentUserReducer,
+        currentWorkspace: currentWorkspaceReducer,
     },
 })
 
