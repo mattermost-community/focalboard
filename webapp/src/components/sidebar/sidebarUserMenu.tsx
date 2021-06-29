@@ -1,7 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
-import {useSelector} from 'react-redux'
 import {useIntl} from 'react-intl'
 import {useHistory} from 'react-router-dom'
 
@@ -13,6 +12,7 @@ import LogoWithNameWhiteIcon from '../../widgets/icons/logoWithNameWhite'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {getCurrentUser} from '../../store/currentUser'
+import {useAppSelector} from '../../store/hooks'
 
 import ModalWrapper from '../modalWrapper'
 
@@ -29,7 +29,7 @@ const SidebarUserMenu = React.memo((props: Props) => {
     const history = useHistory()
     const [showRegistrationLinkDialog, setShowRegistrationLinkDialog] = useState(false)
     const {whiteLogo, showVersionBadge} = props
-    const user = useSelector<IUser|null>(getCurrentUser)
+    const user = useAppSelector<IUser|null>(getCurrentUser)
     const intl = useIntl()
     return (
         <div className='SidebarUserMenu'>
@@ -48,8 +48,8 @@ const SidebarUserMenu = React.memo((props: Props) => {
                         </div>
                     </div>
                     <Menu>
-                        {user && (user as IUser).username !== 'single-user' && <>
-                            <Menu.Label><b>{(user as IUser).username}</b></Menu.Label>
+                        {user && user.username !== 'single-user' && <>
+                            <Menu.Label><b>{user.username}</b></Menu.Label>
                             <Menu.Text
                                 id='logout'
                                 name={intl.formatMessage({id: 'Sidebar.logout', defaultMessage: 'Log out'})}

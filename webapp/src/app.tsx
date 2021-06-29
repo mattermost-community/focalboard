@@ -1,7 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useEffect} from 'react'
-import {useSelector} from 'react-redux'
 import {
     BrowserRouter as Router,
     Redirect,
@@ -20,19 +19,19 @@ import {IUser} from './user'
 import {Utils} from './utils'
 import CombinedProviders from './combinedProviders'
 import {importNativeAppSettings} from './nativeApp'
-import store from './store'
 import {fetchCurrentUser, getCurrentUser} from './store/currentUser'
+import {useAppSelector, useAppDispatch} from './store/hooks'
 
 const App = React.memo((): JSX.Element => {
     importNativeAppSettings()
 
     const [language, setLanguage] = useState(getCurrentLanguage())
-    const [user, setUser] = useState<IUser|undefined>(undefined)
+    const user = useAppSelector<IUser|null>(getCurrentUser)
+    const dispatch = useAppDispatch()
     const [initialLoad, setInitialLoad] = useState(false)
 
     useEffect(() => {
-        store.dispatch(fetchCurrentUser()).then((result: any) => {
-            setUser(result.payload)
+        dispatch(fetchCurrentUser()).then(() => {
             setInitialLoad(true)
         })
     }, [])

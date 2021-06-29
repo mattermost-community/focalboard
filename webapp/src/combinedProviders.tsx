@@ -5,12 +5,10 @@ import {IntlProvider} from 'react-intl'
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
 import {TouchBackend} from 'react-dnd-touch-backend'
-import {Provider as ReduxProvider} from 'react-redux'
 
 import {getMessages} from './i18n'
 import {SetLanguageContext} from './setLanguageContext'
 import {Utils} from './utils'
-import store from './store'
 
 type Props = {
     language: string
@@ -27,9 +25,7 @@ const CombinedProviders = React.memo((props: Props): JSX.Element => {
         >
             <SetLanguageContext.Provider value={setLanguage}>
                 <DndProvider backend={Utils.isMobile() ? TouchBackend : HTML5Backend}>
-                    <ReduxProvider store={store}>
-                        {props.children}
-                    </ReduxProvider>
+                    {props.children}
                 </DndProvider>
             </SetLanguageContext.Provider>
         </IntlProvider>

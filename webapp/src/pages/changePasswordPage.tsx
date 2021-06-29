@@ -1,13 +1,13 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
-import {useSelector} from 'react-redux'
 import {Link} from 'react-router-dom'
 
 import Button from '../widgets/buttons/button'
 import client from '../octoClient'
 import './changePasswordPage.scss'
 import {IUser} from '../user'
+import {useAppSelector} from '../store/hooks'
 import {getCurrentUser} from '../store/currentUser'
 
 const ChangePasswordPage = React.memo(() => {
@@ -15,7 +15,7 @@ const ChangePasswordPage = React.memo(() => {
     const [newPassword, setNewPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const [succeeded, setSucceeded] = useState(false)
-    const user = useSelector<IUser|null>(getCurrentUser)
+    const user = useAppSelector<IUser|null>(getCurrentUser)
 
     if (!user) {
         return (
@@ -44,7 +44,7 @@ const ChangePasswordPage = React.memo(() => {
             <form
                 onSubmit={(e: React.FormEvent) => {
                     e.preventDefault()
-                    handleSubmit((user as IUser).id)
+                    handleSubmit(user.id)
                 }}
             >
                 <div className='oldPassword'>
