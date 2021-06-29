@@ -3,11 +3,6 @@
 
 import React from 'react'
 
-const WorkspaceUsersContext = React.createContext({
-    users: new Array<IUser>(),
-    usersById: new Map<string, IUser>(),
-})
-
 interface IUser {
     id: string,
     username: string,
@@ -17,9 +12,4 @@ interface IUser {
     updateAt: number,
 }
 
-type WorkspaceUsersContextData = {
-    users: Array<IUser>
-    usersById: Map<string, IUser>
-}
-
-export {IUser, WorkspaceUsersContext, WorkspaceUsersContextData}
+export {IUser}

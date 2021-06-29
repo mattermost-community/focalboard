@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
+import {connect} from 'react-redux'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 import {withRouter, RouteComponentProps} from 'react-router-dom'
 import HotKeys from 'react-hot-keys'
@@ -16,11 +17,12 @@ import {Utils} from '../utils'
 import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
 import {MutableWorkspaceTree, WorkspaceTree} from '../viewModel/workspaceTree'
 import './boardPage.scss'
-import {IUser, WorkspaceUsersContext, WorkspaceUsersContextData} from '../user'
+import {fetchCurrentWorkspaceUsers} from '../store/currentWorkspaceUsers'
 
 type Props = RouteComponentProps<{workspaceId?: string}> & {
     readonly?: boolean
     intl: IntlShape
+    fetchCurrentWorkspaceUsers: () => void
 }
 
 type State = {
@@ -32,7 +34,6 @@ type State = {
     syncFailed?: boolean
     websocketClosedTimeOutId?: ReturnType<typeof setTimeout>
     websocketClosed?: boolean
-    workspaceUsers: WorkspaceUsersContextData
 }
 
 class BoardPage extends React.Component<Props, State> {
@@ -61,13 +62,7 @@ class BoardPage extends React.Component<Props, State> {
             boardId,
             viewId,
             workspaceTree: new MutableWorkspaceTree(),
-            workspaceUsers: {
-                users: new Array<IUser>(),
-                usersById: new Map<string, IUser>(),
-            },
         }
-
-        this.setWorkspaceUsers()
         Utils.log(`BoardPage. boardId: ${boardId}`)
     }
 
@@ -98,27 +93,8 @@ class BoardPage extends React.Component<Props, State> {
             }
         }
         if (this.state.workspace?.id !== prevState.workspace?.id) {
-            this.setWorkspaceUsers()
+            this.props.fetchCurrentWorkspaceUsers()
         }
-    }
-
-    async setWorkspaceUsers() {
-        const workspaceUsers = await octoClient.getWorkspaceUsers()
-
-        // storing workspaceUsersById in state to avoid re-computation in each render cycle
-        this.setState({
-            workspaceUsers: {
-                users: workspaceUsers,
-                usersById: this.getIdToWorkspaceUsers(workspaceUsers),
-            },
-        })
-    }
-
-    getIdToWorkspaceUsers(users: Array<IUser>): Map<string, IUser> {
-        return users.reduce((acc: Map<string, IUser>, user: IUser) => {
-            acc.set(user.id, user)
-            return acc
-        }, new Map())
     }
 
     private undoRedoHandler = async (keyName: string, e: KeyboardEvent) => {
@@ -189,44 +165,42 @@ class BoardPage extends React.Component<Props, State> {
         }
 
         return (
-            <WorkspaceUsersContext.Provider value={this.state.workspaceUsers}>
-                <div className='BoardPage'>
-                    <HotKeys
-                        keyName='shift+ctrl+z,shift+cmd+z,ctrl+z,cmd+z'
-                        onKeyDown={this.undoRedoHandler}
-                    />
-                    {(this.state.websocketClosed) &&
-                    <div className='banner error'>
-                        <a
-                            href='https://www.focalboard.com/fwlink/websocket-connect-error.html'
-                            target='_blank'
-                            rel='noreferrer'
-                        >
-                            <FormattedMessage
-                                id='Error.websocket-closed'
-                                defaultMessage='Websocket connection closed, connection interrupted. If this persists, check your server or web proxy configuration.'
-                            />
-                        </a>
-                    </div>
-                    }
-
-                    <Workspace
-                        workspace={workspace}
-                        workspaceTree={workspaceTree}
-                        boardTree={this.state.boardTree}
-                        showView={(id, boardId) => {
-                            this.showView(id, boardId)
-                        }}
-                        showBoard={(id) => {
-                            this.showBoard(id)
-                        }}
-                        setSearchText={(text) => {
-                            this.setSearchText(text)
-                        }}
-                        readonly={this.props.readonly || false}
-                    />
+            <div className='BoardPage'>
+                <HotKeys
+                    keyName='shift+ctrl+z,shift+cmd+z,ctrl+z,cmd+z'
+                    onKeyDown={this.undoRedoHandler}
+                />
+                {(this.state.websocketClosed) &&
+                <div className='banner error'>
+                    <a
+                        href='https://www.focalboard.com/fwlink/websocket-connect-error.html'
+                        target='_blank'
+                        rel='noreferrer'
+                    >
+                        <FormattedMessage
+                            id='Error.websocket-closed'
+                            defaultMessage='Websocket connection closed, connection interrupted. If this persists, check your server or web proxy configuration.'
+                        />
+                    </a>
                 </div>
-            </WorkspaceUsersContext.Provider>
+                }
+
+                <Workspace
+                    workspace={workspace}
+                    workspaceTree={workspaceTree}
+                    boardTree={this.state.boardTree}
+                    showView={(id, boardId) => {
+                        this.showView(id, boardId)
+                    }}
+                    showBoard={(id) => {
+                        this.showBoard(id)
+                    }}
+                    setSearchText={(text) => {
+                        this.setSearchText(text)
+                    }}
+                    readonly={this.props.readonly || false}
+                />
+            </div>
         )
     }
 
@@ -412,4 +386,4 @@ class BoardPage extends React.Component<Props, State> {
     }
 }
 
-export default withRouter(injectIntl(BoardPage))
+export default connect(null, {fetchCurrentWorkspaceUsers})(withRouter(injectIntl(BoardPage)))
