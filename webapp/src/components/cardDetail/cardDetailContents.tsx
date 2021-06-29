@@ -72,8 +72,8 @@ function moveBlock(card: Card, srcBlock: IContentBlock, dstBlock: IContentBlock,
             contentOrder.splice(idxDstBlock, 1, [dstBlock.id, srcBlock.id]);
 
         (idxSrcBlockColumn > -1 &&
-            (contentOrder[idxSrcBlock] as string[]).splice(idxSrcBlockColumn, 1)) ||
-            contentOrder.splice(idxSrcBlock, 1)
+            (contentOrder[idxSrcBlock] as string[]).splice((idxSrcBlockColumn > idxDstBlockColumn) ? idxSrcBlockColumn + 1 : idxSrcBlockColumn, 1)) ||
+            contentOrder.splice(idxSrcBlock, 1);
     } else {
         const srcBlockCopy = contentOrder[idxSrcBlock]
         contentOrder.splice(idxSrcBlock, 1)
@@ -109,6 +109,7 @@ const CardDetailContents = React.memo((props: Props) => {
                                         block={b}
                                         card={card}
                                         readonly={props.readonly}
+                                        width={(1/block.length) * 100}
                                         onDrop={(src, dst, isParallel) => moveBlock(card, src, dst, intl, isParallel)}
                                     />
                                 ))}

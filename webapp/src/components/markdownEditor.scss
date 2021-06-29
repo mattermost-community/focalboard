@@ -13,6 +13,7 @@
 
     pre.CodeMirror-line {
         padding: 0;
+        word-break: break-word;
     }
 
     .CodeMirror,
@@ -55,8 +56,5 @@
     .octo-editor-activeEditor {
         overflow: hidden;
         border-radius: 5px;
-        word-break: break-word;
-        flex: 1 1 auto;
-
     }
 }

@@ -29,6 +29,7 @@ type Props = {
     card: Card
     readonly: boolean
     onDrop: (srctBlock: IContentBlock, dstBlock: IContentBlock, isParallel?: boolean) => void
+    width?: number
 }
 
 const ContentBlock = React.memo((props: Props): JSX.Element => {
@@ -56,7 +57,7 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
         className += ' dragover'
     }
     return (
-        <div className='rowContents'>
+        <div className='rowContents' style={{width: props.width + "%"}}>
             <div
                 className={className}
                 style={{opacity: isDragging ? 0.5 : 1}}
