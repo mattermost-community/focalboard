@@ -145,7 +145,6 @@ exports[`components/table/Table should match snapshot 1`] = `
         >
           <div
             class="octo-propertyvalue"
-            data-tooltip="Property 1"
             tabindex="0"
           >
             <span
@@ -161,7 +160,6 @@ exports[`components/table/Table should match snapshot 1`] = `
         >
           <div
             class="octo-propertyvalue"
-            data-tooltip="Property 2"
             tabindex="0"
           >
             <span
@@ -486,8 +484,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
           style="width: 100px;"
         >
           <div
-            class="octo-propertyvalue octo-tooltip tooltip-top"
-            data-tooltip="Property 1"
+            class="octo-propertyvalue"
             tabindex="0"
           >
             <span
@@ -502,8 +499,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
           style="width: 100px;"
         >
           <div
-            class="octo-propertyvalue octo-tooltip tooltip-top"
-            data-tooltip="Property 2"
+            class="octo-propertyvalue"
             tabindex="0"
           >
             <span
