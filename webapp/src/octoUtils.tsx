@@ -40,7 +40,11 @@ class OctoUtils {
         }
         case 'date': {
             if (propertyValue) {
-                displayValue = Utils.displayDate(new Date(parseInt(propertyValue as string, 10)), intl)
+                if (Array.isArray(propertyValue)) {
+                    displayValue = Utils.displayDate(new Date(parseInt(propertyValue[0], 10)), intl) + ' -> ' + Utils.displayDate(new Date(parseInt(propertyValue[1], 10)), intl)
+                } else {
+                    displayValue = Utils.displayDate(new Date(parseInt(propertyValue as string, 10)), intl)
+                }
             }
             break
         }
