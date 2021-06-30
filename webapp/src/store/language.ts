@@ -20,8 +20,8 @@ export const storeLanguage = createAsyncThunk(
     },
 )
 
-const currentUserSlice = createSlice({
-    name: 'currentUser',
+const langaugeSlice = createSlice({
+    name: 'langauge',
     initialState: {value: 'en'} as {value: string},
     reducers: {
         setLanguage: (state, action: PayloadAction<string>) => {
@@ -38,7 +38,7 @@ const currentUserSlice = createSlice({
     },
 })
 
-export const {reducer} = currentUserSlice
+export const {reducer} = langaugeSlice
 
 export function getLanguage(state: RootState): string {
     return state.language.value
