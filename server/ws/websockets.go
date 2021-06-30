@@ -31,8 +31,8 @@ type wsClient struct {
 
 func (c *wsClient) WriteJSON(v interface{}) error {
 	c.lock.Lock()
+	defer c.lock.Unlock()
 	err := c.conn.WriteJSON(v)
-	c.lock.Unlock()
 	return err
 }
 
