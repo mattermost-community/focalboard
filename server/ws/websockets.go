@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"log"
+	"net"
 	"net/http"
 	"sync"
 	"time"
@@ -34,6 +35,14 @@ func (c *wsClient) WriteJSON(v interface{}) error {
 	defer c.lock.Unlock()
 	err := c.conn.WriteJSON(v)
 	return err
+}
+
+func (c *wsClient) RemoteAddr() net.Addr {
+	return c.conn.RemoteAddr()
+}
+
+func (c *wsClient) Close() error {
+	return c.conn.Close()
 }
 
 // Server is a WebSocket server.
@@ -211,7 +220,7 @@ func (ws *Server) authenticateListener(wsSession *websocketSession, workspaceID,
 	// Authenticate session
 	isValidSession := ws.isValidSessionToken(token, workspaceID)
 	if !isValidSession {
-		wsSession.client.conn.Close()
+		wsSession.client.Close()
 		return
 	}
 
@@ -262,7 +271,7 @@ func (ws *Server) addListener(wsSession *websocketSession, command *WebsocketCom
 	workspaceID, err := ws.getAuthenticatedWorkspaceID(wsSession, command)
 	if err != nil {
 		ws.logger.Error("addListener: NOT AUTHENTICATED", mlog.Err(err))
-		ws.sendError(wsSession.client.conn, "not authenticated")
+		ws.sendError(wsSession.client, "not authenticated")
 		return
 	}
 
@@ -300,7 +309,7 @@ func (ws *Server) removeListenerFromBlocks(wsSession *websocketSession, command 
 	workspaceID, err := ws.getAuthenticatedWorkspaceID(wsSession, command)
 	if err != nil {
 		ws.logger.Error("addListener: NOT AUTHENTICATED", mlog.Err(err))
-		ws.sendError(wsSession.client.conn, "not authenticated")
+		ws.sendError(wsSession.client, "not authenticated")
 		return
 	}
 
@@ -327,15 +336,15 @@ func (ws *Server) removeListenerFromBlocks(wsSession *websocketSession, command 
 	ws.mu.Unlock()
 }
 
-func (ws *Server) sendError(conn *websocket.Conn, message string) {
+func (ws *Server) sendError(wsClient *wsClient, message string) {
 	errorMsg := ErrorMsg{
 		Error: message,
 	}
 
-	err := conn.WriteJSON(errorMsg)
+	err := wsClient.WriteJSON(errorMsg)
 	if err != nil {
 		ws.logger.Error("sendError error", mlog.Err(err))
-		conn.Close()
+		wsClient.Close()
 	}
 }
 
@@ -358,12 +367,12 @@ func (ws *Server) SetHub(hub Hub) {
 		}
 
 		for _, listener := range listeners {
-			log.Printf("Broadcast change, workspaceID: %s, blockID: %s, remoteAddr: %s", msg.WorkspaceID, msg.BlockID, listener.conn.RemoteAddr())
+			log.Printf("Broadcast change, workspaceID: %s, blockID: %s, remoteAddr: %s", msg.WorkspaceID, msg.BlockID, listener.RemoteAddr())
 
 			err := listener.WriteJSON(message)
 			if err != nil {
 				log.Printf("broadcast error: %v", err)
-				listener.conn.Close()
+				listener.Close()
 			}
 		}
 	})
@@ -418,13 +427,13 @@ func (ws *Server) BroadcastBlockChange(workspaceID string, block model.Block) {
 			ws.logger.Debug("Broadcast change",
 				mlog.String("workspaceID", workspaceID),
 				mlog.String("blockID", blockID),
-				mlog.Stringer("remoteAddr", listener.conn.RemoteAddr()),
+				mlog.Stringer("remoteAddr", listener.RemoteAddr()),
 			)
 
 			err := listener.WriteJSON(message)
 			if err != nil {
 				ws.logger.Error("broadcast error", mlog.Err(err))
-				listener.conn.Close()
+				listener.Close()
 			}
 		}
 	}
