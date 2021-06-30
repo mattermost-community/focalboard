@@ -15,7 +15,7 @@ type Props = {
 function Switch(props: Props): JSX.Element {
     const switchClassName = props.isOn ? 'Switch on' : 'Switch'
     const tooltipClassName = props.tooltip ? 'octo-tooltip tooltip-top' : ''
-    const className = `${switchClassName} ${tooltipClassName}`
+    const className = `${switchClassName} ${tooltipClassName}`.trim()
     return (
         <div
             className={className}

@@ -131,6 +131,7 @@ exports[`components/table/TableRow should match snapshot, display properties 1`]
     >
       <div
         class="octo-propertyvalue"
+        data-tooltip="Property 1"
         tabindex="0"
       >
         <span
@@ -146,6 +147,7 @@ exports[`components/table/TableRow should match snapshot, display properties 1`]
     >
       <div
         class="octo-propertyvalue"
+        data-tooltip="Property 2"
         tabindex="0"
       >
         <span
@@ -289,6 +291,7 @@ exports[`components/table/TableRow should match snapshot, resizing column 1`] = 
     >
       <div
         class="octo-propertyvalue"
+        data-tooltip="Property 1"
         tabindex="0"
       >
         <span
@@ -304,6 +307,7 @@ exports[`components/table/TableRow should match snapshot, resizing column 1`] = 
     >
       <div
         class="octo-propertyvalue"
+        data-tooltip="Property 2"
         tabindex="0"
       >
         <span

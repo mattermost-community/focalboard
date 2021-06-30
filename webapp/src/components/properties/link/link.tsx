@@ -21,7 +21,7 @@ type Props = {
 const URLProperty = (props: Props): JSX.Element => {
     let link: ReactNode = null
     const tooltipClassName = props.tooltip ? 'octo-tooltip tooltip-top' : ''
-    const linkClassName = `URLProperty property-link url ${tooltipClassName}`
+    const linkClassName = `URLProperty property-link url ${tooltipClassName}`.trim()
     if (props.value?.trim()) {
         link = (
             <a

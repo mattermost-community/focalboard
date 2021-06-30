@@ -19,9 +19,8 @@ type Props = {
 const UserProperty = (props: Props): JSX.Element => {
     const workspaceUsers = useContext<WorkspaceUsersContextData>(WorkspaceUsersContext)
     const tooltipClassName = props.tooltip ? 'octo-tooltip tooltip-top' : ''
-
     if (props.readonly) {
-        const userClassName = `UserProperty octo-propertyvalue ${tooltipClassName}`
+        const userClassName = `UserProperty octo-propertyvalue ${tooltipClassName}`.trim()
         return (
             <div
                 className={userClassName}
