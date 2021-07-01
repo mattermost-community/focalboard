@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"log"
-	"net"
 	"net/http"
 	"sync"
 	"time"
@@ -26,23 +25,15 @@ type Hub interface {
 }
 
 type wsClient struct {
-	conn *websocket.Conn
+	*websocket.Conn
 	lock *sync.RWMutex
 }
 
 func (c *wsClient) WriteJSON(v interface{}) error {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	err := c.conn.WriteJSON(v)
+	err := c.Conn.WriteJSON(v)
 	return err
-}
-
-func (c *wsClient) RemoteAddr() net.Addr {
-	return c.conn.RemoteAddr()
-}
-
-func (c *wsClient) Close() error {
-	return c.conn.Close()
 }
 
 // Server is a WebSocket server.
@@ -119,16 +110,6 @@ func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	// Make sure we close the connection when the function returns
-	defer func() {
-		ws.logger.Debug("DISCONNECT WebSocket onChange", mlog.Stringer("client", client.RemoteAddr()))
-
-		// Remove client from listeners
-		ws.removeListener(client)
-
-		client.Close()
-	}()
-
 	userID := ""
 	if ws.isMattermostAuth {
 		userID = r.Header.Get("Mattermost-User-Id")
@@ -139,16 +120,24 @@ func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request
 		isAuthenticated: userID != "",
 	}
 
+	// Make sure we close the connection when the function returns
+	defer func() {
+		ws.logger.Debug("DISCONNECT WebSocket onChange", mlog.Stringer("client", wsSession.client.RemoteAddr()))
+
+		// Remove client from listeners
+		ws.removeListener(wsSession.client)
+		wsSession.client.Close()
+	}()
+
 	// Simple message handling loop
 	for {
-		_, p, err := client.ReadMessage()
+		_, p, err := wsSession.client.ReadMessage()
 		if err != nil {
 			ws.logger.Error("ERROR WebSocket onChange",
-				mlog.Stringer("client", client.RemoteAddr()),
+				mlog.Stringer("client", wsSession.client.RemoteAddr()),
 				mlog.Err(err),
 			)
-			ws.removeListener(client)
-
+			ws.removeListener(wsSession.client)
 			break
 		}
 
@@ -173,20 +162,20 @@ func (ws *Server) handleWebSocketOnChange(w http.ResponseWriter, r *http.Request
 
 		switch command.Action {
 		case "AUTH":
-			ws.logger.Debug(`Command: AUTH`, mlog.Stringer("client", client.RemoteAddr()))
+			ws.logger.Debug(`Command: AUTH`, mlog.Stringer("client", wsSession.client.RemoteAddr()))
 			ws.authenticateListener(&wsSession, command.WorkspaceID, command.Token)
 		case "ADD":
 			ws.logger.Debug(`Command: ADD`,
 				mlog.String("workspaceID", wsSession.workspaceID),
 				mlog.Array("blockIDs", command.BlockIDs),
-				mlog.Stringer("client", client.RemoteAddr()),
+				mlog.Stringer("client", wsSession.client.RemoteAddr()),
 			)
 			ws.addListener(&wsSession, &command)
 		case "REMOVE":
 			ws.logger.Debug(`Command: REMOVE`,
 				mlog.String("workspaceID", wsSession.workspaceID),
 				mlog.Array("blockIDs", command.BlockIDs),
-				mlog.Stringer("client", client.RemoteAddr()),
+				mlog.Stringer("client", wsSession.client.RemoteAddr()),
 			)
 
 			ws.removeListenerFromBlocks(&wsSession, &command)
@@ -288,13 +277,13 @@ func (ws *Server) addListener(wsSession *websocketSession, command *WebsocketCom
 }
 
 // removeListener removes a webSocket listener from all blocks.
-func (ws *Server) removeListener(client *websocket.Conn) {
+func (ws *Server) removeListener(client *wsClient) {
 	ws.mu.Lock()
 	for key, clients := range ws.listeners {
 		listeners := []*wsClient{}
 
 		for _, existingClient := range clients {
-			if client != existingClient.conn {
+			if client != existingClient {
 				listeners = append(listeners, existingClient)
 			}
 		}
