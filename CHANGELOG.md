@@ -6,6 +6,9 @@ This changelog summarizes updates to our open source project. You can also find 
 
 ## [Work In Progress] - vNext Release - [Date TBD]
 
+* Key Updates:
+    * Changed the urls to use routes instead of query parameters. Thanks @jespino!
+
 ## v0.6.7 Release - May, 2021
 
 * Key Updates:

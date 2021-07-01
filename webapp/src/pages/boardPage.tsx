@@ -39,6 +39,17 @@ class BoardPage extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props)
 
+        // Backward compatible query param urls to regular urls
+        const queryString = new URLSearchParams(window.location.search)
+        if (queryString.get('id')) {
+            const params = {...props.match.params, boardId: queryString.get('id'), viewId: queryString.get('id') || ''}
+            if (queryString.get('v')) {
+                params.viewId = queryString.get('id')
+            }
+            const newPath = generatePath(props.match.path, params)
+            props.history.push(newPath)
+        }
+
         if (!props.match.params.boardId) {
             // Load last viewed boardView
             const boardId = localStorage.getItem('lastBoardId') || ''
