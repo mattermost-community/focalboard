@@ -229,7 +229,7 @@ class BoardPage extends React.Component<Props, State> {
         localStorage.setItem('lastViewId', viewId)
 
         if (boardId) {
-            this.sync(boardId, viewId)
+            this.sync()
         } else {
             const newPath = generatePath(this.props.match.path, {...this.props.match.params, boardId: '', viewId: ''})
             this.props.history.push(newPath)
