@@ -126,13 +126,19 @@ const valueSelectorStyle = {
     multiValueRemove: (): CSSObject => ({
         display: 'none',
     }),
+    menu: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        width: 'unset',
+        background: 'rgb(var(--main-bg))',
+        minWidth: '260px',
+    }),
 }
 
 function ValueSelector(props: Props): JSX.Element {
     return (
         <CreatableSelect
             captureMenuScroll={true}
-            maxMenuHeight={580}
+            maxMenuHeight={1200}
             isMulti={props.isMulti}
             isClearable={true}
             styles={valueSelectorStyle}
