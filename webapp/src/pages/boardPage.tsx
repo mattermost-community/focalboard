@@ -236,7 +236,7 @@ class BoardPage extends React.Component<Props, State> {
         }
     }
 
-    private async sync(boardId?: string, viewId?: string | undefined) {
+    private async sync() {
         Utils.log(`sync start: ${this.props.match.params.boardId}`)
 
         let workspace: IWorkspace | undefined
