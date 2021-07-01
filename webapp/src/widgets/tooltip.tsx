@@ -2,6 +2,8 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
+import './tooltip.scss'
+
 type Props = {
     tooltip: string
     children: any
