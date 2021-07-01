@@ -129,12 +129,12 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                                         onClick={() => mutator.deletePropertyOption(boardTree, boardTree.groupByProperty!, group.option)}
                                     />
                                     <Menu.Separator/>
-                                    {Constants.menuColors.map((color) => (
+                                    {Object.entries(Constants.menuColors).map(([id, color]) => (
                                         <Menu.Color
-                                            key={color.id}
-                                            id={color.id}
+                                            key={id}
+                                            id={id}
                                             name={color.name}
-                                            onClick={() => mutator.changePropertyOptionColor(boardTree.board, boardTree.groupByProperty!, group.option, color.id)}
+                                            onClick={() => mutator.changePropertyOptionColor(boardTree.board, boardTree.groupByProperty!, group.option, id)}
                                         />
                                     ))}
                                 </>}
