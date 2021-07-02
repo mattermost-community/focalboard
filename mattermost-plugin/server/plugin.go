@@ -81,6 +81,11 @@ func (p *Plugin) OnActivate() error {
 	}
 
 	logger := mlog.NewLogger()
+	cfgJSON := defaultLoggingConfig()
+	err := logger.Configure("", cfgJSON)
+	if err != nil {
+		return err
+	}
 
 	server, err := server.New(&config.Configuration{
 		ServerRoot:              *mmconfig.ServiceSettings.SiteURL + "/plugins/focalboard",
@@ -130,4 +135,29 @@ func (p *Plugin) ServeHTTP(c *plugin.Context, w http.ResponseWriter, r *http.Req
 	router.ServeHTTP(w, r)
 }
 
-// See https://developers.mattermost.com/extend/plugins/server/reference/
+func defaultLoggingConfig() string {
+	return `
+	{
+		"def": {
+			"type": "console",
+			"options": {
+				"out": "stdout"
+			},
+			"format": "plain",
+			"format_options": {
+				"delim": " ",
+				"min_level_len": 5,
+				"min_msg_len": 40,
+				"enable_color": true				
+			},
+			"levels": [
+				{"id": 5, "name": "debug"},
+				{"id": 4, "name": "info", "color": 36},
+				{"id": 3, "name": "warn"},
+				{"id": 2, "name": "error", "color": 31},
+				{"id": 1, "name": "fatal", "stacktrace": true},
+				{"id": 0, "name": "panic", "stacktrace": true}
+			]
+		}
+	}`
+}
