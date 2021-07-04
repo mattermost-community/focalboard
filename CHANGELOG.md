@@ -17,6 +17,9 @@ This changelog summarizes updates to our open source project. You can also find 
     * Improved board sorting without leading emoji. Thanks @Johennes!
     * Added Prettier linting for SCSS. Thanks @signalwerk!
     * Improved table headers. Thanks @sbishel!
+    * Disable unused Mac tab menu. Thanks @@haardikdharma10!
+    * Fixed server lint issues. Thanks @harshilsharma63!
+    * Updated open button. Thanks @arjitc!
 
 ## v0.6.5 Release - April 19, 2021
 

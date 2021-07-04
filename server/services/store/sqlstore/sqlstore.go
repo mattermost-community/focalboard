@@ -2,9 +2,9 @@ package sqlstore
 
 import (
 	"database/sql"
-	"log"
 
 	sq "github.com/Masterminds/squirrel"
+	"github.com/mattermost/focalboard/server/services/mlog"
 )
 
 const (
@@ -15,46 +15,35 @@ const (
 
 // SQLStore is a SQL database.
 type SQLStore struct {
-	db          *sql.DB
-	dbType      string
-	tablePrefix string
+	db               *sql.DB
+	dbType           string
+	tablePrefix      string
+	connectionString string
+	logger           *mlog.Logger
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType, connectionString string, tablePrefix string) (*SQLStore, error) {
-	log.Println("connectDatabase", dbType, connectionString)
-	var err error
-
-	db, err := sql.Open(dbType, connectionString)
-	if err != nil {
-		log.Print("connectDatabase: ", err)
-
-		return nil, err
-	}
-
-	err = db.Ping()
-	if err != nil {
-		log.Printf(`Database Ping failed: %v`, err)
-
-		return nil, err
-	}
-
+func New(dbType, connectionString, tablePrefix string, logger *mlog.Logger, db *sql.DB) (*SQLStore, error) {
+	logger.Info("connectDatabase", mlog.String("dbType", dbType), mlog.String("connStr", connectionString))
 	store := &SQLStore{
-		db:          db,
-		dbType:      dbType,
-		tablePrefix: tablePrefix,
+		// TODO: add replica DB support too.
+		db:               db,
+		dbType:           dbType,
+		tablePrefix:      tablePrefix,
+		connectionString: connectionString,
+		logger:           logger,
 	}
 
-	err = store.Migrate()
+	err := store.Migrate()
 	if err != nil {
-		log.Printf(`Table creation / migration failed: %v`, err)
+		logger.Error(`Table creation / migration failed`, mlog.Err(err))
 
 		return nil, err
 	}
 
 	err = store.InitializeTemplates()
 	if err != nil {
-		log.Printf(`InitializeTemplates failed: %v`, err)
+		logger.Error(`InitializeTemplates failed`, mlog.Err(err))
 
 		return nil, err
 	}
@@ -65,6 +54,13 @@ func New(dbType, connectionString string, tablePrefix string) (*SQLStore, error)
 // Shutdown close the connection with the store.
 func (s *SQLStore) Shutdown() error {
 	return s.db.Close()
+}
+
+// DBHandle returns the raw sql.DB handle.
+// It is used by the mattermostauthlayer to run their own
+// raw SQL queries.
+func (s *SQLStore) DBHandle() *sql.DB {
+	return s.db
 }
 
 func (s *SQLStore) getQueryBuilder() sq.StatementBuilderType {

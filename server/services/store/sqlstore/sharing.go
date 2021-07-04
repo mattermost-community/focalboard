@@ -29,9 +29,13 @@ func (s *SQLStore) UpsertSharing(c store.Container, sharing model.Sharing) error
 			now,
 		)
 	if s.dbType == mysqlDBType {
-		query = query.Suffix("ON DUPLICATE KEY UPDATE enabled = ?, token = ?, modified_by = ?, update_at = ?", sharing.Enabled, sharing.Token, sharing.ModifiedBy, now)
+		query = query.Suffix("ON DUPLICATE KEY UPDATE enabled = ?, token = ?, modified_by = ?, update_at = ?",
+			sharing.Enabled, sharing.Token, sharing.ModifiedBy, now)
 	} else {
-		query = query.Suffix("ON CONFLICT (id) DO UPDATE SET enabled = EXCLUDED.enabled, token = EXCLUDED.token, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at")
+		query = query.Suffix(
+			`ON CONFLICT (id) 
+			 DO UPDATE SET enabled = EXCLUDED.enabled, token = EXCLUDED.token, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at`,
+		)
 	}
 
 	_, err := query.Exec()

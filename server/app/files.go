@@ -4,12 +4,13 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
-	"os"
 	"path/filepath"
 	"strings"
 
+	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/utils"
+
+	"github.com/mattermost/mattermost-server/v5/shared/filestore"
 )
 
 func (a *App) SaveFile(reader io.Reader, workspaceID, rootID, filename string) (string, error) {
@@ -30,29 +31,39 @@ func (a *App) SaveFile(reader io.Reader, workspaceID, rootID, filename string) (
 	return createdFilename, nil
 }
 
-func (a *App) GetFilePath(workspaceID, rootID, filename string) string {
-	folderPath := a.config.FilesPath
-	rootPath := filepath.Join(folderPath, workspaceID, rootID)
-
-	filePath := filepath.Join(rootPath, filename)
-
+func (a *App) GetFileReader(workspaceID, rootID, filename string) (filestore.ReadCloseSeeker, error) {
+	filePath := filepath.Join(workspaceID, rootID, filename)
+	exists, err := a.filesBackend.FileExists(filePath)
+	if err != nil {
+		return nil, err
+	}
 	// FIXUP: Check the deprecated old location
-	if workspaceID == "0" && !fileExists(filePath) {
-		oldFilePath := filepath.Join(folderPath, filename)
-		if fileExists(oldFilePath) {
-			err := os.Rename(oldFilePath, filePath)
-			if err != nil {
-				log.Printf("ERROR moving old file from '%s' to '%s'", oldFilePath, filePath)
+	if workspaceID == "0" && !exists {
+		oldExists, err2 := a.filesBackend.FileExists(filename)
+		if err2 != nil {
+			return nil, err2
+		}
+		if oldExists {
+			err2 := a.filesBackend.MoveFile(filename, filePath)
+			if err2 != nil {
+				a.logger.Error("ERROR moving file",
+					mlog.String("old", filename),
+					mlog.String("new", filePath),
+					mlog.Err(err2),
+				)
 			} else {
-				log.Printf("Moved old file from '%s' to '%s'", oldFilePath, filePath)
+				a.logger.Debug("Moved file",
+					mlog.String("old", filename),
+					mlog.String("new", filePath),
+				)
 			}
 		}
 	}
 
-	return filePath
-}
+	reader, err := a.filesBackend.Reader(filePath)
+	if err != nil {
+		return nil, err
+	}
 
-func fileExists(path string) bool {
-	_, err := os.Stat(path)
-	return !os.IsNotExist(err)
+	return reader, nil
 }

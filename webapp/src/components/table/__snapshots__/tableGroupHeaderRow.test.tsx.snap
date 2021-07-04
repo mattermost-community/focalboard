@@ -1,0 +1,364 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should match snapshot on read only 1`] = `
+<div>
+  <div
+    class="octo-group-header-cell expanded"
+    draggable="true"
+    style="opacity: 1;"
+  >
+    <div
+      class="octo-table-cell"
+      style="width: 100px;"
+    >
+      <div
+        class="Button IconButton readonly"
+      >
+        <svg
+          class="DisclosureTriangleIcon Icon"
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <polygon
+            points="37,35 37,65 63,50"
+          />
+        </svg>
+      </div>
+      <span
+        class="Label color1 "
+      >
+        <input
+          class="Editable readonly undefined"
+          placeholder="New Select"
+          readonly=""
+          spellcheck="true"
+          title="value 1"
+          value="value 1"
+        />
+      </span>
+    </div>
+    <button
+      class="Button  "
+      type="button"
+    >
+      0
+    </button>
+  </div>
+</div>
+`;
+
+exports[`should match snapshot with Group 1`] = `
+<div>
+  <div
+    class="octo-group-header-cell expanded"
+    draggable="true"
+    style="opacity: 1;"
+  >
+    <div
+      class="octo-table-cell"
+      style="width: 100px;"
+    >
+      <div
+        class="Button IconButton"
+      >
+        <svg
+          class="DisclosureTriangleIcon Icon"
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <polygon
+            points="37,35 37,65 63,50"
+          />
+        </svg>
+      </div>
+      <span
+        class="Label color1 "
+      >
+        <input
+          class="Editable undefined"
+          placeholder="New Select"
+          spellcheck="true"
+          title="value 1"
+          value="value 1"
+        />
+      </span>
+    </div>
+    <button
+      class="Button  "
+      type="button"
+    >
+      0
+    </button>
+    <div
+      class="MenuWrapper"
+    >
+      <div
+        class="Button IconButton"
+      >
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </div>
+    </div>
+    <div
+      class="Button IconButton"
+    >
+      <i
+        class="CompassIcon icon-plus AddIcon"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`should match snapshot, add new 1`] = `
+<div>
+  <div
+    class="octo-group-header-cell"
+    draggable="true"
+    style="opacity: 1;"
+  >
+    <div
+      class="octo-table-cell"
+      style="width: 100px;"
+    >
+      <div
+        class="Button IconButton"
+      >
+        <svg
+          class="DisclosureTriangleIcon Icon"
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <polygon
+            points="37,35 37,65 63,50"
+          />
+        </svg>
+      </div>
+      <span
+        class="Label color1 "
+      >
+        <input
+          class="Editable undefined"
+          placeholder="New Select"
+          spellcheck="true"
+          title="value 1"
+          value="value 1"
+        />
+      </span>
+    </div>
+    <button
+      class="Button  "
+      type="button"
+    >
+      0
+    </button>
+    <div
+      class="MenuWrapper"
+    >
+      <div
+        class="Button IconButton"
+      >
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </div>
+    </div>
+    <div
+      class="Button IconButton"
+    >
+      <i
+        class="CompassIcon icon-plus AddIcon"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`should match snapshot, edit title 1`] = `
+<div>
+  <div
+    class="octo-group-header-cell"
+    draggable="true"
+    style="opacity: 1;"
+  >
+    <div
+      class="octo-table-cell"
+      style="width: 100px;"
+    >
+      <div
+        class="Button IconButton"
+      >
+        <svg
+          class="DisclosureTriangleIcon Icon"
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <polygon
+            points="37,35 37,65 63,50"
+          />
+        </svg>
+      </div>
+      <span
+        class="Label color1 "
+      >
+        <input
+          class="Editable undefined"
+          placeholder="New Select"
+          spellcheck="true"
+          title="value 1"
+          value="value 1"
+        />
+      </span>
+    </div>
+    <button
+      class="Button  "
+      type="button"
+    >
+      0
+    </button>
+    <div
+      class="MenuWrapper"
+    >
+      <div
+        class="Button IconButton"
+      >
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </div>
+    </div>
+    <div
+      class="Button IconButton"
+    >
+      <i
+        class="CompassIcon icon-plus AddIcon"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`should match snapshot, hide group 1`] = `
+<div>
+  <div
+    class="octo-group-header-cell expanded"
+    draggable="true"
+    style="opacity: 1;"
+  >
+    <div
+      class="octo-table-cell"
+      style="width: 100px;"
+    >
+      <div
+        class="Button IconButton"
+      >
+        <svg
+          class="DisclosureTriangleIcon Icon"
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <polygon
+            points="37,35 37,65 63,50"
+          />
+        </svg>
+      </div>
+      <span
+        class="Label color1 "
+      >
+        <input
+          class="Editable undefined"
+          placeholder="New Select"
+          spellcheck="true"
+          title="value 1"
+          value="value 1"
+        />
+      </span>
+    </div>
+    <button
+      class="Button  "
+      type="button"
+    >
+      0
+    </button>
+    <div
+      class="MenuWrapper"
+    >
+      <div
+        class="Button IconButton"
+      >
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </div>
+    </div>
+    <div
+      class="Button IconButton"
+    >
+      <i
+        class="CompassIcon icon-plus AddIcon"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`should match snapshot, no groups 1`] = `
+<div>
+  <div
+    class="octo-group-header-cell expanded"
+    draggable="true"
+    style="opacity: 1;"
+  >
+    <div
+      class="octo-table-cell"
+      style="width: 100px;"
+    >
+      <div
+        class="Button IconButton"
+      >
+        <svg
+          class="DisclosureTriangleIcon Icon"
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <polygon
+            points="37,35 37,65 63,50"
+          />
+        </svg>
+      </div>
+      <span
+        class="Label empty "
+        title="Items with an empty Property 1 property will go here. This column cannot be removed."
+      >
+        No Property 1
+      </span>
+      
+    </div>
+    <button
+      class="Button  "
+      type="button"
+    >
+      0
+    </button>
+    <div
+      class="MenuWrapper"
+    >
+      <div
+        class="Button IconButton"
+      >
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </div>
+    </div>
+    <div
+      class="Button IconButton"
+    >
+      <i
+        class="CompassIcon icon-plus AddIcon"
+      />
+    </div>
+  </div>
+</div>
+`;

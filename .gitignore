@@ -34,10 +34,6 @@ coverage
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
-# Enterprise files
-server/main/imports.go
-server/enterprise
-
 # Dependency directory
 # https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
 node_modules
@@ -65,6 +61,8 @@ webapp/cypress/screenshots
 webapp/cypress/videos
 server/swagger/clients
 server/vendor
+mattermost-plugin/vendor
+mattermost-plugin/dist
 .idea
 docker/certs
 docker/data

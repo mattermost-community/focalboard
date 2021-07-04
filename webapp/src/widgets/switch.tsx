@@ -7,6 +7,7 @@ import './switch.scss'
 type Props = {
     onChanged: (isOn: boolean) => void
     isOn: boolean
+    readOnly?: boolean
 }
 
 // Switch is an on-off style switch / checkbox
@@ -16,7 +17,9 @@ function Switch(props: Props): JSX.Element {
         <div
             className={className}
             onClick={() => {
-                props.onChanged(!props.isOn)
+                if (!props.readOnly) {
+                    props.onChanged(!props.isOn)
+                }
             }}
         >
             <div className='octo-switch-inner'/>

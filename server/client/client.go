@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	API_URL_SUFFIX = "/api/v1"
+	APIURLSuffix = "/api/v1"
 )
 
 type Response struct {
@@ -57,10 +57,10 @@ func toJSON(v interface{}) string {
 }
 
 type Client struct {
-	Url        string
-	ApiUrl     string
-	HttpClient *http.Client
-	HttpHeader map[string]string
+	URL        string
+	APIURL     string
+	HTTPClient *http.Client
+	HTTPHeader map[string]string
 }
 
 func NewClient(url, sessionToken string) *Client {
@@ -69,63 +69,63 @@ func NewClient(url, sessionToken string) *Client {
 		"X-Requested-With": "XMLHttpRequest",
 		"Authorization":    "Bearer " + sessionToken,
 	}
-	return &Client{url, url + API_URL_SUFFIX, &http.Client{}, headers}
+	return &Client{url, url + APIURLSuffix, &http.Client{}, headers}
 }
 
-func (c *Client) DoApiGet(url, etag string) (*http.Response, error) {
-	return c.DoApiRequest(http.MethodGet, c.ApiUrl+url, "", etag)
+func (c *Client) DoAPIGet(url, etag string) (*http.Response, error) {
+	return c.DoAPIRequest(http.MethodGet, c.APIURL+url, "", etag)
 }
 
-func (c *Client) DoApiPost(url, data string) (*http.Response, error) {
-	return c.DoApiRequest(http.MethodPost, c.ApiUrl+url, data, "")
+func (c *Client) DoAPIPost(url, data string) (*http.Response, error) {
+	return c.DoAPIRequest(http.MethodPost, c.APIURL+url, data, "")
 }
 
-func (c *Client) doApiPostBytes(url string, data []byte) (*http.Response, error) {
-	return c.doApiRequestBytes(http.MethodPost, c.ApiUrl+url, data, "")
+func (c *Client) doAPIPostBytes(url string, data []byte) (*http.Response, error) {
+	return c.doAPIRequestBytes(http.MethodPost, c.APIURL+url, data, "")
 }
 
-func (c *Client) DoApiPut(url, data string) (*http.Response, error) {
-	return c.DoApiRequest(http.MethodPut, c.ApiUrl+url, data, "")
+func (c *Client) DoAPIPut(url, data string) (*http.Response, error) {
+	return c.DoAPIRequest(http.MethodPut, c.APIURL+url, data, "")
 }
 
-func (c *Client) doApiPutBytes(url string, data []byte) (*http.Response, error) {
-	return c.doApiRequestBytes(http.MethodPut, c.ApiUrl+url, data, "")
+func (c *Client) doAPIPutBytes(url string, data []byte) (*http.Response, error) {
+	return c.doAPIRequestBytes(http.MethodPut, c.APIURL+url, data, "")
 }
 
-func (c *Client) DoApiDelete(url string) (*http.Response, error) {
-	return c.DoApiRequest(http.MethodDelete, c.ApiUrl+url, "", "")
+func (c *Client) DoAPIDelete(url string) (*http.Response, error) {
+	return c.DoAPIRequest(http.MethodDelete, c.APIURL+url, "", "")
 }
 
-func (c *Client) DoApiRequest(method, url, data, etag string) (*http.Response, error) {
-	return c.doApiRequestReader(method, url, strings.NewReader(data), etag)
+func (c *Client) DoAPIRequest(method, url, data, etag string) (*http.Response, error) {
+	return c.doAPIRequestReader(method, url, strings.NewReader(data), etag)
 }
 
-func (c *Client) doApiRequestBytes(method, url string, data []byte, etag string) (*http.Response, error) {
-	return c.doApiRequestReader(method, url, bytes.NewReader(data), etag)
+func (c *Client) doAPIRequestBytes(method, url string, data []byte, etag string) (*http.Response, error) {
+	return c.doAPIRequestReader(method, url, bytes.NewReader(data), etag)
 }
 
-func (c *Client) doApiRequestReader(method, url string, data io.Reader, etag string) (*http.Response, error) {
+func (c *Client) doAPIRequestReader(method, url string, data io.Reader, _ /* etag */ string) (*http.Response, error) {
 	rq, err := http.NewRequest(method, url, data)
 	if err != nil {
 		return nil, err
 	}
 
-	if c.HttpHeader != nil && len(c.HttpHeader) > 0 {
-		for k, v := range c.HttpHeader {
+	if c.HTTPHeader != nil && len(c.HTTPHeader) > 0 {
+		for k, v := range c.HTTPHeader {
 			rq.Header.Set(k, v)
 		}
 	}
 
-	rp, err := c.HttpClient.Do(rq)
+	rp, err := c.HTTPClient.Do(rq)
 	if err != nil || rp == nil {
 		return nil, err
 	}
 
-	if rp.StatusCode == 304 {
+	if rp.StatusCode == http.StatusNotModified {
 		return rp, nil
 	}
 
-	if rp.StatusCode >= 300 {
+	if rp.StatusCode >= http.StatusMultipleChoices {
 		defer closeBody(rp)
 		b, err := ioutil.ReadAll(rp.Body)
 		if err != nil {
@@ -150,7 +150,7 @@ func (c *Client) GetSubtreeRoute(id string) string {
 }
 
 func (c *Client) GetBlocks() ([]model.Block, *Response) {
-	r, err := c.DoApiGet(c.GetBlocksRoute(), "")
+	r, err := c.DoAPIGet(c.GetBlocksRoute(), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
@@ -160,7 +160,7 @@ func (c *Client) GetBlocks() ([]model.Block, *Response) {
 }
 
 func (c *Client) InsertBlocks(blocks []model.Block) (bool, *Response) {
-	r, err := c.DoApiPost(c.GetBlocksRoute(), toJSON(blocks))
+	r, err := c.DoAPIPost(c.GetBlocksRoute(), toJSON(blocks))
 	if err != nil {
 		return false, BuildErrorResponse(r, err)
 	}
@@ -170,7 +170,7 @@ func (c *Client) InsertBlocks(blocks []model.Block) (bool, *Response) {
 }
 
 func (c *Client) DeleteBlock(blockID string) (bool, *Response) {
-	r, err := c.DoApiDelete(c.GetBlockRoute(blockID))
+	r, err := c.DoAPIDelete(c.GetBlockRoute(blockID))
 	if err != nil {
 		return false, BuildErrorResponse(r, err)
 	}
@@ -180,7 +180,7 @@ func (c *Client) DeleteBlock(blockID string) (bool, *Response) {
 }
 
 func (c *Client) GetSubtree(blockID string) ([]model.Block, *Response) {
-	r, err := c.DoApiGet(c.GetSubtreeRoute(blockID), "")
+	r, err := c.DoAPIGet(c.GetSubtreeRoute(blockID), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
@@ -196,7 +196,7 @@ func (c *Client) GetSharingRoute(rootID string) string {
 }
 
 func (c *Client) GetSharing(rootID string) (*model.Sharing, *Response) {
-	r, err := c.DoApiGet(c.GetSharingRoute(rootID), "")
+	r, err := c.DoAPIGet(c.GetSharingRoute(rootID), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
@@ -207,7 +207,7 @@ func (c *Client) GetSharing(rootID string) (*model.Sharing, *Response) {
 }
 
 func (c *Client) PostSharing(sharing model.Sharing) (bool, *Response) {
-	r, err := c.DoApiPost(c.GetSharingRoute(sharing.ID), toJSON(sharing))
+	r, err := c.DoAPIPost(c.GetSharingRoute(sharing.ID), toJSON(sharing))
 	if err != nil {
 		return false, BuildErrorResponse(r, err)
 	}

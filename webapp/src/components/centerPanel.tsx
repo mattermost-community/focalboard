@@ -107,7 +107,7 @@ class CenterPanel extends React.Component<Props, State> {
 
         return (
             <div
-                className='BoardComponent octo-app'
+                className='BoardComponent'
                 ref={this.backgroundRef}
                 onClick={(e) => {
                     this.backgroundClicked(e)
@@ -129,55 +129,55 @@ class CenterPanel extends React.Component<Props, State> {
                     />
                 </RootPortal>}
 
-                <div className='octo-frame'>
+                <div className='top-head'>
                     <TopBar/>
                     <ViewTitle
                         key={board.id + board.title}
                         board={board}
                         readonly={this.props.readonly}
                     />
-
-                    <div className={activeView.viewType === 'board' ? 'octo-board' : 'octo-table'}>
-                        <ViewHeader
-                            boardTree={boardTree}
-                            showView={showView}
-                            setSearchText={this.props.setSearchText}
-                            addCard={() => this.addCard('', true)}
-                            addCardFromTemplate={this.addCardFromTemplate}
-                            addCardTemplate={this.addCardTemplate}
-                            editCardTemplate={this.editCardTemplate}
-                            readonly={this.props.readonly}
-                        />
-                        {activeView.viewType === 'board' &&
-                            <Kanban
-                                boardTree={boardTree}
-                                selectedCardIds={this.state.selectedCardIds}
-                                readonly={this.props.readonly}
-                                onCardClicked={this.cardClicked}
-                                addCard={this.addCard}
-                                showCard={this.showCard}
-                            />}
-                        {activeView.viewType === 'table' &&
-                            <Table
-                                boardTree={boardTree}
-                                selectedCardIds={this.state.selectedCardIds}
-                                readonly={this.props.readonly}
-                                cardIdToFocusOnRender={this.state.cardIdToFocusOnRender}
-                                showCard={this.showCard}
-                                addCard={(show) => this.addCard('', show)}
-                                onCardClicked={this.cardClicked}
-                                intl={this.props.intl}
-                            />}
-                        {activeView.viewType === 'gallery' &&
-                            <Gallery
-                                boardTree={boardTree}
-                                readonly={this.props.readonly}
-                                onCardClicked={this.cardClicked}
-                                selectedCardIds={this.state.selectedCardIds}
-                                addCard={(show) => this.addCard('', show)}
-                            />}
-                    </div>
+                    <ViewHeader
+                        boardTree={boardTree}
+                        showView={showView}
+                        setSearchText={this.props.setSearchText}
+                        addCard={() => this.addCard('', true)}
+                        addCardFromTemplate={this.addCardFromTemplate}
+                        addCardTemplate={this.addCardTemplate}
+                        editCardTemplate={this.editCardTemplate}
+                        readonly={this.props.readonly}
+                    />
                 </div>
+
+                {activeView.viewType === 'board' &&
+                <Kanban
+                    boardTree={boardTree}
+                    selectedCardIds={this.state.selectedCardIds}
+                    readonly={this.props.readonly}
+                    onCardClicked={this.cardClicked}
+                    addCard={this.addCard}
+                    showCard={this.showCard}
+                />}
+
+                {activeView.viewType === 'table' &&
+                <Table
+                    boardTree={boardTree}
+                    selectedCardIds={this.state.selectedCardIds}
+                    readonly={this.props.readonly}
+                    cardIdToFocusOnRender={this.state.cardIdToFocusOnRender}
+                    showCard={this.showCard}
+                    addCard={this.addCard}
+                    onCardClicked={this.cardClicked}
+                />}
+
+                {activeView.viewType === 'gallery' &&
+                <Gallery
+                    boardTree={boardTree}
+                    readonly={this.props.readonly}
+                    onCardClicked={this.cardClicked}
+                    selectedCardIds={this.state.selectedCardIds}
+                    addCard={(show) => this.addCard('', show)}
+                />}
+
             </div>
         )
     }
@@ -212,7 +212,7 @@ class CenterPanel extends React.Component<Props, State> {
         card.parentId = boardTree.board.id
         card.rootId = boardTree.board.rootId
         const propertiesThatMeetFilters = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
-        if (activeView.viewType === 'board' && boardTree.groupByProperty) {
+        if ((activeView.viewType === 'board' || activeView.viewType === 'table') && boardTree.groupByProperty) {
             if (groupByOptionId) {
                 propertiesThatMeetFilters[boardTree.groupByProperty.id] = groupByOptionId
             } else {

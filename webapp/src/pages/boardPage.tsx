@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 import {withRouter, RouteComponentProps} from 'react-router-dom'
 import HotKeys from 'react-hot-keys'
 
@@ -16,6 +16,7 @@ import {Utils} from '../utils'
 import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
 import {MutableWorkspaceTree, WorkspaceTree} from '../viewModel/workspaceTree'
 import './boardPage.scss'
+import {IUser, WorkspaceUsersContext, WorkspaceUsersContextData} from '../user'
 
 type Props = RouteComponentProps<{workspaceId?: string}> & {
     readonly?: boolean
@@ -29,6 +30,9 @@ type State = {
     workspaceTree: WorkspaceTree
     boardTree?: BoardTree
     syncFailed?: boolean
+    websocketClosedTimeOutId?: ReturnType<typeof setTimeout>
+    websocketClosed?: boolean
+    workspaceUsers: WorkspaceUsersContextData
 }
 
 class BoardPage extends React.Component<Props, State> {
@@ -57,8 +61,13 @@ class BoardPage extends React.Component<Props, State> {
             boardId,
             viewId,
             workspaceTree: new MutableWorkspaceTree(),
+            workspaceUsers: {
+                users: new Array<IUser>(),
+                usersById: new Map<string, IUser>(),
+            },
         }
 
+        this.setWorkspaceUsers()
         Utils.log(`BoardPage. boardId: ${boardId}`)
     }
 
@@ -85,9 +94,31 @@ class BoardPage extends React.Component<Props, State> {
                 }
                 document.title = title
             } else {
-                document.title = 'OCTO'
+                document.title = 'Focalboard'
             }
         }
+        if (this.state.workspace?.id !== prevState.workspace?.id) {
+            this.setWorkspaceUsers()
+        }
+    }
+
+    async setWorkspaceUsers() {
+        const workspaceUsers = await octoClient.getWorkspaceUsers()
+
+        // storing workspaceUsersById in state to avoid re-computation in each render cycle
+        this.setState({
+            workspaceUsers: {
+                users: workspaceUsers,
+                usersById: this.getIdToWorkspaceUsers(workspaceUsers),
+            },
+        })
+    }
+
+    getIdToWorkspaceUsers(users: Array<IUser>): Map<string, IUser> {
+        return users.reduce((acc: Map<string, IUser>, user: IUser) => {
+            acc.set(user.id, user)
+            return acc
+        }, new Map())
     }
 
     private undoRedoHandler = async (keyName: string, e: KeyboardEvent) => {
@@ -158,27 +189,44 @@ class BoardPage extends React.Component<Props, State> {
         }
 
         return (
-            <div className='BoardPage'>
-                <HotKeys
-                    keyName='shift+ctrl+z,shift+cmd+z,ctrl+z,cmd+z'
-                    onKeyDown={this.undoRedoHandler}
-                />
-                <Workspace
-                    workspace={workspace}
-                    workspaceTree={workspaceTree}
-                    boardTree={this.state.boardTree}
-                    showView={(id, boardId) => {
-                        this.showView(id, boardId)
-                    }}
-                    showBoard={(id) => {
-                        this.showBoard(id)
-                    }}
-                    setSearchText={(text) => {
-                        this.setSearchText(text)
-                    }}
-                    readonly={this.props.readonly || false}
-                />
-            </div>
+            <WorkspaceUsersContext.Provider value={this.state.workspaceUsers}>
+                <div className='BoardPage'>
+                    <HotKeys
+                        keyName='shift+ctrl+z,shift+cmd+z,ctrl+z,cmd+z'
+                        onKeyDown={this.undoRedoHandler}
+                    />
+                    {(this.state.websocketClosed) &&
+                    <div className='banner error'>
+                        <a
+                            href='https://www.focalboard.com/fwlink/websocket-connect-error.html'
+                            target='_blank'
+                            rel='noreferrer'
+                        >
+                            <FormattedMessage
+                                id='Error.websocket-closed'
+                                defaultMessage='Websocket connection closed, connection interrupted. If this persists, check your server or web proxy configuration.'
+                            />
+                        </a>
+                    </div>
+                    }
+
+                    <Workspace
+                        workspace={workspace}
+                        workspaceTree={workspaceTree}
+                        boardTree={this.state.boardTree}
+                        showView={(id, boardId) => {
+                            this.showView(id, boardId)
+                        }}
+                        showBoard={(id) => {
+                            this.showBoard(id)
+                        }}
+                        setSearchText={(text) => {
+                            this.setSearchText(text)
+                        }}
+                        readonly={this.props.readonly || false}
+                    />
+                </div>
+            </WorkspaceUsersContext.Provider>
         )
     }
 
@@ -234,6 +282,28 @@ class BoardPage extends React.Component<Props, State> {
             () => {
                 Utils.log('workspaceListener.onReconnect')
                 this.sync()
+            },
+            (state) => {
+                switch (state) {
+                case 'close': {
+                    // Show error after a delay to ignore brief interruptions
+                    if (!this.state.websocketClosed && !this.state.websocketClosedTimeOutId) {
+                        const timeoutId = setTimeout(() => {
+                            this.setState({websocketClosed: true, websocketClosedTimeOutId: undefined})
+                        }, 5000)
+                        this.setState({websocketClosedTimeOutId: timeoutId})
+                    }
+                    break
+                }
+                case 'open': {
+                    if (this.state.websocketClosedTimeOutId) {
+                        clearTimeout(this.state.websocketClosedTimeOutId)
+                    }
+                    this.setState({websocketClosed: false, websocketClosedTimeOutId: undefined})
+                    Utils.log('Connection established')
+                    break
+                }
+                }
             },
         )
 

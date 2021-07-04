@@ -77,6 +77,7 @@ class MutableBoardTree implements BoardTree {
         }
         const rawBlocks = OctoUtils.mergeBlocks(boardTree.allBlocks, relevantBlocks)
         const newBoardTree = this.buildTree(boardTree.board.id, rawBlocks)
+        newBoardTree?.setSearchText(boardTree.getSearchText())
         if (newBoardTree && boardTree.activeView) {
             newBoardTree.setActiveView(boardTree.activeView.id)
         }
@@ -216,7 +217,13 @@ class MutableBoardTree implements BoardTree {
                         if (option?.value.toLowerCase().includes(searchText)) {
                             return true
                         }
-                    } else if (propertyValue.toLowerCase().includes(searchText)) {
+                    } else if (propertyTemplate.type === 'multiSelect') {
+                        // Look up the value of the select option
+                        const options = (propertyValue as string[]).map((value) => propertyTemplate.options.find((o) => o.id === value)?.value.toLowerCase())
+                        if (options?.includes(searchText)) {
+                            return true
+                        }
+                    } else if ((propertyValue as string).toLowerCase().includes(searchText)) {
                         return true
                     }
                 }
@@ -238,6 +245,7 @@ class MutableBoardTree implements BoardTree {
             Utils.assertValue(property)
         }
         this.groupByProperty = property
+        this.activeView.groupById = property?.id
 
         this.groupCards()
     }
@@ -374,27 +382,10 @@ class MutableBoardTree implements BoardTree {
                         return this.titleOrCreatedOrder(a, b)
                     }
 
-                    const aValue = a.properties[sortPropertyId] || ''
-                    const bValue = b.properties[sortPropertyId] || ''
+                    let aValue = a.properties[sortPropertyId] || ''
+                    let bValue = b.properties[sortPropertyId] || ''
                     let result = 0
-                    if (template.type === 'select') {
-                        // Always put empty values at the bottom
-                        if (aValue && !bValue) {
-                            return -1
-                        }
-                        if (bValue && !aValue) {
-                            return 1
-                        }
-                        if (!aValue && !bValue) {
-                            return this.titleOrCreatedOrder(a, b)
-                        }
-
-                        // Sort by the option order (not alphabetically by value)
-                        const aOrder = template.options.findIndex((o) => o.id === aValue)
-                        const bOrder = template.options.findIndex((o) => o.id === bValue)
-
-                        result = aOrder - bOrder
-                    } else if (template.type === 'number' || template.type === 'date') {
+                    if (template.type === 'number' || template.type === 'date') {
                         // Always put empty values at the bottom
                         if (aValue && !bValue) {
                             return -1
@@ -414,18 +405,22 @@ class MutableBoardTree implements BoardTree {
                     } else {
                         // Text-based sort
 
-                        // Always put empty values at the bottom
-                        if (aValue && !bValue) {
+                        if (aValue.length > 0 && bValue.length <= 0) {
                             return -1
                         }
-                        if (bValue && !aValue) {
+                        if (bValue.length > 0 && aValue.length <= 0) {
                             return 1
                         }
-                        if (!aValue && !bValue) {
+                        if (aValue.length <= 0 && bValue.length <= 0) {
                             return this.titleOrCreatedOrder(a, b)
                         }
 
-                        result = aValue.localeCompare(bValue)
+                        if (template.type === 'select' || template.type === 'multiSelect') {
+                            aValue = template.options.find((o) => o.id === (Array.isArray(aValue) ? aValue[0] : aValue))?.value || ''
+                            bValue = template.options.find((o) => o.id === (Array.isArray(bValue) ? bValue[0] : bValue))?.value || ''
+                        }
+
+                        result = (aValue as string).localeCompare(bValue as string)
                     }
 
                     if (result === 0) {

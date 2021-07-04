@@ -4,7 +4,7 @@ package store
 import "github.com/mattermost/focalboard/server/model"
 
 // Conainer represents a container in a store
-// Using a struct to make extending this easier in the future
+// Using a struct to make extending this easier in the future.
 type Container struct {
 	WorkspaceID string
 }
@@ -22,6 +22,7 @@ type Store interface {
 	GetParentID(c Container, blockID string) (string, error)
 	InsertBlock(c Container, block model.Block) error
 	DeleteBlock(c Container, blockID string, modifiedBy string) error
+	GetBlockCountsByType() (map[string]int64, error)
 
 	Shutdown() error
 
@@ -29,20 +30,21 @@ type Store interface {
 	SetSystemSetting(key, value string) error
 
 	GetRegisteredUserCount() (int, error)
-	GetUserById(userID string) (*model.User, error)
+	GetUserByID(userID string) (*model.User, error)
 	GetUserByEmail(email string) (*model.User, error)
 	GetUserByUsername(username string) (*model.User, error)
 	CreateUser(user *model.User) error
 	UpdateUser(user *model.User) error
 	UpdateUserPassword(username, password string) error
 	UpdateUserPasswordByID(userID, password string) error
+	GetUsersByWorkspace(workspaceID string) ([]*model.User, error)
 
 	GetActiveUserCount(updatedSecondsAgo int64) (int, error)
 	GetSession(token string, expireTime int64) (*model.Session, error)
 	CreateSession(session *model.Session) error
 	RefreshSession(session *model.Session) error
 	UpdateSession(session *model.Session) error
-	DeleteSession(sessionId string) error
+	DeleteSession(sessionID string) error
 	CleanUpSessions(expireTime int64) error
 
 	UpsertSharing(c Container, sharing model.Sharing) error
@@ -51,4 +53,6 @@ type Store interface {
 	UpsertWorkspaceSignupToken(workspace model.Workspace) error
 	UpsertWorkspaceSettings(workspace model.Workspace) error
 	GetWorkspace(ID string) (*model.Workspace, error)
+	HasWorkspaceAccess(userID string, workspaceID string) (bool, error)
+	GetWorkspaceCount() (int64, error)
 }

@@ -10,10 +10,6 @@
         &:hover {
             background-color: rgba(var(--sidebar-fg), 0.08);
             display: flex;
-
-            .MenuWrapper {
-                display: block;
-            }
         }
 
         &.subitem {
@@ -54,12 +50,8 @@
             }
         }
 
-        .MenuWrapper {
-            display: none;
-        }
-
         .Menu.left {
-            right: -32px;
+            right: -16px;
         }
 
         &.expanded {

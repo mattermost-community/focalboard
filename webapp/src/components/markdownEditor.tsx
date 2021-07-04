@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useRef} from 'react'
 import EasyMDE from 'easymde'
 import SimpleMDE from 'react-simplemde-editor'
 
@@ -21,11 +21,10 @@ type Props = {
 }
 
 const MarkdownEditor = (props: Props): JSX. Element => {
-    const {placeholderText, uniqueId, onFocus, onBlur, onChange} = props
+    const {placeholderText, uniqueId, onFocus, onBlur, onChange, text} = props
 
     const [isEditing, setIsEditing] = useState(false)
     const [active, setActive] = useState(false)
-    const [text, setText] = useState(props.text)
     const [editorInstance, setEditorInstance] = useState<EasyMDE>()
 
     const showEditor = (): void => {
@@ -41,12 +40,6 @@ const MarkdownEditor = (props: Props): JSX. Element => {
 
         setIsEditing(true)
     }
-
-    useEffect(() => {
-        if (!isEditing && text !== props.text) {
-            setText(props.text)
-        }
-    }, [props.text])
 
     const stateAndPropsValue = {
         isEditing,
@@ -143,8 +136,7 @@ const MarkdownEditor = (props: Props): JSX. Element => {
                     autoDownloadFontAwesome: true,
                     toolbar: false,
                     status: false,
-                    spellChecker: false,
-                    inputStyle: 'contenteditable',
+                    spellChecker: true,
                     nativeSpellcheck: true,
                     minHeight: '10px',
                     shortcuts: {

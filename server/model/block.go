@@ -53,7 +53,7 @@ type Block struct {
 	DeleteAt int64 `json:"deleteAt"`
 }
 
-// Archive is an import / export archive
+// Archive is an import / export archive.
 type Archive struct {
 	Version int64   `json:"version"`
 	Date    int64   `json:"date"`
@@ -62,6 +62,21 @@ type Archive struct {
 
 func BlocksFromJSON(data io.Reader) []Block {
 	var blocks []Block
-	json.NewDecoder(data).Decode(&blocks)
+	_ = json.NewDecoder(data).Decode(&blocks)
 	return blocks
+}
+
+// LogClone implements the `mlog.LogCloner` interface to provide a subset of Block fields for logging.
+func (b Block) LogClone() interface{} {
+	return struct {
+		ID       string
+		ParentID string
+		RootID   string
+		Type     string
+	}{
+		ID:       b.ID,
+		ParentID: b.ParentID,
+		RootID:   b.RootID,
+		Type:     b.Type,
+	}
 }
