@@ -38,28 +38,15 @@ func (a *App) InsertBlock(c store.Container, block model.Block, userID string) e
 }
 
 func (a *App) InsertBlocks(c store.Container, blocks []model.Block, userID string) error {
-	blockIDsToNotify := []string{}
-
-	uniqueBlockIDs := make(map[string]bool)
-
-	for _, block := range blocks {
-		if !uniqueBlockIDs[block.ID] {
-			blockIDsToNotify = append(blockIDsToNotify, block.ID)
-		}
-
-		// ParentID as empty string denotes a block at the root
-		if !uniqueBlockIDs[block.ParentID] {
-			blockIDsToNotify = append(blockIDsToNotify, block.ParentID)
-		}
-
-		err := a.store.InsertBlock(c, &block, userID)
+	for i := range blocks {
+		err := a.store.InsertBlock(c, &blocks[i], userID)
 		if err != nil {
 			return err
 		}
 
-		a.wsServer.BroadcastBlockChange(c.WorkspaceID, block)
+		a.wsServer.BroadcastBlockChange(c.WorkspaceID, blocks[i])
 		a.metrics.IncrementBlocksInserted(len(blocks))
-		go a.webhook.NotifyUpdate(block)
+		go a.webhook.NotifyUpdate(blocks[i])
 	}
 
 	return nil

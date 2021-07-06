@@ -108,82 +108,78 @@ class CenterPanel extends React.Component<Props, State> {
         const {board} = boardTree
 
         return (
-            <UserContext.Consumer>
-                {(user) => (
-                    <div
-                        className='BoardComponent'
-                        ref={this.backgroundRef}
-                        onClick={(e) => {
-                            this.backgroundClicked(e)
-                        }}
-                    >
-                        <Hotkeys
-                            keyName='ctrl+d,del,esc,backspace'
-                            onKeyDown={this.keydownHandler}
+            <div
+                className='BoardComponent'
+                ref={this.backgroundRef}
+                onClick={(e) => {
+                    this.backgroundClicked(e)
+                }}
+            >
+                <Hotkeys
+                    keyName='ctrl+d,del,esc,backspace'
+                    onKeyDown={this.keydownHandler}
+                />
+                {this.state.shownCardId &&
+                    <RootPortal>
+                        <CardDialog
+                            key={this.state.shownCardId}
+                            boardTree={boardTree}
+                            cardId={this.state.shownCardId}
+                            onClose={() => this.showCard(undefined)}
+                            showCard={(cardId) => this.showCard(cardId)}
+                            readonly={this.props.readonly}
                         />
-                        {this.state.shownCardId &&
-                        <RootPortal>
-                            <CardDialog
-                                key={this.state.shownCardId}
-                                boardTree={boardTree}
-                                cardId={this.state.shownCardId}
-                                onClose={() => this.showCard(undefined)}
-                                showCard={(cardId) => this.showCard(cardId)}
-                                readonly={this.props.readonly}
-                            />
-                        </RootPortal>}
+                    </RootPortal>}
 
-                        <div className='top-head'>
-                            <TopBar/>
-                            <ViewTitle
-                                key={board.id + board.title}
-                                board={board}
-                                readonly={this.props.readonly}
-                            />
-                            <ViewHeader
-                                boardTree={boardTree}
-                                showView={showView}
-                                setSearchText={this.props.setSearchText}
-                                addCard={() => this.addCard(user, '', true)}
-                                addCardFromTemplate={this.addCardFromTemplate}
-                                addCardTemplate={this.addCardTemplate}
-                                editCardTemplate={this.editCardTemplate}
-                                readonly={this.props.readonly}
-                            />
-                        </div>
+                <div className='top-head'>
+                    <TopBar/>
+                    <ViewTitle
+                        key={board.id + board.title}
+                        board={board}
+                        readonly={this.props.readonly}
+                    />
+                    <ViewHeader
+                        boardTree={boardTree}
+                        showView={showView}
+                        setSearchText={this.props.setSearchText}
+                        addCard={() => this.addCard('', true)}
+                        addCardFromTemplate={this.addCardFromTemplate}
+                        addCardTemplate={this.addCardTemplate}
+                        editCardTemplate={this.editCardTemplate}
+                        readonly={this.props.readonly}
+                    />
+                </div>
 
-                        {activeView.viewType === 'board' &&
-                        <Kanban
-                            boardTree={boardTree}
-                            selectedCardIds={this.state.selectedCardIds}
-                            readonly={this.props.readonly}
-                            onCardClicked={this.cardClicked}
-                            addCard={(...args) => this.addCard(user, ...args)}
-                        />}
+                {activeView.viewType === 'board' &&
+                    <Kanban
+                        boardTree={boardTree}
+                        selectedCardIds={this.state.selectedCardIds}
+                        readonly={this.props.readonly}
+                        onCardClicked={this.cardClicked}
+                        addCard={this.addCard}
+                    />}
 
-                        {activeView.viewType === 'table' &&
-                        <Table
-                            boardTree={boardTree}
-                            selectedCardIds={this.state.selectedCardIds}
-                            readonly={this.props.readonly}
-                            cardIdToFocusOnRender={this.state.cardIdToFocusOnRender}
-                            showCard={this.showCard}
-                            addCard={(...args) => this.addCard(user, ...args)}
-                            onCardClicked={this.cardClicked}
-                        />}
+                {activeView.viewType === 'table' &&
+                    <Table
+                        boardTree={boardTree}
+                        selectedCardIds={this.state.selectedCardIds}
+                        readonly={this.props.readonly}
+                        cardIdToFocusOnRender={this.state.cardIdToFocusOnRender}
+                        showCard={this.showCard}
+                        addCard={this.addCard}
+                        onCardClicked={this.cardClicked}
+                    />}
 
-                        {activeView.viewType === 'gallery' &&
-                        <Gallery
-                            boardTree={boardTree}
-                            readonly={this.props.readonly}
-                            onCardClicked={this.cardClicked}
-                            selectedCardIds={this.state.selectedCardIds}
-                            addCard={(show) => this.addCard(user, '', show)}
-                        />}
+                {activeView.viewType === 'gallery' &&
+                    <Gallery
+                        boardTree={boardTree}
+                        readonly={this.props.readonly}
+                        onCardClicked={this.cardClicked}
+                        selectedCardIds={this.state.selectedCardIds}
+                        addCard={(show) => this.addCard('', show)}
+                    />}
 
-                    </div>
-                )}
-            </UserContext.Consumer>
+            </div>
         )
     }
 
@@ -208,7 +204,7 @@ class CenterPanel extends React.Component<Props, State> {
         )
     }
 
-    addCard = async (user: IUser | undefined, groupByOptionId?: string, show = false): Promise<void> => {
+    addCard = async (groupByOptionId?: string, show = false): Promise<void> => {
         const {boardTree} = this.props
         const {activeView, board} = boardTree
 
@@ -216,7 +212,6 @@ class CenterPanel extends React.Component<Props, State> {
 
         card.parentId = boardTree.board.id
         card.rootId = boardTree.board.rootId
-        card.createdBy = user ? user.id : ''
         const propertiesThatMeetFilters = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
         if ((activeView.viewType === 'board' || activeView.viewType === 'table') && boardTree.groupByProperty) {
             if (groupByOptionId) {

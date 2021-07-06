@@ -12,7 +12,6 @@ type Props = {
     boardTree?: BoardTree,
 }
 
-// TODO use useMemo here
 const LastModifiedBy = (props: Props): JSX.Element => {
     let latestBlock = props.boardTree?.allBlocks.filter((block) => block.parentId === props.card.id || block.id === props.card.id).sort((a, b) => b.updateAt - a.updateAt)[0]
     latestBlock = latestBlock || props.card

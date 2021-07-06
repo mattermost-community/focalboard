@@ -50,9 +50,15 @@ const Table = (props: Props) => {
         async (blocks) => {
             for (const block of blocks) {
                 const cardTree = cardTreeRef.current && cardTreeRef.current[block.parentId]
-                // eslint-disable-next-line no-await-in-loop
-                const newCardTree = cardTree ? MutableCardTree.incrementalUpdate(cardTree, blocks) : await MutableCardTree.sync(block.parentId)
-                setCardTrees((oldTree) => ({...oldTree, [block.parentId]: newCardTree}))
+                if (cardTree) {
+                    const newCardTree = MutableCardTree.incrementalUpdate(cardTree, blocks)
+                    setCardTrees((oldTree) => ({...oldTree, [block.parentId]: newCardTree}))
+                } else {
+                    MutableCardTree.sync(block.parentId).
+                        then((newCardTree) => {
+                            setCardTrees((oldTree) => ({...oldTree, [block.parentId]: newCardTree}))
+                        })
+                }
             }
         },
         async () => {

@@ -53,9 +53,6 @@ describe('components/table/TableRow', () => {
         expect(boardTree).toBeDefined()
         expect(FetchMock.fn).toBeCalledTimes(2)
 
-        // const cardTrees:{ [key: string]: CardTree | undefined } = {}
-        // cardTrees[card.id] = new MutableCardTree(card)
-
         const cardTree = new MutableCardTree(card)
 
         const component = wrapProviders(

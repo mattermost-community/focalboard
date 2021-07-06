@@ -7,7 +7,6 @@ const moment = require('moment')
 
 type Props = {
     createAt: number
-
 }
 
 const CreatedAt = (props: Props): JSX.Element => {
