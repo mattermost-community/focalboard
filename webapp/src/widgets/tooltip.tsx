@@ -5,8 +5,8 @@ import React from 'react'
 import './tooltip.scss'
 
 type Props = {
-    tooltip: string
-    children: any
+    title: string
+    children: React.ReactNode
     placement?: 'top'|'left'|'right'|'bottom'
 }
 
@@ -14,13 +14,14 @@ type Props = {
 // be positioned based on the specified placement
 // Default position is 'top'
 function Tooltip(props: Props): JSX.Element {
-    const placement = props.placement ? props.placement : 'top'
+    const placement = props.placement || 'top'
     const className = `octo-tooltip tooltip-${placement}`
     return (
         <div
             className={className}
-            data-tooltip={props.tooltip}
-        >{props.children}
+            data-tooltip={props.title}
+        >
+            {props.children}
         </div>
     )
 }

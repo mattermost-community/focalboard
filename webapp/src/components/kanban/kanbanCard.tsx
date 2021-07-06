@@ -78,7 +78,7 @@ const KanbanCard = React.memo((props: Props) => {
             {visiblePropertyTemplates.map((template) => (
                 <Tooltip
                     key={template.id}
-                    tooltip={template.name}
+                    title={template.name}
                 >
                     <PropertyValueElement
                         readOnly={true}
