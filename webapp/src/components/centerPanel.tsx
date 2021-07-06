@@ -155,6 +155,7 @@ class CenterPanel extends React.Component<Props, State> {
                     readonly={this.props.readonly}
                     onCardClicked={this.cardClicked}
                     addCard={this.addCard}
+                    showCard={this.showCard}
                 />}
 
                 {activeView.viewType === 'table' &&
