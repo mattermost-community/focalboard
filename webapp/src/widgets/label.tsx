@@ -17,7 +17,7 @@ type Props = {
 function Label(props: Props): JSX.Element {
     let color = 'empty'
     if (props.color && props.color in Constants.menuColors) {
-        color = Constants.menuColors[props.color]
+        color = props.color
     }
     return (
         <span
