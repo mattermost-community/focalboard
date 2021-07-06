@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 class Constants {
-    static readonly menuColors = {
+    static readonly menuColors: {[key: string]: string} = {
         propColorDefault: 'Default',
         propColorGray: 'Gray',
         propColorBrown: 'Brown',
