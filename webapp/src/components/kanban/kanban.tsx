@@ -245,7 +245,7 @@ const Kanban = (props: Props) => {
                                     props.onCardClicked(e, card)
                                 }}
                                 onDrop={onDropToCard}
-                                showCard={this.props.showCard}
+                                showCard={props.showCard}
                                 isManualSort={isManualSort}
                             />
                         ))}
