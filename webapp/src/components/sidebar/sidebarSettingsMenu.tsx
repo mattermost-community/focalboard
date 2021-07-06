@@ -54,6 +54,7 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
 
     const [preferredDateFormat, setPreferredDateFormat] = useState(UserSettings.preferredDateFormat)
     const updatePreferredDateFormat = (newDateFormat: string) => {
+        UserSettings.preferredDateFormat = newDateFormat
         setPreferredDateFormat(newDateFormat)
     }
 
