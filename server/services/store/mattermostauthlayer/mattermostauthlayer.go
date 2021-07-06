@@ -27,24 +27,7 @@ type MattermostAuthLayer struct {
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType, connectionString string, store store.Store) (*MattermostAuthLayer, error) {
-	log.Println("connectDatabase", dbType, connectionString)
-	var err error
-
-	db, err := sql.Open(dbType, connectionString)
-	if err != nil {
-		log.Print("connectDatabase: ", err)
-
-		return nil, err
-	}
-
-	err = db.Ping()
-	if err != nil {
-		log.Printf(`Database Ping failed: %v`, err)
-
-		return nil, err
-	}
-
+func New(dbType string, db *sql.DB, store store.Store) (*MattermostAuthLayer, error) {
 	layer := &MattermostAuthLayer{
 		Store:  store,
 		dbType: dbType,
@@ -56,11 +39,7 @@ func New(dbType, connectionString string, store store.Store) (*MattermostAuthLay
 
 // Shutdown close the connection with the store.
 func (s *MattermostAuthLayer) Shutdown() error {
-	err := s.Store.Shutdown()
-	if err != nil {
-		return err
-	}
-	return s.mmDB.Close()
+	return s.Store.Shutdown()
 }
 
 func (s *MattermostAuthLayer) GetRegisteredUserCount() (int, error) {
@@ -215,8 +194,9 @@ func (s *MattermostAuthLayer) GetWorkspace(id string) (*model.Workspace, error) 
 	first := true
 	for rows.Next() {
 		if first {
-			sb.WriteString(", ")
 			first = false
+		} else {
+			sb.WriteString(", ")
 		}
 		var name string
 		if err := rows.Scan(&name); err != nil {

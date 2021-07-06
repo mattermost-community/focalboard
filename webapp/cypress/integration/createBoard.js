@@ -31,6 +31,14 @@ describe('Create and delete board / card', () => {
             should('have.value', boardTitle);
     });
 
+    it('Can hide and show the sidebar with active board', () => {
+        // Hide and show the sidebar
+        cy.get('.Sidebar .heading ~ .Button').click();
+        cy.get('.Sidebar .heading').should('not.exist');
+        cy.get('.Sidebar .show-button').click();
+        cy.get('.Sidebar .heading').should('exist');
+    });
+
     it('Can rename the board view', () => {
         // Rename board view
         const boardViewTitle = `Test board (${timestamp})`;
