@@ -5,6 +5,7 @@ export interface PluginRegistry {
     registerChannelHeaderButtonAction(icon: React.Element, action: () => void, dropdownText: string, tooltipText: string)
     registerCustomRoute(route: string, component: React.ElementType)
     unregisterComponent(componentId: string)
+    registerNeedsTeamRoute(route: string, component: React.ElementType)
 
     // Add more if needed from https://developers.mattermost.com/extend/plugins/webapp/reference
 }

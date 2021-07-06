@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useEffect} from 'react'
 import {Store, Action} from 'redux'
 
 import {GlobalState} from 'mattermost-redux/types/store'
@@ -40,6 +40,29 @@ const focalboardIcon = (
     </svg>
 )
 
+const MainApp = () => {
+    useEffect(() => {
+        document.body.classList.add('focalboard-plugin-body')
+        const root = document.getElementById('root')
+        if (root) {
+            root.classList.add('focalboard-plugin-root')
+        }
+
+        return () => {
+            document.body.classList.remove('focalboard-plugin-body')
+            if (root) {
+                root.classList.remove('focalboard-plugin-root')
+            }
+        }
+    }, [])
+
+    return (
+        <div id='main-app'>
+            <App/>
+        </div>
+    )
+}
+
 export default class Plugin {
     channelHeaderButtonId?: string
     registry?: PluginRegistry
@@ -51,11 +74,7 @@ export default class Plugin {
             const currentChannel = store.getState().entities.channels.currentChannelId
             window.open(`${window.location.origin}/plug/focalboard/workspace/${currentChannel}`)
         }, '', 'Focalboard Workspace')
-        this.registry.registerCustomRoute('/', () => (
-            <div id='main-app'>
-                <App/>
-            </div>
-        ))
+        this.registry.registerCustomRoute('/', MainApp)
     }
 
     public uninitialize() {
