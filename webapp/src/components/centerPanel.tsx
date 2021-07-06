@@ -14,7 +14,6 @@ import {BoardTree} from '../viewModel/boardTree'
 import {UserSettings} from '../userSettings'
 
 import './centerPanel.scss'
-import {IUser, UserContext} from '../user'
 
 import CardDialog from './cardDialog'
 import RootPortal from './rootPortal'
