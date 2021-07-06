@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"github.com/mattermost/focalboard/server/utils"
 	"time"
 
 	sq "github.com/Masterminds/squirrel"
@@ -357,10 +358,12 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 			"delete_at",
 		)
 
+	block.UpdateAt = utils.GetMillis()
+	block.ModifiedBy = userID
+
 	if existingBlock != nil {
-		block.ModifiedBy = userID
 		// block with ID exists, so this is an update operation
-		query := s.getQueryBuilder().Update(s.tablePrefix + "blocks").
+		query := s.getQueryBuilder().Update(s.tablePrefix+"blocks").
 			Where(sq.Eq{"id": block.ID}).
 			Set("workspace_id", c.WorkspaceID).
 			Set("parent_id", block.ParentID).
@@ -385,7 +388,7 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 		}
 	} else {
 		block.CreatedBy = userID
-		block.ModifiedBy = userID
+		block.CreateAt = block.UpdateAt
 		query := insertQuery.Values(
 			c.WorkspaceID,
 			block.ID,
