@@ -7,7 +7,7 @@ func (s *SQLStore) GetSystemSettings() (map[string]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer s.CloseRows(rows)
 
 	results := map[string]string{}
 

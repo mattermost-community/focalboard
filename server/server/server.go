@@ -72,7 +72,7 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 		return nil, err
 	}
 	if cfg.AuthMode == "mattermost" {
-		layeredStore, err := mattermostauthlayer.New(cfg.DBType, cfg.DBConfigString, db)
+		layeredStore, err := mattermostauthlayer.New(cfg.DBType, cfg.DBConfigString, db, logger)
 		if err != nil {
 			log.Print("Unable to start the database", err)
 			return nil, err
