@@ -13,6 +13,7 @@ import (
 	sq "github.com/Masterminds/squirrel"
 
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/store"
 )
 
@@ -27,10 +28,11 @@ type MattermostAuthLayer struct {
 	store.Store
 	dbType string
 	mmDB   *sql.DB
+	logger *mlog.Logger
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType, connectionString string, store store.Store) (*MattermostAuthLayer, error) {
+func New(dbType, connectionString string, store store.Store, logger *mlog.Logger) (*MattermostAuthLayer, error) {
 	log.Println("connectDatabase", dbType, connectionString)
 	var err error
 
@@ -72,6 +74,7 @@ func New(dbType, connectionString string, store store.Store) (*MattermostAuthLay
 		Store:  store,
 		dbType: dbType,
 		mmDB:   db,
+		logger: logger,
 	}
 
 	return layer, nil
@@ -233,6 +236,8 @@ func (s *MattermostAuthLayer) GetWorkspace(ID string) (*model.Workspace, error) 
 	if err != nil {
 		return nil, err
 	}
+	defer s.CloseRows(rows)
+
 	first := true
 	for rows.Next() {
 		if first {
@@ -287,6 +292,7 @@ func (s *MattermostAuthLayer) GetUsersByWorkspace(workspaceID string) ([]*model.
 	if err != nil {
 		return nil, err
 	}
+	defer s.CloseRows(rows)
 
 	users, err := s.usersFromRows(rows)
 	if err != nil {
@@ -297,8 +303,6 @@ func (s *MattermostAuthLayer) GetUsersByWorkspace(workspaceID string) ([]*model.
 }
 
 func (s *MattermostAuthLayer) usersFromRows(rows *sql.Rows) ([]*model.User, error) {
-	defer rows.Close()
-
 	users := []*model.User{}
 
 	for rows.Next() {
@@ -331,4 +335,10 @@ func (s *MattermostAuthLayer) usersFromRows(rows *sql.Rows) ([]*model.User, erro
 	}
 
 	return users, nil
+}
+
+func (s *MattermostAuthLayer) CloseRows(rows *sql.Rows) {
+	if err := rows.Close(); err != nil {
+		s.logger.Error("error closing MattermostAuthLayer row set", mlog.Err(err))
+	}
 }
