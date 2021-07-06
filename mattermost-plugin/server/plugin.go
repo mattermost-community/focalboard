@@ -14,6 +14,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
+
 	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/plugin"
 )
@@ -125,7 +126,7 @@ func (p *Plugin) OnActivate() error {
 		return fmt.Errorf("error initializing the DB: %v", err)
 	}
 	if cfg.AuthMode == server.MattermostAuthMod {
-		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db)
+		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger)
 		if err2 != nil {
 			return fmt.Errorf("error initializing the DB: %v", err2)
 		}
