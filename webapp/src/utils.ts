@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 import marked from 'marked'
 import {IntlShape} from 'react-intl'
+import {UserSettings} from 'userSettings'
 
 declare global {
     interface Window {
@@ -121,8 +122,8 @@ class Utils {
 
     // Date and Time
 
-    static displayDate(date: Date, intl: IntlShape): string {
-        const text = intl.formatDate(date, {year: 'numeric', month: 'short', day: '2-digit'})
+    static displayDate(date: Date, intl: IntlShape, dateFormat: string): string {
+        const text = intl.formatDate(date, {year: 'numeric', month: 'short', day: '2-digit', format: dateFormat})
 
         return text
     }
