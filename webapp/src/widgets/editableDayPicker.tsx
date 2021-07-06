@@ -18,7 +18,7 @@ type Props = {
 const loadedLocales: Record<string, any> = {}
 
 function EditableDayPicker(props: Props): JSX.Element {
-    const {className, onChange} = props
+    const {className, onChange, dateFormat} = props
     const intl = useIntl()
     const [value, setValue] = useState(props.value ? new Date(parseInt(props.value, 10)) : undefined)
 
@@ -51,8 +51,8 @@ function EditableDayPicker(props: Props): JSX.Element {
                 }}
                 formatDate={MomentLocaleUtils.formatDate}
                 parseDate={MomentLocaleUtils.parseDate}
-                format={props.dateFormat}
-                placeholder={`${MomentLocaleUtils.formatDate(new Date(), props.dateFormat, locale)}`}
+                format={dateFormat}
+                placeholder={`${MomentLocaleUtils.formatDate(new Date(), dateFormat, locale)}`}
             />
         </div>
     )
