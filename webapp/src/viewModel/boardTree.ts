@@ -473,10 +473,6 @@ class MutableBoardTree implements BoardTree {
         return cards
     }
 
-    foo(): BoardTree {
-        return new MutableBoardTree(new MutableBoard([]))
-    }
-
     private async mutableCopy(): Promise<BoardTree> {
         const x = await MutableBoardTree.buildTree(this.board.id, this.allBlocks)
         return x!
@@ -486,10 +482,6 @@ class MutableBoardTree implements BoardTree {
         const boardTree = await this.mutableCopy() as MutableBoardTree
         boardTree.setActiveView(viewId)
         return boardTree
-    }
-
-    bar(): string {
-        return 'ASdas'
     }
 
     async copyWithSearchText(searchText?: string): Promise<BoardTree> {
