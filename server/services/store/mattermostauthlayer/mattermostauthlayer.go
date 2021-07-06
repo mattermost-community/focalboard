@@ -194,8 +194,9 @@ func (s *MattermostAuthLayer) GetWorkspace(id string) (*model.Workspace, error) 
 	first := true
 	for rows.Next() {
 		if first {
-			sb.WriteString(", ")
 			first = false
+		} else {
+			sb.WriteString(", ")
 		}
 		var name string
 		if err := rows.Scan(&name); err != nil {
