@@ -150,13 +150,14 @@ class CenterPanel extends React.Component<Props, State> {
                 </div>
 
                 {activeView.viewType === 'board' &&
-                    <Kanban
-                        boardTree={boardTree}
-                        selectedCardIds={this.state.selectedCardIds}
-                        readonly={this.props.readonly}
-                        onCardClicked={this.cardClicked}
-                        addCard={this.addCard}
-                    />}
+                <Kanban
+                    boardTree={boardTree}
+                    selectedCardIds={this.state.selectedCardIds}
+                    readonly={this.props.readonly}
+                    onCardClicked={this.cardClicked}
+                    addCard={this.addCard}
+                    showCard={this.showCard}
+                />}
 
                 {activeView.viewType === 'table' &&
                     <Table

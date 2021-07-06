@@ -29,6 +29,7 @@ type Props = {
     readonly: boolean
     onCardClicked: (e: React.MouseEvent, card: Card) => void
     addCard: (groupByOptionId?: string, show?:boolean) => Promise<void>
+    showCard: (cardId?: string) => void
 }
 
 const Kanban = (props: Props) => {
@@ -244,6 +245,7 @@ const Kanban = (props: Props) => {
                                     props.onCardClicked(e, card)
                                 }}
                                 onDrop={onDropToCard}
+                                showCard={this.props.showCard}
                                 isManualSort={isManualSort}
                             />
                         ))}
