@@ -98,7 +98,7 @@ func (p *Plugin) OnActivate() error {
 		return fmt.Errorf("error initializing the DB: %v", err)
 	}
 
-	baseURL := "."
+	baseURL := ""
 	if mmconfig.ServiceSettings.SiteURL != nil {
 		baseURL = *mmconfig.ServiceSettings.SiteURL
 	}
