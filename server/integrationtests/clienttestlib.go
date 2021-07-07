@@ -94,7 +94,7 @@ func (th *TestHelper) InitBasic() *TestHelper {
 	for {
 		URL := th.Server.Config().ServerRoot
 		th.Server.Logger().Info("Polling server", mlog.String("url", URL))
-		resp, err := http.Get(URL)
+		resp, err := http.Get(URL) //nolint:gosec
 		if err != nil {
 			th.Server.Logger().Error("Polling failed", mlog.Err(err))
 			time.Sleep(100 * time.Millisecond)

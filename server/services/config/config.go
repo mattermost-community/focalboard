@@ -12,7 +12,7 @@ const (
 )
 
 type AmazonS3Config struct {
-	AccessKeyId     string
+	AccessKeyId     string //nolint:stylecheck,golint
 	SecretAccessKey string
 	Bucket          string
 	PathPrefix      string

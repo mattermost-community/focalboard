@@ -2,7 +2,6 @@ package ws
 
 import (
 	"encoding/json"
-	"errors"
 	"log"
 	"net/http"
 	"sync"
@@ -220,6 +219,14 @@ func (ws *Server) authenticateListener(wsSession *websocketSession, workspaceID,
 	ws.logger.Debug("authenticateListener: Authenticated", mlog.String("workspaceID", workspaceID))
 }
 
+type AuthWorkspaceError struct {
+	msg string
+}
+
+func (awe AuthWorkspaceError) Error() string {
+	return awe.msg
+}
+
 func (ws *Server) getAuthenticatedWorkspaceID(wsSession *websocketSession, command *WebsocketCommand) (string, error) {
 	if wsSession.isAuthenticated {
 		return wsSession.workspaceID, nil
@@ -229,7 +236,7 @@ func (ws *Server) getAuthenticatedWorkspaceID(wsSession *websocketSession, comma
 	workspaceID := command.WorkspaceID
 	if len(workspaceID) == 0 {
 		ws.logger.Error("getAuthenticatedWorkspaceID: No workspace")
-		return "", errors.New("no workspace")
+		return "", AuthWorkspaceError{"no workspace"}
 	}
 
 	container := store.Container{
@@ -241,13 +248,13 @@ func (ws *Server) getAuthenticatedWorkspaceID(wsSession *websocketSession, comma
 		for _, blockID := range command.BlockIDs {
 			isValid, _ := ws.auth.IsValidReadToken(container, blockID, command.ReadToken)
 			if !isValid {
-				return "", errors.New("invalid read token for workspace")
+				return "", AuthWorkspaceError{"invalid read token for workspace"}
 			}
 		}
 		return workspaceID, nil
 	}
 
-	return "", errors.New("no read token")
+	return "", AuthWorkspaceError{"no read token"}
 }
 
 // TODO: Refactor workspace hashing.
@@ -314,7 +321,8 @@ func (ws *Server) removeListenerFromBlocks(wsSession *websocketSession, command 
 		// Note: A client can listen multiple times to the same block
 		for index, listener := range listeners {
 			if wsSession.client == listener {
-				newListeners := append(listeners[:index], listeners[index+1:]...)
+				newListeners := listeners[:index]
+				newListeners = append(newListeners, listeners[index+1:]...)
 				ws.listeners[itemID] = newListeners
 
 				break

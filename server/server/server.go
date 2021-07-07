@@ -18,7 +18,6 @@ import (
 	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/app"
 	"github.com/mattermost/focalboard/server/auth"
-	"github.com/mattermost/focalboard/server/context"
 	appModel "github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
 	"github.com/mattermost/focalboard/server/services/config"
@@ -320,7 +319,7 @@ func (s *Server) Logger() *mlog.Logger {
 func (s *Server) startLocalModeServer() error {
 	s.localModeServer = &http.Server{
 		Handler:     s.localRouter,
-		ConnContext: context.SetContextConn,
+		ConnContext: api.SetContextConn,
 	}
 
 	// TODO: Close and delete socket file on shutdown

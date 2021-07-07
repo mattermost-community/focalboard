@@ -16,6 +16,14 @@ const (
 	APIURLSuffix = "/api/v1"
 )
 
+type RequestReaderError struct {
+	buf []byte
+}
+
+func (rre RequestReaderError) Error() string {
+	return "payload: " + string(rre.buf)
+}
+
 type Response struct {
 	StatusCode int
 	Error      error
@@ -131,7 +139,7 @@ func (c *Client) doAPIRequestReader(method, url string, data io.Reader, _ /* eta
 		if err != nil {
 			return rp, fmt.Errorf("error when parsing response with code %d: %w", rp.StatusCode, err)
 		}
-		return rp, fmt.Errorf(string(b))
+		return rp, RequestReaderError{b}
 	}
 
 	return rp, nil

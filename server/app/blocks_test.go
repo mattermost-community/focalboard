@@ -1,13 +1,20 @@
 package app
 
 import (
-	"errors"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	st "github.com/mattermost/focalboard/server/services/store"
 	"github.com/stretchr/testify/require"
 )
+
+type blockError struct {
+	msg string
+}
+
+func (be blockError) Error() string {
+	return be.msg
+}
 
 func TestGetParentID(t *testing.T) {
 	th := SetupTestHelper(t)
@@ -23,9 +30,9 @@ func TestGetParentID(t *testing.T) {
 	})
 
 	t.Run("fail query", func(t *testing.T) {
-		th.Store.EXPECT().GetParentID(gomock.Eq(container), gomock.Eq("test-id")).Return("", errors.New("block-not-found"))
+		th.Store.EXPECT().GetParentID(gomock.Eq(container), gomock.Eq("test-id")).Return("", blockError{"block-not-found"})
 		_, err := th.App.GetParentID(container, "test-id")
 		require.Error(t, err)
-		require.Equal(t, "block-not-found", err.Error())
+		require.ErrorIs(t, err, blockError{"block-not-found"})
 	})
 }
