@@ -16,6 +16,7 @@ import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
 
 import manifest from './manifest'
+import ErrorBoundary from './error_boundary'
 
 // eslint-disable-next-line import/no-unresolved
 import {PluginRegistry} from './types/mattermost-webapp'
@@ -58,7 +59,9 @@ const MainApp = () => {
 
     return (
         <div id='main-app'>
-            <App/>
+            <ErrorBoundary>
+                <App/>
+            </ErrorBoundary>
         </div>
     )
 }
