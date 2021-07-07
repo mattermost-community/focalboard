@@ -5,7 +5,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 
 import {Card} from '../blocks/card'
-import {IContentBlock} from '../blocks/contentBlock'
+import {IContentBlock, IContentBlockWithCords} from '../blocks/contentBlock'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import IconButton from '../widgets/buttons/iconButton'
@@ -18,6 +18,7 @@ import GripIcon from '../widgets/icons/grip'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 import {useSortableWithGrip} from '../hooks/sortable'
+import {Position} from '../components/cardDetail/cardDetailContents';
 
 import ContentElement from './content/contentElement'
 import AddContentMenuItem from './addContentMenuItem'
@@ -28,40 +29,28 @@ type Props = {
     block: IContentBlock
     card: Card
     readonly: boolean
-    onDrop: (srctBlock: IContentBlock, dstBlock: IContentBlock, isParallel?: boolean) => void
+    onDrop: (srctBlock: IContentBlockWithCords, dstBlock: IContentBlockWithCords, position?: Position) => void
     width?: number
+    cords: {x: number, y?: number, z?: number}
 }
 
 const ContentBlock = React.memo((props: Props): JSX.Element => {
-    const {card, block, readonly} = props
+    const {card, block, readonly, cords} = props
     const intl = useIntl()
-    const [isDragging, isOver, gripRef, itemRef] = useSortableWithGrip('content', block, true, props.onDrop)
-    const [, isOver2,, itemRef2] = useSortableWithGrip('content', block, true, (src, dst) => props.onDrop(src, dst, true))
+    const [, , gripRef, itemRef] = useSortableWithGrip('content', {block: block, cords: cords}, true, () => {})
+    const [, isOver2,, itemRef2] = useSortableWithGrip('content', {block: block, cords: cords}, true, (src, dst) => props.onDrop(src, dst, 'right'))
+    const [, isOver3,, itemRef3] = useSortableWithGrip('content', {block: block, cords: cords}, true, (src, dst) => props.onDrop(src, dst, 'left'))
 
-    let index = card.contentOrder.indexOf(block.id)
-    let colIndex = -1
+    let index = cords.x
+    let colIndex = cords.y ? cords.y : -1
     const contentOrder = card.contentOrder.slice()
-    if (index === -1) {
-        contentOrder.find((item, idx) => {
-            if (Array.isArray(item) && item.includes(block.id)) {
-                index = idx
-                colIndex = item.indexOf(block.id)
-                return true
-            }
-            return false
-        })
-    }
 
     let className = 'ContentBlock octo-block'
-    if (isOver) {
-        className += ' dragover'
-    }
     return (
         <div className='rowContents' style={{width: props.width + "%"}}>
             <div
-                className={className}
-                style={{opacity: isDragging ? 0.5 : 1}}
                 ref={itemRef}
+                className={className}
             >
                 <div className='octo-block-margin'>
                     {!props.readonly &&
@@ -97,8 +86,8 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
                                     <AddContentMenuItem
                                         key={type}
                                         type={type}
-                                        block={block}
                                         card={card}
+                                        cords={cords}
                                     />
                                 ))}
                             </Menu.SubMenu>
@@ -127,14 +116,21 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
                     </MenuWrapper>
                     }
                     {!props.readonly &&
-                    <div
-                        ref={gripRef}
-                        className='dnd-handle'
-                    >
-                        <GripIcon/>
-                    </div>
+                        <div
+                            ref={gripRef}
+                            className='dnd-handle'
+                        >
+                            <GripIcon/>
+                        </div>
                     }
                 </div>
+                {!cords.y /* That is to say if cords.y === 0 or cords.y === undefined */ && 
+                    <div
+                        ref={itemRef3}
+                        className={`addToRow ${isOver3 ? 'dragover' : ''}`}
+                        style={{flex: 'none', height: '100%'}}
+                    />
+                }
                 <ContentElement
                     block={block}
                     readonly={readonly}

@@ -15,23 +15,14 @@ import {contentRegistry} from './content/contentRegistry'
 
 type Props = {
     type: BlockTypes
-    block: IContentBlock
     card: Card
+    cords: {x: number, y?: number, z?: number}
 }
 
 const AddContentMenuItem = React.memo((props:Props): JSX.Element => {
-    const {card, block, type} = props
-    let index = card.contentOrder.indexOf(block.id)
+    const {card, type, cords} = props
+    let index = cords.x
     const contentOrder = card.contentOrder.slice()
-    if (index === -1) {
-        contentOrder.find((item, idx) => {
-            if (Array.isArray(item) && item.includes(block.id)) {
-                index = idx
-                return true
-            }
-            return false
-        })
-    }
     const intl = useIntl()
 
     const handler = contentRegistry.getHandler(type)
