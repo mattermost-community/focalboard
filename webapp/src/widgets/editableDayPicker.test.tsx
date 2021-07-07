@@ -45,8 +45,7 @@ describe('widgets/EditableDayPicker', () => {
         )
 
         const date = new Date()
-        const fifteenth = new Date(date.getFullYear(), date.getMonth(), 15)
-        fifteenth.setHours(12)
+        const fifteenth = Date.UTC(date.getFullYear(), date.getMonth(), 15, 12)
 
         const {getByText, getByTitle} = render(component)
         const dayDisplay = getByText('Empty')
@@ -63,7 +62,8 @@ describe('widgets/EditableDayPicker', () => {
             userEvent.click(modal)
         })
 
-        expect(callback).toHaveBeenCalledWith(fifteenth.getTime().toString())
+        const rObject = {from: fifteenth}
+        expect(callback).toHaveBeenCalledWith(JSON.stringify(rObject))
     })
 
     test('handles setting range', () => {
@@ -85,8 +85,7 @@ describe('widgets/EditableDayPicker', () => {
 
         // select start date
         const date = new Date()
-        const fifteenth = new Date(date.getFullYear(), date.getMonth(), 15)
-        fifteenth.setHours(12)
+        const fifteenth = Date.UTC(date.getFullYear(), date.getMonth(), 15, 12)
         const start = getByText('15')
         act(() => {
             userEvent.click(start)
@@ -98,8 +97,7 @@ describe('widgets/EditableDayPicker', () => {
             userEvent.click(endDate)
         })
 
-        const twentieth = new Date(date.getFullYear(), date.getMonth(), 20)
-        twentieth.setHours(12)
+        const twentieth = Date.UTC(date.getFullYear(), date.getMonth(), 20, 12)
 
         const end = getByText('20')
         const modal = getByTitle('Close').children[0]
@@ -110,7 +108,8 @@ describe('widgets/EditableDayPicker', () => {
             userEvent.click(modal)
         })
 
-        expect(callback).toHaveBeenCalledWith([fifteenth.getTime().toString(), twentieth.getTime().toString()])
+        const rObject = {from: fifteenth, to: twentieth}
+        expect(callback).toHaveBeenCalledWith(JSON.stringify(rObject))
     })
 
     test('handle clear', () => {
@@ -149,7 +148,7 @@ describe('widgets/EditableDayPicker', () => {
         const component = wrapIntl(
             <EditableDayPicker
                 className='octo-propertyvalue'
-                value={['1623780000000', '1624212000000']}
+                value={'{"from":1623715200000,"to":1624147200000}'}
                 onChange={callback}
             />,
         )
@@ -159,26 +158,22 @@ describe('widgets/EditableDayPicker', () => {
 
         // open modal
         const dayDisplay = getByText('Jun 15, 2021 -> Jun 20, 2021')
-        act(() => {
-            userEvent.click(dayDisplay)
-        })
+
+        userEvent.click(dayDisplay)
 
         const fromInput = getByDisplayValue('Jun 15, 2021')
         const toInput = getByDisplayValue('Jun 20, 2021')
 
-        act(() => {
-            userEvent.type(fromInput, 'Jul 15, 2021{enter}')
-        })
-        act(() => {
-            userEvent.type(toInput, 'Jul 20, 2021{enter}')
-        })
+        userEvent.type(fromInput, '{selectall}Jul 15, 2021{enter}')
+        userEvent.type(toInput, '{selectall}Jul 20, 2021{enter}')
 
         const modal = getByTitle('Close').children[0]
-        act(() => {
-            userEvent.click(modal)
-        })
 
-        expect(callback).toHaveBeenCalledWith(['1623736800000', '1624168800000'])
+        userEvent.click(modal)
+
+        // {from: '2021-07-15', to: '2021-07-20'}
+        const retVal = '{"from":1626307200000,"to":1626739200000}'
+        expect(callback).toHaveBeenCalledWith(retVal)
     })
 
     test('cancel set via text input', () => {
@@ -186,7 +181,7 @@ describe('widgets/EditableDayPicker', () => {
         const component = wrapIntl(
             <EditableDayPicker
                 className='octo-propertyvalue'
-                value={['1623780000000', '1624212000000']}
+                value={'{"from":1623715200000,"to":1624147200000}'}
                 onChange={callback}
             />,
         )
@@ -204,10 +199,10 @@ describe('widgets/EditableDayPicker', () => {
         const toInput = getByDisplayValue('Jun 20, 2021')
 
         act(() => {
-            userEvent.type(fromInput, 'Jul 15, 2021{esc}')
+            userEvent.type(fromInput, 'Jul 15, 2021{delay}{esc}')
         })
         act(() => {
-            userEvent.type(toInput, 'Jul 20, 2021{esc}')
+            userEvent.type(toInput, 'Jul 20, 2021{delay}{esc}')
         })
 
         const modal = getByTitle('Close').children[0]
@@ -215,6 +210,9 @@ describe('widgets/EditableDayPicker', () => {
             userEvent.click(modal)
         })
 
-        expect(callback).toHaveBeenCalledWith(['1623780000000', '1624212000000'])
+        // const retVal = {from: '2021-06-15', to: '2021-06-20'}
+        const retVal = '{"from":1623715200000,"to":1624147200000}'
+
+        expect(callback).toHaveBeenCalledWith(retVal)
     })
 })

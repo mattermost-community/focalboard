@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useRef} from 'react'
 import {useIntl} from 'react-intl'
 import DayPicker, {DateUtils} from 'react-day-picker'
 import MomentLocaleUtils from 'react-day-picker/moment'
@@ -22,6 +22,13 @@ type Props = {
     onChange: (value: string | string[]) => void
 }
 
+type DateProperty = {
+    from?: number
+    to?: number
+    includeTime?: boolean
+    timeZone?: string
+}
+
 const loadedLocales: Record<string, any> = {}
 
 function EditableDayPicker(props: Props): JSX.Element {
@@ -36,38 +43,47 @@ function EditableDayPicker(props: Props): JSX.Element {
         return displayDate
     }
 
-    const createRangeFromValue = (initialValue: string | string[]) => {
-        if (!initialValue) {
-            return {
-                from: undefined,
-                to: undefined,
-            }
-        } else if (Array.isArray(initialValue)) {
-            return {
-                from: new Date(Number(value[0])),
-                to: new Date(Number(value[1])),
+    const utcToLocalTime = (dateValue: number) => {
+        const localOffset = new Date().getTimezoneOffset() // in minutes
+        const localOffsetMillis = 60 * 1000 * localOffset
+        return dateValue + localOffsetMillis
+    }
+    const createDatePropertyFromString = (initialValue: string) => {
+        let dateProperty: DateProperty = {}
+        if (initialValue) {
+            const singleDate = new Date(Number(initialValue))
+            if (singleDate && DateUtils.isDate(singleDate)) { //!isNaN(singleDate.getTime())) {
+                dateProperty.from = singleDate.getTime()
+            } else {
+                dateProperty = JSON.parse(initialValue)
+                if (!dateProperty.includeTime) {
+                    // if date only, convert from UTC to local time.
+                    if (dateProperty.from) {
+                        dateProperty.from = utcToLocalTime(dateProperty.from)
+                    }
+                    if (dateProperty.to) {
+                        dateProperty.to = utcToLocalTime(dateProperty.to)
+                    }
+                }
             }
         }
-        return {
-            from: new Date(Number(value)),
-            to: undefined,
-        }
+        return dateProperty
     }
 
-    const [rangeValue, setRangeValue] = useState<{from: Date|null|undefined, to:Date|null|undefined}>(createRangeFromValue(value))
+    const [dateProperty, setDateProperty] = useState<DateProperty>(createDatePropertyFromString(value as string))
     const [showDialog, setShowDialog] = useState(false)
-    const [fromInput, setFromInput] = useState<string>(getDisplayDate(rangeValue.from))
-    const [toInput, setToInput] = useState<string>(getDisplayDate(rangeValue.to))
+
+    const dateFrom = dateProperty.from ? new Date(dateProperty.from) : undefined
+    const dateTo = dateProperty.to ? new Date(dateProperty.to) : undefined
+    const [fromInput, setFromInput] = useState<string>(getDisplayDate(dateFrom))
+    const [toInput, setToInput] = useState<string>(getDisplayDate(dateTo))
 
     // use ref will only get created initally
     // rerenders will need to set current.
-    // could be done with 'useEffect' for clairity but not necessary
-    const stateRef = useRef(rangeValue)
+    const stateRef = useRef(dateProperty)
+    stateRef.current = dateProperty
 
-    useEffect(() => {
-        stateRef.current = rangeValue
-    })
-    const isRange = rangeValue.to !== undefined
+    const isRange = dateTo !== undefined
 
     const locale = intl.locale.toLowerCase()
     if (locale && locale !== 'en' && !loadedLocales[locale]) {
@@ -77,25 +93,29 @@ function EditableDayPicker(props: Props): JSX.Element {
     }
 
     const handleDayClick = (day: Date) => {
-        if (isRange) {
-            const range = DateUtils.addDayToRange(day, rangeValue)
-            saveRangeValue(range)
-        } else {
-            saveRangeValue({
-                from: day,
-                to: undefined,
-            })
+        const range = {
+            ...dateProperty,
         }
+        if (isRange) {
+            const newRange = DateUtils.addDayToRange(day, {from: dateFrom, to: dateTo})
+            range.from = newRange.from?.getTime()
+            range.to = newRange.to?.getTime()
+        } else {
+            range.from = day.getTime()
+            range.to = undefined
+        }
+        saveRangeValue(range)
     }
 
     const onRangeClick = () => {
         let range = {
-            from: rangeValue.from,
-            to: rangeValue.from,
+            ...dateProperty,
+            from: dateProperty.from,
+            to: dateProperty.from,
         }
         if (isRange) {
             range = ({
-                from: rangeValue.from,
+                from: dateProperty.from,
                 to: undefined,
             })
         }
@@ -103,34 +123,41 @@ function EditableDayPicker(props: Props): JSX.Element {
     }
 
     const onClear = () => {
-        const range = createRangeFromValue('')
-        saveRangeValue(range)
+        saveRangeValue({})
     }
 
     const saveRangeValue = (range: any) => {
-        setRangeValue(range)
-        setFromInput(getDisplayDate(range.from))
-        setToInput(getDisplayDate(range.to))
+        setDateProperty(range)
+        setFromInput(getDisplayDate(range.from ? new Date(range.from) : undefined))
+        setToInput(getDisplayDate(range.to ? new Date(range.to) : undefined))
     }
 
     const onClose = () => {
         const current = stateRef.current
         setShowDialog(false)
-        if (current && current.to) {
-            onChange([current.from?.getTime().toString() || '', current.to?.getTime().toString() || ''])
-        } else if (current && current.from) {
-            onChange(current!.from!.getTime().toString())
+        if (current && current.from) {
+            if (!current.includeTime) {
+                // Day has time is noon, local time
+                // Set to midnight, UTC time
+                if (current.from) {
+                    current.from -= new Date().getTimezoneOffset() * 60 * 1000
+                }
+                if (current.to) {
+                    current.to -= new Date().getTimezoneOffset() * 60 * 1000
+                }
+            }
+            onChange(JSON.stringify(current))
         } else {
             onChange('')
         }
     }
 
     let displayValue = ''
-    if (rangeValue.from) {
-        displayValue = getDisplayDate(rangeValue.from)
+    if (dateFrom) {
+        displayValue = getDisplayDate(dateFrom)
     }
-    if (rangeValue.to) {
-        displayValue += ' -> ' + getDisplayDate(rangeValue.to)
+    if (dateTo) {
+        displayValue += ' -> ' + getDisplayDate(dateTo)
     }
 
     return (
@@ -160,48 +187,48 @@ function EditableDayPicker(props: Props): JSX.Element {
                                         onChange={setFromInput}
                                         onSave={() => {
                                             const newDate = new Date(fromInput)
-                                            if (newDate && !isNaN(newDate.getTime())) {
-                                                setRangeValue((prevRange) => {
-                                                    return {...prevRange, from: newDate}
+                                            if (newDate && DateUtils.isDate(newDate)) {
+                                                setDateProperty((prev) => {
+                                                    return {...prev, from: newDate.getTime()}
                                                 })
                                             } else {
-                                                setFromInput(getDisplayDate(rangeValue.from))
+                                                setFromInput(getDisplayDate(dateFrom))
                                             }
                                         }}
                                         onCancel={() => {
-                                            setFromInput(getDisplayDate(rangeValue.from))
+                                            setFromInput(getDisplayDate(dateTo))
                                         }}
                                     />
-                                    {rangeValue.to &&
+                                    {dateTo &&
                                         <Editable
                                             value={toInput}
                                             placeholderText={intl.formatMessage({id: 'EditableDayPicker.datePlaceholder', defaultMessage: 'Select Date'})}
                                             onChange={setToInput}
                                             onSave={() => {
                                                 const newDate = new Date(toInput)
-                                                if (newDate && !isNaN(newDate.getTime())) {
-                                                    setRangeValue((prevRange) => {
-                                                        return {...prevRange, to: newDate}
+                                                if (newDate && DateUtils.isDate(newDate)) {
+                                                    setDateProperty((prevRange) => {
+                                                        return {...prevRange, to: newDate.getTime()}
                                                     })
                                                 } else {
-                                                    setToInput(getDisplayDate(rangeValue.to))
+                                                    setToInput(getDisplayDate(dateTo))
                                                 }
                                             }}
                                             onCancel={() => {
-                                                setToInput(getDisplayDate(rangeValue.to))
+                                                setToInput(getDisplayDate(dateTo))
                                             }}
                                         />
                                     }
                                 </div>
                                 <DayPicker
                                     onDayClick={handleDayClick}
-                                    initialMonth={rangeValue.from || new Date()}
+                                    initialMonth={dateFrom || new Date()}
                                     showOutsideDays={true}
 
                                     locale={locale}
                                     localeUtils={MomentLocaleUtils}
                                     todayButton={intl.formatMessage({id: 'EditableDayPicker.today', defaultMessage: 'Today'})}
-                                    selectedDays={[rangeValue.from || new Date(), rangeValue]}
+                                    selectedDays={[dateFrom || new Date(), {from: dateFrom, to: dateTo}]}
 
                                 />
                                 <hr/>
