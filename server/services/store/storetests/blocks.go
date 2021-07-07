@@ -167,8 +167,6 @@ func testInsertBlock(t *testing.T, store store.Store, container store.Container)
 		require.Equal(t, "New Title", newBlock.Title)
 	})
 
-	//RFC822      = "02 Jan 06 15:04 MST"
-
 	createdAt, err := time.Parse(time.RFC822, "01 Jan 90 01:00 IST")
 	assert.NoError(t, err)
 

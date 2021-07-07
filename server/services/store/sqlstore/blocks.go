@@ -409,10 +409,14 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 		}
 	} else {
 		block.CreatedBy = userID
-		block.CreateAt = block.UpdateAt
+		block.CreateAt = utils.GetMillis()
+		block.ModifiedBy = userID
+		block.UpdateAt = utils.GetMillis()
 
 		insertQueryValues["created_by"] = block.CreatedBy
 		insertQueryValues["create_at"] = block.CreateAt
+		insertQueryValues["update_at"] = block.UpdateAt
+		insertQueryValues["modified_by"] = block.ModifiedBy
 
 		query := insertQuery.SetMap(insertQueryValues)
 		_, err = sq.ExecContextWith(ctx, tx, query.Into(s.tablePrefix+"blocks"))
