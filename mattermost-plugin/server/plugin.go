@@ -14,6 +14,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
+
 	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/plugin"
 )
@@ -98,8 +99,13 @@ func (p *Plugin) OnActivate() error {
 		return fmt.Errorf("error initializing the DB: %v", err)
 	}
 
+	baseURL := ""
+	if mmconfig.ServiceSettings.SiteURL != nil {
+		baseURL = *mmconfig.ServiceSettings.SiteURL
+	}
+
 	cfg := &config.Configuration{
-		ServerRoot:              *mmconfig.ServiceSettings.SiteURL + "/plugins/focalboard",
+		ServerRoot:              baseURL + "/plugins/focalboard",
 		Port:                    -1,
 		DBType:                  *mmconfig.SqlSettings.DriverName,
 		DBConfigString:          *mmconfig.SqlSettings.DataSource,
@@ -125,7 +131,7 @@ func (p *Plugin) OnActivate() error {
 		return fmt.Errorf("error initializing the DB: %v", err)
 	}
 	if cfg.AuthMode == server.MattermostAuthMod {
-		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db)
+		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger)
 		if err2 != nil {
 			return fmt.Errorf("error initializing the DB: %v", err2)
 		}
@@ -173,7 +179,7 @@ func defaultLoggingConfig() string {
 				"delim": " ",
 				"min_level_len": 5,
 				"min_msg_len": 40,
-				"enable_color": true				
+				"enable_color": true
 			},
 			"levels": [
 				{"id": 5, "name": "debug"},

@@ -17,6 +17,7 @@ import {useSortable} from '../../hooks/sortable'
 import './kanbanCard.scss'
 import PropertyValueElement from '../propertyValueElement'
 import {CardTree} from '../../viewModel/cardTree'
+import Tooltip from '../../widgets/tooltip'
 
 type Props = {
     card: Card
@@ -88,14 +89,18 @@ const KanbanCard = React.memo((props: Props) => {
                 <div key='__title'>{card.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}</div>
             </div>
             {visiblePropertyTemplates.map((template) => (
-                <PropertyValueElement
+                <Tooltip
                     key={template.id}
-                    readOnly={true}
-                    card={card}
-                    cardTree={props.cardTree}
-                    propertyTemplate={template}
-                    emptyDisplayValue=''
-                />
+                    title={template.name}
+                >
+                    <PropertyValueElement
+                        readOnly={true}
+                        card={card}
+                        cardTree={props.cardTree}
+                        propertyTemplate={template}
+                        emptyDisplayValue=''
+                    />
+                </Tooltip>
             ))}
         </div>
     )

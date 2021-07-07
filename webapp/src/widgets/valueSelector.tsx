@@ -79,12 +79,12 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
                         onClick={() => props.onDeleteOption(option)}
                     />
                     <Menu.Separator/>
-                    {Constants.menuColors.map((color) => (
+                    {Object.entries(Constants.menuColors).map(([key, color]: any) => (
                         <Menu.Color
-                            key={color.id}
-                            id={color.id}
-                            name={color.name}
-                            onClick={() => props.onChangeColor(option, color.id)}
+                            key={key}
+                            id={key}
+                            name={color}
+                            onClick={() => props.onChangeColor(option, key)}
                         />
                     ))}
                 </Menu>

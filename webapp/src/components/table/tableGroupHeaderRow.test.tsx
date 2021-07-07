@@ -49,7 +49,7 @@ const boardTreeNoGroup = {
     option: {
         id: '',
         value: '',
-        color: 'color1',
+        color: 'propColorBrown',
     },
     cards: [],
 }
@@ -58,7 +58,7 @@ const boardTreeGroup = {
     option: {
         id: 'value1',
         value: 'value 1',
-        color: 'color1',
+        color: 'propColorBrown',
     },
     cards: [],
 }

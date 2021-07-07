@@ -43,6 +43,7 @@ func (s *SQLStore) GetBlocksWithParentAndType(c store.Container, parentID string
 
 		return nil, err
 	}
+	defer s.CloseRows(rows)
 
 	return s.blocksFromRows(rows)
 }
@@ -73,6 +74,7 @@ func (s *SQLStore) GetBlocksWithParent(c store.Container, parentID string) ([]mo
 
 		return nil, err
 	}
+	defer s.CloseRows(rows)
 
 	return s.blocksFromRows(rows)
 }
@@ -103,6 +105,7 @@ func (s *SQLStore) GetBlocksWithRootID(c store.Container, rootID string) ([]mode
 
 		return nil, err
 	}
+	defer s.CloseRows(rows)
 
 	return s.blocksFromRows(rows)
 }
@@ -133,6 +136,7 @@ func (s *SQLStore) GetBlocksWithType(c store.Container, blockType string) ([]mod
 
 		return nil, err
 	}
+	defer s.CloseRows(rows)
 
 	return s.blocksFromRows(rows)
 }
@@ -164,6 +168,7 @@ func (s *SQLStore) GetSubTree2(c store.Container, blockID string) ([]model.Block
 
 		return nil, err
 	}
+	defer s.CloseRows(rows)
 
 	return s.blocksFromRows(rows)
 }
@@ -203,6 +208,7 @@ func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block
 
 		return nil, err
 	}
+	defer s.CloseRows(rows)
 
 	return s.blocksFromRows(rows)
 }
@@ -232,13 +238,12 @@ func (s *SQLStore) GetAllBlocks(c store.Container) ([]model.Block, error) {
 
 		return nil, err
 	}
+	defer s.CloseRows(rows)
 
 	return s.blocksFromRows(rows)
 }
 
 func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
-	defer rows.Close()
-
 	results := []model.Block{}
 
 	for rows.Next() {
@@ -506,6 +511,7 @@ func (s *SQLStore) GetBlockCountsByType() (map[string]int64, error) {
 
 		return nil, err
 	}
+	defer s.CloseRows(rows)
 
 	m := make(map[string]int64)
 
