@@ -20,6 +20,7 @@ import {useSortable} from '../../hooks/sortable'
 import ImageElement from '../content/imageElement'
 import ContentElement from '../content/contentElement'
 import PropertyValueElement from '../propertyValueElement'
+import Tooltip from '../../widgets/tooltip'
 
 import './galleryCard.scss'
 
@@ -108,13 +109,18 @@ const GalleryCard = React.memo((props: Props) => {
             {visiblePropertyTemplates.length > 0 &&
                 <div className='gallery-props'>
                     {visiblePropertyTemplates.map((template) => (
-                        <PropertyValueElement
+                        <Tooltip
                             key={template.id}
-                            readOnly={true}
-                            card={cardTree.card}
-                            propertyTemplate={template}
-                            emptyDisplayValue=''
-                        />
+                            title={template.name}
+                            placement='top'
+                        >
+                            <PropertyValueElement
+                                readOnly={true}
+                                card={cardTree.card}
+                                propertyTemplate={template}
+                                emptyDisplayValue=''
+                            />
+                        </Tooltip>
                     ))}
                 </div>}
         </div>
