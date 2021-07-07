@@ -13,7 +13,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        z-index: 5;
+        z-index: 105;
         min-height: 0;
         height: 50px;
         width: 50px;
@@ -108,7 +108,9 @@
         }
     }
 
-    .OptionsIcon,
+    .OptionsIcon {
+        color: rgba(var(--sidebar-fg), 0.5);
+    }
     .DisclosureTriangleIcon,
     .DotIcon {
         fill: rgba(var(--sidebar-fg), 0.5);
@@ -116,7 +118,7 @@
     }
 
     .Menu .OptionsIcon {
-        fill: unset;
+        color: unset;
     }
 
     .HideSidebarIcon {

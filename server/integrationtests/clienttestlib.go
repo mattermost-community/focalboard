@@ -58,7 +58,7 @@ func getTestConfig() *config.Configuration {
 		WebPath:        "./pack",
 		FilesDriver:    "local",
 		FilesPath:      "./files",
-		LoggingJSON:    logging,
+		LoggingCfgJSON: logging,
 	}
 }
 
@@ -66,8 +66,15 @@ func SetupTestHelper() *TestHelper {
 	sessionToken := "TESTTOKEN"
 	th := &TestHelper{}
 	logger := mlog.NewLogger()
-	logger.Configure("", getTestConfig().LoggingJSON)
-	srv, err := server.New(getTestConfig(), sessionToken, logger)
+	if err := logger.Configure("", getTestConfig().LoggingCfgJSON); err != nil {
+		panic(err)
+	}
+	cfg := getTestConfig()
+	db, err := server.NewStore(cfg, logger)
+	if err != nil {
+		logger.Fatal("server.NewStore ERROR", mlog.Err(err))
+	}
+	srv, err := server.New(cfg, sessionToken, db, logger)
 	if err != nil {
 		panic(err)
 	}
@@ -111,7 +118,7 @@ func (th *TestHelper) InitBasic() *TestHelper {
 }
 
 func (th *TestHelper) TearDown() {
-	defer th.Server.Logger().Shutdown()
+	defer func() { _ = th.Server.Logger().Shutdown() }()
 
 	err := th.Server.Shutdown()
 	if err != nil {

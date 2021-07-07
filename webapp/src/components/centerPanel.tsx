@@ -155,6 +155,7 @@ class CenterPanel extends React.Component<Props, State> {
                     readonly={this.props.readonly}
                     onCardClicked={this.cardClicked}
                     addCard={this.addCard}
+                    showCard={this.showCard}
                 />}
 
                 {activeView.viewType === 'table' &&
@@ -166,7 +167,6 @@ class CenterPanel extends React.Component<Props, State> {
                     showCard={this.showCard}
                     addCard={this.addCard}
                     onCardClicked={this.cardClicked}
-                    intl={this.props.intl}
                 />}
 
                 {activeView.viewType === 'gallery' &&

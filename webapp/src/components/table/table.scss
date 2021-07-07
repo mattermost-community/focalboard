@@ -74,6 +74,9 @@
         flex-direction: row;
         color: rgb(var(--body-color));
         border-right: solid 1px rgba(var(--body-color), 0.09);
+        border-left: 1px solid transparent;
+        border-top: 1px solid transparent;
+        border-bottom: 1px solid transparent;
         box-sizing: border-box;
         padding: 8px;
         min-height: 32px;
@@ -132,6 +135,9 @@
             line-height: 17px;
             overflow: hidden;
             text-overflow: ellipsis;
+            .Label {
+                margin: 5px;
+            }
         }
 
         .Editable,

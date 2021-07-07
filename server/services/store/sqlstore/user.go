@@ -64,6 +64,7 @@ func (s *SQLStore) getUsersByCondition(condition sq.Eq) ([]*model.User, error) {
 		log.Printf("getUsersByCondition ERROR: %v", err)
 		return nil, err
 	}
+	defer s.CloseRows(rows)
 
 	users, err := s.usersFromRows(rows)
 	if err != nil {
@@ -77,7 +78,7 @@ func (s *SQLStore) getUsersByCondition(condition sq.Eq) ([]*model.User, error) {
 	return users, nil
 }
 
-func (s *SQLStore) GetUserById(userID string) (*model.User, error) {
+func (s *SQLStore) GetUserByID(userID string) (*model.User, error) {
 	return s.getUserByCondition(sq.Eq{"id": userID})
 }
 
@@ -192,8 +193,6 @@ func (s *SQLStore) GetUsersByWorkspace(workspaceID string) ([]*model.User, error
 }
 
 func (s *SQLStore) usersFromRows(rows *sql.Rows) ([]*model.User, error) {
-	defer rows.Close()
-
 	users := []*model.User{}
 
 	for rows.Next() {

@@ -9,7 +9,7 @@ import (
 
 const (
 	PasswordMaximumLength    = 64
-	PasswordSpecialChars     = "!\"\\#$%&'()*+,-./:;<=>?@[]^_`|~"
+	PasswordSpecialChars     = "!\"\\#$%&'()*+,-./:;<=>?@[]^_`|~" //nolint:gosec
 	PasswordNumbers          = "0123456789"
 	PasswordUpperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	PasswordLowerCaseLetters = "abcdefghijklmnopqrstuvwxyz"
@@ -23,7 +23,7 @@ const (
 	InvalidSymbolPassword    = "symbol"
 )
 
-// HashPassword generates a hash using the bcrypt.GenerateFromPassword
+// HashPassword generates a hash using the bcrypt.GenerateFromPassword.
 func HashPassword(password string) string {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), 10)
 	if err != nil {
@@ -33,7 +33,7 @@ func HashPassword(password string) string {
 	return string(hash)
 }
 
-// ComparePassword compares the hash
+// ComparePassword compares the hash.
 func ComparePassword(hash, password string) bool {
 	if len(password) == 0 || len(hash) == 0 {
 		return false
@@ -48,7 +48,7 @@ type InvalidPasswordError struct {
 }
 
 func (ipe *InvalidPasswordError) Error() string {
-	return fmt.Sprintf("invalid password, failing criterias: %s", strings.Join(ipe.FailingCriterias, ", "))
+	return fmt.Sprintf("invalid password, failing criteria: %s", strings.Join(ipe.FailingCriterias, ", "))
 }
 
 type PasswordSettings struct {

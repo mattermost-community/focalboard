@@ -19,7 +19,7 @@ func StoreTestSystemStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 	})
 }
 
-func testSetGetSystemSettings(t *testing.T, store store.Store, container store.Container) {
+func testSetGetSystemSettings(t *testing.T, store store.Store, _ /*container*/ store.Container) {
 	t.Run("Get empty settings", func(t *testing.T) {
 		settings, err := store.GetSystemSettings()
 		require.NoError(t, err)

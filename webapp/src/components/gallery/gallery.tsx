@@ -105,7 +105,7 @@ const Gallery = (props: Props): JSX.Element => {
                 <div
                     className='octo-gallery-new'
                     onClick={() => {
-                        props.addCard(false)
+                        props.addCard(true)
                     }}
                 >
                     <FormattedMessage

@@ -79,7 +79,7 @@ func (ts *Service) sendDailyTelemetry(override bool) {
 func (ts *Service) sendTelemetry(event string, properties map[string]interface{}) {
 	if ts.rudderClient != nil {
 		var context *rudder.Context
-		ts.rudderClient.Enqueue(rudder.Track{
+		_ = ts.rudderClient.Enqueue(rudder.Track{
 			Event:      event,
 			UserId:     ts.telemetryID,
 			Properties: properties,
@@ -103,7 +103,7 @@ func (ts *Service) initRudder(endpoint, rudderKey string) {
 			ts.logger.Fatal("Failed to create Rudder instance")
 			return
 		}
-		client.Enqueue(rudder.Identify{
+		_ = client.Enqueue(rudder.Identify{
 			UserId: ts.telemetryID,
 		})
 

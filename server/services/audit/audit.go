@@ -33,7 +33,7 @@ type Audit struct {
 	auditLogger *mlog.Logger
 }
 
-// NewAudit creates a new Audit instance which can be configured via `(*Audit).Configure`
+// NewAudit creates a new Audit instance which can be configured via `(*Audit).Configure`.
 func NewAudit(options ...mlog.Option) *Audit {
 	logger := mlog.NewLogger(options...)
 

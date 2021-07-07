@@ -2,7 +2,6 @@
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
 import React from 'react'
-import {IntlShape} from 'react-intl'
 
 import {useDrop} from 'react-dnd'
 
@@ -16,7 +15,6 @@ import TableRows from './tableRows'
 type Props = {
     boardTree: BoardTree
     group: BoardTreeGroup
-    intl: IntlShape
     readonly: boolean
     columnRefs: Map<string, React.RefObject<HTMLDivElement>>
     selectedCardIds: string[]
@@ -61,7 +59,6 @@ const TableGroup = React.memo((props: Props): JSX.Element => {
             <TableGroupHeaderRow
                 group={group}
                 boardTree={boardTree}
-                intl={props.intl}
                 hideGroup={props.hideGroup}
                 addCard={props.addCard}
                 readonly={props.readonly}
@@ -77,7 +74,6 @@ const TableGroup = React.memo((props: Props): JSX.Element => {
                 selectedCardIds={props.selectedCardIds}
                 readonly={props.readonly}
                 cardIdToFocusOnRender={props.cardIdToFocusOnRender}
-                intl={props.intl}
                 showCard={props.showCard}
                 addCard={props.addCard}
                 onCardClicked={props.onCardClicked}

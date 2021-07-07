@@ -84,7 +84,7 @@ func appendMultipleStatementsFlag(connectionString string) (string, error) {
 
 // migrations in MySQL need to run with the multiStatements flag
 // enabled, so this method creates a new connection ensuring that it's
-// enabled
+// enabled.
 func (s *SQLStore) getMySQLMigrationConnection() (*sql.DB, error) {
 	connectionString, err := appendMultipleStatementsFlag(s.connectionString)
 	if err != nil {
@@ -123,9 +123,9 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	if s.dbType == mysqlDBType {
-		db, err := s.getMySQLMigrationConnection()
-		if err != nil {
-			return err
+		db, err2 := s.getMySQLMigrationConnection()
+		if err2 != nil {
+			return err2
 		}
 		defer db.Close()
 
