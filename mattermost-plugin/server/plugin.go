@@ -99,8 +99,13 @@ func (p *Plugin) OnActivate() error {
 		return fmt.Errorf("error initializing the DB: %v", err)
 	}
 
+	baseURL := ""
+	if mmconfig.ServiceSettings.SiteURL != nil {
+		baseURL = *mmconfig.ServiceSettings.SiteURL
+	}
+
 	cfg := &config.Configuration{
-		ServerRoot:              *mmconfig.ServiceSettings.SiteURL + "/plugins/focalboard",
+		ServerRoot:              baseURL + "/plugins/focalboard",
 		Port:                    -1,
 		DBType:                  *mmconfig.SqlSettings.DriverName,
 		DBConfigString:          *mmconfig.SqlSettings.DataSource,
@@ -174,7 +179,7 @@ func defaultLoggingConfig() string {
 				"delim": " ",
 				"min_level_len": 5,
 				"min_msg_len": 40,
-				"enable_color": true				
+				"enable_color": true
 			},
 			"levels": [
 				{"id": 5, "name": "debug"},
