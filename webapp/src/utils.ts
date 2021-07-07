@@ -2,7 +2,6 @@
 // See LICENSE.txt for license information.
 import marked from 'marked'
 import {IntlShape} from 'react-intl'
-import {UserSettings} from 'userSettings'
 
 declare global {
     interface Window {
