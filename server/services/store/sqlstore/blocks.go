@@ -363,6 +363,22 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 			"delete_at",
 		)
 
+	insertQueryValues := map[string]interface{}{
+		"workspace_id":          c.WorkspaceID,
+		"id":                    block.ID,
+		"parent_id":             block.ParentID,
+		"root_id":               block.RootID,
+		s.escapeField("schema"): block.Schema,
+		"type":                  block.Type,
+		"title":                 block.Title,
+		"fields":                fieldsJSON,
+		"delete_at":             block.DeleteAt,
+		"created_by":            block.CreatedBy,
+		"modified_by":           block.ModifiedBy,
+		"create_at":             block.CreateAt,
+		"update_at":             block.UpdateAt,
+	}
+
 	block.UpdateAt = utils.GetMillis()
 	block.ModifiedBy = userID
 
@@ -394,21 +410,11 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 	} else {
 		block.CreatedBy = userID
 		block.CreateAt = block.UpdateAt
-		query := insertQuery.Values(
-			c.WorkspaceID,
-			block.ID,
-			block.ParentID,
-			block.RootID,
-			block.CreatedBy,
-			block.ModifiedBy,
-			block.Schema,
-			block.Type,
-			block.Title,
-			fieldsJSON,
-			block.CreateAt,
-			block.UpdateAt,
-			block.DeleteAt,
-		)
+
+		insertQueryValues["created_by"] = block.CreatedBy
+		insertQueryValues["create_at"] = block.CreateAt
+
+		query := insertQuery.SetMap(insertQueryValues)
 		_, err = sq.ExecContextWith(ctx, tx, query.Into(s.tablePrefix+"blocks"))
 		if err != nil {
 			tx.Rollback()
@@ -417,21 +423,7 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 	}
 
 	// writing block history
-	query := insertQuery.Values(
-		c.WorkspaceID,
-		block.ID,
-		block.ParentID,
-		block.RootID,
-		block.CreatedBy,
-		block.ModifiedBy,
-		block.Schema,
-		block.Type,
-		block.Title,
-		fieldsJSON,
-		block.CreateAt,
-		block.UpdateAt,
-		block.DeleteAt,
-	)
+	query := insertQuery.SetMap(insertQueryValues)
 
 	_, err = sq.ExecContextWith(ctx, tx, query.Into(s.tablePrefix+"blocks_history"))
 	if err != nil {
