@@ -26,10 +26,11 @@ import URLProperty from './properties/link/link'
 import LastModifiedBy from './properties/lastModifiedBy/lastModifiedBy'
 import LastModifiedAt from './properties/lastModifiedAt/lastModifiedAt'
 import CreatedAt from './properties/createdAt/createdAt'
+import CreatedBy from './properties/createdBy/createdBy'
 
 type Props = {
     boardTree?: BoardTree
-    cardTree: CardTree | undefined
+    cardTree?: CardTree
     readOnly: boolean
     card: Card
     propertyTemplate: IPropertyTemplate
@@ -184,11 +185,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         )
     } else if (propertyTemplate.type === 'createdBy') {
         return (
-            <UserProperty
-                value={card.createdBy}
-                readonly={true} // created by is an immutable property, so will always be readonly
-                onChange={() => {}} // since created by is immutable, we don't need to handle onChange
-            />
+            <CreatedBy userID={card.createdBy}/>
         )
     } else if (propertyTemplate.type === 'updatedBy') {
         return (

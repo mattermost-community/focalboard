@@ -46,9 +46,9 @@ const Kanban = (props: Props) => {
 
     const {board, activeView, visibleGroups, hiddenGroups} = boardTree
     const visiblePropertyTemplates = board.cardProperties.filter((template) => activeView.visiblePropertyIds.includes(template.id))
-    const isManualSort = activeView.sortOptions.length < 1
+    const isManualSort = activeView.sortOptions.length === 0
 
-    const [cardTrees, setCardTrees] = useState<{[key: string]: CardTree | undefined}>({a: undefined})
+    const [cardTrees, setCardTrees] = useState<{[key: string]: CardTree | undefined}>({})
     const cardTreeRef = useRef<{[key: string]: CardTree | undefined}>()
     cardTreeRef.current = cardTrees
 
@@ -198,25 +198,25 @@ const Kanban = (props: Props) => {
                 {/* Hidden column header */}
 
                 {hiddenGroups.length > 0 &&
-                <div className='octo-board-header-cell narrow'>
-                    <FormattedMessage
-                        id='BoardComponent.hidden-columns'
-                        defaultMessage='Hidden columns'
-                    />
-                </div>
+                    <div className='octo-board-header-cell narrow'>
+                        <FormattedMessage
+                            id='BoardComponent.hidden-columns'
+                            defaultMessage='Hidden columns'
+                        />
+                    </div>
                 }
 
                 {!props.readonly &&
-                <div className='octo-board-header-cell narrow'>
-                    <Button
-                        onClick={addGroupClicked}
-                    >
-                        <FormattedMessage
-                            id='BoardComponent.add-a-group'
-                            defaultMessage='+ Add a group'
-                        />
-                    </Button>
-                </div>
+                    <div className='octo-board-header-cell narrow'>
+                        <Button
+                            onClick={addGroupClicked}
+                        >
+                            <FormattedMessage
+                                id='BoardComponent.add-a-group'
+                                defaultMessage='+ Add a group'
+                            />
+                        </Button>
+                    </div>
                 }
             </div>
 

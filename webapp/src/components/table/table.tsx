@@ -38,7 +38,7 @@ type Props = {
 const Table = (props: Props) => {
     const {boardTree} = props
     const {board, cards, activeView, visibleGroups} = boardTree
-    const isManualSort = activeView.sortOptions.length < 1
+    const isManualSort = activeView.sortOptions.length === 0
     const intl = useIntl()
 
     const [cardTrees, setCardTrees] = useState<{[key: string]: CardTree | undefined}>({a: undefined})

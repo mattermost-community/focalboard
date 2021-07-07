@@ -71,7 +71,7 @@ class MutableCardTree implements CardTree {
 
     public static getMostRecentBlock(cardTree: CardTree): IBlock {
         let latestBlock: IBlock = cardTree.card
-        cardTree?.allBlocks.forEach((block) => {
+        cardTree.allBlocks.forEach((block) => {
             if (latestBlock) {
                 latestBlock = block.updateAt > latestBlock.updateAt ? block : latestBlock
             } else {

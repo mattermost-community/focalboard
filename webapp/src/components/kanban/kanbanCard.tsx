@@ -21,7 +21,7 @@ import Tooltip from '../../widgets/tooltip'
 
 type Props = {
     card: Card
-    cardTree: CardTree | undefined
+    cardTree?: CardTree
     visiblePropertyTemplates: IPropertyTemplate[]
     isSelected: boolean
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void

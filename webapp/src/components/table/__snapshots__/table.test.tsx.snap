@@ -170,7 +170,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
             tabindex="0"
           >
             <span
-              class="Label color1 "
+              class="Label propColorBrown "
             >
               value 1
             </span>
@@ -246,7 +246,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
             tabindex="0"
           >
             <span
-              class="Label color1 "
+              class="Label propColorBrown "
             >
               value 1
             </span>
@@ -460,7 +460,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
             tabindex="0"
           >
             <span
-              class="Label color1 "
+              class="Label propColorBrown "
             >
               value 1
             </span>
@@ -536,7 +536,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
             tabindex="0"
           >
             <span
-              class="Label color1 "
+              class="Label propColorBrown "
             >
               value 1
             </span>
@@ -750,7 +750,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
             tabindex="0"
           >
             <span
-              class="Label color1 "
+              class="Label propColorBrown "
             >
               value 1
             </span>
@@ -826,7 +826,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
             tabindex="0"
           >
             <span
-              class="Label color1 "
+              class="Label propColorBrown "
             >
               value 1
             </span>
@@ -1040,7 +1040,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
             tabindex="0"
           >
             <span
-              class="Label color1 "
+              class="Label propColorBrown "
             >
               value 1
             </span>
@@ -1116,7 +1116,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
             tabindex="0"
           >
             <span
-              class="Label color1 "
+              class="Label propColorBrown "
             >
               value 1
             </span>

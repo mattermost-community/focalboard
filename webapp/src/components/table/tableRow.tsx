@@ -18,7 +18,7 @@ import {CardTree} from '../../viewModel/cardTree'
 type Props = {
     boardTree: BoardTree
     card: Card
-    cardTree: CardTree | undefined
+    cardTree?: CardTree
     isSelected: boolean
     focusOnMount: boolean
     onSaveWithEnter: () => void
@@ -38,7 +38,7 @@ const TableRow = React.memo((props: Props) => {
     const titleRef = useRef<{focus(selectAll?: boolean): void}>(null)
     const [title, setTitle] = useState(props.card.title)
     const {card} = props
-    const isManualSort = activeView.sortOptions.length < 1
+    const isManualSort = activeView.sortOptions.length === 0
     const isGrouped = Boolean(activeView.groupById)
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly && (isManualSort || isGrouped), props.onDrop)
 
