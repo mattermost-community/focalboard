@@ -11,4 +11,4 @@ import './styles/main.scss'
 import './styles/labels.scss'
 
 initThemes()
-ReactDOM.render(<App/>, document.getElementById('main-app'))
+ReactDOM.render(<App/>, document.getElementById('focalboard-app'))
