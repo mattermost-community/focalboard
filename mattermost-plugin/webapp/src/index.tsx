@@ -43,14 +43,14 @@ const focalboardIcon = (
 
 const MainApp = () => {
     useEffect(() => {
-        document.body.classList.add('focalboard-plugin-body')
+        document.body.classList.add('focalboard-body')
         const root = document.getElementById('root')
         if (root) {
             root.classList.add('focalboard-plugin-root')
         }
 
         return () => {
-            document.body.classList.remove('focalboard-plugin-body')
+            document.body.classList.remove('focalboard-body')
             if (root) {
                 root.classList.remove('focalboard-plugin-root')
             }
@@ -58,7 +58,7 @@ const MainApp = () => {
     }, [])
 
     return (
-        <div id='main-app'>
+        <div id='focalboard-app'>
             <ErrorBoundary>
                 <App/>
             </ErrorBoundary>

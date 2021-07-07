@@ -1,24 +1,9 @@
 @import "compass-icons";
-
-.focalboard-plugin-body {
-    display: flex;
-    flex-direction: column;
-
-    width: 100%;
-    height: 100%;
-    color: rgb(var(--body-color));
-    background: rgb(var(--main-bg));
-}
-
-.focalboard-plugin-root {
-    height: 100%;
-}
-
 html {
     height: 100%;
 }
 
-.focalboard-body {
+.focalboard-body, #focalboard-app {
     display: flex;
     flex-direction: column;
 
@@ -30,7 +15,11 @@ html {
     margin: 0;
 }
 
-#focalboard-app {
+.focalboard-plugin-root {
+    height: 100%;
+}
+
+.focalboard-body {
     @font-face {
         font-family: 'compass-icons';
         src: url('../fonts/compass-icons/compass-icons.eot?45182295');
@@ -52,14 +41,6 @@ html {
         user-select: none; /* Likely future */
         font-family: "Open Sans", sans-serif;
     }
-
-    display: flex;
-    flex-direction: column;
-
-    width: 100%;
-    height: 100%;
-    color: rgb(var(--body-color));
-    background: rgb(var(--main-bg));
 
     input,
     textarea,
