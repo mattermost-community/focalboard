@@ -88,8 +88,6 @@ const Kanban = (props: Props) => {
     }
 
     const orderAfterMoveToColumn = (cardIds: string[], columnId?: string): string[] => {
-        const {boardTree} = props
-        const {activeView} = boardTree
         let cardOrder = activeView.cardOrder.slice()
         const columnGroup = boardTree.visibleGroups.find((g) => g.option.id === columnId)
         const columnCards = columnGroup?.cards
@@ -105,7 +103,7 @@ const Kanban = (props: Props) => {
     }
 
     const onDropToColumn = async (option: IPropertyOption, card?: Card, dstOption?: IPropertyOption) => {
-        const {boardTree, selectedCardIds} = props
+        const {selectedCardIds} = props
         const optionId = option ? option.id : undefined
 
         let draggedCardIds = selectedCardIds
