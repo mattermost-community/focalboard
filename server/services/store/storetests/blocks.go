@@ -1,9 +1,10 @@
 package storetests
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
@@ -154,12 +155,12 @@ func testInsertBlock(t *testing.T, store store.Store, container store.Container)
 
 	t.Run("data tamper attempt", func(t *testing.T) {
 		block := model.Block{
-			ID:     "id-10",
-			RootID: "root-id",
-			Title:  "Old Title",
-			CreateAt: createdAt.Unix(),
-			UpdateAt: updateAt.Unix(),
-			CreatedBy: "user-id-5",
+			ID:         "id-10",
+			RootID:     "root-id",
+			Title:      "Old Title",
+			CreateAt:   createdAt.Unix(),
+			UpdateAt:   updateAt.Unix(),
+			CreatedBy:  "user-id-5",
 			ModifiedBy: "user-id-6",
 		}
 
@@ -172,8 +173,8 @@ func testInsertBlock(t *testing.T, store store.Store, container store.Container)
 		assert.NotNil(t, retrievedBlock)
 		assert.Equal(t, "user-id-1", retrievedBlock.CreatedBy)
 		assert.Equal(t, "user-id-1", retrievedBlock.ModifiedBy)
-		assert.WithinDurationf(t, time.Now(), time.Unix(retrievedBlock.CreateAt / 1000, 0), 1 * time.Second, "create time should be current time")
-		assert.WithinDurationf(t, time.Now(), time.Unix(retrievedBlock.UpdateAt / 1000, 0), 1 * time.Second, "update time should be current time")
+		assert.WithinDurationf(t, time.Now(), time.Unix(retrievedBlock.CreateAt/1000, 0), 1*time.Second, "create time should be current time")
+		assert.WithinDurationf(t, time.Now(), time.Unix(retrievedBlock.UpdateAt/1000, 0), 1*time.Second, "update time should be current time")
 	})
 }
 
@@ -523,8 +524,8 @@ func testGetBlock(t *testing.T, store store.Store, container store.Container) {
 		require.Equal(t, "root-id-1", fetchedBlock.RootID)
 		require.Equal(t, "user-id-1", fetchedBlock.CreatedBy)
 		require.Equal(t, "user-id-1", fetchedBlock.ModifiedBy)
-		assert.WithinDurationf(t, time.Now(), time.Unix(fetchedBlock.CreateAt / 1000, 0), 1 * time.Second, "create time should be current time")
-		assert.WithinDurationf(t, time.Now(), time.Unix(fetchedBlock.UpdateAt / 1000, 0), 1 * time.Second, "update time should be current time")
+		assert.WithinDurationf(t, time.Now(), time.Unix(fetchedBlock.CreateAt/1000, 0), 1*time.Second, "create time should be current time")
+		assert.WithinDurationf(t, time.Now(), time.Unix(fetchedBlock.UpdateAt/1000, 0), 1*time.Second, "update time should be current time")
 	})
 
 	t.Run("get a non-existing block", func(t *testing.T) {

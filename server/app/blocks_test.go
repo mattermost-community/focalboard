@@ -1,9 +1,9 @@
 package app
 
 import (
-	"errors"
-	"github.com/mattermost/focalboard/server/model"
 	"testing"
+
+	"github.com/mattermost/focalboard/server/model"
 
 	"github.com/golang/mock/gomock"
 	st "github.com/mattermost/focalboard/server/services/store"
@@ -55,8 +55,8 @@ func TestInsertBlock(t *testing.T) {
 
 	t.Run("error scenerio", func(t *testing.T) {
 		block := model.Block{}
-		th.Store.EXPECT().InsertBlock(gomock.Eq(container), gomock.Eq(&block), gomock.Eq("user-id-1")).Return(errors.New("dummy error"))
+		th.Store.EXPECT().InsertBlock(gomock.Eq(container), gomock.Eq(&block), gomock.Eq("user-id-1")).Return(blockError{"error"})
 		err := th.App.InsertBlock(container, block, "user-id-1")
-		require.Error(t, err, "dummy error")
+		require.Error(t, err, "error")
 	})
 }
