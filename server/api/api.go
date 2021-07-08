@@ -254,7 +254,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	auditRec.Success()
 }
 
-func stampModifiedByUser(r *http.Request, blocks []model.Block, auditRec *audit.Record) {
+func stampModificationMetadata(r *http.Request, blocks []model.Block, auditRec *audit.Record) {
 	ctx := r.Context()
 	session := ctx.Value("session").(*model.Session)
 	userID := session.UserID
@@ -262,8 +262,10 @@ func stampModifiedByUser(r *http.Request, blocks []model.Block, auditRec *audit.
 		userID = ""
 	}
 
+	now := utils.GetMillis()
 	for i := range blocks {
 		blocks[i].ModifiedBy = userID
+		blocks[i].UpdateAt = now
 
 		if auditRec != nil {
 			auditRec.AddMeta("block_"+strconv.FormatInt(int64(i), 10), blocks[i])
@@ -347,9 +349,12 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	auditRec := a.makeAuditRecord(r, "postBlocks", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 
-	stampModifiedByUser(r, blocks, auditRec)
+	stampModificationMetadata(r, blocks, auditRec)
 
-	err = a.app.InsertBlocks(*container, blocks)
+	ctx := r.Context()
+	session := ctx.Value("session").(*model.Session)
+
+	err = a.app.InsertBlocks(*container, blocks, session.UserID)
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
@@ -774,9 +779,11 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 	auditRec := a.makeAuditRecord(r, "import", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 
-	stampModifiedByUser(r, blocks, auditRec)
+	stampModificationMetadata(r, blocks, auditRec)
 
-	err = a.app.InsertBlocks(*container, blocks)
+	ctx := r.Context()
+	session := ctx.Value("session").(*model.Session)
+	err = a.app.InsertBlocks(*container, blocks, session.UserID)
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return

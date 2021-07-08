@@ -16,10 +16,12 @@ import {useSortable} from '../../hooks/sortable'
 
 import './kanbanCard.scss'
 import PropertyValueElement from '../propertyValueElement'
+import {CardTree} from '../../viewModel/cardTree'
 import Tooltip from '../../widgets/tooltip'
 
 type Props = {
     card: Card
+    cardTree?: CardTree
     visiblePropertyTemplates: IPropertyTemplate[]
     isSelected: boolean
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
@@ -94,6 +96,7 @@ const KanbanCard = React.memo((props: Props) => {
                     <PropertyValueElement
                         readOnly={true}
                         card={card}
+                        cardTree={props.cardTree}
                         propertyTemplate={template}
                         emptyDisplayValue=''
                     />

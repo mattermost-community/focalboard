@@ -52,9 +52,6 @@ const CardDetail = (props: Props): JSX.Element|null => {
         return null
     }
 
-    // componentWillUnmount(): void {
-    // }
-
     return (
         <>
             <div className='CardDetail content'>
