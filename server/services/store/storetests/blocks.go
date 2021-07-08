@@ -1,6 +1,7 @@
 package storetests
 
 import (
+	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
 
@@ -64,7 +65,7 @@ func testInsertBlock(t *testing.T, store store.Store, container store.Container)
 			ModifiedBy: userID,
 		}
 
-		err := store.InsertBlock(container, block)
+		err := store.InsertBlock(container, &block, "user-id-1")
 		require.NoError(t, err)
 
 		blocks, err := store.GetAllBlocks(container)
@@ -79,7 +80,7 @@ func testInsertBlock(t *testing.T, store store.Store, container store.Container)
 			ModifiedBy: userID,
 		}
 
-		err := store.InsertBlock(container, block)
+		err := store.InsertBlock(container, &block, "user-id-1")
 		require.Error(t, err)
 
 		blocks, err := store.GetAllBlocks(container)
@@ -95,12 +96,84 @@ func testInsertBlock(t *testing.T, store store.Store, container store.Container)
 			Fields:     map[string]interface{}{"no-serialiable-value": t.Run},
 		}
 
-		err := store.InsertBlock(container, block)
+		err := store.InsertBlock(container, &block, "user-id-1")
 		require.Error(t, err)
 
 		blocks, err := store.GetAllBlocks(container)
 		require.NoError(t, err)
 		require.Len(t, blocks, initialCount+1)
+	})
+
+	t.Run("insert new block", func(t *testing.T) {
+		block := model.Block{
+			RootID: "root-id",
+		}
+
+		err := store.InsertBlock(container, &block, "user-id-2")
+		require.NoError(t, err)
+		require.Equal(t, "user-id-2", block.CreatedBy)
+	})
+
+	t.Run("update existing block", func(t *testing.T) {
+		block := model.Block{
+			ID:     "id-2",
+			RootID: "root-id",
+			Title:  "Old Title",
+		}
+
+		// inserting
+		err := store.InsertBlock(container, &block, "user-id-2")
+		require.NoError(t, err)
+
+		// created by populated from user id for new blocks
+		require.Equal(t, "user-id-2", block.CreatedBy)
+
+		// hack to avoid multiple, quick updates to a card
+		// violating block_history composite primary key constraint
+		time.Sleep(1 * time.Second)
+
+		// updating
+		newBlock := model.Block{
+			ID:        "id-2",
+			RootID:    "root-id",
+			CreatedBy: "user-id-3",
+			Title:     "New Title",
+		}
+		err = store.InsertBlock(container, &newBlock, "user-id-4")
+		require.NoError(t, err)
+		// created by is not altered for existing blocks
+		require.Equal(t, "user-id-3", newBlock.CreatedBy)
+		require.Equal(t, "New Title", newBlock.Title)
+	})
+
+	createdAt, err := time.Parse(time.RFC822, "01 Jan 90 01:00 IST")
+	assert.NoError(t, err)
+
+	updateAt, err := time.Parse(time.RFC822, "02 Jan 90 01:00 IST")
+	assert.NoError(t, err)
+
+	t.Run("data tamper attempt", func(t *testing.T) {
+		block := model.Block{
+			ID:     "id-10",
+			RootID: "root-id",
+			Title:  "Old Title",
+			CreateAt: createdAt.Unix(),
+			UpdateAt: updateAt.Unix(),
+			CreatedBy: "user-id-5",
+			ModifiedBy: "user-id-6",
+		}
+
+		// inserting
+		err := store.InsertBlock(container, &block, "user-id-1")
+		require.NoError(t, err)
+
+		retrievedBlock, err := store.GetBlock(container, "id-10")
+		assert.NoError(t, err)
+		assert.NotNil(t, retrievedBlock)
+		assert.Equal(t, "user-id-1", retrievedBlock.CreatedBy)
+		assert.Equal(t, "user-id-1", retrievedBlock.ModifiedBy)
+		assert.WithinDurationf(t, time.Now(), time.Unix(retrievedBlock.CreateAt / 1000, 0), 1 * time.Second, "create time should be current time")
+		assert.WithinDurationf(t, time.Now(), time.Unix(retrievedBlock.UpdateAt / 1000, 0), 1 * time.Second, "update time should be current time")
 	})
 }
 
@@ -149,7 +222,7 @@ func testGetSubTree2(t *testing.T, store store.Store, container store.Container)
 	require.NoError(t, err)
 	initialCount := len(blocks)
 
-	InsertBlocks(t, store, container, subtreeSampleBlocks)
+	InsertBlocks(t, store, container, subtreeSampleBlocks, "user-id-1")
 	defer DeleteBlocks(t, store, container, subtreeSampleBlocks, "test")
 
 	blocks, err = store.GetAllBlocks(container)
@@ -185,7 +258,7 @@ func testGetSubTree3(t *testing.T, store store.Store, container store.Container)
 	require.NoError(t, err)
 	initialCount := len(blocks)
 
-	InsertBlocks(t, store, container, subtreeSampleBlocks)
+	InsertBlocks(t, store, container, subtreeSampleBlocks, "user-id-1")
 	defer DeleteBlocks(t, store, container, subtreeSampleBlocks, "test")
 
 	blocks, err = store.GetAllBlocks(container)
@@ -224,7 +297,7 @@ func testGetParents(t *testing.T, store store.Store, container store.Container) 
 	require.NoError(t, err)
 	initialCount := len(blocks)
 
-	InsertBlocks(t, store, container, subtreeSampleBlocks)
+	InsertBlocks(t, store, container, subtreeSampleBlocks, "user-id-1")
 	defer DeleteBlocks(t, store, container, subtreeSampleBlocks, "test")
 
 	blocks, err = store.GetAllBlocks(container)
@@ -290,7 +363,7 @@ func testDeleteBlock(t *testing.T, store store.Store, container store.Container)
 			ModifiedBy: userID,
 		},
 	}
-	InsertBlocks(t, store, container, blocksToInsert)
+	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
 	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
 	blocks, err = store.GetAllBlocks(container)
@@ -365,7 +438,7 @@ func testGetBlocks(t *testing.T, store store.Store, container store.Container) {
 		},
 	}
 
-	InsertBlocks(t, store, container, blocksToInsert)
+	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
 	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
 	t.Run("not existing parent", func(t *testing.T) {
@@ -429,5 +502,34 @@ func testGetBlocks(t *testing.T, store store.Store, container store.Container) {
 		blocks, err = store.GetBlocksWithRootID(container, "block1")
 		require.NoError(t, err)
 		require.Len(t, blocks, 4)
+	})
+}
+
+func testGetBlock(t *testing.T, store store.Store, container store.Container) {
+	t.Run("get a block", func(t *testing.T) {
+		block := model.Block{
+			ID:         "block-id-10",
+			RootID:     "root-id-1",
+			ModifiedBy: "user-id-1",
+		}
+
+		err := store.InsertBlock(container, &block, "user-id-1")
+		require.NoError(t, err)
+
+		fetchedBlock, err := store.GetBlock(container, "block-id-10")
+		require.NoError(t, err)
+		require.NotNil(t, fetchedBlock)
+		require.Equal(t, "block-id-10", fetchedBlock.ID)
+		require.Equal(t, "root-id-1", fetchedBlock.RootID)
+		require.Equal(t, "user-id-1", fetchedBlock.CreatedBy)
+		require.Equal(t, "user-id-1", fetchedBlock.ModifiedBy)
+		assert.WithinDurationf(t, time.Now(), time.Unix(fetchedBlock.CreateAt / 1000, 0), 1 * time.Second, "create time should be current time")
+		assert.WithinDurationf(t, time.Now(), time.Unix(fetchedBlock.UpdateAt / 1000, 0), 1 * time.Second, "update time should be current time")
+	})
+
+	t.Run("get a non-existing block", func(t *testing.T) {
+		fetchedBlock, err := store.GetBlock(container, "non-existing-id")
+		require.NoError(t, err)
+		require.Nil(t, fetchedBlock)
 	})
 }

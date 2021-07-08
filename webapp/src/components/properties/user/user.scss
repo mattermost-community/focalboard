@@ -1,4 +1,10 @@
 .UserProperty {
     margin-right: 20px;
     min-width: 120px;
+
+    &.readonly {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: unset;
+    }
 }

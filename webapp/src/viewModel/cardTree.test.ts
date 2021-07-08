@@ -79,9 +79,8 @@ test('CardTree', async () => {
         fail('incrementalUpdate')
     }
 
-    // Copy
-    // const cardTree2 = cardTree.mutableCopy()
-    // expect(cardTree2.card).toEqual(cardTree.card)
-    // expect(cardTree2.comments).toEqual(cardTree.comments)
-    // expect(cardTree2.contents).toEqual(cardTree.contents)
+    FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([card, comment, text, image, divider])))
+    cardTree = await MutableCardTree.sync(card.id)
+    expect(cardTree).not.toBeUndefined()
+    expect(cardTree?.latestBlock.type).toEqual('divider')
 })
