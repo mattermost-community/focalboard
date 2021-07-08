@@ -58,11 +58,12 @@ const MainApp = () => {
     }, [])
 
     return (
-        <div id='focalboard-app'>
-            <ErrorBoundary>
+        <ErrorBoundary>
+            <div id='focalboard-app'>
                 <App/>
-            </ErrorBoundary>
-        </div>
+            </div>
+            <div id='focalboard-root-portal'/>
+        </ErrorBoundary>
     )
 }
 
