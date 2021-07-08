@@ -24,6 +24,7 @@ import useCardListener from '../../hooks/cardListener'
 import TableHeader from './tableHeader'
 import TableRows from './tableRows'
 import TableGroup from './tableGroup'
+import CalculationRow from './calculation/CalculationRow'
 
 type Props = {
     boardTree: BoardTree
@@ -363,6 +364,12 @@ const Table = (props: Props) => {
                     </div>
                 }
             </div>
+
+            <CalculationRow
+                boardTree={boardTree}
+                resizingColumn={resizingColumn}
+                offset={offset}
+            />
         </div>
     )
 }

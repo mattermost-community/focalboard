@@ -31,6 +31,13 @@ type Props = {
     onDrop: (srcCard: Card, dstCard: Card) => void
 }
 
+export const columnWidth = (templateId: string, resizingColumn: string, boardTree: BoardTree, offset: number): number => {
+    if (resizingColumn === templateId) {
+        return Math.max(Constants.minColumnWidth, (boardTree.activeView.columnWidths[templateId] || 0) + offset)
+    }
+    return Math.max(Constants.minColumnWidth, boardTree.activeView.columnWidths[templateId] || 0)
+}
+
 const TableRow = React.memo((props: Props) => {
     const {boardTree, onSaveWithEnter, columnRefs} = props
     const {board, activeView} = boardTree
@@ -47,13 +54,6 @@ const TableRow = React.memo((props: Props) => {
             setTimeout(() => titleRef.current?.focus(), 10)
         }
     }, [])
-
-    const columnWidth = (templateId: string): number => {
-        if (props.resizingColumn === templateId) {
-            return Math.max(Constants.minColumnWidth, (props.boardTree.activeView.columnWidths[templateId] || 0) + props.offset)
-        }
-        return Math.max(Constants.minColumnWidth, props.boardTree.activeView.columnWidths[templateId] || 0)
-    }
 
     let className = props.isSelected ? 'TableRow octo-table-row selected' : 'TableRow octo-table-row'
     if (isOver) {
@@ -83,7 +83,7 @@ const TableRow = React.memo((props: Props) => {
             <div
                 className='octo-table-cell title-cell'
                 id='mainBoardHeader'
-                style={{width: columnWidth(Constants.titleColumnId)}}
+                style={{width: columnWidth(Constants.titleColumnId, props.resizingColumn, boardTree, props.offset)}}
                 ref={columnRefs.get(Constants.titleColumnId)}
             >
                 <div className='octo-icontitle'>
@@ -127,7 +127,7 @@ const TableRow = React.memo((props: Props) => {
                         <div
                             className='octo-table-cell'
                             key={template.id}
-                            style={{width: columnWidth(template.id)}}
+                            style={{width: columnWidth(template.id, props.resizingColumn, boardTree, props.offset)}}
                             ref={columnRefs.get(template.id)}
                         >
                             <PropertyValueElement

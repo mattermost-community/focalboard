@@ -1,0 +1,15 @@
+.CalculationRow {
+    position: sticky;
+    position: -webkit-sticky;
+    bottom: 0;
+    height: 47px;
+
+    .octo-table-cell {
+        background-color: rgb(var(--main-bg));
+        border-top: solid 1px rgba(var(--body-color), 0.09);
+    }
+
+    .title {
+        padding-left: 40px;
+    }
+}

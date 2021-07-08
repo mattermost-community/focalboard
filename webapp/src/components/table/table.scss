@@ -1,4 +1,6 @@
 .Table {
+    padding-bottom: 0 !important;
+
     .octo-group-header-cell {
         display: flex;
         flex-shrink: 0;
@@ -160,7 +162,6 @@
     .octo-table-footer {
         display: flex;
         flex-direction: row;
-
         border-bottom: solid 1px rgba(var(--body-color), 0.09);
         &.hidden {
             display: none;
@@ -184,6 +185,8 @@
     }
 
     .octo-table-footer {
+        padding-bottom: 47px;
+
         .octo-table-cell {
             color: rgba(var(--body-color), 0.6);
             cursor: pointer;
