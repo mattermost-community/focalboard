@@ -77,8 +77,9 @@ function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: ICont
     if (moveTo === 'right') {
         if (dstBlockY > -1) {
 
-            // Get an updated dst y cord incase delete above changed it
-            dstBlockY = contentOrder[dstBlockX].indexOf(dstBlockId);
+            if (dstBlockX === srcBlockX && dstBlockY > srcBlockY) {
+                dstBlockY -= 1
+            }
 
             (contentOrder[dstBlockX] as string[]).splice(dstBlockY + 1, 0, srcBlockId)
         } else {
@@ -86,8 +87,11 @@ function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: ICont
         }
     } else if (moveTo === 'left') {
         if (dstBlockY > -1) {
-            // Get an updated dst y cord incase delete above changed it
-            dstBlockY = contentOrder[dstBlockX].indexOf(dstBlockId);
+
+            if (dstBlockX === srcBlockX && dstBlockY > srcBlockY) {
+                dstBlockY -= 1
+            }
+
             (contentOrder[dstBlockX] as string[]).splice(dstBlockY, 0, srcBlockId)
         } else {
             contentOrder.splice(dstBlockX, 1, [srcBlockId, dstBlockId]);
@@ -104,6 +108,77 @@ function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: ICont
     })
 }
 
+const ContentBlockWithDragAndDrop = (props) => {
+    const [, isOver,, itemRef] = useSortableWithGrip('content', {block: props.block, cords: {x: props.x}}, true, (src, dst) =>  moveBlock(props.card, src, dst, props.intl, 'aboveRow'))
+    const [, isOver2,, itemRef2] = useSortableWithGrip('content', {block: props.block, cords: {x: props.x}}, true, (src, dst) =>  moveBlock(props.card, src, dst, props.intl, 'belowRow'))
+
+
+    if (Array.isArray(props.block)) {
+        return (
+            <div
+            >
+                <div
+                    ref={itemRef}
+                    className={`addToRow ${isOver ? 'dragover' : ''}`}
+                    style={{width: '94%', height: '10px', marginLeft: '48px'}}
+                /> 
+                <div
+                    style={{display: 'flex'}}
+                >
+
+                    {props.block.map((b, y) => (
+                        <ContentBlock
+                            key={b.id}
+                            block={b}
+                            card={props.card}
+                            readonly={props.readonly}
+                            width={(1/props.block.length) * 100}
+                            onDrop={(src, dst, moveTo) => moveBlock(props.card, src, dst, props.intl, moveTo)}
+                            cords={{x: props.x, y: y}}
+                        />
+                    ))}
+                </div>
+                {props.x === props.cardTree.contents.length - 1 && (
+                    <div
+                        ref={itemRef2}
+                        className={`addToRow ${isOver2 ? 'dragover' : ''}`}
+                        style={{width: '94%', height: '10px', marginLeft: '48px'}}
+                    />
+                )}
+            </div>
+    
+            
+        )
+    }
+
+    return (
+        <div>
+            <div
+                ref={itemRef}
+                className={`addToRow ${isOver ? 'dragover' : ''}`}
+                style={{width: '94%', height: '10px', marginLeft: '48px'}}
+            /> 
+            <ContentBlock
+                key={props.block.id}
+                block={props.block}
+                card={props.card}
+                readonly={props.readonly}
+                onDrop={(src, dst, moveTo) => moveBlock(props.card, src, dst, props.intl, moveTo)}
+                cords={{x: props.x}}
+            />
+            {props.x === props.cardTree.contents.length - 1 && (
+                <div
+                    ref={itemRef2}
+                    className={`addToRow ${isOver2 ? 'dragover' : ''}`}
+                    style={{width: '94%', height: '10px', marginLeft: '48px'}}
+                />
+            )}
+        </div>
+
+    
+    )
+}
+
 const CardDetailContents = React.memo((props: Props) => {
     const intl = useIntl()
     const {cardTree} = props
@@ -114,61 +189,18 @@ const CardDetailContents = React.memo((props: Props) => {
     if (cardTree.contents.length > 0) {
         return (
             <div className='octo-content'>
-                {cardTree.contents.map((block, x) => {
-                    // const [, isOver,, itemRef] = useSortableWithGrip('content', {block: block, cords: {x: x}}, true, (src, dst) =>  moveBlock(card, src, dst, intl, 'aboveRow'))
-                    // const [, isOver2,, itemRef2] = useSortableWithGrip('content', {block: block, cords: {x: x}}, true, (src, dst) =>  moveBlock(card, src, dst, intl, 'belowRow'))
+                {cardTree.contents.map((block, x) => 
+                    <ContentBlockWithDragAndDrop
+                        key={x}
+                        block={block}
+                        x={x}
+                        card={card}
+                        cardTree={cardTree}
+                        intl={intl}
+                        readonly={props.readonly}
+                    />
 
-
-                    if (Array.isArray(block)) {
-                        return (
-                            <div
-                                key={block[0].id + '0'}
-                            >
-                                {/* <div
-                                    className={`addToRow ${isOver ? 'dragover' : ''}`}
-                                    style={{width: '94%', height: '10px', marginLeft: '48px'}}
-                                />  */}
-                                <div
-                                    style={{display: 'flex'}}
-                                >
-        
-                                    {block.map((b, y) => (
-                                        <ContentBlock
-                                            key={b.id}
-                                            block={b}
-                                            card={card}
-                                            readonly={props.readonly}
-                                            width={(1/block.length) * 100}
-                                            onDrop={(src, dst, moveTo) => moveBlock(card, src, dst, intl, moveTo)}
-                                            cords={{x: x, y: y}}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                   
-                            
-                        )
-                    }
-
-                    return (
-                        <div key={block.id + '0'}>
-                            {/* <div
-                                className={`addToRow ${isOver ? 'dragover' : ''}`}
-                                style={{width: '94%', height: '10px', marginLeft: '48px'}}
-                            />  */}
-                            <ContentBlock
-                                key={block.id}
-                                block={block}
-                                card={card}
-                                readonly={props.readonly}
-                                onDrop={(src, dst, moveTo) => moveBlock(card, src, dst, intl, moveTo)}
-                                cords={{x: x}}
-                            />
-                        </div>
-       
-                    
-                    )
-                })}
+                )}
             </div>
         )
     }
