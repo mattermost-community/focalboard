@@ -41,10 +41,12 @@ class BoardPage extends React.Component<Props, State> {
 
         // Backward compatible query param urls to regular urls
         const queryString = new URLSearchParams(window.location.search)
-        if (queryString.get('id')) {
-            const params = {...props.match.params, boardId: queryString.get('id'), viewId: queryString.get('id') || ''}
-            if (queryString.get('v')) {
-                params.viewId = queryString.get('id')
+        const queryBoardId = queryString.get('id')
+        const queryViewId = queryString.get('v')
+        if (queryBoardId) {
+            const params = {...props.match.params, boardId: queryBoardId}
+            if (queryViewId) {
+                params.viewId = queryViewId
             }
             const newPath = generatePath(props.match.path, params)
             props.history.push(newPath)
