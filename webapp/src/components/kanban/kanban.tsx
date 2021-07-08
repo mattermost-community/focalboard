@@ -190,6 +190,23 @@ class Kanban extends React.Component<Props, State> {
         await mutator.insertPropertyOption(boardTree, boardTree.groupByProperty!, option, 'add group')
     }
 
+    private orderAfterMoveToColumn(cardIds: string[], columnId?: string): string[] {
+        const {boardTree} = this.props
+        const {activeView} = boardTree
+        let cardOrder = activeView.cardOrder.slice()
+        const columnGroup = boardTree.visibleGroups.find((g) => g.option.id === columnId)
+        const columnCards = columnGroup?.cards
+        if (!columnCards || columnCards.length === 0) {
+            return cardOrder
+        }
+        const lastCardId = columnCards[columnCards.length - 1].id
+        const setOfIds = new Set(cardIds)
+        cardOrder = cardOrder.filter((id) => !setOfIds.has(id))
+        const lastCardIndex = cardOrder.indexOf(lastCardId)
+        cardOrder.splice(lastCardIndex + 1, 0, ...cardIds)
+        return cardOrder
+    }
+
     private onDropToColumn = async (option: IPropertyOption, card?: Card, dstOption?: IPropertyOption) => {
         const {boardTree, selectedCardIds} = this.props
         const optionId = option ? option.id : undefined
@@ -218,6 +235,8 @@ class Kanban extends React.Component<Props, State> {
                         awaits.push(mutator.changePropertyValue(draggedCard, boardTree.groupByProperty!.id, optionId, description))
                     }
                 }
+                const newOrder = this.orderAfterMoveToColumn(draggedCardIds, optionId)
+                awaits.push(mutator.changeViewCardOrder(boardTree.activeView, newOrder, description))
                 await Promise.all(awaits)
             })
         } else if (dstOption) {
