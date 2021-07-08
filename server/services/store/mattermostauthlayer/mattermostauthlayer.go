@@ -3,7 +3,6 @@ package mattermostauthlayer
 import (
 	"database/sql"
 	"encoding/json"
-	"log"
 	"strings"
 	"time"
 
@@ -212,7 +211,7 @@ func (s *MattermostAuthLayer) GetWorkspace(id string) (*model.Workspace, error) 
 		}
 		var name string
 		if err := rows.Scan(&name); err != nil {
-			log.Fatal(err) //nolint:gocritic
+			return nil, err
 		}
 		sb.WriteString(name)
 	}

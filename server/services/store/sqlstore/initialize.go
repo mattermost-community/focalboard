@@ -66,7 +66,7 @@ func (s *SQLStore) isInitializationNeeded() (bool, error) {
 	var count int
 	err := row.Scan(&count)
 	if err != nil {
-		s.logger.Fatal("isInitializationNeeded", mlog.Err(err))
+		s.logger.Error("isInitializationNeeded", mlog.Err(err))
 		return false, err
 	}
 

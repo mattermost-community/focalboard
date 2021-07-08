@@ -41,7 +41,6 @@ const (
 	cleanupSessionTaskFrequency = 10 * time.Minute
 	updateMetricsTaskFrequency  = 15 * time.Minute
 
-	//nolint:gomnd
 	minSessionExpiryTime = int64(60 * 60 * 24 * 31) // 31 days
 
 	MattermostAuthMod = "mattermost"
@@ -75,7 +74,7 @@ func New(cfg *config.Configuration, singleUserToken string, db store.Store, logg
 	filesBackendSettings := filestore.FileBackendSettings{}
 	filesBackendSettings.DriverName = cfg.FilesDriver
 	filesBackendSettings.Directory = cfg.FilesPath
-	filesBackendSettings.AmazonS3AccessKeyId = cfg.FilesS3Config.AccessKeyId
+	filesBackendSettings.AmazonS3AccessKeyId = cfg.FilesS3Config.AccessKeyID
 	filesBackendSettings.AmazonS3SecretAccessKey = cfg.FilesS3Config.SecretAccessKey
 	filesBackendSettings.AmazonS3Bucket = cfg.FilesS3Config.Bucket
 	filesBackendSettings.AmazonS3PathPrefix = cfg.FilesS3Config.PathPrefix
