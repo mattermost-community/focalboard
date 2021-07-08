@@ -148,7 +148,7 @@ exports[`components/table/Table should match snapshot 1`] = `
             tabindex="0"
           >
             <span
-              class="Label color1 "
+              class="Label propColorBrown "
             >
               value 1
             </span>
@@ -488,7 +488,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
             tabindex="0"
           >
             <span
-              class="Label color1 "
+              class="Label propColorBrown "
             >
               value 1
             </span>

@@ -41,11 +41,13 @@ You may need to adjust your firewall settings depending on the host, e.g.
 ### Configure NGINX
 
 Create a new site config:
+
 ```
 sudo nano /etc/nginx/sites-available/focalboard
 ```
 
 Copy and paste this configuration:
+
 ```
 upstream focalboard {
    server localhost:8000;
@@ -99,6 +101,7 @@ server {
 ```
 
 Enable the site, test the config, and reload NGINX:
+
 ```
 sudo ln -s /etc/nginx/sites-available/focalboard /etc/nginx/sites-enabled/focalboard
 sudo nginx -t
@@ -118,19 +121,22 @@ sudo apt install postgresql postgresql-contrib
 ```
 
 Then run as the postgres user to create a new database:
+
 ```
 sudo --login --user postgres
 psql
 ```
 
 On the psql prompt, run the following commands (**change the user/password** to your own values):
-<pre>
+
+```
 CREATE DATABASE boards;
 CREATE USER <b>boardsuser</b> WITH PASSWORD '<b>boardsuser-password</b>';
 \q
-</pre>
+```
 
 Exit the postgres user session:
+
 ```
 exit
 ```
@@ -142,9 +148,50 @@ nano /opt/focalboard/config.json
 ```
 
 Change the dbconfig setting to use the postgres database you created:
+
 ```
 "dbtype": "postgres",
 "dbconfig": "postgres://boardsuser:boardsuser-password@localhost/boards?sslmode=disable&connect_timeout=10",
+```
+
+## Install MySQL 
+
+As an alternative to Postgres, you also can store your data in a MySQL/MariaDB database. To install, run:
+
+```
+sudo apt install mariadb-server mariadb-client
+```
+
+Log in as `root` in your database:
+
+```
+sudo mysql 
+```
+
+At the MySQL prompt, run the following commands (change `user/password` to your own values):
+
+```
+CREATE DATABASE boards;
+GRANT ALL on boards.* to <b>'boardsuser'@'localhost'</b> identified by '<b>boardsuser-password</b>';
+```
+
+Exit the mysql-prompt:
+
+```
+exit
+```
+
+Edit the Focalboard `config.json`:
+
+```
+nano /opt/focalboard/config.json
+```
+
+Change the dbconfig setting to use the MySQL database you created:
+
+```
+"dbtype": "mysql",
+"dbconfig": "boardsuser:boardsuser-password@tcp(127.0.0.1:3306)/boards",
 ```
 
 ## Configure Focalboard to run as a service
@@ -156,6 +203,7 @@ sudo nano /lib/systemd/system/focalboard.service
 ```
 
 Paste in the following:
+
 ```
 [Unit]
 Description=Focalboard server
@@ -172,6 +220,7 @@ WantedBy=multi-user.target
 ```
 
 Make systemd reload the new unit, and start it on machine reboot:
+
 ```
 sudo systemctl daemon-reload
 sudo systemctl start focalboard.service
@@ -183,12 +232,13 @@ sudo systemctl enable focalboard.service
 At this point, the Focalboard server should be running.
 
 Test that it's running locally with:
+
 ```
 curl localhost:8000
 curl localhost
 ```
 
-The first command checks that the server is running on port 8000 (default), and the second checks that NGINX is proxying requests successfully. Both commands should return the same snippet of html.
+The first command checks that the server is running on port 8000 (default), and the second checks that NGINX is proxying requests successfully. Both commands should return the same snippet of HTML.
 
 To access the server remotely, open a browser to its IP address or domain.
 

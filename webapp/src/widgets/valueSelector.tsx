@@ -79,12 +79,12 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
                         onClick={() => props.onDeleteOption(option)}
                     />
                     <Menu.Separator/>
-                    {Constants.menuColors.map((color) => (
+                    {Object.entries(Constants.menuColors).map(([key, color]: any) => (
                         <Menu.Color
-                            key={color.id}
-                            id={color.id}
-                            name={color.name}
-                            onClick={() => props.onChangeColor(option, color.id)}
+                            key={key}
+                            id={key}
+                            name={color}
+                            onClick={() => props.onChangeColor(option, key)}
                         />
                     ))}
                 </Menu>
@@ -126,13 +126,19 @@ const valueSelectorStyle = {
     multiValueRemove: (): CSSObject => ({
         display: 'none',
     }),
+    menu: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        width: 'unset',
+        background: 'rgb(var(--main-bg))',
+        minWidth: '260px',
+    }),
 }
 
 function ValueSelector(props: Props): JSX.Element {
     return (
         <CreatableSelect
             captureMenuScroll={true}
-            maxMenuHeight={580}
+            maxMenuHeight={1200}
             isMulti={props.isMulti}
             isClearable={true}
             styles={valueSelectorStyle}
