@@ -50,6 +50,11 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		defer tearDown()
 		testGetBlocks(t, store, container)
 	})
+	t.Run("GetBlock", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testGetBlock(t, store, container)
+	})
 }
 
 func testInsertBlock(t *testing.T, store store.Store, container store.Container) {
