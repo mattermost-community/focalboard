@@ -1,7 +1,6 @@
 package client
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -88,16 +87,8 @@ func (c *Client) DoAPIPost(url, data string) (*http.Response, error) {
 	return c.DoAPIRequest(http.MethodPost, c.APIURL+url, data, "")
 }
 
-func (c *Client) doAPIPostBytes(url string, data []byte) (*http.Response, error) {
-	return c.doAPIRequestBytes(http.MethodPost, c.APIURL+url, data, "")
-}
-
 func (c *Client) DoAPIPut(url, data string) (*http.Response, error) {
 	return c.DoAPIRequest(http.MethodPut, c.APIURL+url, data, "")
-}
-
-func (c *Client) doAPIPutBytes(url string, data []byte) (*http.Response, error) {
-	return c.doAPIRequestBytes(http.MethodPut, c.APIURL+url, data, "")
 }
 
 func (c *Client) DoAPIDelete(url string) (*http.Response, error) {
@@ -106,10 +97,6 @@ func (c *Client) DoAPIDelete(url string) (*http.Response, error) {
 
 func (c *Client) DoAPIRequest(method, url, data, etag string) (*http.Response, error) {
 	return c.doAPIRequestReader(method, url, strings.NewReader(data), etag)
-}
-
-func (c *Client) doAPIRequestBytes(method, url string, data []byte, etag string) (*http.Response, error) {
-	return c.doAPIRequestReader(method, url, bytes.NewReader(data), etag)
 }
 
 func (c *Client) doAPIRequestReader(method, url string, data io.Reader, _ /* etag */ string) (*http.Response, error) {
