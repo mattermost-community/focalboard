@@ -60,8 +60,8 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 func testInsertBlock(t *testing.T, store store.Store, container store.Container) {
 	userID := testUserID
 
-	blocks, err := store.GetAllBlocks(container)
-	require.NoError(t, err)
+	blocks, errBlocks := store.GetAllBlocks(container)
+	require.NoError(t, errBlocks)
 	initialCount := len(blocks)
 
 	t.Run("valid block", func(t *testing.T) {
