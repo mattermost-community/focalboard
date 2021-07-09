@@ -7,6 +7,7 @@
     > .Label {
         margin: 0 10px;
         max-width: calc(100% - 10px);
+
         &.empty {
             color: rgba(var(--body-color), 0.6);
         }
@@ -41,19 +42,30 @@
         width: 100%;
         justify-content: center;
         align-items: center;
+
         .label-container {
             flex-grow: 1;
             display: flex;
         }
+
         .MenuWrapper {
             display: flex;
             align-self: flex-end;
+
             .IconButton {
                 background-color: unset;
+
                 &:hover {
                     background-color: rgba(var(--body-color), 0.1);
                 }
             }
+        }
+    }
+
+    div:nth-child(3) {
+        div {
+            overflow-y: unset;
+            overflow-x: unset;
         }
     }
 }
