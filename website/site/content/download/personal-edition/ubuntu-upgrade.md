@@ -13,7 +13,7 @@ Create and use a clean directory, or delete any existing packages first, then ru
 
 ```
 # Download the new version (e.g. 0.7.0 here, check the release for the latest one)
-wget https://github.com/mattermost/focalboard/releases/download/v0.7.3/focalboard-server-linux-amd64.tar.gz
+wget https://github.com/mattermost/focalboard/releases/download/v0.7.0/focalboard-server-linux-amd64.tar.gz
 tar -xvzf focalboard-server-linux-amd64.tar.gz
 
 # Stop the server
