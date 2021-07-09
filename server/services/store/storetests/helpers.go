@@ -9,8 +9,8 @@ import (
 )
 
 func InsertBlocks(t *testing.T, s store.Store, container store.Container, blocks []model.Block, userID string) {
-	for _, block := range blocks {
-		err := s.InsertBlock(container, &block, userID)
+	for i := range blocks {
+		err := s.InsertBlock(container, &blocks[i], userID)
 		require.NoError(t, err)
 	}
 }
