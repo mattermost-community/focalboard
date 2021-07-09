@@ -427,7 +427,10 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 		query := insertQuery.SetMap(insertQueryValues)
 		_, err = sq.ExecContextWith(ctx, tx, query.Into(s.tablePrefix+"blocks"))
 		if err != nil {
-			tx.Rollback()
+			if rollbackErr := tx.Rollback(); rollbackErr != nil {
+				s.logger.Warn("Transaction rollback error", mlog.Err(rollbackErr))
+			}
+
 			return err
 		}
 	}
@@ -437,7 +440,9 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 
 	_, err = sq.ExecContextWith(ctx, tx, query.Into(s.tablePrefix+"blocks_history"))
 	if err != nil {
-		_ = tx.Rollback()
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Warn("Transaction rollback error", mlog.Err(rollbackErr))
+		}
 		return err
 	}
 
@@ -475,7 +480,9 @@ func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy str
 
 	_, err = sq.ExecContextWith(ctx, tx, insertQuery)
 	if err != nil {
-		_ = tx.Rollback()
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Warn("Transaction rollback error", mlog.Err(rollbackErr))
+		}
 		return err
 	}
 
@@ -486,7 +493,9 @@ func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy str
 
 	_, err = sq.ExecContextWith(ctx, tx, deleteQuery)
 	if err != nil {
-		_ = tx.Rollback()
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Warn("Transaction rollback error", mlog.Err(rollbackErr))
+		}
 		return err
 	}
 
@@ -558,6 +567,9 @@ func (s *SQLStore) GetBlock(c store.Container, blockID string) (*model.Block, er
 	}
 
 	blocks, err := s.blocksFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(blocks) == 0 {
 		return nil, nil
