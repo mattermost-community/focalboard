@@ -12,7 +12,6 @@ import mutator from '../../mutator'
 import {BoardTree, BoardTreeGroup} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
 import IconButton from '../../widgets/buttons/iconButton'
-import AddIcon from '../../widgets/icons/add'
 import DeleteIcon from '../../widgets/icons/delete'
 import HideIcon from '../../widgets/icons/hide'
 import OptionsIcon from '../../widgets/icons/options'
@@ -140,10 +139,6 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                                 </>}
                         </Menu>
                     </MenuWrapper>
-                    <IconButton
-                        icon={<AddIcon/>}
-                        onClick={() => props.addCard(group.option.id)}
-                    />
                 </>
             }
         </div>
