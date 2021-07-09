@@ -7,5 +7,8 @@
 	"webpath": "../pack",
 	"filespath": "../../files",
 	"telemetry": false,
-	"webhook_update": []
+	"webhook_update": [],
+	"session_expire_time": 2592000,
+	"session_refresh_time": 18000,
+    "enableTestingAPI": true
 }
