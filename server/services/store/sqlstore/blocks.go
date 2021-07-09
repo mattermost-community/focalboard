@@ -403,15 +403,15 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 			Set("update_at", block.UpdateAt).
 			Set("delete_at", block.DeleteAt)
 
-		q, args, err := query.ToSql()
-		if err != nil {
-			s.logger.Error("InsertBlock error converting update query object to SQL", mlog.Err(err))
-			return err
+		q, args, err2 := query.ToSql()
+		if err2 != nil {
+			s.logger.Error("InsertBlock error converting update query object to SQL", mlog.Err(err2))
+			return err2
 		}
 
-		if _, err := tx.Exec(q, args...); err != nil {
-			s.logger.Error(`InsertBlock error occurred while updating existing block`, mlog.String("blockID", block.ID), mlog.Err(err))
-			return err
+		if _, err2 := tx.Exec(q, args...); err2 != nil {
+			s.logger.Error(`InsertBlock error occurred while updating existing block`, mlog.String("blockID", block.ID), mlog.Err(err2))
+			return err2
 		}
 	} else {
 		block.CreatedBy = userID
