@@ -1,13 +1,18 @@
 package storetests
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/stretchr/testify/require"
+)
+
+const (
+	testUserID = "user-id"
 )
 
 func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
@@ -38,42 +43,17 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 	t.Run("GetParentID", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testGetParentID(t, store, container)
+		testGetParents(t, store, container)
 	})
-	t.Run("GetRootID", func(t *testing.T) {
+	t.Run("GetBlocks", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testGetRootID(t, store, container)
-	})
-	t.Run("GetBlocksWithParentAndType", func(t *testing.T) {
-		store, tearDown := setup(t)
-		defer tearDown()
-		testGetBlocksWithParentAndType(t, store, container)
-	})
-	t.Run("GetBlocksWithParent", func(t *testing.T) {
-		store, tearDown := setup(t)
-		defer tearDown()
-		testGetBlocksWithParent(t, store, container)
-	})
-	t.Run("GetBlocksWithType", func(t *testing.T) {
-		store, tearDown := setup(t)
-		defer tearDown()
-		testGetBlocksWithType(t, store, container)
-	})
-	t.Run("GetBlocksWithRootID", func(t *testing.T) {
-		store, tearDown := setup(t)
-		defer tearDown()
-		testGetBlocksWithRootID(t, store, container)
-	})
-	t.Run("GetBlock", func(t *testing.T) {
-		store, tearDown := setup(t)
-		defer tearDown()
-		testGetBlock(t, store, container)
+		testGetBlocks(t, store, container)
 	})
 }
 
 func testInsertBlock(t *testing.T, store store.Store, container store.Container) {
-	userID := "user-id"
+	userID := testUserID
 
 	blocks, err := store.GetAllBlocks(container)
 	require.NoError(t, err)
@@ -175,12 +155,12 @@ func testInsertBlock(t *testing.T, store store.Store, container store.Container)
 
 	t.Run("data tamper attempt", func(t *testing.T) {
 		block := model.Block{
-			ID:     "id-10",
-			RootID: "root-id",
-			Title:  "Old Title",
-			CreateAt: createdAt.Unix(),
-			UpdateAt: updateAt.Unix(),
-			CreatedBy: "user-id-5",
+			ID:         "id-10",
+			RootID:     "root-id",
+			Title:      "Old Title",
+			CreateAt:   createdAt.Unix(),
+			UpdateAt:   updateAt.Unix(),
+			CreatedBy:  "user-id-5",
 			ModifiedBy: "user-id-6",
 		}
 
@@ -193,58 +173,58 @@ func testInsertBlock(t *testing.T, store store.Store, container store.Container)
 		assert.NotNil(t, retrievedBlock)
 		assert.Equal(t, "user-id-1", retrievedBlock.CreatedBy)
 		assert.Equal(t, "user-id-1", retrievedBlock.ModifiedBy)
-		assert.WithinDurationf(t, time.Now(), time.Unix(retrievedBlock.CreateAt / 1000, 0), 1 * time.Second, "create time should be current time")
-		assert.WithinDurationf(t, time.Now(), time.Unix(retrievedBlock.UpdateAt / 1000, 0), 1 * time.Second, "update time should be current time")
+		assert.WithinDurationf(t, time.Now(), time.Unix(retrievedBlock.CreateAt/1000, 0), 1*time.Second, "create time should be current time")
+		assert.WithinDurationf(t, time.Now(), time.Unix(retrievedBlock.UpdateAt/1000, 0), 1*time.Second, "update time should be current time")
 	})
 }
 
-func testGetSubTree2(t *testing.T, store store.Store, container store.Container) {
-	userID := "user-id"
-
-	blocks, err := store.GetAllBlocks(container)
-	require.NoError(t, err)
-	initialCount := len(blocks)
-
-	blocksToInsert := []model.Block{
+var (
+	subtreeSampleBlocks = []model.Block{
 		{
 			ID:         "parent",
 			RootID:     "parent",
-			ModifiedBy: userID,
+			ModifiedBy: testUserID,
 		},
 		{
 			ID:         "child1",
 			RootID:     "parent",
 			ParentID:   "parent",
-			ModifiedBy: userID,
+			ModifiedBy: testUserID,
 		},
 		{
 			ID:         "child2",
 			RootID:     "parent",
 			ParentID:   "parent",
-			ModifiedBy: userID,
+			ModifiedBy: testUserID,
 		},
 		{
 			ID:         "grandchild1",
 			RootID:     "parent",
 			ParentID:   "child1",
-			ModifiedBy: userID,
+			ModifiedBy: testUserID,
 		},
 		{
 			ID:         "grandchild2",
 			RootID:     "parent",
 			ParentID:   "child2",
-			ModifiedBy: userID,
+			ModifiedBy: testUserID,
 		},
 		{
 			ID:         "greatgrandchild1",
 			RootID:     "parent",
 			ParentID:   "grandchild1",
-			ModifiedBy: userID,
+			ModifiedBy: testUserID,
 		},
 	}
+)
 
-	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
-	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
+func testGetSubTree2(t *testing.T, store store.Store, container store.Container) {
+	blocks, err := store.GetAllBlocks(container)
+	require.NoError(t, err)
+	initialCount := len(blocks)
+
+	InsertBlocks(t, store, container, subtreeSampleBlocks, "user-id-1")
+	defer DeleteBlocks(t, store, container, subtreeSampleBlocks, "test")
 
 	blocks, err = store.GetAllBlocks(container)
 	require.NoError(t, err)
@@ -275,52 +255,12 @@ func testGetSubTree2(t *testing.T, store store.Store, container store.Container)
 }
 
 func testGetSubTree3(t *testing.T, store store.Store, container store.Container) {
-	userID := "user-id"
-
 	blocks, err := store.GetAllBlocks(container)
 	require.NoError(t, err)
 	initialCount := len(blocks)
 
-	blocksToInsert := []model.Block{
-		{
-			ID:         "parent",
-			RootID:     "parent",
-			ModifiedBy: userID,
-		},
-		{
-			ID:         "child1",
-			RootID:     "parent",
-			ParentID:   "parent",
-			ModifiedBy: userID,
-		},
-		{
-			ID:         "child2",
-			RootID:     "parent",
-			ParentID:   "parent",
-			ModifiedBy: userID,
-		},
-		{
-			ID:         "grandchild1",
-			RootID:     "parent",
-			ParentID:   "child1",
-			ModifiedBy: userID,
-		},
-		{
-			ID:         "grandchild2",
-			RootID:     "parent",
-			ParentID:   "child2",
-			ModifiedBy: userID,
-		},
-		{
-			ID:         "greatgrandchild1",
-			RootID:     "parent",
-			ParentID:   "grandchild1",
-			ModifiedBy: userID,
-		},
-	}
-
-	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
-	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
+	InsertBlocks(t, store, container, subtreeSampleBlocks, "user-id-1")
+	defer DeleteBlocks(t, store, container, subtreeSampleBlocks, "test")
 
 	blocks, err = store.GetAllBlocks(container)
 	require.NoError(t, err)
@@ -353,148 +293,55 @@ func testGetSubTree3(t *testing.T, store store.Store, container store.Container)
 	})
 }
 
-func testGetRootID(t *testing.T, store store.Store, container store.Container) {
-	userID := "user-id"
-
+func testGetParents(t *testing.T, store store.Store, container store.Container) {
 	blocks, err := store.GetAllBlocks(container)
 	require.NoError(t, err)
 	initialCount := len(blocks)
 
-	blocksToInsert := []model.Block{
-		{
-			ID:         "parent",
-			RootID:     "parent",
-			ModifiedBy: userID,
-		},
-		{
-			ID:         "child1",
-			RootID:     "parent",
-			ParentID:   "parent",
-			ModifiedBy: userID,
-		},
-		{
-			ID:         "child2",
-			RootID:     "parent",
-			ParentID:   "parent",
-			ModifiedBy: userID,
-		},
-		{
-			ID:         "grandchild1",
-			RootID:     "parent",
-			ParentID:   "child1",
-			ModifiedBy: userID,
-		},
-		{
-			ID:         "grandchild2",
-			RootID:     "parent",
-			ParentID:   "child2",
-			ModifiedBy: userID,
-		},
-		{
-			ID:         "greatgrandchild1",
-			RootID:     "parent",
-			ParentID:   "grandchild1",
-			ModifiedBy: userID,
-		},
-	}
-
-	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
-	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
+	InsertBlocks(t, store, container, subtreeSampleBlocks, "user-id-1")
+	defer DeleteBlocks(t, store, container, subtreeSampleBlocks, "test")
 
 	blocks, err = store.GetAllBlocks(container)
 	require.NoError(t, err)
 	require.Len(t, blocks, initialCount+6)
 
-	t.Run("from root id", func(t *testing.T) {
+	t.Run("root from root id", func(t *testing.T) {
 		rootID, err := store.GetRootID(container, "parent")
 		require.NoError(t, err)
 		require.Equal(t, "parent", rootID)
 	})
 
-	t.Run("from child id", func(t *testing.T) {
+	t.Run("root from child id", func(t *testing.T) {
 		rootID, err := store.GetRootID(container, "child1")
 		require.NoError(t, err)
 		require.Equal(t, "parent", rootID)
 	})
 
-	t.Run("from not existing id", func(t *testing.T) {
+	t.Run("root from not existing id", func(t *testing.T) {
 		_, err := store.GetRootID(container, "not-exists")
 		require.Error(t, err)
 	})
-}
 
-func testGetParentID(t *testing.T, store store.Store, container store.Container) {
-	userID := "user-id"
-
-	blocks, err := store.GetAllBlocks(container)
-	require.NoError(t, err)
-	initialCount := len(blocks)
-
-	blocksToInsert := []model.Block{
-		{
-			ID:         "parent",
-			RootID:     "parent",
-			ModifiedBy: userID,
-		},
-		{
-			ID:         "child1",
-			RootID:     "parent",
-			ParentID:   "parent",
-			ModifiedBy: userID,
-		},
-		{
-			ID:         "child2",
-			RootID:     "parent",
-			ParentID:   "parent",
-			ModifiedBy: userID,
-		},
-		{
-			ID:         "grandchild1",
-			RootID:     "parent",
-			ParentID:   "child1",
-			ModifiedBy: userID,
-		},
-		{
-			ID:         "grandchild2",
-			RootID:     "parent",
-			ParentID:   "child2",
-			ModifiedBy: userID,
-		},
-		{
-			ID:         "greatgrandchild1",
-			RootID:     "parent",
-			ParentID:   "grandchild1",
-			ModifiedBy: userID,
-		},
-	}
-
-	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
-	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
-
-	blocks, err = store.GetAllBlocks(container)
-	require.NoError(t, err)
-	require.Len(t, blocks, initialCount+6)
-
-	t.Run("from root id", func(t *testing.T) {
+	t.Run("parent from root id", func(t *testing.T) {
 		parentID, err := store.GetParentID(container, "parent")
 		require.NoError(t, err)
 		require.Equal(t, "", parentID)
 	})
 
-	t.Run("from child id", func(t *testing.T) {
+	t.Run("parent from child id", func(t *testing.T) {
 		parentID, err := store.GetParentID(container, "grandchild1")
 		require.NoError(t, err)
 		require.Equal(t, "child1", parentID)
 	})
 
-	t.Run("from not existing id", func(t *testing.T) {
+	t.Run("parent from not existing id", func(t *testing.T) {
 		_, err := store.GetParentID(container, "not-exists")
 		require.Error(t, err)
 	})
 }
 
 func testDeleteBlock(t *testing.T, store store.Store, container store.Container) {
-	userID := "user-id"
+	userID := testUserID
 
 	blocks, err := store.GetAllBlocks(container)
 	require.NoError(t, err)
@@ -550,9 +397,7 @@ func testDeleteBlock(t *testing.T, store store.Store, container store.Container)
 	})
 }
 
-func testGetBlocksWithParentAndType(t *testing.T, store store.Store, container store.Container) {
-	userID := "user-id"
-
+func testGetBlocks(t *testing.T, store store.Store, container store.Container) {
 	blocks, err := store.GetAllBlocks(container)
 	require.NoError(t, err)
 
@@ -561,38 +406,39 @@ func testGetBlocksWithParentAndType(t *testing.T, store store.Store, container s
 			ID:         "block1",
 			ParentID:   "",
 			RootID:     "block1",
-			ModifiedBy: userID,
+			ModifiedBy: testUserID,
 			Type:       "test",
 		},
 		{
 			ID:         "block2",
 			ParentID:   "block1",
 			RootID:     "block1",
-			ModifiedBy: userID,
+			ModifiedBy: testUserID,
 			Type:       "test",
 		},
 		{
 			ID:         "block3",
 			ParentID:   "block1",
 			RootID:     "block1",
-			ModifiedBy: userID,
+			ModifiedBy: testUserID,
 			Type:       "test",
 		},
 		{
 			ID:         "block4",
 			ParentID:   "block1",
 			RootID:     "block1",
-			ModifiedBy: userID,
+			ModifiedBy: testUserID,
 			Type:       "test2",
 		},
 		{
 			ID:         "block5",
 			ParentID:   "block2",
-			RootID:     "block1",
-			ModifiedBy: userID,
+			RootID:     "block2",
+			ModifiedBy: testUserID,
 			Type:       "test",
 		},
 	}
+
 	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
 	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
@@ -616,53 +462,6 @@ func testGetBlocksWithParentAndType(t *testing.T, store store.Store, container s
 		require.NoError(t, err)
 		require.Len(t, blocks, 2)
 	})
-}
-
-func testGetBlocksWithParent(t *testing.T, store store.Store, container store.Container) {
-	userID := "user-id"
-
-	blocks, err := store.GetAllBlocks(container)
-	require.NoError(t, err)
-
-	blocksToInsert := []model.Block{
-		{
-			ID:         "block1",
-			ParentID:   "",
-			RootID:     "block1",
-			ModifiedBy: userID,
-			Type:       "test",
-		},
-		{
-			ID:         "block2",
-			ParentID:   "block1",
-			RootID:     "block1",
-			ModifiedBy: userID,
-			Type:       "test",
-		},
-		{
-			ID:         "block3",
-			ParentID:   "block1",
-			RootID:     "block1",
-			ModifiedBy: userID,
-			Type:       "test",
-		},
-		{
-			ID:         "block4",
-			ParentID:   "block1",
-			RootID:     "block1",
-			ModifiedBy: userID,
-			Type:       "test2",
-		},
-		{
-			ID:         "block5",
-			ParentID:   "block2",
-			RootID:     "block1",
-			ModifiedBy: userID,
-			Type:       "test",
-		},
-	}
-	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
-	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
 	t.Run("not existing parent", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
@@ -677,53 +476,6 @@ func testGetBlocksWithParent(t *testing.T, store store.Store, container store.Co
 		require.NoError(t, err)
 		require.Len(t, blocks, 3)
 	})
-}
-
-func testGetBlocksWithType(t *testing.T, store store.Store, container store.Container) {
-	userID := "user-id"
-
-	blocks, err := store.GetAllBlocks(container)
-	require.NoError(t, err)
-
-	blocksToInsert := []model.Block{
-		{
-			ID:         "block1",
-			ParentID:   "",
-			RootID:     "block1",
-			ModifiedBy: userID,
-			Type:       "test",
-		},
-		{
-			ID:         "block2",
-			ParentID:   "block1",
-			RootID:     "block1",
-			ModifiedBy: userID,
-			Type:       "test",
-		},
-		{
-			ID:         "block3",
-			ParentID:   "block1",
-			RootID:     "block1",
-			ModifiedBy: userID,
-			Type:       "test",
-		},
-		{
-			ID:         "block4",
-			ParentID:   "block1",
-			RootID:     "block1",
-			ModifiedBy: userID,
-			Type:       "test2",
-		},
-		{
-			ID:         "block5",
-			ParentID:   "block2",
-			RootID:     "block1",
-			ModifiedBy: userID,
-			Type:       "test",
-		},
-	}
-	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
-	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
 	t.Run("not existing type", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
@@ -738,53 +490,6 @@ func testGetBlocksWithType(t *testing.T, store store.Store, container store.Cont
 		require.NoError(t, err)
 		require.Len(t, blocks, 4)
 	})
-}
-
-func testGetBlocksWithRootID(t *testing.T, store store.Store, container store.Container) {
-	userID := "user-id"
-
-	blocks, err := store.GetAllBlocks(container)
-	require.NoError(t, err)
-
-	blocksToInsert := []model.Block{
-		{
-			ID:         "block1",
-			ParentID:   "",
-			RootID:     "block1",
-			ModifiedBy: userID,
-			Type:       "test",
-		},
-		{
-			ID:         "block2",
-			ParentID:   "block1",
-			RootID:     "block1",
-			ModifiedBy: userID,
-			Type:       "test",
-		},
-		{
-			ID:         "block3",
-			ParentID:   "block1",
-			RootID:     "block1",
-			ModifiedBy: userID,
-			Type:       "test",
-		},
-		{
-			ID:         "block4",
-			ParentID:   "block1",
-			RootID:     "block1",
-			ModifiedBy: userID,
-			Type:       "test2",
-		},
-		{
-			ID:         "block5",
-			ParentID:   "block2",
-			RootID:     "block2",
-			ModifiedBy: userID,
-			Type:       "test",
-		},
-	}
-	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
-	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
 	t.Run("not existing parent", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
@@ -819,8 +524,8 @@ func testGetBlock(t *testing.T, store store.Store, container store.Container) {
 		require.Equal(t, "root-id-1", fetchedBlock.RootID)
 		require.Equal(t, "user-id-1", fetchedBlock.CreatedBy)
 		require.Equal(t, "user-id-1", fetchedBlock.ModifiedBy)
-		assert.WithinDurationf(t, time.Now(), time.Unix(fetchedBlock.CreateAt / 1000, 0), 1 * time.Second, "create time should be current time")
-		assert.WithinDurationf(t, time.Now(), time.Unix(fetchedBlock.UpdateAt / 1000, 0), 1 * time.Second, "update time should be current time")
+		assert.WithinDurationf(t, time.Now(), time.Unix(fetchedBlock.CreateAt/1000, 0), 1*time.Second, "create time should be current time")
+		assert.WithinDurationf(t, time.Now(), time.Unix(fetchedBlock.UpdateAt/1000, 0), 1*time.Second, "update time should be current time")
 	})
 
 	t.Run("get a non-existing block", func(t *testing.T) {

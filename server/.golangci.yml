@@ -43,11 +43,10 @@ linters:
     - depguard
     - dogsled
     - dupl
-    - gochecknoinits
     - goconst
     - gocritic
     - godot
-#    - goerr113
+    - goerr113
     - goheader
     - golint
 #    - gomnd

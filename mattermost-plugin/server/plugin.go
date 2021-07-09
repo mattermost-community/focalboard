@@ -56,7 +56,7 @@ func (p *Plugin) OnActivate() error {
 	mmconfig := p.API.GetUnsanitizedConfig()
 	filesS3Config := config.AmazonS3Config{}
 	if mmconfig.FileSettings.AmazonS3AccessKeyId != nil {
-		filesS3Config.AccessKeyId = *mmconfig.FileSettings.AmazonS3AccessKeyId
+		filesS3Config.AccessKeyID = *mmconfig.FileSettings.AmazonS3AccessKeyId
 	}
 	if mmconfig.FileSettings.AmazonS3SecretAccessKey != nil {
 		filesS3Config.SecretAccessKey = *mmconfig.FileSettings.AmazonS3SecretAccessKey

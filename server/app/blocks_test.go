@@ -1,14 +1,22 @@
 package app
 
 import (
-	"errors"
-	"github.com/mattermost/focalboard/server/model"
 	"testing"
+
+	"github.com/mattermost/focalboard/server/model"
 
 	"github.com/golang/mock/gomock"
 	st "github.com/mattermost/focalboard/server/services/store"
 	"github.com/stretchr/testify/require"
 )
+
+type blockError struct {
+	msg string
+}
+
+func (be blockError) Error() string {
+	return be.msg
+}
 
 func TestGetParentID(t *testing.T) {
 	th := SetupTestHelper(t)
@@ -24,10 +32,10 @@ func TestGetParentID(t *testing.T) {
 	})
 
 	t.Run("fail query", func(t *testing.T) {
-		th.Store.EXPECT().GetParentID(gomock.Eq(container), gomock.Eq("test-id")).Return("", errors.New("block-not-found"))
+		th.Store.EXPECT().GetParentID(gomock.Eq(container), gomock.Eq("test-id")).Return("", blockError{"block-not-found"})
 		_, err := th.App.GetParentID(container, "test-id")
 		require.Error(t, err)
-		require.Equal(t, "block-not-found", err.Error())
+		require.ErrorIs(t, err, blockError{"block-not-found"})
 	})
 }
 
@@ -47,8 +55,8 @@ func TestInsertBlock(t *testing.T) {
 
 	t.Run("error scenerio", func(t *testing.T) {
 		block := model.Block{}
-		th.Store.EXPECT().InsertBlock(gomock.Eq(container), gomock.Eq(&block), gomock.Eq("user-id-1")).Return(errors.New("dummy error"))
+		th.Store.EXPECT().InsertBlock(gomock.Eq(container), gomock.Eq(&block), gomock.Eq("user-id-1")).Return(blockError{"error"})
 		err := th.App.InsertBlock(container, block, "user-id-1")
-		require.Error(t, err, "dummy error")
+		require.Error(t, err, "error")
 	})
 }

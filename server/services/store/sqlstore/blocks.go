@@ -4,17 +4,23 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
-	"errors"
-	"github.com/mattermost/focalboard/server/utils"
 	"time"
 
+	"github.com/mattermost/focalboard/server/utils"
+
 	sq "github.com/Masterminds/squirrel"
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" // postgres driver
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/store"
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/mattn/go-sqlite3" // sqlite driver
 )
+
+type RootIDNilError struct{}
+
+func (re RootIDNilError) Error() string {
+	return "rootId is nil"
+}
 
 func (s *SQLStore) GetBlocksWithParentAndType(c store.Container, parentID string, blockType string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
@@ -327,7 +333,7 @@ func (s *SQLStore) GetParentID(c store.Container, blockID string) (string, error
 
 func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID string) error {
 	if block.RootID == "" {
-		return errors.New("rootId is nil")
+		return RootIDNilError{}
 	}
 
 	fieldsJSON, err := json.Marshal(block.Fields)
