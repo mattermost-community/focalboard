@@ -12,7 +12,7 @@ func (a *API) makeAuditRecord(r *http.Request, event string, initialStatus strin
 	ctx := r.Context()
 	var sessionID string
 	var userID string
-	if session, ok := ctx.Value("session").(*model.Session); ok {
+	if session, ok := ctx.Value(sessionContextKey).(*model.Session); ok {
 		sessionID = session.ID
 		userID = session.UserID
 	}

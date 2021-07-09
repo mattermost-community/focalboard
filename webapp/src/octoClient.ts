@@ -3,7 +3,7 @@
 import {IBlock, IMutableBlock} from './blocks/block'
 import {ISharing} from './blocks/sharing'
 import {IWorkspace} from './blocks/workspace'
-import {IUser} from './user'
+import {IUser, WorkspaceUsers} from './user'
 import {Utils} from './utils'
 
 //
@@ -360,13 +360,27 @@ class OctoClient {
         return URL.createObjectURL(blob)
     }
 
-    async getWorkspaceUsers(): Promise<Array<IUser>> {
+    async getWorkspaceUsers(): Promise<WorkspaceUsers> {
         const path = this.workspacePath() + '/users'
         const response = await fetch(this.serverUrl + path, {headers: this.headers()})
         if (response.status !== 200) {
-            return []
+            return {
+                users: new Array<IUser>(),
+                usersById: new Map<string, IUser>(),
+            }
         }
-        return (await this.getJson(response, [])) as IUser[]
+        const workspaceUsers = (await this.getJson(response, [])) as IUser[]
+        return {
+            users: workspaceUsers,
+            usersById: this.getIdToWorkspaceUsers(workspaceUsers),
+        }
+    }
+
+    private getIdToWorkspaceUsers(users: Array<IUser>): Map<string, IUser> {
+        return users.reduce((acc: Map<string, IUser>, user: IUser) => {
+            acc.set(user.id, user)
+            return acc
+        }, new Map())
     }
 }
 

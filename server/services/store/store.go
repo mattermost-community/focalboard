@@ -20,9 +20,10 @@ type Store interface {
 	GetAllBlocks(c Container) ([]model.Block, error)
 	GetRootID(c Container, blockID string) (string, error)
 	GetParentID(c Container, blockID string) (string, error)
-	InsertBlock(c Container, block model.Block) error
+	InsertBlock(c Container, block *model.Block, userID string) error
 	DeleteBlock(c Container, blockID string, modifiedBy string) error
 	GetBlockCountsByType() (map[string]int64, error)
+	GetBlock(c Container, blockID string) (*model.Block, error)
 
 	Shutdown() error
 

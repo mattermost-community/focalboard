@@ -135,7 +135,10 @@ func TestIsPasswordValidWithSettings(t *testing.T) {
 				assert.NoError(t, err)
 			} else {
 				require.Error(t, err)
-				assert.Equal(t, tc.ExpectedFailingCriterias, err.(*InvalidPasswordError).FailingCriterias)
+				var errFC *InvalidPasswordError
+				if assert.ErrorAs(t, err, &errFC) {
+					assert.Equal(t, tc.ExpectedFailingCriterias, errFC.FailingCriterias)
+				}
 			}
 		})
 	}

@@ -39,13 +39,13 @@ func (s *SQLStore) importInitialTemplates() error {
 	}
 
 	s.logger.Debug("Inserting blocks", mlog.Int("block_count", len(archive.Blocks)))
-	for _, block := range archive.Blocks {
+	for i := range archive.Blocks {
 		s.logger.Trace("insert block",
-			mlog.String("blockID", block.ID),
-			mlog.String("block_type", block.Type),
-			mlog.String("block_title", block.Title),
+			mlog.String("blockID", archive.Blocks[i].ID),
+			mlog.String("block_type", archive.Blocks[i].Type),
+			mlog.String("block_title", archive.Blocks[i].Title),
 		)
-		err := s.InsertBlock(globalContainer, block)
+		err := s.InsertBlock(globalContainer, &archive.Blocks[i], "system")
 		if err != nil {
 			return err
 		}
@@ -66,7 +66,7 @@ func (s *SQLStore) isInitializationNeeded() (bool, error) {
 	var count int
 	err := row.Scan(&count)
 	if err != nil {
-		s.logger.Fatal("isInitializationNeeded", mlog.Err(err))
+		s.logger.Error("isInitializationNeeded", mlog.Err(err))
 		return false, err
 	}
 
