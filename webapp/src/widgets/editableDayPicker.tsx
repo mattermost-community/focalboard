@@ -39,7 +39,7 @@ function EditableDayPicker(props: Props): JSX.Element {
     const getDisplayDate = (date: Date | null | undefined) => {
         let displayDate = ''
         if (date) {
-            displayDate = Utils.displayDate(date, intl, dateFormat)
+            displayDate = Utils.displayDate(date, intl)
         }
         return displayDate
     }
