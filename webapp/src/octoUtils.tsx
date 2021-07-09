@@ -48,7 +48,7 @@ class OctoUtils {
                 } else {
                     const dateValue = JSON.parse(propertyValue as string)
                     if (dateValue.from) {
-                        displayValue = Utils.displayDate(new Date(dateValue.from), intl.UserSettings.preferredDateFormat)
+                        displayValue = Utils.displayDate(new Date(dateValue.from), intl, UserSettings.preferredDateFormat)
                     }
                     if (dateValue.to) {
                         displayValue += ' -> '

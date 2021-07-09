@@ -24,6 +24,7 @@ describe('widgets/EditableDayPicker', () => {
         // const callback = jest.fn()
         const component = wrapIntl(
             <EditableDayPicker
+                dateFormat='MM/DD/YYYY'
                 className='octo-propertyvalue'
                 value={''}
                 onChange={jest.fn()}
@@ -38,6 +39,7 @@ describe('widgets/EditableDayPicker', () => {
         const callback = jest.fn()
         const component = wrapIntl(
             <EditableDayPicker
+                dateFormat='MM/DD/YYYY'
                 className='octo-propertyvalue'
                 value={''}
                 onChange={callback}
@@ -71,6 +73,7 @@ describe('widgets/EditableDayPicker', () => {
         const component = wrapIntl(
             <EditableDayPicker
                 className='octo-propertyvalue'
+                dateFormat='MM/DD/YYYY'
                 value={''}
                 onChange={callback}
             />,
@@ -117,6 +120,7 @@ describe('widgets/EditableDayPicker', () => {
         const component = wrapIntl(
             <EditableDayPicker
                 className='octo-propertyvalue'
+                dateFormat='MM/DD/YYYY'
                 value={'1623780000000'}
                 onChange={callback}
             />,
@@ -148,6 +152,7 @@ describe('widgets/EditableDayPicker', () => {
         const component = wrapIntl(
             <EditableDayPicker
                 className='octo-propertyvalue'
+                dateFormat='MM/DD/YYYY'
                 value={'{"from":1623715200000,"to":1624147200000}'}
                 onChange={callback}
             />,
@@ -182,6 +187,7 @@ describe('widgets/EditableDayPicker', () => {
             <EditableDayPicker
                 className='octo-propertyvalue'
                 value={'{"from":1623715200000,"to":1624147200000}'}
+                dateFormat='MM/DD/YYYY'
                 onChange={callback}
             />,
         )

@@ -93,7 +93,6 @@ function EditableDayPicker(props: Props): JSX.Element {
         /* eslint-disable global-require */
     }
 
-<<<<<<< HEAD
     const handleDayClick = (day: Date) => {
         const range = {
             ...dateProperty,
