@@ -42,7 +42,7 @@ class OctoUtils {
         case 'date': {
             if (propertyValue) {
                 const singleDate = new Date(parseInt(propertyValue as string, 10))
-                if (singleDate && DateUtils.isDate(singleDate)) { //!isNaN(singleDate.getTime())) {
+                if (singleDate && DateUtils.isDate(singleDate)) {
                     displayValue = Utils.displayDate(new Date(parseInt(propertyValue as string, 10)), intl)
                 } else {
                     const dateValue = JSON.parse(propertyValue as string)

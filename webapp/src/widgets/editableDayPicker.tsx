@@ -18,8 +18,8 @@ import {Utils} from '../utils'
 
 type Props = {
     className: string
-    value: string | string[]
-    onChange: (value: string | string[]) => void
+    value: string
+    onChange: (value: string) => void
 }
 
 type DateProperty = {
@@ -34,6 +34,7 @@ const loadedLocales: Record<string, any> = {}
 function EditableDayPicker(props: Props): JSX.Element {
     const {className, value, onChange} = props
     const intl = useIntl()
+    const timeZoneOffset = new Date().getTimezoneOffset() * 60 * 1000
 
     const getDisplayDate = (date: Date | null | undefined) => {
         let displayDate = ''
@@ -43,26 +44,21 @@ function EditableDayPicker(props: Props): JSX.Element {
         return displayDate
     }
 
-    const utcToLocalTime = (dateValue: number) => {
-        const localOffset = new Date().getTimezoneOffset() // in minutes
-        const localOffsetMillis = 60 * 1000 * localOffset
-        return dateValue + localOffsetMillis
-    }
     const createDatePropertyFromString = (initialValue: string) => {
         let dateProperty: DateProperty = {}
         if (initialValue) {
             const singleDate = new Date(Number(initialValue))
-            if (singleDate && DateUtils.isDate(singleDate)) { //!isNaN(singleDate.getTime())) {
+            if (singleDate && DateUtils.isDate(singleDate)) {
                 dateProperty.from = singleDate.getTime()
             } else {
                 dateProperty = JSON.parse(initialValue)
                 if (!dateProperty.includeTime) {
                     // if date only, convert from UTC to local time.
                     if (dateProperty.from) {
-                        dateProperty.from = utcToLocalTime(dateProperty.from)
+                        dateProperty.from += timeZoneOffset
                     }
                     if (dateProperty.to) {
-                        dateProperty.to = utcToLocalTime(dateProperty.to)
+                        dateProperty.to += timeZoneOffset
                     }
                 }
             }
@@ -78,8 +74,6 @@ function EditableDayPicker(props: Props): JSX.Element {
     const [fromInput, setFromInput] = useState<string>(getDisplayDate(dateFrom))
     const [toInput, setToInput] = useState<string>(getDisplayDate(dateTo))
 
-    // use ref will only get created initally
-    // rerenders will need to set current.
     const stateRef = useRef(dateProperty)
     stateRef.current = dateProperty
 
@@ -138,12 +132,12 @@ function EditableDayPicker(props: Props): JSX.Element {
         if (current && current.from) {
             if (!current.includeTime) {
                 // Day has time is noon, local time
-                // Set to midnight, UTC time
+                // Set to UTC time
                 if (current.from) {
-                    current.from -= new Date().getTimezoneOffset() * 60 * 1000
+                    current.from -= timeZoneOffset
                 }
                 if (current.to) {
-                    current.to -= new Date().getTimezoneOffset() * 60 * 1000
+                    current.to -= timeZoneOffset
                 }
             }
             onChange(JSON.stringify(current))
@@ -173,8 +167,7 @@ function EditableDayPicker(props: Props): JSX.Element {
                     <Modal
                         onClose={() => {
                             onClose()
-                        }
-                        }
+                        }}
                     >
                         <div
                             className={className + '-overlayWrapper'}
@@ -196,7 +189,7 @@ function EditableDayPicker(props: Props): JSX.Element {
                                             }
                                         }}
                                         onCancel={() => {
-                                            setFromInput(getDisplayDate(dateTo))
+                                            setFromInput(getDisplayDate(dateFrom))
                                         }}
                                     />
                                     {dateTo &&
@@ -224,7 +217,6 @@ function EditableDayPicker(props: Props): JSX.Element {
                                     onDayClick={handleDayClick}
                                     initialMonth={dateFrom || new Date()}
                                     showOutsideDays={true}
-
                                     locale={locale}
                                     localeUtils={MomentLocaleUtils}
                                     todayButton={intl.formatMessage({id: 'EditableDayPicker.today', defaultMessage: 'Today'})}
