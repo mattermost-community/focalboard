@@ -19,7 +19,6 @@ import {Utils} from '../utils'
 type Props = {
     className: string
     value: string | string[]
-    dateFormat: string
     onChange: (value: string | string[]) => void
 }
 
@@ -33,7 +32,7 @@ type DateProperty = {
 const loadedLocales: Record<string, any> = {}
 
 function EditableDayPicker(props: Props): JSX.Element {
-    const {className, value, dateFormat, onChange} = props
+    const {className, value, onChange} = props
     const intl = useIntl()
 
     const getDisplayDate = (date: Date | null | undefined) => {
