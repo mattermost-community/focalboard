@@ -23,7 +23,6 @@ describe('widgets/EditableDayPicker', () => {
         // const callback = jest.fn()
         const component = wrapIntl(
             <EditableDayPicker
-                dateFormat='MM/DD/YYYY'
                 className='octo-propertyvalue'
                 value={''}
                 onChange={jest.fn()}
@@ -39,7 +38,6 @@ describe('widgets/EditableDayPicker', () => {
         const component = (
             <IntlProvider locale='es'>
                 <EditableDayPicker
-                    dateFormat='MM/DD/YYYY'
                     className='octo-propertyvalue'
                     value={'1623780000000'}
                     onChange={jest.fn()}
@@ -48,7 +46,7 @@ describe('widgets/EditableDayPicker', () => {
         )
 
         const {container, getByText} = render(component)
-        const input = getByText('15/06/2021')
+        const input = getByText('15/6/2021')
         expect(input).not.toBeNull()
         expect(container).toMatchSnapshot()
     })
@@ -57,7 +55,6 @@ describe('widgets/EditableDayPicker', () => {
         const callback = jest.fn()
         const component = wrapIntl(
             <EditableDayPicker
-                dateFormat='MM/DD/YYYY'
                 className='octo-propertyvalue'
                 value={''}
                 onChange={callback}
@@ -85,7 +82,6 @@ describe('widgets/EditableDayPicker', () => {
         const component = wrapIntl(
             <EditableDayPicker
                 className='octo-propertyvalue'
-                dateFormat='MM/DD/YYYY'
                 value={''}
                 onChange={callback}
             />,
@@ -122,7 +118,6 @@ describe('widgets/EditableDayPicker', () => {
         const component = wrapIntl(
             <EditableDayPicker
                 className='octo-propertyvalue'
-                dateFormat='MM/DD/YYYY'
                 value={'1623780000000'}
                 onChange={callback}
             />,
@@ -132,7 +127,7 @@ describe('widgets/EditableDayPicker', () => {
         expect(container).toMatchSnapshot()
 
         // open modal
-        const dayDisplay = getByText('06/15/2021')
+        const dayDisplay = getByText('6/15/2021')
         userEvent.click(dayDisplay)
 
         const clear = getByText('Clear')
@@ -148,7 +143,6 @@ describe('widgets/EditableDayPicker', () => {
         const component = wrapIntl(
             <EditableDayPicker
                 className='octo-propertyvalue'
-                dateFormat='MM/DD/YYYY'
                 value={'{"from":1623715200000,"to":1624147200000}'}
                 onChange={callback}
             />,
@@ -158,12 +152,12 @@ describe('widgets/EditableDayPicker', () => {
         expect(container).toMatchSnapshot()
 
         // open modal
-        const dayDisplay = getByText('06/15/2021 -> 06/20/2021')
+        const dayDisplay = getByText('6/15/2021 -> 6/20/2021')
 
         userEvent.click(dayDisplay)
 
-        const fromInput = getByDisplayValue('06/15/2021')
-        const toInput = getByDisplayValue('06/20/2021')
+        const fromInput = getByDisplayValue('6/15/2021')
+        const toInput = getByDisplayValue('6/20/2021')
 
         userEvent.type(fromInput, '{selectall}07/15/2021{enter}')
         userEvent.type(toInput, '{selectall}07/20/2021{enter}')
@@ -172,7 +166,7 @@ describe('widgets/EditableDayPicker', () => {
 
         userEvent.click(modal)
 
-        // {from: '2021-07-15', to: '2021-07-20'}
+        // {from: '2021-06-15', to: '2021-06-20'}
         const retVal = '{"from":1626307200000,"to":1626739200000}'
         expect(callback).toHaveBeenCalledWith(retVal)
     })
@@ -183,7 +177,6 @@ describe('widgets/EditableDayPicker', () => {
             <EditableDayPicker
                 className='octo-propertyvalue'
                 value={'{"from":1623715200000,"to":1624147200000}'}
-                dateFormat='MM/DD/YYYY'
                 onChange={callback}
             />,
         )
@@ -192,11 +185,11 @@ describe('widgets/EditableDayPicker', () => {
         expect(container).toMatchSnapshot()
 
         // open modal
-        const dayDisplay = getByText('06/15/2021 -> 06/20/2021')
+        const dayDisplay = getByText('6/15/2021 -> 6/20/2021')
         userEvent.click(dayDisplay)
 
-        const fromInput = getByDisplayValue('06/15/2021')
-        const toInput = getByDisplayValue('06/20/2021')
+        const fromInput = getByDisplayValue('6/15/2021')
+        const toInput = getByDisplayValue('6/20/2021')
         userEvent.type(fromInput, '{selectall}07/15/2021{delay}{esc}')
         userEvent.type(toInput, '{selectall}07/20/2021{delay}{esc}')
 

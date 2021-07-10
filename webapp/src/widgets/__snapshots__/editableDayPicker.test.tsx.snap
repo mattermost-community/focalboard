@@ -9,7 +9,7 @@ exports[`widgets/EditableDayPicker cancel set via text input 1`] = `
       class="Button  "
       type="button"
     >
-      06/15/2021 -&gt; 06/20/2021
+      6/15/2021 -&gt; 6/20/2021
     </button>
   </div>
 </div>
@@ -24,7 +24,7 @@ exports[`widgets/EditableDayPicker handle clear 1`] = `
       class="Button  "
       type="button"
     >
-      06/15/2021
+      6/15/2021
     </button>
   </div>
 </div>
@@ -54,7 +54,7 @@ exports[`widgets/EditableDayPicker returns default correctly, es local 1`] = `
       class="Button  "
       type="button"
     >
-      15/06/2021
+      15/6/2021
     </button>
   </div>
 </div>
@@ -69,7 +69,7 @@ exports[`widgets/EditableDayPicker set via text input 1`] = `
       class="Button  "
       type="button"
     >
-      06/15/2021 -&gt; 06/20/2021
+      6/15/2021 -&gt; 6/20/2021
     </button>
   </div>
 </div>
