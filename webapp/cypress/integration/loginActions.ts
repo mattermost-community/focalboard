@@ -13,24 +13,6 @@ describe('Login actions', () => {
         cy.get('.Sidebar').should('exist')
     }
 
-    const loginWithPassword = (withPassword: string) => {
-        cy.request({
-            method: 'POST',
-            url: '/api/v1/login',
-            body: {
-                username,
-                password: withPassword,
-                type: 'normal',
-            },
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-        }).then((response) => {
-            expect(response.body).to.have.property('token')
-            localStorage.setItem('focalboardSessionId', response.body.token)
-        })
-    }
-
     it('Redirects to login page', () => {
         cy.visit('/')
         cy.location('pathname').should('eq', '/login')
@@ -62,7 +44,7 @@ describe('Login actions', () => {
     })
 
     it('Can change password', () => {
-        loginWithPassword(password)
+        cy.login({username, password})
         cy.visit('/')
         cy.get('.Sidebar .SidebarUserMenu').click()
         cy.get('.Menu .MenuOption .menu-name').contains('Change password').click()
@@ -76,7 +58,7 @@ describe('Login actions', () => {
     })
 
     it('Can log out user', () => {
-        loginWithPassword(newPassword)
+        cy.login({username, password: newPassword})
         cy.visit('/')
         cy.get('.Sidebar .SidebarUserMenu').click()
         cy.get('.Menu .MenuOption .menu-name').contains('Log out').click()
