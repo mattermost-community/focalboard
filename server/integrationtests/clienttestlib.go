@@ -66,8 +66,15 @@ func SetupTestHelper() *TestHelper {
 	sessionToken := "TESTTOKEN"
 	th := &TestHelper{}
 	logger := mlog.NewLogger()
-	logger.Configure("", getTestConfig().LoggingCfgJSON)
-	srv, err := server.New(getTestConfig(), sessionToken, logger)
+	if err := logger.Configure("", getTestConfig().LoggingCfgJSON); err != nil {
+		panic(err)
+	}
+	cfg := getTestConfig()
+	db, err := server.NewStore(cfg, logger)
+	if err != nil {
+		panic(err)
+	}
+	srv, err := server.New(cfg, sessionToken, db, logger)
 	if err != nil {
 		panic(err)
 	}
@@ -87,7 +94,7 @@ func (th *TestHelper) InitBasic() *TestHelper {
 	for {
 		URL := th.Server.Config().ServerRoot
 		th.Server.Logger().Info("Polling server", mlog.String("url", URL))
-		resp, err := http.Get(URL)
+		resp, err := http.Get(URL) //nolint:gosec
 		if err != nil {
 			th.Server.Logger().Error("Polling failed", mlog.Err(err))
 			time.Sleep(100 * time.Millisecond)
@@ -111,7 +118,7 @@ func (th *TestHelper) InitBasic() *TestHelper {
 }
 
 func (th *TestHelper) TearDown() {
-	defer th.Server.Logger().Shutdown()
+	defer func() { _ = th.Server.Logger().Shutdown() }()
 
 	err := th.Server.Shutdown()
 	if err != nil {

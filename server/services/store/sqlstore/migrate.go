@@ -17,9 +17,9 @@ import (
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	"github.com/golang-migrate/migrate/v4/database/sqlite3"
 	"github.com/golang-migrate/migrate/v4/source"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/golang-migrate/migrate/v4/source/file" // fileystem driver
 	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" // postgres driver
 	"github.com/mattermost/focalboard/server/services/store/sqlstore/migrations"
 )
 
@@ -84,7 +84,7 @@ func appendMultipleStatementsFlag(connectionString string) (string, error) {
 
 // migrations in MySQL need to run with the multiStatements flag
 // enabled, so this method creates a new connection ensuring that it's
-// enabled
+// enabled.
 func (s *SQLStore) getMySQLMigrationConnection() (*sql.DB, error) {
 	connectionString, err := appendMultipleStatementsFlag(s.connectionString)
 	if err != nil {
@@ -123,9 +123,9 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	if s.dbType == mysqlDBType {
-		db, err := s.getMySQLMigrationConnection()
-		if err != nil {
-			return err
+		db, err2 := s.getMySQLMigrationConnection()
+		if err2 != nil {
+			return err2
 		}
 		defer db.Close()
 

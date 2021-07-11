@@ -3,7 +3,7 @@ package api
 import (
 	"context"
 	"encoding/json"
-	"errors"
+	"fmt"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -11,12 +11,23 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	serverContext "github.com/mattermost/focalboard/server/context"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
 	"github.com/mattermost/focalboard/server/services/auth"
 	"github.com/mattermost/focalboard/server/services/mlog"
 )
+
+const (
+	MinimumPasswordLength = 8
+)
+
+type ParamError struct {
+	msg string
+}
+
+func (pe ParamError) Error() string {
+	return pe.msg
+}
 
 // LoginRequest is a login request
 // swagger:model
@@ -73,16 +84,16 @@ type RegisterRequest struct {
 
 func (rd *RegisterRequest) IsValid() error {
 	if strings.TrimSpace(rd.Username) == "" {
-		return errors.New("username is required")
+		return ParamError{"username is required"}
 	}
 	if strings.TrimSpace(rd.Email) == "" {
-		return errors.New("email is required")
+		return ParamError{"email is required"}
 	}
 	if !auth.IsEmailValid(rd.Email) {
-		return errors.New("invalid email format")
+		return ParamError{"invalid email format"}
 	}
 	if rd.Password == "" {
-		return errors.New("password is required")
+		return ParamError{"password is required"}
 	}
 	if err := isValidPassword(rd.Password); err != nil {
 		return err
@@ -102,13 +113,13 @@ type ChangePasswordRequest struct {
 	NewPassword string `json:"newPassword"`
 }
 
-// IsValid validates a password change request
+// IsValid validates a password change request.
 func (rd *ChangePasswordRequest) IsValid() error {
 	if rd.OldPassword == "" {
-		return errors.New("Old password is required")
+		return ParamError{"old password is required"}
 	}
 	if rd.NewPassword == "" {
-		return errors.New("New password is required")
+		return ParamError{"new password is required"}
 	}
 	if err := isValidPassword(rd.NewPassword); err != nil {
 		return err
@@ -118,8 +129,8 @@ func (rd *ChangePasswordRequest) IsValid() error {
 }
 
 func isValidPassword(password string) error {
-	if len(password) < 8 {
-		return errors.New("Password must be at least 8 characters")
+	if len(password) < MinimumPasswordLength {
+		return ParamError{fmt.Sprintf("password must be at least %d characters", MinimumPasswordLength)}
 	}
 	return nil
 }
@@ -243,9 +254,9 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 
 	// Validate token
 	if len(registerData.Token) > 0 {
-		workspace, err := a.app.GetRootWorkspace()
-		if err != nil {
-			a.errorResponse(w, http.StatusInternalServerError, "", err)
+		workspace, err2 := a.app.GetRootWorkspace()
+		if err2 != nil {
+			a.errorResponse(w, http.StatusInternalServerError, "", err2)
 			return
 		}
 
@@ -255,9 +266,9 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		// No signup token, check if no active users
-		userCount, err := a.app.GetRegisteredUserCount()
-		if err != nil {
-			a.errorResponse(w, http.StatusInternalServerError, "", err)
+		userCount, err2 := a.app.GetRegisteredUserCount()
+		if err2 != nil {
+			a.errorResponse(w, http.StatusInternalServerError, "", err2)
 			return
 		}
 		if userCount > 0 {
@@ -335,7 +346,7 @@ func (a *API) handleChangePassword(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var requestData ChangePasswordRequest
-	if err := json.Unmarshal(requestBody, &requestData); err != nil {
+	if err = json.Unmarshal(requestBody, &requestData); err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, "", err)
 		return
 	}
@@ -374,15 +385,15 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 
 			now := time.Now().Unix()
 			session := &model.Session{
-				ID:          "single-user",
+				ID:          SingleUser,
 				Token:       token,
-				UserID:      "single-user",
+				UserID:      SingleUser,
 				AuthService: a.authService,
 				Props:       map[string]interface{}{},
 				CreateAt:    now,
 				UpdateAt:    now,
 			}
-			ctx := context.WithValue(r.Context(), "session", session)
+			ctx := context.WithValue(r.Context(), sessionContextKey, session)
 			handler(w, r.WithContext(ctx))
 			return
 		}
@@ -399,7 +410,7 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 				CreateAt:    now,
 				UpdateAt:    now,
 			}
-			ctx := context.WithValue(r.Context(), "session", session)
+			ctx := context.WithValue(r.Context(), sessionContextKey, session)
 			handler(w, r.WithContext(ctx))
 			return
 		}
@@ -426,7 +437,7 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), "session", session)
+		ctx := context.WithValue(r.Context(), sessionContextKey, session)
 		handler(w, r.WithContext(ctx))
 	}
 }
@@ -434,13 +445,12 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 func (a *API) adminRequired(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Currently, admin APIs require local unix connections
-		conn := serverContext.GetContextConn(r)
+		conn := GetContextConn(r)
 		if _, isUnix := conn.(*net.UnixConn); !isUnix {
 			a.errorResponse(w, http.StatusUnauthorized, "", nil)
 			return
 		}
 
 		handler(w, r)
-		return
 	}
 }

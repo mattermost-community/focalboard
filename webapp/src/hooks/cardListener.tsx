@@ -7,7 +7,7 @@ import octoClient from '../octoClient'
 import {OctoListener} from '../octoListener'
 import {Utils} from '../utils'
 
-export default function useCardListener(cardIds: string[], onChange: (blocks: IBlock[]) => void, onReconnect: () => void): void {
+export default function useCardListener(cardIds: string[], onChange: (blocks: IBlock[]) => void, onReconnect: () => void, initialCall = true): void {
     let cardListener: OctoListener | null = null
 
     const deleteListener = () => {
@@ -28,7 +28,10 @@ export default function useCardListener(cardIds: string[], onChange: (blocks: IB
     }
 
     const createCardTreeAndSync = async () => {
-        onReconnect()
+        if (initialCall) {
+            onReconnect()
+        }
+
         createListener()
     }
 
