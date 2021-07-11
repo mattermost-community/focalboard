@@ -8,22 +8,27 @@ describe('Login actions', () => {
     const newPassword = 'new_password'
 
     const workspaceIsAvailable = () => {
+        cy.location('pathname').should('eq', '/')
         cy.get('.Workspace').should('exist')
         cy.get('.Sidebar').should('exist')
     }
 
     const loginWithPassword = (withPassword: string) => {
-        cy.visit('/login')
-        cy.get('#login-username').type(username)
-        cy.get('#login-password').type(withPassword)
-        cy.get('button').contains('Log in').click()
-        workspaceIsAvailable()
-    }
-
-    const logout = () => {
-        cy.get('.Sidebar .SidebarUserMenu').click()
-        cy.get('.Menu .MenuOption .menu-name').contains('Log out').click()
-        cy.location('pathname').should('eq', '/login')
+        cy.request({
+            method: 'POST',
+            url: '/api/v1/login',
+            body: {
+                username,
+                password: withPassword,
+                type: 'normal',
+            },
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        }).then((response) => {
+            expect(response.body).to.have.property('token')
+            localStorage.setItem('focalboardSessionId', response.body.token)
+        })
     }
 
     it('Redirects to login page', () => {
@@ -46,11 +51,19 @@ describe('Login actions', () => {
         cy.get('#login-password').type(password)
         cy.get('button').contains('Register').click()
         workspaceIsAvailable()
-        logout()
+    })
+
+    it('Can log in user', () => {
+        cy.visit('/login')
+        cy.get('#login-username').type(username)
+        cy.get('#login-password').type(password)
+        cy.get('button').contains('Log in').click()
+        workspaceIsAvailable()
     })
 
     it('Can change password', () => {
         loginWithPassword(password)
+        cy.visit('/')
         cy.get('.Sidebar .SidebarUserMenu').click()
         cy.get('.Menu .MenuOption .menu-name').contains('Change password').click()
         cy.location('pathname').should('eq', '/change_password')
@@ -60,10 +73,13 @@ describe('Login actions', () => {
         cy.get('button').contains('Change password').click()
         cy.get('.succeeded').click()
         workspaceIsAvailable()
-        logout()
     })
 
-    it('Can log in user with new password', () => {
+    it('Can log out user', () => {
         loginWithPassword(newPassword)
+        cy.visit('/')
+        cy.get('.Sidebar .SidebarUserMenu').click()
+        cy.get('.Menu .MenuOption .menu-name').contains('Log out').click()
+        cy.location('pathname').should('eq', '/login')
     })
 })
