@@ -108,7 +108,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                 >
                     {board.icon ? `${board.icon} ${displayTitle}` : displayTitle}
                 </div>
-                <MenuWrapper>
+                <MenuWrapper stopPropagationOnToggle={true}>
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu position='left'>
                         <Menu.Text

@@ -54,10 +54,12 @@ class BoardPage extends React.Component<Props, State> {
 
         if (!props.match.params.boardId) {
             // Load last viewed boardView
-            const boardId = localStorage.getItem('lastBoardId') || ''
-            const viewId = localStorage.getItem('lastViewId') || ''
-            const newPath = generatePath(props.match.path, {...props.match.params, boardId, viewId})
-            props.history.push(newPath)
+            const boardId = localStorage.getItem('lastBoardId') || undefined
+            const viewId = localStorage.getItem('lastViewId') || undefined
+            if (boardId) {
+                const newPath = generatePath(props.match.path, {...props.match.params, boardId, viewId})
+                props.history.push(newPath)
+            }
         }
 
         this.state = {
