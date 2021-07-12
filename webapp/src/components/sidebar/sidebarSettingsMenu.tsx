@@ -14,6 +14,9 @@ import {
     setTheme, systemThemeName,
     Theme,
 } from '../../theme'
+import {
+    defaultDateFormat, dmyDateFormat,
+} from '../../dateFormat'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {SetLanguageContext} from '../../setLanguageContext'
@@ -47,6 +50,12 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
     const toggleRandomIcons = () => {
         UserSettings.prefillRandomIcons = !UserSettings.prefillRandomIcons
         setRandomIcons(!randomIcons)
+    }
+
+    const [preferredDateFormat, setPreferredDateFormat] = useState(UserSettings.preferredDateFormat)
+    const updatePreferredDateFormat = (newDateFormat: string) => {
+        UserSettings.preferredDateFormat = newDateFormat
+        setPreferredDateFormat(newDateFormat)
     }
 
     const languages = [
@@ -130,6 +139,19 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
         },
     ]
 
+    const dateFormats = [
+        {
+            id: defaultDateFormat,
+            displayName: 'MM/DD/YYYY',
+            value: 'MM/DD/YYYY',
+        },
+        {
+            id: dmyDateFormat,
+            displayName: 'DD/MM/YYYY',
+            value: 'DD/MM/YYYY',
+        },
+    ]
+
     return (
         <div className='SidebarSettingsMenu'>
             <MenuWrapper>
@@ -181,6 +203,25 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
                                         name={intl.formatMessage({id: `Sidebar.${theme.id}`, defaultMessage: theme.displayName})}
                                         onClick={async () => updateTheme(theme.theme, theme.id)}
                                         rightIcon={themeName === theme.id ? <CheckIcon/> : null}
+                                    />
+                                ),
+                            )
+                        }
+                    </Menu.SubMenu>
+                    <Menu.SubMenu
+                        id='date-format'
+                        name={intl.formatMessage({id: 'Sidebar.set-date-format', defaultMessage: 'Set date format'})}
+                        position='top'
+                    >
+                        {
+                            dateFormats.map((dateFormat) =>
+                                (
+                                    <Menu.Text
+                                        key={dateFormat.id}
+                                        id={dateFormat.id}
+                                        name={intl.formatMessage({id: `Sidebar.${dateFormat.id}`, defaultMessage: dateFormat.displayName})}
+                                        onClick={async () => updatePreferredDateFormat(dateFormat.value)}
+                                        rightIcon={preferredDateFormat === dateFormat.value ? <CheckIcon/> : null}
                                     />
                                 ),
                             )

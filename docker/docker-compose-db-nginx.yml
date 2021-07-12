@@ -1,30 +1,40 @@
 version: "3"
+
 services:
   app:
     build:
-      context: ./
+      context: ../
+      dockerfile: docker/Dockerfile
     container_name: focalboard
     depends_on:
       - focalboard-db
     expose:
       - 8000
     environment:
-      - VIRTUAL_HOST=focalboard.local
+      - VIRTUAL_HOST=localhost
       - VIRTUAL_PORT=8000
+      - VIRTUAL_PROTO=http
     volumes:
       - "./config.json:/opt/focalboard/config.json"
+    restart: always
+    networks:
+      - proxy
+      - default
 
   proxy:
     image: jwilder/nginx-proxy:latest
     container_name: focalboard-proxy
+    restart: always
     ports:
-      - 443:443
+      - 80:80
     volumes:
-      - "./certs:/etc/nginx/certs:ro"
-      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - proxy
 
   focalboard-db:
     image: postgres:latest
+    restart: always
     container_name: focalboard-postgres
     restart: always
     volumes:
@@ -34,3 +44,5 @@ services:
       POSTGRES_USER: boardsuser
       POSTGRES_PASSWORD: boardsuser-password
 
+networks:
+  proxy:

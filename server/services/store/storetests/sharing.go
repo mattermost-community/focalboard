@@ -26,7 +26,7 @@ func testUpsertSharingAndGetSharing(t *testing.T, store store.Store, container s
 			ID:         "sharing-id",
 			Enabled:    true,
 			Token:      "token",
-			ModifiedBy: "user-id",
+			ModifiedBy: testUserID,
 		}
 
 		err := store.UpsertSharing(container, sharing)

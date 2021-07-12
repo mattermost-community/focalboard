@@ -12,33 +12,57 @@ linters-settings:
   govet:
     check-shadowing: true
     enable-all: true
+    disable:
+      - fieldalignment
   misspell:
     locale: US
+  lll:
+    line-length: 150
 
 linters:
   disable-all: true
   enable:
-    - bodyclose
-    - deadcode
-    - errcheck
-    - gocritic
     - gofmt
     - goimports
-    - golint
-    - gosec
-    - gosimple
-    - govet
+    - deadcode
     - ineffassign
-    - misspell
-    - nakedret
-    - staticcheck
     - structcheck
+    - varcheck
+    - unparam
+    - errcheck
+    - govet
+    - bodyclose
+    - durationcheck
+    - errorlint
+    - exhaustive
+    - exportloopref
+    - gosec
+    - makezero
+    - staticcheck
+    - prealloc
+    - asciicheck
+    - depguard
+    - dogsled
+    - dupl
+    - goconst
+    - gocritic
+    - godot
+    - goerr113
+    - goheader
+    - golint
+    - nakedret
+    - gomodguard
+    - goprintffuncname
+    - gosimple
+    - lll
+    - misspell
+    - nolintlint
     - stylecheck
     - typecheck
     - unconvert
     - unused
-    - varcheck
     - whitespace
+    - gocyclo
 
 issues:
   exclude-rules:
