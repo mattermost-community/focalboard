@@ -18,7 +18,6 @@ import (
 	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/app"
 	"github.com/mattermost/focalboard/server/auth"
-	"github.com/mattermost/focalboard/server/context"
 	appModel "github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
 	"github.com/mattermost/focalboard/server/services/config"
@@ -42,7 +41,6 @@ const (
 	cleanupSessionTaskFrequency = 10 * time.Minute
 	updateMetricsTaskFrequency  = 15 * time.Minute
 
-	//nolint:gomnd
 	minSessionExpiryTime = int64(60 * 60 * 24 * 31) // 31 days
 
 	MattermostAuthMod = "mattermost"
@@ -76,7 +74,7 @@ func New(cfg *config.Configuration, singleUserToken string, db store.Store, logg
 	filesBackendSettings := filestore.FileBackendSettings{}
 	filesBackendSettings.DriverName = cfg.FilesDriver
 	filesBackendSettings.Directory = cfg.FilesPath
-	filesBackendSettings.AmazonS3AccessKeyId = cfg.FilesS3Config.AccessKeyId
+	filesBackendSettings.AmazonS3AccessKeyId = cfg.FilesS3Config.AccessKeyID
 	filesBackendSettings.AmazonS3SecretAccessKey = cfg.FilesS3Config.SecretAccessKey
 	filesBackendSettings.AmazonS3Bucket = cfg.FilesS3Config.Bucket
 	filesBackendSettings.AmazonS3PathPrefix = cfg.FilesS3Config.PathPrefix
@@ -320,7 +318,7 @@ func (s *Server) Logger() *mlog.Logger {
 func (s *Server) startLocalModeServer() error {
 	s.localModeServer = &http.Server{
 		Handler:     s.localRouter,
-		ConnContext: context.SetContextConn,
+		ConnContext: api.SetContextConn,
 	}
 
 	// TODO: Close and delete socket file on shutdown

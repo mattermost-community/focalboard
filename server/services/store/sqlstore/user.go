@@ -3,7 +3,7 @@ package sqlstore
 import (
 	"database/sql"
 	"encoding/json"
-	"errors"
+	"fmt"
 	"log"
 	"time"
 
@@ -11,6 +11,14 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 )
+
+type UserNotFoundError struct {
+	id string
+}
+
+func (unf UserNotFoundError) Error() string {
+	return fmt.Sprintf("user not found (%s)", unf.id)
+}
 
 func (s *SQLStore) GetRegisteredUserCount() (int, error) {
 	query := s.getQueryBuilder().
@@ -132,7 +140,7 @@ func (s *SQLStore) UpdateUser(user *model.User) error {
 	}
 
 	if rowCount < 1 {
-		return errors.New("user not found")
+		return UserNotFoundError{user.ID}
 	}
 
 	return nil
@@ -157,7 +165,7 @@ func (s *SQLStore) UpdateUserPassword(username, password string) error {
 	}
 
 	if rowCount < 1 {
-		return errors.New("user not found")
+		return UserNotFoundError{username}
 	}
 
 	return nil
@@ -182,7 +190,7 @@ func (s *SQLStore) UpdateUserPasswordByID(userID, password string) error {
 	}
 
 	if rowCount < 1 {
-		return errors.New("user not found")
+		return UserNotFoundError{userID}
 	}
 
 	return nil

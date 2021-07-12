@@ -4,17 +4,23 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
-	"errors"
-	"github.com/mattermost/focalboard/server/utils"
 	"time"
 
+	"github.com/mattermost/focalboard/server/utils"
+
 	sq "github.com/Masterminds/squirrel"
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" // postgres driver
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/store"
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/mattn/go-sqlite3" // sqlite driver
 )
+
+type RootIDNilError struct{}
+
+func (re RootIDNilError) Error() string {
+	return "rootId is nil"
+}
 
 func (s *SQLStore) GetBlocksWithParentAndType(c store.Container, parentID string, blockType string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
@@ -327,7 +333,7 @@ func (s *SQLStore) GetParentID(c store.Container, blockID string) (string, error
 
 func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID string) error {
 	if block.RootID == "" {
-		return errors.New("rootId is nil")
+		return RootIDNilError{}
 	}
 
 	fieldsJSON, err := json.Marshal(block.Fields)
@@ -397,15 +403,15 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 			Set("update_at", block.UpdateAt).
 			Set("delete_at", block.DeleteAt)
 
-		q, args, err := query.ToSql()
-		if err != nil {
-			s.logger.Error("InsertBlock error converting update query object to SQL", mlog.Err(err))
-			return err
+		q, args, err2 := query.ToSql()
+		if err2 != nil {
+			s.logger.Error("InsertBlock error converting update query object to SQL", mlog.Err(err2))
+			return err2
 		}
 
-		if _, err := tx.Exec(q, args...); err != nil {
-			s.logger.Error(`InsertBlock error occurred while updating existing block`, mlog.String("blockID", block.ID), mlog.Err(err))
-			return err
+		if _, err2 := tx.Exec(q, args...); err2 != nil {
+			s.logger.Error(`InsertBlock error occurred while updating existing block`, mlog.String("blockID", block.ID), mlog.Err(err2))
+			return err2
 		}
 	} else {
 		block.CreatedBy = userID
@@ -421,7 +427,10 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 		query := insertQuery.SetMap(insertQueryValues)
 		_, err = sq.ExecContextWith(ctx, tx, query.Into(s.tablePrefix+"blocks"))
 		if err != nil {
-			tx.Rollback()
+			if rollbackErr := tx.Rollback(); rollbackErr != nil {
+				s.logger.Warn("Transaction rollback error", mlog.Err(rollbackErr))
+			}
+
 			return err
 		}
 	}
@@ -431,7 +440,9 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 
 	_, err = sq.ExecContextWith(ctx, tx, query.Into(s.tablePrefix+"blocks_history"))
 	if err != nil {
-		_ = tx.Rollback()
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Warn("Transaction rollback error", mlog.Err(rollbackErr))
+		}
 		return err
 	}
 
@@ -469,7 +480,9 @@ func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy str
 
 	_, err = sq.ExecContextWith(ctx, tx, insertQuery)
 	if err != nil {
-		_ = tx.Rollback()
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Warn("Transaction rollback error", mlog.Err(rollbackErr))
+		}
 		return err
 	}
 
@@ -480,7 +493,9 @@ func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy str
 
 	_, err = sq.ExecContextWith(ctx, tx, deleteQuery)
 	if err != nil {
-		_ = tx.Rollback()
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Warn("Transaction rollback error", mlog.Err(rollbackErr))
+		}
 		return err
 	}
 
@@ -552,6 +567,9 @@ func (s *SQLStore) GetBlock(c store.Container, blockID string) (*model.Block, er
 	}
 
 	blocks, err := s.blocksFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(blocks) == 0 {
 		return nil, nil

@@ -1,7 +1,6 @@
 package app
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"path/filepath"
@@ -25,7 +24,7 @@ func (a *App) SaveFile(reader io.Reader, workspaceID, rootID, filename string) (
 
 	_, appErr := a.filesBackend.WriteFile(reader, filePath)
 	if appErr != nil {
-		return "", errors.New("unable to store the file in the files storage")
+		return "", fmt.Errorf("unable to store the file in the files storage: %w", appErr)
 	}
 
 	return createdFilename, nil
