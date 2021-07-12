@@ -3,7 +3,7 @@
 import React from 'react'
 import {useIntl, IntlShape} from 'react-intl'
 
-import {IContentBlockWithCords} from '../../blocks/contentBlock'
+import {IContentBlockWithCords, IContentBlock} from '../../blocks/contentBlock'
 import {MutableTextBlock} from '../../blocks/textBlock'
 import mutator from '../../mutator'
 import {CardTree} from '../../viewModel/cardTree'
@@ -41,7 +41,7 @@ function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: ICont
     const srcBlockId = srcBlock.block.id
     const dstBlockId = dstBlock.block.id
 
-    let srcBlockX = srcBlock.cords.x
+    const srcBlockX = srcBlock.cords.x
     let dstBlockX = dstBlock.cords.x
 
     let srcBlockY = srcBlock.cords.y
@@ -65,7 +65,6 @@ function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: ICont
         if (contentOrder[srcBlockX].length === 1) {
             contentOrder.splice(srcBlockX, 1, contentOrder[srcBlockX][0])
         }
-
     } else {
         contentOrder.splice(srcBlockX, 1)
 
@@ -76,25 +75,23 @@ function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: ICont
 
     if (moveTo === 'right') {
         if (dstBlockY > -1) {
-
             if (dstBlockX === srcBlockX && dstBlockY > srcBlockY) {
                 dstBlockY -= 1
             }
 
             (contentOrder[dstBlockX] as string[]).splice(dstBlockY + 1, 0, srcBlockId)
         } else {
-            contentOrder.splice(dstBlockX, 1, [dstBlockId, srcBlockId]);
+            contentOrder.splice(dstBlockX, 1, [dstBlockId, srcBlockId])
         }
     } else if (moveTo === 'left') {
         if (dstBlockY > -1) {
-
             if (dstBlockX === srcBlockX && dstBlockY > srcBlockY) {
                 dstBlockY -= 1
             }
 
             (contentOrder[dstBlockX] as string[]).splice(dstBlockY, 0, srcBlockId)
         } else {
-            contentOrder.splice(dstBlockX, 1, [srcBlockId, dstBlockId]);
+            contentOrder.splice(dstBlockX, 1, [srcBlockId, dstBlockId])
         }
     } else if (moveTo === 'aboveRow') {
         contentOrder.splice(dstBlockX, 0, srcBlockId)
@@ -108,20 +105,27 @@ function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: ICont
     })
 }
 
-const ContentBlockWithDragAndDrop = (props) => {
-    const [, isOver,, itemRef] = useSortableWithGrip('content', {block: props.block, cords: {x: props.x}}, true, (src, dst) =>  moveBlock(props.card, src, dst, props.intl, 'aboveRow'))
-    const [, isOver2,, itemRef2] = useSortableWithGrip('content', {block: props.block, cords: {x: props.x}}, true, (src, dst) =>  moveBlock(props.card, src, dst, props.intl, 'belowRow'))
+type ContentBlockWithDragAndDropProps = {
+    block: IContentBlock | IContentBlock[],
+    x: number,
+    card: Card,
+    cardTree: CardTree,
+    intl: IntlShape,
+    readonly: boolean,
+}
 
+const ContentBlockWithDragAndDrop = (props: ContentBlockWithDragAndDropProps) => {
+    const [, isOver,, itemRef] = useSortableWithGrip('content', {block: props.block, cords: {x: props.x}}, true, (src, dst) => moveBlock(props.card, src, dst, props.intl, 'aboveRow'))
+    const [, isOver2,, itemRef2] = useSortableWithGrip('content', {block: props.block, cords: {x: props.x}}, true, (src, dst) => moveBlock(props.card, src, dst, props.intl, 'belowRow'))
 
     if (Array.isArray(props.block)) {
         return (
-            <div
-            >
+            <div >
                 <div
                     ref={itemRef}
                     className={`addToRow ${isOver ? 'dragover' : ''}`}
                     style={{width: '94%', height: '10px', marginLeft: '48px'}}
-                /> 
+                />
                 <div
                     style={{display: 'flex'}}
                 >
@@ -132,9 +136,9 @@ const ContentBlockWithDragAndDrop = (props) => {
                             block={b}
                             card={props.card}
                             readonly={props.readonly}
-                            width={(1/props.block.length) * 100}
+                            width={(1 / (props.block as IContentBlock[]).length) * 100}
                             onDrop={(src, dst, moveTo) => moveBlock(props.card, src, dst, props.intl, moveTo)}
-                            cords={{x: props.x, y: y}}
+                            cords={{x: props.x, y}}
                         />
                     ))}
                 </div>
@@ -146,8 +150,7 @@ const ContentBlockWithDragAndDrop = (props) => {
                     />
                 )}
             </div>
-    
-            
+
         )
     }
 
@@ -157,7 +160,7 @@ const ContentBlockWithDragAndDrop = (props) => {
                 ref={itemRef}
                 className={`addToRow ${isOver ? 'dragover' : ''}`}
                 style={{width: '94%', height: '10px', marginLeft: '48px'}}
-            /> 
+            />
             <ContentBlock
                 key={props.block.id}
                 block={props.block}
@@ -175,7 +178,6 @@ const ContentBlockWithDragAndDrop = (props) => {
             )}
         </div>
 
-    
     )
 }
 
@@ -189,17 +191,18 @@ const CardDetailContents = React.memo((props: Props) => {
     if (cardTree.contents.length > 0) {
         return (
             <div className='octo-content'>
-                {cardTree.contents.map((block, x) => 
-                    <ContentBlockWithDragAndDrop
-                        key={x}
-                        block={block}
-                        x={x}
-                        card={card}
-                        cardTree={cardTree}
-                        intl={intl}
-                        readonly={props.readonly}
-                    />
-
+                {cardTree.contents.map((block, x) =>
+                    (
+                        <ContentBlockWithDragAndDrop
+                            key={x}
+                            block={block}
+                            x={x}
+                            card={card}
+                            cardTree={cardTree}
+                            intl={intl}
+                            readonly={props.readonly}
+                        />
+                    ),
                 )}
             </div>
         )

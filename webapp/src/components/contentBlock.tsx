@@ -18,7 +18,7 @@ import GripIcon from '../widgets/icons/grip'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 import {useSortableWithGrip} from '../hooks/sortable'
-import {Position} from '../components/cardDetail/cardDetailContents';
+import {Position} from '../components/cardDetail/cardDetailContents'
 
 import ContentElement from './content/contentElement'
 import AddContentMenuItem from './addContentMenuItem'
@@ -37,17 +37,20 @@ type Props = {
 const ContentBlock = React.memo((props: Props): JSX.Element => {
     const {card, block, readonly, cords} = props
     const intl = useIntl()
-    const [, , gripRef, itemRef] = useSortableWithGrip('content', {block: block, cords: cords}, true, () => {})
-    const [, isOver2,, itemRef2] = useSortableWithGrip('content', {block: block, cords: cords}, true, (src, dst) => props.onDrop(src, dst, 'right'))
-    const [, isOver3,, itemRef3] = useSortableWithGrip('content', {block: block, cords: cords}, true, (src, dst) => props.onDrop(src, dst, 'left'))
+    const [, , gripRef, itemRef] = useSortableWithGrip('content', {block, cords}, true, () => {})
+    const [, isOver2,, itemRef2] = useSortableWithGrip('content', {block, cords}, true, (src, dst) => props.onDrop(src, dst, 'right'))
+    const [, isOver3,, itemRef3] = useSortableWithGrip('content', {block, cords}, true, (src, dst) => props.onDrop(src, dst, 'left'))
 
-    let index = cords.x
-    let colIndex = cords.y ? cords.y : -1
+    const index = cords.x
+    const colIndex = cords.y ? cords.y : -1
     const contentOrder = card.contentOrder.slice()
 
-    let className = 'ContentBlock octo-block'
+    const className = 'ContentBlock octo-block'
     return (
-        <div className='rowContents' style={{width: props.width + "%"}}>
+        <div
+            className='rowContents'
+            style={{width: props.width + '%'}}
+        >
             <div
                 ref={itemRef}
                 className={className}
@@ -124,7 +127,7 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
                         </div>
                     }
                 </div>
-                {!cords.y /* That is to say if cords.y === 0 or cords.y === undefined */ && 
+                {!cords.y /* That is to say if cords.y === 0 or cords.y === undefined */ &&
                     <div
                         ref={itemRef3}
                         className={`addToRow ${isOver3 ? 'dragover' : ''}`}

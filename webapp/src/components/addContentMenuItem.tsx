@@ -6,7 +6,6 @@ import {useIntl} from 'react-intl'
 
 import {BlockTypes} from '../blocks/block'
 import {Card} from '../blocks/card'
-import {IContentBlock} from '../blocks/contentBlock'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import Menu from '../widgets/menu'
@@ -21,7 +20,7 @@ type Props = {
 
 const AddContentMenuItem = React.memo((props:Props): JSX.Element => {
     const {card, type, cords} = props
-    let index = cords.x
+    const index = cords.x
     const contentOrder = card.contentOrder.slice()
     const intl = useIntl()
 
