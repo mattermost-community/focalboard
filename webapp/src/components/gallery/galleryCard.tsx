@@ -96,7 +96,7 @@ const GalleryCard = React.memo((props: Props) => {
                 <div className='gallery-image'>
                     <ImageElement block={image}/>
                 </div>}
-            {!!image &&
+            {!image &&
                 <div className='gallery-item'>
                     {cardTree?.contents.map((block) => {
                         if (Array.isArray(block)) {
