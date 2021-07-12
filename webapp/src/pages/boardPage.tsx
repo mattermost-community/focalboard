@@ -323,7 +323,7 @@ class BoardPage extends React.Component<Props, State> {
 
         let newBoardTree: BoardTree | undefined
         if (boardTree) {
-            newBoardTree = MutableBoardTree.incrementalUpdate(boardTree, blocks)
+            newBoardTree = await MutableBoardTree.incrementalUpdate(boardTree, blocks)
         } else if (this.state.boardId) {
             // Corner case: When the page is viewing a deleted board, that is subsequently un-deleted on another client
             newBoardTree = await MutableBoardTree.sync(this.state.boardId, this.state.viewId)
@@ -359,11 +359,11 @@ class BoardPage extends React.Component<Props, State> {
         this.attachToBoard(boardId)
     }
 
-    showView(viewId: string, boardId: string = this.state.boardId): void {
+    async showView(viewId: string, boardId: string = this.state.boardId): Promise<void> {
         localStorage.setItem('lastViewId', viewId)
 
         if (this.state.boardTree && this.state.boardId === boardId) {
-            const newBoardTree = this.state.boardTree.copyWithView(viewId)
+            const newBoardTree = await this.state.boardTree.copyWithView(viewId)
             this.setState({boardTree: newBoardTree, viewId})
         } else {
             this.attachToBoard(boardId, viewId)
@@ -375,13 +375,13 @@ class BoardPage extends React.Component<Props, State> {
         window.history.pushState({path: newUrl.toString()}, '', newUrl.toString())
     }
 
-    setSearchText(text?: string): void {
+    async setSearchText(text?: string): Promise<void> {
         if (!this.state.boardTree) {
             Utils.assertFailure('setSearchText: boardTree')
             return
         }
 
-        const newBoardTree = this.state.boardTree.copyWithSearchText(text)
+        const newBoardTree = await this.state.boardTree.copyWithSearchText(text)
         this.setState({boardTree: newBoardTree})
     }
 }

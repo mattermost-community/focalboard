@@ -69,7 +69,7 @@
   "PropertyType.Select": "Auswählen",
   "PropertyType.Text": "Text",
   "PropertyType.URL": "URL",
-  "PropertyType.UpdatedBy": "Aktualisiert von",
+  "PropertyType.UpdatedBy": "Aktualisiert durch",
   "PropertyType.UpdatedTime": "Aktualisierungszeit",
   "RegistrationLink.confirmRegenerateToken": "Diese Aktion widerruft zuvor geteilte Links. Trotzdem fortfahren?",
   "RegistrationLink.copiedLink": "Kopiert!",

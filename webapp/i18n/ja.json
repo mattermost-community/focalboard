@@ -44,6 +44,7 @@
   "FilterComponent.delete": "削除",
   "GalleryCard.delete": "削除",
   "GalleryCard.duplicate": "複製",
+  "GroupBy.ungroup": "グループ解除",
   "KanbanCard.delete": "削除",
   "KanbanCard.duplicate": "複製",
   "KanbanCard.untitled": "無題",

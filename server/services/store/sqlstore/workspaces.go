@@ -128,6 +128,7 @@ func (s *SQLStore) GetWorkspaceCount() (int64, error) {
 		s.logger.Error("ERROR GetWorkspaceCount", mlog.Err(err))
 		return 0, err
 	}
+	defer s.CloseRows(rows)
 
 	var count int64
 
