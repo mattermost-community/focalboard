@@ -1,9 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useRef, useState} from 'react'
 
 import {FormattedMessage, useIntl} from 'react-intl'
-import {useDrop, useDragLayer} from 'react-dnd'
+import {useDragLayer, useDrop} from 'react-dnd'
 
 import {IPropertyOption, IPropertyTemplate} from '../../blocks/board'
 import {MutableBoardView} from '../../blocks/boardView'
@@ -14,9 +14,13 @@ import {Utils} from '../../utils'
 
 import {BoardTree} from '../../viewModel/boardTree'
 
-import {OctoUtils} from './../../octoUtils'
+import {OctoUtils} from '../../octoUtils'
 
 import './table.scss'
+import {CardTree, MutableCardTree} from '../../viewModel/cardTree'
+
+import useCardListener from '../../hooks/cardListener'
+
 import TableHeader from './tableHeader'
 import TableRows from './tableRows'
 import TableGroup from './tableGroup'
@@ -34,8 +38,37 @@ type Props = {
 const Table = (props: Props) => {
     const {boardTree} = props
     const {board, cards, activeView, visibleGroups} = boardTree
-    const isManualSort = activeView.sortOptions.length < 1
+    const isManualSort = activeView.sortOptions.length === 0
     const intl = useIntl()
+
+    const [cardTrees, setCardTrees] = useState<{[key: string]: CardTree | undefined}>({a: undefined})
+    const cardTreeRef = useRef<{[key: string]: CardTree | undefined}>()
+    cardTreeRef.current = cardTrees
+
+    useCardListener(
+        cards.map((c) => c.id),
+        async (blocks) => {
+            for (const block of blocks) {
+                const cardTree = cardTreeRef.current && cardTreeRef.current[block.parentId]
+                if (cardTree) {
+                    const newCardTree = MutableCardTree.incrementalUpdate(cardTree, blocks)
+                    setCardTrees((oldTree) => ({...oldTree, [block.parentId]: newCardTree}))
+                } else {
+                    MutableCardTree.sync(block.parentId).
+                        then((newCardTree) => {
+                            setCardTrees((oldTree) => ({...oldTree, [block.parentId]: newCardTree}))
+                        })
+                }
+            }
+        },
+        async () => {
+            cards.forEach(async (c) => {
+                const newCardTree = await MutableCardTree.sync(c.id)
+                setCardTrees((oldTree) => ({...oldTree, [c.id]: newCardTree}))
+            })
+        },
+        false,
+    )
 
     const {offset, resizingColumn} = useDragLayer((monitor) => {
         if (monitor.getItemType() === 'horizontalGrip') {
@@ -54,7 +87,7 @@ const Table = (props: Props) => {
 
     const [, drop] = useDrop(() => ({
         accept: 'horizontalGrip',
-        drop: (item: {id: string}, monitor) => {
+        drop: (item: { id: string }, monitor) => {
             const columnWidths = {...activeView.columnWidths}
             const finalOffset = monitor.getDifferenceFromInitialOffset()?.x || 0
             const newWidth = Math.max(Constants.minColumnWidth, (columnWidths[item.id] || 0) + (finalOffset || 0))
@@ -103,8 +136,8 @@ const Table = (props: Props) => {
     })
 
     const hideGroup = (groupById: string): void => {
-        const index : number = activeView.collapsedOptionIds.indexOf(groupById)
-        const newValue : string[] = [...activeView.collapsedOptionIds]
+        const index: number = activeView.collapsedOptionIds.indexOf(groupById)
+        const newValue: string[] = [...activeView.collapsedOptionIds]
         if (index > -1) {
             newValue.splice(index, 1)
         } else if (groupById !== '') {
@@ -156,7 +189,7 @@ const Table = (props: Props) => {
 
         if (activeView.groupById !== undefined) {
             const orderedCards = boardTree.orderedCards()
-            const cardsById: {[key: string]: Card} = orderedCards.reduce((acc: {[key: string]: Card}, card: Card): {[key: string]: Card} => {
+            const cardsById: { [key: string]: Card } = orderedCards.reduce((acc: { [key: string]: Card }, card: Card): { [key: string]: Card } => {
                 acc[card.id] = card
                 return acc
             }, {})
@@ -247,70 +280,70 @@ const Table = (props: Props) => {
 
                 {/* Table header row */}
 
-                {board.cardProperties.
-                    filter((template) => activeView.visiblePropertyIds.includes(template.id)).
-                    map((template) => {
-                        let sorted: 'up' | 'down' | 'none' = 'none'
-                        const sortOption = activeView.sortOptions.find((o) => o.propertyId === template.id)
-                        if (sortOption) {
-                            sorted = sortOption.reversed ? 'down' : 'up'
-                        }
+                {board.cardProperties.filter((template) => activeView.visiblePropertyIds.includes(template.id)).map((template) => {
+                    let sorted: 'up' | 'down' | 'none' = 'none'
+                    const sortOption = activeView.sortOptions.find((o) => o.propertyId === template.id)
+                    if (sortOption) {
+                        sorted = sortOption.reversed ? 'down' : 'up'
+                    }
 
-                        return (
-                            <TableHeader
-                                name={template.name}
-                                sorted={sorted}
-                                readonly={props.readonly}
-                                boardTree={boardTree}
-                                template={template}
-                                key={template.id}
-                                offset={resizingColumn === template.id ? offset : 0}
-                                onDrop={onDropToColumn}
-                                onAutoSizeColumn={onAutoSizeColumn}
-                            />
-                        )
-                    })}
+                    return (
+                        <TableHeader
+                            name={template.name}
+                            sorted={sorted}
+                            readonly={props.readonly}
+                            boardTree={boardTree}
+                            template={template}
+                            key={template.id}
+                            offset={resizingColumn === template.id ? offset : 0}
+                            onDrop={onDropToColumn}
+                            onAutoSizeColumn={onAutoSizeColumn}
+                        />
+                    )
+                })}
             </div>
 
             {/* Table header row */}
             <div className='table-row-container'>
                 {activeView.groupById &&
-                    visibleGroups.map((group) => {
-                        return (
-                            <TableGroup
-                                key={group.option.id}
-                                boardTree={boardTree}
-                                group={group}
-                                readonly={props.readonly}
-                                columnRefs={columnRefs}
-                                selectedCardIds={props.selectedCardIds}
-                                cardIdToFocusOnRender={props.cardIdToFocusOnRender}
-                                hideGroup={hideGroup}
-                                addCard={props.addCard}
-                                showCard={props.showCard}
-                                propertyNameChanged={propertyNameChanged}
-                                onCardClicked={props.onCardClicked}
-                                onDropToGroupHeader={onDropToGroupHeader}
-                                onDropToCard={onDropToCard}
-                                onDropToGroup={onDropToGroup}
-                            />)
-                    })
+                visibleGroups.map((group) => {
+                    return (
+                        <TableGroup
+                            key={group.option.id}
+                            boardTree={boardTree}
+                            cardTrees={cardTrees}
+                            group={group}
+                            readonly={props.readonly}
+                            columnRefs={columnRefs}
+                            selectedCardIds={props.selectedCardIds}
+                            cardIdToFocusOnRender={props.cardIdToFocusOnRender}
+                            hideGroup={hideGroup}
+                            addCard={props.addCard}
+                            showCard={props.showCard}
+                            propertyNameChanged={propertyNameChanged}
+                            onCardClicked={props.onCardClicked}
+                            onDropToGroupHeader={onDropToGroupHeader}
+                            onDropToCard={onDropToCard}
+                            onDropToGroup={onDropToGroup}
+                        />)
+                })
                 }
 
                 {/* No Grouping, Rows, one per card */}
                 {!activeView.groupById &&
-                    <TableRows
-                        boardTree={boardTree}
-                        columnRefs={columnRefs}
-                        cards={boardTree.cards}
-                        selectedCardIds={props.selectedCardIds}
-                        readonly={props.readonly}
-                        cardIdToFocusOnRender={props.cardIdToFocusOnRender}
-                        showCard={props.showCard}
-                        addCard={props.addCard}
-                        onCardClicked={props.onCardClicked}
-                        onDrop={onDropToCard}
-                    />
+                <TableRows
+                    boardTree={boardTree}
+                    cardTrees={cardTrees}
+                    columnRefs={columnRefs}
+                    cards={boardTree.cards}
+                    selectedCardIds={props.selectedCardIds}
+                    readonly={props.readonly}
+                    cardIdToFocusOnRender={props.cardIdToFocusOnRender}
+                    showCard={props.showCard}
+                    addCard={props.addCard}
+                    onCardClicked={props.onCardClicked}
+                    onDrop={onDropToCard}
+                />
                 }
             </div>
 

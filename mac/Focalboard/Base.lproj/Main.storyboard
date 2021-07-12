@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
-        <plugIn identifier="com.apple.WebKit2IBPlugin" version="17701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
+        <plugIn identifier="com.apple.WebKit2IBPlugin" version="18122"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -717,20 +717,20 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="baY-7A-lBA">
-                                <rect key="frame" x="20" y="55" width="574" height="417"/>
+                                <rect key="frame" x="20" y="54" width="574" height="418"/>
                                 <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="qB2-dj-jVl">
-                                    <rect key="frame" x="0.0" y="0.0" width="559" height="417"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="559" height="418"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textView editable="NO" importsGraphics="NO" verticallyResizable="YES" smartInsertDelete="YES" id="f3s-Q5-6IG">
-                                            <rect key="frame" x="0.0" y="0.0" width="559" height="417"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="559" height="418"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            <size key="minSize" width="559" height="417"/>
+                                            <size key="minSize" width="559" height="418"/>
                                             <size key="maxSize" width="636" height="10000000"/>
                                             <attributedString key="textStorage">
-                                                <fragment content="Welcome to Focalboard v0.6.7!">
+                                                <fragment content="Welcome to Focalboard v0.8.0!">
                                                     <attributes>
                                                         <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                         <font key="NSFont" size="18" name="Helvetica-Bold"/>
@@ -826,15 +826,61 @@ Cg
                                                     </attributes>
                                                 </fragment>
                                                 <fragment>
-                                                    <string key="content">
-Thank you contributors! There are a number of new features and improvements in this release:
+                                                    <string key="content" base64-UTF8="YES">
+Cg
+</string>
+                                                    <attributes>
+                                                        <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                        <font key="NSFont" size="14" name="Helvetica"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                            <tabStops>
+                                                                <textTab alignment="left" location="36">
+                                                                    <options/>
+                                                                </textTab>
+                                                                <textTab alignment="left" location="72">
+                                                                    <options/>
+                                                                </textTab>
+                                                                <textTab alignment="left" location="108">
+                                                                    <options/>
+                                                                </textTab>
+                                                                <textTab alignment="left" location="144">
+                                                                    <options/>
+                                                                </textTab>
+                                                                <textTab alignment="left" location="180">
+                                                                    <options/>
+                                                                </textTab>
+                                                                <textTab alignment="left" location="216">
+                                                                    <options/>
+                                                                </textTab>
+                                                                <textTab alignment="left" location="252">
+                                                                    <options/>
+                                                                </textTab>
+                                                                <textTab alignment="left" location="288">
+                                                                    <options/>
+                                                                </textTab>
+                                                                <textTab alignment="left" location="324">
+                                                                    <options/>
+                                                                </textTab>
+                                                                <textTab alignment="left" location="360">
+                                                                    <options/>
+                                                                </textTab>
+                                                                <textTab alignment="left" location="396">
+                                                                    <options/>
+                                                                </textTab>
+                                                                <textTab alignment="left" location="432">
+                                                                    <options/>
+                                                                </textTab>
+                                                            </tabStops>
+                                                        </paragraphStyle>
+                                                    </attributes>
+                                                </fragment>
+                                                <fragment>
+                                                    <string key="content">Thank you contributors! There are a number of new features and improvements in this release:
 
-    * Added URL and phone number properties. Thanks @BharatKalluri!
-    * Persist Mac app settings. Thanks @Johennes!
 </string>
                                                     <attributes>
                                                         <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                        <font key="NSFont" size="14" name="Helvetica"/>
+                                                        <font key="NSFont" textStyle="body" name=".SFNS-Regular"/>
                                                         <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                             <tabStops>
                                                                 <textTab alignment="left" location="36">
@@ -877,157 +923,184 @@ Thank you contributors! There are a number of new features and improvements in t
                                                         </paragraphStyle>
                                                     </attributes>
                                                 </fragment>
+                                                <fragment content="*">
+                                                    <attributes>
+                                                        <color key="NSBackgroundColor" red="0.11764705926179886" green="0.11764705926179886" blue="0.11764705926179886" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="NSColor" red="0.40392157435417175" green="0.58823531866073608" blue="0.90196079015731812" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <font key="NSFont" textStyle="body" name=".SFNS-Regular"/>
+                                                        <real key="NSKern" value="0.0"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" minimumLineHeight="20" defaultTabInterval="36" tighteningFactorForTruncation="0.0">
+                                                            <tabStops/>
+                                                        </paragraphStyle>
+                                                        <color key="NSStrokeColor" red="0.40392157435417175" green="0.58823531866073608" blue="0.90196079015731812" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <real key="NSStrokeWidth" value="0.0"/>
+                                                    </attributes>
+                                                </fragment>
+                                                <fragment content=" CreatedBy property. Thanks @harshilsharma63!">
+                                                    <attributes>
+                                                        <color key="NSBackgroundColor" red="0.11764705926179886" green="0.11764705926179886" blue="0.11764705926179886" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="NSColor" red="0.83137255907058716" green="0.83137255907058716" blue="0.83137255907058716" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <font key="NSFont" textStyle="body" name=".SFNS-Regular"/>
+                                                        <real key="NSKern" value="0.0"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" minimumLineHeight="20" defaultTabInterval="36" tighteningFactorForTruncation="0.0">
+                                                            <tabStops/>
+                                                        </paragraphStyle>
+                                                        <color key="NSStrokeColor" red="0.83137255907058716" green="0.83137255907058716" blue="0.83137255907058716" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <real key="NSStrokeWidth" value="0.0"/>
+                                                    </attributes>
+                                                </fragment>
                                                 <fragment>
-                                                    <string key="content">    * Disable unused Mac tab menu. Thanks @@haardikdharma10!
+                                                    <string key="content" base64-UTF8="YES">
+Cg
+</string>
+                                                    <attributes>
+                                                        <color key="NSColor" red="0.83137255907058716" green="0.83137255907058716" blue="0.83137255907058716" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <font key="NSFont" textStyle="body" name=".SFNS-Regular"/>
+                                                        <real key="NSKern" value="0.0"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" minimumLineHeight="20" defaultTabInterval="36" tighteningFactorForTruncation="0.0">
+                                                            <tabStops/>
+                                                        </paragraphStyle>
+                                                        <color key="NSStrokeColor" red="0.83137255907058716" green="0.83137255907058716" blue="0.83137255907058716" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <real key="NSStrokeWidth" value="0.0"/>
+                                                    </attributes>
+                                                </fragment>
+                                                <fragment content="*">
+                                                    <attributes>
+                                                        <color key="NSBackgroundColor" red="0.11764705926179886" green="0.11764705926179886" blue="0.11764705926179886" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="NSColor" red="0.40392157435417175" green="0.58823531866073608" blue="0.90196079015731812" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <font key="NSFont" textStyle="body" name=".SFNS-Regular"/>
+                                                        <real key="NSKern" value="0.0"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" minimumLineHeight="20" defaultTabInterval="36" tighteningFactorForTruncation="0.0">
+                                                            <tabStops/>
+                                                        </paragraphStyle>
+                                                        <color key="NSStrokeColor" red="0.40392157435417175" green="0.58823531866073608" blue="0.90196079015731812" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <real key="NSStrokeWidth" value="0.0"/>
+                                                    </attributes>
+                                                </fragment>
+                                                <fragment content=" Fix dragged card order. Thanks @kamre!">
+                                                    <attributes>
+                                                        <color key="NSBackgroundColor" red="0.11764705926179886" green="0.11764705926179886" blue="0.11764705926179886" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="NSColor" red="0.83137255907058716" green="0.83137255907058716" blue="0.83137255907058716" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <font key="NSFont" textStyle="body" name=".SFNS-Regular"/>
+                                                        <real key="NSKern" value="0.0"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" minimumLineHeight="20" defaultTabInterval="36" tighteningFactorForTruncation="0.0">
+                                                            <tabStops/>
+                                                        </paragraphStyle>
+                                                        <color key="NSStrokeColor" red="0.83137255907058716" green="0.83137255907058716" blue="0.83137255907058716" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <real key="NSStrokeWidth" value="0.0"/>
+                                                    </attributes>
+                                                </fragment>
+                                                <fragment>
+                                                    <string key="content" base64-UTF8="YES">
+Cg
+</string>
+                                                    <attributes>
+                                                        <color key="NSColor" red="0.83137255907058716" green="0.83137255907058716" blue="0.83137255907058716" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <font key="NSFont" textStyle="body" name=".SFNS-Regular"/>
+                                                        <real key="NSKern" value="0.0"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" minimumLineHeight="20" defaultTabInterval="36" tighteningFactorForTruncation="0.0">
+                                                            <tabStops/>
+                                                        </paragraphStyle>
+                                                        <color key="NSStrokeColor" red="0.83137255907058716" green="0.83137255907058716" blue="0.83137255907058716" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <real key="NSStrokeWidth" value="0.0"/>
+                                                    </attributes>
+                                                </fragment>
+                                                <fragment content="*">
+                                                    <attributes>
+                                                        <color key="NSBackgroundColor" red="0.11764705926179886" green="0.11764705926179886" blue="0.11764705926179886" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="NSColor" red="0.40392157435417175" green="0.58823531866073608" blue="0.90196079015731812" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <font key="NSFont" textStyle="body" name=".SFNS-Regular"/>
+                                                        <real key="NSKern" value="0.0"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" minimumLineHeight="20" defaultTabInterval="36" tighteningFactorForTruncation="0.0">
+                                                            <tabStops/>
+                                                        </paragraphStyle>
+                                                        <color key="NSStrokeColor" red="0.40392157435417175" green="0.58823531866073608" blue="0.90196079015731812" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <real key="NSStrokeWidth" value="0.0"/>
+                                                    </attributes>
+                                                </fragment>
+                                                <fragment content=" Date format user setting. Thanks @darkLord19!">
+                                                    <attributes>
+                                                        <color key="NSBackgroundColor" red="0.11764705926179886" green="0.11764705926179886" blue="0.11764705926179886" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="NSColor" red="0.83137255907058716" green="0.83137255907058716" blue="0.83137255907058716" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <font key="NSFont" textStyle="body" name=".SFNS-Regular"/>
+                                                        <real key="NSKern" value="0.0"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" minimumLineHeight="20" defaultTabInterval="36" tighteningFactorForTruncation="0.0">
+                                                            <tabStops/>
+                                                        </paragraphStyle>
+                                                        <color key="NSStrokeColor" red="0.83137255907058716" green="0.83137255907058716" blue="0.83137255907058716" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <real key="NSStrokeWidth" value="0.0"/>
+                                                    </attributes>
+                                                </fragment>
+                                                <fragment>
+                                                    <string key="content" base64-UTF8="YES">
+Cg
+</string>
+                                                    <attributes>
+                                                        <color key="NSColor" red="0.83137255907058716" green="0.83137255907058716" blue="0.83137255907058716" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <font key="NSFont" textStyle="body" name=".SFNS-Regular"/>
+                                                        <real key="NSKern" value="0.0"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" minimumLineHeight="20" defaultTabInterval="36" tighteningFactorForTruncation="0.0">
+                                                            <tabStops/>
+                                                        </paragraphStyle>
+                                                        <color key="NSStrokeColor" red="0.83137255907058716" green="0.83137255907058716" blue="0.83137255907058716" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <real key="NSStrokeWidth" value="0.0"/>
+                                                    </attributes>
+                                                </fragment>
+                                                <fragment content="*">
+                                                    <attributes>
+                                                        <color key="NSBackgroundColor" red="0.11764705926179886" green="0.11764705926179886" blue="0.11764705926179886" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="NSColor" red="0.40392157435417175" green="0.58823531866073608" blue="0.90196079015731812" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <font key="NSFont" textStyle="body" name=".SFNS-Regular"/>
+                                                        <real key="NSKern" value="0.0"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" minimumLineHeight="20" defaultTabInterval="36" tighteningFactorForTruncation="0.0">
+                                                            <tabStops/>
+                                                        </paragraphStyle>
+                                                        <color key="NSStrokeColor" red="0.40392157435417175" green="0.58823531866073608" blue="0.90196079015731812" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <real key="NSStrokeWidth" value="0.0"/>
+                                                    </attributes>
+                                                </fragment>
+                                                <fragment content=" Add property tooltip in board view. Thanks @ditsemto!">
+                                                    <attributes>
+                                                        <color key="NSBackgroundColor" red="0.11764705926179886" green="0.11764705926179886" blue="0.11764705926179886" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="NSColor" red="0.83137255907058716" green="0.83137255907058716" blue="0.83137255907058716" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <font key="NSFont" textStyle="body" name=".SFNS-Regular"/>
+                                                        <real key="NSKern" value="0.0"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" minimumLineHeight="20" defaultTabInterval="36" tighteningFactorForTruncation="0.0">
+                                                            <tabStops/>
+                                                        </paragraphStyle>
+                                                        <color key="NSStrokeColor" red="0.83137255907058716" green="0.83137255907058716" blue="0.83137255907058716" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <real key="NSStrokeWidth" value="0.0"/>
+                                                    </attributes>
+                                                </fragment>
+                                                <fragment>
+                                                    <string key="content" base64-UTF8="YES">
+Cg
+</string>
+                                                    <attributes>
+                                                        <color key="NSColor" red="0.83137255907058716" green="0.83137255907058716" blue="0.83137255907058716" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <font key="NSFont" textStyle="body" name=".SFNS-Regular"/>
+                                                        <real key="NSKern" value="0.0"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" minimumLineHeight="20" defaultTabInterval="36" tighteningFactorForTruncation="0.0">
+                                                            <tabStops/>
+                                                        </paragraphStyle>
+                                                        <color key="NSStrokeColor" red="0.83137255907058716" green="0.83137255907058716" blue="0.83137255907058716" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <real key="NSStrokeWidth" value="0.0"/>
+                                                    </attributes>
+                                                </fragment>
+                                                <fragment>
+                                                    <string key="content" base64-UTF8="YES">
+Cg
 </string>
                                                     <attributes>
                                                         <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                        <font key="NSFont" size="14" name="Helvetica"/>
-                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                            <tabStops>
-                                                                <textTab alignment="left" location="36">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="72">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="108">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="144">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="180">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="216">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="252">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="288">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="324">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="360">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="396">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="432">
-                                                                    <options/>
-                                                                </textTab>
-                                                            </tabStops>
+                                                        <font key="NSFont" textStyle="body" name=".SFNS-Regular"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" minimumLineHeight="20" defaultTabInterval="36" tighteningFactorForTruncation="0.0">
+                                                            <tabStops/>
                                                         </paragraphStyle>
                                                     </attributes>
                                                 </fragment>
                                                 <fragment>
-                                                    <string key="content">    * Improved board sorting without leading emoji. Thanks @Johennes!
-    * Improved table headers. Thanks @sbishel!
-    * Updated open button. Thanks @arjitc!
-</string>
-                                                    <attributes>
-                                                        <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                        <font key="NSFont" size="14" name="Helvetica"/>
-                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                            <tabStops>
-                                                                <textTab alignment="left" location="36">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="72">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="108">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="144">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="180">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="216">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="252">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="288">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="324">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="360">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="396">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="432">
-                                                                    <options/>
-                                                                </textTab>
-                                                            </tabStops>
-                                                        </paragraphStyle>
-                                                    </attributes>
-                                                </fragment>
-                                                <fragment>
-                                                    <string key="content">    * Added documentation for share board. Thanks @haardikdharma10!
-    * Added Todoist import script. Thanks @harshilsharma63!
-    * Added Prettier linting for SCSS. Thanks @signalwerk!
-</string>
-                                                    <attributes>
-                                                        <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                        <font key="NSFont" size="14" name="Helvetica"/>
-                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                            <tabStops>
-                                                                <textTab alignment="left" location="36">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="72">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="108">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="144">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="180">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="216">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="252">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="288">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="324">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="360">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="396">
-                                                                    <options/>
-                                                                </textTab>
-                                                                <textTab alignment="left" location="432">
-                                                                    <options/>
-                                                                </textTab>
-                                                            </tabStops>
-                                                        </paragraphStyle>
-                                                    </attributes>
-                                                </fragment>
-                                                <fragment>
-                                                    <string key="content">
-If you like what you see, please consider taking a moment to rate this version in the App Store. Your positive ratings make a real difference for us.
+                                                    <string key="content">If you like what you see, please consider taking a moment to rate this version in the App Store. Your positive ratings make a real difference for us.
 
 Thanks so much,
 
@@ -1035,7 +1108,7 @@ Thanks so much,
 </string>
                                                     <attributes>
                                                         <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                        <font key="NSFont" size="14" name="Helvetica"/>
+                                                        <font key="NSFont" textStyle="body" name=".SFNS-Regular"/>
                                                         <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                             <tabStops>
                                                                 <textTab alignment="left" location="36">
@@ -1088,12 +1161,12 @@ Thanks so much,
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="7bj-hR-AiH">
-                                    <rect key="frame" x="559" y="0.0" width="15" height="417"/>
+                                    <rect key="frame" x="559" y="0.0" width="15" height="418"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eyp-ee-dxf">
-                                <rect key="frame" x="8" y="7" width="287" height="32"/>
+                                <rect key="frame" x="7" y="7" width="289" height="32"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="275" id="Zzi-QI-UrX"/>
                                 </constraints>
@@ -1106,7 +1179,7 @@ Thanks so much,
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dYB-Yp-UHf">
-                                <rect key="frame" x="501" y="7" width="87" height="32"/>
+                                <rect key="frame" x="500" y="7" width="89" height="32"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="75" id="vxR-kQ-YQg"/>
                                 </constraints>

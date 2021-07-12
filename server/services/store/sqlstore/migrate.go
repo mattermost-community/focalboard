@@ -17,9 +17,9 @@ import (
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	"github.com/golang-migrate/migrate/v4/database/sqlite3"
 	"github.com/golang-migrate/migrate/v4/source"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/golang-migrate/migrate/v4/source/file" // fileystem driver
 	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" // postgres driver
 	"github.com/mattermost/focalboard/server/services/store/sqlstore/migrations"
 )
 
