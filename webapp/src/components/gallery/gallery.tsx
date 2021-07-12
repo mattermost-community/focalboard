@@ -27,7 +27,7 @@ const Gallery = (props: Props): JSX.Element => {
     const {cards, activeView} = boardTree
     const visiblePropertyTemplates = boardTree.board.cardProperties.filter((template) => boardTree.activeView.visiblePropertyIds.includes(template.id))
     const [cardTrees, setCardTrees] = useState<{[key: string]: CardTree | undefined}>({})
-    const isManualSort = activeView.sortOptions.length < 1
+    const isManualSort = activeView.sortOptions.length === 0
 
     const onDropToCard = (srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)

@@ -3,8 +3,6 @@ package mattermostauthlayer
 import (
 	"database/sql"
 	"encoding/json"
-	"errors"
-	"log"
 	"strings"
 	"time"
 
@@ -19,6 +17,14 @@ const (
 	sqliteDBType   = "sqlite3"
 	postgresDBType = "postgres"
 )
+
+type NotSupportedError struct {
+	msg string
+}
+
+func (pe NotSupportedError) Error() string {
+	return pe.msg
+}
 
 // Store represents the abstraction of the data storage.
 type MattermostAuthLayer struct {
@@ -99,19 +105,19 @@ func (s *MattermostAuthLayer) GetUserByUsername(username string) (*model.User, e
 }
 
 func (s *MattermostAuthLayer) CreateUser(user *model.User) error {
-	return errors.New("no user creation allowed from focalboard, create it using mattermost")
+	return NotSupportedError{"no user creation allowed from focalboard, create it using mattermost"}
 }
 
 func (s *MattermostAuthLayer) UpdateUser(user *model.User) error {
-	return errors.New("no update allowed from focalboard, update it using mattermost")
+	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
 }
 
 func (s *MattermostAuthLayer) UpdateUserPassword(username, password string) error {
-	return errors.New("no update allowed from focalboard, update it using mattermost")
+	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
 }
 
 func (s *MattermostAuthLayer) UpdateUserPasswordByID(userID, password string) error {
-	return errors.New("no update allowed from focalboard, update it using mattermost")
+	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
 }
 
 // GetActiveUserCount returns the number of users with active sessions within N seconds ago.
@@ -133,27 +139,27 @@ func (s *MattermostAuthLayer) GetActiveUserCount(updatedSecondsAgo int64) (int, 
 }
 
 func (s *MattermostAuthLayer) GetSession(token string, expireTime int64) (*model.Session, error) {
-	return nil, errors.New("sessions not used when using mattermost")
+	return nil, NotSupportedError{"sessions not used when using mattermost"}
 }
 
 func (s *MattermostAuthLayer) CreateSession(session *model.Session) error {
-	return errors.New("no update allowed from focalboard, update it using mattermost")
+	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
 }
 
 func (s *MattermostAuthLayer) RefreshSession(session *model.Session) error {
-	return errors.New("no update allowed from focalboard, update it using mattermost")
+	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
 }
 
 func (s *MattermostAuthLayer) UpdateSession(session *model.Session) error {
-	return errors.New("no update allowed from focalboard, update it using mattermost")
+	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
 }
 
 func (s *MattermostAuthLayer) DeleteSession(sessionID string) error {
-	return errors.New("no update allowed from focalboard, update it using mattermost")
+	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
 }
 
 func (s *MattermostAuthLayer) CleanUpSessions(expireTime int64) error {
-	return errors.New("no update allowed from focalboard, update it using mattermost")
+	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
 }
 
 func (s *MattermostAuthLayer) GetWorkspace(id string) (*model.Workspace, error) {
@@ -205,7 +211,7 @@ func (s *MattermostAuthLayer) GetWorkspace(id string) (*model.Workspace, error) 
 		}
 		var name string
 		if err := rows.Scan(&name); err != nil {
-			log.Fatal(err)
+			return nil, err
 		}
 		sb.WriteString(name)
 	}

@@ -18,14 +18,20 @@ import Label from '../widgets/label'
 import EditableDayPicker from '../widgets/editableDayPicker'
 import Switch from '../widgets/switch'
 
+import {CardTree} from '../viewModel/cardTree'
 import {UserSettings} from '../userSettings'
 
 import UserProperty from './properties/user/user'
 import MultiSelectProperty from './properties/multiSelect'
 import URLProperty from './properties/link/link'
+import LastModifiedBy from './properties/lastModifiedBy/lastModifiedBy'
+import LastModifiedAt from './properties/lastModifiedAt/lastModifiedAt'
+import CreatedAt from './properties/createdAt/createdAt'
+import CreatedBy from './properties/createdBy/createdBy'
 
 type Props = {
     boardTree?: BoardTree
+    cardTree?: CardTree
     readOnly: boolean
     card: Card
     propertyTemplate: IPropertyTemplate
@@ -35,7 +41,7 @@ type Props = {
 const PropertyValueElement = (props:Props): JSX.Element => {
     const [value, setValue] = useState(props.card.properties[props.propertyTemplate.id])
 
-    const {card, propertyTemplate, readOnly, emptyDisplayValue, boardTree} = props
+    const {card, propertyTemplate, readOnly, emptyDisplayValue, boardTree, cardTree} = props
     const intl = useIntl()
     const propertyValue = card.properties[propertyTemplate.id]
     const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate, intl)
@@ -168,9 +174,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 validator={(newValue) => validateProp(propertyTemplate.type, newValue)}
             />
         )
-    }
-
-    if (propertyTemplate.type === 'checkbox') {
+    } else if (propertyTemplate.type === 'checkbox') {
         return (
             <Switch
                 isOn={Boolean(propertyValue)}
@@ -179,6 +183,28 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                     mutator.changePropertyValue(card, propertyTemplate.id, newValue)
                 }}
                 readOnly={readOnly}
+            />
+        )
+    } else if (propertyTemplate.type === 'createdBy') {
+        return (
+            <CreatedBy userID={card.createdBy}/>
+        )
+    } else if (propertyTemplate.type === 'updatedBy') {
+        return (
+            <LastModifiedBy
+                card={card}
+                boardTree={boardTree}
+            />
+        )
+    } else if (propertyTemplate.type === 'createdTime') {
+        return (
+            <CreatedAt createAt={card.createAt}/>
+        )
+    } else if (propertyTemplate.type === 'updatedTime') {
+        return (
+            <LastModifiedAt
+                card={card}
+                cardTree={cardTree}
             />
         )
     }

@@ -1,5 +1,1165 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`components/table/Table extended should match snapshot with CreatedBy 1`] = `
+<div>
+  <div
+    class="octo-table-body Table"
+  >
+    <div
+      class="octo-table-header"
+      id="mainBoardHeader"
+    >
+      <div
+        class="octo-table-cell header-cell"
+        style="overflow: unset; width: 100px; opacity: 1;"
+      >
+        <div
+          class="MenuWrapper"
+        >
+          <span
+            class="Label empty "
+          >
+            Name
+          </span>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          class="HorizontalGrip"
+          draggable="true"
+        />
+      </div>
+      <div
+        class="octo-table-cell header-cell"
+        draggable="true"
+        style="overflow: unset; width: 100px; opacity: 1;"
+      >
+        <div
+          class="MenuWrapper"
+        >
+          <span
+            class="Label empty "
+          >
+            Property 1
+            <svg
+              class="SortDownIcon Icon"
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline
+                points="50,20 50,80"
+              />
+              <polyline
+                points="30,60 50,80 70,60"
+              />
+            </svg>
+          </span>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          class="HorizontalGrip"
+          draggable="true"
+        />
+      </div>
+      <div
+        class="octo-table-cell header-cell"
+        draggable="true"
+        style="overflow: unset; width: 100px; opacity: 1;"
+      >
+        <div
+          class="MenuWrapper"
+        >
+          <span
+            class="Label empty "
+          >
+            Property 2
+            <svg
+              class="SortUpIcon Icon"
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline
+                points="50,20 50,80"
+              />
+              <polyline
+                points="30,40 50,20 70,40"
+              />
+            </svg>
+          </span>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          class="HorizontalGrip"
+          draggable="true"
+        />
+      </div>
+      <div
+        class="octo-table-cell header-cell"
+        draggable="true"
+        style="overflow: unset; width: 100px; opacity: 1;"
+      >
+        <div
+          class="MenuWrapper"
+        >
+          <span
+            class="Label empty "
+          >
+            Date Created
+          </span>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          class="HorizontalGrip"
+          draggable="true"
+        />
+      </div>
+    </div>
+    <div
+      class="table-row-container"
+    >
+      <div
+        class="TableRow octo-table-row"
+        draggable="true"
+        style="opacity: 1;"
+      >
+        <div
+          class="octo-table-cell title-cell"
+          id="mainBoardHeader"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-icontitle"
+          >
+            <div
+              class="octo-icon"
+            >
+              i
+            </div>
+            <input
+              class="Editable undefined"
+              placeholder="Untitled"
+              spellcheck="true"
+              title="title"
+              value="title"
+            />
+          </div>
+          <div
+            class="open-button"
+          >
+            <button
+              class="Button  "
+              type="button"
+            >
+              Open
+            </button>
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-propertyvalue"
+            tabindex="0"
+          >
+            <span
+              class="Label propColorBrown "
+            >
+              value 1
+            </span>
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-propertyvalue"
+            tabindex="0"
+          >
+            <span
+              class="Label empty "
+            />
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="CreatedAt octo-propertyvalue"
+          >
+            Tue, Jun 15, 2021 4:22 PM
+          </div>
+        </div>
+      </div>
+      <div
+        class="TableRow octo-table-row"
+        draggable="true"
+        style="opacity: 1;"
+      >
+        <div
+          class="octo-table-cell title-cell"
+          id="mainBoardHeader"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-icontitle"
+          >
+            <div
+              class="octo-icon"
+            >
+              i
+            </div>
+            <input
+              class="Editable undefined"
+              placeholder="Untitled"
+              spellcheck="true"
+              title="title"
+              value="title"
+            />
+          </div>
+          <div
+            class="open-button"
+          >
+            <button
+              class="Button  "
+              type="button"
+            >
+              Open
+            </button>
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-propertyvalue"
+            tabindex="0"
+          >
+            <span
+              class="Label propColorBrown "
+            >
+              value 1
+            </span>
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-propertyvalue"
+            tabindex="0"
+          >
+            <span
+              class="Label empty "
+            />
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="CreatedAt octo-propertyvalue"
+          >
+            Tue, Jun 15, 2021 4:22 PM
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="octo-table-footer"
+    >
+      <div
+        class="octo-table-cell"
+      >
+        + New
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/table/Table extended should match snapshot with CreatedBy 2`] = `
+<div>
+  <div
+    class="octo-table-body Table"
+  >
+    <div
+      class="octo-table-header"
+      id="mainBoardHeader"
+    >
+      <div
+        class="octo-table-cell header-cell"
+        style="overflow: unset; width: 100px; opacity: 1;"
+      >
+        <div
+          class="MenuWrapper"
+        >
+          <span
+            class="Label empty "
+          >
+            Name
+          </span>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          class="HorizontalGrip"
+          draggable="true"
+        />
+      </div>
+      <div
+        class="octo-table-cell header-cell"
+        draggable="true"
+        style="overflow: unset; width: 100px; opacity: 1;"
+      >
+        <div
+          class="MenuWrapper"
+        >
+          <span
+            class="Label empty "
+          >
+            Property 1
+            <svg
+              class="SortDownIcon Icon"
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline
+                points="50,20 50,80"
+              />
+              <polyline
+                points="30,60 50,80 70,60"
+              />
+            </svg>
+          </span>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          class="HorizontalGrip"
+          draggable="true"
+        />
+      </div>
+      <div
+        class="octo-table-cell header-cell"
+        draggable="true"
+        style="overflow: unset; width: 100px; opacity: 1;"
+      >
+        <div
+          class="MenuWrapper"
+        >
+          <span
+            class="Label empty "
+          >
+            Property 2
+            <svg
+              class="SortUpIcon Icon"
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline
+                points="50,20 50,80"
+              />
+              <polyline
+                points="30,40 50,20 70,40"
+              />
+            </svg>
+          </span>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          class="HorizontalGrip"
+          draggable="true"
+        />
+      </div>
+      <div
+        class="octo-table-cell header-cell"
+        draggable="true"
+        style="overflow: unset; width: 100px; opacity: 1;"
+      >
+        <div
+          class="MenuWrapper"
+        >
+          <span
+            class="Label empty "
+          >
+            Created By
+          </span>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          class="HorizontalGrip"
+          draggable="true"
+        />
+      </div>
+    </div>
+    <div
+      class="table-row-container"
+    >
+      <div
+        class="TableRow octo-table-row"
+        draggable="true"
+        style="opacity: 1;"
+      >
+        <div
+          class="octo-table-cell title-cell"
+          id="mainBoardHeader"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-icontitle"
+          >
+            <div
+              class="octo-icon"
+            >
+              i
+            </div>
+            <input
+              class="Editable undefined"
+              placeholder="Untitled"
+              spellcheck="true"
+              title="title"
+              value="title"
+            />
+          </div>
+          <div
+            class="open-button"
+          >
+            <button
+              class="Button  "
+              type="button"
+            >
+              Open
+            </button>
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-propertyvalue"
+            tabindex="0"
+          >
+            <span
+              class="Label propColorBrown "
+            >
+              value 1
+            </span>
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-propertyvalue"
+            tabindex="0"
+          >
+            <span
+              class="Label empty "
+            />
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="UserProperty octo-propertyvalue readonly"
+          >
+            username_1
+          </div>
+        </div>
+      </div>
+      <div
+        class="TableRow octo-table-row"
+        draggable="true"
+        style="opacity: 1;"
+      >
+        <div
+          class="octo-table-cell title-cell"
+          id="mainBoardHeader"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-icontitle"
+          >
+            <div
+              class="octo-icon"
+            >
+              i
+            </div>
+            <input
+              class="Editable undefined"
+              placeholder="Untitled"
+              spellcheck="true"
+              title="title"
+              value="title"
+            />
+          </div>
+          <div
+            class="open-button"
+          >
+            <button
+              class="Button  "
+              type="button"
+            >
+              Open
+            </button>
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-propertyvalue"
+            tabindex="0"
+          >
+            <span
+              class="Label propColorBrown "
+            >
+              value 1
+            </span>
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-propertyvalue"
+            tabindex="0"
+          >
+            <span
+              class="Label empty "
+            />
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="UserProperty octo-propertyvalue readonly"
+          >
+            username_2
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="octo-table-footer"
+    >
+      <div
+        class="octo-table-cell"
+      >
+        + New
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/table/Table extended should match snapshot with UpdatedAt 1`] = `
+<div>
+  <div
+    class="octo-table-body Table"
+  >
+    <div
+      class="octo-table-header"
+      id="mainBoardHeader"
+    >
+      <div
+        class="octo-table-cell header-cell"
+        style="overflow: unset; width: 100px; opacity: 1;"
+      >
+        <div
+          class="MenuWrapper"
+        >
+          <span
+            class="Label empty "
+          >
+            Name
+          </span>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          class="HorizontalGrip"
+          draggable="true"
+        />
+      </div>
+      <div
+        class="octo-table-cell header-cell"
+        draggable="true"
+        style="overflow: unset; width: 100px; opacity: 1;"
+      >
+        <div
+          class="MenuWrapper"
+        >
+          <span
+            class="Label empty "
+          >
+            Property 1
+            <svg
+              class="SortDownIcon Icon"
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline
+                points="50,20 50,80"
+              />
+              <polyline
+                points="30,60 50,80 70,60"
+              />
+            </svg>
+          </span>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          class="HorizontalGrip"
+          draggable="true"
+        />
+      </div>
+      <div
+        class="octo-table-cell header-cell"
+        draggable="true"
+        style="overflow: unset; width: 100px; opacity: 1;"
+      >
+        <div
+          class="MenuWrapper"
+        >
+          <span
+            class="Label empty "
+          >
+            Property 2
+            <svg
+              class="SortUpIcon Icon"
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline
+                points="50,20 50,80"
+              />
+              <polyline
+                points="30,40 50,20 70,40"
+              />
+            </svg>
+          </span>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          class="HorizontalGrip"
+          draggable="true"
+        />
+      </div>
+      <div
+        class="octo-table-cell header-cell"
+        draggable="true"
+        style="overflow: unset; width: 100px; opacity: 1;"
+      >
+        <div
+          class="MenuWrapper"
+        >
+          <span
+            class="Label empty "
+          >
+            Date Updated
+          </span>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          class="HorizontalGrip"
+          draggable="true"
+        />
+      </div>
+    </div>
+    <div
+      class="table-row-container"
+    >
+      <div
+        class="TableRow octo-table-row"
+        draggable="true"
+        style="opacity: 1;"
+      >
+        <div
+          class="octo-table-cell title-cell"
+          id="mainBoardHeader"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-icontitle"
+          >
+            <div
+              class="octo-icon"
+            >
+              i
+            </div>
+            <input
+              class="Editable undefined"
+              placeholder="Untitled"
+              spellcheck="true"
+              title="title"
+              value="title"
+            />
+          </div>
+          <div
+            class="open-button"
+          >
+            <button
+              class="Button  "
+              type="button"
+            >
+              Open
+            </button>
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-propertyvalue"
+            tabindex="0"
+          >
+            <span
+              class="Label propColorBrown "
+            >
+              value 1
+            </span>
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-propertyvalue"
+            tabindex="0"
+          >
+            <span
+              class="Label empty "
+            />
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="LastModifiedAt octo-propertyvalue"
+          >
+            Sun, Jun 20, 2021 12:22 PM
+          </div>
+        </div>
+      </div>
+      <div
+        class="TableRow octo-table-row"
+        draggable="true"
+        style="opacity: 1;"
+      >
+        <div
+          class="octo-table-cell title-cell"
+          id="mainBoardHeader"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-icontitle"
+          >
+            <div
+              class="octo-icon"
+            >
+              i
+            </div>
+            <input
+              class="Editable undefined"
+              placeholder="Untitled"
+              spellcheck="true"
+              title="title"
+              value="title"
+            />
+          </div>
+          <div
+            class="open-button"
+          >
+            <button
+              class="Button  "
+              type="button"
+            >
+              Open
+            </button>
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-propertyvalue"
+            tabindex="0"
+          >
+            <span
+              class="Label propColorBrown "
+            >
+              value 1
+            </span>
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-propertyvalue"
+            tabindex="0"
+          >
+            <span
+              class="Label empty "
+            />
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="LastModifiedAt octo-propertyvalue"
+          >
+            Sun, Jun 20, 2021 12:22 PM
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="octo-table-footer"
+    >
+      <div
+        class="octo-table-cell"
+      >
+        + New
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/table/Table extended should match snapshot with UpdatedBy 1`] = `
+<div>
+  <div
+    class="octo-table-body Table"
+  >
+    <div
+      class="octo-table-header"
+      id="mainBoardHeader"
+    >
+      <div
+        class="octo-table-cell header-cell"
+        style="overflow: unset; width: 100px; opacity: 1;"
+      >
+        <div
+          class="MenuWrapper"
+        >
+          <span
+            class="Label empty "
+          >
+            Name
+          </span>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          class="HorizontalGrip"
+          draggable="true"
+        />
+      </div>
+      <div
+        class="octo-table-cell header-cell"
+        draggable="true"
+        style="overflow: unset; width: 100px; opacity: 1;"
+      >
+        <div
+          class="MenuWrapper"
+        >
+          <span
+            class="Label empty "
+          >
+            Property 1
+            <svg
+              class="SortDownIcon Icon"
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline
+                points="50,20 50,80"
+              />
+              <polyline
+                points="30,60 50,80 70,60"
+              />
+            </svg>
+          </span>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          class="HorizontalGrip"
+          draggable="true"
+        />
+      </div>
+      <div
+        class="octo-table-cell header-cell"
+        draggable="true"
+        style="overflow: unset; width: 100px; opacity: 1;"
+      >
+        <div
+          class="MenuWrapper"
+        >
+          <span
+            class="Label empty "
+          >
+            Property 2
+            <svg
+              class="SortUpIcon Icon"
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline
+                points="50,20 50,80"
+              />
+              <polyline
+                points="30,40 50,20 70,40"
+              />
+            </svg>
+          </span>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          class="HorizontalGrip"
+          draggable="true"
+        />
+      </div>
+      <div
+        class="octo-table-cell header-cell"
+        draggable="true"
+        style="overflow: unset; width: 100px; opacity: 1;"
+      >
+        <div
+          class="MenuWrapper"
+        >
+          <span
+            class="Label empty "
+          >
+            Last Modified By
+          </span>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          class="HorizontalGrip"
+          draggable="true"
+        />
+      </div>
+    </div>
+    <div
+      class="table-row-container"
+    >
+      <div
+        class="TableRow octo-table-row"
+        draggable="true"
+        style="opacity: 1;"
+      >
+        <div
+          class="octo-table-cell title-cell"
+          id="mainBoardHeader"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-icontitle"
+          >
+            <div
+              class="octo-icon"
+            >
+              i
+            </div>
+            <input
+              class="Editable undefined"
+              placeholder="Untitled"
+              spellcheck="true"
+              title="title"
+              value="title"
+            />
+          </div>
+          <div
+            class="open-button"
+          >
+            <button
+              class="Button  "
+              type="button"
+            >
+              Open
+            </button>
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-propertyvalue"
+            tabindex="0"
+          >
+            <span
+              class="Label propColorBrown "
+            >
+              value 1
+            </span>
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-propertyvalue"
+            tabindex="0"
+          >
+            <span
+              class="Label empty "
+            />
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="LastModifiedBy octo-propertyvalue"
+          >
+            username_4
+          </div>
+        </div>
+      </div>
+      <div
+        class="TableRow octo-table-row"
+        draggable="true"
+        style="opacity: 1;"
+      >
+        <div
+          class="octo-table-cell title-cell"
+          id="mainBoardHeader"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-icontitle"
+          >
+            <div
+              class="octo-icon"
+            >
+              i
+            </div>
+            <input
+              class="Editable undefined"
+              placeholder="Untitled"
+              spellcheck="true"
+              title="title"
+              value="title"
+            />
+          </div>
+          <div
+            class="open-button"
+          >
+            <button
+              class="Button  "
+              type="button"
+            >
+              Open
+            </button>
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-propertyvalue"
+            tabindex="0"
+          >
+            <span
+              class="Label propColorBrown "
+            >
+              value 1
+            </span>
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="octo-propertyvalue"
+            tabindex="0"
+          >
+            <span
+              class="Label empty "
+            />
+          </div>
+        </div>
+        <div
+          class="octo-table-cell"
+          style="width: 100px;"
+        >
+          <div
+            class="LastModifiedBy octo-propertyvalue"
+          >
+            username_3
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="octo-table-footer"
+    >
+      <div
+        class="octo-table-cell"
+      >
+        + New
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`components/table/Table should match snapshot 1`] = `
 <div>
   <div

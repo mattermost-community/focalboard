@@ -79,7 +79,7 @@ exports[`components/properties/user not readonly 1`] = `
 exports[`components/properties/user readonly view 1`] = `
 <div>
   <div
-    class="UserProperty octo-propertyvalue"
+    class="UserProperty octo-propertyvalue readonly"
   >
     user-id-1
   </div>

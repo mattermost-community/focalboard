@@ -117,6 +117,7 @@ const GalleryCard = React.memo((props: Props) => {
                             <PropertyValueElement
                                 readOnly={true}
                                 card={cardTree.card}
+                                cardTree={cardTree}
                                 propertyTemplate={template}
                                 emptyDisplayValue=''
                             />

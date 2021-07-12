@@ -24,6 +24,7 @@ describe('components/content/CheckboxElement', () => {
         type: 'checkbox',
         title: 'test-title',
         fields: {},
+        createdBy: 'test-user-id',
         createAt: 0,
         updateAt: 0,
         deleteAt: 0,

@@ -16,7 +16,7 @@ import {Utils} from '../utils'
 import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
 import {MutableWorkspaceTree, WorkspaceTree} from '../viewModel/workspaceTree'
 import './boardPage.scss'
-import {IUser, WorkspaceUsersContext, WorkspaceUsersContextData} from '../user'
+import {IUser, WorkspaceUsersContext, WorkspaceUsers} from '../user'
 
 type Props = RouteComponentProps<{workspaceId?: string, boardId?: string, viewId?: string}> & {
     readonly?: boolean
@@ -30,7 +30,7 @@ type State = {
     syncFailed?: boolean
     websocketClosedTimeOutId?: ReturnType<typeof setTimeout>
     websocketClosed?: boolean
-    workspaceUsers: WorkspaceUsersContextData
+    workspaceUsers: WorkspaceUsers
 }
 
 class BoardPage extends React.Component<Props, State> {
@@ -108,10 +108,7 @@ class BoardPage extends React.Component<Props, State> {
 
         // storing workspaceUsersById in state to avoid re-computation in each render cycle
         this.setState({
-            workspaceUsers: {
-                users: workspaceUsers,
-                usersById: this.getIdToWorkspaceUsers(workspaceUsers),
-            },
+            workspaceUsers,
         })
     }
 
@@ -338,7 +335,7 @@ class BoardPage extends React.Component<Props, State> {
 
         let newBoardTree: BoardTree | undefined
         if (boardTree) {
-            newBoardTree = MutableBoardTree.incrementalUpdate(boardTree, blocks)
+            newBoardTree = await MutableBoardTree.incrementalUpdate(boardTree, blocks)
         } else if (this.props.match.params.boardId) {
             // Corner case: When the page is viewing a deleted board, that is subsequently un-deleted on another client
             newBoardTree = await MutableBoardTree.sync(this.props.match.params.boardId || '', this.props.match.params.viewId || '')
@@ -360,13 +357,13 @@ class BoardPage extends React.Component<Props, State> {
     }
 
     // IPageController
-    setSearchText(text?: string): void {
+    async setSearchText(text?: string): Promise<void> {
         if (!this.state.boardTree) {
             Utils.assertFailure('setSearchText: boardTree')
             return
         }
 
-        const newBoardTree = this.state.boardTree.copyWithSearchText(text)
+        const newBoardTree = await this.state.boardTree.copyWithSearchText(text)
         this.setState({boardTree: newBoardTree})
     }
 }

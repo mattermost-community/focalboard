@@ -9,6 +9,7 @@ import {Constants} from '../constants'
 import octoClient from '../octoClient'
 import {OctoUtils} from '../octoUtils'
 import {Utils} from '../utils'
+import {IUser, WorkspaceUsers} from '../user'
 
 type Group = {
     option: IPropertyOption
@@ -29,11 +30,13 @@ interface BoardTree {
     readonly activeView: BoardView
     readonly groupByProperty?: IPropertyTemplate
 
+    readonly rawBlocks: IBlock[]
+
     getSearchText(): string | undefined
     orderedCards(): Card[]
 
-    copyWithView(viewId: string): BoardTree
-    copyWithSearchText(searchText?: string): BoardTree
+    copyWithView(viewId: string): Promise<BoardTree>
+    copyWithSearchText(searchText?: string): Promise<BoardTree>
 }
 
 class MutableBoardTree implements BoardTree {
@@ -50,33 +53,44 @@ class MutableBoardTree implements BoardTree {
 
     private searchText?: string
     allCards: MutableCard[] = []
+    rawBlocks: IBlock[] = []
+
+    workspaceUsers: WorkspaceUsers = {
+        users: new Array<IUser>(),
+        usersById: new Map<string, IUser>(),
+    }
+
     get allBlocks(): IBlock[] {
-        return [this.board, ...this.views, ...this.allCards, ...this.cardTemplates]
+        return [this.board, ...this.views, ...this.allCards, ...this.cardTemplates, ...this.rawBlocks]
     }
 
     constructor(board: MutableBoard) {
         this.board = board
     }
 
+    public async initWorkSpaceUsers() {
+        this.workspaceUsers = await octoClient.getWorkspaceUsers()
+    }
+
     // Factory methods
 
     static async sync(boardId: string, viewId: string): Promise<BoardTree | undefined> {
-        const rawBlocks = await octoClient.getSubtree(boardId)
-        const newBoardTree = this.buildTree(boardId, rawBlocks)
+        const rawBlocks = await octoClient.getSubtree(boardId, 3)
+        const newBoardTree = await this.buildTree(boardId, rawBlocks)
         if (newBoardTree) {
             newBoardTree.setActiveView(viewId)
         }
         return newBoardTree
     }
 
-    static incrementalUpdate(boardTree: BoardTree, updatedBlocks: IBlock[]): BoardTree | undefined {
+    static async incrementalUpdate(boardTree: BoardTree, updatedBlocks: IBlock[]): Promise<BoardTree | undefined> {
         const relevantBlocks = updatedBlocks.filter((block) => block.deleteAt !== 0 || block.id === boardTree.board.id || block.parentId === boardTree.board.id)
         if (relevantBlocks.length < 1) {
             // No change
             return boardTree
         }
         const rawBlocks = OctoUtils.mergeBlocks(boardTree.allBlocks, relevantBlocks)
-        const newBoardTree = this.buildTree(boardTree.board.id, rawBlocks)
+        const newBoardTree = await this.buildTree(boardTree.board.id, rawBlocks)
         newBoardTree?.setSearchText(boardTree.getSearchText())
         if (newBoardTree && boardTree.activeView) {
             newBoardTree.setActiveView(boardTree.activeView.id)
@@ -84,19 +98,21 @@ class MutableBoardTree implements BoardTree {
         return newBoardTree
     }
 
-    private static buildTree(boardId: string, sourceBlocks: readonly IBlock[]): MutableBoardTree | undefined {
+    private static async buildTree(boardId: string, sourceBlocks: readonly IBlock[]): Promise<MutableBoardTree | undefined> {
         const blocks = OctoUtils.hydrateBlocks(sourceBlocks)
         const board = blocks.find((block) => block.type === 'board' && block.id === boardId) as MutableBoard
         if (!board) {
             return undefined
         }
         const boardTree = new MutableBoardTree(board)
+        await boardTree.initWorkSpaceUsers()
         boardTree.views = blocks.filter((block) => block.type === 'view').
             sort((a, b) => a.title.localeCompare(b.title)) as MutableBoardView[]
         boardTree.allCards = blocks.filter((block) => block.type === 'card' && !(block as Card).isTemplate) as MutableCard[]
         boardTree.cardTemplates = blocks.filter((block) => block.type === 'card' && (block as Card).isTemplate).
             sort((a, b) => a.title.localeCompare(b.title)) as MutableCard[]
         boardTree.cards = []
+        boardTree.rawBlocks = blocks.filter((block) => block.type !== 'view' && block.type !== 'card' && block.id !== boardId)
 
         boardTree.ensureMinimumSchema()
         return boardTree
@@ -384,6 +400,15 @@ class MutableBoardTree implements BoardTree {
 
                     let aValue = a.properties[sortPropertyId] || ''
                     let bValue = b.properties[sortPropertyId] || ''
+
+                    if (template.type === 'createdBy') {
+                        aValue = this.workspaceUsers.usersById.get(a.createdBy)?.username || ''
+                        bValue = this.workspaceUsers.usersById.get(b.createdBy)?.username || ''
+                    } else if (template.type === 'updatedBy') {
+                        aValue = this.workspaceUsers.usersById.get(a.modifiedBy)?.username || ''
+                        bValue = this.workspaceUsers.usersById.get(b.modifiedBy)?.username || ''
+                    }
+
                     let result = 0
                     if (template.type === 'number' || template.type === 'date') {
                         // Always put empty values at the bottom
@@ -448,18 +473,19 @@ class MutableBoardTree implements BoardTree {
         return cards
     }
 
-    private mutableCopy(): MutableBoardTree {
-        return MutableBoardTree.buildTree(this.board.id, this.allBlocks)!
+    private async mutableCopy(): Promise<BoardTree> {
+        const x = await MutableBoardTree.buildTree(this.board.id, this.allBlocks)
+        return x!
     }
 
-    copyWithView(viewId: string): BoardTree {
-        const boardTree = this.mutableCopy()
+    async copyWithView(viewId: string): Promise<BoardTree> {
+        const boardTree = await this.mutableCopy() as MutableBoardTree
         boardTree.setActiveView(viewId)
         return boardTree
     }
 
-    copyWithSearchText(searchText?: string): BoardTree {
-        const boardTree = this.mutableCopy()
+    async copyWithSearchText(searchText?: string): Promise<BoardTree> {
+        const boardTree = await this.mutableCopy() as MutableBoardTree
         if (this.activeView) {
             boardTree.setActiveView(this.activeView.id)
         }
