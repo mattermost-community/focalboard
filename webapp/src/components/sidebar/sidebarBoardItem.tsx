@@ -60,13 +60,11 @@ const SidebarBoardItem = React.memo((props: Props) => {
             intl.formatMessage({id: 'Mutator.duplicate-board', defaultMessage: 'duplicate board'}),
             false,
             async (newBoardId) => {
-                const newPath = generatePath(match.path, {...match.params, boardId: newBoardId || ''})
-                history.push(newPath)
+                showBoard(newBoardId)
             },
             async () => {
                 if (oldBoardId) {
-                    const newPath = generatePath(match.path, {...match.params, boardId: oldBoardId || ''})
-                    history.push(newPath)
+                    showBoard(oldBoardId)
                 }
             },
         )
