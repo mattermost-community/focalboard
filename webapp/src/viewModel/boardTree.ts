@@ -69,7 +69,7 @@ class MutableBoardTree implements BoardTree {
     }
 
     public async initWorkSpaceUsers() {
-        this.workspaceUsers = await octoClient.getWorkspaceUsers()
+        this.workspaceUsers = await octoClient.getWorkspaceUsersNew()
     }
 
     // Factory methods

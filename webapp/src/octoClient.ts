@@ -360,7 +360,17 @@ class OctoClient {
         return URL.createObjectURL(blob)
     }
 
-    async getWorkspaceUsers(): Promise<WorkspaceUsers> {
+    async getWorkspaceUsers(): Promise<IUser[]> {
+        const path = this.workspacePath() + '/users'
+        const response = await fetch(this.serverUrl + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return []
+        }
+        return (await this.getJson(response, [])) as IUser[]
+    }
+
+    // TODO: This is going to be removed when we finish the whole migration to redux store
+    async getWorkspaceUsersNew(): Promise<WorkspaceUsers> {
         const path = this.workspacePath() + '/users'
         const response = await fetch(this.serverUrl + path, {headers: this.headers()})
         if (response.status !== 200) {

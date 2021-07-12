@@ -2,7 +2,9 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
+import {Provider as ReduxProvider} from 'react-redux'
 import {render} from '@testing-library/react'
+import configureStore from 'redux-mock-store'
 import '@testing-library/jest-dom'
 import {IntlProvider} from 'react-intl'
 
@@ -15,7 +17,7 @@ import {TestBlockFactory} from '../../test/testBlockFactory'
 import {FetchMock} from '../../test/fetchMock'
 import {MutableBoardTree} from '../../viewModel/boardTree'
 
-import {IUser, WorkspaceUsersContext} from '../../user'
+import {IUser} from '../../user'
 
 import {Utils} from '../../utils'
 
@@ -180,16 +182,28 @@ describe('components/table/Table extended', () => {
         const callback = jest.fn()
         const addCard = jest.fn()
 
+        const mockStore = configureStore([])
+        const store = mockStore({
+            currentWorkspaceUsers: {
+                byId: {
+                    'user-id-1': {username: 'username_1'} as IUser,
+                    'user-id-2': {username: 'username_2'} as IUser,
+                },
+            },
+        })
+
         const component = wrapProviders(
-            <Table
-                boardTree={boardTree!}
-                selectedCardIds={[]}
-                readonly={false}
-                cardIdToFocusOnRender=''
-                showCard={callback}
-                addCard={addCard}
-                onCardClicked={jest.fn()}
-            />,
+            <ReduxProvider store={store}>
+                <Table
+                    boardTree={boardTree!}
+                    selectedCardIds={[]}
+                    readonly={false}
+                    cardIdToFocusOnRender=''
+                    showCard={callback}
+                    addCard={addCard}
+                    onCardClicked={jest.fn()}
+                />
+            </ReduxProvider>,
         )
         const {container} = render(component)
         expect(container).toMatchSnapshot()
@@ -288,15 +302,18 @@ describe('components/table/Table extended', () => {
         const callback = jest.fn()
         const addCard = jest.fn()
 
-        const workspaceUsers = {
-            users: new Array<IUser>(),
-            usersById: new Map<string, IUser>(),
-        }
-        workspaceUsers.usersById.set('user-id-1', {username: 'username_1'} as IUser)
-        workspaceUsers.usersById.set('user-id-2', {username: 'username_2'} as IUser)
+        const mockStore = configureStore([])
+        const store = mockStore({
+            currentWorkspaceUsers: {
+                byId: {
+                    'user-id-1': {username: 'username_1'} as IUser,
+                    'user-id-2': {username: 'username_2'} as IUser,
+                },
+            },
+        })
 
         const component = wrapProviders(
-            <WorkspaceUsersContext.Provider value={workspaceUsers}>
+            <ReduxProvider store={store}>
                 <Table
                     boardTree={boardTree!}
                     selectedCardIds={[]}
@@ -306,7 +323,7 @@ describe('components/table/Table extended', () => {
                     addCard={addCard}
                     onCardClicked={jest.fn()}
                 />
-            </WorkspaceUsersContext.Provider>,
+            </ReduxProvider>,
         )
 
         const {container} = render(component)
@@ -361,15 +378,18 @@ describe('components/table/Table extended', () => {
         const callback = jest.fn()
         const addCard = jest.fn()
 
-        const workspaceUsers = {
-            users: new Array<IUser>(),
-            usersById: new Map<string, IUser>(),
-        }
-        workspaceUsers.usersById.set('user-id-3', {username: 'username_3'} as IUser)
-        workspaceUsers.usersById.set('user-id-4', {username: 'username_4'} as IUser)
+        const mockStore = configureStore([])
+        const store = mockStore({
+            currentWorkspaceUsers: {
+                byId: {
+                    'user-id-3': {username: 'username_3'} as IUser,
+                    'user-id-4': {username: 'username_4'} as IUser,
+                },
+            },
+        })
 
         const component = wrapProviders(
-            <WorkspaceUsersContext.Provider value={workspaceUsers}>
+            <ReduxProvider store={store}>
                 <Table
                     boardTree={boardTree!}
                     selectedCardIds={[]}
@@ -379,7 +399,7 @@ describe('components/table/Table extended', () => {
                     addCard={addCard}
                     onCardClicked={jest.fn()}
                 />
-            </WorkspaceUsersContext.Provider>,
+            </ReduxProvider>,
         )
 
         const {container} = render(component)
