@@ -29,7 +29,7 @@ type Props = {
     block: IContentBlock
     card: Card
     readonly: boolean
-    onDrop: (srctBlock: IContentBlockWithCords, dstBlock: IContentBlockWithCords, position?: Position) => void
+    onDrop: (srctBlock: IContentBlockWithCords, dstBlock: IContentBlockWithCords, position: Position) => void
     width?: number
     cords: {x: number, y?: number, z?: number}
 }
@@ -42,7 +42,7 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
     const [, isOver3,, itemRef3] = useSortableWithGrip('content', {block, cords}, true, (src, dst) => props.onDrop(src, dst, 'left'))
 
     const index = cords.x
-    const colIndex = cords.y ? cords.y : -1
+    const colIndex = cords.y && cords.y > -1 ? cords.y : -1
     const contentOrder = card.contentOrder.slice()
 
     const className = 'ContentBlock octo-block'
@@ -101,10 +101,13 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
                                 onClick={() => {
                                     const description = intl.formatMessage({id: 'ContentBlock.DeleteAction', defaultMessage: 'delete'});
 
-                                    (colIndex > -1 &&
-                                        (contentOrder[index] as string[]).splice(colIndex, 1)) ||
+                                    if (colIndex > -1) {
+                                        (contentOrder[index] as string[]).splice(colIndex, 1)
+                                    } else {
                                         contentOrder.splice(index, 1)
+                                    }
 
+                                    // If only one item in the row, convert form an array item to normal item ( [item] => item )
                                     if (Array.isArray(contentOrder[index]) && contentOrder[index].length === 1) {
                                         contentOrder[index] = contentOrder[index][0]
                                     }
