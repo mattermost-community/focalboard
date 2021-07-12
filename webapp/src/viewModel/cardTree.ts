@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {ContentBlockTypes, contentBlockTypes, IBlock, MutableBlock} from '../blocks/block'
+import {ContentBlockTypes, contentBlockTypes, IBlock} from '../blocks/block'
 import {Card, MutableCard} from '../blocks/card'
 import {CommentBlock} from '../blocks/commentBlock'
 import {IContentBlock} from '../blocks/contentBlock'
@@ -63,9 +63,7 @@ class MutableCardTree implements CardTree {
 
         const contentBlocks = blocks.filter((block) => contentBlockTypes.includes(block.type as ContentBlockTypes)) as IContentBlock[]
 
-
         cardTree.contents = OctoUtils.getBlockOrder(card.contentOrder, contentBlocks)
-
 
         cardTree.latestBlock = MutableCardTree.getMostRecentBlock(cardTree)
 
