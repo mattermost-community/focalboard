@@ -59,7 +59,6 @@ test('CardTree', async () => {
     const divider2 = TestBlockFactory.createDivider(card)
     card.contentOrder.push(...[text2.id, image2.id, divider2.id])
 
-    
     cardTree = MutableCardTree.incrementalUpdate(cardTree, [card, comment2, text2, image2, divider2])
     expect(cardTree).not.toBeUndefined()
     if (!cardTree) {

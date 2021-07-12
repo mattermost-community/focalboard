@@ -65,7 +65,7 @@ class MutableCardTree implements CardTree {
 
         cardTree.contents = card.contentOrder.map((contentIds) => {
             if (Array.isArray(contentIds)) {
-                return contentIds.map((contentId) => contentBlocks.find((content) => content.id === contentId)).filter((content): content is IContentBlock => !!content)
+                return contentIds.map((contentId) => contentBlocks.find((content) => content.id === contentId)).filter((content): content is IContentBlock => Boolean(content))
             }
 
             return contentBlocks.find((content) => content.id === contentIds) || new MutableBlock()
