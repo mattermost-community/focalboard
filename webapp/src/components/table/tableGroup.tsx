@@ -9,11 +9,14 @@ import {IPropertyOption} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {BoardTree, BoardTreeGroup} from '../../viewModel/boardTree'
 
+import {CardTree} from '../../viewModel/cardTree'
+
 import TableGroupHeaderRow from './tableGroupHeaderRow'
 import TableRows from './tableRows'
 
 type Props = {
     boardTree: BoardTree
+    cardTrees: { [key: string]: CardTree | undefined }
     group: BoardTreeGroup
     readonly: boolean
     columnRefs: Map<string, React.RefObject<HTMLDivElement>>
@@ -69,6 +72,7 @@ const TableGroup = React.memo((props: Props): JSX.Element => {
             {(group.cards.length > 0) &&
             <TableRows
                 boardTree={boardTree}
+                cardTrees={props.cardTrees}
                 columnRefs={props.columnRefs}
                 cards={group.cards}
                 selectedCardIds={props.selectedCardIds}

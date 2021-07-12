@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React from 'react'
+import React, {useState} from 'react'
 
 import {IPropertyOption, IPropertyTemplate} from '../../blocks/board'
 
@@ -23,16 +23,18 @@ type Props = {
 
 const MultiSelectProperty = (props: Props): JSX.Element => {
     const {propertyTemplate, emptyValue, propertyValue, isEditable, onChange, onChangeColor, onDeleteOption, onCreate, onDeleteValue} = props
+    const [open, setOpen] = useState(false)
 
     const values = Array.isArray(propertyValue) ?
         propertyValue.map((v) => propertyTemplate.options.find((o) => o!.id === v)).filter((v): v is IPropertyOption => Boolean(v)) :
         []
 
-    if (!isEditable) {
+    if (!isEditable || !open) {
         return (
             <div
-                className='octo-property-value'
+                className='octo-propertyvalue'
                 tabIndex={0}
+                onClick={() => setOpen(true)}
             >
                 {values.map((v) => (
                     <Label

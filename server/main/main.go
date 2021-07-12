@@ -105,7 +105,7 @@ func main() {
 		log.Fatal("Error in config file for logger: ", err)
 		return
 	}
-	defer logger.Shutdown()
+	defer func() { _ = logger.Shutdown() }()
 
 	if logger.HasTargets() {
 		restore := logger.RedirectStdLog(mlog.Info, mlog.String("src", "stdlog"))
@@ -160,7 +160,12 @@ func main() {
 		config.Port = *pPort
 	}
 
-	server, err := server.New(config, singleUserToken, logger)
+	db, err := server.NewStore(config, logger)
+	if err != nil {
+		logger.Fatal("server.NewStore ERROR", mlog.Err(err))
+	}
+
+	server, err := server.New(config, singleUserToken, db, logger)
 	if err != nil {
 		logger.Fatal("server.New ERROR", mlog.Err(err))
 	}
@@ -176,7 +181,7 @@ func main() {
 	// Waiting for SIGINT (pkill -2)
 	<-stop
 
-	server.Shutdown()
+	_ = server.Shutdown()
 }
 
 // StartServer starts the server
@@ -235,7 +240,12 @@ func startServer(webPath string, filesPath string, port int, singleUserToken, db
 		config.DBConfigString = dbConfigString
 	}
 
-	pServer, err = server.New(config, singleUserToken, logger)
+	db, err := server.NewStore(config, logger)
+	if err != nil {
+		logger.Fatal("server.NewStore ERROR", mlog.Err(err))
+	}
+
+	pServer, err = server.New(config, singleUserToken, db, logger)
 	if err != nil {
 		logger.Fatal("server.New ERROR", mlog.Err(err))
 	}
@@ -254,7 +264,7 @@ func stopServer() {
 	if err != nil {
 		pServer.Logger().Error("server.Shutdown ERROR", mlog.Err(err))
 	}
-	pServer.Logger().Shutdown()
+	_ = pServer.Logger().Shutdown()
 	pServer = nil
 }
 

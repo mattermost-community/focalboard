@@ -8,10 +8,13 @@ import {Card} from '../../blocks/card'
 import {BoardTree} from '../../viewModel/boardTree'
 
 import './table.scss'
+import {CardTree} from '../../viewModel/cardTree'
+
 import TableRow from './tableRow'
 
 type Props = {
     boardTree: BoardTree
+    cardTrees: { [key: string]: CardTree | undefined }
     columnRefs: Map<string, React.RefObject<HTMLDivElement>>
     cards: readonly Card[]
     selectedCardIds: string[]
@@ -48,6 +51,7 @@ const TableRows = (props: Props) => {
                         key={card.id + card.updateAt}
                         boardTree={boardTree}
                         card={card}
+                        cardTree={props.cardTrees[card.id]}
                         isSelected={props.selectedCardIds.includes(card.id)}
                         focusOnMount={props.cardIdToFocusOnRender === card.id}
                         onSaveWithEnter={() => {

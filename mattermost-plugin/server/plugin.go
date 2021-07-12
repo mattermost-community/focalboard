@@ -3,11 +3,17 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"path"
 	"sync"
 
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/mlog"
+	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
+	"github.com/mattermost/focalboard/server/services/store/sqlstore"
+
+	pluginapi "github.com/mattermost/mattermost-plugin-api"
 
 	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/plugin"
@@ -34,12 +40,16 @@ type WSHub struct {
 }
 
 func (h *WSHub) SendWSMessage(data []byte) {
-	h.API.PublishPluginClusterEvent(model.PluginClusterEvent{
+	err := h.API.PublishPluginClusterEvent(model.PluginClusterEvent{
 		Id:   "websocket_event",
 		Data: data,
 	}, model.PluginClusterEventSendOptions{
 		SendType: model.PluginClusterEventSendTypeReliable,
 	})
+
+	if err != nil {
+		h.API.LogError("Error sending websocket message", map[string]interface{}{"err": err})
+	}
 }
 
 func (h *WSHub) SetReceiveWSMessage(handler func(data []byte)) {
@@ -50,7 +60,7 @@ func (p *Plugin) OnActivate() error {
 	mmconfig := p.API.GetUnsanitizedConfig()
 	filesS3Config := config.AmazonS3Config{}
 	if mmconfig.FileSettings.AmazonS3AccessKeyId != nil {
-		filesS3Config.AccessKeyId = *mmconfig.FileSettings.AmazonS3AccessKeyId
+		filesS3Config.AccessKeyID = *mmconfig.FileSettings.AmazonS3AccessKeyId
 	}
 	if mmconfig.FileSettings.AmazonS3SecretAccessKey != nil {
 		filesS3Config.SecretAccessKey = *mmconfig.FileSettings.AmazonS3SecretAccessKey
@@ -81,16 +91,32 @@ func (p *Plugin) OnActivate() error {
 	}
 
 	logger := mlog.NewLogger()
+	cfgJSON := defaultLoggingConfig()
+	err := logger.Configure("", cfgJSON)
+	if err != nil {
+		return err
+	}
 
-	server, err := server.New(&config.Configuration{
-		ServerRoot:              *mmconfig.ServiceSettings.SiteURL + "/plugins/focalboard",
+	client := pluginapi.NewClient(p.API, p.Driver)
+	sqlDB, err := client.Store.GetMasterDB()
+	if err != nil {
+		return fmt.Errorf("error initializing the DB: %w", err)
+	}
+
+	baseURL := ""
+	if mmconfig.ServiceSettings.SiteURL != nil {
+		baseURL = *mmconfig.ServiceSettings.SiteURL
+	}
+
+	cfg := &config.Configuration{
+		ServerRoot:              baseURL + "/plugins/focalboard",
 		Port:                    -1,
 		DBType:                  *mmconfig.SqlSettings.DriverName,
 		DBConfigString:          *mmconfig.SqlSettings.DataSource,
 		DBTablePrefix:           "focalboard_",
 		UseSSL:                  false,
 		SecureCookie:            true,
-		WebPath:                 "./plugins/focalboard/pack",
+		WebPath:                 path.Join(*mmconfig.PluginSettings.Directory, "focalboard", "pack"),
 		FilesDriver:             *mmconfig.FileSettings.DriverName,
 		FilesPath:               *mmconfig.FileSettings.Directory,
 		FilesS3Config:           filesS3Config,
@@ -102,7 +128,21 @@ func (p *Plugin) OnActivate() error {
 		EnableLocalMode:         false,
 		LocalModeSocketLocation: "",
 		AuthMode:                "mattermost",
-	}, "", logger)
+	}
+	var db store.Store
+	db, err = sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger, sqlDB)
+	if err != nil {
+		return fmt.Errorf("error initializing the DB: %w", err)
+	}
+	if cfg.AuthMode == server.MattermostAuthMod {
+		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger)
+		if err2 != nil {
+			return fmt.Errorf("error initializing the DB: %w", err2)
+		}
+		db = layeredStore
+	}
+
+	server, err := server.New(cfg, "", db, logger)
 	if err != nil {
 		fmt.Println("ERROR INITIALIZING THE SERVER", err)
 		return err
@@ -114,7 +154,7 @@ func (p *Plugin) OnActivate() error {
 	return server.Start()
 }
 
-func (p *Plugin) OnPluginClusterEvent(c *plugin.Context, ev model.PluginClusterEvent) {
+func (p *Plugin) OnPluginClusterEvent(_ *plugin.Context, ev model.PluginClusterEvent) {
 	if ev.Id == "websocket_event" {
 		p.wsHub.handleWSMessage(ev.Data)
 	}
@@ -125,9 +165,34 @@ func (p *Plugin) OnDeactivate() error {
 }
 
 // ServeHTTP demonstrates a plugin that handles HTTP requests by greeting the world.
-func (p *Plugin) ServeHTTP(c *plugin.Context, w http.ResponseWriter, r *http.Request) {
+func (p *Plugin) ServeHTTP(_ *plugin.Context, w http.ResponseWriter, r *http.Request) {
 	router := p.server.GetRootRouter()
 	router.ServeHTTP(w, r)
 }
 
-// See https://developers.mattermost.com/extend/plugins/server/reference/
+func defaultLoggingConfig() string {
+	return `
+	{
+		"def": {
+			"type": "console",
+			"options": {
+				"out": "stdout"
+			},
+			"format": "plain",
+			"format_options": {
+				"delim": " ",
+				"min_level_len": 5,
+				"min_msg_len": 40,
+				"enable_color": true
+			},
+			"levels": [
+				{"id": 5, "name": "debug"},
+				{"id": 4, "name": "info", "color": 36},
+				{"id": 3, "name": "warn"},
+				{"id": 2, "name": "error", "color": 31},
+				{"id": 1, "name": "fatal", "stacktrace": true},
+				{"id": 0, "name": "panic", "stacktrace": true}
+			]
+		}
+	}`
+}

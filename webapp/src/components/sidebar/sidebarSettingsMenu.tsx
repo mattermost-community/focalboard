@@ -14,6 +14,9 @@ import {
     setTheme, systemThemeName,
     Theme,
 } from '../../theme'
+import {
+    defaultDateFormat, dmyDateFormat,
+} from '../../dateFormat'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {SetLanguageContext} from '../../setLanguageContext'
@@ -49,6 +52,12 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
         setRandomIcons(!randomIcons)
     }
 
+    const [preferredDateFormat, setPreferredDateFormat] = useState(UserSettings.preferredDateFormat)
+    const updatePreferredDateFormat = (newDateFormat: string) => {
+        UserSettings.preferredDateFormat = newDateFormat
+        setPreferredDateFormat(newDateFormat)
+    }
+
     const languages = [
         {
             code: 'en',
@@ -58,47 +67,47 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
         {
             code: 'es',
             name: 'spanish',
-            displayName: 'Spanish',
+            displayName: 'Español',
         },
         {
             code: 'de',
             name: 'german',
-            displayName: 'German',
+            displayName: 'Deutsch',
         },
         {
             code: 'ja',
             name: 'japanese',
-            displayName: 'Japanese',
+            displayName: '日本語',
         },
         {
             code: 'fr',
             name: 'french',
-            displayName: 'French',
+            displayName: 'Français',
         },
         {
             code: 'nl',
             name: 'dutch',
-            displayName: 'Dutch',
+            displayName: 'Nederlands',
         },
         {
             code: 'ru',
             name: 'russian',
-            displayName: 'Russian',
+            displayName: 'Pусский',
         },
         {
-            code: 'chinese',
-            name: 'zh',
-            displayName: 'Traditional Chinese',
+            code: 'zh-cn',
+            name: 'chinese',
+            displayName: '中文 (繁體)',
         },
         {
-            code: 'zh_Hans',
+            code: 'zh-tx',
             name: 'simplified-chinese',
-            displayName: 'Simplified Chinese',
+            displayName: '中文 (简体)',
         },
         {
             code: 'tr',
             name: 'turkish',
-            displayName: 'Turkish',
+            displayName: 'Türkçe',
         },
         {
             code: 'oc',
@@ -127,6 +136,19 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
             id: systemThemeName,
             displayName: 'System theme',
             theme: null,
+        },
+    ]
+
+    const dateFormats = [
+        {
+            id: defaultDateFormat,
+            displayName: 'MM/DD/YYYY',
+            value: 'MM/DD/YYYY',
+        },
+        {
+            id: dmyDateFormat,
+            displayName: 'DD/MM/YYYY',
+            value: 'DD/MM/YYYY',
         },
     ]
 
@@ -160,7 +182,7 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
                                 <Menu.Text
                                     key={language.code}
                                     id={`${language.name}-lang`}
-                                    name={intl.formatMessage({id: `Sidebar.${language.name}`, defaultMessage: language.displayName})}
+                                    name={language.displayName}
                                     onClick={async () => setLanguage(language.code)}
                                     rightIcon={intl.locale.toLowerCase() === language.code ? <CheckIcon/> : null}
                                 />
@@ -181,6 +203,25 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
                                         name={intl.formatMessage({id: `Sidebar.${theme.id}`, defaultMessage: theme.displayName})}
                                         onClick={async () => updateTheme(theme.theme, theme.id)}
                                         rightIcon={themeName === theme.id ? <CheckIcon/> : null}
+                                    />
+                                ),
+                            )
+                        }
+                    </Menu.SubMenu>
+                    <Menu.SubMenu
+                        id='date-format'
+                        name={intl.formatMessage({id: 'Sidebar.set-date-format', defaultMessage: 'Set date format'})}
+                        position='top'
+                    >
+                        {
+                            dateFormats.map((dateFormat) =>
+                                (
+                                    <Menu.Text
+                                        key={dateFormat.id}
+                                        id={dateFormat.id}
+                                        name={intl.formatMessage({id: `Sidebar.${dateFormat.id}`, defaultMessage: dateFormat.displayName})}
+                                        onClick={async () => updatePreferredDateFormat(dateFormat.value)}
+                                        rightIcon={preferredDateFormat === dateFormat.value ? <CheckIcon/> : null}
                                     />
                                 ),
                             )

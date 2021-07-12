@@ -1,7 +1,8 @@
 package server
 
 import (
-	"log"
+	"database/sql"
+	"fmt"
 	"net"
 	"net/http"
 	"os"
@@ -17,7 +18,6 @@ import (
 	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/app"
 	"github.com/mattermost/focalboard/server/auth"
-	"github.com/mattermost/focalboard/server/context"
 	appModel "github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
 	"github.com/mattermost/focalboard/server/services/config"
@@ -41,8 +41,9 @@ const (
 	cleanupSessionTaskFrequency = 10 * time.Minute
 	updateMetricsTaskFrequency  = 15 * time.Minute
 
-	//nolint:gomnd
 	minSessionExpiryTime = int64(60 * 60 * 24 * 31) // 31 days
+
+	MattermostAuthMod = "mattermost"
 )
 
 type Server struct {
@@ -65,30 +66,15 @@ type Server struct {
 	api             *api.API
 }
 
-func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger) (*Server, error) {
-	var db store.Store
-	db, err := sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger)
-	if err != nil {
-		logger.Error("Unable to start the database", mlog.Err(err))
-		return nil, err
-	}
-	if cfg.AuthMode == "mattermost" {
-		layeredStore, err := mattermostauthlayer.New(cfg.DBType, cfg.DBConfigString, db)
-		if err != nil {
-			log.Print("Unable to start the database", err)
-			return nil, err
-		}
-		db = layeredStore
-	}
-
+func New(cfg *config.Configuration, singleUserToken string, db store.Store, logger *mlog.Logger) (*Server, error) {
 	authenticator := auth.New(cfg, db)
 
-	wsServer := ws.NewServer(authenticator, singleUserToken, cfg.AuthMode == "mattermost", logger)
+	wsServer := ws.NewServer(authenticator, singleUserToken, cfg.AuthMode == MattermostAuthMod, logger)
 
 	filesBackendSettings := filestore.FileBackendSettings{}
 	filesBackendSettings.DriverName = cfg.FilesDriver
 	filesBackendSettings.Directory = cfg.FilesPath
-	filesBackendSettings.AmazonS3AccessKeyId = cfg.FilesS3Config.AccessKeyId
+	filesBackendSettings.AmazonS3AccessKeyId = cfg.FilesS3Config.AccessKeyID
 	filesBackendSettings.AmazonS3SecretAccessKey = cfg.FilesS3Config.SecretAccessKey
 	filesBackendSettings.AmazonS3Bucket = cfg.FilesS3Config.Bucket
 	filesBackendSettings.AmazonS3PathPrefix = cfg.FilesS3Config.PathPrefix
@@ -119,8 +105,8 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 
 	// Init audit
 	auditService := audit.NewAudit()
-	if err := auditService.Configure(cfg.AuditCfgFile, cfg.AuditCfgJSON); err != nil {
-		return nil, errors.New("unable to initialize the audit service")
+	if err2 := auditService.Configure(cfg.AuditCfgFile, cfg.AuditCfgJSON); err2 != nil {
+		return nil, fmt.Errorf("unable to initialize the audit service: %w", err2)
 	}
 
 	appServices := app.Services{
@@ -140,7 +126,7 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 	focalboardAPI.RegisterAdminRoutes(localRouter)
 
 	// Init workspace
-	if _, err = app.GetRootWorkspace(); err != nil {
+	if _, err := app.GetRootWorkspace(); err != nil {
 		logger.Error("Unable to get root workspace", mlog.Err(err))
 		return nil, err
 	}
@@ -189,6 +175,34 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 	server.initHandlers()
 
 	return &server, nil
+}
+
+func NewStore(config *config.Configuration, logger *mlog.Logger) (store.Store, error) {
+	sqlDB, err := sql.Open(config.DBType, config.DBConfigString)
+	if err != nil {
+		logger.Error("connectDatabase failed", mlog.Err(err))
+		return nil, err
+	}
+
+	err = sqlDB.Ping()
+	if err != nil {
+		logger.Error(`Database Ping failed`, mlog.Err(err))
+		return nil, err
+	}
+
+	var db store.Store
+	db, err = sqlstore.New(config.DBType, config.DBConfigString, config.DBTablePrefix, logger, sqlDB)
+	if err != nil {
+		return nil, err
+	}
+	if config.AuthMode == MattermostAuthMod {
+		layeredStore, err2 := mattermostauthlayer.New(config.DBType, db.(*sqlstore.SQLStore).DBHandle(), db, logger)
+		if err2 != nil {
+			return nil, err2
+		}
+		db = layeredStore
+	}
+	return db, nil
 }
 
 func (s *Server) Start() error {
@@ -250,7 +264,7 @@ func (s *Server) Start() error {
 			}
 			return nil
 		}, func(error) {
-			s.metricsServer.Shutdown()
+			_ = s.metricsServer.Shutdown()
 		})
 
 		if err := group.Run(); err != nil {
@@ -304,7 +318,7 @@ func (s *Server) Logger() *mlog.Logger {
 func (s *Server) startLocalModeServer() error {
 	s.localModeServer = &http.Server{
 		Handler:     s.localRouter,
-		ConnContext: context.SetContextConn,
+		ConnContext: api.SetContextConn,
 	}
 
 	// TODO: Close and delete socket file on shutdown
