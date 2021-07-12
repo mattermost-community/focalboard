@@ -99,7 +99,7 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
                                 id='delete'
                                 name={intl.formatMessage({id: 'ContentBlock.Delete', defaultMessage: 'Delete'})}
                                 onClick={() => {
-                                    const description = intl.formatMessage({id: 'ContentBlock.DeleteAction', defaultMessage: 'delete'});
+                                    const description = intl.formatMessage({id: 'ContentBlock.DeleteAction', defaultMessage: 'delete'})
 
                                     if (colIndex > -1) {
                                         (contentOrder[index] as string[]).splice(colIndex, 1)

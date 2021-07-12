@@ -42,20 +42,19 @@ const GalleryCard = React.memo((props: Props) => {
 
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
 
-    let image: IContentBlock | undefined;
+    let image: IContentBlock | undefined
     for (let i = 0; i < cardTree.contents.length; ++i) {
         if (Array.isArray(cardTree.contents[i])) {
-            image = (cardTree.contents[i] as IContentBlock[]).find(c => c.type === 'image')
+            image = (cardTree.contents[i] as IContentBlock[]).find((c) => c.type === 'image')
         } else if ((cardTree.contents[i] as IContentBlock).type === 'image') {
             image = cardTree.contents[i] as IContentBlock
         }
 
         if (image) {
-            break;
+            break
         }
     }
 
-  
     let className = props.isSelected ? 'GalleryCard selected' : 'GalleryCard'
     if (isOver) {
         className += ' dragover'
@@ -101,7 +100,7 @@ const GalleryCard = React.memo((props: Props) => {
                 <div className='gallery-item'>
                     {cardTree?.contents.map((block) => {
                         if (Array.isArray(block)) {
-                            return block.map(b => (
+                            return block.map((b) => (
                                 <ContentElement
                                     key={b.id}
                                     block={b}
@@ -109,7 +108,7 @@ const GalleryCard = React.memo((props: Props) => {
                                 />
                             ))
                         }
-                        
+
                         return (
                             <ContentElement
                                 key={block.id}
