@@ -52,9 +52,26 @@ class OctoUtils {
         return displayValue
     }
 
-    static relativeBlockOrder(partialOrder: readonly string[], blocks: readonly IBlock[], blockA: IBlock, blockB: IBlock): number {
-        const orderA = partialOrder.indexOf(blockA.id)
-        const orderB = partialOrder.indexOf(blockB.id)
+    static relativeBlockOrder(partialOrder: readonly (string | string[])[], blocks: readonly IBlock[], blockA: IBlock, blockB: IBlock): number {
+        let orderA = partialOrder.indexOf(blockA.id)
+        if (orderA === -1) {
+            partialOrder.some((ele) => {
+                if (Array.isArray(ele)) {
+                    orderA = ele.indexOf(blockA.id)
+                }
+                return orderA > -1
+            })
+        }
+
+        let orderB = partialOrder.indexOf(blockB.id)
+        if (orderB === -1) {
+            partialOrder.some((ele) => {
+                if (Array.isArray(ele)) {
+                    orderB = ele.indexOf(blockA.id)
+                }
+                return orderB > -1
+            })
+        }
 
         if (orderA >= 0 && orderB >= 0) {
             // Order of both blocks is specified
@@ -69,6 +86,10 @@ class OctoUtils {
 
         // Order of both blocks are unspecified, use create date
         return blockA.createAt - blockB.createAt
+    }
+
+    static getBlockOrder(partialOrder: readonly (string[] | string)[], blocks: readonly IBlock[]): IBlock[] {
+        return blocks.slice().sort((a, b) => this.relativeBlockOrder(partialOrder, blocks, a, b))
     }
 
     static hydrateBlock(block: IBlock): MutableBlock {

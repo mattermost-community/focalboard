@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {ContentBlockTypes, contentBlockTypes, IBlock} from '../blocks/block'
+import {ContentBlockTypes, contentBlockTypes, IBlock, MutableBlock} from '../blocks/block'
 import {Card, MutableCard} from '../blocks/card'
 import {CommentBlock} from '../blocks/commentBlock'
 import {IContentBlock} from '../blocks/contentBlock'
@@ -20,11 +20,11 @@ interface CardTree {
 class MutableCardTree implements CardTree {
     card: MutableCard
     comments: CommentBlock[] = []
-    contents: IContentBlock[] = []
+    contents: (IContentBlock[] | IContentBlock)[] = []
     latestBlock: IBlock
 
     get allBlocks(): IBlock[] {
-        return [this.card, ...this.comments, ...this.contents]
+        return [this.card, ...this.comments, ...this.contents.flat()]
     }
 
     constructor(card: MutableCard) {
@@ -63,13 +63,9 @@ class MutableCardTree implements CardTree {
 
         const contentBlocks = blocks.filter((block) => contentBlockTypes.includes(block.type as ContentBlockTypes)) as IContentBlock[]
 
-        cardTree.contents = card.contentOrder.map((contentIds) => {
-            if (Array.isArray(contentIds)) {
-                return contentIds.map((contentId) => contentBlocks.find((content) => content.id === contentId))
-            }
 
-            return contentBlocks.find((content) => content.id === contentIds)
-        }) as any
+        cardTree.contents = OctoUtils.getBlockOrder(card.contentOrder, contentBlocks)
+
 
         cardTree.latestBlock = MutableCardTree.getMostRecentBlock(cardTree)
 
