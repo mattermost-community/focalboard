@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useRef, useEffect} from 'react'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Utils} from '../../utils'
 import {Card} from '../../blocks/card'
@@ -40,6 +40,7 @@ type Props = {
 
 const TableRow = React.memo((props: Props) => {
     const {boardTree, onSaveWithEnter, columnRefs} = props
+    const intl = useIntl()
     const {board, activeView} = boardTree
 
     const titleRef = useRef<{focus(selectAll?: boolean): void}>(null)
@@ -157,7 +158,7 @@ const TableRow = React.memo((props: Props) => {
                     <Menu.Text
                         icon={<DeleteIcon/>}
                         id='delete'
-                        name={'Delete'}
+                        name={intl.formatMessage({id: 'TableRow.delete', defaultMessage: 'Delete'})}
                         onClick={async () => {
                             if (!card) {
                                 Utils.assertFailure()
