@@ -42,7 +42,7 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
     const [, isOver3,, itemRef3] = useSortableWithGrip('content', {block, cords}, true, (src, dst) => props.onDrop(src, dst, 'left'))
 
     const index = cords.x
-    const colIndex = cords.y && cords.y > -1 ? cords.y : -1
+    const colIndex = (cords.y || cords.y === 0) && cords.y > -1 ? cords.y : -1
     const contentOrder = card.contentOrder.slice()
 
     const className = 'ContentBlock octo-block'
