@@ -6,7 +6,7 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
-import {CardTree, MutableCardTree} from '../viewModel/cardTree'
+import {CardTree, CardTreeContext, MutableCardTree} from '../viewModel/cardTree'
 import DeleteIcon from '../widgets/icons/delete'
 import Menu from '../widgets/menu'
 
@@ -101,11 +101,13 @@ const CardDialog = (props: Props) => {
                 </div>
             }
             {cardTree &&
-                <CardDetail
-                    boardTree={props.boardTree}
-                    cardTree={cardTree}
-                    readonly={props.readonly}
-                />
+                <CardTreeContext.Provider value={cardTree}>
+                    <CardDetail
+                        boardTree={props.boardTree}
+                        cardTree={cardTree}
+                        readonly={props.readonly}
+                    />
+                </CardTreeContext.Provider>
             }
             {(!cardTree && syncComplete) &&
                 <div className='banner error'>

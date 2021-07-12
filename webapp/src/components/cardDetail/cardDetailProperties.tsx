@@ -50,6 +50,7 @@ const CardDetailProperties = React.memo((props: Props) => {
                             readOnly={props.readonly}
                             card={card}
                             boardTree={boardTree}
+                            cardTree={cardTree}
                             propertyTemplate={propertyTemplate}
                             emptyDisplayValue='Empty'
                         />

@@ -134,7 +134,7 @@ exports[`components/table/TableRow should match snapshot, display properties 1`]
         tabindex="0"
       >
         <span
-          class="Label color1 "
+          class="Label propColorBrown "
         >
           value 1
         </span>
@@ -292,7 +292,7 @@ exports[`components/table/TableRow should match snapshot, resizing column 1`] = 
         tabindex="0"
       >
         <span
-          class="Label color1 "
+          class="Label propColorBrown "
         >
           value 1
         </span>

@@ -11,13 +11,14 @@ import './editableDayPicker.scss'
 type Props = {
     className: string
     value: string
+    dateFormat: string
     onChange: (value: string | undefined) => void
 }
 
 const loadedLocales: Record<string, any> = {}
 
 function EditableDayPicker(props: Props): JSX.Element {
-    const {className, onChange} = props
+    const {className, onChange, dateFormat} = props
     const intl = useIntl()
     const [value, setValue] = useState(props.value ? new Date(parseInt(props.value, 10)) : undefined)
 
@@ -29,7 +30,6 @@ function EditableDayPicker(props: Props): JSX.Element {
     }
 
     const saveSelection = () => onChange(value?.getTime().toString())
-    const dateFormat = 'l'
 
     return (
         <div className={'EditableDayPicker ' + className}>

@@ -14,6 +14,7 @@ import {MutableImageBlock} from './blocks/imageBlock'
 import {MutableTextBlock} from './blocks/textBlock'
 import {FilterCondition} from './blocks/filterClause'
 import {Utils} from './utils'
+import {UserSettings} from './userSettings'
 
 class OctoUtils {
     static propertyDisplayValue(block: IBlock, propertyValue: string | string[] | undefined, propertyTemplate: IPropertyTemplate, intl: IntlShape): string | string[] | undefined {
@@ -40,7 +41,7 @@ class OctoUtils {
         }
         case 'date': {
             if (propertyValue) {
-                displayValue = Utils.displayDate(new Date(parseInt(propertyValue as string, 10)), intl)
+                displayValue = Utils.displayDate(new Date(parseInt(propertyValue as string, 10)), intl, UserSettings.preferredDateFormat)
             }
             break
         }
