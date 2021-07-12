@@ -44,8 +44,8 @@ function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: ICont
     const srcBlockX = srcBlock.cords.x
     let dstBlockX = dstBlock.cords.x
 
-    const srcBlockY = srcBlock.cords.y && (srcBlock.cords.y > -1) ? srcBlock.cords.y : -1
-    let dstBlockY = dstBlock.cords.y && (dstBlock.cords.y > -1) ? dstBlock.cords.y : -1
+    const srcBlockY = (srcBlock.cords.y || srcBlock.cords.y === 0)&& (srcBlock.cords.y > -1) ? srcBlock.cords.y : -1
+    let dstBlockY = (dstBlock.cords.y || dstBlock.cords.y === 0) && (dstBlock.cords.y > -1) ? dstBlock.cords.y : -1
 
     if (srcBlockId === dstBlockId) {
         return
