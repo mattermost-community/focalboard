@@ -7,6 +7,7 @@ import {reducer as currentUserReducer} from './currentUser'
 import {reducer as currentWorkspaceReducer} from './currentWorkspace'
 import {reducer as currentWorkspaceUsersReducer} from './currentWorkspaceUsers'
 import {reducer as languageReducer} from './language'
+import {reducer as globalTemplatesReducer} from './globalTemplates'
 
 const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
         currentWorkspace: currentWorkspaceReducer,
         currentWorkspaceUsers: currentWorkspaceUsersReducer,
         language: languageReducer,
+        globalTemplates: globalTemplatesReducer,
     },
 })
 
