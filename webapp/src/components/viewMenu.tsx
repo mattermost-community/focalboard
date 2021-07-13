@@ -1,10 +1,11 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useCallback} from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
+import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board} from '../blocks/board'
-import {IViewType, MutableBoardView} from '../blocks/boardView'
+import {BoardView, IViewType, MutableBoardView} from '../blocks/boardView'
 import {Constants} from '../constants'
 import mutator from '../mutator'
 import {Utils} from '../utils'
@@ -20,19 +21,26 @@ import Menu from '../widgets/menu'
 type Props = {
     boardTree: BoardTree
     board: Board,
-    showView: (id: string) => void
     intl: IntlShape
     readonly: boolean
 }
 
-export class ViewMenu extends React.PureComponent<Props> {
-    private handleDuplicateView = async () => {
-        const {boardTree, showView} = this.props
+const ViewMenu = React.memo((props: Props) => {
+    const history = useHistory()
+    const match = useRouteMatch()
+
+    const showView = useCallback((viewId) => {
+        const newPath = generatePath(match.path, {...match.params, viewId: viewId || ''})
+        history.push(newPath)
+    }, [match, history])
+
+    const handleDuplicateView = useCallback(() => {
+        const {boardTree} = props
         Utils.log('duplicateView')
         const currentViewId = boardTree.activeView.id
         const newView = boardTree.activeView.duplicate()
         newView.title = `${boardTree.activeView.title} copy`
-        await mutator.insertBlock(
+        mutator.insertBlock(
             newView,
             'duplicate view',
             async () => {
@@ -45,31 +53,31 @@ export class ViewMenu extends React.PureComponent<Props> {
                 showView(currentViewId)
             },
         )
-    }
+    }, [props.boardTree, showView])
 
-    private handleDeleteView = async () => {
-        const {boardTree, showView} = this.props
+    const handleDeleteView = useCallback(() => {
+        const {boardTree} = props
         Utils.log('deleteView')
         const view = boardTree.activeView
         const nextView = boardTree.views.find((o) => o !== view)
-        await mutator.deleteBlock(view, 'delete view')
+        mutator.deleteBlock(view, 'delete view')
         if (nextView) {
             showView(nextView.id)
         }
-    }
+    }, [props.boardTree, showView])
 
-    private handleViewClick = (id: string) => {
-        const {boardTree, showView} = this.props
+    const handleViewClick = useCallback((id: string) => {
+        const {boardTree} = props
         Utils.log('view ' + id)
         const view = boardTree.views.find((o) => o.id === id)
         Utils.assert(view, `view not found: ${id}`)
         if (view) {
             showView(view.id)
         }
-    }
+    }, [props.boardTree, showView])
 
-    private handleAddViewBoard = async () => {
-        const {board, boardTree, showView, intl} = this.props
+    const handleAddViewBoard = useCallback(() => {
+        const {board, boardTree, intl} = props
         Utils.log('addview-board')
         const view = new MutableBoardView()
         view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
@@ -79,7 +87,7 @@ export class ViewMenu extends React.PureComponent<Props> {
 
         const oldViewId = boardTree.activeView.id
 
-        await mutator.insertBlock(
+        mutator.insertBlock(
             view,
             'add view',
             async () => {
@@ -91,10 +99,10 @@ export class ViewMenu extends React.PureComponent<Props> {
             async () => {
                 showView(oldViewId)
             })
-    }
+    }, [props.boardTree, props.board, props.intl, showView])
 
-    private handleAddViewTable = async () => {
-        const {board, boardTree, showView, intl} = this.props
+    const handleAddViewTable = useCallback(() => {
+        const {board, boardTree, intl} = props
 
         Utils.log('addview-table')
         const view = new MutableBoardView()
@@ -108,7 +116,7 @@ export class ViewMenu extends React.PureComponent<Props> {
 
         const oldViewId = boardTree.activeView.id
 
-        await mutator.insertBlock(
+        mutator.insertBlock(
             view,
             'add view',
             async () => {
@@ -121,10 +129,10 @@ export class ViewMenu extends React.PureComponent<Props> {
             async () => {
                 showView(oldViewId)
             })
-    }
+    }, [props.boardTree, props.board, props.intl, showView])
 
-    private handleAddViewGallery = async () => {
-        const {board, boardTree, showView, intl} = this.props
+    const handleAddViewGallery = useCallback(() => {
+        const {board, boardTree, intl} = props
 
         Utils.log('addview-gallery')
         const view = new MutableBoardView()
@@ -136,7 +144,7 @@ export class ViewMenu extends React.PureComponent<Props> {
 
         const oldViewId = boardTree.activeView.id
 
-        await mutator.insertBlock(
+        mutator.insertBlock(
             view,
             'add view',
             async () => {
@@ -149,90 +157,32 @@ export class ViewMenu extends React.PureComponent<Props> {
             async () => {
                 showView(oldViewId)
             })
-    }
+    }, [props.board, props.boardTree, props.intl, showView])
 
-    render(): JSX.Element {
-        const {boardTree, intl} = this.props
+    const {boardTree, intl} = props
 
-        const duplicateViewText = intl.formatMessage({
-            id: 'View.DuplicateView',
-            defaultMessage: 'Duplicate View',
-        })
-        const deleteViewText = intl.formatMessage({
-            id: 'View.DeleteView',
-            defaultMessage: 'Delete View',
-        })
-        const addViewText = intl.formatMessage({
-            id: 'View.AddView',
-            defaultMessage: 'Add View',
-        })
-        const boardText = intl.formatMessage({
-            id: 'View.Board',
-            defaultMessage: 'Board',
-        })
-        const tableText = intl.formatMessage({
-            id: 'View.Table',
-            defaultMessage: 'Table',
-        })
+    const duplicateViewText = intl.formatMessage({
+        id: 'View.DuplicateView',
+        defaultMessage: 'Duplicate View',
+    })
+    const deleteViewText = intl.formatMessage({
+        id: 'View.DeleteView',
+        defaultMessage: 'Delete View',
+    })
+    const addViewText = intl.formatMessage({
+        id: 'View.AddView',
+        defaultMessage: 'Add View',
+    })
+    const boardText = intl.formatMessage({
+        id: 'View.Board',
+        defaultMessage: 'Board',
+    })
+    const tableText = intl.formatMessage({
+        id: 'View.Table',
+        defaultMessage: 'Table',
+    })
 
-        return (
-            <Menu>
-                {boardTree.views.map((view) => (
-                    <Menu.Text
-                        key={view.id}
-                        id={view.id}
-                        name={view.title}
-                        icon={this.iconForViewType(view.viewType)}
-                        onClick={this.handleViewClick}
-                    />))}
-                <Menu.Separator/>
-                {!this.props.readonly &&
-                    <Menu.Text
-                        id='__duplicateView'
-                        name={duplicateViewText}
-                        icon={<DuplicateIcon/>}
-                        onClick={this.handleDuplicateView}
-                    />
-                }
-                {!this.props.readonly && boardTree.views.length > 1 &&
-                    <Menu.Text
-                        id='__deleteView'
-                        name={deleteViewText}
-                        icon={<DeleteIcon/>}
-                        onClick={this.handleDeleteView}
-                    />
-                }
-                {!this.props.readonly &&
-                    <Menu.SubMenu
-                        id='__addView'
-                        name={addViewText}
-                        icon={<AddIcon/>}
-                    >
-                        <Menu.Text
-                            id='board'
-                            name={boardText}
-                            icon={<BoardIcon/>}
-                            onClick={this.handleAddViewBoard}
-                        />
-                        <Menu.Text
-                            id='table'
-                            name={tableText}
-                            icon={<TableIcon/>}
-                            onClick={this.handleAddViewTable}
-                        />
-                        <Menu.Text
-                            id='gallery'
-                            name='Gallery'
-                            icon={<GalleryIcon/>}
-                            onClick={this.handleAddViewGallery}
-                        />
-                    </Menu.SubMenu>
-                }
-            </Menu>
-        )
-    }
-
-    private iconForViewType(viewType: IViewType) {
+    const iconForViewType = (viewType: IViewType) => {
         switch (viewType) {
         case 'board': return <BoardIcon/>
         case 'table': return <TableIcon/>
@@ -240,6 +190,62 @@ export class ViewMenu extends React.PureComponent<Props> {
         default: return <div/>
         }
     }
-}
+
+    return (
+        <Menu>
+            {boardTree.views.map((view: BoardView) => (
+                <Menu.Text
+                    key={view.id}
+                    id={view.id}
+                    name={view.title}
+                    icon={iconForViewType(view.viewType)}
+                    onClick={handleViewClick}
+                />))}
+            <Menu.Separator/>
+            {!props.readonly &&
+                <Menu.Text
+                    id='__duplicateView'
+                    name={duplicateViewText}
+                    icon={<DuplicateIcon/>}
+                    onClick={handleDuplicateView}
+                />
+            }
+            {!props.readonly && boardTree.views.length > 1 &&
+                <Menu.Text
+                    id='__deleteView'
+                    name={deleteViewText}
+                    icon={<DeleteIcon/>}
+                    onClick={handleDeleteView}
+                />
+            }
+            {!props.readonly &&
+                <Menu.SubMenu
+                    id='__addView'
+                    name={addViewText}
+                    icon={<AddIcon/>}
+                >
+                    <Menu.Text
+                        id='board'
+                        name={boardText}
+                        icon={<BoardIcon/>}
+                        onClick={handleAddViewBoard}
+                    />
+                    <Menu.Text
+                        id='table'
+                        name={tableText}
+                        icon={<TableIcon/>}
+                        onClick={handleAddViewTable}
+                    />
+                    <Menu.Text
+                        id='gallery'
+                        name='Gallery'
+                        icon={<GalleryIcon/>}
+                        onClick={handleAddViewGallery}
+                    />
+                </Menu.SubMenu>
+            }
+        </Menu>
+    )
+})
 
 export default injectIntl(ViewMenu)
