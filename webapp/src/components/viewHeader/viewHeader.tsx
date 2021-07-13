@@ -26,7 +26,6 @@ import './viewHeader.scss'
 
 type Props = {
     boardTree: BoardTree
-    showView: (id: string) => void
     setSearchText: (text?: string) => void
     addCard: () => void
     addCardFromTemplate: (cardTemplateId: string) => void
@@ -38,7 +37,7 @@ type Props = {
 const ViewHeader = React.memo((props: Props) => {
     const [showFilter, setShowFilter] = useState(false)
 
-    const {boardTree, showView} = props
+    const {boardTree} = props
     const {board, activeView} = boardTree
 
     const withGroupBy = activeView.viewType === 'board' || activeView.viewType === 'table'
@@ -72,7 +71,6 @@ const ViewHeader = React.memo((props: Props) => {
                 <ViewMenu
                     board={board}
                     boardTree={boardTree}
-                    showView={showView}
                     readonly={props.readonly}
                 />
             </MenuWrapper>
