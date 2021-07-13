@@ -15,8 +15,6 @@ import UserProperty from './user'
 
 const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
 
-const fetchMock = require('fetch-mock-jest')
-
 describe('components/properties/user', () => {
     const mockStore = configureStore([])
     const store = mockStore({
