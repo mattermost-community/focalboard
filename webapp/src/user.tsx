@@ -10,9 +10,4 @@ interface IUser {
     updateAt: number,
 }
 
-type WorkspaceUsers = {
-    users: Array<IUser>
-    usersById: Map<string, IUser>
-}
-
-export {IUser, WorkspaceUsers}
+export {IUser}

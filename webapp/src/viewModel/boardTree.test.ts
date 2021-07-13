@@ -33,18 +33,17 @@ test('BoardTree', async () => {
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
     let boardTree: BoardTree | undefined
 
-    boardTree = await MutableBoardTree.sync('invalid_id', 'invalid_id')
+    boardTree = await MutableBoardTree.sync('invalid_id', 'invalid_id', {})
     expect(boardTree).toBeUndefined()
     expect(FetchMock.fn).toBeCalledTimes(1)
 
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-    FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify([{username: 'username_1'}, {username: 'username_2'}])))
-    boardTree = await MutableBoardTree.sync(board.id, view.id)
+    boardTree = await MutableBoardTree.sync(board.id, view.id, {})
     expect(boardTree).not.toBeUndefined()
     if (!boardTree) {
         fail('sync')
     }
-    expect(FetchMock.fn).toBeCalledTimes(3)
+    expect(FetchMock.fn).toBeCalledTimes(2)
     expect(boardTree.board).toEqual(board)
     expect(boardTree.views).toEqual([view, view2])
     expect(boardTree.allCards).toEqual([card])
@@ -73,7 +72,7 @@ test('BoardTree', async () => {
     cardTemplate2.isTemplate = true
 
     let originalBoardTree = boardTree
-    boardTree = await MutableBoardTree.incrementalUpdate(boardTree, [view3, card2, cardTemplate2])
+    boardTree = await MutableBoardTree.incrementalUpdate(boardTree, [view3, card2, cardTemplate2], {})
     expect(boardTree).not.toBe(originalBoardTree)
     expect(boardTree).not.toBeUndefined()
     if (!boardTree) {
@@ -102,7 +101,7 @@ test('BoardTree', async () => {
     const anotherBoard = TestBlockFactory.createBoard()
     const card4 = TestBlockFactory.createCard(anotherBoard)
     originalBoardTree = boardTree
-    boardTree = await MutableBoardTree.incrementalUpdate(boardTree, [anotherBoard, card4])
+    boardTree = await MutableBoardTree.incrementalUpdate(boardTree, [anotherBoard, card4], {})
     expect(boardTree).toBe(originalBoardTree) // Expect same value on no change
     expect(boardTree).not.toBeUndefined()
     if (!boardTree) {
@@ -130,15 +129,14 @@ test('BoardTree: defaults', async () => {
 
     // Sync
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board])))
-    FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify([{username: 'username_1'}, {username: 'username_2'}])))
 
-    const boardTree = await MutableBoardTree.sync(board.id, 'noView')
+    const boardTree = await MutableBoardTree.sync(board.id, 'noView', {})
     expect(boardTree).not.toBeUndefined()
     if (!boardTree) {
         fail('sync')
     }
 
-    expect(FetchMock.fn).toBeCalledTimes(2)
+    expect(FetchMock.fn).toBeCalledTimes(1)
     expect(boardTree.board).not.toBeUndefined()
     expect(boardTree.activeView).not.toBeUndefined()
     expect(boardTree.views.length).toEqual(1)

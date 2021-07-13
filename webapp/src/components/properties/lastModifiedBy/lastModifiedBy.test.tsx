@@ -33,7 +33,9 @@ describe('components/properties/lastModifiedBy', () => {
         card.id = 'card-id-1'
         card.modifiedBy = 'user-id-1'
 
-        const boardTree = new MutableBoardTree(new MutableBoard([]))
+        const boardTree = new MutableBoardTree(new MutableBoard([]), {
+            'user-id-1': {username: 'username_1'} as IUser,
+        })
         const block = new MutableBlock()
         block.modifiedBy = 'user-id-1'
         block.parentId = 'card-id-1'

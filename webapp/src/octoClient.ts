@@ -3,7 +3,7 @@
 import {IBlock, IMutableBlock} from './blocks/block'
 import {ISharing} from './blocks/sharing'
 import {IWorkspace} from './blocks/workspace'
-import {IUser, WorkspaceUsers} from './user'
+import {IUser} from './user'
 import {Utils} from './utils'
 
 //
@@ -367,30 +367,6 @@ class OctoClient {
             return []
         }
         return (await this.getJson(response, [])) as IUser[]
-    }
-
-    // TODO: This is going to be removed when we finish the whole migration to redux store
-    async getWorkspaceUsersNew(): Promise<WorkspaceUsers> {
-        const path = this.workspacePath() + '/users'
-        const response = await fetch(this.serverUrl + path, {headers: this.headers()})
-        if (response.status !== 200) {
-            return {
-                users: new Array<IUser>(),
-                usersById: new Map<string, IUser>(),
-            }
-        }
-        const workspaceUsers = (await this.getJson(response, [])) as IUser[]
-        return {
-            users: workspaceUsers,
-            usersById: this.getIdToWorkspaceUsers(workspaceUsers),
-        }
-    }
-
-    private getIdToWorkspaceUsers(users: Array<IUser>): Map<string, IUser> {
-        return users.reduce((acc: Map<string, IUser>, user: IUser) => {
-            acc.set(user.id, user)
-            return acc
-        }, new Map())
     }
 }
 

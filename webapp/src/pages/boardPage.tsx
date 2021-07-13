@@ -7,6 +7,7 @@ import {withRouter, RouteComponentProps} from 'react-router-dom'
 import HotKeys from 'react-hot-keys'
 
 import {IBlock} from '../blocks/block'
+import {IUser} from '../user'
 import {IWorkspace} from '../blocks/workspace'
 import {sendFlashMessage} from '../components/flashMessages'
 import Workspace from '../components/workspace'
@@ -17,11 +18,13 @@ import {Utils} from '../utils'
 import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
 import {MutableWorkspaceTree, WorkspaceTree} from '../viewModel/workspaceTree'
 import './boardPage.scss'
-import {fetchCurrentWorkspaceUsers} from '../store/currentWorkspaceUsers'
+import {fetchCurrentWorkspaceUsers, getCurrentWorkspaceUsersById} from '../store/currentWorkspaceUsers'
+import {RootState} from '../store'
 
 type Props = RouteComponentProps<{workspaceId?: string}> & {
     readonly?: boolean
     intl: IntlShape
+    usersById: {[key: string]: IUser}
     fetchCurrentWorkspaceUsers: () => void
 }
 
@@ -282,7 +285,7 @@ class BoardPage extends React.Component<Props, State> {
         )
 
         if (boardId) {
-            const boardTree = await MutableBoardTree.sync(boardId, viewId)
+            const boardTree = await MutableBoardTree.sync(boardId, viewId, this.props.usersById)
 
             if (boardTree && boardTree.board) {
                 // Update url with viewId if it's different
@@ -323,10 +326,10 @@ class BoardPage extends React.Component<Props, State> {
 
         let newBoardTree: BoardTree | undefined
         if (boardTree) {
-            newBoardTree = await MutableBoardTree.incrementalUpdate(boardTree, blocks)
+            newBoardTree = await MutableBoardTree.incrementalUpdate(boardTree, blocks, this.props.usersById)
         } else if (this.state.boardId) {
             // Corner case: When the page is viewing a deleted board, that is subsequently un-deleted on another client
-            newBoardTree = await MutableBoardTree.sync(this.state.boardId, this.state.viewId)
+            newBoardTree = await MutableBoardTree.sync(this.state.boardId, this.state.viewId, this.props.usersById)
         }
 
         if (newBoardTree) {
@@ -386,4 +389,4 @@ class BoardPage extends React.Component<Props, State> {
     }
 }
 
-export default connect(null, {fetchCurrentWorkspaceUsers})(withRouter(injectIntl(BoardPage)))
+export default connect((state: RootState) => ({usersById: getCurrentWorkspaceUsersById(state)}), {fetchCurrentWorkspaceUsers})(withRouter(injectIntl(BoardPage)))
