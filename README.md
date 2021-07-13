@@ -1,4 +1,4 @@
-# Focalboard
+# Focalboard test
 
 ![CI Status](https://github.com/mattermost/focalboard/actions/workflows/ci.yml/badge.svg)
 ![Mac Build](https://github.com/mattermost/focalboard/actions/workflows/build-mac.yml/badge.svg)
