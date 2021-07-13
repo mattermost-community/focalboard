@@ -19,7 +19,7 @@ var versions = []string{
 }
 
 var (
-	CurrentVersion string = versions[0]
+	CurrentVersion = versions[0]
 	BuildNumber    string
 	BuildDate      string
 	BuildHash      string
