@@ -5,11 +5,21 @@
     height: 47px;
 
     .octo-table-cell {
-        background-color: rgb(var(--main-bg));
+        background-color: rgb(var(--main-bg)) !important;
         border-top: solid 1px rgba(var(--body-color), 0.09);
+        padding-top: 0;
+
+        // To override table's generic hover styling
+        &:hover {
+            background-color: rgb(var(--main-bg)) !important;
+        }
     }
 
     .title {
         padding-left: 40px;
+    }
+
+    .CalculationOptions {
+        width: 100%;
     }
 }
