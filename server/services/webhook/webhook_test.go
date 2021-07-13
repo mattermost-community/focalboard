@@ -22,7 +22,7 @@ func TestClientUpdateNotify(t *testing.T) {
 		WebhookUpdate: []string{ts.URL},
 	}
 
-	client := NewClient(cfg, mlog.NewLogger())
+	client := NewClient(cfg, mlog.CreateTestLogger(t))
 
 	client.NotifyUpdate(model.Block{})
 
