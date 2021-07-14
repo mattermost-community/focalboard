@@ -7,27 +7,15 @@ on:
     branches: [ main ]
 
 jobs:
-  setup-golangci:
-    name: setup
+  golangci:
+    name: plugin
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/setup-go@v2
         with:
           go-version: 1.16
-
-  golangci:
-    name: lint
-    runs-on: ubuntu-18.04
-    needs: setup-golangci
-    steps:
       - uses: actions/checkout@v2
       - name: server-lint
-        uses: golangci/golangci-lint-action@v2
-        with:
-          version: v1.41
-          working-directory: server
-          skip-go-installation: true
-      - name: plugin-lint
         uses: golangci/golangci-lint-action@v2
         with:
           version: v1.41
