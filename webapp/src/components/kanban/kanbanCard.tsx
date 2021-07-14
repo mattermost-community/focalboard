@@ -16,14 +16,18 @@ import {useSortable} from '../../hooks/sortable'
 
 import './kanbanCard.scss'
 import PropertyValueElement from '../propertyValueElement'
+import {CardTree} from '../../viewModel/cardTree'
+import Tooltip from '../../widgets/tooltip'
 
 type Props = {
     card: Card
+    cardTree?: CardTree
     visiblePropertyTemplates: IPropertyTemplate[]
     isSelected: boolean
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
     readonly: boolean
     onDrop: (srcCard: Card, dstCard: Card) => void
+    showCard: (cardId?: string) => void
     isManualSort: boolean
 }
 
@@ -63,7 +67,17 @@ const KanbanCard = React.memo((props: Props) => {
                             id='duplicate'
                             name={intl.formatMessage({id: 'KanbanCard.duplicate', defaultMessage: 'Duplicate'})}
                             onClick={() => {
-                                mutator.duplicateCard(card.id)
+                                mutator.duplicateCard(
+                                    card.id,
+                                    'duplicate card',
+                                    false,
+                                    async (newCardId) => {
+                                        props.showCard(newCardId)
+                                    },
+                                    async () => {
+                                        props.showCard(undefined)
+                                    },
+                                )
                             }}
                         />
                     </Menu>
@@ -75,13 +89,18 @@ const KanbanCard = React.memo((props: Props) => {
                 <div key='__title'>{card.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}</div>
             </div>
             {visiblePropertyTemplates.map((template) => (
-                <PropertyValueElement
+                <Tooltip
                     key={template.id}
-                    readOnly={true}
-                    card={card}
-                    propertyTemplate={template}
-                    emptyDisplayValue=''
-                />
+                    title={template.name}
+                >
+                    <PropertyValueElement
+                        readOnly={true}
+                        card={card}
+                        cardTree={props.cardTree}
+                        propertyTemplate={template}
+                        emptyDisplayValue=''
+                    />
+                </Tooltip>
             ))}
         </div>
     )

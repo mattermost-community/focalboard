@@ -1,0 +1,244 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/table/TableHeaderMenu should match snapshot, other column 1`] = `
+<div>
+  <div
+    class="Menu noselect bottom"
+  >
+    <div
+      class="menu-contents"
+    >
+      <div
+        class="menu-options"
+      >
+        <div
+          class="MenuOption TextOption menu-option"
+        >
+          <div
+            class="noicon"
+          />
+          <div
+            class="menu-name"
+          >
+            Sort ascending
+          </div>
+          <div
+            class="noicon"
+          />
+        </div>
+        <div
+          class="MenuOption TextOption menu-option"
+        >
+          <div
+            class="noicon"
+          />
+          <div
+            class="menu-name"
+          >
+            Sort descending
+          </div>
+          <div
+            class="noicon"
+          />
+        </div>
+        <div
+          class="MenuOption TextOption menu-option"
+        >
+          <div
+            class="noicon"
+          />
+          <div
+            class="menu-name"
+          >
+            Insert left
+          </div>
+          <div
+            class="noicon"
+          />
+        </div>
+        <div
+          class="MenuOption TextOption menu-option"
+        >
+          <div
+            class="noicon"
+          />
+          <div
+            class="menu-name"
+          >
+            Insert right
+          </div>
+          <div
+            class="noicon"
+          />
+        </div>
+        <div
+          class="MenuOption TextOption menu-option"
+        >
+          <div
+            class="noicon"
+          />
+          <div
+            class="menu-name"
+          >
+            Hide
+          </div>
+          <div
+            class="noicon"
+          />
+        </div>
+        <div
+          class="MenuOption TextOption menu-option"
+        >
+          <div
+            class="noicon"
+          />
+          <div
+            class="menu-name"
+          >
+            Duplicate
+          </div>
+          <div
+            class="noicon"
+          />
+        </div>
+        <div
+          class="MenuOption TextOption menu-option"
+        >
+          <div
+            class="noicon"
+          />
+          <div
+            class="menu-name"
+          >
+            Delete
+          </div>
+          <div
+            class="noicon"
+          />
+        </div>
+      </div>
+      <div
+        class="menu-spacer hideOnWidescreen"
+      />
+      <div
+        class="menu-options hideOnWidescreen"
+      >
+        <div
+          class="MenuOption TextOption menu-option menu-cancel"
+        >
+          <div
+            class="noicon"
+          />
+          <div
+            class="menu-name"
+          >
+            Cancel
+          </div>
+          <div
+            class="noicon"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/table/TableHeaderMenu should match snapshot, title column 1`] = `
+<div>
+  <div
+    class="Menu noselect bottom"
+  >
+    <div
+      class="menu-contents"
+    >
+      <div
+        class="menu-options"
+      >
+        <div
+          class="MenuOption TextOption menu-option"
+        >
+          <div
+            class="noicon"
+          />
+          <div
+            class="menu-name"
+          >
+            Sort ascending
+          </div>
+          <div
+            class="noicon"
+          />
+        </div>
+        <div
+          class="MenuOption TextOption menu-option"
+        >
+          <div
+            class="noicon"
+          />
+          <div
+            class="menu-name"
+          >
+            Sort descending
+          </div>
+          <div
+            class="noicon"
+          />
+        </div>
+        <div
+          class="MenuOption TextOption menu-option"
+        >
+          <div
+            class="noicon"
+          />
+          <div
+            class="menu-name"
+          >
+            Insert left
+          </div>
+          <div
+            class="noicon"
+          />
+        </div>
+        <div
+          class="MenuOption TextOption menu-option"
+        >
+          <div
+            class="noicon"
+          />
+          <div
+            class="menu-name"
+          >
+            Insert right
+          </div>
+          <div
+            class="noicon"
+          />
+        </div>
+      </div>
+      <div
+        class="menu-spacer hideOnWidescreen"
+      />
+      <div
+        class="menu-options hideOnWidescreen"
+      >
+        <div
+          class="MenuOption TextOption menu-option menu-cancel"
+        >
+          <div
+            class="noicon"
+          />
+          <div
+            class="menu-name"
+          >
+            Cancel
+          </div>
+          <div
+            class="noicon"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

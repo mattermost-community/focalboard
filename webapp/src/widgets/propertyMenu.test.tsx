@@ -24,8 +24,7 @@ describe('widgets/PropertyMenu', () => {
                 propertyId={'id'}
                 propertyName={'email of a person'}
                 propertyType={'email'}
-                onTypeChanged={callback}
-                onNameChanged={callback}
+                onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,
         )
@@ -40,8 +39,7 @@ describe('widgets/PropertyMenu', () => {
                 propertyId={'id'}
                 propertyName={'email of a person'}
                 propertyType={'email'}
-                onTypeChanged={callback}
-                onNameChanged={callback}
+                onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,
         )
@@ -57,8 +55,7 @@ describe('widgets/PropertyMenu', () => {
                 propertyId={'id'}
                 propertyName={'test-property'}
                 propertyType={'text'}
-                onTypeChanged={callback}
-                onNameChanged={callback}
+                onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,
         )
@@ -66,18 +63,17 @@ describe('widgets/PropertyMenu', () => {
         const input = getByDisplayValue(/test-property/i)
         fireEvent.change(input, {target: {value: 'changed name'}})
         fireEvent.blur(input)
-        expect(callback).toHaveBeenCalledWith('changed name')
+        expect(callback).toHaveBeenCalledWith('text', 'changed name')
     })
 
-    test('handles type change event', () => {
+    test('handles type change event', async () => {
         const callback = jest.fn()
         const component = wrapIntl(
             <PropertyMenu
                 propertyId={'id'}
                 propertyName={'test-property'}
                 propertyType={'text'}
-                onTypeChanged={callback}
-                onNameChanged={callback}
+                onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,
         )
@@ -85,7 +81,7 @@ describe('widgets/PropertyMenu', () => {
         const menuOpen = getByText(/Type: Text/i)
         fireEvent.click(menuOpen)
         fireEvent.click(getByText('Select'))
-        expect(callback).toHaveBeenCalledWith('select')
+        setTimeout(() => expect(callback).toHaveBeenCalledWith('select', 'test-property'), 2000)
     })
 
     test('should match snapshot', () => {
@@ -95,8 +91,7 @@ describe('widgets/PropertyMenu', () => {
                 propertyId={'id'}
                 propertyName={'test-property'}
                 propertyType={'text'}
-                onTypeChanged={callback}
-                onNameChanged={callback}
+                onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,
         )

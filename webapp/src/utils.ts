@@ -82,10 +82,10 @@ class Utils {
         Array.from(children).forEach((element) => {
             switch (element.className) {
             case IconClass:
-            case SpacerClass:
             case HorizontalGripClass:
                 myResults.padding += element.clientWidth
                 break
+            case SpacerClass:
             case OpenButtonClass:
                 break
             default: {
@@ -112,15 +112,17 @@ class Utils {
     static htmlFromMarkdown(text: string): string {
         // HACKHACK: Somehow, marked doesn't encode angle brackets
         const renderer = new marked.Renderer()
-        renderer.link = (href, title, contents) => `<a target="_blank" rel="noreferrer" href="${href}" title="${title || ''}" onclick="event.stopPropagation(); openInNewBrowser && openInNewBrowser('${href}');">${contents}</a>`
+        if ((window as any).openInNewBrowser) {
+            renderer.link = (href, title, contents) => `<a target="_blank" rel="noreferrer" href="${encodeURI(href || '')}" title="${title ? encodeURI(title) : ''}" onclick="event.stopPropagation(); openInNewBrowser && openInNewBrowser(event.target.href);">${contents}</a>`
+        }
         const html = marked(text.replace(/</g, '&lt;'), {renderer, breaks: true})
-        return html
+        return html.trim()
     }
 
     // Date and Time
 
-    static displayDate(date: Date, intl: IntlShape): string {
-        const text = intl.formatDate(date, {year: 'numeric', month: 'short', day: '2-digit'})
+    static displayDate(date: Date, intl: IntlShape, dateFormat: string): string {
+        const text = intl.formatDate(date, {year: 'numeric', month: 'short', day: '2-digit', format: dateFormat})
 
         return text
     }
@@ -209,6 +211,10 @@ class Utils {
             }
             window.history.pushState({}, document.title, newUrl.toString())
         }
+    }
+
+    static ensureProtocol(url: string): string {
+        return url.match(/^.+:\/\//) ? url : `https://${url}`
     }
 
     // File names
@@ -327,6 +333,9 @@ class Utils {
             finalPath = baseURL + '/' + path
         }
         if (absolute) {
+            if (finalPath.indexOf('/') === 0) {
+                finalPath = finalPath.slice(1)
+            }
             return window.location.origin + '/' + finalPath
         }
         return finalPath

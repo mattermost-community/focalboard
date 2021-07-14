@@ -13,10 +13,12 @@ import {useSortable} from '../../hooks/sortable'
 
 import PropertyValueElement from '../propertyValueElement'
 import './tableRow.scss'
+import {CardTree} from '../../viewModel/cardTree'
 
 type Props = {
     boardTree: BoardTree
     card: Card
+    cardTree?: CardTree
     isSelected: boolean
     focusOnMount: boolean
     onSaveWithEnter: () => void
@@ -36,8 +38,9 @@ const TableRow = React.memo((props: Props) => {
     const titleRef = useRef<{focus(selectAll?: boolean): void}>(null)
     const [title, setTitle] = useState(props.card.title)
     const {card} = props
-    const isManualSort = activeView.sortOptions.length < 1
-    const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly && isManualSort, props.onDrop)
+    const isManualSort = activeView.sortOptions.length === 0
+    const isGrouped = Boolean(activeView.groupById)
+    const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly && (isManualSort || isGrouped), props.onDrop)
 
     useEffect(() => {
         if (props.focusOnMount) {
@@ -56,6 +59,13 @@ const TableRow = React.memo((props: Props) => {
     if (isOver) {
         className += ' dragover'
     }
+    if (isGrouped) {
+        const groupID = activeView.groupById || ''
+        const groupValue = card.properties[groupID] as string || 'undefined'
+        if (activeView.collapsedOptionIds.indexOf(groupValue) > -1) {
+            className += ' hidden'
+        }
+    }
 
     if (!columnRefs.get(Constants.titleColumnId)) {
         columnRefs.set(Constants.titleColumnId, React.createRef())
@@ -70,7 +80,6 @@ const TableRow = React.memo((props: Props) => {
         >
 
             {/* Name / title */}
-
             <div
                 className='octo-table-cell title-cell'
                 id='mainBoardHeader'
@@ -124,6 +133,7 @@ const TableRow = React.memo((props: Props) => {
                             <PropertyValueElement
                                 readOnly={props.readonly}
                                 card={card}
+                                cardTree={props.cardTree}
                                 boardTree={boardTree}
                                 propertyTemplate={template}
                                 emptyDisplayValue=''

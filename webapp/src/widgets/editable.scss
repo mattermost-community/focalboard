@@ -1,6 +1,5 @@
 .Editable {
     cursor: text;
-    border: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     border: 1px solid transparent;
@@ -16,5 +15,9 @@
     &.error {
         border: 1px solid var(--error-color);
         border-radius: var(--default-rad);
+    }
+    &.readonly {
+        background-color: transparent;
+        flex: 1;
     }
 }

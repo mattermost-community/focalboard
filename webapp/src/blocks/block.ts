@@ -11,6 +11,7 @@ interface IBlock {
     readonly id: string
     readonly parentId: string
     readonly rootId: string
+    readonly createdBy: string
     readonly modifiedBy: string
 
     readonly schema: number
@@ -27,6 +28,7 @@ interface IMutableBlock extends IBlock {
     id: string
     parentId: string
     rootId: string
+    createdBy: string
     modifiedBy: string
 
     schema: number
@@ -44,6 +46,7 @@ class MutableBlock implements IMutableBlock {
     schema: number
     parentId: string
     rootId: string
+    createdBy: string
     modifiedBy: string
     type: BlockTypes
     title: string
@@ -57,6 +60,7 @@ class MutableBlock implements IMutableBlock {
         this.schema = 1
         this.parentId = block.parentId || ''
         this.rootId = block.rootId || ''
+        this.createdBy = block.createdBy || ''
         this.modifiedBy = block.modifiedBy || ''
         this.type = block.type || ''
 

@@ -4,4 +4,14 @@
         text-align: center;
         padding: 10px;
     }
+
+    > .banner {
+        background-color: rgba(230, 220, 192, 0.9);
+        text-align: center;
+        padding: 10px;
+    }
+
+    > .banner.error {
+        background-color: rgba(230, 192, 192, 0.9);
+    }
 }

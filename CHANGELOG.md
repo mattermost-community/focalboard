@@ -5,6 +5,31 @@ Focalboard is an open source, self-hosted alternative to Trello, Notion, Asana a
 This changelog summarizes updates to our open source project. You can also find the [latest releases and release notes on GitHub here](https://github.com/mattermost/focalboard/releases).
 
 ## [Work In Progress] - vNext Release - [Date TBD]
+* Changed the urls to use routes instead of query parameters. Thanks @jespino!
+
+## v0.8 Release - July, 2021
+* CreatedBy property. Thanks @harshilsharma63!
+* Fix dragged card order. Thanks @kamre!
+* Date format user setting. Thanks @darkLord19!
+* Add property tooltip in board view. Thanks @ditsemto!
+* Fix plugin links. Thanks @N3rdP1um23!
+* Add MySQL documentation. Thanks @ctlaltdieliet and @3l0w!
+* RPC API support. Thanks @agnivade!
+
+## v0.7.0 Release - June, 2021
+* Multi-select property type. Thanks @hahmadia!
+* Checkbox property type. Thanks @mickmister!
+* Person property type. Thanks @harshilsharma63!
+* Grouped table view. Thanks @sbishel!
+* Export individual boards. Thanks @hahmadia!
+* Focalboard can now be built as a Mattermost plugin! Thanks @mgdelacroix and @jespino!
+* Improved read-only fields display. Thanks @Johennes!
+* Improved logging. Thanks @wiggin77!
+* Prometheus metrics. Thanks @spirosoik!
+* Mac: Open window by clicking on the dock icon. Thanks @Johennes!
+* Additional unit tests. Thanks @matheusmosca!
+* Fixed Linux app caret display. Thanks @fritsstegmann!
+* Added CodeQL check. Thanks @srkgupta!
 
 ## v0.6.7 Release - May, 2021
 
@@ -17,6 +42,9 @@ This changelog summarizes updates to our open source project. You can also find 
     * Improved board sorting without leading emoji. Thanks @Johennes!
     * Added Prettier linting for SCSS. Thanks @signalwerk!
     * Improved table headers. Thanks @sbishel!
+    * Disable unused Mac tab menu. Thanks @@haardikdharma10!
+    * Fixed server lint issues. Thanks @harshilsharma63!
+    * Updated open button. Thanks @arjitc!
 
 ## v0.6.5 Release - April 19, 2021
 

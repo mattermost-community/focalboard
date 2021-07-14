@@ -31,11 +31,11 @@ func TestParseAuthTokenFromRequest(t *testing.T) {
 		}
 		req := httptest.NewRequest("GET", pathname, nil)
 		if tc.header != "" {
-			req.Header.Add(HEADER_AUTH, tc.header)
+			req.Header.Add(HeaderAuth, tc.header)
 		}
 		if tc.cookie != "" {
 			req.AddCookie(&http.Cookie{
-				Name:  SESSION_COOKIE_TOKEN,
+				Name:  "FOCALBOARDAUTHTOKEN",
 				Value: tc.cookie,
 			})
 		}

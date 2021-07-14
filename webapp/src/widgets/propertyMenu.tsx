@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useRef, useEffect} from 'react'
+import debounce from 'lodash/debounce'
 import {useIntl, IntlShape} from 'react-intl'
 
 import {PropertyType} from '../blocks/board'
@@ -12,8 +13,7 @@ type Props = {
     propertyId: string
     propertyName: string
     propertyType: PropertyType
-    onNameChanged: (newName: string) => void
-    onTypeChanged: (newType: PropertyType) => void
+    onTypeAndNameChanged: (newType: PropertyType, newName: string) => void
     onDelete: (id: string) => void
 }
 
@@ -31,8 +31,8 @@ function typeDisplayName(intl: IntlShape, type: PropertyType): string {
     case 'phone': return intl.formatMessage({id: 'PropertyType.Phone', defaultMessage: 'Phone'})
     case 'createdTime': return intl.formatMessage({id: 'PropertyType.CreatedTime', defaultMessage: 'Created Time'})
     case 'createdBy': return intl.formatMessage({id: 'PropertyType.CreatedBy', defaultMessage: 'Created By'})
-    case 'updatedTime': return intl.formatMessage({id: 'PropertyType.UpdatedTime', defaultMessage: 'Updated Time'})
-    case 'updatedBy': return intl.formatMessage({id: 'PropertyType.UpdatedBy', defaultMessage: 'Updated By'})
+    case 'updatedTime': return intl.formatMessage({id: 'PropertyType.UpdatedTime', defaultMessage: 'Last Updated Time'})
+    case 'updatedBy': return intl.formatMessage({id: 'PropertyType.UpdatedBy', defaultMessage: 'Last Updated By'})
     case 'date': return intl.formatMessage({id: 'PropertyType.Date', defaultMessage: 'Date'})
     default: {
         Utils.assertFailure(`typeDisplayName, unhandled type: ${type}`)
@@ -54,10 +54,29 @@ const PropertyMenu = React.memo((props: Props) => {
         defaultMessage: 'Delete',
     })
 
+    const debouncedOnTypeAndNameChanged = (newType: PropertyType) => debounce(() => props.onTypeAndNameChanged(newType, name), 150)
+
     useEffect(() => {
         nameTextbox.current?.focus()
         nameTextbox.current?.setSelectionRange(0, name.length)
     }, [])
+
+    const propertyTypes = [
+        {type: 'text'},
+        {type: 'number'},
+        {type: 'email'},
+        {type: 'phone'},
+        {type: 'url'},
+        {type: 'select'},
+        {type: 'multiSelect'},
+        {type: 'date'},
+        {type: 'person'},
+        {type: 'checkbox'},
+        {type: 'createdTime'},
+        {type: 'createdBy'},
+        {type: 'updatedTime'},
+        {type: 'updatedBy'},
+    ]
 
     return (
         <Menu>
@@ -68,10 +87,10 @@ const PropertyMenu = React.memo((props: Props) => {
                 onClick={(e) => e.stopPropagation()}
                 onChange={(e) => setName(e.target.value)}
                 value={name}
-                onBlur={() => props.onNameChanged(name)}
+                onBlur={() => props.onTypeAndNameChanged(props.propertyType, name)}
                 onKeyDown={(e) => {
                     if (e.keyCode === 13 || e.keyCode === 27) {
-                        props.onNameChanged(name)
+                        props.onTypeAndNameChanged(props.propertyType, name)
                         e.stopPropagation()
                     }
                 }}
@@ -89,51 +108,16 @@ const PropertyMenu = React.memo((props: Props) => {
 
                 <Menu.Separator/>
 
-                <Menu.Text
-                    id='text'
-                    name={typeDisplayName(intl, 'text')}
-                    onClick={() => props.onTypeChanged('text')}
-                />
-                <Menu.Text
-                    id='number'
-                    name={typeDisplayName(intl, 'number')}
-                    onClick={() => props.onTypeChanged('number')}
-                />
-                <Menu.Text
-                    id='email'
-                    name={typeDisplayName(intl, 'email')}
-                    onClick={() => props.onTypeChanged('email')}
-                />
-                <Menu.Text
-                    id='phone'
-                    name={typeDisplayName(intl, 'phone')}
-                    onClick={() => props.onTypeChanged('phone')}
-                />
-                <Menu.Text
-                    id='url'
-                    name={typeDisplayName(intl, 'url')}
-                    onClick={() => props.onTypeChanged('url')}
-                />
-                <Menu.Text
-                    id='select'
-                    name={typeDisplayName(intl, 'select')}
-                    onClick={() => props.onTypeChanged('select')}
-                />
-                <Menu.Text
-                    id='date'
-                    name={typeDisplayName(intl, 'date')}
-                    onClick={() => props.onTypeChanged('date')}
-                />
-                <Menu.Text
-                    id='createdTime'
-                    name={typeDisplayName(intl, 'createdTime')}
-                    onClick={() => props.onTypeChanged('createdTime')}
-                />
-                <Menu.Text
-                    id='updatedTime'
-                    name={typeDisplayName(intl, 'updatedTime')}
-                    onClick={() => props.onTypeChanged('updatedTime')}
-                />
+                {
+                    propertyTypes.map((propertyType) => (
+                        <Menu.Text
+                            key={propertyType.type}
+                            id={propertyType.type}
+                            name={typeDisplayName(intl, propertyType.type as PropertyType)}
+                            onClick={() => debouncedOnTypeAndNameChanged(propertyType.type as PropertyType)()}
+                        />
+                    ))
+                }
             </Menu.SubMenu>
             <Menu.Text
                 id='delete'

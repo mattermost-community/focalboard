@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
+	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/webview/webview"
 )
 
@@ -30,7 +31,9 @@ func getFreePort() (int, error) {
 }
 
 func runServer(port int) (*server.Server, error) {
-	server, err := server.New(&config.Configuration{
+	logger := mlog.NewLogger()
+
+	config := &config.Configuration{
 		ServerRoot:              fmt.Sprintf("http://localhost:%d", port),
 		Port:                    port,
 		DBType:                  "sqlite3",
@@ -38,20 +41,25 @@ func runServer(port int) (*server.Server, error) {
 		UseSSL:                  false,
 		SecureCookie:            true,
 		WebPath:                 "./pack",
+		FilesDriver:             "local",
 		FilesPath:               "./focalboard_files",
 		Telemetry:               true,
 		WebhookUpdate:           []string{},
-		Secret:                  "",
 		SessionExpireTime:       259200000000,
 		SessionRefreshTime:      18000,
 		LocalOnly:               false,
 		EnableLocalMode:         false,
 		LocalModeSocketLocation: "",
 		AuthMode:                "native",
-		MattermostURL:           "",
-		MattermostClientID:      "",
-		MattermostClientSecret:  "",
-	}, sessionToken)
+	}
+
+	db, err := server.NewStore(config, logger)
+	if err != nil {
+		fmt.Println("ERROR INITIALIZING THE SERVER STORE", err)
+		return nil, err
+	}
+
+	server, err := server.New(config, sessionToken, db, logger)
 	if err != nil {
 		fmt.Println("ERROR INITIALIZING THE SERVER", err)
 		return nil, err

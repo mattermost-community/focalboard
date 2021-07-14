@@ -2,19 +2,26 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
+import {Constants} from '../constants'
+
 import './label.scss'
 
 type Props = {
     color?: string
     title?: string
     children: React.ReactNode
+    classNames?: string
 }
 
 // Switch is an on-off style switch / checkbox
 function Label(props: Props): JSX.Element {
+    let color = 'empty'
+    if (props.color && props.color in Constants.menuColors) {
+        color = props.color
+    }
     return (
         <span
-            className={`Label ${props.color || 'empty'}`}
+            className={`Label ${color} ${props.classNames ? props.classNames : ''}`}
             title={props.title}
         >
             {props.children}

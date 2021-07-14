@@ -2,9 +2,10 @@ package app
 
 import (
 	"database/sql"
-	"log"
+	"errors"
 
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/utils"
 )
 
@@ -18,24 +19,24 @@ func (a *App) GetRootWorkspace() (*model.Workspace, error) {
 		}
 		err := a.store.UpsertWorkspaceSignupToken(*workspace)
 		if err != nil {
-			log.Fatal("Unable to initialize workspace", err)
+			a.logger.Fatal("Unable to initialize workspace", mlog.Err(err))
 			return nil, err
 		}
 		workspace, err = a.store.GetWorkspace(workspaceID)
 		if err != nil {
-			log.Fatal("Unable to get initialized workspace", err)
+			a.logger.Fatal("Unable to get initialized workspace", mlog.Err(err))
 			return nil, err
 		}
 
-		log.Println("initialized workspace")
+		a.logger.Info("initialized workspace")
 	}
 
 	return workspace, nil
 }
 
-func (a *App) getWorkspace(ID string) (*model.Workspace, error) {
-	workspace, err := a.store.GetWorkspace(ID)
-	if err == sql.ErrNoRows {
+func (a *App) GetWorkspace(id string) (*model.Workspace, error) {
+	workspace, err := a.store.GetWorkspace(id)
+	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
 	}
 	if err != nil {
@@ -44,10 +45,18 @@ func (a *App) getWorkspace(ID string) (*model.Workspace, error) {
 	return workspace, nil
 }
 
+func (a *App) DoesUserHaveWorkspaceAccess(userID string, workspaceID string) bool {
+	return a.auth.DoesUserHaveWorkspaceAccess(userID, workspaceID)
+}
+
 func (a *App) UpsertWorkspaceSettings(workspace model.Workspace) error {
 	return a.store.UpsertWorkspaceSettings(workspace)
 }
 
 func (a *App) UpsertWorkspaceSignupToken(workspace model.Workspace) error {
 	return a.store.UpsertWorkspaceSignupToken(workspace)
+}
+
+func (a *App) GetWorkspaceCount() (int64, error) {
+	return a.store.GetWorkspaceCount()
 }

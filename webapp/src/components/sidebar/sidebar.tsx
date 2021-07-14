@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react'
 
 import {IWorkspace} from '../../blocks/workspace'
-import {loadTheme} from '../../theme'
+import {getActiveThemeName, loadTheme} from '../../theme'
 import {WorkspaceTree} from '../../viewModel/workspaceTree'
 import IconButton from '../../widgets/buttons/iconButton'
 import HamburgerIcon from '../../widgets/icons/hamburger'
@@ -11,6 +11,7 @@ import HideSidebarIcon from '../../widgets/icons/hideSidebar'
 import ShowSidebarIcon from '../../widgets/icons/showSidebar'
 
 import './sidebar.scss'
+
 import SidebarAddBoardMenu from './sidebarAddBoardMenu'
 import SidebarBoardItem from './sidebarBoardItem'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
@@ -18,8 +19,6 @@ import SidebarUserMenu from './sidebarUserMenu'
 
 type Props = {
     workspace?: IWorkspace
-    showBoard: (id?: string) => void
-    showView: (id: string, boardId?: string) => void
     workspaceTree: WorkspaceTree,
     activeBoardId?: string
 }
@@ -94,8 +93,6 @@ const Sidebar = React.memo((props: Props) => {
                                 key={board.id}
                                 views={views}
                                 board={board}
-                                showBoard={props.showBoard}
-                                showView={props.showView}
                                 activeBoardId={props.activeBoardId}
                                 nextBoardId={nextBoardId}
                             />
@@ -107,13 +104,13 @@ const Sidebar = React.memo((props: Props) => {
             <div className='octo-spacer'/>
 
             <SidebarAddBoardMenu
-                showBoard={props.showBoard}
                 workspaceTree={props.workspaceTree}
                 activeBoardId={props.activeBoardId}
             />
 
             <SidebarSettingsMenu
                 setWhiteLogo={(newWhiteLogo: boolean) => setWhiteLogo(newWhiteLogo)}
+                activeTheme={getActiveThemeName()}
             />
         </div>
     )

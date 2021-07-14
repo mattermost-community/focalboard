@@ -10,6 +10,8 @@ import {IContentBlock} from '../../blocks/contentBlock'
 
 import CheckboxElement from './checkboxElement'
 
+const fetchMock = require('fetch-mock-jest')
+
 const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
 
 describe('components/content/CheckboxElement', () => {
@@ -22,10 +24,19 @@ describe('components/content/CheckboxElement', () => {
         type: 'checkbox',
         title: 'test-title',
         fields: {},
+        createdBy: 'test-user-id',
         createAt: 0,
         updateAt: 0,
         deleteAt: 0,
     }
+
+    beforeAll(() => {
+        fetchMock.post('*', {})
+    })
+
+    afterAll(() => {
+        fetchMock.mockClear()
+    })
 
     test('should match snapshot', () => {
         const component = wrapIntl(

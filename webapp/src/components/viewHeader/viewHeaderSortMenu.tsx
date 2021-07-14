@@ -66,7 +66,7 @@ const ViewHeaderSortMenu = React.memo((props: Props) => {
                     if (activeView.sortOptions.length > 0) {
                         const sortOption = activeView.sortOptions[0]
                         if (sortOption.propertyId === option.id) {
-                            rightIcon = sortOption.reversed ? <SortUpIcon/> : <SortDownIcon/>
+                            rightIcon = sortOption.reversed ? <SortDownIcon/> : <SortUpIcon/>
                         }
                     }
                     return (

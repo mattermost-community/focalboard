@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/table/TableHeaderMenu should match snapshot, title column 1`] = `
+<div>
+  <div
+    class="octo-table-cell header-cell"
+    draggable="true"
+    style="overflow: unset; width: 100px; opacity: 1;"
+  >
+    <div
+      class="MenuWrapper"
+    >
+      <span
+        class="Label empty "
+      >
+        my Name
+      </span>
+    </div>
+    <div
+      class="octo-spacer"
+    />
+    <div
+      class="HorizontalGrip"
+      draggable="true"
+    />
+  </div>
+</div>
+`;

@@ -2,10 +2,10 @@ package sqlstore
 
 import (
 	"encoding/json"
-	"log"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/mlog"
 
 	sq "github.com/Masterminds/squirrel"
 )
@@ -28,9 +28,13 @@ func (s *SQLStore) UpsertWorkspaceSignupToken(workspace model.Workspace) error {
 			now,
 		)
 	if s.dbType == mysqlDBType {
-		query = query.Suffix("ON DUPLICATE KEY UPDATE signup_token = ?, modified_by = ?, update_at = ?", workspace.SignupToken, workspace.ModifiedBy, now)
+		query = query.Suffix("ON DUPLICATE KEY UPDATE signup_token = ?, modified_by = ?, update_at = ?",
+			workspace.SignupToken, workspace.ModifiedBy, now)
 	} else {
-		query = query.Suffix("ON CONFLICT (id) DO UPDATE SET signup_token = EXCLUDED.signup_token, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at")
+		query = query.Suffix(
+			`ON CONFLICT (id) 
+			 DO UPDATE SET signup_token = EXCLUDED.signup_token, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at`,
+		)
 	}
 
 	_, err := query.Exec()
@@ -62,14 +66,17 @@ func (s *SQLStore) UpsertWorkspaceSettings(workspace model.Workspace) error {
 	if s.dbType == mysqlDBType {
 		query = query.Suffix("ON DUPLICATE KEY UPDATE settings = ?, modified_by = ?, update_at = ?", settingsJSON, workspace.ModifiedBy, now)
 	} else {
-		query = query.Suffix("ON CONFLICT (id) DO UPDATE SET settings = EXCLUDED.settings, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at")
+		query = query.Suffix(
+			`ON CONFLICT (id) 
+			 DO UPDATE SET settings = EXCLUDED.settings, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at`,
+		)
 	}
 
 	_, err = query.Exec()
 	return err
 }
 
-func (s *SQLStore) GetWorkspace(ID string) (*model.Workspace, error) {
+func (s *SQLStore) GetWorkspace(id string) (*model.Workspace, error) {
 	var settingsJSON string
 
 	query := s.getQueryBuilder().
@@ -81,7 +88,7 @@ func (s *SQLStore) GetWorkspace(ID string) (*model.Workspace, error) {
 			"update_at",
 		).
 		From(s.tablePrefix + "workspaces").
-		Where(sq.Eq{"id": ID})
+		Where(sq.Eq{"id": id})
 	row := query.QueryRow()
 	workspace := model.Workspace{}
 
@@ -98,9 +105,38 @@ func (s *SQLStore) GetWorkspace(ID string) (*model.Workspace, error) {
 
 	err = json.Unmarshal([]byte(settingsJSON), &workspace.Settings)
 	if err != nil {
-		log.Printf(`ERROR GetWorkspace settings json.Unmarshal: %v`, err)
+		s.logger.Error(`ERROR GetWorkspace settings json.Unmarshal`, mlog.Err(err))
 		return nil, err
 	}
 
 	return &workspace, nil
+}
+
+func (s *SQLStore) HasWorkspaceAccess(userID string, workspaceID string) (bool, error) {
+	return true, nil
+}
+
+func (s *SQLStore) GetWorkspaceCount() (int64, error) {
+	query := s.getQueryBuilder().
+		Select(
+			"COUNT(*) AS count",
+		).
+		From(s.tablePrefix + "workspaces")
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error("ERROR GetWorkspaceCount", mlog.Err(err))
+		return 0, err
+	}
+	defer s.CloseRows(rows)
+
+	var count int64
+
+	rows.Next()
+	err = rows.Scan(&count)
+	if err != nil {
+		s.logger.Error("Failed to fetch workspace count", mlog.Err(err))
+		return 0, err
+	}
+	return count, nil
 }

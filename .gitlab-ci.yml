@@ -1,0 +1,12 @@
+stages:
+  - build
+  - s3
+
+variables:
+  BUILD: "yes"
+  IMAGE_BUILDER: $CI_REGISTRY/mattermost/ci/images/builder:go-1.16.5-node-16.3.0
+
+include:
+  - project: mattermost/ci/focalboard
+    ref: main
+    file: private.yml

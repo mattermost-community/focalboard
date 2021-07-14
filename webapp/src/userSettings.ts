@@ -9,9 +9,17 @@ export class UserSettings {
     static set prefillRandomIcons(newValue: boolean) {
         localStorage.setItem('randomIcons', JSON.stringify(newValue))
     }
+
+    static get preferredDateFormat(): string {
+        return localStorage.getItem('preferredDateFormat') || 'MM/DD/YYYY'
+    }
+
+    static set preferredDateFormat(newValue: string) {
+        localStorage.setItem('preferredDateFormat', newValue)
+    }
 }
 
-const keys = ['language', 'theme', 'lastBoardId', 'lastViewId', 'emoji-mart.last', 'emoji-mart.frequently', 'randomIcons']
+const keys = ['language', 'theme', 'lastBoardId', 'lastViewId', 'emoji-mart.last', 'emoji-mart.frequently', 'randomIcons', 'preferredDateFormat']
 
 export function exportUserSettingsBlob(): string {
     return window.btoa(exportUserSettings())
@@ -35,7 +43,11 @@ function importUserSettings(json: string): boolean {
         return false
     }
     for (const [key, value] of Object.entries(settings)) {
-        localStorage.setItem(key, value as string)
+        if (value) {
+            localStorage.setItem(key, value as string)
+        } else {
+            localStorage.removeItem(key)
+        }
     }
     return true
 }

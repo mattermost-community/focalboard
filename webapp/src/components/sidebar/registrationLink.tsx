@@ -8,6 +8,8 @@ import {sendFlashMessage} from '../../components/flashMessages'
 import client from '../../octoClient'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
+import {getCurrentWorkspace, fetchCurrentWorkspace} from '../../store/currentWorkspace'
+import {useAppSelector, useAppDispatch} from '../../store/hooks'
 
 import Modal from '../modal'
 
@@ -20,18 +22,13 @@ type Props = {
 const RegistrationLink = React.memo((props: Props) => {
     const {onClose} = props
     const intl = useIntl()
+    const workspace = useAppSelector<IWorkspace|null>(getCurrentWorkspace)
+    const dispatch = useAppDispatch()
 
     const [wasCopied, setWasCopied] = useState(false)
-    const [workspace, setWorkspace] = useState<IWorkspace>()
-
-    const loadData = async () => {
-        const updatedWorkspace = await client.getWorkspace()
-        setWorkspace(updatedWorkspace)
-        setWasCopied(false)
-    }
 
     useEffect(() => {
-        loadData()
+        dispatch(fetchCurrentWorkspace())
     }, [])
 
     const regenerateToken = async () => {
@@ -39,7 +36,8 @@ const RegistrationLink = React.memo((props: Props) => {
         const accept = window.confirm(intl.formatMessage({id: 'RegistrationLink.confirmRegenerateToken', defaultMessage: 'This will invalidate previously shared links. Continue?'}))
         if (accept) {
             await client.regenerateWorkspaceSignupToken()
-            await loadData()
+            await dispatch(fetchCurrentWorkspace())
+            setWasCopied(false)
 
             const description = intl.formatMessage({id: 'RegistrationLink.tokenRegenerated', defaultMessage: 'Registration link regenerated'})
             sendFlashMessage({content: description, severity: 'low'})

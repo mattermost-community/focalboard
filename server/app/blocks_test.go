@@ -1,45 +1,62 @@
 package app
 
 import (
-	"errors"
 	"testing"
 
+	"github.com/mattermost/focalboard/server/model"
+
 	"github.com/golang/mock/gomock"
-	"github.com/mattermost/focalboard/server/auth"
-	"github.com/mattermost/focalboard/server/services/config"
 	st "github.com/mattermost/focalboard/server/services/store"
-	"github.com/mattermost/focalboard/server/services/store/mockstore"
-	"github.com/mattermost/focalboard/server/services/webhook"
-	"github.com/mattermost/focalboard/server/ws"
-	"github.com/mattermost/mattermost-server/v5/services/filesstore/mocks"
 	"github.com/stretchr/testify/require"
 )
 
+type blockError struct {
+	msg string
+}
+
+func (be blockError) Error() string {
+	return be.msg
+}
+
 func TestGetParentID(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-	cfg := config.Configuration{}
-	store := mockstore.NewMockStore(ctrl)
-	auth := auth.New(&cfg, store)
-	sessionToken := "TESTTOKEN"
-	wsserver := ws.NewServer(auth, sessionToken)
-	webhook := webhook.NewClient(&cfg)
-	app := New(&cfg, store, auth, wsserver, &mocks.FileBackend{}, webhook)
+	th := SetupTestHelper(t)
 
 	container := st.Container{
 		WorkspaceID: "0",
 	}
 	t.Run("success query", func(t *testing.T) {
-		store.EXPECT().GetParentID(gomock.Eq(container), gomock.Eq("test-id")).Return("test-parent-id", nil)
-		result, err := app.GetParentID(container, "test-id")
+		th.Store.EXPECT().GetParentID(gomock.Eq(container), gomock.Eq("test-id")).Return("test-parent-id", nil)
+		result, err := th.App.GetParentID(container, "test-id")
 		require.NoError(t, err)
 		require.Equal(t, "test-parent-id", result)
 	})
 
 	t.Run("fail query", func(t *testing.T) {
-		store.EXPECT().GetParentID(gomock.Eq(container), gomock.Eq("test-id")).Return("", errors.New("block-not-found"))
-		_, err := app.GetParentID(container, "test-id")
+		th.Store.EXPECT().GetParentID(gomock.Eq(container), gomock.Eq("test-id")).Return("", blockError{"block-not-found"})
+		_, err := th.App.GetParentID(container, "test-id")
 		require.Error(t, err)
-		require.Equal(t, "block-not-found", err.Error())
+		require.ErrorIs(t, err, blockError{"block-not-found"})
+	})
+}
+
+func TestInsertBlock(t *testing.T) {
+	th := SetupTestHelper(t)
+
+	container := st.Container{
+		WorkspaceID: "0",
+	}
+
+	t.Run("success scenerio", func(t *testing.T) {
+		block := model.Block{}
+		th.Store.EXPECT().InsertBlock(gomock.Eq(container), gomock.Eq(&block), gomock.Eq("user-id-1")).Return(nil)
+		err := th.App.InsertBlock(container, block, "user-id-1")
+		require.NoError(t, err)
+	})
+
+	t.Run("error scenerio", func(t *testing.T) {
+		block := model.Block{}
+		th.Store.EXPECT().InsertBlock(gomock.Eq(container), gomock.Eq(&block), gomock.Eq("user-id-1")).Return(blockError{"error"})
+		err := th.App.InsertBlock(container, block, "user-id-1")
+		require.Error(t, err, "error")
 	})
 }

@@ -4,11 +4,11 @@
 package telemetry
 
 import (
-	"log"
 	"os"
 	"strings"
 	"time"
 
+	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/scheduler"
 	rudder "github.com/rudderlabs/analytics-go"
 )
@@ -19,11 +19,13 @@ const (
 	timeBetweenTelemetryChecks = 10 * time.Minute
 )
 
-type Tracker func() map[string]interface{}
+type TrackerFunc func() (Tracker, error)
+
+type Tracker map[string]interface{}
 
 type Service struct {
-	trackers                   map[string]Tracker
-	log                        *log.Logger
+	trackers                   map[string]TrackerFunc
+	logger                     *mlog.Logger
 	rudderClient               rudder.Client
 	telemetryID                string
 	timestampLastTelemetrySent time.Time
@@ -34,28 +36,28 @@ type RudderConfig struct {
 	DataplaneURL string
 }
 
-func New(telemetryID string, log *log.Logger) *Service {
+func New(telemetryID string, logger *mlog.Logger) *Service {
 	service := &Service{
-		log:         log,
+		logger:      logger,
 		telemetryID: telemetryID,
-		trackers:    map[string]Tracker{},
+		trackers:    map[string]TrackerFunc{},
 	}
 
 	return service
 }
 
-func (ts *Service) RegisterTracker(name string, tracker Tracker) {
-	ts.trackers[name] = tracker
+func (ts *Service) RegisterTracker(name string, f TrackerFunc) {
+	ts.trackers[name] = f
 }
 
 func (ts *Service) getRudderConfig() RudderConfig {
 	if !strings.Contains(rudderKey, "placeholder") && !strings.Contains(rudderDataplaneURL, "placeholder") {
 		return RudderConfig{rudderKey, rudderDataplaneURL}
-	} else if os.Getenv("RUDDER_KEY") != "" && os.Getenv("RUDDER_DATAPLANE_URL") != "" {
-		return RudderConfig{os.Getenv("RUDDER_KEY"), os.Getenv("RUDDER_DATAPLANE_URL")}
-	} else {
-		return RudderConfig{}
 	}
+	if os.Getenv("RUDDER_KEY") != "" && os.Getenv("RUDDER_DATAPLANE_URL") != "" {
+		return RudderConfig{os.Getenv("RUDDER_KEY"), os.Getenv("RUDDER_DATAPLANE_URL")}
+	}
+	return RudderConfig{}
 }
 
 func (ts *Service) sendDailyTelemetry(override bool) {
@@ -64,7 +66,12 @@ func (ts *Service) sendDailyTelemetry(override bool) {
 		ts.initRudder(config.DataplaneURL, config.RudderKey)
 
 		for name, tracker := range ts.trackers {
-			ts.sendTelemetry(name, tracker())
+			m, err := tracker()
+			if err != nil {
+				ts.logger.Error("Error fetching telemetry data", mlog.String("name", name), mlog.Err(err))
+				continue
+			}
+			ts.sendTelemetry(name, m)
 		}
 	}
 }
@@ -72,7 +79,7 @@ func (ts *Service) sendDailyTelemetry(override bool) {
 func (ts *Service) sendTelemetry(event string, properties map[string]interface{}) {
 	if ts.rudderClient != nil {
 		var context *rudder.Context
-		ts.rudderClient.Enqueue(rudder.Track{
+		_ = ts.rudderClient.Enqueue(rudder.Track{
 			Event:      event,
 			UserId:     ts.telemetryID,
 			Properties: properties,
@@ -84,7 +91,7 @@ func (ts *Service) sendTelemetry(event string, properties map[string]interface{}
 func (ts *Service) initRudder(endpoint, rudderKey string) {
 	if ts.rudderClient == nil {
 		config := rudder.Config{}
-		config.Logger = rudder.StdLogger(ts.log)
+		config.Logger = rudder.StdLogger(ts.logger.StdLogger(mlog.Telemetry))
 		config.Endpoint = endpoint
 		// For testing
 		if endpoint != rudderDataplaneURL {
@@ -93,11 +100,10 @@ func (ts *Service) initRudder(endpoint, rudderKey string) {
 		}
 		client, err := rudder.NewWithConfig(rudderKey, endpoint, config)
 		if err != nil {
-			ts.log.Fatal("Failed to create Rudder instance")
-
+			ts.logger.Fatal("Failed to create Rudder instance")
 			return
 		}
-		client.Enqueue(rudder.Identify{
+		_ = client.Enqueue(rudder.Identify{
 			UserId: ts.telemetryID,
 		})
 
@@ -107,15 +113,23 @@ func (ts *Service) initRudder(endpoint, rudderKey string) {
 
 func (ts *Service) doTelemetryIfNeeded(firstRun time.Time) {
 	hoursSinceFirstServerRun := time.Since(firstRun).Hours()
+
 	// Send once every 10 minutes for the first hour
-	// Send once every hour thereafter for the first 12 hours
-	// Send at the 24 hour mark and every 24 hours after
 	if hoursSinceFirstServerRun < 1 {
 		ts.doTelemetry()
-	} else if hoursSinceFirstServerRun <= 12 && time.Since(ts.timestampLastTelemetrySent) >= time.Hour {
+		return
+	}
+
+	// Send once every hour thereafter for the first 12 hours
+	if hoursSinceFirstServerRun <= 12 && time.Since(ts.timestampLastTelemetrySent) >= time.Hour {
 		ts.doTelemetry()
-	} else if hoursSinceFirstServerRun > 12 && time.Since(ts.timestampLastTelemetrySent) >= 24*time.Hour {
+		return
+	}
+
+	// Send at the 24 hour mark and every 24 hours after
+	if hoursSinceFirstServerRun > 12 && time.Since(ts.timestampLastTelemetrySent) >= 24*time.Hour {
 		ts.doTelemetry()
+		return
 	}
 }
 
