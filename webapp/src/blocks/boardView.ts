@@ -19,6 +19,7 @@ interface BoardView extends IBlock {
     readonly filter: FilterGroup
     readonly cardOrder: readonly string[]
     readonly columnWidths: Readonly<Record<string, number>>
+    readonly columnCalculations: Readonly<Record<string, string>>
 
     duplicate(): MutableBoardView
 }
@@ -94,6 +95,14 @@ class MutableBoardView extends MutableBlock implements BoardView {
         this.fields.columnWidths = value
     }
 
+    get columnCalculations(): Record<string, string> {
+        return this.fields.columnCalculations ? this.fields.columnCalculations as Record<string, string> : {}
+    }
+
+    set columnCalculations(value: Record<string, string>) {
+        this.fields.columnCalculations = value
+    }
+
     constructor(block: any = {}) {
         super(block)
 
@@ -107,6 +116,7 @@ class MutableBoardView extends MutableBlock implements BoardView {
         this.filter = new FilterGroup(block.fields?.filter)
         this.cardOrder = block.fields?.cardOrder?.slice() || []
         this.columnWidths = {...(block.fields?.columnWidths || {})}
+        this.columnCalculations = block.fields?.columnCalculations || {}
 
         if (!this.viewType) {
             this.viewType = 'board'

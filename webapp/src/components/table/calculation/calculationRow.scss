@@ -3,11 +3,11 @@
     position: -webkit-sticky;
     bottom: 0;
     height: 47px;
+    border-bottom: none;
+    border-top: solid 1px rgba(var(--body-color), 0.09);
 
     .octo-table-cell {
         background-color: rgb(var(--main-bg)) !important;
-        border-top: solid 1px rgba(var(--body-color), 0.09);
-        padding-top: 0;
 
         // To override table's generic hover styling
         &:hover {
@@ -21,5 +21,13 @@
 
     .CalculationOptions {
         width: 100%;
+    }
+}
+
+.Table {
+    .octo-table-row {
+        &.CalculationRow {
+            border-bottom: none;
+        }
     }
 }

@@ -3,12 +3,14 @@
 import React, {useState} from 'react'
 
 import {BoardTree} from '../../../viewModel/boardTree'
-import {columnWidth} from '../tableRow'
 import {Constants} from '../../../constants'
 
 import './calculationRow.scss'
-import CalculationOptions from '../../calculations/options'
+import {CalculationOptions, Options, Option} from '../../calculations/options'
 import {IPropertyTemplate} from '../../../blocks/board'
+import {columnWidth} from '../tableRow'
+import {MutableBoardView} from '../../../blocks/boardView'
+import mutator from '../../../mutator'
 
 type Props = {
     boardTree: BoardTree
@@ -17,6 +19,12 @@ type Props = {
 }
 
 const CalculationRow = (props: Props): JSX.Element => {
+    const toggleOptions = (templateId: string, show: boolean) => {
+        const newShowOptions = new Map<string, boolean>(showOptions)
+        newShowOptions.set(templateId, show)
+        setShowOptions(newShowOptions)
+    }
+
     const {board, activeView} = props.boardTree
     const [showOptions, setShowOptions] = useState<Map<string, boolean>>(new Map<string, boolean>())
     const titleTemplate: IPropertyTemplate = {
@@ -25,34 +33,48 @@ const CalculationRow = (props: Props): JSX.Element => {
 
     const templates: IPropertyTemplate[] = [
         titleTemplate,
-        ...board.cardProperties.
-            filter((template) => activeView.visiblePropertyIds.includes(template.id)),
+        ...board.cardProperties.filter((template) => activeView.visiblePropertyIds.includes(template.id)),
     ]
+
+    const selectedCalculations = activeView.columnCalculations
+    console.log('#########################################')
+    console.log(selectedCalculations)
+    console.log('#########################################')
 
     return (
         <div className='CalculationRow octo-table-row'>
             {
                 templates.map((template) => {
                     const style = {width: columnWidth(template.id, props.resizingColumn, props.boardTree, props.offset)}
+                    const value = selectedCalculations[template.id] || Options.get('none')!.value
+                    const valueOption = Options.get(value)
+
                     return showOptions.get(template.id) ? (
                         <div
                             key={template.id}
                             className='octo-table-cell'
                             style={style}
                         >
-                            <CalculationOptions menuOpen={showOptions.get(template.id)}/>
+                            <CalculationOptions
+                                value={value}
+                                menuOpen={showOptions.get(template.id)}
+                                onClose={() => toggleOptions(template.id, false)}
+                                onChange={(v: string) => {
+                                    const calculations = {...selectedCalculations}
+                                    calculations[template.id] = v
+                                    const newView = new MutableBoardView(activeView)
+                                    newView.columnCalculations = calculations
+                                    mutator.updateBlock(newView, activeView, 'update_calculation')
+                                }}
+                            />
                         </div>
                     ) : (
                         <div
                             className={'octo-table-cell'}
                             style={style}
-                            onClick={() => {
-                                const newShowOptions = new Map<string, boolean>(showOptions)
-                                newShowOptions.set(template.id, true)
-                                setShowOptions(newShowOptions)
-                            }}
+                            onClick={() => toggleOptions(template.id, true)}
                         >
-                            {'Hello World'}
+                            {valueOption!.label}
                         </div>
                     )
                 })
