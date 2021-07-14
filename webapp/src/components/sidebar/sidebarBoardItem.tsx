@@ -1,7 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React, {useState, useCallback} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
+import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board} from '../../blocks/board'
 import {BoardView, IViewType, sortBoardViewsAlphabetically} from '../../blocks/boardView'
@@ -22,8 +23,6 @@ import './sidebarBoardItem.scss'
 type Props = {
     views: readonly BoardView[]
     board: Board
-    showBoard: (id?: string) => void
-    showView: (id: string, boardId?: string) => void
     activeBoardId?: string
     nextBoardId?: string
 }
@@ -31,6 +30,18 @@ type Props = {
 const SidebarBoardItem = React.memo((props: Props) => {
     const [collapsed, setCollapsed] = useState(false)
     const intl = useIntl()
+    const history = useHistory()
+    const match = useRouteMatch()
+
+    const showBoard = useCallback((boardId) => {
+        const newPath = generatePath(match.path, {...match.params, boardId: boardId || ''})
+        history.push(newPath)
+    }, [match, history])
+
+    const showView = useCallback((viewId, boardId) => {
+        const newPath = generatePath(match.path, {...match.params, boardId: boardId || '', viewId: viewId || ''})
+        history.push(newPath)
+    }, [match, history])
 
     const iconForViewType = (viewType: IViewType): JSX.Element => {
         switch (viewType) {
@@ -49,11 +60,11 @@ const SidebarBoardItem = React.memo((props: Props) => {
             intl.formatMessage({id: 'Mutator.duplicate-board', defaultMessage: 'duplicate board'}),
             false,
             async (newBoardId) => {
-                props.showBoard(newBoardId)
+                showBoard(newBoardId)
             },
             async () => {
                 if (oldBoardId) {
-                    props.showBoard(oldBoardId)
+                    showBoard(oldBoardId)
                 }
             },
         )
@@ -67,11 +78,11 @@ const SidebarBoardItem = React.memo((props: Props) => {
             intl.formatMessage({id: 'Mutator.new-template-from-board', defaultMessage: 'new template from board'}),
             true,
             async (newBoardId) => {
-                props.showBoard(newBoardId)
+                showBoard(newBoardId)
             },
             async () => {
                 if (oldBoardId) {
-                    props.showBoard(oldBoardId)
+                    showBoard(oldBoardId)
                 }
             },
         )
@@ -85,7 +96,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
         <div className='SidebarBoardItem'>
             <div
                 className={'octo-sidebar-item ' + (collapsed ? 'collapsed' : 'expanded')}
-                onClick={() => props.showBoard(board.id)}
+                onClick={() => showBoard(board.id)}
             >
                 <IconButton
                     icon={<DisclosureTriangle/>}
@@ -97,7 +108,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                 >
                     {board.icon ? `${board.icon} ${displayTitle}` : displayTitle}
                 </div>
-                <MenuWrapper>
+                <MenuWrapper stopPropagationOnToggle={true}>
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu position='left'>
                         <Menu.Text
@@ -111,11 +122,11 @@ const SidebarBoardItem = React.memo((props: Props) => {
                                     async () => {
                                         // This delay is needed because OctoListener has a default 100 ms notification delay before updates
                                         setTimeout(() => {
-                                            props.showBoard(props.nextBoardId)
+                                            showBoard(props.nextBoardId)
                                         }, 120)
                                     },
                                     async () => {
-                                        props.showBoard(board.id)
+                                        showBoard(board.id)
                                     },
                                 )
                             }}
@@ -151,7 +162,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                 <div
                     key={view.id}
                     className='octo-sidebar-item subitem'
-                    onClick={() => props.showView(view.id, board.id)}
+                    onClick={() => showView(view.id, board.id)}
                 >
                     {iconForViewType(view.viewType)}
                     <div
