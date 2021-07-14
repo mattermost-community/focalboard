@@ -1,0 +1,26 @@
+name: golangci-lint
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  golangci:
+    name: lint
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: server-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.41
+          working-directory: server
+          skip-go-installation: true
+      - name: plugin-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.41
+          working-directory: mattermost-plugin
+          skip-go-installation: true

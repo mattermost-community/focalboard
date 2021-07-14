@@ -43,9 +43,6 @@ jobs:
         name: focalboard-server-linux-amd64.tar.gz
         path: ${{ github.workspace }}/dist/focalboard-server-linux-amd64.tar.gz
 
-    - name: Lint server
-      run: make server-lint
-
     - name: Test server
       run: make server-test
 
