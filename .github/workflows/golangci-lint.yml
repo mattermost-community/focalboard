@@ -20,13 +20,16 @@ jobs:
     name: lint
     runs-on: ubuntu-18.04
     needs: setup-golangci
-    strategy:
-      matrix: 
-        working-dir: [server, plugin]
     steps:
-      - name: ${{ matrix.working-dir }}
+      - name: server-lint
         uses: golangci/golangci-lint-action@v2
         with:
           version: v1.41
-          working-directory: ${{ matrix.working-dir }}
+          working-directory: server
+          skip-go-installation: true
+      - name: plugin-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.41
+          working-directory: mattermost-plugin
           skip-go-installation: true
