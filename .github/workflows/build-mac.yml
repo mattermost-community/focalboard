@@ -5,7 +5,7 @@ on: workflow_dispatch
 jobs:
 
   macos:
-    runs-on: macos-10.15
+    runs-on: macos-latest
 
     steps:
 
