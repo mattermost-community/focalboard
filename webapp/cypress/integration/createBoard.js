@@ -112,7 +112,9 @@ describe('Create and delete board / card', () => {
 
         cy.contains('Delete board').click({force: true});
 
-        // // Board should not exist
+        cy.wait(50); // eslint-disable-line cypress/no-unnecessary-waiting
+
+        // Board should not exist
         cy.contains(boardTitle).should('not.exist');
     });
 });
