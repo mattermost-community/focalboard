@@ -93,9 +93,12 @@ func (rd *RegisterRequest) IsValid() error {
 		return ParamError{"invalid email format"}
 	}
 	if rd.Password == "" {
-		return ParamError{"password is required"}
+		return fmt.Errorf("password is required")
 	}
-	return isValidPassword(rd.Password)
+	if err := isValidPassword(rd.Password); err != nil {
+		return err
+	}
+	return nil
 }
 
 // ChangePasswordRequest is a user password change request
