@@ -66,10 +66,6 @@ class MutableBoardTree implements BoardTree {
         this.usersById = usersById
     }
 
-    setUsersById(usersById: {[key: string]: IUser}): void {
-        this.usersById = usersById
-    }
-
     // Factory methods
 
     static async sync(boardId: string, viewId: string, usersById: {[key: string]: IUser}): Promise<BoardTree | undefined> {

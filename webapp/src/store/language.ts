@@ -14,7 +14,7 @@ export const fetchLanguage = createAsyncThunk(
 
 export const storeLanguage = createAsyncThunk(
     'language/store',
-    async (lang: string) => {
+    (lang: string) => {
         i18nStoreLanguage(lang)
         return lang
     },
