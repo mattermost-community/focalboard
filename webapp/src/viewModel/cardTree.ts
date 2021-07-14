@@ -12,7 +12,7 @@ import {OctoUtils} from '../octoUtils'
 interface CardTree {
     readonly card: Card
     readonly comments: readonly CommentBlock[]
-    readonly contents: readonly (IContentBlock|IContentBlock[])[]
+    readonly contents: Readonly<Array< IContentBlock |IContentBlock[] >>
     readonly allBlocks: readonly IBlock[]
     readonly latestBlock: IBlock
 }
