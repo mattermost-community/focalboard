@@ -10,6 +10,7 @@ windowAny.baseURL = '/plugins/focalboard'
 windowAny.frontendBaseURL = '/plug/focalboard'
 
 import App from '../../../webapp/src/app'
+import store from '../../../webapp/src/store'
 
 import '../../../webapp/src/styles/variables.scss'
 import '../../../webapp/src/styles/main.scss'
@@ -59,10 +60,12 @@ const MainApp = () => {
 
     return (
         <ErrorBoundary>
-            <div id='focalboard-app'>
-                <App/>
-            </div>
-            <div id='focalboard-root-portal'/>
+            <ReduxProvider store={store}>
+                <div id='focalboard-app'>
+                    <App/>
+                </div>
+                <div id='focalboard-root-portal'/>
+            </ReduxProvider>
         </ErrorBoundary>
     )
 }

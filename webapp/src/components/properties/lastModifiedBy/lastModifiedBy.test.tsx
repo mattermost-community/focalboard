@@ -2,12 +2,14 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
+import {Provider as ReduxProvider} from 'react-redux'
 
 import {render} from '@testing-library/react'
+import configureStore from 'redux-mock-store'
 
 import {MutableCardTree, CardTreeContext} from '../../../viewModel/cardTree'
 import {MutableCard} from '../../../blocks/card'
-import {IUser, WorkspaceUsersContext} from '../../../user'
+import {IUser} from '../../../user'
 
 import {MutableBoardTree} from '../../../viewModel/boardTree'
 
@@ -27,32 +29,37 @@ describe('components/properties/lastModifiedBy', () => {
 
         )
 
-        const workspaceUsers = {
-            users: new Array<IUser>(),
-            usersById: new Map<string, IUser>(),
-        }
-        workspaceUsers.usersById.set('user-id-1', {username: 'username_1'} as IUser)
-
         const card = new MutableCard()
         card.id = 'card-id-1'
         card.modifiedBy = 'user-id-1'
 
-        const boardTree = new MutableBoardTree(new MutableBoard([]))
+        const boardTree = new MutableBoardTree(new MutableBoard([]), {
+            'user-id-1': {username: 'username_1'} as IUser,
+        })
         const block = new MutableBlock()
         block.modifiedBy = 'user-id-1'
         block.parentId = 'card-id-1'
         block.type = 'comment'
         boardTree.rawBlocks.push(block)
 
+        const mockStore = configureStore([])
+        const store = mockStore({
+            currentWorkspaceUsers: {
+                byId: {
+                    'user-id-1': {username: 'username_1'} as IUser,
+                },
+            },
+        })
+
         const component = (
-            <WorkspaceUsersContext.Provider value={workspaceUsers}>
+            <ReduxProvider store={store}>
                 <CardTreeContext.Provider value={cardTree}>
                     <LastModifiedBy
                         card={card}
                         boardTree={boardTree}
                     />
                 </CardTreeContext.Provider>
-            </WorkspaceUsersContext.Provider>
+            </ReduxProvider>
         )
 
         const {container} = render(component)
