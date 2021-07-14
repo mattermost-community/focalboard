@@ -66,18 +66,18 @@ const App = React.memo((): JSX.Element => {
                             <Route path='/change_password'>
                                 <ChangePasswordPage/>
                             </Route>
-                            <Route path='/shared'>
+                            <Route path='/shared/:boardId?/:viewId?'>
                                 <BoardPage readonly={true}/>
                             </Route>
-                            <Route path='/board'>
+                            <Route path='/board/:boardId?/:viewId?'>
                                 {initialLoad && !user && <Redirect to='/login'/>}
                                 <BoardPage/>
                             </Route>
-                            <Route path='/workspace/:workspaceId/shared'>
+                            <Route path='/workspace/:workspaceId/shared/:boardId?/:viewId?'>
                                 <BoardPage readonly={true}/>
                             </Route>
                             <Route
-                                path='/workspace/:workspaceId/'
+                                path='/workspace/:workspaceId/:boardId?/:viewId?'
                                 render={({match}) => {
                                     if (initialLoad && !user) {
                                         let redirectUrl = '/' + Utils.buildURL(`/workspace/${match.params.workspaceId}/`)
@@ -92,7 +92,7 @@ const App = React.memo((): JSX.Element => {
                                     )
                                 }}
                             />
-                            <Route path='/'>
+                            <Route path='/:boardId?/:viewId?'>
                                 {initialLoad && !user && <Redirect to='/login'/>}
                                 <BoardPage/>
                             </Route>
