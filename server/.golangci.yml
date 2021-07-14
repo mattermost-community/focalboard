@@ -14,6 +14,11 @@ linters-settings:
       - fieldalignment
   lll:
     line-length: 150
+  revive:
+    enableAllRules: true
+    rules:
+      - name: exported
+        disabled: true
 
 linters:
   disable-all: true
@@ -45,7 +50,7 @@ linters:
     - godot
     - goerr113
     - goheader
-    - golint
+    - revive
     - nakedret
     - gomodguard
     - goprintffuncname
