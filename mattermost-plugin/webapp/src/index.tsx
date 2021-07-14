@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useEffect} from 'react'
 import {Store, Action} from 'redux'
+import {Provider as ReduxProvider} from 'react-redux'
 
 import {GlobalState} from 'mattermost-redux/types/store'
 
