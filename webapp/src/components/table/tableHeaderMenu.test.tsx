@@ -51,7 +51,7 @@ describe('components/table/TableHeaderMenu', () => {
         // Sync
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
 
-        const boardTree = await MutableBoardTree.sync(board.id, view.id)
+        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
         expect(boardTree).toBeDefined()
         expect(FetchMock.fn).toBeCalledTimes(1)
         const component = wrapIntl(
@@ -81,7 +81,7 @@ describe('components/table/TableHeaderMenu', () => {
         // Sync
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
 
-        const boardTree = await MutableBoardTree.sync(board.id, view.id)
+        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
         expect(boardTree).toBeDefined()
         expect(FetchMock.fn).toBeCalledTimes(1)
         const component = wrapIntl(

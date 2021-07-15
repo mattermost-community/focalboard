@@ -15,6 +15,8 @@ import {TestBlockFactory} from '../../test/testBlockFactory'
 import {FetchMock} from '../../test/fetchMock'
 import {MutableBoardTree} from '../../viewModel/boardTree'
 
+import {MutableCardTree} from '../../viewModel/cardTree'
+
 import TableRow from './tableRow'
 
 global.fetch = FetchMock.fn
@@ -46,12 +48,16 @@ describe('components/table/TableRow', () => {
         // Sync
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
 
-        const boardTree = await MutableBoardTree.sync(board.id, view.id)
+        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
         expect(boardTree).toBeDefined()
         expect(FetchMock.fn).toBeCalledTimes(1)
+
+        const cardTree = new MutableCardTree(card)
+
         const component = wrapProviders(
             <TableRow
                 boardTree={boardTree!}
+                cardTree={cardTree}
                 card={card}
                 isSelected={false}
                 focusOnMount={false}
@@ -73,12 +79,16 @@ describe('components/table/TableRow', () => {
         // Sync
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
 
-        const boardTree = await MutableBoardTree.sync(board.id, view.id)
+        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
         expect(boardTree).toBeDefined()
         expect(FetchMock.fn).toBeCalledTimes(1)
+
+        const cardTree = new MutableCardTree(card)
+
         const component = wrapProviders(
             <TableRow
                 boardTree={boardTree!}
+                cardTree={cardTree}
                 card={card}
                 isSelected={false}
                 focusOnMount={false}
@@ -100,12 +110,16 @@ describe('components/table/TableRow', () => {
         // Sync
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
 
-        const boardTree = await MutableBoardTree.sync(board.id, view.id)
+        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
         expect(boardTree).toBeDefined()
         expect(FetchMock.fn).toBeCalledTimes(1)
+
+        const cardTree = new MutableCardTree(card)
+
         const component = wrapProviders(
             <TableRow
                 boardTree={boardTree!}
+                cardTree={cardTree}
                 card={card}
                 isSelected={true}
                 focusOnMount={false}
@@ -130,12 +144,15 @@ describe('components/table/TableRow', () => {
 
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
 
-        const boardTree = await MutableBoardTree.sync(board.id, view.id)
+        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
         expect(boardTree).toBeDefined()
         expect(FetchMock.fn).toBeCalledTimes(1)
+        const cardTree = new MutableCardTree(card)
+
         const component = wrapProviders(
             <TableRow
                 boardTree={boardTree!}
+                cardTree={cardTree}
                 card={card}
                 isSelected={false}
                 focusOnMount={false}
@@ -159,12 +176,14 @@ describe('components/table/TableRow', () => {
 
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
 
-        const boardTree = await MutableBoardTree.sync(board.id, view.id)
+        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
         expect(boardTree).toBeDefined()
         expect(FetchMock.fn).toBeCalledTimes(1)
+        const cardTree = new MutableCardTree(card)
         const component = wrapProviders(
             <TableRow
                 boardTree={boardTree!}
+                cardTree={cardTree}
                 card={card}
                 isSelected={false}
                 focusOnMount={false}
@@ -187,12 +206,14 @@ describe('components/table/TableRow', () => {
 
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
 
-        const boardTree = await MutableBoardTree.sync(board.id, view.id)
+        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
         expect(boardTree).toBeDefined()
         expect(FetchMock.fn).toBeCalledTimes(1)
+        const cardTree = new MutableCardTree(card)
         const component = wrapProviders(
             <TableRow
                 boardTree={boardTree!}
+                cardTree={cardTree}
                 card={card}
                 isSelected={false}
                 focusOnMount={false}

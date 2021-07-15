@@ -14,6 +14,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
+
 	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/plugin"
 )
@@ -39,12 +40,16 @@ type WSHub struct {
 }
 
 func (h *WSHub) SendWSMessage(data []byte) {
-	h.API.PublishPluginClusterEvent(model.PluginClusterEvent{
+	err := h.API.PublishPluginClusterEvent(model.PluginClusterEvent{
 		Id:   "websocket_event",
 		Data: data,
 	}, model.PluginClusterEventSendOptions{
 		SendType: model.PluginClusterEventSendTypeReliable,
 	})
+
+	if err != nil {
+		h.API.LogError("Error sending websocket message", map[string]interface{}{"err": err})
+	}
 }
 
 func (h *WSHub) SetReceiveWSMessage(handler func(data []byte)) {
@@ -55,7 +60,7 @@ func (p *Plugin) OnActivate() error {
 	mmconfig := p.API.GetUnsanitizedConfig()
 	filesS3Config := config.AmazonS3Config{}
 	if mmconfig.FileSettings.AmazonS3AccessKeyId != nil {
-		filesS3Config.AccessKeyId = *mmconfig.FileSettings.AmazonS3AccessKeyId
+		filesS3Config.AccessKeyID = *mmconfig.FileSettings.AmazonS3AccessKeyId
 	}
 	if mmconfig.FileSettings.AmazonS3SecretAccessKey != nil {
 		filesS3Config.SecretAccessKey = *mmconfig.FileSettings.AmazonS3SecretAccessKey
@@ -95,11 +100,16 @@ func (p *Plugin) OnActivate() error {
 	client := pluginapi.NewClient(p.API, p.Driver)
 	sqlDB, err := client.Store.GetMasterDB()
 	if err != nil {
-		return fmt.Errorf("error initializing the DB: %v", err)
+		return fmt.Errorf("error initializing the DB: %w", err)
+	}
+
+	baseURL := ""
+	if mmconfig.ServiceSettings.SiteURL != nil {
+		baseURL = *mmconfig.ServiceSettings.SiteURL
 	}
 
 	cfg := &config.Configuration{
-		ServerRoot:              *mmconfig.ServiceSettings.SiteURL + "/plugins/focalboard",
+		ServerRoot:              baseURL + "/plugins/focalboard",
 		Port:                    -1,
 		DBType:                  *mmconfig.SqlSettings.DriverName,
 		DBConfigString:          *mmconfig.SqlSettings.DataSource,
@@ -122,12 +132,12 @@ func (p *Plugin) OnActivate() error {
 	var db store.Store
 	db, err = sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger, sqlDB)
 	if err != nil {
-		return fmt.Errorf("error initializing the DB: %v", err)
+		return fmt.Errorf("error initializing the DB: %w", err)
 	}
 	if cfg.AuthMode == server.MattermostAuthMod {
-		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db)
+		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger)
 		if err2 != nil {
-			return fmt.Errorf("error initializing the DB: %v", err2)
+			return fmt.Errorf("error initializing the DB: %w", err2)
 		}
 		db = layeredStore
 	}
@@ -144,7 +154,7 @@ func (p *Plugin) OnActivate() error {
 	return server.Start()
 }
 
-func (p *Plugin) OnPluginClusterEvent(c *plugin.Context, ev model.PluginClusterEvent) {
+func (p *Plugin) OnPluginClusterEvent(_ *plugin.Context, ev model.PluginClusterEvent) {
 	if ev.Id == "websocket_event" {
 		p.wsHub.handleWSMessage(ev.Data)
 	}
@@ -155,7 +165,7 @@ func (p *Plugin) OnDeactivate() error {
 }
 
 // ServeHTTP demonstrates a plugin that handles HTTP requests by greeting the world.
-func (p *Plugin) ServeHTTP(c *plugin.Context, w http.ResponseWriter, r *http.Request) {
+func (p *Plugin) ServeHTTP(_ *plugin.Context, w http.ResponseWriter, r *http.Request) {
 	router := p.server.GetRootRouter()
 	router.ServeHTTP(w, r)
 }
@@ -173,7 +183,7 @@ func defaultLoggingConfig() string {
 				"delim": " ",
 				"min_level_len": 5,
 				"min_msg_len": 40,
-				"enable_color": true				
+				"enable_color": true
 			},
 			"levels": [
 				{"id": 5, "name": "debug"},

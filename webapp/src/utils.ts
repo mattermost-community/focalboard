@@ -121,8 +121,8 @@ class Utils {
 
     // Date and Time
 
-    static displayDate(date: Date, intl: IntlShape): string {
-        const text = intl.formatDate(date, {year: 'numeric', month: 'short', day: '2-digit'})
+    static displayDate(date: Date, intl: IntlShape, dateFormat: string): string {
+        const text = intl.formatDate(date, {year: 'numeric', month: 'short', day: '2-digit', format: dateFormat})
 
         return text
     }

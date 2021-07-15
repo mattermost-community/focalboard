@@ -17,14 +17,12 @@ type Props = {
     workspace?: IWorkspace
     workspaceTree: WorkspaceTree
     boardTree?: BoardTree
-    showBoard: (id?: string) => void
-    showView: (id: string, boardId?: string) => void
     setSearchText: (text?: string) => void
     readonly: boolean
 }
 
 function centerContent(props: Props) {
-    const {workspace, boardTree, setSearchText, showView} = props
+    const {workspace, boardTree, setSearchText} = props
     const {activeView} = boardTree || {}
 
     if (boardTree && activeView) {
@@ -32,7 +30,6 @@ function centerContent(props: Props) {
             <CenterPanel
                 boardTree={boardTree}
                 setSearchText={setSearchText}
-                showView={showView}
                 readonly={props.readonly}
             />
         )
@@ -44,7 +41,7 @@ function centerContent(props: Props) {
 }
 
 const Workspace = React.memo((props: Props) => {
-    const {workspace, boardTree, workspaceTree, showBoard, showView} = props
+    const {workspace, boardTree, workspaceTree} = props
 
     Utils.assert(workspaceTree || !props.readonly)
 
@@ -53,8 +50,6 @@ const Workspace = React.memo((props: Props) => {
             {!props.readonly &&
                 <Sidebar
                     workspace={workspace}
-                    showBoard={showBoard}
-                    showView={showView}
                     workspaceTree={workspaceTree}
                     activeBoardId={boardTree?.board.id}
                 />

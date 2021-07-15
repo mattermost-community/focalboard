@@ -19,6 +19,8 @@ import {TestBlockFactory} from '../../test/testBlockFactory'
 import {FetchMock} from '../../test/fetchMock'
 import {MutableBoardTree} from '../../viewModel/boardTree'
 
+import {CardTree, MutableCardTree} from '../../viewModel/cardTree'
+
 import TableRows from './tableRows'
 
 global.fetch = FetchMock.fn
@@ -50,16 +52,20 @@ describe('components/table/TableRows', () => {
         // Sync
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
 
-        const boardTree = await MutableBoardTree.sync(board.id, view.id)
+        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
         expect(boardTree).toBeDefined()
         expect(FetchMock.fn).toBeCalledTimes(1)
 
         const callback = jest.fn()
         const addCard = jest.fn()
 
+        const cardTrees:{ [key: string]: CardTree | undefined } = {}
+        cardTrees[card.id] = new MutableCardTree(card)
+
         const component = wrapProviders(
             <TableRows
                 boardTree={boardTree!}
+                cardTrees={cardTrees}
                 columnRefs={new Map()}
                 cards={[card]}
                 selectedCardIds={[]}

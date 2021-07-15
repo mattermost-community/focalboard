@@ -49,7 +49,7 @@ const boardTreeNoGroup = {
     option: {
         id: '',
         value: '',
-        color: 'color1',
+        color: 'propColorBrown',
     },
     cards: [],
 }
@@ -58,7 +58,7 @@ const boardTreeGroup = {
     option: {
         id: 'value1',
         value: 'value 1',
-        color: 'color1',
+        color: 'propColorBrown',
     },
     cards: [],
 }
@@ -66,7 +66,7 @@ const boardTreeGroup = {
 test('should match snapshot, no groups', async () => {
     // Sync
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-    const boardTree = await MutableBoardTree.sync(board.id, view.id)
+    const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
     expect(boardTree).toBeDefined()
     expect(FetchMock.fn).toBeCalledTimes(1)
 
@@ -89,7 +89,7 @@ test('should match snapshot with Group', async () => {
     // Sync
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
 
-    const boardTree = await MutableBoardTree.sync(board.id, view.id)
+    const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
     expect(boardTree).toBeDefined()
     expect(FetchMock.fn).toBeCalledTimes(1)
 
@@ -112,7 +112,7 @@ test('should match snapshot on read only', async () => {
     // Sync
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
 
-    const boardTree = await MutableBoardTree.sync(board.id, view.id)
+    const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
     expect(boardTree).toBeDefined()
     expect(FetchMock.fn).toBeCalledTimes(1)
 
@@ -138,7 +138,7 @@ test('should match snapshot, hide group', async () => {
     const hideGroup = jest.fn()
 
     view.collapsedOptionIds = [boardTreeGroup.option.id]
-    const boardTree = await MutableBoardTree.sync(board.id, view.id)
+    const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
     expect(boardTree).toBeDefined()
     expect(FetchMock.fn).toBeCalledTimes(1)
 
@@ -171,7 +171,7 @@ test('should match snapshot, add new', async () => {
 
     const addNew = jest.fn()
 
-    const boardTree = await MutableBoardTree.sync(board.id, view.id)
+    const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
     expect(boardTree).toBeDefined()
     expect(FetchMock.fn).toBeCalledTimes(1)
 
@@ -203,7 +203,7 @@ test('should match snapshot, edit title', async () => {
     // Sync
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
 
-    const boardTree = await MutableBoardTree.sync(board.id, view.id)
+    const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
     expect(boardTree).toBeDefined()
     expect(FetchMock.fn).toBeCalledTimes(1)
 
