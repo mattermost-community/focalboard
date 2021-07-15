@@ -6,11 +6,13 @@ import {useHistory} from 'react-router-dom'
 
 import {Constants} from '../../constants'
 import octoClient from '../../octoClient'
-import {UserContext} from '../../user'
+import {IUser} from '../../user'
 import LogoWithNameIcon from '../../widgets/icons/logoWithName'
 import LogoWithNameWhiteIcon from '../../widgets/icons/logoWithNameWhite'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
+import {getCurrentUser} from '../../store/currentUser'
+import {useAppSelector} from '../../store/hooks'
 
 import ModalWrapper from '../modalWrapper'
 
@@ -27,6 +29,7 @@ const SidebarUserMenu = React.memo((props: Props) => {
     const history = useHistory()
     const [showRegistrationLinkDialog, setShowRegistrationLinkDialog] = useState(false)
     const {whiteLogo, showVersionBadge} = props
+    const user = useAppSelector<IUser|null>(getCurrentUser)
     const intl = useIntl()
     return (
         <div className='SidebarUserMenu'>
@@ -44,54 +47,48 @@ const SidebarUserMenu = React.memo((props: Props) => {
                             </div>
                         </div>
                     </div>
-                    <UserContext.Consumer>
-                        {(user) => {
-                            return (
-                                <Menu>
-                                    {user && user.username !== 'single-user' && <>
-                                        <Menu.Label><b>{user.username}</b></Menu.Label>
-                                        <Menu.Text
-                                            id='logout'
-                                            name={intl.formatMessage({id: 'Sidebar.logout', defaultMessage: 'Log out'})}
-                                            onClick={async () => {
-                                                octoClient.logout()
-                                                history.push('/login')
-                                            }}
-                                        />
-                                        <Menu.Text
-                                            id='changePassword'
-                                            name={intl.formatMessage({id: 'Sidebar.changePassword', defaultMessage: 'Change password'})}
-                                            onClick={async () => {
-                                                history.push('/change_password')
-                                            }}
-                                        />
-                                        <Menu.Text
-                                            id='invite'
-                                            name={intl.formatMessage({id: 'Sidebar.invite-users', defaultMessage: 'Invite Users'})}
-                                            onClick={async () => {
-                                                setShowRegistrationLinkDialog(true)
-                                            }}
-                                        />
+                    <Menu>
+                        {user && user.username !== 'single-user' && <>
+                            <Menu.Label><b>{user.username}</b></Menu.Label>
+                            <Menu.Text
+                                id='logout'
+                                name={intl.formatMessage({id: 'Sidebar.logout', defaultMessage: 'Log out'})}
+                                onClick={async () => {
+                                    octoClient.logout()
+                                    history.push('/login')
+                                }}
+                            />
+                            <Menu.Text
+                                id='changePassword'
+                                name={intl.formatMessage({id: 'Sidebar.changePassword', defaultMessage: 'Change password'})}
+                                onClick={async () => {
+                                    history.push('/change_password')
+                                }}
+                            />
+                            <Menu.Text
+                                id='invite'
+                                name={intl.formatMessage({id: 'Sidebar.invite-users', defaultMessage: 'Invite Users'})}
+                                onClick={async () => {
+                                    setShowRegistrationLinkDialog(true)
+                                }}
+                            />
 
-                                        <Menu.Separator/>
-                                    </>}
+                            <Menu.Separator/>
+                        </>}
 
-                                    <Menu.Text
-                                        id='about'
-                                        name={intl.formatMessage({id: 'Sidebar.about', defaultMessage: 'About Focalboard'})}
-                                        onClick={async () => {
-                                            window.open('https://www.focalboard.com?utm_source=webapp', '_blank')
+                        <Menu.Text
+                            id='about'
+                            name={intl.formatMessage({id: 'Sidebar.about', defaultMessage: 'About Focalboard'})}
+                            onClick={async () => {
+                                window.open('https://www.focalboard.com?utm_source=webapp', '_blank')
 
-                                            // TODO: Review if this is needed in the future, this is to fix the problem with linux webview links
-                                            if ((window as any).openInNewBrowser) {
-                                                (window as any).openInNewBrowser('https://www.focalboard.com?utm_source=webapp')
-                                            }
-                                        }}
-                                    />
-                                </Menu>
-                            )
-                        }}
-                    </UserContext.Consumer>
+                                // TODO: Review if this is needed in the future, this is to fix the problem with linux webview links
+                                if ((window as any).openInNewBrowser) {
+                                    (window as any).openInNewBrowser('https://www.focalboard.com?utm_source=webapp')
+                                }
+                            }}
+                        />
+                    </Menu>
                 </MenuWrapper>
 
                 {showRegistrationLinkDialog &&

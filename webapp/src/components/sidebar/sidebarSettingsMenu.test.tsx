@@ -2,12 +2,14 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
+import {Provider as ReduxProvider} from 'react-redux'
 
 import {render} from '@testing-library/react'
 
 import {IntlProvider} from 'react-intl'
 
 import userEvent from '@testing-library/user-event'
+import configureStore from 'redux-mock-store'
 
 import {defaultThemeName} from '../../theme'
 
@@ -16,12 +18,19 @@ import SidebarSettingsMenu from './sidebarSettingsMenu'
 const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
 
 describe('components/sidebar/SidebarSettingsMenu', () => {
+    const mockStore = configureStore([])
+    let store = mockStore({})
+    beforeEach(() => {
+        store = mockStore({})
+    })
     test('settings menu closed should match snapshot', () => {
         const component = wrapIntl(
-            <SidebarSettingsMenu
-                setWhiteLogo={() => {}}
-                activeTheme={defaultThemeName}
-            />,
+            <ReduxProvider store={store}>
+                <SidebarSettingsMenu
+                    setWhiteLogo={() => {}}
+                    activeTheme={defaultThemeName}
+                />
+            </ReduxProvider>,
         )
 
         const {container} = render(component)
@@ -30,10 +39,12 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
 
     test('settings menu open should match snapshot', () => {
         const component = wrapIntl(
-            <SidebarSettingsMenu
-                setWhiteLogo={() => {}}
-                activeTheme={defaultThemeName}
-            />,
+            <ReduxProvider store={store}>
+                <SidebarSettingsMenu
+                    setWhiteLogo={() => {}}
+                    activeTheme={defaultThemeName}
+                />
+            </ReduxProvider>,
         )
 
         const {container} = render(component)
@@ -43,10 +54,12 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
 
     test('theme menu open should match snapshot', () => {
         const component = wrapIntl(
-            <SidebarSettingsMenu
-                setWhiteLogo={() => {}}
-                activeTheme={defaultThemeName}
-            />,
+            <ReduxProvider store={store}>
+                <SidebarSettingsMenu
+                    setWhiteLogo={() => {}}
+                    activeTheme={defaultThemeName}
+                />
+            </ReduxProvider>,
         )
 
         const {container} = render(component)
@@ -57,10 +70,12 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
 
     test('languages menu open should match snapshot', () => {
         const component = wrapIntl(
-            <SidebarSettingsMenu
-                setWhiteLogo={() => {}}
-                activeTheme={defaultThemeName}
-            />,
+            <ReduxProvider store={store}>
+                <SidebarSettingsMenu
+                    setWhiteLogo={() => {}}
+                    activeTheme={defaultThemeName}
+                />
+            </ReduxProvider>,
         )
 
         const {container} = render(component)

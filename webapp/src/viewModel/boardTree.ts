@@ -9,7 +9,7 @@ import {Constants} from '../constants'
 import octoClient from '../octoClient'
 import {OctoUtils} from '../octoUtils'
 import {Utils} from '../utils'
-import {IUser, WorkspaceUsers} from '../user'
+import {IUser} from '../user'
 
 type Group = {
     option: IPropertyOption
@@ -55,42 +55,36 @@ class MutableBoardTree implements BoardTree {
     allCards: MutableCard[] = []
     rawBlocks: IBlock[] = []
 
-    workspaceUsers: WorkspaceUsers = {
-        users: new Array<IUser>(),
-        usersById: new Map<string, IUser>(),
-    }
+    usersById: {[key: string]: IUser}
 
     get allBlocks(): IBlock[] {
         return [this.board, ...this.views, ...this.allCards, ...this.cardTemplates, ...this.rawBlocks]
     }
 
-    constructor(board: MutableBoard) {
+    constructor(board: MutableBoard, usersById: {[key: string]: IUser}) {
         this.board = board
-    }
-
-    public async initWorkSpaceUsers() {
-        this.workspaceUsers = await octoClient.getWorkspaceUsers()
+        this.usersById = usersById
     }
 
     // Factory methods
 
-    static async sync(boardId: string, viewId: string): Promise<BoardTree | undefined> {
+    static async sync(boardId: string, viewId: string, usersById: {[key: string]: IUser}): Promise<BoardTree | undefined> {
         const rawBlocks = await octoClient.getSubtree(boardId, 3)
-        const newBoardTree = await this.buildTree(boardId, rawBlocks)
+        const newBoardTree = await this.buildTree(boardId, rawBlocks, usersById)
         if (newBoardTree) {
             newBoardTree.setActiveView(viewId)
         }
         return newBoardTree
     }
 
-    static async incrementalUpdate(boardTree: BoardTree, updatedBlocks: IBlock[]): Promise<BoardTree | undefined> {
+    static async incrementalUpdate(boardTree: BoardTree, updatedBlocks: IBlock[], usersById: {[key: string]: IUser}): Promise<BoardTree | undefined> {
         const relevantBlocks = updatedBlocks.filter((block) => block.deleteAt !== 0 || block.id === boardTree.board.id || block.parentId === boardTree.board.id)
         if (relevantBlocks.length < 1) {
             // No change
             return boardTree
         }
         const rawBlocks = OctoUtils.mergeBlocks(boardTree.allBlocks, relevantBlocks)
-        const newBoardTree = await this.buildTree(boardTree.board.id, rawBlocks)
+        const newBoardTree = await this.buildTree(boardTree.board.id, rawBlocks, usersById)
         newBoardTree?.setSearchText(boardTree.getSearchText())
         if (newBoardTree && boardTree.activeView) {
             newBoardTree.setActiveView(boardTree.activeView.id)
@@ -98,14 +92,13 @@ class MutableBoardTree implements BoardTree {
         return newBoardTree
     }
 
-    private static async buildTree(boardId: string, sourceBlocks: readonly IBlock[]): Promise<MutableBoardTree | undefined> {
+    private static async buildTree(boardId: string, sourceBlocks: readonly IBlock[], usersById: {[key: string]: IUser}): Promise<MutableBoardTree | undefined> {
         const blocks = OctoUtils.hydrateBlocks(sourceBlocks)
         const board = blocks.find((block) => block.type === 'board' && block.id === boardId) as MutableBoard
         if (!board) {
             return undefined
         }
-        const boardTree = new MutableBoardTree(board)
-        await boardTree.initWorkSpaceUsers()
+        const boardTree = new MutableBoardTree(board, usersById)
         boardTree.views = blocks.filter((block) => block.type === 'view').
             sort((a, b) => a.title.localeCompare(b.title)) as MutableBoardView[]
         boardTree.allCards = blocks.filter((block) => block.type === 'card' && !(block as Card).isTemplate) as MutableCard[]
@@ -402,11 +395,11 @@ class MutableBoardTree implements BoardTree {
                     let bValue = b.properties[sortPropertyId] || ''
 
                     if (template.type === 'createdBy') {
-                        aValue = this.workspaceUsers.usersById.get(a.createdBy)?.username || ''
-                        bValue = this.workspaceUsers.usersById.get(b.createdBy)?.username || ''
+                        aValue = this.usersById[a.createdBy]?.username || ''
+                        bValue = this.usersById[b.createdBy]?.username || ''
                     } else if (template.type === 'updatedBy') {
-                        aValue = this.workspaceUsers.usersById.get(a.modifiedBy)?.username || ''
-                        bValue = this.workspaceUsers.usersById.get(b.modifiedBy)?.username || ''
+                        aValue = this.usersById[a.modifiedBy]?.username || ''
+                        bValue = this.usersById[b.modifiedBy]?.username || ''
                     }
 
                     let result = 0
@@ -474,7 +467,7 @@ class MutableBoardTree implements BoardTree {
     }
 
     private async mutableCopy(): Promise<BoardTree> {
-        const x = await MutableBoardTree.buildTree(this.board.id, this.allBlocks)
+        const x = await MutableBoardTree.buildTree(this.board.id, this.allBlocks, this.usersById)
         return x!
     }
 

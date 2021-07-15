@@ -1,12 +1,14 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useContext} from 'react'
+import React from 'react'
 
-import {WorkspaceUsersContext, WorkspaceUsers} from '../../../user'
+import {IUser} from '../../../user'
 import {Card} from '../../../blocks/card'
 import {BoardTree} from '../../../viewModel/boardTree'
 import {IBlock} from '../../../blocks/block'
+import {getCurrentWorkspaceUsersById} from '../../../store/currentWorkspaceUsers'
+import {useAppSelector} from '../../../store/hooks'
 
 type Props = {
     card: Card,
@@ -14,6 +16,8 @@ type Props = {
 }
 
 const LastModifiedBy = (props: Props): JSX.Element => {
+    const workspaceUsersById = useAppSelector<{[key:string]: IUser}>(getCurrentWorkspaceUsersById)
+
     let latestBlock: IBlock = props.card
     if (props.boardTree) {
         const sortedBlocks = props.boardTree?.allBlocks.
@@ -23,11 +27,9 @@ const LastModifiedBy = (props: Props): JSX.Element => {
         latestBlock = sortedBlocks.length > 0 ? sortedBlocks[0] : latestBlock
     }
 
-    const workspaceUsers = useContext<WorkspaceUsers>(WorkspaceUsersContext)
-
     return (
         <div className='LastModifiedBy octo-propertyvalue'>
-            {workspaceUsers?.usersById.get(latestBlock.modifiedBy)?.username || latestBlock.modifiedBy}
+            {(workspaceUsersById && workspaceUsersById[latestBlock.modifiedBy]?.username) || latestBlock.modifiedBy}
         </div>
     )
 }

@@ -2,8 +2,10 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
+import {Provider as ReduxProvider} from 'react-redux'
 import {IntlProvider} from 'react-intl'
 import {render, waitFor} from '@testing-library/react'
+import configureStore from 'redux-mock-store'
 
 import {act} from 'react-dom/test-utils'
 
@@ -13,87 +15,108 @@ import UserProperty from './user'
 
 const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
 
-const fetchMock = require('fetch-mock-jest')
-
 describe('components/properties/user', () => {
-    beforeAll(() => {
-        fetchMock.get('http://localhost/api/v1/workspaces/0/users', JSON.stringify([
-            {
-                id: 'user-id-1',
-                username: 'username-1',
-                email: 'user-1@example.com',
-                props: {},
-                create_at: 1621315184,
-                update_at: 1621315184,
-                delete_at: 0,
+    const mockStore = configureStore([])
+    const store = mockStore({
+        currentWorkspaceUsers: {
+            byId: {
+                'user-id-1': {
+                    id: 'user-id-1',
+                    username: 'username-1',
+                    email: 'user-1@example.com',
+                    props: {},
+                    create_at: 1621315184,
+                    update_at: 1621315184,
+                    delete_at: 0,
+                },
             },
-            {
-                id: 'user-id-2',
-                username: 'username-2',
-                email: 'user-2@example.com',
-                props: {},
-                create_at: 1621315184,
-                update_at: 1621315184,
-                delete_at: 0,
-            },
-        ]),
-        )
+        },
     })
 
-    afterAll(() => {
-        fetchMock.mockClear()
+    test('not readonly not existing user', async () => {
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <UserProperty
+                    value={'user-id-2'}
+                    readonly={false}
+                    onChange={() => {
+                    }}
+                />
+            </ReduxProvider>,
+        )
+
+        const renderResult = render(component)
+        const container = await waitFor(() => {
+            if (!renderResult.container) {
+                return Promise.reject(new Error('container not found'))
+            }
+            return Promise.resolve(renderResult.container)
+        })
+        expect(container).toMatchSnapshot()
     })
 
     test('not readonly', async () => {
         const component = wrapIntl(
-            <UserProperty
-                value={'user-id-1'}
-                readonly={false}
-                onChange={() => {
-                }}
-            />,
+            <ReduxProvider store={store}>
+                <UserProperty
+                    value={'user-id-1'}
+                    readonly={false}
+                    onChange={() => {
+                    }}
+                />
+            </ReduxProvider>,
         )
 
-        let container
-        await waitFor(() => {
-            const renderResult = render(component)
-            container = renderResult.container
+        const renderResult = render(component)
+        const container = await waitFor(() => {
+            if (!renderResult.container) {
+                return Promise.reject(new Error('container not found'))
+            }
+            return Promise.resolve(renderResult.container)
         })
         expect(container).toMatchSnapshot()
     })
 
     test('readonly view', async () => {
         const component = wrapIntl(
-            <UserProperty
-                value={'user-id-1'}
-                readonly={true}
-                onChange={() => {
-                }}
-            />,
+            <ReduxProvider store={store}>
+                <UserProperty
+                    value={'user-id-1'}
+                    readonly={true}
+                    onChange={() => {
+                    }}
+                />
+            </ReduxProvider>,
         )
 
-        let container
-        await waitFor(() => {
-            const renderResult = render(component)
-            container = renderResult.container
+        const renderResult = render(component)
+        const container = await waitFor(() => {
+            if (!renderResult.container) {
+                return Promise.reject(new Error('container not found'))
+            }
+            return Promise.resolve(renderResult.container)
         })
         expect(container).toMatchSnapshot()
     })
 
     test('user dropdown open', async () => {
         const component = wrapIntl(
-            <UserProperty
-                value={'user-id-1'}
-                readonly={false}
-                onChange={() => {
-                }}
-            />,
+            <ReduxProvider store={store}>
+                <UserProperty
+                    value={'user-id-1'}
+                    readonly={false}
+                    onChange={() => {
+                    }}
+                />
+            </ReduxProvider>,
         )
 
-        let container: Element | DocumentFragment = {} as Element
-        await waitFor(() => {
-            const renderResult = render(component)
-            container = renderResult.container
+        const renderResult = render(component)
+        const container = await waitFor(() => {
+            if (!renderResult.container) {
+                return Promise.reject(new Error('container not found'))
+            }
+            return Promise.resolve(renderResult.container)
         })
 
         if (container) {
