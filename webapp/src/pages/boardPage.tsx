@@ -86,7 +86,7 @@ class BoardPage extends React.Component<Props, State> {
         const viewId = this.props.match.params.viewId
         const prevViewId = prevProps.match.params.viewId
 
-        if (boardId && boardId !== prevBoardId || viewId !== prevViewId) {
+        if (boardId && (boardId !== prevBoardId || viewId !== prevViewId)) {
             this.attachToBoard(boardId, viewId)
         }
 
