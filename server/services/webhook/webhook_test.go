@@ -11,7 +11,6 @@ import (
 )
 
 func TestClientUpdateNotify(t *testing.T) {
-
 	var isNotified bool
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		isNotified = true
