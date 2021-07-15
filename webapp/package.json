@@ -24,6 +24,7 @@
 		"updatesnapshots": "jest --updateSnapshot"
 	},
 	"dependencies": {
+		"@reduxjs/toolkit": "^1.6.0",
 		"emoji-mart": "^3.0.1",
 		"imagemin-gifsicle": "^7.0.0",
 		"imagemin-mozjpeg": "^9.0.0",
@@ -44,6 +45,7 @@
 		"react-hot-keys": "^2.6.2",
 		"react-hotkeys-hook": "^3.3.0",
 		"react-intl": "^5.13.5",
+		"react-redux": "^7.2.4",
 		"react-router-dom": "^5.2.0",
 		"react-select": "^4.3.0",
 		"react-simplemde-editor": "^4.1.3"
@@ -80,8 +82,10 @@
 		"@types/react": "^17.0.3",
 		"@types/react-dom": "^17.0.3",
 		"@types/react-intl": "^3.0.0",
+		"@types/react-redux": "^7.1.16",
 		"@types/react-router-dom": "^5.1.7",
 		"@types/react-select": "^4.0.13",
+		"@types/redux-mock-store": "^1.0.3",
 		"@typescript-eslint/eslint-plugin": "^4.19.0",
 		"@typescript-eslint/parser": "^4.19.0",
 		"copy-webpack-plugin": "^8.1.0",
@@ -103,6 +107,7 @@
 		"isomorphic-fetch": "^3.0.0",
 		"jest": "^26.6.3",
 		"prettier": "^2.2.1",
+		"redux-mock-store": "^1.5.4",
 		"sass": "^1.32.8",
 		"sass-loader": "^11.0.1",
 		"start-server-and-test": "^1.12.1",

@@ -27,7 +27,7 @@ describe('componnets/properties/lastModifiedAt', () => {
         card.modifiedBy = 'user-id-1'
         card.updateAt = Date.parse('10 Jun 2021 16:22:00')
 
-        const boardTree = new MutableBoardTree(new MutableBoard([]))
+        const boardTree = new MutableBoardTree(new MutableBoard([]), {})
         const block = new MutableBlock()
         block.modifiedBy = 'user-id-1'
         block.parentId = 'card-id-1'
