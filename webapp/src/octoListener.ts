@@ -138,7 +138,11 @@ class OctoListener {
         this.blockIds = []
         this.onChange = undefined
         this.isInitialized = false
-        ws.close()
+        try {
+            ws?.close()
+        } catch {
+            Utils.log('OctoListener unable to close the websocket')
+        }
     }
 
     private authenticate(workspaceId: string): void {
