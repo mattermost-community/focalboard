@@ -18,11 +18,17 @@ const boardsSlice = createSlice({
     initialState: {boards: [], templates: []} as {boards: MutableBoard[], templates: MutableBoard[]},
     reducers: {
         updateBoards: (state, action: PayloadAction<MutableBoard[]>) => {
-            const updatedBoardIds = action.payload.map((o: Board) => o.id)
+            const updatedBoardIds = action.payload.filter((o: Board) => !o.fields.isTemplate).map((o: Board) => o.id)
             const newBoards = state.boards.filter((o: Board) => !updatedBoardIds.includes(o.id))
-            const updatedAndNotDeletedBoards = action.payload.filter((o: Board) => o.deleteAt === 0)
+            const updatedAndNotDeletedBoards = action.payload.filter((o: Board) => o.deleteAt === 0 && !o.fields.isTemplate)
             newBoards.push(...updatedAndNotDeletedBoards)
             state.boards = newBoards.sort((a, b) => a.title.localeCompare(b.title)) as MutableBoard[]
+
+            const updatedTemplateIds = action.payload.filter((o: Board) => o.fields.isTemplate).map((o: Board) => o.id)
+            const newTemplates = state.boards.filter((o: Board) => !updatedTemplateIds.includes(o.id))
+            const updatedAndNotDeletedTemplates = action.payload.filter((o: Board) => o.deleteAt === 0 && o.fields.isTemplate)
+            newTemplates.push(...updatedAndNotDeletedTemplates)
+            state.templates = newTemplates.sort((a, b) => a.title.localeCompare(b.title)) as MutableBoard[]
         },
     },
     extraReducers: (builder) => {
