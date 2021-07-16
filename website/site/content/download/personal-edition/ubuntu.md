@@ -100,7 +100,13 @@ server {
 }
 ```
 
-Enable the site, test the config, and reload NGINX:
+If there is a default site, you may need to delete it
+
+```
+sudo rm /etc/nginx/sites-enabled/default
+```
+
+Enable the Focalboard site, test the config, and reload NGINX:
 
 ```
 sudo ln -s /etc/nginx/sites-available/focalboard /etc/nginx/sites-enabled/focalboard
@@ -154,25 +160,25 @@ Change the dbconfig setting to use the postgres database you created:
 "dbconfig": "postgres://boardsuser:boardsuser-password@localhost/boards?sslmode=disable&connect_timeout=10",
 ```
 
-## Install MySQL 
+## Install MySQL
 
-As an alternative to Postgres, you also can store your data in a MySQL/MariaDB database. To install, run:
+As an alternative to Postgres, you also can store your data in a MySQL database. To install, run:
 
 ```
-sudo apt install mariadb-server mariadb-client
+sudo apt-get install mysql-server
 ```
 
 Log in as `root` in your database:
 
 ```
-sudo mysql 
+sudo mysql
 ```
 
 At the MySQL prompt, run the following commands (change `user/password` to your own values):
 
 ```
 CREATE DATABASE boards;
-GRANT ALL on boards.* to <b>'boardsuser'@'localhost'</b> identified by '<b>boardsuser-password</b>';
+GRANT ALL on boards.* to 'boardsuser'@'localhost' identified by 'boardsuser-password';
 ```
 
 Exit the mysql-prompt:
