@@ -21,11 +21,7 @@ export const fetchGlobalTemplates = createAsyncThunk(
 const globalTemplatesSlice = createSlice({
     name: 'globalTemplates',
     initialState: {value: []} as {value: MutableBoard[]},
-    reducers: {
-        setGlobalTemplates: (state, action: PayloadAction<MutableBoard[]>) => {
-            state.value = action.payload || []
-        },
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder.addCase(fetchGlobalTemplates.fulfilled, (state, action) => {
             state.value = action.payload || []
@@ -33,7 +29,6 @@ const globalTemplatesSlice = createSlice({
     },
 })
 
-export const {setGlobalTemplates} = globalTemplatesSlice.actions
 export const {reducer} = globalTemplatesSlice
 
 export function getGlobalTemplates(state: RootState): MutableBoard[] {
