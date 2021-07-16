@@ -259,10 +259,8 @@ class BoardPage extends React.Component<Props, State> {
         }
     }
 
-    private async incrementalUpdate(blocks: IBlock[]) {
+    incrementalUpdate = async (blocks: IBlock[]) => {
         const {boardTree} = this.state
-
-        let newState = {boardTree}
 
         let newBoardTree: BoardTree | undefined
         if (boardTree) {
@@ -273,9 +271,9 @@ class BoardPage extends React.Component<Props, State> {
         }
 
         if (newBoardTree) {
-            newState = {...newState, boardTree: newBoardTree}
+            this.setState({boardTree: newBoardTree})
         } else {
-            newState = {...newState, boardTree: undefined}
+            this.setState({boardTree: undefined})
         }
 
         // Update url with viewId if it's different
@@ -283,8 +281,6 @@ class BoardPage extends React.Component<Props, State> {
             const newPath = generatePath(this.props.match.path, {...this.props.match.params, viewId: newBoardTree?.activeView.id})
             this.props.history.push(newPath)
         }
-
-        this.setState(newState)
     }
 
     // IPageController
