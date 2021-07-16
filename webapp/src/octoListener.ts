@@ -141,7 +141,11 @@ class OctoListener {
         try {
             ws?.close()
         } catch {
-            Utils.log('OctoListener unable to close the websocket')
+            try {
+                (ws as any)?.websocket?.close()
+            } catch {
+                Utils.log('OctoListener unable to close the websocket')
+            }
         }
     }
 
