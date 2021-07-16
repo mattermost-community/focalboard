@@ -15,7 +15,6 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {getGlobalTemplates, fetchGlobalTemplates} from '../../store/globalTemplates'
 import {getTemplates} from '../../store/boards'
-import {useAppSelector} from '../../store/hooks'
 
 import BoardTemplateMenuItem from './boardTemplateMenuItem'
 

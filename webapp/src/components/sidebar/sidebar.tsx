@@ -2,7 +2,6 @@
 // See LICENSE.txt for license information.
 import React, {useEffect, useState} from 'react'
 
-import {IWorkspace} from '../../blocks/workspace'
 import {getActiveThemeName, loadTheme} from '../../theme'
 import IconButton from '../../widgets/buttons/iconButton'
 import HamburgerIcon from '../../widgets/icons/hamburger'
@@ -10,6 +9,7 @@ import HideSidebarIcon from '../../widgets/icons/hideSidebar'
 import ShowSidebarIcon from '../../widgets/icons/showSidebar'
 import {getBoards} from '../../store/boards'
 import {getViews} from '../../store/views'
+import {getCurrentWorkspace} from '../../store/currentWorkspace'
 import {useAppSelector} from '../../store/hooks'
 
 import './sidebar.scss'
@@ -20,7 +20,6 @@ import SidebarSettingsMenu from './sidebarSettingsMenu'
 import SidebarUserMenu from './sidebarUserMenu'
 
 type Props = {
-    workspace?: IWorkspace
     activeBoardId?: string
 }
 
@@ -38,7 +37,7 @@ const Sidebar = React.memo((props: Props) => {
         }
     }, [])
 
-    const {workspace} = props
+    const workspace = useAppSelector(getCurrentWorkspace)
     if (!boards) {
         return <div/>
     }

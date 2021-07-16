@@ -3,7 +3,6 @@
 import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import {IWorkspace} from '../blocks/workspace'
 import {BoardTree} from '../viewModel/boardTree'
 
 import CenterPanel from './centerPanel'
@@ -12,14 +11,13 @@ import Sidebar from './sidebar/sidebar'
 import './workspace.scss'
 
 type Props = {
-    workspace?: IWorkspace
     boardTree?: BoardTree
     setSearchText: (text?: string) => void
     readonly: boolean
 }
 
 function centerContent(props: Props) {
-    const {workspace, boardTree, setSearchText} = props
+    const {boardTree, setSearchText} = props
     const {activeView} = boardTree || {}
 
     if (boardTree && activeView) {
@@ -33,20 +31,17 @@ function centerContent(props: Props) {
     }
 
     return (
-        <EmptyCenterPanel workspace={workspace}/>
+        <EmptyCenterPanel/>
     )
 }
 
 const Workspace = React.memo((props: Props) => {
-    const {workspace, boardTree} = props
+    const {boardTree} = props
 
     return (
         <div className='Workspace'>
             {!props.readonly &&
-                <Sidebar
-                    workspace={workspace}
-                    activeBoardId={boardTree?.board.id}
-                />
+                <Sidebar activeBoardId={boardTree?.board.id}/>
             }
             <div className='mainFrame'>
                 {(boardTree?.board.isTemplate) &&
