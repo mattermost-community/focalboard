@@ -4,9 +4,7 @@ import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {IWorkspace} from '../blocks/workspace'
-import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
-import {WorkspaceTree} from '../viewModel/workspaceTree'
 
 import CenterPanel from './centerPanel'
 import EmptyCenterPanel from './emptyCenterPanel'
@@ -15,7 +13,6 @@ import './workspace.scss'
 
 type Props = {
     workspace?: IWorkspace
-    workspaceTree: WorkspaceTree
     boardTree?: BoardTree
     setSearchText: (text?: string) => void
     readonly: boolean
@@ -41,16 +38,13 @@ function centerContent(props: Props) {
 }
 
 const Workspace = React.memo((props: Props) => {
-    const {workspace, boardTree, workspaceTree} = props
-
-    Utils.assert(workspaceTree || !props.readonly)
+    const {workspace, boardTree} = props
 
     return (
         <div className='Workspace'>
             {!props.readonly &&
                 <Sidebar
                     workspace={workspace}
-                    workspaceTree={workspaceTree}
                     activeBoardId={boardTree?.board.id}
                 />
             }

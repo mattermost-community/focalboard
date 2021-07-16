@@ -8,20 +8,20 @@ import {MutableBoard} from '../../blocks/board'
 import {MutableBoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import octoClient from '../../octoClient'
-import {WorkspaceTree} from '../../viewModel/workspaceTree'
 import AddIcon from '../../widgets/icons/add'
 import BoardIcon from '../../widgets/icons/board'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {getGlobalTemplates, fetchGlobalTemplates} from '../../store/globalTemplates'
+import {getTemplates} from '../../store/boards'
+import {useAppSelector} from '../../store/hooks'
 
 import BoardTemplateMenuItem from './boardTemplateMenuItem'
 
 import './sidebarAddBoardMenu.scss'
 
 type Props = {
-    workspaceTree: WorkspaceTree,
     activeBoardId?: string
 }
 
@@ -85,10 +85,10 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
         }
     }, [octoClient.workspaceId])
 
-    const {workspaceTree} = props
     const intl = useIntl()
+    const templates = useAppSelector(getTemplates)
 
-    if (!workspaceTree) {
+    if (!templates) {
         return <div/>
     }
 
@@ -102,7 +102,7 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
                     />
                 </div>
                 <Menu position='top'>
-                    {workspaceTree.boardTemplates.length > 0 && <>
+                    {templates.length > 0 && <>
                         <Menu.Label>
                             <b>
                                 <FormattedMessage
@@ -115,7 +115,7 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
                         <Menu.Separator/>
                     </>}
 
-                    {workspaceTree.boardTemplates.map((boardTemplate) => (
+                    {templates.map((boardTemplate) => (
                         <BoardTemplateMenuItem
                             key={boardTemplate.id}
                             boardTemplate={boardTemplate}

@@ -8,6 +8,8 @@ import {reducer as currentWorkspaceReducer} from './currentWorkspace'
 import {reducer as currentWorkspaceUsersReducer} from './currentWorkspaceUsers'
 import {reducer as languageReducer} from './language'
 import {reducer as globalTemplatesReducer} from './globalTemplates'
+import {reducer as boardsReducer} from './boards'
+import {reducer as viewsReducer} from './views'
 
 const store = configureStore({
     reducer: {
@@ -16,6 +18,8 @@ const store = configureStore({
         currentWorkspaceUsers: currentWorkspaceUsersReducer,
         language: languageReducer,
         globalTemplates: globalTemplatesReducer,
+        boards: boardsReducer,
+        views: viewsReducer,
     },
 })
 
