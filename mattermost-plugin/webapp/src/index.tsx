@@ -8,7 +8,7 @@ import {GlobalState} from 'mattermost-redux/types/store'
 
 const windowAny = (window as any)
 windowAny.baseURL = '/plugins/focalboard'
-windowAny.frontendBaseURL = '/plug/focalboard'
+windowAny.frontendBaseURL = '/boards'
 
 import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
@@ -43,6 +43,26 @@ const focalboardIcon = (
     </svg>
 )
 
+const GlobalHeaderIcon = () => {
+    return (
+        <svg
+            width='24'
+            height='24'
+            viewBox='0 0 24 24'
+            fill='none'
+            xmlns='http://www.w3.org/2000/svg'
+        >
+            <path
+                fillRule='evenodd'
+                clipRule='evenodd'
+                d='M6 3C4.34315 3 3 4.34314 3 6V13.2C3 14.8569 4.34314 16.2 6 16.2H7.8V18C7.8 19.6569 9.14314 21 10.8 21H18C19.6569 21 21 19.6569 21 18V10.8C21 9.14315 19.6569 7.8 18 7.8H16.2V6C16.2 4.34315 14.8569 3 13.2 3H6ZM16.2 7.8H10.8C9.14315 7.8 7.8 9.14314 7.8 10.8V16.2H13.2C14.8569 16.2 16.2 14.8569 16.2 13.2V7.8Z'
+                fill='orange'
+            />
+        </svg>
+
+    )
+}
+
 const MainApp = () => {
     useEffect(() => {
         document.body.classList.add('focalboard-body')
@@ -71,6 +91,10 @@ const MainApp = () => {
     )
 }
 
+const HeaderComponent = () => {
+    return null
+}
+
 export default class Plugin {
     channelHeaderButtonId?: string
     registry?: PluginRegistry
@@ -78,11 +102,14 @@ export default class Plugin {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
     public async initialize(registry: PluginRegistry, store: Store<GlobalState, Action<Record<string, unknown>>>) {
         this.registry = registry
-        this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(focalboardIcon, () => {
+        const goToFocalboardWorkspace = () => {
             const currentChannel = store.getState().entities.channels.currentChannelId
-            window.open(`${window.location.origin}/plug/focalboard/workspace/${currentChannel}`)
-        }, '', 'Focalboard Workspace')
-        this.registry.registerCustomRoute('/', MainApp)
+            window.open(`${window.location.origin}/boards/workspace/${currentChannel}`)
+        }
+        this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(focalboardIcon, goToFocalboardWorkspace, '', 'Focalboard Workspace')
+        if (this.registry.registerProduct) {
+            this.registry.registerProduct('/boards', GlobalHeaderIcon, 'Boards', '/boards', MainApp, HeaderComponent)
+        }
     }
 
     public uninitialize() {

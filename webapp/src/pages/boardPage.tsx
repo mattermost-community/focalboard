@@ -247,7 +247,7 @@ class BoardPage extends React.Component<Props, State> {
             // Require workspace for editing, not for sharing (readonly)
             workspace = await octoClient.getWorkspace()
             if (!workspace) {
-                this.props.history.push(Utils.buildURL('/error?id=no_workspace'))
+                this.props.history.push('/error?id=no_workspace')
             }
         }
 
