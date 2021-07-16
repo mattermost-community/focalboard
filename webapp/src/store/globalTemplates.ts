@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit'
+import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 
 import {default as client, OctoClient} from '../octoClient'
 import {MutableBoard} from '../blocks/board'
