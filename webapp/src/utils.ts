@@ -121,10 +121,13 @@ class Utils {
 
     // Date and Time
 
-    static displayDate(date: Date, intl: IntlShape, dateFormat: string): string {
-        const text = intl.formatDate(date, {year: 'numeric', month: 'short', day: '2-digit', format: dateFormat})
-
-        return text
+    static displayDate(date: Date, intl: IntlShape): string {
+        const isCurrentYear = date.getFullYear() === new Date().getFullYear()
+        return intl.formatDate(date, {
+            year: isCurrentYear ? undefined : 'numeric',
+            month: 'long',
+            day: '2-digit',
+        })
     }
 
     static displayDateTime(date: Date, intl: IntlShape): string {
