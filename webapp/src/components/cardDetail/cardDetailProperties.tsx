@@ -4,9 +4,9 @@ import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {PropertyType} from '../../blocks/board'
+import {Card} from '../../blocks/card'
 import mutator from '../../mutator'
 import {BoardTree} from '../../viewModel/boardTree'
-import {CardTree} from '../../viewModel/cardTree'
 import Button from '../../widgets/buttons/button'
 import MenuWrapper from '../../widgets/menuWrapper'
 import PropertyMenu from '../../widgets/propertyMenu'
@@ -15,14 +15,13 @@ import PropertyValueElement from '../propertyValueElement'
 
 type Props = {
     boardTree: BoardTree
-    cardTree: CardTree
+    card: Card
     readonly: boolean
 }
 
 const CardDetailProperties = React.memo((props: Props) => {
-    const {boardTree, cardTree} = props
+    const {boardTree, card} = props
     const {board} = boardTree
-    const {card} = cardTree
 
     return (
         <div className='octo-propertylist'>

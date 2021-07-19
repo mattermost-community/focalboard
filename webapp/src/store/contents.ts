@@ -35,7 +35,7 @@ export function getContents(state: RootState): IContentBlock[] {
     return state.contents.contents
 }
 
-export function getCardContents(cardId: string) {
+export function getCardContents(cardId: string): (state: RootState) => IContentBlock[] {
     return (state: RootState): IContentBlock[] => {
         return state.contents.contents.filter((c) => c.parentId === cardId)
     }

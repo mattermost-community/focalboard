@@ -5,12 +5,14 @@ import {FormattedMessage, useIntl} from 'react-intl'
 
 import mutator from '../mutator'
 import {Utils} from '../utils'
+import {CommentBlock} from '../blocks/commentBlock'
 import {BoardTree} from '../viewModel/boardTree'
-import {CardTree, CardTreeContext, MutableCardTree} from '../viewModel/cardTree'
 import DeleteIcon from '../widgets/icons/delete'
 import Menu from '../widgets/menu'
 
-import useCardListener from '../hooks/cardListener'
+import {useAppSelector} from '../store/hooks'
+import {getCard} from '../store/cards'
+import {getCardContents} from '../store/contents'
 
 import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
@@ -24,39 +26,21 @@ type Props = {
 }
 
 const CardDialog = (props: Props) => {
-    const [syncComplete, setSyncComplete] = useState(false)
-    const [cardTree, setCardTree] = useState<CardTree>()
+    const card = useAppSelector(getCard(props.cardId))
+    const contents = useAppSelector(getCardContents(props.cardId))
+    // TODO Implement the comments reducer and selector
+    // const comments = useAppSelector(getComments(props.cardId))
+    const comments: CommentBlock[] = []
     const intl = useIntl()
-    useCardListener(
-        async (blocks) => {
-            Utils.log(`cardListener.onChanged: ${blocks.length}`)
-            const newCardTree = cardTree ? MutableCardTree.incrementalUpdate(cardTree, blocks) : await MutableCardTree.sync(props.cardId)
-            setCardTree(newCardTree)
-            setSyncComplete(true)
-        },
-        async () => {
-            Utils.log('cardListener.onReconnect')
-            const newCardTree = await MutableCardTree.sync(props.cardId)
-            setCardTree(newCardTree)
-            setSyncComplete(true)
-        },
-    )
-
-    useEffect(() => {
-        MutableCardTree.sync(props.cardId).then((newCardTree) => {
-            setCardTree(newCardTree)
-            setSyncComplete(true)
-        })
-    }, [props.cardId])
 
     const makeTemplateClicked = async () => {
-        if (!cardTree) {
+        if (!card) {
             Utils.assertFailure('cardTree')
             return
         }
 
         await mutator.duplicateCard(
-            cardTree.card.id,
+            props.cardId,
             intl.formatMessage({id: 'Mutator.new-template-from-card', defaultMessage: 'new template from card'}),
             true,
             async (newCardId) => {
@@ -75,7 +59,6 @@ const CardDialog = (props: Props) => {
                 icon={<DeleteIcon/>}
                 name='Delete'
                 onClick={async () => {
-                    const card = cardTree?.card
                     if (!card) {
                         Utils.assertFailure()
                         return
@@ -84,7 +67,7 @@ const CardDialog = (props: Props) => {
                     props.onClose()
                 }}
             />
-            {(cardTree && !cardTree.card.isTemplate) &&
+            {(card && !card.isTemplate) &&
                 <Menu.Text
                     id='makeTemplate'
                     name='New template from card'
@@ -98,31 +81,30 @@ const CardDialog = (props: Props) => {
             onClose={props.onClose}
             toolsMenu={!props.readonly && menu}
         >
-            {(cardTree?.card.isTemplate) &&
+            {card && card.fields.isTemplate &&
                 <div className='banner'>
                     <FormattedMessage
                         id='CardDialog.editing-template'
                         defaultMessage="You're editing a template"
                     />
-                </div>
-            }
-            {cardTree &&
-                <CardTreeContext.Provider value={cardTree}>
-                    <CardDetail
-                        boardTree={props.boardTree}
-                        cardTree={cardTree}
-                        readonly={props.readonly}
-                    />
-                </CardTreeContext.Provider>
-            }
-            {(!cardTree && syncComplete) &&
+                </div>}
+
+            {card &&
+                <CardDetail
+                    boardTree={props.boardTree}
+                    card={card}
+                    contents={contents}
+                    comments={comments}
+                    readonly={props.readonly}
+                />}
+
+            {!card &&
                 <div className='banner error'>
                     <FormattedMessage
                         id='CardDialog.nocard'
                         defaultMessage="This card doesn't exist or is inaccessible"
                     />
-                </div>
-            }
+                </div>}
         </Dialog>
     )
 }

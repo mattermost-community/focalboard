@@ -4,10 +4,9 @@ import React from 'react'
 import {useIntl, IntlShape} from 'react-intl'
 
 import {IContentBlockWithCords, IContentBlock} from '../../blocks/contentBlock'
+import {Card} from '../../blocks/card'
 import {MutableTextBlock} from '../../blocks/textBlock'
 import mutator from '../../mutator'
-import {CardTree} from '../../viewModel/cardTree'
-import {Card} from '../../blocks/card'
 import {useSortableWithGrip} from '../../hooks/sortable'
 
 import ContentBlock from '../contentBlock'
@@ -16,7 +15,8 @@ import {MarkdownEditor} from '../markdownEditor'
 export type Position = 'left' | 'right' | 'above' | 'below' | 'aboveRow' | 'belowRow'
 
 type Props = {
-    cardTree: CardTree
+    card: Card
+    contents: IContentBlock[]
     readonly: boolean
 }
 
@@ -102,7 +102,7 @@ type ContentBlockWithDragAndDropProps = {
     block: IContentBlock | IContentBlock[],
     x: number,
     card: Card,
-    cardTree: CardTree,
+    contents: IContentBlock[],
     intl: IntlShape,
     readonly: boolean,
 }
@@ -135,7 +135,7 @@ const ContentBlockWithDragAndDrop = (props: ContentBlockWithDragAndDropProps) =>
                         />
                     ))}
                 </div>
-                {props.x === props.cardTree.contents.length - 1 && (
+                {props.x === props.contents.length - 1 && (
                     <div
                         ref={itemRef2}
                         className={`addToRow ${isOver2 ? 'dragover' : ''}`}
@@ -162,7 +162,7 @@ const ContentBlockWithDragAndDrop = (props: ContentBlockWithDragAndDropProps) =>
                 onDrop={(src, dst, moveTo) => moveBlock(props.card, src, dst, props.intl, moveTo)}
                 cords={{x: props.x}}
             />
-            {props.x === props.cardTree.contents.length - 1 && (
+            {props.x === props.contents.length - 1 && (
                 <div
                     ref={itemRef2}
                     className={`addToRow ${isOver2 ? 'dragover' : ''}`}
@@ -176,22 +176,21 @@ const ContentBlockWithDragAndDrop = (props: ContentBlockWithDragAndDropProps) =>
 
 const CardDetailContents = React.memo((props: Props) => {
     const intl = useIntl()
-    const {cardTree} = props
-    if (!cardTree) {
+    const {contents, card} = props
+    if (!contents) {
         return null
     }
-    const {card} = cardTree
-    if (cardTree.contents.length > 0) {
+    if (contents.length > 0) {
         return (
             <div className='octo-content'>
-                {cardTree.contents.map((block, x) =>
+                {contents.map((block, x) =>
                     (
                         <ContentBlockWithDragAndDrop
                             key={x}
                             block={block}
                             x={x}
                             card={card}
-                            cardTree={cardTree}
+                            contents={contents}
                             intl={intl}
                             readonly={props.readonly}
                         />

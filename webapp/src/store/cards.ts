@@ -47,3 +47,9 @@ export function getCards(state: RootState): Card[] {
 export function getTemplates(state: RootState): Card[] {
     return state.cards.templates
 }
+
+export function getCard(cardId: string): (state: RootState) => Card|undefined {
+    return (state: RootState): Card|undefined => {
+        return state.cards.cards.find((c) => c.id == cardId)
+    }
+}
