@@ -252,7 +252,6 @@ class BoardPage extends React.Component<Props, State> {
         }
 
         const workspaceTree = await MutableWorkspaceTree.sync()
-        const boardIds = [...workspaceTree.boards.map((o) => o.id), ...workspaceTree.boardTemplates.map((o) => o.id)]
         this.setState({workspace, workspaceTree})
 
         if (this.props.match.params.boardId) {
