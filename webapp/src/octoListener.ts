@@ -67,7 +67,7 @@ class OctoListener {
 
         const url = new URL(this.serverUrl)
         const protocol = (url.protocol === 'https:') ? 'wss:' : 'ws:'
-        const wsServerUrl = `${protocol}//${url.host}${url.pathname.replace(/\/$/, '')}/ws/onchange`
+        const wsServerUrl = `${protocol}//${url.host}${url.pathname.replace(/\/$/, '')}/ws`
         Utils.log(`OctoListener open: ${wsServerUrl}`)
         const ws = new WebSocket(wsServerUrl)
         this.ws = ws
@@ -165,7 +165,7 @@ class OctoListener {
         }
 
         const command: WSCommand = {
-            action: 'ADD',
+            action: 'SUBSCRIBE_WORKSPACE',
             blockIds,
             workspaceId: this.workspaceId,
             readToken: this.readToken,
