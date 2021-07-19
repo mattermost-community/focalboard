@@ -21,6 +21,7 @@ const (
 	websocketActionSubscribeWorkspace   = "SUBSCRIBE_WORKSPACE"
 	websocketActionUnsubscribeWorkspace = "UNSUBSCRIBE_WORKSPACE"
 	websocketActionSubscribeBlocks      = "SUBSCRIBE_BLOCKS"
+	websocketActionUnsubscribeBlocks    = "UNSUBSCRIBE_BLOCKS"
 )
 
 type Hub interface {
@@ -208,6 +209,26 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 			}
 
 			ws.subscribeListenerToBlocks(wsSession.client, command.BlockIDs)
+			continue
+		}
+
+		if command.Action == websocketActionUnsubscribeBlocks {
+			ws.logger.Debug(`Command: UNSUBSCRIBE_BLOCKS`,
+				mlog.String("workspaceID", command.WorkspaceID),
+				mlog.Stringer("client", wsSession.client.RemoteAddr()),
+			)
+
+			if !ws.isCommandReadTokenValid(command) {
+				ws.logger.Error(`Rejected invalid read token`,
+					mlog.Stringer("client", wsSession.client.RemoteAddr()),
+					mlog.String("action", command.Action),
+					mlog.String("readToken", command.ReadToken),
+				)
+
+				continue
+			}
+
+			ws.unsubscribeListenerFromBlocks(wsSession.client, command.BlockIDs)
 			continue
 		}
 
