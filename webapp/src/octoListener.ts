@@ -8,7 +8,7 @@ type WSCommand = {
     action: string
     workspaceId?: string
     readToken?: string
-    blockIds: string[]
+    blockIds?: string[]
 }
 
 // These are messages from the server
@@ -75,7 +75,7 @@ class OctoListener {
         ws.onopen = () => {
             Utils.log('OctoListener webSocket opened.')
             this.authenticate(workspaceId)
-            this.addBlocks(blockIds)
+            this.subscribeToWorkspace(workspaceId)
             this.isInitialized = true
             onStateChange?.('open')
         }
@@ -166,14 +166,14 @@ class OctoListener {
         this.ws.send(JSON.stringify(command))
     }
 
-    private addBlocks(blockIds: string[]): void {
+    private subscribeToBlocks(blockIds: string[]): void {
         if (!this.ws) {
-            Utils.assertFailure('OctoListener.addBlocks: ws is not open')
+            Utils.assertFailure('OctoListener.subscribeToBlocks: ws is not open')
             return
         }
 
         const command: WSCommand = {
-            action: 'SUBSCRIBE_WORKSPACE',
+            action: 'SUBSCRIBE_BLOCKS',
             blockIds,
             workspaceId: this.workspaceId,
             readToken: this.readToken,
@@ -181,6 +181,20 @@ class OctoListener {
 
         this.ws.send(JSON.stringify(command))
         this.blockIds.push(...blockIds)
+    }
+
+    private subscribeToWorkspace(workspaceId: string): void {
+        if (!this.ws) {
+            Utils.assertFailure('OctoListener.subscribeToWorkspace: ws is not open')
+            return
+        }
+
+        const command: WSCommand = {
+            action: 'SUBSCRIBE_WORKSPACE',
+            workspaceId: workspaceId,
+        }
+
+        this.ws.send(JSON.stringify(command))
     }
 
     private removeBlocks(blockIds: string[]): void {
