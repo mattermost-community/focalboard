@@ -2,8 +2,8 @@ package storetests
 
 import (
 	"fmt"
-	"math/rand"
 	"testing"
+	"time"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
@@ -34,7 +34,7 @@ func StoreTestSessionStore(t *testing.T, setup func(t *testing.T) (store.Store, 
 	})
 }
 
-func testCreateAndGetAndDeleteSession(t *testing.T, store store.Store, container store.Container) {
+func testCreateAndGetAndDeleteSession(t *testing.T, store store.Store, _ store.Container) {
 	session := &model.Session{
 		ID:    "session-id",
 		Token: "token",
@@ -58,7 +58,7 @@ func testCreateAndGetAndDeleteSession(t *testing.T, store store.Store, container
 	})
 }
 
-func testGetActiveUserCount(t *testing.T, store store.Store, container store.Container) {
+func testGetActiveUserCount(t *testing.T, store store.Store, _ store.Container) {
 	t.Run("no active user", func(t *testing.T) {
 		count, err := store.GetActiveUserCount(60)
 		require.NoError(t, err)
@@ -66,12 +66,13 @@ func testGetActiveUserCount(t *testing.T, store store.Store, container store.Con
 	})
 
 	t.Run("active user", func(t *testing.T) {
-		// create active user session
-		count := rand.Int() % 10
+		// gen random count active user session
+		count := int(time.Now().Unix() % 10)
 		for i := 0; i < count; i++ {
 			session := &model.Session{
-				ID:    fmt.Sprintf("session-id-%d", i),
-				Token: fmt.Sprintf("token-%d", i),
+				ID:     fmt.Sprintf("id-%d", i),
+				UserID: fmt.Sprintf("user-id-%d", i),
+				Token:  fmt.Sprintf("token-%d", i),
 			}
 			err := store.CreateSession(session)
 			require.NoError(t, err)
@@ -83,7 +84,7 @@ func testGetActiveUserCount(t *testing.T, store store.Store, container store.Con
 	})
 }
 
-func testUpdateSession(t *testing.T, store store.Store, container store.Container) {
+func testUpdateSession(t *testing.T, store store.Store, _ store.Container) {
 	session := &model.Session{
 		ID:    "session-id",
 		Token: "token",
