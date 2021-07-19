@@ -16,6 +16,7 @@ import WSConnection from '../components/wsconnection'
 import mutator from '../mutator'
 import octoClient from '../octoClient'
 import {Utils} from '../utils'
+import wsClient, {WSClient} from '../wsclient'
 import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
 import './boardPage.scss'
 import {fetchCurrentWorkspaceUsers, getCurrentWorkspaceUsersById} from '../store/currentWorkspaceUsers'
@@ -157,6 +158,15 @@ class BoardPage extends React.Component<Props, State> {
         }
     }
 
+    updateWebsocketState = (_: WSClient, newState: 'init'|'open'|'close'): void => {
+        if (newState === 'open') {
+            const token = localStorage.getItem('focalboardSessionId') || ''
+            wsClient.authenticate(this.props.match.params.workspaceId || '0', token)
+            wsClient.subscribeToWorkspace(this.props.match.params.workspaceId || '0')
+        }
+        this.setState({websocketClosed: newState === 'close'})
+    }
+
     componentDidMount(): void {
         if (!this.props.readonly) {
             this.props.fetchCurrentWorkspace().then((result) => {
@@ -171,6 +181,17 @@ class BoardPage extends React.Component<Props, State> {
         } else {
             this.sync()
         }
+        wsClient.addOnChange(this.incrementalUpdate)
+        wsClient.addOnReconnect(this.sync)
+        wsClient.addOnStateChange(this.updateWebsocketState)
+    }
+
+    componentWillUnmount(): void {
+        Utils.log(`boardPage.componentWillUnmount: ${this.props.match.params.boardId}`)
+        wsClient.unsubscribeToWorkspace(this.props.match.params.workspaceId || '0')
+        wsClient.removeOnChange(this.incrementalUpdate)
+        wsClient.removeOnReconnect(this.sync)
+        wsClient.removeOnStateChange(this.updateWebsocketState)
     }
 
     render(): JSX.Element {
@@ -225,7 +246,7 @@ class BoardPage extends React.Component<Props, State> {
         }
     }
 
-    private async sync() {
+    private sync = async () => {
         Utils.log(`sync start: ${this.props.match.params.boardId}`)
 
         this.props.fetchBoards()
@@ -259,7 +280,7 @@ class BoardPage extends React.Component<Props, State> {
         }
     }
 
-    incrementalUpdate = async (blocks: IBlock[]) => {
+    private incrementalUpdate = async (_: WSClient, blocks: IBlock[]) => {
         const {boardTree} = this.state
 
         let newBoardTree: BoardTree | undefined
