@@ -23,12 +23,13 @@ import './sidebarUserMenu.scss'
 type Props = {
     whiteLogo: boolean
     showVersionBadge: boolean
+    showAccountActions: boolean
 }
 
 const SidebarUserMenu = React.memo((props: Props) => {
     const history = useHistory()
     const [showRegistrationLinkDialog, setShowRegistrationLinkDialog] = useState(false)
-    const {whiteLogo, showVersionBadge} = props
+    const {whiteLogo, showVersionBadge, showAccountActions} = props
     const user = useAppSelector<IUser|null>(getCurrentUser)
     const intl = useIntl()
     return (
@@ -48,7 +49,7 @@ const SidebarUserMenu = React.memo((props: Props) => {
                         </div>
                     </div>
                     <Menu>
-                        {user && user.username !== 'single-user' && <>
+                        {showAccountActions && user && user.username !== 'single-user' && <>
                             <Menu.Label><b>{user.username}</b></Menu.Label>
                             <Menu.Text
                                 id='logout'
