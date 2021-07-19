@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
 import mutator from '../mutator'
@@ -41,6 +41,13 @@ const CardDialog = (props: Props) => {
             setSyncComplete(true)
         },
     )
+
+    useEffect(() => {
+        MutableCardTree.sync(props.cardId).then((newCardTree) => {
+            setCardTree(newCardTree)
+            setSyncComplete(true)
+        })
+    }, [props.cardId])
 
     const makeTemplateClicked = async () => {
         if (!cardTree) {

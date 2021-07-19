@@ -10,9 +10,10 @@ import HotKeys from 'react-hot-keys'
 import {IUser} from '../user'
 import {IWorkspace} from '../blocks/workspace'
 import {IBlock} from '../blocks/block'
+import {MutableBoard} from '../blocks/board'
+import {MutableBoardView} from '../blocks/boardView'
 import {sendFlashMessage} from '../components/flashMessages'
 import Workspace from '../components/workspace'
-import WSConnection from '../components/wsconnection'
 import mutator from '../mutator'
 import octoClient from '../octoClient'
 import {Utils} from '../utils'
@@ -21,8 +22,8 @@ import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
 import './boardPage.scss'
 import {fetchCurrentWorkspaceUsers, getCurrentWorkspaceUsersById} from '../store/currentWorkspaceUsers'
 import {fetchCurrentWorkspace, getCurrentWorkspace} from '../store/currentWorkspace'
-import {fetchBoards} from '../store/boards'
-import {fetchViews} from '../store/views'
+import {fetchBoards, updateBoards} from '../store/boards'
+import {fetchViews, updateViews} from '../store/views'
 import {RootState} from '../store'
 
 type Props = RouteComponentProps<{workspaceId?: string, boardId?: string, viewId?: string}> & {
@@ -31,6 +32,8 @@ type Props = RouteComponentProps<{workspaceId?: string, boardId?: string, viewId
     fetchCurrentWorkspaceUsers: () => void
     fetchBoards: () => void
     fetchViews: () => void
+    updateBoards: (boards: MutableBoard[]) => void
+    updateViews: (views: MutableBoardView[]) => void
     fetchCurrentWorkspace: () => Promise<PayloadAction<any>>
     workspace: IWorkspace | null,
 }
@@ -220,8 +223,19 @@ class BoardPage extends React.Component<Props, State> {
                     keyName='shift+ctrl+z,shift+cmd+z,ctrl+z,cmd+z'
                     onKeyDown={this.undoRedoHandler}
                 />
-                <WSConnection onBlocksChange={this.incrementalUpdate}/>
-
+                {this.state.websocketClosed &&
+                    <div className='WSConnection error'>
+                        <a
+                            href='https://www.focalboard.com/fwlink/websocket-connect-error.html'
+                            target='_blank'
+                            rel='noreferrer'
+                        >
+                            <FormattedMessage
+                                id='Error.websocket-closed'
+                                defaultMessage='Websocket connection closed, connection interrupted. If this persists, check your server or web proxy configuration.'
+                            />
+                        </a>
+                    </div>}
                 <Workspace
                     boardTree={this.state.boardTree}
                     setSearchText={(text) => {
@@ -249,6 +263,7 @@ class BoardPage extends React.Component<Props, State> {
     private sync = async () => {
         Utils.log(`sync start: ${this.props.match.params.boardId}`)
 
+        this.props.fetchCurrentWorkspaceUsers()
         this.props.fetchBoards()
         this.props.fetchViews()
 
@@ -282,6 +297,8 @@ class BoardPage extends React.Component<Props, State> {
 
     private incrementalUpdate = async (_: WSClient, blocks: IBlock[]) => {
         const {boardTree} = this.state
+        this.props.updateBoards(blocks.filter((b: IBlock) => b.type === 'board') as MutableBoard[])
+        this.props.updateViews(blocks.filter((b: IBlock) => b.type === 'view') as MutableBoardView[])
 
         let newBoardTree: BoardTree | undefined
         if (boardTree) {
@@ -316,4 +333,4 @@ class BoardPage extends React.Component<Props, State> {
     }
 }
 
-export default connect((state: RootState) => ({usersById: getCurrentWorkspaceUsersById(state), workspace: getCurrentWorkspace(state)}), {fetchCurrentWorkspaceUsers, fetchCurrentWorkspace, fetchBoards, fetchViews})(withRouter(BoardPage))
+export default connect((state: RootState) => ({usersById: getCurrentWorkspaceUsersById(state), workspace: getCurrentWorkspace(state)}), {fetchCurrentWorkspaceUsers, fetchCurrentWorkspace, fetchBoards, fetchViews, updateBoards, updateViews})(withRouter(BoardPage))
