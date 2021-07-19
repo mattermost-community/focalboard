@@ -1,17 +1,13 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit'
+import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 
-import {default as client} from '../octoClient'
 import {IUser} from '../user'
 
-import {RootState} from './index'
+import {initialLoad} from './initialLoad'
 
-export const fetchCurrentWorkspaceUsers = createAsyncThunk(
-    'currentWorkspaceUsers/fetch',
-    async () => client.getWorkspaceUsers(),
-)
+import {RootState} from './index'
 
 const currentWorkspaceUsersSlice = createSlice({
     name: 'currentWorkspaceUsers',
@@ -26,9 +22,9 @@ const currentWorkspaceUsersSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchCurrentWorkspaceUsers.fulfilled, (state, action) => {
-            state.list = action.payload || []
-            state.byId = action.payload.reduce((acc: {[key: string]: IUser}, user: IUser) => {
+        builder.addCase(initialLoad.fulfilled, (state, action) => {
+            state.list = action.payload.workspaceUsers || []
+            state.byId = state.list.reduce((acc: {[key: string]: IUser}, user: IUser) => {
                 acc[user.id] = user
                 return acc
             }, {})

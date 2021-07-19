@@ -1,17 +1,13 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit'
+import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 
-import {default as client} from '../octoClient'
 import {MutableBoardView, BoardView} from '../blocks/boardView'
 
-import {RootState} from './index'
+import {initialLoad} from './initialLoad'
 
-export const fetchViews = createAsyncThunk(
-    'views/fetch',
-    async () => client.getBlocksWithType('view'),
-)
+import {RootState} from './index'
 
 const viewsSlice = createSlice({
     name: 'views',
@@ -26,8 +22,8 @@ const viewsSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchViews.fulfilled, (state, action) => {
-            state.views = action.payload.sort((a, b) => a.title.localeCompare(b.title)) as MutableBoardView[]
+        builder.addCase(initialLoad.fulfilled, (state, action) => {
+            state.views = action.payload.blocks.filter((o) => o.type === 'view').sort((a, b) => a.title.localeCompare(b.title)) as MutableBoardView[]
         })
     },
 })

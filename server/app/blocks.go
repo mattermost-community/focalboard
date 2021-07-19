@@ -14,7 +14,11 @@ func (a *App) GetBlocks(c store.Container, parentID string, blockType string) ([
 		return a.store.GetBlocksWithType(c, blockType)
 	}
 
-	return a.store.GetBlocksWithParent(c, parentID)
+	if len(parentID) > 0 {
+		return a.store.GetBlocksWithParent(c, parentID)
+	}
+
+	return a.store.GetAllBlocks(c)
 }
 
 func (a *App) GetBlocksWithRootID(c store.Container, rootID string) ([]model.Block, error) {

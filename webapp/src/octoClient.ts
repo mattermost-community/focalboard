@@ -176,6 +176,11 @@ class OctoClient {
         return this.getBlocksWithPath(path)
     }
 
+    async getAllBlocks(): Promise<IBlock[]> {
+        const path = this.workspacePath() + '/blocks'
+        return this.getBlocksWithPath(path)
+    }
+
     private async getBlocksWithPath(path: string): Promise<IBlock[]> {
         const response = await fetch(this.serverUrl + path, {headers: this.headers()})
         if (response.status !== 200) {

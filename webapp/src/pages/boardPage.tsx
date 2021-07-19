@@ -11,6 +11,7 @@ import {IUser} from '../user'
 import {IWorkspace} from '../blocks/workspace'
 import {IBlock} from '../blocks/block'
 import {MutableBoard} from '../blocks/board'
+import {MutableCard} from '../blocks/card'
 import {MutableBoardView} from '../blocks/boardView'
 import {sendFlashMessage} from '../components/flashMessages'
 import Workspace from '../components/workspace'
@@ -20,21 +21,21 @@ import {Utils} from '../utils'
 import wsClient, {WSClient} from '../wsclient'
 import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
 import './boardPage.scss'
-import {fetchCurrentWorkspaceUsers, getCurrentWorkspaceUsersById} from '../store/currentWorkspaceUsers'
-import {fetchCurrentWorkspace, getCurrentWorkspace} from '../store/currentWorkspace'
-import {fetchBoards, updateBoards} from '../store/boards'
-import {fetchViews, updateViews} from '../store/views'
+import {getCurrentWorkspaceUsersById} from '../store/currentWorkspaceUsers'
+import {getCurrentWorkspace} from '../store/currentWorkspace'
+import {updateBoards} from '../store/boards'
+import {updateViews} from '../store/views'
+import {updateCards} from '../store/cards'
+import {initialLoad} from '../store/initialLoad'
 import {RootState} from '../store'
 
 type Props = RouteComponentProps<{workspaceId?: string, boardId?: string, viewId?: string}> & {
     readonly?: boolean
     usersById: {[key: string]: IUser}
-    fetchCurrentWorkspaceUsers: () => void
-    fetchBoards: () => void
-    fetchViews: () => void
     updateBoards: (boards: MutableBoard[]) => void
     updateViews: (views: MutableBoardView[]) => void
-    fetchCurrentWorkspace: () => Promise<PayloadAction<any>>
+    updateCards: (cards: MutableCard[]) => void
+    initialLoad: () => Promise<PayloadAction<any>>
     workspace: IWorkspace | null,
 }
 
@@ -116,14 +117,14 @@ class BoardPage extends React.Component<Props, State> {
         }
         if (workspaceId !== prevWorkspaceId) {
             if (!this.props.readonly) {
-                this.props.fetchCurrentWorkspace().then((result) => {
+                this.props.initialLoad().then((result) => {
                     if (!result.payload) {
                         this.props.history.push(Utils.buildURL('/error?id=no_workspace'))
                     }
                 })
             }
 
-            this.props.fetchCurrentWorkspaceUsers()
+            this.props.initialLoad()
         }
     }
 
@@ -172,7 +173,7 @@ class BoardPage extends React.Component<Props, State> {
 
     componentDidMount(): void {
         if (!this.props.readonly) {
-            this.props.fetchCurrentWorkspace().then((result) => {
+            this.props.initialLoad().then((result) => {
                 if (!result.payload) {
                     this.props.history.push(Utils.buildURL('/error?id=no_workspace'))
                 }
@@ -263,9 +264,7 @@ class BoardPage extends React.Component<Props, State> {
     private sync = async () => {
         Utils.log(`sync start: ${this.props.match.params.boardId}`)
 
-        this.props.fetchCurrentWorkspaceUsers()
-        this.props.fetchBoards()
-        this.props.fetchViews()
+        this.props.initialLoad()
 
         if (this.props.match.params.boardId) {
             const boardTree = await MutableBoardTree.sync(this.props.match.params.boardId || '', this.props.match.params.viewId || '', this.props.usersById)
@@ -299,6 +298,7 @@ class BoardPage extends React.Component<Props, State> {
         const {boardTree} = this.state
         this.props.updateBoards(blocks.filter((b: IBlock) => b.type === 'board') as MutableBoard[])
         this.props.updateViews(blocks.filter((b: IBlock) => b.type === 'view') as MutableBoardView[])
+        this.props.updateCards(blocks.filter((b: IBlock) => b.type === 'card') as MutableCard[])
 
         let newBoardTree: BoardTree | undefined
         if (boardTree) {
@@ -333,4 +333,4 @@ class BoardPage extends React.Component<Props, State> {
     }
 }
 
-export default connect((state: RootState) => ({usersById: getCurrentWorkspaceUsersById(state), workspace: getCurrentWorkspace(state)}), {fetchCurrentWorkspaceUsers, fetchCurrentWorkspace, fetchBoards, fetchViews, updateBoards, updateViews})(withRouter(BoardPage))
+export default connect((state: RootState) => ({usersById: getCurrentWorkspaceUsersById(state), workspace: getCurrentWorkspace(state)}), {initialLoad, updateBoards, updateViews, updateCards})(withRouter(BoardPage))

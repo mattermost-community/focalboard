@@ -4,12 +4,14 @@ import React, {useState, useEffect} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {Constants} from '../../constants'
-import {Card} from '../../blocks/card'
+import {MutableCard, Card} from '../../blocks/card'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import {BoardTree} from '../../viewModel/boardTree'
 import {CardTree, MutableCardTree} from '../../viewModel/cardTree'
 import useCardListener from '../../hooks/cardListener'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
+import {updateCards, getCards} from '../../store/cards'
 
 import './gallery.scss'
 import GalleryCard from './galleryCard'
@@ -24,10 +26,11 @@ type Props = {
 
 const Gallery = (props: Props): JSX.Element => {
     const {boardTree} = props
-    const {cards, activeView} = boardTree
+    const {activeView} = boardTree
     const visiblePropertyTemplates = boardTree.board.cardProperties.filter((template) => boardTree.activeView.visiblePropertyIds.includes(template.id))
-    const [cardTrees, setCardTrees] = useState<{[key: string]: CardTree | undefined}>({})
+    const cards = useAppSelector(getCards)
     const isManualSort = activeView.sortOptions.length === 0
+    const dispatch = useAppDispatch()
 
     const onDropToCard = (srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)
@@ -55,46 +58,27 @@ const Gallery = (props: Props): JSX.Element => {
 
     useCardListener(
         async (blocks) => {
-            cards.forEach(async (c) => {
-                const cardTree = cardTrees[c.id]
-                const newCardTree = cardTree ? MutableCardTree.incrementalUpdate(cardTree, blocks) : await MutableCardTree.sync(c.id)
-                setCardTrees((oldTree) => ({...oldTree, [c.id]: newCardTree}))
-            })
+            dispatch(updateCards(blocks.filter((o) => o.type === 'card') as MutableCard[]))
         },
-        async () => {
-            cards.forEach(async (c) => {
-                const newCardTree = await MutableCardTree.sync(c.id)
-                setCardTrees((oldTree) => ({...oldTree, [c.id]: newCardTree}))
-            })
-        },
+        () => {},
     )
-
-    useEffect(() => {
-        cards.forEach(async (c) => {
-            const newCardTree = await MutableCardTree.sync(c.id)
-            setCardTrees((oldTree) => ({...oldTree, [c.id]: newCardTree}))
-        })
-    }, [cards])
 
     return (
         <div className='octo-table-body Gallery'>
-            {cards.map((card) => {
-                const cardTree = cardTrees[card.id]
-                if (cardTree) {
-                    return (
-                        <GalleryCard
-                            key={card.id + card.updateAt}
-                            cardTree={cardTree}
-                            onClick={props.onCardClicked}
-                            visiblePropertyTemplates={visiblePropertyTemplates}
-                            visibleTitle={visibleTitle}
-                            isSelected={props.selectedCardIds.includes(card.id)}
-                            readonly={props.readonly}
-                            onDrop={onDropToCard}
-                            isManualSort={isManualSort}
-                        />
-                    )
-                }
+            {cards.filter((c) => c.parentId === boardTree.board.id).map((card) => {
+                return (
+                    <GalleryCard
+                        key={card.id + card.updateAt}
+                        card={card}
+                        onClick={props.onCardClicked}
+                        visiblePropertyTemplates={visiblePropertyTemplates}
+                        visibleTitle={visibleTitle}
+                        isSelected={props.selectedCardIds.includes(card.id)}
+                        readonly={props.readonly}
+                        onDrop={onDropToCard}
+                        isManualSort={isManualSort}
+                    />
+                )
                 return null
             })}
 

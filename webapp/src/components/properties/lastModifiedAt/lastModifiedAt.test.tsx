@@ -40,10 +40,7 @@ describe('componnets/properties/lastModifiedAt', () => {
 
         const component = (
             <CardTreeContext.Provider value={cardTree}>
-                <LastModifiedAt
-                    card={card}
-                    cardTree={cardTree}
-                />
+                <LastModifiedAt card={card}/>
             </CardTreeContext.Provider>
         )
 

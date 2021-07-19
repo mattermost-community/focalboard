@@ -1,17 +1,13 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit'
+import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 
-import {default as client} from '../octoClient'
 import {MutableBoard, Board} from '../blocks/board'
 
-import {RootState} from './index'
+import {initialLoad} from './initialLoad'
 
-export const fetchBoards = createAsyncThunk(
-    'boards/fetch',
-    async () => client.getBlocksWithType('board'),
-)
+import {RootState} from './index'
 
 const boardsSlice = createSlice({
     name: 'boards',
@@ -32,10 +28,10 @@ const boardsSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchBoards.fulfilled, (state, action) => {
-            state.boards = action.payload.filter((block) => !block.fields.isTemplate).
+        builder.addCase(initialLoad.fulfilled, (state, action) => {
+            state.boards = action.payload.blocks.filter((block) => block.type === 'board' && !block.fields.isTemplate).
                 sort((a, b) => a.title.localeCompare(b.title)) as MutableBoard[]
-            state.templates = action.payload.filter((block) => block.fields.isTemplate).
+            state.templates = action.payload.blocks.filter((block) => block.type === 'board' && block.fields.isTemplate).
                 sort((a, b) => a.title.localeCompare(b.title)) as MutableBoard[]
         })
     },

@@ -6,6 +6,8 @@ import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit'
 import {default as client} from '../octoClient'
 import {IWorkspace} from '../blocks/workspace'
 
+import {initialLoad} from './initialLoad'
+
 import {RootState} from './index'
 
 export const fetchCurrentWorkspace = createAsyncThunk(
@@ -22,6 +24,9 @@ const currentWorkspaceSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
+        builder.addCase(initialLoad.fulfilled, (state, action) => {
+            state.value = action.payload.workspace || null
+        })
         builder.addCase(fetchCurrentWorkspace.fulfilled, (state, action) => {
             state.value = action.payload || null
         })

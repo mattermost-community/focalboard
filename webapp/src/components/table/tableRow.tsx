@@ -133,7 +133,6 @@ const TableRow = React.memo((props: Props) => {
                             <PropertyValueElement
                                 readOnly={props.readonly}
                                 card={card}
-                                cardTree={props.cardTree}
                                 boardTree={boardTree}
                                 propertyTemplate={template}
                                 emptyDisplayValue=''

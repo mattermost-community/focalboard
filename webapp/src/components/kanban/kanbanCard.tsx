@@ -96,7 +96,6 @@ const KanbanCard = React.memo((props: Props) => {
                     <PropertyValueElement
                         readOnly={true}
                         card={card}
-                        cardTree={props.cardTree}
                         propertyTemplate={template}
                         emptyDisplayValue=''
                     />

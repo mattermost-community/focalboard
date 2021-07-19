@@ -3,12 +3,14 @@
 import {Utils} from '../utils'
 
 import {IBlock, MutableBlock} from './block'
+import {IContentBlock} from './contentBlock'
 
 interface Card extends IBlock {
     readonly icon: string
     readonly isTemplate: boolean
     readonly properties: Readonly<Record<string, string | string[]>>
     readonly contentOrder: Readonly<Array<string | string[]>>
+    contents: IContentBlock[]|IContentBlock[][]
 
     duplicate(): MutableCard
 }
@@ -19,6 +21,13 @@ class MutableCard extends MutableBlock implements Card {
     }
     set icon(value: string) {
         this.fields.icon = value
+    }
+
+    get contents(): IContentBlock[]|IContentBlock[][] {
+        return this.contents
+    }
+    set contents(value: IContentBlock[]|IContentBlock[][]) {
+        this.contents = value
     }
 
     get isTemplate(): boolean {
