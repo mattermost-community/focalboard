@@ -132,27 +132,27 @@ func TestBlocksSubscription(t *testing.T) {
 		require.True(t, client.isSubscribedToBlock(blockID1))
 		require.True(t, client.isSubscribedToBlock(blockID2))
 		require.True(t, client.isSubscribedToBlock(blockID3))
-	})
 
-	t.Run("Subscribing again to a subscribed block would have no effect", func(t *testing.T) {
-		require.True(t, client.isSubscribedToBlock(blockID1))
-		require.True(t, client.isSubscribedToBlock(blockID2))
-		require.True(t, client.isSubscribedToBlock(blockID3))
+		t.Run("Subscribing again to a subscribed block would have no effect", func(t *testing.T) {
+			require.True(t, client.isSubscribedToBlock(blockID1))
+			require.True(t, client.isSubscribedToBlock(blockID2))
+			require.True(t, client.isSubscribedToBlock(blockID3))
 
-		server.subscribeListenerToBlocks(client, blockIDs)
+			server.subscribeListenerToBlocks(client, blockIDs)
 
-		require.Len(t, server.listenersByBlock[blockID1], 1)
-		require.Contains(t, server.listenersByBlock[blockID1], client)
-		require.Len(t, server.listenersByBlock[blockID2], 1)
-		require.Contains(t, server.listenersByBlock[blockID2], client)
-		require.Len(t, server.listenersByBlock[blockID3], 1)
-		require.Contains(t, server.listenersByBlock[blockID3], client)
-		require.Len(t, client.blocks, 3)
-		require.ElementsMatch(t, blockIDs, client.blocks)
+			require.Len(t, server.listenersByBlock[blockID1], 1)
+			require.Contains(t, server.listenersByBlock[blockID1], client)
+			require.Len(t, server.listenersByBlock[blockID2], 1)
+			require.Contains(t, server.listenersByBlock[blockID2], client)
+			require.Len(t, server.listenersByBlock[blockID3], 1)
+			require.Contains(t, server.listenersByBlock[blockID3], client)
+			require.Len(t, client.blocks, 3)
+			require.ElementsMatch(t, blockIDs, client.blocks)
 
-		require.True(t, client.isSubscribedToBlock(blockID1))
-		require.True(t, client.isSubscribedToBlock(blockID2))
-		require.True(t, client.isSubscribedToBlock(blockID3))
+			require.True(t, client.isSubscribedToBlock(blockID1))
+			require.True(t, client.isSubscribedToBlock(blockID2))
+			require.True(t, client.isSubscribedToBlock(blockID3))
+		})
 	})
 
 	t.Run("Should correctly unsubscribe to a set of blocks", func(t *testing.T) {

@@ -89,11 +89,6 @@ type clusterUpdateMsg struct {
 	WorkspaceID string `json:"workspace_id"`
 }
 
-// ErrorMsg is sent on errors.
-type ErrorMsg struct {
-	Error string `json:"error"`
-}
-
 // WebsocketCommand is an incoming command from the client.
 type WebsocketCommand struct {
 	Action      string   `json:"action"`
@@ -264,13 +259,13 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 }
 
 // isCommandReadTokenValid ensures that a command contains a read
-// token and a set of block ids that said token is valid for
+// token and a set of block ids that said token is valid for.
 func (ws *Server) isCommandReadTokenValid(command WebsocketCommand) bool {
 	if len(command.WorkspaceID) == 0 {
 		return false
 	}
 
-	container := store.Container{command.WorkspaceID}
+	container := store.Container{WorkspaceID: command.WorkspaceID}
 
 	if len(command.ReadToken) != 0 && len(command.BlockIDs) != 0 {
 		// Read token must be valid for all block IDs
@@ -289,7 +284,7 @@ func (ws *Server) isCommandReadTokenValid(command WebsocketCommand) bool {
 // addListener adds a listener to the websocket server. The listener
 // should not receive any update from the server until it subscribes
 // itself to some entity changes. Adding a listener to the server
-// doesn't mean that it's authenticated in any way
+// doesn't mean that it's authenticated in any way.
 func (ws *Server) addListener(client *wsClient) {
 	ws.mu.Lock()
 	defer ws.mu.Unlock()
@@ -297,7 +292,7 @@ func (ws *Server) addListener(client *wsClient) {
 }
 
 // removeListener removes a listener and all its subscriptions, if
-// any, from the websockets server
+// any, from the websockets server.
 func (ws *Server) removeListener(client *wsClient) {
 	ws.mu.Lock()
 	defer ws.mu.Unlock()
@@ -318,7 +313,7 @@ func (ws *Server) removeListener(client *wsClient) {
 }
 
 // subscribeListenerToWorkspace safely modifies the listener and the
-// server to subscribe the listener to a given workspace updates
+// server to subscribe the listener to a given workspace updates.
 func (ws *Server) subscribeListenerToWorkspace(client *wsClient, workspaceID string) {
 	if client.isSubscribedToWorkspace(workspaceID) {
 		return
@@ -333,7 +328,7 @@ func (ws *Server) subscribeListenerToWorkspace(client *wsClient, workspaceID str
 
 // unsubscribeListenerFromWorkspace safely modifies the listener and
 // the server data structures to remove the link between the listener
-// and a given workspace ID
+// and a given workspace ID.
 func (ws *Server) unsubscribeListenerFromWorkspace(client *wsClient, workspaceID string) {
 	if !client.isSubscribedToWorkspace(workspaceID) {
 		return
@@ -346,7 +341,7 @@ func (ws *Server) unsubscribeListenerFromWorkspace(client *wsClient, workspaceID
 }
 
 // subscribeListenerToBlocks safely modifies the listener and the
-// server to subscribe the listener to a given set of block updates
+// server to subscribe the listener to a given set of block updates.
 func (ws *Server) subscribeListenerToBlocks(client *wsClient, blockIDs []string) {
 	ws.mu.Lock()
 	defer ws.mu.Unlock()
@@ -363,7 +358,7 @@ func (ws *Server) subscribeListenerToBlocks(client *wsClient, blockIDs []string)
 
 // unsubscribeListenerFromBlocks safely modifies the listener and the
 // server data structures to remove the link between the listener and
-// a given set of block IDs
+// a given set of block IDs.
 func (ws *Server) unsubscribeListenerFromBlocks(client *wsClient, blockIDs []string) {
 	ws.mu.Lock()
 	defer ws.mu.Unlock()
@@ -376,7 +371,7 @@ func (ws *Server) unsubscribeListenerFromBlocks(client *wsClient, blockIDs []str
 }
 
 // removeListenerFromWorkspace removes the listener from both its own
-// block subscribed list and the server listeners by workspace map
+// block subscribed list and the server listeners by workspace map.
 func (ws *Server) removeListenerFromWorkspace(client *wsClient, workspaceID string) {
 	// we remove the listener from the workspace index
 	newWorkspaceListeners := []*wsClient{}
@@ -398,7 +393,7 @@ func (ws *Server) removeListenerFromWorkspace(client *wsClient, workspaceID stri
 }
 
 // removeListenerFromBlock removes the listener from both its own
-// block subscribed list and the server listeners by block map
+// block subscribed list and the server listeners by block map.
 func (ws *Server) removeListenerFromBlock(client *wsClient, blockID string) {
 	// we remove the listener from the block index
 	newBlockListeners := []*wsClient{}
@@ -439,7 +434,11 @@ func (ws *Server) getUserIDForToken(token string) string {
 func (ws *Server) authenticateListener(wsSession *websocketSession, token string) {
 	if wsSession.isAuthenticated() {
 		// Do not allow multiple auth calls (for security)
-		ws.logger.Debug("authenticateListener: Ignoring already authenticated session", mlog.String("userID", wsSession.userID), mlog.Stringer("client", wsSession.client.RemoteAddr()))
+		ws.logger.Debug(
+			"authenticateListener: Ignoring already authenticated session",
+			mlog.String("userID", wsSession.userID),
+			mlog.Stringer("client", wsSession.client.RemoteAddr()),
+		)
 		return
 	}
 
@@ -453,25 +452,6 @@ func (ws *Server) authenticateListener(wsSession *websocketSession, token string
 	// Authenticated
 	wsSession.userID = userID
 	ws.logger.Debug("authenticateListener: Authenticated", mlog.String("userID", userID), mlog.Stringer("client", wsSession.client.RemoteAddr()))
-}
-
-type AuthWorkspaceError struct {
-	msg string
-}
-
-func (awe AuthWorkspaceError) Error() string {
-	return awe.msg
-}
-
-func (ws *Server) sendError(wsClient *wsClient, message string) {
-	errorMsg := ErrorMsg{
-		Error: message,
-	}
-
-	if err := wsClient.WriteJSON(errorMsg); err != nil {
-		ws.logger.Error("sendError error", mlog.Err(err))
-		wsClient.Close()
-	}
 }
 
 func (ws *Server) SetHub(hub Hub) {

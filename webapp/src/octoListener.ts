@@ -191,7 +191,7 @@ class OctoListener {
 
         const command: WSCommand = {
             action: 'SUBSCRIBE_WORKSPACE',
-            workspaceId: workspaceId,
+            workspaceId,
         }
 
         this.ws.send(JSON.stringify(command))
