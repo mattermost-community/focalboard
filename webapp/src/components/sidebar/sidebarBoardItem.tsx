@@ -120,10 +120,12 @@ const SidebarBoardItem = React.memo((props: Props) => {
                                     board,
                                     intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'}),
                                     async () => {
-                                        // This delay is needed because OctoListener has a default 100 ms notification delay before updates
-                                        setTimeout(() => {
-                                            showBoard(props.nextBoardId)
-                                        }, 120)
+                                        if (props.nextBoardId) {
+                                            // This delay is needed because OctoListener has a default 100 ms notification delay before updates
+                                            setTimeout(() => {
+                                                showBoard(props.nextBoardId)
+                                            }, 120)
+                                        }
                                     },
                                     async () => {
                                         showBoard(board.id)

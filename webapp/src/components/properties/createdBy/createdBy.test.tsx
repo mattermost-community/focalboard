@@ -2,29 +2,34 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
+import {Provider as ReduxProvider} from 'react-redux'
 
 import {render} from '@testing-library/react'
+import configureStore from 'redux-mock-store'
 
-import {IUser, WorkspaceUsersContext} from '../../../user'
+import {IUser} from '../../../user'
 import {MutableCard} from '../../../blocks/card'
 
 import CreatedBy from './createdBy'
 
 describe('components/properties/createdBy', () => {
     test('should match snapshot', () => {
-        const workspaceUsers = {
-            users: new Array<IUser>(),
-            usersById: new Map<string, IUser>(),
-        }
-        workspaceUsers.usersById.set('user-id-1', {username: 'username_1'} as IUser)
-
         const card = new MutableCard()
         card.createdBy = 'user-id-1'
 
+        const mockStore = configureStore([])
+        const store = mockStore({
+            currentWorkspaceUsers: {
+                byId: {
+                    'user-id-1': {username: 'username_1'} as IUser,
+                },
+            },
+        })
+
         const component = (
-            <WorkspaceUsersContext.Provider value={workspaceUsers}>
+            <ReduxProvider store={store}>
                 <CreatedBy userID='user-id-1'/>
-            </WorkspaceUsersContext.Provider>
+            </ReduxProvider>
         )
 
         const {container} = render(component)
