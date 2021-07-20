@@ -6,11 +6,11 @@ import {BoardTree} from '../../../viewModel/boardTree'
 import {Constants} from '../../../constants'
 
 import './calculationRow.scss'
-import {CalculationOptions, Options, Option} from '../../calculations/options'
 import {IPropertyTemplate} from '../../../blocks/board'
 import {columnWidth} from '../tableRow'
 import {MutableBoardView} from '../../../blocks/boardView'
 import mutator from '../../../mutator'
+import Calculation from '../../calculations/calculation'
 
 type Props = {
     boardTree: BoardTree
@@ -35,48 +35,64 @@ const CalculationRow = (props: Props): JSX.Element => {
         titleTemplate,
         ...board.cardProperties.filter((template) => activeView.visiblePropertyIds.includes(template.id)),
     ]
-
     const selectedCalculations = activeView.columnCalculations
-    console.log('#########################################')
-    console.log(selectedCalculations)
-    console.log('#########################################')
 
     return (
         <div className='CalculationRow octo-table-row'>
             {
                 templates.map((template) => {
                     const style = {width: columnWidth(template.id, props.resizingColumn, props.boardTree, props.offset)}
-                    const value = selectedCalculations[template.id] || Options.get('none')!.value
-                    const valueOption = Options.get(value)
+                    const value = selectedCalculations[template.id]
 
-                    return showOptions.get(template.id) ? (
-                        <div
+                    return (
+                        <Calculation
                             key={template.id}
-                            className='octo-table-cell'
                             style={style}
-                        >
-                            <CalculationOptions
-                                value={value}
-                                menuOpen={showOptions.get(template.id)}
-                                onClose={() => toggleOptions(template.id, false)}
-                                onChange={(v: string) => {
-                                    const calculations = {...selectedCalculations}
-                                    calculations[template.id] = v
-                                    const newView = new MutableBoardView(activeView)
-                                    newView.columnCalculations = calculations
-                                    mutator.updateBlock(newView, activeView, 'update_calculation')
-                                }}
-                            />
-                        </div>
-                    ) : (
-                        <div
-                            className={'octo-table-cell'}
-                            style={style}
-                            onClick={() => toggleOptions(template.id, true)}
-                        >
-                            {valueOption!.label}
-                        </div>
+                            class='octo-table-cell'
+                            value={value}
+                            menuOpen={Boolean(showOptions.get(template.id))}
+                            onMenuClose={() => toggleOptions(template.id, false)}
+                            onMenuOpen={() => toggleOptions(template.id, true)}
+                            onChange={(v: string) => {
+                                const calculations = {...selectedCalculations}
+                                calculations[template.id] = v
+                                const newView = new MutableBoardView(activeView)
+                                newView.columnCalculations = calculations
+                                mutator.updateBlock(newView, activeView, 'update_calculation')
+                            }}
+                            cards={props.boardTree.cards}
+                            property={template}
+                        />
                     )
+
+                    // return showOptions.get(template.id) ? (
+                    //     <div
+                    //         key={template.id}
+                    //         className='octo-table-cell'
+                    //         style={style}
+                    //     >
+                    //         <CalculationOptions
+                    //             value={value}
+                    //             menuOpen={showOptions.get(template.id)}
+                    //             onClose={() => toggleOptions(template.id, false)}
+                    //             onChange={(v: string) => {
+                    //                 const calculations = {...selectedCalculations}
+                    //                 calculations[template.id] = v
+                    //                 const newView = new MutableBoardView(activeView)
+                    //                 newView.columnCalculations = calculations
+                    //                 mutator.updateBlock(newView, activeView, 'update_calculation')
+                    //             }}
+                    //         />
+                    //     </div>
+                    // ) : (
+                    //     <div
+                    //         className={'octo-table-cell'}
+                    //         style={style}
+                    //         onClick={() => toggleOptions(template.id, true)}
+                    //     >
+                    //         {valueOption!.label}
+                    //     </div>
+                    // )
                 })
             }
         </div>
