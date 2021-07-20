@@ -106,6 +106,7 @@ function makeCommonConfig() {
                 template: 'html-templates/page.ejs',
                 filename: 'index.html',
                 publicPath: '{{.BaseURL}}/',
+                hash: true,
             }),
         ],
         entry: ['./src/main.tsx', './src/userSettings.ts'],
