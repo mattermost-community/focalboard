@@ -32,7 +32,7 @@ class TestBlockFactory {
                 type: 'select',
                 options: [propertyOption],
             }
-            board.cardProperties.push(propertyTemplate)
+            board.fields.cardProperties.push(propertyTemplate)
         }
 
         return board

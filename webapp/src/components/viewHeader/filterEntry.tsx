@@ -8,8 +8,8 @@ import {FilterGroup} from '../../blocks/filterGroup'
 import mutator from '../../mutator'
 import {OctoUtils} from '../../octoUtils'
 import {Utils} from '../../utils'
-import {Board} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
+import {Board, IPropertyTemplate} from '../../blocks/board'
+import {MutableBoardView} from '../../blocks/boardView'
 import Button from '../../widgets/buttons/button'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
@@ -20,7 +20,7 @@ import './filterEntry.scss'
 
 type Props = {
     board: Board
-    view: BoardView
+    view: MutableBoardView
     conditionClicked: (optionId: string, filter: FilterClause) => void
     filter: FilterClause
 }
@@ -29,7 +29,7 @@ const FilterEntry = React.memo((props: Props): JSX.Element => {
     const {board, view, filter} = props
     const intl = useIntl()
 
-    const template = board.cardProperties.find((o) => o.id === filter.propertyId)
+    const template = board.fields.cardProperties.find((o: IPropertyTemplate) => o.id === filter.propertyId)
     const propertyName = template ? template.name : '(unknown)'		// TODO: Handle error
     const key = `${filter.propertyId}-${filter.condition}-${filter.values.join(',')}`
     return (
@@ -40,7 +40,7 @@ const FilterEntry = React.memo((props: Props): JSX.Element => {
             <MenuWrapper>
                 <Button>{propertyName}</Button>
                 <Menu>
-                    {board.cardProperties.filter((o) => o.type === 'select' || o.type === 'multiSelect').map((o) => (
+                    {board.fields.cardProperties.filter((o: IPropertyTemplate) => o.type === 'select' || o.type === 'multiSelect').map((o: IPropertyTemplate) => (
                         <Menu.Text
                             key={o.id}
                             id={o.id}

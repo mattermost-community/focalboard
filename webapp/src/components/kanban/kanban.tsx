@@ -6,7 +6,7 @@ import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {Board, IPropertyOption, IPropertyTemplate, BoardGroup} from '../../blocks/board'
 import {Card} from '../../blocks/card'
-import {BoardView} from '../../blocks/boardView'
+import {MutableBoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
@@ -20,7 +20,7 @@ import './kanban.scss'
 
 type Props = {
     board: Board
-    activeView: BoardView
+    activeView: MutableBoardView
     cards: Card[]
     groupByProperty?: IPropertyTemplate
     visibleGroups: BoardGroup[]
@@ -44,8 +44,8 @@ const Kanban = (props: Props) => {
     const propertyValues = groupByProperty.options || []
     Utils.log(`${propertyValues.length} propertyValues`)
 
-    const visiblePropertyTemplates = board.cardProperties.filter((template) => activeView.visiblePropertyIds.includes(template.id))
-    const isManualSort = activeView.sortOptions.length === 0
+    const visiblePropertyTemplates = board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
+    const isManualSort = activeView.fields.sortOptions.length === 0
 
     const propertyNameChanged = async (option: IPropertyOption, text: string): Promise<void> => {
         await mutator.changePropertyOptionValue(board, groupByProperty!, option, text)
@@ -129,7 +129,7 @@ const Kanban = (props: Props) => {
     const onDropToCard = async (srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)
         const {selectedCardIds} = props
-        const optionId = dstCard.properties[activeView.groupById!]
+        const optionId = dstCard.properties[activeView.fields.groupById!]
 
         const draggedCardIds = Array.from(new Set(selectedCardIds).add(srcCard.id))
 
@@ -182,6 +182,7 @@ const Kanban = (props: Props) => {
                         board={board}
                         activeView={activeView}
                         intl={props.intl}
+                        groupByProperty={groupByProperty}
                         addCard={props.addCard}
                         readonly={props.readonly}
                         propertyNameChanged={propertyNameChanged}

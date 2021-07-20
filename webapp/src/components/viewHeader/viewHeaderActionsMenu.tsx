@@ -7,7 +7,7 @@ import {CsvExporter} from '../../csvExporter'
 import {Archiver} from '../../archiver'
 import {IUser} from '../../user'
 import {Board} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
+import {MutableBoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
 import IconButton from '../../widgets/buttons/iconButton'
 import OptionsIcon from '../../widgets/icons/options'
@@ -22,7 +22,7 @@ import {sendFlashMessage} from '../flashMessages'
 
 type Props = {
     board: Board
-    activeView: BoardView
+    activeView: MutableBoardView
     cards: Card[]
 }
 
@@ -78,7 +78,7 @@ type Props = {
 //     })
 // }
 
-function onExportCsvTrigger(board: Board, activeView: BoardView, cards: Card[], intl: IntlShape) {
+function onExportCsvTrigger(board: Board, activeView: MutableBoardView, cards: Card[], intl: IntlShape) {
     try {
         CsvExporter.exportTableCsv(board, activeView, cards, intl)
         const exportCompleteMessage = intl.formatMessage({

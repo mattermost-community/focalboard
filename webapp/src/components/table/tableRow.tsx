@@ -6,8 +6,8 @@ import {FormattedMessage} from 'react-intl'
 import {Card} from '../../blocks/card'
 import {IContentBlock} from '../../blocks/contentBlock'
 import {CommentBlock} from '../../blocks/commentBlock'
-import {Board} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
+import {Board, IPropertyTemplate} from '../../blocks/board'
+import {MutableBoardView} from '../../blocks/boardView'
 import {Constants} from '../../constants'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
@@ -21,7 +21,7 @@ import './tableRow.scss'
 
 type Props = {
     board: Board
-    activeView: BoardView
+    activeView: MutableBoardView
     card: Card
     isSelected: boolean
     focusOnMount: boolean
@@ -44,8 +44,8 @@ const TableRow = React.memo((props: Props) => {
 
     const titleRef = useRef<{focus(selectAll?: boolean): void}>(null)
     const [title, setTitle] = useState(props.card.title)
-    const isManualSort = activeView.sortOptions.length === 0
-    const isGrouped = Boolean(activeView.groupById)
+    const isManualSort = activeView.fields.sortOptions.length === 0
+    const isGrouped = Boolean(activeView.fields.groupById)
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly && (isManualSort || isGrouped), props.onDrop)
 
     useEffect(() => {
@@ -56,9 +56,9 @@ const TableRow = React.memo((props: Props) => {
 
     const columnWidth = (templateId: string): number => {
         if (props.resizingColumn === templateId) {
-            return Math.max(Constants.minColumnWidth, (props.activeView.columnWidths[templateId] || 0) + props.offset)
+            return Math.max(Constants.minColumnWidth, (props.activeView.fields.columnWidths[templateId] || 0) + props.offset)
         }
-        return Math.max(Constants.minColumnWidth, props.activeView.columnWidths[templateId] || 0)
+        return Math.max(Constants.minColumnWidth, props.activeView.fields.columnWidths[templateId] || 0)
     }
 
     let className = props.isSelected ? 'TableRow octo-table-row selected' : 'TableRow octo-table-row'
@@ -66,8 +66,8 @@ const TableRow = React.memo((props: Props) => {
         className += ' dragover'
     }
     if (isGrouped) {
-        const groupID = activeView.groupById || ''
-        const groupValue = card.properties[groupID] as string || 'undefined'
+        const groupID = activeView.fields.groupById || ''
+        const groupValue = card.fields.properties[groupID] as string || 'undefined'
         if (activeView.collapsedOptionIds.indexOf(groupValue) > -1) {
             className += ' hidden'
         }
@@ -123,9 +123,9 @@ const TableRow = React.memo((props: Props) => {
 
             {/* Columns, one per property */}
 
-            {board.cardProperties.
-                filter((template) => activeView.visiblePropertyIds.includes(template.id)).
-                map((template) => {
+            {board.fields.cardProperties.
+                filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id)).
+                map((template: IPropertyTemplate) => {
                     if (!columnRefs.get(template.id)) {
                         columnRefs.set(template.id, React.createRef())
                     }

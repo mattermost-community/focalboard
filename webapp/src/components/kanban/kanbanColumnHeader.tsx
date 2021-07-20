@@ -7,7 +7,7 @@ import {useDrop, useDrag} from 'react-dnd'
 
 import {Constants} from '../../constants'
 import {IPropertyOption, IPropertyTemplate, Board, BoardGroup} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
+import {MutableBoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
@@ -23,7 +23,7 @@ import Label from '../../widgets/label'
 
 type Props = {
     board: Board
-    activeView: BoardView
+    activeView: MutableBoardView
     group: BoardGroup
     groupByProperty?: IPropertyTemplate
     intl: IntlShape

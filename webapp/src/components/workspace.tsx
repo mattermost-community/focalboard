@@ -4,16 +4,17 @@ import React from 'react'
 import {useRouteMatch} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
+import {IPropertyTemplate} from '../blocks/board'
 import {getBoard} from '../store/boards'
 import {getCardsByBoard} from '../store/cards'
-import {getView, getViews} from '../store/views'
+import {getView, getBoardViews} from '../store/views'
 import {useAppSelector} from '../store/hooks'
+import {Utils} from '../utils'
 
 import CenterPanel from './centerPanel'
 import EmptyCenterPanel from './emptyCenterPanel'
 import Sidebar from './sidebar/sidebar'
 import './workspace.scss'
-
 
 type Props = {
     readonly: boolean
@@ -24,15 +25,24 @@ function CenterContent(props: Props) {
     const board = useAppSelector(getBoard(match.params.boardId))
     const cards = useAppSelector(getCardsByBoard(match.params.boardId))
     const activeView = useAppSelector(getView(match.params.viewId))
-    const views = useAppSelector(getViews)
+    const views = useAppSelector(getBoardViews(match.params.boardId))
 
     if (board && activeView) {
+        // TODO: Allow to set the propertyId
+        const propertyId = null
+        let property = board?.fields.cardProperties.find((o: IPropertyTemplate) => o.id === propertyId)
+        if (!property || property.type !== 'select') {
+            // Utils.logError(`this.view.groupById card property not found: ${propertyId}`)
+            property = board?.fields.cardProperties.find((o: IPropertyTemplate) => o.type === 'select')
+            Utils.assertValue(property)
+        }
         return (
             <CenterPanel
                 readonly={props.readonly}
                 board={board}
                 cards={cards}
                 activeView={activeView}
+                groupByProperty={property}
                 views={views}
             />
         )

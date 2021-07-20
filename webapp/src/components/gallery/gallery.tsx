@@ -5,8 +5,8 @@ import {FormattedMessage} from 'react-intl'
 
 import {Constants} from '../../constants'
 import {MutableCard, Card} from '../../blocks/card'
-import {Board} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
+import {Board, IPropertyTemplate} from '../../blocks/board'
+import {MutableBoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import useCardListener from '../../hooks/cardListener'
@@ -18,7 +18,7 @@ import GalleryCard from './galleryCard'
 
 type Props = {
     board: Board
-    activeView: BoardView
+    activeView: MutableBoardView
     readonly: boolean
     addCard: (show: boolean) => Promise<void>
     selectedCardIds: string[]
@@ -27,9 +27,9 @@ type Props = {
 
 const Gallery = (props: Props): JSX.Element => {
     const {activeView, board} = props
-    const visiblePropertyTemplates = board.cardProperties.filter((template) => activeView.visiblePropertyIds.includes(template.id))
+    const visiblePropertyTemplates = board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
     const cards = useAppSelector(getCardsByBoard(board.id))
-    const isManualSort = activeView.sortOptions.length === 0
+    const isManualSort = activeView.fields.sortOptions.length === 0
     const dispatch = useAppDispatch()
 
     const onDropToCard = (srcCard: Card, dstCard: Card) => {
@@ -54,7 +54,7 @@ const Gallery = (props: Props): JSX.Element => {
         })
     }
 
-    const visibleTitle = activeView.visiblePropertyIds.includes(Constants.titleColumnId)
+    const visibleTitle = activeView.fields.visiblePropertyIds.includes(Constants.titleColumnId)
 
     useCardListener(
         async (blocks) => {

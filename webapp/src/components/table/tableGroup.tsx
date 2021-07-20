@@ -6,7 +6,7 @@ import React from 'react'
 import {useDrop} from 'react-dnd'
 
 import {Board, IPropertyOption, IPropertyTemplate, BoardGroup} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
+import {MutableBoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
 
 import TableGroupHeaderRow from './tableGroupHeaderRow'
@@ -14,7 +14,7 @@ import TableRows from './tableRows'
 
 type Props = {
     board: Board
-    activeView: BoardView
+    activeView: MutableBoardView
     groupByProperty?: IPropertyTemplate
     group: BoardGroup
     readonly: boolean

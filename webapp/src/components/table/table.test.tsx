@@ -15,7 +15,7 @@ import {HTML5Backend} from 'react-dnd-html5-backend'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import {FetchMock} from '../../test/fetchMock'
-import {BoardView} from '../../blocks/boardView'
+import {MutableBoardView} from '../../blocks/boardView'
 
 import {IUser} from '../../user'
 
@@ -42,7 +42,7 @@ describe('components/table/Table', () => {
     const view = TestBlockFactory.createBoardView(board)
     view.viewType = 'table'
     view.groupById = undefined
-    view.visiblePropertyIds = ['property1', 'property2']
+    view.fields.visiblePropertyIds = ['property1', 'property2']
 
     const view2 = TestBlockFactory.createBoardView(board)
     view2.sortOptions = []
@@ -105,7 +105,7 @@ describe('components/table/Table', () => {
         const component = wrapProviders(
             <Table
                 board={board}
-                activeView={{...view, groupById: 'property1'} as BoardView}
+                activeView={{...view, groupById: 'property1'} as MutableBoardView}
                 visibleGroups={[]}
                 cards={[card]}
                 views={[view, view2]}
@@ -127,7 +127,7 @@ describe('components/table/Table extended', () => {
         const board = TestBlockFactory.createBoard()
 
         const dateCreatedId = Utils.createGuid()
-        board.cardProperties.push({
+        board.fields.cardProperties.push({
             id: dateCreatedId,
             name: 'Date Created',
             type: 'createdTime',
@@ -143,7 +143,7 @@ describe('components/table/Table extended', () => {
         const view = TestBlockFactory.createBoardView(board)
         view.viewType = 'table'
         view.groupById = undefined
-        view.visiblePropertyIds = ['property1', 'property2', dateCreatedId]
+        view.fields.visiblePropertyIds = ['property1', 'property2', dateCreatedId]
 
         const callback = jest.fn()
         const addCard = jest.fn()
@@ -183,7 +183,7 @@ describe('components/table/Table extended', () => {
         const board = TestBlockFactory.createBoard()
 
         const dateUpdatedId = Utils.createGuid()
-        board.cardProperties.push({
+        board.fields.cardProperties.push({
             id: dateUpdatedId,
             name: 'Date Updated',
             type: 'updatedTime',
@@ -209,7 +209,7 @@ describe('components/table/Table extended', () => {
         const view = TestBlockFactory.createBoardView(board)
         view.viewType = 'table'
         view.groupById = undefined
-        view.visiblePropertyIds = ['property1', 'property2', dateUpdatedId]
+        view.fields.visiblePropertyIds = ['property1', 'property2', dateUpdatedId]
 
         const callback = jest.fn()
         const addCard = jest.fn()
@@ -237,7 +237,7 @@ describe('components/table/Table extended', () => {
         const board = TestBlockFactory.createBoard()
 
         const createdById = Utils.createGuid()
-        board.cardProperties.push({
+        board.fields.cardProperties.push({
             id: createdById,
             name: 'Created By',
             type: 'createdBy',
@@ -253,7 +253,7 @@ describe('components/table/Table extended', () => {
         const view = TestBlockFactory.createBoardView(board)
         view.viewType = 'table'
         view.groupById = undefined
-        view.visiblePropertyIds = ['property1', 'property2', createdById]
+        view.fields.visiblePropertyIds = ['property1', 'property2', createdById]
 
         const callback = jest.fn()
         const addCard = jest.fn()
@@ -294,7 +294,7 @@ describe('components/table/Table extended', () => {
         const board = TestBlockFactory.createBoard()
 
         const modifiedById = Utils.createGuid()
-        board.cardProperties.push({
+        board.fields.cardProperties.push({
             id: modifiedById,
             name: 'Last Modified By',
             type: 'updatedBy',
@@ -324,7 +324,7 @@ describe('components/table/Table extended', () => {
         const view = TestBlockFactory.createBoardView(board)
         view.viewType = 'table'
         view.groupById = undefined
-        view.visiblePropertyIds = ['property1', 'property2', modifiedById]
+        view.fields.visiblePropertyIds = ['property1', 'property2', modifiedById]
 
         const callback = jest.fn()
         const addCard = jest.fn()

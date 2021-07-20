@@ -5,7 +5,7 @@ import React from 'react'
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Constants} from '../../constants'
 import {Card} from '../../blocks/card'
-import {BoardView} from '../../blocks/boardView'
+import {MutableBoardView} from '../../blocks/boardView'
 import SortDownIcon from '../../widgets/icons/sortDown'
 import SortUpIcon from '../../widgets/icons/sortUp'
 import MenuWrapper from '../../widgets/menuWrapper'
@@ -23,9 +23,9 @@ type Props = {
     sorted: 'up'|'down'|'none'
     name: React.ReactNode
     board: Board
-    activeView: BoardView
+    activeView: MutableBoardView
     cards: Card[]
-    views: BoardView[]
+    views: MutableBoardView[]
     template: IPropertyTemplate
     offset: number
     onDrop: (template: IPropertyTemplate, container: IPropertyTemplate) => void
@@ -36,7 +36,7 @@ const TableHeader = React.memo((props: Props): JSX.Element => {
     const [isDragging, isOver, columnRef] = useSortable('column', props.template, !props.readonly, props.onDrop)
 
     const columnWidth = (templateId: string): number => {
-        return Math.max(Constants.minColumnWidth, (props.activeView.columnWidths[templateId] || 0) + props.offset)
+        return Math.max(Constants.minColumnWidth, (props.activeView.fields.columnWidths[templateId] || 0) + props.offset)
     }
 
     const onAutoSizeColumn = (templateId: string) => {

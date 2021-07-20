@@ -5,7 +5,7 @@ import React from 'react'
 import {IPropertyTemplate} from '../../blocks/board'
 import {FilterClause} from '../../blocks/filterClause'
 import {FilterGroup} from '../../blocks/filterGroup'
-import {BoardView} from '../../blocks/boardView'
+import {MutableBoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
@@ -15,7 +15,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import './filterValue.scss'
 
 type Props = {
-    view: BoardView
+    view: MutableBoardView
     filter: FilterClause
     template: IPropertyTemplate
 }

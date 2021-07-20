@@ -6,7 +6,7 @@ import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Constants} from '../../constants'
 import {IPropertyOption, Board, IPropertyTemplate, BoardGroup} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
+import {MutableBoardView} from '../../blocks/boardView'
 import {useSortable} from '../../hooks/sortable'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
@@ -23,7 +23,7 @@ import Label from '../../widgets/label'
 
 type Props = {
     board: Board
-    activeView: BoardView
+    activeView: MutableBoardView
     group: BoardGroup
     groupByProperty?: IPropertyTemplate
     readonly: boolean

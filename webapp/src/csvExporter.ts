@@ -3,7 +3,7 @@
 import {IntlShape} from 'react-intl'
 
 import {BoardView} from './blocks/boardView'
-import {Board} from './blocks/board'
+import {Board, IPropertyTemplate} from './blocks/board'
 import {Card} from './blocks/card'
 import {OctoUtils} from './octoUtils'
 import {Utils} from './utils'
@@ -49,12 +49,12 @@ class CsvExporter {
 
     private static generateTableArray(board: Board, cards: Card[], viewToExport: BoardView, intl: IntlShape): string[][] {
         const rows: string[][] = []
-        const visibleProperties = board.cardProperties.filter((template) => viewToExport.visiblePropertyIds.includes(template.id))
+        const visibleProperties = board.fields.cardProperties.filter((template: IPropertyTemplate) => viewToExport.fields.visiblePropertyIds.includes(template.id))
 
         {
             // Header row
             const row: string[] = ['Title']
-            visibleProperties.forEach((template) => {
+            visibleProperties.forEach((template: IPropertyTemplate) => {
                 row.push(template.name)
             })
             rows.push(row)
@@ -63,8 +63,8 @@ class CsvExporter {
         cards.forEach((card) => {
             const row: string[] = []
             row.push(`"${this.encodeText(card.title)}"`)
-            visibleProperties.forEach((template) => {
-                const propertyValue = card.properties[template.id]
+            visibleProperties.forEach((template: IPropertyTemplate) => {
+                const propertyValue = card.fields.properties[template.id]
                 const displayValue = (OctoUtils.propertyDisplayValue(card, propertyValue, template, intl) || '') as string
                 if (template.type === 'number') {
                     const numericValue = propertyValue ? Number(propertyValue).toString() : ''

@@ -4,8 +4,8 @@ import React, {useCallback} from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
-import {Board} from '../blocks/board'
-import {BoardView, IViewType, MutableBoardView} from '../blocks/boardView'
+import {Board, IPropertyTemplate} from '../blocks/board'
+import {IViewType, MutableBoardView} from '../blocks/boardView'
 import {Constants} from '../constants'
 import mutator from '../mutator'
 import {Utils} from '../utils'
@@ -19,8 +19,8 @@ import Menu from '../widgets/menu'
 
 type Props = {
     board: Board,
-    activeView: BoardView,
-    views: BoardView[],
+    activeView: MutableBoardView,
+    views: MutableBoardView[],
     intl: IntlShape
     readonly: boolean
 }
@@ -110,7 +110,7 @@ const ViewMenu = React.memo((props: Props) => {
         view.viewType = 'table'
         view.parentId = board.id
         view.rootId = board.rootId
-        view.visiblePropertyIds = board.cardProperties.map((o) => o.id)
+        view.fields.visiblePropertyIds = board.fields.cardProperties.map((o: IPropertyTemplate) => o.id)
         view.columnWidths = {}
         view.columnWidths[Constants.titleColumnId] = Constants.defaultTitleColumnWidth
 
@@ -140,7 +140,7 @@ const ViewMenu = React.memo((props: Props) => {
         view.viewType = 'gallery'
         view.parentId = board.id
         view.rootId = board.rootId
-        view.visiblePropertyIds = [Constants.titleColumnId]
+        view.fields.visiblePropertyIds = [Constants.titleColumnId]
 
         const oldViewId = activeView.id
 
@@ -193,7 +193,7 @@ const ViewMenu = React.memo((props: Props) => {
 
     return (
         <Menu>
-            {views.map((view: BoardView) => (
+            {views.map((view: MutableBoardView) => (
                 <Menu.Text
                     key={view.id}
                     id={view.id}

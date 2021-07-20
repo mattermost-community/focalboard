@@ -127,7 +127,7 @@ describe('components/table/TableRow', () => {
     })
 
     test('should match snapshot, display properties', async () => {
-        view.visiblePropertyIds = ['property1', 'property2']
+        view.fields.visiblePropertyIds = ['property1', 'property2']
 
         const component = wrapProviders(
             <TableRow
@@ -150,7 +150,7 @@ describe('components/table/TableRow', () => {
     })
 
     test('should match snapshot, resizing column', async () => {
-        view.visiblePropertyIds = ['property1', 'property2']
+        view.fields.visiblePropertyIds = ['property1', 'property2']
 
         const component = wrapProviders(
             <TableRow

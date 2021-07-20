@@ -4,7 +4,7 @@ import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {IPropertyTemplate} from '../../blocks/board'
-import {BoardView, MutableBoardView, ISortOption} from '../../blocks/boardView'
+import {MutableBoardView, ISortOption} from '../../blocks/boardView'
 import {Constants} from '../../constants'
 import {Card} from '../../blocks/card'
 import mutator from '../../mutator'
@@ -16,14 +16,14 @@ import SortUpIcon from '../../widgets/icons/sortUp'
 
 type Props = {
     properties: readonly IPropertyTemplate[]
-    activeView: BoardView
+    activeView: MutableBoardView
     orderedCards: Card[]
 }
 const ViewHeaderSortMenu = React.memo((props: Props) => {
     const {properties, activeView, orderedCards} = props
-    const hasSort = activeView.sortOptions.length > 0
-    const sortDisplayOptions = properties.map((o) => ({id: o.id, name: o.name}))
-    sortDisplayOptions.unshift({id: Constants.titleColumnId, name: 'Name'})
+    const hasSort = activeView.sortOptions?.length > 0
+    const sortDisplayOptions = properties?.map((o) => ({id: o.id, name: o.name}))
+    sortDisplayOptions?.unshift({id: Constants.titleColumnId, name: 'Name'})
 
     return (
         <MenuWrapper>
@@ -34,7 +34,7 @@ const ViewHeaderSortMenu = React.memo((props: Props) => {
                 />
             </Button>
             <Menu>
-                {(activeView.sortOptions.length > 0) &&
+                {(activeView.sortOptions?.length > 0) &&
                 <>
                     <Menu.Text
                         id='manual'
@@ -61,9 +61,9 @@ const ViewHeaderSortMenu = React.memo((props: Props) => {
                 </>
                 }
 
-                {sortDisplayOptions.map((option) => {
+                {sortDisplayOptions?.map((option) => {
                     let rightIcon: JSX.Element | undefined
-                    if (activeView.sortOptions.length > 0) {
+                    if (activeView.sortOptions?.length > 0) {
                         const sortOption = activeView.sortOptions[0]
                         if (sortOption.propertyId === option.id) {
                             rightIcon = sortOption.reversed ? <SortDownIcon/> : <SortUpIcon/>
@@ -77,7 +77,7 @@ const ViewHeaderSortMenu = React.memo((props: Props) => {
                             rightIcon={rightIcon}
                             onClick={(propertyId: string) => {
                                 let newSortOptions: ISortOption[] = []
-                                if (activeView.sortOptions[0] && activeView.sortOptions[0].propertyId === propertyId) {
+                                if (activeView.sortOptions && activeView.sortOptions[0] && activeView.sortOptions[0].propertyId === propertyId) {
                                     // Already sorting by name, so reverse it
                                     newSortOptions = [
                                         {propertyId, reversed: !activeView.sortOptions[0].reversed},

@@ -5,7 +5,7 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board} from '../../blocks/board'
-import {BoardView, IViewType, sortBoardViewsAlphabetically} from '../../blocks/boardView'
+import {MutableBoardView, IViewType, sortBoardViewsAlphabetically} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import IconButton from '../../widgets/buttons/iconButton'
 import BoardIcon from '../../widgets/icons/board'
@@ -21,7 +21,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import './sidebarBoardItem.scss'
 
 type Props = {
-    views: readonly BoardView[]
+    views: MutableBoardView[]
     board: Board
     activeBoardId?: string
     nextBoardId?: string
@@ -166,7 +166,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                     className='octo-sidebar-item subitem'
                     onClick={() => showView(view.id, board.id)}
                 >
-                    {iconForViewType(view.viewType)}
+                    {iconForViewType(view.fields.viewType)}
                     <div
                         className='octo-sidebar-title'
                         title={view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}

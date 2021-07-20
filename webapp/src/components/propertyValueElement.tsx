@@ -40,11 +40,11 @@ type Props = {
 }
 
 const PropertyValueElement = (props:Props): JSX.Element => {
-    const [value, setValue] = useState(props.card.properties[props.propertyTemplate.id])
+    const [value, setValue] = useState(props.card.fields.properties[props.propertyTemplate.id])
 
     const {card, propertyTemplate, readOnly, emptyDisplayValue, board, contents, comments} = props
     const intl = useIntl()
-    const propertyValue = card.properties[propertyTemplate.id]
+    const propertyValue = card.fields.properties[propertyTemplate.id]
     const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate, intl)
     const finalDisplayValue = displayValue || emptyDisplayValue
     const [open, setOpen] = useState(false)

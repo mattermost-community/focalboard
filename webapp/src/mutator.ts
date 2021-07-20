@@ -194,8 +194,8 @@ class Mutator {
         const oldBlocks: IBlock[] = [board]
 
         const newBoard = new MutableBoard(board)
-        const startIndex = (index >= 0) ? index : board.cardProperties.length
-        newBoard.cardProperties.splice(startIndex, 0, newTemplate)
+        const startIndex = (index >= 0) ? index : board.fields.cardProperties.length
+        newBoard.fields.cardProperties.splice(startIndex, 0, newTemplate)
         const changedBlocks: IBlock[] = [newBoard]
 
         let description = 'add property'
@@ -204,7 +204,7 @@ class Mutator {
             oldBlocks.push(activeView)
 
             const newActiveView = new MutableBoardView(activeView)
-            newActiveView.visiblePropertyIds.push(newTemplate.id)
+            newActiveView.fields.visiblePropertyIds.push(newTemplate.id)
             changedBlocks.push(newActiveView)
 
             description = 'add column'
@@ -223,26 +223,26 @@ class Mutator {
 
         const newBoard = new MutableBoard(board)
         const changedBlocks: IBlock[] = [newBoard]
-        const index = newBoard.cardProperties.findIndex((o) => o.id === propertyId)
+        const index = newBoard.fields.cardProperties.findIndex((o: IPropertyTemplate) => o.id === propertyId)
         if (index === -1) {
             Utils.assertFailure(`Cannot find template with id: ${propertyId}`)
             return
         }
-        const srcTemplate = newBoard.cardProperties[index]
+        const srcTemplate = newBoard.fields.cardProperties[index]
         const newTemplate: IPropertyTemplate = {
             id: Utils.createGuid(),
             name: `${srcTemplate.name} copy`,
             type: srcTemplate.type,
             options: srcTemplate.options.slice(),
         }
-        newBoard.cardProperties.splice(index + 1, 0, newTemplate)
+        newBoard.fields.cardProperties.splice(index + 1, 0, newTemplate)
 
         let description = 'duplicate property'
         if (activeView.viewType === 'table') {
             oldBlocks.push(activeView)
 
             const newActiveView = new MutableBoardView(activeView)
-            newActiveView.visiblePropertyIds.push(newTemplate.id)
+            newActiveView.fields.visiblePropertyIds.push(newTemplate.id)
             changedBlocks.push(newActiveView)
 
             description = 'duplicate column'
@@ -252,7 +252,7 @@ class Mutator {
     }
 
     async changePropertyTemplateOrder(board: Board, template: IPropertyTemplate, destIndex: number) {
-        const templates = board.cardProperties
+        const templates = board.fields.cardProperties
         const newValue = templates.slice()
 
         const srcIndex = templates.indexOf(template)
@@ -260,7 +260,7 @@ class Mutator {
         newValue.splice(destIndex, 0, newValue.splice(srcIndex, 1)[0])
 
         const newBoard = new MutableBoard(board)
-        newBoard.cardProperties = newValue
+        newBoard.fields.cardProperties = newValue
 
         await this.updateBlock(newBoard, board, 'reorder properties')
     }
@@ -270,14 +270,14 @@ class Mutator {
 
         const newBoard = new MutableBoard(board)
         const changedBlocks: IBlock[] = [newBoard]
-        newBoard.cardProperties = board.cardProperties.filter((o) => o.id !== propertyId)
+        newBoard.fields.cardProperties = board.fields.cardProperties.filter((o: IPropertyTemplate) => o.id !== propertyId)
 
         views.forEach((view) => {
-            if (view.visiblePropertyIds.includes(propertyId)) {
+            if (view.fields.visiblePropertyIds.includes(propertyId)) {
                 oldBlocks.push(view)
 
                 const newView = new MutableBoardView(view)
-                newView.visiblePropertyIds = view.visiblePropertyIds.filter((o) => o !== propertyId)
+                newView.fields.visiblePropertyIds = view.fields.visiblePropertyIds.filter((o: string) => o !== propertyId)
                 changedBlocks.push(newView)
             }
         })
@@ -297,10 +297,10 @@ class Mutator {
     // Properties
 
     async insertPropertyOption(board: Board, template: IPropertyTemplate, option: IPropertyOption, description = 'add option') {
-        Utils.assert(board.cardProperties.includes(template))
+        Utils.assert(board.fields.cardProperties.includes(template))
 
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)!
+        const newTemplate = newBoard.fields.cardProperties.find((o: IPropertyTemplate) => o.id === template.id)!
         newTemplate.options.push(option)
 
         await this.updateBlock(newBoard, board, description)
@@ -308,8 +308,8 @@ class Mutator {
 
     async deletePropertyOption(board: Board, template: IPropertyTemplate, option: IPropertyOption) {
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)!
-        newTemplate.options = newTemplate.options.filter((o) => o.id !== option.id)
+        const newTemplate = newBoard.fields.cardProperties.find((o: IPropertyTemplate) => o.id === template.id)!
+        newTemplate.options = newTemplate.options.filter((o: IPropertyTemplate) => o.id !== option.id)
 
         await this.updateBlock(newBoard, board, 'delete option')
     }
@@ -319,7 +319,7 @@ class Mutator {
         Utils.log(`srcIndex: ${srcIndex}, destIndex: ${destIndex}`)
 
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)!
+        const newTemplate = newBoard.fields.cardProperties.find((o: IPropertyTemplate) => o.id === template.id)!
         newTemplate.options.splice(destIndex, 0, newTemplate.options.splice(srcIndex, 1)[0])
 
         await this.updateBlock(newBoard, board, 'reorder options')
@@ -329,8 +329,8 @@ class Mutator {
         const oldBlocks: IBlock[] = [board]
 
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o) => o.id === propertyTemplate.id)!
-        const newOption = newTemplate.options.find((o) => o.id === option.id)!
+        const newTemplate = newBoard.fields.cardProperties.find((o: IPropertyTemplate) => o.id === propertyTemplate.id)!
+        const newOption = newTemplate.options.find((o: IPropertyTemplate) => o.id === option.id)!
         newOption.value = value
         const changedBlocks: IBlock[] = [newBoard]
 
@@ -341,8 +341,8 @@ class Mutator {
 
     async changePropertyOptionColor(board: Board, template: IPropertyTemplate, option: IPropertyOption, color: string) {
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)!
-        const newOption = newTemplate.options.find((o) => o.id === option.id)!
+        const newTemplate = newBoard.fields.cardProperties.find((o: IPropertyTemplate) => o.id === template.id)!
+        const newOption = newTemplate.options.find((o: IPropertyTemplate) => o.id === option.id)!
         newOption.color = color
         await this.updateBlock(newBoard, board, 'change option color')
     }
@@ -363,7 +363,7 @@ class Mutator {
         }
 
         const newBoard = new MutableBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o) => o.id === propertyTemplate.id)!
+        const newTemplate = newBoard.fields.cardProperties.find((o: IPropertyTemplate) => o.id === propertyTemplate.id)!
         newTemplate.options = []
         newTemplate.type = newType
         newTemplate.name = newName
@@ -406,7 +406,7 @@ class Mutator {
                 for (const card of cards) {
                     const oldValue = card.properties[propertyTemplate.id] as string
                     if (oldValue) {
-                        let option = newTemplate.options.find((o) => o.value === oldValue)
+                        let option = newTemplate.options.find((o: IPropertyOption) => o.value === oldValue)
                         if (!option) {
                             option = {
                                 id: Utils.createGuid(),
@@ -445,7 +445,7 @@ class Mutator {
 
     async changeViewGroupById(view: BoardView, groupById: string): Promise<void> {
         const newView = new MutableBoardView(view)
-        newView.groupById = groupById
+        newView.fields.groupById = groupById
         newView.hiddenOptionIds = []
         newView.visibleOptionIds = []
         await this.updateBlock(newView, view, 'group by')
@@ -453,7 +453,7 @@ class Mutator {
 
     async changeViewVisibleProperties(view: BoardView, visiblePropertyIds: string[], description = 'show / hide property'): Promise<void> {
         const newView = new MutableBoardView(view)
-        newView.visiblePropertyIds = visiblePropertyIds
+        newView.fields.visiblePropertyIds = visiblePropertyIds
         await this.updateBlock(newView, view, description)
     }
 

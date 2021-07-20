@@ -6,7 +6,7 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import {CommentBlock} from '../blocks/commentBlock'
-import {BoardView} from '../blocks/boardView'
+import {MutableBoardView} from '../blocks/boardView'
 import {Board} from '../blocks/board'
 import {Card} from '../blocks/card'
 import DeleteIcon from '../widgets/icons/delete'
@@ -21,8 +21,8 @@ import Dialog from './dialog'
 
 type Props = {
     board: Board
-    activeView: BoardView
-    views: BoardView[]
+    activeView: MutableBoardView
+    views: MutableBoardView[]
     cards: Card[]
     cardId: string
     onClose: () => void

@@ -5,7 +5,7 @@ import {FormattedMessage} from 'react-intl'
 
 import {BlockIcons} from '../../blockIcons'
 import {Card} from '../../blocks/card'
-import {BoardView} from '../../blocks/boardView'
+import {MutableBoardView} from '../../blocks/boardView'
 import {Board} from '../../blocks/board'
 import {CommentBlock} from '../../blocks/commentBlock.ts'
 import {IContentBlock} from '../../blocks/contentBlock'
@@ -25,8 +25,8 @@ import './cardDetail.scss'
 
 type Props = {
     board: Board
-    activeView: BoardView
-    views: BoardView[]
+    activeView: MutableBoardView
+    views: MutableBoardView[]
     cards: Card[]
     card: Card
     comments: CommentBlock[]

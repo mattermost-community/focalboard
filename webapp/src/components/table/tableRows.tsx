@@ -5,7 +5,7 @@ import {useDragLayer} from 'react-dnd'
 
 import {Card} from '../../blocks/card'
 import {Board} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
+import {MutableBoardView} from '../../blocks/boardView'
 
 import './table.scss'
 
@@ -13,7 +13,7 @@ import TableRow from './tableRow'
 
 type Props = {
     board: Board
-    activeView: BoardView
+    activeView: MutableBoardView
     columnRefs: Map<string, React.RefObject<HTMLDivElement>>
     cards: readonly Card[]
     selectedCardIds: string[]
@@ -54,7 +54,7 @@ const TableRows = (props: Props) => {
                         focusOnMount={props.cardIdToFocusOnRender === card.id}
                         onSaveWithEnter={() => {
                             if (cards.length > 0 && cards[cards.length - 1] === card) {
-                                props.addCard(activeView.groupById ? card.properties[activeView.groupById!] as string : '')
+                                props.addCard(activeView.fields.groupById ? card.fields.properties[activeView.fields.groupById!] as string : '')
                             }
                         }}
                         onClick={(e: React.MouseEvent<HTMLDivElement>) => {

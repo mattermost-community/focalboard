@@ -7,8 +7,8 @@ import Hotkeys from 'react-hot-keys'
 
 import {BlockIcons} from '../blockIcons'
 import {Card, MutableCard} from '../blocks/card'
-import {Board, IPropertyTemplate} from '../blocks/board'
-import {BoardView} from '../blocks/boardView'
+import {Board, IPropertyTemplate, IPropertyOption, BoardGroup} from '../blocks/board'
+import {MutableBoardView} from '../blocks/boardView'
 import {CardFilter} from '../cardFilter'
 import mutator from '../mutator'
 import {Utils} from '../utils'
@@ -28,8 +28,8 @@ import Gallery from './gallery/gallery'
 type Props = {
     board: Board
     cards: Card[]
-    activeView: BoardView
-    views: BoardView[]
+    activeView: MutableBoardView
+    views: MutableBoardView[]
     groupByProperty?: IPropertyTemplate
     intl: IntlShape
     readonly: boolean
@@ -99,8 +99,9 @@ class CenterPanel extends React.Component<Props, State> {
 
     render(): JSX.Element {
         const {groupByProperty, activeView, board, views, cards} = this.props
+        const {visible: visibleGroups, hidden: hiddenGroups} = this.getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty)
 
-        if (!groupByProperty && activeView.viewType === 'board') {
+        if (!groupByProperty && activeView.fields.viewType === 'board') {
             Utils.assertFailure('Board views must have groupByProperty set')
             return <div/>
         }
@@ -153,15 +154,14 @@ class CenterPanel extends React.Component<Props, State> {
                     />
                 </div>
 
-                {/* TODO: Pass correctly the visibleGroups and the hiddenGroups */}
-                {activeView.viewType === 'board' &&
+                {activeView.fields.viewType === 'board' &&
                 <Kanban
                     board={this.props.board}
                     activeView={this.props.activeView}
                     cards={this.props.cards}
                     groupByProperty={this.props.groupByProperty}
-                    visibleGroups={[]}
-                    hiddenGroups={[]}
+                    visibleGroups={visibleGroups}
+                    hiddenGroups={hiddenGroups}
                     selectedCardIds={this.state.selectedCardIds}
                     readonly={this.props.readonly}
                     onCardClicked={this.cardClicked}
@@ -170,14 +170,14 @@ class CenterPanel extends React.Component<Props, State> {
                 />}
 
                 {/* TODO: Pass correctly the visibleGroups */}
-                {activeView.viewType === 'table' &&
+                {activeView.fields.viewType === 'table' &&
                     <Table
                         board={this.props.board}
                         activeView={this.props.activeView}
                         cards={this.props.cards}
                         groupByProperty={this.props.groupByProperty}
                         views={this.props.views}
-                        visibleGroups={[]}
+                        visibleGroups={visibleGroups}
                         selectedCardIds={this.state.selectedCardIds}
                         readonly={this.props.readonly}
                         cardIdToFocusOnRender={this.state.cardIdToFocusOnRender}
@@ -186,7 +186,7 @@ class CenterPanel extends React.Component<Props, State> {
                         onCardClicked={this.cardClicked}
                     />}
 
-                {activeView.viewType === 'gallery' &&
+                {activeView.fields.viewType === 'gallery' &&
                     <Gallery
                         board={this.props.board}
                         activeView={this.props.activeView}
@@ -228,15 +228,15 @@ class CenterPanel extends React.Component<Props, State> {
 
         card.parentId = board.id
         card.rootId = board.rootId
-        const propertiesThatMeetFilters = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
-        if ((activeView.viewType === 'board' || activeView.viewType === 'table') && groupByProperty) {
+        const propertiesThatMeetFilters = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.fields.cardProperties)
+        if ((activeView.fields.viewType === 'board' || activeView.fields.viewType === 'table') && groupByProperty) {
             if (groupByOptionId) {
                 propertiesThatMeetFilters[groupByProperty.id] = groupByOptionId
             } else {
                 delete propertiesThatMeetFilters[groupByProperty.id]
             }
         }
-        card.properties = {...card.properties, ...propertiesThatMeetFilters}
+        card.fields.properties = {...card.fields.properties, ...propertiesThatMeetFilters}
         if (!card.icon && UserSettings.prefillRandomIcons) {
             card.icon = BlockIcons.shared.randomIcon()
         }
@@ -307,7 +307,7 @@ class CenterPanel extends React.Component<Props, State> {
                 }
                 this.setState({selectedCardIds})
             }
-        } else if (activeView.viewType === 'board' || activeView.viewType === 'gallery') {
+        } else if (activeView.fields.viewType === 'board' || activeView.fields.viewType === 'gallery') {
             this.showCard(card.id)
         }
 
@@ -357,6 +357,57 @@ class CenterPanel extends React.Component<Props, State> {
         })
 
         this.setState({selectedCardIds: []})
+    }
+    private groupCardsByOptions(cards: Card[], optionIds: string[], groupByProperty: IPropertyTemplate): BoardGroup[] {
+        const groups = []
+        for (const optionId of optionIds) {
+            if (optionId) {
+                const option = groupByProperty.options.find((o) => o.id === optionId)
+                if (option) {
+                    const c = cards.filter((o) => optionId === o.fields.properties[groupByProperty.id])
+                    const group: BoardGroup = {
+                        option,
+                        cards: c,
+                    }
+                    groups.push(group)
+                } else {
+                    Utils.logError(`groupCardsByOptions: Missing option with id: ${optionId}`)
+                }
+            } else {
+                // Empty group
+                const emptyGroupCards = cards.filter((card) => {
+                    const groupByOptionId = card.fields.properties[groupByProperty.id]
+                    return !groupByOptionId || !groupByProperty.options.find((option) => option.id === groupByOptionId)
+                })
+                const group: BoardGroup = {
+                    option: {id: '', value: `No ${groupByProperty.name}`, color: ''},
+                    cards: emptyGroupCards,
+                }
+                groups.push(group)
+            }
+        }
+        return groups
+    }
+
+    private getVisibleAndHiddenGroups(cards: Card[], visibleOptionIds: string[], hiddenOptionIds: string[], groupByProperty?: IPropertyTemplate): {visible: BoardGroup[], hidden: BoardGroup[]} {
+        if (!groupByProperty) {
+            Utils.assertFailure('groupCards')
+            return {visible: [], hidden: []}
+        }
+
+        const unassignedOptionIds = groupByProperty.options.
+            filter((o: IPropertyOption) => !visibleOptionIds.includes(o.id) && !hiddenOptionIds.includes(o.id)).
+            map((o: IPropertyOption) => o.id)
+        const allVisibleOptionIds = [...visibleOptionIds, ...unassignedOptionIds]
+
+        // If the empty group positon is not explicitly specified, make it the first visible column
+        if (!allVisibleOptionIds.includes('') && !hiddenOptionIds.includes('')) {
+            allVisibleOptionIds.unshift('')
+        }
+
+        const visibleGroups = this.groupCardsByOptions(cards, allVisibleOptionIds, groupByProperty)
+        const hiddenGroups = this.groupCardsByOptions(cards, hiddenOptionIds, groupByProperty)
+        return {visible: visibleGroups, hidden: hiddenGroups}
     }
 }
 

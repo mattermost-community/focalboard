@@ -6,7 +6,7 @@ import {FormattedMessage} from 'react-intl'
 import ViewMenu from '../../components/viewMenu'
 import mutator from '../../mutator'
 import {Board, IPropertyTemplate} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
+import {MutableBoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
 import Button from '../../widgets/buttons/button'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -28,8 +28,8 @@ import './viewHeader.scss'
 
 type Props = {
     board: Board
-    activeView: BoardView
-    views: BoardView[]
+    activeView: MutableBoardView
+    views: MutableBoardView[]
     cards: Card[]
     groupByProperty?: IPropertyTemplate
     addCard: () => void
@@ -87,7 +87,7 @@ const ViewHeader = React.memo((props: Props) => {
                 {/* Card properties */}
 
                 <ViewHeaderPropertiesMenu
-                    properties={board.cardProperties}
+                    properties={board.fields.cardProperties}
                     activeView={activeView}
                 />
 
@@ -95,7 +95,7 @@ const ViewHeader = React.memo((props: Props) => {
 
                 {withGroupBy &&
                     <ViewHeaderGroupByMenu
-                        properties={board.cardProperties}
+                        properties={board.fields.cardProperties}
                         activeView={activeView}
                         groupByPropertyName={groupByProperty?.name}
                     />}
@@ -123,7 +123,7 @@ const ViewHeader = React.memo((props: Props) => {
                 {/* Sort */}
 
                 <ViewHeaderSortMenu
-                    properties={board.cardProperties}
+                    properties={board.fields.cardProperties}
                     activeView={activeView}
                     orderedCards={cards}
                 />

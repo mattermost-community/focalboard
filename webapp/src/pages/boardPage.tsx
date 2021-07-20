@@ -13,7 +13,7 @@ import {IBlock} from '../blocks/block'
 import {IContentBlock} from '../blocks/contentBlock'
 import {MutableBoard, Board} from '../blocks/board'
 import {MutableCard} from '../blocks/card'
-import {MutableBoardView, BoardView} from '../blocks/boardView'
+import {MutableBoardView} from '../blocks/boardView'
 import {sendFlashMessage} from '../components/flashMessages'
 import Workspace from '../components/workspace'
 import mutator from '../mutator'
@@ -43,7 +43,7 @@ type Props = OwnProps & {
     initialLoad: () => Promise<PayloadAction<any>>
     workspace: IWorkspace | null,
     board: Board | null,
-    activeView: BoardView | null,
+    activeView: MutableBoardView | null,
 }
 
 type State = {

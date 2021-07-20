@@ -5,8 +5,8 @@ import {FormattedMessage} from 'react-intl'
 
 import {FilterClause, FilterCondition} from '../../blocks/filterClause'
 import {FilterGroup} from '../../blocks/filterGroup'
-import {Board} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
+import {Board, IPropertyTemplate} from '../../blocks/board'
+import {MutableBoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
@@ -19,7 +19,7 @@ import './filterComponent.scss'
 
 type Props = {
     board: Board
-    activeView: BoardView
+    activeView: MutableBoardView
     onClose: () => void
 }
 
@@ -48,9 +48,9 @@ const FilterComponent = React.memo((props: Props): JSX.Element => {
         const filter = new FilterClause()
 
         // Pick the first select property that isn't already filtered on
-        const selectProperty = board.cardProperties.
-            filter((o) => !filters.find((f) => f.propertyId === o.id)).
-            find((o) => o.type === 'select' || o.type === 'multiSelect')
+        const selectProperty = board.fields.cardProperties.
+            filter((o: IPropertyTemplate) => !filters.find((f) => f.propertyId === o.id)).
+            find((o: IPropertyTemplate) => o.type === 'select' || o.type === 'multiSelect')
         if (selectProperty) {
             filter.propertyId = selectProperty.id
         }

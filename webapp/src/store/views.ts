@@ -18,7 +18,7 @@ const viewsSlice = createSlice({
             const newViews = state.views.filter((o: BoardView) => !updatedViewIds.includes(o.id))
             const updatedAndNotDeletedViews = action.payload.filter((o: BoardView) => o.deleteAt === 0)
             newViews.push(...updatedAndNotDeletedViews)
-            state.views = newViews.sort((a, b) => a.title.localeCompare(b.title)) as MutableBoardView[]
+            state.views = newViews.sort((a, b) => a.title.localeCompare(b.title)).map((v) => new MutableBoardView(v))
         },
     },
     extraReducers: (builder) => {
@@ -31,12 +31,18 @@ const viewsSlice = createSlice({
 export const {updateViews} = viewsSlice.actions
 export const {reducer} = viewsSlice
 
-export function getViews(state: RootState): BoardView[] {
+export function getViews(state: RootState): MutableBoardView[] {
     return state.views.views
 }
 
-export function getView(viewId: string): (state: RootState) => BoardView|null {
-    return (state: RootState): BoardView|null => {
+export function getView(viewId: string): (state: RootState) => MutableBoardView|null {
+    return (state: RootState): MutableBoardView|null => {
         return state.views.views.find((v) => v.id === viewId) || null
+    }
+}
+
+export function getBoardViews(boardId: string): (state: RootState) => MutableBoardView[] {
+    return (state: RootState): MutableBoardView[] => {
+        return state.views.views.filter((v) => v.parentId === boardId)
     }
 }
