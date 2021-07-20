@@ -31,7 +31,7 @@ type Props = {
     activeView: BoardView
     views: BoardView[]
     cards: Card[]
-    groupByProperty: IPropertyTemplate
+    groupByProperty?: IPropertyTemplate
     addCard: () => void
     addCardFromTemplate: (cardTemplateId: string) => void
     addCardTemplate: () => void
@@ -140,6 +140,8 @@ const ViewHeader = React.memo((props: Props) => {
             <>
                 <ViewHeaderActionsMenu
                     board={board}
+                    activeView={activeView}
+                    cards={cards}
                 />
 
                 {/* New card button */}

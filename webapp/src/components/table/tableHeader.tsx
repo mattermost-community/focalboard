@@ -2,9 +2,9 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {IPropertyTemplate} from '../../blocks/board'
+import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Constants} from '../../constants'
-import {Board} from '../../blocks/board'
+import {Card} from '../../blocks/card'
 import {BoardView} from '../../blocks/boardView'
 import SortDownIcon from '../../widgets/icons/sortDown'
 import SortUpIcon from '../../widgets/icons/sortUp'
@@ -24,6 +24,8 @@ type Props = {
     name: React.ReactNode
     board: Board
     activeView: BoardView
+    cards: Card[]
+    views: BoardView[]
     template: IPropertyTemplate
     offset: number
     onDrop: (template: IPropertyTemplate, container: IPropertyTemplate) => void
@@ -67,6 +69,8 @@ const TableHeader = React.memo((props: Props): JSX.Element => {
                 <TableHeaderMenu
                     board={props.board}
                     activeView={props.activeView}
+                    views={props.views}
+                    cards={props.cards}
                     templateId={props.template.id}
                 />
             </MenuWrapper>

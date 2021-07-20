@@ -11,16 +11,9 @@ import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
-import {FetchMock} from '../../test/fetchMock'
-import {MutableBoardTree} from '../../viewModel/boardTree'
 
 import TableHeader from './tableHeader'
 
-global.fetch = FetchMock.fn
-
-beforeEach(() => {
-    FetchMock.fn.mockReset()
-})
 
 const wrapProviders = (children: any) => {
     return (
@@ -46,6 +39,8 @@ describe('components/table/TableHeaderMenu', () => {
                 name={'my Name'}
                 board={board}
                 activeView={view}
+                cards={[]}
+                views={[view, view2]}
                 template={board.cardProperties[0]}
                 offset={0}
                 onDrop={jest.fn()}

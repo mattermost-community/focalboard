@@ -5,6 +5,8 @@ import {useRouteMatch} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
 import {getBoard} from '../store/boards'
+import {getCardsByBoard} from '../store/cards'
+import {getView, getViews} from '../store/views'
 import {useAppSelector} from '../store/hooks'
 
 import CenterPanel from './centerPanel'
@@ -19,10 +21,20 @@ type Props = {
 
 function CenterContent(props: Props) {
     const match = useRouteMatch<{boardId: string, viewId: string}>()
+    const board = useAppSelector(getBoard(match.params.boardId))
+    const cards = useAppSelector(getCardsByBoard(match.params.boardId))
+    const activeView = useAppSelector(getView(match.params.viewId))
+    const views = useAppSelector(getViews)
 
-    if (match.params.boardId && match.params.viewId) {
+    if (board && activeView) {
         return (
-            <CenterPanel readonly={props.readonly}/>
+            <CenterPanel
+                readonly={props.readonly}
+                board={board}
+                cards={cards}
+                activeView={activeView}
+                views={views}
+            />
         )
     }
 

@@ -16,18 +16,8 @@ import {HTML5Backend} from 'react-dnd-html5-backend'
 import userEvent from '@testing-library/user-event'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
-import {FetchMock} from '../../test/fetchMock'
-import {MutableBoardTree} from '../../viewModel/boardTree'
-
-import {CardTree, MutableCardTree} from '../../viewModel/cardTree'
 
 import TableRows from './tableRows'
-
-global.fetch = FetchMock.fn
-
-beforeEach(() => {
-    FetchMock.fn.mockReset()
-})
 
 const wrapProviders = (children: any) => {
     return (
@@ -49,23 +39,13 @@ describe('components/table/TableRows', () => {
     cardTemplate.isTemplate = true
 
     test('should match snapshot, fire events', async () => {
-        // Sync
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).toBeDefined()
-        expect(FetchMock.fn).toBeCalledTimes(1)
-
         const callback = jest.fn()
         const addCard = jest.fn()
 
-        const cardTrees:{ [key: string]: CardTree | undefined } = {}
-        cardTrees[card.id] = new MutableCardTree(card)
-
         const component = wrapProviders(
             <TableRows
-                boardTree={boardTree!}
-                cardTrees={cardTrees}
+                board={board}
+                activeView={view}
                 columnRefs={new Map()}
                 cards={[card]}
                 selectedCardIds={[]}

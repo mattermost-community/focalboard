@@ -70,6 +70,7 @@ const Gallery = (props: Props): JSX.Element => {
                     <GalleryCard
                         key={card.id + card.updateAt}
                         card={card}
+                        board={board}
                         onClick={props.onCardClicked}
                         visiblePropertyTemplates={visiblePropertyTemplates}
                         visibleTitle={visibleTitle}

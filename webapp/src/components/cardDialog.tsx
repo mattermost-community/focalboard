@@ -6,6 +6,9 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import {CommentBlock} from '../blocks/commentBlock'
+import {BoardView} from '../blocks/boardView'
+import {Board} from '../blocks/board'
+import {Card} from '../blocks/card'
 import DeleteIcon from '../widgets/icons/delete'
 import Menu from '../widgets/menu'
 
@@ -17,6 +20,10 @@ import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
 
 type Props = {
+    board: Board
+    activeView: BoardView
+    views: BoardView[]
+    cards: Card[]
     cardId: string
     onClose: () => void
     showCard: (cardId?: string) => void
@@ -24,6 +31,7 @@ type Props = {
 }
 
 const CardDialog = (props: Props) => {
+    const {board, activeView, cards, views} = props
     const card = useAppSelector(getCard(props.cardId))
     const contents = useAppSelector(getCardContents(props.cardId))
     // TODO Implement the comments reducer and selector
@@ -89,6 +97,10 @@ const CardDialog = (props: Props) => {
 
             {card &&
                 <CardDetail
+                    board={board}
+                    activeView={activeView}
+                    views={views}
+                    cards={cards}
                     card={card}
                     contents={contents}
                     comments={comments}

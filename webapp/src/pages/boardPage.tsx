@@ -30,8 +30,11 @@ import {updateContents} from '../store/contents'
 import {initialLoad} from '../store/initialLoad'
 import {RootState} from '../store'
 
-type Props = RouteComponentProps<{workspaceId?: string, boardId?: string, viewId?: string}> & {
+type OwnProps = RouteComponentProps<{workspaceId?: string, boardId?: string, viewId?: string}> & {
     readonly?: boolean
+}
+
+type Props = OwnProps & {
     usersById: {[key: string]: IUser}
     updateBoards: (boards: MutableBoard[]) => void
     updateViews: (views: MutableBoardView[]) => void
@@ -39,8 +42,8 @@ type Props = RouteComponentProps<{workspaceId?: string, boardId?: string, viewId
     updateContents: (contents: IContentBlock[]) => void
     initialLoad: () => Promise<PayloadAction<any>>
     workspace: IWorkspace | null,
-    board?: Board
-    activeView?: BoardView
+    board: Board | null,
+    activeView: BoardView | null,
 }
 
 type State = {
@@ -88,7 +91,7 @@ class BoardPage extends React.Component<Props, State> {
     componentDidUpdate(prevProps: Props, prevState: State): void {
         Utils.log('componentDidUpdate')
         const board = this.props.board
-        const prevBoard = prevState.board
+        const prevBoard = prevProps.board
 
         const workspaceId = this.props.match.params.workspaceId
         const prevWorkspaceId = prevProps.match.params.workspaceId
@@ -102,7 +105,7 @@ class BoardPage extends React.Component<Props, State> {
         }
 
         const activeView = this.props.activeView
-        const prevActiveView = prevState.activeView
+        const prevActiveView = prevProps.activeView
 
         if (board?.icon !== prevBoard?.icon) {
             Utils.setFavicon(board?.icon)
@@ -321,9 +324,9 @@ class BoardPage extends React.Component<Props, State> {
     }
 }
 
-export default connect((state: RootState, ownProps: Props) => ({
+export default withRouter(connect((state: RootState, ownProps: OwnProps) => ({
     usersById: getCurrentWorkspaceUsersById(state),
     workspace: getCurrentWorkspace(state),
-    board: getBoard(ownProps.match.params.boardId)(state)
-    activeView: getView(ownProps.match.params.viewId)(state)
-}), {initialLoad, updateBoards, updateViews, updateCards, updateContents})(withRouter(BoardPage))
+    board: getBoard(ownProps.match.params.boardId || '')(state),
+    activeView: getView(ownProps.match.params.viewId || '')(state),
+}), {initialLoad, updateBoards, updateViews, updateCards, updateContents})(BoardPage))

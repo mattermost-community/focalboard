@@ -5,6 +5,8 @@ import {FormattedMessage} from 'react-intl'
 
 import {BlockIcons} from '../../blockIcons'
 import {Card} from '../../blocks/card'
+import {BoardView} from '../../blocks/boardView'
+import {Board} from '../../blocks/board'
 import {CommentBlock} from '../../blocks/commentBlock.ts'
 import {IContentBlock} from '../../blocks/contentBlock'
 import mutator from '../../mutator'
@@ -22,6 +24,10 @@ import CardDetailProperties from './cardDetailProperties'
 import './cardDetail.scss'
 
 type Props = {
+    board: Board
+    activeView: BoardView
+    views: BoardView[]
+    cards: Card[]
     card: Card
     comments: CommentBlock[]
     contents: IContentBlock[]
@@ -97,7 +103,13 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 {/* Property list */}
 
                 <CardDetailProperties
+                    board={props.board}
                     card={props.card}
+                    contents={props.contents}
+                    comments={props.comments}
+                    cards={props.cards}
+                    activeView={props.activeView}
+                    views={props.views}
                     readonly={props.readonly}
                 />
 

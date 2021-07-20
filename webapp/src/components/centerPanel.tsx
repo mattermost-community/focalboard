@@ -29,7 +29,8 @@ type Props = {
     board: Board
     cards: Card[]
     activeView: BoardView
-    groupByProperty: IPropertyTemplate
+    views: BoardView[]
+    groupByProperty?: IPropertyTemplate
     intl: IntlShape
     readonly: boolean
 }
@@ -97,7 +98,7 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     render(): JSX.Element {
-        const {groupByProperty, activeView, board} = this.props
+        const {groupByProperty, activeView, board, views, cards} = this.props
 
         if (!groupByProperty && activeView.viewType === 'board') {
             Utils.assertFailure('Board views must have groupByProperty set')
@@ -119,6 +120,10 @@ class CenterPanel extends React.Component<Props, State> {
                 {this.state.shownCardId &&
                     <RootPortal>
                         <CardDialog
+                            board={board}
+                            activeView={activeView}
+                            views={views}
+                            cards={cards}
                             key={this.state.shownCardId}
                             cardId={this.state.shownCardId}
                             onClose={() => this.showCard(undefined)}
@@ -135,6 +140,11 @@ class CenterPanel extends React.Component<Props, State> {
                         readonly={this.props.readonly}
                     />
                     <ViewHeader
+                        board={this.props.board}
+                        activeView={this.props.activeView}
+                        cards={this.props.cards}
+                        views={this.props.views}
+                        groupByProperty={this.props.groupByProperty}
                         addCard={() => this.addCard('', true)}
                         addCardFromTemplate={this.addCardFromTemplate}
                         addCardTemplate={this.addCardTemplate}
@@ -143,8 +153,15 @@ class CenterPanel extends React.Component<Props, State> {
                     />
                 </div>
 
+                {/* TODO: Pass correctly the visibleGroups and the hiddenGroups */}
                 {activeView.viewType === 'board' &&
                 <Kanban
+                    board={this.props.board}
+                    activeView={this.props.activeView}
+                    cards={this.props.cards}
+                    groupByProperty={this.props.groupByProperty}
+                    visibleGroups={[]}
+                    hiddenGroups={[]}
                     selectedCardIds={this.state.selectedCardIds}
                     readonly={this.props.readonly}
                     onCardClicked={this.cardClicked}
@@ -152,8 +169,15 @@ class CenterPanel extends React.Component<Props, State> {
                     showCard={this.showCard}
                 />}
 
+                {/* TODO: Pass correctly the visibleGroups */}
                 {activeView.viewType === 'table' &&
                     <Table
+                        board={this.props.board}
+                        activeView={this.props.activeView}
+                        cards={this.props.cards}
+                        groupByProperty={this.props.groupByProperty}
+                        views={this.props.views}
+                        visibleGroups={[]}
                         selectedCardIds={this.state.selectedCardIds}
                         readonly={this.props.readonly}
                         cardIdToFocusOnRender={this.state.cardIdToFocusOnRender}
@@ -164,6 +188,8 @@ class CenterPanel extends React.Component<Props, State> {
 
                 {activeView.viewType === 'gallery' &&
                     <Gallery
+                        board={this.props.board}
+                        activeView={this.props.activeView}
                         readonly={this.props.readonly}
                         onCardClicked={this.cardClicked}
                         selectedCardIds={this.state.selectedCardIds}

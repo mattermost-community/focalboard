@@ -4,9 +4,10 @@
 import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
 
-import {IPropertyOption, IPropertyTemplate, PropertyType} from '../blocks/board'
+import {Board, IPropertyOption, IPropertyTemplate, PropertyType} from '../blocks/board'
 import {Card} from '../blocks/card'
-import {Board} from '../blocks/board'
+import {IContentBlock} from '../blocks/contentBlock'
+import {CommentBlock} from '../blocks/commentBlock'
 import mutator from '../mutator'
 import {OctoUtils} from '../octoUtils'
 import {Utils} from '../utils'
@@ -32,6 +33,8 @@ type Props = {
     board: Board
     readOnly: boolean
     card: Card
+    contents: IContentBlock[]
+    comments: CommentBlock[]
     propertyTemplate: IPropertyTemplate
     emptyDisplayValue: string
 }
@@ -39,7 +42,7 @@ type Props = {
 const PropertyValueElement = (props:Props): JSX.Element => {
     const [value, setValue] = useState(props.card.properties[props.propertyTemplate.id])
 
-    const {card, propertyTemplate, readOnly, emptyDisplayValue, board} = props
+    const {card, propertyTemplate, readOnly, emptyDisplayValue, board, contents, comments} = props
     const intl = useIntl()
     const propertyValue = card.properties[propertyTemplate.id]
     const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate, intl)
@@ -192,6 +195,8 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             <LastModifiedBy
                 card={card}
                 board={board}
+                contents={contents}
+                comments={comments}
             />
         )
     } else if (propertyTemplate.type === 'createdTime') {
@@ -200,7 +205,11 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         )
     } else if (propertyTemplate.type === 'updatedTime') {
         return (
-            <LastModifiedAt card={card}/>
+            <LastModifiedAt
+                card={card}
+                contents={contents}
+                comments={comments}
+            />
         )
     }
 

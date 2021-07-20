@@ -15,7 +15,7 @@ import TableRows from './tableRows'
 type Props = {
     board: Board
     activeView: BoardView
-    groupByProperty: IPropertyTemplate
+    groupByProperty?: IPropertyTemplate
     group: BoardGroup
     readonly: boolean
     columnRefs: Map<string, React.RefObject<HTMLDivElement>>

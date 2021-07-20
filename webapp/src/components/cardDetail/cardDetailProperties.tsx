@@ -6,6 +6,8 @@ import {FormattedMessage} from 'react-intl'
 import {Board, PropertyType} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {BoardView} from '../../blocks/boardView'
+import {IContentBlock} from '../../blocks/contentBlock'
+import {CommentBlock} from '../../blocks/commentBlock'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import MenuWrapper from '../../widgets/menuWrapper'
@@ -17,13 +19,15 @@ type Props = {
     board: Board
     card: Card
     cards: Card[]
+    contents: IContentBlock[]
+    comments: CommentBlock[]
     activeView: BoardView
     views: BoardView[]
     readonly: boolean
 }
 
 const CardDetailProperties = React.memo((props: Props) => {
-    const {board, card, cards, views, activeView} = props
+    const {board, card, cards, views, activeView, contents, comments} = props
 
     return (
         <div className='octo-propertylist'>
@@ -51,6 +55,8 @@ const CardDetailProperties = React.memo((props: Props) => {
                             readOnly={props.readonly}
                             card={card}
                             board={board}
+                            contents={contents}
+                            comments={comments}
                             propertyTemplate={propertyTemplate}
                             emptyDisplayValue='Empty'
                         />

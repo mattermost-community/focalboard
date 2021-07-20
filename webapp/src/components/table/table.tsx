@@ -25,6 +25,7 @@ type Props = {
     board: Board
     cards: Card[]
     activeView: BoardView
+    views: BoardView[]
     visibleGroups: BoardGroup[]
     groupByProperty?: IPropertyTemplate
     readonly: boolean
@@ -35,7 +36,7 @@ type Props = {
 }
 
 const Table = (props: Props) => {
-    const {board, cards, activeView, visibleGroups, groupByProperty} = props
+    const {board, cards, activeView, visibleGroups, groupByProperty, views} = props
     const isManualSort = activeView.sortOptions.length === 0
     const intl = useIntl()
 
@@ -242,6 +243,8 @@ const Table = (props: Props) => {
                     readonly={props.readonly}
                     board={board}
                     activeView={activeView}
+                    cards={cards}
+                    views={views}
                     template={{id: Constants.titleColumnId, name: 'title', type: 'text', options: []}}
                     offset={resizingColumn === Constants.titleColumnId ? offset : 0}
                     onDrop={onDropToColumn}
@@ -264,6 +267,8 @@ const Table = (props: Props) => {
                             readonly={props.readonly}
                             board={board}
                             activeView={activeView}
+                            cards={cards}
+                            views={views}
                             template={template}
                             key={template.id}
                             offset={resizingColumn === template.id ? offset : 0}

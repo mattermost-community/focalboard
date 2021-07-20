@@ -4,6 +4,8 @@ import React, {useState, useRef, useEffect} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {Card} from '../../blocks/card'
+import {IContentBlock} from '../../blocks/contentBlock'
+import {CommentBlock} from '../../blocks/commentBlock'
 import {Board} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
 import {Constants} from '../../constants'
@@ -11,6 +13,8 @@ import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
 import {useSortable} from '../../hooks/sortable'
+import {useAppSelector} from '../../store/hooks'
+import {getCardContents} from '../../store/contents'
 
 import PropertyValueElement from '../propertyValueElement'
 import './tableRow.scss'
@@ -32,11 +36,14 @@ type Props = {
 }
 
 const TableRow = React.memo((props: Props) => {
-    const {board, activeView, onSaveWithEnter, columnRefs} = props
+    const {board, activeView, onSaveWithEnter, columnRefs, card} = props
+    const contents = useAppSelector(getCardContents(card.id))
+    // TODO: Add comments redux store
+    // const comments = useAppSelector(getCardContents(card.id))
+    const comments: CommentBlock[] = []
 
     const titleRef = useRef<{focus(selectAll?: boolean): void}>(null)
     const [title, setTitle] = useState(props.card.title)
-    const {card} = props
     const isManualSort = activeView.sortOptions.length === 0
     const isGrouped = Boolean(activeView.groupById)
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly && (isManualSort || isGrouped), props.onDrop)
@@ -133,6 +140,8 @@ const TableRow = React.memo((props: Props) => {
                                 readOnly={props.readonly}
                                 card={card}
                                 board={board}
+                                contents={contents}
+                                comments={comments}
                                 propertyTemplate={template}
                                 emptyDisplayValue=''
                             />

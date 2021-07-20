@@ -16,7 +16,6 @@ import {act} from 'react-dom/test-utils'
 import userEvent from '@testing-library/user-event'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
-import {BoardView} from '../../blocks/boardView'
 
 import TableGroupHeaderRowElement from './tableGroupHeaderRow'
 
@@ -109,7 +108,7 @@ test('should match snapshot, hide group', async () => {
     const component = wrapProviders(
         <TableGroupHeaderRowElement
             board={board}
-            activeView={{...view, collapsedOptionIds: [boardTreeGroup.option.id]} as BoardView}
+            activeView={view}
             group={boardTreeGroup}
             readonly={false}
             hideGroup={hideGroup}

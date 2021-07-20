@@ -3,8 +3,10 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import {IPropertyTemplate} from '../../blocks/board'
+import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
+import {IContentBlock} from '../../blocks/contentBlock'
+import {CommentBlock} from '../../blocks/commentBlock'
 import mutator from '../../mutator'
 import IconButton from '../../widgets/buttons/iconButton'
 import DeleteIcon from '../../widgets/icons/delete'
@@ -13,6 +15,8 @@ import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {useSortable} from '../../hooks/sortable'
+import {useAppSelector} from '../../store/hooks'
+import {getCardContents} from '../../store/contents'
 
 import './kanbanCard.scss'
 import PropertyValueElement from '../propertyValueElement'
@@ -20,6 +24,7 @@ import Tooltip from '../../widgets/tooltip'
 
 type Props = {
     card: Card
+    board: Board
     visiblePropertyTemplates: IPropertyTemplate[]
     isSelected: boolean
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
@@ -30,7 +35,7 @@ type Props = {
 }
 
 const KanbanCard = React.memo((props: Props) => {
-    const {card} = props
+    const {card, board} = props
     const intl = useIntl()
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly, props.onDrop)
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
@@ -38,6 +43,11 @@ const KanbanCard = React.memo((props: Props) => {
     if (props.isManualSort && isOver) {
         className += ' dragover'
     }
+
+    const contents = useAppSelector(getCardContents(card.id))
+    // TODO: Add comments redux store
+    // const comments = useAppSelector(getCardContents(card.id))
+    const comments: CommentBlock[] = []
 
     return (
         <div
@@ -92,8 +102,11 @@ const KanbanCard = React.memo((props: Props) => {
                     title={template.name}
                 >
                     <PropertyValueElement
+                        board={board}
                         readOnly={true}
                         card={card}
+                        contents={contents}
+                        comments={comments}
                         propertyTemplate={template}
                         emptyDisplayValue=''
                     />

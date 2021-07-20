@@ -3,10 +3,10 @@
 import React from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import {IPropertyTemplate} from '../../blocks/board'
+import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
-import {Board} from '../../blocks/board'
 import {IContentBlock} from '../../blocks/contentBlock'
+import {CommentBlock} from '../../blocks/commentBlock'
 import mutator from '../../mutator'
 
 import IconButton from '../../widgets/buttons/iconButton'
@@ -43,6 +43,9 @@ const GalleryCard = React.memo((props: Props) => {
     const intl = useIntl()
     const [isDragging, isOver, cardRef] = useSortable('card', card, props.isManualSort && !props.readonly, props.onDrop)
     const contents = useAppSelector(getCardContents(card.id))
+    // TODO: Add comments redux store
+    // const comments = useAppSelector(getCardContents(card.id))
+    const comments: CommentBlock[] = []
 
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
 
@@ -143,6 +146,8 @@ const GalleryCard = React.memo((props: Props) => {
                             placement='top'
                         >
                             <PropertyValueElement
+                                contents={contents}
+                                comments={comments}
                                 board={board}
                                 readOnly={true}
                                 card={card}

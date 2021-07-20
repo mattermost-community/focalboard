@@ -11,8 +11,6 @@ import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
 
-import useCardListener from '../../hooks/cardListener'
-
 import KanbanCard from './kanbanCard'
 import KanbanColumn from './kanbanColumn'
 import KanbanColumnHeader from './kanbanColumnHeader'
@@ -24,7 +22,7 @@ type Props = {
     board: Board
     activeView: BoardView
     cards: Card[]
-    groupByProperty: IPropertyTemplate
+    groupByProperty?: IPropertyTemplate
     visibleGroups: BoardGroup[]
     hiddenGroups: BoardGroup[]
     selectedCardIds: string[]
@@ -232,6 +230,7 @@ const Kanban = (props: Props) => {
                         {group.cards.map((card) => (
                             <KanbanCard
                                 card={card}
+                                board={board}
                                 visiblePropertyTemplates={visiblePropertyTemplates}
                                 key={card.id}
                                 readonly={props.readonly}
