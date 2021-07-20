@@ -47,22 +47,22 @@ class CardFilter {
         const value = card.properties[filter.propertyId]
         switch (filter.condition) {
         case 'includes': {
-            if (filter.values.length < 1) {
+            if (filter.values?.length < 1) {
                 break
             }		// No values = ignore clause (always met)
             return (filter.values.find((cValue) => (Array.isArray(value) ? value.includes(cValue) : cValue === value)) !== undefined)
         }
         case 'notIncludes': {
-            if (filter.values.length < 1) {
+            if (filter.values?.length < 1) {
                 break
             }		// No values = ignore clause (always met)
             return (filter.values.find((cValue) => (Array.isArray(value) ? value.includes(cValue) : cValue === value)) === undefined)
         }
         case 'isEmpty': {
-            return value.length <= 0
+            return value?.length <= 0
         }
         case 'isNotEmpty': {
-            return value.length > 0
+            return value?.length > 0
         }
         default: {
             Utils.assertFailure(`Invalid filter condition ${filter.condition}`)
