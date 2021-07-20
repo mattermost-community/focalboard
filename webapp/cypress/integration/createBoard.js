@@ -112,7 +112,7 @@ describe('Create and delete board / card', () => {
 
         cy.contains('Delete board').click({force: true});
 
-        // // Board should not exist
+        // Board should not exist
         cy.contains(boardTitle).should('not.exist');
     });
 });

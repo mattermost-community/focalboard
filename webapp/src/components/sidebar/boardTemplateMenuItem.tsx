@@ -50,7 +50,7 @@ const BoardTemplateMenuItem = React.memo((props: Props) => {
             key={boardTemplate.id}
             id={boardTemplate.id}
             name={displayName}
-            icon={<div className='Icon'>{boardTemplate.icon}</div>}
+            icon={<div className='Icon'>{boardTemplate.fields.icon}</div>}
             onClick={() => {
                 addBoardFromTemplate(intl, props.showBoard, boardTemplate.id, activeBoardId, isGlobal)
             }}

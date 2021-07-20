@@ -95,10 +95,7 @@ func (rd *RegisterRequest) IsValid() error {
 	if rd.Password == "" {
 		return ParamError{"password is required"}
 	}
-	if err := isValidPassword(rd.Password); err != nil {
-		return err
-	}
-	return nil
+	return isValidPassword(rd.Password)
 }
 
 // ChangePasswordRequest is a user password change request
@@ -121,11 +118,7 @@ func (rd *ChangePasswordRequest) IsValid() error {
 	if rd.NewPassword == "" {
 		return ParamError{"new password is required"}
 	}
-	if err := isValidPassword(rd.NewPassword); err != nil {
-		return err
-	}
-
-	return nil
+	return isValidPassword(rd.NewPassword)
 }
 
 func isValidPassword(password string) error {
