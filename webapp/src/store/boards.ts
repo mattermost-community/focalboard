@@ -47,3 +47,9 @@ export function getBoards(state: RootState): Board[] {
 export function getTemplates(state: RootState): Board[] {
     return state.boards.templates
 }
+
+export function getBoard(boardId: string): (state: RootState) => Board|null {
+    return (state: RootState): Board|null => {
+        return state.boards.boards.find((b) => b.id === boardId) || null
+    }
+}

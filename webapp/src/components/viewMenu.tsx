@@ -9,7 +9,6 @@ import {BoardView, IViewType, MutableBoardView} from '../blocks/boardView'
 import {Constants} from '../constants'
 import mutator from '../mutator'
 import {Utils} from '../utils'
-import {BoardTree} from '../viewModel/boardTree'
 import AddIcon from '../widgets/icons/add'
 import BoardIcon from '../widgets/icons/board'
 import DeleteIcon from '../widgets/icons/delete'
@@ -19,8 +18,9 @@ import GalleryIcon from '../widgets/icons/gallery'
 import Menu from '../widgets/menu'
 
 type Props = {
-    boardTree: BoardTree
     board: Board,
+    activeView: BoardView,
+    views: BoardView[],
     intl: IntlShape
     readonly: boolean
 }
@@ -35,11 +35,11 @@ const ViewMenu = React.memo((props: Props) => {
     }, [match, history])
 
     const handleDuplicateView = useCallback(() => {
-        const {boardTree} = props
+        const {activeView} = props
         Utils.log('duplicateView')
-        const currentViewId = boardTree.activeView.id
-        const newView = boardTree.activeView.duplicate()
-        newView.title = `${boardTree.activeView.title} copy`
+        const currentViewId = activeView.id
+        const newView = activeView.duplicate()
+        newView.title = `${activeView.title} copy`
         mutator.insertBlock(
             newView,
             'duplicate view',
@@ -53,31 +53,31 @@ const ViewMenu = React.memo((props: Props) => {
                 showView(currentViewId)
             },
         )
-    }, [props.boardTree, showView])
+    }, [props.activeView, showView])
 
     const handleDeleteView = useCallback(() => {
-        const {boardTree} = props
+        const {activeView, views} = props
         Utils.log('deleteView')
-        const view = boardTree.activeView
-        const nextView = boardTree.views.find((o) => o !== view)
+        const view = activeView
+        const nextView = views.find((o) => o !== view)
         mutator.deleteBlock(view, 'delete view')
         if (nextView) {
             showView(nextView.id)
         }
-    }, [props.boardTree, showView])
+    }, [props.views, props.activeView, showView])
 
     const handleViewClick = useCallback((id: string) => {
-        const {boardTree} = props
+        const {views} = props
         Utils.log('view ' + id)
-        const view = boardTree.views.find((o) => o.id === id)
+        const view = views.find((o) => o.id === id)
         Utils.assert(view, `view not found: ${id}`)
         if (view) {
             showView(view.id)
         }
-    }, [props.boardTree, showView])
+    }, [props.views, showView])
 
     const handleAddViewBoard = useCallback(() => {
-        const {board, boardTree, intl} = props
+        const {board, activeView, intl} = props
         Utils.log('addview-board')
         const view = new MutableBoardView()
         view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
@@ -85,7 +85,7 @@ const ViewMenu = React.memo((props: Props) => {
         view.parentId = board.id
         view.rootId = board.rootId
 
-        const oldViewId = boardTree.activeView.id
+        const oldViewId = activeView.id
 
         mutator.insertBlock(
             view,
@@ -99,10 +99,10 @@ const ViewMenu = React.memo((props: Props) => {
             async () => {
                 showView(oldViewId)
             })
-    }, [props.boardTree, props.board, props.intl, showView])
+    }, [props.activeView, props.board, props.intl, showView])
 
     const handleAddViewTable = useCallback(() => {
-        const {board, boardTree, intl} = props
+        const {board, activeView, intl} = props
 
         Utils.log('addview-table')
         const view = new MutableBoardView()
@@ -114,7 +114,7 @@ const ViewMenu = React.memo((props: Props) => {
         view.columnWidths = {}
         view.columnWidths[Constants.titleColumnId] = Constants.defaultTitleColumnWidth
 
-        const oldViewId = boardTree.activeView.id
+        const oldViewId = activeView.id
 
         mutator.insertBlock(
             view,
@@ -129,10 +129,10 @@ const ViewMenu = React.memo((props: Props) => {
             async () => {
                 showView(oldViewId)
             })
-    }, [props.boardTree, props.board, props.intl, showView])
+    }, [props.activeView, props.board, props.intl, showView])
 
     const handleAddViewGallery = useCallback(() => {
-        const {board, boardTree, intl} = props
+        const {board, activeView, intl} = props
 
         Utils.log('addview-gallery')
         const view = new MutableBoardView()
@@ -142,7 +142,7 @@ const ViewMenu = React.memo((props: Props) => {
         view.rootId = board.rootId
         view.visiblePropertyIds = [Constants.titleColumnId]
 
-        const oldViewId = boardTree.activeView.id
+        const oldViewId = activeView.id
 
         mutator.insertBlock(
             view,
@@ -157,9 +157,9 @@ const ViewMenu = React.memo((props: Props) => {
             async () => {
                 showView(oldViewId)
             })
-    }, [props.board, props.boardTree, props.intl, showView])
+    }, [props.board, props.activeView, props.intl, showView])
 
-    const {boardTree, intl} = props
+    const {views, intl} = props
 
     const duplicateViewText = intl.formatMessage({
         id: 'View.DuplicateView',
@@ -193,7 +193,7 @@ const ViewMenu = React.memo((props: Props) => {
 
     return (
         <Menu>
-            {boardTree.views.map((view: BoardView) => (
+            {views.map((view: BoardView) => (
                 <Menu.Text
                     key={view.id}
                     id={view.id}
@@ -210,7 +210,7 @@ const ViewMenu = React.memo((props: Props) => {
                     onClick={handleDuplicateView}
                 />
             }
-            {!props.readonly && boardTree.views.length > 1 &&
+            {!props.readonly && views.length > 1 &&
                 <Menu.Text
                     id='__deleteView'
                     name={deleteViewText}

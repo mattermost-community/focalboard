@@ -37,24 +37,15 @@ describe('components/table/TableHeaderMenu', () => {
     const view2 = TestBlockFactory.createBoardView(board)
     view2.sortOptions = []
 
-    const card = TestBlockFactory.createCard(board)
-    const cardTemplate = TestBlockFactory.createCard(board)
-    cardTemplate.isTemplate = true
-
     test('should match snapshot, title column', async () => {
-        // Sync
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).toBeDefined()
-        expect(FetchMock.fn).toBeCalledTimes(1)
         const onAutoSizeColumn = jest.fn()
         const component = wrapProviders(
             <TableHeader
                 readonly={false}
                 sorted={'none'}
                 name={'my Name'}
-                boardTree={boardTree!}
+                board={board}
+                activeView={view}
                 template={board.cardProperties[0]}
                 offset={0}
                 onDrop={jest.fn()}

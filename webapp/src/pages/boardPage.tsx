@@ -10,22 +10,23 @@ import HotKeys from 'react-hot-keys'
 import {IUser} from '../user'
 import {IWorkspace} from '../blocks/workspace'
 import {IBlock} from '../blocks/block'
-import {MutableBoard} from '../blocks/board'
+import {IContentBlock} from '../blocks/contentBlock'
+import {MutableBoard, Board} from '../blocks/board'
 import {MutableCard} from '../blocks/card'
-import {MutableBoardView} from '../blocks/boardView'
+import {MutableBoardView, BoardView} from '../blocks/boardView'
 import {sendFlashMessage} from '../components/flashMessages'
 import Workspace from '../components/workspace'
 import mutator from '../mutator'
 import octoClient from '../octoClient'
 import {Utils} from '../utils'
 import wsClient, {WSClient} from '../wsclient'
-import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
 import './boardPage.scss'
 import {getCurrentWorkspaceUsersById} from '../store/currentWorkspaceUsers'
 import {getCurrentWorkspace} from '../store/currentWorkspace'
-import {updateBoards} from '../store/boards'
-import {updateViews} from '../store/views'
+import {updateBoards, getBoard} from '../store/boards'
+import {updateViews, getView} from '../store/views'
 import {updateCards} from '../store/cards'
+import {updateContents} from '../store/contents'
 import {initialLoad} from '../store/initialLoad'
 import {RootState} from '../store'
 
@@ -35,12 +36,14 @@ type Props = RouteComponentProps<{workspaceId?: string, boardId?: string, viewId
     updateBoards: (boards: MutableBoard[]) => void
     updateViews: (views: MutableBoardView[]) => void
     updateCards: (cards: MutableCard[]) => void
+    updateContents: (contents: IContentBlock[]) => void
     initialLoad: () => Promise<PayloadAction<any>>
     workspace: IWorkspace | null,
+    board?: Board
+    activeView?: BoardView
 }
 
 type State = {
-    boardTree?: BoardTree
     syncFailed?: boolean
     websocketClosedTimeOutId?: ReturnType<typeof setTimeout>
     websocketClosed?: boolean
@@ -84,8 +87,8 @@ class BoardPage extends React.Component<Props, State> {
 
     componentDidUpdate(prevProps: Props, prevState: State): void {
         Utils.log('componentDidUpdate')
-        const board = this.state.boardTree?.board
-        const prevBoard = prevState.boardTree?.board
+        const board = this.props.board
+        const prevBoard = prevState.board
 
         const workspaceId = this.props.match.params.workspaceId
         const prevWorkspaceId = prevProps.match.params.workspaceId
@@ -98,8 +101,8 @@ class BoardPage extends React.Component<Props, State> {
             this.attachToBoard(boardId, viewId)
         }
 
-        const activeView = this.state.boardTree?.activeView
-        const prevActiveView = prevState.boardTree?.activeView
+        const activeView = this.props.activeView
+        const prevActiveView = prevState.activeView
 
         if (board?.icon !== prevBoard?.icon) {
             Utils.setFavicon(board?.icon)
@@ -199,7 +202,7 @@ class BoardPage extends React.Component<Props, State> {
     }
 
     render(): JSX.Element {
-        Utils.log(`BoardPage.render (workspace ${this.props.match.params.workspaceId || '0'}) ${this.state.boardTree?.board?.title}`)
+        Utils.log(`BoardPage.render (workspace ${this.props.match.params.workspaceId || '0'}) ${this.props.board?.title}`)
 
         // TODO: Make this less brittle. This only works because this is the root render function
         octoClient.workspaceId = this.props.match.params.workspaceId || '0'
@@ -237,13 +240,7 @@ class BoardPage extends React.Component<Props, State> {
                             />
                         </a>
                     </div>}
-                <Workspace
-                    boardTree={this.state.boardTree}
-                    setSearchText={(text) => {
-                        this.setSearchText(text)
-                    }}
-                    readonly={this.props.readonly || false}
-                />
+                <Workspace readonly={this.props.readonly || false}/>
             </div>
         )
     }
@@ -266,71 +263,67 @@ class BoardPage extends React.Component<Props, State> {
 
         this.props.initialLoad()
 
-        if (this.props.match.params.boardId) {
-            const boardTree = await MutableBoardTree.sync(this.props.match.params.boardId || '', this.props.match.params.viewId || '', this.props.usersById)
+        // TODO: Review the need of this
+        // if (this.props.match.params.boardId) {
+        //     const boardTree = await MutableBoardTree.sync(this.props.match.params.boardId || '', this.props.match.params.viewId || '', this.props.usersById)
 
-            if (boardTree && boardTree.board) {
-                // Update url with viewId if it's different
-                if (boardTree.activeView.id !== this.props.match.params.viewId) {
-                    const newPath = generatePath(this.props.match.path, {...this.props.match.params, viewId: boardTree.activeView.id})
-                    this.props.history.push(newPath)
-                }
+        //     if (boardTree && boardTree.board) {
+        //         // Update url with viewId if it's different
+        //         if (boardTree.activeView.id !== this.props.match.params.viewId) {
+        //             const newPath = generatePath(this.props.match.path, {...this.props.match.params, viewId: boardTree.activeView.id})
+        //             this.props.history.push(newPath)
+        //         }
 
-                // TODO: Handle error (viewId not found)
+        //         // TODO: Handle error (viewId not found)
 
-                this.setState({
-                    boardTree,
-                    syncFailed: false,
-                })
-                Utils.log(`sync complete: ${boardTree.board?.id} (${boardTree.board?.title})`)
-            } else {
-                // Board may have been deleted
-                this.setState({
-                    boardTree: undefined,
-                    syncFailed: true,
-                })
-                Utils.log(`sync complete: board ${this.props.match.params.boardId} not found`)
-            }
-        }
+        //         this.setState({
+        //             boardTree,
+        //             syncFailed: false,
+        //         })
+        //         Utils.log(`sync complete: ${boardTree.board?.id} (${boardTree.board?.title})`)
+        //     } else {
+        //         // Board may have been deleted
+        //         this.setState({
+        //             boardTree: undefined,
+        //             syncFailed: true,
+        //         })
+        //         Utils.log(`sync complete: board ${this.props.match.params.boardId} not found`)
+        //     }
+        // }
     }
 
     private incrementalUpdate = async (_: WSClient, blocks: IBlock[]) => {
-        const {boardTree} = this.state
         this.props.updateBoards(blocks.filter((b: IBlock) => b.type === 'board') as MutableBoard[])
         this.props.updateViews(blocks.filter((b: IBlock) => b.type === 'view') as MutableBoardView[])
         this.props.updateCards(blocks.filter((b: IBlock) => b.type === 'card') as MutableCard[])
+        this.props.updateContents(blocks.filter((b: IBlock) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board') as IContentBlock[])
 
-        let newBoardTree: BoardTree | undefined
-        if (boardTree) {
-            newBoardTree = await MutableBoardTree.incrementalUpdate(boardTree, blocks, this.props.usersById)
-        } else if (this.props.match.params.boardId) {
-            // Corner case: When the page is viewing a deleted board, that is subsequently un-deleted on another client
-            newBoardTree = await MutableBoardTree.sync(this.props.match.params.boardId || '', this.props.match.params.viewId || '', this.props.usersById)
-        }
+        // TODO: Review this
+        // let newBoardTree: BoardTree | undefined
+        // if (boardTree) {
+        //     newBoardTree = await MutableBoardTree.incrementalUpdate(boardTree, blocks, this.props.usersById)
+        // } else if (this.props.match.params.boardId) {
+        //     // Corner case: When the page is viewing a deleted board, that is subsequently un-deleted on another client
+        //     newBoardTree = await MutableBoardTree.sync(this.props.match.params.boardId || '', this.props.match.params.viewId || '', this.props.usersById)
+        // }
 
-        if (newBoardTree) {
-            this.setState({boardTree: newBoardTree})
-        } else {
-            this.setState({boardTree: undefined})
-        }
+        // if (newBoardTree) {
+        //     this.setState({boardTree: newBoardTree})
+        // } else {
+        //     this.setState({boardTree: undefined})
+        // }
 
-        // Update url with viewId if it's different
-        if (newBoardTree && newBoardTree.activeView.id !== this.props.match.params.viewId) {
-            const newPath = generatePath(this.props.match.path, {...this.props.match.params, viewId: newBoardTree?.activeView.id})
-            this.props.history.push(newPath)
-        }
-    }
-
-    // IPageController
-    async setSearchText(text?: string): Promise<void> {
-        if (!this.state.boardTree) {
-            Utils.assertFailure('setSearchText: boardTree')
-            return
-        }
-
-        const newBoardTree = await this.state.boardTree.copyWithSearchText(text)
-        this.setState({boardTree: newBoardTree})
+        // // Update url with viewId if it's different
+        // if (newBoardTree && newBoardTree.activeView.id !== this.props.match.params.viewId) {
+        //     const newPath = generatePath(this.props.match.path, {...this.props.match.params, viewId: newBoardTree?.activeView.id})
+        //     this.props.history.push(newPath)
+        // }
     }
 }
 
-export default connect((state: RootState) => ({usersById: getCurrentWorkspaceUsersById(state), workspace: getCurrentWorkspace(state)}), {initialLoad, updateBoards, updateViews, updateCards})(withRouter(BoardPage))
+export default connect((state: RootState, ownProps: Props) => ({
+    usersById: getCurrentWorkspaceUsersById(state),
+    workspace: getCurrentWorkspace(state),
+    board: getBoard(ownProps.match.params.boardId)(state)
+    activeView: getView(ownProps.match.params.viewId)(state)
+}), {initialLoad, updateBoards, updateViews, updateCards, updateContents})(withRouter(BoardPage))

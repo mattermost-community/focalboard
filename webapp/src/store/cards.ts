@@ -50,6 +50,12 @@ export function getTemplates(state: RootState): Card[] {
 
 export function getCard(cardId: string): (state: RootState) => Card|undefined {
     return (state: RootState): Card|undefined => {
-        return state.cards.cards.find((c) => c.id == cardId)
+        return state.cards.cards.find((c) => c.id === cardId)
+    }
+}
+
+export function getCardsByBoard(boardId: string): (state: RootState) => Card[] {
+    return (state: RootState): Card[] => {
+        return state.cards.cards.filter((c) => c.parentId === boardId)
     }
 }

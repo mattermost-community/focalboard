@@ -34,3 +34,9 @@ export const {reducer} = viewsSlice
 export function getViews(state: RootState): BoardView[] {
     return state.views.views
 }
+
+export function getView(viewId: string): (state: RootState) => BoardView|null {
+    return (state: RootState): BoardView|null => {
+        return state.views.views.find((v) => v.id === viewId) || null
+    }
+}

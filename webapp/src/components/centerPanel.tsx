@@ -7,10 +7,11 @@ import Hotkeys from 'react-hot-keys'
 
 import {BlockIcons} from '../blockIcons'
 import {Card, MutableCard} from '../blocks/card'
+import {Board, IPropertyTemplate} from '../blocks/board'
+import {BoardView} from '../blocks/boardView'
 import {CardFilter} from '../cardFilter'
 import mutator from '../mutator'
 import {Utils} from '../utils'
-import {BoardTree} from '../viewModel/boardTree'
 import {UserSettings} from '../userSettings'
 
 import './centerPanel.scss'
@@ -25,8 +26,10 @@ import Table from './table/table'
 import Gallery from './gallery/gallery'
 
 type Props = {
-    boardTree: BoardTree
-    setSearchText: (text?: string) => void
+    board: Board
+    cards: Card[]
+    activeView: BoardView
+    groupByProperty: IPropertyTemplate
     intl: IntlShape
     readonly: boolean
 }
@@ -94,16 +97,12 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     render(): JSX.Element {
-        const {boardTree} = this.props
-        const {groupByProperty} = boardTree
-        const {activeView} = boardTree
+        const {groupByProperty, activeView, board} = this.props
 
         if (!groupByProperty && activeView.viewType === 'board') {
             Utils.assertFailure('Board views must have groupByProperty set')
             return <div/>
         }
-
-        const {board} = boardTree
 
         return (
             <div
@@ -121,7 +120,6 @@ class CenterPanel extends React.Component<Props, State> {
                     <RootPortal>
                         <CardDialog
                             key={this.state.shownCardId}
-                            boardTree={boardTree}
                             cardId={this.state.shownCardId}
                             onClose={() => this.showCard(undefined)}
                             showCard={(cardId) => this.showCard(cardId)}
@@ -137,8 +135,6 @@ class CenterPanel extends React.Component<Props, State> {
                         readonly={this.props.readonly}
                     />
                     <ViewHeader
-                        boardTree={boardTree}
-                        setSearchText={this.props.setSearchText}
                         addCard={() => this.addCard('', true)}
                         addCardFromTemplate={this.addCardFromTemplate}
                         addCardTemplate={this.addCardTemplate}
@@ -149,7 +145,6 @@ class CenterPanel extends React.Component<Props, State> {
 
                 {activeView.viewType === 'board' &&
                 <Kanban
-                    boardTree={boardTree}
                     selectedCardIds={this.state.selectedCardIds}
                     readonly={this.props.readonly}
                     onCardClicked={this.cardClicked}
@@ -159,7 +154,6 @@ class CenterPanel extends React.Component<Props, State> {
 
                 {activeView.viewType === 'table' &&
                     <Table
-                        boardTree={boardTree}
                         selectedCardIds={this.state.selectedCardIds}
                         readonly={this.props.readonly}
                         cardIdToFocusOnRender={this.state.cardIdToFocusOnRender}
@@ -170,7 +164,6 @@ class CenterPanel extends React.Component<Props, State> {
 
                 {activeView.viewType === 'gallery' &&
                     <Gallery
-                        boardTree={boardTree}
                         readonly={this.props.readonly}
                         onCardClicked={this.cardClicked}
                         selectedCardIds={this.state.selectedCardIds}
@@ -203,19 +196,18 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     addCard = async (groupByOptionId?: string, show = false): Promise<void> => {
-        const {boardTree} = this.props
-        const {activeView, board} = boardTree
+        const {activeView, board, groupByProperty} = this.props
 
         const card = new MutableCard()
 
-        card.parentId = boardTree.board.id
-        card.rootId = boardTree.board.rootId
+        card.parentId = board.id
+        card.rootId = board.rootId
         const propertiesThatMeetFilters = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
-        if ((activeView.viewType === 'board' || activeView.viewType === 'table') && boardTree.groupByProperty) {
+        if ((activeView.viewType === 'board' || activeView.viewType === 'table') && groupByProperty) {
             if (groupByOptionId) {
-                propertiesThatMeetFilters[boardTree.groupByProperty.id] = groupByOptionId
+                propertiesThatMeetFilters[groupByProperty.id] = groupByOptionId
             } else {
-                delete propertiesThatMeetFilters[boardTree.groupByProperty.id]
+                delete propertiesThatMeetFilters[groupByProperty.id]
             }
         }
         card.properties = {...card.properties, ...propertiesThatMeetFilters}
@@ -241,12 +233,12 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     private addCardTemplate = async () => {
-        const {boardTree} = this.props
+        const {board} = this.props
 
         const cardTemplate = new MutableCard()
         cardTemplate.isTemplate = true
-        cardTemplate.parentId = boardTree.board.id
-        cardTemplate.rootId = boardTree.board.rootId
+        cardTemplate.parentId = board.id
+        cardTemplate.rootId = board.rootId
         await mutator.insertBlock(
             cardTemplate,
             'add card template',
@@ -263,14 +255,13 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     cardClicked = (e: React.MouseEvent, card: Card): void => {
-        const {boardTree} = this.props
-        const {activeView} = boardTree
+        const {activeView, cards} = this.props
 
         if (e.shiftKey) {
             let selectedCardIds = this.state.selectedCardIds.slice()
             if (selectedCardIds.length > 0 && (e.metaKey || e.ctrlKey)) {
                 // Cmd+Shift+Click: Extend the selection
-                const orderedCardIds = boardTree.orderedCards().map((o) => o.id)
+                const orderedCardIds = cards.map((o) => o.id)
                 const lastCardId = selectedCardIds[selectedCardIds.length - 1]
                 const srcIndex = orderedCardIds.indexOf(lastCardId)
                 const destIndex = orderedCardIds.indexOf(card.id)
@@ -310,7 +301,7 @@ class CenterPanel extends React.Component<Props, State> {
 
         mutator.performAsUndoGroup(async () => {
             for (const cardId of selectedCardIds) {
-                const card = this.props.boardTree.allCards.find((o) => o.id === cardId)
+                const card = this.props.cards.find((o) => o.id === cardId)
                 if (card) {
                     mutator.deleteBlock(card, selectedCardIds.length > 1 ? `delete ${selectedCardIds.length} cards` : 'delete card')
                 } else {
@@ -330,7 +321,7 @@ class CenterPanel extends React.Component<Props, State> {
 
         mutator.performAsUndoGroup(async () => {
             for (const cardId of selectedCardIds) {
-                const card = this.props.boardTree.allCards.find((o) => o.id === cardId)
+                const card = this.props.cards.find((o) => o.id === cardId)
                 if (card) {
                     mutator.duplicateCard(cardId)
                 } else {

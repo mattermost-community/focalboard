@@ -3,10 +3,10 @@
 import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import {PropertyType} from '../../blocks/board'
+import {Board, PropertyType} from '../../blocks/board'
 import {Card} from '../../blocks/card'
+import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
-import {BoardTree} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
 import MenuWrapper from '../../widgets/menuWrapper'
 import PropertyMenu from '../../widgets/propertyMenu'
@@ -14,19 +14,21 @@ import PropertyMenu from '../../widgets/propertyMenu'
 import PropertyValueElement from '../propertyValueElement'
 
 type Props = {
-    boardTree: BoardTree
+    board: Board
     card: Card
+    cards: Card[]
+    activeView: BoardView
+    views: BoardView[]
     readonly: boolean
 }
 
 const CardDetailProperties = React.memo((props: Props) => {
-    const {boardTree, card} = props
-    const {board} = boardTree
+    const {board, card, cards, views, activeView} = props
 
     return (
         <div className='octo-propertylist'>
             {board.cardProperties.map((propertyTemplate) => {
-                const propertyValue = card.properties[propertyTemplate.id]
+                const propertyValue = card.fields[propertyTemplate.id]
                 return (
                     <div
                         key={propertyTemplate.id + '-' + propertyTemplate.type + '-' + propertyValue}
@@ -40,15 +42,15 @@ const CardDetailProperties = React.memo((props: Props) => {
                                     propertyId={propertyTemplate.id}
                                     propertyName={propertyTemplate.name}
                                     propertyType={propertyTemplate.type}
-                                    onTypeAndNameChanged={(newType: PropertyType, newName: string) => mutator.changePropertyTypeAndName(boardTree, propertyTemplate, newType, newName)}
-                                    onDelete={(id: string) => mutator.deleteProperty(boardTree, id)}
+                                    onTypeAndNameChanged={(newType: PropertyType, newName: string) => mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType, newName)}
+                                    onDelete={(id: string) => mutator.deleteProperty(board, views, cards, id)}
                                 />
                             </MenuWrapper>
                         }
                         <PropertyValueElement
                             readOnly={props.readonly}
                             card={card}
-                            boardTree={boardTree}
+                            board={board}
                             propertyTemplate={propertyTemplate}
                             emptyDisplayValue='Empty'
                         />
@@ -61,7 +63,7 @@ const CardDetailProperties = React.memo((props: Props) => {
                     <Button
                         onClick={async () => {
                             // TODO: Show UI
-                            await mutator.insertPropertyTemplate(boardTree)
+                            await mutator.insertPropertyTemplate(board, activeView)
                         }}
                     >
                         <FormattedMessage

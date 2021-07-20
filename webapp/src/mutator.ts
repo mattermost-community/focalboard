@@ -10,7 +10,6 @@ import octoClient, {OctoClient} from './octoClient'
 import {OctoUtils} from './octoUtils'
 import undoManager from './undomanager'
 import {Utils} from './utils'
-import {BoardTree} from './viewModel/boardTree'
 
 //
 // The Mutator is used to make all changes to server state
@@ -179,8 +178,7 @@ class Mutator {
 
     // Property Templates
 
-    async insertPropertyTemplate(boardTree: BoardTree, index = -1, template?: IPropertyTemplate) {
-        const {board, activeView} = boardTree
+    async insertPropertyTemplate(board: Board, activeView: BoardView, index = -1, template?: IPropertyTemplate) {
         if (!activeView) {
             Utils.assertFailure('insertPropertyTemplate: no activeView')
             return
@@ -215,8 +213,7 @@ class Mutator {
         await this.updateBlocks(changedBlocks, oldBlocks, description)
     }
 
-    async duplicatePropertyTemplate(boardTree: BoardTree, propertyId: string) {
-        const {board, activeView} = boardTree
+    async duplicatePropertyTemplate(board: Board, activeView: BoardView, propertyId: string) {
         if (!activeView) {
             Utils.assertFailure('duplicatePropertyTemplate: no activeView')
             return
@@ -268,9 +265,7 @@ class Mutator {
         await this.updateBlock(newBoard, board, 'reorder properties')
     }
 
-    async deleteProperty(boardTree: BoardTree, propertyId: string) {
-        const {board, views, cards} = boardTree
-
+    async deleteProperty(board: Board, views: BoardView[], cards: Card[], propertyId: string) {
         const oldBlocks: IBlock[] = [board]
 
         const newBoard = new MutableBoard(board)
@@ -301,9 +296,7 @@ class Mutator {
 
     // Properties
 
-    async insertPropertyOption(boardTree: BoardTree, template: IPropertyTemplate, option: IPropertyOption, description = 'add option') {
-        const {board} = boardTree
-
+    async insertPropertyOption(board: Board, template: IPropertyTemplate, option: IPropertyOption, description = 'add option') {
         Utils.assert(board.cardProperties.includes(template))
 
         const newBoard = new MutableBoard(board)
@@ -313,9 +306,7 @@ class Mutator {
         await this.updateBlock(newBoard, board, description)
     }
 
-    async deletePropertyOption(boardTree: BoardTree, template: IPropertyTemplate, option: IPropertyOption) {
-        const {board} = boardTree
-
+    async deletePropertyOption(board: Board, template: IPropertyTemplate, option: IPropertyOption) {
         const newBoard = new MutableBoard(board)
         const newTemplate = newBoard.cardProperties.find((o) => o.id === template.id)!
         newTemplate.options = newTemplate.options.filter((o) => o.id !== option.id)
@@ -334,9 +325,7 @@ class Mutator {
         await this.updateBlock(newBoard, board, 'reorder options')
     }
 
-    async changePropertyOptionValue(boardTree: BoardTree, propertyTemplate: IPropertyTemplate, option: IPropertyOption, value: string) {
-        const {board} = boardTree
-
+    async changePropertyOptionValue(board: Board, propertyTemplate: IPropertyTemplate, option: IPropertyOption, value: string) {
         const oldBlocks: IBlock[] = [board]
 
         const newBoard = new MutableBoard(board)
@@ -368,12 +357,10 @@ class Mutator {
         await this.updateBlock(newCard, card, description)
     }
 
-    async changePropertyTypeAndName(boardTree: BoardTree, propertyTemplate: IPropertyTemplate, newType: PropertyType, newName: string) {
+    async changePropertyTypeAndName(board: Board, cards: Card[], propertyTemplate: IPropertyTemplate, newType: PropertyType, newName: string) {
         if (propertyTemplate.type === newType && propertyTemplate.name === newName) {
             return
         }
-
-        const {board} = boardTree
 
         const newBoard = new MutableBoard(board)
         const newTemplate = newBoard.cardProperties.find((o) => o.id === propertyTemplate.id)!
@@ -388,7 +375,7 @@ class Mutator {
             if (propertyTemplate.type === 'select' || propertyTemplate.type === 'multiSelect') { // If the old type was either select or multiselect
                 const isNewTypeSelectOrMulti = newType === 'select' || newType === 'multiSelect'
 
-                for (const card of boardTree.allCards) {
+                for (const card of cards) {
                     const oldValue = Array.isArray(card.properties[propertyTemplate.id]) ?
                         (card.properties[propertyTemplate.id].length > 0 && card.properties[propertyTemplate.id][0]) :
                         card.properties[propertyTemplate.id]
@@ -416,7 +403,7 @@ class Mutator {
                 }
             } else if (newType === 'select' || newType === 'multiSelect') { // if the new type is either select or multiselect
                 // Map values to new template option IDs
-                for (const card of boardTree.allCards) {
+                for (const card of cards) {
                     const oldValue = card.properties[propertyTemplate.id] as string
                     if (oldValue) {
                         let option = newTemplate.options.find((o) => o.value === oldValue)

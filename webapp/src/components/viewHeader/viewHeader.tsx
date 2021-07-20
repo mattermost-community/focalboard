@@ -5,7 +5,9 @@ import {FormattedMessage} from 'react-intl'
 
 import ViewMenu from '../../components/viewMenu'
 import mutator from '../../mutator'
-import {BoardTree} from '../../viewModel/boardTree'
+import {Board, IPropertyTemplate} from '../../blocks/board'
+import {BoardView} from '../../blocks/boardView'
+import {Card} from '../../blocks/card'
 import Button from '../../widgets/buttons/button'
 import IconButton from '../../widgets/buttons/iconButton'
 import DropdownIcon from '../../widgets/icons/dropdown'
@@ -25,8 +27,11 @@ import FilterComponent from './filterComponent'
 import './viewHeader.scss'
 
 type Props = {
-    boardTree: BoardTree
-    setSearchText: (text?: string) => void
+    board: Board
+    activeView: BoardView
+    views: BoardView[]
+    cards: Card[]
+    groupByProperty: IPropertyTemplate
     addCard: () => void
     addCardFromTemplate: (cardTemplateId: string) => void
     addCardTemplate: () => void
@@ -37,8 +42,7 @@ type Props = {
 const ViewHeader = React.memo((props: Props) => {
     const [showFilter, setShowFilter] = useState(false)
 
-    const {boardTree} = props
-    const {board, activeView} = boardTree
+    const {board, activeView, views, groupByProperty, cards} = props
 
     const withGroupBy = activeView.viewType === 'board' || activeView.viewType === 'table'
 
@@ -70,7 +74,8 @@ const ViewHeader = React.memo((props: Props) => {
                 <IconButton icon={<DropdownIcon/>}/>
                 <ViewMenu
                     board={board}
-                    boardTree={boardTree}
+                    activeView={activeView}
+                    views={views}
                     readonly={props.readonly}
                 />
             </MenuWrapper>
@@ -92,7 +97,7 @@ const ViewHeader = React.memo((props: Props) => {
                     <ViewHeaderGroupByMenu
                         properties={board.cardProperties}
                         activeView={activeView}
-                        groupByPropertyName={boardTree.groupByProperty?.name}
+                        groupByPropertyName={groupByProperty?.name}
                     />}
 
                 {/* Filter */}
@@ -109,7 +114,8 @@ const ViewHeader = React.memo((props: Props) => {
                     </Button>
                     {showFilter &&
                     <FilterComponent
-                        boardTree={boardTree}
+                        board={board}
+                        activeView={activeView}
                         onClose={() => setShowFilter(false)}
                     />}
                 </ModalWrapper>
@@ -119,30 +125,26 @@ const ViewHeader = React.memo((props: Props) => {
                 <ViewHeaderSortMenu
                     properties={board.cardProperties}
                     activeView={activeView}
-                    orderedCards={boardTree.orderedCards()}
+                    orderedCards={cards}
                 />
             </>
             }
 
             {/* Search */}
 
-            <ViewHeaderSearch
-                boardTree={boardTree}
-                setSearchText={props.setSearchText}
-            />
+            <ViewHeaderSearch/>
 
             {/* Options menu */}
 
             {!props.readonly &&
             <>
                 <ViewHeaderActionsMenu
-                    boardTree={boardTree}
+                    board={board}
                 />
 
                 {/* New card button */}
 
                 <NewCardButton
-                    boardTree={boardTree}
                     addCard={props.addCard}
                     addCardFromTemplate={props.addCardFromTemplate}
                     addCardTemplate={props.addCardTemplate}

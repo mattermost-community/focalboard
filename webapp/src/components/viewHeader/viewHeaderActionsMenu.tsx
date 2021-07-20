@@ -6,7 +6,9 @@ import {useIntl, IntlShape} from 'react-intl'
 import {CsvExporter} from '../../csvExporter'
 import {Archiver} from '../../archiver'
 import {IUser} from '../../user'
-import {BoardTree} from '../../viewModel/boardTree'
+import {Board} from '../../blocks/board'
+import {BoardView} from '../../blocks/boardView'
+import {Card} from '../../blocks/card'
 import IconButton from '../../widgets/buttons/iconButton'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
@@ -19,7 +21,9 @@ import ShareBoardComponent from '../shareBoardComponent'
 import {sendFlashMessage} from '../flashMessages'
 
 type Props = {
-    boardTree: BoardTree
+    board: Board
+    activeView: BoardView
+    cards: Card[]
 }
 
 // async function testAddCards(boardTree: BoardTree, count: number) {
@@ -74,9 +78,9 @@ type Props = {
 //     })
 // }
 
-function onExportCsvTrigger(boardTree: BoardTree, intl: IntlShape) {
+function onExportCsvTrigger(board: Board, activeView: BoardView, cards: Card[], intl: IntlShape) {
     try {
-        CsvExporter.exportTableCsv(boardTree, intl)
+        CsvExporter.exportTableCsv(board, activeView, cards, intl)
         const exportCompleteMessage = intl.formatMessage({
             id: 'ViewHeader.export-complete',
             defaultMessage: 'Export complete!',
@@ -94,7 +98,7 @@ function onExportCsvTrigger(boardTree: BoardTree, intl: IntlShape) {
 const ViewHeaderActionsMenu = React.memo((props: Props) => {
     const [showShareDialog, setShowShareDialog] = useState(false)
 
-    const {boardTree} = props
+    const {board, activeView, cards} = props
     const user = useAppSelector<IUser|null>(getCurrentUser)
     const intl = useIntl()
 
@@ -106,12 +110,12 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
                     <Menu.Text
                         id='exportCsv'
                         name={intl.formatMessage({id: 'ViewHeader.export-csv', defaultMessage: 'Export to CSV'})}
-                        onClick={() => onExportCsvTrigger(boardTree, intl)}
+                        onClick={() => onExportCsvTrigger(board, activeView, cards, intl)}
                     />
                     <Menu.Text
                         id='exportBoardArchive'
                         name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
-                        onClick={() => Archiver.exportBoardArchive(boardTree)}
+                        onClick={() => Archiver.exportBoardArchive(board)}
                     />
                     {user && user.id !== 'single-user' &&
                         <Menu.Text
@@ -151,7 +155,7 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
             </MenuWrapper>
             {showShareDialog &&
                 <ShareBoardComponent
-                    boardId={boardTree.board.id}
+                    boardId={board.id}
                     onClose={() => setShowShareDialog(false)}
                 />
             }

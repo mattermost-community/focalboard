@@ -5,6 +5,7 @@ import {FormattedMessage, useIntl} from 'react-intl'
 
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
+import {Board} from '../../blocks/board'
 import {IContentBlock} from '../../blocks/contentBlock'
 import mutator from '../../mutator'
 
@@ -26,6 +27,7 @@ import {getCardContents} from '../../store/contents'
 import './galleryCard.scss'
 
 type Props = {
+    board: Board
     card: Card
     onClick: (e: React.MouseEvent, card: Card) => void
     visiblePropertyTemplates: IPropertyTemplate[]
@@ -37,7 +39,7 @@ type Props = {
 }
 
 const GalleryCard = React.memo((props: Props) => {
-    const {card} = props
+    const {card, board} = props
     const intl = useIntl()
     const [isDragging, isOver, cardRef] = useSortable('card', card, props.isManualSort && !props.readonly, props.onDrop)
     const contents = useAppSelector(getCardContents(card.id))
@@ -141,6 +143,7 @@ const GalleryCard = React.memo((props: Props) => {
                             placement='top'
                         >
                             <PropertyValueElement
+                                board={board}
                                 readOnly={true}
                                 card={card}
                                 propertyTemplate={template}

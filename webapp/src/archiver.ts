@@ -2,14 +2,14 @@
 // See LICENSE.txt for license information.
 import {ArchiveUtils, IArchiveHeader, IArchiveLine, IBlockArchiveLine} from './blocks/archive'
 import {IBlock} from './blocks/block'
+import {Board} from './blocks/board'
 import {LineReader} from './lineReader'
 import mutator from './mutator'
 import {Utils} from './utils'
-import {BoardTree} from './viewModel/boardTree'
 
 class Archiver {
-    static async exportBoardArchive(boardTree: BoardTree): Promise<void> {
-        const blocks = await mutator.exportArchive(boardTree.board.id)
+    static async exportBoardArchive(board: Board): Promise<void> {
+        const blocks = await mutator.exportArchive(board.id)
         this.exportArchive(blocks)
     }
 

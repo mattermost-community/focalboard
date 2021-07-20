@@ -3,6 +3,7 @@
 import {Utils} from '../utils'
 
 import {IBlock, MutableBlock} from './block'
+import {Card} from './card'
 
 type PropertyType = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy'
 
@@ -106,4 +107,9 @@ class MutableBoard extends MutableBlock implements Board {
     }
 }
 
-export {Board, MutableBoard, PropertyType, IPropertyOption, IPropertyTemplate}
+type BoardGroup = {
+    option: IPropertyOption
+    cards: Card[]
+}
+
+export {Board, MutableBoard, PropertyType, IPropertyOption, IPropertyTemplate, BoardGroup}

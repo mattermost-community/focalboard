@@ -6,7 +6,6 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import {CommentBlock} from '../blocks/commentBlock'
-import {BoardTree} from '../viewModel/boardTree'
 import DeleteIcon from '../widgets/icons/delete'
 import Menu from '../widgets/menu'
 
@@ -18,7 +17,6 @@ import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
 
 type Props = {
-    boardTree: BoardTree
     cardId: string
     onClose: () => void
     showCard: (cardId?: string) => void
@@ -35,7 +33,7 @@ const CardDialog = (props: Props) => {
 
     const makeTemplateClicked = async () => {
         if (!card) {
-            Utils.assertFailure('cardTree')
+            Utils.assertFailure('card')
             return
         }
 
@@ -91,7 +89,6 @@ const CardDialog = (props: Props) => {
 
             {card &&
                 <CardDetail
-                    boardTree={props.boardTree}
                     card={card}
                     contents={contents}
                     comments={comments}

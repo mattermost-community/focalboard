@@ -12,18 +12,8 @@ import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
-import {FetchMock} from '../../test/fetchMock'
-import {MutableBoardTree} from '../../viewModel/boardTree'
-
-import {MutableCardTree} from '../../viewModel/cardTree'
 
 import TableRow from './tableRow'
-
-global.fetch = FetchMock.fn
-
-beforeEach(() => {
-    FetchMock.fn.mockReset()
-})
 
 const wrapProviders = (children: any) => {
     return (
@@ -45,19 +35,10 @@ describe('components/table/TableRow', () => {
     cardTemplate.isTemplate = true
 
     test('should match snapshot', async () => {
-        // Sync
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).toBeDefined()
-        expect(FetchMock.fn).toBeCalledTimes(1)
-
-        const cardTree = new MutableCardTree(card)
-
         const component = wrapProviders(
             <TableRow
-                boardTree={boardTree!}
-                cardTree={cardTree}
+                board={board}
+                activeView={view}
                 card={card}
                 isSelected={false}
                 focusOnMount={false}
@@ -76,20 +57,11 @@ describe('components/table/TableRow', () => {
     })
 
     test('should match snapshot, read-only', async () => {
-        // Sync
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).toBeDefined()
-        expect(FetchMock.fn).toBeCalledTimes(1)
-
-        const cardTree = new MutableCardTree(card)
-
         const component = wrapProviders(
             <TableRow
-                boardTree={boardTree!}
-                cardTree={cardTree}
+                board={board}
                 card={card}
+                activeView={view}
                 isSelected={false}
                 focusOnMount={false}
                 onSaveWithEnter={jest.fn()}
@@ -107,20 +79,11 @@ describe('components/table/TableRow', () => {
     })
 
     test('should match snapshot, isSelected', async () => {
-        // Sync
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).toBeDefined()
-        expect(FetchMock.fn).toBeCalledTimes(1)
-
-        const cardTree = new MutableCardTree(card)
-
         const component = wrapProviders(
             <TableRow
-                boardTree={boardTree!}
-                cardTree={cardTree}
+                board={board}
                 card={card}
+                activeView={view}
                 isSelected={true}
                 focusOnMount={false}
                 onSaveWithEnter={jest.fn()}
@@ -142,18 +105,11 @@ describe('components/table/TableRow', () => {
         view.collapsedOptionIds = ['value1']
         view.hiddenOptionIds = []
 
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).toBeDefined()
-        expect(FetchMock.fn).toBeCalledTimes(1)
-        const cardTree = new MutableCardTree(card)
-
         const component = wrapProviders(
             <TableRow
-                boardTree={boardTree!}
-                cardTree={cardTree}
+                board={board}
                 card={card}
+                activeView={view}
                 isSelected={false}
                 focusOnMount={false}
                 onSaveWithEnter={jest.fn()}
@@ -171,20 +127,13 @@ describe('components/table/TableRow', () => {
     })
 
     test('should match snapshot, display properties', async () => {
-        // Sync
         view.visiblePropertyIds = ['property1', 'property2']
 
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).toBeDefined()
-        expect(FetchMock.fn).toBeCalledTimes(1)
-        const cardTree = new MutableCardTree(card)
         const component = wrapProviders(
             <TableRow
-                boardTree={boardTree!}
-                cardTree={cardTree}
+                board={board}
                 card={card}
+                activeView={view}
                 isSelected={false}
                 focusOnMount={false}
                 onSaveWithEnter={jest.fn()}
@@ -201,20 +150,13 @@ describe('components/table/TableRow', () => {
     })
 
     test('should match snapshot, resizing column', async () => {
-        // Sync
         view.visiblePropertyIds = ['property1', 'property2']
 
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).toBeDefined()
-        expect(FetchMock.fn).toBeCalledTimes(1)
-        const cardTree = new MutableCardTree(card)
         const component = wrapProviders(
             <TableRow
-                boardTree={boardTree!}
-                cardTree={cardTree}
+                board={board}
                 card={card}
+                activeView={view}
                 isSelected={false}
                 focusOnMount={false}
                 onSaveWithEnter={jest.fn()}

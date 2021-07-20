@@ -4,21 +4,21 @@ import React, {useState, useRef, useEffect} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {Card} from '../../blocks/card'
+import {Board} from '../../blocks/board'
+import {BoardView} from '../../blocks/boardView'
 import {Constants} from '../../constants'
 import mutator from '../../mutator'
-import {BoardTree} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
 import {useSortable} from '../../hooks/sortable'
 
 import PropertyValueElement from '../propertyValueElement'
 import './tableRow.scss'
-import {CardTree} from '../../viewModel/cardTree'
 
 type Props = {
-    boardTree: BoardTree
+    board: Board
+    activeView: BoardView
     card: Card
-    cardTree?: CardTree
     isSelected: boolean
     focusOnMount: boolean
     onSaveWithEnter: () => void
@@ -32,8 +32,7 @@ type Props = {
 }
 
 const TableRow = React.memo((props: Props) => {
-    const {boardTree, onSaveWithEnter, columnRefs} = props
-    const {board, activeView} = boardTree
+    const {board, activeView, onSaveWithEnter, columnRefs} = props
 
     const titleRef = useRef<{focus(selectAll?: boolean): void}>(null)
     const [title, setTitle] = useState(props.card.title)
@@ -50,9 +49,9 @@ const TableRow = React.memo((props: Props) => {
 
     const columnWidth = (templateId: string): number => {
         if (props.resizingColumn === templateId) {
-            return Math.max(Constants.minColumnWidth, (props.boardTree.activeView.columnWidths[templateId] || 0) + props.offset)
+            return Math.max(Constants.minColumnWidth, (props.activeView.columnWidths[templateId] || 0) + props.offset)
         }
-        return Math.max(Constants.minColumnWidth, props.boardTree.activeView.columnWidths[templateId] || 0)
+        return Math.max(Constants.minColumnWidth, props.activeView.columnWidths[templateId] || 0)
     }
 
     let className = props.isSelected ? 'TableRow octo-table-row selected' : 'TableRow octo-table-row'
@@ -133,7 +132,7 @@ const TableRow = React.memo((props: Props) => {
                             <PropertyValueElement
                                 readOnly={props.readonly}
                                 card={card}
-                                boardTree={boardTree}
+                                board={board}
                                 propertyTemplate={template}
                                 emptyDisplayValue=''
                             />

@@ -8,7 +8,6 @@ import {Card} from '../../blocks/card'
 import {CommentBlock} from '../../blocks/commentBlock.ts'
 import {IContentBlock} from '../../blocks/contentBlock'
 import mutator from '../../mutator'
-import {BoardTree} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
 import EmojiIcon from '../../widgets/icons/emoji'
@@ -23,7 +22,6 @@ import CardDetailProperties from './cardDetailProperties'
 import './cardDetail.scss'
 
 type Props = {
-    boardTree: BoardTree
     card: Card
     comments: CommentBlock[]
     contents: IContentBlock[]
@@ -99,7 +97,6 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 {/* Property list */}
 
                 <CardDetailProperties
-                    boardTree={props.boardTree}
                     card={props.card}
                     readonly={props.readonly}
                 />

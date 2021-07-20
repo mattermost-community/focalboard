@@ -5,19 +5,20 @@ import {FormattedMessage} from 'react-intl'
 
 import {Constants} from '../../constants'
 import {MutableCard, Card} from '../../blocks/card'
+import {Board} from '../../blocks/board'
+import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
-import {BoardTree} from '../../viewModel/boardTree'
-import {CardTree, MutableCardTree} from '../../viewModel/cardTree'
 import useCardListener from '../../hooks/cardListener'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
-import {updateCards, getCards} from '../../store/cards'
+import {updateCards, getCardsByBoard} from '../../store/cards'
 
 import './gallery.scss'
 import GalleryCard from './galleryCard'
 
 type Props = {
-    boardTree: BoardTree
+    board: Board
+    activeView: BoardView
     readonly: boolean
     addCard: (show: boolean) => Promise<void>
     selectedCardIds: string[]
@@ -25,10 +26,9 @@ type Props = {
 }
 
 const Gallery = (props: Props): JSX.Element => {
-    const {boardTree} = props
-    const {activeView} = boardTree
-    const visiblePropertyTemplates = boardTree.board.cardProperties.filter((template) => boardTree.activeView.visiblePropertyIds.includes(template.id))
-    const cards = useAppSelector(getCards)
+    const {activeView, board} = props
+    const visiblePropertyTemplates = board.cardProperties.filter((template) => activeView.visiblePropertyIds.includes(template.id))
+    const cards = useAppSelector(getCardsByBoard(board.id))
     const isManualSort = activeView.sortOptions.length === 0
     const dispatch = useAppDispatch()
 
@@ -40,7 +40,7 @@ const Gallery = (props: Props): JSX.Element => {
         const description = draggedCardIds.length > 1 ? `drag ${draggedCardIds.length} cards` : 'drag card'
 
         // Update dstCard order
-        let cardOrder = Array.from(new Set([...activeView.cardOrder, ...boardTree.cards.map((o) => o.id)]))
+        let cardOrder = Array.from(new Set([...activeView.cardOrder, ...cards.map((o) => o.id)]))
         const isDraggingDown = cardOrder.indexOf(srcCard.id) <= cardOrder.indexOf(dstCard.id)
         cardOrder = cardOrder.filter((id) => !draggedCardIds.includes(id))
         let destIndex = cardOrder.indexOf(dstCard.id)
@@ -54,7 +54,7 @@ const Gallery = (props: Props): JSX.Element => {
         })
     }
 
-    const visibleTitle = boardTree.activeView.visiblePropertyIds.includes(Constants.titleColumnId)
+    const visibleTitle = activeView.visiblePropertyIds.includes(Constants.titleColumnId)
 
     useCardListener(
         async (blocks) => {
@@ -65,7 +65,7 @@ const Gallery = (props: Props): JSX.Element => {
 
     return (
         <div className='octo-table-body Gallery'>
-            {cards.filter((c) => c.parentId === boardTree.board.id).map((card) => {
+            {cards.filter((c) => c.parentId === board.id).map((card) => {
                 return (
                     <GalleryCard
                         key={card.id + card.updateAt}

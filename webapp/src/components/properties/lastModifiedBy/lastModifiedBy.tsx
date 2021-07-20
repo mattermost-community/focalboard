@@ -5,24 +5,27 @@ import React from 'react'
 
 import {IUser} from '../../../user'
 import {Card} from '../../../blocks/card'
-import {BoardTree} from '../../../viewModel/boardTree'
+import {IContentBlock} from '../../../blocks/contentBlock'
+import {CommentBlock} from '../../../blocks/commentBlock'
+import {Board} from '../../../blocks/board'
 import {IBlock} from '../../../blocks/block'
 import {getCurrentWorkspaceUsersById} from '../../../store/currentWorkspaceUsers'
 import {useAppSelector} from '../../../store/hooks'
 
 type Props = {
     card: Card,
-    boardTree?: BoardTree,
+    board?: Board,
+    contents: IContentBlock[],
+    comments: CommentBlock[],
 }
 
 const LastModifiedBy = (props: Props): JSX.Element => {
     const workspaceUsersById = useAppSelector<{[key:string]: IUser}>(getCurrentWorkspaceUsersById)
 
     let latestBlock: IBlock = props.card
-    if (props.boardTree) {
-        const sortedBlocks = props.boardTree?.allBlocks.
-            filter((block) => block.parentId === props.card.id || block.id === props.card.id).
-            sort((a, b) => b.updateAt - a.updateAt)
+    if (props.board) {
+        const allBlocks: IBlock[] = [props.card, ...props.contents, ...props.comments]
+        const sortedBlocks = allBlocks.sort((a, b) => b.updateAt - a.updateAt)
 
         latestBlock = sortedBlocks.length > 0 ? sortedBlocks[0] : latestBlock
     }

@@ -5,24 +5,25 @@ import React from 'react'
 
 import {Card} from '../../../blocks/card'
 import {IBlock} from '../../../blocks/block'
+import {IContentBlock} from '../../../blocks/contentBlock'
+import {CommentBlock} from '../../../blocks/commentBlock'
 
 const moment = require('moment')
 
 type Props = {
     card: Card,
+    contents: IContentBlock[]
+    comments: CommentBlock[]
 }
 
 const LastModifiedAt = (props: Props): JSX.Element => {
-    const latestBlock: IBlock = props.card
-    // TODO: Make this as part of the reducer
-    // let latestBlock: IBlock = props.card
-    // if (props.cardTree) {
-    //     const sortedBlocks = props.cardTree.allBlocks.
-    //         filter((block) => block.parentId === props.card.id || block.id === props.card.id).
-    //         sort((a, b) => b.updateAt - a.updateAt)
+    let latestBlock: IBlock = props.card
+    if (props.card) {
+        const allBlocks = [props.card, ...props.contents, ...props.comments]
+        const sortedBlocks = allBlocks.sort((a, b) => b.updateAt - a.updateAt)
 
-    //     latestBlock = sortedBlocks.length > 0 ? sortedBlocks[0] : latestBlock
-    // }
+        latestBlock = sortedBlocks.length > 0 ? sortedBlocks[0] : latestBlock
+    }
 
     return (
         <div className='LastModifiedAt octo-propertyvalue'>

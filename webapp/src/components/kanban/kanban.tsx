@@ -4,14 +4,12 @@
 import React, {useRef, useState} from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
-import {IPropertyOption} from '../../blocks/board'
+import {Board, IPropertyOption, IPropertyTemplate, BoardGroup} from '../../blocks/board'
 import {Card} from '../../blocks/card'
+import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
-import {BoardTree} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
-
-import {CardTree, MutableCardTree} from '../../viewModel/cardTree'
 
 import useCardListener from '../../hooks/cardListener'
 
@@ -23,7 +21,12 @@ import KanbanHiddenColumnItem from './kanbanHiddenColumnItem'
 import './kanban.scss'
 
 type Props = {
-    boardTree: BoardTree
+    board: Board
+    activeView: BoardView
+    cards: Card[]
+    groupByProperty: IPropertyTemplate
+    visibleGroups: BoardGroup[]
+    hiddenGroups: BoardGroup[]
     selectedCardIds: string[]
     intl: IntlShape
     readonly: boolean
@@ -33,8 +36,7 @@ type Props = {
 }
 
 const Kanban = (props: Props) => {
-    const {boardTree} = props
-    const {cards, groupByProperty} = boardTree
+    const {board, activeView, cards, groupByProperty, visibleGroups, hiddenGroups} = props
 
     if (!groupByProperty) {
         Utils.assertFailure('Board views must have groupByProperty set')
@@ -44,33 +46,11 @@ const Kanban = (props: Props) => {
     const propertyValues = groupByProperty.options || []
     Utils.log(`${propertyValues.length} propertyValues`)
 
-    const {board, activeView, visibleGroups, hiddenGroups} = boardTree
     const visiblePropertyTemplates = board.cardProperties.filter((template) => activeView.visiblePropertyIds.includes(template.id))
     const isManualSort = activeView.sortOptions.length === 0
 
-    const [cardTrees, setCardTrees] = useState<{[key: string]: CardTree | undefined}>({})
-    const cardTreeRef = useRef<{[key: string]: CardTree | undefined}>()
-    cardTreeRef.current = cardTrees
-
-    useCardListener(
-        async (blocks) => {
-            for (const block of blocks) {
-                const cardTree = cardTreeRef.current && cardTreeRef.current[block.parentId]
-                // eslint-disable-next-line no-await-in-loop
-                const newCardTree = cardTree ? MutableCardTree.incrementalUpdate(cardTree, blocks) : await MutableCardTree.sync(block.parentId)
-                setCardTrees((oldTree) => ({...oldTree, [block.parentId]: newCardTree}))
-            }
-        },
-        async () => {
-            cards.forEach(async (c) => {
-                const newCardTree = await MutableCardTree.sync(c.id)
-                setCardTrees((oldTree) => ({...oldTree, [c.id]: newCardTree}))
-            })
-        },
-    )
-
     const propertyNameChanged = async (option: IPropertyOption, text: string): Promise<void> => {
-        await mutator.changePropertyOptionValue(boardTree, boardTree.groupByProperty!, option, text)
+        await mutator.changePropertyOptionValue(board, groupByProperty!, option, text)
     }
 
     const addGroupClicked = async () => {
@@ -82,12 +62,12 @@ const Kanban = (props: Props) => {
             color: 'propColorDefault',
         }
 
-        await mutator.insertPropertyOption(boardTree, boardTree.groupByProperty!, option, 'add group')
+        await mutator.insertPropertyOption(board, groupByProperty!, option, 'add group')
     }
 
     const orderAfterMoveToColumn = (cardIds: string[], columnId?: string): string[] => {
         let cardOrder = activeView.cardOrder.slice()
-        const columnGroup = boardTree.visibleGroups.find((g) => g.option.id === columnId)
+        const columnGroup = visibleGroups.find((g) => g.option.id === columnId)
         const columnCards = columnGroup?.cards
         if (!columnCards || columnCards.length === 0) {
             return cardOrder
@@ -109,10 +89,10 @@ const Kanban = (props: Props) => {
             draggedCardIds = Array.from(new Set(selectedCardIds).add(card.id))
         }
 
-        Utils.assertValue(boardTree)
+        Utils.assertValue(board)
 
         if (draggedCardIds.length > 0) {
-            const orderedCards = boardTree.orderedCards()
+            const orderedCards = cards
             const cardsById: { [key: string]: Card } = orderedCards.reduce((acc: { [key: string]: Card }, c: Card): { [key: string]: Card } => {
                 acc[c.id] = c
                 return acc
@@ -123,20 +103,20 @@ const Kanban = (props: Props) => {
                 const awaits = []
                 for (const draggedCard of draggedCards) {
                     Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${optionId}`)
-                    const oldValue = draggedCard.properties[boardTree.groupByProperty!.id]
+                    const oldValue = draggedCard.properties[groupByProperty!.id]
                     if (optionId !== oldValue) {
-                        awaits.push(mutator.changePropertyValue(draggedCard, boardTree.groupByProperty!.id, optionId, description))
+                        awaits.push(mutator.changePropertyValue(draggedCard, groupByProperty!.id, optionId, description))
                     }
                 }
                 const newOrder = orderAfterMoveToColumn(draggedCardIds, optionId)
-                awaits.push(mutator.changeViewCardOrder(boardTree.activeView, newOrder, description))
+                awaits.push(mutator.changeViewCardOrder(activeView, newOrder, description))
                 await Promise.all(awaits)
             })
         } else if (dstOption) {
             Utils.log(`ondrop. Header option: ${dstOption.value}, column: ${option?.value}`)
 
             // Move option to new index
-            const visibleOptionIds = boardTree.visibleGroups.map((o) => o.option.id)
+            const visibleOptionIds = visibleGroups.map((o) => o.option.id)
 
             const srcIndex = visibleOptionIds.indexOf(dstOption.id)
             const destIndex = visibleOptionIds.indexOf(option.id)
@@ -158,7 +138,7 @@ const Kanban = (props: Props) => {
         const description = draggedCardIds.length > 1 ? `drag ${draggedCardIds.length} cards` : 'drag card'
 
         // Update dstCard order
-        const orderedCards = boardTree.orderedCards()
+        const orderedCards = cards
         const cardsById: { [key: string]: Card } = orderedCards.reduce((acc: { [key: string]: Card }, card: Card): { [key: string]: Card } => {
             acc[card.id] = card
             return acc
@@ -168,7 +148,7 @@ const Kanban = (props: Props) => {
         const isDraggingDown = cardOrder.indexOf(srcCard.id) <= cardOrder.indexOf(dstCard.id)
         cardOrder = cardOrder.filter((id) => !draggedCardIds.includes(id))
         let destIndex = cardOrder.indexOf(dstCard.id)
-        if (srcCard.properties[boardTree.groupByProperty!.id] === optionId && isDraggingDown) {
+        if (srcCard.properties[groupByProperty!.id] === optionId && isDraggingDown) {
             // If the cards are in the same column and dragging down, drop after the target dstCard
             destIndex += 1
         }
@@ -179,9 +159,9 @@ const Kanban = (props: Props) => {
             const awaits = []
             for (const draggedCard of draggedCards) {
                 Utils.log(`draggedCard: ${draggedCard.title}, column: ${optionId}`)
-                const oldOptionId = draggedCard.properties[boardTree.groupByProperty!.id]
+                const oldOptionId = draggedCard.properties[groupByProperty!.id]
                 if (optionId !== oldOptionId) {
-                    awaits.push(mutator.changePropertyValue(draggedCard, boardTree.groupByProperty!.id, optionId, description))
+                    awaits.push(mutator.changePropertyValue(draggedCard, groupByProperty!.id, optionId, description))
                 }
             }
             await Promise.all(awaits)
@@ -201,7 +181,8 @@ const Kanban = (props: Props) => {
                     <KanbanColumnHeader
                         key={group.option.id}
                         group={group}
-                        boardTree={boardTree}
+                        board={board}
+                        activeView={activeView}
                         intl={props.intl}
                         addCard={props.addCard}
                         readonly={props.readonly}
@@ -251,7 +232,6 @@ const Kanban = (props: Props) => {
                         {group.cards.map((card) => (
                             <KanbanCard
                                 card={card}
-                                cardTree={cardTrees[card.id]}
                                 visiblePropertyTemplates={visiblePropertyTemplates}
                                 key={card.id}
                                 readonly={props.readonly}
@@ -287,7 +267,7 @@ const Kanban = (props: Props) => {
                         <KanbanHiddenColumnItem
                             key={group.option.id}
                             group={group}
-                            boardTree={boardTree}
+                            activeView={activeView}
                             intl={props.intl}
                             readonly={props.readonly}
                             onDrop={(card: Card) => onDropToColumn(group.option, card)}

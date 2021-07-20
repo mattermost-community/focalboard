@@ -5,18 +5,22 @@ import React, {FC} from 'react'
 import {useIntl} from 'react-intl'
 
 import {Constants} from '../../constants'
+import {Board} from '../../blocks/board'
+import {BoardView} from '../../blocks/boardView'
+import {Card} from '../../blocks/card'
 import mutator from '../../mutator'
-import {BoardTree} from '../../viewModel/boardTree'
 import Menu from '../../widgets/menu'
 
 type Props = {
     templateId: string
-    boardTree: BoardTree
+    board: Board
+    activeView: BoardView
+    views: BoardView[]
+    cards: Card[]
 }
 
 const TableHeaderMenu: FC<Props> = (props: Props): JSX.Element => {
-    const {boardTree, templateId} = props
-    const {board, activeView} = boardTree
+    const {board, activeView, templateId, views, cards} = props
     const intl = useIntl()
     return (
         <Menu>
@@ -38,7 +42,7 @@ const TableHeaderMenu: FC<Props> = (props: Props): JSX.Element => {
                         // TODO: Handle name column
                     } else {
                         const index = board.cardProperties.findIndex((o) => o.id === templateId)
-                        mutator.insertPropertyTemplate(boardTree, index)
+                        mutator.insertPropertyTemplate(board, activeView, index)
                     }
                 }}
             />
@@ -50,7 +54,7 @@ const TableHeaderMenu: FC<Props> = (props: Props): JSX.Element => {
                         // TODO: Handle title column
                     } else {
                         const index = board.cardProperties.findIndex((o) => o.id === templateId) + 1
-                        mutator.insertPropertyTemplate(boardTree, index)
+                        mutator.insertPropertyTemplate(board, activeView, index)
                     }
                 }}
             />
@@ -64,12 +68,12 @@ const TableHeaderMenu: FC<Props> = (props: Props): JSX.Element => {
                     <Menu.Text
                         id='duplicate'
                         name={intl.formatMessage({id: 'TableHeaderMenu.duplicate', defaultMessage: 'Duplicate'})}
-                        onClick={() => mutator.duplicatePropertyTemplate(boardTree, templateId)}
+                        onClick={() => mutator.duplicatePropertyTemplate(board, activeView, templateId)}
                     />
                     <Menu.Text
                         id='delete'
                         name={intl.formatMessage({id: 'TableHeaderMenu.delete', defaultMessage: 'Delete'})}
-                        onClick={() => mutator.deleteProperty(boardTree, templateId)}
+                        onClick={() => mutator.deleteProperty(board, views, cards, templateId)}
                     />
                 </>}
         </Menu>
