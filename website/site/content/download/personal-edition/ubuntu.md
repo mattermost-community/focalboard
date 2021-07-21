@@ -118,6 +118,8 @@ sudo /etc/init.d/nginx reload
 
 For a production server, it's important to set up TLS to encrypt web traffic. Without this, your login passwords and data are unprotected. Refer to the [NGINX TLS guide](https://docs.nginx.com/nginx/admin-guide/security-controls/terminating-ssl-http/) and [Let's Encrypt Certbot guide](https://certbot.eff.org/lets-encrypt/ubuntubionic-nginx) on setting this up.
 
+You can refer this guide for [installing SSL certificate on NGINX](https://www.armanism.com/blog/install-free-ssl-on-nginx).
+
 ## Install Postgresql (Recommended)
 
 Focalboard stores data in a SQLite database by default, but we recommend running against Postgres in production (we've tested against Postgres 10.15). To install, run:
