@@ -11,7 +11,6 @@ import './table.scss'
 import {CardTree} from '../../viewModel/cardTree'
 
 import TableRow from './tableRow'
-import CalculationRow from './calculation/CalculationRow'
 
 type Props = {
     boardTree: BoardTree

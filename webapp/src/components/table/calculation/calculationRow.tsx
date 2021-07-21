@@ -64,35 +64,6 @@ const CalculationRow = (props: Props): JSX.Element => {
                             property={template}
                         />
                     )
-
-                    // return showOptions.get(template.id) ? (
-                    //     <div
-                    //         key={template.id}
-                    //         className='octo-table-cell'
-                    //         style={style}
-                    //     >
-                    //         <CalculationOptions
-                    //             value={value}
-                    //             menuOpen={showOptions.get(template.id)}
-                    //             onClose={() => toggleOptions(template.id, false)}
-                    //             onChange={(v: string) => {
-                    //                 const calculations = {...selectedCalculations}
-                    //                 calculations[template.id] = v
-                    //                 const newView = new MutableBoardView(activeView)
-                    //                 newView.columnCalculations = calculations
-                    //                 mutator.updateBlock(newView, activeView, 'update_calculation')
-                    //             }}
-                    //         />
-                    //     </div>
-                    // ) : (
-                    //     <div
-                    //         className={'octo-table-cell'}
-                    //         style={style}
-                    //         onClick={() => toggleOptions(template.id, true)}
-                    //     >
-                    //         {valueOption!.label}
-                    //     </div>
-                    // )
                 })
             }
         </div>

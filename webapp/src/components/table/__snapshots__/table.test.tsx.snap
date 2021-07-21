@@ -290,7 +290,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
       class="CalculationRow octo-table-row"
     >
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -300,7 +300,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
         </span>
       </div>
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -310,7 +310,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
         </span>
       </div>
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -320,7 +320,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
         </span>
       </div>
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -624,7 +624,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
       class="CalculationRow octo-table-row"
     >
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -634,7 +634,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
         </span>
       </div>
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -644,7 +644,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
         </span>
       </div>
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -654,7 +654,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
         </span>
       </div>
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -958,7 +958,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
       class="CalculationRow octo-table-row"
     >
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -968,7 +968,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
         </span>
       </div>
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -978,7 +978,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
         </span>
       </div>
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -988,7 +988,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
         </span>
       </div>
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -1292,7 +1292,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
       class="CalculationRow octo-table-row"
     >
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -1302,7 +1302,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
         </span>
       </div>
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -1312,7 +1312,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
         </span>
       </div>
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -1322,7 +1322,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
         </span>
       </div>
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -1518,7 +1518,7 @@ exports[`components/table/Table should match snapshot 1`] = `
       class="CalculationRow octo-table-row"
     >
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -1528,7 +1528,7 @@ exports[`components/table/Table should match snapshot 1`] = `
         </span>
       </div>
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -1538,7 +1538,7 @@ exports[`components/table/Table should match snapshot 1`] = `
         </span>
       </div>
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -1721,7 +1721,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
       class="CalculationRow octo-table-row"
     >
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -1731,7 +1731,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
         </span>
       </div>
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -1741,7 +1741,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
         </span>
       </div>
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -1920,7 +1920,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
       class="CalculationRow octo-table-row"
     >
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -1930,7 +1930,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
         </span>
       </div>
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span
@@ -1940,7 +1940,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
         </span>
       </div>
       <div
-        class="Calculation octo-table-cell"
+        class="Calculation none octo-table-cell"
         style="width: 100px;"
       >
         <span

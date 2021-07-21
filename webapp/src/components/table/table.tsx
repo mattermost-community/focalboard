@@ -24,7 +24,7 @@ import useCardListener from '../../hooks/cardListener'
 import TableHeader from './tableHeader'
 import TableRows from './tableRows'
 import TableGroup from './tableGroup'
-import CalculationRow from './calculation/CalculationRow'
+import CalculationRow from './calculation/calculationRow'
 
 type Props = {
     boardTree: BoardTree

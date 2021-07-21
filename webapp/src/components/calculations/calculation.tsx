@@ -29,7 +29,7 @@ const Calculation = (props: Props): JSX.Element => {
     if (props.menuOpen) {
         return (
             <div
-                className={`Calculation ${props.class}`}
+                className={`Calculation ${value} ${props.class}`}
                 style={props.style}
             >
                 <CalculationOptions
@@ -44,7 +44,7 @@ const Calculation = (props: Props): JSX.Element => {
 
     return (
         <div
-            className={`Calculation ${props.class}`}
+            className={`Calculation ${value} ${props.class}`}
             style={props.style}
             onClick={props.onMenuOpen}
         >
