@@ -28,11 +28,11 @@ describe('components/table/TableRow', () => {
     const view = TestBlockFactory.createBoardView(board)
 
     const view2 = TestBlockFactory.createBoardView(board)
-    view2.sortOptions = []
+    view2.fields.sortOptions = []
 
     const card = TestBlockFactory.createCard(board)
     const cardTemplate = TestBlockFactory.createCard(board)
-    cardTemplate.isTemplate = true
+    cardTemplate.fields.isTemplate = true
 
     test('should match snapshot', async () => {
         const component = wrapProviders(
@@ -102,8 +102,8 @@ describe('components/table/TableRow', () => {
 
     test('should match snapshot, collapsed tree', async () => {
         // Sync
-        view.collapsedOptionIds = ['value1']
-        view.hiddenOptionIds = []
+        view.fields.collapsedOptionIds = ['value1']
+        view.fields.hiddenOptionIds = []
 
         const component = wrapProviders(
             <TableRow

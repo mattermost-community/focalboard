@@ -6,7 +6,7 @@ import {FormattedMessage} from 'react-intl'
 import ViewMenu from '../../components/viewMenu'
 import mutator from '../../mutator'
 import {Board, IPropertyTemplate} from '../../blocks/board'
-import {MutableBoardView} from '../../blocks/boardView'
+import {BoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
 import Button from '../../widgets/buttons/button'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -28,8 +28,8 @@ import './viewHeader.scss'
 
 type Props = {
     board: Board
-    activeView: MutableBoardView
-    views: MutableBoardView[]
+    activeView: BoardView
+    views: BoardView[]
     cards: Card[]
     groupByProperty?: IPropertyTemplate
     addCard: () => void
@@ -44,7 +44,7 @@ const ViewHeader = React.memo((props: Props) => {
 
     const {board, activeView, views, groupByProperty, cards} = props
 
-    const withGroupBy = activeView.viewType === 'board' || activeView.viewType === 'table'
+    const withGroupBy = activeView.fields.viewType === 'board' || activeView.fields.viewType === 'table'
 
     const [viewTitle, setViewTitle] = useState(activeView.title)
 
@@ -52,7 +52,7 @@ const ViewHeader = React.memo((props: Props) => {
         setViewTitle(activeView.title)
     }, [activeView.title])
 
-    const hasFilter = activeView.filter && activeView.filter.filters?.length > 0
+    const hasFilter = activeView.fields.filter && activeView.fields.filter.filters?.length > 0
 
     return (
         <div className='ViewHeader'>

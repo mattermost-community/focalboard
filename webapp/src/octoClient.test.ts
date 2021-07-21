@@ -5,7 +5,7 @@
 console.log = jest.fn()
 
 import {IBlock} from './blocks/block'
-import {MutableBoard} from './blocks/board'
+import {Board} from './blocks/board'
 import octoClient from './octoClient'
 import 'isomorphic-fetch'
 import {FetchMock} from './test/fetchMock'
@@ -73,7 +73,7 @@ function createBoards(): IBlock[] {
     const blocks = []
 
     for (let i = 0; i < 5; i++) {
-        const board = new MutableBoard()
+        const board = new Board()
         board.id = `board${i + 1}`
         blocks.push(board)
     }

@@ -13,10 +13,10 @@ import ShowIcon from '../../widgets/icons/show'
 import Label from '../../widgets/label'
 import {Card} from '../../blocks/card'
 import {BoardGroup} from '../../blocks/board'
-import {MutableBoardView} from '../../blocks/boardView'
+import {BoardView} from '../../blocks/boardView'
 
 type Props = {
-    activeView: MutableBoardView
+    activeView: BoardView
     group: BoardGroup
     intl: IntlShape
     readonly: boolean

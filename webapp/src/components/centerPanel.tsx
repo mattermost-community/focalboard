@@ -6,9 +6,9 @@ import {injectIntl, IntlShape} from 'react-intl'
 import Hotkeys from 'react-hot-keys'
 
 import {BlockIcons} from '../blockIcons'
-import {Card, MutableCard} from '../blocks/card'
+import {Card} from '../blocks/card'
 import {Board, IPropertyTemplate, IPropertyOption, BoardGroup} from '../blocks/board'
-import {MutableBoardView} from '../blocks/boardView'
+import {BoardView} from '../blocks/boardView'
 import {CardFilter} from '../cardFilter'
 import mutator from '../mutator'
 import {Utils} from '../utils'
@@ -28,8 +28,8 @@ import Gallery from './gallery/gallery'
 type Props = {
     board: Board
     cards: Card[]
-    activeView: MutableBoardView
-    views: MutableBoardView[]
+    activeView: BoardView
+    views: BoardView[]
     groupByProperty?: IPropertyTemplate
     intl: IntlShape
     readonly: boolean
@@ -224,11 +224,11 @@ class CenterPanel extends React.Component<Props, State> {
     addCard = async (groupByOptionId?: string, show = false): Promise<void> => {
         const {activeView, board, groupByProperty} = this.props
 
-        const card = new MutableCard()
+        const card = new Card()
 
         card.parentId = board.id
         card.rootId = board.rootId
-        const propertiesThatMeetFilters = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.fields.cardProperties)
+        const propertiesThatMeetFilters = CardFilter.propertiesThatMeetFilterGroup(activeView.fields.filter, board.fields.cardProperties)
         if ((activeView.fields.viewType === 'board' || activeView.fields.viewType === 'table') && groupByProperty) {
             if (groupByOptionId) {
                 propertiesThatMeetFilters[groupByProperty.id] = groupByOptionId
@@ -237,8 +237,8 @@ class CenterPanel extends React.Component<Props, State> {
             }
         }
         card.fields.properties = {...card.fields.properties, ...propertiesThatMeetFilters}
-        if (!card.icon && UserSettings.prefillRandomIcons) {
-            card.icon = BlockIcons.shared.randomIcon()
+        if (!card.fields.icon && UserSettings.prefillRandomIcons) {
+            card.fields.icon = BlockIcons.shared.randomIcon()
         }
         await mutator.insertBlock(
             card,
@@ -261,8 +261,8 @@ class CenterPanel extends React.Component<Props, State> {
     private addCardTemplate = async () => {
         const {board} = this.props
 
-        const cardTemplate = new MutableCard()
-        cardTemplate.isTemplate = true
+        const cardTemplate = new Card()
+        cardTemplate.fields.isTemplate = true
         cardTemplate.parentId = board.id
         cardTemplate.rootId = board.rootId
         await mutator.insertBlock(

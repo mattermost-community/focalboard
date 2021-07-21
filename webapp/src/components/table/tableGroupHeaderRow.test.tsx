@@ -31,7 +31,7 @@ const board = TestBlockFactory.createBoard()
 const view = TestBlockFactory.createBoardView(board)
 
 const view2 = TestBlockFactory.createBoardView(board)
-view2.sortOptions = []
+view2.fields.sortOptions = []
 
 const boardTreeNoGroup = {
     option: {

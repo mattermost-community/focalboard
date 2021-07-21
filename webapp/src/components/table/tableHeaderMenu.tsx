@@ -6,7 +6,7 @@ import {useIntl} from 'react-intl'
 
 import {Constants} from '../../constants'
 import {Board, IPropertyTemplate} from '../../blocks/board'
-import {MutableBoardView} from '../../blocks/boardView'
+import {BoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
 import mutator from '../../mutator'
 import Menu from '../../widgets/menu'
@@ -14,8 +14,8 @@ import Menu from '../../widgets/menu'
 type Props = {
     templateId: string
     board: Board
-    activeView: MutableBoardView
-    views: MutableBoardView[]
+    activeView: BoardView
+    views: BoardView[]
     cards: Card[]
 }
 

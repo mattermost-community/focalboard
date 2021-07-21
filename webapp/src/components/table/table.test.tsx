@@ -15,7 +15,7 @@ import {HTML5Backend} from 'react-dnd-html5-backend'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import {FetchMock} from '../../test/fetchMock'
-import {MutableBoardView} from '../../blocks/boardView'
+import {BoardView} from '../../blocks/boardView'
 
 import {IUser} from '../../user'
 
@@ -40,16 +40,16 @@ const wrapProviders = (children: any) => {
 describe('components/table/Table', () => {
     const board = TestBlockFactory.createBoard()
     const view = TestBlockFactory.createBoardView(board)
-    view.viewType = 'table'
-    view.groupById = undefined
+    view.fields.viewType = 'table'
+    view.fields.groupById = undefined
     view.fields.visiblePropertyIds = ['property1', 'property2']
 
     const view2 = TestBlockFactory.createBoardView(board)
-    view2.sortOptions = []
+    view2.fields.sortOptions = []
 
     const card = TestBlockFactory.createCard(board)
     const cardTemplate = TestBlockFactory.createCard(board)
-    cardTemplate.isTemplate = true
+    cardTemplate.fields.isTemplate = true
 
     test('should match snapshot', async () => {
         const callback = jest.fn()
@@ -105,7 +105,7 @@ describe('components/table/Table', () => {
         const component = wrapProviders(
             <Table
                 board={board}
-                activeView={{...view, groupById: 'property1'} as MutableBoardView}
+                activeView={{...view, fields: {...view.fields, groupById: 'property1'}} as BoardView}
                 visibleGroups={[]}
                 cards={[card]}
                 views={[view, view2]}
@@ -141,8 +141,8 @@ describe('components/table/Table extended', () => {
         card2.createAt = Date.parse('15 Jun 2021 16:22:00')
 
         const view = TestBlockFactory.createBoardView(board)
-        view.viewType = 'table'
-        view.groupById = undefined
+        view.fields.viewType = 'table'
+        view.fields.groupById = undefined
         view.fields.visiblePropertyIds = ['property1', 'property2', dateCreatedId]
 
         const callback = jest.fn()
@@ -207,8 +207,8 @@ describe('components/table/Table extended', () => {
         card2Text.updateAt = Date.parse('22 Jun 2021 11:23:00')
 
         const view = TestBlockFactory.createBoardView(board)
-        view.viewType = 'table'
-        view.groupById = undefined
+        view.fields.viewType = 'table'
+        view.fields.groupById = undefined
         view.fields.visiblePropertyIds = ['property1', 'property2', dateUpdatedId]
 
         const callback = jest.fn()
@@ -251,8 +251,8 @@ describe('components/table/Table extended', () => {
         card2.createdBy = 'user-id-2'
 
         const view = TestBlockFactory.createBoardView(board)
-        view.viewType = 'table'
-        view.groupById = undefined
+        view.fields.viewType = 'table'
+        view.fields.groupById = undefined
         view.fields.visiblePropertyIds = ['property1', 'property2', createdById]
 
         const callback = jest.fn()
@@ -322,8 +322,8 @@ describe('components/table/Table extended', () => {
         card2.updateAt = Date.parse('16 Jun 2021 16:22:00')
 
         const view = TestBlockFactory.createBoardView(board)
-        view.viewType = 'table'
-        view.groupById = undefined
+        view.fields.viewType = 'table'
+        view.fields.groupById = undefined
         view.fields.visiblePropertyIds = ['property1', 'property2', modifiedById]
 
         const callback = jest.fn()

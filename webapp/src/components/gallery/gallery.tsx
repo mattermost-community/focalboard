@@ -1,12 +1,12 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {Constants} from '../../constants'
-import {MutableCard, Card} from '../../blocks/card'
+import {Card} from '../../blocks/card'
 import {Board, IPropertyTemplate} from '../../blocks/board'
-import {MutableBoardView} from '../../blocks/boardView'
+import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import useCardListener from '../../hooks/cardListener'
@@ -18,7 +18,7 @@ import GalleryCard from './galleryCard'
 
 type Props = {
     board: Board
-    activeView: MutableBoardView
+    activeView: BoardView
     readonly: boolean
     addCard: (show: boolean) => Promise<void>
     selectedCardIds: string[]
@@ -40,7 +40,7 @@ const Gallery = (props: Props): JSX.Element => {
         const description = draggedCardIds.length > 1 ? `drag ${draggedCardIds.length} cards` : 'drag card'
 
         // Update dstCard order
-        let cardOrder = Array.from(new Set([...activeView.cardOrder, ...cards.map((o) => o.id)]))
+        let cardOrder = Array.from(new Set([...activeView.fields.cardOrder, ...cards.map((o) => o.id)]))
         const isDraggingDown = cardOrder.indexOf(srcCard.id) <= cardOrder.indexOf(dstCard.id)
         cardOrder = cardOrder.filter((id) => !draggedCardIds.includes(id))
         let destIndex = cardOrder.indexOf(dstCard.id)
@@ -58,7 +58,7 @@ const Gallery = (props: Props): JSX.Element => {
 
     useCardListener(
         async (blocks) => {
-            dispatch(updateCards(blocks.filter((o) => o.type === 'card') as MutableCard[]))
+            dispatch(updateCards(blocks.filter((o) => o.type === 'card') as Card[]))
         },
         () => {},
     )

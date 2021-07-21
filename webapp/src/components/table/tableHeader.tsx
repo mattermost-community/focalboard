@@ -5,7 +5,7 @@ import React from 'react'
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Constants} from '../../constants'
 import {Card} from '../../blocks/card'
-import {MutableBoardView} from '../../blocks/boardView'
+import {BoardView} from '../../blocks/boardView'
 import SortDownIcon from '../../widgets/icons/sortDown'
 import SortUpIcon from '../../widgets/icons/sortUp'
 import MenuWrapper from '../../widgets/menuWrapper'
@@ -23,9 +23,9 @@ type Props = {
     sorted: 'up'|'down'|'none'
     name: React.ReactNode
     board: Board
-    activeView: MutableBoardView
+    activeView: BoardView
     cards: Card[]
-    views: MutableBoardView[]
+    views: BoardView[]
     template: IPropertyTemplate
     offset: number
     onDrop: (template: IPropertyTemplate, container: IPropertyTemplate) => void

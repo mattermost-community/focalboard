@@ -4,7 +4,7 @@ import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {IPropertyTemplate} from '../../blocks/board'
-import {MutableBoardView, ISortOption} from '../../blocks/boardView'
+import {BoardView, ISortOption} from '../../blocks/boardView'
 import {Constants} from '../../constants'
 import {Card} from '../../blocks/card'
 import mutator from '../../mutator'
@@ -16,12 +16,12 @@ import SortUpIcon from '../../widgets/icons/sortUp'
 
 type Props = {
     properties: readonly IPropertyTemplate[]
-    activeView: MutableBoardView
+    activeView: BoardView
     orderedCards: Card[]
 }
 const ViewHeaderSortMenu = React.memo((props: Props) => {
     const {properties, activeView, orderedCards} = props
-    const hasSort = activeView.sortOptions?.length > 0
+    const hasSort = activeView.fields.sortOptions?.length > 0
     const sortDisplayOptions = properties?.map((o) => ({id: o.id, name: o.name}))
     sortDisplayOptions?.unshift({id: Constants.titleColumnId, name: 'Name'})
 
@@ -34,7 +34,7 @@ const ViewHeaderSortMenu = React.memo((props: Props) => {
                 />
             </Button>
             <Menu>
-                {(activeView.sortOptions?.length > 0) &&
+                {(activeView.fields.sortOptions?.length > 0) &&
                 <>
                     <Menu.Text
                         id='manual'
@@ -42,9 +42,9 @@ const ViewHeaderSortMenu = React.memo((props: Props) => {
                         onClick={() => {
                             // This sets the manual card order to the currently displayed order
                             // Note: Perform this as a single update to change both properties correctly
-                            const newView = new MutableBoardView(activeView)
-                            newView.cardOrder = orderedCards.map((o) => o.id)
-                            newView.sortOptions = []
+                            const newView = {...activeView, fields: {...activeView.fields}}
+                            newView.fields.cardOrder = orderedCards.map((o) => o.id || '') || []
+                            newView.fields.sortOptions = []
                             mutator.updateBlock(newView, activeView, 'reorder')
                         }}
                     />
@@ -63,8 +63,8 @@ const ViewHeaderSortMenu = React.memo((props: Props) => {
 
                 {sortDisplayOptions?.map((option) => {
                     let rightIcon: JSX.Element | undefined
-                    if (activeView.sortOptions?.length > 0) {
-                        const sortOption = activeView.sortOptions[0]
+                    if (activeView.fields.sortOptions?.length > 0) {
+                        const sortOption = activeView.fields.sortOptions[0]
                         if (sortOption.propertyId === option.id) {
                             rightIcon = sortOption.reversed ? <SortDownIcon/> : <SortUpIcon/>
                         }
@@ -77,10 +77,10 @@ const ViewHeaderSortMenu = React.memo((props: Props) => {
                             rightIcon={rightIcon}
                             onClick={(propertyId: string) => {
                                 let newSortOptions: ISortOption[] = []
-                                if (activeView.sortOptions && activeView.sortOptions[0] && activeView.sortOptions[0].propertyId === propertyId) {
+                                if (activeView.fields.sortOptions && activeView.fields.sortOptions[0] && activeView.fields.sortOptions[0].propertyId === propertyId) {
                                     // Already sorting by name, so reverse it
                                     newSortOptions = [
-                                        {propertyId, reversed: !activeView.sortOptions[0].reversed},
+                                        {propertyId, reversed: !activeView.fields.sortOptions[0].reversed},
                                     ]
                                 } else {
                                     newSortOptions = [

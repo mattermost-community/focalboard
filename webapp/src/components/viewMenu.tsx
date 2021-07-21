@@ -5,7 +5,7 @@ import {injectIntl, IntlShape} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board, IPropertyTemplate} from '../blocks/board'
-import {IViewType, MutableBoardView} from '../blocks/boardView'
+import {IViewType, BoardView} from '../blocks/boardView'
 import {Constants} from '../constants'
 import mutator from '../mutator'
 import {Utils} from '../utils'
@@ -19,8 +19,8 @@ import Menu from '../widgets/menu'
 
 type Props = {
     board: Board,
-    activeView: MutableBoardView,
-    views: MutableBoardView[],
+    activeView: BoardView,
+    views: BoardView[],
     intl: IntlShape
     readonly: boolean
 }
@@ -79,9 +79,9 @@ const ViewMenu = React.memo((props: Props) => {
     const handleAddViewBoard = useCallback(() => {
         const {board, activeView, intl} = props
         Utils.log('addview-board')
-        const view = new MutableBoardView()
+        const view = new BoardView()
         view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
-        view.viewType = 'board'
+        view.fields.viewType = 'board'
         view.parentId = board.id
         view.rootId = board.rootId
 
@@ -105,14 +105,14 @@ const ViewMenu = React.memo((props: Props) => {
         const {board, activeView, intl} = props
 
         Utils.log('addview-table')
-        const view = new MutableBoardView()
+        const view = new BoardView()
         view.title = intl.formatMessage({id: 'View.NewTableTitle', defaultMessage: 'Table view'})
-        view.viewType = 'table'
+        view.fields.viewType = 'table'
         view.parentId = board.id
         view.rootId = board.rootId
         view.fields.visiblePropertyIds = board.fields.cardProperties.map((o: IPropertyTemplate) => o.id)
-        view.columnWidths = {}
-        view.columnWidths[Constants.titleColumnId] = Constants.defaultTitleColumnWidth
+        view.fields.columnWidths = {}
+        view.fields.columnWidths[Constants.titleColumnId] = Constants.defaultTitleColumnWidth
 
         const oldViewId = activeView.id
 
@@ -135,9 +135,9 @@ const ViewMenu = React.memo((props: Props) => {
         const {board, activeView, intl} = props
 
         Utils.log('addview-gallery')
-        const view = new MutableBoardView()
+        const view = new BoardView()
         view.title = intl.formatMessage({id: 'View.NewGalleryTitle', defaultMessage: 'Gallery view'})
-        view.viewType = 'gallery'
+        view.fields.viewType = 'gallery'
         view.parentId = board.id
         view.rootId = board.rootId
         view.fields.visiblePropertyIds = [Constants.titleColumnId]
@@ -193,12 +193,12 @@ const ViewMenu = React.memo((props: Props) => {
 
     return (
         <Menu>
-            {views.map((view: MutableBoardView) => (
+            {views.map((view: BoardView) => (
                 <Menu.Text
                     key={view.id}
                     id={view.id}
                     name={view.title}
-                    icon={iconForViewType(view.viewType)}
+                    icon={iconForViewType(view.fields.viewType)}
                     onClick={handleViewClick}
                 />))}
             <Menu.Separator/>

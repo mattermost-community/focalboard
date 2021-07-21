@@ -10,7 +10,7 @@
 // import {TestBlockFactory} from '../test/testBlockFactory'
 // import {FetchMock} from '../test/fetchMock'
 
-// import {BoardTree, MutableBoardTree} from './boardTree'
+// import {BoardTree, BoardTree} from './boardTree'
 
 // global.fetch = FetchMock.fn
 
@@ -33,12 +33,12 @@
 //     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
 //     let boardTree: BoardTree | undefined
 
-//     boardTree = await MutableBoardTree.sync('invalid_id', 'invalid_id', {})
+//     boardTree = await BoardTree.sync('invalid_id', 'invalid_id', {})
 //     expect(boardTree).toBeUndefined()
 //     expect(FetchMock.fn).toBeCalledTimes(1)
 
 //     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-//     boardTree = await MutableBoardTree.sync(board.id, view.id, {})
+//     boardTree = await BoardTree.sync(board.id, view.id, {})
 //     expect(boardTree).not.toBeUndefined()
 //     if (!boardTree) {
 //         fail('sync')
@@ -72,7 +72,7 @@
 //     cardTemplate2.isTemplate = true
 
 //     let originalBoardTree = boardTree
-//     boardTree = await MutableBoardTree.incrementalUpdate(boardTree, [view3, card2, cardTemplate2], {})
+//     boardTree = await BoardTree.incrementalUpdate(boardTree, [view3, card2, cardTemplate2], {})
 //     expect(boardTree).not.toBe(originalBoardTree)
 //     expect(boardTree).not.toBeUndefined()
 //     if (!boardTree) {
@@ -101,7 +101,7 @@
 //     const anotherBoard = TestBlockFactory.createBoard()
 //     const card4 = TestBlockFactory.createCard(anotherBoard)
 //     originalBoardTree = boardTree
-//     boardTree = await MutableBoardTree.incrementalUpdate(boardTree, [anotherBoard, card4], {})
+//     boardTree = await BoardTree.incrementalUpdate(boardTree, [anotherBoard, card4], {})
 //     expect(boardTree).toBe(originalBoardTree) // Expect same value on no change
 //     expect(boardTree).not.toBeUndefined()
 //     if (!boardTree) {
@@ -130,7 +130,7 @@
 //     // Sync
 //     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board])))
 
-//     const boardTree = await MutableBoardTree.sync(board.id, 'noView', {})
+//     const boardTree = await BoardTree.sync(board.id, 'noView', {})
 //     expect(boardTree).not.toBeUndefined()
 //     if (!boardTree) {
 //         fail('sync')

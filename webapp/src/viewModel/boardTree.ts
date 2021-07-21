@@ -1,8 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 // import {IBlock} from '../blocks/block'
-// import {Board, IPropertyOption, IPropertyTemplate, MutableBoard} from '../blocks/board'
-// import {BoardView, MutableBoardView} from '../blocks/boardView'
+// import {Board, IPropertyOption, IPropertyTemplate, Board} from '../blocks/board'
+// import {BoardView, BoardView} from '../blocks/boardView'
 // import {Card, MutableCard} from '../blocks/card'
 // import {CardFilter} from '../cardFilter'
 // import {Constants} from '../constants'
@@ -34,16 +34,16 @@
 //     copyWithSearchText(searchText?: string): Promise<BoardTree>
 // }
 
-// class MutableBoardTree implements BoardTree {
-//     board: MutableBoard
-//     views: MutableBoardView[] = []
+// class BoardTree implements BoardTree {
+//     board: Board
+//     views: BoardView[] = []
 //     cards: MutableCard[] = []
 //     cardTemplates: MutableCard[] = []
 
 //     visibleGroups: Group[] = []
 //     hiddenGroups: Group[] = []
 
-//     activeView!: MutableBoardView
+//     activeView!: BoardView
 //     groupByProperty?: IPropertyTemplate
 
 //     private searchText?: string
@@ -56,7 +56,7 @@
 //         return [this.board, ...this.views, ...this.allCards, ...this.cardTemplates, ...this.rawBlocks]
 //     }
 
-//     constructor(board: MutableBoard, usersById: {[key: string]: IUser}) {
+//     constructor(board: Board, usersById: {[key: string]: IUser}) {
 //         this.board = board
 //         this.usersById = usersById
 //     }
@@ -87,15 +87,15 @@
 //         return newBoardTree
 //     }
 
-//     private static async buildTree(boardId: string, sourceBlocks: readonly IBlock[], usersById: {[key: string]: IUser}): Promise<MutableBoardTree | undefined> {
+//     private static async buildTree(boardId: string, sourceBlocks: readonly IBlock[], usersById: {[key: string]: IUser}): Promise<BoardTree | undefined> {
 //         const blocks = OctoUtils.hydrateBlocks(sourceBlocks)
-//         const board = blocks.find((block) => block.type === 'board' && block.id === boardId) as MutableBoard
+//         const board = blocks.find((block) => block.type === 'board' && block.id === boardId) as Board
 //         if (!board) {
 //             return undefined
 //         }
-//         const boardTree = new MutableBoardTree(board, usersById)
+//         const boardTree = new BoardTree(board, usersById)
 //         boardTree.views = blocks.filter((block) => block.type === 'view').
-//             sort((a, b) => a.title.localeCompare(b.title)) as MutableBoardView[]
+//             sort((a, b) => a.title.localeCompare(b.title)) as BoardView[]
 //         boardTree.allCards = blocks.filter((block) => block.type === 'card' && !(block as Card).isTemplate) as MutableCard[]
 //         boardTree.cardTemplates = blocks.filter((block) => block.type === 'card' && (block as Card).isTemplate).
 //             sort((a, b) => a.title.localeCompare(b.title)) as MutableCard[]
@@ -112,7 +112,7 @@
 //         // At least one select property
 //         const selectProperties = this.board.cardProperties.find((o) => o.type === 'select')
 //         if (!selectProperties) {
-//             const newBoard = new MutableBoard(this.board)
+//             const newBoard = new Board(this.board)
 //             newBoard.rootId = newBoard.id
 //             const property: IPropertyTemplate = {
 //                 id: Utils.createGuid(),
@@ -127,7 +127,7 @@
 
 //         // At least one view
 //         if (this.views.length < 1) {
-//             const view = new MutableBoardView()
+//             const view = new BoardView()
 //             view.parentId = this.board.id
 //             view.rootId = this.board.rootId
 //             view.groupById = this.board.cardProperties.find((o) => o.type === 'select')?.id
@@ -143,7 +143,7 @@
 //     }
 
 //     private setActiveView(viewId?: string): void {
-//         let view: MutableBoardView | undefined
+//         let view: BoardView | undefined
 //         if (viewId) {
 //             view = this.views.find((o) => o.id === viewId)
 //             if (!view) {
@@ -462,18 +462,18 @@
 //     }
 
 //     private async mutableCopy(): Promise<BoardTree> {
-//         const x = await MutableBoardTree.buildTree(this.board.id, this.allBlocks, this.usersById)
+//         const x = await BoardTree.buildTree(this.board.id, this.allBlocks, this.usersById)
 //         return x!
 //     }
 
 //     async copyWithView(viewId: string): Promise<BoardTree> {
-//         const boardTree = await this.mutableCopy() as MutableBoardTree
+//         const boardTree = await this.mutableCopy() as BoardTree
 //         boardTree.setActiveView(viewId)
 //         return boardTree
 //     }
 
 //     async copyWithSearchText(searchText?: string): Promise<BoardTree> {
-//         const boardTree = await this.mutableCopy() as MutableBoardTree
+//         const boardTree = await this.mutableCopy() as BoardTree
 //         if (this.activeView) {
 //             boardTree.setActiveView(this.activeView.id)
 //         }
@@ -482,4 +482,4 @@
 //     }
 // }
 
-// export {MutableBoardTree, BoardTree}
+// export {BoardTree, BoardTree}

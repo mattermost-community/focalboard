@@ -5,7 +5,7 @@ import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Constants} from '../../constants'
 import {IPropertyTemplate} from '../../blocks/board'
-import {MutableBoardView} from '../../blocks/boardView'
+import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import Menu from '../../widgets/menu'
@@ -13,7 +13,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 
 type Props = {
     properties: readonly IPropertyTemplate[]
-    activeView: MutableBoardView
+    activeView: BoardView
 }
 const ViewHeaderPropertiesMenu = React.memo((props: Props) => {
     const {properties, activeView} = props
@@ -27,7 +27,7 @@ const ViewHeaderPropertiesMenu = React.memo((props: Props) => {
                 />
             </Button>
             <Menu>
-                {activeView.viewType === 'gallery' &&
+                {activeView.fields.viewType === 'gallery' &&
                     <Menu.Switch
                         key={Constants.titleColumnId}
                         id={Constants.titleColumnId}

@@ -3,9 +3,9 @@
 import React from 'react'
 import {useIntl, IntlShape} from 'react-intl'
 
-import {IContentBlockWithCords, IContentBlock} from '../../blocks/contentBlock'
+import {IContentBlockWithCords, ContentBlock as ContentBlockType} from '../../blocks/contentBlock'
 import {Card} from '../../blocks/card'
-import {MutableTextBlock} from '../../blocks/textBlock'
+import {TextBlock} from '../../blocks/textBlock'
 import mutator from '../../mutator'
 import {useSortableWithGrip} from '../../hooks/sortable'
 
@@ -16,17 +16,17 @@ export type Position = 'left' | 'right' | 'above' | 'below' | 'aboveRow' | 'belo
 
 type Props = {
     card: Card
-    contents: IContentBlock[]
+    contents: ContentBlockType[]
     readonly: boolean
 }
 
 function addTextBlock(card: Card, intl: IntlShape, text: string): void {
-    const block = new MutableTextBlock()
+    const block = new TextBlock()
     block.parentId = card.id
     block.rootId = card.rootId
     block.title = text
 
-    const contentOrder = card.contentOrder.slice()
+    const contentOrder = card.fields.contentOrder.slice()
     contentOrder.push(block.id)
     mutator.performAsUndoGroup(async () => {
         const description = intl.formatMessage({id: 'CardDetail.addCardText', defaultMessage: 'add card text'})
@@ -36,7 +36,7 @@ function addTextBlock(card: Card, intl: IntlShape, text: string): void {
 }
 
 function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: IContentBlockWithCords, intl: IntlShape, moveTo: Position): void {
-    const contentOrder = card.contentOrder.slice()
+    const contentOrder = card.fields.contentOrder.slice()
 
     const srcBlockId = srcBlock.block.id
     const dstBlockId = dstBlock.block.id
@@ -99,10 +99,10 @@ function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: ICont
 }
 
 type ContentBlockWithDragAndDropProps = {
-    block: IContentBlock | IContentBlock[],
+    block: ContentBlockType | ContentBlockType[],
     x: number,
     card: Card,
-    contents: IContentBlock[],
+    contents: ContentBlockType[],
     intl: IntlShape,
     readonly: boolean,
 }
@@ -129,7 +129,7 @@ const ContentBlockWithDragAndDrop = (props: ContentBlockWithDragAndDropProps) =>
                             block={b}
                             card={props.card}
                             readonly={props.readonly}
-                            width={(1 / (props.block as IContentBlock[]).length) * 100}
+                            width={(1 / (props.block as ContentBlockType[]).length) * 100}
                             onDrop={(src, dst, moveTo) => moveBlock(props.card, src, dst, props.intl, moveTo)}
                             cords={{x: props.x, y}}
                         />

@@ -32,11 +32,11 @@ describe('components/table/TableRows', () => {
     const view = TestBlockFactory.createBoardView(board)
 
     const view2 = TestBlockFactory.createBoardView(board)
-    view2.sortOptions = []
+    view2.fields.sortOptions = []
 
     const card = TestBlockFactory.createCard(board)
     const cardTemplate = TestBlockFactory.createCard(board)
-    cardTemplate.isTemplate = true
+    cardTemplate.fields.isTemplate = true
 
     test('should match snapshot, fire events', async () => {
         const callback = jest.fn()

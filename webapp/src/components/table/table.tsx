@@ -6,7 +6,7 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import {useDragLayer, useDrop} from 'react-dnd'
 
 import {IPropertyOption, IPropertyTemplate, Board, BoardGroup} from '../../blocks/board'
-import {MutableBoardView, ISortOption} from '../../blocks/boardView'
+import {BoardView, ISortOption} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
 import {Constants} from '../../constants'
 import mutator from '../../mutator'
@@ -24,8 +24,8 @@ type Props = {
     selectedCardIds: string[]
     board: Board
     cards: Card[]
-    activeView: MutableBoardView
-    views: MutableBoardView[]
+    activeView: BoardView
+    views: BoardView[]
     visibleGroups: BoardGroup[]
     groupByProperty?: IPropertyTemplate
     readonly: boolean
@@ -37,7 +37,7 @@ type Props = {
 
 const Table = (props: Props) => {
     const {board, cards, activeView, visibleGroups, groupByProperty, views} = props
-    const isManualSort = activeView.sortOptions?.length === 0
+    const isManualSort = activeView.fields.sortOptions?.length === 0
     const intl = useIntl()
 
     const {offset, resizingColumn} = useDragLayer((monitor) => {
@@ -58,14 +58,14 @@ const Table = (props: Props) => {
     const [, drop] = useDrop(() => ({
         accept: 'horizontalGrip',
         drop: (item: { id: string }, monitor) => {
-            const columnWidths = {...activeView.columnWidths}
+            const columnWidths = {...activeView.fields.columnWidths}
             const finalOffset = monitor.getDifferenceFromInitialOffset()?.x || 0
             const newWidth = Math.max(Constants.minColumnWidth, (columnWidths[item.id] || 0) + (finalOffset || 0))
             if (newWidth !== columnWidths[item.id]) {
                 columnWidths[item.id] = newWidth
 
-                const newView = new MutableBoardView(activeView)
-                newView.columnWidths = columnWidths
+                const newView = new BoardView(activeView)
+                newView.fields.columnWidths = columnWidths
                 mutator.updateBlock(newView, activeView, 'resize column')
             }
         },
@@ -98,24 +98,24 @@ const Table = (props: Props) => {
             }
         })
 
-        const columnWidths = {...activeView.columnWidths}
+        const columnWidths = {...activeView.fields.columnWidths}
         columnWidths[columnID] = longestSize
-        const newView = new MutableBoardView(activeView)
-        newView.columnWidths = columnWidths
+        const newView = new BoardView(activeView)
+        newView.fields.columnWidths = columnWidths
         mutator.updateBlock(newView, activeView, 'autosize column')
     })
 
     const hideGroup = (groupById: string): void => {
-        const index: number = activeView.collapsedOptionIds.indexOf(groupById)
-        const newValue: string[] = [...activeView.collapsedOptionIds]
+        const index: number = activeView.fields.collapsedOptionIds.indexOf(groupById)
+        const newValue: string[] = [...activeView.fields.collapsedOptionIds]
         if (index > -1) {
             newValue.splice(index, 1)
         } else if (groupById !== '') {
             newValue.push(groupById)
         }
 
-        const newView = new MutableBoardView(activeView)
-        newView.collapsedOptionIds = newValue
+        const newView = new BoardView(activeView)
+        newView.fields.collapsedOptionIds = newValue
         mutator.performAsUndoGroup(async () => {
             await mutator.updateBlock(newView, activeView, 'hide group')
         })
@@ -147,7 +147,7 @@ const Table = (props: Props) => {
 
     const onDropToCard = (srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)
-        onDropToGroup(srcCard, dstCard.properties[activeView.fields.groupById!] as string, dstCard.id)
+        onDropToGroup(srcCard, dstCard.fields.properties[activeView.fields.groupById!] as string, dstCard.id)
     }
 
     const onDropToGroup = (srcCard: Card, groupID: string, dstCardID: string) => {
@@ -169,9 +169,9 @@ const Table = (props: Props) => {
                 // Update properties of dragged cards
                 const awaits = []
                 for (const draggedCard of draggedCards) {
-                    Utils.log(`draggedCard: ${draggedCard.title}, column: ${draggedCard.properties}`)
+                    Utils.log(`draggedCard: ${draggedCard.title}, column: ${draggedCard.fields.properties}`)
                     Utils.log(`droppedColumn:  ${groupID}`)
-                    const oldOptionId = draggedCard.properties[groupByProperty!.id]
+                    const oldOptionId = draggedCard.fields.properties[groupByProperty!.id]
                     Utils.log(`ondrop. oldValue: ${oldOptionId}`)
 
                     if (groupID !== oldOptionId) {
@@ -184,7 +184,7 @@ const Table = (props: Props) => {
 
         // Update dstCard order
         if (isManualSort) {
-            let cardOrder = Array.from(new Set([...activeView.cardOrder, ...cards.map((o) => o.id)]))
+            let cardOrder = Array.from(new Set([...activeView.fields.cardOrder, ...cards.map((o) => o.id)]))
             if (dstCardID) {
                 const isDraggingDown = cardOrder.indexOf(srcCard.id) <= cardOrder.indexOf(dstCardID)
                 cardOrder = cardOrder.filter((id) => !draggedCardIds.includes(id))
@@ -195,7 +195,7 @@ const Table = (props: Props) => {
                 cardOrder.splice(destIndex, 0, ...draggedCardIds)
             } else {
                 // Find index of first group item
-                const firstCard = cards.find((card) => card.properties[activeView.fields.groupById!] === groupID)
+                const firstCard = cards.find((card) => card.fields.properties[activeView.fields.groupById!] === groupID)
                 if (firstCard) {
                     const destIndex = cardOrder.indexOf(firstCard.id)
                     cardOrder.splice(destIndex, 0, ...draggedCardIds)
@@ -215,7 +215,7 @@ const Table = (props: Props) => {
         await mutator.changePropertyOptionValue(board, groupByProperty!, option, text)
     }
 
-    const titleSortOption = activeView.sortOptions?.find((o) => o.propertyId === Constants.titleColumnId)
+    const titleSortOption = activeView.fields.sortOptions?.find((o) => o.propertyId === Constants.titleColumnId)
     let titleSorted: 'up' | 'down' | 'none' = 'none'
     if (titleSortOption) {
         titleSorted = titleSortOption.reversed ? 'down' : 'up'

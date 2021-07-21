@@ -1,14 +1,15 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IContentBlock, MutableContentBlock} from './contentBlock'
+import {IBlock} from './block'
+import {ContentBlock} from './contentBlock'
 
-type DividerBlock = IContentBlock
+class DividerBlock extends ContentBlock {
+    type: 'divider'
 
-class MutableDividerBlock extends MutableContentBlock implements DividerBlock {
-    constructor(block: any = {}) {
+    constructor(block?: IBlock) {
         super(block)
         this.type = 'divider'
     }
 }
 
-export {DividerBlock, MutableDividerBlock}
+export {DividerBlock}

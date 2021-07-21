@@ -3,7 +3,7 @@
 
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 
-import {MutableBoard, Board} from '../blocks/board'
+import {Board} from '../blocks/board'
 
 import {initialLoad} from './initialLoad'
 
@@ -11,28 +11,28 @@ import {RootState} from './index'
 
 const boardsSlice = createSlice({
     name: 'boards',
-    initialState: {boards: [], templates: []} as {boards: MutableBoard[], templates: MutableBoard[]},
+    initialState: {boards: [], templates: []} as {boards: Board[], templates: Board[]},
     reducers: {
-        updateBoards: (state, action: PayloadAction<MutableBoard[]>) => {
+        updateBoards: (state, action: PayloadAction<Board[]>) => {
             const updatedBoardIds = action.payload.filter((o: Board) => !o.fields.isTemplate).map((o: Board) => o.id)
             const newBoards = state.boards.filter((o: Board) => !updatedBoardIds.includes(o.id))
             const updatedAndNotDeletedBoards = action.payload.filter((o: Board) => o.deleteAt === 0 && !o.fields.isTemplate)
             newBoards.push(...updatedAndNotDeletedBoards)
-            state.boards = newBoards.sort((a, b) => a.title.localeCompare(b.title)) as MutableBoard[]
+            state.boards = newBoards.sort((a, b) => a.title.localeCompare(b.title)) as Board[]
 
             const updatedTemplateIds = action.payload.filter((o: Board) => o.fields.isTemplate).map((o: Board) => o.id)
             const newTemplates = state.boards.filter((o: Board) => !updatedTemplateIds.includes(o.id))
             const updatedAndNotDeletedTemplates = action.payload.filter((o: Board) => o.deleteAt === 0 && o.fields.isTemplate)
             newTemplates.push(...updatedAndNotDeletedTemplates)
-            state.templates = newTemplates.sort((a, b) => a.title.localeCompare(b.title)) as MutableBoard[]
+            state.templates = newTemplates.sort((a, b) => a.title.localeCompare(b.title)) as Board[]
         },
     },
     extraReducers: (builder) => {
         builder.addCase(initialLoad.fulfilled, (state, action) => {
             state.boards = action.payload.blocks.filter((block) => block.type === 'board' && !block.fields.isTemplate).
-                sort((a, b) => a.title.localeCompare(b.title)) as MutableBoard[]
+                sort((a, b) => a.title.localeCompare(b.title)) as Board[]
             state.templates = action.payload.blocks.filter((block) => block.type === 'board' && block.fields.isTemplate).
-                sort((a, b) => a.title.localeCompare(b.title)) as MutableBoard[]
+                sort((a, b) => a.title.localeCompare(b.title)) as Board[]
         })
     },
 })

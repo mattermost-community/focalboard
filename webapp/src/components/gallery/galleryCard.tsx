@@ -5,7 +5,7 @@ import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
-import {IContentBlock} from '../../blocks/contentBlock'
+import {ContentBlock} from '../../blocks/contentBlock'
 import {CommentBlock} from '../../blocks/commentBlock'
 import mutator from '../../mutator'
 
@@ -49,13 +49,13 @@ const GalleryCard = React.memo((props: Props) => {
 
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
 
-    let image: IContentBlock | undefined
+    let image: ContentBlock | undefined
     for (let i = 0; i < contents.length; ++i) {
         // TODO: Verify what case is it and how it maps to redux store
         // if (Array.isArray(contents[i])) {
         //     image = (contents[i] as IContentBlock[]).find((c) => c.type === 'image')
-        if ((contents[i] as IContentBlock).type === 'image') {
-            image = contents[i] as IContentBlock
+        if ((contents[i] as ContentBlock).type === 'image') {
+            image = contents[i] as ContentBlock
         }
 
         if (image) {
@@ -128,7 +128,7 @@ const GalleryCard = React.memo((props: Props) => {
                 </div>}
             {props.visibleTitle &&
                 <div className='gallery-title'>
-                    { card.icon ? <div className='octo-icon'>{card.icon}</div> : undefined }
+                    { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
                     <div key='__title'>
                         {card.title ||
                             <FormattedMessage

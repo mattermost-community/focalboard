@@ -10,10 +10,10 @@ import HotKeys from 'react-hot-keys'
 import {IUser} from '../user'
 import {IWorkspace} from '../blocks/workspace'
 import {IBlock} from '../blocks/block'
-import {IContentBlock} from '../blocks/contentBlock'
-import {MutableBoard, Board} from '../blocks/board'
-import {MutableCard} from '../blocks/card'
-import {MutableBoardView} from '../blocks/boardView'
+import {ContentBlock} from '../blocks/contentBlock'
+import {Board} from '../blocks/board'
+import {Card} from '../blocks/card'
+import {BoardView} from '../blocks/boardView'
 import {sendFlashMessage} from '../components/flashMessages'
 import Workspace from '../components/workspace'
 import mutator from '../mutator'
@@ -36,14 +36,14 @@ type OwnProps = RouteComponentProps<{workspaceId?: string, boardId?: string, vie
 
 type Props = OwnProps & {
     usersById: {[key: string]: IUser}
-    updateBoards: (boards: MutableBoard[]) => void
-    updateViews: (views: MutableBoardView[]) => void
-    updateCards: (cards: MutableCard[]) => void
-    updateContents: (contents: IContentBlock[]) => void
+    updateBoards: (boards: Board[]) => void
+    updateViews: (views: BoardView[]) => void
+    updateCards: (cards: Card[]) => void
+    updateContents: (contents: ContentBlock[]) => void
     initialLoad: () => Promise<PayloadAction<any>>
     workspace: IWorkspace | null,
     board: Board | null,
-    activeView: MutableBoardView | null,
+    activeView: BoardView | null,
 }
 
 type State = {
@@ -107,8 +107,8 @@ class BoardPage extends React.Component<Props, State> {
         const activeView = this.props.activeView
         const prevActiveView = prevProps.activeView
 
-        if (board?.icon !== prevBoard?.icon) {
-            Utils.setFavicon(board?.icon)
+        if (board?.fields.icon !== prevBoard?.fields.icon) {
+            Utils.setFavicon(board?.fields.icon)
         }
         if (board?.title !== prevBoard?.title || activeView?.title !== prevActiveView?.title) {
             if (board) {
@@ -268,7 +268,7 @@ class BoardPage extends React.Component<Props, State> {
 
         // TODO: Review the need of this
         // if (this.props.match.params.boardId) {
-        //     const boardTree = await MutableBoardTree.sync(this.props.match.params.boardId || '', this.props.match.params.viewId || '', this.props.usersById)
+        //     const boardTree = await BoardTree.sync(this.props.match.params.boardId || '', this.props.match.params.viewId || '', this.props.usersById)
 
         //     if (boardTree && boardTree.board) {
         //         // Update url with viewId if it's different
@@ -296,18 +296,18 @@ class BoardPage extends React.Component<Props, State> {
     }
 
     private incrementalUpdate = async (_: WSClient, blocks: IBlock[]) => {
-        this.props.updateBoards(blocks.filter((b: IBlock) => b.type === 'board') as MutableBoard[])
-        this.props.updateViews(blocks.filter((b: IBlock) => b.type === 'view') as MutableBoardView[])
-        this.props.updateCards(blocks.filter((b: IBlock) => b.type === 'card') as MutableCard[])
-        this.props.updateContents(blocks.filter((b: IBlock) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board') as IContentBlock[])
+        this.props.updateBoards(blocks.filter((b: IBlock) => b.type === 'board') as Board[])
+        this.props.updateViews(blocks.filter((b: IBlock) => b.type === 'view') as BoardView[])
+        this.props.updateCards(blocks.filter((b: IBlock) => b.type === 'card') as Card[])
+        this.props.updateContents(blocks.filter((b: IBlock) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board') as ContentBlock[])
 
         // TODO: Review this
         // let newBoardTree: BoardTree | undefined
         // if (boardTree) {
-        //     newBoardTree = await MutableBoardTree.incrementalUpdate(boardTree, blocks, this.props.usersById)
+        //     newBoardTree = await BoardTree.incrementalUpdate(boardTree, blocks, this.props.usersById)
         // } else if (this.props.match.params.boardId) {
         //     // Corner case: When the page is viewing a deleted board, that is subsequently un-deleted on another client
-        //     newBoardTree = await MutableBoardTree.sync(this.props.match.params.boardId || '', this.props.match.params.viewId || '', this.props.usersById)
+        //     newBoardTree = await BoardTree.sync(this.props.match.params.boardId || '', this.props.match.params.viewId || '', this.props.usersById)
         // }
 
         // if (newBoardTree) {

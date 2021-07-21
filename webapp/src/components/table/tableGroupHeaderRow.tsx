@@ -6,7 +6,7 @@ import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Constants} from '../../constants'
 import {IPropertyOption, Board, IPropertyTemplate, BoardGroup} from '../../blocks/board'
-import {MutableBoardView} from '../../blocks/boardView'
+import {BoardView} from '../../blocks/boardView'
 import {useSortable} from '../../hooks/sortable'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
@@ -23,7 +23,7 @@ import Label from '../../widgets/label'
 
 type Props = {
     board: Board
-    activeView: MutableBoardView
+    activeView: BoardView
     group: BoardGroup
     groupByProperty?: IPropertyTemplate
     readonly: boolean
@@ -47,12 +47,12 @@ const TableGroupHeaderRow = React.memo((props: Props): JSX.Element => {
     if (isOver) {
         className += ' dragover'
     }
-    if (activeView.collapsedOptionIds.indexOf(group.option.id || 'undefined') < 0) {
+    if (activeView.fields.collapsedOptionIds.indexOf(group.option.id || 'undefined') < 0) {
         className += ' expanded'
     }
 
     const columnWidth = (templateId: string): number => {
-        return Math.max(Constants.minColumnWidth, props.activeView.columnWidths[templateId] || 0)
+        return Math.max(Constants.minColumnWidth, props.activeView.fields.columnWidths[templateId] || 0)
     }
 
     return (

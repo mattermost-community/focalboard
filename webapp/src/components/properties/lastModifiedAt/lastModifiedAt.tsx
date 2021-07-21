@@ -5,14 +5,14 @@ import React from 'react'
 
 import {Card} from '../../../blocks/card'
 import {IBlock} from '../../../blocks/block'
-import {IContentBlock} from '../../../blocks/contentBlock'
+import {ContentBlock} from '../../../blocks/contentBlock'
 import {CommentBlock} from '../../../blocks/commentBlock'
 
 const moment = require('moment')
 
 type Props = {
     card: Card,
-    contents: IContentBlock[]
+    contents: ContentBlock[]
     comments: CommentBlock[]
 }
 

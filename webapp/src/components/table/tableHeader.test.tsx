@@ -28,7 +28,7 @@ describe('components/table/TableHeaderMenu', () => {
     const view = TestBlockFactory.createBoardView(board)
 
     const view2 = TestBlockFactory.createBoardView(board)
-    view2.sortOptions = []
+    view2.fields.sortOptions = []
 
     test('should match snapshot, title column', async () => {
         const onAutoSizeColumn = jest.fn()

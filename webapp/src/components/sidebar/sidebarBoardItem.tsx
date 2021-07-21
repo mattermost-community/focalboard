@@ -5,7 +5,7 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board} from '../../blocks/board'
-import {MutableBoardView, IViewType, sortBoardViewsAlphabetically} from '../../blocks/boardView'
+import {BoardView, IViewType, sortBoardViewsAlphabetically} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import IconButton from '../../widgets/buttons/iconButton'
 import BoardIcon from '../../widgets/icons/board'
@@ -21,7 +21,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import './sidebarBoardItem.scss'
 
 type Props = {
-    views: MutableBoardView[]
+    views: BoardView[]
     board: Board
     activeBoardId?: string
     nextBoardId?: string
@@ -106,7 +106,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                     className='octo-sidebar-title'
                     title={displayTitle}
                 >
-                    {board.icon ? `${board.icon} ${displayTitle}` : displayTitle}
+                    {board.fields.icon ? `${board.fields.icon} ${displayTitle}` : displayTitle}
                 </div>
                 <MenuWrapper stopPropagationOnToggle={true}>
                     <IconButton icon={<OptionsIcon/>}/>
@@ -139,7 +139,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                             name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
                             icon={<DuplicateIcon/>}
                             onClick={() => {
-                                duplicateBoard(board.id)
+                                duplicateBoard(board.id || '')
                             }}
                         />
 
@@ -147,7 +147,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                             id='templateFromBoard'
                             name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}
                             onClick={() => {
-                                addTemplateFromBoard(board.id)
+                                addTemplateFromBoard(board.id || '')
                             }}
                         />
                     </Menu>

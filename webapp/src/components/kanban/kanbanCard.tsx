@@ -5,7 +5,6 @@ import {useIntl} from 'react-intl'
 
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
-import {IContentBlock} from '../../blocks/contentBlock'
 import {CommentBlock} from '../../blocks/commentBlock'
 import mutator from '../../mutator'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -93,7 +92,7 @@ const KanbanCard = React.memo((props: Props) => {
             }
 
             <div className='octo-icontitle'>
-                { card.icon ? <div className='octo-icon'>{card.icon}</div> : undefined }
+                { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
                 <div key='__title'>{card.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}</div>
             </div>
             {visiblePropertyTemplates.map((template) => (

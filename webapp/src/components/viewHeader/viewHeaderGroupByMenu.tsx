@@ -5,7 +5,7 @@ import React from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
 import {IPropertyTemplate} from '../../blocks/board'
-import {MutableBoardView} from '../../blocks/boardView'
+import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import Menu from '../../widgets/menu'
@@ -14,7 +14,7 @@ import CheckIcon from '../../widgets/icons/check'
 
 type Props = {
     properties: readonly IPropertyTemplate[]
-    activeView: MutableBoardView
+    activeView: BoardView
     groupByPropertyName?: string
 }
 
@@ -40,7 +40,7 @@ const ViewHeaderGroupByMenu = React.memo((props: Props) => {
                 />
             </Button>
             <Menu>
-                {activeView.viewType === 'table' && activeView.fields.groupById &&
+                {activeView.fields.viewType === 'table' && activeView.fields.groupById &&
                 <>
                     <Menu.Text
                         key={'ungroup'}

@@ -3,15 +3,15 @@
 
 import {IntlShape} from 'react-intl'
 
-import {IBlock, MutableBlock} from './blocks/block'
-import {IPropertyTemplate, MutableBoard} from './blocks/board'
-import {MutableBoardView} from './blocks/boardView'
-import {MutableCard} from './blocks/card'
-import {MutableCommentBlock} from './blocks/commentBlock'
-import {MutableCheckboxBlock} from './blocks/checkboxBlock'
-import {MutableDividerBlock} from './blocks/dividerBlock'
-import {MutableImageBlock} from './blocks/imageBlock'
-import {MutableTextBlock} from './blocks/textBlock'
+import {IBlock, Block} from './blocks/block'
+import {IPropertyTemplate, Board} from './blocks/board'
+import {BoardView} from './blocks/boardView'
+import {Card} from './blocks/card'
+import {CommentBlock} from './blocks/commentBlock'
+import {CheckboxBlock} from './blocks/checkboxBlock'
+import {DividerBlock} from './blocks/dividerBlock'
+import {ImageBlock} from './blocks/imageBlock'
+import {TextBlock} from './blocks/textBlock'
 import {FilterCondition} from './blocks/filterClause'
 import {Utils} from './utils'
 import {UserSettings} from './userSettings'
@@ -52,24 +52,24 @@ class OctoUtils {
         return displayValue
     }
 
-    static hydrateBlock(block: IBlock): MutableBlock {
+    static hydrateBlock(block: IBlock): Block {
         switch (block.type) {
-        case 'board': { return new MutableBoard(block) }
-        case 'view': { return new MutableBoardView(block) }
-        case 'card': { return new MutableCard(block) }
-        case 'text': { return new MutableTextBlock(block) }
-        case 'image': { return new MutableImageBlock(block) }
-        case 'divider': { return new MutableDividerBlock(block) }
-        case 'comment': { return new MutableCommentBlock(block) }
-        case 'checkbox': { return new MutableCheckboxBlock(block) }
+        case 'board': { return new Board(block) }
+        case 'view': { return new BoardView(block) }
+        case 'card': { return new Card(block) }
+        case 'text': { return new TextBlock(block) }
+        case 'image': { return new ImageBlock(block) }
+        case 'divider': { return new DividerBlock(block) }
+        case 'comment': { return new CommentBlock(block) }
+        case 'checkbox': { return new CheckboxBlock(block) }
         default: {
             Utils.assertFailure(`Can't hydrate unknown block type: ${block.type}`)
-            return new MutableBlock(block)
+            return new Block(block)
         }
         }
     }
 
-    static hydrateBlocks(blocks: readonly IBlock[]): MutableBlock[] {
+    static hydrateBlocks(blocks: readonly IBlock[]): Block[] {
         return blocks.map((block) => this.hydrateBlock(block))
     }
 
@@ -82,7 +82,7 @@ class OctoUtils {
     }
 
     // Creates a copy of the blocks with new ids and parentIDs
-    static duplicateBlockTree(blocks: readonly IBlock[], sourceBlockId: string): [MutableBlock[], MutableBlock, Readonly<Record<string, string>>] {
+    static duplicateBlockTree(blocks: readonly IBlock[], sourceBlockId: string): [Block[], Block, Readonly<Record<string, string>>] {
         const idMap: Record<string, string> = {}
         const now = Date.now()
         const newBlocks = blocks.map((block) => {
@@ -119,14 +119,14 @@ class OctoUtils {
 
             // Remap manual card order
             if (newBlock.type === 'view') {
-                const view = newBlock as MutableBoardView
-                view.cardOrder = view.cardOrder.map((o) => idMap[o])
+                const view = newBlock as BoardView
+                view.fields.cardOrder = view.fields.cardOrder.map((o) => idMap[o])
             }
 
             // Remap card content order
             if (newBlock.type === 'card') {
-                const card = newBlock as MutableCard
-                card.contentOrder = card.contentOrder.map((o) => (Array.isArray(o) ? o.map((o2) => idMap[o2]) : idMap[o]))
+                const card = newBlock as Card
+                card.fields.contentOrder = card.fields.contentOrder.map((o) => (Array.isArray(o) ? o.map((o2) => idMap[o2]) : idMap[o]))
             }
         })
 

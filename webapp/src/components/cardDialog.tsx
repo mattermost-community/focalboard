@@ -6,7 +6,7 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import {CommentBlock} from '../blocks/commentBlock'
-import {MutableBoardView} from '../blocks/boardView'
+import {BoardView} from '../blocks/boardView'
 import {Board} from '../blocks/board'
 import {Card} from '../blocks/card'
 import DeleteIcon from '../widgets/icons/delete'
@@ -21,8 +21,8 @@ import Dialog from './dialog'
 
 type Props = {
     board: Board
-    activeView: MutableBoardView
-    views: MutableBoardView[]
+    activeView: BoardView
+    views: BoardView[]
     cards: Card[]
     cardId: string
     onClose: () => void
@@ -73,7 +73,7 @@ const CardDialog = (props: Props) => {
                     props.onClose()
                 }}
             />
-            {(card && !card.isTemplate) &&
+            {(card && !card.fields.isTemplate) &&
                 <Menu.Text
                     id='makeTemplate'
                     name='New template from card'

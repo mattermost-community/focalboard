@@ -6,7 +6,7 @@ import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {Board, IPropertyOption, IPropertyTemplate, BoardGroup} from '../../blocks/board'
 import {Card} from '../../blocks/card'
-import {MutableBoardView} from '../../blocks/boardView'
+import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
@@ -20,7 +20,7 @@ import './kanban.scss'
 
 type Props = {
     board: Board
-    activeView: MutableBoardView
+    activeView: BoardView
     cards: Card[]
     groupByProperty?: IPropertyTemplate
     visibleGroups: BoardGroup[]
@@ -64,7 +64,7 @@ const Kanban = (props: Props) => {
     }
 
     const orderAfterMoveToColumn = (cardIds: string[], columnId?: string): string[] => {
-        let cardOrder = activeView.cardOrder.slice()
+        let cardOrder = activeView.fields.cardOrder.slice()
         const columnGroup = visibleGroups.find((g) => g.option.id === columnId)
         const columnCards = columnGroup?.cards
         if (!columnCards || columnCards.length === 0) {
@@ -101,7 +101,7 @@ const Kanban = (props: Props) => {
                 const awaits = []
                 for (const draggedCard of draggedCards) {
                     Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${optionId}`)
-                    const oldValue = draggedCard.properties[groupByProperty!.id]
+                    const oldValue = draggedCard.fields.properties[groupByProperty!.id]
                     if (optionId !== oldValue) {
                         awaits.push(mutator.changePropertyValue(draggedCard, groupByProperty!.id, optionId, description))
                     }
@@ -129,7 +129,7 @@ const Kanban = (props: Props) => {
     const onDropToCard = async (srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)
         const {selectedCardIds} = props
-        const optionId = dstCard.properties[activeView.fields.groupById!]
+        const optionId = dstCard.fields.properties[activeView.fields.groupById!]
 
         const draggedCardIds = Array.from(new Set(selectedCardIds).add(srcCard.id))
 
@@ -146,7 +146,7 @@ const Kanban = (props: Props) => {
         const isDraggingDown = cardOrder.indexOf(srcCard.id) <= cardOrder.indexOf(dstCard.id)
         cardOrder = cardOrder.filter((id) => !draggedCardIds.includes(id))
         let destIndex = cardOrder.indexOf(dstCard.id)
-        if (srcCard.properties[groupByProperty!.id] === optionId && isDraggingDown) {
+        if (srcCard.fields.properties[groupByProperty!.id] === optionId && isDraggingDown) {
             // If the cards are in the same column and dragging down, drop after the target dstCard
             destIndex += 1
         }
@@ -157,7 +157,7 @@ const Kanban = (props: Props) => {
             const awaits = []
             for (const draggedCard of draggedCards) {
                 Utils.log(`draggedCard: ${draggedCard.title}, column: ${optionId}`)
-                const oldOptionId = draggedCard.properties[groupByProperty!.id]
+                const oldOptionId = draggedCard.fields.properties[groupByProperty!.id]
                 if (optionId !== oldOptionId) {
                     awaits.push(mutator.changePropertyValue(draggedCard, groupByProperty!.id, optionId, description))
                 }

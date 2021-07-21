@@ -6,7 +6,7 @@ import {useIntl} from 'react-intl'
 
 import {Board, IPropertyOption, IPropertyTemplate, PropertyType} from '../blocks/board'
 import {Card} from '../blocks/card'
-import {IContentBlock} from '../blocks/contentBlock'
+import {ContentBlock} from '../blocks/contentBlock'
 import {CommentBlock} from '../blocks/commentBlock'
 import mutator from '../mutator'
 import {OctoUtils} from '../octoUtils'
@@ -33,7 +33,7 @@ type Props = {
     board: Board
     readOnly: boolean
     card: Card
-    contents: IContentBlock[]
+    contents: ContentBlock[]
     comments: CommentBlock[]
     propertyTemplate: IPropertyTemplate
     emptyDisplayValue: string

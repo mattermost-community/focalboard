@@ -1,14 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IContentBlock, MutableContentBlock} from './contentBlock'
+import {ContentBlock} from './contentBlock'
 
-type TextBlock = IContentBlock
-
-class MutableTextBlock extends MutableContentBlock implements TextBlock {
-    constructor(block: any = {}) {
-        super(block)
-        this.type = 'text'
-    }
+class TextBlock extends ContentBlock {
+    type: 'text' = 'text'
 }
 
-export {TextBlock, MutableTextBlock}
+export {TextBlock}

@@ -6,7 +6,7 @@ import {FormattedMessage} from 'react-intl'
 import {FilterClause, FilterCondition} from '../../blocks/filterClause'
 import {FilterGroup} from '../../blocks/filterGroup'
 import {Board, IPropertyTemplate} from '../../blocks/board'
-import {MutableBoardView} from '../../blocks/boardView'
+import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
@@ -19,7 +19,7 @@ import './filterComponent.scss'
 
 type Props = {
     board: Board
-    activeView: MutableBoardView
+    activeView: BoardView
     onClose: () => void
 }
 
@@ -27,10 +27,10 @@ const FilterComponent = React.memo((props: Props): JSX.Element => {
     const conditionClicked = (optionId: string, filter: FilterClause): void => {
         const {activeView} = props
 
-        const filterIndex = activeView.filter.filters.indexOf(filter)
+        const filterIndex = activeView.fields.filter.filters.indexOf(filter)
         Utils.assert(filterIndex >= 0, "Can't find filter")
 
-        const filterGroup = new FilterGroup(activeView.filter)
+        const filterGroup = new FilterGroup(activeView.fields.filter)
         const newFilter = filterGroup.filters[filterIndex] as FilterClause
 
         Utils.assert(newFilter, `No filter at index ${filterIndex}`)
@@ -43,8 +43,8 @@ const FilterComponent = React.memo((props: Props): JSX.Element => {
     const addFilterClicked = () => {
         const {board, activeView} = props
 
-        const filters = activeView.filter?.filters.filter((o) => !FilterGroup.isAnInstanceOf(o)) as FilterClause[] || []
-        const filterGroup = new FilterGroup(activeView.filter)
+        const filters = activeView.fields.filter?.filters.filter((o) => !FilterGroup.isAnInstanceOf(o)) as FilterClause[] || []
+        const filterGroup = new FilterGroup(activeView.fields.filter)
         const filter = new FilterClause()
 
         // Pick the first select property that isn't already filtered on
@@ -62,7 +62,7 @@ const FilterComponent = React.memo((props: Props): JSX.Element => {
     const {board, activeView} = props
 
     // TODO: Handle FilterGroups (compound filter statements)
-    const filters: FilterClause[] = activeView.filter?.filters.filter((o) => !FilterGroup.isAnInstanceOf(o)) as FilterClause[] || []
+    const filters: FilterClause[] = activeView.fields.filter?.filters.filter((o) => !FilterGroup.isAnInstanceOf(o)) as FilterClause[] || []
 
     return (
         <Modal

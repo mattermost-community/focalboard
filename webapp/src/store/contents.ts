@@ -3,7 +3,7 @@
 
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 
-import {MutableContentBlock, IContentBlock} from '../blocks/contentBlock'
+import {ContentBlock} from '../blocks/contentBlock'
 
 import {initialLoad} from './initialLoad'
 
@@ -11,14 +11,14 @@ import {RootState} from './index'
 
 const contentsSlice = createSlice({
     name: 'contents',
-    initialState: {contents: []} as {contents: MutableContentBlock[]},
+    initialState: {contents: []} as {contents: ContentBlock[]},
     reducers: {
-        updateContents: (state, action: PayloadAction<MutableContentBlock[]>) => {
-            const updatedContentIds = action.payload.map((o: IContentBlock) => o.id)
-            const newContents = state.contents.filter((o: IContentBlock) => !updatedContentIds.includes(o.id))
-            const updatedAndNotDeletedContents = action.payload.filter((o: IContentBlock) => o.deleteAt === 0 && !o.fields.isTemplate)
+        updateContents: (state, action: PayloadAction<ContentBlock[]>) => {
+            const updatedContentIds = action.payload.map((o: ContentBlock) => o.id)
+            const newContents = state.contents.filter((o: ContentBlock) => !updatedContentIds.includes(o.id))
+            const updatedAndNotDeletedContents = action.payload.filter((o: ContentBlock) => o.deleteAt === 0 && !o.fields.isTemplate)
             newContents.push(...updatedAndNotDeletedContents)
-            state.contents = newContents.sort((a, b) => a.title.localeCompare(b.title)) as MutableContentBlock[]
+            state.contents = newContents.sort((a, b) => a.title.localeCompare(b.title)) as ContentBlock[]
         },
     },
     extraReducers: (builder) => {
@@ -31,12 +31,12 @@ const contentsSlice = createSlice({
 export const {updateContents} = contentsSlice.actions
 export const {reducer} = contentsSlice
 
-export function getContents(state: RootState): IContentBlock[] {
+export function getContents(state: RootState): ContentBlock[] {
     return state.contents.contents
 }
 
-export function getCardContents(cardId: string): (state: RootState) => IContentBlock[] {
-    return (state: RootState): IContentBlock[] => {
+export function getCardContents(cardId: string): (state: RootState) => ContentBlock[] {
+    return (state: RootState): ContentBlock[] => {
         return state.contents.contents.filter((c) => c.parentId === cardId)
     }
 }

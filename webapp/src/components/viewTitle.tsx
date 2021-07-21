@@ -30,7 +30,7 @@ const ViewTitle = React.memo((props: Props) => {
     return (
         <div className='ViewTitle'>
             <div className='add-buttons add-visible'>
-                {!props.readonly && !board.icon &&
+                {!props.readonly && !board.fields.icon &&
                     <Button
                         onClick={() => {
                             const newIcon = BlockIcons.shared.randomIcon()
@@ -44,7 +44,7 @@ const ViewTitle = React.memo((props: Props) => {
                         />
                     </Button>
                 }
-                {!props.readonly && board.showDescription &&
+                {!props.readonly && board.fields.showDescription &&
                     <Button
                         onClick={() => {
                             mutator.showDescription(board, false)
@@ -57,7 +57,7 @@ const ViewTitle = React.memo((props: Props) => {
                         />
                     </Button>
                 }
-                {!props.readonly && !board.showDescription &&
+                {!props.readonly && !board.fields.showDescription &&
                     <Button
                         onClick={() => {
                             mutator.showDescription(board, true)
@@ -87,10 +87,10 @@ const ViewTitle = React.memo((props: Props) => {
                 />
             </div>
 
-            {board.showDescription &&
+            {board.fields.showDescription &&
                 <div className='description'>
                     <MarkdownEditor
-                        text={board.description}
+                        text={board.fields.description}
                         placeholderText='Add a description...'
                         onBlur={(text) => {
                             mutator.changeDescription(board, text)

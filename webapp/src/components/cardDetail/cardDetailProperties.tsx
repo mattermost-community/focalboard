@@ -5,8 +5,8 @@ import {FormattedMessage} from 'react-intl'
 
 import {Board, PropertyType, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
-import {MutableBoardView} from '../../blocks/boardView'
-import {IContentBlock} from '../../blocks/contentBlock'
+import {BoardView} from '../../blocks/boardView'
+import {ContentBlock} from '../../blocks/contentBlock'
 import {CommentBlock} from '../../blocks/commentBlock'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
@@ -19,10 +19,10 @@ type Props = {
     board: Board
     card: Card
     cards: Card[]
-    contents: IContentBlock[]
+    contents: ContentBlock[]
     comments: CommentBlock[]
-    activeView: MutableBoardView
-    views: MutableBoardView[]
+    activeView: BoardView
+    views: BoardView[]
     readonly: boolean
 }
 
@@ -32,7 +32,7 @@ const CardDetailProperties = React.memo((props: Props) => {
     return (
         <div className='octo-propertylist'>
             {board.fields.cardProperties.map((propertyTemplate: IPropertyTemplate) => {
-                const propertyValue = card.fields[propertyTemplate.id]
+                const propertyValue = card.fields.properties[propertyTemplate.id]
                 return (
                     <div
                         key={propertyTemplate.id + '-' + propertyTemplate.type + '-' + propertyValue}

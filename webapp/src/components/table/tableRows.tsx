@@ -5,7 +5,7 @@ import {useDragLayer} from 'react-dnd'
 
 import {Card} from '../../blocks/card'
 import {Board} from '../../blocks/board'
-import {MutableBoardView} from '../../blocks/boardView'
+import {BoardView} from '../../blocks/boardView'
 
 import './table.scss'
 
@@ -13,7 +13,7 @@ import TableRow from './tableRow'
 
 type Props = {
     board: Board
-    activeView: MutableBoardView
+    activeView: BoardView
     columnRefs: Map<string, React.RefObject<HTMLDivElement>>
     cards: readonly Card[]
     selectedCardIds: string[]

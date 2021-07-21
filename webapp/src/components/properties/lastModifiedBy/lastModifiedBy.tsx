@@ -5,7 +5,7 @@ import React from 'react'
 
 import {IUser} from '../../../user'
 import {Card} from '../../../blocks/card'
-import {IContentBlock} from '../../../blocks/contentBlock'
+import {ContentBlock} from '../../../blocks/contentBlock'
 import {CommentBlock} from '../../../blocks/commentBlock'
 import {Board} from '../../../blocks/board'
 import {IBlock} from '../../../blocks/block'
@@ -15,7 +15,7 @@ import {useAppSelector} from '../../../store/hooks'
 type Props = {
     card: Card,
     board?: Board,
-    contents: IContentBlock[],
+    contents: ContentBlock[],
     comments: CommentBlock[],
 }
 

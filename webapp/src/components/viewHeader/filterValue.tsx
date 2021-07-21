@@ -5,7 +5,7 @@ import React from 'react'
 import {IPropertyTemplate} from '../../blocks/board'
 import {FilterClause} from '../../blocks/filterClause'
 import {FilterGroup} from '../../blocks/filterGroup'
-import {MutableBoardView} from '../../blocks/boardView'
+import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
@@ -15,7 +15,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import './filterValue.scss'
 
 type Props = {
-    view: MutableBoardView
+    view: BoardView
     filter: FilterClause
     template: IPropertyTemplate
 }
@@ -47,10 +47,10 @@ const filterValue = (props: Props): JSX.Element|null => {
                         name={o.value}
                         isOn={filter.values.includes(o.id)}
                         onClick={(optionId) => {
-                            const filterIndex = view.filter.filters.indexOf(filter)
+                            const filterIndex = view.fields.filter.filters.indexOf(filter)
                             Utils.assert(filterIndex >= 0, "Can't find filter")
 
-                            const filterGroup = new FilterGroup(view.filter)
+                            const filterGroup = new FilterGroup(view.fields.filter)
                             const newFilter = filterGroup.filters[filterIndex] as FilterClause
                             Utils.assert(newFilter, `No filter at index ${filterIndex}`)
                             if (filter.values.includes(o.id)) {

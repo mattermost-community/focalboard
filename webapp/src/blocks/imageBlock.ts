@@ -1,24 +1,23 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IContentBlock, MutableContentBlock} from './contentBlock'
+import {IBlock} from './block'
+import {ContentBlock} from './contentBlock'
 
-interface ImageBlock extends IContentBlock {
-    readonly fileId: string
+type ImageBlockFields = {
+    fileId: string
 }
 
-class MutableImageBlock extends MutableContentBlock implements ImageBlock {
-    get fileId(): string {
-        return this.fields.fileId as string
-    }
-    set fileId(value: string) {
-        this.fields.fileId = value
-    }
+class ImageBlock extends ContentBlock {
+    type: 'image'
+    fields: ImageBlockFields
 
-    constructor(block: any = {}) {
+    constructor(block?: IBlock) {
         super(block)
         this.type = 'image'
-        this.fileId = block.fields?.fileId || ''
+        this.fields = {
+            fileId: block?.fields.fileId || '',
+        }
     }
 }
 
-export {ImageBlock, MutableImageBlock}
+export {ImageBlock}

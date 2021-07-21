@@ -9,7 +9,7 @@ import mutator from '../../mutator'
 import {OctoUtils} from '../../octoUtils'
 import {Utils} from '../../utils'
 import {Board, IPropertyTemplate} from '../../blocks/board'
-import {MutableBoardView} from '../../blocks/boardView'
+import {BoardView} from '../../blocks/boardView'
 import Button from '../../widgets/buttons/button'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
@@ -20,7 +20,7 @@ import './filterEntry.scss'
 
 type Props = {
     board: Board
-    view: MutableBoardView
+    view: BoardView
     conditionClicked: (optionId: string, filter: FilterClause) => void
     filter: FilterClause
 }
@@ -46,9 +46,9 @@ const FilterEntry = React.memo((props: Props): JSX.Element => {
                             id={o.id}
                             name={o.name}
                             onClick={(optionId: string) => {
-                                const filterIndex = view.filter.filters.indexOf(filter)
+                                const filterIndex = view.fields.filter.filters.indexOf(filter)
                                 Utils.assert(filterIndex >= 0, "Can't find filter")
-                                const filterGroup = new FilterGroup(view.filter)
+                                const filterGroup = new FilterGroup(view.fields.filter)
                                 const newFilter = filterGroup.filters[filterIndex] as FilterClause
                                 Utils.assert(newFilter, `No filter at index ${filterIndex}`)
                                 if (newFilter.propertyId !== optionId) {
@@ -94,7 +94,7 @@ const FilterEntry = React.memo((props: Props): JSX.Element => {
             <div className='octo-spacer'/>
             <Button
                 onClick={() => {
-                    const filterGroup = new FilterGroup(view.filter)
+                    const filterGroup = new FilterGroup(view.fields.filter)
                     filterGroup.filters = filterGroup.filters.filter((o) => FilterGroup.isAnInstanceOf(o) || !o.isEqual(filter))
                     mutator.changeViewFilter(view, filterGroup)
                 }}

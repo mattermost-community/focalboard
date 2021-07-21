@@ -7,7 +7,7 @@ import {CsvExporter} from '../../csvExporter'
 import {Archiver} from '../../archiver'
 import {IUser} from '../../user'
 import {Board} from '../../blocks/board'
-import {MutableBoardView} from '../../blocks/boardView'
+import {BoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
 import IconButton from '../../widgets/buttons/iconButton'
 import OptionsIcon from '../../widgets/icons/options'
@@ -22,7 +22,7 @@ import {sendFlashMessage} from '../flashMessages'
 
 type Props = {
     board: Board
-    activeView: MutableBoardView
+    activeView: BoardView
     cards: Card[]
 }
 
@@ -34,7 +34,7 @@ type Props = {
 
 //     mutator.performAsUndoGroup(async () => {
 //         for (let i = 0; i < count; i++) {
-//             const card = new MutableCard()
+//             const card = new Card()
 //             card.parentId = boardTree.board.id
 //             card.rootId = boardTree.board.rootId
 //             card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
@@ -60,7 +60,7 @@ type Props = {
 //                 // Cycle through options
 //                 const option = boardTree.groupByProperty.options[optionIndex]
 //                 optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
-//                 const newCard = new MutableCard(card)
+//                 const newCard = new Card(card)
 //                 if (newCard.properties[boardTree.groupByProperty.id] !== option.id) {
 //                     newCard.properties[boardTree.groupByProperty.id] = option.id
 //                     mutator.updateBlock(newCard, card, 'test distribute cards')
@@ -78,7 +78,7 @@ type Props = {
 //     })
 // }
 
-function onExportCsvTrigger(board: Board, activeView: MutableBoardView, cards: Card[], intl: IntlShape) {
+function onExportCsvTrigger(board: Board, activeView: BoardView, cards: Card[], intl: IntlShape) {
     try {
         CsvExporter.exportTableCsv(board, activeView, cards, intl)
         const exportCompleteMessage = intl.formatMessage({
@@ -155,7 +155,7 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
             </MenuWrapper>
             {showShareDialog &&
                 <ShareBoardComponent
-                    boardId={board.id}
+                    boardId={board.id || ''}
                     onClose={() => setShowShareDialog(false)}
                 />
             }

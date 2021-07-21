@@ -4,10 +4,10 @@ import React, {useState, useRef, useEffect} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {Card} from '../../blocks/card'
-import {IContentBlock} from '../../blocks/contentBlock'
+import {ContentBlock} from '../../blocks/contentBlock'
 import {CommentBlock} from '../../blocks/commentBlock'
 import {Board, IPropertyTemplate} from '../../blocks/board'
-import {MutableBoardView} from '../../blocks/boardView'
+import {BoardView} from '../../blocks/boardView'
 import {Constants} from '../../constants'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
@@ -21,7 +21,7 @@ import './tableRow.scss'
 
 type Props = {
     board: Board
-    activeView: MutableBoardView
+    activeView: BoardView
     card: Card
     isSelected: boolean
     focusOnMount: boolean
@@ -37,13 +37,13 @@ type Props = {
 
 const TableRow = React.memo((props: Props) => {
     const {board, activeView, onSaveWithEnter, columnRefs, card} = props
-    const contents = useAppSelector(getCardContents(card.id))
+    const contents = useAppSelector(getCardContents(card.id || ''))
     // TODO: Add comments redux store
     // const comments = useAppSelector(getCardContents(card.id))
     const comments: CommentBlock[] = []
 
     const titleRef = useRef<{focus(selectAll?: boolean): void}>(null)
-    const [title, setTitle] = useState(props.card.title)
+    const [title, setTitle] = useState(props.card.title || '')
     const isManualSort = activeView.fields.sortOptions.length === 0
     const isGrouped = Boolean(activeView.fields.groupById)
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly && (isManualSort || isGrouped), props.onDrop)
@@ -68,7 +68,7 @@ const TableRow = React.memo((props: Props) => {
     if (isGrouped) {
         const groupID = activeView.fields.groupById || ''
         const groupValue = card.fields.properties[groupID] as string || 'undefined'
-        if (activeView.collapsedOptionIds.indexOf(groupValue) > -1) {
+        if (activeView.fields.collapsedOptionIds.indexOf(groupValue) > -1) {
             className += ' hidden'
         }
     }
@@ -93,7 +93,7 @@ const TableRow = React.memo((props: Props) => {
                 ref={columnRefs.get(Constants.titleColumnId)}
             >
                 <div className='octo-icontitle'>
-                    <div className='octo-icon'>{card.icon}</div>
+                    <div className='octo-icon'>{card.fields.icon}</div>
                     <Editable
                         ref={titleRef}
                         value={title}
@@ -105,14 +105,14 @@ const TableRow = React.memo((props: Props) => {
                                 onSaveWithEnter()
                             }
                         }}
-                        onCancel={() => setTitle(card.title)}
+                        onCancel={() => setTitle(card.title || '')}
                         readonly={props.readonly}
                         spellCheck={true}
                     />
                 </div>
 
                 <div className='open-button'>
-                    <Button onClick={() => props.showCard(props.card.id)}>
+                    <Button onClick={() => props.showCard(props.card.id || '')}>
                         <FormattedMessage
                             id='TableRow.open'
                             defaultMessage='Open'
