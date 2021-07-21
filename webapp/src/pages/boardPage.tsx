@@ -23,8 +23,8 @@ import wsClient, {WSClient} from '../wsclient'
 import './boardPage.scss'
 import {getCurrentWorkspaceUsersById} from '../store/currentWorkspaceUsers'
 import {getCurrentWorkspace} from '../store/currentWorkspace'
-import {updateBoards, getBoard} from '../store/boards'
-import {updateViews, getView} from '../store/views'
+import {updateBoards, getBoard, setCurrent as setCurrentBoard} from '../store/boards'
+import {updateViews, getView, setCurrent as setCurrentView} from '../store/views'
 import {updateCards} from '../store/cards'
 import {updateContents} from '../store/contents'
 import {initialLoad} from '../store/initialLoad'
@@ -40,6 +40,8 @@ type Props = OwnProps & {
     updateViews: (views: BoardView[]) => void
     updateCards: (cards: Card[]) => void
     updateContents: (contents: ContentBlock[]) => void
+    setCurrentBoard: (boardId: string) => void
+    setCurrentView: (viewId: string) => void
     initialLoad: () => Promise<PayloadAction<any>>
     workspace: IWorkspace | null,
     board: Board | null,
@@ -250,6 +252,8 @@ class BoardPage extends React.Component<Props, State> {
         Utils.log(`attachToBoard: ${boardId}`)
         localStorage.setItem('lastBoardId', boardId || '')
         localStorage.setItem('lastViewId', viewId)
+        this.props.setCurrentBoard(boardId || '')
+        this.props.setCurrentView(viewId || '')
 
         if (!boardId) {
             const newPath = generatePath(this.props.match.path, {...this.props.match.params, boardId: '', viewId: ''})
@@ -270,4 +274,4 @@ export default withRouter(connect((state: RootState, ownProps: OwnProps) => ({
     workspace: getCurrentWorkspace(state),
     board: getBoard(ownProps.match.params.boardId || '')(state),
     activeView: getView(ownProps.match.params.viewId || '')(state),
-}), {initialLoad, updateBoards, updateViews, updateCards, updateContents})(BoardPage))
+}), {initialLoad, updateBoards, updateViews, updateCards, updateContents, setCurrentBoard, setCurrentView})(BoardPage))

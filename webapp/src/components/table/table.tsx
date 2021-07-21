@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useRef, useState} from 'react'
+import React, {useRef, useState, useCallback} from 'react'
 
 import {FormattedMessage, useIntl} from 'react-intl'
 import {useDragLayer, useDrop} from 'react-dnd'
@@ -35,7 +35,7 @@ type Props = {
     onCardClicked: (e: React.MouseEvent, card: Card) => void
 }
 
-const Table = (props: Props) => {
+const Table = (props: Props): JSX.Element => {
     const {board, cards, activeView, visibleGroups, groupByProperty, views} = props
     const isManualSort = activeView.fields.sortOptions?.length === 0
     const intl = useIntl()
@@ -71,7 +71,7 @@ const Table = (props: Props) => {
         },
     }), [activeView])
 
-    const onAutoSizeColumn = ((columnID: string, headerWidth: number) => {
+    const onAutoSizeColumn = useCallback((columnID: string, headerWidth: number) => {
         let longestSize = headerWidth
         const visibleProperties = board.fields.cardProperties.filter(() => activeView.fields.visiblePropertyIds.includes(columnID)) || []
         const columnRef = columnRefs.get(columnID)
@@ -103,9 +103,9 @@ const Table = (props: Props) => {
         const newView = new BoardView(activeView)
         newView.fields.columnWidths = columnWidths
         mutator.updateBlock(newView, activeView, 'autosize column')
-    })
+    }, [activeView, board, cards])
 
-    const hideGroup = (groupById: string): void => {
+    const hideGroup = useCallback((groupById: string): void => {
         const index: number = activeView.fields.collapsedOptionIds.indexOf(groupById)
         const newValue: string[] = [...activeView.fields.collapsedOptionIds]
         if (index > -1) {
@@ -119,17 +119,17 @@ const Table = (props: Props) => {
         mutator.performAsUndoGroup(async () => {
             await mutator.updateBlock(newView, activeView, 'hide group')
         })
-    }
+    }, [activeView])
 
-    const onDropToColumn = async (template: IPropertyTemplate, container: IPropertyTemplate) => {
+    const onDropToColumn = useCallback(async (template: IPropertyTemplate, container: IPropertyTemplate) => {
         Utils.log(`ondrop. Source column: ${template.name}, dest column: ${container.name}`)
 
         // Move template to new index
         const destIndex = container ? board.fields.cardProperties.indexOf(container) : 0
         await mutator.changePropertyTemplateOrder(board, template, destIndex >= 0 ? destIndex : 0)
-    }
+    }, [board])
 
-    const onDropToGroupHeader = async (option: IPropertyOption, dstOption?: IPropertyOption) => {
+    const onDropToGroupHeader = useCallback(async (option: IPropertyOption, dstOption?: IPropertyOption) => {
         if (dstOption) {
             Utils.log(`ondrop. Header target: ${dstOption.value}, source: ${option?.value}`)
 
@@ -143,14 +143,14 @@ const Table = (props: Props) => {
 
             await mutator.changeViewVisibleOptionIds(activeView, visibleOptionIds)
         }
-    }
+    }, [activeView, visibleGroups])
 
-    const onDropToCard = (srcCard: Card, dstCard: Card) => {
+    const onDropToCard = useCallback((srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)
         onDropToGroup(srcCard, dstCard.fields.properties[activeView.fields.groupById!] as string, dstCard.id)
-    }
+    }, [activeView])
 
-    const onDropToGroup = (srcCard: Card, groupID: string, dstCardID: string) => {
+    const onDropToGroup = useCallback((srcCard: Card, groupID: string, dstCardID: string) => {
         Utils.log(`onDropToGroup: ${srcCard.title}`)
         const {selectedCardIds} = props
 
@@ -158,8 +158,7 @@ const Table = (props: Props) => {
         const description = draggedCardIds.length > 1 ? `drag ${draggedCardIds.length} cards` : 'drag card'
 
         if (activeView.fields.groupById !== undefined) {
-            const orderedCards = cards
-            const cardsById: { [key: string]: Card } = orderedCards.reduce((acc: { [key: string]: Card }, card: Card): { [key: string]: Card } => {
+            const cardsById: { [key: string]: Card } = cards.reduce((acc: { [key: string]: Card }, card: Card): { [key: string]: Card } => {
                 acc[card.id] = card
                 return acc
             }, {})
@@ -209,11 +208,11 @@ const Table = (props: Props) => {
                 await mutator.changeViewCardOrder(activeView, cardOrder, description)
             })
         }
-    }
+    }, [activeView, cards, props.selectedCardIds, groupByProperty])
 
-    const propertyNameChanged = async (option: IPropertyOption, text: string): Promise<void> => {
+    const propertyNameChanged = useCallback(async (option: IPropertyOption, text: string): Promise<void> => {
         await mutator.changePropertyOptionValue(board, groupByProperty!, option, text)
-    }
+    }, [board, groupByProperty])
 
     const titleSortOption = activeView.fields.sortOptions?.find((o) => o.propertyId === Constants.titleColumnId)
     let titleSorted: 'up' | 'down' | 'none' = 'none'

@@ -10,7 +10,7 @@ import CardIcon from '../../widgets/icons/card'
 import AddIcon from '../../widgets/icons/add'
 import Menu from '../../widgets/menu'
 import {useAppSelector} from '../../store/hooks'
-import {getTemplates} from '../../store/cards'
+import {getCurrentBoardTemplates} from '../../store/cards'
 
 import NewCardButtonTemplateItem from './newCardButtonTemplateItem'
 
@@ -22,7 +22,7 @@ type Props = {
 }
 
 const NewCardButton = React.memo((props: Props): JSX.Element => {
-    const cardTemplates: Card[] = useAppSelector(getTemplates)
+    const cardTemplates: Card[] = useAppSelector(getCurrentBoardTemplates)
     const intl = useIntl()
 
     return (

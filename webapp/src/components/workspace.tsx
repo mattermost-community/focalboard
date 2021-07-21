@@ -4,10 +4,9 @@ import React from 'react'
 import {useRouteMatch} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
-import {IPropertyTemplate} from '../blocks/board'
-import {getBoard} from '../store/boards'
-import {getCardsByBoard} from '../store/cards'
-import {getView, getBoardViews} from '../store/views'
+import {getCurrentBoard} from '../store/boards'
+import {getCurrentBoardCards} from '../store/cards'
+import {getView, getCurrentBoardViews} from '../store/views'
 import {useAppSelector} from '../store/hooks'
 import {Utils} from '../utils'
 
@@ -22,10 +21,10 @@ type Props = {
 
 function CenterContent(props: Props) {
     const match = useRouteMatch<{boardId: string, viewId: string}>()
-    const board = useAppSelector(getBoard(match.params.boardId))
-    const cards = useAppSelector(getCardsByBoard(match.params.boardId))
+    const board = useAppSelector(getCurrentBoard)
+    const cards = useAppSelector(getCurrentBoardCards)
     const activeView = useAppSelector(getView(match.params.viewId))
-    const views = useAppSelector(getBoardViews(match.params.boardId))
+    const views = useAppSelector(getCurrentBoardViews)
 
     if (board && activeView) {
         let property = board?.fields.cardProperties.find((o) => o.id === activeView.fields.groupById)
@@ -51,8 +50,7 @@ function CenterContent(props: Props) {
 }
 
 const Workspace = React.memo((props: Props) => {
-    const match = useRouteMatch<{boardId: string}>()
-    const board = useAppSelector(getBoard(match.params.boardId))
+    const board = useAppSelector(getCurrentBoard)
 
     return (
         <div className='Workspace'>

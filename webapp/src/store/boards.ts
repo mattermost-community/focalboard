@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit'
 
 import {Board} from '../blocks/board'
 
@@ -9,47 +9,76 @@ import {initialLoad} from './initialLoad'
 
 import {RootState} from './index'
 
+type BoardsState = {
+    current: string
+    boards: {[key: string]: Board}
+    templates: {[key: string]: Board}
+}
+
 const boardsSlice = createSlice({
     name: 'boards',
-    initialState: {boards: [], templates: []} as {boards: Board[], templates: Board[]},
+    initialState: {boards: {}, templates: {}} as BoardsState,
     reducers: {
+        setCurrent: (state, action: PayloadAction<string>) => {
+            state.current = action.payload
+        },
         updateBoards: (state, action: PayloadAction<Board[]>) => {
-            const updatedBoardIds = action.payload.filter((o: Board) => !o.fields?.isTemplate).map((o: Board) => o.id)
-            const newBoards = state.boards.filter((o: Board) => !updatedBoardIds.includes(o.id)).map((o) => new Board(o))
-            const updatedAndNotDeletedBoards = action.payload.filter((o: Board) => o.deleteAt === 0 && !o.fields?.isTemplate)
-            newBoards.push(...updatedAndNotDeletedBoards)
-            state.boards = newBoards.sort((a, b) => a.title.localeCompare(b.title)).map((o) => new Board(o))
-
-            const updatedTemplateIds = action.payload.filter((o: Board) => o.fields?.isTemplate).map((o: Board) => o.id)
-            const newTemplates = state.boards.filter((o: Board) => !updatedTemplateIds.includes(o.id)).map((o) => new Board(o))
-            const updatedAndNotDeletedTemplates = action.payload.filter((o: Board) => o.deleteAt === 0 && o.fields?.isTemplate)
-            newTemplates.push(...updatedAndNotDeletedTemplates)
-            state.templates = newTemplates.sort((a, b) => a.title.localeCompare(b.title))
+            for (const board of action.payload) {
+                if (board.deleteAt !== 0) {
+                    delete state.boards[board.id]
+                    delete state.templates[board.id]
+                } else if (board.fields.isTemplate) {
+                    state.templates[board.id] = board
+                } else {
+                    state.boards[board.id] = board
+                }
+            }
         },
     },
     extraReducers: (builder) => {
         builder.addCase(initialLoad.fulfilled, (state, action) => {
-            state.boards = action.payload.blocks.filter((block) => block.type === 'board' && !block.fields.isTemplate).
-                sort((a, b) => a.title.localeCompare(b.title)).map((o) => new Board(o))
-            state.templates = action.payload.blocks.filter((block) => block.type === 'board' && block.fields.isTemplate).
-                sort((a, b) => a.title.localeCompare(b.title)).map((o) => new Board(o))
+            for (const block of action.payload.blocks) {
+                if (block.type === 'board' && block.fields.isTemplate) {
+                    state.templates[block.id] = block as Board
+                } else if (block.type === 'board' && !block.fields.isTemplate) {
+                    state.boards[block.id] = block as Board
+                }
+            }
         })
     },
 })
 
-export const {updateBoards} = boardsSlice.actions
+export const {updateBoards, setCurrent} = boardsSlice.actions
 export const {reducer} = boardsSlice
 
-export function getBoards(state: RootState): Board[] {
-    return state.boards.boards
-}
+export const getBoards = (state: RootState): {[key: string]: Board} => state.boards.boards
 
-export function getTemplates(state: RootState): Board[] {
-    return state.boards.templates
-}
+export const getSortedBoards = createSelector(
+    getBoards,
+    (boards) => {
+        return Object.values(boards).sort((a, b) => a.title.localeCompare(b.title))
+    },
+)
+
+export const getCurrentBoard = createSelector(
+    (state) => state.boards.current,
+    getBoards,
+    (boardId, boards) => {
+        return boards[boardId]
+    },
+)
+
+export const getTemplates = (state: RootState): {[key: string]: Board} => state.boards.templates
+
+export const getSortedTemplates = createSelector(
+    getTemplates,
+    (templates) => {
+        return Object.values(templates).sort((a, b) => a.title.localeCompare(b.title))
+    },
+)
 
 export function getBoard(boardId: string): (state: RootState) => Board|null {
     return (state: RootState): Board|null => {
-        return state.boards.boards.find((b) => b.id === boardId) || state.boards.templates.find((b) => b.id === boardId) || null
+        return state.boards.boards[boardId] || state.boards.templates[boardId] || null
     }
 }

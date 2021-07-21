@@ -1,40 +1,53 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit'
 
 import {Card} from '../blocks/card'
-import {BoardGroup, IPropertyTemplate, IPropertyOption} from '../blocks/board'
-import {Utils} from '../utils'
 
 import {initialLoad} from './initialLoad'
 
 import {RootState} from './index'
 
+type CardsState = {
+    current: string
+    cards: {[key: string]: Card}
+    templates: {[key: string]: Card}
+}
+
 const cardsSlice = createSlice({
     name: 'cards',
-    initialState: {cards: [], templates: []} as {cards: Card[], templates: Card[]},
+    initialState: {
+        current: '',
+        cards: {},
+        templates: {},
+    } as CardsState,
     reducers: {
+        setCurrent: (state, action: PayloadAction<string>) => {
+            state.current = action.payload
+        },
         updateCards: (state, action: PayloadAction<Card[]>) => {
-            const updatedCardIds = action.payload.filter((o: Card) => !o.fields?.isTemplate).map((o: Card) => o.id)
-            const newCards = state.cards.filter((o: Card) => !updatedCardIds.includes(o.id))
-            const updatedAndNotDeletedCards = action.payload.filter((o: Card) => o.deleteAt === 0 && !o.fields?.isTemplate)
-            newCards.push(...updatedAndNotDeletedCards)
-            state.cards = newCards.sort((a, b) => a.title.localeCompare(b.title)) as Card[]
-
-            const updatedTemplateIds = action.payload.filter((o: Card) => o.fields?.isTemplate).map((o: Card) => o.id)
-            const newTemplates = state.cards.filter((o: Card) => !updatedTemplateIds.includes(o.id))
-            const updatedAndNotDeletedTemplates = action.payload.filter((o: Card) => o.deleteAt === 0 && o.fields?.isTemplate)
-            newTemplates.push(...updatedAndNotDeletedTemplates)
-            state.templates = newTemplates.sort((a, b) => a.title.localeCompare(b.title)) as Card[]
+            for (const card of action.payload) {
+                if (card.deleteAt !== 0) {
+                    delete state.cards[card.id]
+                    delete state.templates[card.id]
+                } else if (card.fields.isTemplate) {
+                    state.templates[card.id] = card
+                } else {
+                    state.cards[card.id] = card
+                }
+            }
         },
     },
     extraReducers: (builder) => {
         builder.addCase(initialLoad.fulfilled, (state, action) => {
-            state.cards = action.payload.blocks.filter((block) => block.type === 'card' && !block.fields?.isTemplate).
-                sort((a, b) => a.title.localeCompare(b.title)) as Card[]
-            state.templates = action.payload.blocks.filter((block) => block.type === 'card' && block.fields?.isTemplate).
-                sort((a, b) => a.title.localeCompare(b.title)) as Card[]
+            for (const block of action.payload.blocks) {
+                if (block.type === 'card' && block.fields.isTemplate) {
+                    state.templates[block.id] = block as Card
+                } else if (block.type === 'card' && !block.fields.isTemplate) {
+                    state.cards[block.id] = block as Card
+                }
+            }
         })
     },
 })
@@ -42,22 +55,42 @@ const cardsSlice = createSlice({
 export const {updateCards} = cardsSlice.actions
 export const {reducer} = cardsSlice
 
-export function getCards(state: RootState): Card[] {
-    return state.cards.cards
-}
+export const getCards = (state: RootState): {[key: string]: Card} => state.cards.cards
 
-export function getTemplates(state: RootState): Card[] {
-    return state.cards.templates
-}
+export const getSortedCards = createSelector(
+    getCards,
+    (cards) => {
+        return Object.values(cards).sort((a, b) => a.title.localeCompare(b.title)) as Card[]
+    },
+)
+
+export const getTemplates = (state: RootState): {[key: string]: Card} => state.cards.templates
+
+export const getSortedTemplates = createSelector(
+    getTemplates,
+    (templates) => {
+        return Object.values(templates).sort((a, b) => a.title.localeCompare(b.title)) as Card[]
+    },
+)
 
 export function getCard(cardId: string): (state: RootState) => Card|undefined {
     return (state: RootState): Card|undefined => {
-        return state.cards.cards.find((c) => c.id === cardId) || state.cards.templates.find((c) => c.id === cardId)
+        return state.cards.cards[cardId] || state.cards.templates[cardId]
     }
 }
 
-export function getCardsByBoard(boardId: string): (state: RootState) => Card[] {
-    return (state: RootState): Card[] => {
-        return state.cards.cards.filter((c) => c.parentId === boardId)
-    }
-}
+export const getCurrentBoardCards = createSelector(
+    (state) => state.boards.current,
+    getCards,
+    (boardId, cards) => {
+        return Object.values(cards).filter((c) => c.parentId === boardId) as Card[]
+    },
+)
+
+export const getCurrentBoardTemplates = createSelector(
+    (state) => state.boards.current,
+    getTemplates,
+    (boardId, cards) => {
+        return Object.values(cards).filter((c) => c.parentId === boardId) as Card[]
+    },
+)

@@ -14,7 +14,7 @@ import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {getGlobalTemplates, fetchGlobalTemplates} from '../../store/globalTemplates'
-import {getTemplates} from '../../store/boards'
+import {getSortedTemplates} from '../../store/boards'
 
 import BoardTemplateMenuItem from './boardTemplateMenuItem'
 
@@ -85,7 +85,7 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
     }, [octoClient.workspaceId])
 
     const intl = useIntl()
-    const templates = useAppSelector(getTemplates)
+    const templates = useAppSelector(getSortedTemplates)
 
     if (!templates) {
         return <div/>

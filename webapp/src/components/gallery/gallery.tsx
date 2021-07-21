@@ -9,15 +9,13 @@ import {Board, IPropertyTemplate} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
-import useCardListener from '../../hooks/cardListener'
-import {useAppDispatch, useAppSelector} from '../../store/hooks'
-import {updateCards, getCardsByBoard} from '../../store/cards'
 
 import './gallery.scss'
 import GalleryCard from './galleryCard'
 
 type Props = {
     board: Board
+    cards: Card[]
     activeView: BoardView
     readonly: boolean
     addCard: (show: boolean) => Promise<void>
@@ -26,11 +24,9 @@ type Props = {
 }
 
 const Gallery = (props: Props): JSX.Element => {
-    const {activeView, board} = props
+    const {activeView, board, cards} = props
     const visiblePropertyTemplates = board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
-    const cards = useAppSelector(getCardsByBoard(board.id))
     const isManualSort = activeView.fields.sortOptions.length === 0
-    const dispatch = useAppDispatch()
 
     const onDropToCard = (srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)
@@ -55,13 +51,6 @@ const Gallery = (props: Props): JSX.Element => {
     }
 
     const visibleTitle = activeView.fields.visiblePropertyIds.includes(Constants.titleColumnId)
-
-    useCardListener(
-        async (blocks) => {
-            dispatch(updateCards(blocks.filter((o) => o.type === 'card') as Card[]))
-        },
-        () => {},
-    )
 
     return (
         <div className='octo-table-body Gallery'>

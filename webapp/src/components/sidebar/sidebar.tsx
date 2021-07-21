@@ -7,8 +7,8 @@ import IconButton from '../../widgets/buttons/iconButton'
 import HamburgerIcon from '../../widgets/icons/hamburger'
 import HideSidebarIcon from '../../widgets/icons/hideSidebar'
 import ShowSidebarIcon from '../../widgets/icons/showSidebar'
-import {getBoards} from '../../store/boards'
-import {getViews} from '../../store/views'
+import {getSortedBoards} from '../../store/boards'
+import {getSortedViews} from '../../store/views'
 import {getCurrentWorkspace} from '../../store/currentWorkspace'
 import {useAppSelector} from '../../store/hooks'
 
@@ -26,8 +26,8 @@ type Props = {
 const Sidebar = React.memo((props: Props) => {
     const [isHidden, setHidden] = useState(false)
     const [whiteLogo, setWhiteLogo] = useState(false)
-    const boards = useAppSelector(getBoards)
-    const views = useAppSelector(getViews)
+    const boards = useAppSelector(getSortedBoards)
+    const views = useAppSelector(getSortedViews)
 
     useEffect(() => {
         const theme = loadTheme()
