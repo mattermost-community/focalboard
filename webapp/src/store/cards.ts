@@ -52,7 +52,7 @@ export function getTemplates(state: RootState): Card[] {
 
 export function getCard(cardId: string): (state: RootState) => Card|undefined {
     return (state: RootState): Card|undefined => {
-        return state.cards.cards.find((c) => c.id === cardId)
+        return state.cards.cards.find((c) => c.id === cardId) || state.cards.templates.find((c) => c.id === cardId)
     }
 }
 

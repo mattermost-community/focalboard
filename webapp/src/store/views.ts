@@ -15,7 +15,7 @@ const viewsSlice = createSlice({
     reducers: {
         updateViews: (state, action: PayloadAction<BoardView[]>) => {
             const updatedViewIds = action.payload.map((o: BoardView) => o.id)
-            const newViews = state.views.filter((o: BoardView) => !updatedViewIds.includes(o.id))
+            const newViews = state.views.filter((o: BoardView) => !updatedViewIds.includes(o.id)).map((o) => new BoardView(o))
             const updatedAndNotDeletedViews = action.payload.filter((o: BoardView) => o.deleteAt === 0)
             newViews.push(...updatedAndNotDeletedViews)
             state.views = newViews.sort((a, b) => a.title.localeCompare(b.title)).map((v) => new BoardView(v))
@@ -23,7 +23,7 @@ const viewsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(initialLoad.fulfilled, (state, action) => {
-            state.views = action.payload.blocks.filter((o) => o.type === 'view').sort((a, b) => a.title.localeCompare(b.title)) as BoardView[]
+            state.views = action.payload.blocks.filter((o) => o.type === 'view').sort((a, b) => a.title.localeCompare(b.title)).map((o) => new BoardView(o))
         })
     },
 })

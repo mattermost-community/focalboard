@@ -189,10 +189,10 @@ class BoardPage extends React.Component<Props, State> {
         if (this.props.match.params.boardId) {
             this.attachToBoard(this.props.match.params.boardId, this.props.match.params.viewId)
         } else {
-            this.sync()
+            this.props.initialLoad()
         }
         wsClient.addOnChange(this.incrementalUpdate)
-        wsClient.addOnReconnect(this.sync)
+        wsClient.addOnReconnect(this.props.initialLoad)
         wsClient.addOnStateChange(this.updateWebsocketState)
     }
 
@@ -200,7 +200,7 @@ class BoardPage extends React.Component<Props, State> {
         Utils.log(`boardPage.componentWillUnmount: ${this.props.match.params.boardId}`)
         wsClient.unsubscribeToWorkspace(this.props.match.params.workspaceId || '0')
         wsClient.removeOnChange(this.incrementalUpdate)
-        wsClient.removeOnReconnect(this.sync)
+        wsClient.removeOnReconnect(this.props.initialLoad)
         wsClient.removeOnStateChange(this.updateWebsocketState)
     }
 
@@ -254,45 +254,11 @@ class BoardPage extends React.Component<Props, State> {
         localStorage.setItem('lastViewId', viewId)
 
         if (boardId) {
-            this.sync()
+            this.props.initialLoad()
         } else {
             const newPath = generatePath(this.props.match.path, {...this.props.match.params, boardId: '', viewId: ''})
             this.props.history.push(newPath)
         }
-    }
-
-    private sync = async () => {
-        Utils.log(`sync start: ${this.props.match.params.boardId}`)
-
-        this.props.initialLoad()
-
-        // TODO: Review the need of this
-        // if (this.props.match.params.boardId) {
-        //     const boardTree = await BoardTree.sync(this.props.match.params.boardId || '', this.props.match.params.viewId || '', this.props.usersById)
-
-        //     if (boardTree && boardTree.board) {
-        //         // Update url with viewId if it's different
-        //         if (boardTree.activeView.id !== this.props.match.params.viewId) {
-        //             const newPath = generatePath(this.props.match.path, {...this.props.match.params, viewId: boardTree.activeView.id})
-        //             this.props.history.push(newPath)
-        //         }
-
-        //         // TODO: Handle error (viewId not found)
-
-        //         this.setState({
-        //             boardTree,
-        //             syncFailed: false,
-        //         })
-        //         Utils.log(`sync complete: ${boardTree.board?.id} (${boardTree.board?.title})`)
-        //     } else {
-        //         // Board may have been deleted
-        //         this.setState({
-        //             boardTree: undefined,
-        //             syncFailed: true,
-        //         })
-        //         Utils.log(`sync complete: board ${this.props.match.params.boardId} not found`)
-        //     }
-        // }
     }
 
     private incrementalUpdate = async (_: WSClient, blocks: IBlock[]) => {
@@ -300,27 +266,6 @@ class BoardPage extends React.Component<Props, State> {
         this.props.updateViews(blocks.filter((b: IBlock) => b.type === 'view') as BoardView[])
         this.props.updateCards(blocks.filter((b: IBlock) => b.type === 'card') as Card[])
         this.props.updateContents(blocks.filter((b: IBlock) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board') as ContentBlock[])
-
-        // TODO: Review this
-        // let newBoardTree: BoardTree | undefined
-        // if (boardTree) {
-        //     newBoardTree = await BoardTree.incrementalUpdate(boardTree, blocks, this.props.usersById)
-        // } else if (this.props.match.params.boardId) {
-        //     // Corner case: When the page is viewing a deleted board, that is subsequently un-deleted on another client
-        //     newBoardTree = await BoardTree.sync(this.props.match.params.boardId || '', this.props.match.params.viewId || '', this.props.usersById)
-        // }
-
-        // if (newBoardTree) {
-        //     this.setState({boardTree: newBoardTree})
-        // } else {
-        //     this.setState({boardTree: undefined})
-        // }
-
-        // // Update url with viewId if it's different
-        // if (newBoardTree && newBoardTree.activeView.id !== this.props.match.params.viewId) {
-        //     const newPath = generatePath(this.props.match.path, {...this.props.match.params, viewId: newBoardTree?.activeView.id})
-        //     this.props.history.push(newPath)
-        // }
     }
 }
 

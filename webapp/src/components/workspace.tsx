@@ -28,11 +28,9 @@ function CenterContent(props: Props) {
     const views = useAppSelector(getBoardViews(match.params.boardId))
 
     if (board && activeView) {
-        // TODO: Allow to set the propertyId
-        const propertyId = null
-        let property = board?.fields.cardProperties.find((o: IPropertyTemplate) => o.id === propertyId)
+        let property = board?.fields.cardProperties.find((o: IPropertyTemplate) => o.id === activeView.fields.groupById)
         if (!property || property.type !== 'select') {
-            // Utils.logError(`this.view.groupById card property not found: ${propertyId}`)
+            Utils.logError(`this.view.groupById card property not found: ${activeView.fields.groupById}`)
             property = board?.fields.cardProperties.find((o: IPropertyTemplate) => o.type === 'select')
             Utils.assertValue(property)
         }
