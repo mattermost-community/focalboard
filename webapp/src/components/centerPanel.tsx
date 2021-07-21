@@ -169,7 +169,6 @@ class CenterPanel extends React.Component<Props, State> {
                     showCard={this.showCard}
                 />}
 
-                {/* TODO: Pass correctly the visibleGroups */}
                 {activeView.fields.viewType === 'table' &&
                     <Table
                         board={this.props.board}
@@ -359,13 +358,13 @@ class CenterPanel extends React.Component<Props, State> {
 
         this.setState({selectedCardIds: []})
     }
-    private groupCardsByOptions(cards: Card[], optionIds: string[], groupByProperty: IPropertyTemplate): BoardGroup[] {
+    private groupCardsByOptions(cards: Card[], optionIds: string[], groupByProperty?: IPropertyTemplate): BoardGroup[] {
         const groups = []
         for (const optionId of optionIds) {
             if (optionId) {
-                const option = groupByProperty.options.find((o) => o.id === optionId)
+                const option = groupByProperty?.options.find((o) => o.id === optionId)
                 if (option) {
-                    const c = cards.filter((o) => optionId === o.fields.properties[groupByProperty.id])
+                    const c = cards.filter((o) => optionId === o.fields.properties[groupByProperty!.id])
                     const group: BoardGroup = {
                         option,
                         cards: c,
@@ -377,11 +376,11 @@ class CenterPanel extends React.Component<Props, State> {
             } else {
                 // Empty group
                 const emptyGroupCards = cards.filter((card) => {
-                    const groupByOptionId = card.fields.properties[groupByProperty.id]
-                    return !groupByOptionId || !groupByProperty.options.find((option) => option.id === groupByOptionId)
+                    const groupByOptionId = card.fields.properties[groupByProperty?.id || '']
+                    return !groupByOptionId || !groupByProperty?.options.find((option) => option.id === groupByOptionId)
                 })
                 const group: BoardGroup = {
-                    option: {id: '', value: `No ${groupByProperty.name}`, color: ''},
+                    option: {id: '', value: `No ${groupByProperty?.name}`, color: ''},
                     cards: emptyGroupCards,
                 }
                 groups.push(group)
@@ -391,14 +390,12 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     private getVisibleAndHiddenGroups(cards: Card[], visibleOptionIds: string[], hiddenOptionIds: string[], groupByProperty?: IPropertyTemplate): {visible: BoardGroup[], hidden: BoardGroup[]} {
-        if (!groupByProperty) {
-            Utils.assertFailure('groupCards')
-            return {visible: [], hidden: []}
+        let unassignedOptionIds: string[] = []
+        if (groupByProperty) {
+            unassignedOptionIds = groupByProperty.options.
+                filter((o: IPropertyOption) => !visibleOptionIds.includes(o.id) && !hiddenOptionIds.includes(o.id)).
+                map((o: IPropertyOption) => o.id)
         }
-
-        const unassignedOptionIds = groupByProperty.options.
-            filter((o: IPropertyOption) => !visibleOptionIds.includes(o.id) && !hiddenOptionIds.includes(o.id)).
-            map((o: IPropertyOption) => o.id)
         const allVisibleOptionIds = [...visibleOptionIds, ...unassignedOptionIds]
 
         // If the empty group positon is not explicitly specified, make it the first visible column
