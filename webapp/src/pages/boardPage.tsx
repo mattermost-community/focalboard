@@ -188,8 +188,6 @@ class BoardPage extends React.Component<Props, State> {
 
         if (this.props.match.params.boardId) {
             this.attachToBoard(this.props.match.params.boardId, this.props.match.params.viewId)
-        } else {
-            this.props.initialLoad()
         }
         wsClient.addOnChange(this.incrementalUpdate)
         wsClient.addOnReconnect(this.props.initialLoad)
@@ -253,18 +251,16 @@ class BoardPage extends React.Component<Props, State> {
         localStorage.setItem('lastBoardId', boardId || '')
         localStorage.setItem('lastViewId', viewId)
 
-        if (boardId) {
-            this.props.initialLoad()
-        } else {
+        if (!boardId) {
             const newPath = generatePath(this.props.match.path, {...this.props.match.params, boardId: '', viewId: ''})
             this.props.history.push(newPath)
         }
     }
 
     private incrementalUpdate = async (_: WSClient, blocks: IBlock[]) => {
-        this.props.updateBoards(blocks.filter((b: IBlock) => b.type === 'board') as Board[])
-        this.props.updateViews(blocks.filter((b: IBlock) => b.type === 'view') as BoardView[])
-        this.props.updateCards(blocks.filter((b: IBlock) => b.type === 'card') as Card[])
+        this.props.updateBoards(blocks.filter((b: IBlock) => b.type === 'board' || b.deleteAt !== 0) as Board[])
+        this.props.updateViews(blocks.filter((b: IBlock) => b.type === 'view' || b.deleteAt !== 0) as BoardView[])
+        this.props.updateCards(blocks.filter((b: IBlock) => b.type === 'card' || b.deleteAt !== 0) as Card[])
         this.props.updateContents(blocks.filter((b: IBlock) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board') as ContentBlock[])
     }
 }

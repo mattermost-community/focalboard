@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
-import React, {useRef, useState} from 'react'
+import React, {useCallback} from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {Board, IPropertyOption, IPropertyTemplate, BoardGroup} from '../../blocks/board'
@@ -47,11 +47,11 @@ const Kanban = (props: Props) => {
     const visiblePropertyTemplates = board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
     const isManualSort = activeView.fields.sortOptions.length === 0
 
-    const propertyNameChanged = async (option: IPropertyOption, text: string): Promise<void> => {
+    const propertyNameChanged = useCallback(async (option: IPropertyOption, text: string): Promise<void> => {
         await mutator.changePropertyOptionValue(board, groupByProperty!, option, text)
-    }
+    }, [board, groupByProperty])
 
-    const addGroupClicked = async () => {
+    const addGroupClicked = useCallback(async () => {
         Utils.log('onAddGroupClicked')
 
         const option: IPropertyOption = {
@@ -61,9 +61,9 @@ const Kanban = (props: Props) => {
         }
 
         await mutator.insertPropertyOption(board, groupByProperty!, option, 'add group')
-    }
+    }, [board, groupByProperty])
 
-    const orderAfterMoveToColumn = (cardIds: string[], columnId?: string): string[] => {
+    const orderAfterMoveToColumn = useCallback((cardIds: string[], columnId?: string): string[] => {
         let cardOrder = activeView.fields.cardOrder.slice()
         const columnGroup = visibleGroups.find((g) => g.option.id === columnId)
         const columnCards = columnGroup?.cards
@@ -76,9 +76,9 @@ const Kanban = (props: Props) => {
         const lastCardIndex = cardOrder.indexOf(lastCardId)
         cardOrder.splice(lastCardIndex + 1, 0, ...cardIds)
         return cardOrder
-    }
+    }, [activeView, visibleGroups])
 
-    const onDropToColumn = async (option: IPropertyOption, card?: Card, dstOption?: IPropertyOption) => {
+    const onDropToColumn = useCallback(async (option: IPropertyOption, card?: Card, dstOption?: IPropertyOption) => {
         const {selectedCardIds} = props
         const optionId = option ? option.id : undefined
 
@@ -87,16 +87,13 @@ const Kanban = (props: Props) => {
             draggedCardIds = Array.from(new Set(selectedCardIds).add(card.id))
         }
 
-        Utils.assertValue(board)
-
         if (draggedCardIds.length > 0) {
-            const orderedCards = cards
-            const cardsById: { [key: string]: Card } = orderedCards.reduce((acc: { [key: string]: Card }, c: Card): { [key: string]: Card } => {
-                acc[c.id] = c
-                return acc
-            }, {})
-            const draggedCards: Card[] = draggedCardIds.map((o: string) => cardsById[o])
             await mutator.performAsUndoGroup(async () => {
+                const cardsById: { [key: string]: Card } = cards.reduce((acc: { [key: string]: Card }, c: Card): { [key: string]: Card } => {
+                    acc[c.id] = c
+                    return acc
+                }, {})
+                const draggedCards: Card[] = draggedCardIds.map((o: string) => cardsById[o])
                 const description = draggedCards.length > 1 ? `drag ${draggedCards.length} cards` : 'drag card'
                 const awaits = []
                 for (const draggedCard of draggedCards) {
@@ -124,9 +121,9 @@ const Kanban = (props: Props) => {
 
             await mutator.changeViewVisibleOptionIds(activeView, visibleOptionIds)
         }
-    }
+    }, [cards, visibleGroups, activeView, groupByProperty, props.selectedCardIds])
 
-    const onDropToCard = async (srcCard: Card, dstCard: Card) => {
+    const onDropToCard = useCallback(async (srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)
         const {selectedCardIds} = props
         const optionId = dstCard.fields.properties[activeView.fields.groupById!]
@@ -136,13 +133,12 @@ const Kanban = (props: Props) => {
         const description = draggedCardIds.length > 1 ? `drag ${draggedCardIds.length} cards` : 'drag card'
 
         // Update dstCard order
-        const orderedCards = cards
-        const cardsById: { [key: string]: Card } = orderedCards.reduce((acc: { [key: string]: Card }, card: Card): { [key: string]: Card } => {
+        const cardsById: { [key: string]: Card } = cards.reduce((acc: { [key: string]: Card }, card: Card): { [key: string]: Card } => {
             acc[card.id] = card
             return acc
         }, {})
         const draggedCards: Card[] = draggedCardIds.map((o: string) => cardsById[o])
-        let cardOrder = orderedCards.map((o) => o.id)
+        let cardOrder = cards.map((o) => o.id)
         const isDraggingDown = cardOrder.indexOf(srcCard.id) <= cardOrder.indexOf(dstCard.id)
         cardOrder = cardOrder.filter((id) => !draggedCardIds.includes(id))
         let destIndex = cardOrder.indexOf(dstCard.id)
@@ -165,7 +161,7 @@ const Kanban = (props: Props) => {
             await Promise.all(awaits)
             await mutator.changeViewCardOrder(activeView, cardOrder, description)
         })
-    }
+    }, [cards, activeView, groupByProperty])
 
     return (
         <div className='Kanban'>

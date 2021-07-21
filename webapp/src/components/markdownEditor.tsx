@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useRef} from 'react'
+import React, {useState, useRef, useCallback} from 'react'
 import EasyMDE from 'easymde'
 import SimpleMDE from 'react-simplemde-editor'
 
@@ -10,7 +10,6 @@ import './markdownEditor.scss'
 type Props = {
     text?: string
     placeholderText?: string
-    uniqueId?: string
     className?: string
     readonly?: boolean
 
@@ -21,13 +20,14 @@ type Props = {
 }
 
 const MarkdownEditor = (props: Props): JSX. Element => {
-    const {placeholderText, uniqueId, onFocus, onBlur, onChange, text} = props
+    const {placeholderText, onFocus, onBlur, onChange, text} = props
+    const [uniqueId] = useState(Utils.createGuid())
 
     const [isEditing, setIsEditing] = useState(false)
     const [active, setActive] = useState(false)
     const [editorInstance, setEditorInstance] = useState<EasyMDE>()
 
-    const showEditor = (): void => {
+    const showEditor = useCallback((): void => {
         const cm = editorInstance?.codemirror
         if (cm) {
             setTimeout(() => {
@@ -39,18 +39,7 @@ const MarkdownEditor = (props: Props): JSX. Element => {
         }
 
         setIsEditing(true)
-    }
-
-    const stateAndPropsValue = {
-        isEditing,
-        setIsEditing,
-        setActive,
-        onBlur,
-        onChange,
-        onFocus,
-    }
-    const stateAndPropsRef = useRef(stateAndPropsValue)
-    stateAndPropsRef.current = stateAndPropsValue
+    }, [editorInstance])
 
     const html: string = Utils.htmlFromMarkdown(text || placeholderText || '')
 
@@ -72,7 +61,7 @@ const MarkdownEditor = (props: Props): JSX. Element => {
 
             // Use visibility instead of display here so the editor is pre-rendered, avoiding a flash on showEditor
             style={isEditing ? {} : {visibility: 'hidden', position: 'absolute', top: 0, left: 0}}
-            onKeyDown={(e) => {
+            onKeyDown={useCallback((e) => {
                 // HACKHACK: Need to handle here instad of in CodeMirror because that breaks auto-lists
                 if (e.keyCode === 27 && !e.shiftKey && !(e.ctrlKey || e.metaKey) && !e.altKey) { // Esc
                     editorInstance?.codemirror?.getInputField()?.blur()
@@ -85,11 +74,11 @@ const MarkdownEditor = (props: Props): JSX. Element => {
                         props.onAccept?.(text || '')
                     }, 20)
                 }
-            }}
+            }, [editorInstance, props.onAccept])}
         >
             <SimpleMDE
                 id={uniqueId}
-                getMdeInstance={(instance) => {
+                getMdeInstance={useCallback((instance: EasyMDE) => {
                     setEditorInstance(instance)
 
                     // BUGBUG: This breaks auto-lists
@@ -98,39 +87,39 @@ const MarkdownEditor = (props: Props): JSX. Element => {
                     //         cm.getInputField().blur()
                     //     }
                     // })
-                }}
+                }, [setEditorInstance])}
                 value={text}
 
                 events={{
-                    change: (instance: any) => {
-                        if (stateAndPropsRef.current.isEditing) {
+                    change: useCallback((instance: any) => {
+                        if (isEditing) {
                             const newText = instance.getValue()
-                            stateAndPropsRef.current.onChange?.(newText)
+                            onChange?.(newText)
                         }
-                    },
-                    blur: (instance: any) => {
+                    }, [isEditing, onChange]),
+                    blur: useCallback((instance: any) => {
                         const newText = instance.getValue()
                         const oldText = text || ''
-                        if (newText !== oldText && stateAndPropsRef.current.onChange) {
-                            stateAndPropsRef.current.onChange(newText)
+                        if (newText !== oldText && onChange) {
+                            onChange(newText)
                         }
 
-                        stateAndPropsRef.current.setActive(false)
+                        setActive(false)
 
-                        if (stateAndPropsRef.current.onBlur) {
-                            stateAndPropsRef.current.onBlur(newText)
+                        if (onBlur) {
+                            onBlur(newText)
                         }
 
-                        stateAndPropsRef.current.setIsEditing(false)
-                    },
-                    focus: () => {
-                        stateAndPropsRef.current.setActive(true)
-                        stateAndPropsRef.current.setIsEditing(true)
+                        setIsEditing(false)
+                    }, [setActive, onBlur, onChange, setIsEditing]),
+                    focus: useCallback(() => {
+                        setActive(true)
+                        setIsEditing(true)
 
-                        if (stateAndPropsRef.current.onFocus) {
-                            stateAndPropsRef.current.onFocus()
+                        if (onFocus) {
+                            onFocus()
                         }
-                    },
+                    }, [setActive, setIsEditing, onFocus]),
                 }}
                 options={{
                     autoDownloadFontAwesome: true,

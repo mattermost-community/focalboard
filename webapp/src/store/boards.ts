@@ -14,15 +14,15 @@ const boardsSlice = createSlice({
     initialState: {boards: [], templates: []} as {boards: Board[], templates: Board[]},
     reducers: {
         updateBoards: (state, action: PayloadAction<Board[]>) => {
-            const updatedBoardIds = action.payload.filter((o: Board) => !o.fields.isTemplate).map((o: Board) => o.id)
+            const updatedBoardIds = action.payload.filter((o: Board) => !o.fields?.isTemplate).map((o: Board) => o.id)
             const newBoards = state.boards.filter((o: Board) => !updatedBoardIds.includes(o.id)).map((o) => new Board(o))
-            const updatedAndNotDeletedBoards = action.payload.filter((o: Board) => o.deleteAt === 0 && !o.fields.isTemplate)
+            const updatedAndNotDeletedBoards = action.payload.filter((o: Board) => o.deleteAt === 0 && !o.fields?.isTemplate)
             newBoards.push(...updatedAndNotDeletedBoards)
             state.boards = newBoards.sort((a, b) => a.title.localeCompare(b.title)).map((o) => new Board(o))
 
-            const updatedTemplateIds = action.payload.filter((o: Board) => o.fields.isTemplate).map((o: Board) => o.id)
+            const updatedTemplateIds = action.payload.filter((o: Board) => o.fields?.isTemplate).map((o: Board) => o.id)
             const newTemplates = state.boards.filter((o: Board) => !updatedTemplateIds.includes(o.id)).map((o) => new Board(o))
-            const updatedAndNotDeletedTemplates = action.payload.filter((o: Board) => o.deleteAt === 0 && o.fields.isTemplate)
+            const updatedAndNotDeletedTemplates = action.payload.filter((o: Board) => o.deleteAt === 0 && o.fields?.isTemplate)
             newTemplates.push(...updatedAndNotDeletedTemplates)
             state.templates = newTemplates.sort((a, b) => a.title.localeCompare(b.title))
         },

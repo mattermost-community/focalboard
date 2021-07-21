@@ -36,7 +36,7 @@ class Board extends Block {
         super(block)
         this.type = 'board'
 
-        let cardProperties = []
+        let cardProperties: IPropertyTemplate[] = []
         if (block?.fields.cardProperties) {
             // Deep clone of card properties and their options
             cardProperties = block?.fields.cardProperties.map((o: IPropertyTemplate) => {
@@ -48,6 +48,18 @@ class Board extends Block {
                 }
             })
         }
+
+        const selectProperties = cardProperties.find((o) => o.type === 'select')
+        if (!selectProperties) {
+            const property: IPropertyTemplate = {
+                id: Utils.createGuid(),
+                name: 'Status',
+                type: 'select',
+                options: [],
+            }
+            cardProperties.push(property)
+        }
+
         this.fields = {
             description: block?.fields.description || '',
             icon: block?.fields.icon || '',

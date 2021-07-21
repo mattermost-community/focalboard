@@ -16,24 +16,24 @@ const cardsSlice = createSlice({
     initialState: {cards: [], templates: []} as {cards: Card[], templates: Card[]},
     reducers: {
         updateCards: (state, action: PayloadAction<Card[]>) => {
-            const updatedCardIds = action.payload.filter((o: Card) => !o.fields.isTemplate).map((o: Card) => o.id)
+            const updatedCardIds = action.payload.filter((o: Card) => !o.fields?.isTemplate).map((o: Card) => o.id)
             const newCards = state.cards.filter((o: Card) => !updatedCardIds.includes(o.id))
-            const updatedAndNotDeletedCards = action.payload.filter((o: Card) => o.deleteAt === 0 && !o.fields.isTemplate)
+            const updatedAndNotDeletedCards = action.payload.filter((o: Card) => o.deleteAt === 0 && !o.fields?.isTemplate)
             newCards.push(...updatedAndNotDeletedCards)
             state.cards = newCards.sort((a, b) => a.title.localeCompare(b.title)) as Card[]
 
-            const updatedTemplateIds = action.payload.filter((o: Card) => o.fields.isTemplate).map((o: Card) => o.id)
+            const updatedTemplateIds = action.payload.filter((o: Card) => o.fields?.isTemplate).map((o: Card) => o.id)
             const newTemplates = state.cards.filter((o: Card) => !updatedTemplateIds.includes(o.id))
-            const updatedAndNotDeletedTemplates = action.payload.filter((o: Card) => o.deleteAt === 0 && o.fields.isTemplate)
+            const updatedAndNotDeletedTemplates = action.payload.filter((o: Card) => o.deleteAt === 0 && o.fields?.isTemplate)
             newTemplates.push(...updatedAndNotDeletedTemplates)
             state.templates = newTemplates.sort((a, b) => a.title.localeCompare(b.title)) as Card[]
         },
     },
     extraReducers: (builder) => {
         builder.addCase(initialLoad.fulfilled, (state, action) => {
-            state.cards = action.payload.blocks.filter((block) => block.type === 'card' && !block.fields.isTemplate).
+            state.cards = action.payload.blocks.filter((block) => block.type === 'card' && !block.fields?.isTemplate).
                 sort((a, b) => a.title.localeCompare(b.title)) as Card[]
-            state.templates = action.payload.blocks.filter((block) => block.type === 'card' && block.fields.isTemplate).
+            state.templates = action.payload.blocks.filter((block) => block.type === 'card' && block.fields?.isTemplate).
                 sort((a, b) => a.title.localeCompare(b.title)) as Card[]
         })
     },
