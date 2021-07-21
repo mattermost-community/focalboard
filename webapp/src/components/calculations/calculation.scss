@@ -1,0 +1,16 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
+.Calculation {
+    cursor: pointer;
+
+    .calculationLabel {
+        font-size: 12px;
+        opacity: 0.8;
+        margin-right: 8px;
+    }
+
+    .calculationValue {
+        font-weight: bold;
+    }
+}

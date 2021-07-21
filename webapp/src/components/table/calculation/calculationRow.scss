@@ -5,6 +5,8 @@
     height: 47px;
     border-bottom: none;
     border-top: solid 1px rgba(var(--body-color), 0.09);
+    // To override table's specific border
+    border-bottom: solid 1px rgba(var(--body-color), 0.09) !important;
 
     .octo-table-cell {
         background-color: rgb(var(--main-bg)) !important;
@@ -25,9 +27,7 @@
 }
 
 .Table {
-    .octo-table-row {
-        &.CalculationRow {
-            border-bottom: none;
-        }
+    .octo-table-cell.Calculation:focus-within {
+        border: unset;
     }
 }

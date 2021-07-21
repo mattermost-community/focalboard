@@ -8,6 +8,7 @@ import {IPropertyTemplate} from '../../blocks/board'
 
 import {CalculationOptions, Options} from './options'
 import Calculations from './calculations'
+import './calculation.scss'
 
 type Props = {
     style: CSSProperties
@@ -48,13 +49,15 @@ const Calculation = (props: Props): JSX.Element => {
             onClick={props.onMenuOpen}
         >
             <span className='calculationLabel'>
-                {valueOption!.label}
+                {valueOption!.displayName}
             </span>
 
-            {value !== Options.get('none')!.value &&
-            <span className='calculationValue'>
-                {Calculations[value](props.cards, props.property)}
-            </span>}
+            {
+                value !== Options.get('none')!.value &&
+                <span className='calculationValue'>
+                    {Calculations[value](props.cards, props.property)}
+                </span>
+            }
 
         </div>
     )
