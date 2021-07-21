@@ -93,7 +93,7 @@ const Kanban = (props: Props) => {
                     acc[c.id] = c
                     return acc
                 }, {})
-                const draggedCards: Card[] = draggedCardIds.map((o: string) => cardsById[o])
+                const draggedCards: Card[] = draggedCardIds.map((o: string) => cardsById[o]).filter((c) => c)
                 const description = draggedCards.length > 1 ? `drag ${draggedCards.length} cards` : 'drag card'
                 const awaits = []
                 for (const draggedCard of draggedCards) {
@@ -137,7 +137,7 @@ const Kanban = (props: Props) => {
             acc[card.id] = card
             return acc
         }, {})
-        const draggedCards: Card[] = draggedCardIds.map((o: string) => cardsById[o])
+        const draggedCards: Card[] = draggedCardIds.map((o: string) => cardsById[o]).filter((c) => c)
         let cardOrder = cards.map((o) => o.id)
         const isDraggingDown = cardOrder.indexOf(srcCard.id) <= cardOrder.indexOf(dstCard.id)
         cardOrder = cardOrder.filter((id) => !draggedCardIds.includes(id))
