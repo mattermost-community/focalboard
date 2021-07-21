@@ -6,6 +6,7 @@ import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit'
 import {BoardView} from '../blocks/boardView'
 
 import {initialLoad} from './initialLoad'
+import {getCurrentBoard} from './boards'
 
 import {RootState} from './index'
 
@@ -64,5 +65,17 @@ export const getCurrentBoardViews = createSelector(
     getViews,
     (boardId, views) => {
         return Object.values(views).filter((v) => v.parentId === boardId).sort((a, b) => a.title.localeCompare(b.title)).map((v) => new BoardView(v))
+    },
+)
+
+export const getCurrentViewGroupBy = createSelector(
+    getCurrentBoard,
+    (state) => state.views.current,
+    getViews,
+    (currentBoard, viewId, views) => {
+        if (!currentBoard) {
+            return undefined
+        }
+        return currentBoard.fields.cardProperties.find((o) => o.id === views[viewId].fields.groupById)
     },
 )

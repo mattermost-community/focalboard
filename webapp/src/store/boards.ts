@@ -60,14 +60,6 @@ export const getSortedBoards = createSelector(
     },
 )
 
-export const getCurrentBoard = createSelector(
-    (state) => state.boards.current,
-    getBoards,
-    (boardId, boards) => {
-        return boards[boardId]
-    },
-)
-
 export const getTemplates = (state: RootState): {[key: string]: Board} => state.boards.templates
 
 export const getSortedTemplates = createSelector(
@@ -82,3 +74,13 @@ export function getBoard(boardId: string): (state: RootState) => Board|null {
         return state.boards.boards[boardId] || state.boards.templates[boardId] || null
     }
 }
+
+export const getCurrentBoard = createSelector(
+    (state) => state.boards.current,
+    getBoards,
+    getTemplates,
+    (boardId, boards, templates) => {
+        return boards[boardId] || templates[boardId]
+    },
+)
+

@@ -101,10 +101,10 @@ class CenterPanel extends React.Component<Props, State> {
         const {groupByProperty, activeView, board, views, cards} = this.props
         const {visible: visibleGroups, hidden: hiddenGroups} = this.getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty)
 
-        if (!groupByProperty && activeView.fields.viewType === 'board') {
-            Utils.assertFailure('Board views must have groupByProperty set')
-            return <div/>
-        }
+        // if (!groupByProperty && activeView.fields.viewType === 'board') {
+        //     Utils.assertFailure('Board views must have groupByProperty set')
+        //     return <div/>
+        // }
 
         return (
             <div

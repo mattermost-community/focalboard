@@ -6,9 +6,9 @@ import {FormattedMessage} from 'react-intl'
 
 import {getCurrentBoard} from '../store/boards'
 import {getCurrentBoardCards} from '../store/cards'
-import {getView, getCurrentBoardViews} from '../store/views'
+import {getView, getCurrentBoardViews, getCurrentViewGroupBy} from '../store/views'
 import {useAppSelector} from '../store/hooks'
-import {Utils} from '../utils'
+// import {Utils} from '../utils'
 
 import CenterPanel from './centerPanel'
 import EmptyCenterPanel from './emptyCenterPanel'
@@ -25,12 +25,12 @@ function CenterContent(props: Props) {
     const cards = useAppSelector(getCurrentBoardCards)
     const activeView = useAppSelector(getView(match.params.viewId))
     const views = useAppSelector(getCurrentBoardViews)
+    const groupByProperty = useAppSelector(getCurrentViewGroupBy)
 
     if (board && activeView) {
-        let property = board?.fields.cardProperties.find((o) => o.id === activeView.fields.groupById)
-        if (!property || property.type !== 'select') {
+        let property = groupByProperty
+        if ((!property || property.type !== 'select') && activeView.fields.viewType === 'board') {
             property = board?.fields.cardProperties.find((o) => o.type === 'select')
-            Utils.assertValue(property)
         }
         return (
             <CenterPanel
