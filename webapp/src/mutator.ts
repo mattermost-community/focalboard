@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {BlockIcons} from './blockIcons'
-import {IBlock} from './blocks/block'
+import {IBlock, Block} from './blocks/block'
 import {Board, IPropertyOption, IPropertyTemplate, PropertyType} from './blocks/board'
 import {BoardView, ISortOption} from './blocks/boardView'
 import {Card} from './blocks/card'
@@ -125,7 +125,7 @@ class Mutator {
     }
 
     async changeTitle(block: IBlock, title: string, description = 'change title') {
-        const newBlock = {...block}
+        const newBlock = new Block(block)
         newBlock.title = title
         await this.updateBlock(newBlock, block, description)
     }
@@ -134,13 +134,13 @@ class Mutator {
         let newBlock: IBlock
         switch (block.type) {
         case 'card': {
-            const card = {...block, fields: {...block.fields}} as Card
+            const card = new Card(block)
             card.fields.icon = icon
             newBlock = card
             break
         }
         case 'board': {
-            const board = {...block, fields: {...block.fields}} as Board
+            const board = new Board(block)
 
             board.fields.icon = icon
             newBlock = board
@@ -156,13 +156,13 @@ class Mutator {
     }
 
     async changeDescription(block: IBlock, boardDescription: string, description = 'change description') {
-        const newBoard = {...block, fields: {...block.fields}} as Board
+        const newBoard = new Board(block)
         newBoard.fields.description = boardDescription
         await this.updateBlock(newBoard, block, description)
     }
 
     async showDescription(board: Board, showDescription = true, description?: string) {
-        const newBoard = {...board, fields: {...board.fields}} as Board
+        const newBoard = new Board(board)
         newBoard.fields.showDescription = showDescription
         let actionDescription = description
         if (!actionDescription) {
@@ -172,7 +172,7 @@ class Mutator {
     }
 
     async changeCardContentOrder(card: Card, contentOrder: Array<string | string[]>, description = 'reorder'): Promise<void> {
-        const newCard = {...card, fields: {...card.fields}} as Card
+        const newCard = new Card(card)
         newCard.fields.contentOrder = contentOrder
         await this.updateBlock(newCard, card, description)
     }
@@ -194,7 +194,7 @@ class Mutator {
 
         const oldBlocks: IBlock[] = [board]
 
-        const newBoard = {...board, fields: {...board.fields}} as Board
+        const newBoard = new Board(board)
         const startIndex = (index >= 0) ? index : board.fields.cardProperties.length
         newBoard.fields.cardProperties.splice(startIndex, 0, newTemplate)
         const changedBlocks: IBlock[] = [newBoard]
@@ -204,7 +204,7 @@ class Mutator {
         if (activeView.fields.viewType === 'table') {
             oldBlocks.push(activeView)
 
-            const newActiveView = {...activeView, fields: {...activeView.fields, visiblePropertyIds: [...activeView.fields.visiblePropertyIds]}} as BoardView
+            const newActiveView = new BoardView(activeView)
             newActiveView.fields.visiblePropertyIds.push(newTemplate.id)
             changedBlocks.push(newActiveView)
 
@@ -222,7 +222,7 @@ class Mutator {
 
         const oldBlocks: IBlock[] = [board]
 
-        const newBoard = {...board, fields: {...board.fields}} as Board
+        const newBoard = new Board(board)
         const changedBlocks: IBlock[] = [newBoard]
         const index = newBoard.fields.cardProperties.findIndex((o: IPropertyTemplate) => o.id === propertyId)
         if (index === -1) {
@@ -242,7 +242,7 @@ class Mutator {
         if (activeView.fields.viewType === 'table') {
             oldBlocks.push(activeView)
 
-            const newActiveView = {...activeView, fields: {...activeView.fields, visiblePropertyIds: [...activeView.fields.visiblePropertyIds]}} as BoardView
+            const newActiveView = new BoardView(activeView)
             newActiveView.fields.visiblePropertyIds.push(newTemplate.id)
             changedBlocks.push(newActiveView)
 
@@ -260,7 +260,7 @@ class Mutator {
         Utils.log(`srcIndex: ${srcIndex}, destIndex: ${destIndex}`)
         newValue.splice(destIndex, 0, newValue.splice(srcIndex, 1)[0])
 
-        const newBoard = {...board, fields: {...board.fields}} as Board
+        const newBoard = new Board(board)
         newBoard.fields.cardProperties = newValue
 
         await this.updateBlock(newBoard, board, 'reorder properties')
@@ -269,7 +269,7 @@ class Mutator {
     async deleteProperty(board: Board, views: BoardView[], cards: Card[], propertyId: string) {
         const oldBlocks: IBlock[] = [board]
 
-        const newBoard = {...board, fields: {...board.fields}} as Board
+        const newBoard = new Board(board)
         const changedBlocks: IBlock[] = [newBoard]
         newBoard.fields.cardProperties = board.fields.cardProperties.filter((o: IPropertyTemplate) => o.id !== propertyId)
 
@@ -277,7 +277,7 @@ class Mutator {
             if (view.fields.visiblePropertyIds.includes(propertyId)) {
                 oldBlocks.push(view)
 
-                const newView = {...view, fields: {...view.fields, visiblePropertyIds: [...view.fields.visiblePropertyIds]}} as BoardView
+                const newView = new BoardView(view)
                 newView.fields.visiblePropertyIds = view.fields.visiblePropertyIds.filter((o: string) => o !== propertyId)
                 changedBlocks.push(newView)
             }
@@ -286,7 +286,7 @@ class Mutator {
             if (card.fields.properties[propertyId]) {
                 oldBlocks.push(card)
 
-                const newCard = {...card, fields: {...card.fields, properties: {...card.fields.properties}}} as Card
+                const newCard = new Card(card)
                 delete newCard.fields.properties[propertyId]
                 changedBlocks.push(newCard)
             }
@@ -300,7 +300,7 @@ class Mutator {
     async insertPropertyOption(board: Board, template: IPropertyTemplate, option: IPropertyOption, description = 'add option') {
         Utils.assert(board.fields.cardProperties.includes(template))
 
-        const newBoard = {...board, fields: {...board.fields}} as Board
+        const newBoard = new Board(board)
         const newTemplate = newBoard.fields.cardProperties.find((o: IPropertyTemplate) => o.id === template.id)!
         newTemplate.options.push(option)
 
@@ -308,7 +308,7 @@ class Mutator {
     }
 
     async deletePropertyOption(board: Board, template: IPropertyTemplate, option: IPropertyOption) {
-        const newBoard = {...board, fields: {...board.fields}} as Board
+        const newBoard = new Board(board)
         const newTemplate = newBoard.fields.cardProperties.find((o: IPropertyTemplate) => o.id === template.id)!
         newTemplate.options = newTemplate.options.filter((o) => o.id !== option.id)
 
@@ -319,7 +319,7 @@ class Mutator {
         const srcIndex = template.options.indexOf(option)
         Utils.log(`srcIndex: ${srcIndex}, destIndex: ${destIndex}`)
 
-        const newBoard = {...board, fields: {...board.fields}} as Board
+        const newBoard = new Board(board)
         const newTemplate = newBoard.fields.cardProperties.find((o: IPropertyTemplate) => o.id === template.id)!
         newTemplate.options.splice(destIndex, 0, newTemplate.options.splice(srcIndex, 1)[0])
 
@@ -329,7 +329,7 @@ class Mutator {
     async changePropertyOptionValue(board: Board, propertyTemplate: IPropertyTemplate, option: IPropertyOption, value: string) {
         const oldBlocks: IBlock[] = [board]
 
-        const newBoard = {...board, fields: {...board.fields}} as Board
+        const newBoard = new Board(board)
         const newTemplate = newBoard.fields.cardProperties.find((o: IPropertyTemplate) => o.id === propertyTemplate.id)!
         const newOption = newTemplate.options.find((o) => o.id === option.id)!
         newOption.value = value
@@ -341,7 +341,7 @@ class Mutator {
     }
 
     async changePropertyOptionColor(board: Board, template: IPropertyTemplate, option: IPropertyOption, color: string) {
-        const newBoard = {...board, fields: {...board.fields}} as Board
+        const newBoard = new Board(board)
         const newTemplate = newBoard.fields.cardProperties.find((o: IPropertyTemplate) => o.id === template.id)!
         const newOption = newTemplate.options.find((o) => o.id === option.id)!
         newOption.color = color
@@ -349,7 +349,7 @@ class Mutator {
     }
 
     async changePropertyValue(card: Card, propertyId: string, value?: string | string[], description = 'change property') {
-        const newCard = {...card, fields: {...card.fields, properties: {...card.fields.properties}}} as Card
+        const newCard = new Card(card)
         if (value) {
             newCard.fields.properties[propertyId] = value
         } else {
@@ -363,7 +363,7 @@ class Mutator {
             return
         }
 
-        const newBoard = {...board, fields: {...board.fields}} as Board
+        const newBoard = new Board(board)
         const newTemplate = newBoard.fields.cardProperties.find((o: IPropertyTemplate) => o.id === propertyTemplate.id)!
         newTemplate.options = []
         newTemplate.type = newType
@@ -385,7 +385,7 @@ class Mutator {
                         const newValue = isNewTypeSelectOrMulti ?
                             propertyTemplate.options.find((o) => o.id === oldValue)?.id :
                             propertyTemplate.options.find((o) => o.id === oldValue)?.value
-                        const newCard = {...card, fields: {...card.fields, properties: {...card.fields.properties}}} as Card
+                        const newCard = new Card(card)
 
                         if (newValue) {
                             newCard.fields.properties[propertyTemplate.id] = newType === 'multiSelect' ? [newValue] : newValue
@@ -417,7 +417,7 @@ class Mutator {
                             newTemplate.options.push(option)
                         }
 
-                        const newCard = {...card, fields: {...card.fields, properties: {...card.fields.properties}}} as Card
+                        const newCard = new Card(card)
                         newCard.fields.properties[propertyTemplate.id] = newType === 'multiSelect' ? [option.id] : option.id
 
                         newBlocks.push(newCard)
@@ -433,19 +433,19 @@ class Mutator {
     // Views
 
     async changeViewSortOptions(view: BoardView, sortOptions: ISortOption[]): Promise<void> {
-        const newView = {...view, fields: {...view.fields}}
+        const newView = new BoardView(view)
         newView.fields.sortOptions = sortOptions
         await this.updateBlock(newView, view, 'sort')
     }
 
     async changeViewFilter(view: BoardView, filter: FilterGroup): Promise<void> {
-        const newView = {...view, fields: {...view.fields}}
+        const newView = new BoardView(view)
         newView.fields.filter = filter
         await this.updateBlock(newView, view, 'filter')
     }
 
     async changeViewGroupById(view: BoardView, groupById: string): Promise<void> {
-        const newView = {...view, fields: {...view.fields}}
+        const newView = new BoardView(view)
         newView.fields.groupById = groupById
         newView.fields.hiddenOptionIds = []
         newView.fields.visibleOptionIds = []
@@ -453,19 +453,19 @@ class Mutator {
     }
 
     async changeViewVisibleProperties(view: BoardView, visiblePropertyIds: string[], description = 'show / hide property'): Promise<void> {
-        const newView = {...view, fields: {...view.fields}}
+        const newView = new BoardView(view)
         newView.fields.visiblePropertyIds = visiblePropertyIds
         await this.updateBlock(newView, view, description)
     }
 
     async changeViewVisibleOptionIds(view: BoardView, visibleOptionIds: string[], description = 'reorder'): Promise<void> {
-        const newView = {...view, fields: {...view.fields}}
+        const newView = new BoardView(view)
         newView.fields.visibleOptionIds = visibleOptionIds
         await this.updateBlock(newView, view, description)
     }
 
     async changeViewHiddenOptionIds(view: BoardView, hiddenOptionIds: string[], description = 'reorder'): Promise<void> {
-        const newView = {...view, fields: {...view.fields}}
+        const newView = new BoardView(view)
         newView.fields.hiddenOptionIds = hiddenOptionIds
         await this.updateBlock(newView, view, description)
     }
@@ -475,7 +475,7 @@ class Mutator {
             return
         }
 
-        const newView = {...view, fields: {...view.fields}}
+        const newView = new BoardView(view)
         newView.fields.visibleOptionIds = newView.fields.visibleOptionIds.filter((o) => o !== columnOptionId)
         newView.fields.hiddenOptionIds = [...newView.fields.hiddenOptionIds, columnOptionId]
         await this.updateBlock(newView, view, 'hide column')
@@ -486,7 +486,7 @@ class Mutator {
             return
         }
 
-        const newView = {...view, fields: {...view.fields}}
+        const newView = new BoardView(view)
         newView.fields.hiddenOptionIds = newView.fields.hiddenOptionIds.filter((o) => o !== columnOptionId)
 
         // Put the column at the end of the visible list
@@ -496,7 +496,7 @@ class Mutator {
     }
 
     async changeViewCardOrder(view: BoardView, cardOrder: string[], description = 'reorder'): Promise<void> {
-        const newView = {...view, fields: {...view.fields}}
+        const newView = new BoardView(view)
         newView.fields.cardOrder = cardOrder
         await this.updateBlock(newView, view, description)
     }

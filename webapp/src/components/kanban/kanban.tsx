@@ -126,7 +126,7 @@ const Kanban = (props: Props) => {
     const onDropToCard = useCallback(async (srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)
         const {selectedCardIds} = props
-        const optionId = dstCard.fields.properties[activeView.fields.groupById!]
+        const optionId = dstCard.fields.properties[groupByProperty.id]
 
         const draggedCardIds = Array.from(new Set(selectedCardIds).add(srcCard.id))
 
@@ -161,7 +161,7 @@ const Kanban = (props: Props) => {
             await Promise.all(awaits)
             await mutator.changeViewCardOrder(activeView, cardOrder, description)
         })
-    }, [cards, activeView, groupByProperty])
+    }, [cards, activeView, groupByProperty, props.selectedCardIds])
 
     return (
         <div className='Kanban'>
