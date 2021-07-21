@@ -77,13 +77,13 @@ const TableGroupHeaderRow = React.memo((props: Props): JSX.Element => {
                         title={intl.formatMessage({
                             id: 'BoardComponent.no-property-title',
                             defaultMessage: 'Items with an empty {property} property will go here. This column cannot be removed.',
-                        }, {property: groupByProperty!.name})}
+                        }, {property: groupByProperty?.name})}
                     >
                         <FormattedMessage
                             id='BoardComponent.no-property'
                             defaultMessage='No {property}'
                             values={{
-                                property: groupByProperty!.name,
+                                property: groupByProperty?.name,
                             }}
                         />
                     </Label>}

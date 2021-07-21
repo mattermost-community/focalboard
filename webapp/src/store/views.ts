@@ -68,14 +68,19 @@ export const getCurrentBoardViews = createSelector(
     },
 )
 
+export const getCurrentView = createSelector(
+    getViews,
+    (state) => state.views.current,
+    (views, viewId) => views[viewId],
+)
+
 export const getCurrentViewGroupBy = createSelector(
     getCurrentBoard,
-    (state) => state.views.current,
-    getViews,
-    (currentBoard, viewId, views) => {
+    getCurrentView,
+    (currentBoard, currentView) => {
         if (!currentBoard) {
             return undefined
         }
-        return currentBoard.fields.cardProperties.find((o) => o.id === views[viewId].fields.groupById)
+        return currentBoard.fields.cardProperties.find((o) => o.id === currentView.fields.groupById)
     },
 )
