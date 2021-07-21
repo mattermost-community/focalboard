@@ -1,0 +1,42 @@
+.grow-wrap {
+    display: grid;
+}
+
+.grow-wrap::after {
+    content: attr(data-replicated-value) " ";
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    visibility: hidden;
+}
+
+.grow-wrap > .EditableArea,
+.grow-wrap::after {
+    grid-area: 1 / 1 / 2 / 2;
+    border: 0px solid transparent;
+    min-height: 24px;
+    padding: 0;
+    box-sizing: border-box;
+    font: inherit;
+}
+
+.EditableArea {
+    cursor: text;
+    overflow: hidden;
+    resize: none;
+
+    &.active {
+        min-width: 100px;
+    }
+    &::placeholder {
+        color: rgba(var(--body-color), 0.4);
+        opacity: 1;
+    }
+    &.error {
+        border: 1px solid var(--error-color);
+        border-radius: var(--default-rad);
+    }
+    &.readonly {
+        background-color: transparent;
+        flex: 1;
+    }
+}

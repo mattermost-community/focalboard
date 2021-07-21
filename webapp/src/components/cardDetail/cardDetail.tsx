@@ -8,8 +8,8 @@ import mutator from '../../mutator'
 import {BoardTree} from '../../viewModel/boardTree'
 import {CardTree} from '../../viewModel/cardTree'
 import Button from '../../widgets/buttons/button'
-import Editable from '../../widgets/editable'
 import EmojiIcon from '../../widgets/icons/emoji'
+import EditableArea from '../../widgets/editableArea'
 
 import BlockIconSelector from '../blockIconSelector'
 
@@ -76,7 +76,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                         </Button>
                     </div>}
 
-                <Editable
+                <EditableArea
                     ref={titleRef}
                     className='title'
                     value={title}
