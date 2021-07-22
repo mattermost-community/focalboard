@@ -24,6 +24,7 @@ type Props = {
     views: readonly BoardView[]
     board: Board
     activeBoardId?: string
+    activeViewId?: string
     nextBoardId?: string
 }
 
@@ -91,6 +92,10 @@ const SidebarBoardItem = React.memo((props: Props) => {
     const {board, views} = props
     const displayTitle: string = board.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})
     const boardViews = sortBoardViewsAlphabetically(views.filter((view) => view.parentId === board.id))
+
+    console.log('####################################################################')
+    console.log(props.activeViewId)
+    console.log('####################################################################')
 
     return (
         <div className='SidebarBoardItem'>
