@@ -30,10 +30,16 @@ const Calculation = (props: Props): JSX.Element => {
     const valueOption = Options.get(value)
 
     return (
+
+        // tabindex is needed to make onBlur work on div.
+        // See this for more details-
+        // https://stackoverflow.com/questions/47308081/onblur-event-is-not-firing
         <div
             className={`Calculation ${value} ${props.class}`}
             style={props.style}
             onClick={() => (props.menuOpen ? props.onMenuClose() : props.onMenuOpen())}
+            tabIndex={0}
+            onBlur={props.onMenuClose}
         >
             {
                 props.menuOpen && (

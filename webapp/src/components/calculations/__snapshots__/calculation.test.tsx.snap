@@ -4,6 +4,7 @@ exports[`components/calculations/Calculation should match snapshot - count 1`] =
 <div>
   <div
     class="Calculation count fooClass"
+    tabindex="0"
   >
     <span
       class="calculationLabel"
@@ -23,6 +24,7 @@ exports[`components/calculations/Calculation should match snapshot - countUnique
 <div>
   <div
     class="Calculation countUniqueValue fooClass"
+    tabindex="0"
   >
     <span
       class="calculationLabel"
@@ -42,6 +44,7 @@ exports[`components/calculations/Calculation should match snapshot - countValue 
 <div>
   <div
     class="Calculation countValue fooClass"
+    tabindex="0"
   >
     <span
       class="calculationLabel"
@@ -61,6 +64,7 @@ exports[`components/calculations/Calculation should match snapshot - none 1`] = 
 <div>
   <div
     class="Calculation none fooClass"
+    tabindex="0"
   >
     <span
       class="calculationLabel"
@@ -78,6 +82,7 @@ exports[`components/calculations/Calculation should match snapshot - option chan
 <div>
   <div
     class="Calculation none fooClass"
+    tabindex="0"
   >
     <div>
       <div

@@ -8,6 +8,7 @@ exports[`components/table/calculation/CalculationRow should match snapshot 1`] =
     <div
       class="Calculation none octo-table-cell"
       style="width: 100px;"
+      tabindex="0"
     >
       <span
         class="calculationLabel"
@@ -21,6 +22,7 @@ exports[`components/table/calculation/CalculationRow should match snapshot 1`] =
     <div
       class="Calculation count octo-table-cell"
       style="width: 100px;"
+      tabindex="0"
     >
       <span
         class="calculationLabel"
@@ -36,6 +38,7 @@ exports[`components/table/calculation/CalculationRow should match snapshot 1`] =
     <div
       class="Calculation countValue octo-table-cell"
       style="width: 100px;"
+      tabindex="0"
     >
       <span
         class="calculationLabel"
@@ -51,6 +54,7 @@ exports[`components/table/calculation/CalculationRow should match snapshot 1`] =
     <div
       class="Calculation countUniqueValue octo-table-cell"
       style="width: 100px;"
+      tabindex="0"
     >
       <span
         class="calculationLabel"
@@ -75,6 +79,7 @@ exports[`components/table/calculation/CalculationRow should render three calcula
     <div
       class="Calculation none octo-table-cell"
       style="width: 100px;"
+      tabindex="0"
     >
       <span
         class="calculationLabel"
@@ -88,6 +93,7 @@ exports[`components/table/calculation/CalculationRow should render three calcula
     <div
       class="Calculation none octo-table-cell"
       style="width: 100px;"
+      tabindex="0"
     >
       <span
         class="calculationLabel"
@@ -101,6 +107,7 @@ exports[`components/table/calculation/CalculationRow should render three calcula
     <div
       class="Calculation none octo-table-cell"
       style="width: 100px;"
+      tabindex="0"
     >
       <span
         class="calculationLabel"
@@ -114,6 +121,7 @@ exports[`components/table/calculation/CalculationRow should render three calcula
     <div
       class="Calculation none octo-table-cell"
       style="width: 100px;"
+      tabindex="0"
     >
       <span
         class="calculationLabel"
