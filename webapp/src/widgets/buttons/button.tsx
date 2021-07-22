@@ -12,6 +12,8 @@ type Props = {
     filled?: boolean
     active?: boolean
     submit?: boolean
+    emphasis?: string
+    size?: string
 }
 
 function Button(props: Props): JSX.Element {
@@ -19,7 +21,7 @@ function Button(props: Props): JSX.Element {
         <button
             type={props.submit ? 'submit' : 'button'}
             onClick={props.onClick}
-            className={`Button ${props.active ? 'active' : ''} ${props.filled ? 'filled' : ''}`}
+            className={`Button ${props.active ? 'active' : ''} ${props.filled ? 'filled' : ''} ${props.emphasis ? props.emphasis : ''} ${props.size ? 'size--' + props.size : ''}`}
             title={props.title}
         >
             {props.icon}
