@@ -6,7 +6,6 @@
 
     &.none {
         .calculationLabel {
-            text-transform: capitalize;
             letter-spacing: 0;
             font-size: 14px;
             color: rgba(var(--body-color), 0.64);
@@ -25,5 +24,17 @@
         top: -1px;
         position: relative;
         font-weight: bold;
+    }
+
+    .ChevronUpIcon {
+        font-size: 22px;
+        line-height: 14px;
+        padding: 0;
+    }
+
+    .CalculationOptions {
+        right: 0;
+        top: 0;
+        position: absolute;
     }
 }

@@ -6,7 +6,10 @@ import {Card} from '../../blocks/card'
 
 import {IPropertyTemplate} from '../../blocks/board'
 
+import ChevronUp from '../../widgets/icons/chevronUp'
+
 import {CalculationOptions, Options} from './options'
+
 import Calculations from './calculations'
 import './calculation.scss'
 
@@ -26,31 +29,35 @@ const Calculation = (props: Props): JSX.Element => {
     const value = props.value || Options.get('none')!.value
     const valueOption = Options.get(value)
 
-    if (props.menuOpen) {
-        return (
-            <div
-                className={`Calculation ${value} ${props.class}`}
-                style={props.style}
-            >
-                <CalculationOptions
-                    value={value}
-                    menuOpen={props.menuOpen}
-                    onClose={props.onMenuClose}
-                    onChange={props.onChange}
-                />
-            </div>
-        )
-    }
-
     return (
         <div
             className={`Calculation ${value} ${props.class}`}
             style={props.style}
-            onClick={props.onMenuOpen}
+            onClick={() => (props.menuOpen ? props.onMenuClose() : props.onMenuOpen())}
         >
+            {
+                props.menuOpen && (
+                    <div
+                        style={props.style}
+                    >
+                        <CalculationOptions
+                            value={value}
+                            menuOpen={props.menuOpen}
+                            onClose={props.onMenuClose}
+                            onChange={props.onChange}
+                        />
+                    </div>
+                )
+            }
+
             <span className='calculationLabel'>
                 {valueOption!.displayName}
             </span>
+
+            {
+                value === Options.get('none')!.value &&
+                <ChevronUp/>
+            }
 
             {
                 value !== Options.get('none')!.value &&

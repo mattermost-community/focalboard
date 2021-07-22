@@ -27,10 +27,8 @@ const baseStyles = getSelectBaseStyle()
 const styles = {
     ...baseStyles,
     dropdownIndicator: (provided: CSSObject): CSSObject => ({
-        ...provided,
-        fontSize: '22px',
-        lineHeight: '14px',
-        padding: '0',
+        ...baseStyles.dropdownIndicator(provided),
+        pointerEvents: 'none',
     }),
     control: (): CSSObject => ({
         border: 0,
@@ -45,11 +43,19 @@ const styles = {
         width: 'max-content',
         background: 'rgb(var(--main-bg))',
         right: '0',
+        marginBottom: '0',
     }),
     singleValue: (provided: CSSObject): CSSObject => ({
         ...baseStyles.singleValue(provided),
         opacity: '0.8',
         fontSize: '12px',
+        right: '0',
+        textTransform: 'uppercase',
+    }),
+    valueContainer: (provided: CSSObject): CSSObject => ({
+        ...baseStyles.valueContainer(provided),
+        display: 'none',
+        pointerEvents: 'none',
     }),
 }
 

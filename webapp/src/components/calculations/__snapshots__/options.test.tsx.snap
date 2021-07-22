@@ -24,12 +24,12 @@ exports[`components/calculations/Options should match snapshot 1`] = `
       class=" css-1s59geg-Control"
     >
       <div
-        class=" css-kpfmlq-ValueContainer"
+        class=" css-1mxrbau-ValueContainer"
       >
         <div
-          class=" css-1fdh584-singleValue"
+          class=" css-i6eed2-singleValue"
         >
-          None
+          Calculate
         </div>
         <input
           aria-autocomplete="list"
@@ -65,7 +65,7 @@ exports[`components/calculations/Options should match snapshot 1`] = `
         />
         <div
           aria-hidden="true"
-          class=" css-5oqqa5-indicatorContainer"
+          class=" css-1f9iddu-indicatorContainer"
         >
           <i
             class="CompassIcon icon-chevron-up ChevronUpIcon"
@@ -106,12 +106,12 @@ exports[`components/calculations/Options should match snapshot menu open 1`] = `
       class=" css-1s59geg-Control"
     >
       <div
-        class=" css-kpfmlq-ValueContainer"
+        class=" css-1mxrbau-ValueContainer"
       >
         <div
-          class=" css-1fdh584-singleValue"
+          class=" css-i6eed2-singleValue"
         >
-          None
+          Calculate
         </div>
         <input
           aria-autocomplete="list"
@@ -147,7 +147,7 @@ exports[`components/calculations/Options should match snapshot menu open 1`] = `
         />
         <div
           aria-hidden="true"
-          class=" css-5oqqa5-indicatorContainer"
+          class=" css-1f9iddu-indicatorContainer"
         >
           <i
             class="CompassIcon icon-chevron-up ChevronUpIcon"
@@ -156,7 +156,7 @@ exports[`components/calculations/Options should match snapshot menu open 1`] = `
       </div>
     </div>
     <div
-      class=" css-1pkyhrg-menu"
+      class=" css-inewzj-menu"
     >
       <div
         class=" css-g29tl0-MenuList"

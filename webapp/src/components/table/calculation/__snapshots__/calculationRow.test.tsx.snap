@@ -12,8 +12,11 @@ exports[`components/table/calculation/CalculationRow should match snapshot 1`] =
       <span
         class="calculationLabel"
       >
-        None
+        Calculate
       </span>
+      <i
+        class="CompassIcon icon-chevron-up ChevronUpIcon"
+      />
     </div>
     <div
       class="Calculation count octo-table-cell"
@@ -76,8 +79,11 @@ exports[`components/table/calculation/CalculationRow should render three calcula
       <span
         class="calculationLabel"
       >
-        None
+        Calculate
       </span>
+      <i
+        class="CompassIcon icon-chevron-up ChevronUpIcon"
+      />
     </div>
     <div
       class="Calculation none octo-table-cell"
@@ -86,8 +92,11 @@ exports[`components/table/calculation/CalculationRow should render three calcula
       <span
         class="calculationLabel"
       >
-        None
+        Calculate
       </span>
+      <i
+        class="CompassIcon icon-chevron-up ChevronUpIcon"
+      />
     </div>
     <div
       class="Calculation none octo-table-cell"
@@ -96,8 +105,11 @@ exports[`components/table/calculation/CalculationRow should render three calcula
       <span
         class="calculationLabel"
       >
-        None
+        Calculate
       </span>
+      <i
+        class="CompassIcon icon-chevron-up ChevronUpIcon"
+      />
     </div>
     <div
       class="Calculation none octo-table-cell"
@@ -106,8 +118,11 @@ exports[`components/table/calculation/CalculationRow should render three calcula
       <span
         class="calculationLabel"
       >
-        None
+        Calculate
       </span>
+      <i
+        class="CompassIcon icon-chevron-up ChevronUpIcon"
+      />
     </div>
   </div>
 </div>

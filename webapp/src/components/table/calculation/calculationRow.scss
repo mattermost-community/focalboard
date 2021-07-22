@@ -16,7 +16,11 @@
 
         // To override table's generic hover styling
         &:hover {
-            background-color: rgba(var(--body-color), 0.05);
+            background-color: rgb(var(--main-bg)) !important;
+        }
+
+        &:focus-within {
+            background-color: rgb(var(--main-bg)) !important;
         }
     }
 

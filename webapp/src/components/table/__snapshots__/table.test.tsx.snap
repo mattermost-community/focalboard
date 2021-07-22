@@ -296,8 +296,11 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
       <div
         class="Calculation none octo-table-cell"
@@ -306,8 +309,11 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
       <div
         class="Calculation none octo-table-cell"
@@ -316,8 +322,11 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
       <div
         class="Calculation none octo-table-cell"
@@ -326,8 +335,11 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
     </div>
   </div>
@@ -630,8 +642,11 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
       <div
         class="Calculation none octo-table-cell"
@@ -640,8 +655,11 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
       <div
         class="Calculation none octo-table-cell"
@@ -650,8 +668,11 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
       <div
         class="Calculation none octo-table-cell"
@@ -660,8 +681,11 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
     </div>
   </div>
@@ -964,8 +988,11 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
       <div
         class="Calculation none octo-table-cell"
@@ -974,8 +1001,11 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
       <div
         class="Calculation none octo-table-cell"
@@ -984,8 +1014,11 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
       <div
         class="Calculation none octo-table-cell"
@@ -994,8 +1027,11 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
     </div>
   </div>
@@ -1298,8 +1334,11 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
       <div
         class="Calculation none octo-table-cell"
@@ -1308,8 +1347,11 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
       <div
         class="Calculation none octo-table-cell"
@@ -1318,8 +1360,11 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
       <div
         class="Calculation none octo-table-cell"
@@ -1328,8 +1373,11 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
     </div>
   </div>
@@ -1524,8 +1572,11 @@ exports[`components/table/Table should match snapshot 1`] = `
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
       <div
         class="Calculation none octo-table-cell"
@@ -1534,8 +1585,11 @@ exports[`components/table/Table should match snapshot 1`] = `
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
       <div
         class="Calculation none octo-table-cell"
@@ -1544,8 +1598,11 @@ exports[`components/table/Table should match snapshot 1`] = `
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
     </div>
   </div>
@@ -1727,8 +1784,11 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
       <div
         class="Calculation none octo-table-cell"
@@ -1737,8 +1797,11 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
       <div
         class="Calculation none octo-table-cell"
@@ -1747,8 +1810,11 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
     </div>
   </div>
@@ -1926,8 +1992,11 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
       <div
         class="Calculation none octo-table-cell"
@@ -1936,8 +2005,11 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
       <div
         class="Calculation none octo-table-cell"
@@ -1946,8 +2018,11 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
         <span
           class="calculationLabel"
         >
-          None
+          Calculate
         </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
     </div>
   </div>
