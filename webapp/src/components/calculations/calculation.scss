@@ -5,9 +5,11 @@
     cursor: pointer;
 
     .calculationLabel {
+        text-transform: uppercase;
         font-size: 12px;
         opacity: 0.8;
         margin-right: 8px;
+        letter-spacing: 0.8px;
     }
 
     .calculationValue {

@@ -9,11 +9,13 @@
     border-bottom: solid 1px rgba(var(--body-color), 0.09) !important;
 
     .octo-table-cell {
-        background-color: rgb(var(--main-bg)) !important;
+        background-color: rgb(var(--main-bg));
+        align-items: center;
+        justify-content: flex-end;
 
         // To override table's generic hover styling
         &:hover {
-            background-color: rgb(var(--main-bg)) !important;
+            background-color: rgba(var(--body-color), 0.05);
         }
     }
 
