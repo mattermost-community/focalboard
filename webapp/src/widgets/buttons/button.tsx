@@ -21,7 +21,7 @@ function Button(props: Props): JSX.Element {
         <button
             type={props.submit ? 'submit' : 'button'}
             onClick={props.onClick}
-            className={`Button ${props.active ? 'active' : ''} ${props.filled ? 'filled' : ''} ${props.emphasis ? props.emphasis : ''} ${props.size ? 'size--' + props.size : ''}`}
+            className={`Button ${props.active ? 'active' : ''} ${props.filled ? 'filled' : ''} ${props.emphasis ? 'emphasis--' + props.emphasis : ''} ${props.size ? 'size--' + props.size : ''}`}
             title={props.title}
         >
             {props.icon}
