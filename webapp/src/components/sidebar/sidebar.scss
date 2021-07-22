@@ -69,8 +69,9 @@
         }
 
         button {
-            font-size: 16px;
+            font-size: 12px;
             font-weight: 600;
+            padding: 0 16px;
         }
 
         > .heading {
@@ -127,7 +128,7 @@
     }
 
     .Button {
-        min-height: 30px;
-        min-width: 30px;
+        min-height: 32px;
+        min-width: 32px;
     }
 }
