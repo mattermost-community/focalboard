@@ -25,7 +25,7 @@ function Button(props: Props): JSX.Element {
             title={props.title}
         >
             {props.icon}
-            {props.children}
+            <span>{props.children}</span>
         </button>)
 }
 
