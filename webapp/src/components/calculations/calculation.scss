@@ -5,10 +5,12 @@
     cursor: pointer;
 
     &.none {
+        color: rgba(var(--body-color), 0.64);
+
         .calculationLabel {
             letter-spacing: 0;
             font-size: 14px;
-            color: rgba(var(--body-color), 0.64);
+            margin-right: 0;
         }
     }
 
