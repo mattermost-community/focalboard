@@ -19,8 +19,8 @@ describe('components/properties/createdBy', () => {
 
         const mockStore = configureStore([])
         const store = mockStore({
-            currentWorkspaceUsers: {
-                byId: {
+            users: {
+                workspaceUsers: {
                     'user-id-1': {username: 'username_1'} as IUser,
                 },
             },

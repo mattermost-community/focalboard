@@ -150,12 +150,12 @@ describe('components/table/Table extended', () => {
 
         const mockStore = configureStore([])
         const store = mockStore({
-            currentWorkspaceUsers: {
-                byId: {
+            users: {
+                workspaceUsers: {
                     'user-id-1': {username: 'username_1'} as IUser,
                     'user-id-2': {username: 'username_2'} as IUser,
                 },
-            },
+            }
         })
 
         const component = wrapProviders(
@@ -260,8 +260,8 @@ describe('components/table/Table extended', () => {
 
         const mockStore = configureStore([])
         const store = mockStore({
-            currentWorkspaceUsers: {
-                byId: {
+            users: {
+                workspaceUsers: {
                     'user-id-1': {username: 'username_1'} as IUser,
                     'user-id-2': {username: 'username_2'} as IUser,
                 },
@@ -331,8 +331,8 @@ describe('components/table/Table extended', () => {
 
         const mockStore = configureStore([])
         const store = mockStore({
-            currentWorkspaceUsers: {
-                byId: {
+            users: {
+                workspaceUsers: {
                     'user-id-3': {username: 'username_3'} as IUser,
                     'user-id-4': {username: 'username_4'} as IUser,
                 },

@@ -13,7 +13,7 @@ import IconButton from '../../widgets/buttons/iconButton'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
-import {getCurrentUser} from '../../store/currentUser'
+import {getMe} from '../../store/users'
 import {useAppSelector} from '../../store/hooks'
 
 import ModalWrapper from '../modalWrapper'
@@ -99,7 +99,7 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
     const [showShareDialog, setShowShareDialog] = useState(false)
 
     const {board, activeView, cards} = props
-    const user = useAppSelector<IUser|null>(getCurrentUser)
+    const user = useAppSelector<IUser|null>(getMe)
     const intl = useIntl()
 
     return (

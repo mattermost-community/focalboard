@@ -10,13 +10,13 @@ import {initialLoad} from './initialLoad'
 
 import {RootState} from './index'
 
-export const fetchCurrentWorkspace = createAsyncThunk(
-    'currentWorkspace/fetch',
+export const fetchWorkspace = createAsyncThunk(
+    'workspace/fetch',
     async () => client.getWorkspace(),
 )
 
-const currentWorkspaceSlice = createSlice({
-    name: 'currentWorkspace',
+const workspaceSlice = createSlice({
+    name: 'workspace',
     initialState: {value: null} as {value: IWorkspace|null},
     reducers: {
         setWorkspace: (state, action: PayloadAction<IWorkspace>) => {
@@ -27,15 +27,15 @@ const currentWorkspaceSlice = createSlice({
         builder.addCase(initialLoad.fulfilled, (state, action) => {
             state.value = action.payload.workspace || null
         })
-        builder.addCase(fetchCurrentWorkspace.fulfilled, (state, action) => {
+        builder.addCase(fetchWorkspace.fulfilled, (state, action) => {
             state.value = action.payload || null
         })
     },
 })
 
-export const {setWorkspace} = currentWorkspaceSlice.actions
-export const {reducer} = currentWorkspaceSlice
+export const {setWorkspace} = workspaceSlice.actions
+export const {reducer} = workspaceSlice
 
-export function getCurrentWorkspace(state: RootState): IWorkspace|null {
-    return state.currentWorkspace.value
+export function getWorkspace(state: RootState): IWorkspace|null {
+    return state.workspace.value
 }

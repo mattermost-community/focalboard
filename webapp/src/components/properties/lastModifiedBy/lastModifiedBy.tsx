@@ -9,7 +9,7 @@ import {ContentBlock} from '../../../blocks/contentBlock'
 import {CommentBlock} from '../../../blocks/commentBlock'
 import {Board} from '../../../blocks/board'
 import {IBlock} from '../../../blocks/block'
-import {getCurrentWorkspaceUsersById} from '../../../store/currentWorkspaceUsers'
+import {getWorkspaceUsers} from '../../../store/users'
 import {useAppSelector} from '../../../store/hooks'
 
 type Props = {
@@ -20,7 +20,7 @@ type Props = {
 }
 
 const LastModifiedBy = (props: Props): JSX.Element => {
-    const workspaceUsersById = useAppSelector<{[key:string]: IUser}>(getCurrentWorkspaceUsersById)
+    const workspaceUsersById = useAppSelector<{[key:string]: IUser}>(getWorkspaceUsers)
 
     let latestBlock: IBlock = props.card
     if (props.board) {

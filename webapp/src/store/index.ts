@@ -3,9 +3,8 @@
 
 import {configureStore} from '@reduxjs/toolkit'
 
-import {reducer as currentUserReducer} from './currentUser'
-import {reducer as currentWorkspaceReducer} from './currentWorkspace'
-import {reducer as currentWorkspaceUsersReducer} from './currentWorkspaceUsers'
+import {reducer as usersReducer} from './users'
+import {reducer as workspaceReducer} from './workspace'
 import {reducer as languageReducer} from './language'
 import {reducer as globalTemplatesReducer} from './globalTemplates'
 import {reducer as boardsReducer} from './boards'
@@ -16,9 +15,8 @@ import {reducer as searchTextReducer} from './searchText'
 
 const store = configureStore({
     reducer: {
-        currentUser: currentUserReducer,
-        currentWorkspace: currentWorkspaceReducer,
-        currentWorkspaceUsers: currentWorkspaceUsersReducer,
+        users: usersReducer,
+        workspace: workspaceReducer,
         language: languageReducer,
         globalTemplates: globalTemplatesReducer,
         boards: boardsReducer,

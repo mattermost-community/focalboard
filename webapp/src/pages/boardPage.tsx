@@ -21,8 +21,8 @@ import octoClient from '../octoClient'
 import {Utils} from '../utils'
 import wsClient, {WSClient} from '../wsclient'
 import './boardPage.scss'
-import {getCurrentWorkspaceUsersById} from '../store/currentWorkspaceUsers'
-import {getCurrentWorkspace} from '../store/currentWorkspace'
+import {getWorkspaceUsers} from '../store/users'
+import {getWorkspace} from '../store/workspace'
 import {updateBoards, getBoard, setCurrent as setCurrentBoard} from '../store/boards'
 import {updateViews, getView, setCurrent as setCurrentView} from '../store/views'
 import {updateCards} from '../store/cards'
@@ -270,8 +270,8 @@ class BoardPage extends React.Component<Props, State> {
 }
 
 export default withRouter(connect((state: RootState, ownProps: OwnProps) => ({
-    usersById: getCurrentWorkspaceUsersById(state),
-    workspace: getCurrentWorkspace(state),
+    usersById: getWorkspaceUsers(state),
+    workspace: getWorkspace(state),
     board: getBoard(ownProps.match.params.boardId || '')(state),
     activeView: getView(ownProps.match.params.viewId || '')(state),
 }), {initialLoad, updateBoards, updateViews, updateCards, updateContents, setCurrentBoard, setCurrentView})(BoardPage))

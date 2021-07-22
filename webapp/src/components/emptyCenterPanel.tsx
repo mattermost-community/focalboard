@@ -3,12 +3,12 @@
 import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import {getCurrentWorkspace} from '../store/currentWorkspace'
+import {getWorkspace} from '../store/workspace'
 import {useAppSelector} from '../store/hooks'
 import './emptyCenterPanel.scss'
 
 const EmptyCenterPanel = React.memo(() => {
-    const workspace = useAppSelector(getCurrentWorkspace)
+    const workspace = useAppSelector(getWorkspace)
 
     return (
         <div className='EmptyCenterPanel'>

@@ -27,7 +27,7 @@ const MarkdownEditor = (props: Props): JSX. Element => {
     const [active, setActive] = useState(false)
     const [editorInstance, setEditorInstance] = useState<EasyMDE>()
 
-    const showEditor = useCallback((): void => {
+    const showEditor = (): void => {
         const cm = editorInstance?.codemirror
         if (cm) {
             setTimeout(() => {
@@ -39,7 +39,18 @@ const MarkdownEditor = (props: Props): JSX. Element => {
         }
 
         setIsEditing(true)
-    }, [editorInstance])
+    }
+
+    const stateAndPropsValue = {
+        isEditing,
+        setIsEditing,
+        setActive,
+        onBlur,
+        onChange,
+        onFocus,
+    }
+    const stateAndPropsRef = useRef(stateAndPropsValue)
+    stateAndPropsRef.current = stateAndPropsValue
 
     const html: string = Utils.htmlFromMarkdown(text || placeholderText || '')
 
@@ -57,11 +68,11 @@ const MarkdownEditor = (props: Props): JSX. Element => {
 
     const editorElement = (
         <div
-            className='octo-editor-activeEditor'
+            className='octo-editor-active Editor'
 
             // Use visibility instead of display here so the editor is pre-rendered, avoiding a flash on showEditor
             style={isEditing ? {} : {visibility: 'hidden', position: 'absolute', top: 0, left: 0}}
-            onKeyDown={useCallback((e) => {
+            onKeyDown={(e) => {
                 // HACKHACK: Need to handle here instad of in CodeMirror because that breaks auto-lists
                 if (e.keyCode === 27 && !e.shiftKey && !(e.ctrlKey || e.metaKey) && !e.altKey) { // Esc
                     editorInstance?.codemirror?.getInputField()?.blur()
@@ -74,70 +85,72 @@ const MarkdownEditor = (props: Props): JSX. Element => {
                         props.onAccept?.(text || '')
                     }, 20)
                 }
-            }, [editorInstance, props.onAccept])}
+            }}
         >
-            <SimpleMDE
-                id={uniqueId}
-                getMdeInstance={useCallback((instance: EasyMDE) => {
-                    setEditorInstance(instance)
+            {isEditing &&
+                <SimpleMDE
+                    id={uniqueId}
+                    getMdeInstance={(instance) => {
+                        setEditorInstance(instance)
 
-                    // BUGBUG: This breaks auto-lists
-                    // instance.codemirror.setOption("extraKeys", {
-                    //     "Ctrl-Enter": (cm) => {
-                    //         cm.getInputField().blur()
-                    //     }
-                    // })
-                }, [setEditorInstance])}
-                value={text}
+                        // BUGBUG: This breaks auto-lists
+                        // instance.codemirror.setOption("extraKeys", {
+                        //     "Ctrl-Enter": (cm) => {
+                        //         cm.getInputField().blur()
+                        //     }
+                        // })
+                    }}
+                    value={text}
 
-                events={{
-                    change: useCallback((instance: any) => {
-                        if (isEditing) {
+                    events={{
+                        change: (instance: any) => {
+                            if (stateAndPropsRef.current.isEditing) {
+                                const newText = instance.getValue()
+                                stateAndPropsRef.current.onChange?.(newText)
+                            }
+                        },
+                        blur: (instance: any) => {
                             const newText = instance.getValue()
-                            onChange?.(newText)
-                        }
-                    }, [isEditing, onChange]),
-                    blur: useCallback((instance: any) => {
-                        const newText = instance.getValue()
-                        const oldText = text || ''
-                        if (newText !== oldText && onChange) {
-                            onChange(newText)
-                        }
+                            const oldText = text || ''
+                            if (newText !== oldText && stateAndPropsRef.current.onChange) {
+                                stateAndPropsRef.current.onChange(newText)
+                            }
 
-                        setActive(false)
+                            stateAndPropsRef.current.setActive(false)
 
-                        if (onBlur) {
-                            onBlur(newText)
-                        }
+                            if (stateAndPropsRef.current.onBlur) {
+                                stateAndPropsRef.current.onBlur(newText)
+                            }
 
-                        setIsEditing(false)
-                    }, [setActive, onBlur, onChange, setIsEditing]),
-                    focus: useCallback(() => {
-                        setActive(true)
-                        setIsEditing(true)
+                            stateAndPropsRef.current.setIsEditing(false)
+                        },
+                        focus: () => {
+                            stateAndPropsRef.current.setActive(true)
+                            stateAndPropsRef.current.setIsEditing(true)
 
-                        if (onFocus) {
-                            onFocus()
-                        }
-                    }, [setActive, setIsEditing, onFocus]),
-                }}
-                options={{
-                    autoDownloadFontAwesome: true,
-                    toolbar: false,
-                    status: false,
-                    spellChecker: true,
-                    nativeSpellcheck: true,
-                    minHeight: '10px',
-                    shortcuts: {
-                        toggleStrikethrough: 'Cmd-.',
-                        togglePreview: null,
-                        drawImage: null,
-                        drawLink: null,
-                        toggleSideBySide: null,
-                        toggleFullScreen: null,
-                    },
-                }}
-            />
+                            if (stateAndPropsRef.current.onFocus) {
+                                stateAndPropsRef.current.onFocus()
+                            }
+                        },
+                    }}
+                    options={{
+                        autoDownloadFontAwesome: true,
+                        toolbar: false,
+                        status: false,
+                        autofocus: true,
+                        spellChecker: true,
+                        nativeSpellcheck: true,
+                        minHeight: '10px',
+                        shortcuts: {
+                            toggleStrikethrough: 'Cmd-.',
+                            togglePreview: null,
+                            drawImage: null,
+                            drawLink: null,
+                            toggleSideBySide: null,
+                            toggleFullScreen: null,
+                        },
+                    }}
+                />}
         </div>)
 
     const element = (

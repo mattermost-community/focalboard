@@ -18,8 +18,8 @@ const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlPr
 describe('components/properties/user', () => {
     const mockStore = configureStore([])
     const store = mockStore({
-        currentWorkspaceUsers: {
-            byId: {
+        users: {
+            workspaceUsers: {
                 'user-id-1': {
                     id: 'user-id-1',
                     username: 'username-1',
