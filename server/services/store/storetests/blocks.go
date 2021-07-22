@@ -1,9 +1,10 @@
 package storetests
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
@@ -54,10 +55,10 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		defer tearDown()
 		testGetBlock(t, store, container)
 	})
-	t.Run("GetBlock", func(t *testing.T) {
+	t.Run("GetBlockWithParent", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testGetBlock(t, store, container)
+		testGetBlocksWithParent(t, store, container)
 	})
 }
 
