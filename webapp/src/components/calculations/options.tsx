@@ -16,7 +16,7 @@ type Option = {
 }
 
 const Options:Map<string, Option> = new Map([
-    ['none', {value: 'none', label: 'None', displayName: 'None'}],
+    ['none', {value: 'none', label: 'None', displayName: 'Calculate'}],
     ['count', {value: 'count', label: 'Count', displayName: 'Count'}],
     ['countValue', {value: 'countValue', label: 'Count Value', displayName: 'Values'}],
     ['countUniqueValue', {value: 'countUniqueValue', label: 'Count Unique Values', displayName: 'Unique'}],
