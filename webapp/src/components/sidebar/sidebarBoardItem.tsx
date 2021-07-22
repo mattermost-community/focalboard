@@ -93,10 +93,6 @@ const SidebarBoardItem = React.memo((props: Props) => {
     const displayTitle: string = board.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})
     const boardViews = sortBoardViewsAlphabetically(views.filter((view) => view.parentId === board.id))
 
-    console.log('####################################################################')
-    console.log(props.activeViewId)
-    console.log('####################################################################')
-
     return (
         <div className='SidebarBoardItem'>
             <div
@@ -168,7 +164,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
             {!collapsed && boardViews.map((view) => (
                 <div
                     key={view.id}
-                    className='octo-sidebar-item subitem'
+                    className={`octo-sidebar-item subitem ${view.id === props.activeViewId ? 'active' : ''}`}
                     onClick={() => showView(view.id, board.id)}
                 >
                     {iconForViewType(view.viewType)}
