@@ -28,7 +28,7 @@ type Props = {
     intl: IntlShape
     readonly: boolean
     onCardClicked: (e: React.MouseEvent, card: Card) => void
-    addCard: (groupByOptionId?: string, show?:boolean) => Promise<void>
+    addCard: (groupByOptionId?: string, show?: boolean) => Promise<void>
     showCard: (cardId?: string) => void
 }
 
@@ -51,6 +51,8 @@ const Kanban = (props: Props) => {
     const [cardTrees, setCardTrees] = useState<{[key: string]: CardTree | undefined}>({})
     const cardTreeRef = useRef<{[key: string]: CardTree | undefined}>()
     cardTreeRef.current = cardTrees
+    const selectedCardsIdsRef = useRef<string[]>()
+    selectedCardsIdsRef.current = props.selectedCardIds
 
     useCardListener(
         cards.map((c) => c.id),
@@ -103,19 +105,18 @@ const Kanban = (props: Props) => {
     }
 
     const onDropToColumn = async (option: IPropertyOption, card?: Card, dstOption?: IPropertyOption) => {
-        const {selectedCardIds} = props
         const optionId = option ? option.id : undefined
 
-        let draggedCardIds = selectedCardIds
+        let draggedCardIds = selectedCardsIdsRef.current || []
         if (card) {
-            draggedCardIds = Array.from(new Set(selectedCardIds).add(card.id))
+            draggedCardIds = Array.from(new Set(draggedCardIds).add(card.id))
         }
 
         Utils.assertValue(boardTree)
 
         if (draggedCardIds.length > 0) {
             const orderedCards = boardTree.orderedCards()
-            const cardsById: { [key: string]: Card } = orderedCards.reduce((acc: { [key: string]: Card }, c: Card): { [key: string]: Card } => {
+            const cardsById: {[key: string]: Card} = orderedCards.reduce((acc: {[key: string]: Card}, c: Card): {[key: string]: Card} => {
                 acc[c.id] = c
                 return acc
             }, {})
@@ -161,7 +162,7 @@ const Kanban = (props: Props) => {
 
         // Update dstCard order
         const orderedCards = boardTree.orderedCards()
-        const cardsById: { [key: string]: Card } = orderedCards.reduce((acc: { [key: string]: Card }, card: Card): { [key: string]: Card } => {
+        const cardsById: {[key: string]: Card} = orderedCards.reduce((acc: {[key: string]: Card}, card: Card): {[key: string]: Card} => {
             acc[card.id] = card
             return acc
         }, {})
@@ -267,16 +268,16 @@ const Kanban = (props: Props) => {
                             />
                         ))}
                         {!props.readonly &&
-                        <Button
-                            onClick={() => {
-                                props.addCard(group.option.id, true)
-                            }}
-                        >
-                            <FormattedMessage
-                                id='BoardComponent.new'
-                                defaultMessage='+ New'
-                            />
-                        </Button>
+                            <Button
+                                onClick={() => {
+                                    props.addCard(group.option.id, true)
+                                }}
+                            >
+                                <FormattedMessage
+                                    id='BoardComponent.new'
+                                    defaultMessage='+ New'
+                                />
+                            </Button>
                         }
                     </KanbanColumn>
                 ))}
@@ -284,18 +285,18 @@ const Kanban = (props: Props) => {
                 {/* Hidden columns */}
 
                 {hiddenGroups.length > 0 &&
-                <div className='octo-board-column narrow'>
-                    {hiddenGroups.map((group) => (
-                        <KanbanHiddenColumnItem
-                            key={group.option.id}
-                            group={group}
-                            boardTree={boardTree}
-                            intl={props.intl}
-                            readonly={props.readonly}
-                            onDrop={(card: Card) => onDropToColumn(group.option, card)}
-                        />
-                    ))}
-                </div>}
+                    <div className='octo-board-column narrow'>
+                        {hiddenGroups.map((group) => (
+                            <KanbanHiddenColumnItem
+                                key={group.option.id}
+                                group={group}
+                                boardTree={boardTree}
+                                intl={props.intl}
+                                readonly={props.readonly}
+                                onDrop={(card: Card) => onDropToColumn(group.option, card)}
+                            />
+                        ))}
+                    </div>}
             </div>
         </div>
     )
