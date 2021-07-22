@@ -13,6 +13,7 @@ export type Theme = {
     buttonFg: string,
     sidebarBg: string,
     sidebarFg: string,
+    sidebarTextActiveBorder: string,
     sidebarWhiteLogo: string,
 
     link: string,
@@ -41,6 +42,7 @@ export const defaultTheme = {
     buttonFg: '255, 255, 255',
     sidebarBg: '20, 93, 191',
     sidebarFg: '255, 255, 255',
+    sidebarTextActiveBorder: '#579eff',
     sidebarWhiteLogo: 'true',
 
     link: '#0000ee',
@@ -69,6 +71,7 @@ export const darkTheme = {
     buttonFg: '255, 255, 255',
     sidebarBg: '75, 73, 67',
     sidebarFg: '255, 255, 255',
+    sidebarTextActiveBorder: '#66b9a7',
     sidebarWhiteLogo: 'true',
 
     link: '#0090ff',
@@ -97,6 +100,7 @@ export const lightTheme = {
     buttonFg: '255, 255, 255',
     sidebarBg: '247, 246, 243',
     sidebarFg: '55, 53, 47',
+    sidebarTextActiveBorder: '#579eff',
     sidebarWhiteLogo: 'false',
 }
 
@@ -122,6 +126,7 @@ export function setTheme(theme: Theme | null): Theme {
     document.documentElement.style.setProperty('--button-fg', consolidatedTheme.buttonFg)
     document.documentElement.style.setProperty('--sidebar-bg', consolidatedTheme.sidebarBg)
     document.documentElement.style.setProperty('--sidebar-fg', consolidatedTheme.sidebarFg)
+    document.documentElement.style.setProperty('--sidebar-text-active-border', consolidatedTheme.sidebarTextActiveBorder)
     document.documentElement.style.setProperty('--sidebar-white-logo', consolidatedTheme.sidebarWhiteLogo)
 
     document.documentElement.style.setProperty('--link-color', consolidatedTheme.link)

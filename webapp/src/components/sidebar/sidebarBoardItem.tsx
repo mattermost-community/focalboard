@@ -95,7 +95,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
     return (
         <div className='SidebarBoardItem'>
             <div
-                className={'octo-sidebar-item ' + (collapsed ? 'collapsed' : 'expanded')}
+                className={`octo-sidebar-item ' ${collapsed ? 'collapsed' : 'expanded'} ${board.id === props.activeBoardId ? 'active' : ''}`}
                 onClick={() => showBoard(board.id)}
             >
                 <IconButton
