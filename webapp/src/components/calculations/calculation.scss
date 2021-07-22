@@ -4,6 +4,15 @@
 .Calculation {
     cursor: pointer;
 
+    &.none {
+        .calculationLabel {
+            text-transform: capitalize;
+            letter-spacing: 0;
+            font-size: 14px;
+            color: rgba(var(--body-color), 0.64);
+        }
+    }
+
     .calculationLabel {
         text-transform: uppercase;
         font-size: 12px;
