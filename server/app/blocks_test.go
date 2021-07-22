@@ -60,25 +60,3 @@ func TestInsertBlock(t *testing.T) {
 		require.Error(t, err, "error")
 	})
 }
-
-func TestInsertBlock(t *testing.T) {
-	th := SetupTestHelper(t)
-
-	container := st.Container{
-		WorkspaceID: "0",
-	}
-
-	t.Run("success scenerio", func(t *testing.T) {
-		block := model.Block{}
-		th.Store.EXPECT().InsertBlock(gomock.Eq(container), gomock.Eq(&block), gomock.Eq("user-id-1")).Return(nil)
-		err := th.App.InsertBlock(container, block, "user-id-1")
-		require.NoError(t, err)
-	})
-
-	t.Run("error scenerio", func(t *testing.T) {
-		block := model.Block{}
-		th.Store.EXPECT().InsertBlock(gomock.Eq(container), gomock.Eq(&block), gomock.Eq("user-id-1")).Return(errors.New("dummy error"))
-		err := th.App.InsertBlock(container, block, "user-id-1")
-		require.Error(t, err, "dummy error")
-	})
-}

@@ -5,8 +5,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/stretchr/testify/require"
@@ -519,8 +517,6 @@ func testGetBlocksWithParent(t *testing.T, store store.Store, container store.Co
 	}
 	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
 	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
-=======
->>>>>>> main
 
 	t.Run("not existing parent", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
