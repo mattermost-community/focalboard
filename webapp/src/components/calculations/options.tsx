@@ -91,7 +91,7 @@ const CalculationOptions = (props: Props): JSX.Element => {
                     props.onClose()
                 }
             }}
-            onChange={(item, action) => {
+            onChange={(item) => {
                 if (item?.value) {
                     props.onChange(item.value)
                 }

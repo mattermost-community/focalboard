@@ -98,10 +98,6 @@ class CenterPanel extends React.Component<Props, State> {
         const {groupByProperty} = boardTree
         const {activeView} = boardTree
 
-        if (activeView.viewType === 'table') {
-            console.log(activeView.fields)
-        }
-
         if (!groupByProperty && activeView.viewType === 'board') {
             Utils.assertFailure('Board views must have groupByProperty set')
             return <div/>
