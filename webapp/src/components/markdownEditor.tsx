@@ -1,7 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useRef, useCallback} from 'react'
-import EasyMDE from 'easymde'
+import React, {useState, useRef, useCallback, useMemo} from 'react'
 import SimpleMDE from 'react-simplemde-editor'
 
 import {Utils} from '../utils'
@@ -25,7 +24,24 @@ const MarkdownEditor = (props: Props): JSX. Element => {
 
     const [isEditing, setIsEditing] = useState(false)
     const [active, setActive] = useState(false)
-    const [editorInstance, setEditorInstance] = useState<EasyMDE>()
+    const [editorInstance, setEditorInstance] = useState<any>()
+    const editorOptions = useMemo(() => ({
+        autoDownloadFontAwesome: true,
+        toolbar: false,
+        status: false,
+        autofocus: true,
+        spellChecker: true,
+        nativeSpellcheck: true,
+        minHeight: '10px',
+        shortcuts: {
+            toggleStrikethrough: 'Cmd-.',
+            togglePreview: null,
+            drawImage: null,
+            drawLink: null,
+            toggleSideBySide: null,
+            toggleFullScreen: null,
+        },
+    }), [])
 
     const showEditor = (): void => {
         const cm = editorInstance?.codemirror
@@ -51,6 +67,38 @@ const MarkdownEditor = (props: Props): JSX. Element => {
     }
     const stateAndPropsRef = useRef(stateAndPropsValue)
     stateAndPropsRef.current = stateAndPropsValue
+
+    const editorEvents = useMemo(() => ({
+        change: (instance: any) => {
+            if (stateAndPropsRef.current.isEditing) {
+                const newText = instance.getValue()
+                stateAndPropsRef.current.onChange?.(newText)
+            }
+        },
+        blur: (instance: any) => {
+            const newText = instance.getValue()
+            const oldText = text || ''
+            if (newText !== oldText && stateAndPropsRef.current.onChange) {
+                stateAndPropsRef.current.onChange(newText)
+            }
+
+            stateAndPropsRef.current.setActive(false)
+
+            if (stateAndPropsRef.current.onBlur) {
+                stateAndPropsRef.current.onBlur(newText)
+            }
+
+            stateAndPropsRef.current.setIsEditing(false)
+        },
+        focus: () => {
+            stateAndPropsRef.current.setActive(true)
+            stateAndPropsRef.current.setIsEditing(true)
+
+            if (stateAndPropsRef.current.onFocus) {
+                stateAndPropsRef.current.onFocus()
+            }
+        },
+    }), [])
 
     const html: string = Utils.htmlFromMarkdown(text || placeholderText || '')
 
@@ -87,70 +135,13 @@ const MarkdownEditor = (props: Props): JSX. Element => {
                 }
             }}
         >
-            {isEditing &&
-                <SimpleMDE
-                    id={uniqueId}
-                    getMdeInstance={(instance) => {
-                        setEditorInstance(instance)
-
-                        // BUGBUG: This breaks auto-lists
-                        // instance.codemirror.setOption("extraKeys", {
-                        //     "Ctrl-Enter": (cm) => {
-                        //         cm.getInputField().blur()
-                        //     }
-                        // })
-                    }}
-                    value={text}
-
-                    events={{
-                        change: (instance: any) => {
-                            if (stateAndPropsRef.current.isEditing) {
-                                const newText = instance.getValue()
-                                stateAndPropsRef.current.onChange?.(newText)
-                            }
-                        },
-                        blur: (instance: any) => {
-                            const newText = instance.getValue()
-                            const oldText = text || ''
-                            if (newText !== oldText && stateAndPropsRef.current.onChange) {
-                                stateAndPropsRef.current.onChange(newText)
-                            }
-
-                            stateAndPropsRef.current.setActive(false)
-
-                            if (stateAndPropsRef.current.onBlur) {
-                                stateAndPropsRef.current.onBlur(newText)
-                            }
-
-                            stateAndPropsRef.current.setIsEditing(false)
-                        },
-                        focus: () => {
-                            stateAndPropsRef.current.setActive(true)
-                            stateAndPropsRef.current.setIsEditing(true)
-
-                            if (stateAndPropsRef.current.onFocus) {
-                                stateAndPropsRef.current.onFocus()
-                            }
-                        },
-                    }}
-                    options={{
-                        autoDownloadFontAwesome: true,
-                        toolbar: false,
-                        status: false,
-                        autofocus: true,
-                        spellChecker: true,
-                        nativeSpellcheck: true,
-                        minHeight: '10px',
-                        shortcuts: {
-                            toggleStrikethrough: 'Cmd-.',
-                            togglePreview: null,
-                            drawImage: null,
-                            drawLink: null,
-                            toggleSideBySide: null,
-                            toggleFullScreen: null,
-                        },
-                    }}
-                />}
+            <SimpleMDE
+                id={uniqueId}
+                getMdeInstance={setEditorInstance}
+                value={text}
+                events={editorEvents}
+                options={editorOptions}
+            />
         </div>)
 
     const element = (
