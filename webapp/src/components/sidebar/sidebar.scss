@@ -68,11 +68,6 @@
             background-color: rgba(var(--sidebar-fg), 0.08);
         }
 
-        button {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
         > .heading {
             line-height: 30px;
             cursor: default;
@@ -124,10 +119,5 @@
     .HideSidebarIcon {
         stroke: rgba(var(--sidebar-fg), 0.5);
         stroke-width: 6px;
-    }
-
-    .Button {
-        min-height: 30px;
-        min-width: 30px;
     }
 }
