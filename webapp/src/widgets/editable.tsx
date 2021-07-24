@@ -94,7 +94,7 @@ export function useEditable(
         onBlur: () => save('onBlur'),
         onKeyDown: (e: React.KeyboardEvent<ElementType>): void => {
             if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
-                e.stopPropagation()
+                e.preventDefault()
                 if (props.saveOnEsc) {
                     save('onEsc')
                 } else {
@@ -102,7 +102,7 @@ export function useEditable(
                 }
                 blur()
             } else if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // Return
-                e.stopPropagation()
+                e.preventDefault()
                 save('onEnter')
                 blur()
             }
