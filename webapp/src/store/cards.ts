@@ -100,8 +100,8 @@ export const getCurrentBoardCards = createSelector(
 export const getCurrentBoardTemplates = createSelector(
     (state) => state.boards.current,
     getTemplates,
-    (boardId, cards) => {
-        return Object.values(cards).filter((c) => c.parentId === boardId) as Card[]
+    (boardId, templates) => {
+        return Object.values(templates).filter((c) => c.parentId === boardId) as Card[]
     },
 )
 

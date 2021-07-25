@@ -64,6 +64,7 @@ class Board extends Block {
             showDescription: block?.fields.showDescription || false,
             description: block?.fields.description || '',
             icon: block?.fields.icon || '',
+            isTemplate: block?.fields.isTemplate || false,
             cardProperties,
         }
     }

@@ -25,6 +25,7 @@ class Card extends Block {
             properties: {...(block?.fields.properties || {})},
             contentOrder: block?.fields.contentOrder?.slice() || [],
             contents: block?.fields.contents?.slice() || [],
+            isTemplate: block?.fields.isTemplate || false,
         }
     }
 
