@@ -15,9 +15,15 @@ export const fetchMe = createAsyncThunk(
     async () => client.getMe(),
 )
 
+type UsersStatus = {
+    me: IUser|null
+    workspaceUsers: {[key: string]: IUser}
+    loggedIn: boolean|null
+}
+
 const usersSlice = createSlice({
     name: 'users',
-    initialState: {me: null, workspaceUsers: {}} as {me: IUser|null, workspaceUsers: {[key: string]: IUser}},
+    initialState: {me: null, workspaceUsers: {}, loggedIn: null} as UsersStatus,
     reducers: {
         setMe: (state, action: PayloadAction<IUser>) => {
             state.me = action.payload
@@ -32,6 +38,11 @@ const usersSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(fetchMe.fulfilled, (state, action) => {
             state.me = action.payload || null
+            state.loggedIn = Boolean(state.me)
+        })
+        builder.addCase(fetchMe.rejected, (state) => {
+            state.me = null
+            state.loggedIn = false
         })
         builder.addCase(initialLoad.fulfilled, (state, action) => {
             state.workspaceUsers = action.payload.workspaceUsers.reduce((acc: {[key: string]: IUser}, user: IUser) => {
@@ -46,6 +57,7 @@ export const {setMe, setWorkspaceUsers} = usersSlice.actions
 export const {reducer} = usersSlice
 
 export const getMe = (state: RootState): IUser|null => state.users.me
+export const getLoggedIn = (state: RootState): boolean|null => state.users.loggedIn
 export const getWorkspaceUsers = (state: RootState): {[key: string]: IUser} => state.users.workspaceUsers
 
 export const getWorkspaceUsersList = createSelector(

@@ -19,11 +19,10 @@ import ChangePasswordPage from './pages/changePasswordPage'
 import ErrorPage from './pages/errorPage'
 import LoginPage from './pages/loginPage'
 import RegisterPage from './pages/registerPage'
-import {IUser} from './user'
 import {Utils} from './utils'
 import wsClient from './wsclient'
 import {importNativeAppSettings} from './nativeApp'
-import {fetchMe, getMe} from './store/users'
+import {fetchMe, getLoggedIn} from './store/users'
 import {getLanguage, fetchLanguage} from './store/language'
 import {useAppSelector, useAppDispatch} from './store/hooks'
 
@@ -31,16 +30,12 @@ const App = React.memo((): JSX.Element => {
     importNativeAppSettings()
 
     const language = useAppSelector<string>(getLanguage)
-
-    const user = useAppSelector<IUser|null>(getMe)
+    const loggedIn = useAppSelector<boolean|null>(getLoggedIn)
     const dispatch = useAppDispatch()
-    const [initialLoad, setInitialLoad] = useState(false)
 
     useEffect(() => {
         dispatch(fetchLanguage())
-        dispatch(fetchMe()).then(() => {
-            setInitialLoad(true)
-        })
+        dispatch(fetchMe())
     }, [])
 
     useEffect(() => {
@@ -77,8 +72,8 @@ const App = React.memo((): JSX.Element => {
                                     <BoardPage readonly={true}/>
                                 </Route>
                                 <Route path='/board/:boardId?/:viewId?'>
-                                    {initialLoad && !user && <Redirect to='/login'/>}
-                                    <BoardPage/>
+                                    {loggedIn === false && <Redirect to='/login'/>}
+                                    {loggedIn === true && <BoardPage/>}
                                 </Route>
                                 <Route path='/workspace/:workspaceId/shared/:boardId?/:viewId?'>
                                     <BoardPage readonly={true}/>
@@ -86,22 +81,24 @@ const App = React.memo((): JSX.Element => {
                                 <Route
                                     path='/workspace/:workspaceId/:boardId?/:viewId?'
                                     render={({match}) => {
-                                        if (initialLoad && !user) {
+                                        if (loggedIn === false) {
                                             let redirectUrl = '/' + Utils.buildURL(`/workspace/${match.params.workspaceId}/`)
                                             if (redirectUrl.indexOf('//') === 0) {
                                                 redirectUrl = redirectUrl.slice(1)
                                             }
                                             const loginUrl = `/login?r=${encodeURIComponent(redirectUrl)}`
                                             return <Redirect to={loginUrl}/>
+                                        } else if (loggedIn === true) {
+                                            return (
+                                                <BoardPage/>
+                                            )
                                         }
-                                        return (
-                                            <BoardPage/>
-                                        )
+                                        return null
                                     }}
                                 />
                                 <Route path='/:boardId?/:viewId?'>
-                                    {initialLoad && !user && <Redirect to='/login'/>}
-                                    <BoardPage/>
+                                    {loggedIn === false && <Redirect to='/login'/>}
+                                    {loggedIn === true && <BoardPage/>}
                                 </Route>
                             </Switch>
                         </div>
