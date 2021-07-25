@@ -70,7 +70,7 @@
   "PropertyType.Text": "Text",
   "PropertyType.URL": "URL",
   "PropertyType.UpdatedBy": "Aktualisiert durch",
-  "PropertyType.UpdatedTime": "Aktualisierungszeit",
+  "PropertyType.UpdatedTime": "Letzte Aktualisierung",
   "RegistrationLink.confirmRegenerateToken": "Diese Aktion widerruft zuvor geteilte Links. Trotzdem fortfahren?",
   "RegistrationLink.copiedLink": "Kopiert!",
   "RegistrationLink.copyLink": "Link kopieren",

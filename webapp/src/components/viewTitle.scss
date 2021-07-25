@@ -1,5 +1,5 @@
 .ViewTitle {
-    > div {
+    >div {
         flex: 0 0 auto;
         display: flex;
         flex-direction: row;
@@ -9,16 +9,25 @@
 
     > .add-buttons {
         flex-direction: row;
-        min-height: 30px;
+        min-height: 28px;
         color: rgba(var(--body-color), 0.4);
         width: 100%;
         align-items: flex-start;
-        .Icon {
-            margin-left: 0.5em;
+
+        .Icon:last-child {
+            margin-left: 6px;
         }
+
+        .Icon:first-child {
+            margin-right: 6px;
+        }
+
         .Button {
+            min-height: 28px;
             display: none;
+            line-height: 1;
         }
+
         &.add-visible:hover {
             .Button {
                 display: flex;
@@ -35,7 +44,7 @@
         flex-grow: 1;
     }
 
-    > .description > * {
+    >.description>* {
         flex-grow: 1;
     }
 }
