@@ -99,7 +99,7 @@ exports[`components/calculations/Options should match snapshot menu open 1`] = `
       <span
         id="aria-context"
       >
-         4 results available. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+         10 results available. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
       </span>
     </span>
     <div
@@ -188,6 +188,48 @@ exports[`components/calculations/Options should match snapshot menu open 1`] = `
           tabindex="-1"
         >
           Count Unique Values
+        </div>
+        <div
+          class=" css-5peqmn-option"
+          id="react-select-3-option-4"
+          tabindex="-1"
+        >
+          Sum
+        </div>
+        <div
+          class=" css-5peqmn-option"
+          id="react-select-3-option-5"
+          tabindex="-1"
+        >
+          Average
+        </div>
+        <div
+          class=" css-5peqmn-option"
+          id="react-select-3-option-6"
+          tabindex="-1"
+        >
+          Median
+        </div>
+        <div
+          class=" css-5peqmn-option"
+          id="react-select-3-option-7"
+          tabindex="-1"
+        >
+          Min
+        </div>
+        <div
+          class=" css-5peqmn-option"
+          id="react-select-3-option-8"
+          tabindex="-1"
+        >
+          Max
+        </div>
+        <div
+          class=" css-5peqmn-option"
+          id="react-select-3-option-9"
+          tabindex="-1"
+        >
+          Range
         </div>
       </div>
     </div>

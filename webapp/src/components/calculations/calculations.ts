@@ -25,7 +25,9 @@ function countUniqueValue(cards: readonly Card[], property: IPropertyTemplate): 
 
     cards.forEach((card) => {
         const value = property.id === Constants.titleColumnId ? card.title : card.properties[property.id]
-        valueMap.set(value, true)
+        if (value) {
+            valueMap.set(value, true)
+        }
     })
 
     return String(valueMap.size)
