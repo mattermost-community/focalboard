@@ -52,6 +52,7 @@ const Workspace = React.memo((props: Props) => {
                     workspace={workspace}
                     workspaceTree={workspaceTree}
                     activeBoardId={boardTree?.board.id}
+                    activeViewId={boardTree?.activeView.id}
                 />
             }
             <div className='mainFrame'>
