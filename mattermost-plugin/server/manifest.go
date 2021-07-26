@@ -19,8 +19,8 @@ const manifestStr = `
   "support_url": "https://github.com/mattermost/focalboard/issues",
   "release_notes_url": "https://github.com/mattermost/focalboard/releases",
   "icon_path": "assets/starter-template-icon.svg",
-  "version": "0.8.0",
-  "min_server_version": "5.36.0",
+  "version": "0.8.1",
+  "min_server_version": "5.37.0",
   "server": {
     "executables": {
       "linux-amd64": "server/dist/plugin-linux-amd64",
