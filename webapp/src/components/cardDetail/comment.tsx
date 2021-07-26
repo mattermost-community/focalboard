@@ -11,7 +11,8 @@ import DeleteIcon from '../../widgets/icons/delete'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
-import {UserCache} from '../../userCache'
+import {getUser} from '../../store/users'
+import {useAppSelector} from '../../store/hooks'
 
 import './comment.scss'
 
@@ -25,15 +26,7 @@ const Comment: FC<Props> = (props: Props) => {
     const {comment, userId, userImageUrl} = props
     const intl = useIntl()
     const html = Utils.htmlFromMarkdown(comment.title)
-
-    const [username, setUsername] = useState('')
-    useEffect(() => {
-        UserCache.shared.getUser(userId).then((user) => {
-            if (user) {
-                setUsername(user.username)
-            }
-        })
-    }, [])
+    const user = useAppSelector(getUser(userId))
 
     return (
         <div
@@ -45,7 +38,7 @@ const Comment: FC<Props> = (props: Props) => {
                     className='comment-avatar'
                     src={userImageUrl}
                 />
-                <div className='comment-username'>{username}</div>
+                <div className='comment-username'>{user?.username}</div>
                 <div className='comment-date'>{(new Date(comment.createAt)).toLocaleString()}</div>
                 <MenuWrapper>
                     <IconButton icon={<OptionsIcon/>}/>

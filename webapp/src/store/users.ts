@@ -64,3 +64,10 @@ export const getWorkspaceUsersList = createSelector(
     getWorkspaceUsers,
     (workspaceUsers) => Object.values(workspaceUsers).sort((a, b) => a.username.localeCompare(b.username)),
 )
+
+export const getUser = (userId: string): (state: RootState) => IUser|undefined => {
+    return (state: RootState): IUser|undefined => {
+        const users = getWorkspaceUsers(state)
+        return users[userId]
+    }
+}
