@@ -392,7 +392,7 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 		// block with ID exists, so this is an update operation
 		query := s.getQueryBuilder().Update(s.tablePrefix+"blocks").
 			Where(sq.Eq{"id": block.ID}).
-			Set("workspace_id", c.WorkspaceID).
+			Where(sq.Eq{"COALESCE(workspace_id, '0')": c.WorkspaceID}).
 			Set("parent_id", block.ParentID).
 			Set("root_id", block.RootID).
 			Set("modified_by", block.ModifiedBy).

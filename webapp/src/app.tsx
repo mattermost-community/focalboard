@@ -16,6 +16,7 @@ import {getMessages} from './i18n'
 import {FlashMessages} from './components/flashMessages'
 import BoardPage from './pages/boardPage'
 import ChangePasswordPage from './pages/changePasswordPage'
+import DashboardPage from './pages/dashboardPage'
 import ErrorPage from './pages/errorPage'
 import LoginPage from './pages/loginPage'
 import RegisterPage from './pages/registerPage'
@@ -91,6 +92,12 @@ const App = React.memo((): JSX.Element => {
                                         )
                                     }}
                                 />
+                                <Route
+                                    exact={true}
+                                    path='/dashboard'
+                                >
+                                    <DashboardPage/>
+                                </Route>
                                 <Route path='/:boardId?/:viewId?'>
                                     {initialLoad && !user && <Redirect to='/login'/>}
                                     <BoardPage/>
