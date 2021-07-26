@@ -34,11 +34,7 @@ type Props = {
 
 const Kanban = (props: Props) => {
     const {boardTree} = props
-
-    const boardTreeRef = useRef<BoardTree>(boardTree)
-    boardTreeRef.current = boardTree
-
-    const {cards, groupByProperty} = boardTreeRef.current
+    const {cards, groupByProperty} = boardTree
 
     if (!groupByProperty) {
         Utils.assertFailure('Board views must have groupByProperty set')
@@ -48,7 +44,7 @@ const Kanban = (props: Props) => {
     const propertyValues = groupByProperty.options || []
     Utils.log(`${propertyValues.length} propertyValues`)
 
-    const {board, activeView, visibleGroups, hiddenGroups} = boardTreeRef.current
+    const {board, activeView, visibleGroups, hiddenGroups} = boardTree
     const visiblePropertyTemplates = board.cardProperties.filter((template) => activeView.visiblePropertyIds.includes(template.id))
     const isManualSort = activeView.sortOptions.length === 0
 
@@ -76,7 +72,7 @@ const Kanban = (props: Props) => {
     )
 
     const propertyNameChanged = async (option: IPropertyOption, text: string): Promise<void> => {
-        await mutator.changePropertyOptionValue(boardTreeRef.current, boardTreeRef.current.groupByProperty!, option, text)
+        await mutator.changePropertyOptionValue(boardTree, boardTree.groupByProperty!, option, text)
     }
 
     const addGroupClicked = async () => {
@@ -88,12 +84,12 @@ const Kanban = (props: Props) => {
             color: 'propColorDefault',
         }
 
-        await mutator.insertPropertyOption(boardTreeRef.current, boardTreeRef.current.groupByProperty!, option, 'add group')
+        await mutator.insertPropertyOption(boardTree, boardTree.groupByProperty!, option, 'add group')
     }
 
     const orderAfterMoveToColumn = (cardIds: string[], columnId?: string): string[] => {
         let cardOrder = activeView.cardOrder.slice()
-        const columnGroup = boardTreeRef.current.visibleGroups.find((g) => g.option.id === columnId)
+        const columnGroup = boardTree.visibleGroups.find((g) => g.option.id === columnId)
         const columnCards = columnGroup?.cards
         if (!columnCards || columnCards.length === 0) {
             return cardOrder
@@ -114,36 +110,35 @@ const Kanban = (props: Props) => {
         if (card) {
             draggedCardIds = Array.from(new Set(selectedCardIds).add(card.id))
         }
-        Utils.assertValue(boardTreeRef.current)
+
+        Utils.assertValue(boardTree)
 
         if (draggedCardIds.length > 0) {
-            const orderedCards = boardTreeRef.current.orderedCards()
+            const orderedCards = boardTree.orderedCards()
             const cardsById: { [key: string]: Card } = orderedCards.reduce((acc: { [key: string]: Card }, c: Card): { [key: string]: Card } => {
                 acc[c.id] = c
                 return acc
             }, {})
-
             const draggedCards: Card[] = draggedCardIds.map((o: string) => cardsById[o])
-
             await mutator.performAsUndoGroup(async () => {
                 const description = draggedCards.length > 1 ? `drag ${draggedCards.length} cards` : 'drag card'
                 const awaits = []
                 for (const draggedCard of draggedCards) {
                     Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${optionId}`)
-                    const oldValue = draggedCard.properties[boardTreeRef.current.groupByProperty!.id]
+                    const oldValue = draggedCard.properties[boardTree.groupByProperty!.id]
                     if (optionId !== oldValue) {
-                        awaits.push(mutator.changePropertyValue(draggedCard, boardTreeRef.current.groupByProperty!.id, optionId, description))
+                        awaits.push(mutator.changePropertyValue(draggedCard, boardTree.groupByProperty!.id, optionId, description))
                     }
                 }
                 const newOrder = orderAfterMoveToColumn(draggedCardIds, optionId)
-                awaits.push(mutator.changeViewCardOrder(boardTreeRef.current.activeView, newOrder, description))
+                awaits.push(mutator.changeViewCardOrder(boardTree.activeView, newOrder, description))
                 await Promise.all(awaits)
             })
         } else if (dstOption) {
             Utils.log(`ondrop. Header option: ${dstOption.value}, column: ${option?.value}`)
 
             // Move option to new index
-            const visibleOptionIds = boardTreeRef.current.visibleGroups.map((o) => o.option.id)
+            const visibleOptionIds = boardTree.visibleGroups.map((o) => o.option.id)
 
             const srcIndex = visibleOptionIds.indexOf(dstOption.id)
             const destIndex = visibleOptionIds.indexOf(option.id)
@@ -165,7 +160,7 @@ const Kanban = (props: Props) => {
         const description = draggedCardIds.length > 1 ? `drag ${draggedCardIds.length} cards` : 'drag card'
 
         // Update dstCard order
-        const orderedCards = boardTreeRef.current.orderedCards()
+        const orderedCards = boardTree.orderedCards()
         const cardsById: { [key: string]: Card } = orderedCards.reduce((acc: { [key: string]: Card }, card: Card): { [key: string]: Card } => {
             acc[card.id] = card
             return acc
@@ -175,7 +170,7 @@ const Kanban = (props: Props) => {
         const isDraggingDown = cardOrder.indexOf(srcCard.id) <= cardOrder.indexOf(dstCard.id)
         cardOrder = cardOrder.filter((id) => !draggedCardIds.includes(id))
         let destIndex = cardOrder.indexOf(dstCard.id)
-        if (srcCard.properties[boardTreeRef.current.groupByProperty!.id] === optionId && isDraggingDown) {
+        if (srcCard.properties[boardTree.groupByProperty!.id] === optionId && isDraggingDown) {
             // If the cards are in the same column and dragging down, drop after the target dstCard
             destIndex += 1
         }
@@ -186,9 +181,9 @@ const Kanban = (props: Props) => {
             const awaits = []
             for (const draggedCard of draggedCards) {
                 Utils.log(`draggedCard: ${draggedCard.title}, column: ${optionId}`)
-                const oldOptionId = draggedCard.properties[boardTreeRef.current.groupByProperty!.id]
+                const oldOptionId = draggedCard.properties[boardTree.groupByProperty!.id]
                 if (optionId !== oldOptionId) {
-                    awaits.push(mutator.changePropertyValue(draggedCard, boardTreeRef.current.groupByProperty!.id, optionId, description))
+                    awaits.push(mutator.changePropertyValue(draggedCard, boardTree.groupByProperty!.id, optionId, description))
                 }
             }
             await Promise.all(awaits)
@@ -208,7 +203,7 @@ const Kanban = (props: Props) => {
                     <KanbanColumnHeader
                         key={group.option.id}
                         group={group}
-                        boardTree={boardTreeRef.current}
+                        boardTree={boardTree}
                         intl={props.intl}
                         addCard={props.addCard}
                         readonly={props.readonly}
@@ -294,7 +289,7 @@ const Kanban = (props: Props) => {
                         <KanbanHiddenColumnItem
                             key={group.option.id}
                             group={group}
-                            boardTree={boardTreeRef.current}
+                            boardTree={boardTree}
                             intl={props.intl}
                             readonly={props.readonly}
                             onDrop={(card: Card) => onDropToColumn(group.option, card)}
