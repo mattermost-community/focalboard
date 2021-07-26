@@ -24,6 +24,7 @@ import wsClient from './wsclient'
 import {importNativeAppSettings} from './nativeApp'
 import {fetchMe, getLoggedIn} from './store/users'
 import {getLanguage, fetchLanguage} from './store/language'
+import {setGlobalError, getGlobalError} from './store/globalError'
 import {useAppSelector, useAppDispatch} from './store/hooks'
 
 const App = React.memo((): JSX.Element => {
@@ -31,6 +32,7 @@ const App = React.memo((): JSX.Element => {
 
     const language = useAppSelector<string>(getLanguage)
     const loggedIn = useAppSelector<boolean|null>(getLoggedIn)
+    const globalError = useAppSelector<string>(getGlobalError)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
@@ -45,6 +47,12 @@ const App = React.memo((): JSX.Element => {
         }
     }, [])
 
+    let globalErrorRedirect = null
+    if (globalError) {
+        globalErrorRedirect = <Route path='/*'><Redirect to={`/error?id=${globalError}`}/></Route>
+        setTimeout(() => dispatch(setGlobalError('')), 0)
+    }
+
     return (
         <IntlProvider
             locale={language.split(/[_]/)[0]}
@@ -56,6 +64,7 @@ const App = React.memo((): JSX.Element => {
                     <div id='frame'>
                         <div id='main'>
                             <Switch>
+                                {globalErrorRedirect}
                                 <Route path='/error'>
                                     <ErrorPage/>
                                 </Route>

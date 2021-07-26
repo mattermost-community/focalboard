@@ -12,6 +12,7 @@ import {reducer as viewsReducer} from './views'
 import {reducer as cardsReducer} from './cards'
 import {reducer as contentsReducer} from './contents'
 import {reducer as searchTextReducer} from './searchText'
+import {reducer as globalErrorReducer} from './globalError'
 
 const store = configureStore({
     reducer: {
@@ -24,6 +25,7 @@ const store = configureStore({
         cards: cardsReducer,
         contents: contentsReducer,
         searchText: searchTextReducer,
+        globalError: globalErrorReducer,
     },
 })
 

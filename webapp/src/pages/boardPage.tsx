@@ -1,14 +1,11 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
-import {connect} from 'react-redux'
-import {PayloadAction} from '@reduxjs/toolkit'
+import React, {useEffect, useCallback, useState} from 'react'
+import {batch} from 'react-redux'
 import {FormattedMessage} from 'react-intl'
-import {generatePath, withRouter, RouteComponentProps} from 'react-router-dom'
-import HotKeys from 'react-hot-keys'
+import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
+import {useHotkeys} from 'react-hotkeys-hook'
 
-import {IUser} from '../user'
-import {IWorkspace} from '../blocks/workspace'
 import {IBlock} from '../blocks/block'
 import {ContentBlock} from '../blocks/contentBlock'
 import {Board} from '../blocks/board'
@@ -21,257 +18,183 @@ import octoClient from '../octoClient'
 import {Utils} from '../utils'
 import wsClient, {WSClient} from '../wsclient'
 import './boardPage.scss'
-import {getWorkspaceUsers} from '../store/users'
-import {getWorkspace} from '../store/workspace'
-import {updateBoards, getBoard, setCurrent as setCurrentBoard} from '../store/boards'
-import {updateViews, getView, setCurrent as setCurrentView} from '../store/views'
+import {updateBoards, getCurrentBoard, setCurrent as setCurrentBoard} from '../store/boards'
+import {updateViews, getCurrentView, setCurrent as setCurrentView} from '../store/views'
 import {updateCards} from '../store/cards'
 import {updateContents} from '../store/contents'
 import {initialLoad} from '../store/initialLoad'
-import {RootState} from '../store'
+import {useAppSelector, useAppDispatch} from '../store/hooks'
 
-type OwnProps = RouteComponentProps<{workspaceId?: string, boardId?: string, viewId?: string}> & {
+type Props = {
     readonly?: boolean
 }
 
-type Props = OwnProps & {
-    usersById: {[key: string]: IUser}
-    updateBoards: (boards: Board[]) => void
-    updateViews: (views: BoardView[]) => void
-    updateCards: (cards: Card[]) => void
-    updateContents: (contents: ContentBlock[]) => void
-    setCurrentBoard: (boardId: string) => void
-    setCurrentView: (viewId: string) => void
-    initialLoad: () => Promise<PayloadAction<any>>
-    workspace: IWorkspace | null,
-    board: Board | null,
-    activeView: BoardView | null,
-}
+const BoardPage = (props: Props) => {
+    const board = useAppSelector(getCurrentBoard)
+    const activeView = useAppSelector(getCurrentView)
+    const dispatch = useAppDispatch()
 
-type State = {
-    syncFailed?: boolean
-    websocketClosedTimeOutId?: ReturnType<typeof setTimeout>
-    websocketClosed?: boolean
-}
+    const history = useHistory()
+    const match = useRouteMatch<{boardId: string, viewId: string, workspaceId?: string}>()
+    const [websocketClosed, setWebsocketClosed] = useState(false)
 
-class BoardPage extends React.Component<Props, State> {
-    constructor(props: Props) {
-        super(props)
+    // TODO: Make this less brittle. This only works because this is the root render function
+    useEffect(() => {
+        octoClient.workspaceId = match.params.workspaceId || '0'
+    }, [match.params.workspaceId])
 
-        // Backward compatible query param urls to regular urls
+    // Backward compatibility: This can be removed in the future, this is for
+    // transform the old query params into routes
+    useEffect(() => {
         const queryString = new URLSearchParams(window.location.search)
         const queryBoardId = queryString.get('id')
         const queryViewId = queryString.get('v')
         if (queryBoardId) {
-            const params = {...props.match.params, boardId: queryBoardId}
+            const params = {...match.params, boardId: queryBoardId}
             if (queryViewId) {
                 params.viewId = queryViewId
             }
-            const newPath = generatePath(props.match.path, params)
-            props.history.push(newPath)
+            const newPath = generatePath(match.path, params)
+            history.push(newPath)
         }
+    }, [])
 
-        if (!props.match.params.boardId) {
+    useEffect(() => {
+        if (!match.params.boardId) {
             // Load last viewed boardView
             const boardId = localStorage.getItem('lastBoardId') || undefined
             const viewId = localStorage.getItem('lastViewId') || undefined
             if (boardId) {
-                const newPath = generatePath(props.match.path, {...props.match.params, boardId, viewId})
-                props.history.push(newPath)
+                const newPath = generatePath(match.path, {...match.params, boardId, viewId})
+                history.push(newPath)
             }
         }
+    }, [])
 
-        this.state = {}
+    const attachToBoard = useCallback((boardId?: string, viewId = '') => {
+        Utils.log(`attachToBoard: ${boardId}`)
+        localStorage.setItem('lastBoardId', boardId || '')
+        localStorage.setItem('lastViewId', viewId)
+        dispatch(setCurrentBoard(boardId || ''))
+        dispatch(setCurrentView(viewId || ''))
 
-        Utils.log(`BoardPage. boardId: ${props.match.params.boardId}`)
-    }
-
-    shouldComponentUpdate(): boolean {
-        return true
-    }
-
-    componentDidUpdate(prevProps: Props, prevState: State): void {
-        Utils.log('componentDidUpdate')
-        const board = this.props.board
-        const prevBoard = prevProps.board
-
-        const workspaceId = this.props.match.params.workspaceId
-        const prevWorkspaceId = prevProps.match.params.workspaceId
-        const boardId = this.props.match.params.boardId
-        const prevBoardId = prevProps.match.params.boardId
-        const viewId = this.props.match.params.viewId
-        const prevViewId = prevProps.match.params.viewId
-
-        if (boardId && (boardId !== prevBoardId || viewId !== prevViewId)) {
-            this.attachToBoard(boardId, viewId)
+        if (!boardId) {
+            const newPath = generatePath(match.path, {...match.params, boardId: '', viewId: ''})
+            history.push(newPath)
         }
+    }, [match.path, match.params, history])
 
-        const activeView = this.props.activeView
-        const prevActiveView = prevProps.activeView
+    useEffect(() => {
+        attachToBoard(match.params.boardId, match.params.viewId)
+    }, [match.params.boardId, match.params.viewId])
 
-        if (board?.fields.icon !== prevBoard?.fields.icon) {
-            Utils.setFavicon(board?.fields.icon)
-        }
-        if (board?.title !== prevBoard?.title || activeView?.title !== prevActiveView?.title) {
-            if (board) {
-                let title = `${board.title}`
-                if (activeView?.title) {
-                    title += ` | ${activeView.title}`
-                }
-                document.title = title
-            } else {
-                document.title = 'Focalboard'
+    useEffect(() => {
+        Utils.setFavicon(board?.fields.icon)
+    }, [board?.fields.icon])
+
+    useEffect(() => {
+        if (board) {
+            let title = `${board.title}`
+            if (activeView?.title) {
+                title += ` | ${activeView.title}`
             }
+            document.title = title
+        } else {
+            document.title = 'Focalboard'
         }
-        if (workspaceId !== prevWorkspaceId) {
-            if (!this.props.readonly) {
-                this.props.initialLoad().then((result) => {
-                    if (!result.payload) {
-                        this.props.history.push(Utils.buildURL('/error?id=no_workspace'))
-                    }
-                })
+    }, [board?.title, activeView?.title])
+
+    useEffect(() => {
+        if (!props.readonly) {
+            dispatch(initialLoad)
+            const token = localStorage.getItem('focalboardSessionId') || ''
+            wsClient.authenticate(match.params.workspaceId || '0', token)
+            wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
+        }
+
+        dispatch(initialLoad())
+
+        const token = localStorage.getItem('focalboardSessionId') || ''
+        wsClient.authenticate(match.params.workspaceId || '0', token)
+        wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
+
+        const incrementalUpdate = (_: WSClient, blocks: IBlock[]) => {
+            batch(() => {
+                dispatch(updateBoards(blocks.filter((b: IBlock) => b.type === 'board' || b.deleteAt !== 0) as Board[]))
+                dispatch(updateViews(blocks.filter((b: IBlock) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
+                dispatch(updateCards(blocks.filter((b: IBlock) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
+                dispatch(updateContents(blocks.filter((b: IBlock) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board') as ContentBlock[]))
+            })
+        }
+        const updateWebsocketState = (_: WSClient, newState: 'init'|'open'|'close'): void => {
+            if (newState === 'open') {
+                const newToken = localStorage.getItem('focalboardSessionId') || ''
+                wsClient.authenticate(match.params.workspaceId || '0', newToken)
+                wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
             }
-
-            this.props.initialLoad()
+            setWebsocketClosed(newState === 'close')
         }
-    }
-
-    private undoRedoHandler = async (keyName: string, e: KeyboardEvent) => {
-        if (e.target !== document.body || this.props.readonly) {
-            return
+        wsClient.addOnChange(incrementalUpdate)
+        wsClient.addOnReconnect(() => dispatch(initialLoad))
+        wsClient.addOnStateChange(updateWebsocketState)
+        return () => {
+            wsClient.unsubscribeToWorkspace(match.params.workspaceId || '0')
+            wsClient.removeOnChange(incrementalUpdate)
+            wsClient.removeOnReconnect(() => dispatch(initialLoad))
+            wsClient.removeOnStateChange(updateWebsocketState)
         }
+    }, [match.params.workspaceId, props.readonly])
 
-        if (keyName === 'ctrl+z' || keyName === 'cmd+z') { // Cmd+Z
-            Utils.log('Undo')
-            if (mutator.canUndo) {
-                const description = mutator.undoDescription
-                await mutator.undo()
+    useHotkeys('ctrl+z,cmd+z', () => {
+        Utils.log('Undo')
+        if (mutator.canUndo) {
+            const description = mutator.undoDescription
+            mutator.undo().then(() => {
                 if (description) {
                     sendFlashMessage({content: `Undo ${description}`, severity: 'low'})
                 } else {
                     sendFlashMessage({content: 'Undo', severity: 'low'})
                 }
-            } else {
-                sendFlashMessage({content: 'Nothing to Undo', severity: 'low'})
-            }
-        } else if (keyName === 'shift+ctrl+z' || keyName === 'shift+cmd+z') { // Shift+Cmd+Z
-            Utils.log('Redo')
-            if (mutator.canRedo) {
-                const description = mutator.redoDescription
-                await mutator.redo()
+            })
+        } else {
+            sendFlashMessage({content: 'Nothing to Undo', severity: 'low'})
+        }
+    })
+
+    useHotkeys('shift+ctrl+z,shift+cmd+z', () => {
+        Utils.log('Redo')
+        if (mutator.canRedo) {
+            const description = mutator.redoDescription
+            mutator.redo().then(() => {
                 if (description) {
                     sendFlashMessage({content: `Redo ${description}`, severity: 'low'})
                 } else {
                     sendFlashMessage({content: 'Redu', severity: 'low'})
                 }
-            } else {
-                sendFlashMessage({content: 'Nothing to Redo', severity: 'low'})
-            }
-        }
-    }
-
-    updateWebsocketState = (_: WSClient, newState: 'init'|'open'|'close'): void => {
-        if (newState === 'open') {
-            const token = localStorage.getItem('focalboardSessionId') || ''
-            wsClient.authenticate(this.props.match.params.workspaceId || '0', token)
-            wsClient.subscribeToWorkspace(this.props.match.params.workspaceId || '0')
-        }
-        this.setState({websocketClosed: newState === 'close'})
-    }
-
-    componentDidMount(): void {
-        if (!this.props.readonly) {
-            this.props.initialLoad().then((result) => {
-                if (!result.payload) {
-                    this.props.history.push(Utils.buildURL('/error?id=no_workspace'))
-                }
             })
+        } else {
+            sendFlashMessage({content: 'Nothing to Redo', severity: 'low'})
         }
+    })
 
-        if (this.props.match.params.boardId) {
-            this.attachToBoard(this.props.match.params.boardId, this.props.match.params.viewId)
-        }
-        wsClient.addOnChange(this.incrementalUpdate)
-        wsClient.addOnReconnect(this.props.initialLoad)
-        wsClient.addOnStateChange(this.updateWebsocketState)
-    }
-
-    componentWillUnmount(): void {
-        Utils.log(`boardPage.componentWillUnmount: ${this.props.match.params.boardId}`)
-        wsClient.unsubscribeToWorkspace(this.props.match.params.workspaceId || '0')
-        wsClient.removeOnChange(this.incrementalUpdate)
-        wsClient.removeOnReconnect(this.props.initialLoad)
-        wsClient.removeOnStateChange(this.updateWebsocketState)
-    }
-
-    render(): JSX.Element {
-        Utils.log(`BoardPage.render (workspace ${this.props.match.params.workspaceId || '0'}) ${this.props.board?.title}`)
-
-        // TODO: Make this less brittle. This only works because this is the root render function
-        octoClient.workspaceId = this.props.match.params.workspaceId || '0'
-
-        if (this.props.readonly && this.state.syncFailed) {
-            Utils.log('BoardPage.render: sync failed')
-            return (
-                <div className='BoardPage'>
-                    <div className='error'>
+    return (
+        <div className='BoardPage'>
+            {websocketClosed &&
+                <div className='WSConnection error'>
+                    <a
+                        href='https://www.focalboard.com/fwlink/websocket-connect-error.html'
+                        target='_blank'
+                        rel='noreferrer'
+                    >
                         <FormattedMessage
-                            id='BoardPage.syncFailed'
-                            defaultMessage='Board may be deleted or access revoked.'
+                            id='Error.websocket-closed'
+                            defaultMessage='Websocket connection closed, connection interrupted. If this persists, check your server or web proxy configuration.'
                         />
-                    </div>
-                </div>
-            )
-        }
-
-        return (
-            <div className='BoardPage'>
-                <HotKeys
-                    keyName='shift+ctrl+z,shift+cmd+z,ctrl+z,cmd+z'
-                    onKeyDown={this.undoRedoHandler}
-                />
-                {this.state.websocketClosed &&
-                    <div className='WSConnection error'>
-                        <a
-                            href='https://www.focalboard.com/fwlink/websocket-connect-error.html'
-                            target='_blank'
-                            rel='noreferrer'
-                        >
-                            <FormattedMessage
-                                id='Error.websocket-closed'
-                                defaultMessage='Websocket connection closed, connection interrupted. If this persists, check your server or web proxy configuration.'
-                            />
-                        </a>
-                    </div>}
-                <Workspace readonly={this.props.readonly || false}/>
-            </div>
-        )
-    }
-
-    private async attachToBoard(boardId?: string, viewId = '') {
-        Utils.log(`attachToBoard: ${boardId}`)
-        localStorage.setItem('lastBoardId', boardId || '')
-        localStorage.setItem('lastViewId', viewId)
-        this.props.setCurrentBoard(boardId || '')
-        this.props.setCurrentView(viewId || '')
-
-        if (!boardId) {
-            const newPath = generatePath(this.props.match.path, {...this.props.match.params, boardId: '', viewId: ''})
-            this.props.history.push(newPath)
-        }
-    }
-
-    private incrementalUpdate = async (_: WSClient, blocks: IBlock[]) => {
-        this.props.updateBoards(blocks.filter((b: IBlock) => b.type === 'board' || b.deleteAt !== 0) as Board[])
-        this.props.updateViews(blocks.filter((b: IBlock) => b.type === 'view' || b.deleteAt !== 0) as BoardView[])
-        this.props.updateCards(blocks.filter((b: IBlock) => b.type === 'card' || b.deleteAt !== 0) as Card[])
-        this.props.updateContents(blocks.filter((b: IBlock) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board') as ContentBlock[])
-    }
+                    </a>
+                </div>}
+            <Workspace readonly={props.readonly || false}/>
+        </div>
+    )
 }
 
-export default withRouter(connect((state: RootState, ownProps: OwnProps) => ({
-    usersById: getWorkspaceUsers(state),
-    workspace: getWorkspace(state),
-    board: getBoard(ownProps.match.params.boardId || '')(state),
-    activeView: getView(ownProps.match.params.viewId || '')(state),
-}), {initialLoad, updateBoards, updateViews, updateCards, updateContents, setCurrentBoard, setCurrentView})(BoardPage))
+export default BoardPage

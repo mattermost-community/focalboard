@@ -13,10 +13,14 @@ export const initialLoad = createAsyncThunk(
             client.getWorkspaceUsers(),
             client.getAllBlocks(),
         ])
+        if (!workspace) {
+            throw new Error('no_workspace')
+        }
         return {
             workspace,
             workspaceUsers,
             blocks,
+            error: '',
         }
     },
 )
