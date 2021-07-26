@@ -32,10 +32,12 @@ exports[`components/table/TableRow should match snapshot 1`] = `
         class="open-button"
       >
         <button
-          class="Button  "
+          class="Button    "
           type="button"
         >
-          Open
+          <span>
+            Open
+          </span>
         </button>
       </div>
     </div>
@@ -75,10 +77,12 @@ exports[`components/table/TableRow should match snapshot, collapsed tree 1`] = `
         class="open-button"
       >
         <button
-          class="Button  "
+          class="Button    "
           type="button"
         >
-          Open
+          <span>
+            Open
+          </span>
         </button>
       </div>
     </div>
@@ -118,10 +122,12 @@ exports[`components/table/TableRow should match snapshot, display properties 1`]
         class="open-button"
       >
         <button
-          class="Button  "
+          class="Button    "
           type="button"
         >
-          Open
+          <span>
+            Open
+          </span>
         </button>
       </div>
     </div>
@@ -189,10 +195,12 @@ exports[`components/table/TableRow should match snapshot, isSelected 1`] = `
         class="open-button"
       >
         <button
-          class="Button  "
+          class="Button    "
           type="button"
         >
-          Open
+          <span>
+            Open
+          </span>
         </button>
       </div>
     </div>
@@ -233,10 +241,12 @@ exports[`components/table/TableRow should match snapshot, read-only 1`] = `
         class="open-button"
       >
         <button
-          class="Button  "
+          class="Button    "
           type="button"
         >
-          Open
+          <span>
+            Open
+          </span>
         </button>
       </div>
     </div>
@@ -276,10 +286,12 @@ exports[`components/table/TableRow should match snapshot, resizing column 1`] = 
         class="open-button"
       >
         <button
-          class="Button  "
+          class="Button    "
           type="button"
         >
-          Open
+          <span>
+            Open
+          </span>
         </button>
       </div>
     </div>
