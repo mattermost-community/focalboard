@@ -32,6 +32,8 @@
   "ContentBlock.moveDown": "Move down",
   "ContentBlock.moveUp": "Move up",
   "ContentBlock.text": "text",
+  "DashboardPage.title": "Welcome to Focalboard (Beta)!",
+  "DashboardPage.message": "Use Focalboard to create and track tasks for projects big and small using familiar kanban-boards, tables, and other views.",
   "Dialog.closeDialog": "Close dialog",
   "EditableDayPicker.today": "Today",
   "EmptyCenterPanel.no-content": "Add or select a board from the sidebar to get started.",
