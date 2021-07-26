@@ -26,8 +26,8 @@ type Props = {
 }
 
 const Calculation = (props: Props): JSX.Element => {
-    const value = props.value || Options.get('none')!.value
-    const valueOption = Options.get(value)
+    const value = props.value || Options.none.value
+    const valueOption = Options[value]
 
     return (
 
@@ -51,6 +51,7 @@ const Calculation = (props: Props): JSX.Element => {
                             menuOpen={props.menuOpen}
                             onClose={props.onMenuClose}
                             onChange={props.onChange}
+                            property={props.property}
                         />
                     </div>
                 )
@@ -61,14 +62,14 @@ const Calculation = (props: Props): JSX.Element => {
             </span>
 
             {
-                value === Options.get('none')!.value &&
+                value === Options.none.value &&
                 <ChevronUp/>
             }
 
             {
-                value !== Options.get('none')!.value &&
+                value !== Options.none.value &&
                 <span className='calculationValue'>
-                    {Calculations[value](props.cards, props.property)}
+                    {Calculations[value] ? Calculations[value](props.cards, props.property) : ''}
                 </span>
             }
 
