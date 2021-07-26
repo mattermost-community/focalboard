@@ -59,7 +59,7 @@ describe('Create and delete board / card', () => {
 
     it('Can set the card title', () => {
         // Card title
-        cy.get('.CardDetail>.Editable.title').
+        cy.get('.CardDetail .EditableArea.title').
             type(cardTitle).
             type('{enter}').
             should('have.value', cardTitle);
