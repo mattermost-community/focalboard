@@ -85,4 +85,21 @@ describe('utils', () => {
             expect(Utils.displayDate(date, intl)).toBe(`July 09, ${previousYear}`)
         })
     })
+
+    describe('display date and time', () => {
+        const intl = createIntl({locale: 'en-us'})
+
+        it('should show month, day and time for current year', () => {
+            const currentYear = new Date().getFullYear()
+            const date = new Date(currentYear, 6, 9, 15, 20)
+            expect(Utils.displayDateTime(date, intl)).toBe('July 09, 3:20 PM')
+        })
+
+        it('should show month, day, year and time for previous year', () => {
+            const currentYear = new Date().getFullYear()
+            const previousYear = currentYear - 1
+            const date = new Date(previousYear, 6, 9, 5, 35)
+            expect(Utils.displayDateTime(date, intl)).toBe(`July 09, ${previousYear}, 5:35 AM`)
+        })
+    })
 })
