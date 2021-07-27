@@ -4,6 +4,8 @@
 import React from 'react'
 import {render} from '@testing-library/react'
 
+import {IntlProvider} from 'react-intl'
+
 import {CardTree, CardTreeContext, MutableCardTree} from '../../../viewModel/cardTree'
 
 import {MutableCard} from '../../../blocks/card'
@@ -13,6 +15,8 @@ import {MutableBoard} from '../../../blocks/board'
 import {MutableBlock} from '../../../blocks/block'
 
 import LastModifiedAt from './lastModifiedAt'
+
+const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
 
 describe('componnets/properties/lastModifiedAt', () => {
     test('should match snapshot', () => {
@@ -38,13 +42,13 @@ describe('componnets/properties/lastModifiedAt', () => {
         const cardTrees:{ [key: string]: CardTree | undefined } = {}
         cardTrees[card.id] = new MutableCardTree(card)
 
-        const component = (
+        const component = wrapIntl(
             <CardTreeContext.Provider value={cardTree}>
                 <LastModifiedAt
                     card={card}
                     cardTree={cardTree}
                 />
-            </CardTreeContext.Provider>
+            </CardTreeContext.Provider>,
         )
 
         const {container} = render(component)
