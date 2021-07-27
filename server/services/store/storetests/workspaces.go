@@ -47,20 +47,20 @@ func testUpsertWorkspaceSignupToken(t *testing.T, store store.Store) {
 
 		// insert
 		err := store.UpsertWorkspaceSignupToken(*workspace)
-		require.Nil(t, err)
+		require.NoError(t, err)
 
 		got, err := store.GetWorkspace(workspaceID)
-		require.Nil(t, err)
+		require.NoError(t, err)
 		require.Equal(t, workspace.ID, got.ID)
 		require.Equal(t, workspace.SignupToken, got.SignupToken)
 
 		// update signup token
 		workspace.SignupToken = utils.CreateGUID()
 		err = store.UpsertWorkspaceSignupToken(*workspace)
-		require.Nil(t, err)
+		require.NoError(t, err)
 
 		got, err = store.GetWorkspace(workspaceID)
-		require.Nil(t, err)
+		require.NoError(t, err)
 		require.Equal(t, workspace.ID, got.ID)
 		require.Equal(t, workspace.SignupToken, got.SignupToken)
 	})
@@ -84,7 +84,7 @@ func testUpsertWorkspaceSettings(t *testing.T, store store.Store) {
 
 		/*
 			got, err := store.GetWorkspace(workspaceID)
-			require.Nil(t, err)
+			require.NoError(t, err)
 			require.Equal(t, workspace.ID, got.ID)
 			require.Equal(t, workspace.Settings, got.Settings)
 
@@ -93,10 +93,10 @@ func testUpsertWorkspaceSettings(t *testing.T, store store.Store) {
 				"field1": "B",
 			}
 			err = store.UpsertWorkspaceSettings(*workspace)
-			require.Nil(t, err)
+			require.NoError(t, err)
 
 			got, err = store.GetWorkspace(workspaceID)
-			require.Nil(t, err)
+			require.NoError(t, err)
 			require.Equal(t, workspace.ID, got.ID)
 			require.Equal(t, workspace.Settings, got.Settings)
 		*/
@@ -115,11 +115,11 @@ func testGetWorkspaceCount(t *testing.T, store store.Store) {
 			}
 
 			err := store.UpsertWorkspaceSignupToken(*workspace)
-			require.Nil(t, err)
+			require.NoError(t, err)
 		}
 
 		got, err := store.GetWorkspaceCount()
-		require.Nil(t, err)
+		require.NoError(t, err)
 		require.Equal(t, n, got)
 	})
 }
