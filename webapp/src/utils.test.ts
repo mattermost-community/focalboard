@@ -69,20 +69,37 @@ describe('utils', () => {
         })
     })
 
-    describe('test - display date', () => {
-        test('default', () => {
-            const testDate = new Date()
-            let intlShape = createIntl({
-                locale: 'en-US',
-                messages: {},
-            }, undefined)
-            expect(Utils.displayDate(testDate, intlShape)).toBe((testDate.getMonth() + 1) + '/' + testDate.getDate() + '/' + testDate.getFullYear())
+    describe('display date', () => {
+        const intl = createIntl({locale: 'en-us'})
 
-            intlShape = createIntl({
-                locale: 'fr-FR',
-                messages: {},
-            }, undefined)
-            expect(Utils.displayDate(testDate, intlShape)).toBe(testDate.getDate() + '/' + (testDate.getMonth() + 1) + '/' + testDate.getFullYear())
+        it('should show month and day for current year', () => {
+            const currentYear = new Date().getFullYear()
+            const date = new Date(currentYear, 6, 9)
+            expect(Utils.displayDate(date, intl)).toBe('July 09')
+        })
+
+        it('should show month, day and year for previous year', () => {
+            const currentYear = new Date().getFullYear()
+            const previousYear = currentYear - 1
+            const date = new Date(previousYear, 6, 9)
+            expect(Utils.displayDate(date, intl)).toBe(`July 09, ${previousYear}`)
+        })
+    })
+
+    describe('display date and time', () => {
+        const intl = createIntl({locale: 'en-us'})
+
+        it('should show month, day and time for current year', () => {
+            const currentYear = new Date().getFullYear()
+            const date = new Date(currentYear, 6, 9, 15, 20)
+            expect(Utils.displayDateTime(date, intl)).toBe('July 09, 3:20 PM')
+        })
+
+        it('should show month, day, year and time for previous year', () => {
+            const currentYear = new Date().getFullYear()
+            const previousYear = currentYear - 1
+            const date = new Date(previousYear, 6, 9, 5, 35)
+            expect(Utils.displayDateTime(date, intl)).toBe(`July 09, ${previousYear}, 5:35 AM`)
         })
     })
 })

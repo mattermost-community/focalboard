@@ -198,7 +198,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           <div
             class="CreatedAt octo-propertyvalue"
           >
-            Tue, Jun 15, 2021 4:22 PM
+            June 15, 4:22 PM
           </div>
         </div>
       </div>
@@ -276,7 +276,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           <div
             class="CreatedAt octo-propertyvalue"
           >
-            Tue, Jun 15, 2021 4:22 PM
+            June 15, 4:22 PM
           </div>
         </div>
       </div>
@@ -786,7 +786,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           <div
             class="LastModifiedAt octo-propertyvalue"
           >
-            Sun, Jun 20, 2021 12:22 PM
+            June 20, 12:22 PM
           </div>
         </div>
       </div>
@@ -864,7 +864,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           <div
             class="LastModifiedAt octo-propertyvalue"
           >
-            Sun, Jun 20, 2021 12:22 PM
+            June 20, 12:22 PM
           </div>
         </div>
       </div>

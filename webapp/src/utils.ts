@@ -120,21 +120,27 @@ class Utils {
     }
 
     // Date and Time
+    private static yearOption(date: Date) {
+        const isCurrentYear = date.getFullYear() === new Date().getFullYear()
+        return isCurrentYear ? undefined : 'numeric'
+    }
 
     static displayDate(date: Date, intl: IntlShape): string {
-        const text = intl.formatDate(date, {year: 'numeric', month: 'numeric', day: '2-digit'})
-        return text
+        return intl.formatDate(date, {
+            year: Utils.yearOption(date),
+            month: 'long',
+            day: '2-digit',
+        })
     }
 
     static displayDateTime(date: Date, intl: IntlShape): string {
-        const text = intl.formatDate(date, {
-            year: 'numeric',
-            month: 'short',
+        return intl.formatDate(date, {
+            year: Utils.yearOption(date),
+            month: 'long',
             day: '2-digit',
             hour: 'numeric',
             minute: 'numeric',
         })
-        return text
     }
 
     static sleep(miliseconds: number): Promise<void> {
