@@ -8,12 +8,14 @@ import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
 import {CardTree, MutableCardTree} from '../viewModel/cardTree'
 import DeleteIcon from '../widgets/icons/delete'
+import AddIcon from '../widgets/icons/add'
 import Menu from '../widgets/menu'
 
 import useCardListener from '../hooks/cardListener'
 
 import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
+import { sendFlashMessage } from './flashMessages'
 
 type Props = {
     boardTree: BoardTree
@@ -76,6 +78,15 @@ const CardDialog = (props: Props) => {
                     }
                     await mutator.deleteBlock(card, 'delete card')
                     props.onClose()
+                }}
+            />
+            <Menu.Text
+                icon={<AddIcon/>}
+                id='copy'
+                name={intl.formatMessage({id: 'CardDialog.copyLink', defaultMessage: 'Copy link'})}
+                onClick={() => {
+                    Utils.copyTextToClipboard(window.location.href);
+                    sendFlashMessage({ content: intl.formatMessage({id: 'CardDialog.copiedLink', defaultMessage: 'Copied!'}), severity: 'high' });
                 }}
             />
             {(cardTree && !cardTree.card.isTemplate) &&

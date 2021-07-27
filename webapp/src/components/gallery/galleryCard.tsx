@@ -8,11 +8,13 @@ import {Card} from '../../blocks/card'
 import {CardTree} from '../../viewModel/cardTree'
 import {IContentBlock} from '../../blocks/contentBlock'
 import mutator from '../../mutator'
+import {Utils} from '../../utils';
 
 import IconButton from '../../widgets/buttons/iconButton'
 import DeleteIcon from '../../widgets/icons/delete'
 import DuplicateIcon from '../../widgets/icons/duplicate'
 import OptionsIcon from '../../widgets/icons/options'
+import AddIcon from '../../widgets/icons/add'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {useSortable} from '../../hooks/sortable'
@@ -20,6 +22,7 @@ import {useSortable} from '../../hooks/sortable'
 import ImageElement from '../content/imageElement'
 import ContentElement from '../content/contentElement'
 import PropertyValueElement from '../propertyValueElement'
+import { sendFlashMessage } from '../flashMessages'
 
 import './galleryCard.scss'
 
@@ -74,6 +77,16 @@ const GalleryCard = React.memo((props: Props) => {
                             name={intl.formatMessage({id: 'GalleryCard.duplicate', defaultMessage: 'Duplicate'})}
                             onClick={() => {
                                 mutator.duplicateCard(cardTree.card.id)
+                            }}
+                        />
+                        <Menu.Text
+                            icon={<AddIcon/>}
+                            id='copy'
+                            name={intl.formatMessage({id: 'GalleryCard.copyLink', defaultMessage: 'Copy link'})}
+                            onClick={() => {
+                                const url = Utils.addQueryParamToCurrentURL('c', cardTree.card.id)
+                                Utils.copyTextToClipboard(url);
+                                sendFlashMessage({ content: intl.formatMessage({id: 'GalleryCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high' });
                             }}
                         />
                     </Menu>

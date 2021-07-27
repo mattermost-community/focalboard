@@ -335,6 +335,14 @@ class Utils {
         }
         return finalPath
     }
+
+    static addQueryParamToCurrentURL(paramName: string, paramValue: string): string {
+        const {search, href} = window.location
+        const path = href.split("?")[0];
+        const queryString = new URLSearchParams(search);
+        queryString.set(paramName, paramValue)
+        return path + "?" + queryString.toString();
+    }
 }
 
 export {Utils}
