@@ -1,6 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
+import {createIntl} from 'react-intl'
+
 import {Utils} from './utils'
 
 describe('utils', () => {
@@ -64,6 +66,23 @@ describe('utils', () => {
 
             expect(Utils.buildURL('test')).toBe('base/test')
             expect(Utils.buildURL('/test')).toBe('base/test')
+        })
+    })
+
+    describe('display date', () => {
+        const intl = createIntl({locale: 'en-us'})
+
+        it('should show month and day for current year', () => {
+            const currentYear = new Date().getFullYear()
+            const date = new Date(currentYear, 6, 9)
+            expect(Utils.displayDate(date, intl)).toBe('July 09')
+        })
+
+        it('should show month, day and year for previous year', () => {
+            const currentYear = new Date().getFullYear()
+            const previousYear = currentYear - 1
+            const date = new Date(previousYear, 6, 9)
+            expect(Utils.displayDate(date, intl)).toBe(`July 09, ${previousYear}`)
         })
     })
 })
