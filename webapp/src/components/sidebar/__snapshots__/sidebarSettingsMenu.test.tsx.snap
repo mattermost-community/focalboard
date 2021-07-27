@@ -302,28 +302,6 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
               </svg>
             </div>
             <div
-              class="MenuOption SubMenuOption menu-option"
-              id="date-format"
-            >
-              <div
-                class="noicon"
-              />
-              <div
-                class="menu-name"
-              >
-                Set date format
-              </div>
-              <svg
-                class="SubmenuTriangleIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <polygon
-                  points="50,35 75,50 50,65"
-                />
-              </svg>
-            </div>
-            <div
               class="MenuOption SwitchOption menu-option"
             >
               <div
@@ -475,28 +453,6 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
                 class="menu-name"
               >
                 Set theme
-              </div>
-              <svg
-                class="SubmenuTriangleIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <polygon
-                  points="50,35 75,50 50,65"
-                />
-              </svg>
-            </div>
-            <div
-              class="MenuOption SubMenuOption menu-option"
-              id="date-format"
-            >
-              <div
-                class="noicon"
-              />
-              <div
-                class="menu-name"
-              >
-                Set date format
               </div>
               <svg
                 class="SubmenuTriangleIcon Icon"
@@ -752,28 +708,6 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                   </div>
                 </div>
               </div>
-            </div>
-            <div
-              class="MenuOption SubMenuOption menu-option"
-              id="date-format"
-            >
-              <div
-                class="noicon"
-              />
-              <div
-                class="menu-name"
-              >
-                Set date format
-              </div>
-              <svg
-                class="SubmenuTriangleIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <polygon
-                  points="50,35 75,50 50,65"
-                />
-              </svg>
             </div>
             <div
               class="MenuOption SwitchOption menu-option"
