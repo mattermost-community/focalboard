@@ -133,7 +133,7 @@ class Utils {
     static displayDateTime(date: Date, intl: IntlShape): string {
         const text = intl.formatDate(date, {
             year: 'numeric',
-            month: 'short',
+            month: 'long',
             day: '2-digit',
             hour: 'numeric',
             minute: 'numeric',
