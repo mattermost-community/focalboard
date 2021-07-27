@@ -53,7 +53,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
         drop: (item: IPropertyOption) => {
             props.onDropToColumn(item, undefined, group.option)
         },
-    }))
+    }), [props.onDropToColumn])
 
     useEffect(() => {
         setGroupTitle(group.option.value)
