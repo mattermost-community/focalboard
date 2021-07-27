@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/properties/dateRange cancel set via text input 1`] = `
+<div>
+  <div
+    class="DateRange "
+  >
+    <button
+      class="Button    "
+      type="button"
+    >
+      <span>
+        6/15/2021 -&gt; 6/20/2021
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`components/properties/dateRange handle clear 1`] = `
+<div>
+  <div
+    class="DateRange "
+  >
+    <button
+      class="Button    "
+      type="button"
+    >
+      <span>
+        6/15/2021
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`components/properties/dateRange returns default correctly 1`] = `
+<div>
+  <div
+    class="DateRange "
+  >
+    <button
+      class="Button    "
+      type="button"
+    >
+      <span>
+        Empty
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`components/properties/dateRange returns default correctly, es local 1`] = `
+<div>
+  <div
+    class="DateRange "
+  >
+    <button
+      class="Button    "
+      type="button"
+    >
+      <span>
+        15/6/2021
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`components/properties/dateRange set via text input 1`] = `
+<div>
+  <div
+    class="DateRange "
+  >
+    <button
+      class="Button    "
+      type="button"
+    >
+      <span>
+        6/15/2021 -&gt; 6/20/2021
+      </span>
+    </button>
+  </div>
+</div>
+`;

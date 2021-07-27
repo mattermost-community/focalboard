@@ -8,11 +8,11 @@ import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 import {IntlProvider} from 'react-intl'
 
-import EditableDayPicker from './editableDayPicker'
+import DateRange from '../dateRange/dateRange'
 
 const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
 
-describe('widgets/EditableDayPicker', () => {
+describe('components/properties/dateRange', () => {
     beforeEach(() => {
         // Quick fix to disregard console error when unmounting a component
         console.error = jest.fn()
@@ -22,7 +22,7 @@ describe('widgets/EditableDayPicker', () => {
     test('returns default correctly', () => {
         // const callback = jest.fn()
         const component = wrapIntl(
-            <EditableDayPicker
+            <DateRange
                 className='octo-propertyvalue'
                 value={''}
                 onChange={jest.fn()}
@@ -37,7 +37,7 @@ describe('widgets/EditableDayPicker', () => {
         // const callback = jest.fn()
         const component = (
             <IntlProvider locale='es'>
-                <EditableDayPicker
+                <DateRange
                     className='octo-propertyvalue'
                     value={'1623780000000'}
                     onChange={jest.fn()}
@@ -54,7 +54,7 @@ describe('widgets/EditableDayPicker', () => {
     test('handles calendar click event', () => {
         const callback = jest.fn()
         const component = wrapIntl(
-            <EditableDayPicker
+            <DateRange
                 className='octo-propertyvalue'
                 value={''}
                 onChange={callback}
@@ -80,7 +80,7 @@ describe('widgets/EditableDayPicker', () => {
     test('handles setting range', () => {
         const callback = jest.fn()
         const component = wrapIntl(
-            <EditableDayPicker
+            <DateRange
                 className='octo-propertyvalue'
                 value={''}
                 onChange={callback}
@@ -116,7 +116,7 @@ describe('widgets/EditableDayPicker', () => {
     test('handle clear', () => {
         const callback = jest.fn()
         const component = wrapIntl(
-            <EditableDayPicker
+            <DateRange
                 className='octo-propertyvalue'
                 value={'1623780000000'}
                 onChange={callback}
@@ -141,7 +141,7 @@ describe('widgets/EditableDayPicker', () => {
     test('set via text input', () => {
         const callback = jest.fn()
         const component = wrapIntl(
-            <EditableDayPicker
+            <DateRange
                 className='octo-propertyvalue'
                 value={'{"from":1623715200000,"to":1624147200000}'}
                 onChange={callback}
@@ -174,7 +174,7 @@ describe('widgets/EditableDayPicker', () => {
     test('cancel set via text input', () => {
         const callback = jest.fn()
         const component = wrapIntl(
-            <EditableDayPicker
+            <DateRange
                 className='octo-propertyvalue'
                 value={'{"from":1623715200000,"to":1624147200000}'}
                 onChange={callback}
