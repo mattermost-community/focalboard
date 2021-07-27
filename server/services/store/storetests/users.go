@@ -53,7 +53,7 @@ func testGetWorkspaceUsers(t *testing.T, store store.Store) {
 			ID:       userID,
 			Username: "darth.vader",
 		})
-		require.Nil(t, err)
+		require.NoError(t, err)
 
 		defer func() {
 			_ = store.UpdateUser(&model.User{
@@ -65,7 +65,7 @@ func testGetWorkspaceUsers(t *testing.T, store store.Store) {
 		users, err = store.GetUsersByWorkspace("workspace_1")
 		require.Equal(t, 1, len(users))
 		require.Equal(t, "darth.vader", users[0].Username)
-		require.Nil(t, err)
+		require.NoError(t, err)
 	})
 }
 
@@ -78,12 +78,12 @@ func testCreateAndGetUser(t *testing.T, store store.Store) {
 
 	t.Run("CreateUser", func(t *testing.T) {
 		err := store.CreateUser(user)
-		require.Nil(t, err)
+		require.NoError(t, err)
 	})
 
 	t.Run("GetUserByID", func(t *testing.T) {
 		got, err := store.GetUserByID(user.ID)
-		require.Nil(t, err)
+		require.NoError(t, err)
 		require.Equal(t, user.ID, got.ID)
 		require.Equal(t, user.Username, got.Username)
 		require.Equal(t, user.Email, got.Email)
@@ -91,7 +91,7 @@ func testCreateAndGetUser(t *testing.T, store store.Store) {
 
 	t.Run("GetUserByUsername", func(t *testing.T) {
 		got, err := store.GetUserByUsername(user.Username)
-		require.Nil(t, err)
+		require.NoError(t, err)
 		require.Equal(t, user.ID, got.ID)
 		require.Equal(t, user.Username, got.Username)
 		require.Equal(t, user.Email, got.Email)
@@ -99,7 +99,7 @@ func testCreateAndGetUser(t *testing.T, store store.Store) {
 
 	t.Run("GetUserByEmail", func(t *testing.T) {
 		got, err := store.GetUserByEmail(user.Email)
-		require.Nil(t, err)
+		require.NoError(t, err)
 		require.Equal(t, user.ID, got.ID)
 		require.Equal(t, user.Username, got.Username)
 		require.Equal(t, user.Email, got.Email)
@@ -111,17 +111,17 @@ func testCreateAndUpdateUser(t *testing.T, store store.Store) {
 		ID: uuid.New().String(),
 	}
 	err := store.CreateUser(user)
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	t.Run("UpdateUser", func(t *testing.T) {
 		user.Username = "damao"
 		user.Email = "mock@email.com"
 		user.Props = map[string]interface{}{"a": "b"}
 		err := store.UpdateUser(user)
-		require.Nil(t, err)
+		require.NoError(t, err)
 
 		got, err := store.GetUserByID(user.ID)
-		require.Nil(t, err)
+		require.NoError(t, err)
 		require.Equal(t, user.ID, got.ID)
 		require.Equal(t, user.Username, got.Username)
 		require.Equal(t, user.Email, got.Email)
@@ -131,10 +131,10 @@ func testCreateAndUpdateUser(t *testing.T, store store.Store) {
 	t.Run("UpdateUserPassword", func(t *testing.T) {
 		newPassword := uuid.New().String()
 		err := store.UpdateUserPassword(user.Username, newPassword)
-		require.Nil(t, err)
+		require.NoError(t, err)
 
 		got, err := store.GetUserByUsername(user.Username)
-		require.Nil(t, err)
+		require.NoError(t, err)
 		require.Equal(t, user.Username, got.Username)
 		require.Equal(t, newPassword, got.Password)
 	})
@@ -142,10 +142,10 @@ func testCreateAndUpdateUser(t *testing.T, store store.Store) {
 	t.Run("UpdateUserPasswordByID", func(t *testing.T) {
 		newPassword := uuid.New().String()
 		err := store.UpdateUserPasswordByID(user.ID, newPassword)
-		require.Nil(t, err)
+		require.NoError(t, err)
 
 		got, err := store.GetUserByID(user.ID)
-		require.Nil(t, err)
+		require.NoError(t, err)
 		require.Equal(t, user.ID, got.ID)
 		require.Equal(t, newPassword, got.Password)
 	})
@@ -157,10 +157,10 @@ func testCreateAndGetRegisteredUserCount(t *testing.T, store store.Store) {
 		err := store.CreateUser(&model.User{
 			ID: uuid.New().String(),
 		})
-		require.Nil(t, err)
+		require.NoError(t, err)
 	}
 
 	got, err := store.GetRegisteredUserCount()
-	require.Nil(t, err)
+	require.NoError(t, err)
 	require.Equal(t, randomN, got)
 }
