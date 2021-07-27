@@ -13,7 +13,6 @@ import './editableDayPicker.scss'
 type Props = {
     className: string
     value: string
-    dateFormat: string
     onChange: (value: string | undefined) => void
 }
 
@@ -37,8 +36,10 @@ const displayDate = (date: Date | undefined, intl: IntlShape): string | undefine
     return Utils.displayDate(date, intl)
 }
 
+const dateFormat = 'MM/DD/YYYY'
+
 function EditableDayPicker(props: Props): JSX.Element {
-    const {className, onChange, dateFormat} = props
+    const {className, onChange} = props
     const intl = useIntl()
     const [value, setValue] = useState(() => parseValue(props.value))
     const [dayPickerVisible, setDayPickerVisible] = useState(false)
