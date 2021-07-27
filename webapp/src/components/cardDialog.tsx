@@ -15,7 +15,7 @@ import useCardListener from '../hooks/cardListener'
 
 import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
-import { sendFlashMessage } from './flashMessages'
+import {sendFlashMessage} from './flashMessages'
 
 type Props = {
     boardTree: BoardTree
@@ -85,8 +85,8 @@ const CardDialog = (props: Props) => {
                 id='copy'
                 name={intl.formatMessage({id: 'CardDialog.copyLink', defaultMessage: 'Copy link'})}
                 onClick={() => {
-                    Utils.copyTextToClipboard(window.location.href);
-                    sendFlashMessage({ content: intl.formatMessage({id: 'CardDialog.copiedLink', defaultMessage: 'Copied!'}), severity: 'high' });
+                    Utils.copyTextToClipboard(window.location.href)
+                    sendFlashMessage({content: intl.formatMessage({id: 'CardDialog.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
                 }}
             />
             {(cardTree && !cardTree.card.isTemplate) &&

@@ -14,8 +14,8 @@ import AddIcon from '../../widgets/icons/add'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {useSortable} from '../../hooks/sortable'
-import {Utils} from '../../utils';
-import { sendFlashMessage } from '../flashMessages'
+import {Utils} from '../../utils'
+import {sendFlashMessage} from '../flashMessages'
 
 import './kanbanCard.scss'
 import PropertyValueElement from '../propertyValueElement'
@@ -89,8 +89,8 @@ const KanbanCard = React.memo((props: Props) => {
                             name={intl.formatMessage({id: 'KanbanCard.copyLink', defaultMessage: 'Copy link'})}
                             onClick={() => {
                                 const url = Utils.addQueryParamToCurrentURL('c', card.id)
-                                Utils.copyTextToClipboard(url);
-                                sendFlashMessage({ content: intl.formatMessage({id: 'KanbanCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high' });
+                                Utils.copyTextToClipboard(url)
+                                sendFlashMessage({content: intl.formatMessage({id: 'KanbanCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
                             }}
                         />
                     </Menu>
