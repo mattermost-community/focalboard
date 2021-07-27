@@ -3,16 +3,19 @@
 
 import React from 'react'
 
-const moment = require('moment')
+import {useIntl} from 'react-intl'
+
+import {Utils} from '../../../utils'
 
 type Props = {
     createAt: number
 }
 
 const CreatedAt = (props: Props): JSX.Element => {
+    const intl = useIntl()
     return (
         <div className='CreatedAt octo-propertyvalue'>
-            {moment(props.createAt).format('llll')}
+            {Utils.displayDateTime(new Date(props.createAt), intl)}
         </div>
     )
 }
