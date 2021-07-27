@@ -112,28 +112,36 @@ class Utils {
     static htmlFromMarkdown(text: string): string {
         // HACKHACK: Somehow, marked doesn't encode angle brackets
         const renderer = new marked.Renderer()
-        renderer.link = (href, title, contents) => `<a target="_blank" rel="noreferrer" href="${href}" title="${title || ''}" onclick="event.stopPropagation(); openInNewBrowser && openInNewBrowser('${href}');">${contents}</a>`
+        if ((window as any).openInNewBrowser) {
+            renderer.link = (href, title, contents) => `<a target="_blank" rel="noreferrer" href="${encodeURI(href || '')}" title="${title ? encodeURI(title) : ''}" onclick="event.stopPropagation(); openInNewBrowser && openInNewBrowser(event.target.href);">${contents}</a>`
+        }
         const html = marked(text.replace(/</g, '&lt;'), {renderer, breaks: true})
-        return html
+        return html.trim()
     }
 
     // Date and Time
 
-    static displayDate(date: Date, intl: IntlShape): string {
-        const text = intl.formatDate(date, {year: 'numeric', month: 'short', day: '2-digit'})
+    private static yearOption(date: Date) {
+        const isCurrentYear = date.getFullYear() === new Date().getFullYear()
+        return isCurrentYear ? undefined : 'numeric'
+    }
 
-        return text
+    static displayDate(date: Date, intl: IntlShape): string {
+        return intl.formatDate(date, {
+            year: Utils.yearOption(date),
+            month: 'long',
+            day: '2-digit',
+        })
     }
 
     static displayDateTime(date: Date, intl: IntlShape): string {
-        const text = intl.formatDate(date, {
-            year: 'numeric',
-            month: 'short',
+        return intl.formatDate(date, {
+            year: Utils.yearOption(date),
+            month: 'long',
             day: '2-digit',
             hour: 'numeric',
             minute: 'numeric',
         })
-        return text
     }
 
     static sleep(miliseconds: number): Promise<void> {
@@ -331,6 +339,9 @@ class Utils {
             finalPath = baseURL + '/' + path
         }
         if (absolute) {
+            if (finalPath.indexOf('/') === 0) {
+                finalPath = finalPath.slice(1)
+            }
             return window.location.origin + '/' + finalPath
         }
         return finalPath

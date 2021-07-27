@@ -31,6 +31,14 @@ describe('Create and delete board / card', () => {
             should('have.value', boardTitle);
     });
 
+    it('Can hide and show the sidebar with active board', () => {
+        // Hide and show the sidebar
+        cy.get('.Sidebar .heading ~ .Button').click();
+        cy.get('.Sidebar .heading').should('not.exist');
+        cy.get('.Sidebar .show-button').click();
+        cy.get('.Sidebar .heading').should('exist');
+    });
+
     it('Can rename the board view', () => {
         // Rename board view
         const boardViewTitle = `Test board (${timestamp})`;
@@ -51,7 +59,7 @@ describe('Create and delete board / card', () => {
 
     it('Can set the card title', () => {
         // Card title
-        cy.get('.CardDetail>.Editable.title').
+        cy.get('.CardDetail .EditableArea.title').
             type(cardTitle).
             type('{enter}').
             should('have.value', cardTitle);
@@ -104,7 +112,7 @@ describe('Create and delete board / card', () => {
 
         cy.contains('Delete board').click({force: true});
 
-        // // Board should not exist
+        // Board should not exist
         cy.contains(boardTitle).should('not.exist');
     });
 });

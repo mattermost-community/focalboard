@@ -13,6 +13,7 @@ export type Theme = {
     buttonFg: string,
     sidebarBg: string,
     sidebarFg: string,
+    sidebarTextActiveBorder: string,
     sidebarWhiteLogo: string,
 
     link: string,
@@ -41,6 +42,7 @@ export const defaultTheme = {
     buttonFg: '255, 255, 255',
     sidebarBg: '20, 93, 191',
     sidebarFg: '255, 255, 255',
+    sidebarTextActiveBorder: '#579eff',
     sidebarWhiteLogo: 'true',
 
     link: '#0000ee',
@@ -64,17 +66,18 @@ export const darkTheme = {
     ...defaultTheme,
 
     mainBg: '55, 53, 47',
-    mainFg: '200, 200, 200',
+    mainFg: '220, 220, 220',
     buttonBg: '80, 170, 221',
     buttonFg: '255, 255, 255',
     sidebarBg: '75, 73, 67',
     sidebarFg: '255, 255, 255',
+    sidebarTextActiveBorder: '#66b9a7',
     sidebarWhiteLogo: 'true',
 
     link: '#0090ff',
     linkVisited: 'hsla(270, 68%, 70%, 1.0)',
 
-    propDefault: 'hsla(0, 100%, 100%, 0.4)',
+    propDefault: 'hsla(0, 100%, 100%, 0.08)',
     propGray: 'hsla(0, 0%, 70%, 0.4)',
     propBrown: 'hsla(25, 60%, 40%, 0.4)',
     propOrange: 'hsla(35, 100%, 50%, 0.4)',
@@ -97,6 +100,7 @@ export const lightTheme = {
     buttonFg: '255, 255, 255',
     sidebarBg: '247, 246, 243',
     sidebarFg: '55, 53, 47',
+    sidebarTextActiveBorder: '#579eff',
     sidebarWhiteLogo: 'false',
 }
 
@@ -122,6 +126,7 @@ export function setTheme(theme: Theme | null): Theme {
     document.documentElement.style.setProperty('--button-fg', consolidatedTheme.buttonFg)
     document.documentElement.style.setProperty('--sidebar-bg', consolidatedTheme.sidebarBg)
     document.documentElement.style.setProperty('--sidebar-fg', consolidatedTheme.sidebarFg)
+    document.documentElement.style.setProperty('--sidebar-text-active-border', consolidatedTheme.sidebarTextActiveBorder)
     document.documentElement.style.setProperty('--sidebar-white-logo', consolidatedTheme.sidebarWhiteLogo)
 
     document.documentElement.style.setProperty('--link-color', consolidatedTheme.link)
@@ -245,7 +250,8 @@ export function getSelectBaseStyle() {
         }),
         menuList: (provided: CSSObject): CSSObject => ({
             ...provided,
-            overflowY: 'unset',
+            overflowY: 'auto',
+            overflowX: 'hidden',
         }),
     }
 }

@@ -31,6 +31,6 @@ type Sharing struct {
 
 func SharingFromJSON(data io.Reader) Sharing {
 	var sharing Sharing
-	json.NewDecoder(data).Decode(&sharing)
+	_ = json.NewDecoder(data).Decode(&sharing)
 	return sharing
 }

@@ -8,12 +8,12 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-// Service prometheus to run the server
+// Service prometheus to run the server.
 type Service struct {
 	*http.Server
 }
 
-// NewMetricsServer factory method to create a new prometheus server
+// NewMetricsServer factory method to create a new prometheus server.
 func NewMetricsServer(address string, metricsService *Metrics, logger *mlog.Logger) *Service {
 	return &Service{
 		&http.Server{
@@ -25,12 +25,12 @@ func NewMetricsServer(address string, metricsService *Metrics, logger *mlog.Logg
 	}
 }
 
-// Run will start the prometheus server
+// Run will start the prometheus server.
 func (h *Service) Run() error {
 	return errors.Wrap(h.Server.ListenAndServe(), "prometheus ListenAndServe")
 }
 
-// Shutdown will shutdown the prometheus server
+// Shutdown will shutdown the prometheus server.
 func (h *Service) Shutdown() error {
 	return errors.Wrap(h.Server.Close(), "prometheus Close")
 }

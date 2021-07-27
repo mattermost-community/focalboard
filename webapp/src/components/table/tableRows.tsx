@@ -1,7 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {IntlShape} from 'react-intl'
 import {useDragLayer} from 'react-dnd'
 
 import {Card} from '../../blocks/card'
@@ -9,20 +8,23 @@ import {Card} from '../../blocks/card'
 import {BoardTree} from '../../viewModel/boardTree'
 
 import './table.scss'
+import {CardTree} from '../../viewModel/cardTree'
+
 import TableRow from './tableRow'
 
 type Props = {
     boardTree: BoardTree
+    cardTrees: { [key: string]: CardTree | undefined }
     columnRefs: Map<string, React.RefObject<HTMLDivElement>>
     cards: readonly Card[]
     selectedCardIds: string[]
     readonly: boolean
     cardIdToFocusOnRender: string
-    intl: IntlShape
     showCard: (cardId?: string) => void
     addCard: (groupByOptionId?: string) => Promise<void>
     onCardClicked: (e: React.MouseEvent, card: Card) => void
-    onDrop: (srcCard: Card, dstCard: Card) => void}
+    onDrop: (srcCard: Card, dstCard: Card) => void
+}
 
 const TableRows = (props: Props) => {
     const {boardTree, cards} = props
@@ -49,6 +51,7 @@ const TableRows = (props: Props) => {
                         key={card.id + card.updateAt}
                         boardTree={boardTree}
                         card={card}
+                        cardTree={props.cardTrees[card.id]}
                         isSelected={props.selectedCardIds.includes(card.id)}
                         focusOnMount={props.cardIdToFocusOnRender === card.id}
                         onSaveWithEnter={() => {

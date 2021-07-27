@@ -2,7 +2,6 @@
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
 import React from 'react'
-import {IntlShape} from 'react-intl'
 
 import {useDrop} from 'react-dnd'
 
@@ -10,13 +9,15 @@ import {IPropertyOption} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {BoardTree, BoardTreeGroup} from '../../viewModel/boardTree'
 
+import {CardTree} from '../../viewModel/cardTree'
+
 import TableGroupHeaderRow from './tableGroupHeaderRow'
 import TableRows from './tableRows'
 
 type Props = {
     boardTree: BoardTree
+    cardTrees: { [key: string]: CardTree | undefined }
     group: BoardTreeGroup
-    intl: IntlShape
     readonly: boolean
     columnRefs: Map<string, React.RefObject<HTMLDivElement>>
     selectedCardIds: string[]
@@ -61,7 +62,6 @@ const TableGroup = React.memo((props: Props): JSX.Element => {
             <TableGroupHeaderRow
                 group={group}
                 boardTree={boardTree}
-                intl={props.intl}
                 hideGroup={props.hideGroup}
                 addCard={props.addCard}
                 readonly={props.readonly}
@@ -72,12 +72,12 @@ const TableGroup = React.memo((props: Props): JSX.Element => {
             {(group.cards.length > 0) &&
             <TableRows
                 boardTree={boardTree}
+                cardTrees={props.cardTrees}
                 columnRefs={props.columnRefs}
                 cards={group.cards}
                 selectedCardIds={props.selectedCardIds}
                 readonly={props.readonly}
                 cardIdToFocusOnRender={props.cardIdToFocusOnRender}
-                intl={props.intl}
                 showCard={props.showCard}
                 addCard={props.addCard}
                 onCardClicked={props.onCardClicked}

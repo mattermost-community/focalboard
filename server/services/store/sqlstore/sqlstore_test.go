@@ -1,6 +1,7 @@
 package sqlstore
 
 import (
+	"database/sql"
 	"os"
 	"testing"
 
@@ -23,11 +24,15 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 
 	logger := mlog.CreateTestLogger(t)
 
-	store, err := New(dbType, connectionString, "test_", logger)
+	sqlDB, err := sql.Open(dbType, connectionString)
+	require.NoError(t, err)
+	err = sqlDB.Ping()
+	require.NoError(t, err)
+	store, err := New(dbType, connectionString, "test_", logger, sqlDB)
 	require.Nil(t, err)
 
 	tearDown := func() {
-		defer logger.Shutdown()
+		defer func() { _ = logger.Shutdown() }()
 		err = store.Shutdown()
 		require.Nil(t, err)
 	}
@@ -40,4 +45,5 @@ func TestBlocksStore(t *testing.T) {
 	t.Run("SharingStore", func(t *testing.T) { storetests.StoreTestSharingStore(t, SetupTests) })
 	t.Run("SystemStore", func(t *testing.T) { storetests.StoreTestSystemStore(t, SetupTests) })
 	t.Run("UserStore", func(t *testing.T) { storetests.StoreTestUserStore(t, SetupTests) })
+	t.Run("SessionStore", func(t *testing.T) { storetests.StoreTestSessionStore(t, SetupTests) })
 }

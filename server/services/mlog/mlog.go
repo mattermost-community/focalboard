@@ -8,6 +8,8 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"runtime"
+	"strings"
 	"time"
 
 	"github.com/mattermost/logr/v2"
@@ -17,6 +19,18 @@ import (
 const (
 	ShutdownTimeout = time.Second * 15
 )
+
+var (
+	mlogPkg string
+)
+
+func init() {
+	// Calc current package name
+	pcs := make([]uintptr, 2)
+	_ = runtime.Callers(0, pcs)
+	tmp := runtime.FuncForPC(pcs[1]).Name()
+	mlogPkg = GetPackageName(tmp)
+}
 
 // Type and function aliases from Logr to limit the spread of dependencies throughout Focalboard.
 type Field = logr.Field
@@ -106,8 +120,10 @@ type Logger struct {
 	log *logr.Logger
 }
 
-// NewLogger creates a new Logger instance which can be configured via `(*Logger).Configure`
+// NewLogger creates a new Logger instance which can be configured via `(*Logger).Configure`.
 func NewLogger(options ...Option) *Logger {
+	options = append(options, logr.StackFilter(GetPackageName(mlogPkg)))
+
 	lgr, _ := logr.New(options...)
 	log := lgr.NewLogger()
 
@@ -129,15 +145,16 @@ func (l *Logger) Configure(cfgFile string, cfgEscaped string) error {
 
 	// Add config from file
 	if cfgFile != "" {
-		if b, err := ioutil.ReadFile(string(cfgFile)); err != nil {
+		b, err := ioutil.ReadFile(cfgFile)
+		if err != nil {
 			return fmt.Errorf("error reading logger config file %s: %w", cfgFile, err)
-		} else {
-			var mapCfgFile LoggerConfig
-			if err := json.Unmarshal(b, &mapCfgFile); err != nil {
-				return fmt.Errorf("error decoding logger config file %s: %w", cfgFile, err)
-			}
-			cfgMap.append(mapCfgFile)
 		}
+
+		var mapCfgFile LoggerConfig
+		if err := json.Unmarshal(b, &mapCfgFile); err != nil {
+			return fmt.Errorf("error decoding logger config file %s: %w", cfgFile, err)
+		}
+		cfgMap.append(mapCfgFile)
 	}
 
 	// Add config from escaped json string
@@ -172,7 +189,7 @@ func (l *Logger) With(fields ...Field) *Logger {
 // Note, transformations and serializations done via fields are already
 // lazily evaluated and don't require this check beforehand.
 func (l *Logger) IsLevelEnabled(level Level) bool {
-	return l.IsLevelEnabled(level)
+	return l.log.IsLevelEnabled(level)
 }
 
 // Log emits the log record for any targets configured for the specified level.
@@ -215,7 +232,7 @@ func (l *Logger) Error(msg string, fields ...Field) {
 // followed by `os.Exit(1)`.
 func (l *Logger) Fatal(msg string, fields ...Field) {
 	l.log.Log(logr.Fatal, msg, fields...)
-	l.Shutdown()
+	_ = l.Shutdown()
 	os.Exit(1)
 }
 
@@ -246,4 +263,19 @@ func (l *Logger) Shutdown() error {
 	ctx, cancel := context.WithTimeout(context.Background(), ShutdownTimeout)
 	defer cancel()
 	return l.log.Logr().ShutdownWithTimeout(ctx)
+}
+
+// GetPackageName reduces a fully qualified function name to the package name
+// By sirupsen: https://github.com/sirupsen/logrus/blob/master/entry.go
+func GetPackageName(f string) string {
+	for {
+		lastPeriod := strings.LastIndex(f, ".")
+		lastSlash := strings.LastIndex(f, "/")
+		if lastPeriod > lastSlash {
+			f = f[:lastPeriod]
+		} else {
+			break
+		}
+	}
+	return f
 }

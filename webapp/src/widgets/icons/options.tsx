@@ -3,30 +3,15 @@
 
 import React from 'react'
 
+import CompassIcon from './compassIcon'
+
 import './options.scss'
 
 export default function OptionsIcon(): JSX.Element {
     return (
-        <svg
-            xmlns='http://www.w3.org/2000/svg'
-            className='OptionsIcon Icon'
-            viewBox='0 0 100 100'
-        >
-            <circle
-                cx='30'
-                cy='50'
-                r='5'
-            />
-            <circle
-                cx='50'
-                cy='50'
-                r='5'
-            />
-            <circle
-                cx='70'
-                cy='50'
-                r='5'
-            />
-        </svg>
+        <CompassIcon
+            icon='dots-horizontal'
+            className='OptionsIcon'
+        />
     )
 }

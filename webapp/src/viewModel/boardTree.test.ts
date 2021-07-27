@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 
 // Disable console log
+
 console.log = jest.fn()
 console.error = jest.fn()
 
@@ -32,12 +33,12 @@ test('BoardTree', async () => {
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
     let boardTree: BoardTree | undefined
 
-    boardTree = await MutableBoardTree.sync('invalid_id', 'invalid_id')
+    boardTree = await MutableBoardTree.sync('invalid_id', 'invalid_id', {})
     expect(boardTree).toBeUndefined()
     expect(FetchMock.fn).toBeCalledTimes(1)
 
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-    boardTree = await MutableBoardTree.sync(board.id, view.id)
+    boardTree = await MutableBoardTree.sync(board.id, view.id, {})
     expect(boardTree).not.toBeUndefined()
     if (!boardTree) {
         fail('sync')
@@ -48,6 +49,7 @@ test('BoardTree', async () => {
     expect(boardTree.allCards).toEqual([card])
     expect(boardTree.orderedCards()).toEqual([card])
     expect(boardTree.cardTemplates).toEqual([cardTemplate])
+    console.log(boardTree.rawBlocks)
     expect(boardTree.allBlocks).toEqual([board, view, view2, card, cardTemplate])
 
     // Group / filter with sort
@@ -55,12 +57,12 @@ test('BoardTree', async () => {
     expect(boardTree.cards).toEqual([card])
 
     // Group / filter without sort
-    boardTree = boardTree.copyWithView(view2.id)
+    boardTree = await boardTree.copyWithView(view2.id)
     expect(boardTree.activeView).toEqual(view2)
     expect(boardTree.cards).toEqual([card])
 
     // Invalid view, defaults to first view
-    boardTree = boardTree.copyWithView('invalid id')
+    boardTree = await boardTree.copyWithView('invalid id')
     expect(boardTree.activeView).toEqual(view)
 
     // Incremental update
@@ -70,7 +72,7 @@ test('BoardTree', async () => {
     cardTemplate2.isTemplate = true
 
     let originalBoardTree = boardTree
-    boardTree = MutableBoardTree.incrementalUpdate(boardTree, [view3, card2, cardTemplate2])
+    boardTree = await MutableBoardTree.incrementalUpdate(boardTree, [view3, card2, cardTemplate2], {})
     expect(boardTree).not.toBe(originalBoardTree)
     expect(boardTree).not.toBeUndefined()
     if (!boardTree) {
@@ -82,7 +84,7 @@ test('BoardTree', async () => {
 
     // Group / filter with sort
     originalBoardTree = boardTree
-    boardTree = boardTree.copyWithView(view.id)
+    boardTree = await boardTree.copyWithView(view.id)
     expect(boardTree).not.toBe(originalBoardTree)
     expect(boardTree.activeView).toEqual(view)
     expect(boardTree.cards).toEqual([card, card2])
@@ -90,7 +92,7 @@ test('BoardTree', async () => {
 
     // Group / filter without sort
     originalBoardTree = boardTree
-    boardTree = boardTree.copyWithView(view2.id)
+    boardTree = await boardTree.copyWithView(view2.id)
     expect(boardTree).not.toBe(originalBoardTree)
     expect(boardTree.activeView).toEqual(view2)
     expect(boardTree.cards).toEqual([card, card2])
@@ -99,7 +101,7 @@ test('BoardTree', async () => {
     const anotherBoard = TestBlockFactory.createBoard()
     const card4 = TestBlockFactory.createCard(anotherBoard)
     originalBoardTree = boardTree
-    boardTree = MutableBoardTree.incrementalUpdate(boardTree, [anotherBoard, card4])
+    boardTree = await MutableBoardTree.incrementalUpdate(boardTree, [anotherBoard, card4], {})
     expect(boardTree).toBe(originalBoardTree) // Expect same value on no change
     expect(boardTree).not.toBeUndefined()
     if (!boardTree) {
@@ -117,7 +119,7 @@ test('BoardTree', async () => {
     // Search text
     const searchText = 'search text'
     expect(boardTree.getSearchText()).toBeUndefined()
-    boardTree = boardTree.copyWithSearchText(searchText)
+    boardTree = await boardTree.copyWithSearchText(searchText)
     expect(boardTree.getSearchText()).toBe(searchText)
 })
 
@@ -127,7 +129,8 @@ test('BoardTree: defaults', async () => {
 
     // Sync
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board])))
-    const boardTree = await MutableBoardTree.sync(board.id, 'noView')
+
+    const boardTree = await MutableBoardTree.sync(board.id, 'noView', {})
     expect(boardTree).not.toBeUndefined()
     if (!boardTree) {
         fail('sync')

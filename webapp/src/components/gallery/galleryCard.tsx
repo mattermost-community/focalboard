@@ -23,6 +23,7 @@ import ImageElement from '../content/imageElement'
 import ContentElement from '../content/contentElement'
 import PropertyValueElement from '../propertyValueElement'
 import { sendFlashMessage } from '../flashMessages'
+import Tooltip from '../../widgets/tooltip'
 
 import './galleryCard.scss'
 
@@ -44,8 +45,19 @@ const GalleryCard = React.memo((props: Props) => {
 
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
 
-    let images: IContentBlock[] = []
-    images = cardTree.contents.filter((content) => content.type === 'image')
+    let image: IContentBlock | undefined
+    for (let i = 0; i < cardTree.contents.length; ++i) {
+        if (Array.isArray(cardTree.contents[i])) {
+            image = (cardTree.contents[i] as IContentBlock[]).find((c) => c.type === 'image')
+        } else if ((cardTree.contents[i] as IContentBlock).type === 'image') {
+            image = cardTree.contents[i] as IContentBlock
+        }
+
+        if (image) {
+            break
+        }
+    }
+
     let className = props.isSelected ? 'GalleryCard selected' : 'GalleryCard'
     if (isOver) {
         className += ' dragover'
@@ -93,19 +105,31 @@ const GalleryCard = React.memo((props: Props) => {
                 </MenuWrapper>
             }
 
-            {images?.length > 0 &&
+            {image &&
                 <div className='gallery-image'>
-                    <ImageElement block={images[0]}/>
+                    <ImageElement block={image}/>
                 </div>}
-            {images?.length === 0 &&
+            {!image &&
                 <div className='gallery-item'>
-                    {cardTree && images?.length === 0 && cardTree.contents.map((block) => (
-                        <ContentElement
-                            key={block.id}
-                            block={block}
-                            readonly={true}
-                        />
-                    ))}
+                    {cardTree?.contents.map((block) => {
+                        if (Array.isArray(block)) {
+                            return block.map((b) => (
+                                <ContentElement
+                                    key={b.id}
+                                    block={b}
+                                    readonly={true}
+                                />
+                            ))
+                        }
+
+                        return (
+                            <ContentElement
+                                key={block.id}
+                                block={block}
+                                readonly={true}
+                            />
+                        )
+                    })}
                 </div>}
             {props.visibleTitle &&
                 <div className='gallery-title'>
@@ -121,13 +145,19 @@ const GalleryCard = React.memo((props: Props) => {
             {visiblePropertyTemplates.length > 0 &&
                 <div className='gallery-props'>
                     {visiblePropertyTemplates.map((template) => (
-                        <PropertyValueElement
+                        <Tooltip
                             key={template.id}
-                            readOnly={true}
-                            card={cardTree.card}
-                            propertyTemplate={template}
-                            emptyDisplayValue=''
-                        />
+                            title={template.name}
+                            placement='top'
+                        >
+                            <PropertyValueElement
+                                readOnly={true}
+                                card={cardTree.card}
+                                cardTree={cardTree}
+                                propertyTemplate={template}
+                                emptyDisplayValue=''
+                            />
+                        </Tooltip>
                     ))}
                 </div>}
         </div>

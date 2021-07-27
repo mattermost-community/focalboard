@@ -53,7 +53,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
         drop: (item: IPropertyOption) => {
             props.onDropToColumn(item, undefined, group.option)
         },
-    }))
+    }), [props.onDropToColumn])
 
     useEffect(() => {
         setGroupTitle(group.option.value)
@@ -129,12 +129,12 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                                         onClick={() => mutator.deletePropertyOption(boardTree, boardTree.groupByProperty!, group.option)}
                                     />
                                     <Menu.Separator/>
-                                    {Constants.menuColors.map((color) => (
+                                    {Object.entries(Constants.menuColors).map(([key, color]) => (
                                         <Menu.Color
-                                            key={color.id}
-                                            id={color.id}
-                                            name={color.name}
-                                            onClick={() => mutator.changePropertyOptionColor(boardTree.board, boardTree.groupByProperty!, group.option, color.id)}
+                                            key={key}
+                                            id={key}
+                                            name={color}
+                                            onClick={() => mutator.changePropertyOptionColor(boardTree.board, boardTree.groupByProperty!, group.option, key)}
                                         />
                                     ))}
                                 </>}

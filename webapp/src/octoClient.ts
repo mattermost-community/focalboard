@@ -360,7 +360,7 @@ class OctoClient {
         return URL.createObjectURL(blob)
     }
 
-    async getWorkspaceUsers(): Promise<Array<IUser>> {
+    async getWorkspaceUsers(): Promise<IUser[]> {
         const path = this.workspacePath() + '/users'
         const response = await fetch(this.serverUrl + path, {headers: this.headers()})
         if (response.status !== 200) {

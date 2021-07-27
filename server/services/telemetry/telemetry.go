@@ -53,11 +53,11 @@ func (ts *Service) RegisterTracker(name string, f TrackerFunc) {
 func (ts *Service) getRudderConfig() RudderConfig {
 	if !strings.Contains(rudderKey, "placeholder") && !strings.Contains(rudderDataplaneURL, "placeholder") {
 		return RudderConfig{rudderKey, rudderDataplaneURL}
-	} else if os.Getenv("RUDDER_KEY") != "" && os.Getenv("RUDDER_DATAPLANE_URL") != "" {
-		return RudderConfig{os.Getenv("RUDDER_KEY"), os.Getenv("RUDDER_DATAPLANE_URL")}
-	} else {
-		return RudderConfig{}
 	}
+	if os.Getenv("RUDDER_KEY") != "" && os.Getenv("RUDDER_DATAPLANE_URL") != "" {
+		return RudderConfig{os.Getenv("RUDDER_KEY"), os.Getenv("RUDDER_DATAPLANE_URL")}
+	}
+	return RudderConfig{}
 }
 
 func (ts *Service) sendDailyTelemetry(override bool) {
@@ -79,7 +79,7 @@ func (ts *Service) sendDailyTelemetry(override bool) {
 func (ts *Service) sendTelemetry(event string, properties map[string]interface{}) {
 	if ts.rudderClient != nil {
 		var context *rudder.Context
-		ts.rudderClient.Enqueue(rudder.Track{
+		_ = ts.rudderClient.Enqueue(rudder.Track{
 			Event:      event,
 			UserId:     ts.telemetryID,
 			Properties: properties,
@@ -103,7 +103,7 @@ func (ts *Service) initRudder(endpoint, rudderKey string) {
 			ts.logger.Fatal("Failed to create Rudder instance")
 			return
 		}
-		client.Enqueue(rudder.Identify{
+		_ = client.Enqueue(rudder.Identify{
 			UserId: ts.telemetryID,
 		})
 
@@ -113,15 +113,23 @@ func (ts *Service) initRudder(endpoint, rudderKey string) {
 
 func (ts *Service) doTelemetryIfNeeded(firstRun time.Time) {
 	hoursSinceFirstServerRun := time.Since(firstRun).Hours()
+
 	// Send once every 10 minutes for the first hour
-	// Send once every hour thereafter for the first 12 hours
-	// Send at the 24 hour mark and every 24 hours after
 	if hoursSinceFirstServerRun < 1 {
 		ts.doTelemetry()
-	} else if hoursSinceFirstServerRun <= 12 && time.Since(ts.timestampLastTelemetrySent) >= time.Hour {
+		return
+	}
+
+	// Send once every hour thereafter for the first 12 hours
+	if hoursSinceFirstServerRun <= 12 && time.Since(ts.timestampLastTelemetrySent) >= time.Hour {
 		ts.doTelemetry()
-	} else if hoursSinceFirstServerRun > 12 && time.Since(ts.timestampLastTelemetrySent) >= 24*time.Hour {
+		return
+	}
+
+	// Send at the 24 hour mark and every 24 hours after
+	if hoursSinceFirstServerRun > 12 && time.Since(ts.timestampLastTelemetrySent) >= 24*time.Hour {
 		ts.doTelemetry()
+		return
 	}
 }
 

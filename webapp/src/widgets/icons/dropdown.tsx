@@ -3,18 +3,15 @@
 
 import React from 'react'
 
+import CompassIcon from './compassIcon'
+
 import './dropdown.scss'
 
 export default function DropdownIcon(): JSX.Element {
     return (
-        <svg
-            xmlns='http://www.w3.org/2000/svg'
-            className='DropdownIcon Icon'
-            viewBox='0 0 100 100'
-        >
-            <polyline
-                points='30,35 50,55 70,35'
-            />
-        </svg>
+        <CompassIcon
+            icon='chevron-down'
+            className='DropdownIcon'
+        />
     )
 }

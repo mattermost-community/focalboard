@@ -3,7 +3,7 @@ package api
 import (
 	"context"
 	"encoding/json"
-	"errors"
+	"fmt"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -11,12 +11,23 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	serverContext "github.com/mattermost/focalboard/server/context"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
 	"github.com/mattermost/focalboard/server/services/auth"
 	"github.com/mattermost/focalboard/server/services/mlog"
 )
+
+const (
+	MinimumPasswordLength = 8
+)
+
+type ParamError struct {
+	msg string
+}
+
+func (pe ParamError) Error() string {
+	return pe.msg
+}
 
 // LoginRequest is a login request
 // swagger:model
@@ -73,21 +84,18 @@ type RegisterRequest struct {
 
 func (rd *RegisterRequest) IsValid() error {
 	if strings.TrimSpace(rd.Username) == "" {
-		return errors.New("username is required")
+		return ParamError{"username is required"}
 	}
 	if strings.TrimSpace(rd.Email) == "" {
-		return errors.New("email is required")
+		return ParamError{"email is required"}
 	}
 	if !auth.IsEmailValid(rd.Email) {
-		return errors.New("invalid email format")
+		return ParamError{"invalid email format"}
 	}
 	if rd.Password == "" {
-		return errors.New("password is required")
+		return ParamError{"password is required"}
 	}
-	if err := isValidPassword(rd.Password); err != nil {
-		return err
-	}
-	return nil
+	return isValidPassword(rd.Password)
 }
 
 // ChangePasswordRequest is a user password change request
@@ -102,24 +110,20 @@ type ChangePasswordRequest struct {
 	NewPassword string `json:"newPassword"`
 }
 
-// IsValid validates a password change request
+// IsValid validates a password change request.
 func (rd *ChangePasswordRequest) IsValid() error {
 	if rd.OldPassword == "" {
-		return errors.New("Old password is required")
+		return ParamError{"old password is required"}
 	}
 	if rd.NewPassword == "" {
-		return errors.New("New password is required")
+		return ParamError{"new password is required"}
 	}
-	if err := isValidPassword(rd.NewPassword); err != nil {
-		return err
-	}
-
-	return nil
+	return isValidPassword(rd.NewPassword)
 }
 
 func isValidPassword(password string) error {
-	if len(password) < 8 {
-		return errors.New("Password must be at least 8 characters")
+	if len(password) < MinimumPasswordLength {
+		return ParamError{fmt.Sprintf("password must be at least %d characters", MinimumPasswordLength)}
 	}
 	return nil
 }
@@ -155,20 +159,20 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
-		a.errorResponse(w, http.StatusUnauthorized, "", nil)
+		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "not permitted in single-user mode", nil)
 		return
 	}
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	var loginData LoginRequest
 	err = json.Unmarshal(requestBody, &loginData)
 	if err != nil {
-		a.errorResponse(w, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
@@ -178,14 +182,14 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("type", loginData.Type)
 
 	if loginData.Type == "normal" {
-		token, err := a.app().Login(loginData.Username, loginData.Email, loginData.Password, loginData.MfaToken)
+		token, err := a.app.Login(loginData.Username, loginData.Email, loginData.Password, loginData.MfaToken)
 		if err != nil {
-			a.errorResponse(w, http.StatusUnauthorized, "incorrect login", err)
+			a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "incorrect login", err)
 			return
 		}
 		json, err := json.Marshal(LoginResponse{Token: token})
 		if err != nil {
-			a.errorResponse(w, http.StatusInternalServerError, "", err)
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 			return
 		}
 
@@ -194,7 +198,7 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	a.errorResponse(w, http.StatusBadRequest, "invalid login type", nil)
+	a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "invalid login type", nil)
 }
 
 func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
@@ -224,50 +228,50 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
-		a.errorResponse(w, http.StatusUnauthorized, "", nil)
+		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "not permitted in single-user mode", nil)
 		return
 	}
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	var registerData RegisterRequest
 	err = json.Unmarshal(requestBody, &registerData)
 	if err != nil {
-		a.errorResponse(w, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	// Validate token
 	if len(registerData.Token) > 0 {
-		workspace, err := a.app().GetRootWorkspace()
-		if err != nil {
-			a.errorResponse(w, http.StatusInternalServerError, "", err)
+		workspace, err2 := a.app.GetRootWorkspace()
+		if err2 != nil {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err2)
 			return
 		}
 
 		if registerData.Token != workspace.SignupToken {
-			a.errorResponse(w, http.StatusUnauthorized, "", nil)
+			a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "invalid token", nil)
 			return
 		}
 	} else {
 		// No signup token, check if no active users
-		userCount, err := a.app().GetRegisteredUserCount()
-		if err != nil {
-			a.errorResponse(w, http.StatusInternalServerError, "", err)
+		userCount, err2 := a.app.GetRegisteredUserCount()
+		if err2 != nil {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err2)
 			return
 		}
 		if userCount > 0 {
-			a.errorResponse(w, http.StatusUnauthorized, "", nil)
+			a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "no sign-up token and user(s) already exist", nil)
 			return
 		}
 	}
 
 	if err = registerData.IsValid(); err != nil {
-		a.errorResponse(w, http.StatusBadRequest, err.Error(), err)
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
@@ -275,9 +279,9 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelAuth, auditRec)
 	auditRec.AddMeta("username", registerData.Username)
 
-	err = a.app().RegisterUser(registerData.Username, registerData.Email, registerData.Password)
+	err = a.app.RegisterUser(registerData.Username, registerData.Email, registerData.Password)
 	if err != nil {
-		a.errorResponse(w, http.StatusBadRequest, err.Error(), err)
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
@@ -321,7 +325,7 @@ func (a *API) handleChangePassword(w http.ResponseWriter, r *http.Request) {
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
-		a.errorResponse(w, http.StatusUnauthorized, "", nil)
+		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "not permitted in single-user mode", nil)
 		return
 	}
 
@@ -330,26 +334,26 @@ func (a *API) handleChangePassword(w http.ResponseWriter, r *http.Request) {
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	var requestData ChangePasswordRequest
-	if err := json.Unmarshal(requestBody, &requestData); err != nil {
-		a.errorResponse(w, http.StatusInternalServerError, "", err)
+	if err = json.Unmarshal(requestBody, &requestData); err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	if err = requestData.IsValid(); err != nil {
-		a.errorResponse(w, http.StatusBadRequest, err.Error(), err)
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
 	auditRec := a.makeAuditRecord(r, "changePassword", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelAuth, auditRec)
 
-	if err = a.app().ChangePassword(userID, requestData.OldPassword, requestData.NewPassword); err != nil {
-		a.errorResponse(w, http.StatusBadRequest, err.Error(), err)
+	if err = a.app.ChangePassword(userID, requestData.OldPassword, requestData.NewPassword); err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
@@ -368,21 +372,21 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 		a.logger.Debug(`attachSession`, mlog.Bool("single_user", len(a.singleUserToken) > 0))
 		if len(a.singleUserToken) > 0 {
 			if required && (token != a.singleUserToken) {
-				a.errorResponse(w, http.StatusUnauthorized, "", nil)
+				a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "invalid single user token", nil)
 				return
 			}
 
 			now := time.Now().Unix()
 			session := &model.Session{
-				ID:          "single-user",
+				ID:          SingleUser,
 				Token:       token,
-				UserID:      "single-user",
+				UserID:      SingleUser,
 				AuthService: a.authService,
 				Props:       map[string]interface{}{},
 				CreateAt:    now,
 				UpdateAt:    now,
 			}
-			ctx := context.WithValue(r.Context(), "session", session)
+			ctx := context.WithValue(r.Context(), sessionContextKey, session)
 			handler(w, r.WithContext(ctx))
 			return
 		}
@@ -399,15 +403,15 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 				CreateAt:    now,
 				UpdateAt:    now,
 			}
-			ctx := context.WithValue(r.Context(), "session", session)
+			ctx := context.WithValue(r.Context(), sessionContextKey, session)
 			handler(w, r.WithContext(ctx))
 			return
 		}
 
-		session, err := a.app().GetSession(token)
+		session, err := a.app.GetSession(token)
 		if err != nil {
 			if required {
-				a.errorResponse(w, http.StatusUnauthorized, "", err)
+				a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", err)
 				return
 			}
 
@@ -422,11 +426,11 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 				mlog.String("want", a.authService),
 				mlog.String("got", authService),
 			)
-			a.errorResponse(w, http.StatusUnauthorized, "", err)
+			a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", err)
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), "session", session)
+		ctx := context.WithValue(r.Context(), sessionContextKey, session)
 		handler(w, r.WithContext(ctx))
 	}
 }
@@ -434,13 +438,12 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 func (a *API) adminRequired(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Currently, admin APIs require local unix connections
-		conn := serverContext.GetContextConn(r)
+		conn := GetContextConn(r)
 		if _, isUnix := conn.(*net.UnixConn); !isUnix {
-			a.errorResponse(w, http.StatusUnauthorized, "", nil)
+			a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "not a local unix connection", nil)
 			return
 		}
 
 		handler(w, r)
-		return
 	}
 }

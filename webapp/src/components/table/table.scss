@@ -1,7 +1,4 @@
 .Table {
-    .table-row-container {
-        margin-top: 48px;
-    }
     .octo-group-header-cell {
         display: flex;
         flex-shrink: 0;
@@ -46,7 +43,7 @@
             font-weight: normal;
             font-size: 16px;
             width: 100%;
-        
+
             input {
                 background: transparent;
                 width: 100%;
@@ -57,7 +54,7 @@
                 color: rgba(var(--body-color), 1);
             }
         }
-        
+
         > .Button {
             &.IconButton:not(.readonly) {
                 cursor: pointer;
@@ -77,11 +74,13 @@
         flex-direction: row;
         color: rgb(var(--body-color));
         border-right: solid 1px rgba(var(--body-color), 0.09);
+        border-left: 1px solid transparent;
+        border-top: 1px solid transparent;
+        border-bottom: 1px solid transparent;
         box-sizing: border-box;
         padding: 8px;
         min-height: 32px;
         font-size: 14px;
-        line-height: 30px;
         position: relative;
         text-overflow: ellipsis;
 
@@ -135,6 +134,10 @@
             line-height: 17px;
             overflow: hidden;
             text-overflow: ellipsis;
+            .Label {
+                margin: 0 5px;
+                padding: 0 8px;
+            }
         }
 
         .Editable,
@@ -145,9 +148,12 @@
         }
     }
 
-    .octo-table-body {
+    &.octo-table-body {
         display: flex;
+        flex: 1;
         flex-direction: column;
+        overflow: auto;
+        position: relative;
     }
 
     .octo-table-header,
@@ -163,12 +169,14 @@
     }
 
     .octo-table-header {
-        position: fixed;
+        position: sticky;
+        top: 0;
         z-index: 1;
         background: rgb(var(--main-bg));
 
         .octo-table-cell {
             color: rgba(var(--body-color), 0.6);
+            background: rgb(var(--main-bg));
 
             .Label {
                 color: rgba(var(--body-color), 0.6);
