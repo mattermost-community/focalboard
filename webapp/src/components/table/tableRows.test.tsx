@@ -2,7 +2,9 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
+import {Provider as ReduxProvider} from 'react-redux'
 import {fireEvent, render} from '@testing-library/react'
+import configureStore from 'redux-mock-store'
 import '@testing-library/jest-dom'
 import {IntlProvider} from 'react-intl'
 
@@ -38,24 +40,46 @@ describe('components/table/TableRows', () => {
     const cardTemplate = TestBlockFactory.createCard(board)
     cardTemplate.fields.isTemplate = true
 
+    const mockStore = configureStore([])
+    const state = {
+        users: {},
+        comments: {
+            comments: {},
+        },
+        contents: {
+            contents: {},
+        },
+        cards: {
+            cards: {
+                [card.id]: card,
+            },
+            templates: {
+                [cardTemplate.id]: cardTemplate,
+            },
+        },
+    }
+
     test('should match snapshot, fire events', async () => {
         const callback = jest.fn()
         const addCard = jest.fn()
 
+        const store = mockStore(state)
         const component = wrapProviders(
-            <TableRows
-                board={board}
-                activeView={view}
-                columnRefs={new Map()}
-                cards={[card]}
-                selectedCardIds={[]}
-                readonly={false}
-                cardIdToFocusOnRender=''
-                showCard={callback}
-                addCard={addCard}
-                onCardClicked={jest.fn()}
-                onDrop={jest.fn()}
-            />,
+            <ReduxProvider store={store}>
+                <TableRows
+                    board={board}
+                    activeView={view}
+                    columnRefs={new Map()}
+                    cards={[card]}
+                    selectedCardIds={[]}
+                    readonly={false}
+                    cardIdToFocusOnRender=''
+                    showCard={callback}
+                    addCard={addCard}
+                    onCardClicked={jest.fn()}
+                    onDrop={jest.fn()}
+                />
+            </ReduxProvider>,
         )
 
         const {container, getByTitle, getByText} = render(<DndProvider backend={HTML5Backend}>{component}</DndProvider>)

@@ -114,7 +114,7 @@ exports[`should match snapshot with Group 1`] = `
 exports[`should match snapshot, add new 1`] = `
 <div>
   <div
-    class="octo-group-header-cell"
+    class="octo-group-header-cell expanded"
     draggable="true"
     style="opacity: 1;"
   >
@@ -178,7 +178,7 @@ exports[`should match snapshot, add new 1`] = `
 exports[`should match snapshot, edit title 1`] = `
 <div>
   <div
-    class="octo-group-header-cell"
+    class="octo-group-header-cell expanded"
     draggable="true"
     style="opacity: 1;"
   >
@@ -242,7 +242,7 @@ exports[`should match snapshot, edit title 1`] = `
 exports[`should match snapshot, hide group 1`] = `
 <div>
   <div
-    class="octo-group-header-cell expanded"
+    class="octo-group-header-cell"
     draggable="true"
     style="opacity: 1;"
   >

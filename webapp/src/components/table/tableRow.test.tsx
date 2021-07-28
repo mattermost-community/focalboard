@@ -2,7 +2,9 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
+import {Provider as ReduxProvider} from 'react-redux'
 import {render} from '@testing-library/react'
+import configureStore from 'redux-mock-store'
 import '@testing-library/jest-dom'
 import {IntlProvider} from 'react-intl'
 
@@ -34,93 +36,121 @@ describe('components/table/TableRow', () => {
     const cardTemplate = TestBlockFactory.createCard(board)
     cardTemplate.fields.isTemplate = true
 
-    test('should match snapshot', async () => {
-        const component = wrapProviders(
-            <TableRow
-                board={board}
-                activeView={view}
-                card={card}
-                isSelected={false}
-                focusOnMount={false}
-                onSaveWithEnter={jest.fn()}
-                showCard={jest.fn()}
+    const state = {
+        users: {},
+        comments: {
+            comments: {},
+        },
+        contents: {
+            contents: {},
+        },
+        cards: {
+            cards: {
+                [card.id]: card,
+            },
+        },
+    }
 
-                readonly={false}
-                offset={0}
-                resizingColumn={''}
-                columnRefs={new Map()}
-                onDrop={jest.fn()}
-            />,
+    const mockStore = configureStore([])
+
+    test('should match snapshot', async () => {
+        const store = mockStore(state)
+        const component = wrapProviders(
+            <ReduxProvider store={store}>
+                <TableRow
+                    board={board}
+                    activeView={view}
+                    card={card}
+                    isSelected={false}
+                    focusOnMount={false}
+                    onSaveWithEnter={jest.fn()}
+                    showCard={jest.fn()}
+
+                    readonly={false}
+                    offset={0}
+                    resizingColumn={''}
+                    columnRefs={new Map()}
+                    onDrop={jest.fn()}
+                />
+            </ReduxProvider>,
         )
         const {container} = render(component)
         expect(container).toMatchSnapshot()
     })
 
     test('should match snapshot, read-only', async () => {
+        const store = mockStore(state)
         const component = wrapProviders(
-            <TableRow
-                board={board}
-                card={card}
-                activeView={view}
-                isSelected={false}
-                focusOnMount={false}
-                onSaveWithEnter={jest.fn()}
-                showCard={jest.fn()}
+            <ReduxProvider store={store}>
+                <TableRow
+                    board={board}
+                    card={card}
+                    activeView={view}
+                    isSelected={false}
+                    focusOnMount={false}
+                    onSaveWithEnter={jest.fn()}
+                    showCard={jest.fn()}
 
-                readonly={true}
-                offset={0}
-                resizingColumn={''}
-                columnRefs={new Map()}
-                onDrop={jest.fn()}
-            />,
+                    readonly={true}
+                    offset={0}
+                    resizingColumn={''}
+                    columnRefs={new Map()}
+                    onDrop={jest.fn()}
+                />
+            </ReduxProvider>,
         )
         const {container} = render(component)
         expect(container).toMatchSnapshot()
     })
 
     test('should match snapshot, isSelected', async () => {
+        const store = mockStore(state)
         const component = wrapProviders(
-            <TableRow
-                board={board}
-                card={card}
-                activeView={view}
-                isSelected={true}
-                focusOnMount={false}
-                onSaveWithEnter={jest.fn()}
-                showCard={jest.fn()}
+            <ReduxProvider store={store}>
+                <TableRow
+                    board={board}
+                    card={card}
+                    activeView={view}
+                    isSelected={true}
+                    focusOnMount={false}
+                    onSaveWithEnter={jest.fn()}
+                    showCard={jest.fn()}
 
-                readonly={false}
-                offset={0}
-                resizingColumn={''}
-                columnRefs={new Map()}
-                onDrop={jest.fn()}
-            />,
+                    readonly={false}
+                    offset={0}
+                    resizingColumn={''}
+                    columnRefs={new Map()}
+                    onDrop={jest.fn()}
+                />
+            </ReduxProvider>,
         )
         const {container} = render(component)
         expect(container).toMatchSnapshot()
     })
 
     test('should match snapshot, collapsed tree', async () => {
-        // Sync
         view.fields.collapsedOptionIds = ['value1']
         view.fields.hiddenOptionIds = []
 
+        const store = mockStore(state)
         const component = wrapProviders(
-            <TableRow
-                board={board}
-                card={card}
-                activeView={view}
-                isSelected={false}
-                focusOnMount={false}
-                onSaveWithEnter={jest.fn()}
-                showCard={jest.fn()}
+            <ReduxProvider store={store}>
+                <TableRow
+                    board={board}
+                    card={card}
+                    activeView={view}
+                    isSelected={false}
+                    focusOnMount={false}
+                    onSaveWithEnter={jest.fn()}
+                    showCard={jest.fn()}
 
-                readonly={false}
-                offset={0}
-                resizingColumn={''}
-                columnRefs={new Map()}
-                onDrop={jest.fn()}
-            />,
+                    readonly={false}
+                    offset={0}
+                    resizingColumn={''}
+                    columnRefs={new Map()}
+                    onDrop={jest.fn()}
+                />
+            </ReduxProvider>,
         )
         const {container} = render(component)
         expect(container).toMatchSnapshot()
@@ -129,21 +159,24 @@ describe('components/table/TableRow', () => {
     test('should match snapshot, display properties', async () => {
         view.fields.visiblePropertyIds = ['property1', 'property2']
 
+        const store = mockStore(state)
         const component = wrapProviders(
-            <TableRow
-                board={board}
-                card={card}
-                activeView={view}
-                isSelected={false}
-                focusOnMount={false}
-                onSaveWithEnter={jest.fn()}
-                showCard={jest.fn()}
-                readonly={false}
-                offset={0}
-                resizingColumn={''}
-                columnRefs={new Map()}
-                onDrop={jest.fn()}
-            />,
+            <ReduxProvider store={store}>
+                <TableRow
+                    board={board}
+                    card={card}
+                    activeView={view}
+                    isSelected={false}
+                    focusOnMount={false}
+                    onSaveWithEnter={jest.fn()}
+                    showCard={jest.fn()}
+                    readonly={false}
+                    offset={0}
+                    resizingColumn={''}
+                    columnRefs={new Map()}
+                    onDrop={jest.fn()}
+                />
+            </ReduxProvider>,
         )
         const {container} = render(component)
         expect(container).toMatchSnapshot()
@@ -152,21 +185,24 @@ describe('components/table/TableRow', () => {
     test('should match snapshot, resizing column', async () => {
         view.fields.visiblePropertyIds = ['property1', 'property2']
 
+        const store = mockStore(state)
         const component = wrapProviders(
-            <TableRow
-                board={board}
-                card={card}
-                activeView={view}
-                isSelected={false}
-                focusOnMount={false}
-                onSaveWithEnter={jest.fn()}
-                showCard={jest.fn()}
-                readonly={false}
-                offset={0}
-                resizingColumn={'property1'}
-                columnRefs={new Map()}
-                onDrop={jest.fn()}
-            />,
+            <ReduxProvider store={store}>
+                <TableRow
+                    board={board}
+                    card={card}
+                    activeView={view}
+                    isSelected={false}
+                    focusOnMount={false}
+                    onSaveWithEnter={jest.fn()}
+                    showCard={jest.fn()}
+                    readonly={false}
+                    offset={0}
+                    resizingColumn={'property1'}
+                    columnRefs={new Map()}
+                    onDrop={jest.fn()}
+                />
+            </ReduxProvider>,
         )
         const {container} = render(component)
         expect(container).toMatchSnapshot()

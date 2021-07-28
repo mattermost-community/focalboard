@@ -62,6 +62,12 @@ test('should match snapshot, no groups', async () => {
             addCard={jest.fn()}
             propertyNameChanged={jest.fn()}
             onDrop={jest.fn()}
+            groupByProperty={{
+                id: '',
+                name: 'Property 1',
+                type: 'text',
+                options: [{id: 'property1', value: 'Property 1', color: ''}],
+            }}
         />,
     )
     const {container} = render(component)
@@ -105,10 +111,13 @@ test('should match snapshot on read only', async () => {
 test('should match snapshot, hide group', async () => {
     const hideGroup = jest.fn()
 
+    const collapsedOptionsView = TestBlockFactory.createBoardView(board)
+    collapsedOptionsView.fields.collapsedOptionIds = [boardTreeGroup.option.id]
+
     const component = wrapProviders(
         <TableGroupHeaderRowElement
             board={board}
-            activeView={view}
+            activeView={collapsedOptionsView}
             group={boardTreeGroup}
             readonly={false}
             hideGroup={hideGroup}

@@ -17,7 +17,7 @@ const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlPr
 
 describe('components/properties/user', () => {
     const mockStore = configureStore([])
-    const store = mockStore({
+    const state = {
         users: {
             workspaceUsers: {
                 'user-id-1': {
@@ -31,9 +31,10 @@ describe('components/properties/user', () => {
                 },
             },
         },
-    })
+    }
 
     test('not readonly not existing user', async () => {
+        const store = mockStore(state)
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <UserProperty
@@ -56,6 +57,7 @@ describe('components/properties/user', () => {
     })
 
     test('not readonly', async () => {
+        const store = mockStore(state)
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <UserProperty
@@ -78,6 +80,7 @@ describe('components/properties/user', () => {
     })
 
     test('readonly view', async () => {
+        const store = mockStore(state)
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <UserProperty
@@ -100,6 +103,7 @@ describe('components/properties/user', () => {
     })
 
     test('user dropdown open', async () => {
+        const store = mockStore(state)
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <UserProperty

@@ -852,7 +852,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           <div
             class="LastModifiedAt octo-propertyvalue"
           >
-            Sun, Jun 20, 2021 12:22 PM
+            Tue, Jun 22, 2021 11:23 AM
           </div>
         </div>
       </div>
