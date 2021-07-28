@@ -33,7 +33,7 @@ type Props = {
     board: Board
     readOnly: boolean
     card: Card
-    contents: ContentBlock[]
+    contents: Array<ContentBlock|ContentBlock[]>
     comments: CommentBlock[]
     propertyTemplate: IPropertyTemplate
     emptyDisplayValue: string

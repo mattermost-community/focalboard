@@ -15,7 +15,7 @@ import {useAppSelector} from '../../../store/hooks'
 type Props = {
     card: Card,
     board?: Board,
-    contents: ContentBlock[],
+    contents: Array<ContentBlock|ContentBlock[]>
     comments: CommentBlock[],
 }
 
@@ -24,7 +24,7 @@ const LastModifiedBy = (props: Props): JSX.Element => {
 
     let latestBlock: IBlock = props.card
     if (props.board) {
-        const allBlocks: IBlock[] = [props.card, ...props.contents, ...props.comments]
+        const allBlocks: IBlock[] = [props.card, ...props.contents.flat(), ...props.comments]
         const sortedBlocks = allBlocks.sort((a, b) => b.updateAt - a.updateAt)
 
         latestBlock = sortedBlocks.length > 0 ? sortedBlocks[0] : latestBlock

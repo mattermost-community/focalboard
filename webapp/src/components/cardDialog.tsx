@@ -15,6 +15,7 @@ import Menu from '../widgets/menu'
 import {useAppSelector} from '../store/hooks'
 import {getCard} from '../store/cards'
 import {getCardContents} from '../store/contents'
+import {getCardComments} from '../store/comments'
 
 import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
@@ -34,9 +35,7 @@ const CardDialog = (props: Props) => {
     const {board, activeView, cards, views} = props
     const card = useAppSelector(getCard(props.cardId))
     const contents = useAppSelector(getCardContents(props.cardId))
-    // TODO Implement the comments reducer and selector
-    // const comments = useAppSelector(getComments(props.cardId))
-    const comments: CommentBlock[] = []
+    const comments = useAppSelector(getCardComments(props.cardId))
     const intl = useIntl()
 
     const makeTemplateClicked = async () => {

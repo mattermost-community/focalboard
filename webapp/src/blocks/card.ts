@@ -3,14 +3,12 @@
 import {Utils} from '../utils'
 
 import {Block, IBlock} from './block'
-import {ContentBlock} from './contentBlock'
 
 type CardFields = {
     icon?: string
     isTemplate?: boolean
     properties: Record<string, string | string[]>
     contentOrder: Array<string | string[]>
-    contents: ContentBlock[]|ContentBlock[][]
 }
 
 class Card extends Block {
@@ -24,7 +22,6 @@ class Card extends Block {
             icon: block?.fields.icon || '',
             properties: {...(block?.fields.properties || {})},
             contentOrder: block?.fields.contentOrder?.slice() || [],
-            contents: block?.fields.contents?.slice() || [],
             isTemplate: block?.fields.isTemplate || false,
         }
     }

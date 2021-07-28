@@ -6,7 +6,6 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {ContentBlock} from '../../blocks/contentBlock'
-import {CommentBlock} from '../../blocks/commentBlock'
 import mutator from '../../mutator'
 
 import IconButton from '../../widgets/buttons/iconButton'
@@ -23,6 +22,7 @@ import PropertyValueElement from '../propertyValueElement'
 import Tooltip from '../../widgets/tooltip'
 import {useAppSelector} from '../../store/hooks'
 import {getCardContents} from '../../store/contents'
+import {getCardComments} from '../../store/comments'
 
 import './galleryCard.scss'
 
@@ -43,9 +43,7 @@ const GalleryCard = React.memo((props: Props) => {
     const intl = useIntl()
     const [isDragging, isOver, cardRef] = useSortable('card', card, props.isManualSort && !props.readonly, props.onDrop)
     const contents = useAppSelector(getCardContents(card.id))
-    // TODO: Add comments redux store
-    // const comments = useAppSelector(getCardContents(card.id))
-    const comments: CommentBlock[] = []
+    const comments = useAppSelector(getCardComments(card.id))
 
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
 

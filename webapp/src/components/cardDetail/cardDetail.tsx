@@ -7,7 +7,7 @@ import {BlockIcons} from '../../blockIcons'
 import {Card} from '../../blocks/card'
 import {BoardView} from '../../blocks/boardView'
 import {Board} from '../../blocks/board'
-import {CommentBlock} from '../../blocks/commentBlock.ts'
+import {CommentBlock} from '../../blocks/commentBlock'
 import {ContentBlock} from '../../blocks/contentBlock'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
@@ -30,7 +30,7 @@ type Props = {
     cards: Card[]
     card: Card
     comments: CommentBlock[]
-    contents: ContentBlock[]
+    contents: Array<ContentBlock|ContentBlock[]>
     readonly: boolean
 }
 

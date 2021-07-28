@@ -8,6 +8,7 @@ import {useHotkeys} from 'react-hotkeys-hook'
 
 import {IBlock} from '../blocks/block'
 import {ContentBlock} from '../blocks/contentBlock'
+import {CommentBlock} from '../blocks/commentBlock'
 import {Board} from '../blocks/board'
 import {Card} from '../blocks/card'
 import {BoardView} from '../blocks/boardView'
@@ -22,6 +23,7 @@ import {updateBoards, getCurrentBoard, setCurrent as setCurrentBoard} from '../s
 import {updateViews, getCurrentView, setCurrent as setCurrentView} from '../store/views'
 import {updateCards} from '../store/cards'
 import {updateContents} from '../store/contents'
+import {updateComments} from '../store/comments'
 import {initialLoad} from '../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
@@ -79,8 +81,7 @@ const BoardPage = (props: Props) => {
         dispatch(setCurrentView(viewId || ''))
 
         if (!boardId) {
-            const newPath = generatePath(match.path, {...match.params, boardId: '', viewId: ''})
-            history.push(newPath)
+            history.push('/')
         }
     }, [match.path, match.params, history])
 
@@ -123,7 +124,8 @@ const BoardPage = (props: Props) => {
                 dispatch(updateBoards(blocks.filter((b: IBlock) => b.type === 'board' || b.deleteAt !== 0) as Board[]))
                 dispatch(updateViews(blocks.filter((b: IBlock) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
                 dispatch(updateCards(blocks.filter((b: IBlock) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
-                dispatch(updateContents(blocks.filter((b: IBlock) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board') as ContentBlock[]))
+                dispatch(updateComments(blocks.filter((b: IBlock) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
+                dispatch(updateContents(blocks.filter((b: IBlock) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
             })
         }
         const updateWebsocketState = (_: WSClient, newState: 'init'|'open'|'close'): void => {

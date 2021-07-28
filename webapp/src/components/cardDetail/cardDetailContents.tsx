@@ -16,7 +16,7 @@ export type Position = 'left' | 'right' | 'above' | 'below' | 'aboveRow' | 'belo
 
 type Props = {
     card: Card
-    contents: ContentBlockType[]
+    contents: Array<ContentBlockType|ContentBlockType[]>
     readonly: boolean
 }
 
@@ -102,7 +102,7 @@ type ContentBlockWithDragAndDropProps = {
     block: ContentBlockType | ContentBlockType[],
     x: number,
     card: Card,
-    contents: ContentBlockType[],
+    contents: Array<ContentBlockType|ContentBlockType[]>,
     intl: IntlShape,
     readonly: boolean,
 }

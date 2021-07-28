@@ -19,7 +19,7 @@ type Props = {
     board: Board
     card: Card
     cards: Card[]
-    contents: ContentBlock[]
+    contents: Array<ContentBlock|ContentBlock[]>
     comments: CommentBlock[]
     activeView: BoardView
     views: BoardView[]
