@@ -30,7 +30,6 @@
     .Modal{
         position: absolute;
         top: 0px;
-        width: 275px;
         left: 0px;
         margin-bottom: 100px;
     }
@@ -95,6 +94,11 @@
         background-color: rgba(var(--main-bg));
         box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1),0 4px 11px hsla(0, 0%, 0%, 0.1);
         line-height: 100%;
+    }
+
+    .DayPicker-Month {
+        margin: 0;
+        margin-top: 1em;
     }
 
     .DayPicker-Day--today {

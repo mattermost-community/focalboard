@@ -37,7 +37,7 @@ describe('components/properties/dateRange', () => {
         expect(container).toMatchSnapshot()
     })
 
-    test('returns default correctly, es local', () => {
+    test('returns local correctly - es local', () => {
         const component = (
             <IntlProvider locale='es'>
                 <DateRange

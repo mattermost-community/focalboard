@@ -46,13 +46,17 @@ class OctoUtils {
                 if (singleDate && DateUtils.isDate(singleDate)) {
                     displayValue = Utils.displayDate(new Date(parseInt(propertyValue as string, 10)), intl)
                 } else {
-                    const dateValue = JSON.parse(propertyValue as string)
-                    if (dateValue.from) {
-                        displayValue = Utils.displayDate(new Date(dateValue.from), intl)
-                    }
-                    if (dateValue.to) {
-                        displayValue += ' -> '
-                        displayValue += Utils.displayDate(new Date(dateValue.to), intl)
+                    try {
+                        const dateValue = JSON.parse(propertyValue as string)
+                        if (dateValue.from) {
+                            displayValue = Utils.displayDate(new Date(dateValue.from), intl)
+                        }
+                        if (dateValue.to) {
+                            displayValue += ' -> '
+                            displayValue += Utils.displayDate(new Date(dateValue.to), intl)
+                        }
+                    } catch {
+                        // do nothing
                     }
                 }
             }

@@ -52,7 +52,11 @@ function DateRange(props: Props): JSX.Element {
             if (singleDate && DateUtils.isDate(singleDate)) {
                 dateProperty.from = singleDate.getTime()
             } else {
-                dateProperty = JSON.parse(initialValue)
+                try {
+                    dateProperty = JSON.parse(initialValue)
+                } catch {
+                    //Don't do anything, return empty dateProperty
+                }
             }
         }
         return dateProperty
@@ -102,7 +106,6 @@ function DateRange(props: Props): JSX.Element {
                 to: undefined,
             })
         }
-
         saveRangeValue(range)
     }
 
@@ -243,7 +246,6 @@ function DateRange(props: Props): JSX.Element {
             </ModalWrapper>
             }
         </div>
-
     )
 }
 
