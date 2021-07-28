@@ -156,7 +156,6 @@ function DateRange(props: Props): JSX.Element {
         const current = stateRef.current
         setShowDialog(false)
         if (current && current.from) {
-            console.log(current)
             if (!current.includeTime) {
                 // Day has time is noon, local time
                 // Set to Midnight UTC time
@@ -169,7 +168,6 @@ function DateRange(props: Props): JSX.Element {
                     current.to -= timeZoneOffset
                 }
             }
-            console.log(current)
             onChange(JSON.stringify(current))
         } else {
             onChange('')
