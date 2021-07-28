@@ -5,7 +5,6 @@ import {useIntl} from 'react-intl'
 
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
-import {CommentBlock} from '../../blocks/commentBlock'
 import mutator from '../../mutator'
 import IconButton from '../../widgets/buttons/iconButton'
 import DeleteIcon from '../../widgets/icons/delete'
@@ -16,6 +15,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import {useSortable} from '../../hooks/sortable'
 import {useAppSelector} from '../../store/hooks'
 import {getCardContents} from '../../store/contents'
+import {getCardComments} from '../../store/comments'
 
 import './kanbanCard.scss'
 import PropertyValueElement from '../propertyValueElement'
@@ -44,9 +44,7 @@ const KanbanCard = React.memo((props: Props) => {
     }
 
     const contents = useAppSelector(getCardContents(card.id))
-    // TODO: Add comments redux store
-    // const comments = useAppSelector(getCardContents(card.id))
-    const comments: CommentBlock[] = []
+    const comments = useAppSelector(getCardComments(card.id))
 
     return (
         <div

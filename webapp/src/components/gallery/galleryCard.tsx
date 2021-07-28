@@ -49,10 +49,9 @@ const GalleryCard = React.memo((props: Props) => {
 
     let image: ContentBlock | undefined
     for (let i = 0; i < contents.length; ++i) {
-        // TODO: Verify what case is it and how it maps to redux store
-        // if (Array.isArray(contents[i])) {
-        //     image = (contents[i] as IContentBlock[]).find((c) => c.type === 'image')
-        if ((contents[i] as ContentBlock).type === 'image') {
+        if (Array.isArray(contents[i])) {
+            image = (contents[i] as ContentBlock[]).find((c) => c.type === 'image')
+        } else if ((contents[i] as ContentBlock).type === 'image') {
             image = contents[i] as ContentBlock
         }
 

@@ -4,8 +4,6 @@ import React, {useState, useRef, useEffect} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {Card} from '../../blocks/card'
-import {ContentBlock} from '../../blocks/contentBlock'
-import {CommentBlock} from '../../blocks/commentBlock'
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
 import {Constants} from '../../constants'
@@ -15,6 +13,7 @@ import Editable from '../../widgets/editable'
 import {useSortable} from '../../hooks/sortable'
 import {useAppSelector} from '../../store/hooks'
 import {getCardContents} from '../../store/contents'
+import {getCardComments} from '../../store/comments'
 
 import PropertyValueElement from '../propertyValueElement'
 import './tableRow.scss'
@@ -38,9 +37,7 @@ type Props = {
 const TableRow = React.memo((props: Props) => {
     const {board, activeView, onSaveWithEnter, columnRefs, card} = props
     const contents = useAppSelector(getCardContents(card.id || ''))
-    // TODO: Add comments redux store
-    // const comments = useAppSelector(getCardContents(card.id))
-    const comments: CommentBlock[] = []
+    const comments = useAppSelector(getCardComments(card.id))
 
     const titleRef = useRef<{focus(selectAll?: boolean): void}>(null)
     const [title, setTitle] = useState(props.card.title || '')
