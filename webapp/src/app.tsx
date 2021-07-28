@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import {
     BrowserRouter as Router,
     Redirect,

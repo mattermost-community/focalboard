@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useRef, useCallback, useMemo} from 'react'
+import React, {useState, useRef, useMemo} from 'react'
 import SimpleMDE from 'react-simplemde-editor'
 
 import {Utils} from '../utils'

@@ -14,7 +14,6 @@ import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import TableHeader from './tableHeader'
 
-
 const wrapProviders = (children: any) => {
     return (
         <DndProvider backend={HTML5Backend}>

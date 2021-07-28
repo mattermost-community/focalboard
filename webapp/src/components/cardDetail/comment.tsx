@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {FC, useEffect, useState} from 'react'
+import React, {FC} from 'react'
 import {useIntl} from 'react-intl'
 
 import {IBlock} from '../../blocks/block'
