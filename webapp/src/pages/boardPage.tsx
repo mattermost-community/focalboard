@@ -112,15 +112,19 @@ const BoardPage = (props: Props) => {
         if (!props.readonly) {
             dispatch(initialLoad)
             const token = localStorage.getItem('focalboardSessionId') || ''
-            wsClient.authenticate(match.params.workspaceId || '0', token)
-            wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
+            if (wsClient.state === 'open') {
+                wsClient.authenticate(match.params.workspaceId || '0', token)
+                wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
+            }
         }
 
         dispatch(initialLoad())
 
-        const token = localStorage.getItem('focalboardSessionId') || ''
-        wsClient.authenticate(match.params.workspaceId || '0', token)
-        wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
+        if (wsClient.state === 'open') {
+            const token = localStorage.getItem('focalboardSessionId') || ''
+            wsClient.authenticate(match.params.workspaceId || '0', token)
+            wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
+        }
 
         const incrementalUpdate = (_: WSClient, blocks: IBlock[]) => {
             batch(() => {

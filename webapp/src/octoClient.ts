@@ -177,7 +177,7 @@ class OctoClient {
     }
 
     async getAllBlocks(): Promise<IBlock[]> {
-        const path = this.workspacePath() + '/blocks'
+        const path = this.workspacePath() + '/blocks?all=true'
         return this.getBlocksWithPath(path)
     }
 
