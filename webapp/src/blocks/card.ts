@@ -17,11 +17,21 @@ class Card extends Block {
     constructor(block?: IBlock) {
         super(block)
         this.type = 'card'
+        const contentOrder: Array<string|string[]> = []
+        if (block?.fields.contentOrder) {
+            for (const contentId of block.fields.contentOrder) {
+                if (typeof contentId === 'string') {
+                    contentOrder.push(contentId)
+                } else {
+                    contentOrder.push(contentId.slice())
+                }
+            }
+        }
 
         this.fields = {
             icon: block?.fields.icon || '',
             properties: {...(block?.fields.properties || {})},
-            contentOrder: block?.fields.contentOrder?.slice() || [],
+            contentOrder,
             isTemplate: block?.fields.isTemplate || false,
         }
     }

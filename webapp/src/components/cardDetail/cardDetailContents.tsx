@@ -36,7 +36,16 @@ function addTextBlock(card: Card, intl: IntlShape, text: string): void {
 }
 
 function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: IContentBlockWithCords, intl: IntlShape, moveTo: Position): void {
-    const contentOrder = card.fields.contentOrder.slice()
+    const contentOrder: Array<string|string[]> = []
+    if (card.fields.contentOrder) {
+        for (const contentId of card.fields.contentOrder) {
+            if (typeof contentId === 'string') {
+                contentOrder.push(contentId)
+            } else {
+                contentOrder.push(contentId.slice())
+            }
+        }
+    }
 
     const srcBlockId = srcBlock.block.id
     const dstBlockId = dstBlock.block.id
@@ -55,7 +64,7 @@ function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: ICont
     if (srcBlockY > -1) {
         (contentOrder[srcBlockX] as string[]).splice(srcBlockY, 1)
 
-        if (contentOrder[srcBlockX].length === 1) {
+        if (contentOrder[srcBlockX].length === 1 && srcBlockX !== dstBlockX) {
             contentOrder.splice(srcBlockX, 1, contentOrder[srcBlockX][0])
         }
     } else {
