@@ -71,10 +71,12 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
     const globalTemplates = useAppSelector<Board[]>(getGlobalTemplates)
     const dispatch = useAppDispatch()
     const history = useHistory()
-    const match = useRouteMatch()
+    const match = useRouteMatch<{boardId: string, viewId?: string}>()
 
     const showBoard = useCallback((boardId) => {
-        const newPath = generatePath(match.path, {...match.params, boardId: boardId || ''})
+        const params = {...match.params, boardId: boardId || ''}
+        delete params.viewId
+        const newPath = generatePath(match.path, params)
         history.push(newPath)
     }, [match, history])
 

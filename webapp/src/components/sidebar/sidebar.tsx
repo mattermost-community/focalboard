@@ -98,7 +98,7 @@ const Sidebar = React.memo((props: Props) => {
                                 board={board}
                                 activeBoardId={props.activeBoardId}
                                 activeViewId={props.activeViewId}
-                                nextBoardId={nextBoardId}
+                                nextBoardId={board.id === props.activeBoardId ? nextBoardId : undefined}
                             />
                         )
                     })

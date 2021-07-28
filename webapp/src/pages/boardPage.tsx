@@ -77,19 +77,22 @@ const BoardPage = (props: Props) => {
     useEffect(() => {
         const boardId = match.params.boardId
         const viewId = match.params.viewId
-        Utils.log(`attachToBoard: ${boardId}`)
-        localStorage.setItem('lastBoardId', boardId || '')
-        localStorage.setItem('lastViewId', viewId)
-        dispatch(setCurrentBoard(boardId || ''))
-        dispatch(setCurrentView(viewId || ''))
 
-        if (!boardId) {
-            history.push('/')
-        }
+        Utils.log(`attachToBoard: ${boardId}`)
         if (boardId && !viewId && boardViews.length > 0) {
             const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
             history.push(newPath)
         }
+
+        let view = boardViews.find((v) => v.id === viewId)
+        if (!view && boardViews.length > 0) {
+            view = boardViews[0]
+        }
+
+        localStorage.setItem('lastBoardId', boardId || '')
+        localStorage.setItem('lastViewId', view?.id || '')
+        dispatch(setCurrentBoard(boardId || ''))
+        dispatch(setCurrentView(view?.id || ''))
     }, [match.params.boardId, match.params.viewId, history, boardViews])
 
     useEffect(() => {
