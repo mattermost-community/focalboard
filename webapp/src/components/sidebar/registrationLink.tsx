@@ -67,6 +67,7 @@ const RegistrationLink = React.memo((props: Props) => {
                         </a>
                         <Button
                             filled={true}
+                            size='small'
                             onClick={() => {
                                 Utils.copyTextToClipboard(registrationUrl)
                                 setWasCopied(true)
@@ -76,7 +77,11 @@ const RegistrationLink = React.memo((props: Props) => {
                         </Button>
                     </div>
                     <div className='row'>
-                        <Button onClick={regenerateToken}>
+                        <Button
+                            onClick={regenerateToken}
+                            emphasis='secondary'
+                            size='small'
+                        >
                             {intl.formatMessage({id: 'RegistrationLink.regenerateToken', defaultMessage: 'Regenerate token'})}
                         </Button>
                     </div>

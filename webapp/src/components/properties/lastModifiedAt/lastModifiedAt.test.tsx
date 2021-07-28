@@ -3,12 +3,14 @@
 
 import React from 'react'
 import {render} from '@testing-library/react'
+import {IntlProvider} from 'react-intl'
 
 import {Card} from '../../../blocks/card'
-
 import {CommentBlock} from '../../../blocks/commentBlock'
 
 import LastModifiedAt from './lastModifiedAt'
+
+const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
 
 describe('componnets/properties/lastModifiedAt', () => {
     test('should match snapshot', () => {
@@ -22,12 +24,12 @@ describe('componnets/properties/lastModifiedAt', () => {
         comment.parentId = 'card-id-1'
         comment.updateAt = Date.parse('15 Jun 2021 16:22:00')
 
-        const component = (
+        const component = wrapIntl(
             <LastModifiedAt
                 card={card}
                 contents={[]}
                 comments={[comment]}
-            />
+            />,
         )
 
         const {container} = render(component)

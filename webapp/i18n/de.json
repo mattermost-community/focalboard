@@ -23,7 +23,7 @@
   "ContentBlock.addElement": "{type} hinzufügen",
   "ContentBlock.checkbox": "Checkbox",
   "ContentBlock.divider": "Teiler",
-  "ContentBlock.editCardCheckbox": "toggled-checkbox",
+  "ContentBlock.editCardCheckbox": "Umschaltbare Checkbox",
   "ContentBlock.editCardCheckboxText": "Kartentext bearbeiten",
   "ContentBlock.editCardText": "Kartentext bearbeiten",
   "ContentBlock.editText": "Text bearbeiten ...",

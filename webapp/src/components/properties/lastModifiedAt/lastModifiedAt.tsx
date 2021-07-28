@@ -3,12 +3,13 @@
 
 import React from 'react'
 
+import {useIntl} from 'react-intl'
+
 import {Card} from '../../../blocks/card'
 import {IBlock} from '../../../blocks/block'
 import {ContentBlock} from '../../../blocks/contentBlock'
 import {CommentBlock} from '../../../blocks/commentBlock'
-
-const moment = require('moment')
+import {Utils} from '../../../utils'
 
 type Props = {
     card: Card,
@@ -17,6 +18,8 @@ type Props = {
 }
 
 const LastModifiedAt = (props: Props): JSX.Element => {
+    const intl = useIntl()
+
     let latestBlock: IBlock = props.card
     if (props.card) {
         const allBlocks = [props.card, ...props.contents.flat(), ...props.comments]
@@ -27,7 +30,7 @@ const LastModifiedAt = (props: Props): JSX.Element => {
 
     return (
         <div className='LastModifiedAt octo-propertyvalue'>
-            {moment(latestBlock.updateAt).format('llll')}
+            {Utils.displayDateTime(new Date(latestBlock.updateAt), intl)}
         </div>
     )
 }

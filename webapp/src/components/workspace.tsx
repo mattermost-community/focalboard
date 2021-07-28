@@ -6,7 +6,7 @@ import {FormattedMessage} from 'react-intl'
 
 import {getCurrentBoard} from '../store/boards'
 import {getCurrentViewCardsSortedFilteredAndGrouped} from '../store/cards'
-import {getView, getCurrentBoardViews, getCurrentViewGroupBy} from '../store/views'
+import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentView} from '../store/views'
 import {useAppSelector} from '../store/hooks'
 
 import CenterPanel from './centerPanel'
@@ -50,11 +50,15 @@ function CenterContent(props: Props) {
 
 const Workspace = React.memo((props: Props) => {
     const board = useAppSelector(getCurrentBoard)
+    const view = useAppSelector(getCurrentView)
 
     return (
         <div className='Workspace'>
             {!props.readonly &&
-                <Sidebar activeBoardId={board?.id}/>
+                <Sidebar
+                    activeBoardId={board?.id}
+                    activeViewId={view?.id}
+                />
             }
             <div className='mainFrame'>
                 {(board?.fields.isTemplate) &&

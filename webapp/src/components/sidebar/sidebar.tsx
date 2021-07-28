@@ -21,6 +21,7 @@ import SidebarUserMenu from './sidebarUserMenu'
 
 type Props = {
     activeBoardId?: string
+    activeViewId?: string
 }
 
 const Sidebar = React.memo((props: Props) => {
@@ -96,6 +97,7 @@ const Sidebar = React.memo((props: Props) => {
                                 views={views}
                                 board={board}
                                 activeBoardId={props.activeBoardId}
+                                activeViewId={props.activeViewId}
                                 nextBoardId={nextBoardId}
                             />
                         )

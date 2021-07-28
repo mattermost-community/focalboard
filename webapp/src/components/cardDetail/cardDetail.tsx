@@ -11,7 +11,8 @@ import {CommentBlock} from '../../blocks/commentBlock'
 import {ContentBlock} from '../../blocks/contentBlock'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
-import Editable from '../../widgets/editable'
+import {Focusable} from '../../widgets/editable'
+import EditableArea from '../../widgets/editableArea'
 import EmojiIcon from '../../widgets/icons/emoji'
 
 import BlockIconSelector from '../blockIconSelector'
@@ -37,7 +38,7 @@ type Props = {
 const CardDetail = (props: Props): JSX.Element|null => {
     const {card, comments} = props
     const [title, setTitle] = useState(card.title)
-    const titleRef = useRef<{focus(selectAll?: boolean): void}>(null)
+    const titleRef = useRef<Focusable>(null)
     const titleValueRef = useRef(title)
     titleValueRef.current = title
 
@@ -83,7 +84,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                         </Button>
                     </div>}
 
-                <Editable
+                <EditableArea
                     ref={titleRef}
                     className='title'
                     value={title}

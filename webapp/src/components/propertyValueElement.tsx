@@ -19,8 +19,6 @@ import Label from '../widgets/label'
 import EditableDayPicker from '../widgets/editableDayPicker'
 import Switch from '../widgets/switch'
 
-import {UserSettings} from '../userSettings'
-
 import UserProperty from './properties/user/user'
 import MultiSelectProperty from './properties/multiSelect'
 import URLProperty from './properties/link/link'
@@ -161,7 +159,6 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             <EditableDayPicker
                 className='octo-propertyvalue'
                 value={value as string}
-                dateFormat={UserSettings.preferredDateFormat}
                 onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
             />
         )
