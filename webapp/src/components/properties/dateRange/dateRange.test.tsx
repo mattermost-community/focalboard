@@ -13,9 +13,9 @@ import DateRange from '../dateRange/dateRange'
 const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
 
 // create Dates for specific days for this year.
-const June15 = new Date(Date.UTC(new Date().getFullYear(), 5, 15))
-const June15Local = new Date(new Date().getFullYear(), 5, 15)
-const June20 = new Date(Date.UTC(new Date().getFullYear(), 5, 20))
+const June15 = new Date(Date.UTC(new Date().getFullYear(), 5, 15, 12))
+const June15Local = new Date(new Date().getFullYear(), 5, 15, 12)
+const June20 = new Date(Date.UTC(new Date().getFullYear(), 5, 20, 12))
 
 describe('components/properties/dateRange', () => {
     beforeEach(() => {
@@ -65,7 +65,7 @@ describe('components/properties/dateRange', () => {
         )
 
         const date = new Date()
-        const fifteenth = Date.UTC(date.getFullYear(), date.getMonth(), 15)
+        const fifteenth = Date.UTC(date.getFullYear(), date.getMonth(), 15, 12)
 
         const {getByText, getByTitle} = render(component)
         const dayDisplay = getByText('Empty')
@@ -97,7 +97,7 @@ describe('components/properties/dateRange', () => {
 
         // select start date
         const date = new Date()
-        const fifteenth = Date.UTC(date.getFullYear(), date.getMonth(), 15)
+        const fifteenth = Date.UTC(date.getFullYear(), date.getMonth(), 15, 12)
         const start = getByText('15')
         userEvent.click(start)
 
@@ -105,7 +105,7 @@ describe('components/properties/dateRange', () => {
         const endDate = getByText('End date')
         userEvent.click(endDate)
 
-        const twentieth = Date.UTC(date.getFullYear(), date.getMonth(), 20)
+        const twentieth = Date.UTC(date.getFullYear(), date.getMonth(), 20, 12)
 
         const end = getByText('20')
         const modal = getByTitle('Close').children[0]
@@ -165,8 +165,8 @@ describe('components/properties/dateRange', () => {
         userEvent.type(fromInput, '{selectall}07/15/2021{enter}')
         userEvent.type(toInput, '{selectall}07/20/2021{enter}')
 
-        const July15 = new Date(Date.UTC(2021, 6, 15))
-        const July20 = new Date(Date.UTC(2021, 6, 20))
+        const July15 = new Date(Date.UTC(2021, 6, 15, 12))
+        const July20 = new Date(Date.UTC(2021, 6, 20, 12))
         const modal = getByTitle('Close').children[0]
 
         userEvent.click(modal)

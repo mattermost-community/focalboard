@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useRef} from 'react'
+import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
 import {DateUtils} from 'react-day-picker'
 import MomentLocaleUtils from 'react-day-picker/moment'
@@ -31,7 +31,6 @@ type DateProperty = {
 }
 
 const loadedLocales: Record<string, any> = {}
-const twelveHours = 12 * 60 * 60 * 1000
 
 function DateRange(props: Props): JSX.Element {
     const {className, value, onChange} = props
@@ -54,17 +53,6 @@ function DateRange(props: Props): JSX.Element {
                 dateProperty.from = singleDate.getTime()
             } else {
                 dateProperty = JSON.parse(initialValue)
-                if (!dateProperty.includeTime) {
-                    // if date only, convert from UTC midnight to local time noon.
-                    if (dateProperty.from) {
-                        dateProperty.from += twelveHours
-                        dateProperty.from += timeZoneOffset
-                    }
-                    if (dateProperty.to) {
-                        dateProperty.to += twelveHours
-                        dateProperty.to += timeZoneOffset
-                    }
-                }
             }
         }
         return dateProperty
@@ -73,13 +61,13 @@ function DateRange(props: Props): JSX.Element {
     const [dateProperty, setDateProperty] = useState<DateProperty>(createDatePropertyFromString(value as string))
     const [showDialog, setShowDialog] = useState(false)
 
-    const dateFrom = dateProperty.from ? new Date(dateProperty.from) : undefined
-    const dateTo = dateProperty.to ? new Date(dateProperty.to) : undefined
+    // Keep dateProperty as UTC,
+    // dateFrom / dateTo will need converted to local time, to ensure date stays consistent
+    // dateFrom / dateTo will be used for input and calendar dates
+    const dateFrom = dateProperty.from ? new Date(dateProperty.from + (dateProperty.includeTime ? 0 : timeZoneOffset)) : undefined
+    const dateTo = dateProperty.to ? new Date(dateProperty.to + (dateProperty.includeTime ? 0 : timeZoneOffset)) : undefined
     const [fromInput, setFromInput] = useState<string>(getDisplayDate(dateFrom))
     const [toInput, setToInput] = useState<string>(getDisplayDate(dateTo))
-
-    const stateRef = useRef(dateProperty)
-    stateRef.current = dateProperty
 
     const isRange = dateTo !== undefined
 
@@ -91,9 +79,7 @@ function DateRange(props: Props): JSX.Element {
     }
 
     const handleDayClick = (day: Date) => {
-        const range = {
-            ...dateProperty,
-        }
+        const range : DateProperty = {}
         if (isRange) {
             const newRange = DateUtils.addDayToRange(day, {from: dateFrom, to: dateTo})
             range.from = newRange.from?.getTime()
@@ -106,17 +92,17 @@ function DateRange(props: Props): JSX.Element {
     }
 
     const onRangeClick = () => {
-        let range = {
-            ...dateProperty,
-            from: dateProperty.from,
-            to: dateProperty.from,
+        let range : DateProperty = {
+            from: dateFrom?.getTime(),
+            to: dateFrom?.getTime(),
         }
         if (isRange) {
             range = ({
-                from: dateProperty.from,
+                from: dateFrom?.getTime(),
                 to: undefined,
             })
         }
+
         saveRangeValue(range)
     }
 
@@ -124,54 +110,18 @@ function DateRange(props: Props): JSX.Element {
         saveRangeValue({})
     }
 
-    const saveRangeValue = (range: any) => {
-        setDateProperty(range)
+    const saveRangeValue = (range: DateProperty) => {
+        const rangeUTC = {...range}
+        if (rangeUTC.from) {
+            rangeUTC.from -= dateProperty.includeTime ? 0 : timeZoneOffset
+        }
+        if (rangeUTC.to) {
+            rangeUTC.to -= dateProperty.includeTime ? 0 : timeZoneOffset
+        }
+
+        setDateProperty(rangeUTC)
         setFromInput(getDisplayDate(range.from ? new Date(range.from) : undefined))
         setToInput(getDisplayDate(range.to ? new Date(range.to) : undefined))
-    }
-
-    // const onClose = useCallback(() => {
-    //     setShowDialog(false)
-    //     console.log(dateProperty)
-    //     if (dateProperty && dateProperty.from) {
-    //         if (!dateProperty.includeTime) {
-    // Day has time is noon, local time
-    // Set to Midnight UTC time
-    // if (current.from) {
-    //     current.from -= twelveHours
-    //     current.from -= timeZoneOffset
-    // }
-    // if (current.to) {
-    //     current.to -= twelveHours
-    //     current.to -= timeZoneOffset
-    // }
-    //         }
-    //         onChange(JSON.stringify(dateProperty))
-    //     } else {
-    //         onChange('')
-    //     }
-    // }, [dateProperty, dateProperty.from, dateProperty.to])
-
-    const onClose = () => {
-        const current = stateRef.current
-        setShowDialog(false)
-        if (current && current.from) {
-            if (!current.includeTime) {
-                // Day has time is noon, local time
-                // Set to Midnight UTC time
-                if (current.from) {
-                    current.from -= twelveHours
-                    current.from -= timeZoneOffset
-                }
-                if (current.to) {
-                    current.to -= twelveHours
-                    current.to -= timeZoneOffset
-                }
-            }
-            onChange(JSON.stringify(current))
-        } else {
-            onChange('')
-        }
     }
 
     let displayValue = ''
@@ -180,6 +130,20 @@ function DateRange(props: Props): JSX.Element {
     }
     if (dateTo) {
         displayValue += ' -> ' + getDisplayDate(dateTo)
+    }
+
+    const onClose = () => {
+        // not actually setting here,
+        // but using to retreive the current state
+        setDateProperty((current) => {
+            if (current && current.from) {
+                onChange(JSON.stringify(current))
+            } else {
+                onChange('')
+            }
+            return {...current}
+        })
+        setShowDialog(false)
     }
 
     return (
@@ -193,9 +157,7 @@ function DateRange(props: Props): JSX.Element {
             {showDialog &&
             <ModalWrapper>
                 <Modal
-                    onClose={() => {
-                        onClose()
-                    }}
+                    onClose={() => onClose()}
                 >
                     <div
                         className={className + '-overlayWrapper'}
@@ -210,9 +172,11 @@ function DateRange(props: Props): JSX.Element {
                                         const newDate = new Date(fromInput)
                                         if (newDate && DateUtils.isDate(newDate)) {
                                             newDate.setHours(12)
-                                            setDateProperty((prev) => {
-                                                return {...prev, from: newDate.getTime()}
-                                            })
+                                            const range : DateProperty = {
+                                                from: newDate.getTime(),
+                                                to: dateTo?.getTime(),
+                                            }
+                                            saveRangeValue(range)
                                         } else {
                                             setFromInput(getDisplayDate(dateFrom))
                                         }
@@ -230,9 +194,11 @@ function DateRange(props: Props): JSX.Element {
                                             const newDate = new Date(toInput)
                                             if (newDate && DateUtils.isDate(newDate)) {
                                                 newDate.setHours(12)
-                                                setDateProperty((prevRange) => {
-                                                    return {...prevRange, to: newDate.getTime()}
-                                                })
+                                                const range : DateProperty = {
+                                                    from: dateFrom?.getTime(),
+                                                    to: newDate.getTime(),
+                                                }
+                                                saveRangeValue(range)
                                             } else {
                                                 setToInput(getDisplayDate(dateTo))
                                             }
