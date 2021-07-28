@@ -12,7 +12,7 @@ require (
 	github.com/gorilla/websocket v1.4.2
 	github.com/lib/pq v1.10.0
 	github.com/magiconair/properties v1.8.5 // indirect
-	github.com/mattermost/logr/v2 v2.0.2
+	github.com/mattermost/logr/v2 v2.0.4
 	github.com/mattermost/mattermost-server/v5 v5.3.2-0.20210524045451-a4f7df6f6e3c
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
