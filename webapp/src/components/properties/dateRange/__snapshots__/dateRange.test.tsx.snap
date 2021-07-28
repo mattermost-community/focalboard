@@ -10,7 +10,7 @@ exports[`components/properties/dateRange cancel set via text input 1`] = `
       type="button"
     >
       <span>
-        6/15/2021 -&gt; 6/20/2021
+        June 15 -&gt; June 20
       </span>
     </button>
   </div>
@@ -27,7 +27,7 @@ exports[`components/properties/dateRange handle clear 1`] = `
       type="button"
     >
       <span>
-        6/15/2021
+        June 15
       </span>
     </button>
   </div>
@@ -61,7 +61,7 @@ exports[`components/properties/dateRange returns default correctly, es local 1`]
       type="button"
     >
       <span>
-        15/6/2021
+        15 de junio
       </span>
     </button>
   </div>
@@ -78,7 +78,7 @@ exports[`components/properties/dateRange set via text input 1`] = `
       type="button"
     >
       <span>
-        6/15/2021 -&gt; 6/20/2021
+        June 15 -&gt; June 20
       </span>
     </button>
   </div>

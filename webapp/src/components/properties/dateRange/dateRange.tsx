@@ -31,6 +31,7 @@ type DateProperty = {
 }
 
 const loadedLocales: Record<string, any> = {}
+const twelveHours = 12 * 60 * 60 * 1000
 
 function DateRange(props: Props): JSX.Element {
     const {className, value, onChange} = props
@@ -54,11 +55,13 @@ function DateRange(props: Props): JSX.Element {
             } else {
                 dateProperty = JSON.parse(initialValue)
                 if (!dateProperty.includeTime) {
-                    // if date only, convert from UTC to local time.
+                    // if date only, convert from UTC midnight to local time noon.
                     if (dateProperty.from) {
+                        dateProperty.from += twelveHours
                         dateProperty.from += timeZoneOffset
                     }
                     if (dateProperty.to) {
+                        dateProperty.to += twelveHours
                         dateProperty.to += timeZoneOffset
                     }
                 }
@@ -132,14 +135,16 @@ function DateRange(props: Props): JSX.Element {
     //     console.log(dateProperty)
     //     if (dateProperty && dateProperty.from) {
     //         if (!dateProperty.includeTime) {
-    //             // Day has time is noon, local time
-    //             // Set to UTC time
-    //             if (dateProperty.from) {
-    //                 dateProperty.from -= timeZoneOffset
-    //             }
-    //             if (dateProperty.to) {
-    //                 dateProperty.to -= timeZoneOffset
-    //             }
+    // Day has time is noon, local time
+    // Set to Midnight UTC time
+    // if (current.from) {
+    //     current.from -= twelveHours
+    //     current.from -= timeZoneOffset
+    // }
+    // if (current.to) {
+    //     current.to -= twelveHours
+    //     current.to -= timeZoneOffset
+    // }
     //         }
     //         onChange(JSON.stringify(dateProperty))
     //     } else {
@@ -151,16 +156,20 @@ function DateRange(props: Props): JSX.Element {
         const current = stateRef.current
         setShowDialog(false)
         if (current && current.from) {
+            console.log(current)
             if (!current.includeTime) {
                 // Day has time is noon, local time
-                // Set to UTC time
+                // Set to Midnight UTC time
                 if (current.from) {
+                    current.from -= twelveHours
                     current.from -= timeZoneOffset
                 }
                 if (current.to) {
+                    current.to -= twelveHours
                     current.to -= timeZoneOffset
                 }
             }
+            console.log(current)
             onChange(JSON.stringify(current))
         } else {
             onChange('')
@@ -202,6 +211,7 @@ function DateRange(props: Props): JSX.Element {
                                     onSave={() => {
                                         const newDate = new Date(fromInput)
                                         if (newDate && DateUtils.isDate(newDate)) {
+                                            newDate.setHours(12)
                                             setDateProperty((prev) => {
                                                 return {...prev, from: newDate.getTime()}
                                             })
@@ -221,6 +231,7 @@ function DateRange(props: Props): JSX.Element {
                                         onSave={() => {
                                             const newDate = new Date(toInput)
                                             if (newDate && DateUtils.isDate(newDate)) {
+                                                newDate.setHours(12)
                                                 setDateProperty((prevRange) => {
                                                     return {...prevRange, to: newDate.getTime()}
                                                 })
