@@ -20,7 +20,7 @@ import {Utils} from '../utils'
 import wsClient, {WSClient} from '../wsclient'
 import './boardPage.scss'
 import {updateBoards, getCurrentBoard, setCurrent as setCurrentBoard} from '../store/boards'
-import {updateViews, getCurrentView, setCurrent as setCurrentView} from '../store/views'
+import {updateViews, getCurrentView, setCurrent as setCurrentView, getCurrentBoardViews} from '../store/views'
 import {updateCards} from '../store/cards'
 import {updateContents} from '../store/contents'
 import {updateComments} from '../store/comments'
@@ -34,6 +34,7 @@ type Props = {
 const BoardPage = (props: Props) => {
     const board = useAppSelector(getCurrentBoard)
     const activeView = useAppSelector(getCurrentView)
+    const boardViews = useAppSelector(getCurrentBoardViews)
     const dispatch = useAppDispatch()
 
     const history = useHistory()
@@ -73,7 +74,9 @@ const BoardPage = (props: Props) => {
         }
     }, [])
 
-    const attachToBoard = useCallback((boardId?: string, viewId = '') => {
+    useEffect(() => {
+        const boardId = match.params.boardId
+        const viewId = match.params.viewId
         Utils.log(`attachToBoard: ${boardId}`)
         localStorage.setItem('lastBoardId', boardId || '')
         localStorage.setItem('lastViewId', viewId)
@@ -83,11 +86,11 @@ const BoardPage = (props: Props) => {
         if (!boardId) {
             history.push('/')
         }
-    }, [match.path, match.params, history])
-
-    useEffect(() => {
-        attachToBoard(match.params.boardId, match.params.viewId)
-    }, [match.params.boardId, match.params.viewId])
+        if (boardId && !viewId && boardViews.length > 0) {
+            const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
+            history.push(newPath)
+        }
+    }, [match.params.boardId, match.params.viewId, history, boardViews])
 
     useEffect(() => {
         Utils.setFavicon(board?.fields.icon)

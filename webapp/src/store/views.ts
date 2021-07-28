@@ -81,6 +81,9 @@ export const getCurrentViewGroupBy = createSelector(
         if (!currentBoard) {
             return undefined
         }
+        if (!currentView) {
+            return undefined
+        }
         return currentBoard.fields.cardProperties.find((o) => o.id === currentView.fields.groupById)
     },
 )

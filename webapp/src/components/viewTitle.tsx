@@ -25,7 +25,7 @@ const ViewTitle = React.memo((props: Props) => {
     const {board} = props
 
     const [title, setTitle] = useState(board.title)
-    const onEditTitleSave = useCallback(() => mutator.changeTitle(board, title), [board])
+    const onEditTitleSave = useCallback(() => mutator.changeTitle(board, title), [board, title])
     const onEditTitleCancel = useCallback(() => setTitle(board.title), [board])
     const onDescriptionBlur = useCallback((text) => mutator.changeDescription(board, text), [board])
 
