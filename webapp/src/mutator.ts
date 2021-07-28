@@ -377,7 +377,11 @@ class Mutator {
 
         const newBoard = new MutableBoard(board)
         const newTemplate = newBoard.cardProperties.find((o) => o.id === propertyTemplate.id)!
-        newTemplate.options = []
+
+        if (propertyTemplate.type !== newType) {
+            newTemplate.options = []
+        }
+
         newTemplate.type = newType
         newTemplate.name = newName
 
@@ -389,14 +393,10 @@ class Mutator {
                 const isNewTypeSelectOrMulti = newType === 'select' || newType === 'multiSelect'
 
                 for (const card of boardTree.allCards) {
-                    const oldValue = Array.isArray(card.properties[propertyTemplate.id]) ?
-                        (card.properties[propertyTemplate.id].length > 0 && card.properties[propertyTemplate.id][0]) :
-                        card.properties[propertyTemplate.id]
+                    const oldValue = Array.isArray(card.properties[propertyTemplate.id]) ? (card.properties[propertyTemplate.id].length > 0 && card.properties[propertyTemplate.id][0]) : card.properties[propertyTemplate.id]
 
                     if (oldValue) {
-                        const newValue = isNewTypeSelectOrMulti ?
-                            propertyTemplate.options.find((o) => o.id === oldValue)?.id :
-                            propertyTemplate.options.find((o) => o.id === oldValue)?.value
+                        const newValue = isNewTypeSelectOrMulti ? propertyTemplate.options.find((o) => o.id === oldValue)?.id : propertyTemplate.options.find((o) => o.id === oldValue)?.value
                         const newCard = new MutableCard(card)
 
                         if (newValue) {
