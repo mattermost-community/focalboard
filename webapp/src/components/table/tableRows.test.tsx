@@ -18,8 +18,15 @@ import {HTML5Backend} from 'react-dnd-html5-backend'
 import userEvent from '@testing-library/user-event'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
+import {FetchMock} from '../../test/fetchMock'
 
 import TableRows from './tableRows'
+
+global.fetch = FetchMock.fn
+
+beforeEach(() => {
+    FetchMock.fn.mockReset()
+})
 
 const wrapProviders = (children: any) => {
     return (
