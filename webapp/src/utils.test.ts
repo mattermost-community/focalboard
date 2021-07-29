@@ -86,6 +86,23 @@ describe('utils', () => {
         })
     })
 
+    describe('display date short', () => {
+        const intl = createIntl({locale: 'en-us'})
+
+        it('should show mm/dd/yyyy for current year', () => {
+            const currentYear = new Date().getFullYear()
+            const date = new Date(currentYear, 6, 9)
+            expect(Utils.displayDateShort(date, intl)).toBe(`07/09/${currentYear}`)
+        })
+
+        it('should show mm/dd/yyyy for previous year', () => {
+            const currentYear = new Date().getFullYear()
+            const previousYear = currentYear - 1
+            const date = new Date(previousYear, 6, 9)
+            expect(Utils.displayDateShort(date, intl)).toBe(`07/09/${previousYear}`)
+        })
+    })
+
     describe('display date and time', () => {
         const intl = createIntl({locale: 'en-us'})
 

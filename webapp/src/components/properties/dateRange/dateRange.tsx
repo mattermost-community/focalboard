@@ -169,7 +169,13 @@ function DateRange(props: Props): JSX.Element {
                             <div className={'inputContainer'}>
                                 <Editable
                                     value={fromInput}
-                                    placeholderText={intl.formatMessage({id: 'DateRange.datePlaceholder', defaultMessage: 'Select Date'})}
+                                    placeholderText={intl.formatMessage({id: 'DateRange.datePlaceholder', defaultMessage: 'MM/DD/YYY'})}
+                                    onFocus={() => {
+                                        if (dateFrom) {
+                                            return setFromInput(Utils.displayDateShort(dateFrom, intl))
+                                        }
+                                        return undefined
+                                    }}
                                     onChange={setFromInput}
                                     onSave={() => {
                                         const newDate = new Date(fromInput)
@@ -191,7 +197,13 @@ function DateRange(props: Props): JSX.Element {
                                 {dateTo &&
                                     <Editable
                                         value={toInput}
-                                        placeholderText={intl.formatMessage({id: 'DateRange.datePlaceholder', defaultMessage: 'Select Date'})}
+                                        placeholderText={intl.formatMessage({id: 'DateRange.datePlaceholder', defaultMessage: 'MM/DD/YYY'})}
+                                        onFocus={() => {
+                                            if (dateTo) {
+                                                return setToInput(Utils.displayDateShort(dateTo, intl))
+                                            }
+                                            return undefined
+                                        }}
                                         onChange={setToInput}
                                         onSave={() => {
                                             const newDate = new Date(toInput)

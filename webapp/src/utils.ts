@@ -133,6 +133,14 @@ class Utils {
         })
     }
 
+    static displayDateShort(date: Date, intl: IntlShape): string {
+        return intl.formatDate(date, {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+        })
+    }
+
     static displayDateTime(date: Date, intl: IntlShape): string {
         return intl.formatDate(date, {
             year: Utils.yearOption(date),
