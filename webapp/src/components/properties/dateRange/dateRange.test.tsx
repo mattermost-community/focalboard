@@ -162,8 +162,45 @@ describe('components/properties/dateRange', () => {
         const fromInput = getByDisplayValue('June 15')
         const toInput = getByDisplayValue('June 20')
 
-        userEvent.type(fromInput, '{selectall}07/15/2021{enter}')
-        userEvent.type(toInput, '{selectall}07/20/2021{enter}')
+        userEvent.type(fromInput, '{selectall}{delay}07/15/2021{enter}')
+        userEvent.type(toInput, '{selectall}{delay}07/20/2021{enter}')
+
+        const July15 = new Date(Date.UTC(2021, 6, 15, 12))
+        const July20 = new Date(Date.UTC(2021, 6, 20, 12))
+        const modal = getByTitle('Close').children[0]
+
+        userEvent.click(modal)
+
+        // {from: '2021-07-15', to: '2021-07-20'}
+        const retVal = '{"from":' + July15.getTime().toString() + ',"to":' + July20.getTime().toString() + '}'
+        expect(callback).toHaveBeenCalledWith(retVal)
+    })
+
+    test('set via text input, es locale', () => {
+        const callback = jest.fn()
+
+        const component = (
+            <IntlProvider locale='es'>
+                <DateRange
+                    className='octo-propertyvalue'
+                    value={'{"from": ' + June15.getTime().toString() + ',"to": ' + June20.getTime().toString() + '}'}
+                    onChange={callback}
+                />
+            </IntlProvider>
+        )
+        const {container, getByRole, getByTitle, getByDisplayValue} = render(component)
+        expect(container).toMatchSnapshot()
+
+        // open modal
+        const dayDisplay = getByRole('button', {name: '15 de junio -> 20 de junio'})
+
+        userEvent.click(dayDisplay)
+
+        const fromInput = getByDisplayValue('15 de junio')
+        const toInput = getByDisplayValue('20 de junio')
+
+        userEvent.type(fromInput, '{selectall}15/07/2021{enter}')
+        userEvent.type(toInput, '{selectall}20/07/2021{enter}')
 
         const July15 = new Date(Date.UTC(2021, 6, 15, 12))
         const July20 = new Date(Date.UTC(2021, 6, 20, 12))

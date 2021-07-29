@@ -86,20 +86,18 @@ describe('utils', () => {
         })
     })
 
-    describe('display date short', () => {
-        let intl = createIntl({locale: 'es-es'})
+    describe('input date', () => {
+        const currentYear = new Date().getFullYear()
+        const date = new Date(currentYear, 6, 9)
 
         it('should show mm/dd/yyyy for current year', () => {
-            const currentYear = new Date().getFullYear()
-            const date = new Date(currentYear, 6, 9)
-            expect(Utils.displayDateShort(date, intl)).toBe(`07/09/${currentYear}`)
+            const intl = createIntl({locale: 'en-us'})
+            expect(Utils.inputDate(date, intl)).toBe(`07/09/${currentYear}`)
         })
 
-        intl = createIntl({locale: 'en-us'})
         it('should show dd/mm/yyyy for current year, es local', () => {
-            const currentYear = new Date().getFullYear()
-            const date = new Date(currentYear, 6, 9)
-            expect(Utils.displayDateShort(date, intl)).toBe(`09/07/${currentYear}`)
+            const intl = createIntl({locale: 'es-es'})
+            expect(Utils.inputDate(date, intl)).toBe(`09/07/${currentYear}`)
         })
     })
 

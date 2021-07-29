@@ -6,6 +6,8 @@ import {DateUtils} from 'react-day-picker'
 import MomentLocaleUtils from 'react-day-picker/moment'
 import DayPicker from 'react-day-picker/DayPicker'
 
+import moment from 'moment'
+
 import Editable from '../../../widgets/editable'
 import SwitchOption from '../../../widgets/menu/switchOption'
 import Button from '../../../widgets/buttons/button'
@@ -169,16 +171,16 @@ function DateRange(props: Props): JSX.Element {
                             <div className={'inputContainer'}>
                                 <Editable
                                     value={fromInput}
-                                    placeholderText={intl.formatMessage({id: 'DateRange.datePlaceholder', defaultMessage: 'MM/DD/YYY'})}
+                                    placeholderText={moment.localeData(locale).longDateFormat('L')}
                                     onFocus={() => {
                                         if (dateFrom) {
-                                            return setFromInput(Utils.displayDateShort(dateFrom, intl))
+                                            return setFromInput(Utils.inputDate(dateFrom, intl))
                                         }
                                         return undefined
                                     }}
                                     onChange={setFromInput}
                                     onSave={() => {
-                                        const newDate = new Date(fromInput)
+                                        const newDate = MomentLocaleUtils.parseDate(fromInput, 'L', intl.locale)
                                         if (newDate && DateUtils.isDate(newDate)) {
                                             newDate.setHours(12)
                                             const range : DateProperty = {
@@ -197,16 +199,16 @@ function DateRange(props: Props): JSX.Element {
                                 {dateTo &&
                                     <Editable
                                         value={toInput}
-                                        placeholderText={intl.formatMessage({id: 'DateRange.datePlaceholder', defaultMessage: 'MM/DD/YYY'})}
+                                        placeholderText={moment.localeData(locale).longDateFormat('L')}
                                         onFocus={() => {
                                             if (dateTo) {
-                                                return setToInput(Utils.displayDateShort(dateTo, intl))
+                                                return setToInput(Utils.inputDate(dateTo, intl))
                                             }
                                             return undefined
                                         }}
                                         onChange={setToInput}
                                         onSave={() => {
-                                            const newDate = new Date(toInput)
+                                            const newDate = MomentLocaleUtils.parseDate(toInput, 'L', intl.locale)
                                             if (newDate && DateUtils.isDate(newDate)) {
                                                 newDate.setHours(12)
                                                 const range : DateProperty = {

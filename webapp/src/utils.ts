@@ -133,7 +133,7 @@ class Utils {
         })
     }
 
-    static displayDateShort(date: Date, intl: IntlShape): string {
+    static inputDate(date: Date, intl: IntlShape): string {
         return intl.formatDate(date, {
             year: 'numeric',
             month: '2-digit',
