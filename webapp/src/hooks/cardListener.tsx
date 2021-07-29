@@ -3,44 +3,16 @@
 import {useEffect} from 'react'
 
 import {IBlock} from '../blocks/block'
-import octoClient from '../octoClient'
-import {OctoListener} from '../octoListener'
-import {Utils} from '../utils'
+import wsClient, {WSClient} from '../wsclient'
 
-export default function useCardListener(cardIds: string[], onChange: (blocks: IBlock[]) => void, onReconnect: () => void, initialCall = true): void {
-    let cardListener: OctoListener | null = null
-
-    const deleteListener = () => {
-        cardListener?.close()
-        cardListener = null
-    }
-
-    const createListener = () => {
-        deleteListener()
-
-        cardListener = new OctoListener()
-        cardListener.open(
-            octoClient.workspaceId,
-            cardIds,
-            onChange,
-            onReconnect,
-        )
-    }
-
-    const createCardTreeAndSync = async () => {
-        if (initialCall) {
-            onReconnect()
-        }
-
-        createListener()
-    }
-
+export default function useCardListener(onChange: (blocks: IBlock[]) => void, onReconnect: () => void): void {
     useEffect(() => {
-        Utils.log(`useCardListener.connect: ${cardIds}`)
-        createCardTreeAndSync()
+        const onChangeHandler = (_: WSClient, blocks: IBlock[]) => onChange(blocks)
+        wsClient.addOnChange(onChangeHandler)
+        wsClient.addOnReconnect(onReconnect)
         return () => {
-            Utils.log(`useCardListener.disconnect: ${cardIds}`)
-            deleteListener()
+            wsClient.removeOnChange(onChangeHandler)
+            wsClient.removeOnReconnect(onReconnect)
         }
-    }, [cardIds.join('-')])
+    }, [])
 }

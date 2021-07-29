@@ -122,7 +122,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                                     intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'}),
                                     async () => {
                                         if (props.nextBoardId) {
-                                            // This delay is needed because OctoListener has a default 100 ms notification delay before updates
+                                            // This delay is needed because WSClient has a default 100 ms notification delay before updates
                                             setTimeout(() => {
                                                 showBoard(props.nextBoardId)
                                             }, 120)

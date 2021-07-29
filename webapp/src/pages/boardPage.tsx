@@ -13,8 +13,8 @@ import {sendFlashMessage} from '../components/flashMessages'
 import Workspace from '../components/workspace'
 import mutator from '../mutator'
 import octoClient from '../octoClient'
-import {OctoListener} from '../octoListener'
 import {Utils} from '../utils'
+import wsClient, {WSClient} from '../wsclient'
 import {BoardTree, MutableBoardTree} from '../viewModel/boardTree'
 import {MutableWorkspaceTree, WorkspaceTree} from '../viewModel/workspaceTree'
 import './boardPage.scss'
@@ -38,8 +38,6 @@ type State = {
 }
 
 class BoardPage extends React.Component<Props, State> {
-    private workspaceListener = new OctoListener()
-
     constructor(props: Props) {
         super(props)
 
@@ -146,17 +144,32 @@ class BoardPage extends React.Component<Props, State> {
         }
     }
 
+    updateWebsocketState = (_: WSClient, newState: 'init'|'open'|'close'): void => {
+        if (newState === 'open') {
+            const token = localStorage.getItem('focalboardSessionId') || ''
+            wsClient.authenticate(this.props.match.params.workspaceId || '0', token)
+            wsClient.subscribeToWorkspace(this.props.match.params.workspaceId || '0')
+        }
+        this.setState({websocketClosed: newState === 'close'})
+    }
+
     componentDidMount(): void {
         if (this.props.match.params.boardId) {
             this.attachToBoard(this.props.match.params.boardId, this.props.match.params.viewId)
         } else {
             this.sync()
         }
+        wsClient.addOnChange(this.incrementalUpdate)
+        wsClient.addOnReconnect(this.sync)
+        wsClient.addOnStateChange(this.updateWebsocketState)
     }
 
     componentWillUnmount(): void {
         Utils.log(`boardPage.componentWillUnmount: ${this.props.match.params.boardId}`)
-        this.workspaceListener.close()
+        wsClient.unsubscribeToWorkspace(this.props.match.params.workspaceId || '0')
+        wsClient.removeOnChange(this.incrementalUpdate)
+        wsClient.removeOnReconnect(this.sync)
+        wsClient.removeOnStateChange(this.updateWebsocketState)
     }
 
     render(): JSX.Element {
@@ -226,7 +239,7 @@ class BoardPage extends React.Component<Props, State> {
         }
     }
 
-    private async sync() {
+    private sync = async () => {
         Utils.log(`sync start: ${this.props.match.params.boardId}`)
 
         let workspace: IWorkspace | undefined
@@ -239,52 +252,7 @@ class BoardPage extends React.Component<Props, State> {
         }
 
         const workspaceTree = await MutableWorkspaceTree.sync()
-        const boardIds = [...workspaceTree.boards.map((o) => o.id), ...workspaceTree.boardTemplates.map((o) => o.id)]
         this.setState({workspace, workspaceTree})
-
-        let boardIdsToListen: string[]
-        if (boardIds.length > 0) {
-            boardIdsToListen = ['', ...boardIds]
-        } else {
-            // Read-only view
-            boardIdsToListen = [this.props.match.params.boardId || '']
-        }
-
-        // Listen to boards plus all blocks at root (Empty string for parentId)
-        this.workspaceListener.open(
-            octoClient.workspaceId,
-            boardIdsToListen,
-            async (blocks) => {
-                Utils.log(`workspaceListener.onChanged: ${blocks.length}`)
-                this.incrementalUpdate(blocks)
-            },
-            () => {
-                Utils.log('workspaceListener.onReconnect')
-                this.sync()
-            },
-            (state) => {
-                switch (state) {
-                case 'close': {
-                    // Show error after a delay to ignore brief interruptions
-                    if (!this.state.websocketClosed && !this.state.websocketClosedTimeOutId) {
-                        const timeoutId = setTimeout(() => {
-                            this.setState({websocketClosed: true, websocketClosedTimeOutId: undefined})
-                        }, 5000)
-                        this.setState({websocketClosedTimeOutId: timeoutId})
-                    }
-                    break
-                }
-                case 'open': {
-                    if (this.state.websocketClosedTimeOutId) {
-                        clearTimeout(this.state.websocketClosedTimeOutId)
-                    }
-                    this.setState({websocketClosed: false, websocketClosedTimeOutId: undefined})
-                    Utils.log('Connection established')
-                    break
-                }
-                }
-            },
-        )
 
         if (this.props.match.params.boardId) {
             const boardTree = await MutableBoardTree.sync(this.props.match.params.boardId || '', this.props.match.params.viewId || '', this.props.usersById)
@@ -314,7 +282,7 @@ class BoardPage extends React.Component<Props, State> {
         }
     }
 
-    private async incrementalUpdate(blocks: IBlock[]) {
+    private incrementalUpdate = async (_: WSClient, blocks: IBlock[]) => {
         const {workspaceTree, boardTree} = this.state
 
         let newState = {workspaceTree, boardTree}
