@@ -54,7 +54,6 @@ const Gallery = (props: Props): JSX.Element => {
     const visibleTitle = boardTree.activeView.visiblePropertyIds.includes(Constants.titleColumnId)
 
     useCardListener(
-        cards.map((c) => c.id),
         async (blocks) => {
             cards.forEach(async (c) => {
                 const cardTree = cardTrees[c.id]
