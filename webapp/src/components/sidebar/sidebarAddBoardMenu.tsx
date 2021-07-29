@@ -1,25 +1,26 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useEffect} from 'react'
+import React, {useEffect, useCallback} from 'react'
 import {FormattedMessage, useIntl, IntlShape} from 'react-intl'
+import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {MutableBoard} from '../../blocks/board'
 import {MutableBoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import octoClient from '../../octoClient'
-import {GlobalTemplateTree, MutableGlobalTemplateTree} from '../../viewModel/globalTemplateTree'
 import {WorkspaceTree} from '../../viewModel/workspaceTree'
 import AddIcon from '../../widgets/icons/add'
 import BoardIcon from '../../widgets/icons/board'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
+import {getGlobalTemplates, fetchGlobalTemplates} from '../../store/globalTemplates'
 
 import BoardTemplateMenuItem from './boardTemplateMenuItem'
 
 import './sidebarAddBoardMenu.scss'
 
 type Props = {
-    showBoard: (id?: string) => void
     workspaceTree: WorkspaceTree,
     activeBoardId?: string
 }
@@ -68,16 +69,21 @@ const addBoardTemplateClicked = async (showBoard: (id: string) => void, activeBo
 }
 
 const SidebarAddBoardMenu = (props: Props): JSX.Element => {
-    const [globalTemplateTree, setGlobalTemplateTree] = useState<GlobalTemplateTree|null>(null)
+    const globalTemplates = useAppSelector<MutableBoard[]>(getGlobalTemplates)
+    const dispatch = useAppDispatch()
+    const history = useHistory()
+    const match = useRouteMatch()
+
+    const showBoard = useCallback((boardId) => {
+        const newPath = generatePath(match.path, {...match.params, boardId: boardId || ''})
+        history.push(newPath)
+    }, [match, history])
 
     useEffect(() => {
-        if (octoClient.workspaceId !== '0' && !globalTemplateTree) {
-            const syncFunc = async () => {
-                setGlobalTemplateTree(await MutableGlobalTemplateTree.sync())
-            }
-            syncFunc()
+        if (octoClient.workspaceId !== '0' && globalTemplates.length === 0) {
+            dispatch(fetchGlobalTemplates())
         }
-    }, [])
+    }, [octoClient.workspaceId])
 
     const {workspaceTree} = props
     const intl = useIntl()
@@ -114,17 +120,17 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
                             key={boardTemplate.id}
                             boardTemplate={boardTemplate}
                             isGlobal={false}
-                            showBoard={props.showBoard}
+                            showBoard={showBoard}
                             activeBoardId={props.activeBoardId}
                         />
                     ))}
 
-                    {globalTemplateTree && globalTemplateTree.boardTemplates.map((boardTemplate) => (
+                    {globalTemplates.map((boardTemplate: MutableBoard) => (
                         <BoardTemplateMenuItem
                             key={boardTemplate.id}
                             boardTemplate={boardTemplate}
                             isGlobal={true}
-                            showBoard={props.showBoard}
+                            showBoard={showBoard}
                             activeBoardId={props.activeBoardId}
                         />
                     ))}
@@ -133,14 +139,14 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
                         id='empty-template'
                         name={intl.formatMessage({id: 'Sidebar.empty-board', defaultMessage: 'Empty board'})}
                         icon={<BoardIcon/>}
-                        onClick={() => addBoardClicked(props.showBoard, intl, props.activeBoardId)}
+                        onClick={() => addBoardClicked(showBoard, intl, props.activeBoardId)}
                     />
 
                     <Menu.Text
                         icon={<AddIcon/>}
                         id='add-template'
                         name={intl.formatMessage({id: 'Sidebar.add-template', defaultMessage: 'New template'})}
-                        onClick={() => addBoardTemplateClicked(props.showBoard, props.activeBoardId)}
+                        onClick={() => addBoardTemplateClicked(showBoard, props.activeBoardId)}
                     />
                 </Menu>
             </MenuWrapper>

@@ -1,10 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useRef, useImperativeHandle, forwardRef} from 'react'
+import React, {forwardRef, useImperativeHandle, useRef} from 'react'
 
 import './editable.scss'
 
-type Props = {
+export type EditableProps = {
     onChange: (value: string) => void
     value?: string
     placeholderText?: string
@@ -18,8 +18,28 @@ type Props = {
     onSave?: (saveType: 'onEnter'|'onEsc'|'onBlur') => void
 }
 
-const Editable = (props: Props, ref: React.Ref<{focus: (selectAll?: boolean) => void}>): JSX.Element => {
-    const elementRef = useRef<HTMLInputElement>(null)
+export type Focusable = {
+    focus: (selectAll?: boolean) => void
+}
+
+export type ElementType = HTMLInputElement | HTMLTextAreaElement
+
+export type ElementProps = {
+    className: string,
+    placeholder?: string,
+    onChange: (e: React.ChangeEvent<ElementType>) => void,
+    value?: string,
+    title?: string,
+    onBlur: () => void,
+    onKeyDown: (e: React.KeyboardEvent<ElementType>) => void,
+    readOnly?: boolean,
+    spellCheck?: boolean
+}
+
+export function useEditable(
+    props: EditableProps,
+    focusableRef: React.Ref<Focusable>,
+    elementRef: React.RefObject<ElementType>): ElementProps {
     const saveOnBlur = useRef<boolean>(true)
 
     const save = (saveType: 'onEnter'|'onEsc'|'onBlur'): void => {
@@ -38,7 +58,7 @@ const Editable = (props: Props, ref: React.Ref<{focus: (selectAll?: boolean) => 
         props.onSave(saveType)
     }
 
-    useImperativeHandle(ref, () => ({
+    useImperativeHandle(focusableRef, () => ({
         focus: (selectAll = false): void => {
             if (elementRef.current) {
                 const valueLength = elementRef.current.value.length
@@ -63,35 +83,42 @@ const Editable = (props: Props, ref: React.Ref<{focus: (selectAll?: boolean) => 
     if (props.validator) {
         error = !props.validator(value || '')
     }
+    return {
+        className: 'Editable ' + (error ? 'error ' : '') + (readonly ? 'readonly ' : '') + className,
+        placeholder: placeholderText,
+        onChange: (e: React.ChangeEvent<ElementType>) => {
+            onChange(e.target.value)
+        },
+        value,
+        title: value,
+        onBlur: () => save('onBlur'),
+        onKeyDown: (e: React.KeyboardEvent<ElementType>): void => {
+            if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
+                e.preventDefault()
+                if (props.saveOnEsc) {
+                    save('onEsc')
+                } else {
+                    props.onCancel?.()
+                }
+                blur()
+            } else if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // Return
+                e.preventDefault()
+                save('onEnter')
+                blur()
+            }
+        },
+        readOnly: readonly,
+        spellCheck: props.spellCheck,
+    }
+}
 
+const Editable = (props: EditableProps, ref: React.Ref<Focusable>): JSX.Element => {
+    const elementRef = useRef<HTMLInputElement>(null)
+    const elementProps = useEditable(props, ref, elementRef)
     return (
         <input
+            {...elementProps}
             ref={elementRef}
-            className={'Editable ' + (error ? 'error ' : '') + (readonly ? 'readonly ' : '') + className}
-            placeholder={placeholderText}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                onChange(e.target.value)
-            }}
-            value={value}
-            title={value}
-            onBlur={() => save('onBlur')}
-            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>): void => {
-                if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
-                    e.stopPropagation()
-                    if (props.saveOnEsc) {
-                        save('onEsc')
-                    } else {
-                        props.onCancel?.()
-                    }
-                    blur()
-                } else if (e.keyCode === 13 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // Return
-                    e.stopPropagation()
-                    save('onEnter')
-                    blur()
-                }
-            }}
-            readOnly={readonly}
-            spellCheck={props.spellCheck}
         />
     )
 }

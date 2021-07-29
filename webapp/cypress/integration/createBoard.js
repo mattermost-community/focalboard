@@ -59,7 +59,7 @@ describe('Create and delete board / card', () => {
 
     it('Can set the card title', () => {
         // Card title
-        cy.get('.CardDetail>.Editable.title').
+        cy.get('.CardDetail .EditableArea.title').
             type(cardTitle).
             type('{enter}').
             should('have.value', cardTitle);
@@ -112,7 +112,7 @@ describe('Create and delete board / card', () => {
 
         cy.contains('Delete board').click({force: true});
 
-        // // Board should not exist
+        // Board should not exist
         cy.contains(boardTitle).should('not.exist');
     });
 });

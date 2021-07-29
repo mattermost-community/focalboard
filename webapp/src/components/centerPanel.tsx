@@ -26,7 +26,6 @@ import Gallery from './gallery/gallery'
 
 type Props = {
     boardTree: BoardTree
-    showView: (id: string) => void
     setSearchText: (text?: string) => void
     intl: IntlShape
     readonly: boolean
@@ -95,7 +94,7 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     render(): JSX.Element {
-        const {boardTree, showView} = this.props
+        const {boardTree} = this.props
         const {groupByProperty} = boardTree
         const {activeView} = boardTree
 
@@ -139,7 +138,6 @@ class CenterPanel extends React.Component<Props, State> {
                     />
                     <ViewHeader
                         boardTree={boardTree}
-                        showView={showView}
                         setSearchText={this.props.setSearchText}
                         addCard={() => this.addCard('', true)}
                         addCardFromTemplate={this.addCardFromTemplate}
