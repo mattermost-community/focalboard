@@ -3,7 +3,6 @@
 
 import {Card} from '../../blocks/card'
 import {IPropertyTemplate} from '../../blocks/board'
-import {Constants} from '../../constants'
 import {Utils} from '../../utils'
 
 const roundedDecimalPlaces = 2

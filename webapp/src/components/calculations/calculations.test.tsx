@@ -3,7 +3,7 @@
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
-import {IPropertyTemplate, PropertyType} from '../../blocks/board'
+import {IPropertyTemplate} from '../../blocks/board'
 
 import Calculations from './calculations'
 
