@@ -78,28 +78,25 @@ func testUpsertWorkspaceSettings(t *testing.T, store store.Store) {
 
 		// insert
 		err := store.UpsertWorkspaceSettings(*workspace)
-		// FIXME: insert workspace by store.UpsertWorkspaceSettings will failed
-		// be caused by signup_token NOT NULL constraint
-		require.Error(t, err)
+		require.NoError(t, err)
 
-		/*
-			got, err := store.GetWorkspace(workspaceID)
-			require.NoError(t, err)
-			require.Equal(t, workspace.ID, got.ID)
-			require.Equal(t, workspace.Settings, got.Settings)
+		got, err := store.GetWorkspace(workspaceID)
+		require.NoError(t, err)
+		require.Equal(t, workspace.ID, got.ID)
+		require.Equal(t, workspace.Settings, got.Settings)
 
-			// update settings
-			workspace.Settings = map[string]interface{}{
-				"field1": "B",
-			}
-			err = store.UpsertWorkspaceSettings(*workspace)
-			require.NoError(t, err)
+		// update settings
+		workspace.Settings = map[string]interface{}{
+			"field1": "B",
+		}
+		err = store.UpsertWorkspaceSettings(*workspace)
+		require.NoError(t, err)
 
-			got, err = store.GetWorkspace(workspaceID)
-			require.NoError(t, err)
-			require.Equal(t, workspace.ID, got.ID)
-			require.Equal(t, workspace.Settings, got.Settings)
-		*/
+		got2, err := store.GetWorkspace(workspaceID)
+		require.NoError(t, err)
+		require.Equal(t, workspace.ID, got2.ID)
+		require.Equal(t, workspace.Settings, got2.Settings)
+		require.Equal(t, got.SignupToken, got2.SignupToken)
 	})
 }
 
