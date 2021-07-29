@@ -28,7 +28,6 @@ const CardDialog = (props: Props) => {
     const [cardTree, setCardTree] = useState<CardTree>()
     const intl = useIntl()
     useCardListener(
-        [props.cardId],
         async (blocks) => {
             Utils.log(`cardListener.onChanged: ${blocks.length}`)
             const newCardTree = cardTree ? MutableCardTree.incrementalUpdate(cardTree, blocks) : await MutableCardTree.sync(props.cardId)

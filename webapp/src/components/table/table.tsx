@@ -46,7 +46,6 @@ const Table = (props: Props) => {
     cardTreeRef.current = cardTrees
 
     useCardListener(
-        cards.map((c) => c.id),
         async (blocks) => {
             for (const block of blocks) {
                 const cardTree = cardTreeRef.current && cardTreeRef.current[block.parentId]
@@ -67,7 +66,6 @@ const Table = (props: Props) => {
                 setCardTrees((oldTree) => ({...oldTree, [c.id]: newCardTree}))
             })
         },
-        false,
     )
 
     const {offset, resizingColumn} = useDragLayer((monitor) => {
