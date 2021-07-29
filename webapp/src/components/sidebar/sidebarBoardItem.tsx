@@ -24,6 +24,7 @@ type Props = {
     views: readonly BoardView[]
     board: Board
     activeBoardId?: string
+    activeViewId?: string
     nextBoardId?: string
 }
 
@@ -95,7 +96,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
     return (
         <div className='SidebarBoardItem'>
             <div
-                className={'octo-sidebar-item ' + (collapsed ? 'collapsed' : 'expanded')}
+                className={`octo-sidebar-item ' ${collapsed ? 'collapsed' : 'expanded'} ${board.id === props.activeBoardId ? 'active' : ''}`}
                 onClick={() => showBoard(board.id)}
             >
                 <IconButton
@@ -121,7 +122,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                                     intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'}),
                                     async () => {
                                         if (props.nextBoardId) {
-                                            // This delay is needed because OctoListener has a default 100 ms notification delay before updates
+                                            // This delay is needed because WSClient has a default 100 ms notification delay before updates
                                             setTimeout(() => {
                                                 showBoard(props.nextBoardId)
                                             }, 120)
@@ -163,7 +164,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
             {!collapsed && boardViews.map((view) => (
                 <div
                     key={view.id}
-                    className='octo-sidebar-item subitem'
+                    className={`octo-sidebar-item subitem ${view.id === props.activeViewId ? 'active' : ''}`}
                     onClick={() => showView(view.id, board.id)}
                 >
                     {iconForViewType(view.viewType)}

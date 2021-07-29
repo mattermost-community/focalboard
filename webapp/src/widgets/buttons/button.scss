@@ -27,9 +27,29 @@
         }
     }
 
+    &.emphasis--secondary {
+        border: 1px solid rgb(var(--button-bg));
+        color: rgb(var(--button-bg));
+
+        &:hover {
+            background-color: rgb(var(--button-bg), 0.08);
+        }
+
+        &:active {
+            background-color: rgb(var(--button-bg), 0.16);
+        }
+    }
+
     &.active {
         color: rgb(var(--link-color));
         font-weight: 600;
+    }
+
+    &.size--small {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 0 16px;
+        height: 32px;
     }
 
     .Icon {

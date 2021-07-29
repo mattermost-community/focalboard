@@ -21,14 +21,14 @@ func (a *API) handleAdminSetPassword(w http.ResponseWriter, r *http.Request) {
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	var requestData AdminSetPasswordData
 	err = json.Unmarshal(requestBody, &requestData)
 	if err != nil {
-		a.errorResponse(w, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
@@ -37,13 +37,13 @@ func (a *API) handleAdminSetPassword(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("username", username)
 
 	if !strings.Contains(requestData.Password, "") {
-		a.errorResponse(w, http.StatusBadRequest, "password is required", err)
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "password is required", err)
 		return
 	}
 
 	err = a.app.UpdateUserPassword(username, requestData.Password)
 	if err != nil {
-		a.errorResponse(w, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
