@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
 import mutator from '../mutator'
@@ -27,6 +27,13 @@ const CardDialog = (props: Props) => {
     const [syncComplete, setSyncComplete] = useState(false)
     const [cardTree, setCardTree] = useState<CardTree>()
     const intl = useIntl()
+    useEffect(() => {
+        MutableCardTree.sync(props.cardId).then((ct) => {
+            setCardTree(ct)
+            setSyncComplete(true)
+        })
+    }, [props.boardTree])
+
     useCardListener(
         async (blocks) => {
             Utils.log(`cardListener.onChanged: ${blocks.length}`)
