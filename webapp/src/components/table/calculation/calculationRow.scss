@@ -28,5 +28,10 @@
 .Table {
     .octo-table-cell.Calculation:focus-within {
         border: unset;
+        background-color: rgb(var(--main-bg));
+    }
+
+    .octo-table-cell.Calculation:hover {
+        background-color: rgb(var(--main-bg));
     }
 }

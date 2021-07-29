@@ -2,7 +2,10 @@
 // See LICENSE.txt for license information.
 import {Utils} from '../utils'
 
+import {Constants} from '../constants'
+
 import {IBlock, MutableBlock} from './block'
+import {IPropertyTemplate} from './board'
 
 interface Card extends IBlock {
     readonly icon: string
@@ -11,6 +14,7 @@ interface Card extends IBlock {
     readonly contentOrder: Readonly<Array<string | string[]>>
 
     duplicate(): MutableCard
+    getProperty(property: IPropertyTemplate): string | string[] | number
 }
 
 class MutableCard extends MutableBlock implements Card {
@@ -55,6 +59,30 @@ class MutableCard extends MutableBlock implements Card {
         const card = new MutableCard(this)
         card.id = Utils.createGuid()
         return card
+    }
+
+    getProperty(property: IPropertyTemplate): string | string[] | number {
+        if (property.id === Constants.titleColumnId) {
+            return this.title
+        }
+
+        switch (property.type) {
+        case ('createdBy'): {
+            return this.createdBy
+        }
+        case ('createdTime'): {
+            return this.createAt
+        }
+        case ('updatedBy'): {
+            return this.modifiedBy
+        }
+        case ('updatedTime'): {
+            return this.updateAt
+        }
+        default: {
+            return this.properties[property.id]
+        }
+        }
     }
 }
 

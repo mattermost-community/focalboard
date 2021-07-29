@@ -10,7 +10,7 @@ const roundedDecimalPlaces = 2
 
 function cardsWithValue(cards: readonly Card[], property: IPropertyTemplate): Card[] {
     return cards.
-        filter((card) => (property.id === Constants.titleColumnId ? card.title.length > 0 : Boolean(card.properties[property.id])))
+        filter((card) => Boolean(card.getProperty(property)))
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -24,7 +24,7 @@ function countValue(cards: readonly Card[], property: IPropertyTemplate): string
     if (property.type === 'multiSelect') {
         cardsWithValue(cards, property).
             forEach((card) => {
-                values += card.properties[property.id].length
+                values += (card.getProperty(property) as string[]).length
             })
     } else {
         values = cardsWithValue(cards, property).length
@@ -37,7 +37,7 @@ function countUniqueValue(cards: readonly Card[], property: IPropertyTemplate): 
     const valueMap: Map<string | string[], boolean> = new Map()
 
     cards.forEach((card) => {
-        const value = property.id === Constants.titleColumnId ? card.title : card.properties[property.id]
+        const value = card.getProperty(property)
 
         if (!value) {
             return
@@ -46,7 +46,7 @@ function countUniqueValue(cards: readonly Card[], property: IPropertyTemplate): 
         if (property.type === 'multiSelect') {
             (value as string[]).forEach((v) => valueMap.set(v, true))
         } else {
-            valueMap.set(value, true)
+            valueMap.set(String(value), true)
         }
     })
 
@@ -56,17 +56,16 @@ function countUniqueValue(cards: readonly Card[], property: IPropertyTemplate): 
 function sum(cards: readonly Card[], property: IPropertyTemplate): string {
     let result = 0
 
-    cards.
-        filter((card) => Boolean(card.properties[property.id])).
+    cardsWithValue(cards, property).
         forEach((card) => {
-            result += parseFloat(card.properties[property.id] as string)
+            result += parseFloat(card.getProperty(property) as string)
         })
 
     return String(Utils.roundTo(result, roundedDecimalPlaces))
 }
 
 function average(cards: readonly Card[], property: IPropertyTemplate): string {
-    const numCards = cards.filter((card) => Boolean(card.properties[property.id])).length
+    const numCards = cardsWithValue(cards, property).length
     if (numCards === 0) {
         return '0'
     }
@@ -77,19 +76,18 @@ function average(cards: readonly Card[], property: IPropertyTemplate): string {
 }
 
 function median(cards: readonly Card[], property: IPropertyTemplate): string {
-    const sorted = Array.from(cards).
-        filter((card) => Boolean(card.properties[property.id])).
+    const sorted = cardsWithValue(cards, property).
         sort((a, b) => {
-            if (!a.properties[property.id]) {
+            if (!a.getProperty(property)) {
                 return 1
             }
 
-            if (!b.properties[property.id]) {
+            if (!b.getProperty(property)) {
                 return -1
             }
 
-            const aValue = parseFloat(a.properties[property.id] as string || '0')
-            const bValue = parseFloat(b.properties[property.id] as string || '0')
+            const aValue = parseFloat(a.getProperty(property) as string || '0')
+            const bValue = parseFloat(b.getProperty(property) as string || '0')
 
             return aValue - bValue
         })
@@ -101,11 +99,11 @@ function median(cards: readonly Card[], property: IPropertyTemplate): string {
     let result: number
 
     if (sorted.length % 2 === 0) {
-        const val1 = parseFloat(sorted[sorted.length / 2].properties[property.id] as string)
-        const val2 = parseFloat(sorted[(sorted.length / 2) - 1].properties[property.id] as string)
+        const val1 = parseFloat(sorted[sorted.length / 2].getProperty(property) as string)
+        const val2 = parseFloat(sorted[(sorted.length / 2) - 1].getProperty(property) as string)
         result = (val1 + val2) / 2
     } else {
-        result = parseFloat(sorted[Math.floor(sorted.length / 2)].properties[property.id] as string)
+        result = parseFloat(sorted[Math.floor(sorted.length / 2)].getProperty(property) as string)
     }
 
     return String(Utils.roundTo(result, roundedDecimalPlaces))
@@ -114,11 +112,11 @@ function median(cards: readonly Card[], property: IPropertyTemplate): string {
 function min(cards: readonly Card[], property: IPropertyTemplate): string {
     let result = Number.POSITIVE_INFINITY
     cards.forEach((card) => {
-        if (!card.properties[property.id]) {
+        if (!card.getProperty(property)) {
             return
         }
 
-        const value = parseFloat(card.properties[property.id] as string)
+        const value = parseFloat(card.getProperty(property) as string)
         result = Math.min(result, value)
     })
 
@@ -128,11 +126,11 @@ function min(cards: readonly Card[], property: IPropertyTemplate): string {
 function max(cards: readonly Card[], property: IPropertyTemplate): string {
     let result = Number.NEGATIVE_INFINITY
     cards.forEach((card) => {
-        if (!card.properties[property.id]) {
+        if (!card.getProperty(property)) {
             return
         }
 
-        const value = parseFloat(card.properties[property.id] as string)
+        const value = parseFloat(card.getProperty(property) as string)
         result = Math.max(result, value)
     })
 
