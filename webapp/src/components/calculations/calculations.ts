@@ -8,16 +8,29 @@ import {Utils} from '../../utils'
 
 const roundedDecimalPlaces = 2
 
+function cardsWithValue(cards: readonly Card[], property: IPropertyTemplate): Card[] {
+    return cards.
+        filter((card) => (property.id === Constants.titleColumnId ? card.title.length > 0 : Boolean(card.properties[property.id])))
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function count(cards: readonly Card[], property: IPropertyTemplate): string {
     return String(cards.length)
 }
 
 function countValue(cards: readonly Card[], property: IPropertyTemplate): string {
-    return String(
-        cards.filter((card) => (property.id === Constants.titleColumnId ? card.title.length > 0 : Boolean(card.properties[property.id])),
-        ).length,
-    )
+    let values = 0
+
+    if (property.type === 'multiSelect') {
+        cardsWithValue(cards, property).
+            forEach((card) => {
+                values += card.properties[property.id].length
+            })
+    } else {
+        values = cardsWithValue(cards, property).length
+    }
+
+    return String(values)
 }
 
 function countUniqueValue(cards: readonly Card[], property: IPropertyTemplate): string {
@@ -25,7 +38,14 @@ function countUniqueValue(cards: readonly Card[], property: IPropertyTemplate): 
 
     cards.forEach((card) => {
         const value = property.id === Constants.titleColumnId ? card.title : card.properties[property.id]
-        if (value) {
+
+        if (!value) {
+            return
+        }
+
+        if (property.type === 'multiSelect') {
+            (value as string[]).forEach((v) => valueMap.set(v, true))
+        } else {
             valueMap.set(value, true)
         }
     })
@@ -46,8 +66,13 @@ function sum(cards: readonly Card[], property: IPropertyTemplate): string {
 }
 
 function average(cards: readonly Card[], property: IPropertyTemplate): string {
+    const numCards = cards.filter((card) => Boolean(card.properties[property.id])).length
+    if (numCards === 0) {
+        return '0'
+    }
+
     const result = parseFloat(sum(cards, property))
-    const avg = result / cards.filter((card) => Boolean(card.properties[property.id])).length
+    const avg = result / numCards
     return String(Utils.roundTo(avg, roundedDecimalPlaces))
 }
 
@@ -97,7 +122,7 @@ function min(cards: readonly Card[], property: IPropertyTemplate): string {
         result = Math.min(result, value)
     })
 
-    return String(result === Number.NEGATIVE_INFINITY ? '0' : String(Utils.roundTo(result, roundedDecimalPlaces)))
+    return String(result === Number.POSITIVE_INFINITY ? '0' : String(Utils.roundTo(result, roundedDecimalPlaces)))
 }
 
 function max(cards: readonly Card[], property: IPropertyTemplate): string {
@@ -111,7 +136,7 @@ function max(cards: readonly Card[], property: IPropertyTemplate): string {
         result = Math.max(result, value)
     })
 
-    return String(result === Number.POSITIVE_INFINITY ? '0' : String(Utils.roundTo(result, roundedDecimalPlaces)))
+    return String(result === Number.NEGATIVE_INFINITY ? '0' : String(Utils.roundTo(result, roundedDecimalPlaces)))
 }
 
 function range(cards: readonly Card[], property: IPropertyTemplate): string {

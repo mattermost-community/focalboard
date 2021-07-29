@@ -27,6 +27,9 @@
         top: -1px;
         position: relative;
         font-weight: bold;
+        max-height: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .ChevronUpIcon {
