@@ -30,7 +30,7 @@ const CardDetailProperties = React.memo((props: Props) => {
     const {board, card, cards, views, activeView, contents, comments} = props
 
     return (
-        <div className='octo-propertylist'>
+        <div className='octo-propertylist CardDetailProperties'>
             {board.fields.cardProperties.map((propertyTemplate: IPropertyTemplate) => {
                 const propertyValue = card.fields.properties[propertyTemplate.id]
                 return (
