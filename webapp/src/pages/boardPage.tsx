@@ -31,6 +31,8 @@ type Props = {
     readonly?: boolean
 }
 
+const websocketTimeoutForBanner = 5000
+
 const BoardPage = (props: Props) => {
     const board = useAppSelector(getCurrentBoard)
     const activeView = useAppSelector(getCurrentView)
@@ -121,6 +123,8 @@ const BoardPage = (props: Props) => {
             }
         }
 
+        let timeout: ReturnType<typeof setTimeout>
+
         dispatch(initialLoad())
 
         if (wsClient.state === 'open') {
@@ -144,12 +148,27 @@ const BoardPage = (props: Props) => {
                 wsClient.authenticate(match.params.workspaceId || '0', newToken)
                 wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
             }
-            setWebsocketClosed(newState === 'close')
+
+            if (timeout) {
+                clearTimeout(timeout)
+            }
+
+            if (newState === 'close') {
+                timeout = setTimeout(() => {
+                    setWebsocketClosed(true)
+                }, websocketTimeoutForBanner)
+            } else {
+                setWebsocketClosed(false)
+            }
         }
+
         wsClient.addOnChange(incrementalUpdate)
         wsClient.addOnReconnect(() => dispatch(initialLoad))
         wsClient.addOnStateChange(updateWebsocketState)
         return () => {
+            if (timeout) {
+                clearTimeout(timeout)
+            }
             wsClient.unsubscribeToWorkspace(match.params.workspaceId || '0')
             wsClient.removeOnChange(incrementalUpdate)
             wsClient.removeOnReconnect(() => dispatch(initialLoad))
