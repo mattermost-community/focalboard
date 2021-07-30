@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useState, useCallback} from 'react'
+import React, {useEffect, useState} from 'react'
 import {batch} from 'react-redux'
 import {FormattedMessage} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
