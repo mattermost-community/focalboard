@@ -3,6 +3,7 @@
 /* eslint-disable max-lines */
 import React from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
+import {connect} from 'react-redux'
 import Hotkeys from 'react-hot-keys'
 
 import {BlockIcons} from '../blockIcons'
@@ -13,6 +14,7 @@ import {CardFilter} from '../cardFilter'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import {UserSettings} from '../userSettings'
+import {addCard, addTemplate} from '../store/cards'
 
 import './centerPanel.scss'
 
@@ -33,6 +35,8 @@ type Props = {
     groupByProperty?: IPropertyTemplate
     intl: IntlShape
     readonly: boolean
+    addCard: (card: Card) => void
+    addTemplate: (template: Card) => void
 }
 
 type State = {
@@ -245,6 +249,7 @@ class CenterPanel extends React.Component<Props, State> {
             'add card',
             async () => {
                 if (show) {
+                    this.props.addCard(card)
                     this.showCard(card.id)
                 } else {
                     // Focus on this card's title inline on next render
@@ -269,6 +274,7 @@ class CenterPanel extends React.Component<Props, State> {
             cardTemplate,
             'add card template',
             async () => {
+                this.props.addTemplate(cardTemplate)
                 this.showCard(cardTemplate.id)
             }, async () => {
                 this.showCard(undefined)
@@ -409,4 +415,4 @@ class CenterPanel extends React.Component<Props, State> {
     }
 }
 
-export default injectIntl(CenterPanel)
+export default connect(undefined, {addCard, addTemplate})(injectIntl(CenterPanel))

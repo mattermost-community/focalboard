@@ -36,6 +36,12 @@ const cardsSlice = createSlice({
         setCurrent: (state, action: PayloadAction<string>) => {
             state.current = action.payload
         },
+        addCard: (state, action: PayloadAction<Card>) => {
+            state.cards[action.payload.id] = action.payload
+        },
+        addTemplate: (state, action: PayloadAction<Card>) => {
+            state.templates[action.payload.id] = action.payload
+        },
         updateCards: (state, action: PayloadAction<Card[]>) => {
             for (const card of action.payload) {
                 if (card.deleteAt !== 0) {
@@ -62,7 +68,7 @@ const cardsSlice = createSlice({
     },
 })
 
-export const {updateCards} = cardsSlice.actions
+export const {updateCards, addCard, addTemplate, setCurrent} = cardsSlice.actions
 export const {reducer} = cardsSlice
 
 export const getCards = (state: RootState): {[key: string]: Card} => state.cards.cards
