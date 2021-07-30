@@ -11,7 +11,7 @@ import {Utils} from '../utils'
 import {Constants} from '../constants'
 import {CardFilter} from '../cardFilter'
 
-import {initialLoad} from './initialLoad'
+import {initialLoad, initialReadOnlyLoad} from './initialLoad'
 import {getCurrentBoard} from './boards'
 import {getWorkspaceUsers} from './users'
 import {getCurrentView} from './views'
@@ -56,6 +56,15 @@ const cardsSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
+        builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
+            for (const block of action.payload) {
+                if (block.type === 'card' && block.fields.isTemplate) {
+                    state.templates[block.id] = block as Card
+                } else if (block.type === 'card' && !block.fields.isTemplate) {
+                    state.cards[block.id] = block as Card
+                }
+            }
+        })
         builder.addCase(initialLoad.fulfilled, (state, action) => {
             for (const block of action.payload.blocks) {
                 if (block.type === 'card' && block.fields.isTemplate) {

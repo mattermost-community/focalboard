@@ -5,7 +5,7 @@ import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit'
 
 import {Board} from '../blocks/board'
 
-import {initialLoad} from './initialLoad'
+import {initialLoad, initialReadOnlyLoad} from './initialLoad'
 
 import {RootState} from './index'
 
@@ -36,6 +36,15 @@ const boardsSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
+        builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
+            for (const block of action.payload) {
+                if (block.type === 'board' && block.fields.isTemplate) {
+                    state.templates[block.id] = block as Board
+                } else if (block.type === 'board' && !block.fields.isTemplate) {
+                    state.boards[block.id] = block as Board
+                }
+            }
+        })
         builder.addCase(initialLoad.fulfilled, (state, action) => {
             for (const block of action.payload.blocks) {
                 if (block.type === 'board' && block.fields.isTemplate) {

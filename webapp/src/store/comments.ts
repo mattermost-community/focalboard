@@ -5,7 +5,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 
 import {CommentBlock} from '../blocks/commentBlock'
 
-import {initialLoad} from './initialLoad'
+import {initialLoad, initialReadOnlyLoad} from './initialLoad'
 
 import {RootState} from './index'
 
@@ -24,6 +24,13 @@ const commentsSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
+        builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
+            for (const block of action.payload) {
+                if (block.type === 'comment') {
+                    state.comments[block.id] = block as CommentBlock
+                }
+            }
+        })
         builder.addCase(initialLoad.fulfilled, (state, action) => {
             for (const block of action.payload.blocks) {
                 if (block.type === 'comment') {

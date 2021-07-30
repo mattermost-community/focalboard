@@ -3,7 +3,7 @@
 
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 
-import {initialLoad} from './initialLoad'
+import {initialLoad, initialReadOnlyLoad} from './initialLoad'
 
 import {RootState} from './index'
 
@@ -16,6 +16,9 @@ const globalErrorSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
+        builder.addCase(initialReadOnlyLoad.rejected, (state, action) => {
+            state.value = action.error.message || ''
+        })
         builder.addCase(initialLoad.rejected, (state, action) => {
             state.value = action.error.message || ''
         })

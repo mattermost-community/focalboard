@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useCallback} from 'react'
 import {batch} from 'react-redux'
 import {FormattedMessage} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
@@ -24,7 +24,7 @@ import {updateViews, getCurrentView, setCurrent as setCurrentView, getCurrentBoa
 import {updateCards} from '../store/cards'
 import {updateContents} from '../store/contents'
 import {updateComments} from '../store/comments'
-import {initialLoad} from '../store/initialLoad'
+import {initialLoad, initialReadOnlyLoad} from '../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
 type Props = {
@@ -114,21 +114,16 @@ const BoardPage = (props: Props) => {
     }, [board?.title, activeView?.title])
 
     useEffect(() => {
-        if (!props.readonly) {
-            dispatch(initialLoad)
-            const token = localStorage.getItem('focalboardSessionId') || ''
-            if (wsClient.state === 'open') {
-                wsClient.authenticate(match.params.workspaceId || '0', token)
-                wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
-            }
+        let loadAction: any = initialLoad
+        let token = localStorage.getItem('focalboardSessionId') || ''
+        if (props.readonly) {
+            loadAction = initialReadOnlyLoad
+            const queryString = new URLSearchParams(window.location.search)
+            token = token || queryString.get('r') || ''
         }
-
-        let timeout: ReturnType<typeof setTimeout>
-
-        dispatch(initialLoad())
+        dispatch(loadAction(match.params.boardId))
 
         if (wsClient.state === 'open') {
-            const token = localStorage.getItem('focalboardSessionId') || ''
             wsClient.authenticate(match.params.workspaceId || '0', token)
             wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
         }
@@ -142,6 +137,8 @@ const BoardPage = (props: Props) => {
                 dispatch(updateContents(blocks.filter((b: IBlock) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
             })
         }
+
+        let timeout: ReturnType<typeof setTimeout>
         const updateWebsocketState = (_: WSClient, newState: 'init'|'open'|'close'): void => {
             if (newState === 'open') {
                 const newToken = localStorage.getItem('focalboardSessionId') || ''
@@ -163,7 +160,7 @@ const BoardPage = (props: Props) => {
         }
 
         wsClient.addOnChange(incrementalUpdate)
-        wsClient.addOnReconnect(() => dispatch(initialLoad))
+        wsClient.addOnReconnect(() => dispatch(loadAction(match.params.boardId)))
         wsClient.addOnStateChange(updateWebsocketState)
         return () => {
             if (timeout) {
@@ -171,7 +168,7 @@ const BoardPage = (props: Props) => {
             }
             wsClient.unsubscribeToWorkspace(match.params.workspaceId || '0')
             wsClient.removeOnChange(incrementalUpdate)
-            wsClient.removeOnReconnect(() => dispatch(initialLoad))
+            wsClient.removeOnReconnect(() => dispatch(loadAction(match.params.boardId)))
             wsClient.removeOnStateChange(updateWebsocketState)
         }
     }, [match.params.workspaceId, props.readonly])

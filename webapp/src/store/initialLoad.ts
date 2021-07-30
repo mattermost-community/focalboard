@@ -20,7 +20,14 @@ export const initialLoad = createAsyncThunk(
             workspace,
             workspaceUsers,
             blocks,
-            error: '',
         }
+    },
+)
+
+export const initialReadOnlyLoad = createAsyncThunk(
+    'initialReadOnlyLoad',
+    async (boardId: string) => {
+        const blocks = client.getSubtree(boardId, 3)
+        return blocks
     },
 )
