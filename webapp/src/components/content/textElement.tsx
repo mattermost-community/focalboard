@@ -4,7 +4,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 
 import {ContentBlock} from '../../blocks/contentBlock'
-import {TextBlock, createTextBlock} from '../../blocks/textBlock'
+import {createTextBlock} from '../../blocks/textBlock'
 import mutator from '../../mutator'
 import TextIcon from '../../widgets/icons/text'
 import {MarkdownEditor} from '../markdownEditor'

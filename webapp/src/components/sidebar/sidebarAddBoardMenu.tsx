@@ -5,7 +5,7 @@ import {FormattedMessage, useIntl, IntlShape} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board, createBoard} from '../../blocks/board'
-import {BoardView, createBoardView} from '../../blocks/boardView'
+import {createBoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import octoClient from '../../octoClient'
 import AddIcon from '../../widgets/icons/add'
