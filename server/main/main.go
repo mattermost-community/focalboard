@@ -281,7 +281,8 @@ func defaultLoggingConfig() string {
 				"delim": " ",
 				"min_level_len": 5,
 				"min_msg_len": 40,
-				"enable_color": true				
+				"enable_color": true,
+				"enable_caller": true
 			},
 			"levels": [
 				{"id": 5, "name": "debug"},

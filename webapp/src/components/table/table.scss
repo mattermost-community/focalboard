@@ -1,4 +1,4 @@
-.Table {
+.focalboard-body .Table {
     .octo-group-header-cell {
         display: flex;
         flex-shrink: 0;
@@ -150,6 +150,7 @@
 
     &.octo-table-body {
         display: flex;
+        flex: 1;
         flex-direction: column;
         overflow: auto;
         position: relative;

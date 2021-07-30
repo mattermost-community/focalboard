@@ -33,7 +33,7 @@ export default function KanbanHiddenColumnItem(props: Props): JSX.Element {
         drop: (item: Card) => {
             props.onDrop(item)
         },
-    }))
+    }), [props.onDrop])
 
     let className = 'octo-board-hidden-item'
     if (isOver) {

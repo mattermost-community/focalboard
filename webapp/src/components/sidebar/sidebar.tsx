@@ -21,6 +21,7 @@ type Props = {
     workspace?: IWorkspace
     workspaceTree: WorkspaceTree,
     activeBoardId?: string
+    activeViewId?: string
 }
 
 const Sidebar = React.memo((props: Props) => {
@@ -63,13 +64,15 @@ const Sidebar = React.memo((props: Props) => {
         )
     }
 
+    const hasWorkspace = Boolean(workspace && workspace.id !== '0')
     return (
         <div className='Sidebar octo-sidebar'>
             <div className='octo-sidebar-header'>
                 <div className='heading'>
                     <SidebarUserMenu
                         whiteLogo={whiteLogo}
-                        showVersionBadge={Boolean(workspace && workspace.id !== '0')}
+                        showVersionBadge={hasWorkspace}
+                        showAccountActions={!hasWorkspace}
                     />
                 </div>
 
@@ -94,6 +97,7 @@ const Sidebar = React.memo((props: Props) => {
                                 views={views}
                                 board={board}
                                 activeBoardId={props.activeBoardId}
+                                activeViewId={props.activeViewId}
                                 nextBoardId={nextBoardId}
                             />
                         )

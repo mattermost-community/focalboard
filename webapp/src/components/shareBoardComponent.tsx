@@ -117,6 +117,7 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
                         </a>
                         <Button
                             filled={true}
+                            size='small'
                             onClick={() => {
                                 Utils.copyTextToClipboard(shareUrl.toString())
                                 setWasCopied(true)
@@ -135,7 +136,11 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
                         </Button>
                     </div>
                     <div className='row'>
-                        <Button onClick={onRegenerateToken}>
+                        <Button
+                            onClick={onRegenerateToken}
+                            emphasis='secondary'
+                            size='small'
+                        >
                             <FormattedMessage
                                 id='ShareBoard.regenerateToken'
                                 defaultMessage='Regenerate token'
