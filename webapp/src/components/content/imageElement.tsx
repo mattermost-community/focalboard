@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react'
 
 import {ContentBlock} from '../../blocks/contentBlock'
-import {ImageBlock} from '../../blocks/imageBlock'
+import {ImageBlock, createImageBlock} from '../../blocks/imageBlock'
 import octoClient from '../../octoClient'
 import {Utils} from '../../utils'
 import ImageIcon from '../../widgets/icons/image'
@@ -52,7 +52,7 @@ contentRegistry.registerContentType({
                 Utils.selectLocalFile(async (file) => {
                     const fileId = await octoClient.uploadFile(rootId, file)
 
-                    const block = new ImageBlock()
+                    const block = createImageBlock()
                     block.fields.fileId = fileId || ''
                     resolve(block)
                 },

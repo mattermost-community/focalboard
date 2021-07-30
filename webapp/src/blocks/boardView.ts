@@ -1,9 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Utils} from '../utils'
 
-import {IBlock, Block} from './block'
-import {FilterGroup} from './filterGroup'
+import {Block, createBlock} from './block'
+import {FilterGroup, createFilterGroup} from './filterGroup'
 
 type IViewType = 'board' | 'table' | 'gallery' // | 'calendar' | 'list'
 type ISortOption = { propertyId: '__title' | string, reversed: boolean }
@@ -21,15 +20,15 @@ type BoardViewFields = {
     columnWidths: Record<string, number>
 }
 
-class BoardView extends Block {
+type BoardView = Block & {
     fields: BoardViewFields
+}
 
-    constructor(block?: IBlock) {
-        super(block)
-
-        this.type = 'view'
-
-        this.fields = {
+function createBoardView(block?: Block): BoardView {
+    return {
+        ...createBlock(block),
+        type: 'view',
+        fields: {
             viewType: block?.fields.viewType || 'board',
             groupById: block?.fields.groupById,
             sortOptions: block?.fields.sortOptions?.map((o: ISortOption) => ({...o})) || [],
@@ -37,16 +36,10 @@ class BoardView extends Block {
             visibleOptionIds: block?.fields.visibleOptionIds?.slice() || [],
             hiddenOptionIds: block?.fields.hiddenOptionIds?.slice() || [],
             collapsedOptionIds: block?.fields.collapsedOptionIds?.slice() || [],
-            filter: new FilterGroup(block?.fields.filter),
+            filter: createFilterGroup(block?.fields.filter),
             cardOrder: block?.fields.cardOrder?.slice() || [],
             columnWidths: {...(block?.fields.columnWidths || {})},
-        }
-    }
-
-    duplicate(): BoardView {
-        const view = new BoardView(this)
-        view.id = Utils.createGuid()
-        return view
+        },
     }
 }
 
@@ -57,4 +50,4 @@ function sortBoardViewsAlphabetically(views: BoardView[]): BoardView[] {
     }).sort((v1, v2) => v1.title.localeCompare(v2.title)).map((v) => v.view)
 }
 
-export {BoardView, IViewType, ISortOption, sortBoardViewsAlphabetically}
+export {BoardView, IViewType, ISortOption, sortBoardViewsAlphabetically, createBoardView}

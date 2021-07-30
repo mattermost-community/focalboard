@@ -3,7 +3,7 @@
 import React, {FC} from 'react'
 import {useIntl} from 'react-intl'
 
-import {IBlock} from '../../blocks/block'
+import {Block} from '../../blocks/block'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -17,7 +17,7 @@ import {useAppSelector} from '../../store/hooks'
 import './comment.scss'
 
 type Props = {
-    comment: IBlock
+    comment: Block
     userId: string
     userImageUrl: string
 }

@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {IBlock} from './blocks/block'
+import {Block} from './blocks/block'
 import {OctoUtils} from './octoUtils'
 
 import {TestBlockFactory} from './test/testBlockFactory'
@@ -50,8 +50,8 @@ test('duplicateBlockTree: Card', async () => {
     }
 })
 
-function createBoardTree(): [IBlock[], IBlock] {
-    const blocks: IBlock[] = []
+function createBoardTree(): [Block[], Block] {
+    const blocks: Block[] = []
 
     const board = TestBlockFactory.createBoard()
     board.id = 'board1'
@@ -73,8 +73,8 @@ function createBoardTree(): [IBlock[], IBlock] {
     return [blocks, board]
 }
 
-function createCardTree(): [IBlock[], IBlock] {
-    const blocks: IBlock[] = []
+function createCardTree(): [Block[], Block] {
+    const blocks: Block[] = []
 
     const card = TestBlockFactory.createCard()
     card.id = 'card1'

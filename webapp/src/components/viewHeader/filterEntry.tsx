@@ -3,8 +3,8 @@
 import React from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import {FilterClause} from '../../blocks/filterClause'
-import {FilterGroup} from '../../blocks/filterGroup'
+import {FilterClause, areEqual as areFilterClausesEqual} from '../../blocks/filterClause'
+import {createFilterGroup, isAFilterGroupInstance} from '../../blocks/filterGroup'
 import mutator from '../../mutator'
 import {OctoUtils} from '../../octoUtils'
 import {Utils} from '../../utils'
@@ -48,7 +48,7 @@ const FilterEntry = React.memo((props: Props): JSX.Element => {
                             onClick={(optionId: string) => {
                                 const filterIndex = view.fields.filter.filters.indexOf(filter)
                                 Utils.assert(filterIndex >= 0, "Can't find filter")
-                                const filterGroup = new FilterGroup(view.fields.filter)
+                                const filterGroup = createFilterGroup(view.fields.filter)
                                 const newFilter = filterGroup.filters[filterIndex] as FilterClause
                                 Utils.assert(newFilter, `No filter at index ${filterIndex}`)
                                 if (newFilter.propertyId !== optionId) {
@@ -94,8 +94,8 @@ const FilterEntry = React.memo((props: Props): JSX.Element => {
             <div className='octo-spacer'/>
             <Button
                 onClick={() => {
-                    const filterGroup = new FilterGroup(view.fields.filter)
-                    filterGroup.filters = filterGroup.filters.filter((o) => FilterGroup.isAnInstanceOf(o) || !o.isEqual(filter))
+                    const filterGroup = createFilterGroup(view.fields.filter)
+                    filterGroup.filters = filterGroup.filters.filter((o) => isAFilterGroupInstance(o) || areFilterClausesEqual(o, filter))
                     mutator.changeViewFilter(view, filterGroup)
                 }}
             >

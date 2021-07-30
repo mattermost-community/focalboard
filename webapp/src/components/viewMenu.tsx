@@ -5,7 +5,7 @@ import {injectIntl, IntlShape} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board, IPropertyTemplate} from '../blocks/board'
-import {IViewType, BoardView} from '../blocks/boardView'
+import {IViewType, BoardView, createBoardView} from '../blocks/boardView'
 import {Constants} from '../constants'
 import mutator from '../mutator'
 import {Utils} from '../utils'
@@ -38,8 +38,9 @@ const ViewMenu = React.memo((props: Props) => {
         const {activeView} = props
         Utils.log('duplicateView')
         const currentViewId = activeView.id
-        const newView = activeView.duplicate()
+        const newView = createBoardView(activeView)
         newView.title = `${activeView.title} copy`
+        newView.id = Utils.createGuid()
         mutator.insertBlock(
             newView,
             'duplicate view',
@@ -79,7 +80,7 @@ const ViewMenu = React.memo((props: Props) => {
     const handleAddViewBoard = useCallback(() => {
         const {board, activeView, intl} = props
         Utils.log('addview-board')
-        const view = new BoardView()
+        const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
         view.fields.viewType = 'board'
         view.parentId = board.id
@@ -105,7 +106,7 @@ const ViewMenu = React.memo((props: Props) => {
         const {board, activeView, intl} = props
 
         Utils.log('addview-table')
-        const view = new BoardView()
+        const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewTableTitle', defaultMessage: 'Table view'})
         view.fields.viewType = 'table'
         view.parentId = board.id
@@ -135,7 +136,7 @@ const ViewMenu = React.memo((props: Props) => {
         const {board, activeView, intl} = props
 
         Utils.log('addview-gallery')
-        const view = new BoardView()
+        const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewGalleryTitle', defaultMessage: 'Gallery view'})
         view.fields.viewType = 'gallery'
         view.parentId = board.id

@@ -1,9 +1,17 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {ContentBlock} from './contentBlock'
+import {Block, createBlock} from './block'
 
-class TextBlock extends ContentBlock {
-    type: 'text' = 'text'
+type TextBlock = ContentBlock & {
+    type: 'text'
 }
 
-export {TextBlock}
+function createTextBlock(block?: Block): TextBlock {
+    return {
+        ...createBlock(block),
+        type: 'text',
+    }
+}
+
+export {TextBlock, createTextBlock}

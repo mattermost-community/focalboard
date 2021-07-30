@@ -1,19 +1,19 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {Board, IPropertyOption, IPropertyTemplate} from '../blocks/board'
-import {BoardView} from '../blocks/boardView'
-import {Card} from '../blocks/card'
-import {CommentBlock} from '../blocks/commentBlock'
-import {DividerBlock} from '../blocks/dividerBlock'
-import {FilterClause} from '../blocks/filterClause'
-import {FilterGroup} from '../blocks/filterGroup'
-import {ImageBlock} from '../blocks/imageBlock'
-import {TextBlock} from '../blocks/textBlock'
+import {Board, IPropertyOption, IPropertyTemplate, createBoard} from '../blocks/board'
+import {BoardView, createBoardView} from '../blocks/boardView'
+import {Card, createCard} from '../blocks/card'
+import {CommentBlock, createCommentBlock} from '../blocks/commentBlock'
+import {DividerBlock, createDividerBlock} from '../blocks/dividerBlock'
+import {createFilterClause} from '../blocks/filterClause'
+import {createFilterGroup} from '../blocks/filterGroup'
+import {ImageBlock, createImageBlock} from '../blocks/imageBlock'
+import {TextBlock, createTextBlock} from '../blocks/textBlock'
 
 class TestBlockFactory {
     static createBoard(): Board {
-        const board = new Board()
+        const board = createBoard()
         board.rootId = board.id
         board.title = 'board title'
         board.fields.description = 'description'
@@ -39,7 +39,7 @@ class TestBlockFactory {
     }
 
     static createBoardView(board?: Board): BoardView {
-        const view = new BoardView()
+        const view = createBoardView()
         view.parentId = board ? board.id : 'parent'
         view.rootId = board ? board.rootId : 'root'
         view.title = 'view title'
@@ -63,8 +63,8 @@ class TestBlockFactory {
         }
 
         // Filter
-        const filterGroup = new FilterGroup()
-        const filter = new FilterClause()
+        const filterGroup = createFilterGroup()
+        const filter = createFilterClause()
         filter.propertyId = 'property1'
         filter.condition = 'includes'
         filter.values = ['value1']
@@ -75,7 +75,7 @@ class TestBlockFactory {
     }
 
     static createCard(board?: Board): Card {
-        const card = new Card()
+        const card = createCard()
         card.parentId = board ? board.id : 'parent'
         card.rootId = board ? board.rootId : 'root'
         card.title = 'title'
@@ -86,7 +86,7 @@ class TestBlockFactory {
     }
 
     static createComment(card: Card): CommentBlock {
-        const block = new CommentBlock()
+        const block = createCommentBlock()
         block.parentId = card.id
         block.rootId = card.rootId
         block.title = 'title'
@@ -95,7 +95,7 @@ class TestBlockFactory {
     }
 
     static createText(card: Card): TextBlock {
-        const block = new TextBlock()
+        const block = createTextBlock()
         block.parentId = card.id
         block.rootId = card.rootId
         block.title = 'title'
@@ -104,7 +104,7 @@ class TestBlockFactory {
     }
 
     static createImage(card: Card): ImageBlock {
-        const block = new ImageBlock()
+        const block = createImageBlock()
         block.parentId = card.id
         block.rootId = card.rootId
         block.fields.fileId = 'fileId'
@@ -113,7 +113,7 @@ class TestBlockFactory {
     }
 
     static createDivider(card: Card): DividerBlock {
-        const block = new DividerBlock()
+        const block = createDividerBlock()
         block.parentId = card.id
         block.rootId = card.rootId
         block.title = 'title'

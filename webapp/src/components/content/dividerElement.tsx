@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {DividerBlock} from '../../blocks/dividerBlock'
+import {DividerBlock, createDividerBlock} from '../../blocks/dividerBlock'
 import DividerIcon from '../../widgets/icons/divider'
 
 import {contentRegistry} from './contentRegistry'
@@ -15,7 +15,7 @@ contentRegistry.registerContentType({
     getDisplayText: (intl) => intl.formatMessage({id: 'ContentBlock.divider', defaultMessage: 'divider'}),
     getIcon: () => <DividerIcon/>,
     createBlock: async (): Promise<DividerBlock> => {
-        return new DividerBlock()
+        return createDividerBlock()
     },
     createComponent: () => <DividerElement/>,
 })

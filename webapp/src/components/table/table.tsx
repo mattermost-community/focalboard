@@ -6,7 +6,7 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import {useDragLayer, useDrop} from 'react-dnd'
 
 import {IPropertyOption, IPropertyTemplate, Board, BoardGroup} from '../../blocks/board'
-import {BoardView, ISortOption} from '../../blocks/boardView'
+import {createBoardView, BoardView, ISortOption} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
 import {Constants} from '../../constants'
 import mutator from '../../mutator'
@@ -67,7 +67,7 @@ const Table = (props: Props): JSX.Element => {
             if (newWidth !== columnWidths[item.id]) {
                 columnWidths[item.id] = newWidth
 
-                const newView = new BoardView(activeView)
+                const newView = createBoardView(activeView)
                 newView.fields.columnWidths = columnWidths
                 try {
                     dispatch(updateView(newView))
@@ -108,7 +108,7 @@ const Table = (props: Props): JSX.Element => {
 
         const columnWidths = {...activeView.fields.columnWidths}
         columnWidths[columnID] = longestSize
-        const newView = new BoardView(activeView)
+        const newView = createBoardView(activeView)
         newView.fields.columnWidths = columnWidths
         mutator.updateBlock(newView, activeView, 'autosize column')
     }, [activeView, board, cards])
@@ -122,7 +122,7 @@ const Table = (props: Props): JSX.Element => {
             newValue.push(groupById)
         }
 
-        const newView = new BoardView(activeView)
+        const newView = createBoardView(activeView)
         newView.fields.collapsedOptionIds = newValue
         mutator.performAsUndoGroup(async () => {
             await mutator.updateBlock(newView, activeView, 'hide group')

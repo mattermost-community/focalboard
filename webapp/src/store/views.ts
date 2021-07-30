@@ -3,7 +3,7 @@
 
 import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit'
 
-import {BoardView} from '../blocks/boardView'
+import {BoardView, createBoardView} from '../blocks/boardView'
 
 import {initialLoad, initialReadOnlyLoad} from './initialLoad'
 import {getCurrentBoard} from './boards'
@@ -60,7 +60,7 @@ export const getViews = (state: RootState): {[key: string]: BoardView} => state.
 export const getSortedViews = createSelector(
     getViews,
     (views) => {
-        return Object.values(views).sort((a, b) => a.title.localeCompare(b.title)).map((v) => new BoardView(v))
+        return Object.values(views).sort((a, b) => a.title.localeCompare(b.title)).map((v) => createBoardView(v))
     },
 )
 
@@ -74,7 +74,7 @@ export const getCurrentBoardViews = createSelector(
     (state) => state.boards.current,
     getViews,
     (boardId, views) => {
-        return Object.values(views).filter((v) => v.parentId === boardId).sort((a, b) => a.title.localeCompare(b.title)).map((v) => new BoardView(v))
+        return Object.values(views).filter((v) => v.parentId === boardId).sort((a, b) => a.title.localeCompare(b.title)).map((v) => createBoardView(v))
     },
 )
 

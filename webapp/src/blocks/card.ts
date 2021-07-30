@@ -1,8 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Utils} from '../utils'
 
-import {Block, IBlock} from './block'
+import {Block, createBlock} from './block'
 
 type CardFields = {
     icon?: string
@@ -11,36 +10,31 @@ type CardFields = {
     contentOrder: Array<string | string[]>
 }
 
-class Card extends Block {
+type Card = Block & {
     fields: CardFields
+}
 
-    constructor(block?: IBlock) {
-        super(block)
-        this.type = 'card'
-        const contentOrder: Array<string|string[]> = []
-        if (block?.fields.contentOrder) {
-            for (const contentId of block.fields.contentOrder) {
-                if (typeof contentId === 'string') {
-                    contentOrder.push(contentId)
-                } else {
-                    contentOrder.push(contentId.slice())
-                }
+function createCard(block?: Block): Card {
+    const contentOrder: Array<string|string[]> = []
+    if (block?.fields.contentOrder) {
+        for (const contentId of block.fields.contentOrder) {
+            if (typeof contentId === 'string') {
+                contentOrder.push(contentId)
+            } else {
+                contentOrder.push(contentId.slice())
             }
         }
-
-        this.fields = {
+    }
+    return {
+        ...createBlock(block),
+        type: 'card',
+        fields: {
             icon: block?.fields.icon || '',
             properties: {...(block?.fields.properties || {})},
             contentOrder,
             isTemplate: block?.fields.isTemplate || false,
-        }
-    }
-
-    duplicate(): Card {
-        const card = new Card(this)
-        card.id = Utils.createGuid()
-        return card
+        },
     }
 }
 
-export {Card}
+export {Card, createCard}

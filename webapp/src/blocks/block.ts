@@ -8,7 +8,7 @@ const blockTypes = [...contentBlockTypes, 'board', 'view', 'card', 'comment', 'u
 type ContentBlockTypes = typeof contentBlockTypes[number]
 type BlockTypes = typeof blockTypes[number]
 
-interface IBlock {
+interface Block {
     id: string
     parentId: string
     rootId: string
@@ -25,42 +25,23 @@ interface IBlock {
     deleteAt: number
 }
 
-class Block implements IBlock {
-    id: string
-    parentId: string
-    rootId: string
-    createdBy: string
-    modifiedBy: string
-
-    schema: number
-    type: BlockTypes
-    title: string
-    fields: Record<string, any>
-
-    createAt: number
-    updateAt: number
-    deleteAt: number
-
-    constructor(block?: IBlock) {
-        this.id = block?.id || Utils.createGuid()
-        this.schema = 1
-        this.parentId = block?.parentId || ''
-        this.rootId = block?.rootId || ''
-        this.createdBy = block?.createdBy || ''
-        this.modifiedBy = block?.modifiedBy || ''
-        this.type = block?.type || 'unknown'
-
-        // Shallow copy here. Derived classes must make deep copies of their known properties in their constructors.
-        this.fields = block?.fields ? {...block?.fields} : {}
-
-        this.title = block?.title || ''
-
-        const now = Date.now()
-        this.createAt = block?.createAt || now
-        this.updateAt = block?.updateAt || now
-        this.deleteAt = block?.deleteAt || 0
+function createBlock(block?: Block): Block {
+    const now = Date.now()
+    return {
+        id: block?.id || Utils.createGuid(),
+        schema: 1,
+        parentId: block?.parentId || '',
+        rootId: block?.rootId || '',
+        createdBy: block?.createdBy || '',
+        modifiedBy: block?.modifiedBy || '',
+        type: block?.type || 'unknown',
+        fields: block?.fields ? {...block?.fields} : {},
+        title: block?.title || '',
+        createAt: block?.createAt || now,
+        updateAt: block?.updateAt || now,
+        deleteAt: block?.deleteAt || 0,
     }
 }
 
 export type {ContentBlockTypes, BlockTypes}
-export {blockTypes, contentBlockTypes, IBlock, Block}
+export {blockTypes, contentBlockTypes, Block, createBlock}

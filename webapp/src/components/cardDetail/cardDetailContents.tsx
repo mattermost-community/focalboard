@@ -5,7 +5,7 @@ import {useIntl, IntlShape} from 'react-intl'
 
 import {IContentBlockWithCords, ContentBlock as ContentBlockType} from '../../blocks/contentBlock'
 import {Card} from '../../blocks/card'
-import {TextBlock} from '../../blocks/textBlock'
+import {createTextBlock} from '../../blocks/textBlock'
 import mutator from '../../mutator'
 import {useSortableWithGrip} from '../../hooks/sortable'
 
@@ -21,7 +21,7 @@ type Props = {
 }
 
 function addTextBlock(card: Card, intl: IntlShape, text: string): void {
-    const block = new TextBlock()
+    const block = createTextBlock()
     block.parentId = card.id
     block.rootId = card.rootId
     block.title = text

@@ -1,15 +1,17 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IBlock} from './block'
+import {Block, createBlock} from './block'
 import {ContentBlock} from './contentBlock'
 
-class DividerBlock extends ContentBlock {
+type DividerBlock = ContentBlock & {
     type: 'divider'
+}
 
-    constructor(block?: IBlock) {
-        super(block)
-        this.type = 'divider'
+function createDividerBlock(block?: Block): DividerBlock {
+    return {
+        ...createBlock(block),
+        type: 'divider',
     }
 }
 
-export {DividerBlock}
+export {DividerBlock, createDividerBlock}

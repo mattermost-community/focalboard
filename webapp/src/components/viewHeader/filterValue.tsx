@@ -4,7 +4,7 @@ import React from 'react'
 
 import {IPropertyTemplate} from '../../blocks/board'
 import {FilterClause} from '../../blocks/filterClause'
-import {FilterGroup} from '../../blocks/filterGroup'
+import {createFilterGroup} from '../../blocks/filterGroup'
 import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
@@ -50,7 +50,7 @@ const filterValue = (props: Props): JSX.Element|null => {
                             const filterIndex = view.fields.filter.filters.indexOf(filter)
                             Utils.assert(filterIndex >= 0, "Can't find filter")
 
-                            const filterGroup = new FilterGroup(view.fields.filter)
+                            const filterGroup = createFilterGroup(view.fields.filter)
                             const newFilter = filterGroup.filters[filterIndex] as FilterClause
                             Utils.assert(newFilter, `No filter at index ${filterIndex}`)
                             if (filter.values.includes(o.id)) {

@@ -7,23 +7,23 @@ import {Provider as ReduxProvider} from 'react-redux'
 import {render} from '@testing-library/react'
 import configureStore from 'redux-mock-store'
 
-import {Card} from '../../../blocks/card'
+import {createCard} from '../../../blocks/card'
 import {IUser} from '../../../user'
 
-import {Board} from '../../../blocks/board'
+import {createBoard} from '../../../blocks/board'
 
-import {CommentBlock} from '../../../blocks/commentBlock'
+import {createCommentBlock} from '../../../blocks/commentBlock'
 
 import LastModifiedBy from './lastModifiedBy'
 
 describe('components/properties/lastModifiedBy', () => {
     test('should match snapshot', () => {
-        const card = new Card()
+        const card = createCard()
         card.id = 'card-id-1'
         card.modifiedBy = 'user-id-1'
 
-        const board = new Board()
-        const comment = new CommentBlock()
+        const board = createBoard()
+        const comment = createCommentBlock()
         comment.modifiedBy = 'user-id-1'
         comment.parentId = 'card-id-1'
 

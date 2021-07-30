@@ -6,7 +6,7 @@ import {FormattedMessage} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 import {useHotkeys} from 'react-hotkeys-hook'
 
-import {IBlock} from '../blocks/block'
+import {Block} from '../blocks/block'
 import {ContentBlock} from '../blocks/contentBlock'
 import {CommentBlock} from '../blocks/commentBlock'
 import {Board} from '../blocks/board'
@@ -130,13 +130,13 @@ const BoardPage = (props: Props) => {
             wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
         }
 
-        const incrementalUpdate = (_: WSClient, blocks: IBlock[]) => {
+        const incrementalUpdate = (_: WSClient, blocks: Block[]) => {
             batch(() => {
-                dispatch(updateBoards(blocks.filter((b: IBlock) => b.type === 'board' || b.deleteAt !== 0) as Board[]))
-                dispatch(updateViews(blocks.filter((b: IBlock) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
-                dispatch(updateCards(blocks.filter((b: IBlock) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
-                dispatch(updateComments(blocks.filter((b: IBlock) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
-                dispatch(updateContents(blocks.filter((b: IBlock) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
+                dispatch(updateBoards(blocks.filter((b: Block) => b.type === 'board' || b.deleteAt !== 0) as Board[]))
+                dispatch(updateViews(blocks.filter((b: Block) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
+                dispatch(updateCards(blocks.filter((b: Block) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
+                dispatch(updateComments(blocks.filter((b: Block) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
+                dispatch(updateContents(blocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
             })
         }
 

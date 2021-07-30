@@ -7,7 +7,7 @@ import {connect} from 'react-redux'
 import Hotkeys from 'react-hot-keys'
 
 import {BlockIcons} from '../blockIcons'
-import {Card} from '../blocks/card'
+import {Card, createCard} from '../blocks/card'
 import {Board, IPropertyTemplate, IPropertyOption, BoardGroup} from '../blocks/board'
 import {BoardView} from '../blocks/boardView'
 import {CardFilter} from '../cardFilter'
@@ -228,7 +228,7 @@ class CenterPanel extends React.Component<Props, State> {
     addCard = async (groupByOptionId?: string, show = false): Promise<void> => {
         const {activeView, board, groupByProperty} = this.props
 
-        const card = new Card()
+        const card = createCard()
 
         card.parentId = board.id
         card.rootId = board.rootId
@@ -266,7 +266,7 @@ class CenterPanel extends React.Component<Props, State> {
     private addCardTemplate = async () => {
         const {board} = this.props
 
-        const cardTemplate = new Card()
+        const cardTemplate = createCard()
         cardTemplate.fields.isTemplate = true
         cardTemplate.parentId = board.id
         cardTemplate.rootId = board.rootId

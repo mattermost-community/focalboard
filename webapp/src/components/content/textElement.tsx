@@ -4,7 +4,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 
 import {ContentBlock} from '../../blocks/contentBlock'
-import {TextBlock} from '../../blocks/textBlock'
+import {TextBlock, createTextBlock} from '../../blocks/textBlock'
 import mutator from '../../mutator'
 import TextIcon from '../../widgets/icons/text'
 import {MarkdownEditor} from '../markdownEditor'
@@ -37,7 +37,7 @@ contentRegistry.registerContentType({
     getDisplayText: (intl) => intl.formatMessage({id: 'ContentBlock.text', defaultMessage: 'text'}),
     getIcon: () => <TextIcon/>,
     createBlock: async () => {
-        return new TextBlock()
+        return createTextBlock()
     },
     createComponent: (block, readonly) => {
         return (

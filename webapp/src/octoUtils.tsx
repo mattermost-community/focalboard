@@ -3,20 +3,20 @@
 
 import {IntlShape} from 'react-intl'
 
-import {IBlock, Block} from './blocks/block'
-import {IPropertyTemplate, Board} from './blocks/board'
-import {BoardView} from './blocks/boardView'
-import {Card} from './blocks/card'
-import {CommentBlock} from './blocks/commentBlock'
-import {CheckboxBlock} from './blocks/checkboxBlock'
-import {DividerBlock} from './blocks/dividerBlock'
-import {ImageBlock} from './blocks/imageBlock'
-import {TextBlock} from './blocks/textBlock'
+import {Block, createBlock} from './blocks/block'
+import {IPropertyTemplate, Board, createBoard} from './blocks/board'
+import {BoardView, createBoardView} from './blocks/boardView'
+import {Card, createCard} from './blocks/card'
+import {CommentBlock, createCommentBlock} from './blocks/commentBlock'
+import {CheckboxBlock, createCheckboxBlock} from './blocks/checkboxBlock'
+import {DividerBlock, createDividerBlock} from './blocks/dividerBlock'
+import {ImageBlock, createImageBlock} from './blocks/imageBlock'
+import {TextBlock, createTextBlock} from './blocks/textBlock'
 import {FilterCondition} from './blocks/filterClause'
 import {Utils} from './utils'
 
 class OctoUtils {
-    static propertyDisplayValue(block: IBlock, propertyValue: string | string[] | undefined, propertyTemplate: IPropertyTemplate, intl: IntlShape): string | string[] | undefined {
+    static propertyDisplayValue(block: Block, propertyValue: string | string[] | undefined, propertyTemplate: IPropertyTemplate, intl: IntlShape): string | string[] | undefined {
         let displayValue: string | string[] | undefined
         switch (propertyTemplate.type) {
         case 'select': {
@@ -51,28 +51,28 @@ class OctoUtils {
         return displayValue
     }
 
-    static hydrateBlock(block: IBlock): Block {
+    static hydrateBlock(block: Block): Block {
         switch (block.type) {
-        case 'board': { return new Board(block) }
-        case 'view': { return new BoardView(block) }
-        case 'card': { return new Card(block) }
-        case 'text': { return new TextBlock(block) }
-        case 'image': { return new ImageBlock(block) }
-        case 'divider': { return new DividerBlock(block) }
-        case 'comment': { return new CommentBlock(block) }
-        case 'checkbox': { return new CheckboxBlock(block) }
+        case 'board': { return createBoard(block) }
+        case 'view': { return createBoardView(block) }
+        case 'card': { return createCard(block) }
+        case 'text': { return createTextBlock(block) }
+        case 'image': { return createImageBlock(block) }
+        case 'divider': { return createDividerBlock(block) }
+        case 'comment': { return createCommentBlock(block) }
+        case 'checkbox': { return createCheckboxBlock(block) }
         default: {
             Utils.assertFailure(`Can't hydrate unknown block type: ${block.type}`)
-            return new Block(block)
+            return createBlock(block)
         }
         }
     }
 
-    static hydrateBlocks(blocks: readonly IBlock[]): Block[] {
+    static hydrateBlocks(blocks: readonly Block[]): Block[] {
         return blocks.map((block) => this.hydrateBlock(block))
     }
 
-    static mergeBlocks(blocks: readonly IBlock[], updatedBlocks: readonly IBlock[]): IBlock[] {
+    static mergeBlocks(blocks: readonly Block[], updatedBlocks: readonly Block[]): Block[] {
         const updatedBlockIds = updatedBlocks.map((o) => o.id)
         const newBlocks = blocks.filter((o) => !updatedBlockIds.includes(o.id))
         const updatedAndNotDeletedBlocks = updatedBlocks.filter((o) => o.deleteAt === 0)
@@ -81,7 +81,7 @@ class OctoUtils {
     }
 
     // Creates a copy of the blocks with new ids and parentIDs
-    static duplicateBlockTree(blocks: readonly IBlock[], sourceBlockId: string): [Block[], Block, Readonly<Record<string, string>>] {
+    static duplicateBlockTree(blocks: readonly Block[], sourceBlockId: string): [Block[], Block, Readonly<Record<string, string>>] {
         const idMap: Record<string, string> = {}
         const now = Date.now()
         const newBlocks = blocks.map((block) => {

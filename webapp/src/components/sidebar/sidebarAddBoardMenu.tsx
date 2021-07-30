@@ -4,8 +4,8 @@ import React, {useEffect, useCallback} from 'react'
 import {FormattedMessage, useIntl, IntlShape} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
-import {Board} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
+import {Board, createBoard} from '../../blocks/board'
+import {BoardView, createBoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import octoClient from '../../octoClient'
 import AddIcon from '../../widgets/icons/add'
@@ -27,10 +27,10 @@ type Props = {
 const addBoardClicked = async (showBoard: (id: string) => void, intl: IntlShape, activeBoardId?: string) => {
     const oldBoardId = activeBoardId
 
-    const board = new Board()
+    const board = createBoard()
     board.rootId = board.id
 
-    const view = new BoardView()
+    const view = createBoardView()
     view.fields.viewType = 'board'
     view.parentId = board.id
     view.rootId = board.rootId
@@ -51,11 +51,11 @@ const addBoardClicked = async (showBoard: (id: string) => void, intl: IntlShape,
 }
 
 const addBoardTemplateClicked = async (showBoard: (id: string) => void, intl: IntlShape, activeBoardId?: string) => {
-    const boardTemplate = new Board()
+    const boardTemplate = createBoard()
     boardTemplate.rootId = boardTemplate.id
     boardTemplate.fields.isTemplate = true
 
-    const view = new BoardView()
+    const view = createBoardView()
     view.fields.viewType = 'board'
     view.parentId = boardTemplate.id
     view.rootId = boardTemplate.rootId

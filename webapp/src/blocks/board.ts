@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import {Utils} from '../utils'
 
-import {Block, IBlock} from './block'
+import {Block, createBlock} from './block'
 import {Card} from './card'
 
 type PropertyType = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy'
@@ -29,50 +29,45 @@ type BoardFields = {
     cardProperties: IPropertyTemplate[]
 }
 
-class Board extends Block {
+type Board = Block & {
     fields: BoardFields
+}
 
-    constructor(block?: IBlock) {
-        super(block)
-        this.type = 'board'
-
-        let cardProperties: IPropertyTemplate[] = []
-        if (block?.fields.cardProperties) {
-            // Deep clone of card properties and their options
-            cardProperties = block?.fields.cardProperties.map((o: IPropertyTemplate) => {
-                return {
-                    id: o.id,
-                    name: o.name,
-                    type: o.type,
-                    options: o.options ? o.options.map((option) => ({...option})) : [],
-                }
-            })
+function createBoard(block?: Block): Board {
+    let cardProperties: IPropertyTemplate[] = []
+    const selectProperties = cardProperties.find((o) => o.type === 'select')
+    if (!selectProperties) {
+        const property: IPropertyTemplate = {
+            id: Utils.createGuid(),
+            name: 'Status',
+            type: 'select',
+            options: [],
         }
+        cardProperties.push(property)
+    }
 
-        const selectProperties = cardProperties.find((o) => o.type === 'select')
-        if (!selectProperties) {
-            const property: IPropertyTemplate = {
-                id: Utils.createGuid(),
-                name: 'Status',
-                type: 'select',
-                options: [],
+    if (block?.fields.cardProperties) {
+        // Deep clone of card properties and their options
+        cardProperties = block?.fields.cardProperties.map((o: IPropertyTemplate) => {
+            return {
+                id: o.id,
+                name: o.name,
+                type: o.type,
+                options: o.options ? o.options.map((option) => ({...option})) : [],
             }
-            cardProperties.push(property)
-        }
+        })
+    }
 
-        this.fields = {
+    return {
+        ...createBlock(block),
+        type: 'board',
+        fields: {
             showDescription: block?.fields.showDescription || false,
             description: block?.fields.description || '',
             icon: block?.fields.icon || '',
             isTemplate: block?.fields.isTemplate || false,
             cardProperties,
-        }
-    }
-
-    duplicate(): Board {
-        const board = new Board(this)
-        board.id = Utils.createGuid()
-        return board
+        },
     }
 }
 
@@ -81,4 +76,4 @@ type BoardGroup = {
     cards: Card[]
 }
 
-export {Board, PropertyType, IPropertyOption, IPropertyTemplate, BoardGroup}
+export {Board, PropertyType, IPropertyOption, IPropertyTemplate, BoardGroup, createBoard}
