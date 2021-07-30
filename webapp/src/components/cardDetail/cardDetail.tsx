@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useRef, useEffect} from 'react'
+import React, {useState, useRef, useEffect, useCallback} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {BlockIcons} from '../../blockIcons'
@@ -38,9 +38,16 @@ type Props = {
 const CardDetail = (props: Props): JSX.Element|null => {
     const {card, comments} = props
     const [title, setTitle] = useState(card.title)
+    const [serverTitle, setServerTitle] = useState(card.title)
     const titleRef = useRef<Focusable>(null)
-    const titleValueRef = useRef(title)
-    titleValueRef.current = title
+    const saveTitle = useCallback(() => {
+        if (title !== card.title) {
+            mutator.changeTitle(card, title)
+        }
+    }, [card.title, title])
+
+    const saveTitleRef = useRef<() => void>(saveTitle)
+    saveTitleRef.current = saveTitle
 
     useEffect(() => {
         if (!title) {
@@ -49,12 +56,17 @@ const CardDetail = (props: Props): JSX.Element|null => {
     }, [])
 
     useEffect(() => {
-        return () => {
-            if (titleValueRef.current !== card.title) {
-                mutator.changeTitle(card, titleValueRef.current)
-            }
+        if (serverTitle === title) {
+            setTitle(card.title)
         }
-    }, [card])
+        setServerTitle(card.title)
+    }, [card.title, title])
+
+    useEffect(() => {
+        return () => {
+            saveTitleRef.current && saveTitleRef.current()
+        }
+    }, [])
 
     if (!card) {
         return null
@@ -91,11 +103,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     placeholderText='Untitled'
                     onChange={(newTitle: string) => setTitle(newTitle)}
                     saveOnEsc={true}
-                    onSave={() => {
-                        if (title !== props.card.title) {
-                            mutator.changeTitle(card, title)
-                        }
-                    }}
+                    onSave={saveTitle}
                     onCancel={() => setTitle(props.card.title)}
                     readonly={props.readonly}
                     spellCheck={true}

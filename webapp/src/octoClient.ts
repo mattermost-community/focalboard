@@ -219,15 +219,10 @@ class OctoClient {
     }
 
     async updateBlock(block: IBlock): Promise<Response> {
-        block.updateAt = Date.now()
         return this.insertBlocks([block])
     }
 
     async updateBlocks(blocks: IBlock[]): Promise<Response> {
-        const now = Date.now()
-        blocks.forEach((block) => {
-            block.updateAt = now
-        })
         return this.insertBlocks(blocks)
     }
 
