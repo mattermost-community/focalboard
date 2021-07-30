@@ -86,9 +86,11 @@ const BoardPage = (props: Props) => {
             history.push(newPath)
         }
 
-        let view = boardViews.find((v) => v.id === viewId)
+        const view = boardViews.find((v) => v.id === viewId)
         if (!view && boardViews.length > 0) {
-            view = boardViews[0]
+            const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
+            history.push(newPath)
+            return
         }
 
         localStorage.setItem('lastBoardId', boardId || '')

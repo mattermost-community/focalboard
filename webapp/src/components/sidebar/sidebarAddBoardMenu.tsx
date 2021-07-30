@@ -50,12 +50,19 @@ const addBoardClicked = async (showBoard: (id: string) => void, intl: IntlShape,
     )
 }
 
-const addBoardTemplateClicked = async (showBoard: (id: string) => void, activeBoardId?: string) => {
+const addBoardTemplateClicked = async (showBoard: (id: string) => void, intl: IntlShape, activeBoardId?: string) => {
     const boardTemplate = new Board()
     boardTemplate.rootId = boardTemplate.id
     boardTemplate.fields.isTemplate = true
-    await mutator.insertBlock(
-        boardTemplate,
+
+    const view = new BoardView()
+    view.fields.viewType = 'board'
+    view.parentId = boardTemplate.id
+    view.rootId = boardTemplate.rootId
+    view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
+
+    await mutator.insertBlocks(
+        [boardTemplate, view],
         'add board template',
         async () => {
             showBoard(boardTemplate.id)
@@ -147,7 +154,7 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
                         icon={<AddIcon/>}
                         id='add-template'
                         name={intl.formatMessage({id: 'Sidebar.add-template', defaultMessage: 'New template'})}
-                        onClick={() => addBoardTemplateClicked(showBoard, props.activeBoardId)}
+                        onClick={() => addBoardTemplateClicked(showBoard, intl, props.activeBoardId)}
                     />
                 </Menu>
             </MenuWrapper>
