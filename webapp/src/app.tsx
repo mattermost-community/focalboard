@@ -16,11 +16,13 @@ import {getMessages} from './i18n'
 import {FlashMessages} from './components/flashMessages'
 import BoardPage from './pages/boardPage'
 import ChangePasswordPage from './pages/changePasswordPage'
+import DashboardPage from './pages/dashboardPage'
 import ErrorPage from './pages/errorPage'
 import LoginPage from './pages/loginPage'
 import RegisterPage from './pages/registerPage'
 import {IUser} from './user'
 import {Utils} from './utils'
+import wsClient from './wsclient'
 import {importNativeAppSettings} from './nativeApp'
 import {fetchCurrentUser, getCurrentUser} from './store/currentUser'
 import {getLanguage, fetchLanguage} from './store/language'
@@ -42,6 +44,13 @@ const App = React.memo((): JSX.Element => {
         })
     }, [])
 
+    useEffect(() => {
+        wsClient.open()
+        return () => {
+            wsClient.close()
+        }
+    }, [])
+
     return (
         <IntlProvider
             locale={language.split(/[_]/)[0]}
@@ -49,7 +58,7 @@ const App = React.memo((): JSX.Element => {
         >
             <DndProvider backend={Utils.isMobile() ? TouchBackend : HTML5Backend}>
                 <FlashMessages milliseconds={2000}/>
-                <Router basename={Utils.getBaseURL()}>
+                <Router basename={Utils.getFrontendBaseURL()}>
                     <div id='frame'>
                         <div id='main'>
                             <Switch>
@@ -91,6 +100,12 @@ const App = React.memo((): JSX.Element => {
                                         )
                                     }}
                                 />
+                                <Route
+                                    exact={true}
+                                    path='/dashboard'
+                                >
+                                    <DashboardPage/>
+                                </Route>
                                 <Route path='/:boardId?/:viewId?'>
                                     {initialLoad && !user && <Redirect to='/login'/>}
                                     <BoardPage/>
