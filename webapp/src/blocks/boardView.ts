@@ -31,6 +31,7 @@ class BoardView extends Block {
 
         this.fields = {
             viewType: block?.fields.viewType || 'board',
+            groupById: block?.fields.groupById,
             sortOptions: block?.fields.sortOptions?.map((o: ISortOption) => ({...o})) || [],
             visiblePropertyIds: block?.fields.visiblePropertyIds?.slice() || [],
             visibleOptionIds: block?.fields.visibleOptionIds?.slice() || [],

@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useCallback} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {IPropertyTemplate} from '../../blocks/board'
@@ -25,6 +25,34 @@ const ViewHeaderSortMenu = React.memo((props: Props) => {
     const sortDisplayOptions = properties?.map((o) => ({id: o.id, name: o.name}))
     sortDisplayOptions?.unshift({id: Constants.titleColumnId, name: 'Name'})
 
+    const sortChanged = useCallback((propertyId: string) => {
+        let newSortOptions: ISortOption[] = []
+        if (activeView.fields.sortOptions && activeView.fields.sortOptions[0] && activeView.fields.sortOptions[0].propertyId === propertyId) {
+            // Already sorting by name, so reverse it
+            newSortOptions = [
+                {propertyId, reversed: !activeView.fields.sortOptions[0].reversed},
+            ]
+        } else {
+            newSortOptions = [
+                {propertyId, reversed: false},
+            ]
+        }
+        mutator.changeViewSortOptions(activeView, newSortOptions)
+    }, [activeView])
+
+    const onManualSort = useCallback(() => {
+        // This sets the manual card order to the currently displayed order
+        // Note: Perform this as a single update to change both properties correctly
+        const newView = {...activeView, fields: {...activeView.fields}}
+        newView.fields.cardOrder = orderedCards.map((o) => o.id || '') || []
+        newView.fields.sortOptions = []
+        mutator.updateBlock(newView, activeView, 'reorder')
+    }, [activeView, orderedCards])
+
+    const onRevertSort = useCallback(() => {
+        mutator.changeViewSortOptions(activeView, [])
+    }, [activeView])
+
     return (
         <MenuWrapper>
             <Button active={hasSort}>
@@ -39,22 +67,13 @@ const ViewHeaderSortMenu = React.memo((props: Props) => {
                     <Menu.Text
                         id='manual'
                         name='Manual'
-                        onClick={() => {
-                            // This sets the manual card order to the currently displayed order
-                            // Note: Perform this as a single update to change both properties correctly
-                            const newView = {...activeView, fields: {...activeView.fields}}
-                            newView.fields.cardOrder = orderedCards.map((o) => o.id || '') || []
-                            newView.fields.sortOptions = []
-                            mutator.updateBlock(newView, activeView, 'reorder')
-                        }}
+                        onClick={onManualSort}
                     />
 
                     <Menu.Text
                         id='revert'
                         name='Revert'
-                        onClick={() => {
-                            mutator.changeViewSortOptions(activeView, [])
-                        }}
+                        onClick={onRevertSort}
                     />
 
                     <Menu.Separator/>
@@ -75,20 +94,7 @@ const ViewHeaderSortMenu = React.memo((props: Props) => {
                             id={option.id}
                             name={option.name}
                             rightIcon={rightIcon}
-                            onClick={(propertyId: string) => {
-                                let newSortOptions: ISortOption[] = []
-                                if (activeView.fields.sortOptions && activeView.fields.sortOptions[0] && activeView.fields.sortOptions[0].propertyId === propertyId) {
-                                    // Already sorting by name, so reverse it
-                                    newSortOptions = [
-                                        {propertyId, reversed: !activeView.fields.sortOptions[0].reversed},
-                                    ]
-                                } else {
-                                    newSortOptions = [
-                                        {propertyId, reversed: false},
-                                    ]
-                                }
-                                mutator.changeViewSortOptions(activeView, newSortOptions)
-                            }}
+                            onClick={sortChanged}
                         />
                     )
                 })}
