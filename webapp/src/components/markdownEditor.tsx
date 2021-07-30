@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useRef} from 'react'
+import React, {useState, useRef, useMemo} from 'react'
 import EasyMDE from 'easymde'
 import SimpleMDE from 'react-simplemde-editor'
 
@@ -51,6 +51,23 @@ const MarkdownEditor = (props: Props): JSX. Element => {
     }
     const stateAndPropsRef = useRef(stateAndPropsValue)
     stateAndPropsRef.current = stateAndPropsValue
+
+    const mdeOptions = useMemo(() => ({
+        autoDownloadFontAwesome: true,
+        toolbar: false,
+        status: false,
+        spellChecker: true,
+        nativeSpellcheck: true,
+        minHeight: '10px',
+        shortcuts: {
+            toggleStrikethrough: 'Cmd-.',
+            togglePreview: null,
+            drawImage: null,
+            drawLink: null,
+            toggleSideBySide: null,
+            toggleFullScreen: null,
+        },
+    }), [])
 
     const html: string = Utils.htmlFromMarkdown(text || placeholderText || '')
 
@@ -132,22 +149,7 @@ const MarkdownEditor = (props: Props): JSX. Element => {
                         }
                     },
                 }}
-                options={{
-                    autoDownloadFontAwesome: true,
-                    toolbar: false,
-                    status: false,
-                    spellChecker: true,
-                    nativeSpellcheck: true,
-                    minHeight: '10px',
-                    shortcuts: {
-                        toggleStrikethrough: 'Cmd-.',
-                        togglePreview: null,
-                        drawImage: null,
-                        drawLink: null,
-                        toggleSideBySide: null,
-                        toggleFullScreen: null,
-                    },
-                }}
+                options={mdeOptions}
             />
         </div>)
 
