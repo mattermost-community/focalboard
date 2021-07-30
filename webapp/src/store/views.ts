@@ -31,6 +31,9 @@ const viewsSlice = createSlice({
                 }
             }
         },
+        updateView: (state, action: PayloadAction<BoardView>) => {
+            state.views[action.payload.id] = action.payload
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
@@ -50,7 +53,7 @@ const viewsSlice = createSlice({
     },
 })
 
-export const {updateViews, setCurrent} = viewsSlice.actions
+export const {updateViews, setCurrent, updateView} = viewsSlice.actions
 export const {reducer} = viewsSlice
 
 export const getViews = (state: RootState): {[key: string]: BoardView} => state.views.views

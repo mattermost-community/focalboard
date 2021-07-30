@@ -11,6 +11,8 @@ import {Card} from '../../blocks/card'
 import {Constants} from '../../constants'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
+import {useAppDispatch} from '../../store/hooks'
+import {updateView} from '../../store/views'
 
 import {OctoUtils} from '../../octoUtils'
 
@@ -39,6 +41,7 @@ const Table = (props: Props): JSX.Element => {
     const {board, cards, activeView, visibleGroups, groupByProperty, views} = props
     const isManualSort = activeView.fields.sortOptions?.length === 0
     const intl = useIntl()
+    const dispatch = useAppDispatch()
 
     const {offset, resizingColumn} = useDragLayer((monitor) => {
         if (monitor.getItemType() === 'horizontalGrip') {
@@ -57,7 +60,7 @@ const Table = (props: Props): JSX.Element => {
 
     const [, drop] = useDrop(() => ({
         accept: 'horizontalGrip',
-        drop: (item: { id: string }, monitor) => {
+        drop: async (item: { id: string }, monitor) => {
             const columnWidths = {...activeView.fields.columnWidths}
             const finalOffset = monitor.getDifferenceFromInitialOffset()?.x || 0
             const newWidth = Math.max(Constants.minColumnWidth, (columnWidths[item.id] || 0) + (finalOffset || 0))
@@ -66,7 +69,12 @@ const Table = (props: Props): JSX.Element => {
 
                 const newView = new BoardView(activeView)
                 newView.fields.columnWidths = columnWidths
-                mutator.updateBlock(newView, activeView, 'resize column')
+                try {
+                    dispatch(updateView(newView))
+                    await mutator.updateBlock(newView, activeView, 'resize column')
+                } catch {
+                    dispatch(updateView(activeView))
+                }
             }
         },
     }), [activeView])
