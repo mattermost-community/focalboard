@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useState} from 'react'
+import React, {useState, useCallback, useEffect, useRef} from 'react'
 import {useIntl} from 'react-intl'
 
 import {Board, IPropertyOption, IPropertyTemplate, PropertyType} from '../blocks/board'
@@ -39,6 +39,7 @@ type Props = {
 
 const PropertyValueElement = (props:Props): JSX.Element => {
     const [value, setValue] = useState(props.card.fields.properties[props.propertyTemplate.id] || '')
+    const [serverValue, setServerValue] = useState(props.card.fields.properties[props.propertyTemplate.id] || '')
 
     const {card, propertyTemplate, readOnly, emptyDisplayValue, board, contents, comments} = props
     const intl = useIntl()
@@ -46,6 +47,30 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate, intl)
     const finalDisplayValue = displayValue || emptyDisplayValue
     const [open, setOpen] = useState(false)
+
+    const saveTextProperty = useCallback(() => {
+        if (editableFields.includes(props.propertyTemplate.type)) {
+            if (value !== props.card.fields.properties[props.propertyTemplate.id] || '') {
+                mutator.changePropertyValue(card, propertyTemplate.id, value)
+            }
+        }
+    }, [props.card, props.propertyTemplate, value])
+
+    const saveTextPropertyRef = useRef<() => void>(saveTextProperty)
+    saveTextPropertyRef.current = saveTextProperty
+
+    useEffect(() => {
+        if (serverValue === value) {
+            setValue(props.card.fields.properties[props.propertyTemplate.id] || '')
+        }
+        setServerValue(props.card.fields.properties[props.propertyTemplate.id] || '')
+    }, [value, props.card.fields.properties[props.propertyTemplate.id]])
+
+    useEffect(() => {
+        return () => {
+            saveTextPropertyRef.current && saveTextPropertyRef.current()
+        }
+    }, [])
 
     const validateProp = (propType: string, val: string): boolean => {
         if (val === '') {
@@ -167,7 +192,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             <URLProperty
                 value={value as string}
                 onChange={setValue}
-                onSave={() => mutator.changePropertyValue(card, propertyTemplate.id, value)}
+                onSave={saveTextProperty}
                 onCancel={() => setValue(propertyValue)}
                 validator={(newValue) => validateProp(propertyTemplate.type, newValue)}
             />
@@ -222,7 +247,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                     placeholderText='Empty'
                     value={value as string}
                     onChange={setValue}
-                    onSave={() => mutator.changePropertyValue(card, propertyTemplate.id, value)}
+                    onSave={saveTextProperty}
                     onCancel={() => setValue(propertyValue)}
                     validator={(newValue) => validateProp(propertyTemplate.type, newValue)}
                     spellCheck={propertyTemplate.type === 'text'}
