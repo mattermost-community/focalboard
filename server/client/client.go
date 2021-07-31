@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/model"
 )
 
@@ -68,15 +69,18 @@ type Client struct {
 	APIURL     string
 	HTTPClient *http.Client
 	HTTPHeader map[string]string
+	// Token if token is empty indicate client is not login yet
+	Token string
 }
 
 func NewClient(url, sessionToken string) *Client {
 	url = strings.TrimRight(url, "/")
+
 	headers := map[string]string{
 		"X-Requested-With": "XMLHttpRequest",
-		"Authorization":    "Bearer " + sessionToken,
 	}
-	return &Client{url, url + APIURLSuffix, &http.Client{}, headers}
+
+	return &Client{url, url + APIURLSuffix, &http.Client{}, headers, sessionToken}
 }
 
 func (c *Client) DoAPIGet(url, etag string) (*http.Response, error) {
@@ -113,6 +117,10 @@ func (c *Client) doAPIRequestReader(method, url string, data io.Reader, _ /* eta
 		for k, v := range c.HTTPHeader {
 			rq.Header.Set(k, v)
 		}
+	}
+
+	if c.Token != "" {
+		rq.Header.Set("Authorization", "Bearer "+c.Token)
 	}
 
 	rp, err := c.HTTPClient.Do(rq)
@@ -223,4 +231,41 @@ func (c *Client) PostSharing(sharing model.Sharing) (bool, *Response) {
 	defer closeBody(r)
 
 	return true, BuildResponse(r)
+}
+
+func (c *Client) GetRegisterRoute() string {
+	return "/register"
+}
+
+func (c *Client) Register(request *api.RegisterRequest) (bool, *Response) {
+	r, err := c.DoAPIPost(c.GetRegisterRoute(), toJSON(&request))
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
+}
+
+func (c *Client) GetLoginRoute() string {
+	return "/login"
+}
+
+func (c *Client) Login(request *api.LoginRequest) (*api.LoginResponse, *Response) {
+	r, err := c.DoAPIPost(c.GetLoginRoute(), toJSON(&request))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	data, err := api.LoginResponseFromJson(r.Body)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	if data.Token != "" {
+		c.Token = data.Token
+	}
+
+	return data, BuildResponse(r)
 }
