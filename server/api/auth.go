@@ -63,7 +63,7 @@ type LoginResponse struct {
 	Token string `json:"token"`
 }
 
-func LoginResponseFromJson(data io.Reader) (*LoginResponse, error) {
+func LoginResponseFromJSON(data io.Reader) (*LoginResponse, error) {
 	var resp LoginResponse
 	if err := json.NewDecoder(data).Decode(&resp); err != nil {
 		return nil, err

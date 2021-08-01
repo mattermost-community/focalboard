@@ -258,7 +258,7 @@ func (c *Client) Login(request *api.LoginRequest) (*api.LoginResponse, *Response
 	}
 	defer closeBody(r)
 
-	data, err := api.LoginResponseFromJson(r.Body)
+	data, err := api.LoginResponseFromJSON(r.Body)
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
@@ -271,7 +271,7 @@ func (c *Client) Login(request *api.LoginRequest) (*api.LoginResponse, *Response
 }
 
 func (c *Client) GetUserMeRoute() string {
-	return fmt.Sprintf("/users/me")
+	return "/users/me"
 }
 
 func (c *Client) GetUserMe() (*model.User, *Response) {
