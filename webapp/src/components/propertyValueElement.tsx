@@ -52,7 +52,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
 
     const saveTextProperty = useCallback(() => {
         if (editableFields.includes(props.propertyTemplate.type)) {
-            if (value !== props.card.fields.properties[props.propertyTemplate.id] || '') {
+            if (value !== (props.card.fields.properties[props.propertyTemplate.id] || '')) {
                 mutator.changePropertyValue(card, propertyTemplate.id, value)
             }
         }
