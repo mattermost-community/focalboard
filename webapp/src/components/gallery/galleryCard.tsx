@@ -16,6 +16,7 @@ import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {useSortable} from '../../hooks/sortable'
+import {Utils} from '../../utils'
 
 import ImageElement from '../content/imageElement'
 import ContentElement from '../content/contentElement'
@@ -122,7 +123,7 @@ const GalleryCard = React.memo((props: Props) => {
                 <div className='gallery-title'>
                     { cardTree.card.icon ? <div className='octo-icon'>{cardTree.card.icon}</div> : undefined }
                     <div key='__title'>
-                        {cardTree.card.title ||
+                        {Utils.truncateText(cardTree.card.title, 50) ||
                             <FormattedMessage
                                 id='KanbanCard.untitled'
                                 defaultMessage='Untitled'

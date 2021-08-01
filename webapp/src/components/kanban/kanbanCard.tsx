@@ -13,6 +13,7 @@ import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {useSortable} from '../../hooks/sortable'
+import {Utils} from '../../utils'
 
 import './kanbanCard.scss'
 import PropertyValueElement from '../propertyValueElement'
@@ -86,7 +87,7 @@ const KanbanCard = React.memo((props: Props) => {
 
             <div className='octo-icontitle'>
                 { card.icon ? <div className='octo-icon'>{card.icon}</div> : undefined }
-                <div key='__title'>{card.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}</div>
+                <div key='__title'>{Utils.truncateText(card.title, 100) || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}</div>
             </div>
             {visiblePropertyTemplates.map((template) => (
                 <Tooltip
