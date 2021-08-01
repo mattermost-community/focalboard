@@ -15,9 +15,9 @@ LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildNumber=$(BUILD
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildDate=$(BUILD_DATE)"
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildHash=$(BUILD_HASH)"
 
-all: webapp server
+all: webapp server ## Build server and webapp.
 
-prebuild:
+prebuild: ## Run prebuild actions (install dependencies etc.).
 	cd webapp; npm install
 
 ci: server-test
@@ -25,25 +25,25 @@ ci: server-test
 	cd webapp; npm run test
 	cd webapp; npm run cypress:ci
 
-server:
+server: ## Build server for local environment.
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=dev")
 	cd server; go build -ldflags '$(LDFLAGS)' -o ../bin/focalboard-server ./main
 
-server-mac:
+server-mac: ## Build server for Mac.
 	mkdir -p bin/mac
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=mac")
 	cd server; env GOOS=darwin GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/mac/focalboard-server ./main
 
-server-linux:
+server-linux: ## Build server for Linux.
 	mkdir -p bin/linux
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=linux")
 	cd server; env GOOS=linux GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/linux/focalboard-server ./main
 
-server-win:
+server-win: ## Build server for Windows.
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=win")
 	cd server; env GOOS=windows GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/win/focalboard-server.exe ./main
 
-server-dll:
+server-dll: ## Build server as Windows DLL.
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=win")
 	cd server; env GOOS=windows GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -buildmode=c-shared -o ../bin/win-dll/focalboard-server.dll ./main
 
@@ -73,38 +73,35 @@ server-linux-package-docker:
 	cd package && tar -czvf ../dist/focalboard-server-linux-amd64.tar.gz ${PACKAGE_FOLDER}
 	rm -rf package
 
-generate:
+generate: ## Install and run code generators.
 	cd server; go get -modfile=go.tools.mod github.com/golang/mock/mockgen
 	cd server; go get -modfile=go.tools.mod github.com/jteeuwen/go-bindata
 	cd server; go generate ./...
 
-server-lint:
+server-lint: ## Run linters on server code.
 	@if ! [ -x "$$(command -v golangci-lint)" ]; then \
 		echo "golangci-lint is not installed. Please see https://github.com/golangci/golangci-lint#install for installation instructions."; \
 		exit 1; \
-	fi; 
+	fi;
 	cd server; golangci-lint run ./...
 	cd mattermost-plugin; golangci-lint run ./...
 
-server-test:
+server-test: ## Run server tests
 	cd server; go test -race -v ./...
 
-server-doc:
-	cd server; go doc ./...
-
-watch-server:
+watch-server: ## Run server watching for changes with modd (https://github.com/cortesi/modd).
 	cd server; modd
 
-watch-server-single-user:
+watch-server-single-user: ## Run server watching for changes with modd (https://github.com/cortesi/modd) using single user config.
 	cd server; env FOCALBOARDSERVER_ARGS=--single-user modd
 
-webapp:
+webapp: ## Build webapp.
 	cd webapp; npm run pack
 
-watch-webapp:
+watch-webapp: ## Run webapp watching for changes.
 	cd webapp; npm run watchdev
 
-mac-app: server-mac webapp
+mac-app: server-mac webapp ## Build Mac application.
 	rm -rf mac/temp
 	rm -rf mac/dist
 	rm -rf mac/resources/bin
@@ -123,12 +120,12 @@ mac-app: server-mac webapp
 	cp webapp/NOTICE.txt mac/dist/webapp-NOTICE.txt
 	cd mac/dist; zip -r focalboard-mac.zip Focalboard.app MIT-COMPILED-LICENSE.md NOTICE.txt webapp-NOTICE.txt
 
-win-wpf-app: server-dll webapp
+win-wpf-app: server-dll webapp ## Build Windows WPF application.
 	cd win-wpf && ./build.bat
 	cd win-wpf && ./package.bat
 	cd win-wpf && ./package-zip.bat
 
-linux-app: webapp
+linux-app: webapp ## Build Linux application.
 	rm -rf linux/temp
 	rm -rf linux/dist
 	mkdir -p linux/dist
@@ -143,7 +140,7 @@ linux-app: webapp
 	cd linux/temp; tar -zcf ../dist/focalboard-linux.tar.gz focalboard-app
 	rm -rf linux/temp
 
-swagger:
+swagger: ## Generate swagger API spec and clients based on it.
 	mkdir -p server/swagger/docs
 	mkdir -p server/swagger/clients
 	cd server && swagger generate spec -m -o ./swagger/swagger.yml
@@ -155,7 +152,7 @@ swagger:
 	cd server/swagger && openapi-generator generate -i swagger.yml -g swift5 -o clients/swift
 	cd server/swagger && openapi-generator generate -i swagger.yml -g python -o clients/python
 
-clean:
+clean: ## Clean build artifacts.
 	rm -rf bin
 	rm -rf dist
 	rm -rf webapp/pack
@@ -165,5 +162,9 @@ clean:
 	rm -rf win-wpf/msix
 	rm -f win-wpf/focalboard.msix
 
-cleanall: clean
+cleanall: clean ## Clean all build artifacts and dependencies.
 	rm -rf webapp/node_modules
+
+## Help documentatin à la https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
+help:
+	@grep -E '^[0-9a-zA-Z_-]+:.*?## .*$$' ./Makefile | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
