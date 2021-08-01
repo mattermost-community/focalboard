@@ -269,3 +269,53 @@ func (c *Client) Login(request *api.LoginRequest) (*api.LoginResponse, *Response
 
 	return data, BuildResponse(r)
 }
+
+func (c *Client) GetUserMeRoute() string {
+	return fmt.Sprintf("/users/me")
+}
+
+func (c *Client) GetUserMe() (*model.User, *Response) {
+	r, err := c.DoAPIGet(c.GetUserMeRoute(), "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	me, err := model.UserFromJSON(r.Body)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	return me, BuildResponse(r)
+}
+
+func (c *Client) GetUserRoute(id string) string {
+	return fmt.Sprintf("/users/%s", id)
+}
+
+func (c *Client) GetUser(id string) (*model.User, *Response) {
+	r, err := c.DoAPIGet(c.GetUserRoute(id), "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	user, err := model.UserFromJSON(r.Body)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	return user, BuildResponse(r)
+}
+
+func (c *Client) GetUserChangePasswordRoute(id string) string {
+	return fmt.Sprintf("/users/%s/changepassword", id)
+}
+
+func (c *Client) UserChangePassword(id string, data *api.ChangePasswordRequest) (bool, *Response) {
+	r, err := c.DoAPIPost(c.GetUserChangePasswordRoute(id), toJSON(&data))
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
+}
