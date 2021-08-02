@@ -145,7 +145,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 >
                     <Label color={displayValue ? propertyColorCssClassName : 'empty'}>
                         <span className='Label-text'>{finalDisplayValue}</span>
-                        {displayValue &&
+                        {displayValue && !props.readOnly &&
                             <IconButton
                                 onClick={onDeleteValue}
                                 onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
