@@ -48,9 +48,11 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     const finalDisplayValue = displayValue || emptyDisplayValue
     const [open, setOpen] = useState(false)
 
+    const editableFields: Array<PropertyType> = ['text', 'number', 'email', 'url', 'phone']
+
     const saveTextProperty = useCallback(() => {
         if (editableFields.includes(props.propertyTemplate.type)) {
-            if (value !== props.card.fields.properties[props.propertyTemplate.id] || '') {
+            if (value !== (props.card.fields.properties[props.propertyTemplate.id] || '')) {
                 mutator.changePropertyValue(card, propertyTemplate.id, value)
             }
         }
@@ -231,8 +233,6 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             />
         )
     }
-
-    const editableFields: Array<PropertyType> = ['text', 'number', 'email', 'url', 'phone']
 
     if (
         editableFields.includes(propertyTemplate.type)

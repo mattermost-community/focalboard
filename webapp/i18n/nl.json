@@ -32,6 +32,8 @@
   "ContentBlock.moveDown": "Naar beneden verplaatsen",
   "ContentBlock.moveUp": "Naar boven verplaatsen",
   "ContentBlock.text": "tekst",
+  "DashboardPage.message": "Gebruik Focalboard om taken te creëren en bij te houden voor grote en kleine projecten met behulp van bekende kanban-borden, tabellen en andere weergaven.",
+  "DashboardPage.title": "Welkom bij Focalboard (Beta)!",
   "Dialog.closeDialog": "Dialoogvenster sluiten",
   "EditableDayPicker.today": "Vandaag",
   "EmptyCenterPanel.no-content": "Voeg een bord toe of selecteer een bord in de zijbalk om te beginnen.",
