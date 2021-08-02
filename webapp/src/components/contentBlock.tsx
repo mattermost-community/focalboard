@@ -5,7 +5,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 
 import {Card} from '../blocks/card'
-import {IContentBlock, IContentBlockWithCords} from '../blocks/contentBlock'
+import {ContentBlock as ContentBlockType, IContentBlockWithCords} from '../blocks/contentBlock'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import IconButton from '../widgets/buttons/iconButton'
@@ -26,7 +26,7 @@ import {contentRegistry} from './content/contentRegistry'
 import './contentBlock.scss'
 
 type Props = {
-    block: IContentBlock
+    block: ContentBlockType
     card: Card
     readonly: boolean
     onDrop: (srctBlock: IContentBlockWithCords, dstBlock: IContentBlockWithCords, position: Position) => void
@@ -43,7 +43,7 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
 
     const index = cords.x
     const colIndex = (cords.y || cords.y === 0) && cords.y > -1 ? cords.y : -1
-    const contentOrder = card.contentOrder.slice()
+    const contentOrder = card.fields.contentOrder.slice()
 
     const className = 'ContentBlock octo-block'
     return (

@@ -2,17 +2,12 @@
 // See LICENSE.txt for license information.
 import {Utils} from '../utils'
 
-import {IBlock, MutableBlock} from './block'
+import {Block, createBlock} from './block'
+import {Card} from './card'
 
 type PropertyType = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy'
 
 interface IPropertyOption {
-    readonly id: string
-    readonly value: string
-    readonly color: string
-}
-
-interface IMutablePropertyOption {
     id: string
     value: string
     color: string
@@ -20,90 +15,65 @@ interface IMutablePropertyOption {
 
 // A template for card properties attached to a board
 interface IPropertyTemplate {
-    readonly id: string
-    readonly name: string
-    readonly type: PropertyType
-    readonly options: IPropertyOption[]
-}
-
-interface IMutablePropertyTemplate extends IPropertyTemplate {
     id: string
     name: string
     type: PropertyType
-    options: IMutablePropertyOption[]
+    options: IPropertyOption[]
 }
 
-interface Board extends IBlock {
-    readonly icon: string
-    readonly description: string
-    readonly showDescription: boolean
-    readonly isTemplate: boolean
-    readonly cardProperties: readonly IPropertyTemplate[]
-    duplicate(): MutableBoard
+type BoardFields = {
+    icon: string
+    description: string
+    showDescription?: boolean
+    isTemplate?: boolean
+    cardProperties: IPropertyTemplate[]
 }
 
-class MutableBoard extends MutableBlock implements Board {
-    get icon(): string {
-        return this.fields.icon as string
-    }
-    set icon(value: string) {
-        this.fields.icon = value
-    }
+type Board = Block & {
+    fields: BoardFields
+}
 
-    get description(): string {
-        return this.fields.description as string
-    }
-    set description(value: string) {
-        this.fields.description = value
-    }
-
-    get showDescription(): boolean {
-        return Boolean(this.fields.showDescription)
-    }
-    set showDescription(value: boolean) {
-        this.fields.showDescription = value
-    }
-
-    get isTemplate(): boolean {
-        return Boolean(this.fields.isTemplate)
-    }
-    set isTemplate(value: boolean) {
-        this.fields.isTemplate = value
-    }
-
-    get cardProperties(): IMutablePropertyTemplate[] {
-        return this.fields.cardProperties as IPropertyTemplate[]
-    }
-    set cardProperties(value: IMutablePropertyTemplate[]) {
-        this.fields.cardProperties = value
-    }
-
-    constructor(block: any = {}) {
-        super(block)
-        this.type = 'board'
-
-        this.icon = block.fields?.icon || ''
-        this.description = block.fields?.description || ''
-        if (block.fields?.cardProperties) {
-            // Deep clone of card properties and their options
-            this.cardProperties = block.fields.cardProperties.map((o: IPropertyTemplate) => {
-                return {
-                    id: o.id,
-                    name: o.name,
-                    type: o.type,
-                    options: o.options ? o.options.map((option) => ({...option})) : [],
-                }
-            })
-        } else {
-            this.cardProperties = []
+function createBoard(block?: Block): Board {
+    let cardProperties: IPropertyTemplate[] = []
+    const selectProperties = cardProperties.find((o) => o.type === 'select')
+    if (!selectProperties) {
+        const property: IPropertyTemplate = {
+            id: Utils.createGuid(),
+            name: 'Status',
+            type: 'select',
+            options: [],
         }
+        cardProperties.push(property)
     }
 
-    duplicate(): MutableBoard {
-        const board = new MutableBoard(this)
-        board.id = Utils.createGuid()
-        return board
+    if (block?.fields.cardProperties) {
+        // Deep clone of card properties and their options
+        cardProperties = block?.fields.cardProperties.map((o: IPropertyTemplate) => {
+            return {
+                id: o.id,
+                name: o.name,
+                type: o.type,
+                options: o.options ? o.options.map((option) => ({...option})) : [],
+            }
+        })
+    }
+
+    return {
+        ...createBlock(block),
+        type: 'board',
+        fields: {
+            showDescription: block?.fields.showDescription || false,
+            description: block?.fields.description || '',
+            icon: block?.fields.icon || '',
+            isTemplate: block?.fields.isTemplate || false,
+            cardProperties,
+        },
     }
 }
 
-export {Board, MutableBoard, PropertyType, IPropertyOption, IPropertyTemplate}
+type BoardGroup = {
+    option: IPropertyOption
+    cards: Card[]
+}
+
+export {Board, PropertyType, IPropertyOption, IPropertyTemplate, BoardGroup, createBoard}
