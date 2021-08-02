@@ -19,6 +19,15 @@
         overflow: hidden;
         border-radius: var(--default-rad);
         max-width: 100%;
+
+        .IconButton.delete-value {
+            width: 16px;
+            min-width: 16px;
+            height: 16px;
+            i {
+                font-size: 16px;
+            }
+        }
     }
 
     .Label-no-padding {

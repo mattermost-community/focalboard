@@ -164,6 +164,14 @@ html {
         &.empty {
             color: rgba(var(--body-color), 0.4);
         }
+        .IconButton.delete-value {
+            width: 16px;
+            min-width: 16px;
+            height: 16px;
+            i {
+                font-size: 16px;
+            }
+        }
     }
 
     /*-- Editable --*/

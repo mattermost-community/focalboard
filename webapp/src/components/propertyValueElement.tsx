@@ -18,6 +18,8 @@ import Label from '../widgets/label'
 
 import EditableDayPicker from '../widgets/editableDayPicker'
 import Switch from '../widgets/switch'
+import IconButton from '../widgets/buttons/iconButton'
+import CloseIcon from '../widgets/icons/close'
 
 import UserProperty from './properties/user/user'
 import MultiSelectProperty from './properties/multiSelect'
@@ -73,6 +75,8 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             saveTextPropertyRef.current && saveTextPropertyRef.current()
         }
     }, [])
+
+    const onDeleteValue = useCallback(() => mutator.changePropertyValue(card, propertyTemplate.id, ''), [card, propertyTemplate.id])
 
     const validateProp = (propType: string, val: string): boolean => {
         if (val === '') {
@@ -139,7 +143,17 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                     tabIndex={0}
                     onClick={() => setOpen(true)}
                 >
-                    <Label color={displayValue ? propertyColorCssClassName : 'empty'}>{finalDisplayValue}</Label>
+                    <Label color={displayValue ? propertyColorCssClassName : 'empty'}>
+                        <span className='Label-text'>{finalDisplayValue}</span>
+                        {displayValue && !props.readOnly &&
+                            <IconButton
+                                onClick={onDeleteValue}
+                                onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
+                                icon={<CloseIcon/>}
+                                title='Clear'
+                                className='margin-left delete-value'
+                            />}
+                    </Label>
                 </div>
             )
         }
@@ -168,6 +182,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                         mutator.changePropertyValue(card, propertyTemplate.id, option.id)
                     }
                 }
+                onDeleteValue={onDeleteValue}
             />
         )
     } else if (propertyTemplate.type === 'person') {
