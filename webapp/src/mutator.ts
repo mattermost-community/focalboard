@@ -10,6 +10,7 @@ import octoClient, {OctoClient} from './octoClient'
 import {OctoUtils} from './octoUtils'
 import undoManager from './undomanager'
 import {Utils} from './utils'
+import {UserSettings} from './userSettings'
 
 //
 // The Mutator is used to make all changes to server state
@@ -524,7 +525,7 @@ class Mutator {
             newCard.title = ''
 
             // If the template doesn't specify an icon, initialize it to a random one
-            if (!newCard.fields.icon) {
+            if (!newCard.fields.icon && UserSettings.prefillRandomIcons) {
                 newCard.fields.icon = BlockIcons.shared.randomIcon()
             }
         }
