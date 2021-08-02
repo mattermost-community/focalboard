@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {Utils} from './utils'
-import {IBlock} from './blocks/block'
+import {Block} from './blocks/block'
 
 // These are outgoing commands to the server
 type WSCommand = {
@@ -14,11 +14,11 @@ type WSCommand = {
 // These are messages from the server
 type WSMessage = {
     action?: string
-    block?: IBlock
+    block?: Block
     error?: string
 }
 
-type OnChangeHandler = (client: WSClient, blocks: IBlock[]) => void
+type OnChangeHandler = (client: WSClient, blocks: Block[]) => void
 type OnReconnectHandler = (client: WSClient) => void
 type OnStateChangeHandler = (client: WSClient, state: 'init' | 'open' | 'close') => void
 type OnErrorHandler = (client: WSClient, e: Event) => void
@@ -33,7 +33,7 @@ class WSClient {
     onError: OnErrorHandler[] = []
     private notificationDelay = 100
     private reopenDelay = 3000
-    private updatedBlocks: IBlock[] = []
+    private updatedBlocks: Block[] = []
     private updateTimeout?: NodeJS.Timeout
 
     constructor(serverUrl?: string) {
@@ -230,7 +230,7 @@ class WSClient {
         this.ws.send(JSON.stringify(command))
     }
 
-    private queueUpdateNotification(block: IBlock) {
+    private queueUpdateNotification(block: Block) {
         this.updatedBlocks = this.updatedBlocks.filter((o) => o.id !== block.id) // Remove existing queued update
         this.updatedBlocks.push(block)
         if (this.updateTimeout) {

@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useState, useEffect} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
-import {useRouteMatch} from 'react-router'
+import {generatePath, useRouteMatch} from 'react-router'
 
 import {ISharing} from '../blocks/sharing'
 
@@ -26,7 +26,7 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
     const [wasCopied, setWasCopied] = useState(false)
     const [sharing, setSharing] = useState<ISharing|undefined>(undefined)
     const intl = useIntl()
-    const match = useRouteMatch<{workspaceId?: string}>()
+    const match = useRouteMatch<{workspaceId?: string, boardId: string, viewId: string}>()
 
     const loadData = async () => {
         const newSharing = await client.getSharing(props.boardId)
@@ -76,9 +76,18 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
     shareUrl.searchParams.set('r', readToken)
 
     if (match.params.workspaceId) {
-        shareUrl.pathname = Utils.buildURL(`/workspace/${match.params.workspaceId}/shared`)
+        const newPath = generatePath('/workspace/:workspaceId/shared/:boardId/:viewId', {
+            boardId: match.params.boardId,
+            viewId: match.params.viewId,
+            workspaceId: match.params.workspaceId,
+        })
+        shareUrl.pathname = newPath
     } else {
-        shareUrl.pathname = Utils.buildURL('/shared')
+        const newPath = generatePath('/shared/:boardId/:viewId', {
+            boardId: match.params.boardId,
+            viewId: match.params.viewId,
+        })
+        shareUrl.pathname = newPath
     }
 
     return (

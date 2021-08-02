@@ -3,20 +3,20 @@
 
 import {IntlShape} from 'react-intl'
 
-import {IBlock, MutableBlock} from './blocks/block'
-import {IPropertyTemplate, MutableBoard} from './blocks/board'
-import {MutableBoardView} from './blocks/boardView'
-import {MutableCard} from './blocks/card'
-import {MutableCommentBlock} from './blocks/commentBlock'
-import {MutableCheckboxBlock} from './blocks/checkboxBlock'
-import {MutableDividerBlock} from './blocks/dividerBlock'
-import {MutableImageBlock} from './blocks/imageBlock'
-import {MutableTextBlock} from './blocks/textBlock'
+import {Block, createBlock} from './blocks/block'
+import {IPropertyTemplate, createBoard} from './blocks/board'
+import {BoardView, createBoardView} from './blocks/boardView'
+import {Card, createCard} from './blocks/card'
+import {createCommentBlock} from './blocks/commentBlock'
+import {createCheckboxBlock} from './blocks/checkboxBlock'
+import {createDividerBlock} from './blocks/dividerBlock'
+import {createImageBlock} from './blocks/imageBlock'
+import {createTextBlock} from './blocks/textBlock'
 import {FilterCondition} from './blocks/filterClause'
 import {Utils} from './utils'
 
 class OctoUtils {
-    static propertyDisplayValue(block: IBlock, propertyValue: string | string[] | undefined, propertyTemplate: IPropertyTemplate, intl: IntlShape): string | string[] | undefined {
+    static propertyDisplayValue(block: Block, propertyValue: string | string[] | undefined, propertyTemplate: IPropertyTemplate, intl: IntlShape): string | string[] | undefined {
         let displayValue: string | string[] | undefined
         switch (propertyTemplate.type) {
         case 'select': {
@@ -51,28 +51,28 @@ class OctoUtils {
         return displayValue
     }
 
-    static hydrateBlock(block: IBlock): MutableBlock {
+    static hydrateBlock(block: Block): Block {
         switch (block.type) {
-        case 'board': { return new MutableBoard(block) }
-        case 'view': { return new MutableBoardView(block) }
-        case 'card': { return new MutableCard(block) }
-        case 'text': { return new MutableTextBlock(block) }
-        case 'image': { return new MutableImageBlock(block) }
-        case 'divider': { return new MutableDividerBlock(block) }
-        case 'comment': { return new MutableCommentBlock(block) }
-        case 'checkbox': { return new MutableCheckboxBlock(block) }
+        case 'board': { return createBoard(block) }
+        case 'view': { return createBoardView(block) }
+        case 'card': { return createCard(block) }
+        case 'text': { return createTextBlock(block) }
+        case 'image': { return createImageBlock(block) }
+        case 'divider': { return createDividerBlock(block) }
+        case 'comment': { return createCommentBlock(block) }
+        case 'checkbox': { return createCheckboxBlock(block) }
         default: {
             Utils.assertFailure(`Can't hydrate unknown block type: ${block.type}`)
-            return new MutableBlock(block)
+            return createBlock(block)
         }
         }
     }
 
-    static hydrateBlocks(blocks: readonly IBlock[]): MutableBlock[] {
+    static hydrateBlocks(blocks: readonly Block[]): Block[] {
         return blocks.map((block) => this.hydrateBlock(block))
     }
 
-    static mergeBlocks(blocks: readonly IBlock[], updatedBlocks: readonly IBlock[]): IBlock[] {
+    static mergeBlocks(blocks: readonly Block[], updatedBlocks: readonly Block[]): Block[] {
         const updatedBlockIds = updatedBlocks.map((o) => o.id)
         const newBlocks = blocks.filter((o) => !updatedBlockIds.includes(o.id))
         const updatedAndNotDeletedBlocks = updatedBlocks.filter((o) => o.deleteAt === 0)
@@ -81,7 +81,7 @@ class OctoUtils {
     }
 
     // Creates a copy of the blocks with new ids and parentIDs
-    static duplicateBlockTree(blocks: readonly IBlock[], sourceBlockId: string): [MutableBlock[], MutableBlock, Readonly<Record<string, string>>] {
+    static duplicateBlockTree(blocks: readonly Block[], sourceBlockId: string): [Block[], Block, Readonly<Record<string, string>>] {
         const idMap: Record<string, string> = {}
         const now = Date.now()
         const newBlocks = blocks.map((block) => {
@@ -118,14 +118,14 @@ class OctoUtils {
 
             // Remap manual card order
             if (newBlock.type === 'view') {
-                const view = newBlock as MutableBoardView
-                view.cardOrder = view.cardOrder.map((o) => idMap[o])
+                const view = newBlock as BoardView
+                view.fields.cardOrder = view.fields.cardOrder.map((o) => idMap[o])
             }
 
             // Remap card content order
             if (newBlock.type === 'card') {
-                const card = newBlock as MutableCard
-                card.contentOrder = card.contentOrder.map((o) => (Array.isArray(o) ? o.map((o2) => idMap[o2]) : idMap[o]))
+                const card = newBlock as Card
+                card.fields.contentOrder = card.fields.contentOrder.map((o) => (Array.isArray(o) ? o.map((o2) => idMap[o2]) : idMap[o]))
             }
         })
 

@@ -13,7 +13,6 @@ import mutator from '../../mutator'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import {FetchMock} from '../../test/fetchMock'
-import {MutableBoardTree} from '../../viewModel/boardTree'
 
 import TableHeaderMenu from './tableHeaderMenu'
 
@@ -41,23 +40,16 @@ describe('components/table/TableHeaderMenu', () => {
     const view = TestBlockFactory.createBoardView(board)
 
     const view2 = TestBlockFactory.createBoardView(board)
-    view2.sortOptions = []
-
-    const card = TestBlockFactory.createCard(board)
-    const cardTemplate = TestBlockFactory.createCard(board)
-    cardTemplate.isTemplate = true
+    view2.fields.sortOptions = []
 
     test('should match snapshot, title column', async () => {
-        // Sync
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).toBeDefined()
-        expect(FetchMock.fn).toBeCalledTimes(1)
         const component = wrapIntl(
             <TableHeaderMenu
                 templateId={Constants.titleColumnId}
-                boardTree={boardTree!}
+                board={board}
+                activeView={view}
+                views={[view, view2]}
+                cards={[]}
             />,
         )
         const {container, getByText} = render(component)
@@ -78,16 +70,13 @@ describe('components/table/TableHeaderMenu', () => {
     })
 
     test('should match snapshot, other column', async () => {
-        // Sync
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).toBeDefined()
-        expect(FetchMock.fn).toBeCalledTimes(1)
         const component = wrapIntl(
             <TableHeaderMenu
                 templateId={'property 1'}
-                boardTree={boardTree!}
+                board={board}
+                activeView={view}
+                views={[view, view2]}
+                cards={[]}
             />,
         )
         const {container, getByText} = render(component)

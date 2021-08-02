@@ -3,11 +3,10 @@
 import React from 'react'
 import {useIntl, IntlShape} from 'react-intl'
 
-import {IContentBlockWithCords, IContentBlock} from '../../blocks/contentBlock'
-import {MutableTextBlock} from '../../blocks/textBlock'
-import mutator from '../../mutator'
-import {CardTree} from '../../viewModel/cardTree'
+import {IContentBlockWithCords, ContentBlock as ContentBlockType} from '../../blocks/contentBlock'
 import {Card} from '../../blocks/card'
+import {createTextBlock} from '../../blocks/textBlock'
+import mutator from '../../mutator'
 import {useSortableWithGrip} from '../../hooks/sortable'
 
 import ContentBlock from '../contentBlock'
@@ -16,17 +15,18 @@ import {MarkdownEditor} from '../markdownEditor'
 export type Position = 'left' | 'right' | 'above' | 'below' | 'aboveRow' | 'belowRow'
 
 type Props = {
-    cardTree: CardTree
+    card: Card
+    contents: Array<ContentBlockType|ContentBlockType[]>
     readonly: boolean
 }
 
 function addTextBlock(card: Card, intl: IntlShape, text: string): void {
-    const block = new MutableTextBlock()
+    const block = createTextBlock()
     block.parentId = card.id
     block.rootId = card.rootId
     block.title = text
 
-    const contentOrder = card.contentOrder.slice()
+    const contentOrder = card.fields.contentOrder.slice()
     contentOrder.push(block.id)
     mutator.performAsUndoGroup(async () => {
         const description = intl.formatMessage({id: 'CardDetail.addCardText', defaultMessage: 'add card text'})
@@ -36,7 +36,16 @@ function addTextBlock(card: Card, intl: IntlShape, text: string): void {
 }
 
 function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: IContentBlockWithCords, intl: IntlShape, moveTo: Position): void {
-    const contentOrder = card.contentOrder.slice()
+    const contentOrder: Array<string|string[]> = []
+    if (card.fields.contentOrder) {
+        for (const contentId of card.fields.contentOrder) {
+            if (typeof contentId === 'string') {
+                contentOrder.push(contentId)
+            } else {
+                contentOrder.push(contentId.slice())
+            }
+        }
+    }
 
     const srcBlockId = srcBlock.block.id
     const dstBlockId = dstBlock.block.id
@@ -55,7 +64,7 @@ function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: ICont
     if (srcBlockY > -1) {
         (contentOrder[srcBlockX] as string[]).splice(srcBlockY, 1)
 
-        if (contentOrder[srcBlockX].length === 1) {
+        if (contentOrder[srcBlockX].length === 1 && srcBlockX !== dstBlockX) {
             contentOrder.splice(srcBlockX, 1, contentOrder[srcBlockX][0])
         }
     } else {
@@ -99,10 +108,10 @@ function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: ICont
 }
 
 type ContentBlockWithDragAndDropProps = {
-    block: IContentBlock | IContentBlock[],
+    block: ContentBlockType | ContentBlockType[],
     x: number,
     card: Card,
-    cardTree: CardTree,
+    contents: Array<ContentBlockType|ContentBlockType[]>,
     intl: IntlShape,
     readonly: boolean,
 }
@@ -129,13 +138,13 @@ const ContentBlockWithDragAndDrop = (props: ContentBlockWithDragAndDropProps) =>
                             block={b}
                             card={props.card}
                             readonly={props.readonly}
-                            width={(1 / (props.block as IContentBlock[]).length) * 100}
+                            width={(1 / (props.block as ContentBlockType[]).length) * 100}
                             onDrop={(src, dst, moveTo) => moveBlock(props.card, src, dst, props.intl, moveTo)}
                             cords={{x: props.x, y}}
                         />
                     ))}
                 </div>
-                {props.x === props.cardTree.contents.length - 1 && (
+                {props.x === props.contents.length - 1 && (
                     <div
                         ref={itemRef2}
                         className={`addToRow ${isOver2 ? 'dragover' : ''}`}
@@ -162,7 +171,7 @@ const ContentBlockWithDragAndDrop = (props: ContentBlockWithDragAndDropProps) =>
                 onDrop={(src, dst, moveTo) => moveBlock(props.card, src, dst, props.intl, moveTo)}
                 cords={{x: props.x}}
             />
-            {props.x === props.cardTree.contents.length - 1 && (
+            {props.x === props.contents.length - 1 && (
                 <div
                     ref={itemRef2}
                     className={`addToRow ${isOver2 ? 'dragover' : ''}`}
@@ -176,22 +185,21 @@ const ContentBlockWithDragAndDrop = (props: ContentBlockWithDragAndDropProps) =>
 
 const CardDetailContents = React.memo((props: Props) => {
     const intl = useIntl()
-    const {cardTree} = props
-    if (!cardTree) {
+    const {contents, card} = props
+    if (!contents) {
         return null
     }
-    const {card} = cardTree
-    if (cardTree.contents.length > 0) {
+    if (contents.length > 0) {
         return (
             <div className='octo-content'>
-                {cardTree.contents.map((block, x) =>
+                {contents.map((block, x) =>
                     (
                         <ContentBlockWithDragAndDrop
                             key={x}
                             block={block}
                             x={x}
                             card={card}
-                            cardTree={cardTree}
+                            contents={contents}
                             intl={intl}
                             readonly={props.readonly}
                         />

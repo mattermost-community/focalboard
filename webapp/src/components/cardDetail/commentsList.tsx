@@ -3,7 +3,7 @@
 import React, {useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import {CommentBlock, MutableCommentBlock} from '../../blocks/commentBlock'
+import {CommentBlock, createCommentBlock} from '../../blocks/commentBlock'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
@@ -29,7 +29,7 @@ const CommentsList = React.memo((props: Props) => {
             Utils.log(`Send comment: ${commentText}`)
             Utils.assertValue(cardId)
 
-            const comment = new MutableCommentBlock()
+            const comment = createCommentBlock()
             comment.parentId = cardId
             comment.rootId = rootId
             comment.title = commentText
