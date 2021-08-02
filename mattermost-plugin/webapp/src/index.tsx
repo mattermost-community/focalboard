@@ -108,7 +108,7 @@ export default class Plugin {
         }
         this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(focalboardIcon, goToFocalboardWorkspace, '', 'Focalboard Workspace')
         if (this.registry.registerProduct) {
-            this.registry.registerProduct('/boards', GlobalHeaderIcon, 'Boards', '/boards', MainApp, HeaderComponent)
+            this.registry.registerProduct('/boards', GlobalHeaderIcon, 'Boards', '/boards/dashboard', MainApp, HeaderComponent)
         }
     }
 
