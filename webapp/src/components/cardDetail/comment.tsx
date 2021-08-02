@@ -19,6 +19,7 @@ type Props = {
     comment: IBlock
     userId: string
     userImageUrl: string
+    readonly: boolean
 }
 
 const Comment: FC<Props> = (props: Props) => {
@@ -60,6 +61,21 @@ const Comment: FC<Props> = (props: Props) => {
                         />
                     </Menu>
                 </MenuWrapper>
+                <div className='comment-date'>{(new Date(comment.createAt)).toLocaleString()}</div>
+
+                {!props.readonly && (
+                    <MenuWrapper>
+                        <IconButton icon={<OptionsIcon/>}/>
+                        <Menu position='left'>
+                            <Menu.Text
+                                icon={<DeleteIcon/>}
+                                id='delete'
+                                name={intl.formatMessage({id: 'Comment.delete', defaultMessage: 'Delete'})}
+                                onClick={() => mutator.deleteBlock(comment)}
+                            />
+                        </Menu>
+                    </MenuWrapper>
+                )}
             </div>
             <div
                 className='comment-text'

@@ -17,6 +17,7 @@ type Props = {
     comments: readonly CommentBlock[]
     rootId: string
     cardId: string
+    readonly: boolean
 }
 
 const CommentsList = React.memo((props: Props) => {
@@ -44,6 +45,38 @@ const CommentsList = React.memo((props: Props) => {
     // TODO: Replace this placeholder
     const userImageUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="fill: rgb(192, 192, 192);"><rect width="100" height="100" /></svg>'
 
+    const newCommentComponent = (
+        <div className='commentrow'>
+            <img
+                className='comment-avatar'
+                src={userImageUrl}
+            />
+            <MarkdownEditor
+                className='newcomment'
+                text={newComment}
+                placeholderText={intl.formatMessage({id: 'CardDetail.new-comment-placeholder', defaultMessage: 'Add a comment...'})}
+                onChange={(value: string) => {
+                    if (newComment !== value) {
+                        setNewComment(value)
+                    }
+                }}
+                onAccept={onSendClicked}
+            />
+
+            {newComment &&
+            <Button
+                filled={true}
+                onClick={onSendClicked}
+            >
+                <FormattedMessage
+                    id='CommentsList.send'
+                    defaultMessage='Send'
+                />
+            </Button>
+            }
+        </div>
+    )
+
     return (
         <div className='CommentsList'>
             {comments.map((comment) => (
@@ -52,40 +85,15 @@ const CommentsList = React.memo((props: Props) => {
                     comment={comment}
                     userImageUrl={userImageUrl}
                     userId={comment.modifiedBy}
+                    readonly={props.readonly}
                 />
             ))}
 
             {/* New comment */}
+            {!props.readonly && newCommentComponent}
 
-            <div className='commentrow'>
-                <img
-                    className='comment-avatar'
-                    src={userImageUrl}
-                />
-                <MarkdownEditor
-                    className='newcomment'
-                    text={newComment}
-                    placeholderText={intl.formatMessage({id: 'CardDetail.new-comment-placeholder', defaultMessage: 'Add a comment...'})}
-                    onChange={(value: string) => {
-                        if (newComment !== value) {
-                            setNewComment(value)
-                        }
-                    }}
-                    onAccept={onSendClicked}
-                />
-
-                {newComment &&
-                    <Button
-                        filled={true}
-                        onClick={onSendClicked}
-                    >
-                        <FormattedMessage
-                            id='CommentsList.send'
-                            defaultMessage='Send'
-                        />
-                    </Button>
-                }
-            </div>
+            {/* horizontal divider below comments */}
+            {!(comments.length === 0 && props.readonly) && <hr/>}
         </div>
     )
 })
