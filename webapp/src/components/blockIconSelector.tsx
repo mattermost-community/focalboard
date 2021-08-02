@@ -29,7 +29,7 @@ const BlockIconSelector = React.memo((props: Props) => {
         document.body.click()
     }, [])
 
-    if (!block.icon) {
+    if (!block.fields.icon) {
         return null
     }
 
@@ -37,7 +37,7 @@ const BlockIconSelector = React.memo((props: Props) => {
     if (props.readonly) {
         className += ' readonly'
     }
-    const iconElement = <div className={className}><span>{block.icon}</span></div>
+    const iconElement = <div className={className}><span>{block.fields.icon}</span></div>
 
     return (
         <div className='BlockIconSelector'>

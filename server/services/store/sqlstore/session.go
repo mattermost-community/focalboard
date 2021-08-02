@@ -95,8 +95,8 @@ func (s *SQLStore) UpdateSession(session *model.Session) error {
 }
 
 func (s *SQLStore) DeleteSession(sessionID string) error {
-	query := s.getQueryBuilder().Delete(s.tablePrefix+"sessions").
-		Where("id", sessionID)
+	query := s.getQueryBuilder().Delete(s.tablePrefix + "sessions").
+		Where(sq.Eq{"id": sessionID})
 
 	_, err := query.Exec()
 	return err

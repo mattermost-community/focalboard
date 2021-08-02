@@ -3,8 +3,8 @@
 import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
 
-import {MutableCheckboxBlock} from '../../blocks/checkboxBlock'
-import {IContentBlock} from '../../blocks/contentBlock'
+import {createCheckboxBlock} from '../../blocks/checkboxBlock'
+import {ContentBlock} from '../../blocks/contentBlock'
 import CheckIcon from '../../widgets/icons/check'
 import mutator from '../../mutator'
 import Editable from '../../widgets/editable'
@@ -13,7 +13,7 @@ import {contentRegistry} from './contentRegistry'
 import './checkboxElement.scss'
 
 type Props = {
-    block: IContentBlock
+    block: ContentBlock
     readonly: boolean
 }
 
@@ -34,7 +34,7 @@ const CheckboxElement = React.memo((props: Props) => {
                 value={active ? 'on' : 'off'}
                 onChange={(e) => {
                     e.preventDefault()
-                    const newBlock = new MutableCheckboxBlock(block)
+                    const newBlock = createCheckboxBlock(block)
                     newBlock.fields.value = !active
                     newBlock.title = title
                     setActive(newBlock.fields.value)
@@ -46,7 +46,7 @@ const CheckboxElement = React.memo((props: Props) => {
                 placeholderText={intl.formatMessage({id: 'ContentBlock.editText', defaultMessage: 'Edit text...'})}
                 onChange={setTitle}
                 onSave={() => {
-                    const newBlock = new MutableCheckboxBlock(block)
+                    const newBlock = createCheckboxBlock(block)
                     newBlock.title = title
                     newBlock.fields.value = active
                     mutator.updateBlock(newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckboxText', defaultMessage: 'edit card text'}))
@@ -63,7 +63,7 @@ contentRegistry.registerContentType({
     getDisplayText: (intl) => intl.formatMessage({id: 'ContentBlock.checkbox', defaultMessage: 'checkbox'}),
     getIcon: () => <CheckIcon/>,
     createBlock: async () => {
-        return new MutableCheckboxBlock()
+        return createCheckboxBlock()
     },
     createComponent: (block, readonly) => {
         return (

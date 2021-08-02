@@ -1,4 +1,4 @@
-.ShareBoardComponent {
+.focalboard-body .ShareBoardComponent {
     display: flex;
     flex-direction: column;
     padding: 5px;
@@ -21,6 +21,7 @@
     }
 
     a.shareUrl {
+        max-width: 320px;
         flex-grow: 1;
         white-space: nowrap;
         overflow: hidden;

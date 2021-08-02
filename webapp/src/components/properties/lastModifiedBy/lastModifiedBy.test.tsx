@@ -2,57 +2,49 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
+import {Provider as ReduxProvider} from 'react-redux'
 
 import {render} from '@testing-library/react'
+import configureStore from 'redux-mock-store'
 
-import {MutableCardTree, CardTreeContext} from '../../../viewModel/cardTree'
-import {MutableCard} from '../../../blocks/card'
-import {IUser, WorkspaceUsersContext} from '../../../user'
+import {createCard} from '../../../blocks/card'
+import {IUser} from '../../../user'
 
-import {MutableBoardTree} from '../../../viewModel/boardTree'
+import {createBoard} from '../../../blocks/board'
 
-import {MutableBoard} from '../../../blocks/board'
-
-import {MutableBlock} from '../../../blocks/block'
+import {createCommentBlock} from '../../../blocks/commentBlock'
 
 import LastModifiedBy from './lastModifiedBy'
 
 describe('components/properties/lastModifiedBy', () => {
     test('should match snapshot', () => {
-        const cardTree = new MutableCardTree(
-            new MutableCard({
-                updateAt: Date.parse('15 Jun 2021 16:22:00 +05:30'),
-                modifiedBy: 'user-id-1',
-            }),
-
-        )
-
-        const workspaceUsers = {
-            users: new Array<IUser>(),
-            usersById: new Map<string, IUser>(),
-        }
-        workspaceUsers.usersById.set('user-id-1', {username: 'username_1'} as IUser)
-
-        const card = new MutableCard()
+        const card = createCard()
         card.id = 'card-id-1'
         card.modifiedBy = 'user-id-1'
 
-        const boardTree = new MutableBoardTree(new MutableBoard([]))
-        const block = new MutableBlock()
-        block.modifiedBy = 'user-id-1'
-        block.parentId = 'card-id-1'
-        block.type = 'comment'
-        boardTree.rawBlocks.push(block)
+        const board = createBoard()
+        const comment = createCommentBlock()
+        comment.modifiedBy = 'user-id-1'
+        comment.parentId = 'card-id-1'
+
+        const mockStore = configureStore([])
+        const store = mockStore({
+            users: {
+                workspaceUsers: {
+                    'user-id-1': {username: 'username_1'} as IUser,
+                },
+            },
+        })
 
         const component = (
-            <WorkspaceUsersContext.Provider value={workspaceUsers}>
-                <CardTreeContext.Provider value={cardTree}>
-                    <LastModifiedBy
-                        card={card}
-                        boardTree={boardTree}
-                    />
-                </CardTreeContext.Provider>
-            </WorkspaceUsersContext.Provider>
+            <ReduxProvider store={store}>
+                <LastModifiedBy
+                    card={card}
+                    board={board}
+                    contents={[]}
+                    comments={[comment]}
+                />
+            </ReduxProvider>
         )
 
         const {container} = render(component)

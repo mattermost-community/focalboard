@@ -1,4 +1,4 @@
-.SidebarBoardItem {
+.focalboard-body .SidebarBoardItem {
     .octo-sidebar-item {
         display: flex;
         flex-direction: row;
@@ -16,6 +16,28 @@
             padding-left: 20px;
             color: rgba(var(--sidebar-fg), 0.64);
             font-weight: 400;
+        }
+
+        &.active {
+            background: rgba(var(--sidebar-fg), 0.1);
+            position: relative;
+            color: white;
+
+            .Icon {
+                stroke: rgba(var(--sidebar-fg), 1);
+            }
+
+            &:not(.subitem) {
+                &:before {
+                    content: '';
+                    background: var(--sidebar-text-active-border);
+                    width: 2px;
+                    height: 100%;
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                }
+            }
         }
 
         &.no-views {

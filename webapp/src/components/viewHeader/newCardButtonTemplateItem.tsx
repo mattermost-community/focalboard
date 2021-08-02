@@ -28,7 +28,7 @@ const NewCardButtonTemplateItem = React.memo((props: Props) => {
             key={cardTemplate.id}
             id={cardTemplate.id}
             name={displayName}
-            icon={<div className='Icon'>{cardTemplate.icon}</div>}
+            icon={<div className='Icon'>{cardTemplate.fields.icon}</div>}
             onClick={() => {
                 props.addCardFromTemplate(cardTemplate.id)
             }}

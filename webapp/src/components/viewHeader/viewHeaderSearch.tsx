@@ -4,22 +4,20 @@ import React, {useState, useRef, useEffect} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {useHotkeys} from 'react-hotkeys-hook'
 
-import {BoardTree} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
 
-type Props = {
-    boardTree: BoardTree
-    setSearchText: (text?: string) => void
-}
+import {useAppSelector, useAppDispatch} from '../../store/hooks'
+import {getSearchText, setSearchText} from '../../store/searchText'
 
-const ViewHeaderSearch = (props: Props) => {
-    const {boardTree, setSearchText} = props
+const ViewHeaderSearch = () => {
+    const searchText = useAppSelector<string>(getSearchText)
+    const dispatch = useAppDispatch()
     const intl = useIntl()
 
     const searchFieldRef = useRef<{focus(selectAll?: boolean): void}>(null)
-    const [isSearching, setIsSearching] = useState(Boolean(boardTree.getSearchText()))
-    const [searchValue, setSearchValue] = useState(boardTree.getSearchText())
+    const [isSearching, setIsSearching] = useState(Boolean(searchText))
+    const [searchValue, setSearchValue] = useState(searchText)
 
     useEffect(() => {
         searchFieldRef.current?.focus()
@@ -40,13 +38,13 @@ const ViewHeaderSearch = (props: Props) => {
                 onCancel={() => {
                     setSearchValue('')
                     setIsSearching(false)
-                    setSearchText('')
+                    dispatch(setSearchText(''))
                 }}
                 onSave={() => {
                     if (searchValue === '') {
                         setIsSearching(false)
                     }
-                    setSearchText(searchValue)
+                    dispatch(setSearchText(searchValue))
                 }}
             />
         )
