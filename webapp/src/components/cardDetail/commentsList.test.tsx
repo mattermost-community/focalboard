@@ -38,7 +38,8 @@ describe('components/cardDetail/CommentsList', () => {
         modifiedBy: 'user_id_2',
     } as CommentBlock
 
-    test('comments show up', () => {
+    test('comments show up', async () => {
+        FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify({username: 'username_1'} as IUser)))
         const component = wrapIntl(
             <CommentsList
                 comments={[comment1, comment2]}
@@ -50,7 +51,7 @@ describe('components/cardDetail/CommentsList', () => {
 
         let container
 
-        act(() => {
+        await act(async () => {
             const result = render(component)
             container = result.container
         })
@@ -58,7 +59,7 @@ describe('components/cardDetail/CommentsList', () => {
         expect(container).toMatchSnapshot()
     })
 
-    test('comments show up in readonly mode', () => {
+    test('comments show up in readonly mode', async () => {
         FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify({username: 'username_1'} as IUser)))
         const component = wrapIntl(
             <CommentsList

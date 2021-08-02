@@ -50,18 +50,6 @@ const Comment: FC<Props> = (props: Props) => {
                 <div className='comment-date'>
                     {Utils.displayDateTime(new Date(comment.createAt), intl)}
                 </div>
-                <MenuWrapper>
-                    <IconButton icon={<OptionsIcon/>}/>
-                    <Menu position='left'>
-                        <Menu.Text
-                            icon={<DeleteIcon/>}
-                            id='delete'
-                            name={intl.formatMessage({id: 'Comment.delete', defaultMessage: 'Delete'})}
-                            onClick={() => mutator.deleteBlock(comment)}
-                        />
-                    </Menu>
-                </MenuWrapper>
-                <div className='comment-date'>{(new Date(comment.createAt)).toLocaleString()}</div>
 
                 {!props.readonly && (
                     <MenuWrapper>

@@ -188,22 +188,6 @@ exports[`components/cardDetail/CardDetail should show comments 1`] = `
               />
             </div>
           </div>
-          <div
-            class="comment-date"
-          >
-            1/1/2021, 5:30:00 AM
-          </div>
-          <div
-            class="MenuWrapper"
-          >
-            <div
-              class="Button IconButton"
-            >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </div>
-          </div>
         </div>
         <div
           class="comment-text"
@@ -230,22 +214,6 @@ exports[`components/cardDetail/CardDetail should show comments 1`] = `
             class="comment-date"
           >
             January 01, 5:30 AM
-          </div>
-          <div
-            class="MenuWrapper"
-          >
-            <div
-              class="Button IconButton"
-            >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </div>
-          </div>
-          <div
-            class="comment-date"
-          >
-            1/1/2021, 5:30:00 AM
           </div>
           <div
             class="MenuWrapper"
@@ -696,22 +664,6 @@ exports[`components/cardDetail/CardDetail should show comments in readonly view 
           >
             January 01, 5:30 AM
           </div>
-          <div
-            class="MenuWrapper"
-          >
-            <div
-              class="Button IconButton"
-            >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </div>
-          </div>
-          <div
-            class="comment-date"
-          >
-            1/1/2021, 5:30:00 AM
-          </div>
         </div>
         <div
           class="comment-text"
@@ -738,22 +690,6 @@ exports[`components/cardDetail/CardDetail should show comments in readonly view 
             class="comment-date"
           >
             January 01, 5:30 AM
-          </div>
-          <div
-            class="MenuWrapper"
-          >
-            <div
-              class="Button IconButton"
-            >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </div>
-          </div>
-          <div
-            class="comment-date"
-          >
-            1/1/2021, 5:30:00 AM
           </div>
         </div>
         <div
