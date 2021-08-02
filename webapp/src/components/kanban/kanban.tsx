@@ -124,6 +124,9 @@ const Kanban = (props: Props) => {
     }, [cards, visibleGroups, activeView, groupByProperty, props.selectedCardIds])
 
     const onDropToCard = useCallback(async (srcCard: Card, dstCard: Card) => {
+        if (srcCard.id === dstCard.id) {
+            return
+        }
         Utils.log(`onDropToCard: ${dstCard.title}`)
         const {selectedCardIds} = props
         const optionId = dstCard.fields.properties[groupByProperty.id]
