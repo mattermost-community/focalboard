@@ -411,6 +411,9 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 
 		if _, err2 := tx.Exec(q, args...); err2 != nil {
 			s.logger.Error(`InsertBlock error occurred while updating existing block`, mlog.String("blockID", block.ID), mlog.Err(err2))
+			if rollbackErr := tx.Rollback(); rollbackErr != nil {
+				s.logger.Warn("Transaction rollback error", mlog.Err(rollbackErr))
+			}
 			return err2
 		}
 	} else {

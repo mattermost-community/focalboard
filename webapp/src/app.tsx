@@ -58,7 +58,7 @@ const App = React.memo((): JSX.Element => {
         >
             <DndProvider backend={Utils.isMobile() ? TouchBackend : HTML5Backend}>
                 <FlashMessages milliseconds={2000}/>
-                <Router basename={Utils.getBaseURL()}>
+                <Router basename={Utils.getFrontendBaseURL()}>
                     <div id='frame'>
                         <div id='main'>
                             <Switch>
