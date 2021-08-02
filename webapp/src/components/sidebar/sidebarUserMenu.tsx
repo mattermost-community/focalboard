@@ -11,7 +11,7 @@ import LogoWithNameIcon from '../../widgets/icons/logoWithName'
 import LogoWithNameWhiteIcon from '../../widgets/icons/logoWithNameWhite'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
-import {getCurrentUser} from '../../store/currentUser'
+import {getMe} from '../../store/users'
 import {useAppSelector} from '../../store/hooks'
 
 import ModalWrapper from '../modalWrapper'
@@ -30,7 +30,7 @@ const SidebarUserMenu = React.memo((props: Props) => {
     const history = useHistory()
     const [showRegistrationLinkDialog, setShowRegistrationLinkDialog] = useState(false)
     const {whiteLogo, showVersionBadge, showAccountActions} = props
-    const user = useAppSelector<IUser|null>(getCurrentUser)
+    const user = useAppSelector<IUser|null>(getMe)
     const intl = useIntl()
     return (
         <div className='SidebarUserMenu'>

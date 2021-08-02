@@ -6,12 +6,14 @@ import {useIntl, IntlShape} from 'react-intl'
 import {CsvExporter} from '../../csvExporter'
 import {Archiver} from '../../archiver'
 import {IUser} from '../../user'
-import {BoardTree} from '../../viewModel/boardTree'
+import {Board} from '../../blocks/board'
+import {BoardView} from '../../blocks/boardView'
+import {Card} from '../../blocks/card'
 import IconButton from '../../widgets/buttons/iconButton'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
-import {getCurrentUser} from '../../store/currentUser'
+import {getMe} from '../../store/users'
 import {useAppSelector} from '../../store/hooks'
 
 import ModalWrapper from '../modalWrapper'
@@ -19,29 +21,32 @@ import ShareBoardComponent from '../shareBoardComponent'
 import {sendFlashMessage} from '../flashMessages'
 
 type Props = {
-    boardTree: BoardTree
+    board: Board
+    activeView: BoardView
+    cards: Card[]
 }
 
-// async function testAddCards(boardTree: BoardTree, count: number) {
-//     const {board, activeView} = boardTree
-
-//     const startCount = boardTree.cards.length
+// import {mutator} from '../../mutator'
+// import {CardFilter} from '../../cardFilter'
+// import {BlockIcons} from '../../blockIcons'
+// async function testAddCards(board: Board, activeView: BoardView, startCount: number, count: number) {
 //     let optionIndex = 0
 
 //     mutator.performAsUndoGroup(async () => {
 //         for (let i = 0; i < count; i++) {
-//             const card = new MutableCard()
-//             card.parentId = boardTree.board.id
-//             card.rootId = boardTree.board.rootId
-//             card.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.filter, board.cardProperties)
+//             const card = new Card()
+//             card.parentId = board.id
+//             card.rootId = board.rootId
+//             card.fields.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.fields.filter, board.fields.cardProperties)
 //             card.title = `Test Card ${startCount + i + 1}`
-//             card.icon = BlockIcons.shared.randomIcon()
+//             card.fields.icon = BlockIcons.shared.randomIcon()
 
-//             if (boardTree.groupByProperty && boardTree.groupByProperty.options.length > 0) {
+//             const groupByProperty = board.fields.cardProperties.find((o) => o.id === activeView.fields.groupById)
+//             if (groupByProperty && groupByProperty.options.length > 0) {
 //                 // Cycle through options
-//                 const option = boardTree.groupByProperty.options[optionIndex]
-//                 optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
-//                 card.properties[boardTree.groupByProperty.id] = option.id
+//                 const option = groupByProperty.options[optionIndex]
+//                 optionIndex = (optionIndex + 1) % groupByProperty.options.length
+//                 card.fields.properties[groupByProperty.id] = option.id
 //             }
 //             mutator.insertBlock(card, 'test add card')
 //         }
@@ -56,7 +61,7 @@ type Props = {
 //                 // Cycle through options
 //                 const option = boardTree.groupByProperty.options[optionIndex]
 //                 optionIndex = (optionIndex + 1) % boardTree.groupByProperty.options.length
-//                 const newCard = new MutableCard(card)
+//                 const newCard = new Card(card)
 //                 if (newCard.properties[boardTree.groupByProperty.id] !== option.id) {
 //                     newCard.properties[boardTree.groupByProperty.id] = option.id
 //                     mutator.updateBlock(newCard, card, 'test distribute cards')
@@ -74,9 +79,9 @@ type Props = {
 //     })
 // }
 
-function onExportCsvTrigger(boardTree: BoardTree, intl: IntlShape) {
+function onExportCsvTrigger(board: Board, activeView: BoardView, cards: Card[], intl: IntlShape) {
     try {
-        CsvExporter.exportTableCsv(boardTree, intl)
+        CsvExporter.exportTableCsv(board, activeView, cards, intl)
         const exportCompleteMessage = intl.formatMessage({
             id: 'ViewHeader.export-complete',
             defaultMessage: 'Export complete!',
@@ -94,8 +99,8 @@ function onExportCsvTrigger(boardTree: BoardTree, intl: IntlShape) {
 const ViewHeaderActionsMenu = React.memo((props: Props) => {
     const [showShareDialog, setShowShareDialog] = useState(false)
 
-    const {boardTree} = props
-    const user = useAppSelector<IUser|null>(getCurrentUser)
+    const {board, activeView, cards} = props
+    const user = useAppSelector<IUser|null>(getMe)
     const intl = useIntl()
 
     return (
@@ -106,12 +111,12 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
                     <Menu.Text
                         id='exportCsv'
                         name={intl.formatMessage({id: 'ViewHeader.export-csv', defaultMessage: 'Export to CSV'})}
-                        onClick={() => onExportCsvTrigger(boardTree, intl)}
+                        onClick={() => onExportCsvTrigger(board, activeView, cards, intl)}
                     />
                     <Menu.Text
                         id='exportBoardArchive'
                         name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
-                        onClick={() => Archiver.exportBoardArchive(boardTree)}
+                        onClick={() => Archiver.exportBoardArchive(board)}
                     />
                     {user && user.id !== 'single-user' &&
                         <Menu.Text
@@ -122,36 +127,34 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
                     }
 
                     {/*
+                    <Menu.Separator/>
 
-                <Menu.Separator/>
-
-                <Menu.Text
-                    id='testAdd100Cards'
-                    name={intl.formatMessage({id: 'ViewHeader.test-add-100-cards', defaultMessage: 'TEST: Add 100 cards'})}
-                    onClick={() => testAddCards(100)}
-                />
-                <Menu.Text
-                    id='testAdd1000Cards'
-                    name={intl.formatMessage({id: 'ViewHeader.test-add-1000-cards', defaultMessage: 'TEST: Add 1,000 cards'})}
-                    onClick={() => testAddCards(1000)}
-                />
-                <Menu.Text
-                    id='testDistributeCards'
-                    name={intl.formatMessage({id: 'ViewHeader.test-distribute-cards', defaultMessage: 'TEST: Distribute cards'})}
-                    onClick={() => testDistributeCards()}
-                />
-                <Menu.Text
-                    id='testRandomizeIcons'
-                    name={intl.formatMessage({id: 'ViewHeader.test-randomize-icons', defaultMessage: 'TEST: Randomize icons'})}
-                    onClick={() => testRandomizeIcons()}
-                />
-
-                */}
+                    <Menu.Text
+                        id='testAdd100Cards'
+                        name={intl.formatMessage({id: 'ViewHeader.test-add-100-cards', defaultMessage: 'TEST: Add 100 cards'})}
+                        onClick={() => testAddCards(board, activeView, cards.length, 100)}
+                    />
+                    <Menu.Text
+                        id='testAdd1000Cards'
+                        name={intl.formatMessage({id: 'ViewHeader.test-add-1000-cards', defaultMessage: 'TEST: Add 1,000 cards'})}
+                        onClick={() => testAddCards(board, activeView, cards.length, 1000)}
+                    />
+                    <Menu.Text
+                        id='testDistributeCards'
+                        name={intl.formatMessage({id: 'ViewHeader.test-distribute-cards', defaultMessage: 'TEST: Distribute cards'})}
+                        onClick={() => testDistributeCards()}
+                    />
+                    <Menu.Text
+                        id='testRandomizeIcons'
+                        name={intl.formatMessage({id: 'ViewHeader.test-randomize-icons', defaultMessage: 'TEST: Randomize icons'})}
+                        onClick={() => testRandomizeIcons()}
+                    />
+                    */}
                 </Menu>
             </MenuWrapper>
             {showShareDialog &&
                 <ShareBoardComponent
-                    boardId={boardTree.board.id}
+                    boardId={board.id || ''}
                     onClose={() => setShowShareDialog(false)}
                 />
             }

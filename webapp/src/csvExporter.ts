@@ -3,20 +3,20 @@
 import {IntlShape} from 'react-intl'
 
 import {BoardView} from './blocks/boardView'
-import {BoardTree} from './viewModel/boardTree'
+import {Board, IPropertyTemplate} from './blocks/board'
+import {Card} from './blocks/card'
 import {OctoUtils} from './octoUtils'
 import {Utils} from './utils'
 
 class CsvExporter {
-    static exportTableCsv(boardTree: BoardTree, intl: IntlShape, view?: BoardView): void {
-        const {activeView} = boardTree
+    static exportTableCsv(board: Board, activeView: BoardView, cards: Card[], intl: IntlShape, view?: BoardView): void {
         const viewToExport = view ?? activeView
 
         if (!viewToExport) {
             return
         }
 
-        const rows = CsvExporter.generateTableArray(boardTree, viewToExport, intl)
+        const rows = CsvExporter.generateTableArray(board, cards, viewToExport, intl)
 
         let csvContent = 'data:text/csv;charset=utf-8,'
 
@@ -47,16 +47,14 @@ class CsvExporter {
         return text.replace(/"/g, '""')
     }
 
-    private static generateTableArray(boardTree: BoardTree, viewToExport: BoardView, intl: IntlShape): string[][] {
-        const {board, cards} = boardTree
-
+    private static generateTableArray(board: Board, cards: Card[], viewToExport: BoardView, intl: IntlShape): string[][] {
         const rows: string[][] = []
-        const visibleProperties = board.cardProperties.filter((template) => viewToExport.visiblePropertyIds.includes(template.id))
+        const visibleProperties = board.fields.cardProperties.filter((template: IPropertyTemplate) => viewToExport.fields.visiblePropertyIds.includes(template.id))
 
         {
             // Header row
             const row: string[] = ['Title']
-            visibleProperties.forEach((template) => {
+            visibleProperties.forEach((template: IPropertyTemplate) => {
                 row.push(template.name)
             })
             rows.push(row)
@@ -65,8 +63,8 @@ class CsvExporter {
         cards.forEach((card) => {
             const row: string[] = []
             row.push(`"${this.encodeText(card.title)}"`)
-            visibleProperties.forEach((template) => {
-                const propertyValue = card.properties[template.id]
+            visibleProperties.forEach((template: IPropertyTemplate) => {
+                const propertyValue = card.fields.properties[template.id]
                 const displayValue = (OctoUtils.propertyDisplayValue(card, propertyValue, template, intl) || '') as string
                 if (template.type === 'number') {
                     const numericValue = propertyValue ? Number(propertyValue).toString() : ''
