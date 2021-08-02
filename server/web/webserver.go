@@ -78,6 +78,7 @@ func (ws *Server) registerRoutes() {
 	ws.Router().PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(filepath.Join(ws.rootPath, "static")))))
 	ws.Router().PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.Header().Set("Cache-Control", "no-cache")
 		indexTemplate, err := template.New("index").ParseFiles(path.Join(ws.rootPath, "index.html"))
 		if err != nil {
 			ws.logger.Error("Unable to serve the index.html file", mlog.Err(err))

@@ -72,7 +72,7 @@ function makeCommonConfig() {
                         {
                             loader: 'file-loader',
                             options: {
-                                name: '[name].[ext]',
+                                name: '[name].[contenthash].[ext]',
                                 outputPath: 'static',
                             },
                         },
@@ -112,8 +112,10 @@ function makeCommonConfig() {
         entry: ['./src/main.tsx', './src/userSettings.ts'],
         output: {
             library: 'Focalboard',
-            filename: 'static/[name].js',
+            filename: 'static/[name].[contenthash].js',
+            chunkFilename: 'static/[name].[contenthash].js',
             path: outpath,
+            clean: true,
         },
     };
 
