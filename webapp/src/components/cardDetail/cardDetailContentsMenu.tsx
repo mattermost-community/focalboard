@@ -55,7 +55,7 @@ type Props = {
 const CardDetailContentsMenu = React.memo((props: Props) => {
     const intl = useIntl()
     return (
-        <div className='CardDetail content add-content'>
+        <div className='CardDetailContentsMenu content add-content'>
             <MenuWrapper>
                 <Button>
                     <FormattedMessage
