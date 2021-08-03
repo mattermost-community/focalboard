@@ -84,7 +84,7 @@ type BlockPatch struct {
 	// required: false
 	UpdatedFields map[string]interface{} `json:"updatedFields"`
 
-	// The block updated fields
+	// The block removed fields
 	// required: false
 	DeletedFields []string `json:"deletedFields"`
 }
