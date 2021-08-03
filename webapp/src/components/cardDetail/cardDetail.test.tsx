@@ -5,14 +5,13 @@ import React from 'react'
 import 'isomorphic-fetch'
 import {act, render} from '@testing-library/react'
 
+import configureStore from 'redux-mock-store'
+import {Provider as ReduxProvider} from 'react-redux'
+
 import {FetchMock} from '../../test/fetchMock'
 import {TestBlockFactory} from '../../test/testBlockFactory'
-import {MutableBoardTree} from '../../viewModel/boardTree'
-import {wrapIntl} from '../../testUtils'
 
-import {MutableCardTree} from '../../viewModel/cardTree'
-
-import {IUser} from '../../user'
+import {mockDOM, wrapIntl} from '../../testUtils'
 
 import CardDetail from './cardDetail'
 
@@ -22,77 +21,125 @@ beforeEach(() => {
     FetchMock.fn.mockReset()
 })
 
+// This is needed to run EasyMDE in tests.
+// It needs bounding rectangle box property
+// on HTML elements, but Jest's HTML engine jsdom
+// doesn't provide it.
+// So we mock it.
+beforeAll(() => {
+    mockDOM()
+})
+
 describe('components/cardDetail/CardDetail', () => {
     const board = TestBlockFactory.createBoard()
 
     const view = TestBlockFactory.createBoardView(board)
-    view.sortOptions = []
-    view.groupById = undefined
-    view.hiddenOptionIds = []
+    view.fields.sortOptions = []
+    view.fields.groupById = undefined
+    view.fields.hiddenOptionIds = []
 
     const card = TestBlockFactory.createCard(board)
 
     const createdAt = Date.parse('01 Jan 2021 00:00:00 GMT')
-    const comment1 = TestBlockFactory.createCard(board)
+    const comment1 = TestBlockFactory.createComment(card)
     comment1.type = 'comment'
     comment1.title = 'Comment 1'
     comment1.parentId = card.id
     comment1.createAt = createdAt
 
-    const comment2 = TestBlockFactory.createCard(board)
+    const comment2 = TestBlockFactory.createComment(card)
     comment2.type = 'comment'
     comment2.title = 'Comment 2'
     comment2.parentId = card.id
     comment2.createAt = createdAt
 
-    const cardTree = new MutableCardTree(card)
-    cardTree.comments = [comment1, comment2]
-
     test('should show comments', async () => {
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, card, comment1, comment2])))
-        FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify({username: 'username_1'} as IUser)))
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).not.toBeUndefined()
+        const mockStore = configureStore([])
+        const store = mockStore({
+            users: {
+                workspaceUsers: [
+                    {username: 'username_1'},
+                ],
+            },
+        })
 
-        const component = wrapIntl(
-            <CardDetail
-                boardTree={boardTree!}
-                cardTree={cardTree}
-                readonly={false}
-            />,
+        const component = (
+            <ReduxProvider store={store}>
+                {wrapIntl(
+                    <CardDetail
+                        board={board}
+                        activeView={view}
+                        views={[view]}
+                        cards={[card]}
+                        card={card}
+                        comments={[comment1, comment2]}
+                        contents={[]}
+                        readonly={false}
+                    />,
+                )}
+            </ReduxProvider>
         )
 
-        let container
+        let container: Element | DocumentFragment | null = null
 
         await act(async () => {
             const result = render(component)
             container = result.container
         })
 
-        expect(container).toMatchSnapshot()
+        expect(container).toBeDefined()
+
+        // Comments show up
+        const comments = container!.querySelectorAll('.comment-text')
+        expect(comments.length).toBe(2)
+
+        // Add comment option visible when readonly mode is off
+        const newCommentSection = container!.querySelectorAll('.newcomment')
+        expect(newCommentSection.length).toBe(1)
     })
 
     test('should show comments in readonly view', async () => {
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, card, comment1, comment2])))
-        FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify({username: 'username_1'} as IUser)))
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).not.toBeUndefined()
+        const mockStore = configureStore([])
+        const store = mockStore({
+            users: {
+                workspaceUsers: [
+                    {username: 'username_1'},
+                ],
+            },
+        })
 
-        const component = wrapIntl(
-            <CardDetail
-                boardTree={boardTree!}
-                cardTree={cardTree}
-                readonly={true}
-            />,
+        const component = (
+            <ReduxProvider store={store}>
+                {wrapIntl(
+                    <CardDetail
+                        board={board}
+                        activeView={view}
+                        views={[view]}
+                        cards={[card]}
+                        card={card}
+                        comments={[comment1, comment2]}
+                        contents={[]}
+                        readonly={true}
+                    />,
+                )}
+            </ReduxProvider>
         )
 
-        let container
+        let container: Element | DocumentFragment | null = null
 
         await act(async () => {
             const result = render(component)
             container = result.container
         })
 
-        expect(container).toMatchSnapshot()
+        expect(container).toBeDefined()
+
+        // comments show up
+        const comments = container!.querySelectorAll('.comment-text')
+        expect(comments.length).toBe(2)
+
+        // Add comment option is not shown in readonly mode
+        const newCommentSection = container!.querySelectorAll('.newcomment')
+        expect(newCommentSection.length).toBe(0)
     })
 })

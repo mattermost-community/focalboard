@@ -7,12 +7,14 @@ import {render} from '@testing-library/react'
 
 import {act} from 'react-dom/test-utils'
 
+import {Provider as ReduxProvider} from 'react-redux'
+import configureStore from 'redux-mock-store'
+
 import {CommentBlock} from '../../blocks/commentBlock'
 
-import {wrapIntl} from '../../testUtils'
+import {mockDOM, wrapIntl} from '../../testUtils'
 
 import {FetchMock} from '../../test/fetchMock'
-import {IUser} from '../../user'
 
 import CommentsList from './commentsList'
 
@@ -20,6 +22,10 @@ global.fetch = FetchMock.fn
 
 beforeEach(() => {
     FetchMock.fn.mockReset()
+})
+
+beforeAll(() => {
+    mockDOM()
 })
 
 describe('components/cardDetail/CommentsList', () => {
@@ -39,44 +45,82 @@ describe('components/cardDetail/CommentsList', () => {
     } as CommentBlock
 
     test('comments show up', async () => {
-        FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify({username: 'username_1'} as IUser)))
-        const component = wrapIntl(
-            <CommentsList
-                comments={[comment1, comment2]}
-                rootId={'root_id'}
-                cardId={'card_id'}
-                readonly={false}
-            />,
-        )
+        const mockStore = configureStore([])
+        const store = mockStore({
+            users: {
+                workspaceUsers: [
+                    {username: 'username_1'},
+                ],
+            },
+        })
 
-        let container
+        const component = (
+            <ReduxProvider store={store}>
+                {wrapIntl(
+                    <CommentsList
+                        comments={[comment1, comment2]}
+                        rootId={'root_id'}
+                        cardId={'card_id'}
+                        readonly={false}
+                    />,
+                )}
+            </ReduxProvider>)
+
+        let container: Element | DocumentFragment | null = null
 
         await act(async () => {
             const result = render(component)
             container = result.container
         })
 
-        expect(container).toMatchSnapshot()
+        expect(container).toBeDefined()
+
+        // Comments show up
+        const comments = container!.querySelectorAll('.comment-text')
+        expect(comments.length).toBe(2)
+
+        // Add comment option visible when readonly mode is off
+        const newCommentSection = container!.querySelectorAll('.newcomment')
+        expect(newCommentSection.length).toBe(1)
     })
 
     test('comments show up in readonly mode', async () => {
-        FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify({username: 'username_1'} as IUser)))
-        const component = wrapIntl(
-            <CommentsList
-                comments={[comment1, comment2]}
-                rootId={'root_id'}
-                cardId={'card_id'}
-                readonly={true}
-            />,
-        )
+        const mockStore = configureStore([])
+        const store = mockStore({
+            users: {
+                workspaceUsers: [
+                    {username: 'username_1'},
+                ],
+            },
+        })
 
-        let container
+        const component = (
+            <ReduxProvider store={store}>
+                {wrapIntl(
+                    <CommentsList
+                        comments={[comment1, comment2]}
+                        rootId={'root_id'}
+                        cardId={'card_id'}
+                        readonly={true}
+                    />,
+                )}
+            </ReduxProvider>)
+
+        let container: Element | DocumentFragment | null = null
 
         await act(async () => {
             const result = render(component)
             container = result.container
         })
 
-        expect(container).toMatchSnapshot()
+        expect(container).toBeDefined()
+
+        // Comments show up
+        const comments = container!.querySelectorAll('.comment-text')
+        expect(comments.length).toBe(2)
+
+        // Add comment option visible when readonly mode is off
+        const newCommentSection = container!.querySelectorAll('.newcomment')
+        expect(newCommentSection.length).toBe(0)
     })
 })
