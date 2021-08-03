@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {BlockIcons} from './blockIcons'
-import {Block, createBlock} from './blocks/block'
+import {Block} from './blocks/block'
 import {Board, IPropertyOption, IPropertyTemplate, PropertyType, createBoard} from './blocks/board'
 import {BoardView, ISortOption, createBoardView} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'

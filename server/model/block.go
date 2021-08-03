@@ -117,7 +117,7 @@ func (b Block) LogClone() interface{} {
 	}
 }
 
-// Patch returns an update version of the block
+// Patch returns an update version of the block.
 func (p *BlockPatch) Patch(block *Block) *Block {
 	if p.ParentID != nil {
 		block.ParentID = *p.ParentID
