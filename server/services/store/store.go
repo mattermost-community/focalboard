@@ -1,4 +1,4 @@
-//go:generate mockgen -destination=mockstore/mockstore.go -package mockstore . Store
+//go:generate mockgen --build_flags=--mod=mod -destination=mockstore/mockstore.go -package mockstore . Store
 package store
 
 import "github.com/mattermost/focalboard/server/model"
