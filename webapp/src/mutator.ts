@@ -125,10 +125,17 @@ class Mutator {
         )
     }
 
-    async changeTitle(block: Block, title: string, description = 'change title') {
-        const newBlock = createBlock(block)
-        newBlock.title = title
-        await this.updateBlock(newBlock, block, description)
+    async changeTitle(blockId: string, oldTitle: string, newTitle: string, description = 'change title') {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(blockId, {title: newTitle})
+            },
+            async () => {
+                await octoClient.patchBlock(blockId, {title: oldTitle})
+            },
+            description,
+            this.undoGroupId,
+        )
     }
 
     async changeIcon(block: Card | Board, icon: string, description = 'change icon') {

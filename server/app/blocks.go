@@ -29,6 +29,21 @@ func (a *App) GetParentID(c store.Container, blockID string) (string, error) {
 	return a.store.GetParentID(c, blockID)
 }
 
+func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.BlockPatch, userID string) error {
+	err := a.store.PatchBlock(c, blockID, blockPatch, userID)
+	if err != nil {
+		return err
+	}
+	a.metrics.IncrementBlocksPatched(1)
+	block, err := a.store.GetBlock(c, blockID)
+	if err != nil {
+		return nil
+	}
+	a.wsServer.BroadcastBlockChange(c.WorkspaceID, *block)
+	go a.webhook.NotifyUpdate(*block)
+	return nil
+}
+
 func (a *App) InsertBlock(c store.Container, block model.Block, userID string) error {
 	err := a.store.InsertBlock(c, &block, userID)
 	if err == nil {

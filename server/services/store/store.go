@@ -24,6 +24,7 @@ type Store interface {
 	DeleteBlock(c Container, blockID string, modifiedBy string) error
 	GetBlockCountsByType() (map[string]int64, error)
 	GetBlock(c Container, blockID string) (*model.Block, error)
+	PatchBlock(c Container, blockID string, blockPatch *model.BlockPatch, userID string) error
 
 	Shutdown() error
 

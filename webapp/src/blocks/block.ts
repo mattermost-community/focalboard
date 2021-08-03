@@ -8,6 +8,16 @@ const blockTypes = [...contentBlockTypes, 'board', 'view', 'card', 'comment', 'u
 type ContentBlockTypes = typeof contentBlockTypes[number]
 type BlockTypes = typeof blockTypes[number]
 
+interface BlockPatch {
+    parentId?: string
+    rootId?: string
+    schema?: number
+    type?: BlockTypes
+    title?: string
+    updatedFields?: Record<string, any>
+    deletedFields?: string[]
+    deleteAt?: number
+}
 interface Block {
     id: string
     parentId: string
@@ -44,4 +54,4 @@ function createBlock(block?: Block): Block {
 }
 
 export type {ContentBlockTypes, BlockTypes}
-export {blockTypes, contentBlockTypes, Block, createBlock}
+export {blockTypes, contentBlockTypes, Block, BlockPatch, createBlock}

@@ -42,7 +42,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
     const titleRef = useRef<Focusable>(null)
     const saveTitle = useCallback(() => {
         if (title !== card.title) {
-            mutator.changeTitle(card, title)
+            mutator.changeTitle(card.id, card.title, title)
         }
     }, [card.title, title])
 

@@ -457,6 +457,16 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 	return nil
 }
 
+func (s *SQLStore) PatchBlock(c store.Container, blockID string, blockPatch *model.BlockPatch, userID string) error {
+	existingBlock, err := s.GetBlock(c, blockID)
+	if err != nil {
+		return err
+	}
+
+	block := blockPatch.Patch(existingBlock)
+	return s.InsertBlock(c, block, userID)
+}
+
 func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy string) error {
 	ctx := context.Background()
 	tx, err := s.db.BeginTx(ctx, nil)
