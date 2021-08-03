@@ -447,8 +447,6 @@ class Mutator {
     async changeViewGroupById(view: BoardView, groupById: string): Promise<void> {
         const newView = createBoardView(view)
         newView.fields.groupById = groupById
-        newView.fields.hiddenOptionIds = []
-        newView.fields.visibleOptionIds = []
         await this.updateBlock(newView, view, 'group by')
     }
 
