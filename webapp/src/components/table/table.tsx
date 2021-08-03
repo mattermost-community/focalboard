@@ -110,6 +110,8 @@ const Table = (props: Props): JSX.Element => {
                         }
                     }
                 }
+
+                // remove the "value" portion of the original calculation
                 columnFontPadding.padding -= (perItemPadding * valueCount)
             }
         }
@@ -119,21 +121,23 @@ const Table = (props: Props): JSX.Element => {
             if (columnID === Constants.titleColumnId) {
                 thisLen = Utils.getTextWidth(card.title, columnFontPadding.fontDescriptor) + columnFontPadding.padding
             } else if (template) {
-                let displayValue = (OctoUtils.propertyDisplayValue(card, card.fields.properties[columnID], template as IPropertyTemplate, intl) || '')
+                const displayValue = (OctoUtils.propertyDisplayValue(card, card.fields.properties[columnID], template as IPropertyTemplate, intl) || '')
                 switch (template.type) {
                 case 'select': {
                     thisLen = Utils.getTextWidth(displayValue.toString().toUpperCase(), columnFontPadding.fontDescriptor) + perItemPadding
                     break
                 }
                 case 'multiSelect': {
-                    displayValue = displayValue as string[]
-                    displayValue.forEach((value) => {
-                        thisLen += Utils.getTextWidth(value.toUpperCase(), columnFontPadding.fontDescriptor) + perItemPadding
-                    })
+                    if (displayValue) {
+                        const displayValues = displayValue as string[]
+                        displayValues.forEach((value) => {
+                            thisLen += Utils.getTextWidth(value.toUpperCase(), columnFontPadding.fontDescriptor) + perItemPadding
+                        })
+                    }
                     break
                 }
                 default: {
-                    thisLen = Utils.getTextWidth(displayValue.toString().toUpperCase(), columnFontPadding.fontDescriptor) + perItemPadding
+                    thisLen = Utils.getTextWidth(displayValue.toString(), columnFontPadding.fontDescriptor) + perItemPadding
                     break
                 }
                 }

@@ -131,10 +131,8 @@ describe('components/properties/user', () => {
 
             act(() => {
                 userEvent.click(userProperty as Element)
-                userEvent.type(userProperty as Element, '{delete}')
             })
             expect(container).toMatchSnapshot()
-            expect(callback).toHaveBeenCalledWith('')
         } else {
             throw new Error('container should have been initialized')
         }
