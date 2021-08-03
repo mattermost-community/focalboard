@@ -65,7 +65,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
 
     test('should match snapshot', async () => {
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, card, cardTemplate])))
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
+        const boardTree = await MutableBoardTree.sync(board.id, view.id)
         expect(boardTree).not.toBeUndefined()
 
         const componet = wrapIntl((
@@ -82,7 +82,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
 
     test('rename select property', async () => {
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, card, cardTemplate])))
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
+        const boardTree = await MutableBoardTree.sync(board.id, view.id)
         expect(boardTree).not.toBeUndefined()
 
         const component = wrapIntl((
