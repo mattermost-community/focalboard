@@ -89,18 +89,45 @@ const Table = (props: Props): JSX.Element => {
         const {fontDescriptor, padding} = Utils.getFontAndPaddingFromCell(columnRef.current)
 
         cards.forEach((card) => {
-            let displayValue = card.title
+            let displayValue: string | string[] = card.title
+            let thisLen = Utils.getTextWidth(displayValue, fontDescriptor) + padding
             if (columnID !== Constants.titleColumnId) {
                 const template = visibleProperties.find((t: IPropertyTemplate) => t.id === columnID)
                 if (!template) {
                     return
                 }
-                displayValue = (OctoUtils.propertyDisplayValue(card, card.fields.properties[columnID], template, intl) || '') as string
+                displayValue = (OctoUtils.propertyDisplayValue(card, card.fields.properties[columnID], template, intl) || '')
                 if (template.type === 'select') {
-                    displayValue = displayValue.toUpperCase()
+                    displayValue = displayValue.toString().toUpperCase()
+                    thisLen = Utils.getTextWidth(displayValue, fontDescriptor) + padding
+                } else if (template.type === 'multiSelect') {
+                    // For multiselect, the padding calculated above depends on the number selected when calculating the padding.
+                    // Need to calculate it manually here.
+                    // Object hierarchy should be {cell -> property -> [value1, value2, etc]}
+                    let perItemPadding = 0
+                    let childrenCount = 0
+                    if (columnRef.current && columnRef.current.childElementCount > 0) {
+                        const propertyElement = columnRef.current.children.item(0) as Element
+                        if (propertyElement) {
+                            childrenCount = propertyElement.childElementCount
+                            if (childrenCount > 0) {
+                                const statusPadding = Utils.getFontAndPaddingFromChildren(propertyElement.children, 0)
+                                perItemPadding = statusPadding.padding / childrenCount
+                            }
+                        }
+                    }
+
+                    thisLen = 0
+                    displayValue = displayValue as string[]
+                    displayValue.forEach((value) => {
+                        thisLen += Utils.getTextWidth(value.toUpperCase(), fontDescriptor) + perItemPadding
+                    })
+                    thisLen += padding - (perItemPadding * childrenCount)
+                } else {
+                    displayValue = displayValue.toString()
+                    thisLen = Utils.getTextWidth(displayValue, fontDescriptor) + padding
                 }
             }
-            const thisLen = Utils.getTextWidth(displayValue, fontDescriptor) + padding
             if (thisLen > longestSize) {
                 longestSize = thisLen
             }
@@ -286,7 +313,7 @@ const Table = (props: Props): JSX.Element => {
                 })}
             </div>
 
-            {/* Table header row */}
+            {/* Table rows */}
             <div className='table-row-container'>
                 {activeView.fields.groupById &&
                 visibleGroups.map((group) => {

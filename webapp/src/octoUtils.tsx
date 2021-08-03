@@ -30,6 +30,21 @@ class OctoUtils {
             }
             break
         }
+        case 'multiSelect': {
+            if (propertyValue) {
+                const values = propertyValue as string[]
+                const displayValues: string[] = []
+                values.forEach((value) => {
+                    const option = propertyTemplate.options.find((o) => o.id === value)
+                    if (!option) {
+                        Utils.assertFailure(`Invalid select option ID ${propertyValue}, block.title: ${block.title}`)
+                    }
+                    displayValues.push(option?.value || '(Unknown))')
+                })
+                displayValue = displayValues
+            }
+            break
+        }
         case 'createdTime': {
             displayValue = Utils.displayDateTime(new Date(block.createAt), intl)
             break

@@ -104,13 +104,13 @@ describe('components/properties/user', () => {
 
     test('user dropdown open', async () => {
         const store = mockStore(state)
+        const callback = jest.fn()
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <UserProperty
                     value={'user-id-1'}
                     readonly={false}
-                    onChange={() => {
-                    }}
+                    onChange={callback}
                 />
             </ReduxProvider>,
         )
@@ -131,8 +131,10 @@ describe('components/properties/user', () => {
 
             act(() => {
                 userEvent.click(userProperty as Element)
+                userEvent.type(userProperty as Element, '{delete}')
             })
             expect(container).toMatchSnapshot()
+            expect(callback).toHaveBeenCalledWith('')
         } else {
             throw new Error('container should have been initialized')
         }
