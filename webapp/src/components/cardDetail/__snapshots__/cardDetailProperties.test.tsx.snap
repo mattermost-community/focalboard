@@ -31,7 +31,19 @@ exports[`components/cardDetail/CardDetailProperties should match snapshot 1`] = 
         <span
           class="Label propColorDefault "
         >
-          Jean-Luc Picard
+          <span
+            class="Label-text"
+          >
+            Jean-Luc Picard
+          </span>
+          <div
+            class="Button IconButton margin-left delete-value"
+            title="Clear"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </div>
         </span>
       </div>
     </div>

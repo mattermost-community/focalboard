@@ -4,21 +4,24 @@ import React, {useState, useRef, useEffect} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {Card} from '../../blocks/card'
+import {Board, IPropertyTemplate} from '../../blocks/board'
+import {BoardView} from '../../blocks/boardView'
 import {Constants} from '../../constants'
 import mutator from '../../mutator'
-import {BoardTree} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
 import {useSortable} from '../../hooks/sortable'
+import {useAppSelector} from '../../store/hooks'
+import {getCardContents} from '../../store/contents'
+import {getCardComments} from '../../store/comments'
 
 import PropertyValueElement from '../propertyValueElement'
 import './tableRow.scss'
-import {CardTree} from '../../viewModel/cardTree'
 
 type Props = {
-    boardTree: BoardTree
+    board: Board
+    activeView: BoardView
     card: Card
-    cardTree?: CardTree
     isSelected: boolean
     focusOnMount: boolean
     onSaveWithEnter: () => void
@@ -32,14 +35,14 @@ type Props = {
 }
 
 const TableRow = React.memo((props: Props) => {
-    const {boardTree, onSaveWithEnter, columnRefs} = props
-    const {board, activeView} = boardTree
+    const {board, activeView, onSaveWithEnter, columnRefs, card} = props
+    const contents = useAppSelector(getCardContents(card.id || ''))
+    const comments = useAppSelector(getCardComments(card.id))
 
     const titleRef = useRef<{focus(selectAll?: boolean): void}>(null)
-    const [title, setTitle] = useState(props.card.title)
-    const {card} = props
-    const isManualSort = activeView.sortOptions.length === 0
-    const isGrouped = Boolean(activeView.groupById)
+    const [title, setTitle] = useState(props.card.title || '')
+    const isManualSort = activeView.fields.sortOptions.length === 0
+    const isGrouped = Boolean(activeView.fields.groupById)
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly && (isManualSort || isGrouped), props.onDrop)
 
     useEffect(() => {
@@ -50,9 +53,9 @@ const TableRow = React.memo((props: Props) => {
 
     const columnWidth = (templateId: string): number => {
         if (props.resizingColumn === templateId) {
-            return Math.max(Constants.minColumnWidth, (props.boardTree.activeView.columnWidths[templateId] || 0) + props.offset)
+            return Math.max(Constants.minColumnWidth, (props.activeView.fields.columnWidths[templateId] || 0) + props.offset)
         }
-        return Math.max(Constants.minColumnWidth, props.boardTree.activeView.columnWidths[templateId] || 0)
+        return Math.max(Constants.minColumnWidth, props.activeView.fields.columnWidths[templateId] || 0)
     }
 
     let className = props.isSelected ? 'TableRow octo-table-row selected' : 'TableRow octo-table-row'
@@ -60,9 +63,9 @@ const TableRow = React.memo((props: Props) => {
         className += ' dragover'
     }
     if (isGrouped) {
-        const groupID = activeView.groupById || ''
-        const groupValue = card.properties[groupID] as string || 'undefined'
-        if (activeView.collapsedOptionIds.indexOf(groupValue) > -1) {
+        const groupID = activeView.fields.groupById || ''
+        const groupValue = card.fields.properties[groupID] as string || 'undefined'
+        if (activeView.fields.collapsedOptionIds.indexOf(groupValue) > -1) {
             className += ' hidden'
         }
     }
@@ -87,7 +90,7 @@ const TableRow = React.memo((props: Props) => {
                 ref={columnRefs.get(Constants.titleColumnId)}
             >
                 <div className='octo-icontitle'>
-                    <div className='octo-icon'>{card.icon}</div>
+                    <div className='octo-icon'>{card.fields.icon}</div>
                     <Editable
                         ref={titleRef}
                         value={title}
@@ -99,14 +102,14 @@ const TableRow = React.memo((props: Props) => {
                                 onSaveWithEnter()
                             }
                         }}
-                        onCancel={() => setTitle(card.title)}
+                        onCancel={() => setTitle(card.title || '')}
                         readonly={props.readonly}
                         spellCheck={true}
                     />
                 </div>
 
                 <div className='open-button'>
-                    <Button onClick={() => props.showCard(props.card.id)}>
+                    <Button onClick={() => props.showCard(props.card.id || '')}>
                         <FormattedMessage
                             id='TableRow.open'
                             defaultMessage='Open'
@@ -117,9 +120,9 @@ const TableRow = React.memo((props: Props) => {
 
             {/* Columns, one per property */}
 
-            {board.cardProperties.
-                filter((template) => activeView.visiblePropertyIds.includes(template.id)).
-                map((template) => {
+            {board.fields.cardProperties.
+                filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id)).
+                map((template: IPropertyTemplate) => {
                     if (!columnRefs.get(template.id)) {
                         columnRefs.set(template.id, React.createRef())
                     }
@@ -133,8 +136,9 @@ const TableRow = React.memo((props: Props) => {
                             <PropertyValueElement
                                 readOnly={props.readonly}
                                 card={card}
-                                cardTree={props.cardTree}
-                                boardTree={boardTree}
+                                board={board}
+                                contents={contents}
+                                comments={comments}
                                 propertyTemplate={template}
                                 emptyDisplayValue=''
                             />

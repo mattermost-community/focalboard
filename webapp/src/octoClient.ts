@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IBlock, IMutableBlock} from './blocks/block'
+import {Block} from './blocks/block'
 import {ISharing} from './blocks/sharing'
 import {IWorkspace} from './blocks/workspace'
 import {IUser} from './user'
@@ -120,7 +120,7 @@ class OctoClient {
         return user
     }
 
-    async getSubtree(rootId?: string, levels = 2): Promise<IBlock[]> {
+    async getSubtree(rootId?: string, levels = 2): Promise<Block[]> {
         let path = this.workspacePath() + `/blocks/${encodeURIComponent(rootId || '')}/subtree?l=${levels}`
         const readToken = this.readToken()
         if (readToken) {
@@ -130,24 +130,24 @@ class OctoClient {
         if (response.status !== 200) {
             return []
         }
-        const blocks = (await this.getJson(response, [])) as IMutableBlock[]
+        const blocks = (await this.getJson(response, [])) as Block[]
         this.fixBlocks(blocks)
         return blocks
     }
 
     // If no boardID is provided, it will export the entire archive
-    async exportArchive(boardID = ''): Promise<IBlock[]> {
+    async exportArchive(boardID = ''): Promise<Block[]> {
         const path = `${this.workspacePath()}/blocks/export?root_id=${boardID}`
         const response = await fetch(this.serverUrl + path, {headers: this.headers()})
         if (response.status !== 200) {
             return []
         }
-        const blocks = (await this.getJson(response, [])) as IMutableBlock[]
+        const blocks = (await this.getJson(response, [])) as Block[]
         this.fixBlocks(blocks)
         return blocks
     }
 
-    async importFullArchive(blocks: readonly IBlock[]): Promise<Response> {
+    async importFullArchive(blocks: readonly Block[]): Promise<Response> {
         Utils.log(`importFullArchive: ${blocks.length} blocks(s)`)
 
         // blocks.forEach((block) => {
@@ -161,7 +161,7 @@ class OctoClient {
         })
     }
 
-    async getBlocksWithParent(parentId: string, type?: string): Promise<IBlock[]> {
+    async getBlocksWithParent(parentId: string, type?: string): Promise<Block[]> {
         let path: string
         if (type) {
             path = this.workspacePath() + `/blocks?parent_id=${encodeURIComponent(parentId)}&type=${encodeURIComponent(type)}`
@@ -171,23 +171,28 @@ class OctoClient {
         return this.getBlocksWithPath(path)
     }
 
-    async getBlocksWithType(type: string): Promise<IBlock[]> {
+    async getBlocksWithType(type: string): Promise<Block[]> {
         const path = this.workspacePath() + `/blocks?type=${encodeURIComponent(type)}`
         return this.getBlocksWithPath(path)
     }
 
-    private async getBlocksWithPath(path: string): Promise<IBlock[]> {
+    async getAllBlocks(): Promise<Block[]> {
+        const path = this.workspacePath() + '/blocks?all=true'
+        return this.getBlocksWithPath(path)
+    }
+
+    private async getBlocksWithPath(path: string): Promise<Block[]> {
         const response = await fetch(this.serverUrl + path, {headers: this.headers()})
         if (response.status !== 200) {
             return []
         }
-        const blocks = (await this.getJson(response, [])) as IMutableBlock[]
+        const blocks = (await this.getJson(response, [])) as Block[]
         this.fixBlocks(blocks)
         return blocks
     }
 
     // TODO: Remove this fixup code
-    fixBlocks(blocks: IMutableBlock[]): void {
+    fixBlocks(blocks: Block[]): void {
         if (!blocks) {
             return
         }
@@ -213,16 +218,11 @@ class OctoClient {
         }
     }
 
-    async updateBlock(block: IMutableBlock): Promise<Response> {
-        block.updateAt = Date.now()
+    async updateBlock(block: Block): Promise<Response> {
         return this.insertBlocks([block])
     }
 
-    async updateBlocks(blocks: IMutableBlock[]): Promise<Response> {
-        const now = Date.now()
-        blocks.forEach((block) => {
-            block.updateAt = now
-        })
+    async updateBlocks(blocks: Block[]): Promise<Response> {
         return this.insertBlocks(blocks)
     }
 
@@ -234,11 +234,11 @@ class OctoClient {
         })
     }
 
-    async insertBlock(block: IBlock): Promise<Response> {
+    async insertBlock(block: Block): Promise<Response> {
         return this.insertBlocks([block])
     }
 
-    async insertBlocks(blocks: IBlock[]): Promise<Response> {
+    async insertBlocks(blocks: Block[]): Promise<Response> {
         Utils.log(`insertBlocks: ${blocks.length} blocks(s)`)
         blocks.forEach((block) => {
             Utils.log(`\t ${block.type}, ${block.id}, ${block.title?.substr(0, 50) || ''}`)

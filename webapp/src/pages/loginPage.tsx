@@ -4,6 +4,9 @@ import React, {useState} from 'react'
 import {useHistory, Link} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
+import {useAppDispatch} from '../store/hooks'
+import {fetchMe} from '../store/users'
+
 import Button from '../widgets/buttons/button'
 import client from '../octoClient'
 import './loginPage.scss'
@@ -13,10 +16,12 @@ const LoginPage = React.memo(() => {
     const [password, setPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const history = useHistory()
+    const dispatch = useAppDispatch()
 
     const handleLogin = async (): Promise<void> => {
         const logged = await client.login(username, password)
         if (logged) {
+            await dispatch(fetchMe())
             history.push('/')
         } else {
             setErrorMessage('Login failed')

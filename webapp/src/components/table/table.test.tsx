@@ -15,7 +15,7 @@ import {HTML5Backend} from 'react-dnd-html5-backend'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import {FetchMock} from '../../test/fetchMock'
-import {MutableBoardTree} from '../../viewModel/boardTree'
+import {BoardView} from '../../blocks/boardView'
 
 import {IUser} from '../../user'
 
@@ -40,70 +40,90 @@ const wrapProviders = (children: any) => {
 describe('components/table/Table', () => {
     const board = TestBlockFactory.createBoard()
     const view = TestBlockFactory.createBoardView(board)
-    view.viewType = 'table'
-    view.groupById = undefined
-    view.visiblePropertyIds = ['property1', 'property2']
+    view.fields.viewType = 'table'
+    view.fields.groupById = undefined
+    view.fields.visiblePropertyIds = ['property1', 'property2']
 
     const view2 = TestBlockFactory.createBoardView(board)
-    view2.sortOptions = []
+    view2.fields.sortOptions = []
 
     const card = TestBlockFactory.createCard(board)
     const cardTemplate = TestBlockFactory.createCard(board)
-    cardTemplate.isTemplate = true
+    cardTemplate.fields.isTemplate = true
+
+    const state = {
+        users: {
+            workspaceUsers: {
+                'user-id-1': {username: 'username_1'} as IUser,
+                'user-id-2': {username: 'username_2'} as IUser,
+                'user-id-3': {username: 'username_3'} as IUser,
+                'user-id-4': {username: 'username_4'} as IUser,
+            },
+        },
+        comments: {
+            comments: {},
+        },
+        contents: {
+            contents: {},
+        },
+        cards: {
+            cards: {
+                [card.id]: card,
+            },
+        },
+    }
 
     test('should match snapshot', async () => {
-        // Sync
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).not.toBeUndefined()
-        if (!boardTree) {
-            fail('sync')
-        }
-
-        expect(FetchMock.fn).toBeCalledTimes(1)
-        expect(boardTree.cards).toBeDefined()
-        expect(boardTree.cards).toEqual([card])
-
         const callback = jest.fn()
         const addCard = jest.fn()
 
+        const mockStore = configureStore([])
+        const store = mockStore(state)
+
         const component = wrapProviders(
-            <Table
-                boardTree={boardTree!}
-                selectedCardIds={[]}
-                readonly={false}
-                cardIdToFocusOnRender=''
-                showCard={callback}
-                addCard={addCard}
-                onCardClicked={jest.fn()}
-            />,
+            <ReduxProvider store={store}>
+                <Table
+                    board={board}
+                    activeView={view}
+                    visibleGroups={[]}
+                    cards={[card]}
+                    views={[view, view2]}
+                    selectedCardIds={[]}
+                    readonly={false}
+                    cardIdToFocusOnRender=''
+                    showCard={callback}
+                    addCard={addCard}
+                    onCardClicked={jest.fn()}
+                />
+            </ReduxProvider>,
         )
         const {container} = render(component)
         expect(container).toMatchSnapshot()
     })
 
     test('should match snapshot, read-only', async () => {
-        // Sync
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).toBeDefined()
-        expect(FetchMock.fn).toBeCalledTimes(1)
-
         const callback = jest.fn()
         const addCard = jest.fn()
 
+        const mockStore = configureStore([])
+        const store = mockStore(state)
+
         const component = wrapProviders(
-            <Table
-                boardTree={boardTree!}
-                selectedCardIds={[]}
-                readonly={true}
-                cardIdToFocusOnRender=''
-                showCard={callback}
-                addCard={addCard}
-                onCardClicked={jest.fn()}
-            />,
+            <ReduxProvider store={store}>
+                <Table
+                    board={board}
+                    activeView={view}
+                    visibleGroups={[]}
+                    cards={[card]}
+                    views={[view, view2]}
+                    selectedCardIds={[]}
+                    readonly={true}
+                    cardIdToFocusOnRender=''
+                    showCard={callback}
+                    addCard={addCard}
+                    onCardClicked={jest.fn()}
+                />
+            </ReduxProvider>,
         )
 
         const {container} = render(component)
@@ -111,33 +131,34 @@ describe('components/table/Table', () => {
     })
 
     test('should match snapshot with GroupBy', async () => {
-        // Sync
-        view.groupById = 'property1'
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).not.toBeUndefined()
-        if (!boardTree) {
-            fail('sync')
-        }
-
-        expect(FetchMock.fn).toBeCalledTimes(1)
-        expect(boardTree.cards).toBeDefined()
-        expect(boardTree.cards).toEqual([card])
-
         const callback = jest.fn()
         const addCard = jest.fn()
 
+        const mockStore = configureStore([])
+        const store = mockStore(state)
+
         const component = wrapProviders(
-            <Table
-                boardTree={boardTree!}
-                selectedCardIds={[]}
-                readonly={false}
-                cardIdToFocusOnRender=''
-                showCard={callback}
-                addCard={addCard}
-                onCardClicked={jest.fn()}
-            />,
+            <ReduxProvider store={store}>
+                <Table
+                    board={board}
+                    activeView={{...view, fields: {...view.fields, groupById: 'property1'}} as BoardView}
+                    visibleGroups={[{option: {id: '', value: 'test', color: ''}, cards: []}]}
+                    groupByProperty={{
+                        id: '',
+                        name: 'Property 1',
+                        type: 'text',
+                        options: [{id: 'property1', value: 'Property 1', color: ''}],
+                    }}
+                    cards={[card]}
+                    views={[view, view2]}
+                    selectedCardIds={[]}
+                    readonly={false}
+                    cardIdToFocusOnRender=''
+                    showCard={callback}
+                    addCard={addCard}
+                    onCardClicked={jest.fn()}
+                />
+            </ReduxProvider>,
         )
         const {container} = render(component)
         expect(container).toMatchSnapshot()
@@ -145,11 +166,31 @@ describe('components/table/Table', () => {
 })
 
 describe('components/table/Table extended', () => {
+    const state = {
+        users: {
+            workspaceUsers: {
+                'user-id-1': {username: 'username_1'} as IUser,
+                'user-id-2': {username: 'username_2'} as IUser,
+                'user-id-3': {username: 'username_3'} as IUser,
+                'user-id-4': {username: 'username_4'} as IUser,
+            },
+        },
+        comments: {
+            comments: {},
+        },
+        contents: {
+            contents: {},
+        },
+        cards: {
+            cards: {},
+        },
+    }
+
     test('should match snapshot with CreatedBy', async () => {
         const board = TestBlockFactory.createBoard()
 
         const dateCreatedId = Utils.createGuid()
-        board.cardProperties.push({
+        board.fields.cardProperties.push({
             id: dateCreatedId,
             name: 'Date Created',
             type: 'createdTime',
@@ -163,27 +204,20 @@ describe('components/table/Table extended', () => {
         card2.createAt = Date.parse('15 Jun 2021 16:22:00')
 
         const view = TestBlockFactory.createBoardView(board)
-        view.viewType = 'table'
-        view.groupById = undefined
-        view.visiblePropertyIds = ['property1', 'property2', dateCreatedId]
-
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, card1, card2, view])))
-
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).not.toBeUndefined()
-        if (!boardTree) {
-            fail('sync')
-        }
+        view.fields.viewType = 'table'
+        view.fields.groupById = undefined
+        view.fields.visiblePropertyIds = ['property1', 'property2', dateCreatedId]
 
         const callback = jest.fn()
         const addCard = jest.fn()
 
         const mockStore = configureStore([])
         const store = mockStore({
-            currentWorkspaceUsers: {
-                byId: {
-                    'user-id-1': {username: 'username_1'} as IUser,
-                    'user-id-2': {username: 'username_2'} as IUser,
+            ...state,
+            cards: {
+                cards: {
+                    [card1.id]: card1,
+                    [card2.id]: card2,
                 },
             },
         })
@@ -191,7 +225,11 @@ describe('components/table/Table extended', () => {
         const component = wrapProviders(
             <ReduxProvider store={store}>
                 <Table
-                    boardTree={boardTree!}
+                    board={board}
+                    activeView={view}
+                    visibleGroups={[]}
+                    cards={[card1, card2]}
+                    views={[view]}
                     selectedCardIds={[]}
                     readonly={false}
                     cardIdToFocusOnRender=''
@@ -209,7 +247,7 @@ describe('components/table/Table extended', () => {
         const board = TestBlockFactory.createBoard()
 
         const dateUpdatedId = Utils.createGuid()
-        board.cardProperties.push({
+        board.fields.cardProperties.push({
             id: dateUpdatedId,
             name: 'Date Updated',
             type: 'updatedTime',
@@ -232,32 +270,53 @@ describe('components/table/Table extended', () => {
         card2Text.type = 'text'
         card2Text.updateAt = Date.parse('22 Jun 2021 11:23:00')
 
+        card2.fields.contentOrder = [card2Text.id]
+
         const view = TestBlockFactory.createBoardView(board)
-        view.viewType = 'table'
-        view.groupById = undefined
-        view.visiblePropertyIds = ['property1', 'property2', dateUpdatedId]
-
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, card1, card2, view, card2Comment, card2Text])))
-
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).not.toBeUndefined()
-        if (!boardTree) {
-            fail('sync')
-        }
+        view.fields.viewType = 'table'
+        view.fields.groupById = undefined
+        view.fields.visiblePropertyIds = ['property1', 'property2', dateUpdatedId]
 
         const callback = jest.fn()
         const addCard = jest.fn()
 
+        const mockStore = configureStore([])
+        const store = mockStore({
+            ...state,
+            comments: {
+                comments: {
+                    [card2Comment.id]: card2Comment,
+                },
+            },
+            contents: {
+                contents: {
+                    [card2Text.id]: card2Text,
+                },
+            },
+            cards: {
+                cards: {
+                    [card1.id]: card1,
+                    [card2.id]: card2,
+                },
+            },
+        })
+
         const component = wrapProviders(
-            <Table
-                boardTree={boardTree!}
-                selectedCardIds={[]}
-                readonly={false}
-                cardIdToFocusOnRender=''
-                showCard={callback}
-                addCard={addCard}
-                onCardClicked={jest.fn()}
-            />,
+            <ReduxProvider store={store}>
+                <Table
+                    board={board}
+                    activeView={view}
+                    visibleGroups={[]}
+                    cards={[card1, card2]}
+                    views={[view]}
+                    selectedCardIds={[]}
+                    readonly={false}
+                    cardIdToFocusOnRender=''
+                    showCard={callback}
+                    addCard={addCard}
+                    onCardClicked={jest.fn()}
+                />
+            </ReduxProvider>,
         )
         const {container} = render(component)
         expect(container).toMatchSnapshot()
@@ -267,7 +326,7 @@ describe('components/table/Table extended', () => {
         const board = TestBlockFactory.createBoard()
 
         const createdById = Utils.createGuid()
-        board.cardProperties.push({
+        board.fields.cardProperties.push({
             id: createdById,
             name: 'Created By',
             type: 'createdBy',
@@ -281,27 +340,20 @@ describe('components/table/Table extended', () => {
         card2.createdBy = 'user-id-2'
 
         const view = TestBlockFactory.createBoardView(board)
-        view.viewType = 'table'
-        view.groupById = undefined
-        view.visiblePropertyIds = ['property1', 'property2', createdById]
-
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, card1, card2, view])))
-
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).not.toBeUndefined()
-        if (!boardTree) {
-            fail('sync')
-        }
+        view.fields.viewType = 'table'
+        view.fields.groupById = undefined
+        view.fields.visiblePropertyIds = ['property1', 'property2', createdById]
 
         const callback = jest.fn()
         const addCard = jest.fn()
 
         const mockStore = configureStore([])
         const store = mockStore({
-            currentWorkspaceUsers: {
-                byId: {
-                    'user-id-1': {username: 'username_1'} as IUser,
-                    'user-id-2': {username: 'username_2'} as IUser,
+            ...state,
+            cards: {
+                cards: {
+                    [card1.id]: card1,
+                    [card2.id]: card2,
                 },
             },
         })
@@ -309,7 +361,11 @@ describe('components/table/Table extended', () => {
         const component = wrapProviders(
             <ReduxProvider store={store}>
                 <Table
-                    boardTree={boardTree!}
+                    board={board}
+                    activeView={view}
+                    visibleGroups={[]}
+                    cards={[card1, card2]}
+                    views={[view]}
                     selectedCardIds={[]}
                     readonly={false}
                     cardIdToFocusOnRender=''
@@ -328,7 +384,7 @@ describe('components/table/Table extended', () => {
         const board = TestBlockFactory.createBoard()
 
         const modifiedById = Utils.createGuid()
-        board.cardProperties.push({
+        board.fields.cardProperties.push({
             id: modifiedById,
             name: 'Last Modified By',
             type: 'updatedBy',
@@ -345,6 +401,8 @@ describe('components/table/Table extended', () => {
         card1Text.modifiedBy = 'user-id-4'
         card1Text.updateAt = Date.parse('16 Jun 2021 16:22:00')
 
+        card1.fields.contentOrder = [card1Text.id]
+
         const card2 = TestBlockFactory.createCard(board)
         card2.modifiedBy = 'user-id-2'
         card2.updateAt = Date.parse('15 Jun 2021 16:22:00')
@@ -356,27 +414,30 @@ describe('components/table/Table extended', () => {
         card2.updateAt = Date.parse('16 Jun 2021 16:22:00')
 
         const view = TestBlockFactory.createBoardView(board)
-        view.viewType = 'table'
-        view.groupById = undefined
-        view.visiblePropertyIds = ['property1', 'property2', modifiedById]
-
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, card1, card2, view, card2Comment, card1Text])))
-
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).not.toBeUndefined()
-        if (!boardTree) {
-            fail('sync')
-        }
+        view.fields.viewType = 'table'
+        view.fields.groupById = undefined
+        view.fields.visiblePropertyIds = ['property1', 'property2', modifiedById]
 
         const callback = jest.fn()
         const addCard = jest.fn()
 
         const mockStore = configureStore([])
         const store = mockStore({
-            currentWorkspaceUsers: {
-                byId: {
-                    'user-id-3': {username: 'username_3'} as IUser,
-                    'user-id-4': {username: 'username_4'} as IUser,
+            ...state,
+            comments: {
+                comments: {
+                    [card2Comment.id]: card2Comment,
+                },
+            },
+            contents: {
+                contents: {
+                    [card1Text.id]: card1Text,
+                },
+            },
+            cards: {
+                cards: {
+                    [card1.id]: card1,
+                    [card2.id]: card2,
                 },
             },
         })
@@ -384,7 +445,11 @@ describe('components/table/Table extended', () => {
         const component = wrapProviders(
             <ReduxProvider store={store}>
                 <Table
-                    boardTree={boardTree!}
+                    board={board}
+                    activeView={view}
+                    visibleGroups={[]}
+                    cards={[card1, card2]}
+                    views={[view]}
                     selectedCardIds={[]}
                     readonly={false}
                     cardIdToFocusOnRender=''

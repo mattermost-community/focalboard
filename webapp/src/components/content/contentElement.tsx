@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {IContentBlock} from '../../blocks/contentBlock'
+import {ContentBlock} from '../../blocks/contentBlock'
 import {Utils} from '../../utils'
 
 import {contentRegistry} from './contentRegistry'
@@ -14,7 +14,7 @@ import './dividerElement'
 import './checkboxElement'
 
 type Props = {
-    block: IContentBlock
+    block: ContentBlock
     readonly: boolean
 }
 

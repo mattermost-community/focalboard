@@ -4,15 +4,15 @@
 import {IntlShape} from 'react-intl'
 
 import {BlockTypes} from '../../blocks/block'
-import {IContentBlock, MutableContentBlock} from '../../blocks/contentBlock'
+import {ContentBlock} from '../../blocks/contentBlock'
 import {Utils} from '../../utils'
 
 type ContentHandler = {
     type: BlockTypes,
     getDisplayText: (intl: IntlShape) => string,
     getIcon: () => JSX.Element,
-    createBlock: (rootId: string) => Promise<MutableContentBlock>,
-    createComponent: (block: IContentBlock, readonly: boolean) => JSX.Element,
+    createBlock: (rootId: string) => Promise<ContentBlock>,
+    createComponent: (block: ContentBlock, readonly: boolean) => JSX.Element,
 }
 
 class ContentRegistry {
