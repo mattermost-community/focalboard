@@ -16,6 +16,14 @@
         word-break: break-word;
     }
 
+    .CodeMirror-code {
+        line-height: 24px;
+    }
+
+    .CodeMirror-lines {
+        padding: 0;
+    }
+
     .CodeMirror,
     .CodeMirror-scroll {
         flex: 1;
