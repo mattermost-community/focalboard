@@ -104,13 +104,13 @@ describe('components/properties/user', () => {
 
     test('user dropdown open', async () => {
         const store = mockStore(state)
-        const callback = jest.fn()
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <UserProperty
                     value={'user-id-1'}
                     readonly={false}
-                    onChange={callback}
+                    onChange={() => {
+                    }}
                 />
             </ReduxProvider>,
         )

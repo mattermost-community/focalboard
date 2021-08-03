@@ -86,47 +86,58 @@ const Table = (props: Props): JSX.Element => {
         if (!columnRef?.current) {
             return
         }
-        const {fontDescriptor, padding} = Utils.getFontAndPaddingFromCell(columnRef.current)
 
-        cards.forEach((card) => {
-            let displayValue: string | string[] = card.title
-            let thisLen = Utils.getTextWidth(displayValue, fontDescriptor) + padding
-            if (columnID !== Constants.titleColumnId) {
-                const template = visibleProperties.find((t: IPropertyTemplate) => t.id === columnID)
-                if (!template) {
-                    return
-                }
-                displayValue = (OctoUtils.propertyDisplayValue(card, card.fields.properties[columnID], template, intl) || '')
-                if (template.type === 'select') {
-                    displayValue = displayValue.toString().toUpperCase()
-                    thisLen = Utils.getTextWidth(displayValue, fontDescriptor) + padding
-                } else if (template.type === 'multiSelect') {
-                    // For multiselect, the padding calculated above depends on the number selected when calculating the padding.
-                    // Need to calculate it manually here.
-                    // Object hierarchy should be {cell -> property -> [value1, value2, etc]}
-                    let perItemPadding = 0
-                    let childrenCount = 0
-                    if (columnRef.current && columnRef.current.childElementCount > 0) {
-                        const propertyElement = columnRef.current.children.item(0) as Element
-                        if (propertyElement) {
-                            childrenCount = propertyElement.childElementCount
-                            if (childrenCount > 0) {
-                                const statusPadding = Utils.getFontAndPaddingFromChildren(propertyElement.children, 0)
-                                perItemPadding = statusPadding.padding / childrenCount
-                            }
+        let template: IPropertyTemplate | undefined
+        const columnFontPadding = Utils.getFontAndPaddingFromCell(columnRef.current)
+        let perItemPadding = 0
+        if (columnID !== Constants.titleColumnId) {
+            template = visibleProperties.find((t: IPropertyTemplate) => t.id === columnID)
+            if (!template) {
+                return
+            }
+            if (template.type === 'multiSelect') {
+                // For multiselect, the padding calculated above depends on the number selected when calculating the padding.
+                // Need to calculate it manually here.
+                // DOM Object hierarchy should be {cell -> property -> [value1, value2, etc]}
+                let valueCount = 0
+                if (columnRef.current && columnRef.current.childElementCount > 0) {
+                    const propertyElement = columnRef.current.children.item(0) as Element
+                    if (propertyElement) {
+                        valueCount = propertyElement.childElementCount
+                        if (valueCount > 0) {
+                            const statusPadding = Utils.getFontAndPaddingFromChildren(propertyElement.children, 0)
+                            perItemPadding = statusPadding.padding / valueCount
                         }
                     }
+                }
+                columnFontPadding.padding -= (perItemPadding * valueCount)
+            }
+        }
 
-                    thisLen = 0
+        cards.forEach((card) => {
+            let thisLen = 0
+            if (columnID === Constants.titleColumnId) {
+                thisLen = Utils.getTextWidth(card.title, columnFontPadding.fontDescriptor) + columnFontPadding.padding
+            } else if (template) {
+                let displayValue = (OctoUtils.propertyDisplayValue(card, card.fields.properties[columnID], template as IPropertyTemplate, intl) || '')
+                switch (template.type) {
+                case 'select': {
+                    thisLen = Utils.getTextWidth(displayValue.toString().toUpperCase(), columnFontPadding.fontDescriptor) + perItemPadding
+                    break
+                }
+                case 'multiSelect': {
                     displayValue = displayValue as string[]
                     displayValue.forEach((value) => {
-                        thisLen += Utils.getTextWidth(value.toUpperCase(), fontDescriptor) + perItemPadding
+                        thisLen += Utils.getTextWidth(value.toUpperCase(), columnFontPadding.fontDescriptor) + perItemPadding
                     })
-                    thisLen += padding - (perItemPadding * childrenCount)
-                } else {
-                    displayValue = displayValue.toString()
-                    thisLen = Utils.getTextWidth(displayValue, fontDescriptor) + padding
+                    break
                 }
+                default: {
+                    thisLen = Utils.getTextWidth(displayValue.toString().toUpperCase(), columnFontPadding.fontDescriptor) + perItemPadding
+                    break
+                }
+                }
+                thisLen += columnFontPadding.padding
             }
             if (thisLen > longestSize) {
                 longestSize = thisLen

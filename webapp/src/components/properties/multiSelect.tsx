@@ -25,7 +25,7 @@ const MultiSelectProperty = (props: Props): JSX.Element => {
     const {propertyTemplate, emptyValue, propertyValue, isEditable, onChange, onChangeColor, onDeleteOption, onCreate, onDeleteValue} = props
     const [open, setOpen] = useState(false)
 
-    const values = Array.isArray(propertyValue) && propertyValue.length > 0 ? propertyValue.map((v) => propertyTemplate.options.find((o) => o!.id === v)).filter((v): v is IPropertyOption => Boolean(v)) : undefined
+    const values = Array.isArray(propertyValue) && propertyValue.length > 0 ? propertyValue.map((v) => propertyTemplate.options.find((o) => o!.id === v)).filter((v): v is IPropertyOption => Boolean(v)) : []
 
     if (!isEditable || !open) {
         return (
@@ -34,10 +34,7 @@ const MultiSelectProperty = (props: Props): JSX.Element => {
                 tabIndex={0}
                 onClick={() => setOpen(true)}
             >
-                {!values && (
-                    <Label color='empty'>{''}</Label>
-                )}
-                {values && values.map((v) => (
+                {values.map((v) => (
                     <Label
                         key={v.id}
                         color={v ? v.color : 'empty'}
@@ -45,6 +42,10 @@ const MultiSelectProperty = (props: Props): JSX.Element => {
                         {v.value}
                     </Label>
                 ))}
+                {values.length === 0 && (
+                    <Label color='empty'>{''}</Label>
+                )}
+
             </div>
         )
     }
@@ -58,8 +59,8 @@ const MultiSelectProperty = (props: Props): JSX.Element => {
             onChange={onChange}
             onChangeColor={onChangeColor}
             onDeleteOption={onDeleteOption}
-            onDeleteValue={values ? (valueToRemove) => onDeleteValue(valueToRemove, values) : () => {}}
-            onCreate={values ? (newValue) => onCreate(newValue, values) : () => {}}
+            onDeleteValue={(valueToRemove) => onDeleteValue(valueToRemove, values)}
+            onCreate={(newValue) => onCreate(newValue, values)}
         />
     )
 }
