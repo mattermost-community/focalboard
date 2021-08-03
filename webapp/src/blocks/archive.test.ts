@@ -3,10 +3,10 @@
 import {TestBlockFactory} from '../test/testBlockFactory'
 
 import {ArchiveUtils} from './archive'
-import {IBlock} from './block'
+import {Block} from './block'
 
 test('archive: archive and unarchive', async () => {
-    const blocks: IBlock[] = []
+    const blocks: Block[] = []
 
     const board = TestBlockFactory.createBoard()
     blocks.push(board)

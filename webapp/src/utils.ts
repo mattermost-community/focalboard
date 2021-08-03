@@ -86,7 +86,7 @@ class Utils {
                 myResults.padding += element.clientWidth
                 myResults.padding += Utils.getHorizontalBorder(style)
                 myResults.padding += Utils.getHorizontalMargin(style)
-                myResults.fontDescriptor = style.font
+                myResults.fontDescriptor = Utils.getFontString(style)
             } else {
                 switch (element.className) {
                 case IconClass:
@@ -97,7 +97,7 @@ class Utils {
                 case OpenButtonClass:
                     break
                 default: {
-                    myResults.fontDescriptor = style.font
+                    myResults.fontDescriptor = Utils.getFontString(style)
                     myResults.padding += Utils.getTotalHorizontalPadding(style)
                     const childResults = Utils.getFontAndPaddingFromChildren(element.children, myResults.padding)
                     if (childResults.fontDescriptor !== '') {
@@ -111,12 +111,25 @@ class Utils {
         return myResults
     }
 
+    private static getFontString(style: CSSStyleDeclaration): string {
+        if (style.font) {
+            return style.font
+        }
+        const {fontStyle, fontVariant, fontWeight, fontSize, lineHeight, fontFamily} = style
+        const props = [fontStyle, fontVariant, fontWeight]
+        if (fontSize) {
+            props.push(lineHeight ? `${fontSize} / ${lineHeight}` : fontSize)
+        }
+        props.push(fontFamily)
+        return props.join(' ')
+    }
+
     private static getHorizontalMargin(style: CSSStyleDeclaration): number {
         return parseInt(style.marginLeft, 10) + parseInt(style.marginRight, 10)
     }
 
     private static getHorizontalBorder(style: CSSStyleDeclaration): number {
-        return parseInt(style.borderLeft, 10) + parseInt(style.borderRight, 10)
+        return parseInt(style.borderLeftWidth, 10) + parseInt(style.borderRightWidth, 10)
     }
 
     private static getHorizontalPadding(style: CSSStyleDeclaration): number {
