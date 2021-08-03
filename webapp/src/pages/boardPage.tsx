@@ -386,7 +386,7 @@ class BoardPage extends React.Component<Props, State> {
         localStorage.setItem('lastViewId', viewId)
 
         if (this.state.boardTree && this.state.boardId === boardId) {
-            const newBoardTree = await this.state.boardTree.copyWithView(viewId)
+            const newBoardTree = await MutableBoardTree.sync(boardId, viewId)
             this.setState({boardTree: newBoardTree, viewId})
         } else {
             this.attachToBoard(boardId, viewId)
