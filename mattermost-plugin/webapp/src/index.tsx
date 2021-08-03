@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react'
 import {Store, Action} from 'redux'
 import {Provider as ReduxProvider} from 'react-redux'
+import {useHistory} from 'react-router-dom'
 
 import {GlobalState} from 'mattermost-redux/types/store'
 
@@ -107,8 +108,16 @@ export default class Plugin {
             window.open(`${window.location.origin}/boards/workspace/${currentChannel}`)
         }
         this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(focalboardIcon, goToFocalboardWorkspace, '', 'Focalboard Workspace')
+
+        this.registry.registerCustomRoute('go-to-current-workspace', () => {
+            const history = useHistory()
+            const currentChannel = store.getState().entities.channels.currentChannelId
+            history.push(`/boards/workspace/${currentChannel}`)
+            return <></>
+        })
+
         if (this.registry.registerProduct) {
-            this.registry.registerProduct('/boards', GlobalHeaderIcon, 'Boards', '/boards/dashboard', MainApp, HeaderComponent)
+            this.registry.registerProduct('/boards', GlobalHeaderIcon, 'Boards', '/plug/focalboard/go-to-current-workspace', MainApp, HeaderComponent)
         }
     }
 
