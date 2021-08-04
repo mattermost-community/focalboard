@@ -28,6 +28,12 @@ const ViewTitle = React.memo((props: Props) => {
     const onEditTitleSave = useCallback(() => mutator.changeTitle(board, title), [board, title])
     const onEditTitleCancel = useCallback(() => setTitle(board.title), [board])
     const onDescriptionBlur = useCallback((text) => mutator.changeDescription(board, text), [board])
+    const onAddRandomIcon = useCallback(() => {
+        const newIcon = BlockIcons.shared.randomIcon()
+        mutator.changeIcon(board, newIcon)
+    }, [board])
+    const onShowDescription = useCallback(() => mutator.showDescription(board, true), [board])
+    const onHideDescription = useCallback(() => mutator.showDescription(board, false), [board])
 
     const intl = useIntl()
 
@@ -36,10 +42,7 @@ const ViewTitle = React.memo((props: Props) => {
             <div className='add-buttons add-visible'>
                 {!props.readonly && !board.fields.icon &&
                     <Button
-                        onClick={() => {
-                            const newIcon = BlockIcons.shared.randomIcon()
-                            mutator.changeIcon(board, newIcon)
-                        }}
+                        onClick={onAddRandomIcon}
                         icon={<EmojiIcon/>}
                     >
                         <FormattedMessage
@@ -50,9 +53,7 @@ const ViewTitle = React.memo((props: Props) => {
                 }
                 {!props.readonly && board.fields.showDescription &&
                     <Button
-                        onClick={() => {
-                            mutator.showDescription(board, false)
-                        }}
+                        onClick={onHideDescription}
                         icon={<HideIcon/>}
                     >
                         <FormattedMessage
@@ -63,9 +64,7 @@ const ViewTitle = React.memo((props: Props) => {
                 }
                 {!props.readonly && !board.fields.showDescription &&
                     <Button
-                        onClick={() => {
-                            mutator.showDescription(board, true)
-                        }}
+                        onClick={onShowDescription}
                         icon={<ShowIcon/>}
                     >
                         <FormattedMessage
