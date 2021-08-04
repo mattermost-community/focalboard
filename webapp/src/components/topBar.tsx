@@ -5,9 +5,10 @@ import React from 'react'
 
 import './topBar.scss'
 import HelpIcon from '../widgets/icons/help'
+import {Utils} from '../utils'
 
 const TopBar = React.memo((): JSX.Element => {
-    if ((window as any).isFocalboardPlugin === true) {
+    if (Utils.isFocalboardPlugin()) {
         return <></>
     }
     return (

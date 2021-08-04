@@ -11,6 +11,7 @@ import {getSortedBoards} from '../../store/boards'
 import {getSortedViews} from '../../store/views'
 import {getWorkspace} from '../../store/workspace'
 import {useAppSelector} from '../../store/hooks'
+import {Utils} from '../../utils'
 
 import './sidebar.scss'
 
@@ -101,7 +102,7 @@ const Sidebar = React.memo((props: Props) => {
                 activeBoardId={props.activeBoardId}
             />
 
-            {(window as any).isFocalboardPlugin !== true &&
+            {!Utils.isFocalboardPlugin() &&
                 <SidebarSettingsMenu activeTheme={getActiveThemeName()}/>}
         </div>
     )

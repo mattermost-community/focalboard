@@ -1,4 +1,4 @@
-// Copyright (c) 2014-present Mattermost, Inc. All Rights Reserved.
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
 import React, {useState} from 'react'
@@ -13,6 +13,7 @@ import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {getMe} from '../../store/users'
 import {useAppSelector} from '../../store/hooks'
+import {Utils} from '../../utils'
 
 import ModalWrapper from '../modalWrapper'
 
@@ -20,14 +21,12 @@ import RegistrationLink from './registrationLink'
 
 import './sidebarUserMenu.scss'
 
-type Props = {}
-
-const SidebarUserMenu = React.memo((props: Props) => {
+const SidebarUserMenu = React.memo(() => {
     const history = useHistory()
     const [showRegistrationLinkDialog, setShowRegistrationLinkDialog] = useState(false)
-    const showVersionBadge = (window as any).isFocalboardPlugin === true
-    const focalboardTitle = (window as any).isFocalboardPlugin !== true
-    const showAccountActions = (window as any).isFocalboardPlugin !== true
+    const showVersionBadge = Utils.isFocalboardPlugin()
+    const focalboardTitle = !Utils.isFocalboardPlugin()
+    const showAccountActions = !Utils.isFocalboardPlugin()
     const user = useAppSelector<IUser|null>(getMe)
     const intl = useIntl()
     return (
