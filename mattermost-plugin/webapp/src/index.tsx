@@ -31,7 +31,7 @@ import './plugin.scss'
 
 const GlobalHeaderIcon = () => {
     return (
-        <span style={{height: 24, width: 24, display: 'inline-block'}}>
+        <span className='FocalboardGlobalHeaderIcon'>
             <FocalboardIcon/>
         </span>
     )
