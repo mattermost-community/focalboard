@@ -19,12 +19,12 @@ type SubMenuOptionProps = {
 function SubMenuOption(props: SubMenuOptionProps): JSX.Element {
     const [isOpen, setIsOpen] = useState(false)
 
-    const openLeftClass = props.position === 'left' || props.position === 'left-bottom' ? 'open-left' : ''
+    const openLeftClass = props.position === 'left' || props.position === 'left-bottom' ? ' open-left' : ''
 
     return (
         <div
             id={props.id}
-            className={`MenuOption SubMenuOption menu-option ${openLeftClass}`}
+            className={`MenuOption SubMenuOption menu-option${openLeftClass}`}
             onMouseEnter={() => {
                 setTimeout(() => {
                     setIsOpen(true)
