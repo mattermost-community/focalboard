@@ -112,6 +112,8 @@ func TestGetMe(t *testing.T) {
 		me, resp := th.Client.GetMe()
 		require.NoError(t, resp.Error)
 		require.NotNil(t, me)
+		require.Equal(t, registerRequest.Email, me.Email)
+		require.Equal(t, registerRequest.Username, me.Username)
 	})
 }
 
