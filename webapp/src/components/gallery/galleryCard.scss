@@ -1,6 +1,6 @@
 .focalboard-body .GalleryCard {
     position: relative;
-    border: 1px solid rgba(var(--body-color), 0.09);
+    border: 1px solid rgba(var(--center-channel-color-rgb), 0.09);
     border-radius: var(--default-rad);
     width: 280px;
     display: flex;
@@ -14,14 +14,14 @@
     }
 
     &:hover {
-        background-color: rgba(var(--body-color), 0.05);
+        background-color: rgba(var(--center-channel-color-rgb), 0.05);
         .optionsMenu {
             display: block;
         }
     }
 
     .optionsMenu {
-        background-color: rgb(var(--main-bg));
+        background-color: rgb(var(--center-channel-bg-rgb));
         border-radius: var(--default-rad);
         display: none;
         position: absolute;
@@ -29,12 +29,12 @@
         top: 10px;
         z-index: 30;
         .IconButton {
-            background-color: rgba(var(--body-color), 0.13);
+            background-color: rgba(var(--center-channel-color-rgb), 0.13);
         }
     }
 
     .gallery-item {
-        background-color: rgba(var(--body-color), 0.03);
+        background-color: rgba(var(--center-channel-color-rgb), 0.03);
 
         flex-grow: 1;
         overflow: hidden;
@@ -65,7 +65,7 @@
 
     .gallery-title {
         flex-grow: 0;
-        border-top: 1px solid rgba(var(--body-color), 0.09);
+        border-top: 1px solid rgba(var(--center-channel-color-rgb), 0.09);
         margin: 0;
         padding: 5px 10px;
         display: flex;

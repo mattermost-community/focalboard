@@ -9,11 +9,12 @@ import {GlobalState} from 'mattermost-redux/types/store'
 const windowAny = (window as any)
 windowAny.baseURL = '/plugins/focalboard'
 windowAny.frontendBaseURL = '/plug/focalboard'
+windowAny.isFocalboardPlugin = true
 
 import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
 
-import '../../../webapp/src/styles/variables.scss'
+import '../../../webapp/src/styles/shared-variables.scss'
 import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
 

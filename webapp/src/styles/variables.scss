@@ -1,14 +1,8 @@
+@import "./shared-variables";
 :root {
-    --body-color: 38, 38, 38;
-    --main-bg: 255, 255, 255;
-    --button-bg: 80, 170, 221;
-    --button-fg: 255, 255, 255;
-    --sidebar-bg: 20, 93, 191;
-    --sidebar-fg: 55, 53, 47;
-    --button-bg: 22, 109, 204;
-    --link-color: 35, 137, 215;
-    --link-visited-color: #551a8b;
-    --error-color: #ffa9a9;
+    --center-channel-color-rgb: var(--center-channel-color-rgb);
+    --link-visited-color-rgb: #551a8b;
+    --error-text-rgb: #ffa9a9;
 
     // Label Colors
     --prop-default: #fff;

@@ -7,12 +7,12 @@
     width: 26px;
     border-radius: 44px;
     padding: 2px;
-    background-color: rgba(var(--body-color), 0.24);
+    background-color: rgba(var(--center-channel-color-rgb), 0.24);
     transition: background 200ms ease 0s, box-shadow 200ms ease 0s;
     cursor: pointer;
 
     &.on {
-        background-color: rgb(var(--button-bg));
+        background-color: rgb(var(--button-bg-rgb));
         .octo-switch-inner {
             transform: translateX(12px) translateY(0px);
         }

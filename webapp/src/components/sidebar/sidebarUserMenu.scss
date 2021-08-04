@@ -20,14 +20,14 @@
             font-size: 11px;
             line-height: 11px;
             font-weight: 500;
-            color: rgba(var(--sidebar-fg), 0.8);
+            color: rgba(var(--sidebar-text-rgb), 0.8);
         }
 
         .versionBadge {
             font-size: 10px;
             line-height: 11px;
             font-weight: 500;
-            color: rgba(var(--sidebar-fg), 0.8);
+            color: rgba(var(--sidebar-text-rgb), 0.8);
         }
     }
 }
