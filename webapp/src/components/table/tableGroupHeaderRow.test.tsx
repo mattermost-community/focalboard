@@ -16,16 +16,8 @@ import {act} from 'react-dom/test-utils'
 import userEvent from '@testing-library/user-event'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
-import {FetchMock} from '../../test/fetchMock'
-import {MutableBoardTree} from '../../viewModel/boardTree'
 
 import TableGroupHeaderRowElement from './tableGroupHeaderRow'
-
-global.fetch = FetchMock.fn
-
-beforeEach(() => {
-    FetchMock.fn.mockReset()
-})
 
 const wrapProviders = (children: any) => {
     return (
@@ -39,11 +31,7 @@ const board = TestBlockFactory.createBoard()
 const view = TestBlockFactory.createBoardView(board)
 
 const view2 = TestBlockFactory.createBoardView(board)
-view2.sortOptions = []
-
-const card = TestBlockFactory.createCard(board)
-const cardTemplate = TestBlockFactory.createCard(board)
-cardTemplate.isTemplate = true
+view2.fields.sortOptions = []
 
 const boardTreeNoGroup = {
     option: {
@@ -64,21 +52,22 @@ const boardTreeGroup = {
 }
 
 test('should match snapshot, no groups', async () => {
-    // Sync
-    FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-    const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-    expect(boardTree).toBeDefined()
-    expect(FetchMock.fn).toBeCalledTimes(1)
-
     const component = wrapProviders(
         <TableGroupHeaderRowElement
-            boardTree={boardTree!}
+            board={board}
+            activeView={view}
             group={boardTreeNoGroup}
             readonly={false}
             hideGroup={jest.fn()}
             addCard={jest.fn()}
             propertyNameChanged={jest.fn()}
             onDrop={jest.fn()}
+            groupByProperty={{
+                id: '',
+                name: 'Property 1',
+                type: 'text',
+                options: [{id: 'property1', value: 'Property 1', color: ''}],
+            }}
         />,
     )
     const {container} = render(component)
@@ -86,16 +75,10 @@ test('should match snapshot, no groups', async () => {
 })
 
 test('should match snapshot with Group', async () => {
-    // Sync
-    FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-
-    const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-    expect(boardTree).toBeDefined()
-    expect(FetchMock.fn).toBeCalledTimes(1)
-
     const component = wrapProviders(
         <TableGroupHeaderRowElement
-            boardTree={boardTree!}
+            board={board}
+            activeView={view}
             group={boardTreeGroup}
             readonly={false}
             hideGroup={jest.fn()}
@@ -109,16 +92,10 @@ test('should match snapshot with Group', async () => {
 })
 
 test('should match snapshot on read only', async () => {
-    // Sync
-    FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-
-    const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-    expect(boardTree).toBeDefined()
-    expect(FetchMock.fn).toBeCalledTimes(1)
-
     const component = wrapProviders(
         <TableGroupHeaderRowElement
-            boardTree={boardTree!}
+            board={board}
+            activeView={view}
             group={boardTreeGroup}
             readonly={true}
             hideGroup={jest.fn()}
@@ -132,19 +109,15 @@ test('should match snapshot on read only', async () => {
 })
 
 test('should match snapshot, hide group', async () => {
-    // Sync
-    FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-
     const hideGroup = jest.fn()
 
-    view.collapsedOptionIds = [boardTreeGroup.option.id]
-    const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-    expect(boardTree).toBeDefined()
-    expect(FetchMock.fn).toBeCalledTimes(1)
+    const collapsedOptionsView = TestBlockFactory.createBoardView(board)
+    collapsedOptionsView.fields.collapsedOptionIds = [boardTreeGroup.option.id]
 
     const component = wrapProviders(
         <TableGroupHeaderRowElement
-            boardTree={boardTree!}
+            board={board}
+            activeView={collapsedOptionsView}
             group={boardTreeGroup}
             readonly={false}
             hideGroup={hideGroup}
@@ -166,18 +139,12 @@ test('should match snapshot, hide group', async () => {
 })
 
 test('should match snapshot, add new', async () => {
-    // Sync
-    FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-
     const addNew = jest.fn()
-
-    const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-    expect(boardTree).toBeDefined()
-    expect(FetchMock.fn).toBeCalledTimes(1)
 
     const component = wrapProviders(
         <TableGroupHeaderRowElement
-            boardTree={boardTree!}
+            board={board}
+            activeView={view}
             group={boardTreeGroup}
             readonly={false}
             hideGroup={jest.fn()}
@@ -200,16 +167,10 @@ test('should match snapshot, add new', async () => {
 })
 
 test('should match snapshot, edit title', async () => {
-    // Sync
-    FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-
-    const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-    expect(boardTree).toBeDefined()
-    expect(FetchMock.fn).toBeCalledTimes(1)
-
     const component = wrapProviders(
         <TableGroupHeaderRowElement
-            boardTree={boardTree!}
+            board={board}
+            activeView={view}
             group={boardTreeGroup}
             readonly={false}
             hideGroup={jest.fn()}

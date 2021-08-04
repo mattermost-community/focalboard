@@ -43,9 +43,7 @@ const Calculation = (props: Props): JSX.Element => {
         >
             {
                 props.menuOpen && (
-                    <div
-                        style={props.style}
-                    >
+                    <div >
                         <CalculationOptions
                             value={value}
                             menuOpen={props.menuOpen}

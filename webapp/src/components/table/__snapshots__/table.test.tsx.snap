@@ -174,7 +174,19 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
             <span
               class="Label propColorBrown "
             >
-              value 1
+              <span
+                class="Label-text"
+              >
+                value 1
+              </span>
+              <div
+                class="Button IconButton margin-left delete-value"
+                title="Clear"
+              >
+                <i
+                  class="CompassIcon icon-close CloseIcon"
+                />
+              </div>
             </span>
           </div>
         </div>
@@ -188,7 +200,11 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           >
             <span
               class="Label empty "
-            />
+            >
+              <span
+                class="Label-text"
+              />
+            </span>
           </div>
         </div>
         <div
@@ -252,7 +268,19 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
             <span
               class="Label propColorBrown "
             >
-              value 1
+              <span
+                class="Label-text"
+              >
+                value 1
+              </span>
+              <div
+                class="Button IconButton margin-left delete-value"
+                title="Clear"
+              >
+                <i
+                  class="CompassIcon icon-close CloseIcon"
+                />
+              </div>
             </span>
           </div>
         </div>
@@ -266,7 +294,11 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           >
             <span
               class="Label empty "
-            />
+            >
+              <span
+                class="Label-text"
+              />
+            </span>
           </div>
         </div>
         <div
@@ -528,7 +560,19 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
             <span
               class="Label propColorBrown "
             >
-              value 1
+              <span
+                class="Label-text"
+              >
+                value 1
+              </span>
+              <div
+                class="Button IconButton margin-left delete-value"
+                title="Clear"
+              >
+                <i
+                  class="CompassIcon icon-close CloseIcon"
+                />
+              </div>
             </span>
           </div>
         </div>
@@ -542,7 +586,11 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           >
             <span
               class="Label empty "
-            />
+            >
+              <span
+                class="Label-text"
+              />
+            </span>
           </div>
         </div>
         <div
@@ -606,7 +654,19 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
             <span
               class="Label propColorBrown "
             >
-              value 1
+              <span
+                class="Label-text"
+              >
+                value 1
+              </span>
+              <div
+                class="Button IconButton margin-left delete-value"
+                title="Clear"
+              >
+                <i
+                  class="CompassIcon icon-close CloseIcon"
+                />
+              </div>
             </span>
           </div>
         </div>
@@ -620,7 +680,11 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           >
             <span
               class="Label empty "
-            />
+            >
+              <span
+                class="Label-text"
+              />
+            </span>
           </div>
         </div>
         <div
@@ -882,7 +946,19 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
             <span
               class="Label propColorBrown "
             >
-              value 1
+              <span
+                class="Label-text"
+              >
+                value 1
+              </span>
+              <div
+                class="Button IconButton margin-left delete-value"
+                title="Clear"
+              >
+                <i
+                  class="CompassIcon icon-close CloseIcon"
+                />
+              </div>
             </span>
           </div>
         </div>
@@ -896,7 +972,11 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           >
             <span
               class="Label empty "
-            />
+            >
+              <span
+                class="Label-text"
+              />
+            </span>
           </div>
         </div>
         <div
@@ -960,7 +1040,19 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
             <span
               class="Label propColorBrown "
             >
-              value 1
+              <span
+                class="Label-text"
+              >
+                value 1
+              </span>
+              <div
+                class="Button IconButton margin-left delete-value"
+                title="Clear"
+              >
+                <i
+                  class="CompassIcon icon-close CloseIcon"
+                />
+              </div>
             </span>
           </div>
         </div>
@@ -974,7 +1066,11 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           >
             <span
               class="Label empty "
-            />
+            >
+              <span
+                class="Label-text"
+              />
+            </span>
           </div>
         </div>
         <div
@@ -984,7 +1080,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           <div
             class="LastModifiedAt octo-propertyvalue"
           >
-            June 20, 12:22 PM
+            June 22, 11:23 AM
           </div>
         </div>
       </div>
@@ -1236,7 +1332,19 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
             <span
               class="Label propColorBrown "
             >
-              value 1
+              <span
+                class="Label-text"
+              >
+                value 1
+              </span>
+              <div
+                class="Button IconButton margin-left delete-value"
+                title="Clear"
+              >
+                <i
+                  class="CompassIcon icon-close CloseIcon"
+                />
+              </div>
             </span>
           </div>
         </div>
@@ -1250,7 +1358,11 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           >
             <span
               class="Label empty "
-            />
+            >
+              <span
+                class="Label-text"
+              />
+            </span>
           </div>
         </div>
         <div
@@ -1314,7 +1426,19 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
             <span
               class="Label propColorBrown "
             >
-              value 1
+              <span
+                class="Label-text"
+              >
+                value 1
+              </span>
+              <div
+                class="Button IconButton margin-left delete-value"
+                title="Clear"
+              >
+                <i
+                  class="CompassIcon icon-close CloseIcon"
+                />
+              </div>
             </span>
           </div>
         </div>
@@ -1328,7 +1452,11 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           >
             <span
               class="Label empty "
-            />
+            >
+              <span
+                class="Label-text"
+              />
+            </span>
           </div>
         </div>
         <div
@@ -1568,7 +1696,19 @@ exports[`components/table/Table should match snapshot 1`] = `
             <span
               class="Label propColorBrown "
             >
-              value 1
+              <span
+                class="Label-text"
+              >
+                value 1
+              </span>
+              <div
+                class="Button IconButton margin-left delete-value"
+                title="Clear"
+              >
+                <i
+                  class="CompassIcon icon-close CloseIcon"
+                />
+              </div>
             </span>
           </div>
         </div>
@@ -1582,7 +1722,11 @@ exports[`components/table/Table should match snapshot 1`] = `
           >
             <span
               class="Label empty "
-            />
+            >
+              <span
+                class="Label-text"
+              />
+            </span>
           </div>
         </div>
       </div>
@@ -2004,7 +2148,11 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
             <span
               class="Label propColorBrown "
             >
-              value 1
+              <span
+                class="Label-text"
+              >
+                value 1
+              </span>
             </span>
           </div>
         </div>
@@ -2018,7 +2166,11 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
           >
             <span
               class="Label empty "
-            />
+            >
+              <span
+                class="Label-text"
+              />
+            </span>
           </div>
         </div>
       </div>

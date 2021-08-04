@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React, {useState, useCallback} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
 import {BlockIcons} from '../blockIcons'
@@ -22,15 +22,19 @@ type Props = {
 }
 
 const ViewTitle = React.memo((props: Props) => {
-    const [title, setTitle] = useState(props.board.title)
-
     const {board} = props
+
+    const [title, setTitle] = useState(board.title)
+    const onEditTitleSave = useCallback(() => mutator.changeTitle(board, title), [board, title])
+    const onEditTitleCancel = useCallback(() => setTitle(board.title), [board])
+    const onDescriptionBlur = useCallback((text) => mutator.changeDescription(board, text), [board])
+
     const intl = useIntl()
 
     return (
         <div className='ViewTitle'>
             <div className='add-buttons add-visible'>
-                {!props.readonly && !board.icon &&
+                {!props.readonly && !board.fields.icon &&
                     <Button
                         onClick={() => {
                             const newIcon = BlockIcons.shared.randomIcon()
@@ -44,7 +48,7 @@ const ViewTitle = React.memo((props: Props) => {
                         />
                     </Button>
                 }
-                {!props.readonly && board.showDescription &&
+                {!props.readonly && board.fields.showDescription &&
                     <Button
                         onClick={() => {
                             mutator.showDescription(board, false)
@@ -57,7 +61,7 @@ const ViewTitle = React.memo((props: Props) => {
                         />
                     </Button>
                 }
-                {!props.readonly && !board.showDescription &&
+                {!props.readonly && !board.fields.showDescription &&
                     <Button
                         onClick={() => {
                             mutator.showDescription(board, true)
@@ -80,21 +84,19 @@ const ViewTitle = React.memo((props: Props) => {
                     placeholderText={intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled board'})}
                     onChange={(newTitle) => setTitle(newTitle)}
                     saveOnEsc={true}
-                    onSave={() => mutator.changeTitle(board, title)}
-                    onCancel={() => setTitle(props.board.title)}
+                    onSave={onEditTitleSave}
+                    onCancel={onEditTitleCancel}
                     readonly={props.readonly}
                     spellCheck={true}
                 />
             </div>
 
-            {board.showDescription &&
+            {board.fields.showDescription &&
                 <div className='description'>
                     <MarkdownEditor
-                        text={board.description}
+                        text={board.fields.description}
                         placeholderText='Add a description...'
-                        onBlur={(text) => {
-                            mutator.changeDescription(board, text)
-                        }}
+                        onBlur={onDescriptionBlur}
                         readonly={props.readonly}
                     />
                 </div>

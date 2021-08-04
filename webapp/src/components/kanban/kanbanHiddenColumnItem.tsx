@@ -6,25 +6,25 @@ import {IntlShape} from 'react-intl'
 import {useDrop} from 'react-dnd'
 
 import mutator from '../../mutator'
-import {BoardTree, BoardTreeGroup} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import ShowIcon from '../../widgets/icons/show'
 import Label from '../../widgets/label'
 import {Card} from '../../blocks/card'
+import {BoardGroup} from '../../blocks/board'
+import {BoardView} from '../../blocks/boardView'
 
 type Props = {
-    boardTree: BoardTree
-    group: BoardTreeGroup
+    activeView: BoardView
+    group: BoardGroup
     intl: IntlShape
     readonly: boolean
     onDrop: (card: Card) => void
 }
 
 export default function KanbanHiddenColumnItem(props: Props): JSX.Element {
-    const {boardTree, intl, group} = props
-    const {activeView} = boardTree
+    const {activeView, intl, group} = props
     const [{isOver}, drop] = useDrop(() => ({
         accept: 'card',
         collect: (monitor) => ({

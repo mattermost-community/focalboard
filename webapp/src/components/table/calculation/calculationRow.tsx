@@ -2,18 +2,21 @@
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
 
-import {BoardTree} from '../../../viewModel/boardTree'
 import {Constants} from '../../../constants'
 
 import './calculationRow.scss'
-import {IPropertyTemplate} from '../../../blocks/board'
-import {columnWidth} from '../tableRow'
-import {MutableBoardView} from '../../../blocks/boardView'
+import {Board, createBoard, IPropertyTemplate} from '../../../blocks/board'
+
 import mutator from '../../../mutator'
 import Calculation from '../../calculations/calculation'
+import {columnWidth} from '../tableRow'
+import {BoardView} from '../../../blocks/boardView'
+import {Card} from '../../../blocks/card'
 
 type Props = {
-    boardTree: BoardTree
+    board: Board
+    cards: Card[]
+    activeView: BoardView
     resizingColumn: string
     offset: number
 }
@@ -25,7 +28,6 @@ const CalculationRow = (props: Props): JSX.Element => {
         setShowOptions(newShowOptions)
     }
 
-    const {board, activeView} = props.boardTree
     const [showOptions, setShowOptions] = useState<Map<string, boolean>>(new Map<string, boolean>())
     const titleTemplate: IPropertyTemplate = {
         id: Constants.titleColumnId,
@@ -33,16 +35,17 @@ const CalculationRow = (props: Props): JSX.Element => {
 
     const templates: IPropertyTemplate[] = [
         titleTemplate,
-        ...board.cardProperties.filter((template) => activeView.visiblePropertyIds.includes(template.id)),
+        ...props.board.fields.cardProperties.filter((template) => props.activeView.fields.visiblePropertyIds.includes(template.id)),
     ]
-    const selectedCalculations = activeView.columnCalculations
+
+    const selectedCalculations = props.board.fields.columnCalculations || []
 
     return (
         <div className='CalculationRow octo-table-row'>
             {
                 templates.map((template) => {
-                    const style = {width: columnWidth(template.id, props.resizingColumn, props.boardTree, props.offset)}
-                    const value = selectedCalculations[template.id]
+                    const style = {width: columnWidth(props.resizingColumn, props.activeView.fields.columnWidths, props.offset, template.id)}
+                    const value = selectedCalculations[template.id] || 'none'
 
                     return (
                         <Calculation
@@ -56,11 +59,11 @@ const CalculationRow = (props: Props): JSX.Element => {
                             onChange={(v: string) => {
                                 const calculations = {...selectedCalculations}
                                 calculations[template.id] = v
-                                const newView = new MutableBoardView(activeView)
-                                newView.columnCalculations = calculations
-                                mutator.updateBlock(newView, activeView, 'update_calculation')
+                                const newBoard = createBoard(props.board)
+                                newBoard.fields.columnCalculations = calculations
+                                mutator.updateBlock(newBoard, props.board, 'update_calculation')
                             }}
-                            cards={props.boardTree.cards}
+                            cards={props.cards}
                             property={template}
                         />
                     )

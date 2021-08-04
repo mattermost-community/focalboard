@@ -40,15 +40,15 @@ const ViewHeaderGroupByMenu = React.memo((props: Props) => {
                 />
             </Button>
             <Menu>
-                {activeView.viewType === 'table' && activeView.groupById &&
+                {activeView.fields.viewType === 'table' && activeView.fields.groupById &&
                 <>
                     <Menu.Text
                         key={'ungroup'}
                         id={''}
                         name={intl.formatMessage({id: 'GroupBy.ungroup', defaultMessage: 'Ungroup'})}
-                        rightIcon={activeView.groupById === '' ? <CheckIcon/> : undefined}
+                        rightIcon={activeView.fields.groupById === '' ? <CheckIcon/> : undefined}
                         onClick={(id) => {
-                            if (activeView.groupById === id) {
+                            if (activeView.fields.groupById === id) {
                                 return
                             }
                             mutator.changeViewGroupById(activeView, id)
@@ -56,14 +56,14 @@ const ViewHeaderGroupByMenu = React.memo((props: Props) => {
                     />
                     <Menu.Separator/>
                 </>}
-                {properties.filter((o: IPropertyTemplate) => o.type === 'select').map((option: IPropertyTemplate) => (
+                {properties?.filter((o: IPropertyTemplate) => o.type === 'select').map((option: IPropertyTemplate) => (
                     <Menu.Text
                         key={option.id}
                         id={option.id}
                         name={option.name}
-                        rightIcon={activeView.groupById === option.id ? <CheckIcon/> : undefined}
+                        rightIcon={activeView.fields.groupById === option.id ? <CheckIcon/> : undefined}
                         onClick={(id) => {
-                            if (activeView.groupById === id) {
+                            if (activeView.fields.groupById === id) {
                                 return
                             }
 

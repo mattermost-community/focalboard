@@ -9,7 +9,6 @@ import React from 'react'
 import {render} from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import {MutableBoardTree} from '../../../viewModel/boardTree'
 import {TestBlockFactory} from '../../../test/testBlockFactory'
 import {FetchMock} from '../../../test/fetchMock'
 import 'isomorphic-fetch'
@@ -32,19 +31,19 @@ const wrapProviders = (children: any) => {
 
 describe('components/table/calculation/CalculationRow', () => {
     const board = TestBlockFactory.createBoard()
-    board.cardProperties.push({
+    board.fields.cardProperties.push({
         id: 'property_2',
         name: 'Property 2',
         type: 'text',
         options: [],
     })
-    board.cardProperties.push({
+    board.fields.cardProperties.push({
         id: 'property_3',
         name: 'Property 3',
         type: 'text',
         options: [],
     })
-    board.cardProperties.push({
+    board.fields.cardProperties.push({
         id: 'property_4',
         name: 'Property 4',
         type: 'text',
@@ -52,30 +51,26 @@ describe('components/table/calculation/CalculationRow', () => {
     })
 
     const view = TestBlockFactory.createBoardView(board)
-    view.visiblePropertyIds.push(...['property_2', 'property_3', 'property_4'])
+    view.fields.visiblePropertyIds.push(...['property_2', 'property_3', 'property_4'])
 
     const card = TestBlockFactory.createCard(board)
-    card.properties.property_2 = 'Foo'
-    card.properties.property_3 = 'Bar'
-    card.properties.property_4 = 'Baz'
+    card.fields.properties.property_2 = 'Foo'
+    card.fields.properties.property_3 = 'Bar'
+    card.fields.properties.property_4 = 'Baz'
 
     const card2 = TestBlockFactory.createCard(board)
-    card2.properties.property_2 = 'Lorem'
-    card2.properties.property_3 = ''
-    card2.properties.property_4 = 'Baz'
+    card2.fields.properties.property_2 = 'Lorem'
+    card2.fields.properties.property_3 = ''
+    card2.fields.properties.property_4 = 'Baz'
 
     test('should render three calculation elements', async () => {
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, card])))
 
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).not.toBeUndefined()
-        if (!boardTree) {
-            fail('sync')
-        }
-
         const component = wrapProviders(
             <CalculationRow
-                boardTree={boardTree}
+                board={board}
+                cards={[card, card2]}
+                activeView={view}
                 resizingColumn={''}
                 offset={0}
             />,
@@ -86,23 +81,17 @@ describe('components/table/calculation/CalculationRow', () => {
     })
 
     test('should match snapshot', async () => {
-        view.columnCalculations = {
+        board.fields.columnCalculations = {
             property_2: 'count',
             property_3: 'countValue',
             property_4: 'countUniqueValue',
         }
 
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, card, card2])))
-
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).not.toBeUndefined()
-        if (!boardTree) {
-            fail('sync')
-        }
-
         const component = wrapProviders(
             <CalculationRow
-                boardTree={boardTree}
+                board={board}
+                cards={[card, card2]}
+                activeView={view}
                 resizingColumn={''}
                 offset={0}
             />,

@@ -3,7 +3,7 @@
 import {IPropertyTemplate} from './blocks/board'
 import {Card} from './blocks/card'
 import {FilterClause} from './blocks/filterClause'
-import {FilterGroup} from './blocks/filterGroup'
+import {FilterGroup, isAFilterGroupInstance} from './blocks/filterGroup'
 import {Utils} from './utils'
 
 class CardFilter {
@@ -20,7 +20,7 @@ class CardFilter {
 
         if (filterGroup.operation === 'or') {
             for (const filter of filters) {
-                if (FilterGroup.isAnInstanceOf(filter)) {
+                if (isAFilterGroupInstance(filter)) {
                     if (this.isFilterGroupMet(filter, templates, card)) {
                         return true
                     }
@@ -32,7 +32,7 @@ class CardFilter {
         }
         Utils.assert(filterGroup.operation === 'and')
         for (const filter of filters) {
-            if (FilterGroup.isAnInstanceOf(filter)) {
+            if (isAFilterGroupInstance(filter)) {
                 if (!this.isFilterGroupMet(filter, templates, card)) {
                     return false
                 }
@@ -44,7 +44,7 @@ class CardFilter {
     }
 
     static isClauseMet(filter: FilterClause, templates: readonly IPropertyTemplate[], card: Card): boolean {
-        const value = card.properties[filter.propertyId]
+        const value = card.fields.properties[filter.propertyId]
         switch (filter.condition) {
         case 'includes': {
             if (filter.values?.length < 1) {
@@ -77,7 +77,7 @@ class CardFilter {
             return {}
         }
 
-        const filters = filterGroup.filters.filter((o) => !FilterGroup.isAnInstanceOf(o))
+        const filters = filterGroup.filters.filter((o) => !isAFilterGroupInstance(o))
         if (filters.length < 1) {
             return {}
         }

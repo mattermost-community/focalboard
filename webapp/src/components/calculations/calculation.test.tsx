@@ -14,14 +14,14 @@ describe('components/calculations/Calculation', () => {
     const board = TestBlockFactory.createBoard()
 
     const card = TestBlockFactory.createCard(board)
-    card.properties.property_2 = 'Foo'
-    card.properties.property_3 = 'Bar'
-    card.properties.property_4 = 'Baz'
+    card.fields.properties.property_2 = 'Foo'
+    card.fields.properties.property_3 = 'Bar'
+    card.fields.properties.property_4 = 'Baz'
 
     const card2 = TestBlockFactory.createCard(board)
-    card2.properties.property_2 = 'Lorem'
-    card2.properties.property_3 = ''
-    card2.properties.property_4 = 'Baz'
+    card2.fields.properties.property_2 = 'Lorem'
+    card2.fields.properties.property_3 = ''
+    card2.fields.properties.property_4 = 'Baz'
 
     test('should match snapshot - none', () => {
         const component = (
