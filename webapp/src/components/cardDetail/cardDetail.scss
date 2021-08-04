@@ -55,14 +55,19 @@
         }
     }
 
-    &.add-content {
-        .Button {
-            opacity: 0;
-            color: rgba(var(--body-color), 0.6);
+    &.content-blocks {
+        &:hover, &:focus-within {
+            .CardDetailContentsMenu {
+                .Button {
+                    opacity: 1;
+                }
+            }
         }
-        &:hover {
+        .CardDetailContentsMenu {
+            margin-left: 48px;
             .Button {
-                opacity: 1;
+                opacity: 0;
+                color: rgba(var(--body-color), 0.6);
             }
         }
     }
