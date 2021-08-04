@@ -270,12 +270,12 @@ func (c *Client) Login(request *api.LoginRequest) (*api.LoginResponse, *Response
 	return data, BuildResponse(r)
 }
 
-func (c *Client) GetUserMeRoute() string {
+func (c *Client) GetMeRoute() string {
 	return "/users/me"
 }
 
-func (c *Client) GetUserMe() (*model.User, *Response) {
-	r, err := c.DoAPIGet(c.GetUserMeRoute(), "")
+func (c *Client) GetMe() (*model.User, *Response) {
+	r, err := c.DoAPIGet(c.GetMeRoute(), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}

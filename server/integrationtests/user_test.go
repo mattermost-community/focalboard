@@ -75,12 +75,12 @@ func TestUserLogin(t *testing.T) {
 	})
 }
 
-func TestGetUserMe(t *testing.T) {
+func TestGetMe(t *testing.T) {
 	th := SetupTestHelperWithoutToken().InitBasic()
 	defer th.TearDown()
 
 	t.Run("not login yet", func(t *testing.T) {
-		me, resp := th.Client.GetUserMe()
+		me, resp := th.Client.GetMe()
 		require.Error(t, resp.Error)
 		require.Nil(t, me)
 	})
@@ -109,7 +109,7 @@ func TestGetUserMe(t *testing.T) {
 		require.NotNil(t, data.Token)
 
 		// get user me
-		me, resp := th.Client.GetUserMe()
+		me, resp := th.Client.GetMe()
 		require.NoError(t, resp.Error)
 		require.NotNil(t, me)
 	})
@@ -141,7 +141,7 @@ func TestGetUser(t *testing.T) {
 	require.NotNil(t, data)
 	require.NotNil(t, data.Token)
 
-	me, resp := th.Client.GetUserMe()
+	me, resp := th.Client.GetMe()
 	require.NoError(t, resp.Error)
 	require.NotNil(t, me)
 
@@ -186,7 +186,7 @@ func TestUserChangePassword(t *testing.T) {
 	require.NotNil(t, data)
 	require.NotNil(t, data.Token)
 
-	originalMe, resp := th.Client.GetUserMe()
+	originalMe, resp := th.Client.GetMe()
 	require.NoError(t, resp.Error)
 	require.NotNil(t, originalMe)
 
