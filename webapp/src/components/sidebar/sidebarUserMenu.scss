@@ -4,10 +4,22 @@
         flex-direction: row;
         align-items: center;
 
-        .LogoWithNameIcon,
-        .LogoWithNameWhiteIcon {
-            max-height: 24px;
-            width: auto;
+        .logo-title {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-right: 5px;
+            .LogoIcon {
+                fill: rgba(var(--sidebar-fg), 1);
+                height: 24px;
+                width: 22px;
+                margin-right: 3px;
+                position: relative;
+                bottom: 2px;
+            }
+            span {
+                height: 32px;
+            }
         }
 
         .versionFrame {

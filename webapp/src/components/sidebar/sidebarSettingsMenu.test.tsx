@@ -26,10 +26,7 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
     test('settings menu closed should match snapshot', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
-                <SidebarSettingsMenu
-                    setWhiteLogo={() => {}}
-                    activeTheme={defaultThemeName}
-                />
+                <SidebarSettingsMenu activeTheme={defaultThemeName}/>
             </ReduxProvider>,
         )
 
@@ -40,10 +37,7 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
     test('settings menu open should match snapshot', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
-                <SidebarSettingsMenu
-                    setWhiteLogo={() => {}}
-                    activeTheme={defaultThemeName}
-                />
+                <SidebarSettingsMenu activeTheme={defaultThemeName}/>
             </ReduxProvider>,
         )
 
@@ -55,10 +49,7 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
     test('theme menu open should match snapshot', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
-                <SidebarSettingsMenu
-                    setWhiteLogo={() => {}}
-                    activeTheme={defaultThemeName}
-                />
+                <SidebarSettingsMenu activeTheme={defaultThemeName}/>
             </ReduxProvider>,
         )
 
@@ -71,10 +62,7 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
     test('languages menu open should match snapshot', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
-                <SidebarSettingsMenu
-                    setWhiteLogo={() => {}}
-                    activeTheme={defaultThemeName}
-                />
+                <SidebarSettingsMenu activeTheme={defaultThemeName}/>
             </ReduxProvider>,
         )
 

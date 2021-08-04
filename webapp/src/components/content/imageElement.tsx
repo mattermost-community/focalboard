@@ -2,8 +2,8 @@
 // See LICENSE.txt for license information.
 import React, {useEffect, useState} from 'react'
 
-import {IContentBlock} from '../../blocks/contentBlock'
-import {MutableImageBlock} from '../../blocks/imageBlock'
+import {ContentBlock} from '../../blocks/contentBlock'
+import {ImageBlock, createImageBlock} from '../../blocks/imageBlock'
 import octoClient from '../../octoClient'
 import {Utils} from '../../utils'
 import ImageIcon from '../../widgets/icons/image'
@@ -11,7 +11,7 @@ import ImageIcon from '../../widgets/icons/image'
 import {contentRegistry} from './contentRegistry'
 
 type Props = {
-    block: IContentBlock
+    block: ContentBlock
 }
 
 const ImageElement = React.memo((props: Props): JSX.Element|null => {
@@ -47,20 +47,20 @@ contentRegistry.registerContentType({
     getDisplayText: (intl) => intl.formatMessage({id: 'ContentBlock.image', defaultMessage: 'image'}),
     getIcon: () => <ImageIcon/>,
     createBlock: async (rootId: string) => {
-        return new Promise<MutableImageBlock>(
+        return new Promise<ImageBlock>(
             (resolve) => {
                 Utils.selectLocalFile(async (file) => {
                     const fileId = await octoClient.uploadFile(rootId, file)
 
-                    const block = new MutableImageBlock()
-                    block.fileId = fileId || ''
+                    const block = createImageBlock()
+                    block.fields.fileId = fileId || ''
                     resolve(block)
                 },
                 '.jpg,.jpeg,.png')
             },
         )
 
-        // return new MutableImageBlock()
+        // return new ImageBlock()
     },
     createComponent: (block) => <ImageElement block={block}/>,
 })

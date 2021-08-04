@@ -47,12 +47,12 @@ const BoardTemplateMenuItem = React.memo((props: Props) => {
 
     return (
         <Menu.Text
-            key={boardTemplate.id}
-            id={boardTemplate.id}
+            key={boardTemplate.id || ''}
+            id={boardTemplate.id || ''}
             name={displayName}
             icon={<div className='Icon'>{boardTemplate.fields.icon}</div>}
             onClick={() => {
-                addBoardFromTemplate(intl, props.showBoard, boardTemplate.id, activeBoardId, isGlobal)
+                addBoardFromTemplate(intl, props.showBoard, boardTemplate.id || '', activeBoardId, isGlobal)
             }}
             rightIcon={!isGlobal &&
                 <MenuWrapper stopPropagationOnToggle={true}>
@@ -63,7 +63,7 @@ const BoardTemplateMenuItem = React.memo((props: Props) => {
                             id='edit'
                             name={intl.formatMessage({id: 'Sidebar.edit-template', defaultMessage: 'Edit'})}
                             onClick={() => {
-                                props.showBoard(boardTemplate.id)
+                                props.showBoard(boardTemplate.id || '')
                             }}
                         />
                         <Menu.Text

@@ -6,11 +6,11 @@ import (
 )
 
 func (a *App) GetBlocks(c store.Container, parentID string, blockType string) ([]model.Block, error) {
-	if len(blockType) > 0 && len(parentID) > 0 {
+	if blockType != "" && parentID != "" {
 		return a.store.GetBlocksWithParentAndType(c, parentID, blockType)
 	}
 
-	if len(blockType) > 0 {
+	if blockType != "" {
 		return a.store.GetBlocksWithType(c, blockType)
 	}
 

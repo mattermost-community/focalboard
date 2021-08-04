@@ -38,7 +38,7 @@ async function addBlock(card: Card, intl: IntlShape, handler: ContentHandler) {
     newBlock.parentId = card.id
     newBlock.rootId = card.rootId
 
-    const contentOrder = card.contentOrder.slice()
+    const contentOrder = card.fields.contentOrder.slice()
     contentOrder.push(newBlock.id)
     const typeName = handler.getDisplayText(intl)
     const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
@@ -55,7 +55,7 @@ type Props = {
 const CardDetailContentsMenu = React.memo((props: Props) => {
     const intl = useIntl()
     return (
-        <div className='CardDetail content add-content'>
+        <div className='CardDetailContentsMenu content add-content'>
             <MenuWrapper>
                 <Button>
                     <FormattedMessage

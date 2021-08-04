@@ -21,7 +21,7 @@ type Props = {
 const AddContentMenuItem = React.memo((props:Props): JSX.Element => {
     const {card, type, cords} = props
     const index = cords.x
-    const contentOrder = card.contentOrder.slice()
+    const contentOrder = card.fields.contentOrder.slice()
     const intl = useIntl()
 
     const handler = contentRegistry.getHandler(type)

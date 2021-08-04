@@ -8,14 +8,14 @@ import client from '../octoClient'
 import './changePasswordPage.scss'
 import {IUser} from '../user'
 import {useAppSelector} from '../store/hooks'
-import {getCurrentUser} from '../store/currentUser'
+import {getMe} from '../store/users'
 
 const ChangePasswordPage = React.memo(() => {
     const [oldPassword, setOldPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const [succeeded, setSucceeded] = useState(false)
-    const user = useAppSelector<IUser|null>(getCurrentUser)
+    const user = useAppSelector<IUser|null>(getMe)
 
     if (!user) {
         return (
