@@ -1,5 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+
 import {Block, createBlock} from './block'
 
 type CardFields = {
@@ -14,7 +15,8 @@ type Card = Block & {
 }
 
 function createCard(block?: Block): Card {
-    const contentOrder: Array<string | string[]> = []
+    const contentOrder: Array<string|string[]> = []
+
     if (block?.fields.contentOrder) {
         for (const contentId of block.fields.contentOrder) {
             if (typeof contentId === 'string') {

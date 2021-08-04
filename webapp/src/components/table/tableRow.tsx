@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useRef, useEffect} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {Card} from '../../blocks/card'
@@ -12,11 +12,13 @@ import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
 import {useSortable} from '../../hooks/sortable'
 import {useAppSelector} from '../../store/hooks'
+
+import {getCardContents} from '../../store/contents'
+
 import {getCardComments} from '../../store/comments'
 
 import PropertyValueElement from '../propertyValueElement'
 import './tableRow.scss'
-import {getCardContents} from '../../store/contents'
 
 type Props = {
     board: Board
@@ -46,7 +48,7 @@ const TableRow = React.memo((props: Props) => {
     const contents = useAppSelector(getCardContents(card.id || ''))
     const comments = useAppSelector(getCardComments(card.id))
 
-    const titleRef = useRef<{focus(selectAll?: boolean): void}>(null)
+    const titleRef = useRef<{ focus(selectAll?: boolean): void }>(null)
     const [title, setTitle] = useState(props.card.title || '')
     const isManualSort = activeView.fields.sortOptions.length === 0
     const isGrouped = Boolean(activeView.fields.groupById)
@@ -120,30 +122,28 @@ const TableRow = React.memo((props: Props) => {
 
             {/* Columns, one per property */}
 
-            {board.fields.cardProperties.
-                filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id)).
-                map((template: IPropertyTemplate) => {
-                    if (!columnRefs.get(template.id)) {
-                        columnRefs.set(template.id, React.createRef())
-                    }
-                    return (
-                        <div
-                            className='octo-table-cell'
-                            key={template.id}
-                            style={{width: columnWidth(props.resizingColumn, props.activeView.fields.columnWidths, props.offset, template.id)}}
-                            ref={columnRefs.get(template.id)}
-                        >
-                            <PropertyValueElement
-                                readOnly={props.readonly}
-                                card={card}
-                                board={board}
-                                contents={contents}
-                                comments={comments}
-                                propertyTemplate={template}
-                                emptyDisplayValue=''
-                            />
-                        </div>)
-                })}
+            {board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id)).map((template: IPropertyTemplate) => {
+                if (!columnRefs.get(template.id)) {
+                    columnRefs.set(template.id, React.createRef())
+                }
+                return (
+                    <div
+                        className='octo-table-cell'
+                        key={template.id}
+                        style={{width: columnWidth(props.resizingColumn, props.activeView.fields.columnWidths, props.offset, template.id)}}
+                        ref={columnRefs.get(template.id)}
+                    >
+                        <PropertyValueElement
+                            readOnly={props.readonly}
+                            card={card}
+                            board={board}
+                            contents={contents}
+                            comments={comments}
+                            propertyTemplate={template}
+                            emptyDisplayValue=''
+                        />
+                    </div>)
+            })}
         </div>
     )
 })
