@@ -89,11 +89,13 @@ html {
         margin-bottom: 8px;
     }
 
-    button {
-        &.style--none {
-            background: transparent;
-            border: none;
-            padding: 0;
+    #focalboard-app {
+        button {
+            &.style--none {
+                background: transparent;
+                border: none;
+                padding: 0;
+            }
         }
     }
 
