@@ -1,20 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
-import {FormattedMessage, useIntl} from 'react-intl'
+import {useIntl} from 'react-intl'
 
 import {Archiver} from '../../archiver'
-import {
-    darkTheme,
-    darkThemeName,
-    defaultTheme,
-    defaultThemeName,
-    lightTheme,
-    lightThemeName,
-    setTheme, systemThemeName,
-    getActiveThemeName,
-    Theme,
-} from '../../theme'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {useAppDispatch} from '../../store/hooks'
@@ -28,16 +17,6 @@ import './globalHeaderSettingsMenu.scss'
 const GlobalHeaderSettingsMenu = React.memo(() => {
     const intl = useIntl()
     const dispatch = useAppDispatch()
-
-    // we need this as the sidebar doesn't always need to re-render
-    // on theme change. This can cause props and the actual
-    // active theme can go out of sync
-    const [themeName, setThemeName] = useState(getActiveThemeName())
-
-    const updateTheme = (theme: Theme | null, name: string) => {
-        setTheme(theme)
-        setThemeName(name)
-    }
 
     const [randomIcons, setRandomIcons] = useState(UserSettings.prefillRandomIcons)
     const toggleRandomIcons = () => {
@@ -103,29 +82,6 @@ const GlobalHeaderSettingsMenu = React.memo(() => {
         },
     ]
 
-    const themes = [
-        {
-            id: defaultThemeName,
-            displayName: 'Default theme',
-            theme: defaultTheme,
-        },
-        {
-            id: darkThemeName,
-            displayName: 'Dark theme',
-            theme: darkTheme,
-        },
-        {
-            id: lightThemeName,
-            displayName: 'Light theme',
-            theme: lightTheme,
-        },
-        {
-            id: systemThemeName,
-            displayName: 'System theme',
-            theme: null,
-        },
-    ]
-
     return (
         <div className='GlobalHeaderSettingsMenu'>
             <MenuWrapper>
@@ -158,25 +114,6 @@ const GlobalHeaderSettingsMenu = React.memo(() => {
                                     rightIcon={intl.locale.toLowerCase() === language.code ? <CheckIcon/> : null}
                                 />
                             ))
-                        }
-                    </Menu.SubMenu>
-                    <Menu.SubMenu
-                        id='theme'
-                        name={intl.formatMessage({id: 'Sidebar.set-theme', defaultMessage: 'Set theme'})}
-                        position='left-bottom'
-                    >
-                        {
-                            themes.map((theme) =>
-                                (
-                                    <Menu.Text
-                                        key={theme.id}
-                                        id={theme.id}
-                                        name={intl.formatMessage({id: `Sidebar.${theme.id}`, defaultMessage: theme.displayName})}
-                                        onClick={async () => updateTheme(theme.theme, theme.id)}
-                                        rightIcon={themeName === theme.id ? <CheckIcon/> : null}
-                                    />
-                                ),
-                            )
                         }
                     </Menu.SubMenu>
                     <Menu.Switch

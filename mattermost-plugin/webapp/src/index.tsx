@@ -27,6 +27,8 @@ import ErrorBoundary from './error_boundary'
 // eslint-disable-next-line import/no-unresolved
 import {PluginRegistry} from './types/mattermost-webapp'
 
+import './plugin.scss'
+
 const GlobalHeaderIcon = () => {
     return (
         <svg
@@ -82,7 +84,6 @@ const HeaderComponent = () => {
         </ErrorBoundary>
     )
 }
-
 
 export default class Plugin {
     channelHeaderButtonId?: string
