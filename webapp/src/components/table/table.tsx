@@ -124,7 +124,7 @@ const Table = (props: Props): JSX.Element => {
                 const displayValue = (OctoUtils.propertyDisplayValue(card, card.fields.properties[columnID], template as IPropertyTemplate, intl) || '')
                 switch (template.type) {
                 case 'select': {
-                    thisLen = Utils.getTextWidth(displayValue.toString().toUpperCase(), columnFontPadding.fontDescriptor) + perItemPadding
+                    thisLen = Utils.getTextWidth(displayValue.toString().toUpperCase(), columnFontPadding.fontDescriptor)
                     break
                 }
                 case 'multiSelect': {
@@ -137,7 +137,7 @@ const Table = (props: Props): JSX.Element => {
                     break
                 }
                 default: {
-                    thisLen = Utils.getTextWidth(displayValue.toString(), columnFontPadding.fontDescriptor) + perItemPadding
+                    thisLen = Utils.getTextWidth(displayValue.toString(), columnFontPadding.fontDescriptor)
                     break
                 }
                 }
