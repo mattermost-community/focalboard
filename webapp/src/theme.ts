@@ -5,6 +5,8 @@ import {CSSObject} from '@emotion/serialize'
 import isEqual from 'lodash/isEqual'
 import color from 'color'
 
+import {Utils} from './utils'
+
 let activeThemeName: string
 
 export type Theme = {
@@ -120,7 +122,7 @@ export function setTheme(theme: Theme | null): Theme {
 
     setActiveThemeName(consolidatedTheme, theme)
 
-    if ((window as any).isFocalboardPlugin !== true) {
+    if (!Utils.isFocalboardPlugin()) {
         document.documentElement.style.setProperty('--center-channel-bg-rgb', consolidatedTheme.mainBg)
         document.documentElement.style.setProperty('--center-channel-color-rgb', consolidatedTheme.mainFg)
         document.documentElement.style.setProperty('--button-bg-rgb', consolidatedTheme.buttonBg)
@@ -136,7 +138,7 @@ export function setTheme(theme: Theme | null): Theme {
 
     const mainBgColor = color(`rgb(${getComputedStyle(document.documentElement).getPropertyValue('--center-channel-bg-rgb')})`)
 
-    if ((window as any).isFocalboardPlugin === true) {
+    if (Utils.isFocalboardPlugin()) {
         let fixedTheme = lightTheme
         if (mainBgColor.isDark()) {
             fixedTheme = darkTheme
