@@ -160,6 +160,34 @@ const ViewMenu = React.memo((props: Props) => {
             })
     }, [props.board, props.activeView, props.intl, showView])
 
+    const handleAddViewCalendar = useCallback(() => {
+        const {board, activeView, intl} = props
+
+        Utils.log('addview-calendar')
+        const view = createBoardView()
+        view.title = intl.formatMessage({id: 'View.NewCalendarTitle', defaultMessage: 'Calendar view'})
+        view.fields.viewType = 'calendar'
+        view.parentId = board.id
+        view.rootId = board.rootId
+        view.fields.visiblePropertyIds = [Constants.titleColumnId]
+
+        const oldViewId = activeView.id
+
+        mutator.insertBlock(
+            view,
+            'add view',
+            async () => {
+                // This delay is needed because WSClient has a default 100 ms notification delay before updates
+                setTimeout(() => {
+                    Utils.log(`showView: ${view.id}`)
+                    showView(view.id)
+                }, 120)
+            },
+            async () => {
+                showView(oldViewId)
+            })
+    }, [props.board, props.activeView, props.intl, showView])
+
     const {views, intl} = props
 
     const duplicateViewText = intl.formatMessage({
@@ -242,6 +270,12 @@ const ViewMenu = React.memo((props: Props) => {
                         name='Gallery'
                         icon={<GalleryIcon/>}
                         onClick={handleAddViewGallery}
+                    />
+                    <Menu.Text
+                        id='calendar'
+                        name='calendar'
+                        icon={<TableIcon/>}
+                        onClick={handleAddViewCalendar}
                     />
                 </Menu.SubMenu>
             }

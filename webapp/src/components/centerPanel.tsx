@@ -26,6 +26,7 @@ import ViewTitle from './viewTitle'
 import Kanban from './kanban/kanban'
 import Table from './table/table'
 import Gallery from './gallery/gallery'
+import CalendarView from './properties/calendar/calendar'
 
 type Props = {
     board: Board
@@ -194,6 +195,10 @@ class CenterPanel extends React.Component<Props, State> {
                         selectedCardIds={this.state.selectedCardIds}
                         addCard={(show) => this.addCard('', show)}
                     />}
+
+                {
+                    activeView.fields.viewType === 'calendar' && <CalendarView/>
+                }
 
             </div>
         )
