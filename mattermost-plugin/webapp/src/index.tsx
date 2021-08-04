@@ -31,21 +31,9 @@ import './plugin.scss'
 
 const GlobalHeaderIcon = () => {
     return (
-        <svg
-            width='24'
-            height='24'
-            viewBox='0 0 24 24'
-            fill='none'
-            xmlns='http://www.w3.org/2000/svg'
-        >
-            <path
-                fillRule='evenodd'
-                clipRule='evenodd'
-                d='M6 3C4.34315 3 3 4.34314 3 6V13.2C3 14.8569 4.34314 16.2 6 16.2H7.8V18C7.8 19.6569 9.14314 21 10.8 21H18C19.6569 21 21 19.6569 21 18V10.8C21 9.14315 19.6569 7.8 18 7.8H16.2V6C16.2 4.34315 14.8569 3 13.2 3H6ZM16.2 7.8H10.8C9.14315 7.8 7.8 9.14314 7.8 10.8V16.2H13.2C14.8569 16.2 16.2 14.8569 16.2 13.2V7.8Z'
-                fill='orange'
-            />
-        </svg>
-
+        <span style={{height: 24, width: 24, display: 'inline-block'}}>
+            <FocalboardIcon/>
+        </span>
     )
 }
 
@@ -106,7 +94,7 @@ export default class Plugin {
         })
 
         if (this.registry.registerProduct) {
-            this.registry.registerProduct('/boards', FocalboardIcon, 'Boards', '/plug/focalboard/go-to-current-workspace', MainApp, HeaderComponent)
+            this.registry.registerProduct('/boards', GlobalHeaderIcon, 'Boards', '/plug/focalboard/go-to-current-workspace', MainApp, HeaderComponent)
         }
     }
 
