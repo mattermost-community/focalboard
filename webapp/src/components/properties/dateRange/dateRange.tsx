@@ -233,8 +233,8 @@ function DateRange(props: Props): JSX.Element {
                                 locale={locale}
                                 localeUtils={MomentLocaleUtils}
                                 todayButton={intl.formatMessage({id: 'DateRange.today', defaultMessage: 'Today'})}
-                                selectedDays={[dateFrom || new Date(), {from: dateFrom, to: dateTo}]}
-
+                                selectedDays={[dateFrom, dateTo ? {from: dateFrom, to: dateTo} : {from: dateFrom, to: dateFrom}]}
+                                modifiers={dateTo ? {start: dateFrom, end: dateTo} : {start: dateFrom, end: dateFrom}}
                             />
                             <hr/>
                             <SwitchOption

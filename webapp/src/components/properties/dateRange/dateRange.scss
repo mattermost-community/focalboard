@@ -5,6 +5,9 @@
 
     .inputContainer {
         display: flex;
+        .Editable {
+            width: 50% !important;
+        }
     }
 
     input {
@@ -120,6 +123,7 @@
         flex-direction: row;
     }
     .DayPicker-Day {
+        border-radius: unset;
         display: block;
         width: 36px;
         height: 36px;
@@ -127,7 +131,22 @@
     .DayPicker-Day--today {
         color: #c74655;
     }
-
+    .DayPicker-Day--start {
+        border-top-left-radius: 50% !important;
+        border-bottom-left-radius: 50% !important;
+    }
+    .DayPicker-Day--end {
+        border-top-right-radius: 50% !important;
+        border-bottom-right-radius: 50% !important;
+    }
+    .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
+        background-color: rgb(var(--button-bg));;
+        color: rgba(var(--button-fg), 0.5);
+      }
+    .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
+        color: rgb(var(--button-bg));;
+        background-color: rgba(var(--button-bg), 0.2);
+    }
 
     .DayPicker:not(.DayPicker--interactionDisabled)
       .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
