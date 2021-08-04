@@ -404,6 +404,10 @@ class Utils {
         }
         return finalPath
     }
+
+    static isFocalboardPlugin(): boolean {
+        return Boolean((window as any).isFocalboardPlugin)
+    }
 }
 
 export {Utils}
