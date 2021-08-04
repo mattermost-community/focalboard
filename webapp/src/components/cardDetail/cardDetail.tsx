@@ -139,17 +139,16 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
             {/* Content blocks */}
 
-            <div className='CardDetail content fullwidth'>
+            <div className='CardDetail content fullwidth content-blocks'>
                 <CardDetailContents
                     card={props.card}
                     contents={props.contents}
                     readonly={props.readonly}
                 />
+                {!props.readonly &&
+                    <CardDetailContentsMenu card={props.card}/>
+                }
             </div>
-
-            {!props.readonly &&
-                <CardDetailContentsMenu card={props.card}/>
-            }
         </>
     )
 }

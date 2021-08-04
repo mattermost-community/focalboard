@@ -1,5 +1,20 @@
+.focalboard-body .Menu .menu-options .SubMenuOption.open-left {
+    padding: 4px 5px;
+    .menu-name {
+        margin-left: 0;
+    }
+}
+
 .focalboard-body .SubMenuOption {
     position: relative;
+
+    &.open-left {
+        .SubmenuTriangleIcon {
+            position: relative;
+            left: 5px;
+            transform: rotate(180deg)
+        }
+    }
 
     .SubMenu {
         position: absolute;
@@ -18,6 +33,15 @@
             bottom: 0;
         }
         &.bottom {
+            top: 0;
+        }
+        &.left {
+            left: -100%;
+            right: 100%;
+        }
+        &.left-bottom {
+            left: -100%;
+            right: 100%;
             top: 0;
         }
     }
