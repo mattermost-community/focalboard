@@ -68,7 +68,7 @@ class Utils {
 
     static getFontAndPaddingFromCell = (cell: Element) : {fontDescriptor: string, padding: number} => {
         const style = getComputedStyle(cell)
-        const padding = Utils.getHorizontalPadding(style)
+        const padding = Utils.getTotalHorizontalPadding(style)
         return Utils.getFontAndPaddingFromChildren(cell.children, padding)
     }
 
@@ -80,31 +80,64 @@ class Utils {
             padding: pad,
         }
         Array.from(children).forEach((element) => {
-            switch (element.className) {
-            case IconClass:
-            case HorizontalGripClass:
+            const style = getComputedStyle(element)
+            if (element.tagName === 'svg') {
+                // clientWidth already includes padding
                 myResults.padding += element.clientWidth
-                break
-            case SpacerClass:
-            case OpenButtonClass:
-                break
-            default: {
-                const style = getComputedStyle(element)
-                myResults.fontDescriptor = style.font
-                myResults.padding += Utils.getHorizontalPadding(style)
-                const childResults = Utils.getFontAndPaddingFromChildren(element.children, myResults.padding)
-                if (childResults.fontDescriptor !== '') {
-                    myResults.fontDescriptor = childResults.fontDescriptor
-                    myResults.padding = childResults.padding
+                myResults.padding += Utils.getHorizontalBorder(style)
+                myResults.padding += Utils.getHorizontalMargin(style)
+                myResults.fontDescriptor = Utils.getFontString(style)
+            } else {
+                switch (element.className) {
+                case IconClass:
+                case HorizontalGripClass:
+                    myResults.padding += element.clientWidth
+                    break
+                case SpacerClass:
+                case OpenButtonClass:
+                    break
+                default: {
+                    myResults.fontDescriptor = Utils.getFontString(style)
+                    myResults.padding += Utils.getTotalHorizontalPadding(style)
+                    const childResults = Utils.getFontAndPaddingFromChildren(element.children, myResults.padding)
+                    if (childResults.fontDescriptor !== '') {
+                        myResults.fontDescriptor = childResults.fontDescriptor
+                        myResults.padding = childResults.padding
+                    }
                 }
-            }
+                }
             }
         })
         return myResults
     }
 
-    static getHorizontalPadding = (style: CSSStyleDeclaration): number => {
-        return parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10) + parseInt(style.marginLeft, 10) + parseInt(style.marginRight, 10) + parseInt(style.borderLeft, 10) + parseInt(style.borderRight, 10)
+    private static getFontString(style: CSSStyleDeclaration): string {
+        if (style.font) {
+            return style.font
+        }
+        const {fontStyle, fontVariant, fontWeight, fontSize, lineHeight, fontFamily} = style
+        const props = [fontStyle, fontVariant, fontWeight]
+        if (fontSize) {
+            props.push(lineHeight ? `${fontSize} / ${lineHeight}` : fontSize)
+        }
+        props.push(fontFamily)
+        return props.join(' ')
+    }
+
+    private static getHorizontalMargin(style: CSSStyleDeclaration): number {
+        return parseInt(style.marginLeft, 10) + parseInt(style.marginRight, 10)
+    }
+
+    private static getHorizontalBorder(style: CSSStyleDeclaration): number {
+        return parseInt(style.borderLeftWidth, 10) + parseInt(style.borderRightWidth, 10)
+    }
+
+    private static getHorizontalPadding(style: CSSStyleDeclaration): number {
+        return parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10)
+    }
+
+    private static getTotalHorizontalPadding(style: CSSStyleDeclaration): number {
+        return Utils.getHorizontalPadding(style) + Utils.getHorizontalMargin(style) + Utils.getHorizontalBorder(style)
     }
 
     // Markdown
@@ -112,8 +145,14 @@ class Utils {
     static htmlFromMarkdown(text: string): string {
         // HACKHACK: Somehow, marked doesn't encode angle brackets
         const renderer = new marked.Renderer()
-        if ((window as any).openInNewBrowser) {
-            renderer.link = (href, title, contents) => `<a target="_blank" rel="noreferrer" href="${encodeURI(href || '')}" title="${title ? encodeURI(title) : ''}" onclick="event.stopPropagation(); openInNewBrowser && openInNewBrowser(event.target.href);">${contents}</a>`
+        renderer.link = (href, title, contents) => {
+            return '<a ' +
+                'target="_blank" ' +
+                'rel="noreferrer" ' +
+                `href="${encodeURI(href || '')}" ` +
+                `title="${title ? encodeURI(title) : ''}" ` +
+                ((window as any).openInNewBrowser ? 'onclick="event.stopPropagation(); openInNewBrowser && openInNewBrowser(event.target.href);"' : '') +
+            '>' + contents + '</a>'
         }
         const html = marked(text.replace(/</g, '&lt;'), {renderer, breaks: true})
         return html.trim()
@@ -332,6 +371,18 @@ class Utils {
         return baseURL
     }
 
+    static getFrontendBaseURL(absolute?: boolean): string {
+        let frontendBaseURL = (window as any).frontendBaseURL || this.getBaseURL(absolute)
+        frontendBaseURL = frontendBaseURL.replace(/\/+$/, '')
+        if (frontendBaseURL.indexOf('/') === 0) {
+            frontendBaseURL = frontendBaseURL.slice(1)
+        }
+        if (absolute) {
+            return window.location.origin + '/' + frontendBaseURL
+        }
+        return frontendBaseURL
+    }
+
     static buildURL(path: string, absolute?: boolean): string {
         const baseURL = this.getBaseURL()
         let finalPath = baseURL + path
@@ -345,6 +396,10 @@ class Utils {
             return window.location.origin + '/' + finalPath
         }
         return finalPath
+    }
+
+    static isFocalboardPlugin(): boolean {
+        return Boolean((window as any).isFocalboardPlugin)
     }
 }
 

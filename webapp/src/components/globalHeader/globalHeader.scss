@@ -1,0 +1,17 @@
+.GlobalHeaderComponent {
+    display: flex;
+    flex-direction: row;
+    margin-right: 20px;
+    .spacer {
+        flex-grow: 1;
+    }
+    .help-button {
+        display: flex;
+        align-items: center;
+        padding: 0 17px;
+    }
+    .HelpIcon {
+        color: rgba(var(--sidebar-fg), 0.64);
+        font-size: 20px;
+    }
+}

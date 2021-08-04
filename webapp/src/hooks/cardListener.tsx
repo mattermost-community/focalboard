@@ -2,12 +2,12 @@
 // See LICENSE.txt for license information.
 import {useEffect} from 'react'
 
-import {IBlock} from '../blocks/block'
+import {Block} from '../blocks/block'
 import wsClient, {WSClient} from '../wsclient'
 
-export default function useCardListener(onChange: (blocks: IBlock[]) => void, onReconnect: () => void): void {
+export default function useCardListener(onChange: (blocks: Block[]) => void, onReconnect: () => void): void {
     useEffect(() => {
-        const onChangeHandler = (_: WSClient, blocks: IBlock[]) => onChange(blocks)
+        const onChangeHandler = (_: WSClient, blocks: Block[]) => onChange(blocks)
         wsClient.addOnChange(onChangeHandler)
         wsClient.addOnReconnect(onReconnect)
         return () => {

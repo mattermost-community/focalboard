@@ -4,17 +4,16 @@ import React from 'react'
 import {useDragLayer} from 'react-dnd'
 
 import {Card} from '../../blocks/card'
-
-import {BoardTree} from '../../viewModel/boardTree'
+import {Board} from '../../blocks/board'
+import {BoardView} from '../../blocks/boardView'
 
 import './table.scss'
-import {CardTree} from '../../viewModel/cardTree'
 
 import TableRow from './tableRow'
 
 type Props = {
-    boardTree: BoardTree
-    cardTrees: { [key: string]: CardTree | undefined }
+    board: Board
+    activeView: BoardView
     columnRefs: Map<string, React.RefObject<HTMLDivElement>>
     cards: readonly Card[]
     selectedCardIds: string[]
@@ -27,8 +26,7 @@ type Props = {
 }
 
 const TableRows = (props: Props) => {
-    const {boardTree, cards} = props
-    const {activeView} = boardTree
+    const {board, cards, activeView} = props
 
     const {offset, resizingColumn} = useDragLayer((monitor) => {
         if (monitor.getItemType() === 'horizontalGrip') {
@@ -49,14 +47,14 @@ const TableRows = (props: Props) => {
                 const tableRow = (
                     <TableRow
                         key={card.id + card.updateAt}
-                        boardTree={boardTree}
+                        board={board}
+                        activeView={activeView}
                         card={card}
-                        cardTree={props.cardTrees[card.id]}
                         isSelected={props.selectedCardIds.includes(card.id)}
                         focusOnMount={props.cardIdToFocusOnRender === card.id}
                         onSaveWithEnter={() => {
                             if (cards.length > 0 && cards[cards.length - 1] === card) {
-                                props.addCard(activeView.groupById ? card.properties[activeView.groupById!] as string : '')
+                                props.addCard(activeView.fields.groupById ? card.fields.properties[activeView.fields.groupById!] as string : '')
                             }
                         }}
                         onClick={(e: React.MouseEvent<HTMLDivElement>) => {

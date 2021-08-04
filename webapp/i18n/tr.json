@@ -32,6 +32,8 @@
   "ContentBlock.moveDown": "Alta taşı",
   "ContentBlock.moveUp": "Üste taşı",
   "ContentBlock.text": "metin",
+  "DashboardPage.message": "Tanıdık kanban panoları, tablolar ve diğer görünümleri kullanarak büyük ve küçük projeler için görevler oluşturup izlemek için Focalboard kullanın.",
+  "DashboardPage.title": "Focalboard (Beta) uygulamasına hoş geldiniz!",
   "Dialog.closeDialog": "Pencereyi kapat",
   "EditableDayPicker.today": "Bugün",
   "EmptyCenterPanel.no-content": "Başlamak için yan çubukta bir pano ekleyin ya da seçin.",

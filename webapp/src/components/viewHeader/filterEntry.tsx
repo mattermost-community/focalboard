@@ -3,12 +3,12 @@
 import React from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import {FilterClause} from '../../blocks/filterClause'
-import {FilterGroup} from '../../blocks/filterGroup'
+import {FilterClause, areEqual as areFilterClausesEqual} from '../../blocks/filterClause'
+import {createFilterGroup, isAFilterGroupInstance} from '../../blocks/filterGroup'
 import mutator from '../../mutator'
 import {OctoUtils} from '../../octoUtils'
 import {Utils} from '../../utils'
-import {Board} from '../../blocks/board'
+import {Board, IPropertyTemplate} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
 import Button from '../../widgets/buttons/button'
 import Menu from '../../widgets/menu'
@@ -29,7 +29,7 @@ const FilterEntry = React.memo((props: Props): JSX.Element => {
     const {board, view, filter} = props
     const intl = useIntl()
 
-    const template = board.cardProperties.find((o) => o.id === filter.propertyId)
+    const template = board.fields.cardProperties.find((o: IPropertyTemplate) => o.id === filter.propertyId)
     const propertyName = template ? template.name : '(unknown)'		// TODO: Handle error
     const key = `${filter.propertyId}-${filter.condition}-${filter.values.join(',')}`
     return (
@@ -40,15 +40,15 @@ const FilterEntry = React.memo((props: Props): JSX.Element => {
             <MenuWrapper>
                 <Button>{propertyName}</Button>
                 <Menu>
-                    {board.cardProperties.filter((o) => o.type === 'select' || o.type === 'multiSelect').map((o) => (
+                    {board.fields.cardProperties.filter((o: IPropertyTemplate) => o.type === 'select' || o.type === 'multiSelect').map((o: IPropertyTemplate) => (
                         <Menu.Text
                             key={o.id}
                             id={o.id}
                             name={o.name}
                             onClick={(optionId: string) => {
-                                const filterIndex = view.filter.filters.indexOf(filter)
+                                const filterIndex = view.fields.filter.filters.indexOf(filter)
                                 Utils.assert(filterIndex >= 0, "Can't find filter")
-                                const filterGroup = new FilterGroup(view.filter)
+                                const filterGroup = createFilterGroup(view.fields.filter)
                                 const newFilter = filterGroup.filters[filterIndex] as FilterClause
                                 Utils.assert(newFilter, `No filter at index ${filterIndex}`)
                                 if (newFilter.propertyId !== optionId) {
@@ -94,8 +94,8 @@ const FilterEntry = React.memo((props: Props): JSX.Element => {
             <div className='octo-spacer'/>
             <Button
                 onClick={() => {
-                    const filterGroup = new FilterGroup(view.filter)
-                    filterGroup.filters = filterGroup.filters.filter((o) => FilterGroup.isAnInstanceOf(o) || !o.isEqual(filter))
+                    const filterGroup = createFilterGroup(view.fields.filter)
+                    filterGroup.filters = filterGroup.filters.filter((o) => isAFilterGroupInstance(o) || areFilterClausesEqual(o, filter))
                     mutator.changeViewFilter(view, filterGroup)
                 }}
             >

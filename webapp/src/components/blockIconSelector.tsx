@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useMemo} from 'react'
+import React, {useCallback} from 'react'
 import {useIntl} from 'react-intl'
 
 import {BlockIcons} from '../blockIcons'
@@ -24,12 +24,14 @@ const BlockIconSelector = React.memo((props: Props) => {
     const {block, size} = props
     const intl = useIntl()
 
-    const onSelectEmoji = useMemo(() => (emoji: string) => {
-        mutator.changeIcon(props.block, emoji)
+    const onSelectEmoji = useCallback((emoji: string) => {
+        mutator.changeIcon(block, emoji)
         document.body.click()
-    }, [])
+    }, [block])
+    const onAddRandomIcon = useCallback(() => mutator.changeIcon(block, BlockIcons.shared.randomIcon()), [block])
+    const onRemoveIcon = useCallback(() => mutator.changeIcon(block, '', 'remove icon'), [block])
 
-    if (!block.icon) {
+    if (!block.fields.icon) {
         return null
     }
 
@@ -37,7 +39,7 @@ const BlockIconSelector = React.memo((props: Props) => {
     if (props.readonly) {
         className += ' readonly'
     }
-    const iconElement = <div className={className}><span>{block.icon}</span></div>
+    const iconElement = <div className={className}><span>{block.fields.icon}</span></div>
 
     return (
         <div className='BlockIconSelector'>
@@ -50,7 +52,7 @@ const BlockIconSelector = React.memo((props: Props) => {
                         id='random'
                         icon={<EmojiIcon/>}
                         name={intl.formatMessage({id: 'ViewTitle.random-icon', defaultMessage: 'Random'})}
-                        onClick={() => mutator.changeIcon(block, BlockIcons.shared.randomIcon())}
+                        onClick={onAddRandomIcon}
                     />
                     <Menu.SubMenu
                         id='pick'
@@ -63,7 +65,7 @@ const BlockIconSelector = React.memo((props: Props) => {
                         id='remove'
                         icon={<DeleteIcon/>}
                         name={intl.formatMessage({id: 'ViewTitle.remove-icon', defaultMessage: 'Remove icon'})}
-                        onClick={() => mutator.changeIcon(block, '', 'remove icon')}
+                        onClick={onRemoveIcon}
                     />
                 </Menu>
             </MenuWrapper>

@@ -1,6 +1,6 @@
 /* Markdown Editor */
 
-.MarkdownEditor {
+.focalboard-body .MarkdownEditor {
     cursor: text;
     /* CodeMirror / SimpleMDE / EasyMDE overrides */
 
@@ -14,6 +14,14 @@
     pre.CodeMirror-line {
         padding: 0;
         word-break: break-word;
+    }
+
+    .CodeMirror-code {
+        line-height: 24px;
+    }
+
+    .CodeMirror-lines {
+        padding: 0;
     }
 
     .CodeMirror,
