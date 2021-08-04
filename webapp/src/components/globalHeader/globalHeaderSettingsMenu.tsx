@@ -12,6 +12,7 @@ import {
     lightTheme,
     lightThemeName,
     setTheme, systemThemeName,
+    getActiveThemeName,
     Theme,
 } from '../../theme'
 import Menu from '../../widgets/menu'
@@ -19,22 +20,19 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import {useAppDispatch} from '../../store/hooks'
 import {storeLanguage} from '../../store/language'
 import {UserSettings} from '../../userSettings'
-
-import './sidebarSettingsMenu.scss'
 import CheckIcon from '../../widgets/icons/check'
+import SettingsIcon from '../../widgets/icons/settings'
 
-type Props = {
-    activeTheme: string
-}
+import './globalHeaderSettingsMenu.scss'
 
-const SidebarSettingsMenu = React.memo((props: Props) => {
+const GlobalHeaderSettingsMenu = React.memo(() => {
     const intl = useIntl()
     const dispatch = useAppDispatch()
 
     // we need this as the sidebar doesn't always need to re-render
     // on theme change. This can cause props and the actual
     // active theme can go out of sync
-    const [themeName, setThemeName] = useState(props.activeTheme)
+    const [themeName, setThemeName] = useState(getActiveThemeName())
 
     const updateTheme = (theme: Theme | null, name: string) => {
         setTheme(theme)
@@ -129,15 +127,12 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
     ]
 
     return (
-        <div className='SidebarSettingsMenu'>
+        <div className='GlobalHeaderSettingsMenu'>
             <MenuWrapper>
                 <div className='menu-entry'>
-                    <FormattedMessage
-                        id='Sidebar.settings'
-                        defaultMessage='Settings'
-                    />
+                    <SettingsIcon/>
                 </div>
-                <Menu position='top'>
+                <Menu position='left'>
                     <Menu.Text
                         id='import'
                         name={intl.formatMessage({id: 'Sidebar.import-archive', defaultMessage: 'Import archive'})}
@@ -151,7 +146,7 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
                     <Menu.SubMenu
                         id='lang'
                         name={intl.formatMessage({id: 'Sidebar.set-language', defaultMessage: 'Set language'})}
-                        position='top'
+                        position='left-bottom'
                     >
                         {
                             languages.map((language) => (
@@ -168,7 +163,7 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
                     <Menu.SubMenu
                         id='theme'
                         name={intl.formatMessage({id: 'Sidebar.set-theme', defaultMessage: 'Set theme'})}
-                        position='top'
+                        position='left-bottom'
                     >
                         {
                             themes.map((theme) =>
@@ -196,4 +191,4 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
     )
 })
 
-export default SidebarSettingsMenu
+export default GlobalHeaderSettingsMenu

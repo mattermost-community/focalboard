@@ -7,6 +7,9 @@ import './topBar.scss'
 import HelpIcon from '../widgets/icons/help'
 
 const TopBar = React.memo((): JSX.Element => {
+    if ((window as any).isFocalboardPlugin === true) {
+        return <></>
+    }
     return (
         <div
             className='TopBar'
