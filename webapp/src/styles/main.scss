@@ -39,7 +39,6 @@ html {
         -moz-user-select: none; /* Firefox all */
         -ms-user-select: none; /* IE 10+ */
         user-select: none; /* Likely future */
-        font-family: "Open Sans", sans-serif;
     }
 
     input,
@@ -90,11 +89,13 @@ html {
         margin-bottom: 8px;
     }
 
-    button {
-        &.style--none {
-            background: transparent;
-            border: none;
-            padding: 0;
+    #focalboard-app {
+        button {
+            &.style--none {
+                background: transparent;
+                border: none;
+                padding: 0;
+            }
         }
     }
 

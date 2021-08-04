@@ -1,5 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+
 import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
 import {useHistory} from 'react-router-dom'
@@ -7,12 +8,12 @@ import {useHistory} from 'react-router-dom'
 import {Constants} from '../../constants'
 import octoClient from '../../octoClient'
 import {IUser} from '../../user'
-import LogoWithNameIcon from '../../widgets/icons/logoWithName'
-import LogoWithNameWhiteIcon from '../../widgets/icons/logoWithNameWhite'
+import LogoIcon from '../../widgets/icons/logo'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {getMe} from '../../store/users'
 import {useAppSelector} from '../../store/hooks'
+import {Utils} from '../../utils'
 
 import ModalWrapper from '../modalWrapper'
 
@@ -20,16 +21,12 @@ import RegistrationLink from './registrationLink'
 
 import './sidebarUserMenu.scss'
 
-type Props = {
-    whiteLogo: boolean
-    showVersionBadge: boolean
-    showAccountActions: boolean
-}
-
-const SidebarUserMenu = React.memo((props: Props) => {
+const SidebarUserMenu = React.memo(() => {
     const history = useHistory()
     const [showRegistrationLinkDialog, setShowRegistrationLinkDialog] = useState(false)
-    const {whiteLogo, showVersionBadge, showAccountActions} = props
+    const showVersionBadge = Utils.isFocalboardPlugin()
+    const focalboardTitle = !Utils.isFocalboardPlugin()
+    const showAccountActions = !Utils.isFocalboardPlugin()
     const user = useAppSelector<IUser|null>(getMe)
     const intl = useIntl()
     return (
@@ -37,15 +34,17 @@ const SidebarUserMenu = React.memo((props: Props) => {
             <ModalWrapper>
                 <MenuWrapper>
                     <div className='logo'>
-                        {whiteLogo ? <LogoWithNameWhiteIcon/> : <LogoWithNameIcon/>}
+                        <div className='logo-title'>
+                            <LogoIcon/>
+                            {focalboardTitle && <span>{'Focalboard'}</span>}
+                            {!focalboardTitle && <span>{'Boards'}</span>}
+                        </div>
                         <div className='octo-spacer'/>
                         <div className='versionFrame'>
                             <div className='version'>
                                 {`v${Constants.versionString}`}
                             </div>
-                            <div className='versionBadge'>
-                            &nbsp;{showVersionBadge ? 'BETA' : ''}&nbsp;
-                            </div>
+                            {showVersionBadge && <div className='versionBadge'>{'BETA'}</div>}
                         </div>
                     </div>
                     <Menu>

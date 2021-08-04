@@ -75,6 +75,7 @@
     "core-js": "3.12.1",
     "mattermost-redux": "5.33.1",
     "react": "17.0.2",
+    "react-intl": "^5.13.5",
     "react-redux": "7.2.4",
     "redux": "4.1.0",
     "typescript": "4.2.4"
