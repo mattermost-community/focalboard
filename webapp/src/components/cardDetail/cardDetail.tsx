@@ -124,17 +124,13 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
                 {/* Comments */}
 
-                {!props.readonly &&
-                <>
-                    <hr/>
-                    <CommentsList
-                        comments={comments}
-                        rootId={card.rootId}
-                        cardId={card.id}
-                    />
-                    <hr/>
-                </>
-                }
+                <hr/>
+                <CommentsList
+                    comments={comments}
+                    rootId={card.rootId}
+                    cardId={card.id}
+                    readonly={props.readonly}
+                />
             </div>
 
             {/* Content blocks */}
