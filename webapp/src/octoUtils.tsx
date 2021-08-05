@@ -31,7 +31,7 @@ class OctoUtils {
             break
         }
         case 'multiSelect': {
-            if (propertyValue && propertyValue.length) {
+            if (propertyValue?.length) {
                 const options = propertyTemplate.options.filter((o) => propertyValue.includes(o.id))
                 if (!options.length) {
                     Utils.assertFailure(`Invalid multiSelect option IDs ${propertyValue}, block.title: ${block.title}`)
