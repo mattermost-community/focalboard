@@ -3,7 +3,7 @@
 exports[`components/cardDetail/cardDetailContents should match snapshot 1`] = `
 <div>
   <div
-    class="octo-content"
+    class="octo-content CardDetailContents"
   >
     <div
       class="octo-block"
@@ -581,7 +581,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
 exports[`components/cardDetail/cardDetailContents should match snapshot after onBlur triggers 1`] = `
 <div>
   <div
-    class="octo-content"
+    class="octo-content CardDetailContents"
   >
     <div
       class="octo-block"
