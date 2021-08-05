@@ -13,6 +13,7 @@ import {HTML5Backend} from 'react-dnd-html5-backend'
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import CardDetailContents from './cardDetailContents'
+import {mockDOM} from '../../testUtils'
 
 const wrapProviders = (children: any) => {
     return (
@@ -24,21 +25,9 @@ const wrapProviders = (children: any) => {
 
 global.fetch = jest.fn()
 
-document.createRange = () => {
-    const range = new Range()
-
-    range.getBoundingClientRect = jest.fn()
-
-    range.getClientRects = () => {
-        return {
-            item: () => null,
-            length: 0,
-            [Symbol.iterator]: jest.fn(),
-        }
-    }
-    return range
-}
-window.focus = jest.fn()
+beforeAll(() => {
+    mockDOM()
+})
 
 describe('components/cardDetail/cardDetailContents', () => {
     const board = TestBlockFactory.createBoard()
