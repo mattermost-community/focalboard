@@ -111,9 +111,9 @@ describe('components/cardDetail/cardDetailContents', () => {
             const result = render(component)
             container = result.container
         })
-        const markdownEditorField = container!.querySelectorAll('.octo-editor-preview.octo-placeholder')
+        const markdownEditorField = container!.querySelector('.octo-editor-preview.octo-placeholder')
         expect(markdownEditorField).toBeDefined()
-        fireEvent.click(markdownEditorField[markdownEditorField.length - 1]!)
+        fireEvent.click(markdownEditorField!)
 
         const onFocusEvent = new FocusEvent('focus', {
             view: window,
