@@ -339,7 +339,7 @@ func (c *Client) WorkspaceUploadFile(workspaceID, rootID string, data io.Reader)
 	if err != nil {
 		return nil, &Response{Error: err}
 	}
-	if _, err := io.Copy(part, data); err != nil {
+	if _, err = io.Copy(part, data); err != nil {
 		return nil, &Response{Error: err}
 	}
 	writer.Close()
