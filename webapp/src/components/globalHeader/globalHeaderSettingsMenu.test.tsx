@@ -11,13 +11,11 @@ import {IntlProvider} from 'react-intl'
 import userEvent from '@testing-library/user-event'
 import configureStore from 'redux-mock-store'
 
-import {defaultThemeName} from '../../theme'
-
-import SidebarSettingsMenu from './sidebarSettingsMenu'
+import GlobalHeaderSettingsMenu from './globalHeaderSettingsMenu'
 
 const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
 
-describe('components/sidebar/SidebarSettingsMenu', () => {
+describe('components/sidebar/GlobalHeaderSettingsMenu', () => {
     const mockStore = configureStore([])
     let store = mockStore({})
     beforeEach(() => {
@@ -26,7 +24,7 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
     test('settings menu closed should match snapshot', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
-                <SidebarSettingsMenu activeTheme={defaultThemeName}/>
+                <GlobalHeaderSettingsMenu/>
             </ReduxProvider>,
         )
 
@@ -37,32 +35,19 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
     test('settings menu open should match snapshot', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
-                <SidebarSettingsMenu activeTheme={defaultThemeName}/>
+                <GlobalHeaderSettingsMenu/>
             </ReduxProvider>,
         )
 
         const {container} = render(component)
         userEvent.click(container.querySelector('.menu-entry') as Element)
-        expect(container).toMatchSnapshot()
-    })
-
-    test('theme menu open should match snapshot', () => {
-        const component = wrapIntl(
-            <ReduxProvider store={store}>
-                <SidebarSettingsMenu activeTheme={defaultThemeName}/>
-            </ReduxProvider>,
-        )
-
-        const {container} = render(component)
-        userEvent.click(container.querySelector('.menu-entry') as Element)
-        userEvent.click(container.querySelector('#theme') as Element)
         expect(container).toMatchSnapshot()
     })
 
     test('languages menu open should match snapshot', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
-                <SidebarSettingsMenu activeTheme={defaultThemeName}/>
+                <GlobalHeaderSettingsMenu/>
             </ReduxProvider>,
         )
 
