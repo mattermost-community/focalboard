@@ -86,21 +86,63 @@ const Table = (props: Props): JSX.Element => {
         if (!columnRef?.current) {
             return
         }
-        const {fontDescriptor, padding} = Utils.getFontAndPaddingFromCell(columnRef.current)
+
+        let template: IPropertyTemplate | undefined
+        const columnFontPadding = Utils.getFontAndPaddingFromCell(columnRef.current)
+        let perItemPadding = 0
+        if (columnID !== Constants.titleColumnId) {
+            template = visibleProperties.find((t: IPropertyTemplate) => t.id === columnID)
+            if (!template) {
+                return
+            }
+            if (template.type === 'multiSelect') {
+                // For multiselect, the padding calculated above depends on the number selected when calculating the padding.
+                // Need to calculate it manually here.
+                // DOM Object hierarchy should be {cell -> property -> [value1, value2, etc]}
+                let valueCount = 0
+                if (columnRef?.current?.childElementCount > 0) {
+                    const propertyElement = columnRef.current.children.item(0) as Element
+                    if (propertyElement) {
+                        valueCount = propertyElement.childElementCount
+                        if (valueCount > 0) {
+                            const statusPadding = Utils.getFontAndPaddingFromChildren(propertyElement.children, 0)
+                            perItemPadding = statusPadding.padding / valueCount
+                        }
+                    }
+                }
+
+                // remove the "value" portion of the original calculation
+                columnFontPadding.padding -= (perItemPadding * valueCount)
+            }
+        }
 
         cards.forEach((card) => {
-            let displayValue = card.title
-            if (columnID !== Constants.titleColumnId) {
-                const template = visibleProperties.find((t: IPropertyTemplate) => t.id === columnID)
-                if (!template) {
-                    return
+            let thisLen = 0
+            if (columnID === Constants.titleColumnId) {
+                thisLen = Utils.getTextWidth(card.title, columnFontPadding.fontDescriptor) + columnFontPadding.padding
+            } else if (template) {
+                const displayValue = (OctoUtils.propertyDisplayValue(card, card.fields.properties[columnID], template as IPropertyTemplate, intl) || '')
+                switch (template.type) {
+                case 'select': {
+                    thisLen = Utils.getTextWidth(displayValue.toString().toUpperCase(), columnFontPadding.fontDescriptor)
+                    break
                 }
-                displayValue = (OctoUtils.propertyDisplayValue(card, card.fields.properties[columnID], template, intl) || '') as string
-                if (template.type === 'select') {
-                    displayValue = displayValue.toUpperCase()
+                case 'multiSelect': {
+                    if (displayValue) {
+                        const displayValues = displayValue as string[]
+                        displayValues.forEach((value) => {
+                            thisLen += Utils.getTextWidth(value.toUpperCase(), columnFontPadding.fontDescriptor) + perItemPadding
+                        })
+                    }
+                    break
                 }
+                default: {
+                    thisLen = Utils.getTextWidth(displayValue.toString(), columnFontPadding.fontDescriptor)
+                    break
+                }
+                }
+                thisLen += columnFontPadding.padding
             }
-            const thisLen = Utils.getTextWidth(displayValue, fontDescriptor) + padding
             if (thisLen > longestSize) {
                 longestSize = thisLen
             }
@@ -286,7 +328,7 @@ const Table = (props: Props): JSX.Element => {
                 })}
             </div>
 
-            {/* Table header row */}
+            {/* Table rows */}
             <div className='table-row-container'>
                 {activeView.fields.groupById &&
                 visibleGroups.map((group) => {
