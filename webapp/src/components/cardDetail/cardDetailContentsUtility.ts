@@ -43,7 +43,7 @@ export const dragAndDropRearrange =
 
         if (moveTo === 'right') {
             if (copyDstBlockY > -1) {
-                if (copyDstBlockX === copySrcBlockX && copyDstBlockY > copySrcBlockY && copySrcBlockY >= 0) {
+                if (copyDstBlockX === copySrcBlockX && copyDstBlockY > copySrcBlockY && copySrcBlockY > -1) {
                     copyDstBlockY -= 1
                 }
 
@@ -53,7 +53,7 @@ export const dragAndDropRearrange =
             }
         } else if (moveTo === 'left') {
             if (copyDstBlockY > -1) {
-                if (copyDstBlockX === copySrcBlockX && copyDstBlockY > copySrcBlockY && copySrcBlockY >= 0) {
+                if (copyDstBlockX === copySrcBlockX && copyDstBlockY > copySrcBlockY && copySrcBlockY > -1) {
                     copyDstBlockY -= 1
                 }
 

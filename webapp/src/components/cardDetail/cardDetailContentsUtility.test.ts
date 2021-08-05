@@ -110,7 +110,29 @@ describe('components/cardDetail/cardDetailContentsUtility', () => {
         expect(result).toEqual(expected)
     })
 
-    test('Testing moving a single item in the first row into the middle of second row', () => {
+    test('Testing moving a single item in the first row into the middle of second row using left operation', () => {
+        const data = {
+            contentOrder: [
+                '4',
+                ['1', '3'],
+            ],
+            srcBlockId: '4',
+            srcBlockX: 0,
+            srcBlockY: -1,
+            dstBlockX: 1,
+            dstBlockY: 1,
+            dstBlockId: '3',
+            moveTo: 'left' as Position,
+        }
+
+        const result = dragAndDropRearrange(data)
+        const expected = [
+            ['1', '4', '3'],
+        ]
+        expect(result).toEqual(expected)
+    })
+
+    test('Testing moving a single item in the first row into the middle of second row using right operation', () => {
         const data = {
             contentOrder: [
                 '4',
