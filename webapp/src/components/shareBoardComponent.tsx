@@ -100,7 +100,7 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
                         {isSharing &&
                             <FormattedMessage
                                 id='ShareBoard.unshare'
-                                defaultMessage='Anyone with the link can view this board'
+                                defaultMessage='Anyone with the link can view this board and all cards in it'
                             />}
                         {!isSharing &&
                             <FormattedMessage
