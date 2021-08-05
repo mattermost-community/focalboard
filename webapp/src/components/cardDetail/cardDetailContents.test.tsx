@@ -12,8 +12,9 @@ import {HTML5Backend} from 'react-dnd-html5-backend'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
-import CardDetailContents from './cardDetailContents'
 import {mockDOM} from '../../testUtils'
+
+import CardDetailContents from './cardDetailContents'
 
 const wrapProviders = (children: any) => {
     return (
