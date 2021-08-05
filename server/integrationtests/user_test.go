@@ -1,6 +1,8 @@
 package integrationtests
 
 import (
+	"bytes"
+	"crypto/rand"
 	"testing"
 
 	"github.com/mattermost/focalboard/server/api"
@@ -199,4 +201,39 @@ func TestUserChangePassword(t *testing.T) {
 	})
 	require.NoError(t, resp.Error)
 	require.True(t, success)
+}
+
+func randomBytes(t *testing.T, n int) []byte {
+	bb := make([]byte, n)
+	_, err := rand.Read(bb)
+	require.NoError(t, err)
+	return bb
+}
+
+func TestWorkspaceUploadFile(t *testing.T) {
+	t.Run("no permission", func(t *testing.T) { // native auth, but not login
+		th := SetupTestHelperWithoutToken().InitBasic()
+		defer th.TearDown()
+
+		workspaceID := "0"
+		rootID := utils.CreateGUID()
+		data := randomBytes(t, 1024)
+		result, resp := th.Client.WorkspaceUploadFile(workspaceID, rootID, bytes.NewReader(data))
+		require.Error(t, resp.Error)
+		require.Nil(t, result)
+	})
+
+	t.Run("success", func(t *testing.T) { // single token auth
+		th := SetupTestHelper().InitBasic()
+		defer th.TearDown()
+
+		workspaceID := "0"
+		rootID := utils.CreateGUID()
+		data := randomBytes(t, 1024)
+		result, resp := th.Client.WorkspaceUploadFile(workspaceID, rootID, bytes.NewReader(data))
+		require.NoError(t, resp.Error)
+		require.NotNil(t, result)
+		require.NotEmpty(t, result.FileID)
+		// TODO get the uploaded file
+	})
 }

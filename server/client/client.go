@@ -1,10 +1,12 @@
 package client
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
+	"mime/multipart"
 	"net/http"
 	"strings"
 
@@ -107,10 +109,16 @@ func (c *Client) DoAPIRequest(method, url, data, etag string) (*http.Response, e
 	return c.doAPIRequestReader(method, url, strings.NewReader(data), etag)
 }
 
-func (c *Client) doAPIRequestReader(method, url string, data io.Reader, _ /* etag */ string) (*http.Response, error) {
+type requestOption func(r *http.Request)
+
+func (c *Client) doAPIRequestReader(method, url string, data io.Reader, _ /* etag */ string, opts ...requestOption) (*http.Response, error) {
 	rq, err := http.NewRequest(method, url, data)
 	if err != nil {
 		return nil, err
+	}
+
+	for _, opt := range opts {
+		opt(rq)
 	}
 
 	if c.HTTPHeader != nil && len(c.HTTPHeader) > 0 {
@@ -318,4 +326,38 @@ func (c *Client) UserChangePassword(id string, data *api.ChangePasswordRequest) 
 	defer closeBody(r)
 
 	return true, BuildResponse(r)
+}
+
+func (c *Client) GetWorkspaceUploadFileRoute(workspaceID, rootID string) string {
+	return fmt.Sprintf("/workspaces/%s/%s/files", workspaceID, rootID)
+}
+
+func (c *Client) WorkspaceUploadFile(workspaceID, rootID string, data io.Reader) (*api.FileUploadResponse, *Response) {
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+	part, err := writer.CreateFormFile(api.UploadFormFileKey, "file")
+	if err != nil {
+		return nil, &Response{Error: err}
+	}
+	if _, err := io.Copy(part, data); err != nil {
+		return nil, &Response{Error: err}
+	}
+	writer.Close()
+
+	opt := func(r *http.Request) {
+		r.Header.Add("Content-Type", writer.FormDataContentType())
+	}
+
+	r, err := c.doAPIRequestReader(http.MethodPost, c.APIURL+c.GetWorkspaceUploadFileRoute(workspaceID, rootID), body, "", opt)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	fileUploadResponse, err := api.FileUploadResponseFromJSON(r.Body)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return fileUploadResponse, BuildResponse(r)
 }

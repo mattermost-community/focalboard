@@ -50,7 +50,7 @@ func getTestConfig() *config.Configuration {
 	}`
 
 	return &config.Configuration{
-		ServerRoot:        "http://localhost.charlesproxy.com:8888",
+		ServerRoot:        "http://localhost:8888",
 		Port:              8888,
 		DBType:            dbType,
 		DBConfigString:    connectionString,
@@ -137,4 +137,6 @@ func (th *TestHelper) TearDown() {
 	if err != nil {
 		panic(err)
 	}
+
+	os.RemoveAll(th.Server.Config().FilesPath)
 }
