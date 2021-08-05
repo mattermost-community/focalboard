@@ -11,6 +11,7 @@ import {getSortedBoards} from '../../store/boards'
 import {getSortedViews} from '../../store/views'
 import {getWorkspace} from '../../store/workspace'
 import {useAppSelector} from '../../store/hooks'
+import {Utils} from '../../utils'
 
 import './sidebar.scss'
 
@@ -26,16 +27,11 @@ type Props = {
 
 const Sidebar = React.memo((props: Props) => {
     const [isHidden, setHidden] = useState(false)
-    const [whiteLogo, setWhiteLogo] = useState(false)
     const boards = useAppSelector(getSortedBoards)
     const views = useAppSelector(getSortedViews)
 
     useEffect(() => {
-        const theme = loadTheme()
-        const newWhiteLogo = theme.sidebarWhiteLogo === 'true'
-        if (whiteLogo !== newWhiteLogo) {
-            setWhiteLogo(newWhiteLogo)
-        }
+        loadTheme()
     }, [])
 
     const workspace = useAppSelector(getWorkspace)
@@ -64,16 +60,11 @@ const Sidebar = React.memo((props: Props) => {
         )
     }
 
-    const hasWorkspace = Boolean(workspace && workspace.id !== '0')
     return (
         <div className='Sidebar octo-sidebar'>
             <div className='octo-sidebar-header'>
                 <div className='heading'>
-                    <SidebarUserMenu
-                        whiteLogo={whiteLogo}
-                        showVersionBadge={hasWorkspace}
-                        showAccountActions={!hasWorkspace}
-                    />
+                    <SidebarUserMenu/>
                 </div>
 
                 <div className='octo-spacer'/>
@@ -111,10 +102,8 @@ const Sidebar = React.memo((props: Props) => {
                 activeBoardId={props.activeBoardId}
             />
 
-            <SidebarSettingsMenu
-                setWhiteLogo={(newWhiteLogo: boolean) => setWhiteLogo(newWhiteLogo)}
-                activeTheme={getActiveThemeName()}
-            />
+            {!Utils.isFocalboardPlugin() &&
+                <SidebarSettingsMenu activeTheme={getActiveThemeName()}/>}
         </div>
     )
 })

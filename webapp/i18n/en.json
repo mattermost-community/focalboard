@@ -85,7 +85,7 @@
   "ShareBoard.regenerateToken": "Regenerate token",
   "ShareBoard.share": "Publish to web and share this board to anyone",
   "ShareBoard.tokenRegenrated": "Token regenerated",
-  "ShareBoard.unshare": "Anyone with the link can view this board",
+  "ShareBoard.unshare": "Anyone with the link can view this board and all cards in it",
   "Sidebar.about": "About Focalboard",
   "Sidebar.add-board": "+ Add Board",
   "Sidebar.add-template": "New template",

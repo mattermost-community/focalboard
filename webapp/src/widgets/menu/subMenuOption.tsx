@@ -11,7 +11,7 @@ import './subMenuOption.scss'
 type SubMenuOptionProps = {
     id: string,
     name: string,
-    position?: 'bottom' | 'top'
+    position?: 'bottom' | 'top' | 'left' | 'left-bottom'
     icon?: React.ReactNode
     children: React.ReactNode
 }
@@ -19,10 +19,12 @@ type SubMenuOptionProps = {
 function SubMenuOption(props: SubMenuOptionProps): JSX.Element {
     const [isOpen, setIsOpen] = useState(false)
 
+    const openLeftClass = props.position === 'left' || props.position === 'left-bottom' ? ' open-left' : ''
+
     return (
         <div
             id={props.id}
-            className='MenuOption SubMenuOption menu-option'
+            className={`MenuOption SubMenuOption menu-option${openLeftClass}`}
             onMouseEnter={() => {
                 setTimeout(() => {
                     setIsOpen(true)
@@ -35,9 +37,10 @@ function SubMenuOption(props: SubMenuOptionProps): JSX.Element {
                 setIsOpen(true)
             }}
         >
+            {(props.position === 'left' || props.position === 'left-bottom') && <SubmenuTriangleIcon/>}
             {props.icon ?? <div className='noicon'/>}
             <div className='menu-name'>{props.name}</div>
-            <SubmenuTriangleIcon/>
+            {props.position !== 'left' && props.position !== 'left-bottom' && <SubmenuTriangleIcon/>}
             {isOpen &&
                 <div className={'SubMenu Menu noselect ' + (props.position || 'bottom')}>
                     <div className='menu-contents'>
