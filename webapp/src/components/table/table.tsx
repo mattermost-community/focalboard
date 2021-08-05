@@ -100,7 +100,7 @@ const Table = (props: Props): JSX.Element => {
                 // Need to calculate it manually here.
                 // DOM Object hierarchy should be {cell -> property -> [value1, value2, etc]}
                 let valueCount = 0
-                if (columnRef.current && columnRef.current.childElementCount > 0) {
+                if (columnRef?.current?.childElementCount > 0) {
                     const propertyElement = columnRef.current.children.item(0) as Element
                     if (propertyElement) {
                         valueCount = propertyElement.childElementCount
