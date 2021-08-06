@@ -1,0 +1,155 @@
+.DateRange {
+    .octo-propertyvalue {
+        white-space: none;
+    }
+
+    .inputContainer {
+        display: flex;
+        .Editable {
+            width: 50% !important;
+        }
+    }
+
+    input {
+        cursor: text;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-height: 24px;
+        width: 100%;
+        margin: 2px;
+        &.active {
+            min-width: 100px;
+        }
+        &::placeholder {
+            color: rgba(var(--body-color), 0.4);
+            opacity: 1;
+        }
+        &.error {
+            border: 1px solid var(--error-color);
+            border-radius: var(--default-rad);
+        }
+    }
+
+    .Modal{
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        margin-bottom: 100px;
+    }
+
+    .Button{
+        width: 100%;
+        justify-content: left;
+        &:hover {
+            background-color: transparent;
+        }
+    }
+    .menu-option {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        font-size: 14px;
+        line-height: 24px;
+        font-weight: 400;
+        height: 32px;
+        padding: 4px 0px;
+        cursor: pointer;
+
+        &:hover {
+            background: rgba(var(--button-bg), 0.08);
+        }
+
+        > * {
+            margin-left: 6px;
+        }
+
+        > *:first-child {
+            margin-left: 0;
+        }
+
+        > .menu-name {
+            display: flex;
+            flex-grow: 1;
+            white-space: nowrap;
+        }
+
+        > .SubmenuTriangleIcon {
+            fill: rgba(var(--body-color), 0.7);
+        }
+
+        > .Icon {
+            opacity: 0.56;
+            width: 16px;
+            height: 16px;
+            line-height: 16px;
+        }
+
+        > .IconButton .Icon {
+            margin-right: 0;
+        }
+    }
+
+    .DayPicker {
+    }
+    
+    .DayPickerInput-Overlay {
+        background-color: rgba(var(--main-bg));
+        box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1),0 4px 11px hsla(0, 0%, 0%, 0.1);
+        line-height: 100%;
+    }
+
+    .DayPicker-Month {
+        margin: 0;
+        margin-top: 1em;
+        display: flex;
+        flex-direction: column;
+    }
+    .DayPicker-Body {
+        display: flex;
+        flex-direction: column;
+    }
+    .DayPicker-WeekdaysRow {
+        display: flex;
+        flex-direction: row;
+    }
+    .DayPicker-Weekday {
+        display: block;
+        width: 36px;
+        height: 36px;
+    }
+    .DayPicker-Week {
+        display: flex;
+        flex-direction: row;
+    }
+    .DayPicker-Day {
+        border-radius: unset;
+        display: block;
+        width: 36px;
+        height: 36px;
+    }
+    .DayPicker-Day--today {
+        color: #c74655;
+    }
+    .DayPicker-Day--start {
+        border-top-left-radius: 50% !important;
+        border-bottom-left-radius: 50% !important;
+    }
+    .DayPicker-Day--end {
+        border-top-right-radius: 50% !important;
+        border-bottom-right-radius: 50% !important;
+    }
+    .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
+        background-color: rgb(var(--button-bg));;
+        color: rgba(var(--button-fg), 0.5);
+      }
+    .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
+        color: rgb(var(--button-bg));;
+        background-color: rgba(var(--button-bg), 0.2);
+    }
+
+    .DayPicker:not(.DayPicker--interactionDisabled)
+      .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
+        background-color: rgba(var(--body-color), 0.2);
+    }
+}
