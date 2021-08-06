@@ -159,7 +159,6 @@ class Utils {
     }
 
     // Date and Time
-
     private static yearOption(date: Date) {
         const isCurrentYear = date.getFullYear() === new Date().getFullYear()
         return isCurrentYear ? undefined : 'numeric'
@@ -169,6 +168,14 @@ class Utils {
         return intl.formatDate(date, {
             year: Utils.yearOption(date),
             month: 'long',
+            day: '2-digit',
+        })
+    }
+
+    static inputDate(date: Date, intl: IntlShape): string {
+        return intl.formatDate(date, {
+            year: 'numeric',
+            month: '2-digit',
             day: '2-digit',
         })
     }

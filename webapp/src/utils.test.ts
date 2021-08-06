@@ -86,6 +86,21 @@ describe('utils', () => {
         })
     })
 
+    describe('input date', () => {
+        const currentYear = new Date().getFullYear()
+        const date = new Date(currentYear, 6, 9)
+
+        it('should show mm/dd/yyyy for current year', () => {
+            const intl = createIntl({locale: 'en-us'})
+            expect(Utils.inputDate(date, intl)).toBe(`07/09/${currentYear}`)
+        })
+
+        it('should show dd/mm/yyyy for current year, es local', () => {
+            const intl = createIntl({locale: 'es-es'})
+            expect(Utils.inputDate(date, intl)).toBe(`09/07/${currentYear}`)
+        })
+    })
+
     describe('display date and time', () => {
         const intl = createIntl({locale: 'en-us'})
 
