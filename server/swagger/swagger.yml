@@ -10,6 +10,10 @@ definitions:
         format: int64
         type: integer
         x-go-name: CreateAt
+      createdBy:
+        description: The id for user who created this block
+        type: string
+        x-go-name: CreatedBy
       deleteAt:
         description: The deleted time. Set to indicate this block is deleted
         format: int64
@@ -58,11 +62,50 @@ definitions:
     required:
     - id
     - rootId
+    - createdBy
     - modifiedBy
     - schema
     - type
     - createAt
     - updateAt
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/model
+  BlockPatch:
+    description: BlockPatch is a patch for modify blocks
+    properties:
+      deletedFields:
+        description: The block removed fields
+        items:
+          type: string
+        type: array
+        x-go-name: DeletedFields
+      parentId:
+        description: The id for this block's parent block. Empty for root blocks
+        type: string
+        x-go-name: ParentID
+      rootId:
+        description: The id for this block's root block
+        type: string
+        x-go-name: RootID
+      schema:
+        description: The schema version of this block
+        format: int64
+        type: integer
+        x-go-name: Schema
+      title:
+        description: The display title
+        type: string
+        x-go-name: Title
+      type:
+        description: The block type
+        type: string
+        x-go-name: Type
+      updatedFields:
+        additionalProperties:
+          type: object
+        description: The block updated fields
+        type: object
+        x-go-name: UpdatedFields
     type: object
     x-go-package: github.com/mattermost/focalboard/server/model
   ChangePasswordRequest:
@@ -547,6 +590,37 @@ paths:
         name: blockID
         required: true
         type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+    patch:
+      description: Partially updates a block
+      operationId: patchBlock
+      parameters:
+      - description: Workspace ID
+        in: path
+        name: workspaceID
+        required: true
+        type: string
+      - description: ID of block to patch
+        in: path
+        name: blockID
+        required: true
+        type: string
+      - description: block patch to apply
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/BlockPatch'
       produces:
       - application/json
       responses:

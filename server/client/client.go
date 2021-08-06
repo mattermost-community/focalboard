@@ -87,6 +87,10 @@ func (c *Client) DoAPIPost(url, data string) (*http.Response, error) {
 	return c.DoAPIRequest(http.MethodPost, c.APIURL+url, data, "")
 }
 
+func (c *Client) DoAPIPatch(url, data string) (*http.Response, error) {
+	return c.DoAPIRequest(http.MethodPatch, c.APIURL+url, data, "")
+}
+
 func (c *Client) DoAPIPut(url, data string) (*http.Response, error) {
 	return c.DoAPIRequest(http.MethodPut, c.APIURL+url, data, "")
 }
@@ -152,6 +156,16 @@ func (c *Client) GetBlocks() ([]model.Block, *Response) {
 	defer closeBody(r)
 
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) PatchBlock(blockID string, blockPatch *model.BlockPatch) (bool, *Response) {
+	r, err := c.DoAPIPatch(c.GetBlockRoute(blockID), toJSON(blockPatch))
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
 }
 
 func (c *Client) InsertBlocks(blocks []model.Block) (bool, *Response) {
