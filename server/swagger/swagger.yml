@@ -335,9 +335,7 @@ info:
   license:
     name: Custom
     url: https://github.com/mattermost/focalboard/blob/main/LICENSE.txt
-  title: |-
-    line /home/jespino/Projects/mattermost/focalboard/server/main/main.go:1:1
-    Package classification Focalboard Server
+  title: Focalboard Server
   version: 1.0.0
 paths:
   /api/v1/login:
