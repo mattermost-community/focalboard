@@ -148,6 +148,103 @@ func TestPostBlock(t *testing.T) {
 	})
 }
 
+func TestPatchBlock(t *testing.T) {
+	th := SetupTestHelper().InitBasic()
+	defer th.TearDown()
+
+	blockID := utils.CreateGUID()
+
+	block := model.Block{
+		ID:       blockID,
+		RootID:   blockID,
+		CreateAt: 1,
+		UpdateAt: 1,
+		Type:     "board",
+		Title:    "New title",
+		Fields:   map[string]interface{}{"test": "test value", "test2": "test value 2"},
+	}
+
+	_, resp := th.Client.InsertBlocks([]model.Block{block})
+	require.NoError(t, resp.Error)
+
+	blocks, resp := th.Client.GetBlocks()
+	require.NoError(t, resp.Error)
+	initialCount := len(blocks)
+
+	t.Run("Patch a block basic field", func(t *testing.T) {
+		newTitle := "Updated title"
+		blockPatch := &model.BlockPatch{
+			Title: &newTitle,
+		}
+
+		_, resp := th.Client.PatchBlock(blockID, blockPatch)
+		require.NoError(t, resp.Error)
+
+		blocks, resp := th.Client.GetBlocks()
+		require.NoError(t, resp.Error)
+		require.Len(t, blocks, initialCount)
+
+		var updatedBlock model.Block
+		for _, b := range blocks {
+			if b.ID == blockID {
+				updatedBlock = b
+			}
+		}
+		require.NotNil(t, updatedBlock)
+		require.Equal(t, "Updated title", updatedBlock.Title)
+	})
+
+	t.Run("Patch a block custom fields", func(t *testing.T) {
+		blockPatch := &model.BlockPatch{
+			UpdatedFields: map[string]interface{}{
+				"test":  "new test value",
+				"test3": "new field",
+			},
+		}
+
+		_, resp := th.Client.PatchBlock(blockID, blockPatch)
+		require.NoError(t, resp.Error)
+
+		blocks, resp := th.Client.GetBlocks()
+		require.NoError(t, resp.Error)
+		require.Len(t, blocks, initialCount)
+
+		var updatedBlock model.Block
+		for _, b := range blocks {
+			if b.ID == blockID {
+				updatedBlock = b
+			}
+		}
+		require.NotNil(t, updatedBlock)
+		require.Equal(t, "new test value", updatedBlock.Fields["test"])
+		require.Equal(t, "new field", updatedBlock.Fields["test3"])
+	})
+
+	t.Run("Patch a block to remove custom fields", func(t *testing.T) {
+		blockPatch := &model.BlockPatch{
+			DeletedFields: []string{"test", "test3", "test100"},
+		}
+
+		_, resp := th.Client.PatchBlock(blockID, blockPatch)
+		require.NoError(t, resp.Error)
+
+		blocks, resp := th.Client.GetBlocks()
+		require.NoError(t, resp.Error)
+		require.Len(t, blocks, initialCount)
+
+		var updatedBlock model.Block
+		for _, b := range blocks {
+			if b.ID == blockID {
+				updatedBlock = b
+			}
+		}
+		require.NotNil(t, updatedBlock)
+		require.Equal(t, nil, updatedBlock.Fields["test"])
+		require.Equal(t, "test value 2", updatedBlock.Fields["test2"])
+		require.Equal(t, nil, updatedBlock.Fields["test3"])
+	})
+}
+
 func TestDeleteBlock(t *testing.T) {
 	th := SetupTestHelper().InitBasic()
 	defer th.TearDown()
