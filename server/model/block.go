@@ -122,9 +122,11 @@ func (p *BlockPatch) Patch(block *Block) *Block {
 	if p.ParentID != nil {
 		block.ParentID = *p.ParentID
 	}
+	
 	if p.RootID != nil {
 		block.RootID = *p.RootID
 	}
+	
 	if p.Schema != nil {
 		block.Schema = *p.Schema
 	}
