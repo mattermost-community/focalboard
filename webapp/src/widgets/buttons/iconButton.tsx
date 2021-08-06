@@ -9,6 +9,7 @@ type Props = {
     title?: string
     icon?: React.ReactNode
     className?: string
+    'data-testid'?: string
     onMouseDown?: (e: React.MouseEvent<HTMLDivElement>) => void
 }
 
@@ -23,6 +24,7 @@ function IconButton(props: Props): JSX.Element {
             onMouseDown={props.onMouseDown}
             className={className}
             title={props.title}
+            data-testid={props['data-testid']}
         >
             {props.icon}
         </div>

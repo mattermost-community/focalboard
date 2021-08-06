@@ -54,6 +54,7 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
                 <span className='Label-text'>{option.value}</span>
                 {onDeleteValue &&
                     <IconButton
+                        data-testid={`delete-value-${option.id}`}
                         onClick={() => onDeleteValue(option)}
                         onMouseDown={(e) => e.stopPropagation()}
                         icon={<CloseIcon/>}
@@ -70,9 +71,13 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
                 <Label color={option.color}>{option.value}</Label>
             </div>
             <MenuWrapper stopPropagationOnToggle={true}>
-                <IconButton icon={<OptionsIcon/>}/>
+                <IconButton
+                    data-testid={`delete-option-menu-${option.id}`}
+                    icon={<OptionsIcon/>}
+                />
                 <Menu position='left'>
                     <Menu.Text
+                        data-testid={`delete-option-${option.id}`}
                         id='delete'
                         icon={<DeleteIcon/>}
                         name={intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
@@ -81,6 +86,7 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
                     <Menu.Separator/>
                     {Object.entries(Constants.menuColors).map(([key, color]: any) => (
                         <Menu.Color
+                            data-testid={`select-color-${key}`}
                             key={key}
                             id={key}
                             name={color}
@@ -136,44 +142,46 @@ const valueSelectorStyle = {
 
 function ValueSelector(props: Props): JSX.Element {
     return (
-        <CreatableSelect
-            captureMenuScroll={true}
-            maxMenuHeight={1200}
-            isMulti={props.isMulti}
-            isClearable={true}
-            styles={valueSelectorStyle}
-            formatOptionLabel={(option: IPropertyOption, meta: FormatOptionLabelMeta<IPropertyOption, true | false>) => (
-                <ValueSelectorLabel
-                    option={option}
-                    meta={meta}
-                    onChangeColor={props.onChangeColor}
-                    onDeleteOption={props.onDeleteOption}
-                    onDeleteValue={props.onDeleteValue}
-                />
-            )}
-            className='ValueSelector'
-            options={props.options}
-            getOptionLabel={(o: IPropertyOption) => o.value}
-            getOptionValue={(o: IPropertyOption) => o.id}
-            onChange={(value: ValueType<IPropertyOption, true | false>, action: ActionMeta<IPropertyOption>): void => {
-                if (action.action === 'select-option') {
-                    if (Array.isArray(value)) {
-                        props.onChange((value as IPropertyOption[]).map((option) => option.id))
-                    } else {
-                        props.onChange((value as IPropertyOption).id)
+        <div data-testid='creatable-selector-parent'>
+            <CreatableSelect
+                captureMenuScroll={true}
+                maxMenuHeight={1200}
+                isMulti={props.isMulti}
+                isClearable={true}
+                styles={valueSelectorStyle}
+                formatOptionLabel={(option: IPropertyOption, meta: FormatOptionLabelMeta<IPropertyOption, true | false>) => (
+                    <ValueSelectorLabel
+                        option={option}
+                        meta={meta}
+                        onChangeColor={props.onChangeColor}
+                        onDeleteOption={props.onDeleteOption}
+                        onDeleteValue={props.onDeleteValue}
+                    />
+                )}
+                className='ValueSelector'
+                options={props.options}
+                getOptionLabel={(o: IPropertyOption) => o.value}
+                getOptionValue={(o: IPropertyOption) => o.id}
+                onChange={(value: ValueType<IPropertyOption, true | false>, action: ActionMeta<IPropertyOption>): void => {
+                    if (action.action === 'select-option') {
+                        if (Array.isArray(value)) {
+                            props.onChange((value as IPropertyOption[]).map((option) => option.id))
+                        } else {
+                            props.onChange((value as IPropertyOption).id)
+                        }
+                    } else if (action.action === 'clear') {
+                        props.onChange('')
                     }
-                } else if (action.action === 'clear') {
-                    props.onChange('')
-                }
-            }}
-            onCreateOption={props.onCreate}
-            autoFocus={true}
-            value={props.value}
-            closeMenuOnSelect={true}
-            placeholder={props.emptyValue}
-            hideSelectedOptions={false}
-            defaultMenuIsOpen={true}
-        />
+                }}
+                onCreateOption={props.onCreate}
+                autoFocus={true}
+                value={props.value}
+                closeMenuOnSelect={true}
+                placeholder={props.emptyValue}
+                hideSelectedOptions={false}
+                defaultMenuIsOpen={true}
+            />
+        </div>
     )
 }
 

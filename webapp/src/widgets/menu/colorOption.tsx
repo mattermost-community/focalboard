@@ -8,12 +8,14 @@ import './colorOption.scss'
 
 type ColorOptionProps = MenuOptionProps & {
     icon?: React.ReactNode
+    'data-testid'?: string
 }
 
 function ColorOption(props: ColorOptionProps): JSX.Element {
     const {id, name, icon} = props
     return (
         <div
+            data-testid={props['data-testid']}
             className='MenuOption ColorOption menu-option'
             onClick={(e: React.MouseEvent): void => {
                 e.target.dispatchEvent(new Event('menuItemClicked'))
