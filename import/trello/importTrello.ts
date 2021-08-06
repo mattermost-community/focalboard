@@ -4,11 +4,11 @@ import * as fs from 'fs'
 import minimist from 'minimist'
 import {exit} from 'process'
 import {ArchiveUtils} from '../../webapp/src/blocks/archive'
-import {IBlock} from '../../webapp/src/blocks/block'
-import {IPropertyOption, IPropertyTemplate, MutableBoard} from '../../webapp/src/blocks/board'
-import {MutableBoardView} from '../../webapp/src/blocks/boardView'
-import {MutableCard} from '../../webapp/src/blocks/card'
-import {MutableTextBlock} from '../../webapp/src/blocks/textBlock'
+import {Block} from '../../webapp/src/blocks/block'
+import {IPropertyOption, IPropertyTemplate, createBoard} from '../../webapp/src/blocks/board'
+import {createBoardView} from '../../webapp/src/blocks/boardView'
+import {createCard} from '../../webapp/src/blocks/card'
+import {createTextBlock} from '../../webapp/src/blocks/textBlock'
 import {Trello} from './trello'
 import {Utils} from './utils'
 
@@ -59,15 +59,15 @@ function main() {
     console.log(`Exported to ${outputFile}`)
 }
 
-function convert(input: Trello): IBlock[] {
-    const blocks: IBlock[] = []
+function convert(input: Trello): Block[] {
+    const blocks: Block[] = []
 
     // Board
-    const board = new MutableBoard()
+    const board = createBoard()
     console.log(`Board: ${input.name}`)
     board.rootId = board.id
     board.title = input.name
-    board.description = input.desc
+    board.fields.description = input.desc
 
     // Convert lists (columns) to a Select property
     const optionIdMap = new Map<string, string>()
@@ -91,13 +91,13 @@ function convert(input: Trello): IBlock[] {
         type: 'select',
         options
     }
-    board.cardProperties = [cardProperty]
+    board.fields.cardProperties = [cardProperty]
     blocks.push(board)
 
     // Board view
-    const view = new MutableBoardView()
+    const view = createBoardView()
     view.title = 'Board View'
-    view.viewType = 'board'
+    view.fields.viewType = 'board'
     view.rootId = board.id
     view.parentId = board.id
     blocks.push(view)
@@ -106,7 +106,7 @@ function convert(input: Trello): IBlock[] {
     input.cards.forEach(card => {
         console.log(`Card: ${card.name}`)
 
-        const outCard = new MutableCard()
+        const outCard = createCard()
         outCard.title = card.name
         outCard.rootId = board.id
         outCard.parentId = board.id
@@ -115,7 +115,7 @@ function convert(input: Trello): IBlock[] {
         if (card.idList) {
             const optionId = optionIdMap.get(card.idList)
             if (optionId) {
-                outCard.properties[cardProperty.id] = optionId
+                outCard.fields.properties[cardProperty.id] = optionId
             } else {
                 console.warn(`Invalid idList: ${card.idList} for card: ${card.name}`)
             }
@@ -127,13 +127,13 @@ function convert(input: Trello): IBlock[] {
 
         if (card.desc) {
             // console.log(`\t${card.desc}`)
-            const text = new MutableTextBlock()
+            const text = createTextBlock()
             text.title = card.desc
             text.rootId = board.id
             text.parentId = outCard.id
             blocks.push(text)
 
-            outCard.contentOrder = [text.id]
+            outCard.fields.contentOrder = [text.id]
         }
     })
 
