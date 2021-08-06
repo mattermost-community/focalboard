@@ -30,7 +30,7 @@ const ViewHeaderGroupByMenu = React.memo((props: Props) => {
                     values={{
                         property: (
                             <span
-                                style={{color: 'rgb(var(--main-fg))'}}
+                                style={{color: 'rgb(var(--center-channel-color-rgb))'}}
                                 id='groupByLabel'
                             >
                                 {groupByPropertyName}

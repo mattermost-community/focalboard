@@ -5,8 +5,8 @@
     flex-direction: column;
 
     min-height: 100%;
-    color: rgb(var(--sidebar-fg));
-    background-color: rgb(var(--sidebar-bg));
+    color: rgb(var(--sidebar-text-rgb));
+    background-color: rgb(var(--sidebar-bg-rgb));
     padding: 12px 0;
 
     &.hidden {
@@ -65,7 +65,7 @@
         align-items: center;
 
         &:hover {
-            background-color: rgba(var(--sidebar-fg), 0.08);
+            background-color: rgba(var(--sidebar-text-rgb), 0.08);
         }
 
         > .heading {
@@ -75,10 +75,10 @@
         }
 
         > .IconButton {
-            background-color: var(--sidebar-bg);
+            background-color: var(--sidebar-bg-rgb);
 
             &:hover {
-                background-color: rgba(var(--sidebar-fg), 0.1);
+                background-color: rgba(var(--sidebar-text-rgb), 0.1);
             }
         }
 
@@ -104,11 +104,11 @@
     }
 
     .OptionsIcon {
-        color: rgba(var(--sidebar-fg), 0.5);
+        color: rgba(var(--sidebar-text-rgb), 0.5);
     }
     .DisclosureTriangleIcon,
     .DotIcon {
-        fill: rgba(var(--sidebar-fg), 0.5);
+        fill: rgba(var(--sidebar-text-rgb), 0.5);
         flex-shrink: 0;
     }
 
@@ -117,7 +117,7 @@
     }
 
     .HideSidebarIcon {
-        stroke: rgba(var(--sidebar-fg), 0.5);
+        stroke: rgba(var(--sidebar-text-rgb), 0.5);
         stroke-width: 6px;
     }
 }

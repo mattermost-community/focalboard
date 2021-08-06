@@ -25,6 +25,7 @@
 	},
 	"dependencies": {
 		"@reduxjs/toolkit": "^1.6.0",
+		"color": "^4.0.0",
 		"easymde": "^2.15.0",
 		"emoji-mart": "^3.0.1",
 		"imagemin-gifsicle": "^7.0.0",
@@ -76,6 +77,7 @@
 		"@testing-library/jest-dom": "^5.11.10",
 		"@testing-library/react": "^11.2.5",
 		"@testing-library/user-event": "^13.1.9",
+		"@types/color": "^3.0.2",
 		"@types/emoji-mart": "^3.0.4",
 		"@types/jest": "^26.0.21",
 		"@types/marked": "^2.0.0",

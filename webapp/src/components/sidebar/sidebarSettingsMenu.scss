@@ -6,11 +6,11 @@
         height: 36px;
         align-items: center;
         padding-left: 20px;
-        color: rgba(var(--sidebar-fg), 0.64);
+        color: rgba(var(--sidebar-text-rgb), 0.64);
         font-weight: 400;
 
         &:hover {
-            background-color: rgba(var(--sidebar-fg), 0.08);
+            background-color: rgba(var(--sidebar-text-rgb), 0.08);
             display: flex;
         }
     }
