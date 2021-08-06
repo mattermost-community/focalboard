@@ -4,11 +4,11 @@ import minimist from 'minimist'
 import path from 'path'
 import {exit} from 'process'
 import {ArchiveUtils} from '../../webapp/src/blocks/archive'
-import {IBlock} from '../../webapp/src/blocks/block'
-import {IPropertyTemplate, MutableBoard} from '../../webapp/src/blocks/board'
-import {MutableBoardView} from '../../webapp/src/blocks/boardView'
-import {MutableCard} from '../../webapp/src/blocks/card'
-import {MutableTextBlock} from '../../webapp/src/blocks/textBlock'
+import {Block} from '../../webapp/src/blocks/block'
+import {IPropertyTemplate, createBoard} from '../../webapp/src/blocks/board'
+import {createBoardView} from '../../webapp/src/blocks/boardView'
+import {createCard} from '../../webapp/src/blocks/card'
+import {createTextBlock} from '../../webapp/src/blocks/textBlock'
 import {Utils} from './utils'
 
 // HACKHACK: To allow Utils.CreateGuid to work
@@ -88,6 +88,7 @@ function getCsvFilePath(inputFolder: string): string | undefined {
 }
 
 function getMarkdown(cardTitle: string): string | undefined {
+    if (!fs.existsSync(markdownFolder)){ return undefined}
     const files = fs.readdirSync(markdownFolder)
     const file = files.find((o) => {
         const basename = path.basename(o)
@@ -116,11 +117,11 @@ function getColumns(input: any[]) {
     return keys.slice(1)
 }
 
-function convert(input: any[], title: string): IBlock[] {
-    const blocks: IBlock[] = []
+function convert(input: any[], title: string): Block[] {
+    const blocks: Block[] = []
 
     // Board
-    const board = new MutableBoard()
+    const board = createBoard()
     console.log(`Board: ${title}`)
     board.rootId = board.id
     board.title = title
@@ -134,7 +135,7 @@ function convert(input: any[], title: string): IBlock[] {
             type: 'select',
             options: []
         }
-        board.cardProperties.push(cardProperty)
+        board.fields.cardProperties.push(cardProperty)
     })
 
     // Set all column types to select
@@ -142,9 +143,9 @@ function convert(input: any[], title: string): IBlock[] {
     blocks.push(board)
 
     // Board view
-    const view = new MutableBoardView()
+    const view = createBoardView()
     view.title = 'Board View'
-    view.viewType = 'board'
+    view.fields.viewType = 'board'
     view.rootId = board.id
     view.parentId = board.id
     blocks.push(view)
@@ -163,7 +164,7 @@ function convert(input: any[], title: string): IBlock[] {
 
         console.log(`Card: ${title}`)
 
-        const outCard = new MutableCard()
+        const outCard = createCard()
         outCard.title = title
         outCard.rootId = board.id
         outCard.parentId = board.id
@@ -176,7 +177,7 @@ function convert(input: any[], title: string): IBlock[] {
                 continue
             }
 
-            const cardProperty = board.cardProperties.find((o) => o.name === key)!
+            const cardProperty = board.fields.cardProperties.find((o) => o.name === key)!
             let option = cardProperty.options.find((o) => o.value === value)
             if (!option) {
                 const color = optionColors[optionColorIndex % optionColors.length]
@@ -189,7 +190,7 @@ function convert(input: any[], title: string): IBlock[] {
                 cardProperty.options.push(option)
             }
 
-            outCard.properties[cardProperty.id] = option.id
+            outCard.fields.properties[cardProperty.id] = option.id
         }
 
         blocks.push(outCard)
@@ -198,13 +199,13 @@ function convert(input: any[], title: string): IBlock[] {
         const markdown = getMarkdown(title)
         if (markdown) {
             console.log(`Markdown: ${markdown.length} bytes`)
-            const text = new MutableTextBlock()
+            const text = createTextBlock()
             text.title = markdown
             text.rootId = board.id
             text.parentId = outCard.id
             blocks.push(text)
 
-            outCard.contentOrder = [text.id]
+            outCard.fields.contentOrder = [text.id]
         }
     })
 
