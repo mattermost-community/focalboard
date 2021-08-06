@@ -42,7 +42,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
     const titleRef = useRef<Focusable>(null)
     const saveTitle = useCallback(() => {
         if (title !== card.title) {
-            mutator.changeTitle(card, title)
+            mutator.changeTitle(card.id, card.title, title)
         }
     }, [card.title, title])
 
@@ -124,17 +124,13 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
                 {/* Comments */}
 
-                {!props.readonly &&
-                <>
-                    <hr/>
-                    <CommentsList
-                        comments={comments}
-                        rootId={card.rootId}
-                        cardId={card.id}
-                    />
-                    <hr/>
-                </>
-                }
+                <hr/>
+                <CommentsList
+                    comments={comments}
+                    rootId={card.rootId}
+                    cardId={card.id}
+                    readonly={props.readonly}
+                />
             </div>
 
             {/* Content blocks */}

@@ -1,4 +1,4 @@
-//go:generate mockgen -destination=mockstore/mockstore.go -package mockstore . Store
+//go:generate mockgen --build_flags=--mod=mod -destination=mockstore/mockstore.go -package mockstore . Store
 package store
 
 import "github.com/mattermost/focalboard/server/model"
@@ -24,6 +24,7 @@ type Store interface {
 	DeleteBlock(c Container, blockID string, modifiedBy string) error
 	GetBlockCountsByType() (map[string]int64, error)
 	GetBlock(c Container, blockID string) (*model.Block, error)
+	PatchBlock(c Container, blockID string, blockPatch *model.BlockPatch, userID string) error
 
 	Shutdown() error
 

@@ -20,6 +20,7 @@ type Props = {
     comment: Block
     userId: string
     userImageUrl: string
+    readonly: boolean
 }
 
 const Comment: FC<Props> = (props: Props) => {
@@ -42,17 +43,20 @@ const Comment: FC<Props> = (props: Props) => {
                 <div className='comment-date'>
                     {Utils.displayDateTime(new Date(comment.createAt), intl)}
                 </div>
-                <MenuWrapper>
-                    <IconButton icon={<OptionsIcon/>}/>
-                    <Menu position='left'>
-                        <Menu.Text
-                            icon={<DeleteIcon/>}
-                            id='delete'
-                            name={intl.formatMessage({id: 'Comment.delete', defaultMessage: 'Delete'})}
-                            onClick={() => mutator.deleteBlock(comment)}
-                        />
-                    </Menu>
-                </MenuWrapper>
+
+                {!props.readonly && (
+                    <MenuWrapper>
+                        <IconButton icon={<OptionsIcon/>}/>
+                        <Menu position='left'>
+                            <Menu.Text
+                                icon={<DeleteIcon/>}
+                                id='delete'
+                                name={intl.formatMessage({id: 'Comment.delete', defaultMessage: 'Delete'})}
+                                onClick={() => mutator.deleteBlock(comment)}
+                            />
+                        </Menu>
+                    </MenuWrapper>
+                )}
             </div>
             <div
                 className='comment-text'
