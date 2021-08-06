@@ -68,6 +68,11 @@ const CardDetail = (props: Props): JSX.Element|null => {
         }
     }, [])
 
+    const setRandomIcon = useCallback(() => {
+        const newIcon = BlockIcons.shared.randomIcon()
+        mutator.changeIcon(card.id, card.fields.icon, newIcon)
+    }, [card.id, card.fields.icon])
+
     if (!card) {
         return null
     }
@@ -83,10 +88,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 {!props.readonly && !card.fields.icon &&
                     <div className='add-buttons'>
                         <Button
-                            onClick={() => {
-                                const newIcon = BlockIcons.shared.randomIcon()
-                                mutator.changeIcon(card, newIcon)
-                            }}
+                            onClick={setRandomIcon}
                             icon={<EmojiIcon/>}
                         >
                             <FormattedMessage

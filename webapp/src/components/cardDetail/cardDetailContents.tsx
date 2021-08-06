@@ -31,7 +31,7 @@ function addTextBlock(card: Card, intl: IntlShape, text: string): void {
     mutator.performAsUndoGroup(async () => {
         const description = intl.formatMessage({id: 'CardDetail.addCardText', defaultMessage: 'add card text'})
         await mutator.insertBlock(block, description)
-        await mutator.changeCardContentOrder(card, contentOrder, description)
+        await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder, description)
     })
 }
 
@@ -103,7 +103,7 @@ function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: ICont
 
     mutator.performAsUndoGroup(async () => {
         const description = intl.formatMessage({id: 'CardDetail.moveContent', defaultMessage: 'move card content'})
-        await mutator.changeCardContentOrder(card, contentOrder, description)
+        await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder, description)
     })
 }
 

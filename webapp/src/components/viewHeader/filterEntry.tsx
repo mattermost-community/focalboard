@@ -54,7 +54,7 @@ const FilterEntry = React.memo((props: Props): JSX.Element => {
                                 if (newFilter.propertyId !== optionId) {
                                     newFilter.propertyId = optionId
                                     newFilter.values = []
-                                    mutator.changeViewFilter(view, filterGroup)
+                                    mutator.changeViewFilter(view.id, view.fields.filter, filterGroup)
                                 }
                             }}
                         />))}
@@ -96,7 +96,7 @@ const FilterEntry = React.memo((props: Props): JSX.Element => {
                 onClick={() => {
                     const filterGroup = createFilterGroup(view.fields.filter)
                     filterGroup.filters = filterGroup.filters.filter((o) => isAFilterGroupInstance(o) || areFilterClausesEqual(o, filter))
-                    mutator.changeViewFilter(view, filterGroup)
+                    mutator.changeViewFilter(view.id, view.fields.filter, filterGroup)
                 }}
             >
                 <FormattedMessage

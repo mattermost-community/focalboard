@@ -27,12 +27,12 @@ const TableHeaderMenu: FC<Props> = (props: Props): JSX.Element => {
             <Menu.Text
                 id='sortAscending'
                 name={intl.formatMessage({id: 'TableHeaderMenu.sort-ascending', defaultMessage: 'Sort ascending'})}
-                onClick={() => mutator.changeViewSortOptions(activeView, [{propertyId: templateId, reversed: false}])}
+                onClick={() => mutator.changeViewSortOptions(activeView.id, activeView.fields.sortOptions, [{propertyId: templateId, reversed: false}])}
             />
             <Menu.Text
                 id='sortDescending'
                 name={intl.formatMessage({id: 'TableHeaderMenu.sort-descending', defaultMessage: 'Sort descending'})}
-                onClick={() => mutator.changeViewSortOptions(activeView, [{propertyId: templateId, reversed: true}])}
+                onClick={() => mutator.changeViewSortOptions(activeView.id, activeView.fields.sortOptions, [{propertyId: templateId, reversed: true}])}
             />
             <Menu.Text
                 id='insertLeft'
@@ -63,7 +63,7 @@ const TableHeaderMenu: FC<Props> = (props: Props): JSX.Element => {
                     <Menu.Text
                         id='hide'
                         name={intl.formatMessage({id: 'TableHeaderMenu.hide', defaultMessage: 'Hide'})}
-                        onClick={() => mutator.changeViewVisibleProperties(activeView, activeView.fields.visiblePropertyIds.filter((o: string) => o !== templateId))}
+                        onClick={() => mutator.changeViewVisibleProperties(activeView.id, activeView.fields.visiblePropertyIds, activeView.fields.visiblePropertyIds.filter((o: string) => o !== templateId))}
                     />
                     <Menu.Text
                         id='duplicate'

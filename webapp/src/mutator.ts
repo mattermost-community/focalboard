@@ -138,51 +138,61 @@ class Mutator {
         )
     }
 
-    async changeIcon(block: Card | Board, icon: string, description = 'change icon') {
-        let newBlock: Block
-        switch (block.type) {
-        case 'card': {
-            const card = createCard(block)
-            card.fields.icon = icon
-            newBlock = card
-            break
-        }
-        case 'board': {
-            const board = createBoard(block)
-
-            board.fields.icon = icon
-            newBlock = board
-            break
-        }
-        default: {
-            Utils.assertFailure(`changeIcon: Invalid block type: ${block.type}`)
-            return
-        }
-        }
-
-        await this.updateBlock(newBlock, block, description)
+    async changeIcon(blockId: string, oldIcon: string|undefined, icon: string, description = 'change icon') {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(blockId, {updatedFields: {icon}})
+            },
+            async () => {
+                await octoClient.patchBlock(blockId, {updatedFields: {icon: oldIcon}})
+            },
+            description,
+            this.undoGroupId,
+        )
     }
 
-    async changeDescription(block: Block, boardDescription: string, description = 'change description') {
-        const newBoard = createBoard(block)
-        newBoard.fields.description = boardDescription
-        await this.updateBlock(newBoard, block, description)
+    async changeDescription(blockId: string, oldBlockDescription: string|undefined, blockDescription: string, description = 'change description') {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(blockId, {updatedFields: {description: blockDescription}})
+            },
+            async () => {
+                await octoClient.patchBlock(blockId, {updatedFields: {description: oldBlockDescription}})
+            },
+            description,
+            this.undoGroupId,
+        )
     }
 
-    async showDescription(board: Board, showDescription = true, description?: string) {
-        const newBoard = createBoard(board)
-        newBoard.fields.showDescription = showDescription
+    async showDescription(boardId: string, oldShowDescription: boolean, showDescription = true, description?: string) {
         let actionDescription = description
         if (!actionDescription) {
             actionDescription = showDescription ? 'show description' : 'hide description'
         }
-        await this.updateBlock(newBoard, board, actionDescription)
+
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(boardId, {updatedFields: {showDescription}})
+            },
+            async () => {
+                await octoClient.patchBlock(boardId, {updatedFields: {showDescription: oldShowDescription}})
+            },
+            actionDescription,
+            this.undoGroupId,
+        )
     }
 
-    async changeCardContentOrder(card: Card, contentOrder: Array<string | string[]>, description = 'reorder'): Promise<void> {
-        const newCard = createCard(card)
-        newCard.fields.contentOrder = contentOrder
-        await this.updateBlock(newCard, card, description)
+    async changeCardContentOrder(cardId: string, oldContentOrder: Array<string | string[]>, contentOrder: Array<string | string[]>, description = 'reorder'): Promise<void> {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(cardId, {updatedFields: {contentOrder}})
+            },
+            async () => {
+                await octoClient.patchBlock(cardId, {updatedFields: {contentOrder: oldContentOrder}})
+            },
+            description,
+            this.undoGroupId,
+        )
     }
 
     // Property Templates
@@ -439,40 +449,82 @@ class Mutator {
 
     // Views
 
-    async changeViewSortOptions(view: BoardView, sortOptions: ISortOption[]): Promise<void> {
-        const newView = createBoardView(view)
-        newView.fields.sortOptions = sortOptions
-        await this.updateBlock(newView, view, 'sort')
+    async changeViewSortOptions(viewId: string, oldSortOptions: ISortOption[], sortOptions: ISortOption[]): Promise<void> {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {sortOptions}})
+            },
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {sortOptions: oldSortOptions}})
+            },
+            'sort',
+            this.undoGroupId,
+        )
     }
 
-    async changeViewFilter(view: BoardView, filter: FilterGroup): Promise<void> {
-        const newView = createBoardView(view)
-        newView.fields.filter = filter
-        await this.updateBlock(newView, view, 'filter')
+    async changeViewFilter(viewId: string, oldFilter: FilterGroup, filter: FilterGroup): Promise<void> {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {filter}})
+            },
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {filter: oldFilter}})
+            },
+            'filter',
+            this.undoGroupId,
+        )
     }
 
-    async changeViewGroupById(view: BoardView, groupById: string): Promise<void> {
-        const newView = createBoardView(view)
-        newView.fields.groupById = groupById
-        await this.updateBlock(newView, view, 'group by')
+    async changeViewGroupById(viewId: string, oldGroupById: string|undefined, groupById: string): Promise<void> {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {groupById}})
+            },
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {groupById: oldGroupById}})
+            },
+            'group by',
+            this.undoGroupId,
+        )
     }
 
-    async changeViewVisibleProperties(view: BoardView, visiblePropertyIds: string[], description = 'show / hide property'): Promise<void> {
-        const newView = createBoardView(view)
-        newView.fields.visiblePropertyIds = visiblePropertyIds
-        await this.updateBlock(newView, view, description)
+    async changeViewVisibleProperties(viewId: string, oldVisiblePropertyIds: string[], visiblePropertyIds: string[], description = 'show / hide property'): Promise<void> {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {visiblePropertyIds}})
+            },
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {visiblePropertyIds: oldVisiblePropertyIds}})
+            },
+            description,
+            this.undoGroupId,
+        )
     }
 
-    async changeViewVisibleOptionIds(view: BoardView, visibleOptionIds: string[], description = 'reorder'): Promise<void> {
-        const newView = createBoardView(view)
-        newView.fields.visibleOptionIds = visibleOptionIds
-        await this.updateBlock(newView, view, description)
+    async changeViewVisibleOptionIds(viewId: string, oldVisibleOptionIds: string[], visibleOptionIds: string[], description = 'reorder'): Promise<void> {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {visibleOptionIds}})
+            },
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {visibleOptionIds: oldVisibleOptionIds}})
+            },
+            description,
+            this.undoGroupId,
+        )
     }
 
-    async changeViewHiddenOptionIds(view: BoardView, hiddenOptionIds: string[], description = 'reorder'): Promise<void> {
-        const newView = createBoardView(view)
-        newView.fields.hiddenOptionIds = hiddenOptionIds
-        await this.updateBlock(newView, view, description)
+    async changeViewHiddenOptionIds(viewId: string, oldHiddenOptionIds: string[], hiddenOptionIds: string[], description = 'reorder'): Promise<void> {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {hiddenOptionIds}})
+            },
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {hiddenOptionIds: oldHiddenOptionIds}})
+            },
+            description,
+            this.undoGroupId,
+        )
     }
 
     async hideViewColumn(view: BoardView, columnOptionId: string): Promise<void> {

@@ -191,7 +191,7 @@ const Table = (props: Props): JSX.Element => {
             visibleOptionIds.splice(srcIndex, 0, visibleOptionIds.splice(destIndex, 1)[0])
             Utils.log(`ondrop. updated visibleoptionids: ${visibleOptionIds}`)
 
-            await mutator.changeViewVisibleOptionIds(activeView, visibleOptionIds)
+            await mutator.changeViewVisibleOptionIds(activeView.id, activeView.fields.visibleOptionIds, visibleOptionIds)
         }
     }, [activeView, visibleGroups])
 
