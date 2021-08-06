@@ -3,10 +3,10 @@
     display: flex;
     flex-direction: row;
 
-    border-bottom: solid 1px rgba(var(--body-color), 0.16);
+    border-bottom: solid 1px rgba(var(--center-channel-color-rgb), 0.16);
     margin: 16px 0;
     padding: 12px 8px;
-    color: rgba(var(--body-color), 0.64);
+    color: rgba(var(--center-channel-color-rgb), 0.64);
     align-items: center;
 
     > div {
@@ -31,7 +31,7 @@
             margin: 0;
         }
         &:hover {
-            background: rgba(var(--body-color), 0.1);
+            background: rgba(var(--center-channel-color-rgb), 0.1);
         }
     }
 

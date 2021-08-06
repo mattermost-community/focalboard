@@ -9,16 +9,16 @@
     border-radius: 3px;
     margin-bottom: 10px;
     padding: 8px 16px;
-    box-shadow: rgba(var(--body-color), 0.1) 0px 0px 0px 1px,
-        rgba(var(--body-color), 0.1) 0px 2px 4px;
+    box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0px 0px 0px 1px,
+        rgba(var(--center-channel-color-rgb), 0.1) 0px 2px 4px;
 
     cursor: pointer;
-    color: rgb(var(--body-color));
+    color: rgb(var(--center-channel-color-rgb));
 
     transition: background 100ms ease-out 0s;
 
     &:hover {
-        background-color: rgba(var(--body-color), 0.1);
+        background-color: rgba(var(--center-channel-color-rgb), 0.1);
         .optionsMenu {
             display: block;
         }
@@ -57,9 +57,9 @@
         border-radius: 3px;
         margin-right: 6px;
         padding: 0;
-        background: rgb(var(--body-color), 0.1);
-        box-shadow: rgba(var(--body-color), 0.1) 0px 0px 0px 1px,
-            rgba(var(--body-color), 0.1) 0px 2px 4px;
+        background: rgb(var(--center-channel-color-rgb), 0.1);
+        box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0px 0px 0px 1px,
+            rgba(var(--center-channel-color-rgb), 0.1) 0px 2px 4px;
         height: 24px;
         width: 24px;
     }
