@@ -104,6 +104,7 @@ If there is a default site, you may need to delete it
 
 ```
 sudo rm /etc/nginx/sites-enabled/default
+sudo rm /etc/nginx/sites-available/default
 ```
 
 Enable the Focalboard site, test the config, and reload NGINX:
