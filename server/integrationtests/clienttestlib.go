@@ -74,7 +74,7 @@ func SetupTestHelper() *TestHelper {
 	if err != nil {
 		panic(err)
 	}
-	srv, err := server.New(cfg, sessionToken, db, logger)
+	srv, err := server.New(cfg, sessionToken, db, logger, "")
 	if err != nil {
 		panic(err)
 	}

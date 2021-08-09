@@ -16,6 +16,7 @@ export type EditableProps = {
     validator?: (value: string) => boolean
     onCancel?: () => void
     onSave?: (saveType: 'onEnter'|'onEsc'|'onBlur') => void
+    onFocus?: () => void
 }
 
 export type Focusable = {
@@ -33,7 +34,8 @@ export type ElementProps = {
     onBlur: () => void,
     onKeyDown: (e: React.KeyboardEvent<ElementType>) => void,
     readOnly?: boolean,
-    spellCheck?: boolean
+    spellCheck?: boolean,
+    onFocus?: () => void,
 }
 
 export function useEditable(
@@ -109,6 +111,7 @@ export function useEditable(
         },
         readOnly: readonly,
         spellCheck: props.spellCheck,
+        onFocus: props.onFocus,
     }
 }
 

@@ -23,7 +23,7 @@
         .IconButton {
             background-color: unset;
             &:hover:not(.readonly) {
-                background-color: rgba(var(--body-color), 0.1);
+                background-color: rgba(var(--center-channel-color-rgb), 0.1);
             }
             &.readonly {
                 opacity: .5;
@@ -37,7 +37,7 @@
             border-radius: 3px;
             line-height: 20px;
             margin-right: 5px;
-            color: rgba(var(--body-color), 1);
+            color: rgba(var(--center-channel-color-rgb), 1);
             white-space: nowrap;
             text-transform: none;
             font-weight: normal;
@@ -51,7 +51,7 @@
                 font-weight: normal;
                 font-size: 16px;
                 //     line-height: 20px;
-                color: rgba(var(--body-color), 1);
+                color: rgba(var(--center-channel-color-rgb), 1);
             }
         }
 
@@ -72,8 +72,8 @@
         flex: 0 0 auto;
         display: flex;
         flex-direction: row;
-        color: rgb(var(--body-color));
-        border-right: solid 1px rgba(var(--body-color), 0.09);
+        color: rgb(var(--center-channel-color-rgb));
+        border-right: solid 1px rgba(var(--center-channel-color-rgb), 0.09);
         border-left: 1px solid transparent;
         border-top: 1px solid transparent;
         border-bottom: 1px solid transparent;
@@ -85,7 +85,7 @@
         text-overflow: ellipsis;
 
         &:hover {
-            background-color: rgba(var(--body-color), 0.05);
+            background-color: rgba(var(--center-channel-color-rgb), 0.05);
         }
 
         &.title-cell {
@@ -162,7 +162,7 @@
         display: flex;
         flex-direction: row;
 
-        border-bottom: solid 1px rgba(var(--body-color), 0.09);
+        border-bottom: solid 1px rgba(var(--center-channel-color-rgb), 0.09);
         &.hidden {
             display: none;
         }
@@ -172,21 +172,21 @@
         position: sticky;
         top: 0;
         z-index: 1;
-        background: rgb(var(--main-bg));
+        background: rgb(var(--center-channel-bg-rgb));
 
         .octo-table-cell {
-            color: rgba(var(--body-color), 0.6);
-            background: rgb(var(--main-bg));
+            color: rgba(var(--center-channel-color-rgb), 0.6);
+            background: rgb(var(--center-channel-bg-rgb));
 
             .Label {
-                color: rgba(var(--body-color), 0.6);
+                color: rgba(var(--center-channel-color-rgb), 0.6);
             }
         }
     }
 
     .octo-table-footer {
         .octo-table-cell {
-            color: rgba(var(--body-color), 0.6);
+            color: rgba(var(--center-channel-color-rgb), 0.6);
             cursor: pointer;
 
             width: 100%;
@@ -194,7 +194,7 @@
             padding-left: 15px;
 
             &:hover {
-                background-color: rgba(var(--body-color), 0.08);
+                background-color: rgba(var(--center-channel-color-rgb), 0.08);
             }
         }
     }

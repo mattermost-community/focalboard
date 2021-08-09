@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Block} from './blocks/block'
+import {Block, BlockPatch} from './blocks/block'
 import {ISharing} from './blocks/sharing'
 import {IWorkspace} from './blocks/workspace'
 import {IUser} from './user'
@@ -220,6 +220,16 @@ class OctoClient {
 
     async updateBlock(block: Block): Promise<Response> {
         return this.insertBlocks([block])
+    }
+
+    async patchBlock(blockId: string, blockPatch: BlockPatch): Promise<Response> {
+        Utils.log(`patchBlocks: ${blockId} block`)
+        const body = JSON.stringify(blockPatch)
+        return fetch(this.serverUrl + this.workspacePath() + '/blocks/' + blockId, {
+            method: 'PATCH',
+            headers: this.headers(),
+            body,
+        })
     }
 
     async updateBlocks(blocks: Block[]): Promise<Response> {
