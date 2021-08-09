@@ -27,7 +27,7 @@ exports[`components/calculations/Options should match snapshot 1`] = `
         class=" css-1mxrbau-ValueContainer"
       >
         <div
-          class=" css-i6eed2-singleValue"
+          class=" css-1brck82-singleValue"
         >
           Calculate
         </div>
@@ -109,7 +109,7 @@ exports[`components/calculations/Options should match snapshot menu open 1`] = `
         class=" css-1mxrbau-ValueContainer"
       >
         <div
-          class=" css-i6eed2-singleValue"
+          class=" css-1brck82-singleValue"
         >
           Calculate
         </div>
@@ -162,70 +162,70 @@ exports[`components/calculations/Options should match snapshot menu open 1`] = `
         class=" css-g29tl0-MenuList"
       >
         <div
-          class=" css-10a560i-option"
+          class=" css-1cnkr6z-option"
           id="react-select-3-option-0"
           tabindex="-1"
         >
           None
         </div>
         <div
-          class=" css-5peqmn-option"
+          class=" css-14xsrqy-option"
           id="react-select-3-option-1"
           tabindex="-1"
         >
           Count
         </div>
         <div
-          class=" css-5peqmn-option"
+          class=" css-14xsrqy-option"
           id="react-select-3-option-2"
           tabindex="-1"
         >
           Count Value
         </div>
         <div
-          class=" css-5peqmn-option"
+          class=" css-14xsrqy-option"
           id="react-select-3-option-3"
           tabindex="-1"
         >
           Count Unique Values
         </div>
         <div
-          class=" css-5peqmn-option"
+          class=" css-14xsrqy-option"
           id="react-select-3-option-4"
           tabindex="-1"
         >
           Sum
         </div>
         <div
-          class=" css-5peqmn-option"
+          class=" css-14xsrqy-option"
           id="react-select-3-option-5"
           tabindex="-1"
         >
           Average
         </div>
         <div
-          class=" css-5peqmn-option"
+          class=" css-14xsrqy-option"
           id="react-select-3-option-6"
           tabindex="-1"
         >
           Median
         </div>
         <div
-          class=" css-5peqmn-option"
+          class=" css-14xsrqy-option"
           id="react-select-3-option-7"
           tabindex="-1"
         >
           Min
         </div>
         <div
-          class=" css-5peqmn-option"
+          class=" css-14xsrqy-option"
           id="react-select-3-option-8"
           tabindex="-1"
         >
           Max
         </div>
         <div
-          class=" css-5peqmn-option"
+          class=" css-14xsrqy-option"
           id="react-select-3-option-9"
           tabindex="-1"
         >
