@@ -8,7 +8,7 @@
 
     border-radius: 3px;
     margin-bottom: 10px;
-    padding: 8px 16px;
+    padding: 12px 16px;
     box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0px 0px 0px 1px,
         rgba(var(--center-channel-color-rgb), 0.1) 0px 2px 4px;
 
@@ -46,11 +46,13 @@
 
     .octo-icontitle {
         flex: 1 1 auto;
-        font-weight: 500;
+        font-weight: 600;
+        line-height: 20px;
+        margin-bottom: 8px;
 
         .octo-icon {
             font-size: 16px;
-            margin-right: 5px;
+            margin-right: 8px;
         }
     }
     .IconButton {
