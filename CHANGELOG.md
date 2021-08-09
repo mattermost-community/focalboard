@@ -5,7 +5,16 @@ Focalboard is an open source, self-hosted alternative to Trello, Notion, Asana a
 This changelog summarizes updates to our open source project. You can also find the [latest releases and release notes on GitHub here](https://github.com/mattermost/focalboard/releases).
 
 ## [Work In Progress] - vNext Release - [Date TBD]
+
+## v0.9 Release - August, 2021
+* New date range property type. Thanks @sbishel!
 * Changed the urls to use routes instead of query parameters. Thanks @jespino!
+* Add clear button to value selectors. Thanks @jespino!
+* Fix auto-size columns in FireFox. Thanks @kamre!
+* Fix comments not appearing in readonly view. Thanks @harshilsharma63!
+* Multi-line card titles. Thanks @kamre!
+* Add unit tests for sqlstore. Thanks @yedamao!
+* Add makefile documentation. Thanks @Szymongib!
 
 ## v0.8 Release - July, 2021
 * CreatedBy property. Thanks @harshilsharma63!
