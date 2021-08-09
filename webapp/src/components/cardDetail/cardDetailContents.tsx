@@ -12,9 +12,12 @@ import {useSortableWithGrip} from '../../hooks/sortable'
 import ContentBlock from '../contentBlock'
 import {MarkdownEditor} from '../markdownEditor'
 
+import {dragAndDropRearrange} from './cardDetailContentsUtility'
+
 export type Position = 'left' | 'right' | 'above' | 'below' | 'aboveRow' | 'belowRow'
 
 type Props = {
+    id?: string
     card: Card
     contents: Array<ContentBlockType|ContentBlockType[]>
     readonly: boolean
@@ -51,59 +54,20 @@ function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: ICont
     const dstBlockId = dstBlock.block.id
 
     const srcBlockX = srcBlock.cords.x
-    let dstBlockX = dstBlock.cords.x
+    const dstBlockX = dstBlock.cords.x
 
     const srcBlockY = (srcBlock.cords.y || srcBlock.cords.y === 0) && (srcBlock.cords.y > -1) ? srcBlock.cords.y : -1
-    let dstBlockY = (dstBlock.cords.y || dstBlock.cords.y === 0) && (dstBlock.cords.y > -1) ? dstBlock.cords.y : -1
+    const dstBlockY = (dstBlock.cords.y || dstBlock.cords.y === 0) && (dstBlock.cords.y > -1) ? dstBlock.cords.y : -1
 
     if (srcBlockId === dstBlockId) {
         return
     }
 
-    // Delete Src Block
-    if (srcBlockY > -1) {
-        (contentOrder[srcBlockX] as string[]).splice(srcBlockY, 1)
-
-        if (contentOrder[srcBlockX].length === 1 && srcBlockX !== dstBlockX) {
-            contentOrder.splice(srcBlockX, 1, contentOrder[srcBlockX][0])
-        }
-    } else {
-        contentOrder.splice(srcBlockX, 1)
-
-        if (dstBlockX > srcBlockX) {
-            dstBlockX -= 1
-        }
-    }
-
-    if (moveTo === 'right') {
-        if (dstBlockY > -1) {
-            if (dstBlockX === srcBlockX && dstBlockY > srcBlockY) {
-                dstBlockY -= 1
-            }
-
-            (contentOrder[dstBlockX] as string[]).splice(dstBlockY + 1, 0, srcBlockId)
-        } else {
-            contentOrder.splice(dstBlockX, 1, [dstBlockId, srcBlockId])
-        }
-    } else if (moveTo === 'left') {
-        if (dstBlockY > -1) {
-            if (dstBlockX === srcBlockX && dstBlockY > srcBlockY) {
-                dstBlockY -= 1
-            }
-
-            (contentOrder[dstBlockX] as string[]).splice(dstBlockY, 0, srcBlockId)
-        } else {
-            contentOrder.splice(dstBlockX, 1, [srcBlockId, dstBlockId])
-        }
-    } else if (moveTo === 'aboveRow') {
-        contentOrder.splice(dstBlockX, 0, srcBlockId)
-    } else if (moveTo === 'belowRow') {
-        contentOrder.splice(dstBlockX + 1, 0, srcBlockId)
-    }
+    const newContentOrder = dragAndDropRearrange({contentOrder, srcBlockId, srcBlockX, srcBlockY, dstBlockId, dstBlockX, dstBlockY, moveTo})
 
     mutator.performAsUndoGroup(async () => {
         const description = intl.formatMessage({id: 'CardDetail.moveContent', defaultMessage: 'move card content'})
-        await mutator.changeCardContentOrder(card, contentOrder, description)
+        await mutator.changeCardContentOrder(card, newContentOrder, description)
     })
 }
 
@@ -185,11 +149,8 @@ const ContentBlockWithDragAndDrop = (props: ContentBlockWithDragAndDropProps) =>
 
 const CardDetailContents = React.memo((props: Props) => {
     const intl = useIntl()
-    const {contents, card} = props
-    if (!contents) {
-        return null
-    }
-    if (contents.length > 0) {
+    const {contents, card, id} = props
+    if (contents.length) {
         return (
             <div className='octo-content'>
                 {contents.map((block, x) =>
@@ -214,6 +175,7 @@ const CardDetailContents = React.memo((props: Props) => {
                 <div className='octo-block-margin'/>
                 {!props.readonly &&
                     <MarkdownEditor
+                        id={id}
                         text=''
                         placeholderText='Add a description...'
                         onBlur={(text) => {
