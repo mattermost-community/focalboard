@@ -9,8 +9,8 @@ html {
 
     width: 100%;
     height: 100%;
-    color: rgb(var(--body-color));
-    background: rgb(var(--main-bg));
+    color: rgb(var(--center-channel-color-rgb));
+    background: rgb(var(--center-channel-bg-rgb));
     padding: 0;
     margin: 0;
 }
@@ -50,8 +50,8 @@ html {
 
     input,
     textarea {
-        background: rgb(var(--main-bg));
-        color: rgb(var(--body-color));
+        background: rgb(var(--center-channel-bg-rgb));
+        color: rgb(var(--center-channel-color-rgb));
 
         -webkit-user-select: auto; /* Chrome all / Safari all */
         -moz-user-select: auto; /* Firefox all */
@@ -65,11 +65,11 @@ html {
     /* -webkit-font-smoothing: auto; */
     font-size: 14px;
     line-height: 24px;
-    --cursor-color: rgb(var(--body-color));
+    --cursor-color: rgb(var(--center-channel-color-rgb));
 
     a {
         text-decoration: none;
-        color: var(--link-color);
+        color: var(--link-color-rgb);
 
         &:visited {
             color: var(--link-visited-color);
@@ -84,8 +84,8 @@ html {
         width: 100%;
         height: 1px;
         border: none;
-        color: rgba(var(--body-color), 0.09);
-        background-color: rgba(var(--body-color), 0.09);
+        color: rgba(var(--center-channel-color-rgb), 0.09);
+        background-color: rgba(var(--center-channel-color-rgb), 0.09);
         margin-bottom: 8px;
     }
 
@@ -160,10 +160,10 @@ html {
     /*-- Property list --*/
 
     .octo-propertyvalue {
-        color: rgb(var(--body-color));
+        color: rgb(var(--center-channel-color-rgb));
         padding: 0 5px;
         &.empty {
-            color: rgba(var(--body-color), 0.4);
+            color: rgba(var(--center-channel-color-rgb), 0.4);
         }
         .IconButton.delete-value {
             width: 16px;
@@ -186,7 +186,7 @@ html {
     }
 
     .octo-placeholder {
-        color: rgba(var(--body-color), 0.4);
+        color: rgba(var(--center-channel-color-rgb), 0.4);
     }
 
     [contentEditable="true"] {
@@ -199,7 +199,7 @@ html {
     [contentEditable="true"]:empty:before {
         content: attr(placeholder);
         display: block;
-        color: rgba(var(--body-color), 0.4);
+        color: rgba(var(--center-channel-color-rgb), 0.4);
     }
 
     .octo-propertyvalue.Editable.active,

@@ -43,7 +43,16 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
 
     const index = cords.x
     const colIndex = (cords.y || cords.y === 0) && cords.y > -1 ? cords.y : -1
-    const contentOrder = card.fields.contentOrder.slice()
+    const contentOrder: Array<string|string[]> = []
+    if (card.fields.contentOrder) {
+        for (const contentId of card.fields.contentOrder) {
+            if (typeof contentId === 'string') {
+                contentOrder.push(contentId)
+            } else {
+                contentOrder.push(contentId.slice())
+            }
+        }
+    }
 
     const className = 'ContentBlock octo-block'
     return (

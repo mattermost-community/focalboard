@@ -1,20 +1,20 @@
 .focalboard-body .EmojiPicker {
     .emoji-mart {
-        color: rgb(var(--body-color));
-        background: rgb(var(--main-bg));
-        border-color: rgba(var(--body-color), 0.16);
+        color: rgb(var(--center-channel-color-rgb));
+        background: rgb(var(--center-channel-bg-rgb));
+        border-color: rgba(var(--center-channel-color-rgb), 0.16);
         .emoji-mart-bar {
-            border: 0 solid rgba(var(--body-color), 0.16);
+            border: 0 solid rgba(var(--center-channel-color-rgb), 0.16);
             border-bottom-width: 1px;
         }
         .emoji-mart-search input {
-            border: 1px solid rgba(var(--body-color), 0.16);
+            border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
         }
         .emoji-mart-category-label span {
-            background: rgb(var(--main-bg));
+            background: rgb(var(--center-channel-bg-rgb));
         }
         .emoji-mart-search-icon svg {
-            fill: rgb(var(--body-color));
+            fill: rgb(var(--center-channel-color-rgb));
         }
     }
 }

@@ -16,7 +16,6 @@ import ValueSelector from '../widgets/valueSelector'
 
 import Label from '../widgets/label'
 
-import EditableDayPicker from '../widgets/editableDayPicker'
 import Switch from '../widgets/switch'
 import IconButton from '../widgets/buttons/iconButton'
 import CloseIcon from '../widgets/icons/close'
@@ -28,6 +27,7 @@ import LastModifiedBy from './properties/lastModifiedBy/lastModifiedBy'
 import LastModifiedAt from './properties/lastModifiedAt/lastModifiedAt'
 import CreatedAt from './properties/createdAt/createdAt'
 import CreatedBy from './properties/createdBy/createdBy'
+import DateRange from './properties/dateRange/dateRange'
 
 type Props = {
     board: Board
@@ -198,7 +198,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             return <div className='octo-propertyvalue'>{displayValue}</div>
         }
         return (
-            <EditableDayPicker
+            <DateRange
                 className='octo-propertyvalue'
                 value={value as string}
                 onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}

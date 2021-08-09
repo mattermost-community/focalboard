@@ -25,6 +25,11 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		defer tearDown()
 		testInsertBlock(t, store, container)
 	})
+	t.Run("PatchBlock", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testPatchBlock(t, store, container)
+	})
 	t.Run("DeleteBlock", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
@@ -180,6 +185,126 @@ func testInsertBlock(t *testing.T, store store.Store, container store.Container)
 		assert.Equal(t, "user-id-1", retrievedBlock.ModifiedBy)
 		assert.WithinDurationf(t, time.Now(), time.Unix(retrievedBlock.CreateAt/1000, 0), 1*time.Second, "create time should be current time")
 		assert.WithinDurationf(t, time.Now(), time.Unix(retrievedBlock.UpdateAt/1000, 0), 1*time.Second, "update time should be current time")
+	})
+}
+
+func testPatchBlock(t *testing.T, store store.Store, container store.Container) {
+	userID := testUserID
+
+	block := model.Block{
+		ID:         "id-test",
+		RootID:     "id-test",
+		Title:      "oldTitle",
+		ModifiedBy: userID,
+		Fields:     map[string]interface{}{"test": "test value", "test2": "test value 2"},
+	}
+
+	err := store.InsertBlock(container, &block, "user-id-1")
+	require.NoError(t, err)
+
+	blocks, errBlocks := store.GetAllBlocks(container)
+	require.NoError(t, errBlocks)
+	initialCount := len(blocks)
+
+	t.Run("not existing block", func(t *testing.T) {
+		err := store.PatchBlock(container, "invalid-block-id", &model.BlockPatch{}, "user-id-1")
+		require.Error(t, err)
+
+		blocks, err := store.GetAllBlocks(container)
+		require.NoError(t, err)
+		require.Len(t, blocks, initialCount)
+	})
+
+	t.Run("invalid rootid", func(t *testing.T) {
+		wrongRootID := ""
+		blockPatch := model.BlockPatch{
+			RootID: &wrongRootID,
+		}
+
+		err := store.PatchBlock(container, "id-test", &blockPatch, "user-id-1")
+		require.Error(t, err)
+
+		blocks, err := store.GetAllBlocks(container)
+		require.NoError(t, err)
+		require.Len(t, blocks, initialCount)
+	})
+
+	t.Run("invalid fields data", func(t *testing.T) {
+		blockPatch := model.BlockPatch{
+			UpdatedFields: map[string]interface{}{"no-serialiable-value": t.Run},
+		}
+
+		err := store.PatchBlock(container, "id-test", &blockPatch, "user-id-1")
+		require.Error(t, err)
+
+		blocks, err := store.GetAllBlocks(container)
+		require.NoError(t, err)
+		require.Len(t, blocks, initialCount)
+	})
+
+	t.Run("update block fields", func(t *testing.T) {
+		newTitle := "New title"
+		blockPatch := model.BlockPatch{
+			Title: &newTitle,
+		}
+
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+
+		// inserting
+		err := store.PatchBlock(container, "id-test", &blockPatch, "user-id-2")
+		require.NoError(t, err)
+
+		retrievedBlock, err := store.GetBlock(container, "id-test")
+		require.NoError(t, err)
+
+		// created by populated from user id for new blocks
+		require.Equal(t, "user-id-2", retrievedBlock.ModifiedBy)
+		require.Equal(t, "New title", retrievedBlock.Title)
+	})
+
+	t.Run("update block custom fields", func(t *testing.T) {
+		blockPatch := model.BlockPatch{
+			UpdatedFields: map[string]interface{}{"test": "new test value", "test3": "new value"},
+		}
+
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+
+		// inserting
+		err := store.PatchBlock(container, "id-test", &blockPatch, "user-id-2")
+		require.NoError(t, err)
+
+		retrievedBlock, err := store.GetBlock(container, "id-test")
+		require.NoError(t, err)
+
+		// created by populated from user id for new blocks
+		require.Equal(t, "user-id-2", retrievedBlock.ModifiedBy)
+		require.Equal(t, "new test value", retrievedBlock.Fields["test"])
+		require.Equal(t, "test value 2", retrievedBlock.Fields["test2"])
+		require.Equal(t, "new value", retrievedBlock.Fields["test3"])
+	})
+
+	t.Run("remove block custom fields", func(t *testing.T) {
+		blockPatch := model.BlockPatch{
+			DeletedFields: []string{"test", "test3", "test100"},
+		}
+
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+
+		// inserting
+		err := store.PatchBlock(container, "id-test", &blockPatch, "user-id-2")
+		require.NoError(t, err)
+
+		retrievedBlock, err := store.GetBlock(container, "id-test")
+		require.NoError(t, err)
+
+		// created by populated from user id for new blocks
+		require.Equal(t, "user-id-2", retrievedBlock.ModifiedBy)
+		require.Equal(t, nil, retrievedBlock.Fields["test"])
+		require.Equal(t, "test value 2", retrievedBlock.Fields["test2"])
+		require.Equal(t, nil, retrievedBlock.Fields["test3"])
 	})
 }
 

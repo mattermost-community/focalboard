@@ -99,7 +99,7 @@ const TableRow = React.memo((props: Props) => {
                         placeholderText='Untitled'
                         onChange={(newTitle: string) => setTitle(newTitle)}
                         onSave={(saveType) => {
-                            mutator.changeTitle(card, title)
+                            mutator.changeTitle(card.id, card.title, title)
                             if (saveType === 'onEnter') {
                                 onSaveWithEnter()
                             }
