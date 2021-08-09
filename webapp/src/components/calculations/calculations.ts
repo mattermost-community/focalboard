@@ -6,7 +6,7 @@ import {IPropertyTemplate} from '../../blocks/board'
 import {Utils} from '../../utils'
 import {Constants} from '../../constants'
 
-const roundedDecimalPlaces = 2
+const ROUNDED_DECIMAL_PLACES = 2
 
 function getCardProperty(card: Card, property: IPropertyTemplate): string | string[] | number {
     if (property.id === Constants.titleColumnId) {
@@ -85,7 +85,7 @@ function sum(cards: readonly Card[], property: IPropertyTemplate): string {
             result += parseFloat(getCardProperty(card, property) as string)
         })
 
-    return String(Utils.roundTo(result, roundedDecimalPlaces))
+    return String(Utils.roundTo(result, ROUNDED_DECIMAL_PLACES))
 }
 
 function average(cards: readonly Card[], property: IPropertyTemplate): string {
@@ -96,7 +96,7 @@ function average(cards: readonly Card[], property: IPropertyTemplate): string {
 
     const result = parseFloat(sum(cards, property))
     const avg = result / numCards
-    return String(Utils.roundTo(avg, roundedDecimalPlaces))
+    return String(Utils.roundTo(avg, ROUNDED_DECIMAL_PLACES))
 }
 
 function median(cards: readonly Card[], property: IPropertyTemplate): string {
@@ -130,7 +130,7 @@ function median(cards: readonly Card[], property: IPropertyTemplate): string {
         result = parseFloat(getCardProperty(sorted[Math.floor(sorted.length / 2)], property) as string)
     }
 
-    return String(Utils.roundTo(result, roundedDecimalPlaces))
+    return String(Utils.roundTo(result, ROUNDED_DECIMAL_PLACES))
 }
 
 function min(cards: readonly Card[], property: IPropertyTemplate): string {
@@ -144,7 +144,7 @@ function min(cards: readonly Card[], property: IPropertyTemplate): string {
         result = Math.min(result, value)
     })
 
-    return String(result === Number.POSITIVE_INFINITY ? '0' : String(Utils.roundTo(result, roundedDecimalPlaces)))
+    return String(result === Number.POSITIVE_INFINITY ? '0' : String(Utils.roundTo(result, ROUNDED_DECIMAL_PLACES)))
 }
 
 function max(cards: readonly Card[], property: IPropertyTemplate): string {
@@ -158,7 +158,7 @@ function max(cards: readonly Card[], property: IPropertyTemplate): string {
         result = Math.max(result, value)
     })
 
-    return String(result === Number.NEGATIVE_INFINITY ? '0' : String(Utils.roundTo(result, roundedDecimalPlaces)))
+    return String(result === Number.NEGATIVE_INFINITY ? '0' : String(Utils.roundTo(result, ROUNDED_DECIMAL_PLACES)))
 }
 
 function range(cards: readonly Card[], property: IPropertyTemplate): string {
