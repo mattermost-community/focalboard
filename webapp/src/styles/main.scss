@@ -1,4 +1,6 @@
-@import "compass-icons";
+@import "_compass-icons";
+@import "_typography";
+
 html {
     height: 100%;
 }
@@ -20,18 +22,6 @@ html {
 }
 
 .focalboard-body {
-    @font-face {
-        font-family: 'compass-icons';
-        src: url('../fonts/compass-icons/compass-icons.eot?45182295');
-        src: url('../fonts/compass-icons/compass-icons.eot?45182295#iefix') format('embedded-opentype'),
-        url('../fonts/compass-icons/compass-icons.woff2?45182295') format('woff2'),
-        url('../fonts/compass-icons/compass-icons.woff?45182295') format('woff'),
-        url('../fonts/compass-icons/compass-icons.ttf?45182295') format('truetype'),
-        url('../fonts/compass-icons/compass-icons.svg?45182295#compass-icons') format('svg');
-        font-weight: normal;
-        font-style: normal;
-    }
-
     * {
         box-sizing: border-box;
         outline: 0;
@@ -103,14 +93,6 @@ html {
         margin: 50px auto;
     }
 
-    .title,
-    h1 {
-        font-size: 40px;
-        line-height: 40px;
-        margin: 0 0 10px 0;
-        font-weight: 600;
-    }
-
     /* App frame */
 
     #root {
@@ -144,7 +126,7 @@ html {
     .octo-icon {
         font-family: "Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji,
             "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols;
-        line-height: 1.5em;
+        line-height: 1.2;
         align-self: baseline;
         overflow: visible;
     }
@@ -160,8 +142,9 @@ html {
     /*-- Property list --*/
 
     .octo-propertyvalue {
+        font-size: 12px;
         color: rgb(var(--center-channel-color-rgb));
-        padding: 0 5px;
+
         &.empty {
             color: rgba(var(--center-channel-color-rgb), 0.4);
         }
