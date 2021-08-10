@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useRef, useEffect} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {Card} from '../../blocks/card'
@@ -12,7 +12,9 @@ import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
 import {useSortable} from '../../hooks/sortable'
 import {useAppSelector} from '../../store/hooks'
+
 import {getCardContents} from '../../store/contents'
+
 import {getCardComments} from '../../store/comments'
 
 import PropertyValueElement from '../propertyValueElement'
@@ -34,12 +36,19 @@ type Props = {
     onDrop: (srcCard: Card, dstCard: Card) => void
 }
 
+export const columnWidth = (resizingColumn: string, columnWidths: Record<string, number>, offset: number, templateId: string): number => {
+    if (resizingColumn === templateId) {
+        return Math.max(Constants.minColumnWidth, (columnWidths[templateId] || 0) + offset)
+    }
+    return Math.max(Constants.minColumnWidth, columnWidths[templateId] || 0)
+}
+
 const TableRow = React.memo((props: Props) => {
     const {board, activeView, onSaveWithEnter, columnRefs, card} = props
     const contents = useAppSelector(getCardContents(card.id || ''))
     const comments = useAppSelector(getCardComments(card.id))
 
-    const titleRef = useRef<{focus(selectAll?: boolean): void}>(null)
+    const titleRef = useRef<{ focus(selectAll?: boolean): void }>(null)
     const [title, setTitle] = useState(props.card.title || '')
     const isManualSort = activeView.fields.sortOptions.length === 0
     const isGrouped = Boolean(activeView.fields.groupById)
@@ -50,13 +59,6 @@ const TableRow = React.memo((props: Props) => {
             setTimeout(() => titleRef.current?.focus(), 10)
         }
     }, [])
-
-    const columnWidth = (templateId: string): number => {
-        if (props.resizingColumn === templateId) {
-            return Math.max(Constants.minColumnWidth, (props.activeView.fields.columnWidths[templateId] || 0) + props.offset)
-        }
-        return Math.max(Constants.minColumnWidth, props.activeView.fields.columnWidths[templateId] || 0)
-    }
 
     let className = props.isSelected ? 'TableRow octo-table-row selected' : 'TableRow octo-table-row'
     if (isOver) {
@@ -86,7 +88,7 @@ const TableRow = React.memo((props: Props) => {
             <div
                 className='octo-table-cell title-cell'
                 id='mainBoardHeader'
-                style={{width: columnWidth(Constants.titleColumnId)}}
+                style={{width: columnWidth(props.resizingColumn, props.activeView.fields.columnWidths, props.offset, Constants.titleColumnId)}}
                 ref={columnRefs.get(Constants.titleColumnId)}
             >
                 <div className='octo-icontitle'>
@@ -120,30 +122,28 @@ const TableRow = React.memo((props: Props) => {
 
             {/* Columns, one per property */}
 
-            {board.fields.cardProperties.
-                filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id)).
-                map((template: IPropertyTemplate) => {
-                    if (!columnRefs.get(template.id)) {
-                        columnRefs.set(template.id, React.createRef())
-                    }
-                    return (
-                        <div
-                            className='octo-table-cell'
-                            key={template.id}
-                            style={{width: columnWidth(template.id)}}
-                            ref={columnRefs.get(template.id)}
-                        >
-                            <PropertyValueElement
-                                readOnly={props.readonly}
-                                card={card}
-                                board={board}
-                                contents={contents}
-                                comments={comments}
-                                propertyTemplate={template}
-                                emptyDisplayValue=''
-                            />
-                        </div>)
-                })}
+            {board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id)).map((template: IPropertyTemplate) => {
+                if (!columnRefs.get(template.id)) {
+                    columnRefs.set(template.id, React.createRef())
+                }
+                return (
+                    <div
+                        className='octo-table-cell'
+                        key={template.id}
+                        style={{width: columnWidth(props.resizingColumn, props.activeView.fields.columnWidths, props.offset, template.id)}}
+                        ref={columnRefs.get(template.id)}
+                    >
+                        <PropertyValueElement
+                            readOnly={props.readonly}
+                            card={card}
+                            board={board}
+                            contents={contents}
+                            comments={comments}
+                            propertyTemplate={template}
+                            emptyDisplayValue=''
+                        />
+                    </div>)
+            })}
         </div>
     )
 })
