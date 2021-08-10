@@ -38,6 +38,7 @@
   "EditableDayPicker.today": "Aujourd'hui",
   "EmptyCenterPanel.no-content": "Ajoutez ou sélectionnez un tableau dans la barre latérale pour commencer.",
   "EmptyCenterPanel.workspace": "Ceci est l'espace de travail pour :",
+  "Error.websocket-closed": "Connexion au websocket fermé, connexion interrompue. Si cela persiste, vérifiez la configuration de votre serveur ou de votre proxy web.",
   "Filter.includes": "inclus",
   "Filter.is-empty": "est vide",
   "Filter.is-not-empty": "n'est pas vide",
