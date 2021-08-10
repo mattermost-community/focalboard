@@ -18,6 +18,7 @@ import store from '../../../webapp/src/store'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
 import {setMattermostTheme} from '../../../webapp/src/theme'
+import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK} from './../../../webapp/src/wsclient'
 
 import '../../../webapp/src/styles/focalboard-variables.scss'
 import '../../../webapp/src/styles/main.scss'
@@ -39,7 +40,13 @@ const GlobalHeaderIcon = () => {
     )
 }
 
-const MainApp = () => {
+type Props = {
+    webSocketClient: MMWebSocketClient
+}
+
+const MainApp = (props: Props) => {
+    wsClient.initPlugin(manifest.id, props.webSocketClient)
+
     useEffect(() => {
         document.body.classList.add('focalboard-body')
         const root = document.getElementById('root')
@@ -122,12 +129,18 @@ export default class Plugin {
             }, '', 'Focalboard Workspace')
             this.registry.registerCustomRoute('/', MainApp)
         }
+
+        // register websocket handlers
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BLOCK}`, (e: any) => wsClient.updateBlockHandler(e.data))
     }
 
     public uninitialize() {
         if (this.channelHeaderButtonId) {
             this.registry?.unregisterComponent(this.channelHeaderButtonId)
         }
+
+        // unregister websocket handlers
+        this.registry?.unregisterWebSocketEventHandler(wsClient.clientPrefix + ACTION_UPDATE_BLOCK)
     }
 }
 
