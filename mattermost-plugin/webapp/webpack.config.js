@@ -125,6 +125,7 @@ module.exports = {
         react: 'React',
         redux: 'Redux',
         'react-redux': 'ReactRedux',
+        'mm-react-router-dom': 'ReactRouterDom',
         'prop-types': 'PropTypes',
         'react-bootstrap': 'ReactBootstrap',
     },
