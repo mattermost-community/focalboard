@@ -15,8 +15,9 @@
                 font-size: 24px;
             }
 
-            .LogoIcon {
+            .LogoIcon, .FocalboardLogoIcon {
                 fill: rgba(var(--sidebar-text-rgb), 1);
+                color: rgba(var(--sidebar-text-rgb), 1);
                 height: 24px;
                 width: 22px;
                 margin-right: 3px;
