@@ -74,7 +74,7 @@ type Props = {
 // async function testRandomizeIcons(boardTree: BoardTree) {
 //     mutator.performAsUndoGroup(async () => {
 //         for (const card of boardTree.cards) {
-//             mutator.changeIcon(card, BlockIcons.shared.randomIcon(), 'randomize icon')
+//             mutator.changeIcon(card.id, card.fields.icon, BlockIcons.shared.randomIcon(), 'randomize icon')
 //         }
 //     })
 // }

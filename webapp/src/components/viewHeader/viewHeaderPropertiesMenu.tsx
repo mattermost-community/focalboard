@@ -40,7 +40,7 @@ const ViewHeaderPropertiesMenu = React.memo((props: Props) => {
                             } else {
                                 newVisiblePropertyIds = [...activeView.fields.visiblePropertyIds, propertyId]
                             }
-                            mutator.changeViewVisibleProperties(activeView, newVisiblePropertyIds)
+                            mutator.changeViewVisibleProperties(activeView.id, activeView.fields.visiblePropertyIds, newVisiblePropertyIds)
                         }}
                     />}
                 {properties?.map((option: IPropertyTemplate) => (
@@ -56,7 +56,7 @@ const ViewHeaderPropertiesMenu = React.memo((props: Props) => {
                             } else {
                                 newVisiblePropertyIds = [...activeView.fields.visiblePropertyIds, propertyId]
                             }
-                            mutator.changeViewVisibleProperties(activeView, newVisiblePropertyIds)
+                            mutator.changeViewVisibleProperties(activeView.id, activeView.fields.visiblePropertyIds, newVisiblePropertyIds)
                         }}
                     />
                 ))}

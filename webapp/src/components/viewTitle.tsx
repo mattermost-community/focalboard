@@ -27,13 +27,13 @@ const ViewTitle = React.memo((props: Props) => {
     const [title, setTitle] = useState(board.title)
     const onEditTitleSave = useCallback(() => mutator.changeTitle(board.id, board.title, title), [board.id, board.title, title])
     const onEditTitleCancel = useCallback(() => setTitle(board.title), [board.title])
-    const onDescriptionBlur = useCallback((text) => mutator.changeDescription(board, text), [board])
+    const onDescriptionBlur = useCallback((text) => mutator.changeDescription(board.id, board.fields.description, text), [board.id, board.fields.description])
     const onAddRandomIcon = useCallback(() => {
         const newIcon = BlockIcons.shared.randomIcon()
-        mutator.changeIcon(board, newIcon)
-    }, [board])
-    const onShowDescription = useCallback(() => mutator.showDescription(board, true), [board])
-    const onHideDescription = useCallback(() => mutator.showDescription(board, false), [board])
+        mutator.changeIcon(board.id, board.fields.icon, newIcon)
+    }, [board.id, board.fields.icon])
+    const onShowDescription = useCallback(() => mutator.showDescription(board.id, Boolean(board.fields.showDescription), true), [board.id, board.fields.showDescription])
+    const onHideDescription = useCallback(() => mutator.showDescription(board.id, Boolean(board.fields.showDescription), false), [board.id, board.fields.showDescription])
 
     const intl = useIntl()
 

@@ -37,8 +37,8 @@ const ViewHeaderSortMenu = React.memo((props: Props) => {
                 {propertyId, reversed: false},
             ]
         }
-        mutator.changeViewSortOptions(activeView, newSortOptions)
-    }, [activeView])
+        mutator.changeViewSortOptions(activeView.id, activeView.fields.sortOptions, newSortOptions)
+    }, [activeView.id, activeView.fields.sortOptions])
 
     const onManualSort = useCallback(() => {
         // This sets the manual card order to the currently displayed order
@@ -50,8 +50,8 @@ const ViewHeaderSortMenu = React.memo((props: Props) => {
     }, [activeView, orderedCards])
 
     const onRevertSort = useCallback(() => {
-        mutator.changeViewSortOptions(activeView, [])
-    }, [activeView])
+        mutator.changeViewSortOptions(activeView.id, activeView.fields.sortOptions, [])
+    }, [activeView.id, activeView.fields.sortOptions])
 
     return (
         <MenuWrapper>
