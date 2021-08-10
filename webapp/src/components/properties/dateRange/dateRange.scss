@@ -57,7 +57,7 @@
         cursor: pointer;
 
         &:hover {
-            background: rgba(var(--button-bg), 0.08);
+            background: rgba(var(--button-bg-rgb), 0.08);
         }
 
         > * {
@@ -140,12 +140,12 @@
         border-bottom-right-radius: 50% !important;
     }
     .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
-        background-color: rgb(var(--button-bg));;
-        color: rgba(var(--button-fg), 0.5);
+        background-color: rgb(var(--button-bg-rgb));;
+        color: rgba(var(--button-color-rgb), 0.5);
       }
     .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
-        color: rgb(var(--button-bg));;
-        background-color: rgba(var(--button-bg), 0.2);
+        color: rgb(var(--button-bg-rgb));;
+        background-color: rgba(var(--button-bg-rgb), 0.2);
     }
 
     .DayPicker:not(.DayPicker--interactionDisabled)
