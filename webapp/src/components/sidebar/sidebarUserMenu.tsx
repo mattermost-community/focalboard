@@ -38,13 +38,12 @@ const SidebarUserMenu = React.memo(() => {
                             <LogoIcon/>
                             {focalboardTitle && <span>{'Focalboard'}</span>}
                             {!focalboardTitle && <span>{'Boards'}</span>}
-                        </div>
-                        <div className='octo-spacer'/>
-                        <div className='versionFrame'>
-                            <div className='version'>
-                                {`v${Constants.versionString}`}
+                            <div className='versionFrame'>
+                                <div className='version'>
+                                    {`v${Constants.versionString}`}
+                                </div>
+                                {showVersionBadge && <div className='versionBadge'>{'BETA'}</div>}
                             </div>
-                            {showVersionBadge && <div className='versionBadge'>{'BETA'}</div>}
                         </div>
                     </div>
                     <Menu>
