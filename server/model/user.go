@@ -1,5 +1,10 @@
 package model
 
+import (
+	"encoding/json"
+	"io"
+)
+
 // User is a user
 // swagger:model
 type User struct {
@@ -52,4 +57,12 @@ type Session struct {
 	Props       map[string]interface{} `json:"props"`
 	CreateAt    int64                  `json:"create_at,omitempty"`
 	UpdateAt    int64                  `json:"update_at,omitempty"`
+}
+
+func UserFromJSON(data io.Reader) (*User, error) {
+	var user User
+	if err := json.NewDecoder(data).Decode(&user); err != nil {
+		return nil, err
+	}
+	return &user, nil
 }

@@ -1,7 +1,7 @@
 .focalboard-body .ValueSelector {
     width: 100%;
     border-radius: var(--default-rad);
-    color: rgb(var(--body-color));
+    color: rgb(var(--center-channel-color-rgb));
     display: flex;
 
     > .Label {
@@ -9,7 +9,7 @@
         max-width: calc(100% - 10px);
 
         &.empty {
-            color: rgba(var(--body-color), 0.6);
+            color: rgba(var(--center-channel-color-rgb), 0.6);
         }
     }
 
@@ -65,7 +65,7 @@
                 background-color: unset;
 
                 &:hover {
-                    background-color: rgba(var(--body-color), 0.1);
+                    background-color: rgba(var(--center-channel-color-rgb), 0.1);
                 }
             }
         }

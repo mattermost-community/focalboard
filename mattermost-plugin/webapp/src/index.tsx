@@ -17,7 +17,7 @@ import store from '../../../webapp/src/store'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
 
-import '../../../webapp/src/styles/variables.scss'
+import '../../../webapp/src/styles/focalboard-variables.scss'
 import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
 
@@ -31,7 +31,7 @@ import './plugin.scss'
 
 const GlobalHeaderIcon = () => {
     return (
-        <span style={{height: 24, width: 24, display: 'inline-block'}}>
+        <span className='FocalboardGlobalHeaderIcon'>
             <FocalboardIcon/>
         </span>
     )

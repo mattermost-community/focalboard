@@ -60,7 +60,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
     cardTemplate.fields.isTemplate = true
 
     test('should match snapshot', async () => {
-        const componet = wrapIntl((
+        const component = wrapIntl((
             <CardDetailProperties
                 board={board!}
                 card={card}
@@ -73,7 +73,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
             />
         ))
 
-        const {container} = render(componet)
+        const {container} = render(component)
         expect(container).toMatchSnapshot()
     })
 

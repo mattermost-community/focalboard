@@ -59,7 +59,7 @@ func runServer(port int) (*server.Server, error) {
 		return nil, err
 	}
 
-	server, err := server.New(config, sessionToken, db, logger)
+	server, err := server.New(config, sessionToken, db, logger, "")
 	if err != nil {
 		fmt.Println("ERROR INITIALIZING THE SERVER", err)
 		return nil, err
