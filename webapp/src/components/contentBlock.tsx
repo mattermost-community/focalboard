@@ -76,7 +76,7 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
                                     icon={<SortUpIcon/>}
                                     onClick={() => {
                                         Utils.arrayMove(contentOrder, index, index - 1)
-                                        mutator.changeCardContentOrder(card, contentOrder)
+                                        mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder)
                                     }}
                                 />}
                             {index < (contentOrder.length - 1) &&
@@ -86,7 +86,7 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
                                     icon={<SortDownIcon/>}
                                     onClick={() => {
                                         Utils.arrayMove(contentOrder, index, index + 1)
-                                        mutator.changeCardContentOrder(card, contentOrder)
+                                        mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder)
                                     }}
                                 />}
                             <Menu.SubMenu
@@ -123,7 +123,7 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
 
                                     mutator.performAsUndoGroup(async () => {
                                         await mutator.deleteBlock(block, description)
-                                        await mutator.changeCardContentOrder(card, contentOrder, description)
+                                        await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder, description)
                                     })
                                 }}
                             />

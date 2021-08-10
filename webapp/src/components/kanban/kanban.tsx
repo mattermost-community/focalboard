@@ -119,7 +119,7 @@ const Kanban = (props: Props) => {
             visibleOptionIds[srcIndex] = option.id
             visibleOptionIds[destIndex] = dstOption.id
 
-            await mutator.changeViewVisibleOptionIds(activeView, visibleOptionIds)
+            await mutator.changeViewVisibleOptionIds(activeView.id, activeView.fields.visibleOptionIds, visibleOptionIds)
         }
     }, [cards, visibleGroups, activeView, groupByProperty, props.selectedCardIds])
 

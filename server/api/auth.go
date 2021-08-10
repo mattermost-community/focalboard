@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -60,6 +61,14 @@ type LoginResponse struct {
 	// Session token
 	// required: true
 	Token string `json:"token"`
+}
+
+func LoginResponseFromJSON(data io.Reader) (*LoginResponse, error) {
+	var resp LoginResponse
+	if err := json.NewDecoder(data).Decode(&resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
 }
 
 // RegisterRequest is a user registration request
