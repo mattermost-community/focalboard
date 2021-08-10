@@ -85,7 +85,7 @@
   "ShareBoard.regenerateToken": "Token neu generieren",
   "ShareBoard.share": "Im Web veröffentlichen und dieses Board mit beliebigen Personen teilen",
   "ShareBoard.tokenRegenrated": "Token neu generiert",
-  "ShareBoard.unshare": "Jeder mit dem Link can dieses Board sehen",
+  "ShareBoard.unshare": "Jeder, der den Link besitzt, kann dieses Board und alle darin enthaltenen Karten sehen",
   "Sidebar.about": "Über Focalboard",
   "Sidebar.add-board": "+ Board hinzufügen",
   "Sidebar.add-template": "+ Neue Vorlage",
