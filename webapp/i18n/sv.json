@@ -85,7 +85,7 @@
   "ShareBoard.regenerateToken": "Återskapa åtkomstnyckel",
   "ShareBoard.share": "Publicera till webb och dela denna tavla med vem som helst",
   "ShareBoard.tokenRegenrated": "Åtkomstnyckel återskapad",
-  "ShareBoard.unshare": "Vem som helst med den här länken kan se tavlan",
+  "ShareBoard.unshare": "Vem som helst med den här länken kan se tavlan och alla dess kort",
   "Sidebar.about": "Om Focalboard",
   "Sidebar.add-board": "+ Lägg till tavla",
   "Sidebar.add-template": "Ny mall",
