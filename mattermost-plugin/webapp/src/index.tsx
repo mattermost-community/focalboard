@@ -6,6 +6,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 import {useHistory} from 'react-router-dom'
 
 import {GlobalState} from 'mattermost-redux/types/store'
+import {getTheme} from 'mattermost-redux/selectors/entities/preferences'
 
 const windowAny = (window as any)
 windowAny.baseURL = '/plugins/focalboard'
@@ -16,6 +17,7 @@ import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
+import {setMattermostTheme} from '../../../webapp/src/theme'
 
 import '../../../webapp/src/styles/focalboard-variables.scss'
 import '../../../webapp/src/styles/main.scss'
@@ -91,6 +93,16 @@ export default class Plugin {
             const currentChannel = store.getState().entities.channels.currentChannelId
             history.push(`/boards/workspace/${currentChannel}`)
             return <></>
+        })
+
+        let theme = getTheme(store.getState())
+        setMattermostTheme(theme)
+        store.subscribe(() => {
+            const currentTheme = getTheme(store.getState())
+            if (currentTheme !== theme && currentTheme) {
+                setMattermostTheme(currentTheme)
+                theme = currentTheme
+            }
         })
 
         if (this.registry.registerProduct) {
