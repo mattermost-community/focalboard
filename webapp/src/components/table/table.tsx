@@ -21,6 +21,7 @@ import './table.scss'
 import TableHeader from './tableHeader'
 import TableRows from './tableRows'
 import TableGroup from './tableGroup'
+import CalculationRow from './calculation/calculationRow'
 
 type Props = {
     selectedCardIds: string[]
@@ -389,6 +390,14 @@ const Table = (props: Props): JSX.Element => {
                     </div>
                 }
             </div>
+
+            <CalculationRow
+                board={board}
+                cards={cards}
+                activeView={activeView}
+                resizingColumn={resizingColumn}
+                offset={offset}
+            />
         </div>
     )
 }

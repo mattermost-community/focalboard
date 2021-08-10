@@ -16,6 +16,7 @@ type Card = Block & {
 
 function createCard(block?: Block): Card {
     const contentOrder: Array<string|string[]> = []
+
     if (block?.fields.contentOrder) {
         for (const contentId of block.fields.contentOrder) {
             if (typeof contentId === 'string') {
