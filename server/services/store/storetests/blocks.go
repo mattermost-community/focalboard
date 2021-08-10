@@ -568,7 +568,6 @@ func testGetBlocks(t *testing.T, store store.Store, container store.Container) {
 			Type:       "test",
 		},
 	}
-
 	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
 	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
