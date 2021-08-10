@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
@@ -23,6 +24,7 @@ const (
 	HeaderRequestedWith    = "X-Requested-With"
 	HeaderRequestedWithXML = "XMLHttpRequest"
 	SingleUser             = "single-user"
+	UploadFormFileKey      = "file"
 )
 
 const (
@@ -1245,6 +1247,15 @@ type FileUploadResponse struct {
 	FileID string `json:"fileId"`
 }
 
+func FileUploadResponseFromJSON(data io.Reader) (*FileUploadResponse, error) {
+	var fileUploadResponse FileUploadResponse
+
+	if err := json.NewDecoder(data).Decode(&fileUploadResponse); err != nil {
+		return nil, err
+	}
+	return &fileUploadResponse, nil
+}
+
 func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	// swagger:operation POST /api/v1/workspaces/{workspaceID}/{rootID}/files uploadFile
 	//
@@ -1293,10 +1304,9 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	file, handle, err := r.FormFile("file")
+	file, handle, err := r.FormFile(UploadFormFileKey)
 	if err != nil {
 		fmt.Fprintf(w, "%v", err)
-
 		return
 	}
 	defer file.Close()

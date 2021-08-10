@@ -1,0 +1,979 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/cardDetail/cardDetailContents should match snapshot 1`] = `
+<div>
+  <div
+    class="octo-content CardDetailContents"
+  >
+    <div
+      class="octo-block"
+    >
+      <div
+        class="octo-block-margin"
+      />
+      <div
+        class="MarkdownEditor octo-editor  "
+      >
+        <div
+          class="octo-editor-preview octo-placeholder"
+        >
+          <p>
+            Add a description...
+          </p>
+        </div>
+        <div
+          class="octo-editor-active Editor"
+          style="visibility: hidden; position: absolute; top: 0px; left: 0px;"
+        >
+          <div
+            id="test-id-wrapper"
+          >
+            <textarea
+              id="test-id"
+              style="display: none;"
+            />
+            <div
+              class="EasyMDEContainer"
+            >
+              <div
+                class="CodeMirror cm-s-easymde CodeMirror-wrap CodeMirror-focused"
+              >
+                <div
+                  style="overflow: hidden; position: relative; width: 3px; height: 0px;"
+                >
+                  <textarea
+                    autocapitalize="off"
+                    autocorrect="off"
+                    spellcheck="false"
+                    style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"
+                    tabindex="0"
+                  />
+                </div>
+                <div
+                  class="CodeMirror-vscrollbar"
+                  cm-not-content="true"
+                  tabindex="-1"
+                >
+                  <div
+                    style="min-width: 1px;"
+                  />
+                </div>
+                <div
+                  class="CodeMirror-hscrollbar"
+                  cm-not-content="true"
+                  tabindex="-1"
+                >
+                  <div
+                    style="height: 100%; min-height: 1px;"
+                  />
+                </div>
+                <div
+                  class="CodeMirror-scrollbar-filler"
+                  cm-not-content="true"
+                />
+                <div
+                  class="CodeMirror-gutter-filler"
+                  cm-not-content="true"
+                />
+                <div
+                  class="CodeMirror-scroll"
+                  style="min-height: 10px;"
+                  tabindex="-1"
+                >
+                  <div
+                    class="CodeMirror-sizer"
+                    style="margin-left: 0px;"
+                  >
+                    <div
+                      style="position: relative;"
+                    >
+                      <div
+                        class="CodeMirror-lines"
+                        role="presentation"
+                      >
+                        <div
+                          role="presentation"
+                          style="position: relative; outline: none;"
+                        >
+                          <div
+                            class="CodeMirror-measure"
+                          >
+                            <pre
+                              class="CodeMirror-line-like"
+                            >
+                              <span>
+                                xxxxxxxxxx
+                              </span>
+                            </pre>
+                          </div>
+                          <div
+                            class="CodeMirror-measure"
+                          />
+                          <div
+                            style="position: relative; z-index: 1;"
+                          />
+                          <div
+                            class="CodeMirror-cursors"
+                          />
+                          <div
+                            class="CodeMirror-code"
+                            role="presentation"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style="position: absolute; height: 50px; width: 1px;"
+                  />
+                  <div
+                    class="CodeMirror-gutters"
+                    style="display: none;"
+                  />
+                </div>
+              </div>
+              <div
+                class="editor-preview-side editor-preview"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/cardDetail/cardDetailContents should match snapshot after drag and drop event 1`] = `
+<div>
+  <div
+    class="octo-content"
+  >
+    <div>
+      <div
+        class="addToRow "
+        style="width: 94%; height: 10px; margin-left: 48px;"
+      />
+      <div
+        class="rowContents"
+      >
+        <div
+          class="ContentBlock octo-block"
+        >
+          <div
+            class="octo-block-margin"
+          >
+            <div
+              class="MenuWrapper"
+            >
+              <div
+                class="Button IconButton"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </div>
+            </div>
+            <div
+              class="dnd-handle"
+              draggable="true"
+            >
+              <svg
+                class="GripIcon Icon"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            class="addToRow "
+            style="flex: 0 0 auto; height: 100%;"
+          />
+          <div
+            class="DividerElement"
+          />
+        </div>
+        <div
+          class="addToRow "
+        />
+      </div>
+    </div>
+    <div>
+      <div
+        class="addToRow "
+        style="width: 94%; height: 10px; margin-left: 48px;"
+      />
+      <div
+        style="display: flex;"
+      >
+        <div
+          class="rowContents"
+          style="width: 50%;"
+        >
+          <div
+            class="ContentBlock octo-block"
+          >
+            <div
+              class="octo-block-margin"
+            >
+              <div
+                class="MenuWrapper"
+              >
+                <div
+                  class="Button IconButton"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </div>
+              </div>
+              <div
+                class="dnd-handle"
+                draggable="true"
+              >
+                <svg
+                  class="GripIcon Icon"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0V0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div
+              class="addToRow "
+              style="flex: 0 0 auto; height: 100%;"
+            />
+            <div
+              class="DividerElement"
+            />
+          </div>
+          <div
+            class="addToRow "
+          />
+        </div>
+        <div
+          class="rowContents"
+          style="width: 50%;"
+        >
+          <div
+            class="ContentBlock octo-block"
+          >
+            <div
+              class="octo-block-margin"
+            >
+              <div
+                class="MenuWrapper"
+              >
+                <div
+                  class="Button IconButton"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </div>
+              </div>
+              <div
+                class="dnd-handle"
+                draggable="true"
+              >
+                <svg
+                  class="GripIcon Icon"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0V0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div
+              class="DividerElement"
+            />
+          </div>
+          <div
+            class="addToRow "
+          />
+        </div>
+      </div>
+      <div
+        class="addToRow "
+        style="width: 94%; height: 10px; margin-left: 48px;"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/cardDetail/cardDetailContents should match snapshot after drag and drop event 2 1`] = `
+<div>
+  <div
+    class="octo-content"
+  >
+    <div>
+      <div
+        class="addToRow "
+        style="width: 94%; height: 10px; margin-left: 48px;"
+      />
+      <div
+        class="rowContents"
+      >
+        <div
+          class="ContentBlock octo-block"
+        >
+          <div
+            class="octo-block-margin"
+          >
+            <div
+              class="MenuWrapper"
+            >
+              <div
+                class="Button IconButton"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </div>
+            </div>
+            <div
+              class="dnd-handle"
+              draggable="true"
+            >
+              <svg
+                class="GripIcon Icon"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            class="addToRow "
+            style="flex: 0 0 auto; height: 100%;"
+          />
+          <div
+            class="DividerElement"
+          />
+        </div>
+        <div
+          class="addToRow "
+        />
+      </div>
+    </div>
+    <div>
+      <div
+        class="addToRow "
+        style="width: 94%; height: 10px; margin-left: 48px;"
+      />
+      <div
+        class="rowContents"
+      >
+        <div
+          class="ContentBlock octo-block"
+        >
+          <div
+            class="octo-block-margin"
+          >
+            <div
+              class="MenuWrapper"
+            >
+              <div
+                class="Button IconButton"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </div>
+            </div>
+            <div
+              class="dnd-handle"
+              draggable="true"
+            >
+              <svg
+                class="GripIcon Icon"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            class="addToRow "
+            style="flex: 0 0 auto; height: 100%;"
+          />
+          <div
+            class="DividerElement"
+          />
+        </div>
+        <div
+          class="addToRow "
+        />
+      </div>
+      <div
+        class="addToRow "
+        style="width: 94%; height: 10px; margin-left: 48px;"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/cardDetail/cardDetailContents should match snapshot after drag and drop event 3 1`] = `
+<div>
+  <div
+    class="octo-content"
+  >
+    <div>
+      <div
+        class="addToRow "
+        style="width: 94%; height: 10px; margin-left: 48px;"
+      />
+      <div
+        class="rowContents"
+      >
+        <div
+          class="ContentBlock octo-block"
+        >
+          <div
+            class="octo-block-margin"
+          >
+            <div
+              class="MenuWrapper"
+            >
+              <div
+                class="Button IconButton"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </div>
+            </div>
+            <div
+              class="dnd-handle"
+              draggable="true"
+            >
+              <svg
+                class="GripIcon Icon"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            class="addToRow "
+            style="flex: 0 0 auto; height: 100%;"
+          />
+          <div
+            class="DividerElement"
+          />
+        </div>
+        <div
+          class="addToRow "
+        />
+      </div>
+    </div>
+    <div>
+      <div
+        class="addToRow "
+        style="width: 94%; height: 10px; margin-left: 48px;"
+      />
+      <div
+        class="rowContents"
+      >
+        <div
+          class="ContentBlock octo-block"
+        >
+          <div
+            class="octo-block-margin"
+          >
+            <div
+              class="MenuWrapper"
+            >
+              <div
+                class="Button IconButton"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </div>
+            </div>
+            <div
+              class="dnd-handle"
+              draggable="true"
+            >
+              <svg
+                class="GripIcon Icon"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            class="addToRow "
+            style="flex: 0 0 auto; height: 100%;"
+          />
+          <div
+            class="DividerElement"
+          />
+        </div>
+        <div
+          class="addToRow "
+        />
+      </div>
+      <div
+        class="addToRow "
+        style="width: 94%; height: 10px; margin-left: 48px;"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/cardDetail/cardDetailContents should match snapshot after onBlur triggers 1`] = `
+<div>
+  <div
+    class="octo-content CardDetailContents"
+  >
+    <div
+      class="octo-block"
+    >
+      <div
+        class="octo-block-margin"
+      />
+      <div
+        class="MarkdownEditor octo-editor  active"
+      >
+        <div
+          class="octo-editor-preview octo-placeholder"
+          style="display: none;"
+        >
+          <p>
+            Add a description...
+          </p>
+        </div>
+        <div
+          class="octo-editor-active Editor"
+          style=""
+        >
+          <div
+            id="test-id-wrapper"
+          >
+            <textarea
+              id="test-id"
+              style="display: none;"
+            />
+            <div
+              class="EasyMDEContainer"
+            >
+              <div
+                class="CodeMirror cm-s-easymde CodeMirror-wrap CodeMirror-focused"
+              >
+                <div
+                  style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 0px;"
+                >
+                  <textarea
+                    autocapitalize="off"
+                    autocorrect="off"
+                    spellcheck="false"
+                    style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"
+                    tabindex="0"
+                  />
+                </div>
+                <div
+                  class="CodeMirror-vscrollbar"
+                  cm-not-content="true"
+                  style="display: block; bottom: 0px;"
+                  tabindex="-1"
+                >
+                  <div
+                    style="min-width: 1px; height: 52px;"
+                  />
+                </div>
+                <div
+                  class="CodeMirror-hscrollbar"
+                  cm-not-content="true"
+                  tabindex="-1"
+                >
+                  <div
+                    style="height: 100%; min-height: 1px; width: 0px;"
+                  />
+                </div>
+                <div
+                  class="CodeMirror-scrollbar-filler"
+                  cm-not-content="true"
+                />
+                <div
+                  class="CodeMirror-gutter-filler"
+                  cm-not-content="true"
+                />
+                <div
+                  class="CodeMirror-scroll"
+                  style="min-height: 10px;"
+                  tabindex="-1"
+                >
+                  <div
+                    class="CodeMirror-sizer"
+                    style="margin-left: 0px; padding-right: 0px; padding-bottom: 0px;"
+                  >
+                    <div
+                      style="position: relative;"
+                    >
+                      <div
+                        class="CodeMirror-lines"
+                        role="presentation"
+                      >
+                        <div
+                          role="presentation"
+                          style="position: relative; outline: none;"
+                        >
+                          <div
+                            class="CodeMirror-measure"
+                          />
+                          <div
+                            class="CodeMirror-measure"
+                          >
+                            <pre
+                              class="CodeMirror-line"
+                              role="presentation"
+                            >
+                              <span
+                                role="presentation"
+                                style="padding-right: .1px;"
+                              >
+                                test123
+                              </span>
+                            </pre>
+                          </div>
+                          <div
+                            style="position: relative; z-index: 1;"
+                          />
+                          <div
+                            class="CodeMirror-cursors"
+                          />
+                          <div
+                            class="CodeMirror-code"
+                            role="presentation"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style="position: absolute; height: 50px; width: 1px; border-bottom: 0px solid transparent;"
+                  />
+                  <div
+                    class="CodeMirror-gutters"
+                    style="display: none;"
+                  />
+                </div>
+              </div>
+              <div
+                class="editor-preview-side editor-preview"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/cardDetail/cardDetailContents should match snapshot with contents array 1`] = `
+<div>
+  <div
+    class="octo-content"
+  >
+    <div>
+      <div
+        class="addToRow "
+        style="width: 94%; height: 10px; margin-left: 48px;"
+      />
+      <div
+        class="rowContents"
+      >
+        <div
+          class="ContentBlock octo-block"
+        >
+          <div
+            class="octo-block-margin"
+          >
+            <div
+              class="MenuWrapper"
+            >
+              <div
+                class="Button IconButton"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </div>
+            </div>
+            <div
+              class="dnd-handle"
+              draggable="true"
+            >
+              <svg
+                class="GripIcon Icon"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            class="addToRow "
+            style="flex: 0 0 auto; height: 100%;"
+          />
+          <div
+            class="DividerElement"
+          />
+        </div>
+        <div
+          class="addToRow "
+        />
+      </div>
+      <div
+        class="addToRow "
+        style="width: 94%; height: 10px; margin-left: 48px;"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/cardDetail/cardDetailContents should match snapshot with contents array that has array inside it 1`] = `
+<div>
+  <div
+    class="octo-content"
+  >
+    <div>
+      <div
+        class="addToRow "
+        style="width: 94%; height: 10px; margin-left: 48px;"
+      />
+      <div
+        class="rowContents"
+      >
+        <div
+          class="ContentBlock octo-block"
+        >
+          <div
+            class="octo-block-margin"
+          >
+            <div
+              class="MenuWrapper"
+            >
+              <div
+                class="Button IconButton"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </div>
+            </div>
+            <div
+              class="dnd-handle"
+              draggable="true"
+            >
+              <svg
+                class="GripIcon Icon"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            class="addToRow "
+            style="flex: 0 0 auto; height: 100%;"
+          />
+          <div
+            class="DividerElement"
+          />
+        </div>
+        <div
+          class="addToRow "
+        />
+      </div>
+    </div>
+    <div>
+      <div
+        class="addToRow "
+        style="width: 94%; height: 10px; margin-left: 48px;"
+      />
+      <div
+        style="display: flex;"
+      >
+        <div
+          class="rowContents"
+          style="width: 50%;"
+        >
+          <div
+            class="ContentBlock octo-block"
+          >
+            <div
+              class="octo-block-margin"
+            >
+              <div
+                class="MenuWrapper"
+              >
+                <div
+                  class="Button IconButton"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </div>
+              </div>
+              <div
+                class="dnd-handle"
+                draggable="true"
+              >
+                <svg
+                  class="GripIcon Icon"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0V0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div
+              class="addToRow "
+              style="flex: 0 0 auto; height: 100%;"
+            />
+            <div
+              class="DividerElement"
+            />
+          </div>
+          <div
+            class="addToRow "
+          />
+        </div>
+        <div
+          class="rowContents"
+          style="width: 50%;"
+        >
+          <div
+            class="ContentBlock octo-block"
+          >
+            <div
+              class="octo-block-margin"
+            >
+              <div
+                class="MenuWrapper"
+              >
+                <div
+                  class="Button IconButton"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </div>
+              </div>
+              <div
+                class="dnd-handle"
+                draggable="true"
+              >
+                <svg
+                  class="GripIcon Icon"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0V0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div
+              class="DividerElement"
+            />
+          </div>
+          <div
+            class="addToRow "
+          />
+        </div>
+      </div>
+      <div
+        class="addToRow "
+        style="width: 94%; height: 10px; margin-left: 48px;"
+      />
+    </div>
+  </div>
+</div>
+`;

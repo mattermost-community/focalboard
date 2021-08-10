@@ -3,6 +3,9 @@
 
 import {CSSObject} from '@emotion/serialize'
 import isEqual from 'lodash/isEqual'
+import color from 'color'
+
+import {Utils} from './utils'
 
 let activeThemeName: string
 
@@ -119,18 +122,38 @@ export function setTheme(theme: Theme | null): Theme {
 
     setActiveThemeName(consolidatedTheme, theme)
 
-    document.documentElement.style.setProperty('--main-bg', consolidatedTheme.mainBg)
-    document.documentElement.style.setProperty('--main-fg', consolidatedTheme.mainFg)
-    document.documentElement.style.setProperty('--body-color', consolidatedTheme.mainFg)
-    document.documentElement.style.setProperty('--button-bg', consolidatedTheme.buttonBg)
-    document.documentElement.style.setProperty('--button-fg', consolidatedTheme.buttonFg)
-    document.documentElement.style.setProperty('--sidebar-bg', consolidatedTheme.sidebarBg)
-    document.documentElement.style.setProperty('--sidebar-fg', consolidatedTheme.sidebarFg)
-    document.documentElement.style.setProperty('--sidebar-text-active-border', consolidatedTheme.sidebarTextActiveBorder)
-    document.documentElement.style.setProperty('--sidebar-white-logo', consolidatedTheme.sidebarWhiteLogo)
+    if (!Utils.isFocalboardPlugin()) {
+        document.documentElement.style.setProperty('--center-channel-bg-rgb', consolidatedTheme.mainBg)
+        document.documentElement.style.setProperty('--center-channel-color-rgb', consolidatedTheme.mainFg)
+        document.documentElement.style.setProperty('--button-bg-rgb', consolidatedTheme.buttonBg)
+        document.documentElement.style.setProperty('--button-color-rgb', consolidatedTheme.buttonFg)
+        document.documentElement.style.setProperty('--sidebar-bg-rgb', consolidatedTheme.sidebarBg)
+        document.documentElement.style.setProperty('--sidebar-text-rgb', consolidatedTheme.sidebarFg)
+        document.documentElement.style.setProperty('--link-color-rgb', consolidatedTheme.link)
+        document.documentElement.style.setProperty('--sidebar-text-active-border', consolidatedTheme.sidebarTextActiveBorder)
+    }
 
-    document.documentElement.style.setProperty('--link-color', consolidatedTheme.link)
-    document.documentElement.style.setProperty('--link-visited-color', consolidatedTheme.linkVisited)
+    document.documentElement.style.setProperty('--sidebar-white-logo', consolidatedTheme.sidebarWhiteLogo)
+    document.documentElement.style.setProperty('--link-visited-color-rgb', consolidatedTheme.linkVisited)
+
+    const mainBgColor = color(`rgb(${getComputedStyle(document.documentElement).getPropertyValue('--center-channel-bg-rgb')})`)
+
+    if (Utils.isFocalboardPlugin()) {
+        let fixedTheme = lightTheme
+        if (mainBgColor.isDark()) {
+            fixedTheme = darkTheme
+        }
+        consolidatedTheme.propDefault = fixedTheme.propDefault
+        consolidatedTheme.propGray = fixedTheme.propGray
+        consolidatedTheme.propBrown = fixedTheme.propBrown
+        consolidatedTheme.propOrange = fixedTheme.propOrange
+        consolidatedTheme.propYellow = fixedTheme.propYellow
+        consolidatedTheme.propGreen = fixedTheme.propGreen
+        consolidatedTheme.propBlue = fixedTheme.propBlue
+        consolidatedTheme.propPurple = fixedTheme.propPurple
+        consolidatedTheme.propPink = fixedTheme.propPink
+        consolidatedTheme.propRed = fixedTheme.propRed
+    }
 
     document.documentElement.style.setProperty('--prop-default', consolidatedTheme.propDefault)
     document.documentElement.style.setProperty('--prop-gray', consolidatedTheme.propGray)
@@ -212,12 +235,12 @@ export function getSelectBaseStyle() {
         menu: (provided: CSSObject): CSSObject => ({
             ...provided,
             width: 'unset',
-            background: 'rgb(var(--main-bg))',
+            background: 'rgb(var(--center-channel-bg-rgb))',
         }),
         option: (provided: CSSObject, state: { isFocused: boolean }): CSSObject => ({
             ...provided,
-            background: state.isFocused ? 'rgba(var(--main-fg), 0.1)' : 'rgb(var(--main-bg))',
-            color: state.isFocused ? 'rgb(var(--main-fg))' : 'rgb(var(--main-fg))',
+            background: state.isFocused ? 'rgba(var(--center-channel-color-rgb), 0.1)' : 'rgb(var(--center-channel-bg-rgb))',
+            color: state.isFocused ? 'rgb(var(--center-channel-color-rgb))' : 'rgb(var(--center-channel-color-rgb))',
             padding: '2px 8px',
         }),
         control: (): CSSObject => ({
@@ -237,7 +260,7 @@ export function getSelectBaseStyle() {
         }),
         singleValue: (provided: CSSObject): CSSObject => ({
             ...provided,
-            color: 'rgb(var(--main-fg))',
+            color: 'rgb(var(--center-channel-color-rgb))',
             overflow: 'unset',
             maxWidth: 'calc(100% - 20px)',
         }),

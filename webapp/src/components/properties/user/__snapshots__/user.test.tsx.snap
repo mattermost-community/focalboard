@@ -18,7 +18,7 @@ exports[`components/properties/user not readonly 1`] = `
         class=" css-kpfmlq-ValueContainer"
       >
         <div
-          class=" css-14tjw7f-singleValue"
+          class=" css-ciz25-singleValue"
         >
           username-1
         </div>
@@ -206,7 +206,7 @@ exports[`components/properties/user user dropdown open 1`] = `
         class=" css-kpfmlq-ValueContainer"
       >
         <div
-          class=" css-14tjw7f-singleValue"
+          class=" css-ciz25-singleValue"
         >
           username-1
         </div>
@@ -278,13 +278,13 @@ exports[`components/properties/user user dropdown open 1`] = `
       </div>
     </div>
     <div
-      class=" css-7p3rb2-menu"
+      class=" css-l4y5re-menu"
     >
       <div
         class=" css-g29tl0-MenuList"
       >
         <div
-          class=" css-1pe17ep-option"
+          class=" css-xoibch-option"
           id="react-select-4-option-0"
           tabindex="-1"
         >
