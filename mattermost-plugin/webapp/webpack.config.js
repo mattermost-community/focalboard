@@ -110,7 +110,7 @@ module.exports = {
                         options: {
                             name: '[name].[ext]',
                             outputPath: path.join(__dirname, '/dist'),
-                            publicPath: 'plugins/focalboard/static/',
+                            publicPath: '/plugins/focalboard/static/',
                         },
                     },
                     {
