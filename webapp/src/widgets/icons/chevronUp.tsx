@@ -3,14 +3,13 @@
 
 import React from 'react'
 
-import './logo.scss'
 import CompassIcon from './compassIcon'
 
-export default function LogoIcon(): JSX.Element {
+export default function ChevronUp(): JSX.Element {
     return (
         <CompassIcon
-            icon='product-boards'
-            className='logo__icon'
+            icon='chevron-up'
+            className='ChevronUpIcon'
         />
     )
 }

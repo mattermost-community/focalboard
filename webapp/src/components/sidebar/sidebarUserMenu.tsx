@@ -9,6 +9,7 @@ import {Constants} from '../../constants'
 import octoClient from '../../octoClient'
 import {IUser} from '../../user'
 import LogoIcon from '../../widgets/icons/logo'
+import FocalboardLogoIcon from '../../widgets/icons/focalboard_logo'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {getMe} from '../../store/users'
@@ -35,16 +36,22 @@ const SidebarUserMenu = React.memo(() => {
                 <MenuWrapper>
                     <div className='logo'>
                         <div className='logo-title'>
-                            <LogoIcon/>
-                            {focalboardTitle && <span>{'Focalboard'}</span>}
-                            {!focalboardTitle && <span>{'Boards'}</span>}
-                        </div>
-                        <div className='octo-spacer'/>
-                        <div className='versionFrame'>
-                            <div className='version'>
-                                {`v${Constants.versionString}`}
+                            {focalboardTitle &&
+                                <>
+                                    <FocalboardLogoIcon/>
+                                    <span>{'Focalboard'}</span>
+                                </>}
+                            {!focalboardTitle &&
+                                <>
+                                    <LogoIcon/>
+                                    <span>{'Boards'}</span>
+                                </>}
+                            <div className='versionFrame'>
+                                <div className='version'>
+                                    {`v${Constants.versionString}`}
+                                </div>
+                                {showVersionBadge && <div className='versionBadge'>{'BETA'}</div>}
                             </div>
-                            {showVersionBadge && <div className='versionBadge'>{'BETA'}</div>}
                         </div>
                     </div>
                     <Menu>

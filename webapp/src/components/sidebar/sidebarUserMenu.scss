@@ -5,18 +5,26 @@
         align-items: center;
 
         .logo-title {
+            font-family: Metropolis, sans-serif;
             display: flex;
             align-items: center;
             font-size: 16px;
             margin-right: 5px;
-            .LogoIcon {
+
+            .logo__icon {
+                font-size: 24px;
+            }
+
+            .LogoIcon, .FocalboardLogoIcon {
                 fill: rgba(var(--sidebar-text-rgb), 1);
+                color: rgba(var(--sidebar-text-rgb), 1);
                 height: 24px;
                 width: 22px;
                 margin-right: 3px;
                 position: relative;
                 bottom: 2px;
             }
+
             span {
                 height: 32px;
             }
@@ -26,6 +34,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            margin-left: 8px;
         }
 
         .version {
