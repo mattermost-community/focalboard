@@ -6,6 +6,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 import {useHistory} from 'mm-react-router-dom'
 
 import {GlobalState} from 'mattermost-redux/types/store'
+import {getTheme} from 'mattermost-redux/selectors/entities/preferences'
 
 const windowAny = (window as any)
 windowAny.baseURL = '/plugins/focalboard'
@@ -16,6 +17,7 @@ import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
+import {setMattermostTheme} from '../../../webapp/src/theme'
 
 import '../../../webapp/src/styles/focalboard-variables.scss'
 import '../../../webapp/src/styles/main.scss'
@@ -80,6 +82,16 @@ export default class Plugin {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
     public async initialize(registry: PluginRegistry, store: Store<GlobalState, Action<Record<string, unknown>>>) {
         this.registry = registry
+
+        let theme = getTheme(store.getState())
+        setMattermostTheme(theme)
+        store.subscribe(() => {
+            const currentTheme = getTheme(store.getState())
+            if (currentTheme !== theme && currentTheme) {
+                setMattermostTheme(currentTheme)
+                theme = currentTheme
+            }
+        })
 
         if (this.registry.registerProduct) {
             windowAny.frontendBaseURL = '/boards'
