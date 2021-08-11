@@ -35,6 +35,8 @@ export function getMessages(lang: string): {[key: string]: string} {
         return messages_tr
     case 'zh-cn':
         return messages_zhHant
+    case 'zh-tx':
+        return messages_zhHans
     case 'zh-tw':
         return messages_zhHans
     }
