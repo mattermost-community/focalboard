@@ -55,6 +55,9 @@ module.exports = {
             'node_modules',
             path.resolve(__dirname),
         ],
+        alias: {
+            moment: path.resolve(__dirname, '../../webapp/node_modules/moment/'),
+        },
         extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
     },
     module: {
