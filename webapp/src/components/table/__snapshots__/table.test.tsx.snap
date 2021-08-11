@@ -180,7 +180,9 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
                 value 1
               </span>
               <div
+                aria-label="Clear"
                 class="Button IconButton margin-left delete-value"
+                role="button"
                 title="Clear"
               >
                 <i
@@ -274,7 +276,9 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
                 value 1
               </span>
               <div
+                aria-label="Clear"
                 class="Button IconButton margin-left delete-value"
+                role="button"
                 title="Clear"
               >
                 <i
@@ -566,7 +570,9 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
                 value 1
               </span>
               <div
+                aria-label="Clear"
                 class="Button IconButton margin-left delete-value"
+                role="button"
                 title="Clear"
               >
                 <i
@@ -660,7 +666,9 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
                 value 1
               </span>
               <div
+                aria-label="Clear"
                 class="Button IconButton margin-left delete-value"
+                role="button"
                 title="Clear"
               >
                 <i
@@ -952,7 +960,9 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
                 value 1
               </span>
               <div
+                aria-label="Clear"
                 class="Button IconButton margin-left delete-value"
+                role="button"
                 title="Clear"
               >
                 <i
@@ -1046,7 +1056,9 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
                 value 1
               </span>
               <div
+                aria-label="Clear"
                 class="Button IconButton margin-left delete-value"
+                role="button"
                 title="Clear"
               >
                 <i
@@ -1338,7 +1350,9 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
                 value 1
               </span>
               <div
+                aria-label="Clear"
                 class="Button IconButton margin-left delete-value"
+                role="button"
                 title="Clear"
               >
                 <i
@@ -1432,7 +1446,9 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
                 value 1
               </span>
               <div
+                aria-label="Clear"
                 class="Button IconButton margin-left delete-value"
+                role="button"
                 title="Clear"
               >
                 <i
@@ -1702,7 +1718,9 @@ exports[`components/table/Table should match snapshot 1`] = `
                 value 1
               </span>
               <div
+                aria-label="Clear"
                 class="Button IconButton margin-left delete-value"
+                role="button"
                 title="Clear"
               >
                 <i
@@ -1906,6 +1924,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           >
             <div
               class="Button IconButton"
+              role="button"
             >
               <svg
                 class="DisclosureTriangleIcon Icon"
@@ -1938,6 +1957,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           >
             <div
               class="Button IconButton"
+              role="button"
             >
               <i
                 class="CompassIcon icon-dots-horizontal OptionsIcon"
@@ -1946,6 +1966,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           </div>
           <div
             class="Button IconButton"
+            role="button"
           >
             <i
               class="CompassIcon icon-plus AddIcon"
