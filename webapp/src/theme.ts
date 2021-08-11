@@ -169,6 +169,29 @@ export function setTheme(theme: Theme | null): Theme {
     return consolidatedTheme
 }
 
+export function setMattermostTheme(theme: any): Theme {
+    document.documentElement.style.setProperty('--center-channel-bg-rgb', color(theme.centerChannelBg).rgb().array().join(', '))
+    document.documentElement.style.setProperty('--center-channel-color-rgb', color(theme.centerChannelColor).rgb().array().join(', '))
+    document.documentElement.style.setProperty('--button-bg-rgb', color(theme.buttonBg).rgb().array().join(', '))
+    document.documentElement.style.setProperty('--button-color-rgb', color(theme.buttonColor).rgb().array().join(', '))
+    document.documentElement.style.setProperty('--sidebar-bg-rgb', color(theme.sidebarBg).rgb().array().join(', '))
+    document.documentElement.style.setProperty('--sidebar-text-rgb', color(theme.sidebarText).rgb().array().join(', '))
+    document.documentElement.style.setProperty('--link-color-rgb', color(theme.linkColor).rgb().array().join(', '))
+    document.documentElement.style.setProperty('--sidebar-text-active-border', color(theme.sidebarTextActiveBorder).rgb().array().join(', '))
+
+    return setTheme({
+        ...defaultTheme,
+        mainBg: color(theme.centerChannelBg).rgb().array().join(', '),
+        mainFg: color(theme.centerChannelColor).rgb().array().join(', '),
+        buttonBg: color(theme.buttonBg).rgb().array().join(', '),
+        buttonFg: color(theme.buttonColor).rgb().array().join(', '),
+        sidebarBg: color(theme.sidebarBg).rgb().array().join(', '),
+        sidebarFg: color(theme.sidebarColor || '#ffffff').rgb().array().join(', '),
+        sidebarTextActiveBorder: color(theme.sidebarTextActiveBorder).rgb().array().join(', '),
+        link: color(theme.linkColor).rgb().array().join(', '),
+    })
+}
+
 function setActiveThemeName(consolidatedTheme: Theme, theme: Theme | null) {
     if (theme === null) {
         activeThemeName = systemThemeName
