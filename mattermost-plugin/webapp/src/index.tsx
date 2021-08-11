@@ -82,6 +82,7 @@ export default class Plugin {
         this.registry = registry
 
         if (this.registry.registerProduct) {
+            windowAny.frontendBaseURL = '/boards'
             const goToFocalboardWorkspace = () => {
                 const currentChannel = store.getState().entities.channels.currentChannelId
                 window.open(`${window.location.origin}/boards/workspace/${currentChannel}`)
@@ -102,6 +103,7 @@ export default class Plugin {
             })
             this.registry.registerProduct('/boards', GlobalHeaderIcon, 'Boards', '/plug/focalboard/go-to-current-workspace', MainApp, HeaderComponent)
         } else {
+            windowAny.frontendBaseURL = '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
                 const currentChannel = store.getState().entities.channels.currentChannelId
                 window.open(`${window.location.origin}/plug/focalboard/workspace/${currentChannel}`)
