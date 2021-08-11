@@ -137,6 +137,8 @@ describe('components/cardDetail/cardDetailContents', () => {
             textarea!.dispatchEvent(onBlurEvent)
         })
 
+        // TODO: Remove this hack if we get rid of codemirror/simpleMDE.
+        await new Promise((r) => setTimeout(r, 100))
         expect(container).toMatchSnapshot()
     })
 
