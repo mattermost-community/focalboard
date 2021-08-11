@@ -132,7 +132,6 @@ describe('components/properties/multiSelect', () => {
     it('can unselect a option', async () => {
         const propertyTemplate = buildMultiSelectPropertyTemplate()
         const propertyValue = ['multi-option-1']
-        const deleteValueTestId = `delete-value-${propertyValue[0]}`
         const onDeleteValue = jest.fn()
 
         render(
@@ -152,7 +151,7 @@ describe('components/properties/multiSelect', () => {
 
         userEvent.click(screen.getByTestId(nonEditableMultiSelectTestId))
 
-        userEvent.click(screen.getByTestId(deleteValueTestId))
+        userEvent.click(screen.getAllByRole('button', {name: /clear/i})[0])
 
         const valueToRemove = propertyTemplate.options.find((option: IPropertyOption) => option.id === propertyValue[0])
         const selectedValues = propertyTemplate.options.filter((option: IPropertyOption) => propertyValue.includes(option.id))
@@ -192,8 +191,6 @@ describe('components/properties/multiSelect', () => {
     it('can delete a option', () => {
         const propertyTemplate = buildMultiSelectPropertyTemplate()
         const propertyValue = ['multi-option-1', 'multi-option-2']
-        const deleteMenuOpenTestId = `delete-option-menu-${propertyValue[0]}`
-        const deleteButtonTestId = `delete-option-${propertyValue[0]}`
 
         const onDeleteOption = jest.fn()
         render(
@@ -213,9 +210,9 @@ describe('components/properties/multiSelect', () => {
 
         userEvent.click(screen.getByTestId(nonEditableMultiSelectTestId))
 
-        userEvent.click(screen.getByTestId(deleteMenuOpenTestId))
+        userEvent.click(screen.getAllByRole('button', {name: /open menu/i})[0])
 
-        userEvent.click(screen.getByTestId(deleteButtonTestId))
+        userEvent.click(screen.getByRole('button', {name: /delete/i}))
 
         const optionToDelete = propertyTemplate.options.find((option: IPropertyOption) => option.id === propertyValue[0])
 
@@ -225,9 +222,8 @@ describe('components/properties/multiSelect', () => {
     it('can change color for any option', () => {
         const propertyTemplate = buildMultiSelectPropertyTemplate()
         const propertyValue = ['multi-option-1', 'multi-option-2']
-        const deleteMenuOpenTestId = `delete-option-menu-${propertyValue[0]}`
         const newColorKey = 'propColorYellow'
-        const selectColorTestId = `select-color-${newColorKey}`
+        const newColorValue = 'yellow'
 
         const onChangeColor = jest.fn()
         render(
@@ -247,9 +243,9 @@ describe('components/properties/multiSelect', () => {
 
         userEvent.click(screen.getByTestId(nonEditableMultiSelectTestId))
 
-        userEvent.click(screen.getByTestId(deleteMenuOpenTestId))
+        userEvent.click(screen.getAllByRole('button', {name: /open menu/i})[0])
 
-        userEvent.click(screen.getByTestId(selectColorTestId))
+        userEvent.click(screen.getByRole('button', {name: new RegExp(newColorValue, 'i')}))
 
         const selectedOption = propertyTemplate.options.find((option: IPropertyOption) => option.id === propertyValue[0])
 

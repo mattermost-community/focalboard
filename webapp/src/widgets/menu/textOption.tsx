@@ -8,7 +8,6 @@ type TextOptionProps = MenuOptionProps & {
     icon?: React.ReactNode,
     rightIcon?: React.ReactNode,
     className?: string
-    'data-testid'?: string
 }
 
 function TextOption(props:TextOptionProps): JSX.Element {
@@ -19,7 +18,8 @@ function TextOption(props:TextOptionProps): JSX.Element {
     }
     return (
         <div
-            data-testid={props['data-testid']}
+            role='button'
+            aria-label={name}
             className={className}
             onClick={(e: React.MouseEvent) => {
                 e.target.dispatchEvent(new Event('menuItemClicked'))

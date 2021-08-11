@@ -54,7 +54,6 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
                 <span className='Label-text'>{option.value}</span>
                 {onDeleteValue &&
                     <IconButton
-                        data-testid={`delete-value-${option.id}`}
                         onClick={() => onDeleteValue(option)}
                         onMouseDown={(e) => e.stopPropagation()}
                         icon={<CloseIcon/>}
@@ -72,12 +71,11 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
             </div>
             <MenuWrapper stopPropagationOnToggle={true}>
                 <IconButton
-                    data-testid={`delete-option-menu-${option.id}`}
+                    title='Open Menu'
                     icon={<OptionsIcon/>}
                 />
                 <Menu position='left'>
                     <Menu.Text
-                        data-testid={`delete-option-${option.id}`}
                         id='delete'
                         icon={<DeleteIcon/>}
                         name={intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
@@ -86,7 +84,6 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
                     <Menu.Separator/>
                     {Object.entries(Constants.menuColors).map(([key, color]: any) => (
                         <Menu.Color
-                            data-testid={`select-color-${key}`}
                             key={key}
                             id={key}
                             name={color}
