@@ -1,9 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import {Store, Action} from 'redux'
 import {Provider as ReduxProvider} from 'react-redux'
-import {useHistory} from 'react-router-dom'
+import {useHistory} from 'mm-react-router-dom'
 
 import {GlobalState} from 'mattermost-redux/types/store'
 
@@ -80,21 +80,35 @@ export default class Plugin {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
     public async initialize(registry: PluginRegistry, store: Store<GlobalState, Action<Record<string, unknown>>>) {
         this.registry = registry
-        const goToFocalboardWorkspace = () => {
-            const currentChannel = store.getState().entities.channels.currentChannelId
-            window.open(`${window.location.origin}/boards/workspace/${currentChannel}`)
-        }
-        this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Focalboard Workspace')
-
-        this.registry.registerCustomRoute('go-to-current-workspace', () => {
-            const history = useHistory()
-            const currentChannel = store.getState().entities.channels.currentChannelId
-            history.push(`/boards/workspace/${currentChannel}`)
-            return <></>
-        })
 
         if (this.registry.registerProduct) {
+            windowAny.frontendBaseURL = '/boards'
+            const goToFocalboardWorkspace = () => {
+                const currentChannel = store.getState().entities.channels.currentChannelId
+                window.open(`${window.location.origin}/boards/workspace/${currentChannel}`)
+            }
+            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Focalboard Workspace')
+
+            this.registry.registerCustomRoute('go-to-current-workspace', () => {
+                const history = useHistory()
+                useEffect(() => {
+                    const currentChannel = store.getState().entities.channels.currentChannelId
+                    if (currentChannel) {
+                        history.push(`/boards/workspace/${currentChannel}`)
+                    } else {
+                        history.goBack()
+                    }
+                }, [])
+                return <></>
+            })
             this.registry.registerProduct('/boards', GlobalHeaderIcon, 'Boards', '/plug/focalboard/go-to-current-workspace', MainApp, HeaderComponent)
+        } else {
+            windowAny.frontendBaseURL = '/plug/focalboard'
+            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
+                const currentChannel = store.getState().entities.channels.currentChannelId
+                window.open(`${window.location.origin}/plug/focalboard/workspace/${currentChannel}`)
+            }, '', 'Focalboard Workspace')
+            this.registry.registerCustomRoute('/', MainApp)
         }
     }
 
