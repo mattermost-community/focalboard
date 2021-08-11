@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {render, screen, within} from '@testing-library/react'
+import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 import {IntlProvider} from 'react-intl'
@@ -52,7 +52,6 @@ const Wrapper = ({children}: WrapperProps) => {
 
 describe('components/properties/multiSelect', () => {
     const nonEditableMultiSelectTestId = 'multiselect-non-editable'
-    const editableMultiSelectTestId = 'creatable-selector-parent'
 
     it('shows only the selected options when menu is not opened', () => {
         const propertyTemplate = buildMultiSelectPropertyTemplate()
@@ -100,7 +99,7 @@ describe('components/properties/multiSelect', () => {
 
         userEvent.click(screen.getByTestId(nonEditableMultiSelectTestId))
 
-        expect(screen.getByTestId(editableMultiSelectTestId)).toBeInTheDocument()
+        expect(screen.getByRole('textbox', {name: /value selector/i})).toBeInTheDocument()
     })
 
     it('can select a option', async () => {
@@ -125,9 +124,7 @@ describe('components/properties/multiSelect', () => {
 
         userEvent.click(screen.getByTestId(nonEditableMultiSelectTestId))
 
-        const editableMultiSelectorParent = screen.getByTestId(editableMultiSelectTestId)
-
-        userEvent.type(within(editableMultiSelectorParent).getByRole('textbox'), 'b{enter}')
+        userEvent.type(screen.getByRole('textbox', {name: /value selector/i}), 'b{enter}')
 
         expect(onChange).toHaveBeenCalledWith(['multi-option-1', 'multi-option-2'])
     })
@@ -185,9 +182,7 @@ describe('components/properties/multiSelect', () => {
 
         userEvent.click(screen.getByTestId(nonEditableMultiSelectTestId))
 
-        const editableMultiSelectorParent = screen.getByTestId(editableMultiSelectTestId)
-
-        userEvent.type(within(editableMultiSelectorParent).getByRole('textbox'), 'new-value{enter}')
+        userEvent.type(screen.getByRole('textbox', {name: /value selector/i}), 'new-value{enter}')
 
         const selectedValues = propertyTemplate.options.filter((option: IPropertyOption) => propertyValue.includes(option.id))
 
