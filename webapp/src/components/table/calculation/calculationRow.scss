@@ -7,10 +7,10 @@
     border-top: solid 1px rgba(var(--body-color), 0.09);
     // To override table's specific border
     border-bottom: none !important;
-    background-color: rgb(var(--main-bg));
+    background-color: rgb(var(--center-channel-bg-rgb));
 
     .octo-table-cell {
-        background-color: rgb(var(--main-bg));
+        background-color: rgb(var(--center-channel-bg-rgb));
         align-items: center;
         justify-content: flex-end;
         border: none;
@@ -28,10 +28,10 @@
 .Table {
     .octo-table-cell.Calculation:focus-within {
         border: unset;
-        background-color: rgb(var(--main-bg));
+        background-color: rgb(var(--center-channel-bg-rgb));
     }
 
     .octo-table-cell.Calculation:hover {
-        background-color: rgb(var(--main-bg));
+        background-color: rgb(var(--center-channel-bg-rgb));
     }
 }
