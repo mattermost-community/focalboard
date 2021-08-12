@@ -28,34 +28,31 @@ const Dialog = React.memo((props: Props) => {
     useHotkeys('esc', () => props.onClose())
 
     return (
-        <div
-            className='Dialog dialog-back'
-            onMouseDown={(e) => {
-                if (e.target === e.currentTarget) {
-                    props.onClose()
-                }
-            }}
-        >
-            <div className='wrapper' >
+        <div className='Dialog dialog-back'>
+            <div
+                className='wrapper'
+                onMouseDown={(e) => {
+                    if (e.target === e.currentTarget) {
+                        props.onClose()
+                    }
+                }}
+            >
                 <div className='dialog' >
                     <div className='toolbar'>
-                        {toolsMenu &&
-                        <>
+                        <IconButton
+                            onClick={props.onClose}
+                            icon={<CloseIcon/>}
+                            title={closeDialogText}
+                            className='IconButton--large'
+                        />
+                        <div className='octo-spacer'/>
+                        {toolsMenu && <MenuWrapper>
                             <IconButton
-                                onClick={props.onClose}
-                                icon={<CloseIcon/>}
-                                title={closeDialogText}
                                 className='IconButton--large'
+                                icon={<OptionsIcon/>}
                             />
-                            <div className='octo-spacer'/>
-                            <MenuWrapper>
-                                <IconButton
-                                    className='IconButton--large'
-                                    icon={<OptionsIcon/>}
-                                />
-                                {toolsMenu}
-                            </MenuWrapper>
-                        </>
+                            {toolsMenu}
+                        </MenuWrapper>
                         }
                     </div>
                     {props.children}

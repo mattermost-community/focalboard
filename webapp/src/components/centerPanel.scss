@@ -1,4 +1,4 @@
-.CenterPanel {
+.focalboard-body .CenterPanel {
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
@@ -12,7 +12,7 @@
 }
 
 
-.BoardComponent {
+.focalboard-body .BoardComponent {
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
@@ -42,7 +42,7 @@
         position: sticky;
         top: 0;
         left: 0;
-        background: rgb(var(--main-bg));
+        background: rgb(var(--center-channel-bg-rgb));
         z-index: 100;
     }
 }

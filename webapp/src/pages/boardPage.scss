@@ -1,7 +1,17 @@
-.BoardPage {
+.focalboard-body .BoardPage {
     > .error {
         background-color: rgba(230, 192, 192, 0.9);
         text-align: center;
         padding: 10px;
+    }
+
+    > .WSConnection {
+        background-color: rgba(230, 220, 192, 0.9);
+        text-align: center;
+        padding: 10px;
+    }
+
+    > .WSConnection.error {
+        background-color: rgba(230, 192, 192, 0.9);
     }
 }

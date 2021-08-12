@@ -1,7 +1,4 @@
-.DropdownIcon {
-    fill: none;
-    stroke: rgb(var(--body-color));
-    stroke-width: 4px;
-    width: 24px;
-    height: 24px;
+.focalboard-body .DropdownIcon {
+    color: rgb(var(--center-channel-color-rgb));
+    font-size: 16px;
 }

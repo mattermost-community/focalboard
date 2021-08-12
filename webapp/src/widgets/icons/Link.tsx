@@ -7,6 +7,9 @@ import CompassIcon from './compassIcon'
 
 export default function LinkIcon(): JSX.Element {
     return (
-        <CompassIcon icon={'link-variant'}/>
+        <CompassIcon
+            icon='link-variant'
+            className='LinkIcon'
+        />
     )
 }

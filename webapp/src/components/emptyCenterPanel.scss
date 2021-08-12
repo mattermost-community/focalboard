@@ -1,10 +1,10 @@
-.EmptyCenterPanel {
+.focalboard-body .EmptyCenterPanel {
     display: flex;
     flex-direction: column;
 
     padding: 80px;
     font-size: 15px;
-    color: rgba(var(--body-color), 0.7);
+    color: rgba(var(--center-channel-color-rgb), 0.7);
 
     .WorkspaceInfo {
         b {

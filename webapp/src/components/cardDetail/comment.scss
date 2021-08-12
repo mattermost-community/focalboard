@@ -1,4 +1,4 @@
-.Comment {
+.focalboard-body .Comment {
     display: flex;
     flex-direction: column;
     margin: 5px 0;
@@ -41,7 +41,7 @@
     }
 
     .comment-text {
-        color: rgb(var(--body-color));
+        color: rgb(var(--center-channel-color-rgb));
         width: 100%;
         padding-left: 28px;
 

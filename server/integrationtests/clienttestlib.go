@@ -50,30 +50,50 @@ func getTestConfig() *config.Configuration {
 	}`
 
 	return &config.Configuration{
-		ServerRoot:         "http://localhost:8888",
-		Port:               8888,
-		DBType:             dbType,
-		DBConfigString:     connectionString,
-		DBTablePrefix:      "test_",
-		WebPath:            "./pack",
-		FilesDriver:        "local",
-		FilesPath:          "./files",
-		LoggingEscapedJson: logging,
+		ServerRoot:        "http://localhost:8888",
+		Port:              8888,
+		DBType:            dbType,
+		DBConfigString:    connectionString,
+		DBTablePrefix:     "test_",
+		WebPath:           "./pack",
+		FilesDriver:       "local",
+		FilesPath:         "./files",
+		LoggingCfgJSON:    logging,
+		SessionExpireTime: int64(30 * time.Second),
+		AuthMode:          "native",
 	}
+}
+
+func newTestServer(singleUserToken string) *server.Server {
+	logger := mlog.NewLogger()
+	if err := logger.Configure("", getTestConfig().LoggingCfgJSON); err != nil {
+		panic(err)
+	}
+	cfg := getTestConfig()
+	db, err := server.NewStore(cfg, logger)
+	if err != nil {
+		panic(err)
+	}
+	srv, err := server.New(cfg, singleUserToken, db, logger, "")
+	if err != nil {
+		panic(err)
+	}
+
+	return srv
 }
 
 func SetupTestHelper() *TestHelper {
 	sessionToken := "TESTTOKEN"
 	th := &TestHelper{}
-	logger := mlog.NewLogger()
-	logger.Configure("", getTestConfig().LoggingEscapedJson)
-	srv, err := server.New(getTestConfig(), sessionToken, logger)
-	if err != nil {
-		panic(err)
-	}
-	th.Server = srv
-	th.Client = client.NewClient(srv.Config().ServerRoot, sessionToken)
+	th.Server = newTestServer(sessionToken)
+	th.Client = client.NewClient(th.Server.Config().ServerRoot, sessionToken)
+	return th
+}
 
+func SetupTestHelperWithoutToken() *TestHelper {
+	th := &TestHelper{}
+	th.Server = newTestServer("")
+	th.Client = client.NewClient(th.Server.Config().ServerRoot, "")
 	return th
 }
 
@@ -87,7 +107,7 @@ func (th *TestHelper) InitBasic() *TestHelper {
 	for {
 		URL := th.Server.Config().ServerRoot
 		th.Server.Logger().Info("Polling server", mlog.String("url", URL))
-		resp, err := http.Get(URL)
+		resp, err := http.Get(URL) //nolint:gosec
 		if err != nil {
 			th.Server.Logger().Error("Polling failed", mlog.Err(err))
 			time.Sleep(100 * time.Millisecond)
@@ -111,10 +131,12 @@ func (th *TestHelper) InitBasic() *TestHelper {
 }
 
 func (th *TestHelper) TearDown() {
-	defer th.Server.Logger().Shutdown()
+	defer func() { _ = th.Server.Logger().Shutdown() }()
 
 	err := th.Server.Shutdown()
 	if err != nil {
 		panic(err)
 	}
+
+	os.RemoveAll(th.Server.Config().FilesPath)
 }

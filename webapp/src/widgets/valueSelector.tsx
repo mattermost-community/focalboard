@@ -57,8 +57,8 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
                         onClick={() => onDeleteValue(option)}
                         onMouseDown={(e) => e.stopPropagation()}
                         icon={<CloseIcon/>}
-                        title='Close'
-                        className='margin-left'
+                        title='Clear'
+                        className='margin-left delete-value'
                     />
                 }
             </Label>
@@ -79,12 +79,12 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
                         onClick={() => props.onDeleteOption(option)}
                     />
                     <Menu.Separator/>
-                    {Constants.menuColors.map((color) => (
+                    {Object.entries(Constants.menuColors).map(([key, color]: any) => (
                         <Menu.Color
-                            key={color.id}
-                            id={color.id}
-                            name={color.name}
-                            onClick={() => props.onChangeColor(option, color.id)}
+                            key={key}
+                            id={key}
+                            name={color}
+                            onClick={() => props.onChangeColor(option, key)}
                         />
                     ))}
                 </Menu>
@@ -97,8 +97,8 @@ const valueSelectorStyle = {
     ...getSelectBaseStyle(),
     option: (provided: CSSObject, state: {isFocused: boolean}): CSSObject => ({
         ...provided,
-        background: state.isFocused ? 'rgba(var(--main-fg), 0.1)' : 'rgb(var(--main-bg))',
-        color: state.isFocused ? 'rgb(var(--main-fg))' : 'rgb(var(--main-fg))',
+        background: state.isFocused ? 'rgba(var(--center-channel-color-rgb), 0.1)' : 'rgb(var(--center-channel-bg-rgb))',
+        color: state.isFocused ? 'rgb(var(--center-channel-color-rgb))' : 'rgb(var(--center-channel-color-rgb))',
         padding: '8px',
     }),
     control: (): CSSObject => ({
@@ -126,11 +126,19 @@ const valueSelectorStyle = {
     multiValueRemove: (): CSSObject => ({
         display: 'none',
     }),
+    menu: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        width: 'unset',
+        background: 'rgb(var(--center-channel-bg-rgb))',
+        minWidth: '260px',
+    }),
 }
 
 function ValueSelector(props: Props): JSX.Element {
     return (
         <CreatableSelect
+            captureMenuScroll={true}
+            maxMenuHeight={1200}
             isMulti={props.isMulti}
             isClearable={true}
             styles={valueSelectorStyle}
@@ -164,7 +172,7 @@ function ValueSelector(props: Props): JSX.Element {
             closeMenuOnSelect={true}
             placeholder={props.emptyValue}
             hideSelectedOptions={false}
-            defaultMenuIsOpen={false}
+            defaultMenuIsOpen={true}
         />
     )
 }

@@ -1,16 +1,15 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useEffect, useRef} from 'react'
-import EasyMDE from 'easymde'
+import React, {useState, useRef, useMemo} from 'react'
 import SimpleMDE from 'react-simplemde-editor'
 
 import {Utils} from '../utils'
 import './markdownEditor.scss'
 
 type Props = {
+    id?: string
     text?: string
     placeholderText?: string
-    uniqueId?: string
     className?: string
     readonly?: boolean
 
@@ -21,12 +20,29 @@ type Props = {
 }
 
 const MarkdownEditor = (props: Props): JSX. Element => {
-    const {placeholderText, uniqueId, onFocus, onBlur, onChange} = props
-
+    const {placeholderText, onFocus, onBlur, onChange, text, id} = props
     const [isEditing, setIsEditing] = useState(false)
+    const [uniqueId] = useState(id || Utils.createGuid())
+
     const [active, setActive] = useState(false)
-    const [text, setText] = useState(props.text)
-    const [editorInstance, setEditorInstance] = useState<EasyMDE>()
+    const [editorInstance, setEditorInstance] = useState<any>()
+    const editorOptions = useMemo(() => ({
+        autoDownloadFontAwesome: true,
+        toolbar: false,
+        status: false,
+        autofocus: true,
+        spellChecker: true,
+        nativeSpellcheck: true,
+        minHeight: '10px',
+        shortcuts: {
+            toggleStrikethrough: 'Cmd-.',
+            togglePreview: null,
+            drawImage: null,
+            drawLink: null,
+            toggleSideBySide: null,
+            toggleFullScreen: null,
+        },
+    }), [])
 
     const showEditor = (): void => {
         const cm = editorInstance?.codemirror
@@ -42,12 +58,6 @@ const MarkdownEditor = (props: Props): JSX. Element => {
         setIsEditing(true)
     }
 
-    useEffect(() => {
-        if (!isEditing && text !== props.text) {
-            setText(props.text)
-        }
-    }, [props.text])
-
     const stateAndPropsValue = {
         isEditing,
         setIsEditing,
@@ -58,6 +68,38 @@ const MarkdownEditor = (props: Props): JSX. Element => {
     }
     const stateAndPropsRef = useRef(stateAndPropsValue)
     stateAndPropsRef.current = stateAndPropsValue
+
+    const editorEvents = useMemo(() => ({
+        change: (instance: any) => {
+            if (stateAndPropsRef.current.isEditing) {
+                const newText = instance.getValue()
+                stateAndPropsRef.current.onChange?.(newText)
+            }
+        },
+        blur: (instance: any) => {
+            const newText = instance.getValue()
+            const oldText = text || ''
+            if (newText !== oldText && stateAndPropsRef.current.onChange) {
+                stateAndPropsRef.current.onChange(newText)
+            }
+
+            stateAndPropsRef.current.setActive(false)
+
+            if (stateAndPropsRef.current.onBlur) {
+                stateAndPropsRef.current.onBlur(newText)
+            }
+
+            stateAndPropsRef.current.setIsEditing(false)
+        },
+        focus: () => {
+            stateAndPropsRef.current.setActive(true)
+            stateAndPropsRef.current.setIsEditing(true)
+
+            if (stateAndPropsRef.current.onFocus) {
+                stateAndPropsRef.current.onFocus()
+            }
+        },
+    }), [])
 
     const html: string = Utils.htmlFromMarkdown(text || placeholderText || '')
 
@@ -75,7 +117,7 @@ const MarkdownEditor = (props: Props): JSX. Element => {
 
     const editorElement = (
         <div
-            className='octo-editor-activeEditor'
+            className='octo-editor-active Editor'
 
             // Use visibility instead of display here so the editor is pre-rendered, avoiding a flash on showEditor
             style={isEditing ? {} : {visibility: 'hidden', position: 'absolute', top: 0, left: 0}}
@@ -96,65 +138,10 @@ const MarkdownEditor = (props: Props): JSX. Element => {
         >
             <SimpleMDE
                 id={uniqueId}
-                getMdeInstance={(instance) => {
-                    setEditorInstance(instance)
-
-                    // BUGBUG: This breaks auto-lists
-                    // instance.codemirror.setOption("extraKeys", {
-                    //     "Ctrl-Enter": (cm) => {
-                    //         cm.getInputField().blur()
-                    //     }
-                    // })
-                }}
+                getMdeInstance={setEditorInstance}
                 value={text}
-
-                events={{
-                    change: (instance: any) => {
-                        if (stateAndPropsRef.current.isEditing) {
-                            const newText = instance.getValue()
-                            stateAndPropsRef.current.onChange?.(newText)
-                        }
-                    },
-                    blur: (instance: any) => {
-                        const newText = instance.getValue()
-                        const oldText = text || ''
-                        if (newText !== oldText && stateAndPropsRef.current.onChange) {
-                            stateAndPropsRef.current.onChange(newText)
-                        }
-
-                        stateAndPropsRef.current.setActive(false)
-
-                        if (stateAndPropsRef.current.onBlur) {
-                            stateAndPropsRef.current.onBlur(newText)
-                        }
-
-                        stateAndPropsRef.current.setIsEditing(false)
-                    },
-                    focus: () => {
-                        stateAndPropsRef.current.setActive(true)
-                        stateAndPropsRef.current.setIsEditing(true)
-
-                        if (stateAndPropsRef.current.onFocus) {
-                            stateAndPropsRef.current.onFocus()
-                        }
-                    },
-                }}
-                options={{
-                    autoDownloadFontAwesome: true,
-                    toolbar: false,
-                    status: false,
-                    spellChecker: true,
-                    nativeSpellcheck: true,
-                    minHeight: '10px',
-                    shortcuts: {
-                        toggleStrikethrough: 'Cmd-.',
-                        togglePreview: null,
-                        drawImage: null,
-                        drawLink: null,
-                        toggleSideBySide: null,
-                        toggleFullScreen: null,
-                    },
-                }}
+                events={editorEvents}
+                options={editorOptions}
             />
         </div>)
 

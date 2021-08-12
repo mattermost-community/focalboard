@@ -1,19 +1,19 @@
-.Sidebar {
+.focalboard-body .Sidebar {
     flex: 0 0 240px;
 
     display: flex;
     flex-direction: column;
 
     min-height: 100%;
-    color: rgb(var(--sidebar-fg));
-    background-color: rgb(var(--sidebar-bg));
+    color: rgb(var(--sidebar-text-rgb));
+    background-color: rgb(var(--sidebar-bg-rgb));
     padding: 12px 0;
 
     &.hidden {
         position: absolute;
         top: 0;
         left: 0;
-        z-index: 5;
+        z-index: 105;
         min-height: 0;
         height: 50px;
         width: 50px;
@@ -57,20 +57,14 @@
     .octo-sidebar-header {
         display: flex;
         flex-direction: row;
-
         font-weight: 600;
-        padding: 3px 20px;
+        padding: 3px 16px;
         margin-bottom: 16px;
         height: 48px;
         align-items: center;
 
         &:hover {
-            background-color: rgba(var(--sidebar-fg), 0.08);
-        }
-
-        button {
-            font-size: 16px;
-            font-weight: 600;
+            background-color: rgba(var(--sidebar-text-rgb), 0.08);
         }
 
         > .heading {
@@ -80,10 +74,10 @@
         }
 
         > .IconButton {
-            background-color: var(--sidebar-bg);
+            background-color: var(--sidebar-bg-rgb);
 
             &:hover {
-                background-color: rgba(var(--sidebar-fg), 0.1);
+                background-color: rgba(var(--sidebar-text-rgb), 0.1);
             }
         }
 
@@ -108,24 +102,21 @@
         }
     }
 
-    .OptionsIcon,
+    .OptionsIcon {
+        color: rgba(var(--sidebar-text-rgb), 0.5);
+    }
     .DisclosureTriangleIcon,
     .DotIcon {
-        fill: rgba(var(--sidebar-fg), 0.5);
+        fill: rgba(var(--sidebar-text-rgb), 0.5);
         flex-shrink: 0;
     }
 
     .Menu .OptionsIcon {
-        fill: unset;
+        color: unset;
     }
 
     .HideSidebarIcon {
-        stroke: rgba(var(--sidebar-fg), 0.5);
+        stroke: rgba(var(--sidebar-text-rgb), 0.5);
         stroke-width: 6px;
-    }
-
-    .Button {
-        min-height: 30px;
-        min-width: 30px;
     }
 }

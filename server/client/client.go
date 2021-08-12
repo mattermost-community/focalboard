@@ -6,15 +6,25 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"mime/multipart"
 	"net/http"
 	"strings"
 
+	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/model"
 )
 
 const (
-	API_URL_SUFFIX = "/api/v1"
+	APIURLSuffix = "/api/v1"
 )
+
+type RequestReaderError struct {
+	buf []byte
+}
+
+func (rre RequestReaderError) Error() string {
+	return "payload: " + string(rre.buf)
+}
 
 type Response struct {
 	StatusCode int
@@ -57,81 +67,86 @@ func toJSON(v interface{}) string {
 }
 
 type Client struct {
-	Url        string
-	ApiUrl     string
-	HttpClient *http.Client
-	HttpHeader map[string]string
+	URL        string
+	APIURL     string
+	HTTPClient *http.Client
+	HTTPHeader map[string]string
+	// Token if token is empty indicate client is not login yet
+	Token string
 }
 
 func NewClient(url, sessionToken string) *Client {
 	url = strings.TrimRight(url, "/")
+
 	headers := map[string]string{
 		"X-Requested-With": "XMLHttpRequest",
-		"Authorization":    "Bearer " + sessionToken,
 	}
-	return &Client{url, url + API_URL_SUFFIX, &http.Client{}, headers}
+
+	return &Client{url, url + APIURLSuffix, &http.Client{}, headers, sessionToken}
 }
 
-func (c *Client) DoApiGet(url, etag string) (*http.Response, error) {
-	return c.DoApiRequest(http.MethodGet, c.ApiUrl+url, "", etag)
+func (c *Client) DoAPIGet(url, etag string) (*http.Response, error) {
+	return c.DoAPIRequest(http.MethodGet, c.APIURL+url, "", etag)
 }
 
-func (c *Client) DoApiPost(url, data string) (*http.Response, error) {
-	return c.DoApiRequest(http.MethodPost, c.ApiUrl+url, data, "")
+func (c *Client) DoAPIPost(url, data string) (*http.Response, error) {
+	return c.DoAPIRequest(http.MethodPost, c.APIURL+url, data, "")
 }
 
-func (c *Client) doApiPostBytes(url string, data []byte) (*http.Response, error) {
-	return c.doApiRequestBytes(http.MethodPost, c.ApiUrl+url, data, "")
+func (c *Client) DoAPIPatch(url, data string) (*http.Response, error) {
+	return c.DoAPIRequest(http.MethodPatch, c.APIURL+url, data, "")
 }
 
-func (c *Client) DoApiPut(url, data string) (*http.Response, error) {
-	return c.DoApiRequest(http.MethodPut, c.ApiUrl+url, data, "")
+func (c *Client) DoAPIPut(url, data string) (*http.Response, error) {
+	return c.DoAPIRequest(http.MethodPut, c.APIURL+url, data, "")
 }
 
-func (c *Client) doApiPutBytes(url string, data []byte) (*http.Response, error) {
-	return c.doApiRequestBytes(http.MethodPut, c.ApiUrl+url, data, "")
+func (c *Client) DoAPIDelete(url string) (*http.Response, error) {
+	return c.DoAPIRequest(http.MethodDelete, c.APIURL+url, "", "")
 }
 
-func (c *Client) DoApiDelete(url string) (*http.Response, error) {
-	return c.DoApiRequest(http.MethodDelete, c.ApiUrl+url, "", "")
+func (c *Client) DoAPIRequest(method, url, data, etag string) (*http.Response, error) {
+	return c.doAPIRequestReader(method, url, strings.NewReader(data), etag)
 }
 
-func (c *Client) DoApiRequest(method, url, data, etag string) (*http.Response, error) {
-	return c.doApiRequestReader(method, url, strings.NewReader(data), etag)
-}
+type requestOption func(r *http.Request)
 
-func (c *Client) doApiRequestBytes(method, url string, data []byte, etag string) (*http.Response, error) {
-	return c.doApiRequestReader(method, url, bytes.NewReader(data), etag)
-}
-
-func (c *Client) doApiRequestReader(method, url string, data io.Reader, etag string) (*http.Response, error) {
+func (c *Client) doAPIRequestReader(method, url string, data io.Reader, _ /* etag */ string, opts ...requestOption) (*http.Response, error) {
 	rq, err := http.NewRequest(method, url, data)
 	if err != nil {
 		return nil, err
 	}
 
-	if c.HttpHeader != nil && len(c.HttpHeader) > 0 {
-		for k, v := range c.HttpHeader {
+	for _, opt := range opts {
+		opt(rq)
+	}
+
+	if c.HTTPHeader != nil && len(c.HTTPHeader) > 0 {
+		for k, v := range c.HTTPHeader {
 			rq.Header.Set(k, v)
 		}
 	}
 
-	rp, err := c.HttpClient.Do(rq)
+	if c.Token != "" {
+		rq.Header.Set("Authorization", "Bearer "+c.Token)
+	}
+
+	rp, err := c.HTTPClient.Do(rq)
 	if err != nil || rp == nil {
 		return nil, err
 	}
 
-	if rp.StatusCode == 304 {
+	if rp.StatusCode == http.StatusNotModified {
 		return rp, nil
 	}
 
-	if rp.StatusCode >= 300 {
+	if rp.StatusCode >= http.StatusMultipleChoices {
 		defer closeBody(rp)
 		b, err := ioutil.ReadAll(rp.Body)
 		if err != nil {
 			return rp, fmt.Errorf("error when parsing response with code %d: %w", rp.StatusCode, err)
 		}
-		return rp, fmt.Errorf(string(b))
+		return rp, RequestReaderError{b}
 	}
 
 	return rp, nil
@@ -150,7 +165,7 @@ func (c *Client) GetSubtreeRoute(id string) string {
 }
 
 func (c *Client) GetBlocks() ([]model.Block, *Response) {
-	r, err := c.DoApiGet(c.GetBlocksRoute(), "")
+	r, err := c.DoAPIGet(c.GetBlocksRoute(), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
@@ -159,8 +174,18 @@ func (c *Client) GetBlocks() ([]model.Block, *Response) {
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
+func (c *Client) PatchBlock(blockID string, blockPatch *model.BlockPatch) (bool, *Response) {
+	r, err := c.DoAPIPatch(c.GetBlockRoute(blockID), toJSON(blockPatch))
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
+}
+
 func (c *Client) InsertBlocks(blocks []model.Block) (bool, *Response) {
-	r, err := c.DoApiPost(c.GetBlocksRoute(), toJSON(blocks))
+	r, err := c.DoAPIPost(c.GetBlocksRoute(), toJSON(blocks))
 	if err != nil {
 		return false, BuildErrorResponse(r, err)
 	}
@@ -170,7 +195,7 @@ func (c *Client) InsertBlocks(blocks []model.Block) (bool, *Response) {
 }
 
 func (c *Client) DeleteBlock(blockID string) (bool, *Response) {
-	r, err := c.DoApiDelete(c.GetBlockRoute(blockID))
+	r, err := c.DoAPIDelete(c.GetBlockRoute(blockID))
 	if err != nil {
 		return false, BuildErrorResponse(r, err)
 	}
@@ -180,7 +205,7 @@ func (c *Client) DeleteBlock(blockID string) (bool, *Response) {
 }
 
 func (c *Client) GetSubtree(blockID string) ([]model.Block, *Response) {
-	r, err := c.DoApiGet(c.GetSubtreeRoute(blockID), "")
+	r, err := c.DoAPIGet(c.GetSubtreeRoute(blockID), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
@@ -196,7 +221,7 @@ func (c *Client) GetSharingRoute(rootID string) string {
 }
 
 func (c *Client) GetSharing(rootID string) (*model.Sharing, *Response) {
-	r, err := c.DoApiGet(c.GetSharingRoute(rootID), "")
+	r, err := c.DoAPIGet(c.GetSharingRoute(rootID), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
@@ -207,11 +232,132 @@ func (c *Client) GetSharing(rootID string) (*model.Sharing, *Response) {
 }
 
 func (c *Client) PostSharing(sharing model.Sharing) (bool, *Response) {
-	r, err := c.DoApiPost(c.GetSharingRoute(sharing.ID), toJSON(sharing))
+	r, err := c.DoAPIPost(c.GetSharingRoute(sharing.ID), toJSON(sharing))
 	if err != nil {
 		return false, BuildErrorResponse(r, err)
 	}
 	defer closeBody(r)
 
 	return true, BuildResponse(r)
+}
+
+func (c *Client) GetRegisterRoute() string {
+	return "/register"
+}
+
+func (c *Client) Register(request *api.RegisterRequest) (bool, *Response) {
+	r, err := c.DoAPIPost(c.GetRegisterRoute(), toJSON(&request))
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
+}
+
+func (c *Client) GetLoginRoute() string {
+	return "/login"
+}
+
+func (c *Client) Login(request *api.LoginRequest) (*api.LoginResponse, *Response) {
+	r, err := c.DoAPIPost(c.GetLoginRoute(), toJSON(&request))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	data, err := api.LoginResponseFromJSON(r.Body)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	if data.Token != "" {
+		c.Token = data.Token
+	}
+
+	return data, BuildResponse(r)
+}
+
+func (c *Client) GetMeRoute() string {
+	return "/users/me"
+}
+
+func (c *Client) GetMe() (*model.User, *Response) {
+	r, err := c.DoAPIGet(c.GetMeRoute(), "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	me, err := model.UserFromJSON(r.Body)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	return me, BuildResponse(r)
+}
+
+func (c *Client) GetUserRoute(id string) string {
+	return fmt.Sprintf("/users/%s", id)
+}
+
+func (c *Client) GetUser(id string) (*model.User, *Response) {
+	r, err := c.DoAPIGet(c.GetUserRoute(id), "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	user, err := model.UserFromJSON(r.Body)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	return user, BuildResponse(r)
+}
+
+func (c *Client) GetUserChangePasswordRoute(id string) string {
+	return fmt.Sprintf("/users/%s/changepassword", id)
+}
+
+func (c *Client) UserChangePassword(id string, data *api.ChangePasswordRequest) (bool, *Response) {
+	r, err := c.DoAPIPost(c.GetUserChangePasswordRoute(id), toJSON(&data))
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
+}
+
+func (c *Client) GetWorkspaceUploadFileRoute(workspaceID, rootID string) string {
+	return fmt.Sprintf("/workspaces/%s/%s/files", workspaceID, rootID)
+}
+
+func (c *Client) WorkspaceUploadFile(workspaceID, rootID string, data io.Reader) (*api.FileUploadResponse, *Response) {
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+	part, err := writer.CreateFormFile(api.UploadFormFileKey, "file")
+	if err != nil {
+		return nil, &Response{Error: err}
+	}
+	if _, err = io.Copy(part, data); err != nil {
+		return nil, &Response{Error: err}
+	}
+	writer.Close()
+
+	opt := func(r *http.Request) {
+		r.Header.Add("Content-Type", writer.FormDataContentType())
+	}
+
+	r, err := c.doAPIRequestReader(http.MethodPost, c.APIURL+c.GetWorkspaceUploadFileRoute(workspaceID, rootID), body, "", opt)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	fileUploadResponse, err := api.FileUploadResponseFromJSON(r.Body)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return fileUploadResponse, BuildResponse(r)
 }

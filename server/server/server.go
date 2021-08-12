@@ -1,7 +1,8 @@
 package server
 
 import (
-	"log"
+	"database/sql"
+	"fmt"
 	"net"
 	"net/http"
 	"os"
@@ -17,8 +18,8 @@ import (
 	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/app"
 	"github.com/mattermost/focalboard/server/auth"
-	"github.com/mattermost/focalboard/server/context"
 	appModel "github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/audit"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/metrics"
 	"github.com/mattermost/focalboard/server/services/mlog"
@@ -40,8 +41,9 @@ const (
 	cleanupSessionTaskFrequency = 10 * time.Minute
 	updateMetricsTaskFrequency  = 15 * time.Minute
 
-	//nolint:gomnd
 	minSessionExpiryTime = int64(60 * 60 * 24 * 31) // 31 days
+
+	MattermostAuthMod = "mattermost"
 )
 
 type Server struct {
@@ -56,38 +58,23 @@ type Server struct {
 	metricsServer          *metrics.Service
 	metricsService         *metrics.Metrics
 	metricsUpdaterTask     *scheduler.ScheduledTask
+	auditService           *audit.Audit
 	servicesStartStopMutex sync.Mutex
 
 	localRouter     *mux.Router
 	localModeServer *http.Server
 	api             *api.API
-	appBuilder      func() *app.App
 }
 
-func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger) (*Server, error) {
-	var db store.Store
-	db, err := sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger)
-	if err != nil {
-		logger.Error("Unable to start the database", mlog.Err(err))
-		return nil, err
-	}
-	if cfg.AuthMode == "mattermost" {
-		layeredStore, err := mattermostauthlayer.New(cfg.DBType, cfg.DBConfigString, db)
-		if err != nil {
-			log.Print("Unable to start the database", err)
-			return nil, err
-		}
-		db = layeredStore
-	}
-
+func New(cfg *config.Configuration, singleUserToken string, db store.Store, logger *mlog.Logger, serverID string) (*Server, error) {
 	authenticator := auth.New(cfg, db)
 
-	wsServer := ws.NewServer(authenticator, singleUserToken, cfg.AuthMode == "mattermost", logger)
+	wsServer := ws.NewServer(authenticator, singleUserToken, cfg.AuthMode == MattermostAuthMod, logger)
 
 	filesBackendSettings := filestore.FileBackendSettings{}
 	filesBackendSettings.DriverName = cfg.FilesDriver
 	filesBackendSettings.Directory = cfg.FilesPath
-	filesBackendSettings.AmazonS3AccessKeyId = cfg.FilesS3Config.AccessKeyId
+	filesBackendSettings.AmazonS3AccessKeyId = cfg.FilesS3Config.AccessKeyID
 	filesBackendSettings.AmazonS3SecretAccessKey = cfg.FilesS3Config.SecretAccessKey
 	filesBackendSettings.AmazonS3Bucket = cfg.FilesS3Config.Bucket
 	filesBackendSettings.AmazonS3PathPrefix = cfg.FilesS3Config.PathPrefix
@@ -116,7 +103,13 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 	}
 	metricsService := metrics.NewMetrics(instanceInfo)
 
-	appServices := app.AppServices{
+	// Init audit
+	auditService := audit.NewAudit()
+	if err2 := auditService.Configure(cfg.AuditCfgFile, cfg.AuditCfgJSON); err2 != nil {
+		return nil, fmt.Errorf("unable to initialize the audit service: %w", err2)
+	}
+
+	appServices := app.Services{
 		Auth:         authenticator,
 		Store:        db,
 		FilesBackend: filesBackend,
@@ -124,16 +117,16 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 		Metrics:      metricsService,
 		Logger:       logger,
 	}
-	appBuilder := func() *app.App { return app.New(cfg, wsServer, appServices) }
+	app := app.New(cfg, wsServer, appServices)
 
-	focalboardAPI := api.NewAPI(appBuilder, singleUserToken, cfg.AuthMode, logger)
+	focalboardAPI := api.NewAPI(app, singleUserToken, cfg.AuthMode, logger, auditService)
 
 	// Local router for admin APIs
 	localRouter := mux.NewRouter()
 	focalboardAPI.RegisterAdminRoutes(localRouter)
 
 	// Init workspace
-	if _, err = appBuilder().GetRootWorkspace(); err != nil {
+	if _, err := app.GetRootWorkspace(); err != nil {
 		logger.Error("Unable to get root workspace", mlog.Err(err))
 		return nil, err
 	}
@@ -156,9 +149,10 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 		}
 	}
 	telemetryOpts := telemetryOptions{
-		appBuilder:  appBuilder,
+		app:         app,
 		cfg:         cfg,
 		telemetryID: telemetryID,
+		serverID:    serverID,
 		logger:      logger,
 		singleUser:  len(singleUserToken) > 0,
 	}
@@ -173,15 +167,43 @@ func New(cfg *config.Configuration, singleUserToken string, logger *mlog.Logger)
 		telemetry:      telemetryService,
 		metricsServer:  metrics.NewMetricsServer(cfg.PrometheusAddress, metricsService, logger),
 		metricsService: metricsService,
+		auditService:   auditService,
 		logger:         logger,
 		localRouter:    localRouter,
 		api:            focalboardAPI,
-		appBuilder:     appBuilder,
 	}
 
 	server.initHandlers()
 
 	return &server, nil
+}
+
+func NewStore(config *config.Configuration, logger *mlog.Logger) (store.Store, error) {
+	sqlDB, err := sql.Open(config.DBType, config.DBConfigString)
+	if err != nil {
+		logger.Error("connectDatabase failed", mlog.Err(err))
+		return nil, err
+	}
+
+	err = sqlDB.Ping()
+	if err != nil {
+		logger.Error(`Database Ping failed`, mlog.Err(err))
+		return nil, err
+	}
+
+	var db store.Store
+	db, err = sqlstore.New(config.DBType, config.DBConfigString, config.DBTablePrefix, logger, sqlDB)
+	if err != nil {
+		return nil, err
+	}
+	if config.AuthMode == MattermostAuthMod {
+		layeredStore, err2 := mattermostauthlayer.New(config.DBType, db.(*sqlstore.SQLStore).DBHandle(), db, logger)
+		if err2 != nil {
+			return nil, err2
+		}
+		db = layeredStore
+	}
+	return db, nil
 }
 
 func (s *Server) Start() error {
@@ -210,8 +232,7 @@ func (s *Server) Start() error {
 	}, cleanupSessionTaskFrequency)
 
 	metricsUpdater := func() {
-		app := s.appBuilder()
-		blockCounts, err := app.GetBlockCountsByType()
+		blockCounts, err := s.store.GetBlockCountsByType()
 		if err != nil {
 			s.logger.Error("Error updating metrics", mlog.String("group", "blocks"), mlog.Err(err))
 			return
@@ -220,7 +241,7 @@ func (s *Server) Start() error {
 		for blockType, count := range blockCounts {
 			s.metricsService.ObserveBlockCount(blockType, count)
 		}
-		workspaceCount, err := app.GetWorkspaceCount()
+		workspaceCount, err := s.store.GetWorkspaceCount()
 		if err != nil {
 			s.logger.Error("Error updating metrics", mlog.String("group", "workspaces"), mlog.Err(err))
 			return
@@ -228,7 +249,7 @@ func (s *Server) Start() error {
 		s.logger.Log(mlog.Metrics, "Workspace metrics collected", mlog.Int64("workspace_count", workspaceCount))
 		s.metricsService.ObserveWorkspaceCount(workspaceCount)
 	}
-	//metricsUpdater()   Calling this immediately causes integration unit tests to fail.
+	// metricsUpdater()   Calling this immediately causes integration unit tests to fail.
 	s.metricsUpdaterTask = scheduler.CreateRecurringTask("updateMetrics", metricsUpdater, updateMetricsTaskFrequency)
 
 	if s.config.Telemetry {
@@ -244,7 +265,7 @@ func (s *Server) Start() error {
 			}
 			return nil
 		}, func(error) {
-			s.metricsServer.Shutdown()
+			_ = s.metricsServer.Shutdown()
 		})
 
 		if err := group.Run(); err != nil {
@@ -276,6 +297,10 @@ func (s *Server) Shutdown() error {
 		s.logger.Warn("Error occurred when shutting down telemetry", mlog.Err(err))
 	}
 
+	if err := s.auditService.Shutdown(); err != nil {
+		s.logger.Warn("Error occurred when shutting down audit service", mlog.Err(err))
+	}
+
 	defer s.logger.Info("Server.Shutdown")
 
 	return s.store.Shutdown()
@@ -294,7 +319,7 @@ func (s *Server) Logger() *mlog.Logger {
 func (s *Server) startLocalModeServer() error {
 	s.localModeServer = &http.Server{
 		Handler:     s.localRouter,
-		ConnContext: context.SetContextConn,
+		ConnContext: api.SetContextConn,
 	}
 
 	// TODO: Close and delete socket file on shutdown
@@ -338,9 +363,10 @@ func (s *Server) SetWSHub(hub ws.Hub) {
 }
 
 type telemetryOptions struct {
-	appBuilder  func() *app.App
+	app         *app.App
 	cfg         *config.Configuration
 	telemetryID string
+	serverID    string
 	logger      *mlog.Logger
 	singleUser  bool
 }
@@ -355,6 +381,7 @@ func initTelemetry(opts telemetryOptions) *telemetry.Service {
 			"build_hash":       appModel.BuildHash,
 			"edition":          appModel.Edition,
 			"operating_system": runtime.GOOS,
+			"server_id":        opts.serverID,
 		}, nil
 	})
 	telemetryService.RegisterTracker("config", func() (telemetry.Tracker, error) {
@@ -370,29 +397,29 @@ func initTelemetry(opts telemetryOptions) *telemetry.Service {
 		m := make(map[string]interface{})
 		var count int
 		var err error
-		if count, err = opts.appBuilder().GetRegisteredUserCount(); err != nil {
+		if count, err = opts.app.GetRegisteredUserCount(); err != nil {
 			return nil, err
 		}
 		m["registered_users"] = count
 
-		if count, err = opts.appBuilder().GetDailyActiveUsers(); err != nil {
+		if count, err = opts.app.GetDailyActiveUsers(); err != nil {
 			return nil, err
 		}
 		m["daily_active_users"] = count
 
-		if count, err = opts.appBuilder().GetWeeklyActiveUsers(); err != nil {
+		if count, err = opts.app.GetWeeklyActiveUsers(); err != nil {
 			return nil, err
 		}
 		m["weekly_active_users"] = count
 
-		if count, err = opts.appBuilder().GetMonthlyActiveUsers(); err != nil {
+		if count, err = opts.app.GetMonthlyActiveUsers(); err != nil {
 			return nil, err
 		}
 		m["monthly_active_users"] = count
 		return m, nil
 	})
 	telemetryService.RegisterTracker("blocks", func() (telemetry.Tracker, error) {
-		blockCounts, err := opts.appBuilder().GetBlockCountsByType()
+		blockCounts, err := opts.app.GetBlockCountsByType()
 		if err != nil {
 			return nil, err
 		}
@@ -403,7 +430,7 @@ func initTelemetry(opts telemetryOptions) *telemetry.Service {
 		return m, nil
 	})
 	telemetryService.RegisterTracker("workspaces", func() (telemetry.Tracker, error) {
-		count, err := opts.appBuilder().GetWorkspaceCount()
+		count, err := opts.app.GetWorkspaceCount()
 		if err != nil {
 			return nil, err
 		}

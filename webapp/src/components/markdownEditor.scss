@@ -1,17 +1,26 @@
 /* Markdown Editor */
 
-.MarkdownEditor {
+.focalboard-body .MarkdownEditor {
     cursor: text;
     /* CodeMirror / SimpleMDE / EasyMDE overrides */
 
     .CodeMirror {
         padding: 0;
         min-height: 0;
-        background: var(--main-bg);
-        color: var(--body-color);
+        background: var(--center-channel-bg-rgb);
+        color: var(--center-channel-color-rgb);
     }
 
     pre.CodeMirror-line {
+        padding: 0;
+        word-break: break-word;
+    }
+
+    .CodeMirror-code {
+        line-height: 24px;
+    }
+
+    .CodeMirror-lines {
         padding: 0;
     }
 
@@ -44,6 +53,7 @@
         p {
             margin: 0;
             min-height: 32px;
+            word-break: break-word;
         }
     }
 

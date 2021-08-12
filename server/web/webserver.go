@@ -1,6 +1,7 @@
 package web
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -24,12 +25,11 @@ type RoutedService interface {
 type Server struct {
 	http.Server
 
-	baseURL   string
-	rootPath  string
-	port      int
-	ssl       bool
-	localOnly bool
-	logger    *mlog.Logger
+	baseURL  string
+	rootPath string
+	port     int
+	ssl      bool
+	logger   *mlog.Logger
 }
 
 // NewServer creates a new instance of the webserver.
@@ -81,13 +81,13 @@ func (ws *Server) registerRoutes() {
 		indexTemplate, err := template.New("index").ParseFiles(path.Join(ws.rootPath, "index.html"))
 		if err != nil {
 			ws.logger.Error("Unable to serve the index.html file", mlog.Err(err))
-			w.WriteHeader(500)
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 		err = indexTemplate.ExecuteTemplate(w, "index.html", map[string]string{"BaseURL": ws.baseURL})
 		if err != nil {
 			ws.logger.Error("Unable to serve the index.html file", mlog.Err(err))
-			w.WriteHeader(500)
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 	})
@@ -115,7 +115,7 @@ func (ws *Server) Start() {
 
 	ws.logger.Info("http server started", mlog.Int("port", ws.port))
 	go func() {
-		if err := ws.ListenAndServe(); err != http.ErrServerClosed {
+		if err := ws.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
 			ws.logger.Fatal("ListenAndServeTLS", mlog.Err(err))
 		}
 		ws.logger.Info("http server stopped")

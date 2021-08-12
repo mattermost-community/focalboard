@@ -17,9 +17,9 @@ import (
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	"github.com/golang-migrate/migrate/v4/database/sqlite3"
 	"github.com/golang-migrate/migrate/v4/source"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/golang-migrate/migrate/v4/source/file" // fileystem driver
 	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" // postgres driver
 	"github.com/mattermost/focalboard/server/services/store/sqlstore/migrations"
 )
 
@@ -68,16 +68,32 @@ func (pm *PrefixedMigration) ReadDown(version uint) (io.ReadCloser, string, erro
 	return pm.executeTemplate(r, identifier)
 }
 
+func appendMultipleStatementsFlag(connectionString string) (string, error) {
+	config, err := mysqldriver.ParseDSN(connectionString)
+	if err != nil {
+		return "", err
+	}
+
+	if config.Params == nil {
+		config.Params = map[string]string{}
+	}
+
+	config.Params["multiStatements"] = "true"
+	return config.FormatDSN(), nil
+}
+
 // migrations in MySQL need to run with the multiStatements flag
 // enabled, so this method creates a new connection ensuring that it's
-// enabled
-func (s *SQLStore) getMySQLMigrationConnection() (*sql.DB, error) {
-	config, err := mysqldriver.ParseDSN(s.connectionString)
-	if err != nil {
-		return nil, err
+// enabled.
+func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
+	connectionString := s.connectionString
+	if s.dbType == mysqlDBType {
+		var err error
+		connectionString, err = appendMultipleStatementsFlag(s.connectionString)
+		if err != nil {
+			return nil, err
+		}
 	}
-	config.Params["multiStatements"] = "true"
-	connectionString := config.FormatDSN()
 
 	db, err := sql.Open(s.dbType, connectionString)
 	if err != nil {
@@ -103,20 +119,20 @@ func (s *SQLStore) Migrate() error {
 		}
 	}
 
+	db, err := s.getMigrationConnection()
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
 	if s.dbType == postgresDBType {
-		driver, err = postgres.WithInstance(s.db, &postgres.Config{MigrationsTable: migrationsTable})
+		driver, err = postgres.WithInstance(db, &postgres.Config{MigrationsTable: migrationsTable})
 		if err != nil {
 			return err
 		}
 	}
 
 	if s.dbType == mysqlDBType {
-		db, err := s.getMySQLMigrationConnection()
-		if err != nil {
-			return err
-		}
-		defer db.Close()
-
 		driver, err = mysql.WithInstance(db, &mysql.Config{MigrationsTable: migrationsTable})
 		if err != nil {
 			return err

@@ -1,242 +1,237 @@
-@import "compass-icons";
+@import "_compass-icons";
+@import "_typography";
 
-@font-face {
-    font-family: 'compass-icons';
-    src: url('../fonts/compass-icons/compass-icons.eot?45182295');
-    src: url('../fonts/compass-icons/compass-icons.eot?45182295#iefix') format('embedded-opentype'),
-    url('../fonts/compass-icons/compass-icons.woff2?45182295') format('woff2'),
-    url('../fonts/compass-icons/compass-icons.woff?45182295') format('woff'),
-    url('../fonts/compass-icons/compass-icons.ttf?45182295') format('truetype'),
-    url('../fonts/compass-icons/compass-icons.svg?45182295#compass-icons') format('svg');
-    font-weight: normal;
-    font-style: normal;
+html {
+    height: 100%;
 }
 
-* {
-    box-sizing: border-box;
-    outline: 0;
-    -webkit-user-select: none; /* Chrome all / Safari all */
-    -moz-user-select: none; /* Firefox all */
-    -ms-user-select: none; /* IE 10+ */
-    user-select: none; /* Likely future */
-    font-family: "Open Sans", sans-serif;
-}
-
-html,
-body {
+.focalboard-body, #focalboard-app {
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 
     width: 100%;
     height: 100%;
-    color: rgb(var(--body-color));
-    background: rgb(var(--main-bg));
+    color: rgb(var(--center-channel-color-rgb));
+    background: rgb(var(--center-channel-bg-rgb));
+    padding: 0;
+    margin: 0;
 }
 
-input,
-textarea,
-select,
-button {
-    font-size: 100%; /* Normalize */
+.focalboard-plugin-root {
+    height: 100%;
 }
 
-input,
-textarea {
-    background: rgb(var(--main-bg));
-    color: rgb(var(--body-color));
+.focalboard-body {
+    * {
+        box-sizing: border-box;
+        outline: 0;
+        -webkit-user-select: none; /* Chrome all / Safari all */
+        -moz-user-select: none; /* Firefox all */
+        -ms-user-select: none; /* IE 10+ */
+        user-select: none; /* Likely future */
+    }
 
-    -webkit-user-select: auto; /* Chrome all / Safari all */
-    -moz-user-select: auto; /* Firefox all */
-    -ms-user-select: auto; /* IE 10+ */
-    user-select: auto; /* Likely future */
-}
+    input,
+    textarea,
+    select,
+    button {
+        font-size: 100%; /* Normalize */
+    }
 
-body {
+    input,
+    textarea {
+        background: rgb(var(--center-channel-bg-rgb));
+        color: rgb(var(--center-channel-color-rgb));
+
+        -webkit-user-select: auto; /* Chrome all / Safari all */
+        -moz-user-select: auto; /* Firefox all */
+        -ms-user-select: auto; /* IE 10+ */
+        user-select: auto; /* Likely future */
+    }
+
     padding: 0;
     margin: 0;
     font-family: "Open Sans", sans-serif;
     /* -webkit-font-smoothing: auto; */
     font-size: 14px;
     line-height: 24px;
-    --cursor-color: rgb(var(--body-color));
-}
+    --cursor-color: rgb(var(--center-channel-color-rgb));
 
-a {
-    text-decoration: none;
-    color: var(--link-color);
+    a {
+        text-decoration: none;
+        color: var(--link-color-rgb);
 
-    &:visited {
-        color: var(--link-visited-color);
+        &:visited {
+            color: var(--link-visited-color);
+        }
+
+        &:hover {
+            background-color: rgba(192, 192, 255, 0.2);
+        }
     }
 
-    &:hover {
-        background-color: rgba(192, 192, 255, 0.2);
-    }
-}
-
-hr {
-    width: 100%;
-    height: 1px;
-    border: none;
-    color: rgba(var(--body-color), 0.09);
-    background-color: rgba(var(--body-color), 0.09);
-    margin-bottom: 8px;
-}
-
-button {
-    &.style--none {
-        background: transparent;
+    hr {
+        width: 100%;
+        height: 1px;
         border: none;
-        padding: 0;
-    }
-}
-
-.page-loading {
-    margin: 50px auto;
-}
-
-.title,
-h1 {
-    font-size: 40px;
-    line-height: 40px;
-    margin: 0 0 10px 0;
-    font-weight: 600;
-}
-
-/* App frame */
-
-#main-app {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    overflow: auto;
-}
-
-#main-app #frame,
-#main-app #main,
-#main-app .BoardPage {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    overflow: auto;
-}
-
-/* Main app */
-
-.dragover {
-    background-color: rgba(128, 192, 255, 0.4);
-}
-
-.octo-spacer {
-    flex: 1;
-}
-
-/* Icons */
-
-.octo-icon {
-    font-family: "Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji,
-        "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols;
-    line-height: 1.5em;
-    align-self: baseline;
-    overflow: visible;
-}
-
-.octo-icontitle {
-    flex: 0 0 auto;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    min-width: 0;
-}
-
-/*-- Property list --*/
-
-.octo-propertyvalue {
-    color: rgb(var(--body-color));
-    padding: 0 5px;
-    &.empty {
-        color: rgba(var(--body-color), 0.4);
-    }
-}
-
-/*-- Editable --*/
-
-.Editable {
-    cursor: text;
-}
-
-.Editable.active {
-    min-width: 100px;
-}
-
-.octo-placeholder {
-    color: rgba(var(--body-color), 0.4);
-}
-
-[contentEditable="true"] {
-    -webkit-user-select: auto; /* Chrome all / Safari all */
-    -moz-user-select: auto; /* Firefox all */
-    -ms-user-select: auto; /* IE 10+ */
-    user-select: auto; /* Likely future */
-}
-
-[contentEditable="true"]:empty:before {
-    content: attr(placeholder);
-    display: block;
-    color: rgba(var(--body-color), 0.4);
-}
-
-.octo-propertyvalue.Editable.active,
-.octo-table-cell .Editable.active {
-    border-radius: 3px;
-    box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px,
-        rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
-}
-
-.octo-block img {
-    max-width: 500px;
-    max-height: 500px;
-    margin: 5px 0;
-    object-fit: contain;
-    flex: none;
-}
-
-.octo-content {
-    width: 100%;
-    margin-right: 50px;
-}
-
-.octo-block {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-
-    width: 100%;
-
-    @media not screen and (max-width: 975px) {
-        padding-right: 126px;
-    }
-    @media screen and (max-width: 975px) {
-        padding-right: 10px;
+        color: rgba(var(--center-channel-color-rgb), 0.09);
+        background-color: rgba(var(--center-channel-color-rgb), 0.09);
+        margin-bottom: 8px;
     }
 
-    > * {
+    #focalboard-app {
+        button {
+            &.style--none {
+                background: transparent;
+                border: none;
+                padding: 0;
+            }
+        }
+    }
+
+    .page-loading {
+        margin: 50px auto;
+    }
+
+    /* App frame */
+
+    #root {
         flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
     }
-    > .octo-block-margin {
+
+    #frame,
+    #main,
+    .BoardPage {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+    }
+
+    /* Main app */
+
+    .dragover {
+        background-color: rgba(128, 192, 255, 0.4);
+    }
+
+    .octo-spacer {
+        flex: 1;
+    }
+
+    /* Icons */
+
+    .octo-icon {
+        font-family: "Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji,
+            "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols;
+        line-height: 1.2;
+        align-self: baseline;
+        overflow: visible;
+    }
+
+    .octo-icontitle {
         flex: 0 0 auto;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        min-width: 0;
     }
-}
 
-.octo-block-margin {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: flex-end;
-    padding-top: 10px;
-    padding-right: 10px;
+    /*-- Property list --*/
 
-    @media not screen and (max-width: 975px) {
-        width: 126px;
+    .octo-propertyvalue {
+        font-size: 12px;
+        color: rgb(var(--center-channel-color-rgb));
+
+        &.empty {
+            color: rgba(var(--center-channel-color-rgb), 0.4);
+        }
+        .IconButton.delete-value {
+            width: 16px;
+            min-width: 16px;
+            height: 16px;
+            i {
+                font-size: 16px;
+            }
+        }
+    }
+
+    /*-- Editable --*/
+
+    .Editable {
+        cursor: text;
+    }
+
+    .Editable.active {
+        min-width: 100px;
+    }
+
+    .octo-placeholder {
+        color: rgba(var(--center-channel-color-rgb), 0.4);
+    }
+
+    [contentEditable="true"] {
+        -webkit-user-select: auto; /* Chrome all / Safari all */
+        -moz-user-select: auto; /* Firefox all */
+        -ms-user-select: auto; /* IE 10+ */
+        user-select: auto; /* Likely future */
+    }
+
+    [contentEditable="true"]:empty:before {
+        content: attr(placeholder);
+        display: block;
+        color: rgba(var(--center-channel-color-rgb), 0.4);
+    }
+
+    .octo-propertyvalue.Editable.active,
+    .octo-table-cell .Editable.active {
+        border-radius: 3px;
+        box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px,
+            rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+    }
+
+    .octo-block img {
+        max-width: 500px;
+        max-height: 500px;
+        margin: 5px 0;
+        object-fit: contain;
+        flex: none;
+    }
+
+    .octo-content {
+        width: 100%;
+    }
+
+    .octo-block {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+
+        width: 100%;
+
+        @media screen and (max-width: 975px) {
+            padding-right: 10px;
+        }
+
+        > * {
+            flex: 1 1 auto;
+        }
+        > .octo-block-margin {
+            flex: 0 0 auto;
+        }
+    }
+
+    .octo-block-margin {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: flex-end;
+
+        @media not screen and (max-width: 975px) {
+            width: 48px;
+        }
     }
 }

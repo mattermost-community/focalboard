@@ -3,7 +3,7 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import {IPropertyTemplate} from '../../blocks/board'
+import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import mutator from '../../mutator'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -13,22 +13,28 @@ import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {useSortable} from '../../hooks/sortable'
+import {useAppSelector} from '../../store/hooks'
+import {getCardContents} from '../../store/contents'
+import {getCardComments} from '../../store/comments'
 
 import './kanbanCard.scss'
 import PropertyValueElement from '../propertyValueElement'
+import Tooltip from '../../widgets/tooltip'
 
 type Props = {
     card: Card
+    board: Board
     visiblePropertyTemplates: IPropertyTemplate[]
     isSelected: boolean
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
     readonly: boolean
     onDrop: (srcCard: Card, dstCard: Card) => void
+    showCard: (cardId?: string) => void
     isManualSort: boolean
 }
 
 const KanbanCard = React.memo((props: Props) => {
-    const {card} = props
+    const {card, board} = props
     const intl = useIntl()
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly, props.onDrop)
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
@@ -36,6 +42,9 @@ const KanbanCard = React.memo((props: Props) => {
     if (props.isManualSort && isOver) {
         className += ' dragover'
     }
+
+    const contents = useAppSelector(getCardContents(card.id))
+    const comments = useAppSelector(getCardComments(card.id))
 
     return (
         <div
@@ -63,7 +72,17 @@ const KanbanCard = React.memo((props: Props) => {
                             id='duplicate'
                             name={intl.formatMessage({id: 'KanbanCard.duplicate', defaultMessage: 'Duplicate'})}
                             onClick={() => {
-                                mutator.duplicateCard(card.id)
+                                mutator.duplicateCard(
+                                    card.id,
+                                    'duplicate card',
+                                    false,
+                                    async (newCardId) => {
+                                        props.showCard(newCardId)
+                                    },
+                                    async () => {
+                                        props.showCard(undefined)
+                                    },
+                                )
                             }}
                         />
                     </Menu>
@@ -71,17 +90,24 @@ const KanbanCard = React.memo((props: Props) => {
             }
 
             <div className='octo-icontitle'>
-                { card.icon ? <div className='octo-icon'>{card.icon}</div> : undefined }
+                { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
                 <div key='__title'>{card.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}</div>
             </div>
             {visiblePropertyTemplates.map((template) => (
-                <PropertyValueElement
+                <Tooltip
                     key={template.id}
-                    readOnly={true}
-                    card={card}
-                    propertyTemplate={template}
-                    emptyDisplayValue=''
-                />
+                    title={template.name}
+                >
+                    <PropertyValueElement
+                        board={board}
+                        readOnly={true}
+                        card={card}
+                        contents={contents}
+                        comments={comments}
+                        propertyTemplate={template}
+                        emptyDisplayValue=''
+                    />
+                </Tooltip>
             ))}
         </div>
     )

@@ -1,20 +1,93 @@
 .Table {
+    padding-bottom: 0 !important;
+
+    .octo-group-header-cell {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        height: 50px;
+        margin-right: 15px;
+        margin-top: 15px;
+        vertical-align: middle;
+
+        &.narrow {
+            width: 220px;
+        }
+
+        > div {
+            margin-right: 8px;
+
+            &:last-child {
+                margin: 0;
+            }
+        }
+
+        .IconButton {
+            background-color: unset;
+            &:hover:not(.readonly) {
+                background-color: rgba(var(--center-channel-color-rgb), 0.1);
+            }
+            &.readonly {
+                opacity: .5;
+            }
+        }
+
+        .Label {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 3px;
+            line-height: 20px;
+            margin-right: 5px;
+            color: rgba(var(--center-channel-color-rgb), 1);
+            white-space: nowrap;
+            text-transform: none;
+            font-weight: normal;
+            font-size: 16px;
+            width: 100%;
+
+            input {
+                background: transparent;
+                width: 100%;
+                text-transform: none;
+                font-weight: normal;
+                font-size: 16px;
+                //     line-height: 20px;
+                color: rgba(var(--center-channel-color-rgb), 1);
+            }
+        }
+
+        > .Button {
+            &.IconButton:not(.readonly) {
+                cursor: pointer;
+            }
+            cursor: auto;
+        }
+        &.expanded {
+            .DisclosureTriangleIcon {
+                transform: rotate(90deg);
+            }
+        }
+    }
+
     .octo-table-cell {
         flex: 0 0 auto;
         display: flex;
         flex-direction: row;
-        color: rgb(var(--body-color));
-        border-right: solid 1px rgba(var(--body-color), 0.09);
+        color: rgb(var(--center-channel-color-rgb));
+        border-right: solid 1px rgba(var(--center-channel-color-rgb), 0.09);
+        border-left: 1px solid transparent;
+        border-top: 1px solid transparent;
+        border-bottom: 1px solid transparent;
         box-sizing: border-box;
         padding: 8px;
         min-height: 32px;
         font-size: 14px;
-        line-height: 30px;
         position: relative;
         text-overflow: ellipsis;
 
         &:hover {
-            background-color: rgba(var(--body-color), 0.05);
+            background-color: rgba(var(--center-channel-color-rgb), 0.05);
         }
 
         &.title-cell {
@@ -63,6 +136,10 @@
             line-height: 17px;
             overflow: hidden;
             text-overflow: ellipsis;
+            .Label {
+                margin: 0 5px;
+                padding: 0 8px;
+            }
         }
 
         .Editable,
@@ -73,9 +150,12 @@
         }
     }
 
-    .octo-table-body {
+    &.octo-table-body {
         display: flex;
+        flex: 1;
         flex-direction: column;
+        overflow: auto;
+        position: relative;
     }
 
     .octo-table-header,
@@ -83,27 +163,31 @@
     .octo-table-footer {
         display: flex;
         flex-direction: row;
-
-        border-bottom: solid 1px rgba(var(--body-color), 0.09);
+        border-bottom: solid 1px rgba(var(--center-channel-color-rgb), 0.09);
+        &.hidden {
+            display: none;
+        }
     }
 
     .octo-table-header {
-        position: fixed;
+        position: sticky;
+        top: 0;
         z-index: 1;
-        background: rgb(var(--main-bg));
+        background: rgb(var(--center-channel-bg-rgb));
 
         .octo-table-cell {
-            color: rgba(var(--body-color), 0.6);
+            color: rgba(var(--center-channel-color-rgb), 0.6);
+            background: rgb(var(--center-channel-bg-rgb));
 
             .Label {
-                color: rgba(var(--body-color), 0.6);
+                color: rgba(var(--center-channel-color-rgb), 0.6);
             }
         }
     }
 
     .octo-table-footer {
         .octo-table-cell {
-            color: rgba(var(--body-color), 0.6);
+            color: rgba(var(--center-channel-color-rgb), 0.6);
             cursor: pointer;
 
             width: 100%;
@@ -111,13 +195,12 @@
             padding-left: 15px;
 
             &:hover {
-                background-color: rgba(var(--body-color), 0.08);
+                background-color: rgba(var(--center-channel-color-rgb), 0.08);
             }
         }
     }
 
     .MenuWrapper {
-        width: 100%;
         max-width: calc(100% - 5px);
 
         .Label {

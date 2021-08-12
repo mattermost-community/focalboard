@@ -1,8 +1,8 @@
-.ShareBoardComponent {
+.focalboard-body .ShareBoardComponent {
     display: flex;
     flex-direction: column;
     padding: 5px;
-    color: rgb(var(--body-color));
+    color: rgb(var(--center-channel-color-rgb));
     max-width: 400px;
 
     > .row {
@@ -21,6 +21,7 @@
     }
 
     a.shareUrl {
+        max-width: 320px;
         flex-grow: 1;
         white-space: nowrap;
         overflow: hidden;

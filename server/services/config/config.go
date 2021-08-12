@@ -12,7 +12,7 @@ const (
 )
 
 type AmazonS3Config struct {
-	AccessKeyId     string
+	AccessKeyID     string
 	SecretAccessKey string
 	Bucket          string
 	PathPrefix      string
@@ -49,8 +49,11 @@ type Configuration struct {
 
 	AuthMode string `json:"authMode" mapstructure:"authMode"`
 
-	LoggingFile        string `json:"logging_file" mapstructure:"logging_file"`
-	LoggingEscapedJson string `json:"logging_escaped_json" mapstructure:"logging_escaped_json"`
+	LoggingCfgFile string `json:"logging_cfg_file" mapstructure:"logging_cfg_file"`
+	LoggingCfgJSON string `json:"logging_cfg_json" mapstructure:"logging_cfg_json"`
+
+	AuditCfgFile string `json:"audit_cfg_file" mapstructure:"audit_cfg_file"`
+	AuditCfgJSON string `json:"audit_cfg_json" mapstructure:"audit_cfg_json"`
 }
 
 // ReadConfigFile read the configuration from the filesystem.

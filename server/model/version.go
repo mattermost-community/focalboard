@@ -4,6 +4,14 @@ package model
 // It should be maintained in chronological order with most current
 // release at the front of the list.
 var versions = []string{
+	"0.9.0",
+	"0.8.2",
+	"0.8.1",
+	"0.8.0",
+	"0.7.3",
+	"0.7.2",
+	"0.7.1",
+	"0.7.0",
 	"0.6.7",
 	"0.6.6",
 	"0.6.5",
@@ -14,7 +22,7 @@ var versions = []string{
 }
 
 var (
-	CurrentVersion string = versions[0]
+	CurrentVersion = versions[0]
 	BuildNumber    string
 	BuildDate      string
 	BuildHash      string

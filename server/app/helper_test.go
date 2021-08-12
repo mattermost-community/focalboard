@@ -24,7 +24,6 @@ type TestHelper struct {
 }
 
 func SetupTestHelper(t *testing.T) *TestHelper {
-
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	cfg := config.Configuration{}
@@ -36,7 +35,7 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 	webhook := webhook.NewClient(&cfg, logger)
 	metricsService := metrics.NewMetrics(metrics.InstanceInfo{})
 
-	appServices := AppServices{
+	appServices := Services{
 		Auth:         auth,
 		Store:        store,
 		FilesBackend: &mocks.FileBackend{},

@@ -6,6 +6,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/mlog"
+	"github.com/mattermost/focalboard/server/utils"
 
 	sq "github.com/Masterminds/squirrel"
 )
@@ -28,9 +29,13 @@ func (s *SQLStore) UpsertWorkspaceSignupToken(workspace model.Workspace) error {
 			now,
 		)
 	if s.dbType == mysqlDBType {
-		query = query.Suffix("ON DUPLICATE KEY UPDATE signup_token = ?, modified_by = ?, update_at = ?", workspace.SignupToken, workspace.ModifiedBy, now)
+		query = query.Suffix("ON DUPLICATE KEY UPDATE signup_token = ?, modified_by = ?, update_at = ?",
+			workspace.SignupToken, workspace.ModifiedBy, now)
 	} else {
-		query = query.Suffix("ON CONFLICT (id) DO UPDATE SET signup_token = EXCLUDED.signup_token, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at")
+		query = query.Suffix(
+			`ON CONFLICT (id) 
+			 DO UPDATE SET signup_token = EXCLUDED.signup_token, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at`,
+		)
 	}
 
 	_, err := query.Exec()
@@ -39,6 +44,7 @@ func (s *SQLStore) UpsertWorkspaceSignupToken(workspace model.Workspace) error {
 
 func (s *SQLStore) UpsertWorkspaceSettings(workspace model.Workspace) error {
 	now := time.Now().Unix()
+	signupToken := utils.CreateGUID()
 
 	settingsJSON, err := json.Marshal(workspace.Settings)
 	if err != nil {
@@ -49,12 +55,14 @@ func (s *SQLStore) UpsertWorkspaceSettings(workspace model.Workspace) error {
 		Insert(s.tablePrefix+"workspaces").
 		Columns(
 			"id",
+			"signup_token",
 			"settings",
 			"modified_by",
 			"update_at",
 		).
 		Values(
 			workspace.ID,
+			signupToken,
 			settingsJSON,
 			workspace.ModifiedBy,
 			now,
@@ -62,14 +70,17 @@ func (s *SQLStore) UpsertWorkspaceSettings(workspace model.Workspace) error {
 	if s.dbType == mysqlDBType {
 		query = query.Suffix("ON DUPLICATE KEY UPDATE settings = ?, modified_by = ?, update_at = ?", settingsJSON, workspace.ModifiedBy, now)
 	} else {
-		query = query.Suffix("ON CONFLICT (id) DO UPDATE SET settings = EXCLUDED.settings, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at")
+		query = query.Suffix(
+			`ON CONFLICT (id) 
+			 DO UPDATE SET settings = EXCLUDED.settings, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at`,
+		)
 	}
 
 	_, err = query.Exec()
 	return err
 }
 
-func (s *SQLStore) GetWorkspace(ID string) (*model.Workspace, error) {
+func (s *SQLStore) GetWorkspace(id string) (*model.Workspace, error) {
 	var settingsJSON string
 
 	query := s.getQueryBuilder().
@@ -81,7 +92,7 @@ func (s *SQLStore) GetWorkspace(ID string) (*model.Workspace, error) {
 			"update_at",
 		).
 		From(s.tablePrefix + "workspaces").
-		Where(sq.Eq{"id": ID})
+		Where(sq.Eq{"id": id})
 	row := query.QueryRow()
 	workspace := model.Workspace{}
 
@@ -121,6 +132,7 @@ func (s *SQLStore) GetWorkspaceCount() (int64, error) {
 		s.logger.Error("ERROR GetWorkspaceCount", mlog.Err(err))
 		return 0, err
 	}
+	defer s.CloseRows(rows)
 
 	var count int64
 

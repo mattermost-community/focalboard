@@ -70,8 +70,8 @@ func TestGetUser(t *testing.T) {
 		{"success", "goodID", false},
 	}
 
-	th.Store.EXPECT().GetUserById("badID").Return(nil, errors.New("Bad Id"))
-	th.Store.EXPECT().GetUserById("goodID").Return(mockUser, nil)
+	th.Store.EXPECT().GetUserByID("badID").Return(nil, errors.New("Bad Id"))
+	th.Store.EXPECT().GetUserByID("goodID").Return(mockUser, nil)
 
 	for _, test := range testcases {
 		t.Run(test.title, func(t *testing.T) {
@@ -168,8 +168,8 @@ func TestChangePassword(t *testing.T) {
 		{"success, using username", mockUser.ID, "testPassword", "newPassword", false},
 	}
 
-	th.Store.EXPECT().GetUserById("badID").Return(nil, errors.New("userID not found"))
-	th.Store.EXPECT().GetUserById(mockUser.ID).Return(mockUser, nil).Times(2)
+	th.Store.EXPECT().GetUserByID("badID").Return(nil, errors.New("userID not found"))
+	th.Store.EXPECT().GetUserByID(mockUser.ID).Return(mockUser, nil).Times(2)
 	th.Store.EXPECT().UpdateUserPasswordByID(mockUser.ID, gomock.Any()).Return(nil)
 
 	for _, test := range testcases {

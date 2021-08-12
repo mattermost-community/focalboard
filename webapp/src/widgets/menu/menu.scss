@@ -1,11 +1,11 @@
-.Menu {
+.focalboard-body .Menu {
     display: flex;
     flex-direction: column;
     position: absolute;
     z-index: 15;
     min-width: 180px;
-    background-color: rgb(var(--main-bg));
-    color: rgb(var(--body-color));
+    background-color: rgb(var(--center-channel-bg-rgb));
+    color: rgb(var(--center-channel-color-rgb));
     border-radius: var(--default-rad);
     box-shadow: var(--elevation-4);
 
@@ -27,20 +27,22 @@
         padding: 0;
         margin: 0;
 
-        color: rgb(var(--body-color));
+        color: rgb(var(--center-channel-color-rgb));
 
         > .menu-option {
             display: flex;
             flex-direction: row;
             align-items: center;
 
+            font-size: 14px;
+            line-height: 24px;
             font-weight: 400;
             height: 32px;
             padding: 4px 20px;
             cursor: pointer;
 
             &:hover {
-                background: rgba(var(--button-bg), 0.08);
+                background: rgba(var(--button-bg-rgb), 0.08);
             }
 
             > * {
@@ -58,7 +60,7 @@
             }
 
             > .SubmenuTriangleIcon {
-                fill: rgba(var(--body-color), 0.7);
+                fill: rgba(var(--center-channel-color-rgb), 0.7);
             }
 
             > .Icon {
@@ -91,8 +93,8 @@
     }
 }
 
-.Menu,
-.SubMenuOption .SubMenu {
+.focalboard-body .Menu,
+.focalboard-body .SubMenuOption .SubMenu {
     @media screen and (max-width: 430px) {
         position: fixed;
         top: 0;
@@ -100,7 +102,7 @@
         right: 0;
         bottom: 0;
         min-width: 0;
-        background-color: rgba(var(--body-color), 0.5);
+        background-color: rgba(var(--center-channel-color-rgb), 0.5);
         border-radius: 0;
         padding: 10px;
 
@@ -123,7 +125,7 @@
                 min-height: 44px;
                 width: 100%;
                 padding: 0 20px;
-                background-color: rgb(var(--main-bg));
+                background-color: rgb(var(--center-channel-bg-rgb));
 
                 > * {
                     flex: 0 0 auto;

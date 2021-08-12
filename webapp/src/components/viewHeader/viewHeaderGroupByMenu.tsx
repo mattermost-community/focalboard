@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {IPropertyTemplate} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
@@ -20,6 +20,7 @@ type Props = {
 
 const ViewHeaderGroupByMenu = React.memo((props: Props) => {
     const {properties, activeView, groupByPropertyName} = props
+    const intl = useIntl()
     return (
         <MenuWrapper>
             <Button>
@@ -29,7 +30,7 @@ const ViewHeaderGroupByMenu = React.memo((props: Props) => {
                     values={{
                         property: (
                             <span
-                                style={{color: 'rgb(var(--main-fg))'}}
+                                style={{color: 'rgb(var(--center-channel-color-rgb))'}}
                                 id='groupByLabel'
                             >
                                 {groupByPropertyName}
@@ -39,18 +40,34 @@ const ViewHeaderGroupByMenu = React.memo((props: Props) => {
                 />
             </Button>
             <Menu>
-                {properties.filter((o: IPropertyTemplate) => o.type === 'select').map((option: IPropertyTemplate) => (
+                {activeView.fields.viewType === 'table' && activeView.fields.groupById &&
+                <>
+                    <Menu.Text
+                        key={'ungroup'}
+                        id={''}
+                        name={intl.formatMessage({id: 'GroupBy.ungroup', defaultMessage: 'Ungroup'})}
+                        rightIcon={activeView.fields.groupById === '' ? <CheckIcon/> : undefined}
+                        onClick={(id) => {
+                            if (activeView.fields.groupById === id) {
+                                return
+                            }
+                            mutator.changeViewGroupById(activeView.id, activeView.fields.groupById, id)
+                        }}
+                    />
+                    <Menu.Separator/>
+                </>}
+                {properties?.filter((o: IPropertyTemplate) => o.type === 'select').map((option: IPropertyTemplate) => (
                     <Menu.Text
                         key={option.id}
                         id={option.id}
                         name={option.name}
-                        rightIcon={activeView.groupById === option.id ? <CheckIcon/> : undefined}
+                        rightIcon={activeView.fields.groupById === option.id ? <CheckIcon/> : undefined}
                         onClick={(id) => {
-                            if (activeView.groupById === id) {
+                            if (activeView.fields.groupById === id) {
                                 return
                             }
 
-                            mutator.changeViewGroupById(activeView, id)
+                            mutator.changeViewGroupById(activeView.id, activeView.fields.groupById, id)
                         }}
                     />
                 ))}
