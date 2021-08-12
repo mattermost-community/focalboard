@@ -19,6 +19,8 @@
         width: 50px;
         background: none;
         padding: 0;
+        padding-left: 10px;
+        display: block !important;
 
         > div {
             padding: 0;
@@ -40,7 +42,11 @@
     }
 
     .WorkspaceTitle {
+        display: flex;
+        flex-direction: row;
+
         padding: 0 16px;
+        margin-bottom: 12px;
         font-weight: 600;
     }
 
