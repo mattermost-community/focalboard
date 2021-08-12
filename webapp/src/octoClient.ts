@@ -3,6 +3,7 @@
 import {Block, BlockPatch} from './blocks/block'
 import {ISharing} from './blocks/sharing'
 import {IWorkspace} from './blocks/workspace'
+import {OctoUtils} from './octoUtils'
 import {IUser} from './user'
 import {Utils} from './utils'
 
@@ -131,8 +132,7 @@ class OctoClient {
             return []
         }
         const blocks = (await this.getJson(response, [])) as Block[]
-        this.fixBlocks(blocks)
-        return blocks
+        return this.fixBlocks(blocks)
     }
 
     // If no boardID is provided, it will export the entire archive
@@ -143,8 +143,7 @@ class OctoClient {
             return []
         }
         const blocks = (await this.getJson(response, [])) as Block[]
-        this.fixBlocks(blocks)
-        return blocks
+        return this.fixBlocks(blocks)
     }
 
     async importFullArchive(blocks: readonly Block[]): Promise<Response> {
@@ -187,17 +186,19 @@ class OctoClient {
             return []
         }
         const blocks = (await this.getJson(response, [])) as Block[]
-        this.fixBlocks(blocks)
-        return blocks
+        return this.fixBlocks(blocks)
     }
 
-    // TODO: Remove this fixup code
-    fixBlocks(blocks: Block[]): void {
+    fixBlocks(blocks: Block[]): Block[] {
         if (!blocks) {
-            return
+            return []
         }
 
-        for (const block of blocks) {
+        // Hydrate is important, as it ensures that each block is complete to the current model
+        const fixedBlocks = OctoUtils.hydrateBlocks(blocks)
+
+        // TODO: Remove this fixup code
+        for (const block of fixedBlocks) {
             if (!block.fields) {
                 block.fields = {}
             }
@@ -216,6 +217,8 @@ class OctoClient {
                 }
             }
         }
+
+        return fixedBlocks
     }
 
     async updateBlock(block: Block): Promise<Response> {

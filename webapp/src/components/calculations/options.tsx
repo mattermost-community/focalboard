@@ -53,7 +53,7 @@ const styles = {
         ...provided,
         minWidth: '100%',
         width: 'max-content',
-        background: 'rgb(var(--main-bg))',
+        background: 'rgb(var(--center-channel-bg-rgb))',
         right: '0',
         marginBottom: '0',
     }),
