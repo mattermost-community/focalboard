@@ -8,7 +8,6 @@ import {useHistory} from 'react-router-dom'
 import {Constants} from '../../constants'
 import octoClient from '../../octoClient'
 import {IUser} from '../../user'
-import LogoIcon from '../../widgets/icons/logo'
 import FocalboardLogoIcon from '../../widgets/icons/focalboard_logo'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
@@ -25,38 +24,29 @@ import './sidebarUserMenu.scss'
 const SidebarUserMenu = React.memo(() => {
     const history = useHistory()
     const [showRegistrationLinkDialog, setShowRegistrationLinkDialog] = useState(false)
-    const showVersionBadge = Utils.isFocalboardPlugin()
-    const focalboardTitle = !Utils.isFocalboardPlugin()
-    const showAccountActions = !Utils.isFocalboardPlugin()
     const user = useAppSelector<IUser|null>(getMe)
     const intl = useIntl()
+
+    if (Utils.isFocalboardPlugin()) {
+        return <></>
+    }
     return (
         <div className='SidebarUserMenu'>
             <ModalWrapper>
                 <MenuWrapper>
                     <div className='logo'>
                         <div className='logo-title'>
-                            {focalboardTitle &&
-                                <>
-                                    <FocalboardLogoIcon/>
-                                    <span>{'Focalboard'}</span>
-                                </>}
-                            {!focalboardTitle &&
-                                <>
-                                    <LogoIcon/>
-                                    <span>{'Boards'}</span>
-                                </>}
-                            {focalboardTitle &&
-                                <div className='versionFrame'>
-                                    <div className='version'>
-                                        {`v${Constants.versionString}`}
-                                    </div>
-                                    {showVersionBadge && <div className='versionBadge'>{'BETA'}</div>}
-                                </div>}
+                            <FocalboardLogoIcon/>
+                            <span>{'Focalboard'}</span>
+                            <div className='versionFrame'>
+                                <div className='version'>
+                                    {`v${Constants.versionString}`}
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <Menu>
-                        {showAccountActions && user && user.username !== 'single-user' && <>
+                        {user && user.username !== 'single-user' && <>
                             <Menu.Label><b>{user.username}</b></Menu.Label>
                             <Menu.Text
                                 id='logout'
