@@ -6,6 +6,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 import {IntlProvider} from 'react-intl'
 
 import HelpIcon from '../../widgets/icons/help'
+import LogoIcon from '../../widgets/icons/logo'
 import store from '../../store'
 import {useAppSelector} from '../../store/hooks'
 import {getLanguage} from '../../store/language'
@@ -23,6 +24,10 @@ const HeaderItems = () => {
             messages={getMessages(language)}
         >
             <div className='GlobalHeaderComponent'>
+                <div className='logo-title'>
+                    <LogoIcon/>
+                    <span>{'Boards'}</span>
+                </div>
                 <span className='spacer'/>
                 <a
                     href='https://www.focalboard.com/guide/user?utm_source=webapp'
