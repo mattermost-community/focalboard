@@ -8,3 +8,7 @@
     display: inline-block;
     fill: rgb(var(--center-channel-color-rgb));
 }
+
+.focalboard-body .feature-global-header > header {
+    z-index: 1000;
+}
