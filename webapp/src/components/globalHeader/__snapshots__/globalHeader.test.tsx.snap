@@ -5,16 +5,6 @@ exports[`components/sidebar/GlobalHeader header menu should match snapshot 1`] =
   <div
     class="GlobalHeaderComponent"
   >
-    <div
-      class="logo-title"
-    >
-      <i
-        class="CompassIcon icon-product-boards logo__icon"
-      />
-      <span>
-        Boards
-      </span>
-    </div>
     <span
       class="spacer"
     />

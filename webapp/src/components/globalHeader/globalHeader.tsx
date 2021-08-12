@@ -6,7 +6,6 @@ import {Provider as ReduxProvider} from 'react-redux'
 import {IntlProvider} from 'react-intl'
 
 import HelpIcon from '../../widgets/icons/help'
-import LogoIcon from '../../widgets/icons/logo'
 import store from '../../store'
 import {useAppSelector} from '../../store/hooks'
 import {getLanguage} from '../../store/language'
