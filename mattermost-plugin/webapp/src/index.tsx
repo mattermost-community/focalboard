@@ -106,7 +106,7 @@ export default class Plugin {
                 useEffect(() => {
                     const currentChannel = store.getState().entities.channels.currentChannelId
                     if (currentChannel) {
-                        history.push(`/boards/workspace/${currentChannel}`)
+                        history.replace(`/boards/workspace/${currentChannel}`)
                     } else {
                         history.goBack()
                     }
