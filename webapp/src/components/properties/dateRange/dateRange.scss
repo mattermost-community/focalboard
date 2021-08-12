@@ -92,9 +92,9 @@
 
     .DayPicker {
     }
-    
+
     .DayPickerInput-Overlay {
-        background-color: rgba(var(--main-bg));
+        background-color: rgba(var(--center-channel-bg-rgb));
         box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1),0 4px 11px hsla(0, 0%, 0%, 0.1);
         line-height: 100%;
     }
