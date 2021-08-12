@@ -102,7 +102,7 @@ const CalculationOptions = (props: Props): JSX.Element => {
             name={'calculation_options'}
             className={'CalculationOptions'}
             options={options}
-            menuPlacement={'top'}
+            menuPlacement={'auto'}
             isSearchable={false}
             components={{DropdownIndicator}}
             defaultMenuIsOpen={props.menuOpen}
