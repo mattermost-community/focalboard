@@ -31,14 +31,6 @@ import {PluginRegistry} from './types/mattermost-webapp'
 
 import './plugin.scss'
 
-const GlobalHeaderIcon = () => {
-    return (
-        <span className='FocalboardGlobalHeaderIcon'>
-            <FocalboardIcon/>
-        </span>
-    )
-}
-
 const MainApp = () => {
     useEffect(() => {
         document.body.classList.add('focalboard-body')
@@ -128,7 +120,7 @@ export default class Plugin {
                 }, [])
                 return <></>
             })
-            this.registry.registerProduct('/boards', GlobalHeaderIcon, 'Boards', '/plug/focalboard/go-to-current-workspace', MainApp, HeaderComponent)
+            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/plug/focalboard/go-to-current-workspace', MainApp, HeaderComponent)
         } else {
             windowAny.frontendBaseURL = '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
