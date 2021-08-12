@@ -62,17 +62,18 @@ const Sidebar = React.memo((props: Props) => {
 
     return (
         <div className='Sidebar octo-sidebar'>
-            <div className='octo-sidebar-header'>
-                <div className='heading'>
-                    <SidebarUserMenu/>
-                </div>
+            {!Utils.isFocalboardPlugin() &&
+                <div className='octo-sidebar-header'>
+                    <div className='heading'>
+                        <SidebarUserMenu/>
+                    </div>
 
-                <div className='octo-spacer'/>
-                <IconButton
-                    onClick={() => setHidden(true)}
-                    icon={<HideSidebarIcon/>}
-                />
-            </div>
+                    <div className='octo-spacer'/>
+                    <IconButton
+                        onClick={() => setHidden(true)}
+                        icon={<HideSidebarIcon/>}
+                    />
+                </div>}
             {workspace && workspace.id !== '0' &&
                 <div className='WorkspaceTitle'>
                     {workspace.title}
