@@ -16,10 +16,10 @@
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
-    overflow: auto;
+    overflow: hidden;
 
     > * {
-                
+
         padding: 0 80px;
 
         @media screen and (max-width: 768px) {
@@ -44,5 +44,10 @@
         left: 0;
         background: rgb(var(--center-channel-bg-rgb));
         z-index: 100;
+    }
+
+    > div:nth-child(2) {
+        padding: 4px;
+        margin-left: 80px;
     }
 }
