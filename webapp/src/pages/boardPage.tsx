@@ -60,7 +60,7 @@ const BoardPage = (props: Props) => {
                 params.viewId = queryViewId
             }
             const newPath = generatePath(match.path, params)
-            history.push(newPath)
+            history.replace(newPath)
         }
     }, [])
 
@@ -71,7 +71,7 @@ const BoardPage = (props: Props) => {
             const viewId = localStorage.getItem('lastViewId') || undefined
             if (boardId) {
                 const newPath = generatePath(match.path, {...match.params, boardId, viewId})
-                history.push(newPath)
+                history.replace(newPath)
             }
         }
     }, [])
@@ -83,13 +83,13 @@ const BoardPage = (props: Props) => {
         Utils.log(`attachToBoard: ${boardId}`)
         if (boardId && !viewId && boardViews.length > 0) {
             const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
-            history.push(newPath)
+            history.replace(newPath)
         }
 
         const view = boardViews.find((v) => v.id === viewId)
         if (!view && boardViews.length > 0) {
             const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
-            history.push(newPath)
+            history.replace(newPath)
             return
         }
 
