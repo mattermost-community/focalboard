@@ -24,10 +24,6 @@ const HeaderItems = () => {
             messages={getMessages(language)}
         >
             <div className='GlobalHeaderComponent'>
-                <div className='logo-title'>
-                    <LogoIcon/>
-                    <span>{'Boards'}</span>
-                </div>
                 <span className='spacer'/>
                 <a
                     href='https://www.focalboard.com/guide/user?utm_source=webapp'

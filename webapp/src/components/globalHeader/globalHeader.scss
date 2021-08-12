@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: row;
     margin-right: 20px;
+    width: 100%;
     .spacer {
         flex-grow: 1;
     }
@@ -13,28 +14,5 @@
     .HelpIcon {
         color: rgba(var(--sidebar-text-rgb), 0.64);
         font-size: 20px;
-    }
-
-    .logo-title {
-        font-family: Metropolis, sans-serif;
-        display: flex;
-        align-items: center;
-        font-size: 16px;
-        font-weight: 600;
-        margin-right: 5px;
-
-        .logo__icon {
-            font-size: 24px;
-        }
-
-        .LogoIcon, .FocalboardLogoIcon {
-            fill: rgba(var(--sidebar-text-rgb), 1);
-            color: rgba(var(--sidebar-text-rgb), 1);
-            height: 24px;
-            width: 22px;
-            margin-right: 3px;
-            position: relative;
-            bottom: 2px;
-        }
     }
 }
