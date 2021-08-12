@@ -4,3 +4,7 @@
     display: flex;
     align-items: center;
 }
+
+.focalboard-body .feature-global-header > header {
+    z-index: 1000;
+}
