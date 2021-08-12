@@ -55,6 +55,21 @@ const MainApp = () => {
         }
     }, [])
 
+    useEffect(() => {
+        const link = (document.querySelector("link[rel*='icon']") || document.createElement('link')) as HTMLLinkElement
+        const restoreData = {
+            type: link.type,
+            rel: link.rel,
+            href: link.href,
+        }
+        return () => {
+            link.type = restoreData.type
+            link.rel = restoreData.rel
+            link.href = restoreData.href
+            document.getElementsByTagName('head')[0].appendChild(link)
+        }
+    }, [])
+
     return (
         <ErrorBoundary>
             <ReduxProvider store={store}>
