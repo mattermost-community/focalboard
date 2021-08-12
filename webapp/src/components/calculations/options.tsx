@@ -53,7 +53,7 @@ const styles = {
         ...provided,
         minWidth: '100%',
         width: 'max-content',
-        background: 'rgb(var(--main-bg))',
+        background: 'rgb(var(--center-channel-bg-rgb))',
         right: '0',
         marginBottom: '0',
     }),
@@ -102,7 +102,7 @@ const CalculationOptions = (props: Props): JSX.Element => {
             name={'calculation_options'}
             className={'CalculationOptions'}
             options={options}
-            menuPlacement={'top'}
+            menuPlacement={'auto'}
             isSearchable={false}
             components={{DropdownIndicator}}
             defaultMenuIsOpen={props.menuOpen}

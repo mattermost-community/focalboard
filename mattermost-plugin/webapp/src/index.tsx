@@ -31,14 +31,6 @@ import {PluginRegistry} from './types/mattermost-webapp'
 
 import './plugin.scss'
 
-const GlobalHeaderIcon = () => {
-    return (
-        <span className='FocalboardGlobalHeaderIcon'>
-            <FocalboardIcon/>
-        </span>
-    )
-}
-
 const MainApp = () => {
     useEffect(() => {
         document.body.classList.add('focalboard-body')
@@ -52,6 +44,21 @@ const MainApp = () => {
             if (root) {
                 root.classList.remove('focalboard-plugin-root')
             }
+        }
+    }, [])
+
+    useEffect(() => {
+        const link = (document.querySelector("link[rel*='icon']") || document.createElement('link')) as HTMLLinkElement
+        const restoreData = {
+            type: link.type,
+            rel: link.rel,
+            href: link.href,
+        }
+        return () => {
+            link.type = restoreData.type
+            link.rel = restoreData.rel
+            link.href = restoreData.href
+            document.getElementsByTagName('head')[0].appendChild(link)
         }
     }, [])
 
@@ -106,14 +113,14 @@ export default class Plugin {
                 useEffect(() => {
                     const currentChannel = store.getState().entities.channels.currentChannelId
                     if (currentChannel) {
-                        history.push(`/boards/workspace/${currentChannel}`)
+                        history.replace(`/boards/workspace/${currentChannel}`)
                     } else {
                         history.goBack()
                     }
                 }, [])
                 return <></>
             })
-            this.registry.registerProduct('/boards', GlobalHeaderIcon, 'Boards', '/plug/focalboard/go-to-current-workspace', MainApp, HeaderComponent)
+            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/plug/focalboard/go-to-current-workspace', MainApp, HeaderComponent)
         } else {
             windowAny.frontendBaseURL = '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {

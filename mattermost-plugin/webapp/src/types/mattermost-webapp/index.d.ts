@@ -6,7 +6,7 @@ export interface PluginRegistry {
     registerCustomRoute(route: string, component: React.ElementType)
     registerProductRoute(route: string, component: React.ElementType)
     unregisterComponent(componentId: string)
-    registerProduct(baseURL: string, switcherIcon: React.ElementType, switcherText: string, switcherLinkURL: string, mainComponent: React.ElementType, headerCompoent: React.ElementType)
+    registerProduct(baseURL: string, switcherIcon: string, switcherText: string, switcherLinkURL: string, mainComponent: React.ElementType, headerCompoent: React.ElementType)
 
     // Add more if needed from https://developers.mattermost.com/extend/plugins/webapp/reference
 }
