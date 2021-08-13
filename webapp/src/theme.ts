@@ -176,7 +176,7 @@ export function setMattermostTheme(theme: any): Theme {
     document.documentElement.style.setProperty('--button-color-rgb', color(theme.buttonColor).rgb().array().join(', '))
     document.documentElement.style.setProperty('--sidebar-bg-rgb', color(theme.sidebarBg).rgb().array().join(', '))
     document.documentElement.style.setProperty('--sidebar-text-rgb', color(theme.sidebarText).rgb().array().join(', '))
-    document.documentElement.style.setProperty('--link-color-rgb', color(theme.linkColor).rgb().array().join(', '))
+    document.documentElement.style.setProperty('--link-color-rgb', theme.linkColor)
     document.documentElement.style.setProperty('--sidebar-text-active-border', color(theme.sidebarTextActiveBorder).rgb().array().join(', '))
 
     return setTheme({
@@ -188,7 +188,7 @@ export function setMattermostTheme(theme: any): Theme {
         sidebarBg: color(theme.sidebarBg).rgb().array().join(', '),
         sidebarFg: color(theme.sidebarColor || '#ffffff').rgb().array().join(', '),
         sidebarTextActiveBorder: color(theme.sidebarTextActiveBorder).rgb().array().join(', '),
-        link: color(theme.linkColor).rgb().array().join(', '),
+        link: theme.linkColor,
     })
 }
 
