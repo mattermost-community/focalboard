@@ -62,6 +62,10 @@ html {
         text-decoration: none;
         color: var(--link-color-rgb);
 
+        &:visited {
+            color: var(--link-visited-color-rgb);
+        }
+
         &:hover {
             background-color: rgba(192, 192, 255, 0.2);
         }
