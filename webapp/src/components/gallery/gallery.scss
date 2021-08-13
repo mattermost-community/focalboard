@@ -1,6 +1,7 @@
 .focalboard-body .Gallery {
     display: flex;
     flex-wrap: wrap;
+    overflow: auto;
 
     .octo-gallery-new {
         border: 1px solid rgba(var(--center-channel-color-rgb), 0.09);
