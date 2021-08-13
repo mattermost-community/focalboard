@@ -95,7 +95,7 @@ const FilterEntry = React.memo((props: Props): JSX.Element => {
             <Button
                 onClick={() => {
                     const filterGroup = createFilterGroup(view.fields.filter)
-                    filterGroup.filters = filterGroup.filters.filter((o) => isAFilterGroupInstance(o) || areFilterClausesEqual(o, filter))
+                    filterGroup.filters = filterGroup.filters.filter((o) => isAFilterGroupInstance(o) || !areFilterClausesEqual(o, filter))
                     mutator.changeViewFilter(view.id, view.fields.filter, filterGroup)
                 }}
             >
