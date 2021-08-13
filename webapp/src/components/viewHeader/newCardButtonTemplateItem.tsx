@@ -15,6 +15,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import CheckIcon from '../../widgets/icons/check'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentView} from '../../store/views'
+import './newCardButtonTemplateItem.scss'
 
 type Props = {
     cardTemplate: Card
@@ -27,12 +28,15 @@ const NewCardButtonTemplateItem = React.memo((props: Props) => {
     const {cardTemplate} = props
     const intl = useIntl()
     const displayName = cardTemplate.title || intl.formatMessage({id: 'ViewHeader.untitled', defaultMessage: 'Untitled'})
+    const isDefaultTemplate = currentView.fields.defaultTemplateId === cardTemplate.id
+
     return (
         <Menu.Text
             key={cardTemplate.id}
             id={cardTemplate.id}
             name={displayName}
             icon={<div className='Icon'>{cardTemplate.fields.icon}</div>}
+            className={isDefaultTemplate ? 'bold-menu-text' : ''}
             onClick={() => {
                 props.addCardFromTemplate(cardTemplate.id)
             }}
