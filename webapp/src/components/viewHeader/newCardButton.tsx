@@ -10,8 +10,7 @@ import AddIcon from '../../widgets/icons/add'
 import Menu from '../../widgets/menu'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoardTemplates} from '../../store/cards'
-import {getCurrentView, getCurrentBoardViews} from '../../store/views'
-
+import {getCurrentView} from '../../store/views'
 
 import NewCardButtonTemplateItem from './newCardButtonTemplateItem'
 import EmptyCardButton from './emptyCardButton'
@@ -68,7 +67,6 @@ const NewCardButton = React.memo((props: Props): JSX.Element => {
                 ))}
 
                 <EmptyCardButton
-                    boardView={activeView}
                     addCard={props.addCard}
                 />
 

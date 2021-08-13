@@ -8,21 +8,21 @@ import {useIntl} from 'react-intl'
 import CardIcon from '../../widgets/icons/card'
 import Menu from '../../widgets/menu'
 
-import {BoardView} from '../../blocks/boardView'
 import MenuWrapper from '../../widgets/menuWrapper'
 import OptionsIcon from '../../widgets/icons/options'
 import IconButton from '../../widgets/buttons/iconButton'
 import CheckIcon from '../../widgets/icons/check'
 import mutator from '../../mutator'
 import './emptyCardButton.scss'
+import {useAppSelector} from '../../store/hooks'
+import {getCurrentView} from '../../store/views'
 
 type Props = {
-    boardView: BoardView
     addCard: () => void
 }
 
 const EmptyCardButton = React.memo((props: Props) => {
-    const {boardView} = props
+    const currentView = useAppSelector(getCurrentView)
     const intl = useIntl()
 
     return (
@@ -30,7 +30,7 @@ const EmptyCardButton = React.memo((props: Props) => {
             icon={<CardIcon/>}
             id='empty-template'
             name={intl.formatMessage({id: 'ViewHeader.empty-card', defaultMessage: 'Empty card'})}
-            className={boardView.defaultTemplateId ? '' : 'bold-menu-text'}
+            className={currentView.fields.defaultTemplateId ? '' : 'bold-menu-text'}
             onClick={() => {
                 props.addCard()
             }}
@@ -41,9 +41,12 @@ const EmptyCardButton = React.memo((props: Props) => {
                         <Menu.Text
                             icon={<CheckIcon/>}
                             id='default'
-                            name={intl.formatMessage({id: 'ViewHeader.set-default-template', defaultMessage: 'Set as default'})}
+                            name={intl.formatMessage({
+                                id: 'ViewHeader.set-default-template',
+                                defaultMessage: 'Set as default',
+                            })}
                             onClick={async () => {
-                                await mutator.setDefaultTemplate(boardView)
+                                await mutator.setDefaultTemplate(currentView.id, currentView.fields.defaultTemplateId)
                             }}
                         />
                     </Menu>

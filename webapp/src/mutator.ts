@@ -138,7 +138,7 @@ class Mutator {
         )
     }
 
-    async setDefaultTemplate(blockId: string, oldTemplateId: string, templateId?: string, description = 'set default template') {
+    async setDefaultTemplate(blockId: string, oldTemplateId: string, templateId = '', description = 'set default template') {
         await undoManager.perform(
             async () => {
                 await octoClient.patchBlock(blockId, {updatedFields: {defaultTemplateId: templateId}})
