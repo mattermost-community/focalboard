@@ -26,6 +26,7 @@ const contentsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
+            state.contents = {}
             for (const block of action.payload) {
                 if (block.type !== 'board' && block.type !== 'view' && block.type !== 'comment') {
                     state.contents[block.id] = block as ContentBlock
@@ -33,6 +34,7 @@ const contentsSlice = createSlice({
             }
         })
         builder.addCase(initialLoad.fulfilled, (state, action) => {
+            state.contents = {}
             for (const block of action.payload.blocks) {
                 if (block.type !== 'board' && block.type !== 'view' && block.type !== 'comment') {
                     state.contents[block.id] = block as ContentBlock
