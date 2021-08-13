@@ -11,6 +11,8 @@ import AddIcon from '../../widgets/icons/add'
 import Menu from '../../widgets/menu'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoardTemplates} from '../../store/cards'
+import {getCurrentView, getCurrentBoardViews} from '../../store/views'
+
 
 import NewCardButtonTemplateItem from './newCardButtonTemplateItem'
 
@@ -23,12 +25,17 @@ type Props = {
 
 const NewCardButton = React.memo((props: Props): JSX.Element => {
     const cardTemplates: Card[] = useAppSelector(getCurrentBoardTemplates)
+    const currentView = useAppSelector(getCurrentView)
     const intl = useIntl()
 
     return (
         <ButtonWithMenu
             onClick={() => {
-                props.addCard()
+                if (currentView.fields.defaultTemplateId) {
+                    props.addCardFromTemplate(currentView.fields.defaultTemplateId)
+                } else {
+                    props.addCard()
+                }
             }}
             text={(
                 <FormattedMessage
