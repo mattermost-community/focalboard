@@ -37,6 +37,7 @@ const viewsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
+            state.views = {}
             for (const block of action.payload) {
                 if (block.type === 'view') {
                     state.views[block.id] = block as BoardView
@@ -44,6 +45,7 @@ const viewsSlice = createSlice({
             }
         })
         builder.addCase(initialLoad.fulfilled, (state, action) => {
+            state.views = {}
             for (const block of action.payload.blocks) {
                 if (block.type === 'view') {
                     state.views[block.id] = block as BoardView
