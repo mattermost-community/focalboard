@@ -6,7 +6,6 @@ import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Card} from '../../blocks/card'
 import ButtonWithMenu from '../../widgets/buttons/buttonWithMenu'
-import CardIcon from '../../widgets/icons/card'
 import AddIcon from '../../widgets/icons/add'
 import Menu from '../../widgets/menu'
 import {useAppSelector} from '../../store/hooks'
@@ -15,6 +14,7 @@ import {getCurrentView, getCurrentBoardViews} from '../../store/views'
 
 
 import NewCardButtonTemplateItem from './newCardButtonTemplateItem'
+import EmptyCardButton from './emptyCardButton'
 
 type Props = {
     addCard: () => void
@@ -67,13 +67,9 @@ const NewCardButton = React.memo((props: Props): JSX.Element => {
                     />
                 ))}
 
-                <Menu.Text
-                    icon={<CardIcon/>}
-                    id='empty-template'
-                    name={intl.formatMessage({id: 'ViewHeader.empty-card', defaultMessage: 'Empty card'})}
-                    onClick={() => {
-                        props.addCard()
-                    }}
+                <EmptyCardButton
+                    boardView={activeView}
+                    addCard={props.addCard}
                 />
 
                 <Menu.Text

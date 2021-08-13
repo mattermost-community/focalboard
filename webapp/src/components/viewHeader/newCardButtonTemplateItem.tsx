@@ -66,7 +66,7 @@ const NewCardButtonTemplateItem = React.memo((props: Props) => {
                             name={intl.formatMessage({id: 'ViewHeader.delete-template', defaultMessage: 'Delete'})}
                             onClick={async () => {
                                 if (currentView.fields.defaultTemplateId === cardTemplate.id) {
-                                    await mutator.setDefaultTemplate(currentView.id, currentView.fields.defaultTemplateId, '')
+                                    await mutator.setDefaultTemplate(currentView.id, currentView.fields.defaultTemplateId)
                                 }
                                 await mutator.deleteBlock(cardTemplate, 'delete card template')
                             }}
