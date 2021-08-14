@@ -35,7 +35,7 @@ function getCardProperty(card: Card, property: IPropertyTemplate): string | stri
 function fixTimestampToMinutesAccuracy(timestamp: number) {
     // For timestamps that are formatted as hour/minute strings on the UI, we throw away the (milli)seconds
     // so that things like counting unique values work intuitively
-    return timestamp - timestamp % 60000
+    return timestamp - (timestamp % 60000)
 }
 
 function cardsWithValue(cards: readonly Card[], property: IPropertyTemplate): Card[] {
