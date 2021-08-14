@@ -1,6 +1,8 @@
 .focalboard-body .property-link {
     &.url {
         padding-right: 2rem;
+        width: inherit;
+        overflow: hidden;
     }
 
     a {
