@@ -44,9 +44,9 @@ describe('components/calculations/calculation logic', () => {
 
     // card with all properties unset
     const card3 = TestBlockFactory.createCard(board)
-    card3.createAt = 1625639400000
+    card3.createAt = 1625639401000
     card3.createdBy = 'user_id_2'
-    card3.updateAt = 1625639400000
+    card3.updateAt = 1625639401000
     card3.modifiedBy = 'user_id_2'
 
     // clone of card 1. All properties exactly same as that of card 1
