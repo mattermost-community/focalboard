@@ -1,7 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-
-exports[`components/properties/link returns Link correctly 1`] = `
+exports[`components/properties/link returns link properties correctly 1`] = `
 <div>
   <div
     class="URLProperty property-link url"
