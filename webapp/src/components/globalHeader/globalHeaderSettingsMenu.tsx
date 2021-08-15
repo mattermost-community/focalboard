@@ -85,7 +85,7 @@ const GlobalHeaderSettingsMenu = React.memo(() => {
     return (
         <div className='GlobalHeaderSettingsMenu'>
             <MenuWrapper>
-                <div className='menu-entry'>
+                <div className='GlobalHeaderComponent__button menu-entry'>
                     <SettingsIcon/>
                 </div>
                 <Menu position='left'>
