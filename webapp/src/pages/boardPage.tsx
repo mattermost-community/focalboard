@@ -91,7 +91,6 @@ const BoardPage = (props: Props) => {
             return
         }
 
-
         UserSettings.lastBoardId = boardId || ''
         UserSettings.lastViewId = viewId || ''
         dispatch(setCurrentBoard(boardId || ''))
