@@ -7,6 +7,7 @@ import {useHistory} from 'mm-react-router-dom'
 
 import {GlobalState} from 'mattermost-redux/types/store'
 import {getTheme} from 'mattermost-redux/selectors/entities/preferences'
+import {getChannelByName} from 'mattermost-redux/selectors/entities/channels'
 
 const windowAny = (window as any)
 windowAny.baseURL = '/plugins/focalboard'
@@ -87,23 +88,31 @@ export default class Plugin {
     registry?: PluginRegistry
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
-    public async initialize(registry: PluginRegistry, store: Store<GlobalState, Action<Record<string, unknown>>>) {
+    async initialize(registry: PluginRegistry, mmStore: Store<GlobalState, Action<Record<string, unknown>>>): Promise<void> {
         this.registry = registry
 
-        let theme = getTheme(store.getState())
+        let theme = getTheme(mmStore.getState())
         setMattermostTheme(theme)
-        store.subscribe(() => {
-            const currentTheme = getTheme(store.getState())
+        let lastViewedChannel = mmStore.getState().entities.channels.currentChannelId
+        mmStore.subscribe(() => {
+            const currentTheme = getTheme(mmStore.getState())
             if (currentTheme !== theme && currentTheme) {
                 setMattermostTheme(currentTheme)
                 theme = currentTheme
+            }
+
+            const currentUserId = mmStore.getState().entities.users.currentUserId
+            const currentChannel = mmStore.getState().entities.channels.currentChannelId
+            if (lastViewedChannel !== currentChannel && currentChannel) {
+                localStorage.setItem('focalboardLastViewedChannel:' + currentUserId, currentChannel)
+                lastViewedChannel = currentChannel
             }
         })
 
         if (this.registry.registerProduct) {
             windowAny.frontendBaseURL = '/boards'
             const goToFocalboardWorkspace = () => {
-                const currentChannel = store.getState().entities.channels.currentChannelId
+                const currentChannel = mmStore.getState().entities.channels.currentChannelId
                 window.open(`${window.location.origin}/boards/workspace/${currentChannel}`)
             }
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Focalboard Workspace')
@@ -111,12 +120,18 @@ export default class Plugin {
             this.registry.registerCustomRoute('go-to-current-workspace', () => {
                 const history = useHistory()
                 useEffect(() => {
-                    const currentChannel = store.getState().entities.channels.currentChannelId
+                    const currentChannel = mmStore.getState().entities.channels.currentChannelId
                     if (currentChannel) {
                         history.replace(`/boards/workspace/${currentChannel}`)
-                    } else {
-                        history.goBack()
+                        return
                     }
+                    const currentUserId = mmStore.getState().entities.users.currentUserId
+                    const lastChannelId = localStorage.getItem('focalboardLastViewedChannel:' + currentUserId)
+                    if (lastChannelId) {
+                        history.replace(`/boards/workspace/${lastChannelId}`)
+                        return
+                    }
+                    history.goBack()
                 }, [])
                 return <></>
             })
@@ -124,14 +139,14 @@ export default class Plugin {
         } else {
             windowAny.frontendBaseURL = '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
-                const currentChannel = store.getState().entities.channels.currentChannelId
+                const currentChannel = mmStore.getState().entities.channels.currentChannelId
                 window.open(`${window.location.origin}/plug/focalboard/workspace/${currentChannel}`)
             }, '', 'Focalboard Workspace')
             this.registry.registerCustomRoute('/', MainApp)
         }
     }
 
-    public uninitialize() {
+    uninitialize(): void {
         if (this.channelHeaderButtonId) {
             this.registry?.unregisterComponent(this.channelHeaderButtonId)
         }
