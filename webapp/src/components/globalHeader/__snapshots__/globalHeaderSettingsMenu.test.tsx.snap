@@ -25,7 +25,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
             class="menu-options"
           >
             <div
+              aria-label="Import archive"
               class="MenuOption TextOption menu-option"
+              role="button"
             >
               <div
                 class="noicon"
@@ -40,7 +42,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
               />
             </div>
             <div
+              aria-label="Export archive"
               class="MenuOption TextOption menu-option"
+              role="button"
             >
               <div
                 class="noicon"
@@ -85,7 +89,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                     class="menu-options"
                   >
                     <div
+                      aria-label="English"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -106,7 +112,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       </svg>
                     </div>
                     <div
+                      aria-label="Español"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -121,7 +129,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       />
                     </div>
                     <div
+                      aria-label="Deutsch"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -136,7 +146,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       />
                     </div>
                     <div
+                      aria-label="日本語"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -151,7 +163,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       />
                     </div>
                     <div
+                      aria-label="Français"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -166,7 +180,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       />
                     </div>
                     <div
+                      aria-label="Nederlands"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -181,7 +197,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       />
                     </div>
                     <div
+                      aria-label="Pусский"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -196,7 +214,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       />
                     </div>
                     <div
+                      aria-label="中文 (繁體)"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -211,7 +231,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       />
                     </div>
                     <div
+                      aria-label="中文 (简体)"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -226,7 +248,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       />
                     </div>
                     <div
+                      aria-label="Türkçe"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -241,7 +265,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       />
                     </div>
                     <div
+                      aria-label="Occitan"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -263,7 +289,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                     class="menu-options hideOnWidescreen"
                   >
                     <div
+                      aria-label="Cancel"
                       class="MenuOption TextOption menu-option menu-cancel"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -308,7 +336,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
             class="menu-options hideOnWidescreen"
           >
             <div
+              aria-label="Cancel"
               class="MenuOption TextOption menu-option menu-cancel"
+              role="button"
             >
               <div
                 class="noicon"
@@ -375,7 +405,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
             class="menu-options"
           >
             <div
+              aria-label="Import archive"
               class="MenuOption TextOption menu-option"
+              role="button"
             >
               <div
                 class="noicon"
@@ -390,7 +422,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
               />
             </div>
             <div
+              aria-label="Export archive"
               class="MenuOption TextOption menu-option"
+              role="button"
             >
               <div
                 class="noicon"
@@ -453,7 +487,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
             class="menu-options hideOnWidescreen"
           >
             <div
+              aria-label="Cancel"
               class="MenuOption TextOption menu-option menu-cancel"
+              role="button"
             >
               <div
                 class="noicon"
