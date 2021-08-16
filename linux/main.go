@@ -1,9 +1,12 @@
 package main
 
 import (
+	"encoding/base64"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net"
+	"os"
 	"os/exec"
 	"runtime"
 
@@ -16,6 +19,7 @@ import (
 )
 
 var sessionToken string = "su-" + uuid.New().String()
+var settingsDir, settingsFile string = getSettingsPaths()
 
 func getFreePort() (int, error) {
 	addr, err := net.ResolveTCPAddr("tcp", "localhost:0")
@@ -101,6 +105,86 @@ func openBrowser(url string) {
 	}
 }
 
+func getSettingsPaths() (dir string, file string) {	
+	dir = fmt.Sprintf("%s/focalboard", getSettingsRoot())
+	file = fmt.Sprintf("%s/settings", dir)
+	log.Printf("Using settings file %v", file)
+	return
+}
+
+func getSettingsRoot() string {
+	xdgConfigHome := os.Getenv("XDG_CONFIG_HOME")
+	if len(xdgConfigHome) != 0 {
+		return xdgConfigHome
+	}
+
+	log.Println("XDG_CONFIG_HOME is not set, falling back to $HOME/.config")
+	
+	home := os.Getenv("HOME")
+	if len(home) != 0 {
+		return fmt.Sprintf("%s/.config", home)
+	}
+	
+	log.Fatal("HOME is not set, cannot store settings")
+	return ""
+}
+
+func loadSettings() string {
+	bytes, err := ioutil.ReadFile(settingsFile)
+	if err != nil {
+		log.Printf("Could not load user settings: %v", err)
+		return ""
+	}
+	return string(bytes)
+}
+
+func saveSettings(blob string) (err error) {
+	if _, statErr := os.Stat(settingsDir); os.IsNotExist(statErr) { 
+		err = os.MkdirAll(settingsDir, 0700)
+	}
+	if err == nil {
+		err = ioutil.WriteFile(settingsFile, []byte(blob), 0600)
+	}
+	return
+}
+
+func receiveMessage(msg map[string]interface{}) {
+	msgType, ok := msg["type"].(string)
+	if !ok {
+		log.Printf("Received unexpected script message, no value for key 'type': %v ", msg)
+		return
+	}
+
+	blob, ok := msg["settingsBlob"].(string)
+	if !ok {
+		log.Println("Received unexpected script message, no value for key 'settingsBlob': %v", msg)
+		return
+	}
+
+	log.Printf("Received message %v", msgType)
+
+	switch msgType {
+	case "didImportUserSettings":
+		log.Printf("Imported user settings keys %v", msg["keys"])
+	case "didNotImportUserSettings":
+		break
+	case "didChangeUserSettings":
+		err := saveSettings(blob)
+		if err == nil {
+			log.Printf("Persisted user settings after change for key %v", msg["key"])
+		} else {
+			log.Printf("Could not persist user settings: %v", err)
+		}
+	default:
+		log.Printf("Received script message of unknown type %v", msgType)
+	}
+
+	data, err := base64.StdEncoding.DecodeString(blob)
+	if err == nil {
+		log.Printf("Current user settings: %v", string(data))
+	}
+}
+
 func main() {
 	debug := true
 	w := webview.New(debug)
@@ -119,8 +203,13 @@ func main() {
 	w.SetTitle("Focalboard")
 	w.SetSize(1024, 768, webview.HintNone)
 
-	script := fmt.Sprintf("localStorage.setItem('focalboardSessionId', '%s');", sessionToken)
-	w.Init(script)
+	sessionTokenScript := fmt.Sprintf("localStorage.setItem('focalboardSessionId', '%s');", sessionToken)
+	w.Init(sessionTokenScript)
+
+	w.Bind("receiveMessage", receiveMessage)
+
+	userSettingsScript := fmt.Sprintf("const NativeApp = { settingsBlob: \"%s\", receiveMessage: receiveMessage };", loadSettings())
+	w.Init(userSettingsScript)
 
 	w.Navigate(fmt.Sprintf("http://localhost:%d", port))
 	w.Bind("openInNewBrowser", openBrowser)

@@ -4,6 +4,8 @@
 import Cocoa
 import WebKit
 
+private let messageHandlerName = "nativeApp"
+
 class ViewController:
 	NSViewController,
 	WKUIDelegate,
@@ -21,7 +23,7 @@ class ViewController:
 		webView.navigationDelegate = self
 		webView.uiDelegate = self
 		webView.isHidden = true
-		webView.configuration.userContentController.add(self, name: "nativeApp")
+		webView.configuration.userContentController.add(self, name: messageHandlerName)
 
 		clearWebViewCache()
 
@@ -81,7 +83,12 @@ class ViewController:
 		)
 		let blob = UserDefaults.standard.string(forKey: "localStorage") ?? ""
 		let userSettingsScript = WKUserScript(
-			source: "const NativeApp = { settingsBlob: \"\(blob)\" };",
+			source: """
+				const NativeApp = {
+					settingsBlob: \"\(blob)\",
+					receiveMessage: msg => window.webkit.messageHandlers.\(messageHandlerName).postMessage(msg)
+				};
+				""",
 			injectionTime: .atDocumentStart,
 			forMainFrameOnly: true
 		)
