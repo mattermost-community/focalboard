@@ -17,7 +17,7 @@ function ColorOption(props: ColorOptionProps): JSX.Element {
     return (
         <div
             role='button'
-            aria-label={intl.formatMessage({id: 'BoardComponent.selectColor', defaultMessage: 'Select {color} Color'}, {color: name})}
+            aria-label={intl.formatMessage({id: 'ColorOption.selectColor', defaultMessage: 'Select {color} Color'}, {color: name})}
             className='MenuOption ColorOption menu-option'
             onClick={(e: React.MouseEvent): void => {
                 e.target.dispatchEvent(new Event('menuItemClicked'))
