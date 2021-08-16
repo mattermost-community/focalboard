@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"path"
+	"regexp"
 	"sync"
 
 	"github.com/mattermost/focalboard/server/server"
@@ -12,12 +13,22 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
+	"gopkg.in/square/go-jose.v2/json"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
 
+	"github.com/mattermost/mattermost-server/utils/markdown"
 	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/plugin"
 )
+
+const PostEmbedFocalboard model.PostEmbedType = "focalboard"
+
+type FocalboardEmbed struct {
+	WorkspaceID string `json:"workspaceID"`
+	BlockID     string `json:"blockID"`
+	BaseURL     string `json:"baseURL"`
+}
 
 // Plugin implements the interface expected by the Mattermost server to communicate between the server and plugin processes.
 type Plugin struct {
@@ -198,4 +209,45 @@ func defaultLoggingConfig() string {
 			]
 		}
 	}`
+}
+
+func (p *Plugin) MessageWillBePosted(c *plugin.Context, post *model.Post) (*model.Post, string) {
+	mmconfig := p.API.GetUnsanitizedConfig()
+	firstLink := getFirstLink(post.Message)
+	re := regexp.MustCompile(fmt.Sprintf(`^(%s)(\/boards\/workspace\/)([a-z0-9]{26})/(.*?)?c=((\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1})$`, *mmconfig.ServiceSettings.SiteURL))
+	matches := re.FindStringSubmatch(firstLink)
+
+	if len(matches) > 0 {
+		workspaceID := matches[3]
+		blockID := matches[5]
+
+		b, _ := json.Marshal(FocalboardEmbed{
+			WorkspaceID: workspaceID,
+			BlockID:     blockID,
+			BaseURL:     *mmconfig.ServiceSettings.SiteURL,
+		})
+
+		focalboardPostEmbed := &model.PostEmbed{
+			Type: PostEmbedFocalboard,
+			Data: string(b),
+		}
+		post.Metadata.Embeds = []*model.PostEmbed{focalboardPostEmbed}
+	}
+	return post, ""
+}
+
+func getFirstLink(str string) string {
+	firstLink := ""
+
+	markdown.Inspect(str, func(blockOrInline interface{}) bool {
+		switch v := blockOrInline.(type) {
+		case *markdown.Autolink:
+			if link := v.Destination(); firstLink == "" {
+				firstLink = link
+			}
+		}
+		return true
+	})
+
+	return firstLink
 }

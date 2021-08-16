@@ -684,7 +684,7 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 		levels = 2
 	}
 
-	if levels != 2 && levels != 3 {
+	if levels != 0 && levels != 2 && levels != 3 {
 		a.logger.Error("Invalid levels", mlog.Int64("levels", levels))
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "invalid levels", nil)
 		return

@@ -72,6 +72,12 @@ func (a *App) GetSubTree(c store.Container, blockID string, levels int) ([]model
 	if levels >= 3 {
 		return a.store.GetSubTree3(c, blockID)
 	}
+
+	if levels == 0 {
+		block, err := a.store.GetBlock(c, blockID)
+		return []model.Block{*block}, err
+	}
+
 	return a.store.GetSubTree2(c, blockID)
 }
 
