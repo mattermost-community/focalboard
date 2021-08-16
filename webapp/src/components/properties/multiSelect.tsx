@@ -32,12 +32,13 @@ const MultiSelectProperty = (props: Props): JSX.Element => {
             <div
                 className='octo-propertyvalue'
                 tabIndex={0}
+                data-testid='multiselect-non-editable'
                 onClick={() => setOpen(true)}
             >
                 {values.map((v) => (
                     <Label
                         key={v.id}
-                        color={v ? v.color : 'empty'}
+                        color={v.color}
                     >
                         {v.value}
                     </Label>

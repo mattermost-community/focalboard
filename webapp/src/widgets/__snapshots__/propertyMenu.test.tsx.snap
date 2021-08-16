@@ -68,7 +68,9 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   class="MenuOption MenuSeparator menu-separator"
                 />
                 <div
+                  aria-label="Text"
                   class="MenuOption TextOption menu-option"
+                  role="button"
                 >
                   <div
                     class="noicon"
@@ -83,7 +85,9 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   />
                 </div>
                 <div
+                  aria-label="Number"
                   class="MenuOption TextOption menu-option"
+                  role="button"
                 >
                   <div
                     class="noicon"
@@ -98,7 +102,9 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   />
                 </div>
                 <div
+                  aria-label="Email"
                   class="MenuOption TextOption menu-option"
+                  role="button"
                 >
                   <div
                     class="noicon"
@@ -113,7 +119,9 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   />
                 </div>
                 <div
+                  aria-label="Phone"
                   class="MenuOption TextOption menu-option"
+                  role="button"
                 >
                   <div
                     class="noicon"
@@ -128,7 +136,9 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   />
                 </div>
                 <div
+                  aria-label="URL"
                   class="MenuOption TextOption menu-option"
+                  role="button"
                 >
                   <div
                     class="noicon"
@@ -143,7 +153,9 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   />
                 </div>
                 <div
+                  aria-label="Select"
                   class="MenuOption TextOption menu-option"
+                  role="button"
                 >
                   <div
                     class="noicon"
@@ -158,7 +170,9 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   />
                 </div>
                 <div
+                  aria-label="Multi Select"
                   class="MenuOption TextOption menu-option"
+                  role="button"
                 >
                   <div
                     class="noicon"
@@ -173,7 +187,9 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   />
                 </div>
                 <div
+                  aria-label="Date"
                   class="MenuOption TextOption menu-option"
+                  role="button"
                 >
                   <div
                     class="noicon"
@@ -188,7 +204,9 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   />
                 </div>
                 <div
+                  aria-label="Person"
                   class="MenuOption TextOption menu-option"
+                  role="button"
                 >
                   <div
                     class="noicon"
@@ -203,7 +221,9 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   />
                 </div>
                 <div
+                  aria-label="Checkbox"
                   class="MenuOption TextOption menu-option"
+                  role="button"
                 >
                   <div
                     class="noicon"
@@ -218,7 +238,9 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   />
                 </div>
                 <div
+                  aria-label="Created Time"
                   class="MenuOption TextOption menu-option"
+                  role="button"
                 >
                   <div
                     class="noicon"
@@ -233,7 +255,9 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   />
                 </div>
                 <div
+                  aria-label="Created By"
                   class="MenuOption TextOption menu-option"
+                  role="button"
                 >
                   <div
                     class="noicon"
@@ -248,7 +272,9 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   />
                 </div>
                 <div
+                  aria-label="Last Updated Time"
                   class="MenuOption TextOption menu-option"
+                  role="button"
                 >
                   <div
                     class="noicon"
@@ -263,7 +289,9 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   />
                 </div>
                 <div
+                  aria-label="Last Updated By"
                   class="MenuOption TextOption menu-option"
+                  role="button"
                 >
                   <div
                     class="noicon"
@@ -285,7 +313,9 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                 class="menu-options hideOnWidescreen"
               >
                 <div
+                  aria-label="Cancel"
                   class="MenuOption TextOption menu-option menu-cancel"
+                  role="button"
                 >
                   <div
                     class="noicon"
@@ -304,7 +334,9 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
           </div>
         </div>
         <div
+          aria-label="Delete"
           class="MenuOption TextOption menu-option"
+          role="button"
         >
           <div
             class="noicon"
@@ -326,7 +358,9 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
         class="menu-options hideOnWidescreen"
       >
         <div
+          aria-label="Cancel"
           class="MenuOption TextOption menu-option menu-cancel"
+          role="button"
         >
           <div
             class="noicon"
