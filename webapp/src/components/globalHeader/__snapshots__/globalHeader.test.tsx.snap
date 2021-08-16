@@ -9,7 +9,7 @@ exports[`components/sidebar/GlobalHeader header menu should match snapshot 1`] =
       class="spacer"
     />
     <a
-      class="help-button"
+      class="GlobalHeaderComponent__button help-button"
       href="https://www.focalboard.com/guide/user?utm_source=webapp"
       rel="noreferrer"
       target="_blank"
@@ -25,7 +25,7 @@ exports[`components/sidebar/GlobalHeader header menu should match snapshot 1`] =
         class="MenuWrapper"
       >
         <div
-          class="menu-entry"
+          class="GlobalHeaderComponent__button menu-entry"
         >
           <i
             class="CompassIcon icon-settings-outline SettingsIcon"
