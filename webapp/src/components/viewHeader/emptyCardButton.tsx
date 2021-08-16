@@ -45,7 +45,7 @@ const EmptyCardButton = React.memo((props: Props) => {
                                 defaultMessage: 'Set as default',
                             })}
                             onClick={async () => {
-                                await mutator.setDefaultTemplate(currentView.id, currentView.fields.defaultTemplateId)
+                                await mutator.clearDefaultTemplate(currentView.id, currentView.fields.defaultTemplateId)
                             }}
                         />
                     </Menu>

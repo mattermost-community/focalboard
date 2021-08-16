@@ -64,10 +64,12 @@ const NewCardButtonTemplateItem = React.memo((props: Props) => {
                             id='delete'
                             name={intl.formatMessage({id: 'ViewHeader.delete-template', defaultMessage: 'Delete'})}
                             onClick={async () => {
-                                if (currentView.fields.defaultTemplateId === cardTemplate.id) {
-                                    await mutator.setDefaultTemplate(currentView.id, currentView.fields.defaultTemplateId)
-                                }
-                                await mutator.deleteBlock(cardTemplate, 'delete card template')
+                                await mutator.performAsUndoGroup(async () => {
+                                    if (currentView.fields.defaultTemplateId === cardTemplate.id) {
+                                        await mutator.clearDefaultTemplate(currentView.id, currentView.fields.defaultTemplateId)
+                                    }
+                                    await mutator.deleteBlock(cardTemplate, 'delete card template')
+                                })
                             }}
                         />
                     </Menu>
