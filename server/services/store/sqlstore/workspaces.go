@@ -1,6 +1,7 @@
 package sqlstore
 
 import (
+	"database/sql"
 	"encoding/json"
 	"time"
 
@@ -33,7 +34,7 @@ func (s *SQLStore) UpsertWorkspaceSignupToken(workspace model.Workspace) error {
 			workspace.SignupToken, workspace.ModifiedBy, now)
 	} else {
 		query = query.Suffix(
-			`ON CONFLICT (id) 
+			`ON CONFLICT (id)
 			 DO UPDATE SET signup_token = EXCLUDED.signup_token, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at`,
 		)
 	}
@@ -71,7 +72,7 @@ func (s *SQLStore) UpsertWorkspaceSettings(workspace model.Workspace) error {
 		query = query.Suffix("ON DUPLICATE KEY UPDATE settings = ?, modified_by = ?, update_at = ?", settingsJSON, workspace.ModifiedBy, now)
 	} else {
 		query = query.Suffix(
-			`ON CONFLICT (id) 
+			`ON CONFLICT (id)
 			 DO UPDATE SET settings = EXCLUDED.settings, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at`,
 		)
 	}
@@ -143,4 +144,55 @@ func (s *SQLStore) GetWorkspaceCount() (int64, error) {
 		return 0, err
 	}
 	return count, nil
+}
+
+func (s *SQLStore) GetUserWorkspaces(userID string) ([]model.UserWorkspace, error) {
+	// LOL write query fro MySQL
+
+	s.logger.Error("#######################################")
+	s.logger.Error(userID)
+	s.logger.Error("#######################################")
+
+	query := s.getQueryBuilder().
+		Select("channels.id", "channels.displayname", "count(focalboard_blocks.id)").
+		From("focalboard_blocks").
+		Join("channelmembers ON focalboard_blocks.workspace_id = channelmembers.channelid").
+		Join("channels ON channelmembers.channelid = channels.id").
+		Where("channelmembers.userid = ?", userID).
+		Where("focalboard_blocks.type = 'board'").
+		Where("focalboard_blocks.fields ->> 'isTemplate' = 'false'").
+		GroupBy("channels.id", "channels.displayname")
+
+	rows, err := query.Query()
+
+	if err != nil {
+		s.logger.Error("ERROR GetUserWorkspaces", mlog.Err(err))
+		return nil, err
+	}
+
+	defer s.CloseRows(rows)
+	return s.userWorkspacesFromRoes(rows)
+}
+
+func (s *SQLStore) userWorkspacesFromRoes(rows *sql.Rows) ([]model.UserWorkspace, error) {
+	userWorkspaces := []model.UserWorkspace{}
+
+	for rows.Next() {
+		var userWorkspace model.UserWorkspace
+
+		err := rows.Scan(
+			&userWorkspace.ID,
+			&userWorkspace.Title,
+			&userWorkspace.BoardCount,
+		)
+
+		if err != nil {
+			s.logger.Error("ERROR userWorkspacesFromRoes", mlog.Err(err))
+			return nil, err
+		}
+
+		userWorkspaces = append(userWorkspaces, userWorkspace)
+	}
+
+	return userWorkspaces, nil
 }
