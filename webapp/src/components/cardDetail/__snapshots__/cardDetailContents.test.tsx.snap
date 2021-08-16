@@ -168,6 +168,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
             >
               <div
                 class="Button IconButton"
+                role="button"
               >
                 <i
                   class="CompassIcon icon-dots-horizontal OptionsIcon"
@@ -229,6 +230,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
               >
                 <div
                   class="Button IconButton"
+                  role="button"
                 >
                   <i
                     class="CompassIcon icon-dots-horizontal OptionsIcon"
@@ -281,6 +283,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
               >
                 <div
                   class="Button IconButton"
+                  role="button"
                 >
                   <i
                     class="CompassIcon icon-dots-horizontal OptionsIcon"
@@ -348,6 +351,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
             >
               <div
                 class="Button IconButton"
+                role="button"
               >
                 <i
                   class="CompassIcon icon-dots-horizontal OptionsIcon"
@@ -405,6 +409,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
             >
               <div
                 class="Button IconButton"
+                role="button"
               >
                 <i
                   class="CompassIcon icon-dots-horizontal OptionsIcon"
@@ -475,6 +480,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
             >
               <div
                 class="Button IconButton"
+                role="button"
               >
                 <i
                   class="CompassIcon icon-dots-horizontal OptionsIcon"
@@ -532,6 +538,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
             >
               <div
                 class="Button IconButton"
+                role="button"
               >
                 <i
                   class="CompassIcon icon-dots-horizontal OptionsIcon"
@@ -752,6 +759,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot with con
             >
               <div
                 class="Button IconButton"
+                role="button"
               >
                 <i
                   class="CompassIcon icon-dots-horizontal OptionsIcon"
@@ -822,6 +830,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot with con
             >
               <div
                 class="Button IconButton"
+                role="button"
               >
                 <i
                   class="CompassIcon icon-dots-horizontal OptionsIcon"
@@ -883,6 +892,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot with con
               >
                 <div
                   class="Button IconButton"
+                  role="button"
                 >
                   <i
                     class="CompassIcon icon-dots-horizontal OptionsIcon"
@@ -935,6 +945,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot with con
               >
                 <div
                   class="Button IconButton"
+                  role="button"
                 >
                   <i
                     class="CompassIcon icon-dots-horizontal OptionsIcon"
