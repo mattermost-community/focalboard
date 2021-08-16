@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 
 import {useEffect, useCallback} from 'react'
+
 import {ImageBlock, createImageBlock} from '../../blocks/imageBlock'
 import octoClient from '../../octoClient'
 import mutator from '../../mutator'
@@ -11,7 +12,6 @@ export default function useImagePaste(cardId: string, contentOrder: Array<string
         let newImage: File|null = null
         const uploads: Promise<string|undefined>[] = []
         for (const item of items) {
-            console.log("ITEM", item)
             newImage = item
             if (newImage?.type.indexOf('image/') === 0) {
                 uploads.push(octoClient.uploadFile(rootId, newImage))
@@ -37,21 +37,19 @@ export default function useImagePaste(cardId: string, contentOrder: Array<string
         })
     }, [cardId, contentOrder, rootId])
 
-    const onDrop = useCallback(async (event: DragEvent): Promise<void> => {
-        if (!event.dataTransfer) {
-            return
+    const onDrop = useCallback((event: DragEvent): void => {
+        if (event.dataTransfer) {
+            const items = event.dataTransfer.files
+            uploadItems(items)
         }
-        const items = (event.dataTransfer).files
-        uploadItems(items)
-    }, [cardId, contentOrder, rootId])
+    }, [uploadItems])
 
-    const onPaste = useCallback(async (event: ClipboardEvent): Promise<void> => {
-        if (!event.clipboardData) {
-            return
+    const onPaste = useCallback((event: ClipboardEvent): void => {
+        if (event.clipboardData) {
+            const items = event.clipboardData.files
+            uploadItems(items)
         }
-        const items = (event.clipboardData).files
-        uploadItems(items)
-    }, [cardId, contentOrder, rootId])
+    }, [uploadItems])
 
     useEffect(() => {
         document.addEventListener('paste', onPaste)
