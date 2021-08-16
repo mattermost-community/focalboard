@@ -9,7 +9,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
       class="MenuWrapper"
     >
       <div
-        class="menu-entry"
+        class="GlobalHeaderComponent__button menu-entry"
       >
         <i
           class="CompassIcon icon-settings-outline SettingsIcon"
@@ -369,7 +369,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu closed should
       class="MenuWrapper"
     >
       <div
-        class="menu-entry"
+        class="GlobalHeaderComponent__button menu-entry"
       >
         <i
           class="CompassIcon icon-settings-outline SettingsIcon"
@@ -389,7 +389,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
       class="MenuWrapper"
     >
       <div
-        class="menu-entry"
+        class="GlobalHeaderComponent__button menu-entry"
       >
         <i
           class="CompassIcon icon-settings-outline SettingsIcon"
