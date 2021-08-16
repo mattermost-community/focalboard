@@ -13,7 +13,6 @@ import OptionsIcon from '../../widgets/icons/options'
 import IconButton from '../../widgets/buttons/iconButton'
 import CheckIcon from '../../widgets/icons/check'
 import mutator from '../../mutator'
-import './emptyCardButton.scss'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentView} from '../../store/views'
 

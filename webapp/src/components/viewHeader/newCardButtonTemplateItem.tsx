@@ -15,7 +15,6 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import CheckIcon from '../../widgets/icons/check'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentView} from '../../store/views'
-import './newCardButtonTemplateItem.scss'
 
 type Props = {
     cardTemplate: Card
