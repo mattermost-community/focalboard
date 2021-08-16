@@ -5,8 +5,6 @@ import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 import {IntlProvider} from 'react-intl'
-import {DndProvider} from 'react-dnd'
-import {HTML5Backend} from 'react-dnd-html5-backend'
 
 import {IPropertyOption, IPropertyTemplate} from '../../blocks/board'
 
@@ -43,11 +41,7 @@ type WrapperProps = {
 }
 
 const Wrapper = ({children}: WrapperProps) => {
-    return (
-        <DndProvider backend={HTML5Backend}>
-            <IntlProvider locale='en'>{children}</IntlProvider>
-        </DndProvider>
-    )
+    return <IntlProvider locale='en'>{children}</IntlProvider>
 }
 
 describe('components/properties/multiSelect', () => {
