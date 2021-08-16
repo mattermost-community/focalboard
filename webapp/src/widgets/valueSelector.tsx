@@ -71,7 +71,7 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
             </div>
             <MenuWrapper stopPropagationOnToggle={true}>
                 <IconButton
-                    title='Open Menu'
+                    title={intl.formatMessage({id: 'BoardComponent.openMenu', defaultMessage: 'Open Menu'})}
                     icon={<OptionsIcon/>}
                 />
                 <Menu position='left'>
@@ -138,9 +138,10 @@ const valueSelectorStyle = {
 }
 
 function ValueSelector(props: Props): JSX.Element {
+    const intl = useIntl()
     return (
         <CreatableSelect
-            aria-label='Value selector'
+            aria-label={intl.formatMessage({id: 'BoardComponent.valueSelector', defaultMessage: 'Value selector'})}
             captureMenuScroll={true}
             maxMenuHeight={1200}
             isMulti={props.isMulti}
