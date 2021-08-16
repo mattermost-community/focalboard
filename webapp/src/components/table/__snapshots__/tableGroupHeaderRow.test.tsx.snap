@@ -13,6 +13,7 @@ exports[`should match snapshot on read only 1`] = `
     >
       <div
         class="Button IconButton readonly"
+        role="button"
       >
         <svg
           class="DisclosureTriangleIcon Icon"
@@ -62,6 +63,7 @@ exports[`should match snapshot with Group 1`] = `
     >
       <div
         class="Button IconButton"
+        role="button"
       >
         <svg
           class="DisclosureTriangleIcon Icon"
@@ -98,6 +100,7 @@ exports[`should match snapshot with Group 1`] = `
     >
       <div
         class="Button IconButton"
+        role="button"
       >
         <i
           class="CompassIcon icon-dots-horizontal OptionsIcon"
@@ -106,6 +109,7 @@ exports[`should match snapshot with Group 1`] = `
     </div>
     <div
       class="Button IconButton"
+      role="button"
     >
       <i
         class="CompassIcon icon-plus AddIcon"
@@ -128,6 +132,7 @@ exports[`should match snapshot, add new 1`] = `
     >
       <div
         class="Button IconButton"
+        role="button"
       >
         <svg
           class="DisclosureTriangleIcon Icon"
@@ -164,6 +169,7 @@ exports[`should match snapshot, add new 1`] = `
     >
       <div
         class="Button IconButton"
+        role="button"
       >
         <i
           class="CompassIcon icon-dots-horizontal OptionsIcon"
@@ -172,6 +178,7 @@ exports[`should match snapshot, add new 1`] = `
     </div>
     <div
       class="Button IconButton"
+      role="button"
     >
       <i
         class="CompassIcon icon-plus AddIcon"
@@ -194,6 +201,7 @@ exports[`should match snapshot, edit title 1`] = `
     >
       <div
         class="Button IconButton"
+        role="button"
       >
         <svg
           class="DisclosureTriangleIcon Icon"
@@ -230,6 +238,7 @@ exports[`should match snapshot, edit title 1`] = `
     >
       <div
         class="Button IconButton"
+        role="button"
       >
         <i
           class="CompassIcon icon-dots-horizontal OptionsIcon"
@@ -238,6 +247,7 @@ exports[`should match snapshot, edit title 1`] = `
     </div>
     <div
       class="Button IconButton"
+      role="button"
     >
       <i
         class="CompassIcon icon-plus AddIcon"
@@ -260,6 +270,7 @@ exports[`should match snapshot, hide group 1`] = `
     >
       <div
         class="Button IconButton"
+        role="button"
       >
         <svg
           class="DisclosureTriangleIcon Icon"
@@ -296,6 +307,7 @@ exports[`should match snapshot, hide group 1`] = `
     >
       <div
         class="Button IconButton"
+        role="button"
       >
         <i
           class="CompassIcon icon-dots-horizontal OptionsIcon"
@@ -304,6 +316,7 @@ exports[`should match snapshot, hide group 1`] = `
     </div>
     <div
       class="Button IconButton"
+      role="button"
     >
       <i
         class="CompassIcon icon-plus AddIcon"
@@ -326,6 +339,7 @@ exports[`should match snapshot, no groups 1`] = `
     >
       <div
         class="Button IconButton"
+        role="button"
       >
         <svg
           class="DisclosureTriangleIcon Icon"
@@ -358,6 +372,7 @@ exports[`should match snapshot, no groups 1`] = `
     >
       <div
         class="Button IconButton"
+        role="button"
       >
         <i
           class="CompassIcon icon-dots-horizontal OptionsIcon"
@@ -366,6 +381,7 @@ exports[`should match snapshot, no groups 1`] = `
     </div>
     <div
       class="Button IconButton"
+      role="button"
     >
       <i
         class="CompassIcon icon-plus AddIcon"
