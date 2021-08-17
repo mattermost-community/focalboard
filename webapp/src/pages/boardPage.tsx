@@ -26,6 +26,7 @@ import {updateContents} from '../store/contents'
 import {updateComments} from '../store/comments'
 import {initialLoad, initialReadOnlyLoad} from '../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
+import {UserSettings} from '../userSettings'
 
 type Props = {
     readonly?: boolean
@@ -66,38 +67,35 @@ const BoardPage = (props: Props) => {
     }, [])
 
     useEffect(() => {
-        if (!match.params.boardId) {
-            // Load last viewed boardView
-            const boardId = localStorage.getItem('lastBoardId') || undefined
-            const viewId = localStorage.getItem('lastViewId') || undefined
-            if (boardId) {
-                const newPath = generatePath(match.path, {...match.params, boardId, viewId})
-                history.replace(newPath)
-            }
-        }
-    }, [])
-
-    useEffect(() => {
         const boardId = match.params.boardId
         const viewId = match.params.viewId
 
-        Utils.log(`attachToBoard: ${boardId}`)
-        if (boardId && !viewId && boardViews.length > 0) {
-            const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
-            history.replace(newPath)
+        if (!boardId) {
+            // Load last viewed boardView
+            const lastBoardId = UserSettings.lastBoardId || undefined
+            const lastViewId = UserSettings.lastViewId || undefined
+            if (lastBoardId) {
+                let newPath = generatePath(match.path, {...match.params, boardId: lastBoardId})
+                if (lastViewId) {
+                    newPath = generatePath(match.path, {...match.params, boardId: lastBoardId, viewId: lastViewId})
+                }
+                history.replace(newPath)
+                return
+            }
+            return
         }
 
-        const view = boardViews.find((v) => v.id === viewId)
-        if (!view && boardViews.length > 0) {
+        Utils.log(`attachToBoard: ${boardId}`)
+        if (!viewId && boardViews.length > 0) {
             const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
             history.replace(newPath)
             return
         }
 
-        localStorage.setItem('lastBoardId', boardId || '')
-        localStorage.setItem('lastViewId', view?.id || '')
+        UserSettings.lastBoardId = boardId || ''
+        UserSettings.lastViewId = viewId || ''
         dispatch(setCurrentBoard(boardId || ''))
-        dispatch(setCurrentView(view?.id || ''))
+        dispatch(setCurrentView(viewId || ''))
     }, [match.params.boardId, match.params.viewId, history, boardViews])
 
     useEffect(() => {

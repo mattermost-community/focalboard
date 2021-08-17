@@ -28,7 +28,7 @@ const HeaderItems = () => {
                     href='https://www.focalboard.com/guide/user?utm_source=webapp'
                     target='_blank'
                     rel='noreferrer'
-                    className='help-button'
+                    className='GlobalHeaderComponent__button help-button'
                 >
                     <HelpIcon/>
                 </a>
