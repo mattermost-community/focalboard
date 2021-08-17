@@ -1,6 +1,5 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import { stringify } from 'querystring';
 import React, { useState, useEffect } from 'react';
 
 type Props = {
@@ -10,7 +9,7 @@ type Props = {
     }
 }
 
-export const FocalboardUnfurl = async (props: Props) => {
+export const FocalboardUnfurl = (props: Props) => {
     const focalboardInformation = JSON.parse(props.embed.data)
     const workspaceID = focalboardInformation.workspaceID
     const blockID = focalboardInformation.blockID
@@ -29,11 +28,12 @@ export const FocalboardUnfurl = async (props: Props) => {
                     'X-Requested-With': 'XMLHttpRequest',
                 },
             })
-
+            console.log(response)
             if (!response.ok) {
                 return null
             }
             const blocks = await response.json()
+            console.log(blocks)
             if (!blocks.length) {
                 return null
             }
@@ -44,14 +44,12 @@ export const FocalboardUnfurl = async (props: Props) => {
         fetchData()
     }, [])
 
+    console.log(block)
     return (
         <div>
-            {block && (
-                <div>
-                    {block?.title}
-                    {block?.type}
-                </div>
-            )}
+            {workspaceID}
+            {blockID}
+            {baseURL}
         </div>
     )
 }
