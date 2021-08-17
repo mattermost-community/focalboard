@@ -22,15 +22,12 @@ import LoginPage from './pages/loginPage'
 import RegisterPage from './pages/registerPage'
 import {Utils} from './utils'
 import wsClient from './wsclient'
-import {importNativeAppSettings} from './nativeApp'
 import {fetchMe, getLoggedIn} from './store/users'
 import {getLanguage, fetchLanguage} from './store/language'
 import {setGlobalError, getGlobalError} from './store/globalError'
 import {useAppSelector, useAppDispatch} from './store/hooks'
 
 const App = React.memo((): JSX.Element => {
-    importNativeAppSettings()
-
     const language = useAppSelector<string>(getLanguage)
     const loggedIn = useAppSelector<boolean|null>(getLoggedIn)
     const globalError = useAppSelector<string>(getGlobalError)

@@ -70,7 +70,10 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
                 <Label color={option.color}>{option.value}</Label>
             </div>
             <MenuWrapper stopPropagationOnToggle={true}>
-                <IconButton icon={<OptionsIcon/>}/>
+                <IconButton
+                    title={intl.formatMessage({id: 'ValueSelectorLabel.openMenu', defaultMessage: 'Open Menu'})}
+                    icon={<OptionsIcon/>}
+                />
                 <Menu position='left'>
                     <Menu.Text
                         id='delete'
@@ -135,8 +138,10 @@ const valueSelectorStyle = {
 }
 
 function ValueSelector(props: Props): JSX.Element {
+    const intl = useIntl()
     return (
         <CreatableSelect
+            aria-label={intl.formatMessage({id: 'ValueSelector.valueSelector', defaultMessage: 'Value selector'})}
             captureMenuScroll={true}
             maxMenuHeight={1200}
             isMulti={props.isMulti}
