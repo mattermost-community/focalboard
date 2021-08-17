@@ -37,7 +37,9 @@ exports[`components/cardDetail/CardDetailProperties should match snapshot 1`] = 
             Jean-Luc Picard
           </span>
           <div
+            aria-label="Clear"
             class="Button IconButton margin-left delete-value"
+            role="button"
             title="Clear"
           >
             <i
