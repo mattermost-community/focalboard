@@ -87,13 +87,19 @@ const App = React.memo((): JSX.Element => {
                                 </Route>
                                 <Route
                                     path='/workspace/:workspaceId/:boardId?/:viewId?'
-                                    render={({match}) => {
+                                    render={({match, location}) => {
                                         if (loggedIn === false) {
-                                            let redirectUrl = '/' + Utils.buildURL(`/workspace/${match.params.workspaceId}/`)
+                                            let redirectUrl = '/' + Utils.buildURL(`/workspace/${match.params.workspaceId}${match.params.boardId ? `/${match.params.boardId}` : ''}${match.params.boardId ? `/${match.params.viewId}` : ''}${location.search}`)
                                             if (redirectUrl.indexOf('//') === 0) {
                                                 redirectUrl = redirectUrl.slice(1)
                                             }
-                                            const loginUrl = `/login?r=${encodeURIComponent(redirectUrl)}`
+                                            const loginUrl = `/login?redirect_to=${encodeURIComponent(redirectUrl)}`
+
+                                            if (Utils.isFocalboardPlugin()) {
+                                                window.location.href = window.location.origin + loginUrl
+                                                return null
+                                            }
+
                                             return <Redirect to={loginUrl}/>
                                         } else if (loggedIn === true) {
                                             return (
