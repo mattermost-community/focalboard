@@ -156,7 +156,7 @@ function DateRange(props: Props): JSX.Element {
             <Button
                 onClick={() => setShowDialog(true)}
             >
-                {displayValue || ''}
+                {displayValue || <span title={intl.formatMessage({id: 'DateRange.empty', defaultMessage: 'Empty'})}/>}
             </Button>
 
             {showDialog &&
