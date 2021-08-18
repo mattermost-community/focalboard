@@ -89,7 +89,7 @@ const App = React.memo((): JSX.Element => {
                                     path='/workspace/:workspaceId/:boardId?/:viewId?'
                                     render={({match, location}) => {
                                         if (loggedIn === false) {
-                                            let redirectUrl = '/' + Utils.buildURL(`/workspace/${match.params.workspaceId}${match.params.boardId ? `/${match.params.boardId}` : ''}${match.params.boardId ? `/${match.params.viewId}` : ''}${location.search}`)
+                                            let redirectUrl = '/' + Utils.buildURL(`/workspace/${match.params.workspaceId}${match.params.boardId ? `/${match.params.boardId}` : ''}${match.params.viewId ? `/${match.params.viewId}` : ''}${location.search}`)
                                             if (redirectUrl.indexOf('//') === 0) {
                                                 redirectUrl = redirectUrl.slice(1)
                                             }
