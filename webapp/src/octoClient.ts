@@ -4,7 +4,7 @@ import {Block, BlockPatch} from './blocks/block'
 import {ISharing} from './blocks/sharing'
 import {IWorkspace} from './blocks/workspace'
 import {OctoUtils} from './octoUtils'
-import {IUser} from './user'
+import {IUser, UserWorkspace} from './user'
 import {Utils} from './utils'
 
 //
@@ -380,6 +380,16 @@ class OctoClient {
             return []
         }
         return (await this.getJson(response, [])) as IUser[]
+    }
+
+    async getUserWorkspaces(): Promise<UserWorkspace[]> {
+        const path = '/api/v1/workspaces'
+        const response = await fetch(this.serverUrl + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return []
+        }
+
+        return (await this.getJson(response, [])) as UserWorkspace[]
     }
 }
 

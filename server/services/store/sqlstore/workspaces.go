@@ -149,10 +149,6 @@ func (s *SQLStore) GetWorkspaceCount() (int64, error) {
 func (s *SQLStore) GetUserWorkspaces(userID string) ([]model.UserWorkspace, error) {
 	// LOL write query fro MySQL
 
-	s.logger.Error("#######################################")
-	s.logger.Error(userID)
-	s.logger.Error("#######################################")
-
 	query := s.getQueryBuilder().
 		Select("channels.id", "channels.displayname", "count(focalboard_blocks.id)").
 		From("focalboard_blocks").

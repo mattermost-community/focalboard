@@ -15,6 +15,10 @@ import {Utils} from '../../utils'
 
 import './sidebar.scss'
 
+import ChevronUp from '../../widgets/icons/chevronUp'
+
+import WorkspaceSwitcher from '../workspaceSwitcher/workspaceSwitcher'
+
 import SidebarAddBoardMenu from './sidebarAddBoardMenu'
 import SidebarBoardItem from './sidebarBoardItem'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
@@ -69,21 +73,26 @@ const Sidebar = React.memo((props: Props) => {
                     </div>
 
                     <div className='octo-spacer'/>
-                    <IconButton
-                        onClick={() => setHidden(true)}
-                        icon={<HideSidebarIcon/>}
-                    />
-                </div>}
-            {workspace && workspace.id !== '0' &&
-                <div className='WorkspaceTitle'>
-                    {workspace.title}
-                    {Utils.isFocalboardPlugin() &&
-                    <>
-                        <div className='octo-spacer'/>
+                    <div className='sidebarSwitcher'>
                         <IconButton
                             onClick={() => setHidden(true)}
                             icon={<HideSidebarIcon/>}
                         />
+                    </div>
+                </div>}
+
+            {workspace && workspace.id !== '0' &&
+                <div className='WorkspaceTitle'>
+                    <WorkspaceSwitcher activeWorkspace={workspace}/>
+                    {Utils.isFocalboardPlugin() &&
+                    <>
+                        <div className='octo-spacer'/>
+                        <div className='sidebarSwitcher'>
+                            <IconButton
+                                onClick={() => setHidden(true)}
+                                icon={<HideSidebarIcon/>}
+                            />
+                        </div>
                     </>
                     }
                 </div>

@@ -4,7 +4,7 @@
 import {createSlice, createAsyncThunk, PayloadAction, createSelector} from '@reduxjs/toolkit'
 
 import {default as client} from '../octoClient'
-import {IUser} from '../user'
+import {IUser, UserWorkspace} from '../user'
 
 import {initialLoad} from './initialLoad'
 
@@ -19,11 +19,12 @@ type UsersStatus = {
     me: IUser|null
     workspaceUsers: {[key: string]: IUser}
     loggedIn: boolean|null
+    userWorkspaces: UserWorkspace[]
 }
 
 const usersSlice = createSlice({
     name: 'users',
-    initialState: {me: null, workspaceUsers: {}, loggedIn: null} as UsersStatus,
+    initialState: {me: null, workspaceUsers: {}, loggedIn: null, userWorkspaces: []} as UsersStatus,
     reducers: {
         setMe: (state, action: PayloadAction<IUser>) => {
             state.me = action.payload
@@ -49,6 +50,7 @@ const usersSlice = createSlice({
                 acc[user.id] = user
                 return acc
             }, {})
+            state.userWorkspaces = action.payload.userWorkspaces
         })
     },
 })
@@ -59,10 +61,16 @@ export const {reducer} = usersSlice
 export const getMe = (state: RootState): IUser|null => state.users.me
 export const getLoggedIn = (state: RootState): boolean|null => state.users.loggedIn
 export const getWorkspaceUsers = (state: RootState): {[key: string]: IUser} => state.users.workspaceUsers
+export const getUserWorkspaces = (state: RootState): UserWorkspace[] => state.users.userWorkspaces
 
 export const getWorkspaceUsersList = createSelector(
     getWorkspaceUsers,
     (workspaceUsers) => Object.values(workspaceUsers).sort((a, b) => a.username.localeCompare(b.username)),
+)
+
+export const getUserWorkspaceList = createSelector(
+    getUserWorkspaces,
+    (userWorkspaces) => userWorkspaces,
 )
 
 export const getUser = (userId: string): (state: RootState) => IUser|undefined => {
