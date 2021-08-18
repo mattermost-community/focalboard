@@ -5,7 +5,7 @@ import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit'
 
 import {ContentBlock} from '../blocks/contentBlock'
 
-import {getCards} from './cards'
+import {getCards, getTemplates} from './cards'
 import {initialLoad, initialReadOnlyLoad} from './initialLoad'
 
 import {RootState} from './index'
@@ -58,8 +58,9 @@ export function getCardContents(cardId: string): (state: RootState) => Array<Con
     return createSelector(
         getContentsById,
         getCards,
-        (contents, cards): Array<ContentBlock|ContentBlock[]> => {
-            const card = cards[cardId]
+        getTemplates,
+        (contents, cards, templates): Array<ContentBlock|ContentBlock[]> => {
+            const card = {...cards, ...templates}[cardId]
             const result: Array<ContentBlock|ContentBlock[]> = []
             if (card?.fields?.contentOrder) {
                 for (const contentId of card.fields.contentOrder) {
