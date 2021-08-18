@@ -1,12 +1,12 @@
 .focalboard-body .property-link {
     &.url {
-        padding-right: 2rem;
-        width: inherit;
+        display: flex;
         overflow: hidden;
     }
 
     a {
-        padding: 8px; // increases clickable area for better UX
+        padding: 0 8px; // increases clickable area for better UX
+        align-self: stretch;
         display: none;
     }
 
@@ -16,9 +16,8 @@
 
     &:hover {
         a {
-            display: inline;
+            display: flex;
+            align-items: center;
         }
     }
 }
-
-
