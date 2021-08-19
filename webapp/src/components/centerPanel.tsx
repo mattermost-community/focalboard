@@ -37,10 +37,11 @@ type Props = {
     readonly: boolean
     addCard: (card: Card) => void
     addTemplate: (template: Card) => void
+    shownCardId?: string
+    showCard: (cardId?: string) => void
 }
 
 type State = {
-    shownCardId?: string
     selectedCardIds: string[]
     cardIdToFocusOnRender: string
 }
@@ -77,10 +78,6 @@ class CenterPanel extends React.Component<Props, State> {
         }
     }
 
-    componentDidMount(): void {
-        this.showCardInUrl()
-    }
-
     constructor(props: Props) {
         super(props)
         this.state = {
@@ -91,14 +88,6 @@ class CenterPanel extends React.Component<Props, State> {
 
     shouldComponentUpdate(): boolean {
         return true
-    }
-
-    private showCardInUrl() {
-        const queryString = new URLSearchParams(window.location.search)
-        const cardId = queryString.get('c') || undefined
-        if (cardId !== this.state.shownCardId) {
-            this.setState({shownCardId: cardId})
-        }
     }
 
     render(): JSX.Element {
@@ -117,15 +106,15 @@ class CenterPanel extends React.Component<Props, State> {
                     keyName='ctrl+d,del,esc,backspace'
                     onKeyDown={this.keydownHandler}
                 />
-                {this.state.shownCardId &&
+                {this.props.shownCardId &&
                     <RootPortal>
                         <CardDialog
                             board={board}
                             activeView={activeView}
                             views={views}
                             cards={cards}
-                            key={this.state.shownCardId}
-                            cardId={this.state.shownCardId}
+                            key={this.props.shownCardId}
+                            cardId={this.props.shownCardId}
                             onClose={() => this.showCard(undefined)}
                             showCard={(cardId) => this.showCard(cardId)}
                             readonly={this.props.readonly}
@@ -316,8 +305,8 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     private showCard = (cardId?: string) => {
-        Utils.replaceUrlQueryParam('c', cardId)
-        this.setState({selectedCardIds: [], shownCardId: cardId})
+        this.setState({selectedCardIds: []})
+        this.props.showCard(cardId)
     }
 
     private async deleteSelectedCards() {
