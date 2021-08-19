@@ -36,7 +36,7 @@ const URLProperty = (props: Props): JSX.Element => {
         <div className='URLProperty property-link url'>
             <Editable
                 className='octo-propertyvalue'
-                placeholderText='Empty'
+                placeholderText=''
                 value={props.value}
                 onChange={props.onChange}
                 onSave={props.onSave}
