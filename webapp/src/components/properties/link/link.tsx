@@ -25,6 +25,7 @@ const URLProperty = (props: Props): JSX.Element => {
                 href={Utils.ensureProtocol(props.value.trim())}
                 target='_blank'
                 rel='noreferrer'
+                onClick={(event) => event.stopPropagation()}
             >
                 <LinkIcon/>
             </a>
