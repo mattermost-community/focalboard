@@ -220,7 +220,7 @@ func (s *Server) Start() error {
 		}
 	}
 
-	if config.AuthMode != MattermostAuthMod {
+	if s.config.AuthMode != MattermostAuthMod {
 		s.cleanUpSessionsTask = scheduler.CreateRecurringTask("cleanUpSessions", func() {
 			secondsAgo := minSessionExpiryTime
 			if secondsAgo < s.config.SessionExpireTime {
