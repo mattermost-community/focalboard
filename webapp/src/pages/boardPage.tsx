@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useEffect, useState} from 'react'
 import {batch} from 'react-redux'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 import {useHotkeys} from 'react-hotkeys-hook'
 
@@ -35,6 +35,7 @@ type Props = {
 const websocketTimeoutForBanner = 5000
 
 const BoardPage = (props: Props) => {
+    const intl = useIntl()
     const board = useAppSelector(getCurrentBoard)
     const activeView = useAppSelector(getCurrentView)
     const boardViews = useAppSelector(getCurrentBoardViews)
@@ -219,6 +220,10 @@ const BoardPage = (props: Props) => {
                             defaultMessage='Websocket connection closed, connection interrupted. If this persists, check your server or web proxy configuration.'
                         />
                     </a>
+                </div>}
+            {props.readonly && board === undefined &&
+                <div className='error'>
+                    {intl.formatMessage({id: 'BoardPage.syncFailed', defaultMessage: 'Board may be deleted or access revoked.'})}
                 </div>}
             <Workspace readonly={props.readonly || false}/>
         </div>
