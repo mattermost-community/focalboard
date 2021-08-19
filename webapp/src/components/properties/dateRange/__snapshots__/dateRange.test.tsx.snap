@@ -44,7 +44,9 @@ exports[`components/properties/dateRange returns default correctly 1`] = `
       type="button"
     >
       <span>
-        Empty
+        <span
+          title="Empty"
+        />
       </span>
     </button>
   </div>
