@@ -151,7 +151,7 @@ class Utils {
                 'rel="noreferrer" ' +
                 `href="${encodeURI(href || '')}" ` +
                 `title="${title ? encodeURI(title) : ''}" ` +
-                ((window as any).openInNewBrowser ? 'onclick="event.stopPropagation(); openInNewBrowser && openInNewBrowser(event.target.href);"' : '') +
+                `onclick="event.stopPropagation();${((window as any).openInNewBrowser ? ' openInNewBrowser && openInNewBrowser(event.target.href);' : '')}"` +
             '>' + contents + '</a>'
         }
         const html = marked(text.replace(/</g, '&lt;'), {renderer, breaks: true})
