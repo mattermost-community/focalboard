@@ -5,6 +5,22 @@
     align-items: center;
 }
 
-.focalboard-body .feature-global-header > header {
+.focalboard-body .feature-global-header>header {
     z-index: 1000;
+
+    .Menu {
+        a,
+        button {
+            color: rgba(var(--sidebar-text-rgb), 1);
+
+            i {
+                color: inherit;
+            }
+
+            &:hover {
+                color: var(--link-color-rgb);
+                background: rgba(var(--center-channel-color-rgb), 0.08);
+            }
+        }
+    }
 }
