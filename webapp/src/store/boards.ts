@@ -37,6 +37,8 @@ const boardsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
+            state.boards = {}
+            state.templates = {}
             for (const block of action.payload) {
                 if (block.type === 'board' && block.fields.isTemplate) {
                     state.templates[block.id] = block as Board
@@ -46,6 +48,8 @@ const boardsSlice = createSlice({
             }
         })
         builder.addCase(initialLoad.fulfilled, (state, action) => {
+            state.boards = {}
+            state.templates = {}
             for (const block of action.payload.blocks) {
                 if (block.type === 'board' && block.fields.isTemplate) {
                     state.templates[block.id] = block as Board

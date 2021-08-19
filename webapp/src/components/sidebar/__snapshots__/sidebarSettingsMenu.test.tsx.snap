@@ -23,7 +23,9 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
             class="menu-options"
           >
             <div
+              aria-label="Import archive"
               class="MenuOption TextOption menu-option"
+              role="button"
             >
               <div
                 class="noicon"
@@ -38,7 +40,9 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
               />
             </div>
             <div
+              aria-label="Export archive"
               class="MenuOption TextOption menu-option"
+              role="button"
             >
               <div
                 class="noicon"
@@ -83,7 +87,9 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                     class="menu-options"
                   >
                     <div
+                      aria-label="English"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -104,7 +110,9 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       </svg>
                     </div>
                     <div
+                      aria-label="Español"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -119,7 +127,9 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       />
                     </div>
                     <div
+                      aria-label="Deutsch"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -134,7 +144,9 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       />
                     </div>
                     <div
+                      aria-label="日本語"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -149,7 +161,9 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       />
                     </div>
                     <div
+                      aria-label="Français"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -164,7 +178,9 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       />
                     </div>
                     <div
+                      aria-label="Nederlands"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -179,7 +195,9 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       />
                     </div>
                     <div
+                      aria-label="Pусский"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -194,7 +212,9 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       />
                     </div>
                     <div
+                      aria-label="中文 (繁體)"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -209,7 +229,9 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       />
                     </div>
                     <div
+                      aria-label="中文 (简体)"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -224,7 +246,9 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       />
                     </div>
                     <div
+                      aria-label="Türkçe"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -239,7 +263,9 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       />
                     </div>
                     <div
+                      aria-label="Occitan"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -261,7 +287,9 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                     class="menu-options hideOnWidescreen"
                   >
                     <div
+                      aria-label="Cancel"
                       class="MenuOption TextOption menu-option menu-cancel"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -328,7 +356,9 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
             class="menu-options hideOnWidescreen"
           >
             <div
+              aria-label="Cancel"
               class="MenuOption TextOption menu-option menu-cancel"
+              role="button"
             >
               <div
                 class="noicon"
@@ -391,7 +421,9 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
             class="menu-options"
           >
             <div
+              aria-label="Import archive"
               class="MenuOption TextOption menu-option"
+              role="button"
             >
               <div
                 class="noicon"
@@ -406,7 +438,9 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
               />
             </div>
             <div
+              aria-label="Export archive"
               class="MenuOption TextOption menu-option"
+              role="button"
             >
               <div
                 class="noicon"
@@ -491,7 +525,9 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
             class="menu-options hideOnWidescreen"
           >
             <div
+              aria-label="Cancel"
               class="MenuOption TextOption menu-option menu-cancel"
+              role="button"
             >
               <div
                 class="noicon"
@@ -536,7 +572,9 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
             class="menu-options"
           >
             <div
+              aria-label="Import archive"
               class="MenuOption TextOption menu-option"
+              role="button"
             >
               <div
                 class="noicon"
@@ -551,7 +589,9 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
               />
             </div>
             <div
+              aria-label="Export archive"
               class="MenuOption TextOption menu-option"
+              role="button"
             >
               <div
                 class="noicon"
@@ -618,7 +658,9 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                     class="menu-options"
                   >
                     <div
+                      aria-label="Default theme"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -639,7 +681,9 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                       </svg>
                     </div>
                     <div
+                      aria-label="Dark theme"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -654,7 +698,9 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                       />
                     </div>
                     <div
+                      aria-label="Light theme"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -669,7 +715,9 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                       />
                     </div>
                     <div
+                      aria-label="System theme"
                       class="MenuOption TextOption menu-option"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -691,7 +739,9 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                     class="menu-options hideOnWidescreen"
                   >
                     <div
+                      aria-label="Cancel"
                       class="MenuOption TextOption menu-option menu-cancel"
+                      role="button"
                     >
                       <div
                         class="noicon"
@@ -736,7 +786,9 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
             class="menu-options hideOnWidescreen"
           >
             <div
+              aria-label="Cancel"
               class="MenuOption TextOption menu-option menu-cancel"
+              role="button"
             >
               <div
                 class="noicon"

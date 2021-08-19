@@ -25,11 +25,11 @@ const BlockIconSelector = React.memo((props: Props) => {
     const intl = useIntl()
 
     const onSelectEmoji = useCallback((emoji: string) => {
-        mutator.changeIcon(block, emoji)
+        mutator.changeIcon(block.id, block.fields.icon, emoji)
         document.body.click()
-    }, [block])
-    const onAddRandomIcon = useCallback(() => mutator.changeIcon(block, BlockIcons.shared.randomIcon()), [block])
-    const onRemoveIcon = useCallback(() => mutator.changeIcon(block, '', 'remove icon'), [block])
+    }, [block.id, block.fields.icon])
+    const onAddRandomIcon = useCallback(() => mutator.changeIcon(block.id, block.fields.icon, BlockIcons.shared.randomIcon()), [block.id, block.fields.icon])
+    const onRemoveIcon = useCallback(() => mutator.changeIcon(block.id, block.fields.icon, '', 'remove icon'), [block.id, block.fields.icon])
 
     if (!block.fields.icon) {
         return null

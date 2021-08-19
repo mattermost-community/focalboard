@@ -30,7 +30,7 @@ const ViewHeaderGroupByMenu = React.memo((props: Props) => {
                     values={{
                         property: (
                             <span
-                                style={{color: 'rgb(var(--main-fg))'}}
+                                style={{color: 'rgb(var(--center-channel-color-rgb))'}}
                                 id='groupByLabel'
                             >
                                 {groupByPropertyName}
@@ -51,7 +51,7 @@ const ViewHeaderGroupByMenu = React.memo((props: Props) => {
                             if (activeView.fields.groupById === id) {
                                 return
                             }
-                            mutator.changeViewGroupById(activeView, id)
+                            mutator.changeViewGroupById(activeView.id, activeView.fields.groupById, id)
                         }}
                     />
                     <Menu.Separator/>
@@ -67,7 +67,7 @@ const ViewHeaderGroupByMenu = React.memo((props: Props) => {
                                 return
                             }
 
-                            mutator.changeViewGroupById(activeView, id)
+                            mutator.changeViewGroupById(activeView.id, activeView.fields.groupById, id)
                         }}
                     />
                 ))}

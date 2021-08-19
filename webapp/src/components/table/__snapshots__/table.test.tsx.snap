@@ -180,7 +180,9 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
                 value 1
               </span>
               <div
+                aria-label="Clear"
                 class="Button IconButton margin-left delete-value"
+                role="button"
                 title="Clear"
               >
                 <i
@@ -274,7 +276,9 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
                 value 1
               </span>
               <div
+                aria-label="Clear"
                 class="Button IconButton margin-left delete-value"
+                role="button"
                 title="Clear"
               >
                 <i
@@ -320,6 +324,66 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
         class="octo-table-cell"
       >
         + New
+      </div>
+    </div>
+    <div
+      class="CalculationRow octo-table-row"
+    >
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
+      </div>
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
+      </div>
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
+      </div>
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
     </div>
   </div>
@@ -506,7 +570,9 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
                 value 1
               </span>
               <div
+                aria-label="Clear"
                 class="Button IconButton margin-left delete-value"
+                role="button"
                 title="Clear"
               >
                 <i
@@ -600,7 +666,9 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
                 value 1
               </span>
               <div
+                aria-label="Clear"
                 class="Button IconButton margin-left delete-value"
+                role="button"
                 title="Clear"
               >
                 <i
@@ -646,6 +714,66 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
         class="octo-table-cell"
       >
         + New
+      </div>
+    </div>
+    <div
+      class="CalculationRow octo-table-row"
+    >
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
+      </div>
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
+      </div>
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
+      </div>
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
     </div>
   </div>
@@ -832,7 +960,9 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
                 value 1
               </span>
               <div
+                aria-label="Clear"
                 class="Button IconButton margin-left delete-value"
+                role="button"
                 title="Clear"
               >
                 <i
@@ -926,7 +1056,9 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
                 value 1
               </span>
               <div
+                aria-label="Clear"
                 class="Button IconButton margin-left delete-value"
+                role="button"
                 title="Clear"
               >
                 <i
@@ -972,6 +1104,66 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
         class="octo-table-cell"
       >
         + New
+      </div>
+    </div>
+    <div
+      class="CalculationRow octo-table-row"
+    >
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
+      </div>
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
+      </div>
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
+      </div>
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
     </div>
   </div>
@@ -1158,7 +1350,9 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
                 value 1
               </span>
               <div
+                aria-label="Clear"
                 class="Button IconButton margin-left delete-value"
+                role="button"
                 title="Clear"
               >
                 <i
@@ -1252,7 +1446,9 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
                 value 1
               </span>
               <div
+                aria-label="Clear"
                 class="Button IconButton margin-left delete-value"
+                role="button"
                 title="Clear"
               >
                 <i
@@ -1298,6 +1494,66 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
         class="octo-table-cell"
       >
         + New
+      </div>
+    </div>
+    <div
+      class="CalculationRow octo-table-row"
+    >
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
+      </div>
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
+      </div>
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
+      </div>
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
     </div>
   </div>
@@ -1462,7 +1718,9 @@ exports[`components/table/Table should match snapshot 1`] = `
                 value 1
               </span>
               <div
+                aria-label="Clear"
                 class="Button IconButton margin-left delete-value"
+                role="button"
                 title="Clear"
               >
                 <i
@@ -1498,6 +1756,52 @@ exports[`components/table/Table should match snapshot 1`] = `
         class="octo-table-cell"
       >
         + New
+      </div>
+    </div>
+    <div
+      class="CalculationRow octo-table-row"
+    >
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
+      </div>
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
+      </div>
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
       </div>
     </div>
   </div>
@@ -1620,6 +1924,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           >
             <div
               class="Button IconButton"
+              role="button"
             >
               <svg
                 class="DisclosureTriangleIcon Icon"
@@ -1652,6 +1957,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           >
             <div
               class="Button IconButton"
+              role="button"
             >
               <i
                 class="CompassIcon icon-dots-horizontal OptionsIcon"
@@ -1660,6 +1966,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           </div>
           <div
             class="Button IconButton"
+            role="button"
           >
             <i
               class="CompassIcon icon-plus AddIcon"
@@ -1671,6 +1978,52 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
     <div
       class="octo-table-footer"
     />
+    <div
+      class="CalculationRow octo-table-row"
+    >
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
+      </div>
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
+      </div>
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -1846,6 +2199,52 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
     <div
       class="octo-table-footer"
     />
+    <div
+      class="CalculationRow octo-table-row"
+    >
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
+      </div>
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
+      </div>
+      <div
+        class="Calculation none octo-table-cell"
+        style="width: 100px;"
+        tabindex="0"
+      >
+        <span
+          class="calculationLabel"
+        >
+          Calculate
+        </span>
+        <i
+          class="CompassIcon icon-chevron-up ChevronUpIcon"
+        />
+      </div>
+    </div>
   </div>
 </div>
 `;

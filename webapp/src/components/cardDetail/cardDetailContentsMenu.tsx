@@ -44,7 +44,7 @@ async function addBlock(card: Card, intl: IntlShape, handler: ContentHandler) {
     const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
     mutator.performAsUndoGroup(async () => {
         await mutator.insertBlock(newBlock, description)
-        await mutator.changeCardContentOrder(card, contentOrder, description)
+        await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder, description)
     })
 }
 

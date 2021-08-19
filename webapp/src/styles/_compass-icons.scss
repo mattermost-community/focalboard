@@ -21,40 +21,39 @@
   }
 }
 */
-
 [class^="icon-"]:before, [class*=" icon-"]:before {
-    font-family: "compass-icons";
-    font-style: normal;
-    font-weight: normal;
-    speak: never;
+  font-family: "compass-icons";
+  font-style: normal;
+  font-weight: normal;
+  speak: never;
 
-    display: inline-block;
-    text-decoration: inherit;
-    width: 1em;
-    margin-right: .2em;
-    text-align: center;
-    /* opacity: .8; */
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  /* opacity: .8; */
 
-    /* For safety - reset parent styles, that can break glyph codes*/
-    font-variant: normal;
-    text-transform: none;
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
 
-    /* fix buttons height, for twitter bootstrap */
-    line-height: 1em;
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
 
-    /* Animation center compensation - margins should be symmetric */
-    /* remove if not needed */
-    margin-left: .2em;
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
 
-    /* you can be more comfortable with increased icons size */
-    /* font-size: 120%; */
+  /* you can be more comfortable with increased icons size */
+  /* font-size: 120%; */
 
-    /* Font smoothing. That was taken from TWBS */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 
-    /* Uncomment for 3D effect */
-    /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
 .icon-mattermost:before { content: '\e800'; } /* '' */
@@ -97,20 +96,28 @@
 .icon-brand-one-login:before { content: '\e825'; } /* '' */
 .icon-application-cog:before { content: '\e826'; } /* '' */
 .icon-key-variant-circle:before { content: '\e827'; } /* '' */
+.icon-file-zip-outline:before { content: '\e828'; } /* '' */
+.icon-file-patch-outline:before { content: '\e829'; } /* '' */
+.icon-file-multiple-outline-large:before { content: '\e82a'; } /* '' */
+.icon-file-image-broken-outline:before { content: '\e82b'; } /* '' */
+.icon-product-channels:before { content: '\e82c'; } /* '' */
+.icon-product-playbooks:before { content: '\e82d'; } /* '' */
+.icon-product-boards:before { content: '\e82e'; } /* '' */
+.icon-products:before { content: '\e82f'; } /* '' */
 .icon-car-outline:before { content: '\e899'; } /* '' */
-.icon-jumbo-attachment-text:before { content: '\e900'; } /* '' */
-.icon-jumbo-attachment-word:before { content: '\e901'; } /* '' */
-.icon-jumbo-attachment-excel:before { content: '\e902'; } /* '' */
-.icon-jumbo-attachment-powerpoint:before { content: '\e903'; } /* '' */
-.icon-jumbo-attachment-pdf:before { content: '\e904'; } /* '' */
-.icon-jumbo-attachment-image:before { content: '\e905'; } /* '' */
-.icon-jumbo-attachment-video:before { content: '\e906'; } /* '' */
-.icon-jumbo-attachment-audio:before { content: '\e907'; } /* '' */
-.icon-jumbo-attachment-generic:before { content: '\e908'; } /* '' */
-.icon-jumbo-attachment-patch:before { content: '\e909'; } /* '' */
-.icon-jumbo-attachment-zip:before { content: '\e90a'; } /* '' */
-.icon-jumbo-attachment-code:before { content: '\e90b'; } /* '' */
-.icon-jumbo-attachment-image-broken:before { content: '\e90c'; } /* '' */
+.icon-file-text-outline-large:before { content: '\e900'; } /* '' */
+.icon-file-word-outline-large:before { content: '\e901'; } /* '' */
+.icon-file-excel-outline-large:before { content: '\e902'; } /* '' */
+.icon-file-powerpoint-outline-large:before { content: '\e903'; } /* '' */
+.icon-file-pdf-outline-large:before { content: '\e904'; } /* '' */
+.icon-file-image-outline-large:before { content: '\e905'; } /* '' */
+.icon-file-video-outline-large:before { content: '\e906'; } /* '' */
+.icon-file-audio-outline-large:before { content: '\e907'; } /* '' */
+.icon-file-generic-outline-large:before { content: '\e908'; } /* '' */
+.icon-file-patch-outline-large:before { content: '\e909'; } /* '' */
+.icon-file-zip-outline-large:before { content: '\e90a'; } /* '' */
+.icon-file-code-outline-large:before { content: '\e90b'; } /* '' */
+.icon-file-image-broken-outline-large:before { content: '\e90c'; } /* '' */
 .icon-account-multiple-outline:before { content: '\f00f'; } /* '' */
 .icon-airplane:before { content: '\f01d'; } /* '' */
 .icon-alert-outline:before { content: '\f02a'; } /* '' */
@@ -207,7 +214,7 @@
 .icon-clock:before { content: '\f953'; } /* '肋' */
 .icon-image-outline:before { content: '\f975'; } /* '掠' */
 .icon-email-plus-outline:before { content: '\f9eb'; } /* '匿' */
-.icon-file-document-outline:before { content: '\f9ed'; } /* '吝' */
+.icon-file-text-outline:before { content: '\f9ed'; } /* '吝' */
 .icon-layers-outline:before { content: '\f9fd'; } /* '什' */
 .icon-bell-off-outline:before { content: '\fa90'; } /* '敖' */
 .icon-chevron-down-circle-outline:before { content: '\fb0c'; } /* '﬌' */
@@ -218,7 +225,7 @@
 .icon-camera-outline:before { content: '\fd39'; } /* 'ﴹ' */
 .icon-file-video-outline:before { content: '\fe10'; } /* '︐' */
 .icon-palette-outline:before { content: '\fe6c'; } /* '﹬' */
-.icon-file-music-outline:before { content: '\fe7c'; } /* 'ﹼ' */
+.icon-file-audio-outline:before { content: '\fe7c'; } /* 'ﹼ' */
 .icon-file-pdf-outline:before { content: '\fe7d'; } /* 'ﹽ' */
 .icon-file-image-outline:before { content: '\fecd'; } /* 'ﻍ' */
 .icon-reply-outline:before { content: '\ff3d'; } /* '］' */
@@ -238,9 +245,10 @@
 .icon-content-copy:before { content: '󰆏'; } /* '\f018f' */
 .icon-send-outline:before { content: '󰆐'; } /* '\f0190' */
 .icon-credit-card-outline:before { content: '󰆛'; } /* '\f019b' */
-.icon-view-grid-outline:before { content: '󰈄'; } /* '\f0204' */
+.icon-drag-vertical:before { content: '󰇝'; } /* '\f01dd' */
+.icon-apps:before { content: '󰈄'; } /* '\f0204' */
 .icon-exit-to-app:before { content: '󰈆'; } /* '\f0206' */
-.icon-file-outline:before { content: '󰈤'; } /* '\f0224' */
+.icon-file-generic-outline:before { content: '󰈤'; } /* '\f0224' */
 .icon-folder-outline:before { content: '󰉖'; } /* '\f0256' */
 .icon-archive-arrow-up-outline:before { content: '󰊇'; } /* '\f0287' */
 .icon-glasses:before { content: '󰊪'; } /* '\f02aa' */
@@ -253,6 +261,7 @@
 .icon-message-text-outline:before { content: '󰍪'; } /* '\f036a' */
 .icon-minus:before { content: '󰍴'; } /* '\f0374' */
 .icon-minus-circle-outline:before { content: '󰍷'; } /* '\f0377' */
+.icon-open-in-new:before { content: '󰏌'; } /* '\f03cc' */
 .icon-pause:before { content: '󰏤'; } /* '\f03e4' */
 .icon-play:before { content: '󰐊'; } /* '\f040a' */
 .icon-radiobox-blank:before { content: '󰐽'; } /* '\f043d' */
@@ -265,6 +274,7 @@
 .icon-update:before { content: '󰚰'; } /* '\f06b0' */
 .icon-eye-off-outline:before { content: '󰛑'; } /* '\f06d1' */
 .icon-infinity:before { content: '󰛤'; } /* '\f06e4' */
+.icon-plus-box-outline:before { content: '󰜄'; } /* '\f0704' */
 .icon-arrow-right-bold-outline:before { content: '󰧂'; } /* '\f09c2' */
 .icon-trash-can-outline:before { content: '󰩺'; } /* '\f0a7a' */
 .icon-account-minus-outline:before { content: '󰫬'; } /* '\f0aec' */
@@ -282,3 +292,4 @@
 .icon-message-minus-outline:before { content: '󱅯'; } /* '\f116f' */
 .icon-crown-outline:before { content: '󱇐'; } /* '\f11d0' */
 .icon-folder-move-outline:before { content: '󱉆'; } /* '\f1246' */
+.icon-share-variant-outline:before { content: '󱔔'; } /* '\f1514' */

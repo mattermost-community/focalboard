@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useEffect, useState} from 'react'
 import {batch} from 'react-redux'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 import {useHotkeys} from 'react-hotkeys-hook'
 
@@ -26,6 +26,7 @@ import {updateContents} from '../store/contents'
 import {updateComments} from '../store/comments'
 import {initialLoad, initialReadOnlyLoad} from '../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
+import {UserSettings} from '../userSettings'
 
 type Props = {
     readonly?: boolean
@@ -34,6 +35,7 @@ type Props = {
 const websocketTimeoutForBanner = 5000
 
 const BoardPage = (props: Props) => {
+    const intl = useIntl()
     const board = useAppSelector(getCurrentBoard)
     const activeView = useAppSelector(getCurrentView)
     const boardViews = useAppSelector(getCurrentBoardViews)
@@ -60,19 +62,7 @@ const BoardPage = (props: Props) => {
                 params.viewId = queryViewId
             }
             const newPath = generatePath(match.path, params)
-            history.push(newPath)
-        }
-    }, [])
-
-    useEffect(() => {
-        if (!match.params.boardId) {
-            // Load last viewed boardView
-            const boardId = localStorage.getItem('lastBoardId') || undefined
-            const viewId = localStorage.getItem('lastViewId') || undefined
-            if (boardId) {
-                const newPath = generatePath(match.path, {...match.params, boardId, viewId})
-                history.push(newPath)
-            }
+            history.replace(newPath)
         }
     }, [])
 
@@ -80,23 +70,32 @@ const BoardPage = (props: Props) => {
         const boardId = match.params.boardId
         const viewId = match.params.viewId
 
-        Utils.log(`attachToBoard: ${boardId}`)
-        if (boardId && !viewId && boardViews.length > 0) {
-            const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
-            history.push(newPath)
-        }
-
-        const view = boardViews.find((v) => v.id === viewId)
-        if (!view && boardViews.length > 0) {
-            const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
-            history.push(newPath)
+        if (!boardId) {
+            // Load last viewed boardView
+            const lastBoardId = UserSettings.lastBoardId || undefined
+            const lastViewId = UserSettings.lastViewId || undefined
+            if (lastBoardId) {
+                let newPath = generatePath(match.path, {...match.params, boardId: lastBoardId})
+                if (lastViewId) {
+                    newPath = generatePath(match.path, {...match.params, boardId: lastBoardId, viewId: lastViewId})
+                }
+                history.replace(newPath)
+                return
+            }
             return
         }
 
-        localStorage.setItem('lastBoardId', boardId || '')
-        localStorage.setItem('lastViewId', view?.id || '')
+        Utils.log(`attachToBoard: ${boardId}`)
+        if (!viewId && boardViews.length > 0) {
+            const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
+            history.replace(newPath)
+            return
+        }
+
+        UserSettings.lastBoardId = boardId || ''
+        UserSettings.lastViewId = viewId || ''
         dispatch(setCurrentBoard(boardId || ''))
-        dispatch(setCurrentView(view?.id || ''))
+        dispatch(setCurrentView(viewId || ''))
     }, [match.params.boardId, match.params.viewId, history, boardViews])
 
     useEffect(() => {
@@ -221,6 +220,10 @@ const BoardPage = (props: Props) => {
                             defaultMessage='Websocket connection closed, connection interrupted. If this persists, check your server or web proxy configuration.'
                         />
                     </a>
+                </div>}
+            {props.readonly && board === undefined &&
+                <div className='error'>
+                    {intl.formatMessage({id: 'BoardPage.syncFailed', defaultMessage: 'Board may be deleted or access revoked.'})}
                 </div>}
             <Workspace readonly={props.readonly || false}/>
         </div>

@@ -1,3 +1,10 @@
 .channel-header__icon .LogoIcon {
     height: 24px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.focalboard-body .feature-global-header > header {
+    z-index: 1000;
 }

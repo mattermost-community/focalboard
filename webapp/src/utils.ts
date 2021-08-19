@@ -159,7 +159,6 @@ class Utils {
     }
 
     // Date and Time
-
     private static yearOption(date: Date) {
         const isCurrentYear = date.getFullYear() === new Date().getFullYear()
         return isCurrentYear ? undefined : 'numeric'
@@ -169,6 +168,14 @@ class Utils {
         return intl.formatDate(date, {
             year: Utils.yearOption(date),
             month: 'long',
+            day: '2-digit',
+        })
+    }
+
+    static inputDate(date: Date, intl: IntlShape): string {
+        return intl.formatDate(date, {
+            year: 'numeric',
+            month: '2-digit',
             day: '2-digit',
         })
     }
@@ -234,11 +241,15 @@ class Utils {
     // favicon
 
     static setFavicon(icon?: string): void {
-        const href = icon ? `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${icon}</text></svg>` : ''
-        const link = (document.querySelector("link[rel*='icon']") || document.createElement('link')) as HTMLLinkElement
+        if (!icon) {
+            document.querySelector("link[rel*='icon']")?.remove()
+            return
+        }
+        const link = document.createElement('link') as HTMLLinkElement
         link.type = 'image/x-icon'
         link.rel = 'shortcut icon'
-        link.href = href
+        link.href = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${icon}</text></svg>`
+        document.querySelectorAll("link[rel*='icon']").forEach((n) => n.remove())
         document.getElementsByTagName('head')[0].appendChild(link)
     }
 
@@ -396,6 +407,10 @@ class Utils {
             return window.location.origin + '/' + finalPath
         }
         return finalPath
+    }
+
+    static roundTo(num: number, decimalPlaces: number): number {
+        return Math.round(num * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces)
     }
 
     static isFocalboardPlugin(): boolean {

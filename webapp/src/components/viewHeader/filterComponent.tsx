@@ -36,7 +36,7 @@ const FilterComponent = React.memo((props: Props): JSX.Element => {
         Utils.assert(newFilter, `No filter at index ${filterIndex}`)
         if (newFilter.condition !== optionId) {
             newFilter.condition = optionId as FilterCondition
-            mutator.changeViewFilter(activeView, filterGroup)
+            mutator.changeViewFilter(activeView.id, activeView.fields.filter, filterGroup)
         }
     }
 
@@ -56,7 +56,7 @@ const FilterComponent = React.memo((props: Props): JSX.Element => {
         }
         filterGroup.filters.push(filter)
 
-        mutator.changeViewFilter(activeView, filterGroup)
+        mutator.changeViewFilter(activeView.id, activeView.fields.filter, filterGroup)
     }
 
     const {board, activeView} = props

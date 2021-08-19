@@ -2,11 +2,13 @@
 // See LICENSE.txt for license information.
 import React, {useState, useRef, useMemo} from 'react'
 import SimpleMDE from 'react-simplemde-editor'
+import 'easymde/dist/easymde.min.css'
 
 import {Utils} from '../utils'
 import './markdownEditor.scss'
 
 type Props = {
+    id?: string
     text?: string
     placeholderText?: string
     className?: string
@@ -19,10 +21,10 @@ type Props = {
 }
 
 const MarkdownEditor = (props: Props): JSX. Element => {
-    const {placeholderText, onFocus, onBlur, onChange, text} = props
-    const [uniqueId] = useState(Utils.createGuid())
-
+    const {placeholderText, onFocus, onBlur, onChange, text, id} = props
     const [isEditing, setIsEditing] = useState(false)
+    const [uniqueId] = useState(id || Utils.createGuid())
+
     const [active, setActive] = useState(false)
     const [editorInstance, setEditorInstance] = useState<any>()
     const editorOptions = useMemo(() => ({

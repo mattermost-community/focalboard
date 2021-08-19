@@ -1,4 +1,6 @@
-@import "compass-icons";
+@import "_compass-icons";
+@import "_typography";
+
 html {
     height: 100%;
 }
@@ -6,11 +8,12 @@ html {
 .focalboard-body, #focalboard-app {
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 
     width: 100%;
     height: 100%;
-    color: rgb(var(--body-color));
-    background: rgb(var(--main-bg));
+    color: rgb(var(--center-channel-color-rgb));
+    background: rgb(var(--center-channel-bg-rgb));
     padding: 0;
     margin: 0;
 }
@@ -20,18 +23,6 @@ html {
 }
 
 .focalboard-body {
-    @font-face {
-        font-family: 'compass-icons';
-        src: url('../fonts/compass-icons/compass-icons.eot?45182295');
-        src: url('../fonts/compass-icons/compass-icons.eot?45182295#iefix') format('embedded-opentype'),
-        url('../fonts/compass-icons/compass-icons.woff2?45182295') format('woff2'),
-        url('../fonts/compass-icons/compass-icons.woff?45182295') format('woff'),
-        url('../fonts/compass-icons/compass-icons.ttf?45182295') format('truetype'),
-        url('../fonts/compass-icons/compass-icons.svg?45182295#compass-icons') format('svg');
-        font-weight: normal;
-        font-style: normal;
-    }
-
     * {
         box-sizing: border-box;
         outline: 0;
@@ -50,13 +41,13 @@ html {
 
     input,
     textarea {
-        background: rgb(var(--main-bg));
-        color: rgb(var(--body-color));
+        background: rgb(var(--center-channel-bg-rgb));
+        color: rgb(var(--center-channel-color-rgb));
 
-        -webkit-user-select: auto; /* Chrome all / Safari all */
-        -moz-user-select: auto; /* Firefox all */
-        -ms-user-select: auto; /* IE 10+ */
-        user-select: auto; /* Likely future */
+        -webkit-user-select: text; /* Chrome all / Safari all */
+        -moz-user-select: text; /* Firefox all */
+        -ms-user-select: text; /* IE 10+ */
+        user-select: text; /* Likely future */
     }
 
     padding: 0;
@@ -65,14 +56,14 @@ html {
     /* -webkit-font-smoothing: auto; */
     font-size: 14px;
     line-height: 24px;
-    --cursor-color: rgb(var(--body-color));
+    --cursor-color: rgb(var(--center-channel-color-rgb));
 
     a {
         text-decoration: none;
-        color: var(--link-color);
+        color: var(--link-color-rgb);
 
         &:visited {
-            color: var(--link-visited-color);
+            color: var(--link-visited-color-rgb);
         }
 
         &:hover {
@@ -84,8 +75,8 @@ html {
         width: 100%;
         height: 1px;
         border: none;
-        color: rgba(var(--body-color), 0.09);
-        background-color: rgba(var(--body-color), 0.09);
+        color: rgba(var(--center-channel-color-rgb), 0.09);
+        background-color: rgba(var(--center-channel-color-rgb), 0.09);
         margin-bottom: 8px;
     }
 
@@ -101,14 +92,6 @@ html {
 
     .page-loading {
         margin: 50px auto;
-    }
-
-    .title,
-    h1 {
-        font-size: 40px;
-        line-height: 40px;
-        margin: 0 0 10px 0;
-        font-weight: 600;
     }
 
     /* App frame */
@@ -144,7 +127,7 @@ html {
     .octo-icon {
         font-family: "Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji,
             "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols;
-        line-height: 1.5em;
+        line-height: 1.2;
         align-self: baseline;
         overflow: visible;
     }
@@ -160,10 +143,11 @@ html {
     /*-- Property list --*/
 
     .octo-propertyvalue {
-        color: rgb(var(--body-color));
-        padding: 0 5px;
+        font-size: 12px;
+        color: rgb(var(--center-channel-color-rgb));
+
         &.empty {
-            color: rgba(var(--body-color), 0.4);
+            color: rgba(var(--center-channel-color-rgb), 0.4);
         }
         .IconButton.delete-value {
             width: 16px;
@@ -186,20 +170,20 @@ html {
     }
 
     .octo-placeholder {
-        color: rgba(var(--body-color), 0.4);
+        color: rgba(var(--center-channel-color-rgb), 0.4);
     }
 
     [contentEditable="true"] {
-        -webkit-user-select: auto; /* Chrome all / Safari all */
-        -moz-user-select: auto; /* Firefox all */
-        -ms-user-select: auto; /* IE 10+ */
-        user-select: auto; /* Likely future */
+        -webkit-user-select: text; /* Chrome all / Safari all */
+        -moz-user-select: text; /* Firefox all */
+        -ms-user-select: text; /* IE 10+ */
+        user-select: text; /* Likely future */
     }
 
     [contentEditable="true"]:empty:before {
         content: attr(placeholder);
         display: block;
-        color: rgba(var(--body-color), 0.4);
+        color: rgba(var(--center-channel-color-rgb), 0.4);
     }
 
     .octo-propertyvalue.Editable.active,

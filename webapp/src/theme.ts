@@ -3,8 +3,13 @@
 
 import {CSSObject} from '@emotion/serialize'
 import isEqual from 'lodash/isEqual'
+import color from 'color'
+
+import {Utils} from './utils'
 
 let activeThemeName: string
+
+import {UserSettings} from './userSettings'
 
 export type Theme = {
     mainBg: string,
@@ -108,9 +113,9 @@ export function setTheme(theme: Theme | null): Theme {
     let consolidatedTheme = defaultTheme
     if (theme) {
         consolidatedTheme = {...defaultTheme, ...theme}
-        localStorage.setItem('theme', JSON.stringify(consolidatedTheme))
+        UserSettings.theme = JSON.stringify(consolidatedTheme)
     } else {
-        localStorage.setItem('theme', '')
+        UserSettings.theme = ''
         const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)')
         if (darkThemeMq.matches) {
             consolidatedTheme = {...defaultTheme, ...darkTheme}
@@ -119,18 +124,38 @@ export function setTheme(theme: Theme | null): Theme {
 
     setActiveThemeName(consolidatedTheme, theme)
 
-    document.documentElement.style.setProperty('--main-bg', consolidatedTheme.mainBg)
-    document.documentElement.style.setProperty('--main-fg', consolidatedTheme.mainFg)
-    document.documentElement.style.setProperty('--body-color', consolidatedTheme.mainFg)
-    document.documentElement.style.setProperty('--button-bg', consolidatedTheme.buttonBg)
-    document.documentElement.style.setProperty('--button-fg', consolidatedTheme.buttonFg)
-    document.documentElement.style.setProperty('--sidebar-bg', consolidatedTheme.sidebarBg)
-    document.documentElement.style.setProperty('--sidebar-fg', consolidatedTheme.sidebarFg)
-    document.documentElement.style.setProperty('--sidebar-text-active-border', consolidatedTheme.sidebarTextActiveBorder)
-    document.documentElement.style.setProperty('--sidebar-white-logo', consolidatedTheme.sidebarWhiteLogo)
+    if (!Utils.isFocalboardPlugin()) {
+        document.documentElement.style.setProperty('--center-channel-bg-rgb', consolidatedTheme.mainBg)
+        document.documentElement.style.setProperty('--center-channel-color-rgb', consolidatedTheme.mainFg)
+        document.documentElement.style.setProperty('--button-bg-rgb', consolidatedTheme.buttonBg)
+        document.documentElement.style.setProperty('--button-color-rgb', consolidatedTheme.buttonFg)
+        document.documentElement.style.setProperty('--sidebar-bg-rgb', consolidatedTheme.sidebarBg)
+        document.documentElement.style.setProperty('--sidebar-text-rgb', consolidatedTheme.sidebarFg)
+        document.documentElement.style.setProperty('--link-color-rgb', consolidatedTheme.link)
+        document.documentElement.style.setProperty('--sidebar-text-active-border', consolidatedTheme.sidebarTextActiveBorder)
+    }
 
-    document.documentElement.style.setProperty('--link-color', consolidatedTheme.link)
-    document.documentElement.style.setProperty('--link-visited-color', consolidatedTheme.linkVisited)
+    document.documentElement.style.setProperty('--sidebar-white-logo', consolidatedTheme.sidebarWhiteLogo)
+    document.documentElement.style.setProperty('--link-visited-color-rgb', consolidatedTheme.linkVisited)
+
+    const mainBgColor = color(`rgb(${getComputedStyle(document.documentElement).getPropertyValue('--center-channel-bg-rgb')})`)
+
+    if (Utils.isFocalboardPlugin()) {
+        let fixedTheme = lightTheme
+        if (mainBgColor.isDark()) {
+            fixedTheme = darkTheme
+        }
+        consolidatedTheme.propDefault = fixedTheme.propDefault
+        consolidatedTheme.propGray = fixedTheme.propGray
+        consolidatedTheme.propBrown = fixedTheme.propBrown
+        consolidatedTheme.propOrange = fixedTheme.propOrange
+        consolidatedTheme.propYellow = fixedTheme.propYellow
+        consolidatedTheme.propGreen = fixedTheme.propGreen
+        consolidatedTheme.propBlue = fixedTheme.propBlue
+        consolidatedTheme.propPurple = fixedTheme.propPurple
+        consolidatedTheme.propPink = fixedTheme.propPink
+        consolidatedTheme.propRed = fixedTheme.propRed
+    }
 
     document.documentElement.style.setProperty('--prop-default', consolidatedTheme.propDefault)
     document.documentElement.style.setProperty('--prop-gray', consolidatedTheme.propGray)
@@ -146,6 +171,29 @@ export function setTheme(theme: Theme | null): Theme {
     return consolidatedTheme
 }
 
+export function setMattermostTheme(theme: any): Theme {
+    document.documentElement.style.setProperty('--center-channel-bg-rgb', color(theme.centerChannelBg).rgb().array().join(', '))
+    document.documentElement.style.setProperty('--center-channel-color-rgb', color(theme.centerChannelColor).rgb().array().join(', '))
+    document.documentElement.style.setProperty('--button-bg-rgb', color(theme.buttonBg).rgb().array().join(', '))
+    document.documentElement.style.setProperty('--button-color-rgb', color(theme.buttonColor).rgb().array().join(', '))
+    document.documentElement.style.setProperty('--sidebar-bg-rgb', color(theme.sidebarBg).rgb().array().join(', '))
+    document.documentElement.style.setProperty('--sidebar-text-rgb', color(theme.sidebarText).rgb().array().join(', '))
+    document.documentElement.style.setProperty('--link-color-rgb', theme.linkColor)
+    document.documentElement.style.setProperty('--sidebar-text-active-border', color(theme.sidebarTextActiveBorder).rgb().array().join(', '))
+
+    return setTheme({
+        ...defaultTheme,
+        mainBg: color(theme.centerChannelBg).rgb().array().join(', '),
+        mainFg: color(theme.centerChannelColor).rgb().array().join(', '),
+        buttonBg: color(theme.buttonBg).rgb().array().join(', '),
+        buttonFg: color(theme.buttonColor).rgb().array().join(', '),
+        sidebarBg: color(theme.sidebarBg).rgb().array().join(', '),
+        sidebarFg: color(theme.sidebarColor || '#ffffff').rgb().array().join(', '),
+        sidebarTextActiveBorder: color(theme.sidebarTextActiveBorder).rgb().array().join(', '),
+        link: theme.linkColor,
+    })
+}
+
 function setActiveThemeName(consolidatedTheme: Theme, theme: Theme | null) {
     if (theme === null) {
         activeThemeName = systemThemeName
@@ -159,7 +207,7 @@ function setActiveThemeName(consolidatedTheme: Theme, theme: Theme | null) {
 }
 
 export function loadTheme(): Theme {
-    const themeStr = localStorage.getItem('theme')
+    const themeStr = UserSettings.theme
     if (themeStr) {
         try {
             const theme = JSON.parse(themeStr)
@@ -177,7 +225,7 @@ export function loadTheme(): Theme {
 export function initThemes(): void {
     const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)')
     const changeHandler = () => {
-        const themeStr = localStorage.getItem('theme')
+        const themeStr = UserSettings.theme
         if (!themeStr) {
             setTheme(null)
         }
@@ -212,12 +260,12 @@ export function getSelectBaseStyle() {
         menu: (provided: CSSObject): CSSObject => ({
             ...provided,
             width: 'unset',
-            background: 'rgb(var(--main-bg))',
+            background: 'rgb(var(--center-channel-bg-rgb))',
         }),
         option: (provided: CSSObject, state: { isFocused: boolean }): CSSObject => ({
             ...provided,
-            background: state.isFocused ? 'rgba(var(--main-fg), 0.1)' : 'rgb(var(--main-bg))',
-            color: state.isFocused ? 'rgb(var(--main-fg))' : 'rgb(var(--main-fg))',
+            background: state.isFocused ? 'rgba(var(--center-channel-color-rgb), 0.1)' : 'rgb(var(--center-channel-bg-rgb))',
+            color: state.isFocused ? 'rgb(var(--center-channel-color-rgb))' : 'rgb(var(--center-channel-color-rgb))',
             padding: '2px 8px',
         }),
         control: (): CSSObject => ({
@@ -232,12 +280,10 @@ export function getSelectBaseStyle() {
             ...provided,
             padding: '0 5px',
             overflow: 'unset',
-
-            // height: '20px',
         }),
         singleValue: (provided: CSSObject): CSSObject => ({
             ...provided,
-            color: 'rgb(var(--main-fg))',
+            color: 'rgb(var(--center-channel-color-rgb))',
             overflow: 'unset',
             maxWidth: 'calc(100% - 20px)',
         }),

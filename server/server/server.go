@@ -66,7 +66,7 @@ type Server struct {
 	api             *api.API
 }
 
-func New(cfg *config.Configuration, singleUserToken string, db store.Store, logger *mlog.Logger) (*Server, error) {
+func New(cfg *config.Configuration, singleUserToken string, db store.Store, logger *mlog.Logger, serverID string) (*Server, error) {
 	authenticator := auth.New(cfg, db)
 
 	wsServer := ws.NewServer(authenticator, singleUserToken, cfg.AuthMode == MattermostAuthMod, logger)
@@ -152,6 +152,7 @@ func New(cfg *config.Configuration, singleUserToken string, db store.Store, logg
 		app:         app,
 		cfg:         cfg,
 		telemetryID: telemetryID,
+		serverID:    serverID,
 		logger:      logger,
 		singleUser:  len(singleUserToken) > 0,
 	}
@@ -365,6 +366,7 @@ type telemetryOptions struct {
 	app         *app.App
 	cfg         *config.Configuration
 	telemetryID string
+	serverID    string
 	logger      *mlog.Logger
 	singleUser  bool
 }
@@ -379,6 +381,7 @@ func initTelemetry(opts telemetryOptions) *telemetry.Service {
 			"build_hash":       appModel.BuildHash,
 			"edition":          appModel.Edition,
 			"operating_system": runtime.GOOS,
+			"server_id":        opts.serverID,
 		}, nil
 	})
 	telemetryService.RegisterTracker("config", func() (telemetry.Tracker, error) {
