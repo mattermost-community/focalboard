@@ -1,10 +1,14 @@
 .DateRange {
+    width: 100%;
+    display: flex;
+
     .octo-propertyvalue {
         white-space: none;
     }
 
     .inputContainer {
         display: flex;
+
         .Editable {
             width: 50% !important;
         }
@@ -17,33 +21,42 @@
         min-height: 24px;
         width: 100%;
         margin: 2px;
+
         &.active {
             min-width: 100px;
         }
+
         &::placeholder {
             color: rgba(var(--body-color), 0.4);
             opacity: 1;
         }
+
         &.error {
             border: 1px solid var(--error-color);
             border-radius: var(--default-rad);
         }
     }
 
-    .Modal{
+    .Modal {
         position: absolute;
         top: 0px;
         left: 0px;
         margin-bottom: 100px;
     }
 
-    .Button{
+    .Button {
         width: 100%;
         justify-content: left;
+
+        &.--empty {
+            opacity: 0;
+        }
+
         &:hover {
             background-color: transparent;
         }
     }
+
     .menu-option {
         display: flex;
         flex-direction: row;
@@ -60,42 +73,41 @@
             background: rgba(var(--button-bg-rgb), 0.08);
         }
 
-        > * {
+        >* {
             margin-left: 6px;
         }
 
-        > *:first-child {
+        >*:first-child {
             margin-left: 0;
         }
 
-        > .menu-name {
+        >.menu-name {
             display: flex;
             flex-grow: 1;
             white-space: nowrap;
         }
 
-        > .SubmenuTriangleIcon {
+        >.SubmenuTriangleIcon {
             fill: rgba(var(--body-color), 0.7);
         }
 
-        > .Icon {
+        >.Icon {
             opacity: 0.56;
             width: 16px;
             height: 16px;
             line-height: 16px;
         }
 
-        > .IconButton .Icon {
+        >.IconButton .Icon {
             margin-right: 0;
         }
     }
 
-    .DayPicker {
-    }
+    .DayPicker {}
 
     .DayPickerInput-Overlay {
         background-color: rgba(var(--center-channel-bg-rgb));
-        box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1),0 4px 11px hsla(0, 0%, 0%, 0.1);
+        box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1), 0 4px 11px hsla(0, 0%, 0%, 0.1);
         line-height: 100%;
     }
 
@@ -105,51 +117,62 @@
         display: flex;
         flex-direction: column;
     }
+
     .DayPicker-Body {
         display: flex;
         flex-direction: column;
     }
+
     .DayPicker-WeekdaysRow {
         display: flex;
         flex-direction: row;
     }
+
     .DayPicker-Weekday {
         display: block;
         width: 36px;
         height: 36px;
     }
+
     .DayPicker-Week {
         display: flex;
         flex-direction: row;
     }
+
     .DayPicker-Day {
         border-radius: unset;
         display: block;
         width: 36px;
         height: 36px;
     }
+
     .DayPicker-Day--today {
         color: #c74655;
     }
+
     .DayPicker-Day--start {
         border-top-left-radius: 50% !important;
         border-bottom-left-radius: 50% !important;
     }
+
     .DayPicker-Day--end {
         border-top-right-radius: 50% !important;
         border-bottom-right-radius: 50% !important;
     }
+
     .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
-        background-color: rgb(var(--button-bg-rgb));;
+        background-color: rgb(var(--button-bg-rgb));
+        ;
         color: rgba(var(--button-color-rgb), 0.5);
-      }
+    }
+
     .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
-        color: rgb(var(--button-bg-rgb));;
+        color: rgb(var(--button-bg-rgb));
+        ;
         background-color: rgba(var(--button-bg-rgb), 0.2);
     }
 
-    .DayPicker:not(.DayPicker--interactionDisabled)
-      .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
+    .DayPicker:not(.DayPicker--interactionDisabled) .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
         background-color: rgba(var(--body-color), 0.2);
     }
 }
