@@ -68,7 +68,7 @@ describe('components/properties/dateRange', () => {
         const fifteenth = Date.UTC(date.getFullYear(), date.getMonth(), 15, 12)
 
         const {getByText, getByTitle} = render(component)
-        const dayDisplay = getByText('Empty')
+        const dayDisplay = getByTitle('Empty')
         userEvent.click(dayDisplay)
 
         const day = getByText('15')
@@ -92,7 +92,7 @@ describe('components/properties/dateRange', () => {
 
         // open modal
         const {getByText, getByTitle} = render(component)
-        const dayDisplay = getByText('Empty')
+        const dayDisplay = getByTitle('Empty')
         userEvent.click(dayDisplay)
 
         // select start date

@@ -57,7 +57,7 @@ const BoardTemplateMenuItem = React.memo((props: Props) => {
             rightIcon={!isGlobal &&
                 <MenuWrapper stopPropagationOnToggle={true}>
                     <IconButton icon={<OptionsIcon/>}/>
-                    <Menu position='left'>
+                    <Menu position='right'>
                         <Menu.Text
                             icon={<EditIcon/>}
                             id='edit'
