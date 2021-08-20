@@ -3,8 +3,8 @@
 import React from 'react'
 
 import Select from 'react-select'
-
 import {CSSObject} from '@emotion/serialize'
+import {useIntl} from 'react-intl'
 
 import {getUserWorkspaceList} from '../../store/users'
 import {UserWorkspace} from '../../user'
@@ -12,10 +12,6 @@ import {useAppSelector} from '../../store/hooks'
 
 import './workspaceOptions.scss'
 import Search from '../../widgets/icons/search'
-
-import * as i18n from '../../i18n'
-
-import {useIntl} from 'react-intl'
 
 const style = {
     dropdownIndicator: (provided: CSSObject) => ({
