@@ -10,7 +10,7 @@ import IconButton from '../../widgets/buttons/iconButton'
 import DeleteIcon from '../../widgets/icons/delete'
 import DuplicateIcon from '../../widgets/icons/duplicate'
 import OptionsIcon from '../../widgets/icons/options'
-import AddIcon from '../../widgets/icons/add'
+import LinkIcon from '../../widgets/icons/Link'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {useSortable} from '../../hooks/sortable'
@@ -84,7 +84,7 @@ const KanbanCard = React.memo((props: Props) => {
                             }}
                         />
                         <Menu.Text
-                            icon={<AddIcon/>}
+                            icon={<LinkIcon/>}
                             id='copy'
                             name={intl.formatMessage({id: 'KanbanCard.copyLink', defaultMessage: 'Copy link'})}
                             onClick={() => {

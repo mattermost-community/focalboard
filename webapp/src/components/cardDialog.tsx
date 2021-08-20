@@ -8,7 +8,7 @@ import {Utils} from '../utils'
 import {BoardTree} from '../viewModel/boardTree'
 import {CardTree, CardTreeContext, MutableCardTree} from '../viewModel/cardTree'
 import DeleteIcon from '../widgets/icons/delete'
-import AddIcon from '../widgets/icons/add'
+import LinkIcon from '../widgets/icons/Link'
 import Menu from '../widgets/menu'
 
 import useCardListener from '../hooks/cardListener'
@@ -81,7 +81,7 @@ const CardDialog = (props: Props) => {
                 }}
             />
             <Menu.Text
-                icon={<AddIcon/>}
+                icon={<LinkIcon/>}
                 id='copy'
                 name={intl.formatMessage({id: 'CardDialog.copyLink', defaultMessage: 'Copy link'})}
                 onClick={() => {
