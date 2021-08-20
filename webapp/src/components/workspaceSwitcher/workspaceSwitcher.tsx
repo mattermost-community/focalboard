@@ -40,6 +40,7 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
             {
                 showMenu &&
                 <WorkspaceOptions
+                    activeWorkspaceId={props.activeWorkspace.id}
                     onClose={() => {
                         setSelectClosed(true)
                     }}

@@ -209,14 +209,6 @@ const BoardPage = (props: Props) => {
         }
     })
 
-    // if (Utils.isFocalboardPlugin()) {
-    useHotkeys('cmd+k,ctrl+k', (e) => {
-        console.log('Yo!')
-        e.preventDefault()
-        e.stopPropagation()
-        setShowWorkspaceSwitcher(true)
-    }, {filterPreventDefault: true})
-
     // }
 
     return (

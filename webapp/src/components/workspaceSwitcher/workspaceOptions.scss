@@ -17,12 +17,12 @@
     }
 
     .workspaceTitle {
-        color: rgba(var(--center-channel-color-rgb), 0.9);
+        color: var(--center-channel-color-rgb);
         font-size: 14px;
     }
 
     .boardCount {
-        color: rgba(var(--center-channel-color-rgb), 0.7);
+        color: rgba(var(--center-channel-color-rgb), 0.9);
         font-size: 10px;
         text-transform: uppercase;
     }
@@ -31,32 +31,37 @@
 .WorkspaceOptions__indicators {
     color: rgba(var(--center-channel-color-rgb), 0.9);
     font-size: 18px;
-}
-
-.WorkspaceOptions__indicators {
-    color: black;
-    font-size: 18px;
     border: 2px solid var(--link-color);
     border-left: none;
     border-radius: 0 4px 4px 0;
 }
 .WorkspaceOptions__control {
-    border-radius: 4px 4px 0 0 !important;
-    border-bottom: none;
-    border-color: rgb(204, 204, 204) !important;
-    box-shadow: none !important;
+    border-radius: 8px 8px 0 0 !important;
     padding: 12px 16px 0;
-    border-bottom: none !important;
+    border: none !important;
 }
+
+.WorkspaceOptions__control, .WorkspaceOptions__control--is-focused {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 0px 1px, rgba(0, 0, 0, 0.1) 0px 11px 11px !important;
+}
+
 .WorkspaceOptions__menu {
     margin-top: 0 !important;
-    border-radius: 0 0 4px 4px !important;
+    border-radius: 0 0 8px 8px !important;
     border-top: none;
-    box-shadow: none !important;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 0px 1px, rgba(0, 0, 0, 0.1) 0px 11px 11px !important;
 }
 
 .WorkspaceOptions__value-container {
     border: 2px solid var(--link-color);
     border-right: none;
     border-radius: 4px 0 0 4px;
+}
+
+.WorkspaceOptions__input, .WorkspaceOptions__placeholder {
+    color: rgb(var(--sidebar-text-rgb)) !important;
+}
+
+.WorkspaceOptions__control, .WorkspaceOptions__menu {
+    background-color: rgb(var(--center-channel-bg-rgb)) !important;
 }

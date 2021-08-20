@@ -13,6 +13,10 @@ import {useAppSelector} from '../../store/hooks'
 import './workspaceOptions.scss'
 import Search from '../../widgets/icons/search'
 
+import * as i18n from '../../i18n'
+
+import {useIntl} from 'react-intl'
+
 const style = {
     dropdownIndicator: (provided: CSSObject) => ({
         ...provided,
@@ -30,11 +34,13 @@ type Props = {
     onClose?: () => void
     onBlur?: () => void
     onChange: (value: string) => void
+    activeWorkspaceId: string
 }
 
 const WorkspaceOptions = (props: Props): JSX.Element => {
+    const intl = useIntl()
     const userWorkspaces = useAppSelector<UserWorkspace[]>(getUserWorkspaceList)
-    const options = userWorkspaces.map((workspace) => {
+    const options = userWorkspaces.filter((workspace) => workspace.id !== props.activeWorkspaceId).map((workspace) => {
         return {
             label: workspace.title,
             value: workspace.id,
@@ -55,6 +61,10 @@ const WorkspaceOptions = (props: Props): JSX.Element => {
             tabSelectsValue={false}
             options={options}
             menuIsOpen={true}
+            noOptionsMessage={() => intl.formatMessage({
+                id: 'Sidebar.no-more-workspaces',
+                defaultMessage: 'No more workspaces',
+            })}
             onMenuClose={() => {
                 if (props.onClose) {
                     props.onClose()

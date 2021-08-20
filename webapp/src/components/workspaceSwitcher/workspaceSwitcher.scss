@@ -6,12 +6,20 @@
     flex-direction: column;
     gap: 4px;
     width: 100%;
+    position: relative;
+
+    > div:nth-child(2) {
+        position: absolute;
+        width: 100%;
+        top: calc(100% + 8px);
+        z-index: 1;
+    }
 }
 
 .WorkspaceSwitcher {
     display: flex;
     flex-direction: row;
-    background: var(--sidebar-teambar-bg);
+    background: rgba(var(--sidebar-text-rgb), 0.1);
     border-radius: 8px;
     padding: 12px 16px;
     cursor: pointer;
