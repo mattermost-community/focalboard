@@ -13,7 +13,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 
-	pluginapi "github.com/mattermost/mattermost-plugin-api/v6"
+	pluginapi "github.com/mattermost/mattermost-plugin-api"
 
 	"github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
