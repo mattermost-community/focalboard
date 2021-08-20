@@ -6,23 +6,24 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 
 import {Card} from '../../../blocks/card'
-import {CardTree} from '../../../viewModel/cardTree'
-import {IBlock} from '../../../blocks/block'
+import {Block} from '../../../blocks/block'
+import {ContentBlock} from '../../../blocks/contentBlock'
+import {CommentBlock} from '../../../blocks/commentBlock'
 import {Utils} from '../../../utils'
 
 type Props = {
     card: Card,
-    cardTree?: CardTree
+    contents: Array<ContentBlock|ContentBlock[]>
+    comments: CommentBlock[]
 }
 
 const LastModifiedAt = (props: Props): JSX.Element => {
     const intl = useIntl()
 
-    let latestBlock: IBlock = props.card
-    if (props.cardTree) {
-        const sortedBlocks = props.cardTree.allBlocks.
-            filter((block) => block.parentId === props.card.id || block.id === props.card.id).
-            sort((a, b) => b.updateAt - a.updateAt)
+    let latestBlock: Block = props.card
+    if (props.card) {
+        const allBlocks = [props.card, ...props.contents.flat(), ...props.comments]
+        const sortedBlocks = allBlocks.sort((a, b) => b.updateAt - a.updateAt)
 
         latestBlock = sortedBlocks.length > 0 ? sortedBlocks[0] : latestBlock
     }

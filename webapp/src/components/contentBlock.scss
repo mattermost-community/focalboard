@@ -1,4 +1,4 @@
-.ContentBlock {
+.focalboard-body .ContentBlock {
     .MenuWrapper,
     .dnd-handle {
         display: none;
@@ -16,12 +16,14 @@
     > * {
         flex: 1 1 auto;
         max-width: 100%;
+        min-height: 32px;
     }
     > .octo-block-margin {
         flex: 0 0 auto;
     }
     .ImageElement {
         pointer-events: none;
+        width: 100%;
     }
 }
 

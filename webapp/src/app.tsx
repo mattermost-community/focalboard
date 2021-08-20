@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import {
     BrowserRouter as Router,
     Redirect,
@@ -20,28 +20,36 @@ import DashboardPage from './pages/dashboardPage'
 import ErrorPage from './pages/errorPage'
 import LoginPage from './pages/loginPage'
 import RegisterPage from './pages/registerPage'
-import {IUser} from './user'
 import {Utils} from './utils'
-import {importNativeAppSettings} from './nativeApp'
-import {fetchCurrentUser, getCurrentUser} from './store/currentUser'
+import wsClient from './wsclient'
+import {fetchMe, getLoggedIn} from './store/users'
 import {getLanguage, fetchLanguage} from './store/language'
+import {setGlobalError, getGlobalError} from './store/globalError'
 import {useAppSelector, useAppDispatch} from './store/hooks'
 
 const App = React.memo((): JSX.Element => {
-    importNativeAppSettings()
-
     const language = useAppSelector<string>(getLanguage)
-
-    const user = useAppSelector<IUser|null>(getCurrentUser)
+    const loggedIn = useAppSelector<boolean|null>(getLoggedIn)
+    const globalError = useAppSelector<string>(getGlobalError)
     const dispatch = useAppDispatch()
-    const [initialLoad, setInitialLoad] = useState(false)
 
     useEffect(() => {
         dispatch(fetchLanguage())
-        dispatch(fetchCurrentUser()).then(() => {
-            setInitialLoad(true)
-        })
+        dispatch(fetchMe())
     }, [])
+
+    useEffect(() => {
+        wsClient.open()
+        return () => {
+            wsClient.close()
+        }
+    }, [])
+
+    let globalErrorRedirect = null
+    if (globalError) {
+        globalErrorRedirect = <Route path='/*'><Redirect to={`/error?id=${globalError}`}/></Route>
+        setTimeout(() => dispatch(setGlobalError('')), 0)
+    }
 
     return (
         <IntlProvider
@@ -50,10 +58,11 @@ const App = React.memo((): JSX.Element => {
         >
             <DndProvider backend={Utils.isMobile() ? TouchBackend : HTML5Backend}>
                 <FlashMessages milliseconds={2000}/>
-                <Router basename={Utils.getBaseURL()}>
+                <Router basename={Utils.getFrontendBaseURL()}>
                     <div id='frame'>
                         <div id='main'>
                             <Switch>
+                                {globalErrorRedirect}
                                 <Route path='/error'>
                                     <ErrorPage/>
                                 </Route>
@@ -70,8 +79,8 @@ const App = React.memo((): JSX.Element => {
                                     <BoardPage readonly={true}/>
                                 </Route>
                                 <Route path='/board/:boardId?/:viewId?'>
-                                    {initialLoad && !user && <Redirect to='/login'/>}
-                                    <BoardPage/>
+                                    {loggedIn === false && <Redirect to='/login'/>}
+                                    {loggedIn === true && <BoardPage/>}
                                 </Route>
                                 <Route path='/workspace/:workspaceId/shared/:boardId?/:viewId?'>
                                     <BoardPage readonly={true}/>
@@ -79,17 +88,19 @@ const App = React.memo((): JSX.Element => {
                                 <Route
                                     path='/workspace/:workspaceId/:boardId?/:viewId?'
                                     render={({match}) => {
-                                        if (initialLoad && !user) {
+                                        if (loggedIn === false) {
                                             let redirectUrl = '/' + Utils.buildURL(`/workspace/${match.params.workspaceId}/`)
                                             if (redirectUrl.indexOf('//') === 0) {
                                                 redirectUrl = redirectUrl.slice(1)
                                             }
                                             const loginUrl = `/login?r=${encodeURIComponent(redirectUrl)}`
                                             return <Redirect to={loginUrl}/>
+                                        } else if (loggedIn === true) {
+                                            return (
+                                                <BoardPage/>
+                                            )
                                         }
-                                        return (
-                                            <BoardPage/>
-                                        )
+                                        return null
                                     }}
                                 />
                                 <Route
@@ -99,8 +110,8 @@ const App = React.memo((): JSX.Element => {
                                     <DashboardPage/>
                                 </Route>
                                 <Route path='/:boardId?/:viewId?'>
-                                    {initialLoad && !user && <Redirect to='/login'/>}
-                                    <BoardPage/>
+                                    {loggedIn === false && <Redirect to='/login'/>}
+                                    {loggedIn === true && <BoardPage/>}
                                 </Route>
                             </Switch>
                         </div>

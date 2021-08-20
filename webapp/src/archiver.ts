@@ -1,15 +1,15 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {ArchiveUtils, IArchiveHeader, IArchiveLine, IBlockArchiveLine} from './blocks/archive'
-import {IBlock} from './blocks/block'
+import {ArchiveUtils, ArchiveHeader, ArchiveLine, BlockArchiveLine} from './blocks/archive'
+import {Block} from './blocks/block'
+import {Board} from './blocks/board'
 import {LineReader} from './lineReader'
 import mutator from './mutator'
 import {Utils} from './utils'
-import {BoardTree} from './viewModel/boardTree'
 
 class Archiver {
-    static async exportBoardArchive(boardTree: BoardTree): Promise<void> {
-        const blocks = await mutator.exportArchive(boardTree.board.id)
+    static async exportBoardArchive(board: Board): Promise<void> {
+        const blocks = await mutator.exportArchive(board.id)
         this.exportArchive(blocks)
     }
 
@@ -18,7 +18,7 @@ class Archiver {
         this.exportArchive(blocks)
     }
 
-    private static exportArchive(blocks: readonly IBlock[]): void {
+    private static exportArchive(blocks: readonly Block[]): void {
         const content = ArchiveUtils.buildBlockArchive(blocks)
 
         const date = new Date()
@@ -45,7 +45,7 @@ class Archiver {
     private static async importBlocksFromFile(file: File): Promise<void> {
         let blockCount = 0
         const maxBlocksPerImport = 1000
-        let blocks: IBlock[] = []
+        let blocks: Block[] = []
 
         let isFirstLine = true
         return new Promise<void>((resolve) => {
@@ -62,20 +62,20 @@ class Archiver {
 
                 if (isFirstLine) {
                     isFirstLine = false
-                    const header = JSON.parse(line) as IArchiveHeader
+                    const header = JSON.parse(line) as ArchiveHeader
                     if (header.date && header.version >= 1) {
                         const date = new Date(header.date)
                         Utils.log(`Import archive, version: ${header.version}, date/time: ${date.toLocaleString()}.`)
                     }
                 } else {
-                    const row = JSON.parse(line) as IArchiveLine
+                    const row = JSON.parse(line) as ArchiveLine
                     if (!row || !row.type || !row.data) {
                         Utils.logError('importFullArchive ERROR parsing line')
                         return
                     }
                     switch (row.type) {
                     case 'block': {
-                        const blockLine = row as IBlockArchiveLine
+                        const blockLine = row as BlockArchiveLine
                         const block = blockLine.data
                         if (Archiver.isValidBlock(block)) {
                             blocks.push(block)
@@ -94,7 +94,7 @@ class Archiver {
         })
     }
 
-    static isValidBlock(block: IBlock): boolean {
+    static isValidBlock(block: Block): boolean {
         if (!block.id || !block.rootId) {
             return false
         }

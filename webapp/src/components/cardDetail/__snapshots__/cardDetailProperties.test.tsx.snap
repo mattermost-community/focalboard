@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/cardDetail/CardDetailProperties should match snapshot 1`] = `
+<div>
+  <div
+    class="octo-propertylist CardDetailProperties"
+  >
+    <div
+      class="octo-propertyrow"
+    >
+      <div
+        class="MenuWrapper"
+      >
+        <div
+          class="octo-propertyname"
+        >
+          <button
+            class="Button    "
+            type="button"
+          >
+            <span>
+              Owner
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="octo-propertyvalue"
+        tabindex="0"
+      >
+        <span
+          class="Label propColorDefault "
+        >
+          <span
+            class="Label-text"
+          >
+            Jean-Luc Picard
+          </span>
+          <div
+            aria-label="Clear"
+            class="Button IconButton margin-left delete-value"
+            role="button"
+            title="Clear"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </div>
+        </span>
+      </div>
+    </div>
+    <div
+      class="octo-propertyname add-property"
+    >
+      <button
+        class="Button    "
+        type="button"
+      >
+        <span>
+          + Add a property
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+`;

@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
@@ -23,6 +24,7 @@ const (
 	HeaderRequestedWith    = "X-Requested-With"
 	HeaderRequestedWithXML = "XMLHttpRequest"
 	SingleUser             = "single-user"
+	UploadFormFileKey      = "file"
 )
 
 const (
@@ -67,6 +69,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks", a.sessionRequired(a.handleGetBlocks)).Methods("GET")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks", a.sessionRequired(a.handlePostBlocks)).Methods("POST")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/{blockID}", a.sessionRequired(a.handleDeleteBlock)).Methods("DELETE")
+	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/{blockID}", a.sessionRequired(a.handlePatchBlock)).Methods("PATCH")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/{blockID}/subtree", a.attachSession(a.handleGetSubTree, false)).Methods("GET")
 
 	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/export", a.sessionRequired(a.handleExport)).Methods("GET")
@@ -226,6 +229,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	parentID := query.Get("parent_id")
 	blockType := query.Get("type")
+	all := query.Get("all")
 	container, err := a.getContainer(r)
 	if err != nil {
 		a.noContainerErrorResponse(w, r.URL.Path, err)
@@ -236,11 +240,21 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("parentID", parentID)
 	auditRec.AddMeta("blockType", blockType)
+	auditRec.AddMeta("all", all)
 
-	blocks, err := a.app.GetBlocks(*container, parentID, blockType)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
+	var blocks []model.Block
+	if all != "" {
+		blocks, err = a.app.GetAllBlocks(*container)
+		if err != nil {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+			return
+		}
+	} else {
+		blocks, err = a.app.GetBlocks(*container, parentID, blockType)
+		if err != nil {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+			return
+		}
 	}
 
 	a.logger.Debug("GetBlocks",
@@ -533,6 +547,83 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 	}
 
 	a.logger.Debug("DELETE Block", mlog.String("blockID", blockID))
+	jsonStringResponse(w, http.StatusOK, "{}")
+
+	auditRec.Success()
+}
+
+func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation PATCH /api/v1/workspaces/{workspaceID}/blocks/{blockID} patchBlock
+	//
+	// Partially updates a block
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: workspaceID
+	//   in: path
+	//   description: Workspace ID
+	//   required: true
+	//   type: string
+	// - name: blockID
+	//   in: path
+	//   description: ID of block to patch
+	//   required: true
+	//   type: string
+	// - name: Body
+	//   in: body
+	//   description: block patch to apply
+	//   required: true
+	//   schema:
+	//     "$ref": "#/definitions/BlockPatch"
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	userID := session.UserID
+
+	vars := mux.Vars(r)
+	blockID := vars["blockID"]
+
+	container, err := a.getContainer(r)
+	if err != nil {
+		a.noContainerErrorResponse(w, r.URL.Path, err)
+		return
+	}
+
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	var patch *model.BlockPatch
+	err = json.Unmarshal(requestBody, &patch)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "patchBlock", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+	auditRec.AddMeta("blockID", blockID)
+
+	err = a.app.PatchBlock(*container, blockID, patch, userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	a.logger.Debug("PATCH Block", mlog.String("blockID", blockID))
 	jsonStringResponse(w, http.StatusOK, "{}")
 
 	auditRec.Success()
@@ -1156,6 +1247,15 @@ type FileUploadResponse struct {
 	FileID string `json:"fileId"`
 }
 
+func FileUploadResponseFromJSON(data io.Reader) (*FileUploadResponse, error) {
+	var fileUploadResponse FileUploadResponse
+
+	if err := json.NewDecoder(data).Decode(&fileUploadResponse); err != nil {
+		return nil, err
+	}
+	return &fileUploadResponse, nil
+}
+
 func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	// swagger:operation POST /api/v1/workspaces/{workspaceID}/{rootID}/files uploadFile
 	//
@@ -1204,10 +1304,9 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	file, handle, err := r.FormFile("file")
+	file, handle, err := r.FormFile(UploadFormFileKey)
 	if err != nil {
 		fmt.Fprintf(w, "%v", err)
-
 		return
 	}
 	defer file.Close()

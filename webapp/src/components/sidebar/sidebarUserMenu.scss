@@ -1,33 +1,50 @@
-.SidebarUserMenu {
+.focalboard-body .SidebarUserMenu {
     .logo {
         display: flex;
         flex-direction: row;
         align-items: center;
 
-        .LogoWithNameIcon,
-        .LogoWithNameWhiteIcon {
-            max-height: 24px;
-            width: auto;
+        .logo-title {
+            font-family: Metropolis, sans-serif;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-right: 5px;
+
+            .FocalboardLogoIcon {
+                fill: rgba(var(--sidebar-text-rgb), 1);
+                color: rgba(var(--sidebar-text-rgb), 1);
+                height: 24px;
+                width: 22px;
+                margin-right: 3px;
+                position: relative;
+                bottom: 2px;
+            }
+
+            span {
+                height: 32px;
+            }
         }
 
         .versionFrame {
             display: flex;
             flex-direction: column;
             align-items: center;
+            margin-left: 8px;
         }
 
         .version {
             font-size: 11px;
             line-height: 11px;
             font-weight: 500;
-            color: rgba(var(--sidebar-fg), 0.8);
+            color: rgba(var(--sidebar-text-rgb), 0.8);
         }
 
         .versionBadge {
             font-size: 10px;
             line-height: 11px;
             font-weight: 500;
-            color: rgba(var(--sidebar-fg), 0.8);
+            color: rgba(var(--sidebar-text-rgb), 0.8);
         }
     }
 }

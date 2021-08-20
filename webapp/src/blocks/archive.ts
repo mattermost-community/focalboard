@@ -1,26 +1,26 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IBlock} from './block'
+import {Block} from './block'
 
-interface IArchiveHeader {
+interface ArchiveHeader {
     version: number
     date: number
 }
 
-interface IArchiveLine {
+interface ArchiveLine {
     type: string,
     data: any,
 }
 
 // This schema allows the expansion of additional line types in the future
-interface IBlockArchiveLine extends IArchiveLine {
+interface BlockArchiveLine extends ArchiveLine {
     type: 'block',
-    data: IBlock
+    data: Block
 }
 
 class ArchiveUtils {
-    static buildBlockArchive(blocks: readonly IBlock[]): string {
-        const header: IArchiveHeader = {
+    static buildBlockArchive(blocks: readonly Block[]): string {
+        const header: ArchiveHeader = {
             version: 1,
             date: Date.now(),
         }
@@ -28,7 +28,7 @@ class ArchiveUtils {
         const headerString = JSON.stringify(header)
         let content = headerString + '\n'
         for (const block of blocks) {
-            const line: IBlockArchiveLine = {
+            const line: BlockArchiveLine = {
                 type: 'block',
                 data: block,
             }
@@ -40,12 +40,12 @@ class ArchiveUtils {
         return content
     }
 
-    static parseBlockArchive(contents: string): IBlock[] {
-        const blocks: IBlock[] = []
+    static parseBlockArchive(contents: string): Block[] {
+        const blocks: Block[] = []
         const allLineStrings = contents.split('\n')
         if (allLineStrings.length >= 2) {
             const headerString = allLineStrings[0]
-            const header = JSON.parse(headerString) as IArchiveHeader
+            const header = JSON.parse(headerString) as ArchiveHeader
             if (header.date && header.version >= 1) {
                 const lineStrings = allLineStrings.slice(1)
                 let lineNum = 2
@@ -54,13 +54,13 @@ class ArchiveUtils {
                         // Ignore empty lines, e.g. last line
                         continue
                     }
-                    const line = JSON.parse(lineString) as IArchiveLine
+                    const line = JSON.parse(lineString) as ArchiveLine
                     if (!line || !line.type || !line.data) {
                         throw new Error(`ERROR parsing line ${lineNum}`)
                     }
                     switch (line.type) {
                     case 'block': {
-                        const blockLine = line as IBlockArchiveLine
+                        const blockLine = line as BlockArchiveLine
                         const block = blockLine.data
                         blocks.push(block)
                         break
@@ -78,4 +78,4 @@ class ArchiveUtils {
     }
 }
 
-export {IArchiveHeader, IArchiveLine, IBlockArchiveLine, ArchiveUtils}
+export {ArchiveHeader, ArchiveLine, BlockArchiveLine, ArchiveUtils}

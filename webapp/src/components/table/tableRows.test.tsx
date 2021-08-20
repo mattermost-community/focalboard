@@ -2,7 +2,9 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
+import {Provider as ReduxProvider} from 'react-redux'
 import {fireEvent, render} from '@testing-library/react'
+import configureStore from 'redux-mock-store'
 import '@testing-library/jest-dom'
 import {IntlProvider} from 'react-intl'
 
@@ -17,9 +19,6 @@ import userEvent from '@testing-library/user-event'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import {FetchMock} from '../../test/fetchMock'
-import {MutableBoardTree} from '../../viewModel/boardTree'
-
-import {CardTree, MutableCardTree} from '../../viewModel/cardTree'
 
 import TableRows from './tableRows'
 
@@ -42,40 +41,52 @@ describe('components/table/TableRows', () => {
     const view = TestBlockFactory.createBoardView(board)
 
     const view2 = TestBlockFactory.createBoardView(board)
-    view2.sortOptions = []
+    view2.fields.sortOptions = []
 
     const card = TestBlockFactory.createCard(board)
     const cardTemplate = TestBlockFactory.createCard(board)
-    cardTemplate.isTemplate = true
+    cardTemplate.fields.isTemplate = true
+
+    const mockStore = configureStore([])
+    const state = {
+        users: {},
+        comments: {
+            comments: {},
+        },
+        contents: {
+            contents: {},
+        },
+        cards: {
+            cards: {
+                [card.id]: card,
+            },
+            templates: {
+                [cardTemplate.id]: cardTemplate,
+            },
+        },
+    }
 
     test('should match snapshot, fire events', async () => {
-        // Sync
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, view2, card, cardTemplate])))
-
-        const boardTree = await MutableBoardTree.sync(board.id, view.id, {})
-        expect(boardTree).toBeDefined()
-        expect(FetchMock.fn).toBeCalledTimes(1)
-
         const callback = jest.fn()
         const addCard = jest.fn()
 
-        const cardTrees:{ [key: string]: CardTree | undefined } = {}
-        cardTrees[card.id] = new MutableCardTree(card)
-
+        const store = mockStore(state)
         const component = wrapProviders(
-            <TableRows
-                boardTree={boardTree!}
-                cardTrees={cardTrees}
-                columnRefs={new Map()}
-                cards={[card]}
-                selectedCardIds={[]}
-                readonly={false}
-                cardIdToFocusOnRender=''
-                showCard={callback}
-                addCard={addCard}
-                onCardClicked={jest.fn()}
-                onDrop={jest.fn()}
-            />,
+            <ReduxProvider store={store}>
+                <TableRows
+                    board={board}
+                    activeView={view}
+                    columnRefs={new Map()}
+                    cards={[card]}
+                    selectedCardIds={[]}
+                    readonly={false}
+                    cardIdToFocusOnRender=''
+                    showCard={callback}
+                    addCard={addCard}
+                    onCardClicked={jest.fn()}
+                    onDrop={jest.fn()}
+                />
+            </ReduxProvider>,
         )
 
         const {container, getByTitle, getByText} = render(<DndProvider backend={HTML5Backend}>{component}</DndProvider>)

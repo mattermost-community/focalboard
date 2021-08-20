@@ -38,13 +38,13 @@ async function addBlock(card: Card, intl: IntlShape, handler: ContentHandler) {
     newBlock.parentId = card.id
     newBlock.rootId = card.rootId
 
-    const contentOrder = card.contentOrder.slice()
+    const contentOrder = card.fields.contentOrder.slice()
     contentOrder.push(newBlock.id)
     const typeName = handler.getDisplayText(intl)
     const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
     mutator.performAsUndoGroup(async () => {
         await mutator.insertBlock(newBlock, description)
-        await mutator.changeCardContentOrder(card, contentOrder, description)
+        await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder, description)
     })
 }
 
@@ -55,7 +55,7 @@ type Props = {
 const CardDetailContentsMenu = React.memo((props: Props) => {
     const intl = useIntl()
     return (
-        <div className='CardDetail content add-content'>
+        <div className='CardDetailContentsMenu content add-content'>
             <MenuWrapper>
                 <Button>
                     <FormattedMessage

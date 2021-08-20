@@ -3,10 +3,9 @@
 import React from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import {IPropertyTemplate} from '../../blocks/board'
+import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
-import {CardTree} from '../../viewModel/cardTree'
-import {IContentBlock} from '../../blocks/contentBlock'
+import {ContentBlock} from '../../blocks/contentBlock'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 
@@ -24,11 +23,15 @@ import ContentElement from '../content/contentElement'
 import PropertyValueElement from '../propertyValueElement'
 import {sendFlashMessage} from '../flashMessages'
 import Tooltip from '../../widgets/tooltip'
+import {useAppSelector} from '../../store/hooks'
+import {getCardContents} from '../../store/contents'
+import {getCardComments} from '../../store/comments'
 
 import './galleryCard.scss'
 
 type Props = {
-    cardTree: CardTree
+    board: Board
+    card: Card
     onClick: (e: React.MouseEvent, card: Card) => void
     visiblePropertyTemplates: IPropertyTemplate[]
     visibleTitle: boolean
@@ -39,18 +42,20 @@ type Props = {
 }
 
 const GalleryCard = React.memo((props: Props) => {
-    const {cardTree} = props
+    const {card, board} = props
     const intl = useIntl()
-    const [isDragging, isOver, cardRef] = useSortable('card', cardTree.card, props.isManualSort && !props.readonly, props.onDrop)
+    const [isDragging, isOver, cardRef] = useSortable('card', card, props.isManualSort && !props.readonly, props.onDrop)
+    const contents = useAppSelector(getCardContents(card.id))
+    const comments = useAppSelector(getCardComments(card.id))
 
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
 
-    let image: IContentBlock | undefined
-    for (let i = 0; i < cardTree.contents.length; ++i) {
-        if (Array.isArray(cardTree.contents[i])) {
-            image = (cardTree.contents[i] as IContentBlock[]).find((c) => c.type === 'image')
-        } else if ((cardTree.contents[i] as IContentBlock).type === 'image') {
-            image = cardTree.contents[i] as IContentBlock
+    let image: ContentBlock | undefined
+    for (let i = 0; i < contents.length; ++i) {
+        if (Array.isArray(contents[i])) {
+            image = (contents[i] as ContentBlock[]).find((c) => c.type === 'image')
+        } else if ((contents[i] as ContentBlock).type === 'image') {
+            image = contents[i] as ContentBlock
         }
 
         if (image) {
@@ -66,7 +71,7 @@ const GalleryCard = React.memo((props: Props) => {
     return (
         <div
             className={className}
-            onClick={(e: React.MouseEvent) => props.onClick(e, cardTree.card)}
+            onClick={(e: React.MouseEvent) => props.onClick(e, card)}
             style={{opacity: isDragging ? 0.5 : 1}}
             ref={cardRef}
         >
@@ -81,14 +86,14 @@ const GalleryCard = React.memo((props: Props) => {
                             icon={<DeleteIcon/>}
                             id='delete'
                             name={intl.formatMessage({id: 'GalleryCard.delete', defaultMessage: 'Delete'})}
-                            onClick={() => mutator.deleteBlock(cardTree.card, 'delete card')}
+                            onClick={() => mutator.deleteBlock(card, 'delete card')}
                         />
                         <Menu.Text
                             icon={<DuplicateIcon/>}
                             id='duplicate'
                             name={intl.formatMessage({id: 'GalleryCard.duplicate', defaultMessage: 'Duplicate'})}
                             onClick={() => {
-                                mutator.duplicateCard(cardTree.card.id)
+                                mutator.duplicateCard(card.id)
                             }}
                         />
                         <Menu.Text
@@ -111,7 +116,7 @@ const GalleryCard = React.memo((props: Props) => {
                 </div>}
             {!image &&
                 <div className='gallery-item'>
-                    {cardTree?.contents.map((block) => {
+                    {contents.map((block) => {
                         if (Array.isArray(block)) {
                             return block.map((b) => (
                                 <ContentElement
@@ -133,9 +138,9 @@ const GalleryCard = React.memo((props: Props) => {
                 </div>}
             {props.visibleTitle &&
                 <div className='gallery-title'>
-                    { cardTree.card.icon ? <div className='octo-icon'>{cardTree.card.icon}</div> : undefined }
+                    { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
                     <div key='__title'>
-                        {cardTree.card.title ||
+                        {card.title ||
                             <FormattedMessage
                                 id='KanbanCard.untitled'
                                 defaultMessage='Untitled'
@@ -151,9 +156,11 @@ const GalleryCard = React.memo((props: Props) => {
                             placement='top'
                         >
                             <PropertyValueElement
+                                contents={contents}
+                                comments={comments}
+                                board={board}
                                 readOnly={true}
-                                card={cardTree.card}
-                                cardTree={cardTree}
+                                card={card}
                                 propertyTemplate={template}
                                 emptyDisplayValue=''
                             />

@@ -1,7 +1,7 @@
-.ValueSelector {
+.focalboard-body .ValueSelector {
     width: 100%;
     border-radius: var(--default-rad);
-    color: rgb(var(--body-color));
+    color: rgb(var(--center-channel-color-rgb));
     display: flex;
 
     > .Label {
@@ -9,7 +9,7 @@
         max-width: calc(100% - 10px);
 
         &.empty {
-            color: rgba(var(--body-color), 0.6);
+            color: rgba(var(--center-channel-color-rgb), 0.6);
         }
     }
 
@@ -19,6 +19,15 @@
         overflow: hidden;
         border-radius: var(--default-rad);
         max-width: 100%;
+
+        .IconButton.delete-value {
+            width: 16px;
+            min-width: 16px;
+            height: 16px;
+            i {
+                font-size: 16px;
+            }
+        }
     }
 
     .Label-no-padding {
@@ -56,7 +65,7 @@
                 background-color: unset;
 
                 &:hover {
-                    background-color: rgba(var(--body-color), 0.1);
+                    background-color: rgba(var(--center-channel-color-rgb), 0.1);
                 }
             }
         }
@@ -70,7 +79,7 @@
     }
 }
 
-.label-container > .Label {
+.focalboard-body .label-container > .Label {
     max-width: 600px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -79,7 +88,7 @@
 
 }
 
-.octo-property-value > .Label {
+.focalboard-body .octo-property-value > .Label {
     max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;

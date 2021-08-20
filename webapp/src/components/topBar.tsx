@@ -5,8 +5,25 @@ import React from 'react'
 
 import './topBar.scss'
 import HelpIcon from '../widgets/icons/help'
+import {Utils} from '../utils'
+import {Constants} from '../constants'
 
 const TopBar = React.memo((): JSX.Element => {
+    if (Utils.isFocalboardPlugin()) {
+        return (
+            <div
+                className='TopBar'
+            >
+                <div className='versionFrame'>
+                    <div className='version'>
+                        {`v${Constants.versionString}`}
+                    </div>
+                    <div className='versionBadge'>{'BETA'}</div>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div
             className='TopBar'

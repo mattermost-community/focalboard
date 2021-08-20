@@ -1,4 +1,4 @@
-.CardDetail {
+.focalboard-body .CardDetail {
     .title {
         width: 100%;
     }
@@ -7,7 +7,7 @@
         display: flex;
         flex-direction: column;
         min-height: 30px;
-        color: rgba(var(--body-color), 0.4);
+        color: rgba(var(--center-channel-color-rgb), 0.4);
         width: 100%;
         align-items: flex-start;
         .Button {
@@ -45,24 +45,29 @@
     .octo-propertyname {
         width: 150px;
         margin-right: 5px;
-        color: rgba(var(--body-color), 0.6);
+        color: rgba(var(--center-channel-color-rgb), 0.6);
         .Button {
             text-align: left;
             justify-content: unset;
         }
         &.add-property {
-            color: rgba(var(--body-color), 0.4);
+            color: rgba(var(--center-channel-color-rgb), 0.4);
         }
     }
 
-    &.add-content {
-        .Button {
-            opacity: 0;
-            color: rgba(var(--body-color), 0.6);
+    &.content-blocks {
+        &:hover, &:focus-within {
+            .CardDetailContentsMenu {
+                .Button {
+                    opacity: 1;
+                }
+            }
         }
-        &:hover {
+        .CardDetailContentsMenu {
+            margin-left: 48px;
             .Button {
-                opacity: 1;
+                opacity: 0;
+                color: rgba(var(--center-channel-color-rgb), 0.6);
             }
         }
     }

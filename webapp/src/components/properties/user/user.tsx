@@ -5,7 +5,7 @@ import React from 'react'
 import Select from 'react-select'
 
 import {IUser} from '../../../user'
-import {getCurrentWorkspaceUsers, getCurrentWorkspaceUsersById} from '../../../store/currentWorkspaceUsers'
+import {getWorkspaceUsersList, getWorkspaceUsers} from '../../../store/users'
 import {useAppSelector} from '../../../store/hooks'
 
 import './user.scss'
@@ -18,8 +18,8 @@ type Props = {
 }
 
 const UserProperty = (props: Props): JSX.Element => {
-    const workspaceUsers = useAppSelector<IUser[]>(getCurrentWorkspaceUsers)
-    const workspaceUsersById = useAppSelector<{[key:string]: IUser}>(getCurrentWorkspaceUsersById)
+    const workspaceUsers = useAppSelector<IUser[]>(getWorkspaceUsersList)
+    const workspaceUsersById = useAppSelector<{[key:string]: IUser}>(getWorkspaceUsers)
 
     if (props.readonly) {
         return (<div className='UserProperty octo-propertyvalue readonly'>{workspaceUsersById[props.value]?.username || props.value}</div>)

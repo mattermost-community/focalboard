@@ -1,11 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {IBlock} from './blocks/block'
-import {MutableBoard} from './blocks/board'
-import {MutableCard} from './blocks/card'
-import {MutableTextBlock} from './blocks/textBlock'
+import {Block} from './blocks/block'
 import {OctoUtils} from './octoUtils'
+
+import {TestBlockFactory} from './test/testBlockFactory'
 
 test('duplicateBlockTree: Board', async () => {
     const [blocks, sourceBlock] = createBoardTree()
@@ -51,26 +50,22 @@ test('duplicateBlockTree: Card', async () => {
     }
 })
 
-function createBoardTree(): [IBlock[], IBlock] {
-    const blocks: IBlock[] = []
+function createBoardTree(): [Block[], Block] {
+    const blocks: Block[] = []
 
-    const board = new MutableBoard()
+    const board = TestBlockFactory.createBoard()
     board.id = 'board1'
     board.rootId = board.id
     blocks.push(board)
 
     for (let i = 0; i < 5; i++) {
-        const card = new MutableCard()
+        const card = TestBlockFactory.createCard(board)
         card.id = `card${i}`
-        card.parentId = board.id
-        card.rootId = board.id
         blocks.push(card)
 
         for (let j = 0; j < 3; j++) {
-            const textBlock = new MutableTextBlock()
+            const textBlock = TestBlockFactory.createText(card)
             textBlock.id = `text${j}`
-            textBlock.parentId = card.id
-            textBlock.rootId = card.rootId
             blocks.push(textBlock)
         }
     }
@@ -78,19 +73,17 @@ function createBoardTree(): [IBlock[], IBlock] {
     return [blocks, board]
 }
 
-function createCardTree(): [IBlock[], IBlock] {
-    const blocks: IBlock[] = []
+function createCardTree(): [Block[], Block] {
+    const blocks: Block[] = []
 
-    const card = new MutableCard()
+    const card = TestBlockFactory.createCard()
     card.id = 'card1'
     card.rootId = 'board1'
     blocks.push(card)
 
     for (let i = 0; i < 5; i++) {
-        const textBlock = new MutableTextBlock()
+        const textBlock = TestBlockFactory.createText(card)
         textBlock.id = `text${i}`
-        textBlock.parentId = card.id
-        textBlock.rootId = card.rootId
         blocks.push(textBlock)
     }
 

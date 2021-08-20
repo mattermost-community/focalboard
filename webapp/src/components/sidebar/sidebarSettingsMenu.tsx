@@ -24,7 +24,6 @@ import './sidebarSettingsMenu.scss'
 import CheckIcon from '../../widgets/icons/check'
 
 type Props = {
-    setWhiteLogo: (whiteLogo: boolean) => void
     activeTheme: string
 }
 
@@ -38,9 +37,7 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
     const [themeName, setThemeName] = useState(props.activeTheme)
 
     const updateTheme = (theme: Theme | null, name: string) => {
-        const consolidatedTheme = setTheme(theme)
-        const whiteLogo = (consolidatedTheme.sidebarWhiteLogo === 'true')
-        props.setWhiteLogo(whiteLogo)
+        setTheme(theme)
         setThemeName(name)
     }
 
