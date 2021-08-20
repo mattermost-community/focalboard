@@ -17,7 +17,7 @@
     }
 
     .workspaceTitle {
-        color: var(--center-channel-color-rgb);
+        color: rgb(var(--center-channel-color-rgb));
         font-size: 14px;
     }
 
@@ -59,7 +59,7 @@
 }
 
 .WorkspaceOptions__input, .WorkspaceOptions__placeholder {
-    color: rgb(var(--sidebar-text-rgb)) !important;
+    color: rgb(var(--center-channel-color-rgb)) !important;
 }
 
 .WorkspaceOptions__control, .WorkspaceOptions__menu {
