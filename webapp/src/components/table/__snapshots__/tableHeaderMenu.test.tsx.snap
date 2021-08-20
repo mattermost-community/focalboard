@@ -12,7 +12,9 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
         class="menu-options"
       >
         <div
+          aria-label="Sort ascending"
           class="MenuOption TextOption menu-option"
+          role="button"
         >
           <div
             class="noicon"
@@ -27,7 +29,9 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
           />
         </div>
         <div
+          aria-label="Sort descending"
           class="MenuOption TextOption menu-option"
+          role="button"
         >
           <div
             class="noicon"
@@ -42,7 +46,9 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
           />
         </div>
         <div
+          aria-label="Insert left"
           class="MenuOption TextOption menu-option"
+          role="button"
         >
           <div
             class="noicon"
@@ -57,7 +63,9 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
           />
         </div>
         <div
+          aria-label="Insert right"
           class="MenuOption TextOption menu-option"
+          role="button"
         >
           <div
             class="noicon"
@@ -72,7 +80,9 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
           />
         </div>
         <div
+          aria-label="Hide"
           class="MenuOption TextOption menu-option"
+          role="button"
         >
           <div
             class="noicon"
@@ -87,7 +97,9 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
           />
         </div>
         <div
+          aria-label="Duplicate"
           class="MenuOption TextOption menu-option"
+          role="button"
         >
           <div
             class="noicon"
@@ -102,7 +114,9 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
           />
         </div>
         <div
+          aria-label="Delete"
           class="MenuOption TextOption menu-option"
+          role="button"
         >
           <div
             class="noicon"
@@ -124,7 +138,9 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
         class="menu-options hideOnWidescreen"
       >
         <div
+          aria-label="Cancel"
           class="MenuOption TextOption menu-option menu-cancel"
+          role="button"
         >
           <div
             class="noicon"
@@ -156,7 +172,9 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
         class="menu-options"
       >
         <div
+          aria-label="Sort ascending"
           class="MenuOption TextOption menu-option"
+          role="button"
         >
           <div
             class="noicon"
@@ -171,7 +189,9 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
           />
         </div>
         <div
+          aria-label="Sort descending"
           class="MenuOption TextOption menu-option"
+          role="button"
         >
           <div
             class="noicon"
@@ -186,7 +206,9 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
           />
         </div>
         <div
+          aria-label="Insert left"
           class="MenuOption TextOption menu-option"
+          role="button"
         >
           <div
             class="noicon"
@@ -201,7 +223,9 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
           />
         </div>
         <div
+          aria-label="Insert right"
           class="MenuOption TextOption menu-option"
+          role="button"
         >
           <div
             class="noicon"
@@ -223,7 +247,9 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
         class="menu-options hideOnWidescreen"
       >
         <div
+          aria-label="Cancel"
           class="MenuOption TextOption menu-option menu-cancel"
+          role="button"
         >
           <div
             class="noicon"

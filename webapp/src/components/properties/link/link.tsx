@@ -25,6 +25,7 @@ const URLProperty = (props: Props): JSX.Element => {
                 href={Utils.ensureProtocol(props.value.trim())}
                 target='_blank'
                 rel='noreferrer'
+                onClick={(event) => event.stopPropagation()}
             >
                 <LinkIcon/>
             </a>
@@ -35,7 +36,7 @@ const URLProperty = (props: Props): JSX.Element => {
         <div className='URLProperty property-link url'>
             <Editable
                 className='octo-propertyvalue'
-                placeholderText='Empty'
+                placeholderText=''
                 value={props.value}
                 onChange={props.onChange}
                 onSave={props.onSave}

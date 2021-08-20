@@ -151,6 +151,7 @@
     }
 
     &.octo-table-body {
+        margin-top: 16px;
         display: flex;
         flex: 1;
         flex-direction: column;
@@ -171,7 +172,7 @@
 
     .octo-table-header {
         position: sticky;
-        top: 0;
+        top: -2px;
         z-index: 1;
         background: rgb(var(--center-channel-bg-rgb));
 

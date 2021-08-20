@@ -21,6 +21,7 @@ import CommentsList from './commentsList'
 import CardDetailContents from './cardDetailContents'
 import CardDetailContentsMenu from './cardDetailContentsMenu'
 import CardDetailProperties from './cardDetailProperties'
+import useImagePaste from './imagePaste'
 
 import './cardDetail.scss'
 
@@ -48,6 +49,8 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
     const saveTitleRef = useRef<() => void>(saveTitle)
     saveTitleRef.current = saveTitle
+
+    useImagePaste(card.id, card.fields.contentOrder, card.rootId)
 
     useEffect(() => {
         if (!title) {
