@@ -7,7 +7,6 @@
   "BoardComponent.no-property": "无 {property}",
   "BoardComponent.no-property-title": "{property} 属性为空的项目将转到此处。该列无法删除。",
   "BoardComponent.show": "显示",
-  "BoardPage.syncFailed": "版面可能将被删除或访问将被撤销。",
   "CardDetail.add-content": "新增内容",
   "CardDetail.add-icon": "新增图标",
   "CardDetail.add-property": "+ 新增属性",

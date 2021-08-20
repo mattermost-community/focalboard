@@ -7,7 +7,6 @@
   "BoardComponent.no-property": "{property} 無し",
   "BoardComponent.no-property-title": "{property}が空のアイテムがここに表示されます。このカラムは削除できません。",
   "BoardComponent.show": "表示",
-  "BoardPage.syncFailed": "ボードが削除されたか、アクセスが取り消されました。",
   "CardDetail.add-content": "内容を追加する",
   "CardDetail.add-icon": "アイコンを追加する",
   "CardDetail.add-property": "+ プロパティを追加する",

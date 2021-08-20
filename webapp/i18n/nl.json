@@ -7,7 +7,6 @@
   "BoardComponent.no-property": "Geen {property}",
   "BoardComponent.no-property-title": "Items met een lege {property} eigenschap komen hier te staan. Deze kolom kan niet worden verwijderd.",
   "BoardComponent.show": "Toon",
-  "BoardPage.syncFailed": "Het bord kan worden verwijderd of de toegang kan worden ingetrokken.",
   "CardDetail.add-content": "Inhoud toevoegen",
   "CardDetail.add-icon": "Pictogram toevoegen",
   "CardDetail.add-property": "+ Een eigenschap toevoegen",
