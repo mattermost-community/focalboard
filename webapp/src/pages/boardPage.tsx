@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {batch} from 'react-redux'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
@@ -27,9 +27,6 @@ import {updateComments} from '../store/comments'
 import {initialLoad, initialReadOnlyLoad} from '../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 import {UserSettings} from '../userSettings'
-import RootPortal from '../components/rootPortal'
-import Dialog from '../components/dialog'
-import WorkspaceSwitcher from '../components/workspaceSwitcher/workspaceSwitcher'
 
 type Props = {
     readonly?: boolean
@@ -47,7 +44,6 @@ const BoardPage = (props: Props) => {
     const history = useHistory()
     const match = useRouteMatch<{boardId: string, viewId: string, workspaceId?: string}>()
     const [websocketClosed, setWebsocketClosed] = useState(false)
-    const [showWorkspaceSwitcher, setShowWorkspaceSwitcher] = useState(false)
 
     // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {

@@ -15,8 +15,6 @@ import {Utils} from '../../utils'
 
 import './sidebar.scss'
 
-import ChevronUp from '../../widgets/icons/chevronUp'
-
 import WorkspaceSwitcher from '../workspaceSwitcher/workspaceSwitcher'
 
 import SidebarAddBoardMenu from './sidebarAddBoardMenu'

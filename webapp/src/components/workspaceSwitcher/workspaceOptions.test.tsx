@@ -23,26 +23,7 @@ describe('components/workspaceSwitcher/WorkspaceOptions', () => {
     const mockStore = configureStore([])
 
     const workspace1: UserWorkspace = {
-        id: 'worktest(\'2 more workspaces available\', () => {\n' +
-            '        const store = mockStore({\n' +
-            '            users: {\n' +
-            '                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3),\n' +
-            '            },\n' +
-            '        })\n' +
-            '\n' +
-            '        const component = wrapProviders(\n' +
-            '            <ReduxProvider store={store}>\n' +
-            '                <WorkspaceOptions\n' +
-            '                    onChange={() => {\n' +
-            '                    }}\n' +
-            '                    activeWorkspaceId={workspace1.id}\n' +
-            '                />\n' +
-            '            </ReduxProvider>,\n' +
-            '        )\n' +
-            '\n' +
-            '        const {container} = render(component)\n' +
-            '        expect(container).toMatchSnapshot()\n' +
-            '    })space_1',
+        id: 'workspace_1',
         title: 'Workspace 1',
         boardCount: 1,
     }
@@ -58,6 +39,27 @@ describe('components/workspaceSwitcher/WorkspaceOptions', () => {
         title: 'Workspace 3',
         boardCount: 3,
     }
+
+    test('2 more workspaces available', () => {
+        const store = mockStore({
+            users: {
+                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3),
+            },
+        })
+
+        const component = wrapProviders(
+            <ReduxProvider store={store}>
+                <WorkspaceOptions
+                    onChange={() => {
+                    }}
+                    activeWorkspaceId={workspace1.id}
+                />
+            </ReduxProvider>,
+        )
+
+        const {container} = render(component)
+        expect(container).toMatchSnapshot()
+    })
 
     test('no more workspaces available', () => {
         const store = mockStore({

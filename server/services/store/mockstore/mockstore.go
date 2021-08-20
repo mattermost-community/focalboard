@@ -2,7 +2,7 @@
 // Source: services/store/store.go
 
 // Package mock_store is a generated GoMock package.
-package mock_store
+package mockstore
 
 import (
 	reflect "reflect"
