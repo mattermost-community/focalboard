@@ -132,6 +132,7 @@
   "ViewHeader.delete-template": "Удалить",
   "ViewHeader.edit-template": "Редактировать",
   "ViewHeader.empty-card": "Очистить карточку",
+  "ViewHeader.export-board-archive": "Экспорт архива доски",
   "ViewHeader.export-complete": "Экспорт завершен!",
   "ViewHeader.export-csv": "Экспорт в CSV",
   "ViewHeader.export-failed": "Ошибка экспорта!",
