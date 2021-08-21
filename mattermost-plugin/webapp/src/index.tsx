@@ -5,9 +5,10 @@ import {Store, Action} from 'redux'
 import {Provider as ReduxProvider} from 'react-redux'
 import {useHistory} from 'mm-react-router-dom'
 
+import {rudderAnalytics, RudderTelemetryHandler} from 'mattermost-redux/client/rudder'
+
 import {GlobalState} from 'mattermost-redux/types/store'
 import {getTheme} from 'mattermost-redux/selectors/entities/preferences'
-import {getChannelByName} from 'mattermost-redux/selectors/entities/channels'
 
 const windowAny = (window as any)
 windowAny.baseURL = '/plugins/focalboard'
@@ -20,9 +21,12 @@ import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHead
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
 import {setMattermostTheme} from '../../../webapp/src/theme'
 
+import TelemetryClient from '../../../webapp/src/telemetry/telemetryClient'
+
 import '../../../webapp/src/styles/focalboard-variables.scss'
 import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
+import octoClient from '../../../webapp/src/octoClient'
 
 import manifest from './manifest'
 import ErrorBoundary from './error_boundary'
@@ -31,6 +35,9 @@ import ErrorBoundary from './error_boundary'
 import {PluginRegistry} from './types/mattermost-webapp'
 
 import './plugin.scss'
+
+const TELEMETRY_RUDDER_KEY = 'placeholder_rudder_key'
+const TELEMETRY_RUDDER_DATAPLANE_URL = 'placeholder_rudder_dataplane_url'
 
 const MainApp = () => {
     useEffect(() => {
@@ -149,6 +156,54 @@ export default class Plugin {
                 window.open(`${window.location.origin}/plug/focalboard/workspace/${currentChannel}`)
             }, '', 'Focalboard Workspace')
             this.registry.registerCustomRoute('/', MainApp)
+        }
+
+        const config = await octoClient.getClientConfig()
+        if (config?.telemetry) {
+            let rudderKey = TELEMETRY_RUDDER_KEY //'1d5bMvdrfWClLxgK1FvV3s4U1tg' //Constants.TELEMETRY_RUDDER_KEY
+            let rudderUrl = TELEMETRY_RUDDER_DATAPLANE_URL //'https://pdat.matterlytics.com' //Constants.TELEMETRY_RUDDER_DATAPLANE_URL
+
+            // export RUDDER_KEY=1d5bMvdrfWClLxgK1FvV3s4U1tg
+            // export RUDDER_DATAPLANE_URL=https://pdat.matterlytics.com
+            if (rudderKey.startsWith('placeholder') && rudderUrl.startsWith('placeholder')) {
+                rudderKey = process.env.RUDDER_KEY as string //eslint-disable-line no-process-env
+                rudderUrl = process.env.RUDDER_DATAPLANE_URL as string //eslint-disable-line no-process-env
+            }
+
+            if (rudderKey != null && rudderKey !== '') { //&& this.props.telemetryEnabled) {
+                rudderAnalytics.load(rudderKey, rudderUrl)
+
+                rudderAnalytics.identify(config?.telemetryid, {}, {
+                    context: {
+                        ip: '0.0.0.0',
+                    },
+                    page: {
+                        path: '',
+                        referrer: '',
+                        search: '',
+                        title: '',
+                        url: '',
+                    },
+                    anonymousId: '00000000000000000000000000',
+                })
+
+                rudderAnalytics.page('ApplicationLoaded', '', {
+                    path: '',
+                    referrer: '',
+                    search: '',
+                    title: '',
+                    url: '',
+                },
+                {
+                    context: {
+                        ip: '0.0.0.0',
+                    },
+                    anonymousId: '00000000000000000000000000',
+                })
+
+                // Client4.setTelemetryHandler(new RudderTelemetryHandler())
+                TelemetryClient.setTelemetryHandler(new RudderTelemetryHandler())
+            }
         }
     }
 
