@@ -33,8 +33,15 @@
     .octo-propertyrow {
         display: flex;
         flex-direction: row;
-        margin: 8px 0;
+        margin: 4px 0;
         .octo-propertyvalue {
+            &:not(.readonly) {
+                min-width: 150px;
+                transition: background 100ms ease-out 0s;
+                &:hover {
+                    background-color: rgba(var(--center-channel-color-rgb), 0.1);
+                }
+            }
             .MenuWrapper {
                 display: flex;
                 align-items: center;
@@ -47,6 +54,9 @@
         margin-right: 5px;
         color: rgba(var(--center-channel-color-rgb), 0.6);
         .Button {
+            width: 100%;
+            height: 100%;
+            padding: 4px;
             text-align: left;
             justify-content: unset;
         }

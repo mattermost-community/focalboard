@@ -31,7 +31,7 @@ const LastModifiedBy = (props: Props): JSX.Element => {
     }
 
     return (
-        <div className='LastModifiedBy octo-propertyvalue'>
+        <div className='LastModifiedBy octo-propertyvalue readonly'>
             {(workspaceUsersById && workspaceUsersById[latestBlock.modifiedBy]?.username) || latestBlock.modifiedBy}
         </div>
     )
