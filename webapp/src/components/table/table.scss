@@ -1,5 +1,9 @@
 .Table {
+    margin-top: 16px;
     padding-bottom: 0 !important;
+    overflow: auto;
+    position: relative;
+    flex: 1;
 
     .octo-group-header-cell {
         display: flex;
@@ -149,13 +153,10 @@
         }
     }
 
-    &.octo-table-body {
-        margin-top: 16px;
+    .octo-table-body {
         display: flex;
-        flex: 1;
         flex-direction: column;
-        overflow: auto;
-        position: relative;
+        width: fit-content;
     }
 
     .octo-table-header,
@@ -194,9 +195,7 @@
         .octo-table-cell {
             color: rgba(var(--center-channel-color-rgb), 0.6);
             cursor: pointer;
-
             width: 100%;
-            border-right: none;
             padding-left: 15px;
 
             &:hover {
