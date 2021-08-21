@@ -9,6 +9,10 @@ import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 import {IntlProvider} from 'react-intl'
 
+import {mocked} from 'ts-jest/utils'
+
+import mutator from '../mutator'
+
 import {BlockIcons} from '../blockIcons'
 import {TestBlockFactory} from '../test/testBlockFactory'
 
@@ -18,16 +22,13 @@ const wrapIntl = (children: ReactElement) => <IntlProvider locale='en'>{children
 const board = TestBlockFactory.createBoard()
 const icon = BlockIcons.shared.randomIcon()
 
-jest.mock('../mutator', () => ({
-    changeIcon: jest.fn((id, oldIcon, newIcon) => {
-        board.fields.icon = newIcon
-        return Promise.resolve()
-    }),
-}))
+jest.mock('../mutator')
+const mockedMutator = mocked(mutator, true)
 
 describe('components/blockIconSelector', () => {
     beforeEach(() => {
         board.fields.icon = icon
+        jest.clearAllMocks()
     })
     test('return an icon correctly', () => {
         render(wrapIntl(
@@ -82,8 +83,7 @@ describe('components/blockIconSelector', () => {
         const buttonRandom = screen.queryByRole('button', {name: 'Random'})
         expect(buttonRandom).not.toBeNull()
         userEvent.click(buttonRandom!)
-        expect(board.fields.icon).not.toBeNull()
-        expect(board.fields.icon).not.toEqual(icon)
+        expect(mockedMutator.changeIcon).toBeCalledTimes(1)
     })
 
     test('return a new icon after click on EmojiPicker', async () => {
@@ -100,9 +100,8 @@ describe('components/blockIconSelector', () => {
 
         const allButtonThumbUp = await screen.findAllByRole('button', {name: /thumbsup/i})
         userEvent.click(allButtonThumbUp[0])
-
-        expect(board.fields.icon).not.toBeNull()
-        expect(board.fields.icon).toEqual('👍')
+        expect(mockedMutator.changeIcon).toBeCalledTimes(1)
+        expect(mockedMutator.changeIcon).toBeCalledWith(board.id, board.fields.icon, '👍')
     })
 
     test('return no icon after click on remove menu', () => {
@@ -116,8 +115,11 @@ describe('components/blockIconSelector', () => {
         const buttonRemove = screen.queryByRole('button', {name: 'Remove icon'})
         expect(buttonRemove).not.toBeNull()
         userEvent.click(buttonRemove!)
-        expect(board.fields.icon).not.toBeNull()
-        expect(board.fields.icon).toEqual('')
+        expect(mockedMutator.changeIcon).toBeCalledTimes(1)
+        expect(mockedMutator.changeIcon).toBeCalledWith(board.id, board.fields.icon, '', 'remove icon')
+
+        //simulate reset icon
+        board.fields.icon = ''
 
         rerender(wrapIntl(
             <BlockIconSelector
