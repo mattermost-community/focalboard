@@ -50,13 +50,13 @@ describe('components/blockIconSelector', () => {
         expect(container).toBeEmptyDOMElement()
     })
     test('return menu on click', () => {
-        const {container} = render(wrapIntl(
+        render(wrapIntl(
             <BlockIconSelector
                 block={board}
                 size='l'
             />,
         ))
-        userEvent.click(container.getElementsByTagName('div')[1]) //0 is div "BlockIconSelector"
+        userEvent.click(screen.getByTestId('menuwrapper'))
         expect(screen.queryByRole('button', {name: 'Random'})).not.toBeNull()
         expect(screen.queryByText('Pick icon')).not.toBeNull()
         expect(screen.queryByRole('button', {name: 'Remove icon'})).not.toBeNull()
@@ -68,18 +68,17 @@ describe('components/blockIconSelector', () => {
                 readonly={true}
             />,
         ))
-        expect(container.getElementsByTagName('div')[1].className).toContain('readonly')
-        expect(container.getElementsByClassName('MenuWrapper').length).toEqual(0)
+        expect(container.querySelector('.readonly')).not.toBeEmptyDOMElement()
     })
 
     test('return a new icon after click on random menu', () => {
-        const {container} = render(wrapIntl(
+        render(wrapIntl(
             <BlockIconSelector
                 block={board}
                 size='l'
             />,
         ))
-        userEvent.click(container.getElementsByTagName('div')[1]) //0 is div "BlockIconSelector"
+        userEvent.click(screen.getByTestId('menuwrapper'))
         const buttonRandom = screen.queryByRole('button', {name: 'Random'})
         expect(buttonRandom).not.toBeNull()
         userEvent.click(buttonRandom!)
@@ -93,7 +92,7 @@ describe('components/blockIconSelector', () => {
                 size='l'
             />,
         ))
-        userEvent.click(container.getElementsByTagName('div')[1]) //0 is div "BlockIconSelector"
+        userEvent.click(screen.getByTestId('menuwrapper'))
         const menuPicker = container.querySelector('div#pick')
         expect(menuPicker).not.toBeNull()
         fireEvent.mouseEnter(menuPicker!)
@@ -111,7 +110,7 @@ describe('components/blockIconSelector', () => {
                 size='l'
             />,
         ))
-        userEvent.click(container.getElementsByTagName('div')[1]) //0 is div "BlockIconSelector"
+        userEvent.click(screen.getByTestId('menuwrapper'))
         const buttonRemove = screen.queryByRole('button', {name: 'Remove icon'})
         expect(buttonRemove).not.toBeNull()
         userEvent.click(buttonRemove!)
