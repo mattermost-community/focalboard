@@ -261,6 +261,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                     className='octo-propertyvalue'
                     placeholderText=''
                     value={value as string}
+                    autoExpand={true}
                     onChange={setValue}
                     onSave={saveTextProperty}
                     onCancel={() => setValue(propertyValue)}

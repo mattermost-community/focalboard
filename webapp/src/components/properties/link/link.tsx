@@ -38,6 +38,7 @@ const URLProperty = (props: Props): JSX.Element => {
                 className='octo-propertyvalue'
                 placeholderText=''
                 value={props.value}
+                autoExpand={true}
                 onChange={props.onChange}
                 onSave={props.onSave}
                 onCancel={props.onCancel}

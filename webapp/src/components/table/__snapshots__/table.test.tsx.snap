@@ -214,7 +214,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           style="width: 100px;"
         >
           <div
-            class="CreatedAt octo-propertyvalue"
+            class="CreatedAt octo-propertyvalue readonly"
           >
             June 15, 4:22 PM
           </div>
@@ -310,7 +310,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           style="width: 100px;"
         >
           <div
-            class="CreatedAt octo-propertyvalue"
+            class="CreatedAt octo-propertyvalue readonly"
           >
             June 15, 4:22 PM
           </div>
@@ -994,7 +994,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           style="width: 100px;"
         >
           <div
-            class="LastModifiedAt octo-propertyvalue"
+            class="LastModifiedAt octo-propertyvalue readonly"
           >
             June 20, 12:22 PM
           </div>
@@ -1090,7 +1090,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           style="width: 100px;"
         >
           <div
-            class="LastModifiedAt octo-propertyvalue"
+            class="LastModifiedAt octo-propertyvalue readonly"
           >
             June 22, 11:23 AM
           </div>
@@ -1384,7 +1384,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           style="width: 100px;"
         >
           <div
-            class="LastModifiedBy octo-propertyvalue"
+            class="LastModifiedBy octo-propertyvalue readonly"
           >
             username_4
           </div>
@@ -1480,7 +1480,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           style="width: 100px;"
         >
           <div
-            class="LastModifiedBy octo-propertyvalue"
+            class="LastModifiedBy octo-propertyvalue readonly"
           >
             username_3
           </div>
