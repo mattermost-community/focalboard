@@ -31,7 +31,7 @@ const UserProperty = (props: Props): JSX.Element => {
             isSearchable={true}
             isClearable={true}
             backspaceRemovesValue={true}
-            className={'UserProperty'}
+            className={'UserProperty octo-propertyvalue'}
             styles={getSelectBaseStyle()}
             getOptionLabel={(o: IUser) => o.username}
             getOptionValue={(a: IUser) => a.id}
