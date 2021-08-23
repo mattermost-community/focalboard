@@ -53,7 +53,7 @@ const Gallery = (props: Props): JSX.Element => {
     const visibleTitle = activeView.fields.visiblePropertyIds.includes(Constants.titleColumnId)
 
     return (
-        <div className='octo-table-body Gallery'>
+        <div className='Gallery'>
             {cards.filter((c) => c.parentId === board.id).map((card) => {
                 return (
                     <GalleryCard
