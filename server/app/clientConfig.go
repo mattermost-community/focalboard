@@ -7,6 +7,6 @@ import (
 func (a *App) GetClientConfig() *model.ClientConfig {
 	return &model.ClientConfig{
 		Telemetry:   a.config.Telemetry,
-		TelemetryId: a.config.TelemetryID,
+		TelemetryID: a.config.TelemetryID,
 	}
 }

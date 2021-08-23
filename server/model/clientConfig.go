@@ -2,5 +2,5 @@ package model
 
 type ClientConfig struct {
 	Telemetry   bool   `json:"telemetry"`
-	TelemetryId string `json:"telemetryid"`
+	TelemetryID string `json:"telemetryid"`
 }
