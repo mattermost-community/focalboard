@@ -3,15 +3,12 @@
     align-items: center;
 
     &.url {
-        display: flex;
-        overflow: hidden;
-        width: inherit;
+        width: 100%;
     }
 
     a {
         padding: 0 8px; // increases clickable area for better UX
         align-self: stretch;
-        width: 100%;
     }
 
     .Link__button {
