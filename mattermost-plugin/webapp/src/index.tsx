@@ -181,7 +181,6 @@ export default class Plugin {
                         search: '',
                         title: '',
                         url: '',
-                        focalboardTest: true,
                     },
                     anonymousId: '00000000000000000000000000',
                 })
@@ -192,7 +191,6 @@ export default class Plugin {
                     search: '',
                     title: '',
                     url: '',
-                    focalboardTest: true,
                 },
                 {
                     context: {
