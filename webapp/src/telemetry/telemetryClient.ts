@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import {IUser} from '../user'
 
-import {TelemetryHandler} from '../../temp/telemetry/telemetry'
+import {TelemetryHandler} from './telemetry'
 
 class TelemetryClient {
     public telemetryHandler?: TelemetryHandler

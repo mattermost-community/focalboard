@@ -81,7 +81,7 @@ class CenterPanel extends React.Component<Props, State> {
 
     componentDidMount(): void {
         this.showCardInUrl()
-        TelemetryClient.trackEvent('boards', 'view', {viewTypeTest: this.props.activeView.fields.viewType})
+        TelemetryClient.trackEvent('boards', 'view', {viewType: this.props.activeView.fields.viewType})
     }
 
     constructor(props: Props) {
@@ -97,7 +97,7 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     componentDidUpdate(): void {
-        TelemetryClient.trackEvent('boards', 'view', {viewTypeTest: this.props.activeView.fields.viewType})
+        TelemetryClient.trackEvent('boards', 'view', {viewType: this.props.activeView.fields.viewType})
     }
 
     private showCardInUrl() {
