@@ -160,17 +160,15 @@ export default class Plugin {
 
         const config = await octoClient.getClientConfig()
         if (config?.telemetry) {
-            let rudderKey = TELEMETRY_RUDDER_KEY //'1d5bMvdrfWClLxgK1FvV3s4U1tg' //Constants.TELEMETRY_RUDDER_KEY
-            let rudderUrl = TELEMETRY_RUDDER_DATAPLANE_URL //'https://pdat.matterlytics.com' //Constants.TELEMETRY_RUDDER_DATAPLANE_URL
+            let rudderKey = TELEMETRY_RUDDER_KEY
+            let rudderUrl = TELEMETRY_RUDDER_DATAPLANE_URL
 
-            // export RUDDER_KEY=1d5bMvdrfWClLxgK1FvV3s4U1tg
-            // export RUDDER_DATAPLANE_URL=https://pdat.matterlytics.com
             if (rudderKey.startsWith('placeholder') && rudderUrl.startsWith('placeholder')) {
                 rudderKey = process.env.RUDDER_KEY as string //eslint-disable-line no-process-env
                 rudderUrl = process.env.RUDDER_DATAPLANE_URL as string //eslint-disable-line no-process-env
             }
 
-            if (rudderKey != null && rudderKey !== '') { //&& this.props.telemetryEnabled) {
+            if (rudderKey != null && rudderKey !== '') {
                 rudderAnalytics.load(rudderKey, rudderUrl)
 
                 rudderAnalytics.identify(config?.telemetryid, {}, {
@@ -200,8 +198,6 @@ export default class Plugin {
                     },
                     anonymousId: '00000000000000000000000000',
                 })
-
-                // Client4.setTelemetryHandler(new RudderTelemetryHandler())
                 TelemetryClient.setTelemetryHandler(new RudderTelemetryHandler())
             }
         }

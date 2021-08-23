@@ -22,8 +22,6 @@ class TelemetryClient {
     trackEvent(category: string, event: string, props?: any): void {
         if (this.telemetryHandler) {
             const userId = this.user?.id
-
-            // const userRoles = this.userRoles && isSystemAdmin(this.userRoles) ? 'system_admin, system_user' : 'system_user'
             this.telemetryHandler.trackEvent(userId || '', '', category, event, props)
         }
     }
@@ -31,8 +29,6 @@ class TelemetryClient {
     pageVisited(category: string, name: string): void {
         if (this.telemetryHandler) {
             const userId = this.user?.id
-
-            // const userRoles = this.userRoles && isSystemAdmin(this.userRoles) ? 'system_admin, system_user' : 'system_user'
             this.telemetryHandler.pageVisited(userId || '', '', category, name)
         }
     }

@@ -52,10 +52,7 @@ const App = React.memo((): JSX.Element => {
 
     useEffect(() => {
         if (me) {
-            console.log('set me')
             TelemetryClient.setUser(me)
-        } else {
-            console.log('NOT me')
         }
     }, [me])
 
