@@ -155,9 +155,9 @@ func (s *SQLStore) GetUserWorkspaces(userID string) ([]model.UserWorkspace, erro
 			From("focalboard_blocks").
 			Join("ChannelMembers ON focalboard_blocks.workspace_id = ChannelMembers.ChannelId").
 			Join("Channels ON ChannelMembers.ChannelId = Channels.Id").
-			Where("ChannelMembers.UserId = ?", userID).
-			Where("focalboard_blocks.type = 'board'").
-			Where("focalboard_blocks.fields LIKE '%\"isTemplate\":false%'").
+			Where(sq.Eq{"ChannelMembers.UserId": userID}).
+			Where(sq.Eq{"focalboard_blocks.type": "board"}).
+			Where(sq.Like{"focalboard_blocks.fields": "%\"isTemplate\":false%"}).
 			GroupBy("Channels.Id", "Channels.DisplayName")
 	} else {
 		query = s.getQueryBuilder().
@@ -165,8 +165,8 @@ func (s *SQLStore) GetUserWorkspaces(userID string) ([]model.UserWorkspace, erro
 			From("focalboard_blocks").
 			Join("channelmembers ON focalboard_blocks.workspace_id = channelmembers.channelid").
 			Join("channels ON channelmembers.channelid = channels.id").
-			Where("channelmembers.userid = ?", userID).
-			Where("focalboard_blocks.type = 'board'").
+			Where(sq.Eq{"channelmembers.userid": userID}).
+			Where(sq.Eq{"focalboard_blocks.type": "board"}).
 			Where("focalboard_blocks.fields ->> 'isTemplate' = 'false'").
 			GroupBy("channels.id", "channels.displayname")
 	}

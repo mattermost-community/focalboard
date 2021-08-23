@@ -5,12 +5,12 @@ import React from 'react'
 import Select from 'react-select'
 import {useIntl} from 'react-intl'
 
-import {getUserWorkspaceList} from '../../store/users'
 import {UserWorkspace} from '../../user'
 import {useAppSelector} from '../../store/hooks'
 
 import './workspaceOptions.scss'
 import Search from '../../widgets/icons/search'
+import {getUserWorkspaceList} from '../../store/workspace'
 
 type Props = {
     onClose?: () => void
@@ -32,10 +32,9 @@ const WorkspaceOptions = (props: Props): JSX.Element => {
 
     return (
         <Select
-            classNamePrefix={'WorkspaceOptions'}
+            className='WorkspaceOptions'
+            classNamePrefix='WorkspaceOptions'
             autoFocus={true}
-
-            // style={style}
             backspaceRemovesValue={false}
             controlShouldRenderValue={false}
             hideSelectedOptions={false}
@@ -79,7 +78,7 @@ const Option = (props: any): JSX.Element => {
         <div
             ref={innerRef}
             {...innerProps}
-            className={`workspaceOption ${props.isFocused ? 'focused' : ''}`}
+            className={`Option ${props.isFocused ? 'focused' : ''}`}
         >
             <div className='workspaceTitle'>
                 {props.data.label}

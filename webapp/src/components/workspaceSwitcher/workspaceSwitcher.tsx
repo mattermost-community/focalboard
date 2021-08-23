@@ -45,7 +45,7 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
                         setSelectClosed(true)
                     }}
                     onChange={(workspaceId: string) => {
-                        const newPath = generatePath(match.path, {...match.params, workspaceId})
+                        const newPath = generatePath(match.path, {workspaceId})
                         setSelectClosed(false)
                         setShowMenu(false)
                         history.replace(newPath)
