@@ -7,7 +7,6 @@
   "BoardComponent.no-property": "Pas de {property}",
   "BoardComponent.no-property-title": "Les élément sans propriété {property} seront placés ici. Cette colonne ne peut pas être supprimée.",
   "BoardComponent.show": "Montrer",
-  "BoardPage.syncFailed": "Le tableau a peut être été supprimé ou vos droits d'accès révoqués.",
   "CardDetail.add-content": "Ajouter du contenu",
   "CardDetail.add-icon": "Ajouter une icône",
   "CardDetail.add-property": "+ Ajouter une propriété",
