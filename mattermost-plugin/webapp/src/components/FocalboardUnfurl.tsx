@@ -1,6 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react'
+
+import PostAttachmentContainer from './shared/post_attachment_container'
+
+import './FocalboardUnfurl.scss'
 
 type Props = {
     embed: {
@@ -14,7 +18,7 @@ export const FocalboardUnfurl = (props: Props) => {
     const workspaceID = focalboardInformation.workspaceID
     const blockID = focalboardInformation.blockID
     const baseURL = focalboardInformation.baseURL
-    const [block, setBlock] = useState<{title?: string, type?: string}>({})
+    const [block, setBlock] = useState<{title?: string, type?: string, fields?: { icon: string }}>({})
 
 
     if (!workspaceID || !blockID || !baseURL) {
@@ -28,12 +32,10 @@ export const FocalboardUnfurl = (props: Props) => {
                     'X-Requested-With': 'XMLHttpRequest',
                 },
             })
-            console.log(response)
             if (!response.ok) {
                 return null
             }
             const blocks = await response.json()
-            console.log(blocks)
             if (!blocks.length) {
                 return null
             }
@@ -44,12 +46,18 @@ export const FocalboardUnfurl = (props: Props) => {
         fetchData()
     }, [])
 
-    console.log(block)
     return (
-        <div>
-            {workspaceID}
-            {blockID}
-            {baseURL}
-        </div>
+        <PostAttachmentContainer
+            className='FocalboardUnfurl'
+            link='google.com'
+        >
+            <div className='FocalboardUnfurl'>
+                <div className='header'>
+                    {block.fields?.icon}
+                    {block.title}
+                    {block.type}
+                </div>
+            </div>
+        </PostAttachmentContainer>
     )
 }
