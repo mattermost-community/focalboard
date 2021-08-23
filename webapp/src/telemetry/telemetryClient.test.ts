@@ -4,15 +4,6 @@ import '@testing-library/jest-dom'
 
 import TelemetryClient from './telemetryClient'
 
-jest.mock('rudder-sdk-js', () => {
-    const original = jest.requireActual('rudder-sdk-js')
-
-    return {
-        ...original,
-        track: jest.fn(),
-    }
-})
-
 describe('trackEvent', () => {
     const track = jest.fn()
     const page = jest.fn()
