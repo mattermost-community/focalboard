@@ -42,7 +42,7 @@ describe('components/workspaceSwitcher/WorkspaceSwitcher', () => {
 
     test('2 more workspaces available', () => {
         const store = mockStore({
-            users: {
+            workspace: {
                 userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3),
             },
         })
@@ -62,7 +62,7 @@ describe('components/workspaceSwitcher/WorkspaceSwitcher', () => {
 
     test('no more workspaces available', () => {
         const store = mockStore({
-            users: {
+            workspace: {
                 userWorkspaces: [],
             },
         })

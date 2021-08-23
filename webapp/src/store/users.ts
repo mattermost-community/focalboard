@@ -4,7 +4,7 @@
 import {createSlice, createAsyncThunk, PayloadAction, createSelector} from '@reduxjs/toolkit'
 
 import {default as client} from '../octoClient'
-import {IUser, UserWorkspace} from '../user'
+import {IUser} from '../user'
 
 import {initialLoad} from './initialLoad'
 
