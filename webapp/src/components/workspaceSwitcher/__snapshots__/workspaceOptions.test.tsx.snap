@@ -155,7 +155,7 @@ exports[`components/workspaceSwitcher/WorkspaceOptions no more workspaces availa
               autocapitalize="none"
               autocomplete="off"
               autocorrect="off"
-              id="react-select-2-input"
+              id="react-select-3-input"
               spellcheck="false"
               style="box-sizing: content-box; width: 2px; border: 0px; opacity: 1; outline: 0; padding: 0px;"
               tabindex="0"
