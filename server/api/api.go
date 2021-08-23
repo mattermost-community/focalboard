@@ -116,7 +116,6 @@ func (a *API) requireCSRFToken(next http.Handler) http.Handler {
 }
 
 func (a *API) getClientConfig(w http.ResponseWriter, r *http.Request) {
-
 	clientConfig := a.app.GetClientConfig()
 
 	configData, err := json.Marshal(clientConfig)
