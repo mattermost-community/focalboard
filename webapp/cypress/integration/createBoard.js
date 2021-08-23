@@ -33,7 +33,7 @@ describe('Create and delete board / card', () => {
 
     it('Can hide and show the sidebar with active board', () => {
         // Hide and show the sidebar option available on mobile devices
-        cy.viewport(768, 1024);
+        cy.viewport(767, 1024);
         cy.get('.Sidebar .heading ~ .Button').click();
         cy.get('.Sidebar .heading').should('not.exist');
         cy.get('.Sidebar .show-button').click();
