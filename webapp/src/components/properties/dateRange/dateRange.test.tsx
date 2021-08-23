@@ -155,7 +155,7 @@ describe('components/properties/dateRange', () => {
         expect(container).toMatchSnapshot()
 
         // open modal
-        const dayDisplay = getByRole('button', {name: 'June 15 -> June 20'})
+        const dayDisplay = getByRole('button', {name: 'June 15 → June 20'})
 
         userEvent.click(dayDisplay)
 
@@ -192,7 +192,7 @@ describe('components/properties/dateRange', () => {
         expect(container).toMatchSnapshot()
 
         // open modal
-        const dayDisplay = getByRole('button', {name: '15 de junio -> 20 de junio'})
+        const dayDisplay = getByRole('button', {name: '15 de junio → 20 de junio'})
 
         userEvent.click(dayDisplay)
 
@@ -227,7 +227,7 @@ describe('components/properties/dateRange', () => {
         expect(container).toMatchSnapshot()
 
         // open modal
-        const dayDisplay = getByRole('button', {name: 'June 15 -> June 20'})
+        const dayDisplay = getByRole('button', {name: 'June 15 → June 20'})
         userEvent.click(dayDisplay)
 
         const fromInput = getByDisplayValue('June 15')
