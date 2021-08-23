@@ -7,7 +7,6 @@
   "BoardComponent.no-property": "Ingen {property}",
   "BoardComponent.no-property-title": "Objekt med en tom {property} egenskap grupperas här. Denna kolumn kan ej tas bort.",
   "BoardComponent.show": "Visa",
-  "BoardPage.syncFailed": "Tavla kan tas bort eller behörighet återkallas.",
   "CardDetail.add-content": "Lägg till innehåll",
   "CardDetail.add-icon": "Lägg till ikon",
   "CardDetail.add-property": "+ Lägg till egenskap",

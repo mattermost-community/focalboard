@@ -273,110 +273,110 @@ const Table = (props: Props): JSX.Element => {
 
     return (
         <div
-            className='octo-table-body Table'
+            className='Table'
             ref={drop}
         >
-            {/* Headers */}
+            <div className='octo-table-body'>
+                {/* Headers */}
+                <div
+                    className='octo-table-header'
+                    id='mainBoardHeader'
+                >
+                    <TableHeader
+                        name={
+                            <FormattedMessage
+                                id='TableComponent.name'
+                                defaultMessage='Name'
+                            />
+                        }
+                        sorted={titleSorted}
+                        readonly={props.readonly}
+                        board={board}
+                        activeView={activeView}
+                        cards={cards}
+                        views={views}
+                        template={{id: Constants.titleColumnId, name: 'title', type: 'text', options: []}}
+                        offset={resizingColumn === Constants.titleColumnId ? offset : 0}
+                        onDrop={onDropToColumn}
+                        onAutoSizeColumn={onAutoSizeColumn}
+                    />
 
-            <div
-                className='octo-table-header'
-                id='mainBoardHeader'
-            >
-                <TableHeader
-                    name={
-                        <FormattedMessage
-                            id='TableComponent.name'
-                            defaultMessage='Name'
-                        />
+                    {/* Table header row */}
+
+                    {board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id)).map((template: IPropertyTemplate) => {
+                        let sorted: 'up' | 'down' | 'none' = 'none'
+                        const sortOption = activeView.fields.sortOptions.find((o: ISortOption) => o.propertyId === template.id)
+                        if (sortOption) {
+                            sorted = sortOption.reversed ? 'down' : 'up'
+                        }
+
+                        return (
+                            <TableHeader
+                                name={template.name}
+                                sorted={sorted}
+                                readonly={props.readonly}
+                                board={board}
+                                activeView={activeView}
+                                cards={cards}
+                                views={views}
+                                template={template}
+                                key={template.id}
+                                offset={resizingColumn === template.id ? offset : 0}
+                                onDrop={onDropToColumn}
+                                onAutoSizeColumn={onAutoSizeColumn}
+                            />
+                        )
+                    })}
+                </div>
+
+                {/* Table rows */}
+                <div className='table-row-container'>
+                    {activeView.fields.groupById &&
+                    visibleGroups.map((group) => {
+                        return (
+                            <TableGroup
+                                key={group.option.id}
+                                board={board}
+                                activeView={activeView}
+                                groupByProperty={groupByProperty}
+                                group={group}
+                                readonly={props.readonly}
+                                columnRefs={columnRefs}
+                                selectedCardIds={props.selectedCardIds}
+                                cardIdToFocusOnRender={props.cardIdToFocusOnRender}
+                                hideGroup={hideGroup}
+                                addCard={props.addCard}
+                                showCard={props.showCard}
+                                propertyNameChanged={propertyNameChanged}
+                                onCardClicked={props.onCardClicked}
+                                onDropToGroupHeader={onDropToGroupHeader}
+                                onDropToCard={onDropToCard}
+                                onDropToGroup={onDropToGroup}
+                            />)
+                    })
                     }
-                    sorted={titleSorted}
-                    readonly={props.readonly}
-                    board={board}
-                    activeView={activeView}
-                    cards={cards}
-                    views={views}
-                    template={{id: Constants.titleColumnId, name: 'title', type: 'text', options: []}}
-                    offset={resizingColumn === Constants.titleColumnId ? offset : 0}
-                    onDrop={onDropToColumn}
-                    onAutoSizeColumn={onAutoSizeColumn}
-                />
 
-                {/* Table header row */}
-
-                {board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id)).map((template: IPropertyTemplate) => {
-                    let sorted: 'up' | 'down' | 'none' = 'none'
-                    const sortOption = activeView.fields.sortOptions.find((o: ISortOption) => o.propertyId === template.id)
-                    if (sortOption) {
-                        sorted = sortOption.reversed ? 'down' : 'up'
+                    {/* No Grouping, Rows, one per card */}
+                    {!activeView.fields.groupById &&
+                    <TableRows
+                        board={board}
+                        activeView={activeView}
+                        columnRefs={columnRefs}
+                        cards={cards}
+                        selectedCardIds={props.selectedCardIds}
+                        readonly={props.readonly}
+                        cardIdToFocusOnRender={props.cardIdToFocusOnRender}
+                        showCard={props.showCard}
+                        addCard={props.addCard}
+                        onCardClicked={props.onCardClicked}
+                        onDrop={onDropToCard}
+                    />
                     }
+                </div>
 
-                    return (
-                        <TableHeader
-                            name={template.name}
-                            sorted={sorted}
-                            readonly={props.readonly}
-                            board={board}
-                            activeView={activeView}
-                            cards={cards}
-                            views={views}
-                            template={template}
-                            key={template.id}
-                            offset={resizingColumn === template.id ? offset : 0}
-                            onDrop={onDropToColumn}
-                            onAutoSizeColumn={onAutoSizeColumn}
-                        />
-                    )
-                })}
-            </div>
-
-            {/* Table rows */}
-            <div className='table-row-container'>
-                {activeView.fields.groupById &&
-                visibleGroups.map((group) => {
-                    return (
-                        <TableGroup
-                            key={group.option.id}
-                            board={board}
-                            activeView={activeView}
-                            groupByProperty={groupByProperty}
-                            group={group}
-                            readonly={props.readonly}
-                            columnRefs={columnRefs}
-                            selectedCardIds={props.selectedCardIds}
-                            cardIdToFocusOnRender={props.cardIdToFocusOnRender}
-                            hideGroup={hideGroup}
-                            addCard={props.addCard}
-                            showCard={props.showCard}
-                            propertyNameChanged={propertyNameChanged}
-                            onCardClicked={props.onCardClicked}
-                            onDropToGroupHeader={onDropToGroupHeader}
-                            onDropToCard={onDropToCard}
-                            onDropToGroup={onDropToGroup}
-                        />)
-                })
-                }
-
-                {/* No Grouping, Rows, one per card */}
-                {!activeView.fields.groupById &&
-                <TableRows
-                    board={board}
-                    activeView={activeView}
-                    columnRefs={columnRefs}
-                    cards={cards}
-                    selectedCardIds={props.selectedCardIds}
-                    readonly={props.readonly}
-                    cardIdToFocusOnRender={props.cardIdToFocusOnRender}
-                    showCard={props.showCard}
-                    addCard={props.addCard}
-                    onCardClicked={props.onCardClicked}
-                    onDrop={onDropToCard}
-                />
-                }
-            </div>
-
-            {/* Add New row */}
-            <div className='octo-table-footer'>
-                {!props.readonly && !activeView.fields.groupById &&
+                {/* Add New row */}
+                <div className='octo-table-footer'>
+                    {!props.readonly && !activeView.fields.groupById &&
                     <div
                         className='octo-table-cell'
                         onClick={() => {
@@ -388,16 +388,17 @@ const Table = (props: Props): JSX.Element => {
                             defaultMessage='+ New'
                         />
                     </div>
-                }
-            </div>
+                    }
+                </div>
 
-            <CalculationRow
-                board={board}
-                cards={cards}
-                activeView={activeView}
-                resizingColumn={resizingColumn}
-                offset={offset}
-            />
+                <CalculationRow
+                    board={board}
+                    cards={cards}
+                    activeView={activeView}
+                    resizingColumn={resizingColumn}
+                    offset={offset}
+                />
+            </div>
         </div>
     )
 }
