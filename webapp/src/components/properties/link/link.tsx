@@ -22,6 +22,7 @@ const URLProperty = (props: Props): JSX.Element => {
     if (props.value?.trim()) {
         link = (
             <a
+                className='Link__button'
                 href={Utils.ensureProtocol(props.value.trim())}
                 target='_blank'
                 rel='noreferrer'
