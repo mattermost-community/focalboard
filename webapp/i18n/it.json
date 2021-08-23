@@ -7,7 +7,6 @@
   "BoardComponent.no-property": "No {proprietà}",
   "BoardComponent.no-property-title": "Gli oggetti senza alcuna proprietà {property} andranno qui. Questo campo non può essere rimosso.",
   "BoardComponent.show": "Mostra",
-  "BoardPage.syncFailed": "Il contenitore può essere rimosso o l'accesso revocato.",
   "CardDetail.add-content": "Aggiungi contenuto",
   "CardDetail.add-icon": "Aggiungi icona",
   "CardDetail.add-property": "+ Aggiungi una proprietà",
