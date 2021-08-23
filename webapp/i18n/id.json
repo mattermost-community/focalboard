@@ -7,7 +7,6 @@
   "BoardComponent.no-property": "Tidak ada {property}",
   "BoardComponent.no-property-title": "Item dengan properti {property} yang kosong akan berpindah ke sini. Kolom ini tidak dapat dihapus.",
   "BoardComponent.show": "Tampilkan",
-  "BoardPage.syncFailed": "Papan mungkin sudah dihapus atau akses dicabut.",
   "CardDetail.add-content": "Tambahkan isi",
   "CardDetail.add-icon": "Tambahkan ikon",
   "CardDetail.add-property": "+ Tambahkan properti",
