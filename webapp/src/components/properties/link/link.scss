@@ -1,4 +1,7 @@
 .focalboard-body .property-link {
+    display: flex;
+    align-items: center;
+
     &.url {
         display: flex;
         overflow: hidden;
@@ -8,7 +11,30 @@
     a {
         padding: 0 8px; // increases clickable area for better UX
         align-self: stretch;
+        width: 100%;
+    }
+
+    .Link__button {
         display: none;
+        flex: 0 0 24px;
+        width: 24px;
+        height: 24px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        color: rgba(var(--center-channel-color-rgb), 0.56);
+        font-size: 14.4px;
+        margin-left: 8px;
+
+        &:hover {
+            color: rgba(var(--center-channel-color-rgb), 0.72);
+            background: rgba(var(--center-channel-color-rgb), 0.08);
+        }
+
+        &:active {
+            color: var(--button-bg-rgb);
+            background-color: rgb(var(--button-bg-rgb), 0.16);
+        }
     }
 
     a:hover {
@@ -16,9 +42,8 @@
     }
 
     &:hover {
-        a {
+        .Link__button {
             display: flex;
-            align-items: center;
         }
     }
 }

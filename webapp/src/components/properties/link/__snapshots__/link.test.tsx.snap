@@ -7,11 +7,12 @@ exports[`components/properties/link returns link properties correctly 1`] = `
   >
     <input
       class="Editable octo-propertyvalue"
-      placeholder="Empty"
+      placeholder=""
       title="https://github.com/mattermost/focalboard"
       value="https://github.com/mattermost/focalboard"
     />
     <a
+      class="Link__button"
       href="https://github.com/mattermost/focalboard"
       rel="noreferrer"
       target="_blank"
