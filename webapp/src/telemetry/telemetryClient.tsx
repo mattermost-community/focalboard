@@ -2,9 +2,6 @@
 // See LICENSE.txt for license information.
 import {IUser} from '../user'
 
-// import {useAppSelector} from '../store/hooks'
-// import {getMe} from '../store/users'
-
 import {TelemetryHandler} from '../../temp/telemetry/telemetry'
 
 class TelemetryClient {
