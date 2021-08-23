@@ -7,7 +7,6 @@
   "BoardComponent.no-property": "Sin {property}",
   "BoardComponent.no-property-title": "Elementos sin la propiedad {property} irán aquí. Esta columna no se puede eliminar.",
   "BoardComponent.show": "Mostrar",
-  "BoardPage.syncFailed": "Puede que el panel haya sido borrado o el acceso revocado.",
   "CardDetail.add-content": "Añadir contenido",
   "CardDetail.add-icon": "Añadir icono",
   "CardDetail.add-property": "+ Añadir propiedad",
