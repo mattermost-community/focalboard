@@ -259,7 +259,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             return (
                 <Editable
                     className='octo-propertyvalue'
-                    placeholderText='Empty'
+                    placeholderText=''
                     value={value as string}
                     onChange={setValue}
                     onSave={saveTextProperty}
