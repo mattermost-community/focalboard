@@ -206,8 +206,6 @@ const BoardPage = (props: Props) => {
         }
     })
 
-    // }
-
     return (
         <div className='BoardPage'>
             {websocketClosed &&

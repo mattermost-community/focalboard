@@ -179,10 +179,10 @@ func (s *SQLStore) GetUserWorkspaces(userID string) ([]model.UserWorkspace, erro
 	}
 
 	defer s.CloseRows(rows)
-	return s.userWorkspacesFromRoes(rows)
+	return s.userWorkspacesFromRows(rows)
 }
 
-func (s *SQLStore) userWorkspacesFromRoes(rows *sql.Rows) ([]model.UserWorkspace, error) {
+func (s *SQLStore) userWorkspacesFromRows(rows *sql.Rows) ([]model.UserWorkspace, error) {
 	userWorkspaces := []model.UserWorkspace{}
 
 	for rows.Next() {
@@ -195,7 +195,7 @@ func (s *SQLStore) userWorkspacesFromRoes(rows *sql.Rows) ([]model.UserWorkspace
 		)
 
 		if err != nil {
-			s.logger.Error("ERROR userWorkspacesFromRoes", mlog.Err(err))
+			s.logger.Error("ERROR userWorkspacesFromRows", mlog.Err(err))
 			return nil, err
 		}
 

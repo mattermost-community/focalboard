@@ -3,7 +3,6 @@
 import React from 'react'
 
 import Select from 'react-select'
-import {CSSObject} from '@emotion/serialize'
 import {useIntl} from 'react-intl'
 
 import {getUserWorkspaceList} from '../../store/users'
@@ -12,19 +11,6 @@ import {useAppSelector} from '../../store/hooks'
 
 import './workspaceOptions.scss'
 import Search from '../../widgets/icons/search'
-
-const style = {
-    dropdownIndicator: (provided: CSSObject) => ({
-        ...provided,
-        fontSize: '14px',
-        color: 'var(--center-channel-color-rgb)',
-    }),
-    input: (provided: CSSObject) => ({
-        ...provided,
-        fontSize: '14px',
-        color: 'var(--center-channel-color-rgb)',
-    }),
-}
 
 type Props = {
     onClose?: () => void
@@ -48,7 +34,8 @@ const WorkspaceOptions = (props: Props): JSX.Element => {
         <Select
             classNamePrefix={'WorkspaceOptions'}
             autoFocus={true}
-            style={style}
+
+            // style={style}
             backspaceRemovesValue={false}
             controlShouldRenderValue={false}
             hideSelectedOptions={false}
