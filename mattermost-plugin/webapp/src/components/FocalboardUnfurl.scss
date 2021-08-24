@@ -10,6 +10,10 @@
 .FocalboardUnfurl {
     padding: 4px;
 
+    &:hover {
+      cursor: pointer;  
+    }
+
     .header {
         display: flex;
         align-items: center;
@@ -35,6 +39,20 @@
                 font-size: 12px;
                 line-height: 16px;
             }
+        }
+    }
+
+
+    .body {
+        border: 1px solid rgba(61, 60, 64, 0.16);
+        border-radius: 4px;
+        margin-top: 16px;
+        height: 145px;
+        overflow: hidden;
+        padding: 16px;
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 0;
         }
     }
 

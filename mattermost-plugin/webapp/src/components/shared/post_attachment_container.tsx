@@ -4,7 +4,6 @@
 // THIS FILE IS COPIED FROM MATTERMOST WEB APP CODE!
 
 import React, {useCallback} from 'react'
-import {useHistory} from 'react-router-dom'
 
 export type Props = {
     className?: string;
@@ -14,13 +13,15 @@ export type Props = {
 
 const PostAttachmentContainer = (props: Props) => {
     const {children, className, link} = props
-    const history = useHistory()
     const handleOnClick = useCallback((e) => {
         const {tagName} = e.target
         e.stopPropagation()
         const elements = ['A', 'IMG', 'BUTTON'];
         if (!elements.includes(tagName) && (e.target.getAttribute('role') !== 'button' && e.target.className !== `attachment attachment--${className}`)) {
-            history.push(link)
+            window.open(
+                link,
+                '_blank',
+            )
         }
     }, [history])
     return (

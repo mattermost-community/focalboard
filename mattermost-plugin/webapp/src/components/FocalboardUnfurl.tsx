@@ -20,6 +20,7 @@ export const FocalboardUnfurl = (props: Props) => {
     const blockID = focalboardInformation.blockID
     const baseURL = focalboardInformation.baseURL
     const boardID = focalboardInformation.boardID
+    const viewID = focalboardInformation.viewID
     const [card, setCard] = useState<{title?: string, type?: string, fields?: { icon: string, contentOrder: Array<string | string[]> }}>({})
     const [content, setContent] = useState<string>('')
     const [board, setBoard] = useState<{title?: string}>({})
@@ -44,7 +45,6 @@ export const FocalboardUnfurl = (props: Props) => {
             }
             setCard(blocks[0])
 
-            console.log(blocks[0].fields?.contentOrder)
             if (blocks[0].fields?.contentOrder.length > 0) {
                 let contentID = blocks[0].fields?.contentOrder[0]
                 if (Array.isArray(blocks[0].fields?.contentOrder[0])) {
@@ -96,7 +96,7 @@ export const FocalboardUnfurl = (props: Props) => {
     return (
         <PostAttachmentContainer
             className='FocalboardUnfurl'
-            link='google.com'
+            link={`${baseURL}/boards/workspace/${workspaceID}/${boardID}/${viewID}?c=${blockID}`}
         >
             <div className='FocalboardUnfurl'>
 
@@ -110,13 +110,13 @@ export const FocalboardUnfurl = (props: Props) => {
                 </div>
 
                 {/* Body of the Card*/}
-                <div className='body'>
-                    <div className='gallery-item'>
+                {content !== '' &&
+                    <div className='body'>
                         <ReactMarkdown>
                             {content}
                         </ReactMarkdown>
                     </div>
-                </div>
+                }
 
             </div>
         </PostAttachmentContainer>
