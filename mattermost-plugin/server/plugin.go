@@ -15,7 +15,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 	"github.com/mattermost/focalboard/server/ws"
 
-	pluginapi "github.com/mattermost/mattermost-plugin-api/v6"
+	pluginapi "github.com/mattermost/mattermost-plugin-api"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"

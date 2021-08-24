@@ -68,7 +68,7 @@ describe('components/properties/dateRange', () => {
         const fifteenth = Date.UTC(date.getFullYear(), date.getMonth(), 15, 12)
 
         const {getByText, getByTitle} = render(component)
-        const dayDisplay = getByText('Empty')
+        const dayDisplay = getByTitle('Empty')
         userEvent.click(dayDisplay)
 
         const day = getByText('15')
@@ -92,7 +92,7 @@ describe('components/properties/dateRange', () => {
 
         // open modal
         const {getByText, getByTitle} = render(component)
-        const dayDisplay = getByText('Empty')
+        const dayDisplay = getByTitle('Empty')
         userEvent.click(dayDisplay)
 
         // select start date
@@ -155,7 +155,7 @@ describe('components/properties/dateRange', () => {
         expect(container).toMatchSnapshot()
 
         // open modal
-        const dayDisplay = getByRole('button', {name: 'June 15 -> June 20'})
+        const dayDisplay = getByRole('button', {name: 'June 15 → June 20'})
 
         userEvent.click(dayDisplay)
 
@@ -192,7 +192,7 @@ describe('components/properties/dateRange', () => {
         expect(container).toMatchSnapshot()
 
         // open modal
-        const dayDisplay = getByRole('button', {name: '15 de junio -> 20 de junio'})
+        const dayDisplay = getByRole('button', {name: '15 de junio → 20 de junio'})
 
         userEvent.click(dayDisplay)
 
@@ -227,7 +227,7 @@ describe('components/properties/dateRange', () => {
         expect(container).toMatchSnapshot()
 
         // open modal
-        const dayDisplay = getByRole('button', {name: 'June 15 -> June 20'})
+        const dayDisplay = getByRole('button', {name: 'June 15 → June 20'})
         userEvent.click(dayDisplay)
 
         const fromInput = getByDisplayValue('June 15')

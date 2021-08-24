@@ -25,6 +25,7 @@ const commentsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
+            state.comments = {}
             for (const block of action.payload) {
                 if (block.type === 'comment') {
                     state.comments[block.id] = block as CommentBlock
@@ -32,6 +33,7 @@ const commentsSlice = createSlice({
             }
         })
         builder.addCase(initialLoad.fulfilled, (state, action) => {
+            state.comments = {}
             for (const block of action.payload.blocks) {
                 if (block.type === 'comment') {
                     state.comments[block.id] = block as CommentBlock

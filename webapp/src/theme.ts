@@ -9,6 +9,8 @@ import {Utils} from './utils'
 
 let activeThemeName: string
 
+import {UserSettings} from './userSettings'
+
 export type Theme = {
     mainBg: string,
     mainFg: string,
@@ -111,9 +113,9 @@ export function setTheme(theme: Theme | null): Theme {
     let consolidatedTheme = defaultTheme
     if (theme) {
         consolidatedTheme = {...defaultTheme, ...theme}
-        localStorage.setItem('theme', JSON.stringify(consolidatedTheme))
+        UserSettings.theme = JSON.stringify(consolidatedTheme)
     } else {
-        localStorage.setItem('theme', '')
+        UserSettings.theme = ''
         const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)')
         if (darkThemeMq.matches) {
             consolidatedTheme = {...defaultTheme, ...darkTheme}
@@ -176,7 +178,7 @@ export function setMattermostTheme(theme: any): Theme {
     document.documentElement.style.setProperty('--button-color-rgb', color(theme.buttonColor).rgb().array().join(', '))
     document.documentElement.style.setProperty('--sidebar-bg-rgb', color(theme.sidebarBg).rgb().array().join(', '))
     document.documentElement.style.setProperty('--sidebar-text-rgb', color(theme.sidebarText).rgb().array().join(', '))
-    document.documentElement.style.setProperty('--link-color-rgb', color(theme.linkColor).rgb().array().join(', '))
+    document.documentElement.style.setProperty('--link-color-rgb', theme.linkColor)
     document.documentElement.style.setProperty('--sidebar-text-active-border', color(theme.sidebarTextActiveBorder).rgb().array().join(', '))
 
     return setTheme({
@@ -188,7 +190,7 @@ export function setMattermostTheme(theme: any): Theme {
         sidebarBg: color(theme.sidebarBg).rgb().array().join(', '),
         sidebarFg: color(theme.sidebarColor || '#ffffff').rgb().array().join(', '),
         sidebarTextActiveBorder: color(theme.sidebarTextActiveBorder).rgb().array().join(', '),
-        link: color(theme.linkColor).rgb().array().join(', '),
+        link: theme.linkColor,
     })
 }
 
@@ -205,7 +207,7 @@ function setActiveThemeName(consolidatedTheme: Theme, theme: Theme | null) {
 }
 
 export function loadTheme(): Theme {
-    const themeStr = localStorage.getItem('theme')
+    const themeStr = UserSettings.theme
     if (themeStr) {
         try {
             const theme = JSON.parse(themeStr)
@@ -223,7 +225,7 @@ export function loadTheme(): Theme {
 export function initThemes(): void {
     const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)')
     const changeHandler = () => {
-        const themeStr = localStorage.getItem('theme')
+        const themeStr = UserSettings.theme
         if (!themeStr) {
             setTheme(null)
         }

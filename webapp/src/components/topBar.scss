@@ -13,4 +13,25 @@
     .HelpIcon {
         font-size: 20px;
     }
+
+    .versionFrame {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .version {
+        font-size: 11px;
+        line-height: 11px;
+        font-weight: 500;
+        color: rgba(var(--center-channel-color-rgb), 0.7);
+    }
+
+    .versionBadge {
+        font-size: 10px;
+        line-height: 11px;
+        font-weight: 500;
+        margin-left: 3px;
+        color: rgba(var(--center-channel-color-rgb), 0.7);
+    }
 }

@@ -1,10 +1,26 @@
 .channel-header__icon .LogoIcon {
     height: 24px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
 }
 
-.FocalboardGlobalHeaderIcon .LogoIcon {
-    height: 24px;
-    width: 24px;
-    display: inline-block;
-    fill: rgb(var(--center-channel-color-rgb));
+.focalboard-body .feature-global-header>header {
+    z-index: 1000;
+
+    .Menu {
+        a,
+        button {
+            color: rgba(var(--center-channel-text-rgb), 1);
+
+            i {
+                color: inherit;
+            }
+
+            &:hover {
+                color: var(--link-color-rgb);
+                background: rgba(var(--center-channel-color-rgb), 0.08);
+            }
+        }
+    }
 }

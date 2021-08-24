@@ -8,6 +8,7 @@ html {
 .focalboard-body, #focalboard-app {
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 
     width: 100%;
     height: 100%;
@@ -43,10 +44,10 @@ html {
         background: rgb(var(--center-channel-bg-rgb));
         color: rgb(var(--center-channel-color-rgb));
 
-        -webkit-user-select: auto; /* Chrome all / Safari all */
-        -moz-user-select: auto; /* Firefox all */
-        -ms-user-select: auto; /* IE 10+ */
-        user-select: auto; /* Likely future */
+        -webkit-user-select: text; /* Chrome all / Safari all */
+        -moz-user-select: text; /* Firefox all */
+        -ms-user-select: text; /* IE 10+ */
+        user-select: text; /* Likely future */
     }
 
     padding: 0;
@@ -62,7 +63,7 @@ html {
         color: var(--link-color-rgb);
 
         &:visited {
-            color: var(--link-visited-color);
+            color: var(--link-visited-color-rgb);
         }
 
         &:hover {
@@ -173,10 +174,10 @@ html {
     }
 
     [contentEditable="true"] {
-        -webkit-user-select: auto; /* Chrome all / Safari all */
-        -moz-user-select: auto; /* Firefox all */
-        -ms-user-select: auto; /* IE 10+ */
-        user-select: auto; /* Likely future */
+        -webkit-user-select: text; /* Chrome all / Safari all */
+        -moz-user-select: text; /* Firefox all */
+        -ms-user-select: text; /* IE 10+ */
+        user-select: text; /* Likely future */
     }
 
     [contentEditable="true"]:empty:before {

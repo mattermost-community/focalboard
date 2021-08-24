@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useState, useRef, useMemo} from 'react'
 import SimpleMDE from 'react-simplemde-editor'
+import 'easymde/dist/easymde.min.css'
 
 import {Utils} from '../utils'
 import './markdownEditor.scss'
