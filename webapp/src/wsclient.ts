@@ -39,7 +39,7 @@ type OnErrorHandler = (client: WSClient, e: Event) => void
 class WSClient {
     ws: WebSocket|null = null
     client: MMWebSocketClient|null = null
-    clientPrefix: string = ""
+    clientPrefix = ''
     serverUrl: string
     state: 'init'|'open'|'close' = 'init'
     onStateChange: OnStateChangeHandler[] = []
@@ -64,7 +64,7 @@ class WSClient {
 
     sendCommand(command: WSCommand): void {
         if (this.client !== null) {
-            const { action, ...data } = command
+            const {action, ...data} = command
             this.client.sendMessage(this.clientPrefix + action, data)
         }
 
@@ -119,7 +119,7 @@ class WSClient {
         // if running in plugin mode, no ws configuration needs to be done
         if (this.client !== null) {
             this.state = 'open'
-            Utils.log(`Application in plugin mode, reusing Mattermost WS connection`)
+            Utils.log('Application in plugin mode, reusing Mattermost WS connection')
             return
         }
 
@@ -190,7 +190,7 @@ class WSClient {
         }
     }
 
-    hasConn(): Boolean {
+    hasConn(): boolean {
         return this.ws !== null || this.client !== null
     }
 
