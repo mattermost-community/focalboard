@@ -11,6 +11,7 @@ import LinkIcon from '../../../widgets/icons/Link'
 
 type Props = {
     value: string
+    readonly?: boolean
     onChange: (value: string) => void
     onSave: () => void
     onCancel: () => void
@@ -39,6 +40,7 @@ const URLProperty = (props: Props): JSX.Element => {
                 className='octo-propertyvalue'
                 placeholderText=''
                 value={props.value}
+                readonly={props.readonly}
                 onChange={props.onChange}
                 onSave={props.onSave}
                 onCancel={props.onCancel}
