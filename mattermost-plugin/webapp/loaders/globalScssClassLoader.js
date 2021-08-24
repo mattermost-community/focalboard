@@ -11,7 +11,7 @@ function blockList(line) {
 module.exports = function loader(source) {
     var newSource = [];
     source.split('\n').forEach((line) => {
-        if (line.startsWith('.') && !blockList(line)) {
+        if ((line.startsWith('.') || line.startsWith('#')) && !blockList(line)) {
             newSource.push('.focalboard-body ' + line);
         } else {
             newSource.push(line);
