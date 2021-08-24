@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"database/sql"
+
 	"github.com/mattermost/focalboard/server/utils"
 
 	sq "github.com/Masterminds/squirrel"

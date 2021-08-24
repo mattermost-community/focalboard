@@ -3,7 +3,6 @@ package server
 import (
 	"database/sql"
 	"fmt"
-	utils2 "github.com/mattermost/focalboard/server/utils"
 	"net"
 	"net/http"
 	"os"
@@ -11,6 +10,8 @@ import (
 	"sync"
 	"syscall"
 	"time"
+
+	utils2 "github.com/mattermost/focalboard/server/utils"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -180,9 +181,7 @@ func New(cfg *config.Configuration, singleUserToken string, db store.Store, logg
 }
 
 func NewStore(config *config.Configuration, logger *mlog.Logger) (store.Store, error) {
-	connectionStringToUse := config.DBConfigString
-	var err error
-	connectionStringToUse, err = utils2.EnsureCollation(config.DBType, config.DBConfigString)
+	connectionStringToUse, err := utils2.EnsureCollation(config.DBType, config.DBConfigString)
 	if err != nil {
 		logger.Error("Failed to ensure collation in database connection string", mlog.Err(err))
 		return nil, err
