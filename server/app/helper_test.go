@@ -15,7 +15,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/webhook"
 	"github.com/mattermost/focalboard/server/ws"
 
-	"github.com/mattermost/mattermost-server/v5/shared/filestore/mocks"
+	"github.com/mattermost/mattermost-server/v6/shared/filestore/mocks"
 )
 
 type TestHelper struct {
