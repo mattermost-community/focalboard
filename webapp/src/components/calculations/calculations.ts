@@ -18,18 +18,24 @@ function getCardProperty(card: Card, property: IPropertyTemplate): string | stri
         return card.createdBy
     }
     case ('createdTime'): {
-        return card.createAt
+        return fixTimestampToMinutesAccuracy(card.createAt)
     }
     case ('updatedBy'): {
         return card.modifiedBy
     }
     case ('updatedTime'): {
-        return card.updateAt
+        return fixTimestampToMinutesAccuracy(card.updateAt)
     }
     default: {
         return card.fields.properties[property.id]
     }
     }
+}
+
+function fixTimestampToMinutesAccuracy(timestamp: number) {
+    // For timestamps that are formatted as hour/minute strings on the UI, we throw away the (milli)seconds
+    // so that things like counting unique values work intuitively
+    return timestamp - (timestamp % 60000)
 }
 
 function cardsWithValue(cards: readonly Card[], property: IPropertyTemplate): Card[] {
