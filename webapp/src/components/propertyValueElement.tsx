@@ -208,6 +208,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         return (
             <URLProperty
                 value={value as string}
+                readonly={readOnly}
                 onChange={setValue}
                 onSave={saveTextProperty}
                 onCancel={() => setValue(propertyValue)}
@@ -259,7 +260,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             return (
                 <Editable
                     className='octo-propertyvalue'
-                    placeholderText='Empty'
+                    placeholderText=''
                     value={value as string}
                     onChange={setValue}
                     onSave={saveTextProperty}
