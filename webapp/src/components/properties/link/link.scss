@@ -6,6 +6,11 @@
         width: 100%;
     }
 
+    a {
+        padding: 0 8px; // increases clickable area for better UX
+        align-self: stretch;
+    }
+
     .Link__button {
         display: none;
         flex: 0 0 24px;
@@ -39,5 +44,3 @@
         }
     }
 }
-
-
