@@ -108,7 +108,6 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
                                 defaultMessage='Publish to web and share this board to anyone'
                             />}
                     </div>
-                    <div className='spacer'/>
                     <Switch
                         isOn={Boolean(isSharing)}
                         onChanged={onShareChanged}

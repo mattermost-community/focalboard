@@ -1,5 +1,9 @@
 .Table {
+    margin-top: 16px;
     padding-bottom: 0 !important;
+    overflow: auto;
+    position: relative;
+    flex: 1;
 
     .octo-group-header-cell {
         display: flex;
@@ -124,7 +128,6 @@
 
         .Editable {
             padding: 0 5px;
-            display: relative;
             left: -5px;
         }
 
@@ -150,13 +153,10 @@
         }
     }
 
-    &.octo-table-body {
-        margin-top: 16px;
+    .octo-table-body {
         display: flex;
-        flex: 1;
         flex-direction: column;
-        overflow: auto;
-        position: relative;
+        width: fit-content;
     }
 
     .octo-table-header,
@@ -175,6 +175,7 @@
         top: -2px;
         z-index: 1;
         background: rgb(var(--center-channel-bg-rgb));
+        width: fit-content;
 
         .octo-table-cell {
             color: rgba(var(--center-channel-color-rgb), 0.6);
@@ -186,13 +187,15 @@
         }
     }
 
+    .table-row-container {
+        width: fit-content;
+    }
+
     .octo-table-footer {
         .octo-table-cell {
             color: rgba(var(--center-channel-color-rgb), 0.6);
             cursor: pointer;
-
             width: 100%;
-            border-right: none;
             padding-left: 15px;
 
             &:hover {
