@@ -3,7 +3,6 @@ package mattermostauthlayer
 import (
 	"database/sql"
 	"encoding/json"
-	"strings"
 	"time"
 
 	sq "github.com/Masterminds/squirrel"
@@ -173,56 +172,25 @@ func (s *MattermostAuthLayer) GetTeam(id string) (*model.Team, error) {
 	}
 
 	query := s.getQueryBuilder().
-		Select("DisplayName, Type").
-		From("Channels").
+		Select("DisplayName").
+		From("Teams").
 		Where(sq.Eq{"ID": id})
 
 	row := query.QueryRow()
 	var displayName string
-	var channelType string
-	err := row.Scan(&displayName, &channelType)
+	err := row.Scan(&displayName)
 	if err != nil {
 		return nil, err
 	}
 
-	if channelType != "D" && channelType != "G" {
-		return &model.Team{ID: id, Title: displayName}, nil
-	}
-
-	query = s.getQueryBuilder().
-		Select("Username").
-		From("ChannelMembers").
-		Join("Users ON Users.ID=ChannelMembers.UserID").
-		Where(sq.Eq{"ChannelID": id})
-
-	var sb strings.Builder
-	rows, err := query.Query()
-	if err != nil {
-		return nil, err
-	}
-	defer s.CloseRows(rows)
-
-	first := true
-	for rows.Next() {
-		if first {
-			first = false
-		} else {
-			sb.WriteString(", ")
-		}
-		var name string
-		if err := rows.Scan(&name); err != nil {
-			return nil, err
-		}
-		sb.WriteString(name)
-	}
-	return &model.Team{ID: id, Title: sb.String()}, nil
+	return &model.Team{ID: id, Title: displayName}, nil
 }
 
 func (s *MattermostAuthLayer) HasTeamAccess(userID string, teamID string) (bool, error) {
 	query := s.getQueryBuilder().
 		Select("count(*)").
-		From("ChannelMembers").
-		Where(sq.Eq{"ChannelID": teamID}).
+		From("TeamMembers").
+		Where(sq.Eq{"TeamID": teamID}).
 		Where(sq.Eq{"UserID": userID})
 
 	row := query.QueryRow()
@@ -250,9 +218,9 @@ func (s *MattermostAuthLayer) GetUsersByTeam(teamID string) ([]*model.User, erro
 		Select("id", "username", "email", "password", "MFASecret as mfa_secret", "AuthService as auth_service", "COALESCE(AuthData, '') as auth_data",
 			"props", "CreateAt as create_at", "UpdateAt as update_at", "DeleteAt as delete_at").
 		From("Users").
-		Join("ChannelMembers ON ChannelMembers.UserID = Users.ID").
+		Join("TeamMembers ON TeamMembers.UserID = Users.ID").
 		Where(sq.Eq{"deleteAt": 0}).
-		Where(sq.Eq{"ChannelMembers.ChannelId": teamID})
+		Where(sq.Eq{"TeamMembers.TeamId": teamID})
 
 	rows, err := query.Query()
 	if err != nil {
