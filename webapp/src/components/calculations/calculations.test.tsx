@@ -79,6 +79,20 @@ describe('components/calculations/calculation logic', () => {
     card5.fields.properties.property_person = ''
     card5.fields.properties.property_checkbox = ''
 
+    // clone of card 3 but created / updated 1 second later
+    const card6 = TestBlockFactory.createCard(board)
+    card6.createAt = 1625639401000
+    card6.createdBy = 'user_id_2'
+    card6.updateAt = 1625639401000
+    card6.modifiedBy = 'user_id_2'
+
+    // clone of card 3 but created / updated 1 minute later
+    const card7 = TestBlockFactory.createCard(board)
+    card7.createAt = 1625639460000
+    card7.createdBy = 'user_id_2'
+    card7.updateAt = 1625639460000
+    card7.modifiedBy = 'user_id_2'
+
     const cards = [card1, card2, card3, card4]
 
     const properties: Record<string, IPropertyTemplate> = {
@@ -186,6 +200,26 @@ describe('components/calculations/calculation logic', () => {
         it(`should correctly count unique values for property type ${propertyType}`, function() {
             expect(Calculations.countUniqueValue(cards, properties[propertyType]!)).toBe(countUniqueValueTests[propertyType]!)
         })
+    })
+
+    test('countUniqueValue for cards created 1 second apart', () => {
+        const result = Calculations.countUniqueValue([card3, card6], properties.createdTime)
+        expect(result).toBe('1')
+    })
+
+    test('countUniqueValue for cards updated 1 second apart', () => {
+        const result = Calculations.countUniqueValue([card3, card6], properties.updatedTime)
+        expect(result).toBe('1')
+    })
+
+    test('countUniqueValue for cards created 1 minute apart', () => {
+        const result = Calculations.countUniqueValue([card3, card7], properties.createdTime)
+        expect(result).toBe('2')
+    })
+
+    test('countUniqueValue for cards updated 1 minute apart', () => {
+        const result = Calculations.countUniqueValue([card3, card7], properties.updatedTime)
+        expect(result).toBe('2')
     })
 
     test('sum', () => {
