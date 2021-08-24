@@ -10,7 +10,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
-	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/webview/webview"
 )
 
