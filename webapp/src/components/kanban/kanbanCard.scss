@@ -9,8 +9,8 @@
     border-radius: 3px;
     margin-bottom: 10px;
     padding: 12px 16px;
-    box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0px 0px 0px 1px,
-        rgba(var(--center-channel-color-rgb), 0.1) 0px 2px 4px;
+    box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0 0 0 1px,
+        rgba(var(--center-channel-color-rgb), 0.1) 0 2px 4px;
 
     cursor: pointer;
     color: rgb(var(--center-channel-color-rgb));
@@ -19,6 +19,7 @@
 
     &:hover {
         background-color: rgba(var(--center-channel-color-rgb), 0.1);
+
         .optionsMenu {
             display: block;
         }
@@ -55,13 +56,14 @@
             margin-right: 8px;
         }
     }
+
     .IconButton {
         border-radius: 3px;
         margin-right: 6px;
         padding: 0;
         background: rgb(var(--center-channel-color-rgb), 0.1);
-        box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0px 0px 0px 1px,
-            rgba(var(--center-channel-color-rgb), 0.1) 0px 2px 4px;
+        box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0 0 0 1px,
+            rgba(var(--center-channel-color-rgb), 0.1) 0 2px 4px;
         height: 24px;
         width: 24px;
     }

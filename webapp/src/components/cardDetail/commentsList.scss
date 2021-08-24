@@ -9,7 +9,7 @@
         width: 20px;
         height: 20px;
         border-radius: 100%;
-        box-shadow: rgba(15, 15, 15, 0.1) 0px 2px 4px;
+        box-shadow: rgba(15, 15, 15, 0.1) 0 2px 4px;
     }
 
     .commentrow {
@@ -27,7 +27,7 @@
         flex-grow: 1;
         margin: 4px 0 0 8px;
 
-        & + button {
+        + button {
             margin-left: 8px;
         }
     }

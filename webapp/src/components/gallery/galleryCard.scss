@@ -15,6 +15,7 @@
 
     &:hover {
         background-color: rgba(var(--center-channel-color-rgb), 0.05);
+
         .optionsMenu {
             display: block;
         }
@@ -28,6 +29,7 @@
         right: 10px;
         top: 10px;
         z-index: 30;
+
         .IconButton {
             background-color: rgba(var(--center-channel-color-rgb), 0.13);
         }
@@ -70,6 +72,7 @@
         padding: 5px 10px;
         display: flex;
         overflow-wrap: anywhere;
+
         .octo-icon {
             margin-right: 5px;
         }
@@ -83,6 +86,7 @@
         margin: 0;
         padding: 5px 10px;
         overflow-wrap: anywhere;
+
         .octo-icon {
             margin-right: 5px;
         }

@@ -23,6 +23,7 @@
             bottom: 25px;
             left: 25px;
         }
+
         &.bottom-right {
             left: 0;
         }
@@ -34,6 +35,7 @@
             display: none !important;
         }
     }
+
     > .toolbar {
         display: flex;
         flex-direction: row;

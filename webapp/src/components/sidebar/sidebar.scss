@@ -34,6 +34,7 @@
 
     .IconButton {
         padding: 0;
+
         .Icon {
             width: 24px;
             height: 24px;
@@ -111,6 +112,7 @@
     .OptionsIcon {
         color: rgba(var(--sidebar-text-rgb), 0.5);
     }
+
     .DisclosureTriangleIcon,
     .DotIcon {
         fill: rgba(var(--sidebar-text-rgb), 0.5);
