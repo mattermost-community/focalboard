@@ -7,7 +7,6 @@
   "BoardComponent.no-property": "Sem {property}",
   "BoardComponent.no-property-title": "Itens com um {property} vazio irão aqui. Essa coluna não pode ser removida.",
   "BoardComponent.show": "Mostrar",
-  "BoardPage.syncFailed": "O quadro pode ter sido deletado ou seu acesso revogado.",
   "CardDetail.add-content": "Adicionar conteúdo",
   "CardDetail.add-icon": "Adicionar ícone",
   "CardDetail.add-property": "+ Adicionar propriedade",
