@@ -1,7 +1,41 @@
-.attachment__content .attachment__content--FocalboardUnfurl {
+.attachment__content--FocalboardUnfurl {
     width: 425px;
 }
 
+.app__body .attachment__container--FocalboardUnfurl {
+    border: 1px solid rgba(61, 60, 64, 0.24) !important;
+}
+
+
 .FocalboardUnfurl {
     padding: 4px;
+
+    .header {
+        display: flex;
+        align-items: center;
+
+        .icon {
+            font-size: 36px;
+        }
+
+        .information {
+            display: flex;
+            flex-direction: column;
+            margin-left: 10px;
+            overflow: hidden;
+
+            .card_title {
+                color: #3D3C40;
+                font-weight: 600;
+                font-size: 14px;
+            }
+
+            .board_title {
+                color: rgba(61, 60, 64, 0.56);
+                font-size: 12px;
+                line-height: 16px;
+            }
+        }
+    }
+
 }

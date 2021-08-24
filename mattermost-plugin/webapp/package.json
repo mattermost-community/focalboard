@@ -76,6 +76,7 @@
     "core-js": "3.12.1",
     "mattermost-redux": "5.33.1",
     "react-intl": "^5.13.5",
+    "react-markdown": "7.0.0",
     "react-router-dom": "5.2.0"
   },
   "jest": {

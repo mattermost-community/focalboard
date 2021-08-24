@@ -230,6 +230,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	parentID := query.Get("parent_id")
 	blockType := query.Get("type")
 	all := query.Get("all")
+	blockID := query.Get("block_id")
 	container, err := a.getContainer(r)
 	if err != nil {
 		a.noContainerErrorResponse(w, r.URL.Path, err)
@@ -241,6 +242,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("parentID", parentID)
 	auditRec.AddMeta("blockType", blockType)
 	auditRec.AddMeta("all", all)
+	auditRec.AddMeta("blockID", blockID)
 
 	var blocks []model.Block
 	if all != "" {
@@ -249,6 +251,13 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 			return
 		}
+	} else if blockID != "" {
+		block, err := a.app.GetBlockWithID(*container, blockID)
+		if err != nil {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+			return
+		}
+		blocks = append(blocks, *block)
 	} else {
 		blocks, err = a.app.GetBlocks(*container, parentID, blockType)
 		if err != nil {
@@ -260,6 +269,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	a.logger.Debug("GetBlocks",
 		mlog.String("parentID", parentID),
 		mlog.String("blockType", blockType),
+		mlog.String("blockID", blockID),
 		mlog.Int("block_count", len(blocks)),
 	)
 

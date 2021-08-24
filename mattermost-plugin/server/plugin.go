@@ -26,6 +26,8 @@ const PostEmbedFocalboard model.PostEmbedType = "focalboard"
 
 type FocalboardEmbed struct {
 	WorkspaceID string `json:"workspaceID"`
+	ViewID      string `json:"viewID"`
+	BoardID     string `json:"boardID"`
 	BlockID     string `json:"blockID"`
 	BaseURL     string `json:"baseURL"`
 }
@@ -214,15 +216,19 @@ func defaultLoggingConfig() string {
 func (p *Plugin) MessageWillBePosted(c *plugin.Context, post *model.Post) (*model.Post, string) {
 	mmconfig := p.API.GetUnsanitizedConfig()
 	firstLink := getFirstLink(post.Message)
-	re := regexp.MustCompile(fmt.Sprintf(`^(%s)(\/boards\/workspace\/)([a-z0-9]{26})/(.*?)?c=((\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1})$`, *mmconfig.ServiceSettings.SiteURL))
+	re := regexp.MustCompile(fmt.Sprintf(`^(%s)(\/boards\/workspace\/)([a-z0-9]{26})\/((\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1})\/((\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1})\?c=((\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1})$`, *mmconfig.ServiceSettings.SiteURL))
 	matches := re.FindStringSubmatch(firstLink)
 
 	if len(matches) > 0 {
 		workspaceID := matches[3]
-		blockID := matches[5]
+		boardID := matches[4]
+		viewID := matches[7]
+		blockID := matches[10]
 
 		b, _ := json.Marshal(FocalboardEmbed{
 			WorkspaceID: workspaceID,
+			BoardID:     boardID,
+			ViewID:      viewID,
 			BlockID:     blockID,
 			BaseURL:     *mmconfig.ServiceSettings.SiteURL,
 		})
@@ -232,6 +238,7 @@ func (p *Plugin) MessageWillBePosted(c *plugin.Context, post *model.Post) (*mode
 			Data: string(b),
 		}
 		post.Metadata.Embeds = []*model.PostEmbed{focalboardPostEmbed}
+		post.AddProp("focalboard", string(b))
 	}
 	return post, ""
 }
