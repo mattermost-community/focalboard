@@ -3,13 +3,17 @@
     flex-direction: column;
     padding: 5px;
     color: rgb(var(--center-channel-color-rgb));
-    max-width: 400px;
+    max-width: 500px;
+
+    .Switch {
+        margin-left: 8px;
+    }
 
     > .row {
         display: flex;
         flex-direction: row;
         align-items: center;
-        margin-bottom: 10px;
+        margin: 0 0 10px;
     }
 
     > .row:last-child {

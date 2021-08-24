@@ -3,387 +3,391 @@
 exports[`components/table/Table extended should match snapshot with CreatedBy 1`] = `
 <div>
   <div
-    class="octo-table-body Table"
+    class="Table"
   >
     <div
-      class="octo-table-header"
-      id="mainBoardHeader"
+      class="octo-table-body"
     >
       <div
-        class="octo-table-cell header-cell"
-        style="overflow: unset; width: 100px; opacity: 1;"
+        class="octo-table-header"
+        id="mainBoardHeader"
       >
         <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Name
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-      <div
-        class="octo-table-cell header-cell"
-        draggable="true"
-        style="overflow: unset; width: 100px; opacity: 1;"
-      >
-        <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Property 1
-            <svg
-              class="SortDownIcon Icon"
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polyline
-                points="50,20 50,80"
-              />
-              <polyline
-                points="30,60 50,80 70,60"
-              />
-            </svg>
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-      <div
-        class="octo-table-cell header-cell"
-        draggable="true"
-        style="overflow: unset; width: 100px; opacity: 1;"
-      >
-        <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Property 2
-            <svg
-              class="SortUpIcon Icon"
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polyline
-                points="50,20 50,80"
-              />
-              <polyline
-                points="30,40 50,20 70,40"
-              />
-            </svg>
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-      <div
-        class="octo-table-cell header-cell"
-        draggable="true"
-        style="overflow: unset; width: 100px; opacity: 1;"
-      >
-        <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Date Created
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-    </div>
-    <div
-      class="table-row-container"
-    >
-      <div
-        class="TableRow octo-table-row"
-        draggable="true"
-        style="opacity: 1;"
-      >
-        <div
-          class="octo-table-cell title-cell"
-          id="mainBoardHeader"
-          style="width: 100px;"
+          class="octo-table-cell header-cell"
+          style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
-            class="octo-icontitle"
-          >
-            <div
-              class="octo-icon"
-            >
-              i
-            </div>
-            <input
-              class="Editable undefined"
-              placeholder="Untitled"
-              spellcheck="true"
-              title="title"
-              value="title"
-            />
-          </div>
-          <div
-            class="open-button"
-          >
-            <button
-              class="Button    "
-              type="button"
-            >
-              <span>
-                Open
-              </span>
-            </button>
-          </div>
-        </div>
-        <div
-          class="octo-table-cell"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-propertyvalue"
-            tabindex="0"
-          >
-            <span
-              class="Label propColorBrown "
-            >
-              <span
-                class="Label-text"
-              >
-                value 1
-              </span>
-              <div
-                aria-label="Clear"
-                class="Button IconButton margin-left delete-value"
-                role="button"
-                title="Clear"
-              >
-                <i
-                  class="CompassIcon icon-close CloseIcon"
-                />
-              </div>
-            </span>
-          </div>
-        </div>
-        <div
-          class="octo-table-cell"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-propertyvalue"
-            tabindex="0"
+            class="MenuWrapper"
           >
             <span
               class="Label empty "
             >
-              <span
-                class="Label-text"
-              />
+              Name
             </span>
           </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
         </div>
         <div
-          class="octo-table-cell"
-          style="width: 100px;"
+          class="octo-table-cell header-cell"
+          draggable="true"
+          style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
-            class="CreatedAt octo-propertyvalue"
-          >
-            June 15, 4:22 PM
-          </div>
-        </div>
-      </div>
-      <div
-        class="TableRow octo-table-row"
-        draggable="true"
-        style="opacity: 1;"
-      >
-        <div
-          class="octo-table-cell title-cell"
-          id="mainBoardHeader"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-icontitle"
-          >
-            <div
-              class="octo-icon"
-            >
-              i
-            </div>
-            <input
-              class="Editable undefined"
-              placeholder="Untitled"
-              spellcheck="true"
-              title="title"
-              value="title"
-            />
-          </div>
-          <div
-            class="open-button"
-          >
-            <button
-              class="Button    "
-              type="button"
-            >
-              <span>
-                Open
-              </span>
-            </button>
-          </div>
-        </div>
-        <div
-          class="octo-table-cell"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-propertyvalue"
-            tabindex="0"
-          >
-            <span
-              class="Label propColorBrown "
-            >
-              <span
-                class="Label-text"
-              >
-                value 1
-              </span>
-              <div
-                aria-label="Clear"
-                class="Button IconButton margin-left delete-value"
-                role="button"
-                title="Clear"
-              >
-                <i
-                  class="CompassIcon icon-close CloseIcon"
-                />
-              </div>
-            </span>
-          </div>
-        </div>
-        <div
-          class="octo-table-cell"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-propertyvalue"
-            tabindex="0"
+            class="MenuWrapper"
           >
             <span
               class="Label empty "
             >
-              <span
-                class="Label-text"
-              />
+              Property 1
+              <svg
+                class="SortDownIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,60 50,80 70,60"
+                />
+              </svg>
             </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
+        </div>
+        <div
+          class="octo-table-cell header-cell"
+          draggable="true"
+          style="overflow: unset; width: 100px; opacity: 1;"
+        >
+          <div
+            class="MenuWrapper"
+          >
+            <span
+              class="Label empty "
+            >
+              Property 2
+              <svg
+                class="SortUpIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,40 50,20 70,40"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
+        </div>
+        <div
+          class="octo-table-cell header-cell"
+          draggable="true"
+          style="overflow: unset; width: 100px; opacity: 1;"
+        >
+          <div
+            class="MenuWrapper"
+          >
+            <span
+              class="Label empty "
+            >
+              Date Created
+            </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
+        </div>
+      </div>
+      <div
+        class="table-row-container"
+      >
+        <div
+          class="TableRow octo-table-row"
+          draggable="true"
+          style="opacity: 1;"
+        >
+          <div
+            class="octo-table-cell title-cell"
+            id="mainBoardHeader"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-icontitle"
+            >
+              <div
+                class="octo-icon"
+              >
+                i
+              </div>
+              <input
+                class="Editable undefined"
+                placeholder="Untitled"
+                spellcheck="true"
+                title="title"
+                value="title"
+              />
+            </div>
+            <div
+              class="open-button"
+            >
+              <button
+                class="Button    "
+                type="button"
+              >
+                <span>
+                  Open
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue"
+              tabindex="0"
+            >
+              <span
+                class="Label propColorBrown "
+              >
+                <span
+                  class="Label-text"
+                >
+                  value 1
+                </span>
+                <div
+                  aria-label="Clear"
+                  class="Button IconButton margin-left delete-value"
+                  role="button"
+                  title="Clear"
+                >
+                  <i
+                    class="CompassIcon icon-close CloseIcon"
+                  />
+                </div>
+              </span>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue"
+              tabindex="0"
+            >
+              <span
+                class="Label empty "
+              >
+                <span
+                  class="Label-text"
+                />
+              </span>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="CreatedAt octo-propertyvalue"
+            >
+              June 15, 4:22 PM
+            </div>
           </div>
         </div>
         <div
-          class="octo-table-cell"
-          style="width: 100px;"
+          class="TableRow octo-table-row"
+          draggable="true"
+          style="opacity: 1;"
         >
           <div
-            class="CreatedAt octo-propertyvalue"
+            class="octo-table-cell title-cell"
+            id="mainBoardHeader"
+            style="width: 100px;"
           >
-            June 15, 4:22 PM
+            <div
+              class="octo-icontitle"
+            >
+              <div
+                class="octo-icon"
+              >
+                i
+              </div>
+              <input
+                class="Editable undefined"
+                placeholder="Untitled"
+                spellcheck="true"
+                title="title"
+                value="title"
+              />
+            </div>
+            <div
+              class="open-button"
+            >
+              <button
+                class="Button    "
+                type="button"
+              >
+                <span>
+                  Open
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue"
+              tabindex="0"
+            >
+              <span
+                class="Label propColorBrown "
+              >
+                <span
+                  class="Label-text"
+                >
+                  value 1
+                </span>
+                <div
+                  aria-label="Clear"
+                  class="Button IconButton margin-left delete-value"
+                  role="button"
+                  title="Clear"
+                >
+                  <i
+                    class="CompassIcon icon-close CloseIcon"
+                  />
+                </div>
+              </span>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue"
+              tabindex="0"
+            >
+              <span
+                class="Label empty "
+              >
+                <span
+                  class="Label-text"
+                />
+              </span>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="CreatedAt octo-propertyvalue"
+            >
+              June 15, 4:22 PM
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="octo-table-footer"
-    >
       <div
-        class="octo-table-cell"
+        class="octo-table-footer"
       >
-        + New
-      </div>
-    </div>
-    <div
-      class="CalculationRow octo-table-row"
-    >
-      <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
-      >
-        <span
-          class="calculationLabel"
+        <div
+          class="octo-table-cell"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
+          + New
+        </div>
       </div>
       <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
+        class="CalculationRow octo-table-row"
       >
-        <span
-          class="calculationLabel"
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
-      </div>
-      <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
-      >
-        <span
-          class="calculationLabel"
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
-      </div>
-      <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
-      >
-        <span
-          class="calculationLabel"
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
+        >
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -393,387 +397,391 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
 exports[`components/table/Table extended should match snapshot with CreatedBy 2`] = `
 <div>
   <div
-    class="octo-table-body Table"
+    class="Table"
   >
     <div
-      class="octo-table-header"
-      id="mainBoardHeader"
+      class="octo-table-body"
     >
       <div
-        class="octo-table-cell header-cell"
-        style="overflow: unset; width: 100px; opacity: 1;"
+        class="octo-table-header"
+        id="mainBoardHeader"
       >
         <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Name
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-      <div
-        class="octo-table-cell header-cell"
-        draggable="true"
-        style="overflow: unset; width: 100px; opacity: 1;"
-      >
-        <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Property 1
-            <svg
-              class="SortDownIcon Icon"
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polyline
-                points="50,20 50,80"
-              />
-              <polyline
-                points="30,60 50,80 70,60"
-              />
-            </svg>
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-      <div
-        class="octo-table-cell header-cell"
-        draggable="true"
-        style="overflow: unset; width: 100px; opacity: 1;"
-      >
-        <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Property 2
-            <svg
-              class="SortUpIcon Icon"
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polyline
-                points="50,20 50,80"
-              />
-              <polyline
-                points="30,40 50,20 70,40"
-              />
-            </svg>
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-      <div
-        class="octo-table-cell header-cell"
-        draggable="true"
-        style="overflow: unset; width: 100px; opacity: 1;"
-      >
-        <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Created By
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-    </div>
-    <div
-      class="table-row-container"
-    >
-      <div
-        class="TableRow octo-table-row"
-        draggable="true"
-        style="opacity: 1;"
-      >
-        <div
-          class="octo-table-cell title-cell"
-          id="mainBoardHeader"
-          style="width: 100px;"
+          class="octo-table-cell header-cell"
+          style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
-            class="octo-icontitle"
-          >
-            <div
-              class="octo-icon"
-            >
-              i
-            </div>
-            <input
-              class="Editable undefined"
-              placeholder="Untitled"
-              spellcheck="true"
-              title="title"
-              value="title"
-            />
-          </div>
-          <div
-            class="open-button"
-          >
-            <button
-              class="Button    "
-              type="button"
-            >
-              <span>
-                Open
-              </span>
-            </button>
-          </div>
-        </div>
-        <div
-          class="octo-table-cell"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-propertyvalue"
-            tabindex="0"
-          >
-            <span
-              class="Label propColorBrown "
-            >
-              <span
-                class="Label-text"
-              >
-                value 1
-              </span>
-              <div
-                aria-label="Clear"
-                class="Button IconButton margin-left delete-value"
-                role="button"
-                title="Clear"
-              >
-                <i
-                  class="CompassIcon icon-close CloseIcon"
-                />
-              </div>
-            </span>
-          </div>
-        </div>
-        <div
-          class="octo-table-cell"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-propertyvalue"
-            tabindex="0"
+            class="MenuWrapper"
           >
             <span
               class="Label empty "
             >
-              <span
-                class="Label-text"
-              />
+              Name
             </span>
           </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
         </div>
         <div
-          class="octo-table-cell"
-          style="width: 100px;"
+          class="octo-table-cell header-cell"
+          draggable="true"
+          style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
-            class="UserProperty octo-propertyvalue readonly"
-          >
-            username_1
-          </div>
-        </div>
-      </div>
-      <div
-        class="TableRow octo-table-row"
-        draggable="true"
-        style="opacity: 1;"
-      >
-        <div
-          class="octo-table-cell title-cell"
-          id="mainBoardHeader"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-icontitle"
-          >
-            <div
-              class="octo-icon"
-            >
-              i
-            </div>
-            <input
-              class="Editable undefined"
-              placeholder="Untitled"
-              spellcheck="true"
-              title="title"
-              value="title"
-            />
-          </div>
-          <div
-            class="open-button"
-          >
-            <button
-              class="Button    "
-              type="button"
-            >
-              <span>
-                Open
-              </span>
-            </button>
-          </div>
-        </div>
-        <div
-          class="octo-table-cell"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-propertyvalue"
-            tabindex="0"
-          >
-            <span
-              class="Label propColorBrown "
-            >
-              <span
-                class="Label-text"
-              >
-                value 1
-              </span>
-              <div
-                aria-label="Clear"
-                class="Button IconButton margin-left delete-value"
-                role="button"
-                title="Clear"
-              >
-                <i
-                  class="CompassIcon icon-close CloseIcon"
-                />
-              </div>
-            </span>
-          </div>
-        </div>
-        <div
-          class="octo-table-cell"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-propertyvalue"
-            tabindex="0"
+            class="MenuWrapper"
           >
             <span
               class="Label empty "
             >
-              <span
-                class="Label-text"
-              />
+              Property 1
+              <svg
+                class="SortDownIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,60 50,80 70,60"
+                />
+              </svg>
             </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
+        </div>
+        <div
+          class="octo-table-cell header-cell"
+          draggable="true"
+          style="overflow: unset; width: 100px; opacity: 1;"
+        >
+          <div
+            class="MenuWrapper"
+          >
+            <span
+              class="Label empty "
+            >
+              Property 2
+              <svg
+                class="SortUpIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,40 50,20 70,40"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
+        </div>
+        <div
+          class="octo-table-cell header-cell"
+          draggable="true"
+          style="overflow: unset; width: 100px; opacity: 1;"
+        >
+          <div
+            class="MenuWrapper"
+          >
+            <span
+              class="Label empty "
+            >
+              Created By
+            </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
+        </div>
+      </div>
+      <div
+        class="table-row-container"
+      >
+        <div
+          class="TableRow octo-table-row"
+          draggable="true"
+          style="opacity: 1;"
+        >
+          <div
+            class="octo-table-cell title-cell"
+            id="mainBoardHeader"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-icontitle"
+            >
+              <div
+                class="octo-icon"
+              >
+                i
+              </div>
+              <input
+                class="Editable undefined"
+                placeholder="Untitled"
+                spellcheck="true"
+                title="title"
+                value="title"
+              />
+            </div>
+            <div
+              class="open-button"
+            >
+              <button
+                class="Button    "
+                type="button"
+              >
+                <span>
+                  Open
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue"
+              tabindex="0"
+            >
+              <span
+                class="Label propColorBrown "
+              >
+                <span
+                  class="Label-text"
+                >
+                  value 1
+                </span>
+                <div
+                  aria-label="Clear"
+                  class="Button IconButton margin-left delete-value"
+                  role="button"
+                  title="Clear"
+                >
+                  <i
+                    class="CompassIcon icon-close CloseIcon"
+                  />
+                </div>
+              </span>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue"
+              tabindex="0"
+            >
+              <span
+                class="Label empty "
+              >
+                <span
+                  class="Label-text"
+                />
+              </span>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="UserProperty octo-propertyvalue readonly"
+            >
+              username_1
+            </div>
           </div>
         </div>
         <div
-          class="octo-table-cell"
-          style="width: 100px;"
+          class="TableRow octo-table-row"
+          draggable="true"
+          style="opacity: 1;"
         >
           <div
-            class="UserProperty octo-propertyvalue readonly"
+            class="octo-table-cell title-cell"
+            id="mainBoardHeader"
+            style="width: 100px;"
           >
-            username_2
+            <div
+              class="octo-icontitle"
+            >
+              <div
+                class="octo-icon"
+              >
+                i
+              </div>
+              <input
+                class="Editable undefined"
+                placeholder="Untitled"
+                spellcheck="true"
+                title="title"
+                value="title"
+              />
+            </div>
+            <div
+              class="open-button"
+            >
+              <button
+                class="Button    "
+                type="button"
+              >
+                <span>
+                  Open
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue"
+              tabindex="0"
+            >
+              <span
+                class="Label propColorBrown "
+              >
+                <span
+                  class="Label-text"
+                >
+                  value 1
+                </span>
+                <div
+                  aria-label="Clear"
+                  class="Button IconButton margin-left delete-value"
+                  role="button"
+                  title="Clear"
+                >
+                  <i
+                    class="CompassIcon icon-close CloseIcon"
+                  />
+                </div>
+              </span>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue"
+              tabindex="0"
+            >
+              <span
+                class="Label empty "
+              >
+                <span
+                  class="Label-text"
+                />
+              </span>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="UserProperty octo-propertyvalue readonly"
+            >
+              username_2
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="octo-table-footer"
-    >
       <div
-        class="octo-table-cell"
+        class="octo-table-footer"
       >
-        + New
-      </div>
-    </div>
-    <div
-      class="CalculationRow octo-table-row"
-    >
-      <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
-      >
-        <span
-          class="calculationLabel"
+        <div
+          class="octo-table-cell"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
+          + New
+        </div>
       </div>
       <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
+        class="CalculationRow octo-table-row"
       >
-        <span
-          class="calculationLabel"
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
-      </div>
-      <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
-      >
-        <span
-          class="calculationLabel"
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
-      </div>
-      <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
-      >
-        <span
-          class="calculationLabel"
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
+        >
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -783,387 +791,391 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
 exports[`components/table/Table extended should match snapshot with UpdatedAt 1`] = `
 <div>
   <div
-    class="octo-table-body Table"
+    class="Table"
   >
     <div
-      class="octo-table-header"
-      id="mainBoardHeader"
+      class="octo-table-body"
     >
       <div
-        class="octo-table-cell header-cell"
-        style="overflow: unset; width: 100px; opacity: 1;"
+        class="octo-table-header"
+        id="mainBoardHeader"
       >
         <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Name
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-      <div
-        class="octo-table-cell header-cell"
-        draggable="true"
-        style="overflow: unset; width: 100px; opacity: 1;"
-      >
-        <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Property 1
-            <svg
-              class="SortDownIcon Icon"
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polyline
-                points="50,20 50,80"
-              />
-              <polyline
-                points="30,60 50,80 70,60"
-              />
-            </svg>
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-      <div
-        class="octo-table-cell header-cell"
-        draggable="true"
-        style="overflow: unset; width: 100px; opacity: 1;"
-      >
-        <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Property 2
-            <svg
-              class="SortUpIcon Icon"
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polyline
-                points="50,20 50,80"
-              />
-              <polyline
-                points="30,40 50,20 70,40"
-              />
-            </svg>
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-      <div
-        class="octo-table-cell header-cell"
-        draggable="true"
-        style="overflow: unset; width: 100px; opacity: 1;"
-      >
-        <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Date Updated
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-    </div>
-    <div
-      class="table-row-container"
-    >
-      <div
-        class="TableRow octo-table-row"
-        draggable="true"
-        style="opacity: 1;"
-      >
-        <div
-          class="octo-table-cell title-cell"
-          id="mainBoardHeader"
-          style="width: 100px;"
+          class="octo-table-cell header-cell"
+          style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
-            class="octo-icontitle"
-          >
-            <div
-              class="octo-icon"
-            >
-              i
-            </div>
-            <input
-              class="Editable undefined"
-              placeholder="Untitled"
-              spellcheck="true"
-              title="title"
-              value="title"
-            />
-          </div>
-          <div
-            class="open-button"
-          >
-            <button
-              class="Button    "
-              type="button"
-            >
-              <span>
-                Open
-              </span>
-            </button>
-          </div>
-        </div>
-        <div
-          class="octo-table-cell"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-propertyvalue"
-            tabindex="0"
-          >
-            <span
-              class="Label propColorBrown "
-            >
-              <span
-                class="Label-text"
-              >
-                value 1
-              </span>
-              <div
-                aria-label="Clear"
-                class="Button IconButton margin-left delete-value"
-                role="button"
-                title="Clear"
-              >
-                <i
-                  class="CompassIcon icon-close CloseIcon"
-                />
-              </div>
-            </span>
-          </div>
-        </div>
-        <div
-          class="octo-table-cell"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-propertyvalue"
-            tabindex="0"
+            class="MenuWrapper"
           >
             <span
               class="Label empty "
             >
-              <span
-                class="Label-text"
-              />
+              Name
             </span>
           </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
         </div>
         <div
-          class="octo-table-cell"
-          style="width: 100px;"
+          class="octo-table-cell header-cell"
+          draggable="true"
+          style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
-            class="LastModifiedAt octo-propertyvalue"
-          >
-            June 20, 12:22 PM
-          </div>
-        </div>
-      </div>
-      <div
-        class="TableRow octo-table-row"
-        draggable="true"
-        style="opacity: 1;"
-      >
-        <div
-          class="octo-table-cell title-cell"
-          id="mainBoardHeader"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-icontitle"
-          >
-            <div
-              class="octo-icon"
-            >
-              i
-            </div>
-            <input
-              class="Editable undefined"
-              placeholder="Untitled"
-              spellcheck="true"
-              title="title"
-              value="title"
-            />
-          </div>
-          <div
-            class="open-button"
-          >
-            <button
-              class="Button    "
-              type="button"
-            >
-              <span>
-                Open
-              </span>
-            </button>
-          </div>
-        </div>
-        <div
-          class="octo-table-cell"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-propertyvalue"
-            tabindex="0"
-          >
-            <span
-              class="Label propColorBrown "
-            >
-              <span
-                class="Label-text"
-              >
-                value 1
-              </span>
-              <div
-                aria-label="Clear"
-                class="Button IconButton margin-left delete-value"
-                role="button"
-                title="Clear"
-              >
-                <i
-                  class="CompassIcon icon-close CloseIcon"
-                />
-              </div>
-            </span>
-          </div>
-        </div>
-        <div
-          class="octo-table-cell"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-propertyvalue"
-            tabindex="0"
+            class="MenuWrapper"
           >
             <span
               class="Label empty "
             >
-              <span
-                class="Label-text"
-              />
+              Property 1
+              <svg
+                class="SortDownIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,60 50,80 70,60"
+                />
+              </svg>
             </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
+        </div>
+        <div
+          class="octo-table-cell header-cell"
+          draggable="true"
+          style="overflow: unset; width: 100px; opacity: 1;"
+        >
+          <div
+            class="MenuWrapper"
+          >
+            <span
+              class="Label empty "
+            >
+              Property 2
+              <svg
+                class="SortUpIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,40 50,20 70,40"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
+        </div>
+        <div
+          class="octo-table-cell header-cell"
+          draggable="true"
+          style="overflow: unset; width: 100px; opacity: 1;"
+        >
+          <div
+            class="MenuWrapper"
+          >
+            <span
+              class="Label empty "
+            >
+              Date Updated
+            </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
+        </div>
+      </div>
+      <div
+        class="table-row-container"
+      >
+        <div
+          class="TableRow octo-table-row"
+          draggable="true"
+          style="opacity: 1;"
+        >
+          <div
+            class="octo-table-cell title-cell"
+            id="mainBoardHeader"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-icontitle"
+            >
+              <div
+                class="octo-icon"
+              >
+                i
+              </div>
+              <input
+                class="Editable undefined"
+                placeholder="Untitled"
+                spellcheck="true"
+                title="title"
+                value="title"
+              />
+            </div>
+            <div
+              class="open-button"
+            >
+              <button
+                class="Button    "
+                type="button"
+              >
+                <span>
+                  Open
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue"
+              tabindex="0"
+            >
+              <span
+                class="Label propColorBrown "
+              >
+                <span
+                  class="Label-text"
+                >
+                  value 1
+                </span>
+                <div
+                  aria-label="Clear"
+                  class="Button IconButton margin-left delete-value"
+                  role="button"
+                  title="Clear"
+                >
+                  <i
+                    class="CompassIcon icon-close CloseIcon"
+                  />
+                </div>
+              </span>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue"
+              tabindex="0"
+            >
+              <span
+                class="Label empty "
+              >
+                <span
+                  class="Label-text"
+                />
+              </span>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="LastModifiedAt octo-propertyvalue"
+            >
+              June 20, 12:22 PM
+            </div>
           </div>
         </div>
         <div
-          class="octo-table-cell"
-          style="width: 100px;"
+          class="TableRow octo-table-row"
+          draggable="true"
+          style="opacity: 1;"
         >
           <div
-            class="LastModifiedAt octo-propertyvalue"
+            class="octo-table-cell title-cell"
+            id="mainBoardHeader"
+            style="width: 100px;"
           >
-            June 22, 11:23 AM
+            <div
+              class="octo-icontitle"
+            >
+              <div
+                class="octo-icon"
+              >
+                i
+              </div>
+              <input
+                class="Editable undefined"
+                placeholder="Untitled"
+                spellcheck="true"
+                title="title"
+                value="title"
+              />
+            </div>
+            <div
+              class="open-button"
+            >
+              <button
+                class="Button    "
+                type="button"
+              >
+                <span>
+                  Open
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue"
+              tabindex="0"
+            >
+              <span
+                class="Label propColorBrown "
+              >
+                <span
+                  class="Label-text"
+                >
+                  value 1
+                </span>
+                <div
+                  aria-label="Clear"
+                  class="Button IconButton margin-left delete-value"
+                  role="button"
+                  title="Clear"
+                >
+                  <i
+                    class="CompassIcon icon-close CloseIcon"
+                  />
+                </div>
+              </span>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue"
+              tabindex="0"
+            >
+              <span
+                class="Label empty "
+              >
+                <span
+                  class="Label-text"
+                />
+              </span>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="LastModifiedAt octo-propertyvalue"
+            >
+              June 22, 11:23 AM
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="octo-table-footer"
-    >
       <div
-        class="octo-table-cell"
+        class="octo-table-footer"
       >
-        + New
-      </div>
-    </div>
-    <div
-      class="CalculationRow octo-table-row"
-    >
-      <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
-      >
-        <span
-          class="calculationLabel"
+        <div
+          class="octo-table-cell"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
+          + New
+        </div>
       </div>
       <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
+        class="CalculationRow octo-table-row"
       >
-        <span
-          class="calculationLabel"
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
-      </div>
-      <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
-      >
-        <span
-          class="calculationLabel"
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
-      </div>
-      <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
-      >
-        <span
-          class="calculationLabel"
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
+        >
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -1173,387 +1185,391 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
 exports[`components/table/Table extended should match snapshot with UpdatedBy 1`] = `
 <div>
   <div
-    class="octo-table-body Table"
+    class="Table"
   >
     <div
-      class="octo-table-header"
-      id="mainBoardHeader"
+      class="octo-table-body"
     >
       <div
-        class="octo-table-cell header-cell"
-        style="overflow: unset; width: 100px; opacity: 1;"
+        class="octo-table-header"
+        id="mainBoardHeader"
       >
         <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Name
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-      <div
-        class="octo-table-cell header-cell"
-        draggable="true"
-        style="overflow: unset; width: 100px; opacity: 1;"
-      >
-        <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Property 1
-            <svg
-              class="SortDownIcon Icon"
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polyline
-                points="50,20 50,80"
-              />
-              <polyline
-                points="30,60 50,80 70,60"
-              />
-            </svg>
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-      <div
-        class="octo-table-cell header-cell"
-        draggable="true"
-        style="overflow: unset; width: 100px; opacity: 1;"
-      >
-        <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Property 2
-            <svg
-              class="SortUpIcon Icon"
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polyline
-                points="50,20 50,80"
-              />
-              <polyline
-                points="30,40 50,20 70,40"
-              />
-            </svg>
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-      <div
-        class="octo-table-cell header-cell"
-        draggable="true"
-        style="overflow: unset; width: 100px; opacity: 1;"
-      >
-        <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Last Modified By
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-    </div>
-    <div
-      class="table-row-container"
-    >
-      <div
-        class="TableRow octo-table-row"
-        draggable="true"
-        style="opacity: 1;"
-      >
-        <div
-          class="octo-table-cell title-cell"
-          id="mainBoardHeader"
-          style="width: 100px;"
+          class="octo-table-cell header-cell"
+          style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
-            class="octo-icontitle"
-          >
-            <div
-              class="octo-icon"
-            >
-              i
-            </div>
-            <input
-              class="Editable undefined"
-              placeholder="Untitled"
-              spellcheck="true"
-              title="title"
-              value="title"
-            />
-          </div>
-          <div
-            class="open-button"
-          >
-            <button
-              class="Button    "
-              type="button"
-            >
-              <span>
-                Open
-              </span>
-            </button>
-          </div>
-        </div>
-        <div
-          class="octo-table-cell"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-propertyvalue"
-            tabindex="0"
-          >
-            <span
-              class="Label propColorBrown "
-            >
-              <span
-                class="Label-text"
-              >
-                value 1
-              </span>
-              <div
-                aria-label="Clear"
-                class="Button IconButton margin-left delete-value"
-                role="button"
-                title="Clear"
-              >
-                <i
-                  class="CompassIcon icon-close CloseIcon"
-                />
-              </div>
-            </span>
-          </div>
-        </div>
-        <div
-          class="octo-table-cell"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-propertyvalue"
-            tabindex="0"
+            class="MenuWrapper"
           >
             <span
               class="Label empty "
             >
-              <span
-                class="Label-text"
-              />
+              Name
             </span>
           </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
         </div>
         <div
-          class="octo-table-cell"
-          style="width: 100px;"
+          class="octo-table-cell header-cell"
+          draggable="true"
+          style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
-            class="LastModifiedBy octo-propertyvalue"
-          >
-            username_4
-          </div>
-        </div>
-      </div>
-      <div
-        class="TableRow octo-table-row"
-        draggable="true"
-        style="opacity: 1;"
-      >
-        <div
-          class="octo-table-cell title-cell"
-          id="mainBoardHeader"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-icontitle"
-          >
-            <div
-              class="octo-icon"
-            >
-              i
-            </div>
-            <input
-              class="Editable undefined"
-              placeholder="Untitled"
-              spellcheck="true"
-              title="title"
-              value="title"
-            />
-          </div>
-          <div
-            class="open-button"
-          >
-            <button
-              class="Button    "
-              type="button"
-            >
-              <span>
-                Open
-              </span>
-            </button>
-          </div>
-        </div>
-        <div
-          class="octo-table-cell"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-propertyvalue"
-            tabindex="0"
-          >
-            <span
-              class="Label propColorBrown "
-            >
-              <span
-                class="Label-text"
-              >
-                value 1
-              </span>
-              <div
-                aria-label="Clear"
-                class="Button IconButton margin-left delete-value"
-                role="button"
-                title="Clear"
-              >
-                <i
-                  class="CompassIcon icon-close CloseIcon"
-                />
-              </div>
-            </span>
-          </div>
-        </div>
-        <div
-          class="octo-table-cell"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-propertyvalue"
-            tabindex="0"
+            class="MenuWrapper"
           >
             <span
               class="Label empty "
             >
-              <span
-                class="Label-text"
-              />
+              Property 1
+              <svg
+                class="SortDownIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,60 50,80 70,60"
+                />
+              </svg>
             </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
+        </div>
+        <div
+          class="octo-table-cell header-cell"
+          draggable="true"
+          style="overflow: unset; width: 100px; opacity: 1;"
+        >
+          <div
+            class="MenuWrapper"
+          >
+            <span
+              class="Label empty "
+            >
+              Property 2
+              <svg
+                class="SortUpIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,40 50,20 70,40"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
+        </div>
+        <div
+          class="octo-table-cell header-cell"
+          draggable="true"
+          style="overflow: unset; width: 100px; opacity: 1;"
+        >
+          <div
+            class="MenuWrapper"
+          >
+            <span
+              class="Label empty "
+            >
+              Last Modified By
+            </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
+        </div>
+      </div>
+      <div
+        class="table-row-container"
+      >
+        <div
+          class="TableRow octo-table-row"
+          draggable="true"
+          style="opacity: 1;"
+        >
+          <div
+            class="octo-table-cell title-cell"
+            id="mainBoardHeader"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-icontitle"
+            >
+              <div
+                class="octo-icon"
+              >
+                i
+              </div>
+              <input
+                class="Editable undefined"
+                placeholder="Untitled"
+                spellcheck="true"
+                title="title"
+                value="title"
+              />
+            </div>
+            <div
+              class="open-button"
+            >
+              <button
+                class="Button    "
+                type="button"
+              >
+                <span>
+                  Open
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue"
+              tabindex="0"
+            >
+              <span
+                class="Label propColorBrown "
+              >
+                <span
+                  class="Label-text"
+                >
+                  value 1
+                </span>
+                <div
+                  aria-label="Clear"
+                  class="Button IconButton margin-left delete-value"
+                  role="button"
+                  title="Clear"
+                >
+                  <i
+                    class="CompassIcon icon-close CloseIcon"
+                  />
+                </div>
+              </span>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue"
+              tabindex="0"
+            >
+              <span
+                class="Label empty "
+              >
+                <span
+                  class="Label-text"
+                />
+              </span>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="LastModifiedBy octo-propertyvalue"
+            >
+              username_4
+            </div>
           </div>
         </div>
         <div
-          class="octo-table-cell"
-          style="width: 100px;"
+          class="TableRow octo-table-row"
+          draggable="true"
+          style="opacity: 1;"
         >
           <div
-            class="LastModifiedBy octo-propertyvalue"
+            class="octo-table-cell title-cell"
+            id="mainBoardHeader"
+            style="width: 100px;"
           >
-            username_3
+            <div
+              class="octo-icontitle"
+            >
+              <div
+                class="octo-icon"
+              >
+                i
+              </div>
+              <input
+                class="Editable undefined"
+                placeholder="Untitled"
+                spellcheck="true"
+                title="title"
+                value="title"
+              />
+            </div>
+            <div
+              class="open-button"
+            >
+              <button
+                class="Button    "
+                type="button"
+              >
+                <span>
+                  Open
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue"
+              tabindex="0"
+            >
+              <span
+                class="Label propColorBrown "
+              >
+                <span
+                  class="Label-text"
+                >
+                  value 1
+                </span>
+                <div
+                  aria-label="Clear"
+                  class="Button IconButton margin-left delete-value"
+                  role="button"
+                  title="Clear"
+                >
+                  <i
+                    class="CompassIcon icon-close CloseIcon"
+                  />
+                </div>
+              </span>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue"
+              tabindex="0"
+            >
+              <span
+                class="Label empty "
+              >
+                <span
+                  class="Label-text"
+                />
+              </span>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="LastModifiedBy octo-propertyvalue"
+            >
+              username_3
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="octo-table-footer"
-    >
       <div
-        class="octo-table-cell"
+        class="octo-table-footer"
       >
-        + New
-      </div>
-    </div>
-    <div
-      class="CalculationRow octo-table-row"
-    >
-      <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
-      >
-        <span
-          class="calculationLabel"
+        <div
+          class="octo-table-cell"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
+          + New
+        </div>
       </div>
       <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
+        class="CalculationRow octo-table-row"
       >
-        <span
-          class="calculationLabel"
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
-      </div>
-      <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
-      >
-        <span
-          class="calculationLabel"
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
-      </div>
-      <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
-      >
-        <span
-          class="calculationLabel"
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
+        >
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -1563,245 +1579,249 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
 exports[`components/table/Table should match snapshot 1`] = `
 <div>
   <div
-    class="octo-table-body Table"
+    class="Table"
   >
     <div
-      class="octo-table-header"
-      id="mainBoardHeader"
+      class="octo-table-body"
     >
       <div
-        class="octo-table-cell header-cell"
-        style="overflow: unset; width: 100px; opacity: 1;"
+        class="octo-table-header"
+        id="mainBoardHeader"
       >
         <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Name
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-      <div
-        class="octo-table-cell header-cell"
-        draggable="true"
-        style="overflow: unset; width: 100px; opacity: 1;"
-      >
-        <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Property 1
-            <svg
-              class="SortDownIcon Icon"
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polyline
-                points="50,20 50,80"
-              />
-              <polyline
-                points="30,60 50,80 70,60"
-              />
-            </svg>
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-      <div
-        class="octo-table-cell header-cell"
-        draggable="true"
-        style="overflow: unset; width: 100px; opacity: 1;"
-      >
-        <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Property 2
-            <svg
-              class="SortUpIcon Icon"
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polyline
-                points="50,20 50,80"
-              />
-              <polyline
-                points="30,40 50,20 70,40"
-              />
-            </svg>
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-    </div>
-    <div
-      class="table-row-container"
-    >
-      <div
-        class="TableRow octo-table-row"
-        draggable="true"
-        style="opacity: 1;"
-      >
-        <div
-          class="octo-table-cell title-cell"
-          id="mainBoardHeader"
-          style="width: 100px;"
+          class="octo-table-cell header-cell"
+          style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
-            class="octo-icontitle"
-          >
-            <div
-              class="octo-icon"
-            >
-              i
-            </div>
-            <input
-              class="Editable undefined"
-              placeholder="Untitled"
-              spellcheck="true"
-              title="title"
-              value="title"
-            />
-          </div>
-          <div
-            class="open-button"
-          >
-            <button
-              class="Button    "
-              type="button"
-            >
-              <span>
-                Open
-              </span>
-            </button>
-          </div>
-        </div>
-        <div
-          class="octo-table-cell"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-propertyvalue"
-            tabindex="0"
-          >
-            <span
-              class="Label propColorBrown "
-            >
-              <span
-                class="Label-text"
-              >
-                value 1
-              </span>
-              <div
-                aria-label="Clear"
-                class="Button IconButton margin-left delete-value"
-                role="button"
-                title="Clear"
-              >
-                <i
-                  class="CompassIcon icon-close CloseIcon"
-                />
-              </div>
-            </span>
-          </div>
-        </div>
-        <div
-          class="octo-table-cell"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-propertyvalue"
-            tabindex="0"
+            class="MenuWrapper"
           >
             <span
               class="Label empty "
             >
-              <span
-                class="Label-text"
-              />
+              Name
             </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
+        </div>
+        <div
+          class="octo-table-cell header-cell"
+          draggable="true"
+          style="overflow: unset; width: 100px; opacity: 1;"
+        >
+          <div
+            class="MenuWrapper"
+          >
+            <span
+              class="Label empty "
+            >
+              Property 1
+              <svg
+                class="SortDownIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,60 50,80 70,60"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
+        </div>
+        <div
+          class="octo-table-cell header-cell"
+          draggable="true"
+          style="overflow: unset; width: 100px; opacity: 1;"
+        >
+          <div
+            class="MenuWrapper"
+          >
+            <span
+              class="Label empty "
+            >
+              Property 2
+              <svg
+                class="SortUpIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,40 50,20 70,40"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
+        </div>
+      </div>
+      <div
+        class="table-row-container"
+      >
+        <div
+          class="TableRow octo-table-row"
+          draggable="true"
+          style="opacity: 1;"
+        >
+          <div
+            class="octo-table-cell title-cell"
+            id="mainBoardHeader"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-icontitle"
+            >
+              <div
+                class="octo-icon"
+              >
+                i
+              </div>
+              <input
+                class="Editable undefined"
+                placeholder="Untitled"
+                spellcheck="true"
+                title="title"
+                value="title"
+              />
+            </div>
+            <div
+              class="open-button"
+            >
+              <button
+                class="Button    "
+                type="button"
+              >
+                <span>
+                  Open
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue"
+              tabindex="0"
+            >
+              <span
+                class="Label propColorBrown "
+              >
+                <span
+                  class="Label-text"
+                >
+                  value 1
+                </span>
+                <div
+                  aria-label="Clear"
+                  class="Button IconButton margin-left delete-value"
+                  role="button"
+                  title="Clear"
+                >
+                  <i
+                    class="CompassIcon icon-close CloseIcon"
+                  />
+                </div>
+              </span>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue"
+              tabindex="0"
+            >
+              <span
+                class="Label empty "
+              >
+                <span
+                  class="Label-text"
+                />
+              </span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="octo-table-footer"
-    >
       <div
-        class="octo-table-cell"
+        class="octo-table-footer"
       >
-        + New
-      </div>
-    </div>
-    <div
-      class="CalculationRow octo-table-row"
-    >
-      <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
-      >
-        <span
-          class="calculationLabel"
+        <div
+          class="octo-table-cell"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
+          + New
+        </div>
       </div>
       <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
+        class="CalculationRow octo-table-row"
       >
-        <span
-          class="calculationLabel"
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
-      </div>
-      <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
-      >
-        <span
-          class="calculationLabel"
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
+        >
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -1811,217 +1831,221 @@ exports[`components/table/Table should match snapshot 1`] = `
 exports[`components/table/Table should match snapshot with GroupBy 1`] = `
 <div>
   <div
-    class="octo-table-body Table"
+    class="Table"
   >
     <div
-      class="octo-table-header"
-      id="mainBoardHeader"
+      class="octo-table-body"
     >
       <div
-        class="octo-table-cell header-cell"
-        style="overflow: unset; width: 100px; opacity: 1;"
+        class="octo-table-header"
+        id="mainBoardHeader"
       >
         <div
-          class="MenuWrapper"
+          class="octo-table-cell header-cell"
+          style="overflow: unset; width: 100px; opacity: 1;"
         >
-          <span
-            class="Label empty "
-          >
-            Name
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-      <div
-        class="octo-table-cell header-cell"
-        draggable="true"
-        style="overflow: unset; width: 100px; opacity: 1;"
-      >
-        <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Property 1
-            <svg
-              class="SortDownIcon Icon"
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polyline
-                points="50,20 50,80"
-              />
-              <polyline
-                points="30,60 50,80 70,60"
-              />
-            </svg>
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-      <div
-        class="octo-table-cell header-cell"
-        draggable="true"
-        style="overflow: unset; width: 100px; opacity: 1;"
-      >
-        <div
-          class="MenuWrapper"
-        >
-          <span
-            class="Label empty "
-          >
-            Property 2
-            <svg
-              class="SortUpIcon Icon"
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polyline
-                points="50,20 50,80"
-              />
-              <polyline
-                points="30,40 50,20 70,40"
-              />
-            </svg>
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-        <div
-          class="HorizontalGrip"
-          draggable="true"
-        />
-      </div>
-    </div>
-    <div
-      class="table-row-container"
-    >
-      <div
-        class="octo-table-group"
-      >
-        <div
-          class="octo-group-header-cell expanded"
-          draggable="true"
-          style="opacity: 1;"
-        >
-          <div
-            class="octo-table-cell"
-            style="width: 100px;"
-          >
-            <div
-              class="Button IconButton"
-              role="button"
-            >
-              <svg
-                class="DisclosureTriangleIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <polygon
-                  points="37,35 37,65 63,50"
-                />
-              </svg>
-            </div>
-            <span
-              class="Label empty "
-              title="Items with an empty Property 1 property will go here. This column cannot be removed."
-            >
-              No Property 1
-            </span>
-            
-          </div>
-          <button
-            class="Button    "
-            type="button"
-          >
-            <span>
-              0
-            </span>
-          </button>
           <div
             class="MenuWrapper"
           >
+            <span
+              class="Label empty "
+            >
+              Name
+            </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
+        </div>
+        <div
+          class="octo-table-cell header-cell"
+          draggable="true"
+          style="overflow: unset; width: 100px; opacity: 1;"
+        >
+          <div
+            class="MenuWrapper"
+          >
+            <span
+              class="Label empty "
+            >
+              Property 1
+              <svg
+                class="SortDownIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,60 50,80 70,60"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
+        </div>
+        <div
+          class="octo-table-cell header-cell"
+          draggable="true"
+          style="overflow: unset; width: 100px; opacity: 1;"
+        >
+          <div
+            class="MenuWrapper"
+          >
+            <span
+              class="Label empty "
+            >
+              Property 2
+              <svg
+                class="SortUpIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,40 50,20 70,40"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            class="HorizontalGrip"
+            draggable="true"
+          />
+        </div>
+      </div>
+      <div
+        class="table-row-container"
+      >
+        <div
+          class="octo-table-group"
+        >
+          <div
+            class="octo-group-header-cell expanded"
+            draggable="true"
+            style="opacity: 1;"
+          >
+            <div
+              class="octo-table-cell"
+              style="width: 100px;"
+            >
+              <div
+                class="Button IconButton"
+                role="button"
+              >
+                <svg
+                  class="DisclosureTriangleIcon Icon"
+                  viewBox="0 0 100 100"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <polygon
+                    points="37,35 37,65 63,50"
+                  />
+                </svg>
+              </div>
+              <span
+                class="Label empty "
+                title="Items with an empty Property 1 property will go here. This column cannot be removed."
+              >
+                No Property 1
+              </span>
+              
+            </div>
+            <button
+              class="Button    "
+              type="button"
+            >
+              <span>
+                0
+              </span>
+            </button>
+            <div
+              class="MenuWrapper"
+            >
+              <div
+                class="Button IconButton"
+                role="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </div>
+            </div>
             <div
               class="Button IconButton"
               role="button"
             >
               <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
+                class="CompassIcon icon-plus AddIcon"
               />
             </div>
           </div>
-          <div
-            class="Button IconButton"
-            role="button"
-          >
-            <i
-              class="CompassIcon icon-plus AddIcon"
-            />
-          </div>
         </div>
       </div>
-    </div>
-    <div
-      class="octo-table-footer"
-    />
-    <div
-      class="CalculationRow octo-table-row"
-    >
       <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
-      >
-        <span
-          class="calculationLabel"
-        >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
-      </div>
+        class="octo-table-footer"
+      />
       <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
+        class="CalculationRow octo-table-row"
       >
-        <span
-          class="calculationLabel"
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
-      </div>
-      <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
-      >
-        <span
-          class="calculationLabel"
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
+        >
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -2031,218 +2055,222 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
 exports[`components/table/Table should match snapshot, read-only 1`] = `
 <div>
   <div
-    class="octo-table-body Table"
+    class="Table"
   >
     <div
-      class="octo-table-header"
-      id="mainBoardHeader"
+      class="octo-table-body"
     >
       <div
-        class="octo-table-cell header-cell"
-        style="overflow: unset; width: 100px; opacity: 1;"
+        class="octo-table-header"
+        id="mainBoardHeader"
       >
         <div
-          class="MenuWrapper disabled"
-        >
-          <span
-            class="Label empty "
-          >
-            Name
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-      </div>
-      <div
-        class="octo-table-cell header-cell"
-        draggable="true"
-        style="overflow: unset; width: 100px; opacity: 1;"
-      >
-        <div
-          class="MenuWrapper disabled"
-        >
-          <span
-            class="Label empty "
-          >
-            Property 1
-            <svg
-              class="SortDownIcon Icon"
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polyline
-                points="50,20 50,80"
-              />
-              <polyline
-                points="30,60 50,80 70,60"
-              />
-            </svg>
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-      </div>
-      <div
-        class="octo-table-cell header-cell"
-        draggable="true"
-        style="overflow: unset; width: 100px; opacity: 1;"
-      >
-        <div
-          class="MenuWrapper disabled"
-        >
-          <span
-            class="Label empty "
-          >
-            Property 2
-            <svg
-              class="SortUpIcon Icon"
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polyline
-                points="50,20 50,80"
-              />
-              <polyline
-                points="30,40 50,20 70,40"
-              />
-            </svg>
-          </span>
-        </div>
-        <div
-          class="octo-spacer"
-        />
-      </div>
-    </div>
-    <div
-      class="table-row-container"
-    >
-      <div
-        class="TableRow octo-table-row"
-        draggable="true"
-        style="opacity: 1;"
-      >
-        <div
-          class="octo-table-cell title-cell"
-          id="mainBoardHeader"
-          style="width: 100px;"
+          class="octo-table-cell header-cell"
+          style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
-            class="octo-icontitle"
-          >
-            <div
-              class="octo-icon"
-            >
-              i
-            </div>
-            <input
-              class="Editable readonly undefined"
-              placeholder="Untitled"
-              readonly=""
-              spellcheck="true"
-              title="title"
-              value="title"
-            />
-          </div>
-          <div
-            class="open-button"
-          >
-            <button
-              class="Button    "
-              type="button"
-            >
-              <span>
-                Open
-              </span>
-            </button>
-          </div>
-        </div>
-        <div
-          class="octo-table-cell"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-propertyvalue"
-            tabindex="0"
-          >
-            <span
-              class="Label propColorBrown "
-            >
-              <span
-                class="Label-text"
-              >
-                value 1
-              </span>
-            </span>
-          </div>
-        </div>
-        <div
-          class="octo-table-cell"
-          style="width: 100px;"
-        >
-          <div
-            class="octo-propertyvalue"
-            tabindex="0"
+            class="MenuWrapper disabled"
           >
             <span
               class="Label empty "
             >
-              <span
-                class="Label-text"
-              />
+              Name
             </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+        </div>
+        <div
+          class="octo-table-cell header-cell"
+          draggable="true"
+          style="overflow: unset; width: 100px; opacity: 1;"
+        >
+          <div
+            class="MenuWrapper disabled"
+          >
+            <span
+              class="Label empty "
+            >
+              Property 1
+              <svg
+                class="SortDownIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,60 50,80 70,60"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+        </div>
+        <div
+          class="octo-table-cell header-cell"
+          draggable="true"
+          style="overflow: unset; width: 100px; opacity: 1;"
+        >
+          <div
+            class="MenuWrapper disabled"
+          >
+            <span
+              class="Label empty "
+            >
+              Property 2
+              <svg
+                class="SortUpIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,40 50,20 70,40"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+        </div>
+      </div>
+      <div
+        class="table-row-container"
+      >
+        <div
+          class="TableRow octo-table-row"
+          draggable="true"
+          style="opacity: 1;"
+        >
+          <div
+            class="octo-table-cell title-cell"
+            id="mainBoardHeader"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-icontitle"
+            >
+              <div
+                class="octo-icon"
+              >
+                i
+              </div>
+              <input
+                class="Editable readonly undefined"
+                placeholder="Untitled"
+                readonly=""
+                spellcheck="true"
+                title="title"
+                value="title"
+              />
+            </div>
+            <div
+              class="open-button"
+            >
+              <button
+                class="Button    "
+                type="button"
+              >
+                <span>
+                  Open
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue"
+              tabindex="0"
+            >
+              <span
+                class="Label propColorBrown "
+              >
+                <span
+                  class="Label-text"
+                >
+                  value 1
+                </span>
+              </span>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue"
+              tabindex="0"
+            >
+              <span
+                class="Label empty "
+              >
+                <span
+                  class="Label-text"
+                />
+              </span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="octo-table-footer"
-    />
-    <div
-      class="CalculationRow octo-table-row"
-    >
       <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
-      >
-        <span
-          class="calculationLabel"
-        >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
-      </div>
+        class="octo-table-footer"
+      />
       <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
+        class="CalculationRow octo-table-row"
       >
-        <span
-          class="calculationLabel"
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
-      </div>
-      <div
-        class="Calculation none octo-table-cell"
-        style="width: 100px;"
-        tabindex="0"
-      >
-        <span
-          class="calculationLabel"
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
         >
-          Calculate
-        </span>
-        <i
-          class="CompassIcon icon-chevron-up ChevronUpIcon"
-        />
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
+        <div
+          class="Calculation none octo-table-cell"
+          style="width: 100px;"
+          tabindex="0"
+        >
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
       </div>
     </div>
   </div>

@@ -10,9 +10,11 @@
         color: rgba(var(--center-channel-color-rgb), 0.4);
         width: 100%;
         align-items: flex-start;
+
         .Button {
             display: none;
         }
+
         &:hover {
             .Button {
                 display: flex;
@@ -24,6 +26,7 @@
         display: flex;
         flex-direction: column;
         width: 100%;
+
         .MenuWrapper {
             position: relative;
             align-self: center;
@@ -33,8 +36,13 @@
     .octo-propertyrow {
         display: flex;
         flex-direction: row;
-        margin: 8px 0;
+        margin: 4px 0;
+        height: 32px;
+
         .octo-propertyvalue {
+            font-size: 14px;
+            width: 100%;
+
             .MenuWrapper {
                 display: flex;
                 align-items: center;
@@ -46,25 +54,31 @@
         width: 150px;
         margin-right: 5px;
         color: rgba(var(--center-channel-color-rgb), 0.6);
+
         .Button {
             text-align: left;
             justify-content: unset;
         }
+
         &.add-property {
             color: rgba(var(--center-channel-color-rgb), 0.4);
         }
     }
 
     &.content-blocks {
-        &:hover, &:focus-within {
+
+        &:hover,
+        &:focus-within {
             .CardDetailContentsMenu {
                 .Button {
                     opacity: 1;
                 }
             }
         }
+
         .CardDetailContentsMenu {
             margin-left: 48px;
+
             .Button {
                 opacity: 0;
                 color: rgba(var(--center-channel-color-rgb), 0.6);
