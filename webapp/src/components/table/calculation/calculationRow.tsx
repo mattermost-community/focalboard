@@ -12,6 +12,7 @@ import Calculation from '../../calculations/calculation'
 import {columnWidth} from '../tableRow'
 import {BoardView} from '../../../blocks/boardView'
 import {Card} from '../../../blocks/card'
+import {Options} from '../../calculations/options'
 
 type Props = {
     board: Board
@@ -45,7 +46,8 @@ const CalculationRow = (props: Props): JSX.Element => {
             {
                 templates.map((template) => {
                     const style = {width: columnWidth(props.resizingColumn, props.activeView.fields.columnWidths, props.offset, template.id)}
-                    const value = selectedCalculations[template.id] || 'none'
+                    const defaultValue = template.id === Constants.titleColumnId ? Options.count.value : Options.none.value
+                    const value = selectedCalculations[template.id] || defaultValue
 
                     return (
                         <Calculation

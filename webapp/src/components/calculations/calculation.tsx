@@ -35,7 +35,7 @@ const Calculation = (props: Props): JSX.Element => {
         // See this for more details-
         // https://stackoverflow.com/questions/47308081/onblur-event-is-not-firing
         <div
-            className={`Calculation ${value} ${props.class}`}
+            className={`Calculation ${value} ${props.class} ${value === Options.none.value ? 'hidden' : ''}`}
             style={props.style}
             onClick={() => (props.menuOpen ? props.onMenuClose() : props.onMenuOpen())}
             tabIndex={0}

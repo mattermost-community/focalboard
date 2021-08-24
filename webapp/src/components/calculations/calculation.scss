@@ -3,8 +3,10 @@
 
 .Calculation {
     cursor: pointer;
+    transition: opacity 0.1s ease-in;
 
     &.none {
+        opacity: 0;
         color: rgba(var(--body-color), 0.64);
 
         .calculationLabel {
@@ -13,6 +15,10 @@
             font-size: 14px;
             margin-right: 0;
         }
+    }
+
+    &.none:hover {
+        opacity: 1;
     }
 
     .calculationLabel {
