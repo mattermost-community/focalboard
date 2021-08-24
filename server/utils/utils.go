@@ -30,7 +30,7 @@ func GetMillis() int64 {
 }
 
 func EnsureCollation(dbType, rawConnectionString string) (string, error) {
-	if dbType == "mysql" {
+	if dbType != "mysql" {
 		return rawConnectionString, nil
 	}
 
