@@ -10,6 +10,7 @@ exports[`components/cardDetail/CardDetailProperties should match snapshot 1`] = 
     >
       <div
         class="MenuWrapper"
+        data-testid="menuwrapper"
       >
         <div
           class="octo-propertyname"

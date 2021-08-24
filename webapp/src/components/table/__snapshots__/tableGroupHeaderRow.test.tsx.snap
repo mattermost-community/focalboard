@@ -97,6 +97,7 @@ exports[`should match snapshot with Group 1`] = `
     </button>
     <div
       class="MenuWrapper"
+      data-testid="menuwrapper"
     >
       <div
         class="Button IconButton"
@@ -166,6 +167,7 @@ exports[`should match snapshot, add new 1`] = `
     </button>
     <div
       class="MenuWrapper"
+      data-testid="menuwrapper"
     >
       <div
         class="Button IconButton"
@@ -235,6 +237,7 @@ exports[`should match snapshot, edit title 1`] = `
     </button>
     <div
       class="MenuWrapper"
+      data-testid="menuwrapper"
     >
       <div
         class="Button IconButton"
@@ -304,6 +307,7 @@ exports[`should match snapshot, hide group 1`] = `
     </button>
     <div
       class="MenuWrapper"
+      data-testid="menuwrapper"
     >
       <div
         class="Button IconButton"
@@ -369,6 +373,7 @@ exports[`should match snapshot, no groups 1`] = `
     </button>
     <div
       class="MenuWrapper"
+      data-testid="menuwrapper"
     >
       <div
         class="Button IconButton"

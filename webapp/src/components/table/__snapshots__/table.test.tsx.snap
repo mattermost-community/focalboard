@@ -18,6 +18,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -40,6 +41,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -74,6 +76,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -108,6 +111,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -412,6 +416,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -434,6 +439,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -468,6 +474,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -502,6 +509,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -806,6 +814,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -828,6 +837,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -862,6 +872,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -896,6 +907,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -1200,6 +1212,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -1222,6 +1235,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -1256,6 +1270,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -1290,6 +1305,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -1594,6 +1610,7 @@ exports[`components/table/Table should match snapshot 1`] = `
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -1616,6 +1633,7 @@ exports[`components/table/Table should match snapshot 1`] = `
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -1650,6 +1668,7 @@ exports[`components/table/Table should match snapshot 1`] = `
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -1846,6 +1865,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -1868,6 +1888,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -1902,6 +1923,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
         >
           <div
             class="MenuWrapper"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -1977,6 +1999,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
             </button>
             <div
               class="MenuWrapper"
+              data-testid="menuwrapper"
             >
               <div
                 class="Button IconButton"
@@ -2070,6 +2093,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
         >
           <div
             class="MenuWrapper disabled"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -2088,6 +2112,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
         >
           <div
             class="MenuWrapper disabled"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "
@@ -2118,6 +2143,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
         >
           <div
             class="MenuWrapper disabled"
+            data-testid="menuwrapper"
           >
             <span
               class="Label empty "

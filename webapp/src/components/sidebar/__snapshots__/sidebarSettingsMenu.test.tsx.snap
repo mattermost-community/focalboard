@@ -7,6 +7,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
   >
     <div
       class="MenuWrapper"
+      data-testid="menuwrapper"
     >
       <div
         class="menu-entry"
@@ -387,6 +388,7 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu closed should matc
   >
     <div
       class="MenuWrapper"
+      data-testid="menuwrapper"
     >
       <div
         class="menu-entry"
@@ -405,6 +407,7 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
   >
     <div
       class="MenuWrapper"
+      data-testid="menuwrapper"
     >
       <div
         class="menu-entry"
@@ -556,6 +559,7 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
   >
     <div
       class="MenuWrapper"
+      data-testid="menuwrapper"
     >
       <div
         class="menu-entry"

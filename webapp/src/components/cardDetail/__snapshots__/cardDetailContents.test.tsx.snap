@@ -165,6 +165,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
           >
             <div
               class="MenuWrapper"
+              data-testid="menuwrapper"
             >
               <div
                 class="Button IconButton"
@@ -227,6 +228,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
             >
               <div
                 class="MenuWrapper"
+                data-testid="menuwrapper"
               >
                 <div
                   class="Button IconButton"
@@ -280,6 +282,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
             >
               <div
                 class="MenuWrapper"
+                data-testid="menuwrapper"
               >
                 <div
                   class="Button IconButton"
@@ -348,6 +351,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
           >
             <div
               class="MenuWrapper"
+              data-testid="menuwrapper"
             >
               <div
                 class="Button IconButton"
@@ -406,6 +410,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
           >
             <div
               class="MenuWrapper"
+              data-testid="menuwrapper"
             >
               <div
                 class="Button IconButton"
@@ -477,6 +482,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
           >
             <div
               class="MenuWrapper"
+              data-testid="menuwrapper"
             >
               <div
                 class="Button IconButton"
@@ -535,6 +541,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
           >
             <div
               class="MenuWrapper"
+              data-testid="menuwrapper"
             >
               <div
                 class="Button IconButton"
@@ -756,6 +763,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot with con
           >
             <div
               class="MenuWrapper"
+              data-testid="menuwrapper"
             >
               <div
                 class="Button IconButton"
@@ -827,6 +835,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot with con
           >
             <div
               class="MenuWrapper"
+              data-testid="menuwrapper"
             >
               <div
                 class="Button IconButton"
@@ -889,6 +898,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot with con
             >
               <div
                 class="MenuWrapper"
+                data-testid="menuwrapper"
               >
                 <div
                   class="Button IconButton"
@@ -942,6 +952,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot with con
             >
               <div
                 class="MenuWrapper"
+                data-testid="menuwrapper"
               >
                 <div
                   class="Button IconButton"

@@ -7,6 +7,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
   >
     <div
       class="MenuWrapper"
+      data-testid="menuwrapper"
     >
       <div
         class="GlobalHeaderComponent__button menu-entry"
@@ -367,6 +368,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu closed should
   >
     <div
       class="MenuWrapper"
+      data-testid="menuwrapper"
     >
       <div
         class="GlobalHeaderComponent__button menu-entry"
@@ -387,6 +389,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
   >
     <div
       class="MenuWrapper"
+      data-testid="menuwrapper"
     >
       <div
         class="GlobalHeaderComponent__button menu-entry"

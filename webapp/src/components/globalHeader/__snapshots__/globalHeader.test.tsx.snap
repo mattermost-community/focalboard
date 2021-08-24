@@ -23,6 +23,7 @@ exports[`components/sidebar/GlobalHeader header menu should match snapshot 1`] =
     >
       <div
         class="MenuWrapper"
+        data-testid="menuwrapper"
       >
         <div
           class="GlobalHeaderComponent__button menu-entry"
