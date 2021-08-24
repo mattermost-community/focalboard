@@ -208,6 +208,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         return (
             <URLProperty
                 value={value as string}
+                readonly={readOnly}
                 onChange={setValue}
                 onSave={saveTextProperty}
                 onCancel={() => setValue(propertyValue)}
