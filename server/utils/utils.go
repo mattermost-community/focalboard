@@ -4,7 +4,12 @@ import (
 	"crypto/rand"
 	"fmt"
 	"log"
+	"net/url"
 	"time"
+)
+
+const (
+	mysqlDefaultCollation = "utf16_general_ci"
 )
 
 // CreateGUID returns a random GUID.
@@ -22,4 +27,23 @@ func CreateGUID() string {
 // GetMillis is a convenience method to get milliseconds since epoch.
 func GetMillis() int64 {
 	return time.Now().UnixNano() / int64(time.Millisecond)
+}
+
+func EnsureCollation(dbType, rawConnectionString string) (string, error) {
+	if dbType == "mysql" {
+		return rawConnectionString, nil
+	}
+
+	connectionURL, err := url.Parse(rawConnectionString)
+	if err != nil {
+		return "", err
+	}
+
+	params := connectionURL.Query()
+	if params.Get("collation") == "" {
+		params.Set("collation", mysqlDefaultCollation)
+	}
+
+	connectionURL.RawQuery = params.Encode()
+	return connectionURL.String(), nil
 }

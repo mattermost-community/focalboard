@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"database/sql"
+	"github.com/mattermost/focalboard/server/utils"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/services/mlog"
@@ -24,17 +25,23 @@ type SQLStore struct {
 
 // New creates a new SQL implementation of the store.
 func New(dbType, connectionString, tablePrefix string, logger *mlog.Logger, db *sql.DB) (*SQLStore, error) {
-	logger.Info("connectDatabase", mlog.String("dbType", dbType), mlog.String("connStr", connectionString))
+	connectionStringToUse, err := utils.EnsureCollation(dbType, connectionString)
+	if err != nil {
+		logger.Error("Failed to ensure collation in database connection string", mlog.Err(err))
+		return nil, err
+	}
+
+	logger.Info("connectDatabase", mlog.String("dbType", dbType), mlog.String("connStr", connectionStringToUse))
 	store := &SQLStore{
 		// TODO: add replica DB support too.
 		db:               db,
 		dbType:           dbType,
 		tablePrefix:      tablePrefix,
-		connectionString: connectionString,
+		connectionString: connectionStringToUse,
 		logger:           logger,
 	}
 
-	err := store.Migrate()
+	err = store.Migrate()
 	if err != nil {
 		logger.Error(`Table creation / migration failed`, mlog.Err(err))
 
