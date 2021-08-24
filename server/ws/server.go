@@ -69,13 +69,6 @@ type UpdateMsg struct {
 	Block  model.Block `json:"block"`
 }
 
-// clusterUpdateMsg is sent on block updates.
-type clusterUpdateMsg struct {
-	UpdateMsg
-	BlockID     string `json:"block_id"`
-	WorkspaceID string `json:"workspace_id"`
-}
-
 // WebsocketCommand is an incoming command from the client.
 type WebsocketCommand struct {
 	Action      string   `json:"action"`

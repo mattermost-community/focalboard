@@ -66,7 +66,8 @@ type Server struct {
 	api             *api.API
 }
 
-func New(cfg *config.Configuration, singleUserToken string, db store.Store, logger *mlog.Logger, serverID string, wsAdapter ws.Adapter) (*Server, error) {
+func New(cfg *config.Configuration, singleUserToken string, db store.Store,
+	logger *mlog.Logger, serverID string, wsAdapter ws.Adapter) (*Server, error) {
 	authenticator := auth.New(cfg, db)
 
 	// if no ws adapter is provided, we spin up a websocket server

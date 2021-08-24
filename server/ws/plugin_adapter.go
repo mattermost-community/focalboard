@@ -3,9 +3,9 @@ package ws
 import (
 	"encoding/json"
 	"fmt"
-	"time"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/model"
@@ -15,9 +15,11 @@ import (
 
 const websocketMessagePrefix = "custom_focalboard_"
 
+var errMissingWorkspaceInCommand = fmt.Errorf("command doesn't contain workspaceId")
+
 func structToMap(v interface{}) (m map[string]interface{}) {
 	b, _ := json.Marshal(v)
-	json.Unmarshal(b, &m)
+	_ = json.Unmarshal(b, &m)
 	return
 }
 
@@ -38,6 +40,7 @@ func (pac *PluginAdapterClient) isSubscribedToWorkspace(workspaceID string) bool
 	return false
 }
 
+//nolint:unused
 func (pac *PluginAdapterClient) isSubscribedToBlock(blockID string) bool {
 	for _, id := range pac.blocks {
 		if id == blockID {
@@ -60,12 +63,12 @@ type PluginAdapter struct {
 
 func NewPluginAdapter(api plugin.API, auth *auth.Auth) *PluginAdapter {
 	return &PluginAdapter{
-		api: api,
-		auth: auth,
-		listeners: make(map[string]*PluginAdapterClient),
+		api:                  api,
+		auth:                 auth,
+		listeners:            make(map[string]*PluginAdapterClient),
 		listenersByWorkspace: make(map[string][]*PluginAdapterClient),
-  		listenersByBlock: make(map[string][]*PluginAdapterClient),
-		mu: sync.RWMutex{},
+		listenersByBlock:     make(map[string][]*PluginAdapterClient),
+		mu:                   sync.RWMutex{},
 	}
 }
 
@@ -151,6 +154,7 @@ func (pa *PluginAdapter) unsubscribeListenerFromWorkspace(pac *PluginAdapterClie
 	pa.removeListenerFromWorkspace(pac, workspaceID)
 }
 
+//nolint:unused
 func (pa *PluginAdapter) unsubscribeListenerFromBlocks(pac *PluginAdapterClient, blockIDs []string) {
 	pa.mu.Lock()
 	defer pa.mu.Unlock()
@@ -164,10 +168,10 @@ func (pa *PluginAdapter) unsubscribeListenerFromBlocks(pac *PluginAdapterClient,
 
 func (pa *PluginAdapter) OnWebSocketConnect(webConnID, userID string) {
 	pac := &PluginAdapterClient{
-		webConnID: webConnID,
-		userID: userID,
+		webConnID:  webConnID,
+		userID:     userID,
 		workspaces: []string{},
-		blocks: []string{},
+		blocks:     []string{},
 	}
 
 	pa.addListener(pac)
@@ -192,7 +196,7 @@ func commandFromRequest(req *mmModel.WebSocketRequest) (*WebsocketCommand, error
 	if workspaceID, ok := req.Data["workspaceId"]; ok {
 		c.WorkspaceID = workspaceID.(string)
 	} else {
-		return nil, fmt.Errorf("command doesn't contain workspaceId")
+		return nil, errMissingWorkspaceInCommand
 	}
 
 	if readToken, ok := req.Data["readToken"]; ok {
@@ -293,9 +297,8 @@ func (pa *PluginAdapter) BroadcastBlockChange(workspaceID string, block model.Bl
 	}
 
 	userIDs := pa.getUserIDsForWorkspace(workspaceID)
-	messageMap := structToMap(message)
 	for _, userID := range userIDs {
-		pa.api.PublishWebSocketEvent(websocketActionUpdateBlock, messageMap, &mmModel.WebsocketBroadcast{UserId: userID})
+		pa.api.PublishWebSocketEvent(websocketActionUpdateBlock, structToMap(message), &mmModel.WebsocketBroadcast{UserId: userID})
 	}
 }
 
