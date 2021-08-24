@@ -13,7 +13,7 @@ import './menu.scss'
 
 type Props = {
     children: React.ReactNode
-    position?: 'top'|'bottom'|'left'
+    position?: 'top'|'bottom'|'left'|'right'
 }
 
 export default class Menu extends React.PureComponent<Props> {
