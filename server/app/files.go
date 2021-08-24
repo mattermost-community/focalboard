@@ -9,7 +9,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/utils"
 
-	"github.com/mattermost/mattermost-server/v5/shared/filestore"
+	"github.com/mattermost/mattermost-server/v6/shared/filestore"
 )
 
 func (a *App) SaveFile(reader io.Reader, teamID, rootID, filename string) (string, error) {
