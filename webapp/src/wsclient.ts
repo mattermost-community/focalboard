@@ -6,7 +6,7 @@ import {Block} from './blocks/block'
 // These are outgoing commands to the server
 type WSCommand = {
     action: string
-    workspaceId?: string
+    teamId?: string
     readToken?: string
     blockIds?: string[]
 }
@@ -153,7 +153,7 @@ class WSClient {
         }
     }
 
-    authenticate(workspaceId: string, token: string): void {
+    authenticate(teamId: string, token: string): void {
         if (!this.ws) {
             Utils.assertFailure('WSClient.addBlocks: ws is not open')
             return
@@ -165,12 +165,12 @@ class WSClient {
         const command = {
             action: 'AUTH',
             token,
-            workspaceId,
+            teamId,
         }
         this.ws.send(JSON.stringify(command))
     }
 
-    subscribeToBlocks(workspaceId: string, blockIds: string[], readToken = ''): void {
+    subscribeToBlocks(teamId: string, blockIds: string[], readToken = ''): void {
         if (!this.ws) {
             Utils.assertFailure('WSClient.subscribeToBlocks: ws is not open')
             return
@@ -179,42 +179,42 @@ class WSClient {
         const command: WSCommand = {
             action: 'SUBSCRIBE_BLOCKS',
             blockIds,
-            workspaceId,
+            teamId,
             readToken,
         }
 
         this.ws.send(JSON.stringify(command))
     }
 
-    unsubscribeToWorkspace(workspaceId: string): void {
+    unsubscribeToTeam(teamId: string): void {
         if (!this.ws) {
-            Utils.assertFailure('WSClient.subscribeToWorkspace: ws is not open')
+            Utils.assertFailure('WSClient.subscribeToTeam: ws is not open')
             return
         }
 
         const command: WSCommand = {
-            action: 'UNSUBSCRIBE_WORKSPACE',
-            workspaceId,
+            action: 'UNSUBSCRIBE_TEAM',
+            teamId,
         }
 
         this.ws.send(JSON.stringify(command))
     }
 
-    subscribeToWorkspace(workspaceId: string): void {
+    subscribeToTeam(teamId: string): void {
         if (!this.ws) {
-            Utils.assertFailure('WSClient.subscribeToWorkspace: ws is not open')
+            Utils.assertFailure('WSClient.subscribeToTeam: ws is not open')
             return
         }
 
         const command: WSCommand = {
-            action: 'SUBSCRIBE_WORKSPACE',
-            workspaceId,
+            action: 'SUBSCRIBE_TEAM',
+            teamId,
         }
 
         this.ws.send(JSON.stringify(command))
     }
 
-    unsubscribeFromBlocks(workspaceId: string, blockIds: string[], readToken = ''): void {
+    unsubscribeFromBlocks(teamId: string, blockIds: string[], readToken = ''): void {
         if (!this.ws) {
             Utils.assertFailure('WSClient.removeBlocks: ws is not open')
             return
@@ -223,7 +223,7 @@ class WSClient {
         const command: WSCommand = {
             action: 'UNSUBSCRIBE_BLOCKS',
             blockIds,
-            workspaceId,
+            teamId,
             readToken,
         }
 

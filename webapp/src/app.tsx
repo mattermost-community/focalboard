@@ -82,14 +82,14 @@ const App = React.memo((): JSX.Element => {
                                     {loggedIn === false && <Redirect to='/login'/>}
                                     {loggedIn === true && <BoardPage/>}
                                 </Route>
-                                <Route path='/workspace/:workspaceId/shared/:boardId?/:viewId?'>
+                                <Route path='/team/:teamId/shared/:boardId?/:viewId?'>
                                     <BoardPage readonly={true}/>
                                 </Route>
                                 <Route
-                                    path='/workspace/:workspaceId/:boardId?/:viewId?'
+                                    path='/team/:teamId/:boardId?/:viewId?'
                                     render={({match}) => {
                                         if (loggedIn === false) {
-                                            let redirectUrl = '/' + Utils.buildURL(`/workspace/${match.params.workspaceId}/`)
+                                            let redirectUrl = '/' + Utils.buildURL(`/team/${match.params.teamId}/`)
                                             if (redirectUrl.indexOf('//') === 0) {
                                                 redirectUrl = redirectUrl.slice(1)
                                             }

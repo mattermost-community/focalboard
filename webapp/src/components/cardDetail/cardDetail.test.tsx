@@ -57,7 +57,7 @@ describe('components/cardDetail/CardDetail', () => {
         const mockStore = configureStore([])
         const store = mockStore({
             users: {
-                workspaceUsers: [
+                teamUsers: [
                     {username: 'username_1'},
                 ],
             },
@@ -102,7 +102,7 @@ describe('components/cardDetail/CardDetail', () => {
         const mockStore = configureStore([])
         const store = mockStore({
             users: {
-                workspaceUsers: [
+                teamUsers: [
                     {username: 'username_1'},
                 ],
             },

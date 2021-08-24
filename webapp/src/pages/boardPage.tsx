@@ -13,7 +13,7 @@ import {Board} from '../blocks/board'
 import {Card} from '../blocks/card'
 import {BoardView} from '../blocks/boardView'
 import {sendFlashMessage} from '../components/flashMessages'
-import Workspace from '../components/workspace'
+import CurrentTeam from '../components/currentTeam'
 import mutator from '../mutator'
 import octoClient from '../octoClient'
 import {Utils} from '../utils'
@@ -42,13 +42,13 @@ const BoardPage = (props: Props) => {
     const dispatch = useAppDispatch()
 
     const history = useHistory()
-    const match = useRouteMatch<{boardId: string, viewId: string, workspaceId?: string}>()
+    const match = useRouteMatch<{boardId: string, viewId: string, teamId?: string}>()
     const [websocketClosed, setWebsocketClosed] = useState(false)
 
     // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {
-        octoClient.workspaceId = match.params.workspaceId || '0'
-    }, [match.params.workspaceId])
+        octoClient.teamId = match.params.teamId || '0'
+    }, [match.params.teamId])
 
     // Backward compatibility: This can be removed in the future, this is for
     // transform the old query params into routes
@@ -125,8 +125,8 @@ const BoardPage = (props: Props) => {
         dispatch(loadAction(match.params.boardId))
 
         if (wsClient.state === 'open') {
-            wsClient.authenticate(match.params.workspaceId || '0', token)
-            wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
+            wsClient.authenticate(match.params.teamId || '0', token)
+            wsClient.subscribeToTeam(match.params.teamId || '0')
         }
 
         const incrementalUpdate = (_: WSClient, blocks: Block[]) => {
@@ -143,8 +143,8 @@ const BoardPage = (props: Props) => {
         const updateWebsocketState = (_: WSClient, newState: 'init'|'open'|'close'): void => {
             if (newState === 'open') {
                 const newToken = localStorage.getItem('focalboardSessionId') || ''
-                wsClient.authenticate(match.params.workspaceId || '0', newToken)
-                wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
+                wsClient.authenticate(match.params.teamId || '0', newToken)
+                wsClient.subscribeToTeam(match.params.teamId || '0')
             }
 
             if (timeout) {
@@ -167,12 +167,12 @@ const BoardPage = (props: Props) => {
             if (timeout) {
                 clearTimeout(timeout)
             }
-            wsClient.unsubscribeToWorkspace(match.params.workspaceId || '0')
+            wsClient.unsubscribeToTeam(match.params.teamId || '0')
             wsClient.removeOnChange(incrementalUpdate)
             wsClient.removeOnReconnect(() => dispatch(loadAction(match.params.boardId)))
             wsClient.removeOnStateChange(updateWebsocketState)
         }
-    }, [match.params.workspaceId, props.readonly])
+    }, [match.params.teamId, props.readonly])
 
     useHotkeys('ctrl+z,cmd+z', () => {
         Utils.log('Undo')
@@ -225,7 +225,7 @@ const BoardPage = (props: Props) => {
                 <div className='error'>
                     {intl.formatMessage({id: 'BoardPage.syncFailed', defaultMessage: 'Board may be deleted or access revoked.'})}
                 </div>}
-            <Workspace readonly={props.readonly || false}/>
+            <CurrentTeam readonly={props.readonly || false}/>
         </div>
     )
 }

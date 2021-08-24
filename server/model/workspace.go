@@ -1,13 +1,13 @@
 package model
 
-// Workspace is information global to a workspace
+// Team is information global to a team
 // swagger:model
-type Workspace struct {
-	// ID of the workspace
+type Team struct {
+	// ID of the team
 	// required: true
 	ID string `json:"id"`
 
-	// Title of the workspace
+	// Title of the team
 	// required: false
 	Title string `json:"title"`
 
@@ -15,7 +15,7 @@ type Workspace struct {
 	// required: true
 	SignupToken string `json:"signupToken"`
 
-	// Workspace settings
+	// Team settings
 	// required: false
 	Settings map[string]interface{} `json:"settings"`
 

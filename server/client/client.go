@@ -153,7 +153,7 @@ func (c *Client) doAPIRequestReader(method, url string, data io.Reader, _ /* eta
 }
 
 func (c *Client) GetBlocksRoute() string {
-	return "/workspaces/0/blocks"
+	return "/teams/0/blocks"
 }
 
 func (c *Client) GetBlockRoute(id string) string {
@@ -217,7 +217,7 @@ func (c *Client) GetSubtree(blockID string) ([]model.Block, *Response) {
 // Sharing
 
 func (c *Client) GetSharingRoute(rootID string) string {
-	return fmt.Sprintf("/workspaces/0/sharing/%s", rootID)
+	return fmt.Sprintf("/teams/0/sharing/%s", rootID)
 }
 
 func (c *Client) GetSharing(rootID string) (*model.Sharing, *Response) {
@@ -328,11 +328,11 @@ func (c *Client) UserChangePassword(id string, data *api.ChangePasswordRequest) 
 	return true, BuildResponse(r)
 }
 
-func (c *Client) GetWorkspaceUploadFileRoute(workspaceID, rootID string) string {
-	return fmt.Sprintf("/workspaces/%s/%s/files", workspaceID, rootID)
+func (c *Client) GetTeamUploadFileRoute(teamID, rootID string) string {
+	return fmt.Sprintf("/teams/%s/%s/files", teamID, rootID)
 }
 
-func (c *Client) WorkspaceUploadFile(workspaceID, rootID string, data io.Reader) (*api.FileUploadResponse, *Response) {
+func (c *Client) TeamUploadFile(teamID, rootID string, data io.Reader) (*api.FileUploadResponse, *Response) {
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 	part, err := writer.CreateFormFile(api.UploadFormFileKey, "file")
@@ -348,7 +348,7 @@ func (c *Client) WorkspaceUploadFile(workspaceID, rootID string, data io.Reader)
 		r.Header.Add("Content-Type", writer.FormDataContentType())
 	}
 
-	r, err := c.doAPIRequestReader(http.MethodPost, c.APIURL+c.GetWorkspaceUploadFileRoute(workspaceID, rootID), body, "", opt)
+	r, err := c.doAPIRequestReader(http.MethodPost, c.APIURL+c.GetTeamUploadFileRoute(teamID, rootID), body, "", opt)
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}

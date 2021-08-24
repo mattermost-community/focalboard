@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-interface IWorkspace {
+interface ITeam {
     readonly id: string,
     readonly title: string,
     readonly signupToken: string,
@@ -9,4 +9,4 @@ interface IWorkspace {
     readonly updateAt?: number,
 }
 
-export {IWorkspace}
+export {ITeam}

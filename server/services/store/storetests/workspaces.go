@@ -17,105 +17,105 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 )
 
-func StoreTestWorkspaceStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
-	t.Run("UpsertWorkspaceSignupToken", func(t *testing.T) {
+func StoreTestTeamStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
+	t.Run("UpsertTeamSignupToken", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testUpsertWorkspaceSignupToken(t, store)
+		testUpsertTeamSignupToken(t, store)
 	})
 
-	t.Run("UpsertWorkspaceSettings", func(t *testing.T) {
+	t.Run("UpsertTeamSettings", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testUpsertWorkspaceSettings(t, store)
+		testUpsertTeamSettings(t, store)
 	})
 
-	t.Run("GetWorkspaceCount", func(t *testing.T) {
+	t.Run("GetTeamCount", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testGetWorkspaceCount(t, store)
+		testGetTeamCount(t, store)
 	})
 }
 
-func testUpsertWorkspaceSignupToken(t *testing.T, store store.Store) {
-	t.Run("Insert and update workspace with signup token", func(t *testing.T) {
-		workspaceID := "0"
-		workspace := &model.Workspace{
-			ID:          workspaceID,
+func testUpsertTeamSignupToken(t *testing.T, store store.Store) {
+	t.Run("Insert and update team with signup token", func(t *testing.T) {
+		teamID := "0"
+		team := &model.Team{
+			ID:          teamID,
 			SignupToken: utils.CreateGUID(),
 		}
 
 		// insert
-		err := store.UpsertWorkspaceSignupToken(*workspace)
+		err := store.UpsertTeamSignupToken(*team)
 		require.NoError(t, err)
 
-		got, err := store.GetWorkspace(workspaceID)
+		got, err := store.GetTeam(teamID)
 		require.NoError(t, err)
-		require.Equal(t, workspace.ID, got.ID)
-		require.Equal(t, workspace.SignupToken, got.SignupToken)
+		require.Equal(t, team.ID, got.ID)
+		require.Equal(t, team.SignupToken, got.SignupToken)
 
 		// update signup token
-		workspace.SignupToken = utils.CreateGUID()
-		err = store.UpsertWorkspaceSignupToken(*workspace)
+		team.SignupToken = utils.CreateGUID()
+		err = store.UpsertTeamSignupToken(*team)
 		require.NoError(t, err)
 
-		got, err = store.GetWorkspace(workspaceID)
+		got, err = store.GetTeam(teamID)
 		require.NoError(t, err)
-		require.Equal(t, workspace.ID, got.ID)
-		require.Equal(t, workspace.SignupToken, got.SignupToken)
+		require.Equal(t, team.ID, got.ID)
+		require.Equal(t, team.SignupToken, got.SignupToken)
 	})
 }
 
-func testUpsertWorkspaceSettings(t *testing.T, store store.Store) {
-	t.Run("Insert and update workspace with settings", func(t *testing.T) {
-		workspaceID := "0"
-		workspace := &model.Workspace{
-			ID: workspaceID,
+func testUpsertTeamSettings(t *testing.T, store store.Store) {
+	t.Run("Insert and update team with settings", func(t *testing.T) {
+		teamID := "0"
+		team := &model.Team{
+			ID: teamID,
 			Settings: map[string]interface{}{
 				"field1": "A",
 			},
 		}
 
 		// insert
-		err := store.UpsertWorkspaceSettings(*workspace)
+		err := store.UpsertTeamSettings(*team)
 		require.NoError(t, err)
 
-		got, err := store.GetWorkspace(workspaceID)
+		got, err := store.GetTeam(teamID)
 		require.NoError(t, err)
-		require.Equal(t, workspace.ID, got.ID)
-		require.Equal(t, workspace.Settings, got.Settings)
+		require.Equal(t, team.ID, got.ID)
+		require.Equal(t, team.Settings, got.Settings)
 
 		// update settings
-		workspace.Settings = map[string]interface{}{
+		team.Settings = map[string]interface{}{
 			"field1": "B",
 		}
-		err = store.UpsertWorkspaceSettings(*workspace)
+		err = store.UpsertTeamSettings(*team)
 		require.NoError(t, err)
 
-		got2, err := store.GetWorkspace(workspaceID)
+		got2, err := store.GetTeam(teamID)
 		require.NoError(t, err)
-		require.Equal(t, workspace.ID, got2.ID)
-		require.Equal(t, workspace.Settings, got2.Settings)
+		require.Equal(t, team.ID, got2.ID)
+		require.Equal(t, team.Settings, got2.Settings)
 		require.Equal(t, got.SignupToken, got2.SignupToken)
 	})
 }
 
-func testGetWorkspaceCount(t *testing.T, store store.Store) {
-	t.Run("Insert multiple workspace and get workspace count", func(t *testing.T) {
+func testGetTeamCount(t *testing.T, store store.Store) {
+	t.Run("Insert multiple team and get team count", func(t *testing.T) {
 		// insert
 		n := time.Now().Unix() % 10
 		for i := 0; i < int(n); i++ {
-			workspaceID := fmt.Sprintf("%d", i)
-			workspace := &model.Workspace{
-				ID:          workspaceID,
+			teamID := fmt.Sprintf("%d", i)
+			team := &model.Team{
+				ID:          teamID,
 				SignupToken: utils.CreateGUID(),
 			}
 
-			err := store.UpsertWorkspaceSignupToken(*workspace)
+			err := store.UpsertTeamSignupToken(*team)
 			require.NoError(t, err)
 		}
 
-		got, err := store.GetWorkspaceCount()
+		got, err := store.GetTeamCount()
 		require.NoError(t, err)
 		require.Equal(t, n, got)
 	})

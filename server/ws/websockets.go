@@ -16,12 +16,12 @@ import (
 )
 
 const (
-	singleUserID                        = "single-user-id"
-	websocketActionAuth                 = "AUTH"
-	websocketActionSubscribeWorkspace   = "SUBSCRIBE_WORKSPACE"
-	websocketActionUnsubscribeWorkspace = "UNSUBSCRIBE_WORKSPACE"
-	websocketActionSubscribeBlocks      = "SUBSCRIBE_BLOCKS"
-	websocketActionUnsubscribeBlocks    = "UNSUBSCRIBE_BLOCKS"
+	singleUserID                     = "single-user-id"
+	websocketActionAuth              = "AUTH"
+	websocketActionSubscribeTeam     = "SUBSCRIBE_TEAM"
+	websocketActionUnsubscribeTeam   = "UNSUBSCRIBE_TEAM"
+	websocketActionSubscribeBlocks   = "SUBSCRIBE_BLOCKS"
+	websocketActionUnsubscribeBlocks = "UNSUBSCRIBE_BLOCKS"
 )
 
 type Hub interface {
@@ -31,9 +31,9 @@ type Hub interface {
 
 type wsClient struct {
 	*websocket.Conn
-	lock       *sync.Mutex
-	workspaces []string
-	blocks     []string
+	lock   *sync.Mutex
+	teams  []string
+	blocks []string
 }
 
 func (c *wsClient) WriteJSON(v interface{}) error {
@@ -43,9 +43,9 @@ func (c *wsClient) WriteJSON(v interface{}) error {
 	return err
 }
 
-func (c *wsClient) isSubscribedToWorkspace(workspaceID string) bool {
-	for _, id := range c.workspaces {
-		if id == workspaceID {
+func (c *wsClient) isSubscribedToTeam(teamID string) bool {
+	for _, id := range c.teams {
+		if id == teamID {
 			return true
 		}
 	}
@@ -65,16 +65,16 @@ func (c *wsClient) isSubscribedToBlock(blockID string) bool {
 
 // Server is a WebSocket server.
 type Server struct {
-	upgrader             websocket.Upgrader
-	listeners            map[*wsClient]bool
-	listenersByWorkspace map[string][]*wsClient
-	listenersByBlock     map[string][]*wsClient
-	mu                   sync.RWMutex
-	auth                 *auth.Auth
-	hub                  Hub
-	singleUserToken      string
-	isMattermostAuth     bool
-	logger               *mlog.Logger
+	upgrader         websocket.Upgrader
+	listeners        map[*wsClient]bool
+	listenersByTeam  map[string][]*wsClient
+	listenersByBlock map[string][]*wsClient
+	mu               sync.RWMutex
+	auth             *auth.Auth
+	hub              Hub
+	singleUserToken  string
+	isMattermostAuth bool
+	logger           *mlog.Logger
 }
 
 // UpdateMsg is sent on block updates.
@@ -86,17 +86,17 @@ type UpdateMsg struct {
 // clusterUpdateMsg is sent on block updates.
 type clusterUpdateMsg struct {
 	UpdateMsg
-	BlockID     string `json:"block_id"`
-	WorkspaceID string `json:"workspace_id"`
+	BlockID string `json:"block_id"`
+	TeamID  string `json:"team_id"`
 }
 
 // WebsocketCommand is an incoming command from the client.
 type WebsocketCommand struct {
-	Action      string   `json:"action"`
-	WorkspaceID string   `json:"workspaceId"`
-	Token       string   `json:"token"`
-	ReadToken   string   `json:"readToken"`
-	BlockIDs    []string `json:"blockIds"`
+	Action    string   `json:"action"`
+	TeamID    string   `json:"teamId"`
+	Token     string   `json:"token"`
+	ReadToken string   `json:"readToken"`
+	BlockIDs  []string `json:"blockIds"`
 }
 
 type websocketSession struct {
@@ -111,9 +111,9 @@ func (wss *websocketSession) isAuthenticated() bool {
 // NewServer creates a new Server.
 func NewServer(auth *auth.Auth, singleUserToken string, isMattermostAuth bool, logger *mlog.Logger) *Server {
 	return &Server{
-		listeners:            make(map[*wsClient]bool),
-		listenersByWorkspace: make(map[string][]*wsClient),
-		listenersByBlock:     make(map[string][]*wsClient),
+		listeners:        make(map[*wsClient]bool),
+		listenersByTeam:  make(map[string][]*wsClient),
+		listenersByBlock: make(map[string][]*wsClient),
 		upgrader: websocket.Upgrader{
 			CheckOrigin: func(r *http.Request) bool {
 				return true
@@ -194,7 +194,7 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 		// authentication
 		if command.Action == websocketActionSubscribeBlocks {
 			ws.logger.Debug(`Command: SUBSCRIBE_BLOCKS`,
-				mlog.String("workspaceID", command.WorkspaceID),
+				mlog.String("teamID", command.TeamID),
 				mlog.Stringer("client", wsSession.client.RemoteAddr()),
 			)
 
@@ -214,7 +214,7 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 
 		if command.Action == websocketActionUnsubscribeBlocks {
 			ws.logger.Debug(`Command: UNSUBSCRIBE_BLOCKS`,
-				mlog.String("workspaceID", command.WorkspaceID),
+				mlog.String("teamID", command.TeamID),
 				mlog.Stringer("client", wsSession.client.RemoteAddr()),
 			)
 
@@ -244,9 +244,9 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 		}
 
 		switch command.Action {
-		case websocketActionSubscribeWorkspace:
-			ws.logger.Debug(`Command: SUBSCRIBE_WORKSPACE`,
-				mlog.String("workspaceID", command.WorkspaceID),
+		case websocketActionSubscribeTeam:
+			ws.logger.Debug(`Command: SUBSCRIBE_TEAM`,
+				mlog.String("teamID", command.TeamID),
 				mlog.Stringer("client", wsSession.client.RemoteAddr()),
 			)
 
@@ -258,21 +258,21 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 				}
 
 				// if not in single user mode validate that the session
-				// has permissions to the workspace
+				// has permissions to the team
 			} else {
-				if !ws.auth.DoesUserHaveWorkspaceAccess(wsSession.userID, command.WorkspaceID) {
+				if !ws.auth.DoesUserHaveTeamAccess(wsSession.userID, command.TeamID) {
 					continue
 				}
 			}
 
-			ws.subscribeListenerToWorkspace(wsSession.client, command.WorkspaceID)
-		case websocketActionUnsubscribeWorkspace:
-			ws.logger.Debug(`Command: UNSUBSCRIBE_WORKSPACE`,
-				mlog.String("workspaceID", command.WorkspaceID),
+			ws.subscribeListenerToTeam(wsSession.client, command.TeamID)
+		case websocketActionUnsubscribeTeam:
+			ws.logger.Debug(`Command: UNSUBSCRIBE_TEAM`,
+				mlog.String("teamID", command.TeamID),
 				mlog.Stringer("client", wsSession.client.RemoteAddr()),
 			)
 
-			ws.unsubscribeListenerFromWorkspace(wsSession.client, command.WorkspaceID)
+			ws.unsubscribeListenerFromTeam(wsSession.client, command.TeamID)
 		default:
 			ws.logger.Error(`ERROR webSocket command, invalid action`, mlog.String("action", command.Action))
 		}
@@ -282,11 +282,11 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 // isCommandReadTokenValid ensures that a command contains a read
 // token and a set of block ids that said token is valid for.
 func (ws *Server) isCommandReadTokenValid(command WebsocketCommand) bool {
-	if len(command.WorkspaceID) == 0 {
+	if len(command.TeamID) == 0 {
 		return false
 	}
 
-	container := store.Container{WorkspaceID: command.WorkspaceID}
+	container := store.Container{TeamID: command.TeamID}
 
 	if len(command.ReadToken) != 0 && len(command.BlockIDs) != 0 {
 		// Read token must be valid for all block IDs
@@ -320,9 +320,9 @@ func (ws *Server) removeListener(client *wsClient) {
 
 	// remove the listener from its subscriptions, if any
 
-	// workspace subscriptions
-	for _, workspace := range client.workspaces {
-		ws.removeListenerFromWorkspace(client, workspace)
+	// team subscriptions
+	for _, team := range client.teams {
+		ws.removeListenerFromTeam(client, team)
 	}
 
 	// block subscriptions
@@ -333,32 +333,32 @@ func (ws *Server) removeListener(client *wsClient) {
 	delete(ws.listeners, client)
 }
 
-// subscribeListenerToWorkspace safely modifies the listener and the
-// server to subscribe the listener to a given workspace updates.
-func (ws *Server) subscribeListenerToWorkspace(client *wsClient, workspaceID string) {
-	if client.isSubscribedToWorkspace(workspaceID) {
+// subscribeListenerToTeam safely modifies the listener and the
+// server to subscribe the listener to a given team updates.
+func (ws *Server) subscribeListenerToTeam(client *wsClient, teamID string) {
+	if client.isSubscribedToTeam(teamID) {
 		return
 	}
 
 	ws.mu.Lock()
 	defer ws.mu.Unlock()
 
-	ws.listenersByWorkspace[workspaceID] = append(ws.listenersByWorkspace[workspaceID], client)
-	client.workspaces = append(client.workspaces, workspaceID)
+	ws.listenersByTeam[teamID] = append(ws.listenersByTeam[teamID], client)
+	client.teams = append(client.teams, teamID)
 }
 
-// unsubscribeListenerFromWorkspace safely modifies the listener and
+// unsubscribeListenerFromTeam safely modifies the listener and
 // the server data structures to remove the link between the listener
-// and a given workspace ID.
-func (ws *Server) unsubscribeListenerFromWorkspace(client *wsClient, workspaceID string) {
-	if !client.isSubscribedToWorkspace(workspaceID) {
+// and a given team ID.
+func (ws *Server) unsubscribeListenerFromTeam(client *wsClient, teamID string) {
+	if !client.isSubscribedToTeam(teamID) {
 		return
 	}
 
 	ws.mu.Lock()
 	defer ws.mu.Unlock()
 
-	ws.removeListenerFromWorkspace(client, workspaceID)
+	ws.removeListenerFromTeam(client, teamID)
 }
 
 // subscribeListenerToBlocks safely modifies the listener and the
@@ -391,26 +391,26 @@ func (ws *Server) unsubscribeListenerFromBlocks(client *wsClient, blockIDs []str
 	}
 }
 
-// removeListenerFromWorkspace removes the listener from both its own
-// block subscribed list and the server listeners by workspace map.
-func (ws *Server) removeListenerFromWorkspace(client *wsClient, workspaceID string) {
-	// we remove the listener from the workspace index
-	newWorkspaceListeners := []*wsClient{}
-	for _, listener := range ws.listenersByWorkspace[workspaceID] {
+// removeListenerFromTeam removes the listener from both its own
+// block subscribed list and the server listeners by team map.
+func (ws *Server) removeListenerFromTeam(client *wsClient, teamID string) {
+	// we remove the listener from the team index
+	newTeamListeners := []*wsClient{}
+	for _, listener := range ws.listenersByTeam[teamID] {
 		if listener != client {
-			newWorkspaceListeners = append(newWorkspaceListeners, listener)
+			newTeamListeners = append(newTeamListeners, listener)
 		}
 	}
-	ws.listenersByWorkspace[workspaceID] = newWorkspaceListeners
+	ws.listenersByTeam[teamID] = newTeamListeners
 
-	// we remove the workspace from the listener subscription list
-	newClientWorkspaces := []string{}
-	for _, id := range client.workspaces {
-		if id != workspaceID {
-			newClientWorkspaces = append(newClientWorkspaces, id)
+	// we remove the team from the listener subscription list
+	newClientTeams := []string{}
+	for _, id := range client.teams {
+		if id != teamID {
+			newClientTeams = append(newClientTeams, id)
 		}
 	}
-	client.workspaces = newClientWorkspaces
+	client.teams = newClientTeams
 }
 
 // removeListenerFromBlock removes the listener from both its own
@@ -487,8 +487,8 @@ func (ws *Server) SetHub(hub Hub) {
 
 		listeners := ws.getListenersForBlock(msg.BlockID)
 		log.Printf("%d listener(s) for blockID: %s", len(listeners), msg.BlockID)
-		listeners = append(listeners, ws.getListenersForWorkspace(msg.WorkspaceID)...)
-		log.Printf("%d listener(s) for workspaceID: %s", len(listeners), msg.WorkspaceID)
+		listeners = append(listeners, ws.getListenersForTeam(msg.TeamID)...)
+		log.Printf("%d listener(s) for teamID: %s", len(listeners), msg.TeamID)
 
 		message := UpdateMsg{
 			Action: msg.Action,
@@ -496,7 +496,7 @@ func (ws *Server) SetHub(hub Hub) {
 		}
 
 		for _, listener := range listeners {
-			log.Printf("Broadcast change, workspaceID: %s, blockID: %s, remoteAddr: %s", msg.WorkspaceID, msg.BlockID, listener.RemoteAddr())
+			log.Printf("Broadcast change, teamID: %s, blockID: %s, remoteAddr: %s", msg.TeamID, msg.BlockID, listener.RemoteAddr())
 
 			err := listener.WriteJSON(message)
 			if err != nil {
@@ -513,14 +513,14 @@ func (ws *Server) getListenersForBlock(blockID string) []*wsClient {
 	return ws.listenersByBlock[blockID]
 }
 
-// getListenersForWorkspace returns the listeners subscribed to a
-// workspace changes.
-func (ws *Server) getListenersForWorkspace(workspaceID string) []*wsClient {
-	return ws.listenersByWorkspace[workspaceID]
+// getListenersForTeam returns the listeners subscribed to a
+// team changes.
+func (ws *Server) getListenersForTeam(teamID string) []*wsClient {
+	return ws.listenersByTeam[teamID]
 }
 
 // BroadcastBlockDelete broadcasts delete messages to clients.
-func (ws *Server) BroadcastBlockDelete(workspaceID, blockID, parentID string) {
+func (ws *Server) BroadcastBlockDelete(teamID, blockID, parentID string) {
 	now := time.Now().Unix()
 	block := model.Block{}
 	block.ID = blockID
@@ -528,11 +528,11 @@ func (ws *Server) BroadcastBlockDelete(workspaceID, blockID, parentID string) {
 	block.UpdateAt = now
 	block.DeleteAt = now
 
-	ws.BroadcastBlockChange(workspaceID, block)
+	ws.BroadcastBlockChange(teamID, block)
 }
 
 // BroadcastBlockChange broadcasts update messages to clients.
-func (ws *Server) BroadcastBlockChange(workspaceID string, block model.Block) {
+func (ws *Server) BroadcastBlockChange(teamID string, block model.Block) {
 	blockIDsToNotify := []string{block.ID, block.ParentID}
 
 	message := UpdateMsg{
@@ -540,10 +540,10 @@ func (ws *Server) BroadcastBlockChange(workspaceID string, block model.Block) {
 		Block:  block,
 	}
 
-	listeners := ws.getListenersForWorkspace(workspaceID)
-	ws.logger.Debug("listener(s) for workspaceID",
+	listeners := ws.getListenersForTeam(teamID)
+	ws.logger.Debug("listener(s) for teamID",
 		mlog.Int("listener_count", len(listeners)),
-		mlog.String("workspaceID", workspaceID),
+		mlog.String("teamID", teamID),
 	)
 
 	for _, blockID := range blockIDsToNotify {
@@ -554,7 +554,7 @@ func (ws *Server) BroadcastBlockChange(workspaceID string, block model.Block) {
 		)
 
 		if ws.hub != nil {
-			data, err := json.Marshal(clusterUpdateMsg{UpdateMsg: message, WorkspaceID: workspaceID, BlockID: blockID})
+			data, err := json.Marshal(clusterUpdateMsg{UpdateMsg: message, TeamID: teamID, BlockID: blockID})
 			if err != nil {
 				log.Printf("unable to serialize websocket message %v with the error: %v", message, err)
 			}
@@ -564,7 +564,7 @@ func (ws *Server) BroadcastBlockChange(workspaceID string, block model.Block) {
 
 	for _, listener := range listeners {
 		ws.logger.Debug("Broadcast change",
-			mlog.String("workspaceID", workspaceID),
+			mlog.String("teamID", teamID),
 			mlog.String("blockID", block.ID),
 			mlog.Stringer("remoteAddr", listener.RemoteAddr()),
 		)

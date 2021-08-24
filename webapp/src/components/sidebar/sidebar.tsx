@@ -9,7 +9,7 @@ import HideSidebarIcon from '../../widgets/icons/hideSidebar'
 import ShowSidebarIcon from '../../widgets/icons/showSidebar'
 import {getSortedBoards} from '../../store/boards'
 import {getSortedViews} from '../../store/views'
-import {getWorkspace} from '../../store/workspace'
+import {getTeam} from '../../store/teams'
 import {useAppSelector} from '../../store/hooks'
 import {Utils} from '../../utils'
 
@@ -34,7 +34,7 @@ const Sidebar = React.memo((props: Props) => {
         loadTheme()
     }, [])
 
-    const workspace = useAppSelector(getWorkspace)
+    const team = useAppSelector(getTeam)
     if (!boards) {
         return <div/>
     }
@@ -74,9 +74,9 @@ const Sidebar = React.memo((props: Props) => {
                         icon={<HideSidebarIcon/>}
                     />
                 </div>}
-            {workspace && workspace.id !== '0' &&
-                <div className='WorkspaceTitle'>
-                    {workspace.title}
+            {team && team.id !== '0' &&
+                <div className='team-title'>
+                    {team.title}
                     {Utils.isFocalboardPlugin() &&
                     <>
                         <div className='octo-spacer'/>

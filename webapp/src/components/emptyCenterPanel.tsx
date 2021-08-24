@@ -3,23 +3,23 @@
 import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import {getWorkspace} from '../store/workspace'
+import {getTeam} from '../store/teams'
 import {useAppSelector} from '../store/hooks'
 import './emptyCenterPanel.scss'
 
 const EmptyCenterPanel = React.memo(() => {
-    const workspace = useAppSelector(getWorkspace)
+    const team = useAppSelector(getTeam)
 
     return (
         <div className='EmptyCenterPanel'>
-            {workspace && workspace.id !== '0' &&
-            <div className='WorkspaceInfo'>
+            {team && team.id !== '0' &&
+            <div className='TeamInfo'>
                 <FormattedMessage
-                    id='EmptyCenterPanel.workspace'
-                    defaultMessage='This is the workspace for:'
+                    id='EmptyCenterPanel.team'
+                    defaultMessage='This is the team for:'
                 />
                 <b>
-                    {workspace.title}
+                    {team.title}
                 </b>
             </div>
             }

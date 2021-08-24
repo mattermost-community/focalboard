@@ -88,10 +88,10 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
     }, [match, history])
 
     useEffect(() => {
-        if (octoClient.workspaceId !== '0' && globalTemplates.length === 0) {
+        if (octoClient.teamId !== '0' && globalTemplates.length === 0) {
             dispatch(fetchGlobalTemplates())
         }
-    }, [octoClient.workspaceId])
+    }, [octoClient.teamId])
 
     const intl = useIntl()
     const templates = useAppSelector(getSortedTemplates)

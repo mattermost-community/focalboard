@@ -5,7 +5,7 @@ import React from 'react'
 import Select from 'react-select'
 
 import {IUser} from '../../../user'
-import {getWorkspaceUsersList, getWorkspaceUsers} from '../../../store/users'
+import {getTeamUsersList, getTeamUsers} from '../../../store/users'
 import {useAppSelector} from '../../../store/hooks'
 
 import './user.scss'
@@ -18,16 +18,16 @@ type Props = {
 }
 
 const UserProperty = (props: Props): JSX.Element => {
-    const workspaceUsers = useAppSelector<IUser[]>(getWorkspaceUsersList)
-    const workspaceUsersById = useAppSelector<{[key:string]: IUser}>(getWorkspaceUsers)
+    const teamUsers = useAppSelector<IUser[]>(getTeamUsersList)
+    const teamUsersById = useAppSelector<{[key:string]: IUser}>(getTeamUsers)
 
     if (props.readonly) {
-        return (<div className='UserProperty octo-propertyvalue readonly'>{workspaceUsersById[props.value]?.username || props.value}</div>)
+        return (<div className='UserProperty octo-propertyvalue readonly'>{teamUsersById[props.value]?.username || props.value}</div>)
     }
 
     return (
         <Select
-            options={workspaceUsers}
+            options={teamUsers}
             isSearchable={true}
             isClearable={true}
             backspaceRemovesValue={true}
@@ -35,7 +35,7 @@ const UserProperty = (props: Props): JSX.Element => {
             styles={getSelectBaseStyle()}
             getOptionLabel={(o: IUser) => o.username}
             getOptionValue={(a: IUser) => a.id}
-            value={workspaceUsersById[props.value] || null}
+            value={teamUsersById[props.value] || null}
             onChange={(item, action) => {
                 if (action.action === 'select-option') {
                     props.onChange(item?.id || '')

@@ -196,7 +196,7 @@ func (s *SQLStore) UpdateUserPasswordByID(userID, password string) error {
 	return nil
 }
 
-func (s *SQLStore) GetUsersByWorkspace(workspaceID string) ([]*model.User, error) {
+func (s *SQLStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
 	return s.getUsersByCondition(nil)
 }
 

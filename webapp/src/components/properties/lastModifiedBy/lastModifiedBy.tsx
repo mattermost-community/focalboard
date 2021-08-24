@@ -9,7 +9,7 @@ import {ContentBlock} from '../../../blocks/contentBlock'
 import {CommentBlock} from '../../../blocks/commentBlock'
 import {Board} from '../../../blocks/board'
 import {Block} from '../../../blocks/block'
-import {getWorkspaceUsers} from '../../../store/users'
+import {getTeamUsers} from '../../../store/users'
 import {useAppSelector} from '../../../store/hooks'
 
 type Props = {
@@ -20,7 +20,7 @@ type Props = {
 }
 
 const LastModifiedBy = (props: Props): JSX.Element => {
-    const workspaceUsersById = useAppSelector<{[key:string]: IUser}>(getWorkspaceUsers)
+    const teamUsersById = useAppSelector<{[key:string]: IUser}>(getTeamUsers)
 
     let latestBlock: Block = props.card
     if (props.board) {
@@ -32,7 +32,7 @@ const LastModifiedBy = (props: Props): JSX.Element => {
 
     return (
         <div className='LastModifiedBy octo-propertyvalue'>
-            {(workspaceUsersById && workspaceUsersById[latestBlock.modifiedBy]?.username) || latestBlock.modifiedBy}
+            {(teamUsersById && teamUsersById[latestBlock.modifiedBy]?.username) || latestBlock.modifiedBy}
         </div>
     )
 }

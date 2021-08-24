@@ -26,7 +26,7 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
     const [wasCopied, setWasCopied] = useState(false)
     const [sharing, setSharing] = useState<ISharing|undefined>(undefined)
     const intl = useIntl()
-    const match = useRouteMatch<{workspaceId?: string, boardId: string, viewId: string}>()
+    const match = useRouteMatch<{teamId?: string, boardId: string, viewId: string}>()
 
     const loadData = async () => {
         const newSharing = await client.getSharing(props.boardId)
@@ -75,12 +75,12 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
     const shareUrl = new URL(window.location.toString())
     shareUrl.searchParams.set('r', readToken)
 
-    if (match.params.workspaceId) {
-        const newPath = generatePath(':basename/workspace/:workspaceId/shared/:boardId/:viewId', {
+    if (match.params.teamId) {
+        const newPath = generatePath(':basename/team/:teamId/shared/:boardId/:viewId', {
             basename: Utils.getFrontendBaseURL(),
             boardId: match.params.boardId,
             viewId: match.params.viewId,
-            workspaceId: match.params.workspaceId,
+            teamId: match.params.teamId,
         })
         shareUrl.pathname = newPath
     } else {

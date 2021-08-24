@@ -17,19 +17,19 @@ export const fetchMe = createAsyncThunk(
 
 type UsersStatus = {
     me: IUser|null
-    workspaceUsers: {[key: string]: IUser}
+    teamUsers: {[key: string]: IUser}
     loggedIn: boolean|null
 }
 
 const usersSlice = createSlice({
     name: 'users',
-    initialState: {me: null, workspaceUsers: {}, loggedIn: null} as UsersStatus,
+    initialState: {me: null, teamUsers: {}, loggedIn: null} as UsersStatus,
     reducers: {
         setMe: (state, action: PayloadAction<IUser>) => {
             state.me = action.payload
         },
-        setWorkspaceUsers: (state, action: PayloadAction<IUser[]>) => {
-            state.workspaceUsers = action.payload.reduce((acc: {[key: string]: IUser}, user: IUser) => {
+        setTeamUsers: (state, action: PayloadAction<IUser[]>) => {
+            state.teamUsers = action.payload.reduce((acc: {[key: string]: IUser}, user: IUser) => {
                 acc[user.id] = user
                 return acc
             }, {})
@@ -45,7 +45,7 @@ const usersSlice = createSlice({
             state.loggedIn = false
         })
         builder.addCase(initialLoad.fulfilled, (state, action) => {
-            state.workspaceUsers = action.payload.workspaceUsers.reduce((acc: {[key: string]: IUser}, user: IUser) => {
+            state.teamUsers = action.payload.teamUsers.reduce((acc: {[key: string]: IUser}, user: IUser) => {
                 acc[user.id] = user
                 return acc
             }, {})
@@ -53,21 +53,21 @@ const usersSlice = createSlice({
     },
 })
 
-export const {setMe, setWorkspaceUsers} = usersSlice.actions
+export const {setMe, setTeamUsers} = usersSlice.actions
 export const {reducer} = usersSlice
 
 export const getMe = (state: RootState): IUser|null => state.users.me
 export const getLoggedIn = (state: RootState): boolean|null => state.users.loggedIn
-export const getWorkspaceUsers = (state: RootState): {[key: string]: IUser} => state.users.workspaceUsers
+export const getTeamUsers = (state: RootState): {[key: string]: IUser} => state.users.teamUsers
 
-export const getWorkspaceUsersList = createSelector(
-    getWorkspaceUsers,
-    (workspaceUsers) => Object.values(workspaceUsers).sort((a, b) => a.username.localeCompare(b.username)),
+export const getTeamUsersList = createSelector(
+    getTeamUsers,
+    (teamUsers) => Object.values(teamUsers).sort((a, b) => a.username.localeCompare(b.username)),
 )
 
 export const getUser = (userId: string): (state: RootState) => IUser|undefined => {
     return (state: RootState): IUser|undefined => {
-        const users = getWorkspaceUsers(state)
+        const users = getTeamUsers(state)
         return users[userId]
     }
 }

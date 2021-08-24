@@ -16,7 +16,7 @@ import (
 func TestGetSharing(t *testing.T) {
 	th := SetupTestHelper(t)
 	container := st.Container{
-		WorkspaceID: utils.CreateGUID(),
+		TeamID: utils.CreateGUID(),
 	}
 
 	t.Run("should get a sharing successfully", func(t *testing.T) {
@@ -64,7 +64,7 @@ func TestUpsertSharing(t *testing.T) {
 	th := SetupTestHelper(t)
 
 	container := st.Container{
-		WorkspaceID: utils.CreateGUID(),
+		TeamID: utils.CreateGUID(),
 	}
 	sharing := model.Sharing{
 		ID:         utils.CreateGUID(),

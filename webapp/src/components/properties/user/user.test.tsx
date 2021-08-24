@@ -19,7 +19,7 @@ describe('components/properties/user', () => {
     const mockStore = configureStore([])
     const state = {
         users: {
-            workspaceUsers: {
+            teamUsers: {
                 'user-id-1': {
                     id: 'user-id-1',
                     username: 'username-1',

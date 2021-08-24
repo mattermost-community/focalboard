@@ -1125,6 +1125,49 @@ ul.nav-tabs {
   "description" : "Sharing is sharing information for a root block",
   "x-go-package" : "github.com/mattermost/focalboard/server/model"
 };
+    defs["Team"] = {
+  "required" : [ "id", "modifiedBy", "signupToken", "updateAt" ],
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "string",
+      "description" : "ID of the team",
+      "x-go-name" : "ID"
+    },
+    "modifiedBy" : {
+      "type" : "string",
+      "description" : "ID of user who last modified this",
+      "x-go-name" : "ModifiedBy"
+    },
+    "settings" : {
+      "type" : "object",
+      "additionalProperties" : {
+        "type" : "object",
+        "properties" : { }
+      },
+      "description" : "Team settings",
+      "x-go-name" : "Settings"
+    },
+    "signupToken" : {
+      "type" : "string",
+      "description" : "Token required to register new users",
+      "x-go-name" : "SignupToken"
+    },
+    "title" : {
+      "type" : "string",
+      "description" : "Title of the team",
+      "x-go-name" : "Title"
+    },
+    "updateAt" : {
+      "type" : "integer",
+      "description" : "Updated time",
+      "format" : "int64",
+      "x-go-name" : "UpdateAt"
+    }
+  },
+  "description" : "Team is information global to a team",
+  "x-go-package" : "github.com/mattermost/focalboard/server/model"
+};
     defs["User"] = {
   "required" : [ "create_at", "delete_at", "email", "id", "props", "update_at", "username" ],
   "type" : "object",
@@ -1175,49 +1218,6 @@ ul.nav-tabs {
   "description" : "User is a user",
   "x-go-package" : "github.com/mattermost/focalboard/server/model"
 };
-    defs["Workspace"] = {
-  "required" : [ "id", "modifiedBy", "signupToken", "updateAt" ],
-  "type" : "object",
-  "properties" : {
-    "id" : {
-      "type" : "string",
-      "description" : "ID of the workspace",
-      "x-go-name" : "ID"
-    },
-    "modifiedBy" : {
-      "type" : "string",
-      "description" : "ID of user who last modified this",
-      "x-go-name" : "ModifiedBy"
-    },
-    "settings" : {
-      "type" : "object",
-      "additionalProperties" : {
-        "type" : "object",
-        "properties" : { }
-      },
-      "description" : "Workspace settings",
-      "x-go-name" : "Settings"
-    },
-    "signupToken" : {
-      "type" : "string",
-      "description" : "Token required to register new users",
-      "x-go-name" : "SignupToken"
-    },
-    "title" : {
-      "type" : "string",
-      "description" : "Title of the workspace",
-      "x-go-name" : "Title"
-    },
-    "updateAt" : {
-      "type" : "integer",
-      "description" : "Updated time",
-      "format" : "int64",
-      "x-go-name" : "UpdateAt"
-    }
-  },
-  "description" : "Workspace is information global to a workspace",
-  "x-go-package" : "github.com/mattermost/focalboard/server/model"
-};
 
     var errs = {};
   </script>
@@ -1261,14 +1261,14 @@ ul.nav-tabs {
                     <li data-group="Default" data-name="getSubTree" class="">
                       <a href="#api-Default-getSubTree">getSubTree</a>
                     </li>
+                    <li data-group="Default" data-name="getTeam" class="">
+                      <a href="#api-Default-getTeam">getTeam</a>
+                    </li>
+                    <li data-group="Default" data-name="getTeamUsers" class="">
+                      <a href="#api-Default-getTeamUsers">getTeamUsers</a>
+                    </li>
                     <li data-group="Default" data-name="getUser" class="">
                       <a href="#api-Default-getUser">getUser</a>
-                    </li>
-                    <li data-group="Default" data-name="getWorkspace" class="">
-                      <a href="#api-Default-getWorkspace">getWorkspace</a>
-                    </li>
-                    <li data-group="Default" data-name="getWorkspaceUsers" class="">
-                      <a href="#api-Default-getWorkspaceUsers">getWorkspaceUsers</a>
                     </li>
                     <li data-group="Default" data-name="importBlocks" class="">
                       <a href="#api-Default-importBlocks">importBlocks</a>
@@ -1844,7 +1844,7 @@ $(document).ready(function() {
                         <p class="marked">Deletes a block</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="delete"><code><span class="pln">/api/v1/workspaces/{workspaceID}/blocks/{blockID}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="delete"><code><span class="pln">/api/v1/teams/{teamID}/blocks/{blockID}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -1868,7 +1868,7 @@ $(document).ready(function() {
                             <pre class="prettyprint"><code class="language-bsh">curl -X DELETE\
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
- "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/blocks/{blockID}"</code></pre>
+ "http://localhost/api/v1/api/v1/teams/{teamID}/blocks/{blockID}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-deleteBlock-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -1891,11 +1891,11 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         String blockID = blockID_example; // String | ID of block to delete
         
         try {
-            apiInstance.deleteBlock(workspaceID, blockID);
+            apiInstance.deleteBlock(teamID, blockID);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#deleteBlock");
             e.printStackTrace();
@@ -1911,11 +1911,11 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         String blockID = blockID_example; // String | ID of block to delete
         
         try {
-            apiInstance.deleteBlock(workspaceID, blockID);
+            apiInstance.deleteBlock(teamID, blockID);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#deleteBlock");
             e.printStackTrace();
@@ -1938,10 +1938,10 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
-String *workspaceID = workspaceID_example; // Workspace ID (default to null)
+String *teamID = teamID_example; // Team ID (default to null)
 String *blockID = blockID_example; // ID of block to delete (default to null)
 
-[apiInstance deleteBlockWith:workspaceID
+[apiInstance deleteBlockWith:teamID
     blockID:blockID
               completionHandler: ^(NSError* error) {
     if (error) {
@@ -1963,7 +1963,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer.DefaultApi()
-var workspaceID = workspaceID_example; // {String} Workspace ID
+var teamID = teamID_example; // {String} Team ID
 var blockID = blockID_example; // {String} ID of block to delete
 
 var callback = function(error, data, response) {
@@ -1973,7 +1973,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully.');
   }
 };
-api.deleteBlock(workspaceID, blockID, callback);
+api.deleteBlock(teamID, blockID, callback);
 </code></pre>
                             </div>
 
@@ -2000,11 +2000,11 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
-            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
+            var teamID = teamID_example;  // String | Team ID (default to null)
             var blockID = blockID_example;  // String | ID of block to delete (default to null)
 
             try {
-                apiInstance.deleteBlock(workspaceID, blockID);
+                apiInstance.deleteBlock(teamID, blockID);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.deleteBlock: " + e.Message );
             }
@@ -2025,11 +2025,11 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
-$workspaceID = workspaceID_example; // String | Workspace ID
+$teamID = teamID_example; // String | Team ID
 $blockID = blockID_example; // String | ID of block to delete
 
 try {
-    $api_instance->deleteBlock($workspaceID, $blockID);
+    $api_instance->deleteBlock($teamID, $blockID);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->deleteBlock: ', $e->getMessage(), PHP_EOL;
 }
@@ -2048,11 +2048,11 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
-my $workspaceID = workspaceID_example; # String | Workspace ID
+my $teamID = teamID_example; # String | Team ID
 my $blockID = blockID_example; # String | ID of block to delete
 
 eval { 
-    $api_instance->deleteBlock(workspaceID => $workspaceID, blockID => $blockID);
+    $api_instance->deleteBlock(teamID => $teamID, blockID => $blockID);
 };
 if ($@) {
     warn "Exception when calling DefaultApi->deleteBlock: $@\n";
@@ -2073,11 +2073,11 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
-workspaceID = workspaceID_example # String | Workspace ID (default to null)
+teamID = teamID_example # String | Team ID (default to null)
 blockID = blockID_example # String | ID of block to delete (default to null)
 
 try: 
-    api_instance.delete_block(workspaceID, blockID)
+    api_instance.delete_block(teamID, blockID)
 except ApiException as e:
     print("Exception when calling DefaultApi->deleteBlock: %s\n" % e)</code></pre>
                             </div>
@@ -2086,11 +2086,11 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
-    let workspaceID = workspaceID_example; // String
+    let teamID = teamID_example; // String
     let blockID = blockID_example; // String
 
     let mut context = DefaultApi::Context::default();
-    let result = client.deleteBlock(workspaceID, blockID, &context).wait();
+    let result = client.deleteBlock(teamID, blockID, &context).wait();
 
     println!("{:?}", result);
 }
@@ -2111,11 +2111,11 @@ pub fn main() {
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
-                                  <tr><td style="width:150px;">workspaceID*</td>
+                                  <tr><td style="width:150px;">teamID*</td>
 <td>
 
 
-    <div id="d2e199_deleteBlock_workspaceID">
+    <div id="d2e199_deleteBlock_teamID">
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
@@ -2123,7 +2123,7 @@ pub fn main() {
                 </span>
 
                     <div class="inner description marked">
-Workspace ID
+Team ID
                     </div>
             </div>
                 <div class="inner required">
@@ -2267,7 +2267,7 @@ ID of block to delete
                         <p class="marked">Returns all blocks</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/workspaces/{workspaceID}/blocks/export</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/teams/{teamID}/blocks/export</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -2291,7 +2291,7 @@ ID of block to delete
                             <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
- "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/blocks/export"</code></pre>
+ "http://localhost/api/v1/api/v1/teams/{teamID}/blocks/export"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-exportBlocks-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -2314,10 +2314,10 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         
         try {
-            array[Block] result = apiInstance.exportBlocks(workspaceID);
+            array[Block] result = apiInstance.exportBlocks(teamID);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#exportBlocks");
@@ -2334,10 +2334,10 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         
         try {
-            array[Block] result = apiInstance.exportBlocks(workspaceID);
+            array[Block] result = apiInstance.exportBlocks(teamID);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#exportBlocks");
@@ -2361,9 +2361,9 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
-String *workspaceID = workspaceID_example; // Workspace ID (default to null)
+String *teamID = teamID_example; // Team ID (default to null)
 
-[apiInstance exportBlocksWith:workspaceID
+[apiInstance exportBlocksWith:teamID
               completionHandler: ^(array[Block] output, NSError* error) {
     if (output) {
         NSLog(@"%@", output);
@@ -2387,7 +2387,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer.DefaultApi()
-var workspaceID = workspaceID_example; // {String} Workspace ID
+var teamID = teamID_example; // {String} Team ID
 
 var callback = function(error, data, response) {
   if (error) {
@@ -2396,7 +2396,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.exportBlocks(workspaceID, callback);
+api.exportBlocks(teamID, callback);
 </code></pre>
                             </div>
 
@@ -2423,10 +2423,10 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
-            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
+            var teamID = teamID_example;  // String | Team ID (default to null)
 
             try {
-                array[Block] result = apiInstance.exportBlocks(workspaceID);
+                array[Block] result = apiInstance.exportBlocks(teamID);
                 Debug.WriteLine(result);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.exportBlocks: " + e.Message );
@@ -2448,10 +2448,10 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
-$workspaceID = workspaceID_example; // String | Workspace ID
+$teamID = teamID_example; // String | Team ID
 
 try {
-    $result = $api_instance->exportBlocks($workspaceID);
+    $result = $api_instance->exportBlocks($teamID);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->exportBlocks: ', $e->getMessage(), PHP_EOL;
@@ -2471,10 +2471,10 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
-my $workspaceID = workspaceID_example; # String | Workspace ID
+my $teamID = teamID_example; # String | Team ID
 
 eval { 
-    my $result = $api_instance->exportBlocks(workspaceID => $workspaceID);
+    my $result = $api_instance->exportBlocks(teamID => $teamID);
     print Dumper($result);
 };
 if ($@) {
@@ -2496,10 +2496,10 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
-workspaceID = workspaceID_example # String | Workspace ID (default to null)
+teamID = teamID_example # String | Team ID (default to null)
 
 try: 
-    api_response = api_instance.export_blocks(workspaceID)
+    api_response = api_instance.export_blocks(teamID)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DefaultApi->exportBlocks: %s\n" % e)</code></pre>
@@ -2509,10 +2509,10 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
-    let workspaceID = workspaceID_example; // String
+    let teamID = teamID_example; // String
 
     let mut context = DefaultApi::Context::default();
-    let result = client.exportBlocks(workspaceID, &context).wait();
+    let result = client.exportBlocks(teamID, &context).wait();
 
     println!("{:?}", result);
 }
@@ -2533,11 +2533,11 @@ pub fn main() {
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
-                                  <tr><td style="width:150px;">workspaceID*</td>
+                                  <tr><td style="width:150px;">teamID*</td>
 <td>
 
 
-    <div id="d2e199_exportBlocks_workspaceID">
+    <div id="d2e199_exportBlocks_teamID">
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
@@ -2545,7 +2545,7 @@ pub fn main() {
                 </span>
 
                     <div class="inner description marked">
-Workspace ID
+Team ID
                     </div>
             </div>
                 <div class="inner required">
@@ -2713,7 +2713,7 @@ Workspace ID
                         <p class="marked">Returns blocks</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/workspaces/{workspaceID}/blocks</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/teams/{teamID}/blocks</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -2737,7 +2737,7 @@ Workspace ID
                             <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
- "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/blocks?parent_id=&type="</code></pre>
+ "http://localhost/api/v1/api/v1/teams/{teamID}/blocks?parent_id=&type="</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-getBlocks-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -2760,12 +2760,12 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         String parentId = parentId_example; // String | ID of parent block, omit to specify all blocks
         String type = type_example; // String | Type of blocks to return, omit to specify all types
         
         try {
-            array[Block] result = apiInstance.getBlocks(workspaceID, parentId, type);
+            array[Block] result = apiInstance.getBlocks(teamID, parentId, type);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getBlocks");
@@ -2782,12 +2782,12 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         String parentId = parentId_example; // String | ID of parent block, omit to specify all blocks
         String type = type_example; // String | Type of blocks to return, omit to specify all types
         
         try {
-            array[Block] result = apiInstance.getBlocks(workspaceID, parentId, type);
+            array[Block] result = apiInstance.getBlocks(teamID, parentId, type);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getBlocks");
@@ -2811,11 +2811,11 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
-String *workspaceID = workspaceID_example; // Workspace ID (default to null)
+String *teamID = teamID_example; // Team ID (default to null)
 String *parentId = parentId_example; // ID of parent block, omit to specify all blocks (optional) (default to null)
 String *type = type_example; // Type of blocks to return, omit to specify all types (optional) (default to null)
 
-[apiInstance getBlocksWith:workspaceID
+[apiInstance getBlocksWith:teamID
     parentId:parentId
     type:type
               completionHandler: ^(array[Block] output, NSError* error) {
@@ -2841,7 +2841,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer.DefaultApi()
-var workspaceID = workspaceID_example; // {String} Workspace ID
+var teamID = teamID_example; // {String} Team ID
 var opts = {
   'parentId': parentId_example, // {String} ID of parent block, omit to specify all blocks
   'type': type_example // {String} Type of blocks to return, omit to specify all types
@@ -2854,7 +2854,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.getBlocks(workspaceID, opts, callback);
+api.getBlocks(teamID, opts, callback);
 </code></pre>
                             </div>
 
@@ -2881,12 +2881,12 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
-            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
+            var teamID = teamID_example;  // String | Team ID (default to null)
             var parentId = parentId_example;  // String | ID of parent block, omit to specify all blocks (optional)  (default to null)
             var type = type_example;  // String | Type of blocks to return, omit to specify all types (optional)  (default to null)
 
             try {
-                array[Block] result = apiInstance.getBlocks(workspaceID, parentId, type);
+                array[Block] result = apiInstance.getBlocks(teamID, parentId, type);
                 Debug.WriteLine(result);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.getBlocks: " + e.Message );
@@ -2908,12 +2908,12 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
-$workspaceID = workspaceID_example; // String | Workspace ID
+$teamID = teamID_example; // String | Team ID
 $parentId = parentId_example; // String | ID of parent block, omit to specify all blocks
 $type = type_example; // String | Type of blocks to return, omit to specify all types
 
 try {
-    $result = $api_instance->getBlocks($workspaceID, $parentId, $type);
+    $result = $api_instance->getBlocks($teamID, $parentId, $type);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->getBlocks: ', $e->getMessage(), PHP_EOL;
@@ -2933,12 +2933,12 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
-my $workspaceID = workspaceID_example; # String | Workspace ID
+my $teamID = teamID_example; # String | Team ID
 my $parentId = parentId_example; # String | ID of parent block, omit to specify all blocks
 my $type = type_example; # String | Type of blocks to return, omit to specify all types
 
 eval { 
-    my $result = $api_instance->getBlocks(workspaceID => $workspaceID, parentId => $parentId, type => $type);
+    my $result = $api_instance->getBlocks(teamID => $teamID, parentId => $parentId, type => $type);
     print Dumper($result);
 };
 if ($@) {
@@ -2960,12 +2960,12 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
-workspaceID = workspaceID_example # String | Workspace ID (default to null)
+teamID = teamID_example # String | Team ID (default to null)
 parentId = parentId_example # String | ID of parent block, omit to specify all blocks (optional) (default to null)
 type = type_example # String | Type of blocks to return, omit to specify all types (optional) (default to null)
 
 try: 
-    api_response = api_instance.get_blocks(workspaceID, parentId=parentId, type=type)
+    api_response = api_instance.get_blocks(teamID, parentId=parentId, type=type)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DefaultApi->getBlocks: %s\n" % e)</code></pre>
@@ -2975,12 +2975,12 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
-    let workspaceID = workspaceID_example; // String
+    let teamID = teamID_example; // String
     let parentId = parentId_example; // String
     let type = type_example; // String
 
     let mut context = DefaultApi::Context::default();
-    let result = client.getBlocks(workspaceID, parentId, type, &context).wait();
+    let result = client.getBlocks(teamID, parentId, type, &context).wait();
 
     println!("{:?}", result);
 }
@@ -3001,11 +3001,11 @@ pub fn main() {
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
-                                  <tr><td style="width:150px;">workspaceID*</td>
+                                  <tr><td style="width:150px;">teamID*</td>
 <td>
 
 
-    <div id="d2e199_getBlocks_workspaceID">
+    <div id="d2e199_getBlocks_teamID">
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
@@ -3013,7 +3013,7 @@ pub fn main() {
                 </span>
 
                     <div class="inner description marked">
-Workspace ID
+Team ID
                     </div>
             </div>
                 <div class="inner required">
@@ -3228,7 +3228,7 @@ Type of blocks to return, omit to specify all types
                         <p class="marked">Returns the contents of an uploaded file</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/workspaces/{workspaceID}/{rootID}/{fileID}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/teams/{teamID}/{rootID}/{fileID}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -3252,7 +3252,7 @@ Type of blocks to return, omit to specify all types
                             <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json,image/jpg,image/png"\
- "http://localhost/api/v1/workspaces/{workspaceID}/{rootID}/{fileID}"</code></pre>
+ "http://localhost/api/v1/teams/{teamID}/{rootID}/{fileID}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-getFile-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -3275,12 +3275,12 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         String rootID = rootID_example; // String | ID of the root block
         String fileID = fileID_example; // String | ID of the file
         
         try {
-            apiInstance.getFile(workspaceID, rootID, fileID);
+            apiInstance.getFile(teamID, rootID, fileID);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getFile");
             e.printStackTrace();
@@ -3296,12 +3296,12 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         String rootID = rootID_example; // String | ID of the root block
         String fileID = fileID_example; // String | ID of the file
         
         try {
-            apiInstance.getFile(workspaceID, rootID, fileID);
+            apiInstance.getFile(teamID, rootID, fileID);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getFile");
             e.printStackTrace();
@@ -3324,11 +3324,11 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
-String *workspaceID = workspaceID_example; // Workspace ID (default to null)
+String *teamID = teamID_example; // Team ID (default to null)
 String *rootID = rootID_example; // ID of the root block (default to null)
 String *fileID = fileID_example; // ID of the file (default to null)
 
-[apiInstance getFileWith:workspaceID
+[apiInstance getFileWith:teamID
     rootID:rootID
     fileID:fileID
               completionHandler: ^(NSError* error) {
@@ -3351,7 +3351,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer.DefaultApi()
-var workspaceID = workspaceID_example; // {String} Workspace ID
+var teamID = teamID_example; // {String} Team ID
 var rootID = rootID_example; // {String} ID of the root block
 var fileID = fileID_example; // {String} ID of the file
 
@@ -3362,7 +3362,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully.');
   }
 };
-api.getFile(workspaceID, rootID, fileID, callback);
+api.getFile(teamID, rootID, fileID, callback);
 </code></pre>
                             </div>
 
@@ -3389,12 +3389,12 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
-            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
+            var teamID = teamID_example;  // String | Team ID (default to null)
             var rootID = rootID_example;  // String | ID of the root block (default to null)
             var fileID = fileID_example;  // String | ID of the file (default to null)
 
             try {
-                apiInstance.getFile(workspaceID, rootID, fileID);
+                apiInstance.getFile(teamID, rootID, fileID);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.getFile: " + e.Message );
             }
@@ -3415,12 +3415,12 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
-$workspaceID = workspaceID_example; // String | Workspace ID
+$teamID = teamID_example; // String | Team ID
 $rootID = rootID_example; // String | ID of the root block
 $fileID = fileID_example; // String | ID of the file
 
 try {
-    $api_instance->getFile($workspaceID, $rootID, $fileID);
+    $api_instance->getFile($teamID, $rootID, $fileID);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->getFile: ', $e->getMessage(), PHP_EOL;
 }
@@ -3439,12 +3439,12 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
-my $workspaceID = workspaceID_example; # String | Workspace ID
+my $teamID = teamID_example; # String | Team ID
 my $rootID = rootID_example; # String | ID of the root block
 my $fileID = fileID_example; # String | ID of the file
 
 eval { 
-    $api_instance->getFile(workspaceID => $workspaceID, rootID => $rootID, fileID => $fileID);
+    $api_instance->getFile(teamID => $teamID, rootID => $rootID, fileID => $fileID);
 };
 if ($@) {
     warn "Exception when calling DefaultApi->getFile: $@\n";
@@ -3465,12 +3465,12 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
-workspaceID = workspaceID_example # String | Workspace ID (default to null)
+teamID = teamID_example # String | Team ID (default to null)
 rootID = rootID_example # String | ID of the root block (default to null)
 fileID = fileID_example # String | ID of the file (default to null)
 
 try: 
-    api_instance.get_file(workspaceID, rootID, fileID)
+    api_instance.get_file(teamID, rootID, fileID)
 except ApiException as e:
     print("Exception when calling DefaultApi->getFile: %s\n" % e)</code></pre>
                             </div>
@@ -3479,12 +3479,12 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
-    let workspaceID = workspaceID_example; // String
+    let teamID = teamID_example; // String
     let rootID = rootID_example; // String
     let fileID = fileID_example; // String
 
     let mut context = DefaultApi::Context::default();
-    let result = client.getFile(workspaceID, rootID, fileID, &context).wait();
+    let result = client.getFile(teamID, rootID, fileID, &context).wait();
 
     println!("{:?}", result);
 }
@@ -3505,11 +3505,11 @@ pub fn main() {
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
-                                  <tr><td style="width:150px;">workspaceID*</td>
+                                  <tr><td style="width:150px;">teamID*</td>
 <td>
 
 
-    <div id="d2e199_getFile_workspaceID">
+    <div id="d2e199_getFile_teamID">
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
@@ -3517,7 +3517,7 @@ pub fn main() {
                 </span>
 
                     <div class="inner description marked">
-Workspace ID
+Team ID
                     </div>
             </div>
                 <div class="inner required">
@@ -4097,7 +4097,7 @@ pub fn main() {
                         <p class="marked">Returns sharing information for a root block</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/workspaces/{workspaceID}/sharing/{rootID}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/teams/{teamID}/sharing/{rootID}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -4121,7 +4121,7 @@ pub fn main() {
                             <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
- "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/sharing/{rootID}"</code></pre>
+ "http://localhost/api/v1/api/v1/teams/{teamID}/sharing/{rootID}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-getSharing-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -4144,11 +4144,11 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         String rootID = rootID_example; // String | ID of the root block
         
         try {
-            Sharing result = apiInstance.getSharing(workspaceID, rootID);
+            Sharing result = apiInstance.getSharing(teamID, rootID);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getSharing");
@@ -4165,11 +4165,11 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         String rootID = rootID_example; // String | ID of the root block
         
         try {
-            Sharing result = apiInstance.getSharing(workspaceID, rootID);
+            Sharing result = apiInstance.getSharing(teamID, rootID);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getSharing");
@@ -4193,10 +4193,10 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
-String *workspaceID = workspaceID_example; // Workspace ID (default to null)
+String *teamID = teamID_example; // Team ID (default to null)
 String *rootID = rootID_example; // ID of the root block (default to null)
 
-[apiInstance getSharingWith:workspaceID
+[apiInstance getSharingWith:teamID
     rootID:rootID
               completionHandler: ^(Sharing output, NSError* error) {
     if (output) {
@@ -4221,7 +4221,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer.DefaultApi()
-var workspaceID = workspaceID_example; // {String} Workspace ID
+var teamID = teamID_example; // {String} Team ID
 var rootID = rootID_example; // {String} ID of the root block
 
 var callback = function(error, data, response) {
@@ -4231,7 +4231,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.getSharing(workspaceID, rootID, callback);
+api.getSharing(teamID, rootID, callback);
 </code></pre>
                             </div>
 
@@ -4258,11 +4258,11 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
-            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
+            var teamID = teamID_example;  // String | Team ID (default to null)
             var rootID = rootID_example;  // String | ID of the root block (default to null)
 
             try {
-                Sharing result = apiInstance.getSharing(workspaceID, rootID);
+                Sharing result = apiInstance.getSharing(teamID, rootID);
                 Debug.WriteLine(result);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.getSharing: " + e.Message );
@@ -4284,11 +4284,11 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
-$workspaceID = workspaceID_example; // String | Workspace ID
+$teamID = teamID_example; // String | Team ID
 $rootID = rootID_example; // String | ID of the root block
 
 try {
-    $result = $api_instance->getSharing($workspaceID, $rootID);
+    $result = $api_instance->getSharing($teamID, $rootID);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->getSharing: ', $e->getMessage(), PHP_EOL;
@@ -4308,11 +4308,11 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
-my $workspaceID = workspaceID_example; # String | Workspace ID
+my $teamID = teamID_example; # String | Team ID
 my $rootID = rootID_example; # String | ID of the root block
 
 eval { 
-    my $result = $api_instance->getSharing(workspaceID => $workspaceID, rootID => $rootID);
+    my $result = $api_instance->getSharing(teamID => $teamID, rootID => $rootID);
     print Dumper($result);
 };
 if ($@) {
@@ -4334,11 +4334,11 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
-workspaceID = workspaceID_example # String | Workspace ID (default to null)
+teamID = teamID_example # String | Team ID (default to null)
 rootID = rootID_example # String | ID of the root block (default to null)
 
 try: 
-    api_response = api_instance.get_sharing(workspaceID, rootID)
+    api_response = api_instance.get_sharing(teamID, rootID)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DefaultApi->getSharing: %s\n" % e)</code></pre>
@@ -4348,11 +4348,11 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
-    let workspaceID = workspaceID_example; // String
+    let teamID = teamID_example; // String
     let rootID = rootID_example; // String
 
     let mut context = DefaultApi::Context::default();
-    let result = client.getSharing(workspaceID, rootID, &context).wait();
+    let result = client.getSharing(teamID, rootID, &context).wait();
 
     println!("{:?}", result);
 }
@@ -4373,11 +4373,11 @@ pub fn main() {
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
-                                  <tr><td style="width:150px;">workspaceID*</td>
+                                  <tr><td style="width:150px;">teamID*</td>
 <td>
 
 
-    <div id="d2e199_getSharing_workspaceID">
+    <div id="d2e199_getSharing_teamID">
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
@@ -4385,7 +4385,7 @@ pub fn main() {
                 </span>
 
                     <div class="inner description marked">
-Workspace ID
+Team ID
                     </div>
             </div>
                 <div class="inner required">
@@ -4573,7 +4573,7 @@ ID of the root block
                         <p class="marked">Returns the blocks of a subtree</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/workspaces/{workspaceID}/blocks/{blockID}/subtree</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/teams/{teamID}/blocks/{blockID}/subtree</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -4597,7 +4597,7 @@ ID of the root block
                             <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
- "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/blocks/{blockID}/subtree?l="</code></pre>
+ "http://localhost/api/v1/api/v1/teams/{teamID}/blocks/{blockID}/subtree?l="</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-getSubTree-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -4620,12 +4620,12 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         String blockID = blockID_example; // String | The ID of the root block of the subtree
         Integer l = 56; // Integer | The number of levels to return. 2 or 3. Defaults to 2.
         
         try {
-            array[Block] result = apiInstance.getSubTree(workspaceID, blockID, l);
+            array[Block] result = apiInstance.getSubTree(teamID, blockID, l);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getSubTree");
@@ -4642,12 +4642,12 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         String blockID = blockID_example; // String | The ID of the root block of the subtree
         Integer l = 56; // Integer | The number of levels to return. 2 or 3. Defaults to 2.
         
         try {
-            array[Block] result = apiInstance.getSubTree(workspaceID, blockID, l);
+            array[Block] result = apiInstance.getSubTree(teamID, blockID, l);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getSubTree");
@@ -4671,11 +4671,11 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
-String *workspaceID = workspaceID_example; // Workspace ID (default to null)
+String *teamID = teamID_example; // Team ID (default to null)
 String *blockID = blockID_example; // The ID of the root block of the subtree (default to null)
 Integer *l = 56; // The number of levels to return. 2 or 3. Defaults to 2. (optional) (default to null)
 
-[apiInstance getSubTreeWith:workspaceID
+[apiInstance getSubTreeWith:teamID
     blockID:blockID
     l:l
               completionHandler: ^(array[Block] output, NSError* error) {
@@ -4701,7 +4701,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer.DefaultApi()
-var workspaceID = workspaceID_example; // {String} Workspace ID
+var teamID = teamID_example; // {String} Team ID
 var blockID = blockID_example; // {String} The ID of the root block of the subtree
 var opts = {
   'l': 56 // {Integer} The number of levels to return. 2 or 3. Defaults to 2.
@@ -4714,7 +4714,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.getSubTree(workspaceID, blockID, opts, callback);
+api.getSubTree(teamID, blockID, opts, callback);
 </code></pre>
                             </div>
 
@@ -4741,12 +4741,12 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
-            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
+            var teamID = teamID_example;  // String | Team ID (default to null)
             var blockID = blockID_example;  // String | The ID of the root block of the subtree (default to null)
             var l = 56;  // Integer | The number of levels to return. 2 or 3. Defaults to 2. (optional)  (default to null)
 
             try {
-                array[Block] result = apiInstance.getSubTree(workspaceID, blockID, l);
+                array[Block] result = apiInstance.getSubTree(teamID, blockID, l);
                 Debug.WriteLine(result);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.getSubTree: " + e.Message );
@@ -4768,12 +4768,12 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
-$workspaceID = workspaceID_example; // String | Workspace ID
+$teamID = teamID_example; // String | Team ID
 $blockID = blockID_example; // String | The ID of the root block of the subtree
 $l = 56; // Integer | The number of levels to return. 2 or 3. Defaults to 2.
 
 try {
-    $result = $api_instance->getSubTree($workspaceID, $blockID, $l);
+    $result = $api_instance->getSubTree($teamID, $blockID, $l);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->getSubTree: ', $e->getMessage(), PHP_EOL;
@@ -4793,12 +4793,12 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
-my $workspaceID = workspaceID_example; # String | Workspace ID
+my $teamID = teamID_example; # String | Team ID
 my $blockID = blockID_example; # String | The ID of the root block of the subtree
 my $l = 56; # Integer | The number of levels to return. 2 or 3. Defaults to 2.
 
 eval { 
-    my $result = $api_instance->getSubTree(workspaceID => $workspaceID, blockID => $blockID, l => $l);
+    my $result = $api_instance->getSubTree(teamID => $teamID, blockID => $blockID, l => $l);
     print Dumper($result);
 };
 if ($@) {
@@ -4820,12 +4820,12 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
-workspaceID = workspaceID_example # String | Workspace ID (default to null)
+teamID = teamID_example # String | Team ID (default to null)
 blockID = blockID_example # String | The ID of the root block of the subtree (default to null)
 l = 56 # Integer | The number of levels to return. 2 or 3. Defaults to 2. (optional) (default to null)
 
 try: 
-    api_response = api_instance.get_sub_tree(workspaceID, blockID, l=l)
+    api_response = api_instance.get_sub_tree(teamID, blockID, l=l)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DefaultApi->getSubTree: %s\n" % e)</code></pre>
@@ -4835,12 +4835,12 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
-    let workspaceID = workspaceID_example; // String
+    let teamID = teamID_example; // String
     let blockID = blockID_example; // String
     let l = 56; // Integer
 
     let mut context = DefaultApi::Context::default();
-    let result = client.getSubTree(workspaceID, blockID, l, &context).wait();
+    let result = client.getSubTree(teamID, blockID, l, &context).wait();
 
     println!("{:?}", result);
 }
@@ -4861,11 +4861,11 @@ pub fn main() {
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
-                                  <tr><td style="width:150px;">workspaceID*</td>
+                                  <tr><td style="width:150px;">teamID*</td>
 <td>
 
 
-    <div id="d2e199_getSubTree_workspaceID">
+    <div id="d2e199_getSubTree_teamID">
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
@@ -4873,7 +4873,7 @@ pub fn main() {
                 </span>
 
                     <div class="inner description marked">
-Workspace ID
+Team ID
                     </div>
             </div>
                 <div class="inner required">
@@ -5074,6 +5074,895 @@ The number of levels to return. 2 or 3. Defaults to 2.
                                     </script>
                                   </div>
                                   <input id='responses-Default-getSubTree-default-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-getTeam">
+                      <article id="api-Default-getTeam-0" data-group="User" data-name="getTeam" data-version="0">
+                        <div class="pull-left">
+                          <h1>getTeam</h1>
+                          <p></p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Returns information of the root team</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/teams/{teamID}</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-getTeam-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-getTeam-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-getTeam-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-getTeam-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-getTeam-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-getTeam-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-getTeam-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-getTeam-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-getTeam-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-getTeam-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-getTeam-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Default-getTeam-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-getTeam-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Authorization: [[apiKey]]"\
+ -H "Accept: application/json"\
+ "http://localhost/api/v1/api/v1/teams/{teamID}"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-getTeam-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        
+        // Configure API key authorization: BearerAuth
+        ApiKeyAuth BearerAuth = (ApiKeyAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //BearerAuth.setApiKeyPrefix("Token");
+        
+        // Create an instance of the API class
+        DefaultApi apiInstance = new DefaultApi();
+        String teamID = teamID_example; // String | Team ID
+        
+        try {
+            Team result = apiInstance.getTeam(teamID);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#getTeam");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-getTeam-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DefaultApi;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        String teamID = teamID_example; // String | Team ID
+        
+        try {
+            Team result = apiInstance.getTeam(teamID);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#getTeam");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-getTeam-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-getTeam-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+
+// Configure API key authorization: (authentication scheme: BearerAuth)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+
+
+// Create an instance of the API class
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *teamID = teamID_example; // Team ID (default to null)
+
+[apiInstance getTeamWith:teamID
+              completionHandler: ^(Team output, NSError* error) {
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getTeam-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer = require('line__home_jespino_projects_mattermost_focalboard_server_main_main_go11package_classification_focalboard_server');
+var defaultClient = LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer.ApiClient.instance;
+
+// Configure API key authorization: BearerAuth
+var BearerAuth = defaultClient.authentications['BearerAuth'];
+BearerAuth.apiKey = "YOUR API KEY";
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//BearerAuth.apiKeyPrefix['Authorization'] = "Token";
+
+// Create an instance of the API class
+var api = new LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer.DefaultApi()
+var teamID = teamID_example; // {String} Team ID
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.getTeam(teamID, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-getTeam-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-getTeam-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class getTeamExample
+    {
+        public void main()
+        {
+            // Configure API key authorization: BearerAuth
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+            
+            // Create an instance of the API class
+            var apiInstance = new DefaultApi();
+            var teamID = teamID_example;  // String | Team ID (default to null)
+
+            try {
+                Team result = apiInstance.getTeam(teamID);
+                Debug.WriteLine(result);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling DefaultApi.getTeam: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getTeam-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Configure API key authorization: BearerAuth
+OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$teamID = teamID_example; // String | Team ID
+
+try {
+    $result = $api_instance->getTeam($teamID);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->getTeam: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getTeam-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::DefaultApi;
+
+# Configure API key authorization: BearerAuth
+$WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::OPenAPIClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $teamID = teamID_example; # String | Team ID
+
+eval { 
+    my $result = $api_instance->getTeam(teamID => $teamID);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->getTeam: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getTeam-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Configure API key authorization: BearerAuth
+openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# openapi_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
+
+# Create an instance of the API class
+api_instance = openapi_client.DefaultApi()
+teamID = teamID_example # String | Team ID (default to null)
+
+try: 
+    api_response = api_instance.get_team(teamID)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->getTeam: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getTeam-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
+
+pub fn main() {
+    let teamID = teamID_example; // String
+
+    let mut context = DefaultApi::Context::default();
+    let result = client.getTeam(teamID, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">teamID*</td>
+<td>
+
+
+    <div id="d2e199_getTeam_teamID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Team ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Default-getTeam-title-200"></h3>
+                            <p id="examples-Default-getTeam-description-200" class="marked"></p>
+                            <script>
+                              var responseDefault200_description = `success`;
+                              var responseDefault200_description_break = responseDefault200_description.indexOf('\n');
+                              if (responseDefault200_description_break == -1) {
+                                $("#examples-Default-getTeam-title-200").text("Status: 200 - " + responseDefault200_description);
+                              } else {
+                                $("#examples-Default-getTeam-title-200").text("Status: 200 - " + responseDefault200_description.substring(0, responseDefault200_description_break));
+                                $("#examples-Default-getTeam-description-200").html(responseDefault200_description.substring(responseDefault200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-getTeam-200" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-getTeam-200-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-getTeam-200-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-getTeam-200-schema">
+                                  <div id="responses-Default-getTeam-schema-200" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "success",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Team"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-getTeam-200-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-getTeam-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-getTeam-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                            <h3 id="examples-Default-getTeam-title-default"></h3>
+                            <p id="examples-Default-getTeam-description-default" class="marked"></p>
+                            <script>
+                              var responseDefaultdefault_description = `internal error`;
+                              var responseDefaultdefault_description_break = responseDefaultdefault_description.indexOf('\n');
+                              if (responseDefaultdefault_description_break == -1) {
+                                $("#examples-Default-getTeam-title-default").text("Status: default - " + responseDefaultdefault_description);
+                              } else {
+                                $("#examples-Default-getTeam-title-default").text("Status: default - " + responseDefaultdefault_description.substring(0, responseDefaultdefault_description_break));
+                                $("#examples-Default-getTeam-description-default").html(responseDefaultdefault_description.substring(responseDefaultdefault_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-getTeam-default" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-getTeam-default-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-getTeam-default-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-getTeam-default-schema">
+                                  <div id="responses-Default-getTeam-schema-default" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "internal error",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ErrorResponse"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-getTeam-default-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-getTeam-schema-default');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-getTeam-default-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-getTeamUsers">
+                      <article id="api-Default-getTeamUsers-0" data-group="User" data-name="getTeamUsers" data-version="0">
+                        <div class="pull-left">
+                          <h1>getTeamUsers</h1>
+                          <p></p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Returns team users</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/teams/{teamID}/users</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-getTeamUsers-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-getTeamUsers-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-getTeamUsers-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-getTeamUsers-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-getTeamUsers-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-getTeamUsers-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-getTeamUsers-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-getTeamUsers-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-getTeamUsers-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-getTeamUsers-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-getTeamUsers-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Default-getTeamUsers-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-getTeamUsers-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Authorization: [[apiKey]]"\
+ -H "Accept: application/json"\
+ "http://localhost/api/v1/api/v1/teams/{teamID}/users"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-getTeamUsers-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        
+        // Configure API key authorization: BearerAuth
+        ApiKeyAuth BearerAuth = (ApiKeyAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //BearerAuth.setApiKeyPrefix("Token");
+        
+        // Create an instance of the API class
+        DefaultApi apiInstance = new DefaultApi();
+        String teamID = teamID_example; // String | Team ID
+        
+        try {
+            array[User] result = apiInstance.getTeamUsers(teamID);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#getTeamUsers");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-getTeamUsers-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DefaultApi;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        String teamID = teamID_example; // String | Team ID
+        
+        try {
+            array[User] result = apiInstance.getTeamUsers(teamID);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#getTeamUsers");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-getTeamUsers-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-getTeamUsers-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+
+// Configure API key authorization: (authentication scheme: BearerAuth)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+
+
+// Create an instance of the API class
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *teamID = teamID_example; // Team ID (default to null)
+
+[apiInstance getTeamUsersWith:teamID
+              completionHandler: ^(array[User] output, NSError* error) {
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getTeamUsers-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer = require('line__home_jespino_projects_mattermost_focalboard_server_main_main_go11package_classification_focalboard_server');
+var defaultClient = LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer.ApiClient.instance;
+
+// Configure API key authorization: BearerAuth
+var BearerAuth = defaultClient.authentications['BearerAuth'];
+BearerAuth.apiKey = "YOUR API KEY";
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//BearerAuth.apiKeyPrefix['Authorization'] = "Token";
+
+// Create an instance of the API class
+var api = new LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer.DefaultApi()
+var teamID = teamID_example; // {String} Team ID
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.getTeamUsers(teamID, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-getTeamUsers-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-getTeamUsers-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class getTeamUsersExample
+    {
+        public void main()
+        {
+            // Configure API key authorization: BearerAuth
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+            
+            // Create an instance of the API class
+            var apiInstance = new DefaultApi();
+            var teamID = teamID_example;  // String | Team ID (default to null)
+
+            try {
+                array[User] result = apiInstance.getTeamUsers(teamID);
+                Debug.WriteLine(result);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling DefaultApi.getTeamUsers: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getTeamUsers-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Configure API key authorization: BearerAuth
+OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$teamID = teamID_example; // String | Team ID
+
+try {
+    $result = $api_instance->getTeamUsers($teamID);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->getTeamUsers: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getTeamUsers-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::DefaultApi;
+
+# Configure API key authorization: BearerAuth
+$WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::OPenAPIClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $teamID = teamID_example; # String | Team ID
+
+eval { 
+    my $result = $api_instance->getTeamUsers(teamID => $teamID);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->getTeamUsers: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getTeamUsers-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Configure API key authorization: BearerAuth
+openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# openapi_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
+
+# Create an instance of the API class
+api_instance = openapi_client.DefaultApi()
+teamID = teamID_example # String | Team ID (default to null)
+
+try: 
+    api_response = api_instance.get_team_users(teamID)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->getTeamUsers: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getTeamUsers-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
+
+pub fn main() {
+    let teamID = teamID_example; // String
+
+    let mut context = DefaultApi::Context::default();
+    let result = client.getTeamUsers(teamID, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">teamID*</td>
+<td>
+
+
+    <div id="d2e199_getTeamUsers_teamID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Team ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Default-getTeamUsers-title-200"></h3>
+                            <p id="examples-Default-getTeamUsers-description-200" class="marked"></p>
+                            <script>
+                              var responseDefault200_description = `success`;
+                              var responseDefault200_description_break = responseDefault200_description.indexOf('\n');
+                              if (responseDefault200_description_break == -1) {
+                                $("#examples-Default-getTeamUsers-title-200").text("Status: 200 - " + responseDefault200_description);
+                              } else {
+                                $("#examples-Default-getTeamUsers-title-200").text("Status: 200 - " + responseDefault200_description.substring(0, responseDefault200_description_break));
+                                $("#examples-Default-getTeamUsers-description-200").html(responseDefault200_description.substring(responseDefault200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-getTeamUsers-200" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-getTeamUsers-200-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-getTeamUsers-200-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-getTeamUsers-200-schema">
+                                  <div id="responses-Default-getTeamUsers-schema-200" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "success",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/User"
+        }
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-getTeamUsers-200-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-getTeamUsers-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-getTeamUsers-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                            <h3 id="examples-Default-getTeamUsers-title-default"></h3>
+                            <p id="examples-Default-getTeamUsers-description-default" class="marked"></p>
+                            <script>
+                              var responseDefaultdefault_description = `internal error`;
+                              var responseDefaultdefault_description_break = responseDefaultdefault_description.indexOf('\n');
+                              if (responseDefaultdefault_description_break == -1) {
+                                $("#examples-Default-getTeamUsers-title-default").text("Status: default - " + responseDefaultdefault_description);
+                              } else {
+                                $("#examples-Default-getTeamUsers-title-default").text("Status: default - " + responseDefaultdefault_description.substring(0, responseDefaultdefault_description_break));
+                                $("#examples-Default-getTeamUsers-description-default").html(responseDefaultdefault_description.substring(responseDefaultdefault_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-getTeamUsers-default" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-getTeamUsers-default-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-getTeamUsers-default-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-getTeamUsers-default-schema">
+                                  <div id="responses-Default-getTeamUsers-schema-default" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "internal error",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ErrorResponse"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-getTeamUsers-default-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-getTeamUsers-schema-default');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-getTeamUsers-default-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
                         </article>
@@ -5522,895 +6411,6 @@ User ID
                         </article>
                       </div>
                       <hr>
-                    <div id="api-Default-getWorkspace">
-                      <article id="api-Default-getWorkspace-0" data-group="User" data-name="getWorkspace" data-version="0">
-                        <div class="pull-left">
-                          <h1>getWorkspace</h1>
-                          <p></p>
-                        </div>
-                        <div class="pull-right"></div>
-                        <div class="clearfix"></div>
-                        <p></p>
-                        <p class="marked">Returns information of the root workspace</p>
-                        <p></p>
-                        <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/workspaces/{workspaceID}</span></code></pre>
-                        <p>
-                          <h3>Usage and SDK Samples</h3>
-                        </p>
-                        <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Default-getWorkspace-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Default-getWorkspace-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Default-getWorkspace-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Default-getWorkspace-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Default-getWorkspace-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Default-getWorkspace-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Default-getWorkspace-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Default-getWorkspace-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Default-getWorkspace-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Default-getWorkspace-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Default-getWorkspace-0-python">Python</a></li>
-                          <li class=""><a href="#examples-Default-getWorkspace-0-rust">Rust</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Default-getWorkspace-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
--H "Authorization: [[apiKey]]"\
- -H "Accept: application/json"\
- "http://localhost/api/v1/api/v1/workspaces/{workspaceID}"</code></pre>
-                          </div>
-                          <div class="tab-pane" id="examples-Default-getWorkspace-0-java">
-                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
-import org.openapitools.client.auth.*;
-import org.openapitools.client.model.*;
-import org.openapitools.client.api.DefaultApi;
-
-import java.io.File;
-import java.util.*;
-
-public class DefaultApiExample {
-    public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-        
-        // Configure API key authorization: BearerAuth
-        ApiKeyAuth BearerAuth = (ApiKeyAuth) defaultClient.getAuthentication("BearerAuth");
-        BearerAuth.setApiKey("YOUR API KEY");
-        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-        //BearerAuth.setApiKeyPrefix("Token");
-        
-        // Create an instance of the API class
-        DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
-        
-        try {
-            Workspace result = apiInstance.getWorkspace(workspaceID);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#getWorkspace");
-            e.printStackTrace();
-        }
-    }
-}
-</code></pre>
-                          </div>
-
-                          <div class="tab-pane" id="examples-Default-getWorkspace-0-android">
-                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DefaultApi;
-
-public class DefaultApiExample {
-    public static void main(String[] args) {
-        DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
-        
-        try {
-            Workspace result = apiInstance.getWorkspace(workspaceID);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#getWorkspace");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-  <!--
-  <div class="tab-pane" id="examples-Default-getWorkspace-0-groovy">
-  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-  </div> -->
-                            <div class="tab-pane" id="examples-Default-getWorkspace-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
-
-// Configure API key authorization: (authentication scheme: BearerAuth)
-[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
-// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
-
-
-// Create an instance of the API class
-DefaultApi *apiInstance = [[DefaultApi alloc] init];
-String *workspaceID = workspaceID_example; // Workspace ID (default to null)
-
-[apiInstance getWorkspaceWith:workspaceID
-              completionHandler: ^(Workspace output, NSError* error) {
-    if (output) {
-        NSLog(@"%@", output);
-    }
-    if (error) {
-        NSLog(@"Error: %@", error);
-    }
-}];
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-getWorkspace-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer = require('line__home_jespino_projects_mattermost_focalboard_server_main_main_go11package_classification_focalboard_server');
-var defaultClient = LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer.ApiClient.instance;
-
-// Configure API key authorization: BearerAuth
-var BearerAuth = defaultClient.authentications['BearerAuth'];
-BearerAuth.apiKey = "YOUR API KEY";
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//BearerAuth.apiKeyPrefix['Authorization'] = "Token";
-
-// Create an instance of the API class
-var api = new LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer.DefaultApi()
-var workspaceID = workspaceID_example; // {String} Workspace ID
-
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-api.getWorkspace(workspaceID, callback);
-</code></pre>
-                            </div>
-
-                            <!--<div class="tab-pane" id="examples-Default-getWorkspace-0-angular">
-              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-            </div>-->
-                            <div class="tab-pane" id="examples-Default-getWorkspace-0-csharp">
-                              <pre class="prettyprint"><code class="language-cs">using System;
-using System.Diagnostics;
-using Org.OpenAPITools.Api;
-using Org.OpenAPITools.Client;
-using Org.OpenAPITools.Model;
-
-namespace Example
-{
-    public class getWorkspaceExample
-    {
-        public void main()
-        {
-            // Configure API key authorization: BearerAuth
-            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
-            
-            // Create an instance of the API class
-            var apiInstance = new DefaultApi();
-            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
-
-            try {
-                Workspace result = apiInstance.getWorkspace(workspaceID);
-                Debug.WriteLine(result);
-            } catch (Exception e) {
-                Debug.Print("Exception when calling DefaultApi.getWorkspace: " + e.Message );
-            }
-        }
-    }
-}
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-getWorkspace-0-php">
-                              <pre class="prettyprint"><code class="language-php"><&#63;php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-// Configure API key authorization: BearerAuth
-OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
-// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-// OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
-
-// Create an instance of the API class
-$api_instance = new OpenAPITools\Client\Api\DefaultApi();
-$workspaceID = workspaceID_example; // String | Workspace ID
-
-try {
-    $result = $api_instance->getWorkspace($workspaceID);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling DefaultApi->getWorkspace: ', $e->getMessage(), PHP_EOL;
-}
-?></code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-getWorkspace-0-perl">
-                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
-use WWW::OPenAPIClient::Configuration;
-use WWW::OPenAPIClient::DefaultApi;
-
-# Configure API key authorization: BearerAuth
-$WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
-# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-#$WWW::OPenAPIClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
-
-# Create an instance of the API class
-my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
-my $workspaceID = workspaceID_example; # String | Workspace ID
-
-eval { 
-    my $result = $api_instance->getWorkspace(workspaceID => $workspaceID);
-    print Dumper($result);
-};
-if ($@) {
-    warn "Exception when calling DefaultApi->getWorkspace: $@\n";
-}</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-getWorkspace-0-python">
-                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
-import time
-import openapi_client
-from openapi_client.rest import ApiException
-from pprint import pprint
-
-# Configure API key authorization: BearerAuth
-openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
-# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# openapi_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
-
-# Create an instance of the API class
-api_instance = openapi_client.DefaultApi()
-workspaceID = workspaceID_example # String | Workspace ID (default to null)
-
-try: 
-    api_response = api_instance.get_workspace(workspaceID)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling DefaultApi->getWorkspace: %s\n" % e)</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-getWorkspace-0-rust">
-                              <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
-
-pub fn main() {
-    let workspaceID = workspaceID_example; // String
-
-    let mut context = DefaultApi::Context::default();
-    let result = client.getWorkspace(workspaceID, &context).wait();
-
-    println!("{:?}", result);
-}
-</code></pre>
-                            </div>
-                          </div>
-
-                          <h2>Scopes</h2>
-                          <table>
-                            
-                          </table>
-
-                          <h2>Parameters</h2>
-
-                            <div class="methodsubtabletitle">Path parameters</div>
-                            <table id="methodsubtable">
-                                <tr>
-                                  <th width="150px">Name</th>
-                                  <th>Description</th>
-                                </tr>
-                                  <tr><td style="width:150px;">workspaceID*</td>
-<td>
-
-
-    <div id="d2e199_getWorkspace_workspaceID">
-        <div class="json-schema-view">
-            <div class="primitive">
-                <span class="type">
-                    String
-                </span>
-
-                    <div class="inner description marked">
-Workspace ID
-                    </div>
-            </div>
-                <div class="inner required">
-                    Required
-                </div>
-        </div>
-    </div>
-</td>
-</tr>
-
-                            </table>
-
-
-
-
-
-                          <h2>Responses</h2>
-                            <h3 id="examples-Default-getWorkspace-title-200"></h3>
-                            <p id="examples-Default-getWorkspace-description-200" class="marked"></p>
-                            <script>
-                              var responseDefault200_description = `success`;
-                              var responseDefault200_description_break = responseDefault200_description.indexOf('\n');
-                              if (responseDefault200_description_break == -1) {
-                                $("#examples-Default-getWorkspace-title-200").text("Status: 200 - " + responseDefault200_description);
-                              } else {
-                                $("#examples-Default-getWorkspace-title-200").text("Status: 200 - " + responseDefault200_description.substring(0, responseDefault200_description_break));
-                                $("#examples-Default-getWorkspace-description-200").html(responseDefault200_description.substring(responseDefault200_description_break));
-                              }
-                            </script>
-
-
-                            <ul id="responses-detail-Default-getWorkspace-200" class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-Default-getWorkspace-200-schema">Schema</a>
-                                </li>
-
-
-
-
-                            </ul>
-
-
-                            <div class="tab-content" id="responses-Default-getWorkspace-200-wrapper" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-Default-getWorkspace-200-schema">
-                                  <div id="responses-Default-getWorkspace-schema-200" class="exampleStyle">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "success",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/Workspace"
-      }
-    }
-  }
-};
-                                        var schema = findNode('schema',schemaWrapper).schema;
-                                        if (!schema) {
-                                          schema = schemaWrapper.schema;
-                                        }
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else if (schema.items != null && schema.items.$ref != null) {
-                                            schema.items = defsParser.$refs.get(schema.items.$ref);
-                                        } else {
-                                          schemaWrapper.definitions = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-Default-getWorkspace-200-schema-data').val(JSON.stringify(schema));
-                                        var result = $('#responses-Default-getWorkspace-schema-200');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-Default-getWorkspace-200-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-                            <h3 id="examples-Default-getWorkspace-title-default"></h3>
-                            <p id="examples-Default-getWorkspace-description-default" class="marked"></p>
-                            <script>
-                              var responseDefaultdefault_description = `internal error`;
-                              var responseDefaultdefault_description_break = responseDefaultdefault_description.indexOf('\n');
-                              if (responseDefaultdefault_description_break == -1) {
-                                $("#examples-Default-getWorkspace-title-default").text("Status: default - " + responseDefaultdefault_description);
-                              } else {
-                                $("#examples-Default-getWorkspace-title-default").text("Status: default - " + responseDefaultdefault_description.substring(0, responseDefaultdefault_description_break));
-                                $("#examples-Default-getWorkspace-description-default").html(responseDefaultdefault_description.substring(responseDefaultdefault_description_break));
-                              }
-                            </script>
-
-
-                            <ul id="responses-detail-Default-getWorkspace-default" class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-Default-getWorkspace-default-schema">Schema</a>
-                                </li>
-
-
-
-
-                            </ul>
-
-
-                            <div class="tab-content" id="responses-Default-getWorkspace-default-wrapper" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-Default-getWorkspace-default-schema">
-                                  <div id="responses-Default-getWorkspace-schema-default" class="exampleStyle">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "internal error",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/ErrorResponse"
-      }
-    }
-  }
-};
-                                        var schema = findNode('schema',schemaWrapper).schema;
-                                        if (!schema) {
-                                          schema = schemaWrapper.schema;
-                                        }
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else if (schema.items != null && schema.items.$ref != null) {
-                                            schema.items = defsParser.$refs.get(schema.items.$ref);
-                                        } else {
-                                          schemaWrapper.definitions = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-Default-getWorkspace-default-schema-data').val(JSON.stringify(schema));
-                                        var result = $('#responses-Default-getWorkspace-schema-default');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-Default-getWorkspace-default-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-                        </article>
-                      </div>
-                      <hr>
-                    <div id="api-Default-getWorkspaceUsers">
-                      <article id="api-Default-getWorkspaceUsers-0" data-group="User" data-name="getWorkspaceUsers" data-version="0">
-                        <div class="pull-left">
-                          <h1>getWorkspaceUsers</h1>
-                          <p></p>
-                        </div>
-                        <div class="pull-right"></div>
-                        <div class="clearfix"></div>
-                        <p></p>
-                        <p class="marked">Returns workspace users</p>
-                        <p></p>
-                        <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/workspaces/{workspaceID}/users</span></code></pre>
-                        <p>
-                          <h3>Usage and SDK Samples</h3>
-                        </p>
-                        <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Default-getWorkspaceUsers-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Default-getWorkspaceUsers-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Default-getWorkspaceUsers-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Default-getWorkspaceUsers-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Default-getWorkspaceUsers-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Default-getWorkspaceUsers-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Default-getWorkspaceUsers-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Default-getWorkspaceUsers-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Default-getWorkspaceUsers-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Default-getWorkspaceUsers-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Default-getWorkspaceUsers-0-python">Python</a></li>
-                          <li class=""><a href="#examples-Default-getWorkspaceUsers-0-rust">Rust</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Default-getWorkspaceUsers-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
--H "Authorization: [[apiKey]]"\
- -H "Accept: application/json"\
- "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/users"</code></pre>
-                          </div>
-                          <div class="tab-pane" id="examples-Default-getWorkspaceUsers-0-java">
-                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
-import org.openapitools.client.auth.*;
-import org.openapitools.client.model.*;
-import org.openapitools.client.api.DefaultApi;
-
-import java.io.File;
-import java.util.*;
-
-public class DefaultApiExample {
-    public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-        
-        // Configure API key authorization: BearerAuth
-        ApiKeyAuth BearerAuth = (ApiKeyAuth) defaultClient.getAuthentication("BearerAuth");
-        BearerAuth.setApiKey("YOUR API KEY");
-        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-        //BearerAuth.setApiKeyPrefix("Token");
-        
-        // Create an instance of the API class
-        DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
-        
-        try {
-            array[User] result = apiInstance.getWorkspaceUsers(workspaceID);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#getWorkspaceUsers");
-            e.printStackTrace();
-        }
-    }
-}
-</code></pre>
-                          </div>
-
-                          <div class="tab-pane" id="examples-Default-getWorkspaceUsers-0-android">
-                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DefaultApi;
-
-public class DefaultApiExample {
-    public static void main(String[] args) {
-        DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
-        
-        try {
-            array[User] result = apiInstance.getWorkspaceUsers(workspaceID);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#getWorkspaceUsers");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-  <!--
-  <div class="tab-pane" id="examples-Default-getWorkspaceUsers-0-groovy">
-  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-  </div> -->
-                            <div class="tab-pane" id="examples-Default-getWorkspaceUsers-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
-
-// Configure API key authorization: (authentication scheme: BearerAuth)
-[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
-// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
-
-
-// Create an instance of the API class
-DefaultApi *apiInstance = [[DefaultApi alloc] init];
-String *workspaceID = workspaceID_example; // Workspace ID (default to null)
-
-[apiInstance getWorkspaceUsersWith:workspaceID
-              completionHandler: ^(array[User] output, NSError* error) {
-    if (output) {
-        NSLog(@"%@", output);
-    }
-    if (error) {
-        NSLog(@"Error: %@", error);
-    }
-}];
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-getWorkspaceUsers-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer = require('line__home_jespino_projects_mattermost_focalboard_server_main_main_go11package_classification_focalboard_server');
-var defaultClient = LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer.ApiClient.instance;
-
-// Configure API key authorization: BearerAuth
-var BearerAuth = defaultClient.authentications['BearerAuth'];
-BearerAuth.apiKey = "YOUR API KEY";
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//BearerAuth.apiKeyPrefix['Authorization'] = "Token";
-
-// Create an instance of the API class
-var api = new LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer.DefaultApi()
-var workspaceID = workspaceID_example; // {String} Workspace ID
-
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-api.getWorkspaceUsers(workspaceID, callback);
-</code></pre>
-                            </div>
-
-                            <!--<div class="tab-pane" id="examples-Default-getWorkspaceUsers-0-angular">
-              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-            </div>-->
-                            <div class="tab-pane" id="examples-Default-getWorkspaceUsers-0-csharp">
-                              <pre class="prettyprint"><code class="language-cs">using System;
-using System.Diagnostics;
-using Org.OpenAPITools.Api;
-using Org.OpenAPITools.Client;
-using Org.OpenAPITools.Model;
-
-namespace Example
-{
-    public class getWorkspaceUsersExample
-    {
-        public void main()
-        {
-            // Configure API key authorization: BearerAuth
-            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
-            
-            // Create an instance of the API class
-            var apiInstance = new DefaultApi();
-            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
-
-            try {
-                array[User] result = apiInstance.getWorkspaceUsers(workspaceID);
-                Debug.WriteLine(result);
-            } catch (Exception e) {
-                Debug.Print("Exception when calling DefaultApi.getWorkspaceUsers: " + e.Message );
-            }
-        }
-    }
-}
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-getWorkspaceUsers-0-php">
-                              <pre class="prettyprint"><code class="language-php"><&#63;php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-// Configure API key authorization: BearerAuth
-OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
-// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-// OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
-
-// Create an instance of the API class
-$api_instance = new OpenAPITools\Client\Api\DefaultApi();
-$workspaceID = workspaceID_example; // String | Workspace ID
-
-try {
-    $result = $api_instance->getWorkspaceUsers($workspaceID);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling DefaultApi->getWorkspaceUsers: ', $e->getMessage(), PHP_EOL;
-}
-?></code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-getWorkspaceUsers-0-perl">
-                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
-use WWW::OPenAPIClient::Configuration;
-use WWW::OPenAPIClient::DefaultApi;
-
-# Configure API key authorization: BearerAuth
-$WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
-# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-#$WWW::OPenAPIClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
-
-# Create an instance of the API class
-my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
-my $workspaceID = workspaceID_example; # String | Workspace ID
-
-eval { 
-    my $result = $api_instance->getWorkspaceUsers(workspaceID => $workspaceID);
-    print Dumper($result);
-};
-if ($@) {
-    warn "Exception when calling DefaultApi->getWorkspaceUsers: $@\n";
-}</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-getWorkspaceUsers-0-python">
-                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
-import time
-import openapi_client
-from openapi_client.rest import ApiException
-from pprint import pprint
-
-# Configure API key authorization: BearerAuth
-openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
-# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# openapi_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
-
-# Create an instance of the API class
-api_instance = openapi_client.DefaultApi()
-workspaceID = workspaceID_example # String | Workspace ID (default to null)
-
-try: 
-    api_response = api_instance.get_workspace_users(workspaceID)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling DefaultApi->getWorkspaceUsers: %s\n" % e)</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-getWorkspaceUsers-0-rust">
-                              <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
-
-pub fn main() {
-    let workspaceID = workspaceID_example; // String
-
-    let mut context = DefaultApi::Context::default();
-    let result = client.getWorkspaceUsers(workspaceID, &context).wait();
-
-    println!("{:?}", result);
-}
-</code></pre>
-                            </div>
-                          </div>
-
-                          <h2>Scopes</h2>
-                          <table>
-                            
-                          </table>
-
-                          <h2>Parameters</h2>
-
-                            <div class="methodsubtabletitle">Path parameters</div>
-                            <table id="methodsubtable">
-                                <tr>
-                                  <th width="150px">Name</th>
-                                  <th>Description</th>
-                                </tr>
-                                  <tr><td style="width:150px;">workspaceID*</td>
-<td>
-
-
-    <div id="d2e199_getWorkspaceUsers_workspaceID">
-        <div class="json-schema-view">
-            <div class="primitive">
-                <span class="type">
-                    String
-                </span>
-
-                    <div class="inner description marked">
-Workspace ID
-                    </div>
-            </div>
-                <div class="inner required">
-                    Required
-                </div>
-        </div>
-    </div>
-</td>
-</tr>
-
-                            </table>
-
-
-
-
-
-                          <h2>Responses</h2>
-                            <h3 id="examples-Default-getWorkspaceUsers-title-200"></h3>
-                            <p id="examples-Default-getWorkspaceUsers-description-200" class="marked"></p>
-                            <script>
-                              var responseDefault200_description = `success`;
-                              var responseDefault200_description_break = responseDefault200_description.indexOf('\n');
-                              if (responseDefault200_description_break == -1) {
-                                $("#examples-Default-getWorkspaceUsers-title-200").text("Status: 200 - " + responseDefault200_description);
-                              } else {
-                                $("#examples-Default-getWorkspaceUsers-title-200").text("Status: 200 - " + responseDefault200_description.substring(0, responseDefault200_description_break));
-                                $("#examples-Default-getWorkspaceUsers-description-200").html(responseDefault200_description.substring(responseDefault200_description_break));
-                              }
-                            </script>
-
-
-                            <ul id="responses-detail-Default-getWorkspaceUsers-200" class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-Default-getWorkspaceUsers-200-schema">Schema</a>
-                                </li>
-
-
-
-
-                            </ul>
-
-
-                            <div class="tab-content" id="responses-Default-getWorkspaceUsers-200-wrapper" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-Default-getWorkspaceUsers-200-schema">
-                                  <div id="responses-Default-getWorkspaceUsers-schema-200" class="exampleStyle">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "success",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "type" : "array",
-        "items" : {
-          "$ref" : "#/components/schemas/User"
-        }
-      }
-    }
-  }
-};
-                                        var schema = findNode('schema',schemaWrapper).schema;
-                                        if (!schema) {
-                                          schema = schemaWrapper.schema;
-                                        }
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else if (schema.items != null && schema.items.$ref != null) {
-                                            schema.items = defsParser.$refs.get(schema.items.$ref);
-                                        } else {
-                                          schemaWrapper.definitions = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-Default-getWorkspaceUsers-200-schema-data').val(JSON.stringify(schema));
-                                        var result = $('#responses-Default-getWorkspaceUsers-schema-200');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-Default-getWorkspaceUsers-200-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-                            <h3 id="examples-Default-getWorkspaceUsers-title-default"></h3>
-                            <p id="examples-Default-getWorkspaceUsers-description-default" class="marked"></p>
-                            <script>
-                              var responseDefaultdefault_description = `internal error`;
-                              var responseDefaultdefault_description_break = responseDefaultdefault_description.indexOf('\n');
-                              if (responseDefaultdefault_description_break == -1) {
-                                $("#examples-Default-getWorkspaceUsers-title-default").text("Status: default - " + responseDefaultdefault_description);
-                              } else {
-                                $("#examples-Default-getWorkspaceUsers-title-default").text("Status: default - " + responseDefaultdefault_description.substring(0, responseDefaultdefault_description_break));
-                                $("#examples-Default-getWorkspaceUsers-description-default").html(responseDefaultdefault_description.substring(responseDefaultdefault_description_break));
-                              }
-                            </script>
-
-
-                            <ul id="responses-detail-Default-getWorkspaceUsers-default" class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-Default-getWorkspaceUsers-default-schema">Schema</a>
-                                </li>
-
-
-
-
-                            </ul>
-
-
-                            <div class="tab-content" id="responses-Default-getWorkspaceUsers-default-wrapper" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-Default-getWorkspaceUsers-default-schema">
-                                  <div id="responses-Default-getWorkspaceUsers-schema-default" class="exampleStyle">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "internal error",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/ErrorResponse"
-      }
-    }
-  }
-};
-                                        var schema = findNode('schema',schemaWrapper).schema;
-                                        if (!schema) {
-                                          schema = schemaWrapper.schema;
-                                        }
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else if (schema.items != null && schema.items.$ref != null) {
-                                            schema.items = defsParser.$refs.get(schema.items.$ref);
-                                        } else {
-                                          schemaWrapper.definitions = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-Default-getWorkspaceUsers-default-schema-data').val(JSON.stringify(schema));
-                                        var result = $('#responses-Default-getWorkspaceUsers-schema-default');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-Default-getWorkspaceUsers-default-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-                        </article>
-                      </div>
-                      <hr>
                     <div id="api-Default-importBlocks">
                       <article id="api-Default-importBlocks-0" data-group="User" data-name="importBlocks" data-version="0">
                         <div class="pull-left">
@@ -6423,7 +6423,7 @@ Workspace ID
                         <p class="marked">Import blocks</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/workspaces/{workspaceID}/blocks/import</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/teams/{teamID}/blocks/import</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -6448,7 +6448,7 @@ Workspace ID
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
  -H "Content-Type: application/json"\
- "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/blocks/import"</code></pre>
+ "http://localhost/api/v1/api/v1/teams/{teamID}/blocks/import"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-importBlocks-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -6471,11 +6471,11 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         array[Block] body = ; // array[Block] | 
         
         try {
-            apiInstance.importBlocks(workspaceID, body);
+            apiInstance.importBlocks(teamID, body);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#importBlocks");
             e.printStackTrace();
@@ -6491,11 +6491,11 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         array[Block] body = ; // array[Block] | 
         
         try {
-            apiInstance.importBlocks(workspaceID, body);
+            apiInstance.importBlocks(teamID, body);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#importBlocks");
             e.printStackTrace();
@@ -6518,10 +6518,10 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
-String *workspaceID = workspaceID_example; // Workspace ID (default to null)
+String *teamID = teamID_example; // Team ID (default to null)
 array[Block] *body = ; // 
 
-[apiInstance importBlocksWith:workspaceID
+[apiInstance importBlocksWith:teamID
     body:body
               completionHandler: ^(NSError* error) {
     if (error) {
@@ -6543,7 +6543,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer.DefaultApi()
-var workspaceID = workspaceID_example; // {String} Workspace ID
+var teamID = teamID_example; // {String} Team ID
 var body = ; // {array[Block]} 
 
 var callback = function(error, data, response) {
@@ -6553,7 +6553,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully.');
   }
 };
-api.importBlocks(workspaceID, body, callback);
+api.importBlocks(teamID, body, callback);
 </code></pre>
                             </div>
 
@@ -6580,11 +6580,11 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
-            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
+            var teamID = teamID_example;  // String | Team ID (default to null)
             var body = new array[Block](); // array[Block] | 
 
             try {
-                apiInstance.importBlocks(workspaceID, body);
+                apiInstance.importBlocks(teamID, body);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.importBlocks: " + e.Message );
             }
@@ -6605,11 +6605,11 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
-$workspaceID = workspaceID_example; // String | Workspace ID
+$teamID = teamID_example; // String | Team ID
 $body = ; // array[Block] | 
 
 try {
-    $api_instance->importBlocks($workspaceID, $body);
+    $api_instance->importBlocks($teamID, $body);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->importBlocks: ', $e->getMessage(), PHP_EOL;
 }
@@ -6628,11 +6628,11 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
-my $workspaceID = workspaceID_example; # String | Workspace ID
+my $teamID = teamID_example; # String | Team ID
 my $body = [WWW::OPenAPIClient::Object::array[Block]->new()]; # array[Block] | 
 
 eval { 
-    $api_instance->importBlocks(workspaceID => $workspaceID, body => $body);
+    $api_instance->importBlocks(teamID => $teamID, body => $body);
 };
 if ($@) {
     warn "Exception when calling DefaultApi->importBlocks: $@\n";
@@ -6653,11 +6653,11 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
-workspaceID = workspaceID_example # String | Workspace ID (default to null)
+teamID = teamID_example # String | Team ID (default to null)
 body =  # array[Block] | 
 
 try: 
-    api_instance.import_blocks(workspaceID, body)
+    api_instance.import_blocks(teamID, body)
 except ApiException as e:
     print("Exception when calling DefaultApi->importBlocks: %s\n" % e)</code></pre>
                             </div>
@@ -6666,11 +6666,11 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
-    let workspaceID = workspaceID_example; // String
+    let teamID = teamID_example; // String
     let body = ; // array[Block]
 
     let mut context = DefaultApi::Context::default();
-    let result = client.importBlocks(workspaceID, body, &context).wait();
+    let result = client.importBlocks(teamID, body, &context).wait();
 
     println!("{:?}", result);
 }
@@ -6691,11 +6691,11 @@ pub fn main() {
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
-                                  <tr><td style="width:150px;">workspaceID*</td>
+                                  <tr><td style="width:150px;">teamID*</td>
 <td>
 
 
-    <div id="d2e199_importBlocks_workspaceID">
+    <div id="d2e199_importBlocks_teamID">
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
@@ -6703,7 +6703,7 @@ pub fn main() {
                 </span>
 
                     <div class="inner description marked">
-Workspace ID
+Team ID
                     </div>
             </div>
                 <div class="inner required">
@@ -7361,7 +7361,7 @@ $(document).ready(function() {
                         <p class="marked">Partially updates a block</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="patch"><code><span class="pln">/api/v1/workspaces/{workspaceID}/blocks/{blockID}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="patch"><code><span class="pln">/api/v1/teams/{teamID}/blocks/{blockID}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -7386,7 +7386,7 @@ $(document).ready(function() {
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
  -H "Content-Type: application/json"\
- "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/blocks/{blockID}"</code></pre>
+ "http://localhost/api/v1/api/v1/teams/{teamID}/blocks/{blockID}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-patchBlock-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -7409,12 +7409,12 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         String blockID = blockID_example; // String | ID of block to patch
         BlockPatch body = ; // BlockPatch | 
         
         try {
-            apiInstance.patchBlock(workspaceID, blockID, body);
+            apiInstance.patchBlock(teamID, blockID, body);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#patchBlock");
             e.printStackTrace();
@@ -7430,12 +7430,12 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         String blockID = blockID_example; // String | ID of block to patch
         BlockPatch body = ; // BlockPatch | 
         
         try {
-            apiInstance.patchBlock(workspaceID, blockID, body);
+            apiInstance.patchBlock(teamID, blockID, body);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#patchBlock");
             e.printStackTrace();
@@ -7458,11 +7458,11 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
-String *workspaceID = workspaceID_example; // Workspace ID (default to null)
+String *teamID = teamID_example; // Team ID (default to null)
 String *blockID = blockID_example; // ID of block to patch (default to null)
 BlockPatch *body = ; // 
 
-[apiInstance patchBlockWith:workspaceID
+[apiInstance patchBlockWith:teamID
     blockID:blockID
     body:body
               completionHandler: ^(NSError* error) {
@@ -7485,7 +7485,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer.DefaultApi()
-var workspaceID = workspaceID_example; // {String} Workspace ID
+var teamID = teamID_example; // {String} Team ID
 var blockID = blockID_example; // {String} ID of block to patch
 var body = ; // {BlockPatch} 
 
@@ -7496,7 +7496,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully.');
   }
 };
-api.patchBlock(workspaceID, blockID, body, callback);
+api.patchBlock(teamID, blockID, body, callback);
 </code></pre>
                             </div>
 
@@ -7523,12 +7523,12 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
-            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
+            var teamID = teamID_example;  // String | Team ID (default to null)
             var blockID = blockID_example;  // String | ID of block to patch (default to null)
             var body = new BlockPatch(); // BlockPatch | 
 
             try {
-                apiInstance.patchBlock(workspaceID, blockID, body);
+                apiInstance.patchBlock(teamID, blockID, body);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.patchBlock: " + e.Message );
             }
@@ -7549,12 +7549,12 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
-$workspaceID = workspaceID_example; // String | Workspace ID
+$teamID = teamID_example; // String | Team ID
 $blockID = blockID_example; // String | ID of block to patch
 $body = ; // BlockPatch | 
 
 try {
-    $api_instance->patchBlock($workspaceID, $blockID, $body);
+    $api_instance->patchBlock($teamID, $blockID, $body);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->patchBlock: ', $e->getMessage(), PHP_EOL;
 }
@@ -7573,12 +7573,12 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
-my $workspaceID = workspaceID_example; # String | Workspace ID
+my $teamID = teamID_example; # String | Team ID
 my $blockID = blockID_example; # String | ID of block to patch
 my $body = WWW::OPenAPIClient::Object::BlockPatch->new(); # BlockPatch | 
 
 eval { 
-    $api_instance->patchBlock(workspaceID => $workspaceID, blockID => $blockID, body => $body);
+    $api_instance->patchBlock(teamID => $teamID, blockID => $blockID, body => $body);
 };
 if ($@) {
     warn "Exception when calling DefaultApi->patchBlock: $@\n";
@@ -7599,12 +7599,12 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
-workspaceID = workspaceID_example # String | Workspace ID (default to null)
+teamID = teamID_example # String | Team ID (default to null)
 blockID = blockID_example # String | ID of block to patch (default to null)
 body =  # BlockPatch | 
 
 try: 
-    api_instance.patch_block(workspaceID, blockID, body)
+    api_instance.patch_block(teamID, blockID, body)
 except ApiException as e:
     print("Exception when calling DefaultApi->patchBlock: %s\n" % e)</code></pre>
                             </div>
@@ -7613,12 +7613,12 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
-    let workspaceID = workspaceID_example; // String
+    let teamID = teamID_example; // String
     let blockID = blockID_example; // String
     let body = ; // BlockPatch
 
     let mut context = DefaultApi::Context::default();
-    let result = client.patchBlock(workspaceID, blockID, body, &context).wait();
+    let result = client.patchBlock(teamID, blockID, body, &context).wait();
 
     println!("{:?}", result);
 }
@@ -7639,11 +7639,11 @@ pub fn main() {
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
-                                  <tr><td style="width:150px;">workspaceID*</td>
+                                  <tr><td style="width:150px;">teamID*</td>
 <td>
 
 
-    <div id="d2e199_patchBlock_workspaceID">
+    <div id="d2e199_patchBlock_teamID">
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
@@ -7651,7 +7651,7 @@ pub fn main() {
                 </span>
 
                     <div class="inner description marked">
-Workspace ID
+Team ID
                     </div>
             </div>
                 <div class="inner required">
@@ -7842,7 +7842,7 @@ $(document).ready(function() {
                         <p class="marked">Sets sharing information for a root block</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/workspaces/{workspaceID}/sharing/{rootID}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/teams/{teamID}/sharing/{rootID}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -7867,7 +7867,7 @@ $(document).ready(function() {
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
  -H "Content-Type: application/json"\
- "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/sharing/{rootID}"</code></pre>
+ "http://localhost/api/v1/api/v1/teams/{teamID}/sharing/{rootID}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-postSharing-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -7890,12 +7890,12 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         String rootID = rootID_example; // String | ID of the root block
         Sharing body = ; // Sharing | 
         
         try {
-            apiInstance.postSharing(workspaceID, rootID, body);
+            apiInstance.postSharing(teamID, rootID, body);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#postSharing");
             e.printStackTrace();
@@ -7911,12 +7911,12 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         String rootID = rootID_example; // String | ID of the root block
         Sharing body = ; // Sharing | 
         
         try {
-            apiInstance.postSharing(workspaceID, rootID, body);
+            apiInstance.postSharing(teamID, rootID, body);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#postSharing");
             e.printStackTrace();
@@ -7939,11 +7939,11 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
-String *workspaceID = workspaceID_example; // Workspace ID (default to null)
+String *teamID = teamID_example; // Team ID (default to null)
 String *rootID = rootID_example; // ID of the root block (default to null)
 Sharing *body = ; // 
 
-[apiInstance postSharingWith:workspaceID
+[apiInstance postSharingWith:teamID
     rootID:rootID
     body:body
               completionHandler: ^(NSError* error) {
@@ -7966,7 +7966,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer.DefaultApi()
-var workspaceID = workspaceID_example; // {String} Workspace ID
+var teamID = teamID_example; // {String} Team ID
 var rootID = rootID_example; // {String} ID of the root block
 var body = ; // {Sharing} 
 
@@ -7977,7 +7977,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully.');
   }
 };
-api.postSharing(workspaceID, rootID, body, callback);
+api.postSharing(teamID, rootID, body, callback);
 </code></pre>
                             </div>
 
@@ -8004,12 +8004,12 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
-            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
+            var teamID = teamID_example;  // String | Team ID (default to null)
             var rootID = rootID_example;  // String | ID of the root block (default to null)
             var body = new Sharing(); // Sharing | 
 
             try {
-                apiInstance.postSharing(workspaceID, rootID, body);
+                apiInstance.postSharing(teamID, rootID, body);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.postSharing: " + e.Message );
             }
@@ -8030,12 +8030,12 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
-$workspaceID = workspaceID_example; // String | Workspace ID
+$teamID = teamID_example; // String | Team ID
 $rootID = rootID_example; // String | ID of the root block
 $body = ; // Sharing | 
 
 try {
-    $api_instance->postSharing($workspaceID, $rootID, $body);
+    $api_instance->postSharing($teamID, $rootID, $body);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->postSharing: ', $e->getMessage(), PHP_EOL;
 }
@@ -8054,12 +8054,12 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
-my $workspaceID = workspaceID_example; # String | Workspace ID
+my $teamID = teamID_example; # String | Team ID
 my $rootID = rootID_example; # String | ID of the root block
 my $body = WWW::OPenAPIClient::Object::Sharing->new(); # Sharing | 
 
 eval { 
-    $api_instance->postSharing(workspaceID => $workspaceID, rootID => $rootID, body => $body);
+    $api_instance->postSharing(teamID => $teamID, rootID => $rootID, body => $body);
 };
 if ($@) {
     warn "Exception when calling DefaultApi->postSharing: $@\n";
@@ -8080,12 +8080,12 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
-workspaceID = workspaceID_example # String | Workspace ID (default to null)
+teamID = teamID_example # String | Team ID (default to null)
 rootID = rootID_example # String | ID of the root block (default to null)
 body =  # Sharing | 
 
 try: 
-    api_instance.post_sharing(workspaceID, rootID, body)
+    api_instance.post_sharing(teamID, rootID, body)
 except ApiException as e:
     print("Exception when calling DefaultApi->postSharing: %s\n" % e)</code></pre>
                             </div>
@@ -8094,12 +8094,12 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
-    let workspaceID = workspaceID_example; // String
+    let teamID = teamID_example; // String
     let rootID = rootID_example; // String
     let body = ; // Sharing
 
     let mut context = DefaultApi::Context::default();
-    let result = client.postSharing(workspaceID, rootID, body, &context).wait();
+    let result = client.postSharing(teamID, rootID, body, &context).wait();
 
     println!("{:?}", result);
 }
@@ -8120,11 +8120,11 @@ pub fn main() {
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
-                                  <tr><td style="width:150px;">workspaceID*</td>
+                                  <tr><td style="width:150px;">teamID*</td>
 <td>
 
 
-    <div id="d2e199_postSharing_workspaceID">
+    <div id="d2e199_postSharing_teamID">
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
@@ -8132,7 +8132,7 @@ pub fn main() {
                 </span>
 
                     <div class="inner description marked">
-Workspace ID
+Team ID
                     </div>
             </div>
                 <div class="inner required">
@@ -8320,10 +8320,10 @@ $(document).ready(function() {
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Regenerates the signup token for the root workspace</p>
+                        <p class="marked">Regenerates the signup token for the root team</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/workspaces/{workspaceID}/regenerate_signup_token</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/teams/{teamID}/regenerate_signup_token</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -8347,7 +8347,7 @@ $(document).ready(function() {
                             <pre class="prettyprint"><code class="language-bsh">curl -X POST\
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
- "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/regenerate_signup_token"</code></pre>
+ "http://localhost/api/v1/api/v1/teams/{teamID}/regenerate_signup_token"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-regenerateSignupToken-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -8370,10 +8370,10 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         
         try {
-            apiInstance.regenerateSignupToken(workspaceID);
+            apiInstance.regenerateSignupToken(teamID);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#regenerateSignupToken");
             e.printStackTrace();
@@ -8389,10 +8389,10 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         
         try {
-            apiInstance.regenerateSignupToken(workspaceID);
+            apiInstance.regenerateSignupToken(teamID);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#regenerateSignupToken");
             e.printStackTrace();
@@ -8415,9 +8415,9 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
-String *workspaceID = workspaceID_example; // Workspace ID (default to null)
+String *teamID = teamID_example; // Team ID (default to null)
 
-[apiInstance regenerateSignupTokenWith:workspaceID
+[apiInstance regenerateSignupTokenWith:teamID
               completionHandler: ^(NSError* error) {
     if (error) {
         NSLog(@"Error: %@", error);
@@ -8438,7 +8438,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer.DefaultApi()
-var workspaceID = workspaceID_example; // {String} Workspace ID
+var teamID = teamID_example; // {String} Team ID
 
 var callback = function(error, data, response) {
   if (error) {
@@ -8447,7 +8447,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully.');
   }
 };
-api.regenerateSignupToken(workspaceID, callback);
+api.regenerateSignupToken(teamID, callback);
 </code></pre>
                             </div>
 
@@ -8474,10 +8474,10 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
-            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
+            var teamID = teamID_example;  // String | Team ID (default to null)
 
             try {
-                apiInstance.regenerateSignupToken(workspaceID);
+                apiInstance.regenerateSignupToken(teamID);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.regenerateSignupToken: " + e.Message );
             }
@@ -8498,10 +8498,10 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
-$workspaceID = workspaceID_example; // String | Workspace ID
+$teamID = teamID_example; // String | Team ID
 
 try {
-    $api_instance->regenerateSignupToken($workspaceID);
+    $api_instance->regenerateSignupToken($teamID);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->regenerateSignupToken: ', $e->getMessage(), PHP_EOL;
 }
@@ -8520,10 +8520,10 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
-my $workspaceID = workspaceID_example; # String | Workspace ID
+my $teamID = teamID_example; # String | Team ID
 
 eval { 
-    $api_instance->regenerateSignupToken(workspaceID => $workspaceID);
+    $api_instance->regenerateSignupToken(teamID => $teamID);
 };
 if ($@) {
     warn "Exception when calling DefaultApi->regenerateSignupToken: $@\n";
@@ -8544,10 +8544,10 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
-workspaceID = workspaceID_example # String | Workspace ID (default to null)
+teamID = teamID_example # String | Team ID (default to null)
 
 try: 
-    api_instance.regenerate_signup_token(workspaceID)
+    api_instance.regenerate_signup_token(teamID)
 except ApiException as e:
     print("Exception when calling DefaultApi->regenerateSignupToken: %s\n" % e)</code></pre>
                             </div>
@@ -8556,10 +8556,10 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
-    let workspaceID = workspaceID_example; // String
+    let teamID = teamID_example; // String
 
     let mut context = DefaultApi::Context::default();
-    let result = client.regenerateSignupToken(workspaceID, &context).wait();
+    let result = client.regenerateSignupToken(teamID, &context).wait();
 
     println!("{:?}", result);
 }
@@ -8580,11 +8580,11 @@ pub fn main() {
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
-                                  <tr><td style="width:150px;">workspaceID*</td>
+                                  <tr><td style="width:150px;">teamID*</td>
 <td>
 
 
-    <div id="d2e199_regenerateSignupToken_workspaceID">
+    <div id="d2e199_regenerateSignupToken_teamID">
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
@@ -8592,7 +8592,7 @@ pub fn main() {
                 </span>
 
                     <div class="inner description marked">
-Workspace ID
+Team ID
                     </div>
             </div>
                 <div class="inner required">
@@ -9103,7 +9103,7 @@ $(document).ready(function() {
                         <p class="marked">Insert or update blocks</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/workspaces/{workspaceID}/blocks</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/teams/{teamID}/blocks</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -9128,7 +9128,7 @@ $(document).ready(function() {
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
  -H "Content-Type: application/json"\
- "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/blocks"</code></pre>
+ "http://localhost/api/v1/api/v1/teams/{teamID}/blocks"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-updateBlocks-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -9151,11 +9151,11 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         array[Block] body = ; // array[Block] | 
         
         try {
-            apiInstance.updateBlocks(workspaceID, body);
+            apiInstance.updateBlocks(teamID, body);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#updateBlocks");
             e.printStackTrace();
@@ -9171,11 +9171,11 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         array[Block] body = ; // array[Block] | 
         
         try {
-            apiInstance.updateBlocks(workspaceID, body);
+            apiInstance.updateBlocks(teamID, body);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#updateBlocks");
             e.printStackTrace();
@@ -9198,10 +9198,10 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
-String *workspaceID = workspaceID_example; // Workspace ID (default to null)
+String *teamID = teamID_example; // Team ID (default to null)
 array[Block] *body = ; // 
 
-[apiInstance updateBlocksWith:workspaceID
+[apiInstance updateBlocksWith:teamID
     body:body
               completionHandler: ^(NSError* error) {
     if (error) {
@@ -9223,7 +9223,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer.DefaultApi()
-var workspaceID = workspaceID_example; // {String} Workspace ID
+var teamID = teamID_example; // {String} Team ID
 var body = ; // {array[Block]} 
 
 var callback = function(error, data, response) {
@@ -9233,7 +9233,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully.');
   }
 };
-api.updateBlocks(workspaceID, body, callback);
+api.updateBlocks(teamID, body, callback);
 </code></pre>
                             </div>
 
@@ -9260,11 +9260,11 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
-            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
+            var teamID = teamID_example;  // String | Team ID (default to null)
             var body = new array[Block](); // array[Block] | 
 
             try {
-                apiInstance.updateBlocks(workspaceID, body);
+                apiInstance.updateBlocks(teamID, body);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.updateBlocks: " + e.Message );
             }
@@ -9285,11 +9285,11 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
-$workspaceID = workspaceID_example; // String | Workspace ID
+$teamID = teamID_example; // String | Team ID
 $body = ; // array[Block] | 
 
 try {
-    $api_instance->updateBlocks($workspaceID, $body);
+    $api_instance->updateBlocks($teamID, $body);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->updateBlocks: ', $e->getMessage(), PHP_EOL;
 }
@@ -9308,11 +9308,11 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
-my $workspaceID = workspaceID_example; # String | Workspace ID
+my $teamID = teamID_example; # String | Team ID
 my $body = [WWW::OPenAPIClient::Object::array[Block]->new()]; # array[Block] | 
 
 eval { 
-    $api_instance->updateBlocks(workspaceID => $workspaceID, body => $body);
+    $api_instance->updateBlocks(teamID => $teamID, body => $body);
 };
 if ($@) {
     warn "Exception when calling DefaultApi->updateBlocks: $@\n";
@@ -9333,11 +9333,11 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
-workspaceID = workspaceID_example # String | Workspace ID (default to null)
+teamID = teamID_example # String | Team ID (default to null)
 body =  # array[Block] | 
 
 try: 
-    api_instance.update_blocks(workspaceID, body)
+    api_instance.update_blocks(teamID, body)
 except ApiException as e:
     print("Exception when calling DefaultApi->updateBlocks: %s\n" % e)</code></pre>
                             </div>
@@ -9346,11 +9346,11 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
-    let workspaceID = workspaceID_example; // String
+    let teamID = teamID_example; // String
     let body = ; // array[Block]
 
     let mut context = DefaultApi::Context::default();
-    let result = client.updateBlocks(workspaceID, body, &context).wait();
+    let result = client.updateBlocks(teamID, body, &context).wait();
 
     println!("{:?}", result);
 }
@@ -9371,11 +9371,11 @@ pub fn main() {
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
-                                  <tr><td style="width:150px;">workspaceID*</td>
+                                  <tr><td style="width:150px;">teamID*</td>
 <td>
 
 
-    <div id="d2e199_updateBlocks_workspaceID">
+    <div id="d2e199_updateBlocks_teamID">
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
@@ -9383,7 +9383,7 @@ pub fn main() {
                 </span>
 
                     <div class="inner description marked">
-Workspace ID
+Team ID
                     </div>
             </div>
                 <div class="inner required">
@@ -9554,7 +9554,7 @@ $(document).ready(function() {
                         <p class="marked">Upload a binary file, attached to a root block</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/workspaces/{workspaceID}/{rootID}/files</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/teams/{teamID}/{rootID}/files</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -9579,7 +9579,7 @@ $(document).ready(function() {
 -H "Authorization: [[apiKey]]"\
  -H "Accept: application/json"\
  -H "Content-Type: multipart/form-data"\
- "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/{rootID}/files"</code></pre>
+ "http://localhost/api/v1/api/v1/teams/{teamID}/{rootID}/files"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-uploadFile-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
@@ -9602,12 +9602,12 @@ public class DefaultApiExample {
         
         // Create an instance of the API class
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         String rootID = rootID_example; // String | ID of the root block
         File uploaded file = BINARY_DATA_HERE; // File | The file to upload
         
         try {
-            FileUploadResponse result = apiInstance.uploadFile(workspaceID, rootID, uploaded file);
+            FileUploadResponse result = apiInstance.uploadFile(teamID, rootID, uploaded file);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#uploadFile");
@@ -9624,12 +9624,12 @@ public class DefaultApiExample {
 public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
+        String teamID = teamID_example; // String | Team ID
         String rootID = rootID_example; // String | ID of the root block
         File uploaded file = BINARY_DATA_HERE; // File | The file to upload
         
         try {
-            FileUploadResponse result = apiInstance.uploadFile(workspaceID, rootID, uploaded file);
+            FileUploadResponse result = apiInstance.uploadFile(teamID, rootID, uploaded file);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#uploadFile");
@@ -9653,11 +9653,11 @@ public class DefaultApiExample {
 
 // Create an instance of the API class
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
-String *workspaceID = workspaceID_example; // Workspace ID (default to null)
+String *teamID = teamID_example; // Team ID (default to null)
 String *rootID = rootID_example; // ID of the root block (default to null)
 File *uploaded file = BINARY_DATA_HERE; // The file to upload (optional) (default to null)
 
-[apiInstance uploadFileWith:workspaceID
+[apiInstance uploadFileWith:teamID
     rootID:rootID
     uploaded file:uploaded file
               completionHandler: ^(FileUploadResponse output, NSError* error) {
@@ -9683,7 +9683,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 
 // Create an instance of the API class
 var api = new LineHomeJespinoProjectsMattermostFocalboardServerMainMainGo11packageClassificationFocalboardServer.DefaultApi()
-var workspaceID = workspaceID_example; // {String} Workspace ID
+var teamID = teamID_example; // {String} Team ID
 var rootID = rootID_example; // {String} ID of the root block
 var opts = {
   'uploaded file': BINARY_DATA_HERE // {File} The file to upload
@@ -9696,7 +9696,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.uploadFile(workspaceID, rootID, opts, callback);
+api.uploadFile(teamID, rootID, opts, callback);
 </code></pre>
                             </div>
 
@@ -9723,12 +9723,12 @@ namespace Example
             
             // Create an instance of the API class
             var apiInstance = new DefaultApi();
-            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
+            var teamID = teamID_example;  // String | Team ID (default to null)
             var rootID = rootID_example;  // String | ID of the root block (default to null)
             var uploaded file = BINARY_DATA_HERE;  // File | The file to upload (optional)  (default to null)
 
             try {
-                FileUploadResponse result = apiInstance.uploadFile(workspaceID, rootID, uploaded file);
+                FileUploadResponse result = apiInstance.uploadFile(teamID, rootID, uploaded file);
                 Debug.WriteLine(result);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.uploadFile: " + e.Message );
@@ -9750,12 +9750,12 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
-$workspaceID = workspaceID_example; // String | Workspace ID
+$teamID = teamID_example; // String | Team ID
 $rootID = rootID_example; // String | ID of the root block
 $uploaded file = BINARY_DATA_HERE; // File | The file to upload
 
 try {
-    $result = $api_instance->uploadFile($workspaceID, $rootID, $uploaded file);
+    $result = $api_instance->uploadFile($teamID, $rootID, $uploaded file);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->uploadFile: ', $e->getMessage(), PHP_EOL;
@@ -9775,12 +9775,12 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
-my $workspaceID = workspaceID_example; # String | Workspace ID
+my $teamID = teamID_example; # String | Team ID
 my $rootID = rootID_example; # String | ID of the root block
 my $uploaded file = BINARY_DATA_HERE; # File | The file to upload
 
 eval { 
-    my $result = $api_instance->uploadFile(workspaceID => $workspaceID, rootID => $rootID, uploaded file => $uploaded file);
+    my $result = $api_instance->uploadFile(teamID => $teamID, rootID => $rootID, uploaded file => $uploaded file);
     print Dumper($result);
 };
 if ($@) {
@@ -9802,12 +9802,12 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # Create an instance of the API class
 api_instance = openapi_client.DefaultApi()
-workspaceID = workspaceID_example # String | Workspace ID (default to null)
+teamID = teamID_example # String | Team ID (default to null)
 rootID = rootID_example # String | ID of the root block (default to null)
 uploaded file = BINARY_DATA_HERE # File | The file to upload (optional) (default to null)
 
 try: 
-    api_response = api_instance.upload_file(workspaceID, rootID, uploaded file=uploaded file)
+    api_response = api_instance.upload_file(teamID, rootID, uploaded file=uploaded file)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DefaultApi->uploadFile: %s\n" % e)</code></pre>
@@ -9817,12 +9817,12 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
 
 pub fn main() {
-    let workspaceID = workspaceID_example; // String
+    let teamID = teamID_example; // String
     let rootID = rootID_example; // String
     let uploaded file = BINARY_DATA_HERE; // File
 
     let mut context = DefaultApi::Context::default();
-    let result = client.uploadFile(workspaceID, rootID, uploaded file, &context).wait();
+    let result = client.uploadFile(teamID, rootID, uploaded file, &context).wait();
 
     println!("{:?}", result);
 }
@@ -9843,11 +9843,11 @@ pub fn main() {
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
-                                  <tr><td style="width:150px;">workspaceID*</td>
+                                  <tr><td style="width:150px;">teamID*</td>
 <td>
 
 
-    <div id="d2e199_uploadFile_workspaceID">
+    <div id="d2e199_uploadFile_teamID">
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
@@ -9855,7 +9855,7 @@ pub fn main() {
                 </span>
 
                     <div class="inner description marked">
-Workspace ID
+Team ID
                     </div>
             </div>
                 <div class="inner required">

@@ -210,15 +210,15 @@ func randomBytes(t *testing.T, n int) []byte {
 	return bb
 }
 
-func TestWorkspaceUploadFile(t *testing.T) {
+func TestTeamUploadFile(t *testing.T) {
 	t.Run("no permission", func(t *testing.T) { // native auth, but not login
 		th := SetupTestHelperWithoutToken().InitBasic()
 		defer th.TearDown()
 
-		workspaceID := "0"
+		teamID := "0"
 		rootID := utils.CreateGUID()
 		data := randomBytes(t, 1024)
-		result, resp := th.Client.WorkspaceUploadFile(workspaceID, rootID, bytes.NewReader(data))
+		result, resp := th.Client.TeamUploadFile(teamID, rootID, bytes.NewReader(data))
 		require.Error(t, resp.Error)
 		require.Nil(t, result)
 	})
@@ -227,10 +227,10 @@ func TestWorkspaceUploadFile(t *testing.T) {
 		th := SetupTestHelper().InitBasic()
 		defer th.TearDown()
 
-		workspaceID := "0"
+		teamID := "0"
 		rootID := utils.CreateGUID()
 		data := randomBytes(t, 1024)
-		result, resp := th.Client.WorkspaceUploadFile(workspaceID, rootID, bytes.NewReader(data))
+		result, resp := th.Client.TeamUploadFile(teamID, rootID, bytes.NewReader(data))
 		require.NoError(t, resp.Error)
 		require.NotNil(t, result)
 		require.NotEmpty(t, result.FileID)

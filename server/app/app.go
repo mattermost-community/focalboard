@@ -13,8 +13,8 @@ import (
 )
 
 type WebsocketServer interface {
-	BroadcastBlockChange(workspaceID string, block model.Block)
-	BroadcastBlockDelete(workspaceID, blockID, parentID string)
+	BroadcastBlockChange(teamID string, block model.Block)
+	BroadcastBlockDelete(teamID, blockID, parentID string)
 }
 
 type Services struct {

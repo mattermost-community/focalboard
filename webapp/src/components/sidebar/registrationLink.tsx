@@ -3,12 +3,12 @@
 import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 
-import {IWorkspace} from '../../blocks/workspace'
+import {ITeam} from '../../blocks/team'
 import {sendFlashMessage} from '../../components/flashMessages'
 import client from '../../octoClient'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
-import {getWorkspace, fetchWorkspace} from '../../store/workspace'
+import {getTeam, fetchTeam} from '../../store/teams'
 import {useAppSelector, useAppDispatch} from '../../store/hooks'
 
 import Modal from '../modal'
@@ -22,21 +22,21 @@ type Props = {
 const RegistrationLink = React.memo((props: Props) => {
     const {onClose} = props
     const intl = useIntl()
-    const workspace = useAppSelector<IWorkspace|null>(getWorkspace)
+    const team = useAppSelector<ITeam|null>(getTeam)
     const dispatch = useAppDispatch()
 
     const [wasCopied, setWasCopied] = useState(false)
 
     useEffect(() => {
-        dispatch(fetchWorkspace())
+        dispatch(fetchTeam())
     }, [])
 
     const regenerateToken = async () => {
         // eslint-disable-next-line no-alert
         const accept = window.confirm(intl.formatMessage({id: 'RegistrationLink.confirmRegenerateToken', defaultMessage: 'This will invalidate previously shared links. Continue?'}))
         if (accept) {
-            await client.regenerateWorkspaceSignupToken()
-            await dispatch(fetchWorkspace())
+            await client.regenerateTeamSignupToken()
+            await dispatch(fetchTeam())
             setWasCopied(false)
 
             const description = intl.formatMessage({id: 'RegistrationLink.tokenRegenerated', defaultMessage: 'Registration link regenerated'})
@@ -44,7 +44,7 @@ const RegistrationLink = React.memo((props: Props) => {
         }
     }
 
-    const registrationUrl = Utils.buildURL('/register?t=' + workspace?.signupToken, true)
+    const registrationUrl = Utils.buildURL('/register?t=' + team?.signupToken, true)
 
     return (
         <Modal
@@ -52,7 +52,7 @@ const RegistrationLink = React.memo((props: Props) => {
             onClose={onClose}
         >
             <div className='RegistrationLink'>
-                {workspace && <>
+                {team && <>
                     <div className='row'>
                         {intl.formatMessage({id: 'RegistrationLink.description', defaultMessage: 'Share this link for others to create accounts:'})}
                     </div>

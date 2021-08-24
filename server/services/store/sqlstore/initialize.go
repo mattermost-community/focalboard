@@ -35,7 +35,7 @@ func (s *SQLStore) importInitialTemplates() error {
 	}
 
 	globalContainer := store.Container{
-		WorkspaceID: "0",
+		TeamID: "0",
 	}
 
 	s.logger.Debug("Inserting blocks", mlog.Int("block_count", len(archive.Blocks)))
@@ -59,7 +59,7 @@ func (s *SQLStore) isInitializationNeeded() (bool, error) {
 	query := s.getQueryBuilder().
 		Select("count(*)").
 		From(s.tablePrefix + "blocks").
-		Where(sq.Eq{"COALESCE(workspace_id, '0')": "0"})
+		Where(sq.Eq{"COALESCE(team_id, '0')": "0"})
 
 	row := query.QueryRow()
 

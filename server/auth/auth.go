@@ -59,8 +59,8 @@ func (a *Auth) IsValidReadToken(c store.Container, blockID string, readToken str
 	return false, nil
 }
 
-func (a *Auth) DoesUserHaveWorkspaceAccess(userID string, workspaceID string) bool {
-	hasAccess, err := a.store.HasWorkspaceAccess(userID, workspaceID)
+func (a *Auth) DoesUserHaveTeamAccess(userID string, teamID string) bool {
+	hasAccess, err := a.store.HasTeamAccess(userID, teamID)
 	if err != nil {
 		return false
 	}

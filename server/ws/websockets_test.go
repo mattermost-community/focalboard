@@ -11,65 +11,65 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestWorkspaceSubscription(t *testing.T) {
+func TestTeamSubscription(t *testing.T) {
 	server := NewServer(&auth.Auth{}, "token", false, &mlog.Logger{})
 	client := &wsClient{&websocket.Conn{}, &sync.Mutex{}, []string{}, []string{}}
 	session := &websocketSession{client: client}
-	workspaceID := "fake-workspace-id"
+	teamID := "fake-team-id"
 
 	t.Run("Should correctly add a session", func(t *testing.T) {
 		server.addListener(session.client)
 		require.Len(t, server.listeners, 1)
-		require.Empty(t, server.listenersByWorkspace)
-		require.Empty(t, client.workspaces)
+		require.Empty(t, server.listenersByTeam)
+		require.Empty(t, client.teams)
 	})
 
-	t.Run("Should correctly subscribe to a workspace", func(t *testing.T) {
-		require.False(t, client.isSubscribedToWorkspace(workspaceID))
+	t.Run("Should correctly subscribe to a team", func(t *testing.T) {
+		require.False(t, client.isSubscribedToTeam(teamID))
 
-		server.subscribeListenerToWorkspace(client, workspaceID)
+		server.subscribeListenerToTeam(client, teamID)
 
-		require.Len(t, server.listenersByWorkspace[workspaceID], 1)
-		require.Contains(t, server.listenersByWorkspace[workspaceID], client)
-		require.Len(t, client.workspaces, 1)
-		require.Contains(t, client.workspaces, workspaceID)
+		require.Len(t, server.listenersByTeam[teamID], 1)
+		require.Contains(t, server.listenersByTeam[teamID], client)
+		require.Len(t, client.teams, 1)
+		require.Contains(t, client.teams, teamID)
 
-		require.True(t, client.isSubscribedToWorkspace(workspaceID))
+		require.True(t, client.isSubscribedToTeam(teamID))
 	})
 
-	t.Run("Subscribing again to a subscribed workspace would have no effect", func(t *testing.T) {
-		require.True(t, client.isSubscribedToWorkspace(workspaceID))
+	t.Run("Subscribing again to a subscribed team would have no effect", func(t *testing.T) {
+		require.True(t, client.isSubscribedToTeam(teamID))
 
-		server.subscribeListenerToWorkspace(client, workspaceID)
+		server.subscribeListenerToTeam(client, teamID)
 
-		require.Len(t, server.listenersByWorkspace[workspaceID], 1)
-		require.Contains(t, server.listenersByWorkspace[workspaceID], client)
-		require.Len(t, client.workspaces, 1)
-		require.Contains(t, client.workspaces, workspaceID)
+		require.Len(t, server.listenersByTeam[teamID], 1)
+		require.Contains(t, server.listenersByTeam[teamID], client)
+		require.Len(t, client.teams, 1)
+		require.Contains(t, client.teams, teamID)
 
-		require.True(t, client.isSubscribedToWorkspace(workspaceID))
+		require.True(t, client.isSubscribedToTeam(teamID))
 	})
 
-	t.Run("Should correctly unsubscribe to a workspace", func(t *testing.T) {
-		require.True(t, client.isSubscribedToWorkspace(workspaceID))
+	t.Run("Should correctly unsubscribe to a team", func(t *testing.T) {
+		require.True(t, client.isSubscribedToTeam(teamID))
 
-		server.unsubscribeListenerFromWorkspace(client, workspaceID)
+		server.unsubscribeListenerFromTeam(client, teamID)
 
-		require.Empty(t, server.listenersByWorkspace[workspaceID])
-		require.Empty(t, client.workspaces)
+		require.Empty(t, server.listenersByTeam[teamID])
+		require.Empty(t, client.teams)
 
-		require.False(t, client.isSubscribedToWorkspace(workspaceID))
+		require.False(t, client.isSubscribedToTeam(teamID))
 	})
 
-	t.Run("Unsubscribing again to an unsubscribed workspace would have no effect", func(t *testing.T) {
-		require.False(t, client.isSubscribedToWorkspace(workspaceID))
+	t.Run("Unsubscribing again to an unsubscribed team would have no effect", func(t *testing.T) {
+		require.False(t, client.isSubscribedToTeam(teamID))
 
-		server.unsubscribeListenerFromWorkspace(client, workspaceID)
+		server.unsubscribeListenerFromTeam(client, teamID)
 
-		require.Empty(t, server.listenersByWorkspace[workspaceID])
-		require.Empty(t, client.workspaces)
+		require.Empty(t, server.listenersByTeam[teamID])
+		require.Empty(t, client.teams)
 
-		require.False(t, client.isSubscribedToWorkspace(workspaceID))
+		require.False(t, client.isSubscribedToTeam(teamID))
 	})
 
 	t.Run("Should correctly be removed from the server", func(t *testing.T) {
@@ -78,22 +78,22 @@ func TestWorkspaceSubscription(t *testing.T) {
 		require.Empty(t, server.listeners)
 	})
 
-	t.Run("If subscribed to workspaces and removed, should be removed from the workspaces subscription list", func(t *testing.T) {
-		workspaceID2 := "other-fake-workspace-id"
+	t.Run("If subscribed to teams and removed, should be removed from the teams subscription list", func(t *testing.T) {
+		teamID2 := "other-fake-team-id"
 
 		server.addListener(session.client)
-		server.subscribeListenerToWorkspace(client, workspaceID)
-		server.subscribeListenerToWorkspace(client, workspaceID2)
+		server.subscribeListenerToTeam(client, teamID)
+		server.subscribeListenerToTeam(client, teamID2)
 
 		require.Len(t, server.listeners, 1)
-		require.Contains(t, server.listenersByWorkspace[workspaceID], client)
-		require.Contains(t, server.listenersByWorkspace[workspaceID2], client)
+		require.Contains(t, server.listenersByTeam[teamID], client)
+		require.Contains(t, server.listenersByTeam[teamID2], client)
 
 		server.removeListener(client)
 
 		require.Empty(t, server.listeners)
-		require.Empty(t, server.listenersByWorkspace[workspaceID])
-		require.Empty(t, server.listenersByWorkspace[workspaceID2])
+		require.Empty(t, server.listenersByTeam[teamID])
+		require.Empty(t, server.listenersByTeam[teamID2])
 	})
 }
 
@@ -109,8 +109,8 @@ func TestBlocksSubscription(t *testing.T) {
 	t.Run("Should correctly add a session", func(t *testing.T) {
 		server.addListener(session.client)
 		require.Len(t, server.listeners, 1)
-		require.Empty(t, server.listenersByWorkspace)
-		require.Empty(t, client.workspaces)
+		require.Empty(t, server.listenersByTeam)
+		require.Empty(t, client.teams)
 	})
 
 	t.Run("Should correctly subscribe to a set of blocks", func(t *testing.T) {

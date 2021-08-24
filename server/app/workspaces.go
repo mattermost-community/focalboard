@@ -9,54 +9,54 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 )
 
-func (a *App) GetRootWorkspace() (*model.Workspace, error) {
-	workspaceID := "0"
-	workspace, _ := a.store.GetWorkspace(workspaceID)
-	if workspace == nil {
-		workspace = &model.Workspace{
-			ID:          workspaceID,
+func (a *App) GetRootTeam() (*model.Team, error) {
+	teamID := "0"
+	team, _ := a.store.GetTeam(teamID)
+	if team == nil {
+		team = &model.Team{
+			ID:          teamID,
 			SignupToken: utils.CreateGUID(),
 		}
-		err := a.store.UpsertWorkspaceSignupToken(*workspace)
+		err := a.store.UpsertTeamSignupToken(*team)
 		if err != nil {
-			a.logger.Fatal("Unable to initialize workspace", mlog.Err(err))
+			a.logger.Fatal("Unable to initialize team", mlog.Err(err))
 			return nil, err
 		}
-		workspace, err = a.store.GetWorkspace(workspaceID)
+		team, err = a.store.GetTeam(teamID)
 		if err != nil {
-			a.logger.Fatal("Unable to get initialized workspace", mlog.Err(err))
+			a.logger.Fatal("Unable to get initialized team", mlog.Err(err))
 			return nil, err
 		}
 
-		a.logger.Info("initialized workspace")
+		a.logger.Info("initialized team")
 	}
 
-	return workspace, nil
+	return team, nil
 }
 
-func (a *App) GetWorkspace(id string) (*model.Workspace, error) {
-	workspace, err := a.store.GetWorkspace(id)
+func (a *App) GetTeam(id string) (*model.Team, error) {
+	team, err := a.store.GetTeam(id)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
 	}
 	if err != nil {
 		return nil, err
 	}
-	return workspace, nil
+	return team, nil
 }
 
-func (a *App) DoesUserHaveWorkspaceAccess(userID string, workspaceID string) bool {
-	return a.auth.DoesUserHaveWorkspaceAccess(userID, workspaceID)
+func (a *App) DoesUserHaveTeamAccess(userID string, teamID string) bool {
+	return a.auth.DoesUserHaveTeamAccess(userID, teamID)
 }
 
-func (a *App) UpsertWorkspaceSettings(workspace model.Workspace) error {
-	return a.store.UpsertWorkspaceSettings(workspace)
+func (a *App) UpsertTeamSettings(team model.Team) error {
+	return a.store.UpsertTeamSettings(team)
 }
 
-func (a *App) UpsertWorkspaceSignupToken(workspace model.Workspace) error {
-	return a.store.UpsertWorkspaceSignupToken(workspace)
+func (a *App) UpsertTeamSignupToken(team model.Team) error {
+	return a.store.UpsertTeamSignupToken(team)
 }
 
-func (a *App) GetWorkspaceCount() (int64, error) {
-	return a.store.GetWorkspaceCount()
+func (a *App) GetTeamCount() (int64, error) {
+	return a.store.GetTeamCount()
 }

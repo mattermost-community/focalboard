@@ -8,17 +8,17 @@ import {default as client} from '../octoClient'
 export const initialLoad = createAsyncThunk(
     'initialLoad',
     async () => {
-        const [workspace, workspaceUsers, blocks] = await Promise.all([
-            client.getWorkspace(),
-            client.getWorkspaceUsers(),
+        const [team, teamUsers, blocks] = await Promise.all([
+            client.getTeam(),
+            client.getTeamUsers(),
             client.getAllBlocks(),
         ])
-        if (!workspace) {
-            throw new Error('no_workspace')
+        if (!team) {
+            throw new Error('no_team')
         }
         return {
-            workspace,
-            workspaceUsers,
+            team,
+            teamUsers,
             blocks,
         }
     },

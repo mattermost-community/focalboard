@@ -12,7 +12,7 @@ import (
 
 func StoreTestSessionStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
 	container := store.Container{
-		WorkspaceID: "0",
+		TeamID: "0",
 	}
 
 	t.Run("CreateAndGetAndDeleteSession", func(t *testing.T) {

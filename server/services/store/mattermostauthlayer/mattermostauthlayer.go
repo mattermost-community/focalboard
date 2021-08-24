@@ -162,14 +162,14 @@ func (s *MattermostAuthLayer) CleanUpSessions(expireTime int64) error {
 	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
 }
 
-func (s *MattermostAuthLayer) GetWorkspace(id string) (*model.Workspace, error) {
+func (s *MattermostAuthLayer) GetTeam(id string) (*model.Team, error) {
 	if id == "0" {
-		workspace := model.Workspace{
+		team := model.Team{
 			ID:    id,
 			Title: "",
 		}
 
-		return &workspace, nil
+		return &team, nil
 	}
 
 	query := s.getQueryBuilder().
@@ -186,7 +186,7 @@ func (s *MattermostAuthLayer) GetWorkspace(id string) (*model.Workspace, error) 
 	}
 
 	if channelType != "D" && channelType != "G" {
-		return &model.Workspace{ID: id, Title: displayName}, nil
+		return &model.Team{ID: id, Title: displayName}, nil
 	}
 
 	query = s.getQueryBuilder().
@@ -215,14 +215,14 @@ func (s *MattermostAuthLayer) GetWorkspace(id string) (*model.Workspace, error) 
 		}
 		sb.WriteString(name)
 	}
-	return &model.Workspace{ID: id, Title: sb.String()}, nil
+	return &model.Team{ID: id, Title: sb.String()}, nil
 }
 
-func (s *MattermostAuthLayer) HasWorkspaceAccess(userID string, workspaceID string) (bool, error) {
+func (s *MattermostAuthLayer) HasTeamAccess(userID string, teamID string) (bool, error) {
 	query := s.getQueryBuilder().
 		Select("count(*)").
 		From("ChannelMembers").
-		Where(sq.Eq{"ChannelID": workspaceID}).
+		Where(sq.Eq{"ChannelID": teamID}).
 		Where(sq.Eq{"UserID": userID})
 
 	row := query.QueryRow()
@@ -245,14 +245,14 @@ func (s *MattermostAuthLayer) getQueryBuilder() sq.StatementBuilderType {
 	return builder.RunWith(s.mmDB)
 }
 
-func (s *MattermostAuthLayer) GetUsersByWorkspace(workspaceID string) ([]*model.User, error) {
+func (s *MattermostAuthLayer) GetUsersByTeam(teamID string) ([]*model.User, error) {
 	query := s.getQueryBuilder().
 		Select("id", "username", "email", "password", "MFASecret as mfa_secret", "AuthService as auth_service", "COALESCE(AuthData, '') as auth_data",
 			"props", "CreateAt as create_at", "UpdateAt as update_at", "DeleteAt as delete_at").
 		From("Users").
 		Join("ChannelMembers ON ChannelMembers.UserID = Users.ID").
 		Where(sq.Eq{"deleteAt": 0}).
-		Where(sq.Eq{"ChannelMembers.ChannelId": workspaceID})
+		Where(sq.Eq{"ChannelMembers.ChannelId": teamID})
 
 	rows, err := query.Query()
 	if err != nil {

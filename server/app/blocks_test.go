@@ -22,7 +22,7 @@ func TestGetParentID(t *testing.T) {
 	th := SetupTestHelper(t)
 
 	container := st.Container{
-		WorkspaceID: "0",
+		TeamID: "0",
 	}
 	t.Run("success query", func(t *testing.T) {
 		th.Store.EXPECT().GetParentID(gomock.Eq(container), gomock.Eq("test-id")).Return("test-parent-id", nil)
@@ -43,7 +43,7 @@ func TestInsertBlock(t *testing.T) {
 	th := SetupTestHelper(t)
 
 	container := st.Container{
-		WorkspaceID: "0",
+		TeamID: "0",
 	}
 
 	t.Run("success scenerio", func(t *testing.T) {

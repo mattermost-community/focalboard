@@ -12,7 +12,8 @@ import {useAppSelector} from '../store/hooks'
 import CenterPanel from './centerPanel'
 import EmptyCenterPanel from './emptyCenterPanel'
 import Sidebar from './sidebar/sidebar'
-import './workspace.scss'
+
+import './currentTeam.scss'
 
 type Props = {
     readonly: boolean
@@ -48,12 +49,12 @@ function CenterContent(props: Props) {
     )
 }
 
-const Workspace = React.memo((props: Props) => {
+const CurrentTeam = React.memo((props: Props) => {
     const board = useAppSelector(getCurrentBoard)
     const view = useAppSelector(getCurrentView)
 
     return (
-        <div className='Workspace'>
+        <div className='CurrentTeam'>
             {!props.readonly &&
                 <Sidebar
                     activeBoardId={board?.id}
@@ -64,7 +65,7 @@ const Workspace = React.memo((props: Props) => {
                 {(board?.fields.isTemplate) &&
                 <div className='banner'>
                     <FormattedMessage
-                        id='Workspace.editing-board-template'
+                        id='CurrentTeam.editing-board-template'
                         defaultMessage="You're editing a board template"
                     />
                 </div>}
@@ -74,4 +75,4 @@ const Workspace = React.memo((props: Props) => {
     )
 })
 
-export default Workspace
+export default CurrentTeam

@@ -13,8 +13,8 @@ const ErrorPage = React.memo(() => {
             <div className='title'>{'Error'}</div>
             <div>
                 <FormattedMessage
-                    id='error.no-workspace'
-                    defaultMessage='Your session may have expired or you may not have access to this workspace.'
+                    id='error.no-team'
+                    defaultMessage='Your session may have expired or you may not have access to this team.'
                 />
             </div>
             <br/>

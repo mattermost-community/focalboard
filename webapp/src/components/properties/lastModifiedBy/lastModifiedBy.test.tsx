@@ -30,7 +30,7 @@ describe('components/properties/lastModifiedBy', () => {
         const mockStore = configureStore([])
         const store = mockStore({
             users: {
-                workspaceUsers: {
+                teamUsers: {
                     'user-id-1': {username: 'username_1'} as IUser,
                 },
             },
