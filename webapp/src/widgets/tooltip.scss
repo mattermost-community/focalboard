@@ -8,9 +8,8 @@ $tooltop-vertical-offset: 2px;
 %hover-tooltip-body {
     position: absolute;
     content: attr(data-tooltip);
-    line-height: 16px;
     padding: 2px 4px;
-    line-height: 1;
+    line-height: 1px;
     font-size: 1em;
     text-align: center;
     color: rgb(255, 255, 255);

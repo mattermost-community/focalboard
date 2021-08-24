@@ -7,6 +7,7 @@
     "selector-max-compound-selectors": 6,
     "selector-max-id": 1,
     "selector-no-qualifying-type": null,
-    "order/properties-alphabetical-order": null
+    "order/properties-alphabetical-order": null,
+    "declaration-block-no-duplicate-properties": true
   }
 }

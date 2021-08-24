@@ -36,10 +36,7 @@ html {
     * {
         box-sizing: border-box;
         outline: 0;
-        user-select: none; /* Chrome all / Safari all */
-        user-select: none; /* Firefox all */
-        user-select: none; /* IE 10+ */
-        user-select: none; /* Likely future */
+        user-select: none;
     }
 
     input,
@@ -54,10 +51,7 @@ html {
         background: rgb(var(--center-channel-bg-rgb));
         color: rgb(var(--center-channel-color-rgb));
 
-        user-select: text; /* Chrome all / Safari all */
-        user-select: text; /* Firefox all */
-        user-select: text; /* IE 10+ */
-        user-select: text; /* Likely future */
+        user-select: text;
     }
 
     a {
@@ -178,10 +172,7 @@ html {
     }
 
     [contentEditable='true'] {
-        user-select: text; /* Chrome all / Safari all */
-        user-select: text; /* Firefox all */
-        user-select: text; /* IE 10+ */
-        user-select: text; /* Likely future */
+        user-select: text;
     }
 
     [contentEditable='true']:empty::before {
