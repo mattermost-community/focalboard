@@ -134,7 +134,7 @@ function DateRange(props: Props): JSX.Element {
         displayValue = getDisplayDate(dateFrom)
     }
     if (dateTo) {
-        displayValue += ' -> ' + getDisplayDate(dateTo)
+        displayValue += ' → ' + getDisplayDate(dateTo)
     }
 
     const onClose = () => {
