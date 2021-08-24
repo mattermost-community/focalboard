@@ -147,7 +147,7 @@ export default class Plugin {
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
                 window.open(`${window.location.origin}/plug/focalboard/workspace/${currentChannel}`)
-            }, '', 'Focalboard Workspace')
+            }, '', 'Boards Workspace')
             this.registry.registerCustomRoute('/', MainApp)
         }
     }

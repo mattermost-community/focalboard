@@ -7,7 +7,6 @@
   "BoardComponent.no-property": "Sense {property}",
   "BoardComponent.no-property-title": "Els elements amb una propietat {property} buida anirán aquí. Aquesta col·lumna no pot elimiar-se.",
   "BoardComponent.show": "Mostrar",
-  "BoardPage.syncFailed": "El tauler pot ser elimiat o s'en pot revocar l'accés.",
   "CardDetail.add-content": "Afegeix contingut",
   "CardDetail.add-icon": "Afegeix icona",
   "CardDetail.add-property": "+ Afegeix propietat",
