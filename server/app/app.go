@@ -5,9 +5,10 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/metrics"
-	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/webhook"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
 )
