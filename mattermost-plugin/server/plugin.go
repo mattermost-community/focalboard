@@ -247,9 +247,8 @@ func getFirstLink(str string) string {
 	firstLink := ""
 
 	markdown.Inspect(str, func(blockOrInline interface{}) bool {
-		switch v := blockOrInline.(type) {
-		case *markdown.Autolink:
-			if link := v.Destination(); firstLink == "" {
+		if _, ok := blockOrInline.(*markdown.Autolink); ok {
+			if link := blockOrInline.(*markdown.Autolink).Destination(); firstLink == "" {
 				firstLink = link
 			}
 		}
