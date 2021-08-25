@@ -9,7 +9,6 @@ import (
 
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
-	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
@@ -20,6 +19,7 @@ import (
 	"github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
 	"github.com/mattermost/mattermost-server/v6/shared/markdown"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const PostEmbedFocalboard model.PostEmbedType = "focalboard"
@@ -103,7 +103,7 @@ func (p *Plugin) OnActivate() error {
 		filesS3Config.Trace = *mmconfig.FileSettings.AmazonS3Trace
 	}
 
-	logger := mlog.NewLogger()
+	logger, _ := mlog.NewLogger()
 	cfgJSON := defaultLoggingConfig()
 	err := logger.Configure("", cfgJSON)
 	if err != nil {
