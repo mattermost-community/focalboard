@@ -1,4 +1,4 @@
-.focalboard-body .ValueSelector {
+.ValueSelector {
     width: 100%;
     border-radius: var(--default-rad);
     color: rgb(var(--center-channel-color-rgb));
@@ -79,7 +79,7 @@
     }
 }
 
-.focalboard-body .label-container > .Label {
+.label-container > .Label {
     max-width: 600px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -88,7 +88,7 @@
 
 }
 
-.focalboard-body .octo-property-value > .Label {
+.octo-property-value > .Label {
     max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
