@@ -1,4 +1,10 @@
 .Table {
+    margin-top: 16px;
+    padding-bottom: 0 !important;
+    overflow: auto;
+    position: relative;
+    flex: 1;
+
     .octo-group-header-cell {
         display: flex;
         flex-shrink: 0;
@@ -23,7 +29,7 @@
         .IconButton {
             background-color: unset;
             &:hover:not(.readonly) {
-                background-color: rgba(var(--body-color), 0.1);
+                background-color: rgba(var(--center-channel-color-rgb), 0.1);
             }
             &.readonly {
                 opacity: .5;
@@ -37,7 +43,7 @@
             border-radius: 3px;
             line-height: 20px;
             margin-right: 5px;
-            color: rgba(var(--body-color), 1);
+            color: rgba(var(--center-channel-color-rgb), 1);
             white-space: nowrap;
             text-transform: none;
             font-weight: normal;
@@ -51,7 +57,7 @@
                 font-weight: normal;
                 font-size: 16px;
                 //     line-height: 20px;
-                color: rgba(var(--body-color), 1);
+                color: rgba(var(--center-channel-color-rgb), 1);
             }
         }
 
@@ -72,8 +78,8 @@
         flex: 0 0 auto;
         display: flex;
         flex-direction: row;
-        color: rgb(var(--body-color));
-        border-right: solid 1px rgba(var(--body-color), 0.09);
+        color: rgb(var(--center-channel-color-rgb));
+        border-right: solid 1px rgba(var(--center-channel-color-rgb), 0.09);
         border-left: 1px solid transparent;
         border-top: 1px solid transparent;
         border-bottom: 1px solid transparent;
@@ -83,9 +89,10 @@
         font-size: 14px;
         position: relative;
         text-overflow: ellipsis;
+        align-items: center;
 
         &:hover {
-            background-color: rgba(var(--body-color), 0.05);
+            background-color: rgba(var(--center-channel-color-rgb), 0.05);
         }
 
         &.title-cell {
@@ -97,6 +104,7 @@
 
             .octo-icon {
                 min-width: 20px;
+                margin-top: 3px;
             }
 
             .Editable {
@@ -122,7 +130,6 @@
 
         .Editable {
             padding: 0 5px;
-            display: relative;
             left: -5px;
         }
 
@@ -148,12 +155,10 @@
         }
     }
 
-    &.octo-table-body {
+    .octo-table-body {
         display: flex;
-        flex: 1;
         flex-direction: column;
-        overflow: auto;
-        position: relative;
+        width: fit-content;
     }
 
     .octo-table-header,
@@ -161,8 +166,7 @@
     .octo-table-footer {
         display: flex;
         flex-direction: row;
-
-        border-bottom: solid 1px rgba(var(--body-color), 0.09);
+        border-bottom: solid 1px rgba(var(--center-channel-color-rgb), 0.09);
         &.hidden {
             display: none;
         }
@@ -170,31 +174,34 @@
 
     .octo-table-header {
         position: sticky;
-        top: 0;
+        top: -2px;
         z-index: 1;
-        background: rgb(var(--main-bg));
+        background: rgb(var(--center-channel-bg-rgb));
+        width: fit-content;
 
         .octo-table-cell {
-            color: rgba(var(--body-color), 0.6);
-            background: rgb(var(--main-bg));
+            color: rgba(var(--center-channel-color-rgb), 0.6);
+            background: rgb(var(--center-channel-bg-rgb));
 
             .Label {
-                color: rgba(var(--body-color), 0.6);
+                color: rgba(var(--center-channel-color-rgb), 0.6);
             }
         }
     }
 
+    .table-row-container {
+        width: fit-content;
+    }
+
     .octo-table-footer {
         .octo-table-cell {
-            color: rgba(var(--body-color), 0.6);
+            color: rgba(var(--center-channel-color-rgb), 0.6);
             cursor: pointer;
-
             width: 100%;
-            border-right: none;
             padding-left: 15px;
 
             &:hover {
-                background-color: rgba(var(--body-color), 0.08);
+                background-color: rgba(var(--center-channel-color-rgb), 0.08);
             }
         }
     }

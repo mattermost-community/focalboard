@@ -21,7 +21,7 @@ type Props = {
 const AddContentMenuItem = React.memo((props:Props): JSX.Element => {
     const {card, type, cords} = props
     const index = cords.x
-    const contentOrder = card.contentOrder.slice()
+    const contentOrder = card.fields.contentOrder.slice()
     const intl = useIntl()
 
     const handler = contentRegistry.getHandler(type)
@@ -46,7 +46,7 @@ const AddContentMenuItem = React.memo((props:Props): JSX.Element => {
                 const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
                 mutator.performAsUndoGroup(async () => {
                     await mutator.insertBlock(newBlock, description)
-                    await mutator.changeCardContentOrder(card, contentOrder, description)
+                    await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder, description)
                 })
             }}
         />

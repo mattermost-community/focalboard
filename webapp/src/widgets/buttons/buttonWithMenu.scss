@@ -9,20 +9,20 @@
 
     .button-text {
         padding: 3px 10px;
-        background-color: rgb(var(--button-bg));
-        color: rgb(var(--button-fg));
+        background-color: rgb(var(--button-bg-rgb));
+        color: rgb(var(--button-color-rgb));
         border-radius: 5px 0 0 5px;
         transition: background 100ms ease-out 0s;
         height: 100%;
 
         &:hover {
-            background-color: rgba(var(--button-bg), 0.8);
+            background-color: rgba(var(--button-bg-rgb), 0.8);
         }
     }
 
     .button-dropdown {
-        background-color: rgb(var(--button-bg));
-        border-left: 1px solid rgba(var(--button-fg), 0.2);
+        background-color: rgb(var(--button-bg-rgb));
+        border-left: 1px solid rgba(var(--button-color-rgb), 0.2);
         display: flex;
         padding: 0 3px;
         align-items: center;
@@ -31,10 +31,10 @@
         height: 100%;
 
         &:hover {
-            background-color: rgba(var(--button-bg), 0.8);
+            background-color: rgba(var(--button-bg-rgb), 0.8);
         }
         .DropdownIcon {
-            color: rgb(var(--button-fg));
+            color: rgb(var(--button-color-rgb));
         }
     }
 }

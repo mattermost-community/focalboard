@@ -14,29 +14,29 @@
     color: inherit;
 
     &:hover {
-        background-color: rgba(var(--body-color), 0.1);
+        background-color: rgba(var(--center-channel-color-rgb), 0.1);
     }
 
     &.filled {
         color: #ffffff;
-        background-color: rgb(var(--button-bg));
+        background-color: rgb(var(--button-bg-rgb));
         padding: 6px 12px;
 
         &:hover {
-            background-color: rgb(var(--button-bg), 0.8);
+            background-color: rgb(var(--button-bg-rgb), 0.8);
         }
     }
 
     &.emphasis--secondary {
-        border: 1px solid rgb(var(--button-bg));
-        color: rgb(var(--button-bg));
+        border: 1px solid rgb(var(--button-bg-rgb));
+        color: rgb(var(--button-bg-rgb));
 
         &:hover {
-            background-color: rgb(var(--button-bg), 0.08);
+            background-color: rgb(var(--button-bg-rgb), 0.08);
         }
 
         &:active {
-            background-color: rgb(var(--button-bg), 0.16);
+            background-color: rgb(var(--button-bg-rgb), 0.16);
         }
     }
 

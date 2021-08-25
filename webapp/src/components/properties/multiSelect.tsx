@@ -25,25 +25,27 @@ const MultiSelectProperty = (props: Props): JSX.Element => {
     const {propertyTemplate, emptyValue, propertyValue, isEditable, onChange, onChangeColor, onDeleteOption, onCreate, onDeleteValue} = props
     const [open, setOpen] = useState(false)
 
-    const values = Array.isArray(propertyValue) ?
-        propertyValue.map((v) => propertyTemplate.options.find((o) => o!.id === v)).filter((v): v is IPropertyOption => Boolean(v)) :
-        []
+    const values = Array.isArray(propertyValue) && propertyValue.length > 0 ? propertyValue.map((v) => propertyTemplate.options.find((o) => o!.id === v)).filter((v): v is IPropertyOption => Boolean(v)) : []
 
     if (!isEditable || !open) {
         return (
             <div
                 className='octo-propertyvalue'
                 tabIndex={0}
+                data-testid='multiselect-non-editable'
                 onClick={() => setOpen(true)}
             >
                 {values.map((v) => (
                     <Label
                         key={v.id}
-                        color={v ? v.color : 'empty'}
+                        color={v.color}
                     >
                         {v.value}
                     </Label>
                 ))}
+                {values.length === 0 && (
+                    <Label color='empty'>{''}</Label>
+                )}
             </div>
         )
     }

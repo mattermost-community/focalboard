@@ -3,8 +3,8 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import {IContentBlock} from '../../blocks/contentBlock'
-import {MutableTextBlock} from '../../blocks/textBlock'
+import {ContentBlock} from '../../blocks/contentBlock'
+import {createTextBlock} from '../../blocks/textBlock'
 import mutator from '../../mutator'
 import TextIcon from '../../widgets/icons/text'
 import {MarkdownEditor} from '../markdownEditor'
@@ -12,7 +12,7 @@ import {MarkdownEditor} from '../markdownEditor'
 import {contentRegistry} from './contentRegistry'
 
 type Props = {
-    block: IContentBlock
+    block: ContentBlock
     readonly: boolean
 }
 
@@ -25,7 +25,7 @@ const TextElement = React.memo((props: Props): JSX.Element => {
             text={block.title}
             placeholderText={intl.formatMessage({id: 'ContentBlock.editText', defaultMessage: 'Edit text...'})}
             onBlur={(text) => {
-                mutator.changeTitle(block, text, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card text'}))
+                mutator.changeTitle(block.id, block.title, text, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card text'}))
             }}
             readonly={readonly}
         />
@@ -37,7 +37,7 @@ contentRegistry.registerContentType({
     getDisplayText: (intl) => intl.formatMessage({id: 'ContentBlock.text', defaultMessage: 'text'}),
     getIcon: () => <TextIcon/>,
     createBlock: async () => {
-        return new MutableTextBlock()
+        return createTextBlock()
     },
     createComponent: (block, readonly) => {
         return (

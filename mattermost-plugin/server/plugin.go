@@ -15,8 +15,8 @@ import (
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
 
-	"github.com/mattermost/mattermost-server/v5/model"
-	"github.com/mattermost/mattermost-server/v5/plugin"
+	"github.com/mattermost/mattermost-server/v6/model"
+	"github.com/mattermost/mattermost-server/v6/plugin"
 )
 
 // Plugin implements the interface expected by the Mattermost server to communicate between the server and plugin processes.
@@ -142,7 +142,9 @@ func (p *Plugin) OnActivate() error {
 		db = layeredStore
 	}
 
-	server, err := server.New(cfg, "", db, logger)
+	serverID := client.System.GetDiagnosticID()
+
+	server, err := server.New(cfg, "", db, logger, serverID)
 	if err != nil {
 		fmt.Println("ERROR INITIALIZING THE SERVER", err)
 		return err
@@ -181,9 +183,10 @@ func defaultLoggingConfig() string {
 			"format": "plain",
 			"format_options": {
 				"delim": " ",
-				"min_level_len": 5,
-				"min_msg_len": 40,
-				"enable_color": true
+				"min_level_len": 0,
+				"min_msg_len": 0,
+				"enable_color": false,
+				"enable_caller": true
 			},
 			"levels": [
 				{"id": 5, "name": "debug"},

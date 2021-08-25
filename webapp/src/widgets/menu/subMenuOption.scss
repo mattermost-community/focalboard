@@ -1,18 +1,31 @@
+.Menu .menu-options .SubMenuOption.open-left {
+    padding: 4px 5px;
+    .menu-name {
+        margin-left: 0;
+    }
+}
+
 .SubMenuOption {
     position: relative;
+
+    &.open-left {
+        .SubmenuTriangleIcon {
+            position: relative;
+            left: 5px;
+            transform: rotate(180deg)
+        }
+    }
 
     .SubMenu {
         position: absolute;
         z-index: 16;
         min-width: 180px;
-        background-color: rgb(var(--main-bg));
-        color: rgb(var(--body-color));
+        background-color: rgb(var(--center-channel-bg-rgb));
+        color: rgb(var(--center-channel-color-rgb));
         margin: 0 !important;
 
-        border-radius: 3px;
-        box-shadow: rgba(var(--body-color), 0.05) 0px 0px 0px 1px,
-            rgba(var(--body-color), 0.1) 0px 3px 6px,
-            rgba(var(--body-color), 0.2) 0px 9px 24px;
+        border-radius: var(--default-rad);
+        box-shadow: var(--elevation-4);
         left: 100%;
         &.top {
             bottom: 0;
@@ -20,11 +33,20 @@
         &.bottom {
             top: 0;
         }
+        &.left {
+            left: -100%;
+            right: 100%;
+        }
+        &.left-bottom {
+            left: -100%;
+            right: 100%;
+            top: 0;
+        }
     }
 
     @media screen and (max-width: 430px) {
         .SubMenu {
-            background-color: rgba(var(--body-color), 0.8) !important;
+            background-color: rgba(var(--center-channel-color-rgb), 0.8) !important;
         }
     }
 }

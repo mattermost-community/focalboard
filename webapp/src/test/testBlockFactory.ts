@@ -1,24 +1,24 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {Board, IPropertyOption, IPropertyTemplate, MutableBoard} from '../blocks/board'
-import {MutableBoardView} from '../blocks/boardView'
-import {Card, MutableCard} from '../blocks/card'
-import {MutableCommentBlock} from '../blocks/commentBlock'
-import {DividerBlock, MutableDividerBlock} from '../blocks/dividerBlock'
-import {FilterClause} from '../blocks/filterClause'
-import {FilterGroup} from '../blocks/filterGroup'
-import {ImageBlock, MutableImageBlock} from '../blocks/imageBlock'
-import {MutableTextBlock, TextBlock} from '../blocks/textBlock'
+import {Board, IPropertyOption, IPropertyTemplate, createBoard} from '../blocks/board'
+import {BoardView, createBoardView} from '../blocks/boardView'
+import {Card, createCard} from '../blocks/card'
+import {CommentBlock, createCommentBlock} from '../blocks/commentBlock'
+import {DividerBlock, createDividerBlock} from '../blocks/dividerBlock'
+import {createFilterClause} from '../blocks/filterClause'
+import {createFilterGroup} from '../blocks/filterGroup'
+import {ImageBlock, createImageBlock} from '../blocks/imageBlock'
+import {TextBlock, createTextBlock} from '../blocks/textBlock'
 
 class TestBlockFactory {
-    static createBoard(): MutableBoard {
-        const board = new MutableBoard()
+    static createBoard(): Board {
+        const board = createBoard()
         board.rootId = board.id
         board.title = 'board title'
-        board.description = 'description'
-        board.showDescription = true
-        board.icon = 'i'
+        board.fields.description = 'description'
+        board.fields.showDescription = true
+        board.fields.icon = 'i'
 
         for (let i = 0; i < 3; i++) {
             const propertyOption: IPropertyOption = {
@@ -32,22 +32,22 @@ class TestBlockFactory {
                 type: 'select',
                 options: [propertyOption],
             }
-            board.cardProperties.push(propertyTemplate)
+            board.fields.cardProperties.push(propertyTemplate)
         }
 
         return board
     }
 
-    static createBoardView(board?: Board): MutableBoardView {
-        const view = new MutableBoardView()
+    static createBoardView(board?: Board): BoardView {
+        const view = createBoardView()
         view.parentId = board ? board.id : 'parent'
         view.rootId = board ? board.rootId : 'root'
         view.title = 'view title'
-        view.viewType = 'board'
-        view.groupById = 'property1'
-        view.hiddenOptionIds = ['value1']
-        view.cardOrder = ['card1', 'card2', 'card3']
-        view.sortOptions = [
+        view.fields.viewType = 'board'
+        view.fields.groupById = 'property1'
+        view.fields.hiddenOptionIds = ['value1']
+        view.fields.cardOrder = ['card1', 'card2', 'card3']
+        view.fields.sortOptions = [
             {
                 propertyId: 'property1',
                 reversed: true,
@@ -57,36 +57,36 @@ class TestBlockFactory {
                 reversed: false,
             },
         ]
-        view.columnWidths = {
+        view.fields.columnWidths = {
             column1: 100,
             column2: 200,
         }
 
         // Filter
-        const filterGroup = new FilterGroup()
-        const filter = new FilterClause()
+        const filterGroup = createFilterGroup()
+        const filter = createFilterClause()
         filter.propertyId = 'property1'
         filter.condition = 'includes'
         filter.values = ['value1']
         filterGroup.filters.push(filter)
-        view.filter = filterGroup
+        view.fields.filter = filterGroup
 
         return view
     }
 
-    static createCard(board?: Board): MutableCard {
-        const card = new MutableCard()
+    static createCard(board?: Board): Card {
+        const card = createCard()
         card.parentId = board ? board.id : 'parent'
         card.rootId = board ? board.rootId : 'root'
         card.title = 'title'
-        card.icon = 'i'
-        card.properties.property1 = 'value1'
+        card.fields.icon = 'i'
+        card.fields.properties.property1 = 'value1'
 
         return card
     }
 
-    static createComment(card: Card): MutableCommentBlock {
-        const block = new MutableCommentBlock()
+    static createComment(card: Card): CommentBlock {
+        const block = createCommentBlock()
         block.parentId = card.id
         block.rootId = card.rootId
         block.title = 'title'
@@ -95,7 +95,7 @@ class TestBlockFactory {
     }
 
     static createText(card: Card): TextBlock {
-        const block = new MutableTextBlock()
+        const block = createTextBlock()
         block.parentId = card.id
         block.rootId = card.rootId
         block.title = 'title'
@@ -104,16 +104,16 @@ class TestBlockFactory {
     }
 
     static createImage(card: Card): ImageBlock {
-        const block = new MutableImageBlock()
+        const block = createImageBlock()
         block.parentId = card.id
         block.rootId = card.rootId
-        block.fileId = 'fileId'
+        block.fields.fileId = 'fileId'
 
         return block
     }
 
     static createDivider(card: Card): DividerBlock {
-        const block = new MutableDividerBlock()
+        const block = createDividerBlock()
         block.parentId = card.id
         block.rootId = card.rootId
         block.title = 'title'

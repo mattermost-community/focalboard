@@ -6,6 +6,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/mlog"
+	"github.com/mattermost/focalboard/server/utils"
 
 	sq "github.com/Masterminds/squirrel"
 )
@@ -43,6 +44,7 @@ func (s *SQLStore) UpsertWorkspaceSignupToken(workspace model.Workspace) error {
 
 func (s *SQLStore) UpsertWorkspaceSettings(workspace model.Workspace) error {
 	now := time.Now().Unix()
+	signupToken := utils.CreateGUID()
 
 	settingsJSON, err := json.Marshal(workspace.Settings)
 	if err != nil {
@@ -53,12 +55,14 @@ func (s *SQLStore) UpsertWorkspaceSettings(workspace model.Workspace) error {
 		Insert(s.tablePrefix+"workspaces").
 		Columns(
 			"id",
+			"signup_token",
 			"settings",
 			"modified_by",
 			"update_at",
 		).
 		Values(
 			workspace.ID,
+			signupToken,
 			settingsJSON,
 			workspace.ModifiedBy,
 			now,

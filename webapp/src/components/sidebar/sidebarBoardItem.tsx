@@ -21,7 +21,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import './sidebarBoardItem.scss'
 
 type Props = {
-    views: readonly BoardView[]
+    views: BoardView[]
     board: Board
     activeBoardId?: string
     activeViewId?: string
@@ -107,7 +107,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                     className='octo-sidebar-title'
                     title={displayTitle}
                 >
-                    {board.icon ? `${board.icon} ${displayTitle}` : displayTitle}
+                    {board.fields.icon ? `${board.fields.icon} ${displayTitle}` : displayTitle}
                 </div>
                 <MenuWrapper stopPropagationOnToggle={true}>
                     <IconButton icon={<OptionsIcon/>}/>
@@ -122,7 +122,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                                     intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'}),
                                     async () => {
                                         if (props.nextBoardId) {
-                                            // This delay is needed because OctoListener has a default 100 ms notification delay before updates
+                                            // This delay is needed because WSClient has a default 100 ms notification delay before updates
                                             setTimeout(() => {
                                                 showBoard(props.nextBoardId)
                                             }, 120)
@@ -140,7 +140,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                             name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
                             icon={<DuplicateIcon/>}
                             onClick={() => {
-                                duplicateBoard(board.id)
+                                duplicateBoard(board.id || '')
                             }}
                         />
 
@@ -148,7 +148,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                             id='templateFromBoard'
                             name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}
                             onClick={() => {
-                                addTemplateFromBoard(board.id)
+                                addTemplateFromBoard(board.id || '')
                             }}
                         />
                     </Menu>
@@ -167,7 +167,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                     className={`octo-sidebar-item subitem ${view.id === props.activeViewId ? 'active' : ''}`}
                     onClick={() => showView(view.id, board.id)}
                 >
-                    {iconForViewType(view.viewType)}
+                    {iconForViewType(view.fields.viewType)}
                     <div
                         className='octo-sidebar-title'
                         title={view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}

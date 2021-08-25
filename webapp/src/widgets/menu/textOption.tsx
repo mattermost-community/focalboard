@@ -18,6 +18,8 @@ function TextOption(props:TextOptionProps): JSX.Element {
     }
     return (
         <div
+            role='button'
+            aria-label={name}
             className={className}
             onClick={(e: React.MouseEvent) => {
                 e.target.dispatchEvent(new Event('menuItemClicked'))

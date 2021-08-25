@@ -9,11 +9,11 @@
         min-width: 100px;
     }
     &::placeholder {
-        color: rgba(var(--body-color), 0.4);
+        color: rgba(var(--center-channel-color-rgb), 0.4);
         opacity: 1;
     }
     &.error {
-        border: 1px solid var(--error-color);
+        border: 1px solid var(--error-text-rgb);
         border-radius: var(--default-rad);
     }
     &.readonly {

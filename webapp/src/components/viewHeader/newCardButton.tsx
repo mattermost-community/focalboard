@@ -4,16 +4,17 @@
 import React from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import {BoardTree} from '../../viewModel/boardTree'
+import {Card} from '../../blocks/card'
 import ButtonWithMenu from '../../widgets/buttons/buttonWithMenu'
 import CardIcon from '../../widgets/icons/card'
 import AddIcon from '../../widgets/icons/add'
 import Menu from '../../widgets/menu'
+import {useAppSelector} from '../../store/hooks'
+import {getCurrentBoardTemplates} from '../../store/cards'
 
 import NewCardButtonTemplateItem from './newCardButtonTemplateItem'
 
 type Props = {
-    boardTree: BoardTree
     addCard: () => void
     addCardFromTemplate: (cardTemplateId: string) => void
     addCardTemplate: () => void
@@ -21,7 +22,7 @@ type Props = {
 }
 
 const NewCardButton = React.memo((props: Props): JSX.Element => {
-    const {boardTree} = props
+    const cardTemplates: Card[] = useAppSelector(getCurrentBoardTemplates)
     const intl = useIntl()
 
     return (
@@ -37,7 +38,7 @@ const NewCardButton = React.memo((props: Props): JSX.Element => {
             )}
         >
             <Menu position='left'>
-                {boardTree.cardTemplates.length > 0 && <>
+                {cardTemplates.length > 0 && <>
                     <Menu.Label>
                         <b>
                             <FormattedMessage
@@ -50,7 +51,7 @@ const NewCardButton = React.memo((props: Props): JSX.Element => {
                     <Menu.Separator/>
                 </>}
 
-                {boardTree.cardTemplates.map((cardTemplate) => (
+                {cardTemplates.map((cardTemplate) => (
                     <NewCardButtonTemplateItem
                         key={cardTemplate.id}
                         cardTemplate={cardTemplate}

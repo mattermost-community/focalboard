@@ -3,106 +3,79 @@
 import React from 'react'
 import {useIntl, IntlShape} from 'react-intl'
 
-import {IContentBlockWithCords, IContentBlock} from '../../blocks/contentBlock'
-import {MutableTextBlock} from '../../blocks/textBlock'
-import mutator from '../../mutator'
-import {CardTree} from '../../viewModel/cardTree'
+import {IContentBlockWithCords, ContentBlock as ContentBlockType} from '../../blocks/contentBlock'
 import {Card} from '../../blocks/card'
+import {createTextBlock} from '../../blocks/textBlock'
+import mutator from '../../mutator'
 import {useSortableWithGrip} from '../../hooks/sortable'
 
 import ContentBlock from '../contentBlock'
 import {MarkdownEditor} from '../markdownEditor'
 
+import {dragAndDropRearrange} from './cardDetailContentsUtility'
+
 export type Position = 'left' | 'right' | 'above' | 'below' | 'aboveRow' | 'belowRow'
 
 type Props = {
-    cardTree: CardTree
+    id?: string
+    card: Card
+    contents: Array<ContentBlockType|ContentBlockType[]>
     readonly: boolean
 }
 
 function addTextBlock(card: Card, intl: IntlShape, text: string): void {
-    const block = new MutableTextBlock()
+    const block = createTextBlock()
     block.parentId = card.id
     block.rootId = card.rootId
     block.title = text
 
-    const contentOrder = card.contentOrder.slice()
+    const contentOrder = card.fields.contentOrder.slice()
     contentOrder.push(block.id)
     mutator.performAsUndoGroup(async () => {
         const description = intl.formatMessage({id: 'CardDetail.addCardText', defaultMessage: 'add card text'})
         await mutator.insertBlock(block, description)
-        await mutator.changeCardContentOrder(card, contentOrder, description)
+        await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder, description)
     })
 }
 
 function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: IContentBlockWithCords, intl: IntlShape, moveTo: Position): void {
-    const contentOrder = card.contentOrder.slice()
+    const contentOrder: Array<string|string[]> = []
+    if (card.fields.contentOrder) {
+        for (const contentId of card.fields.contentOrder) {
+            if (typeof contentId === 'string') {
+                contentOrder.push(contentId)
+            } else {
+                contentOrder.push(contentId.slice())
+            }
+        }
+    }
 
     const srcBlockId = srcBlock.block.id
     const dstBlockId = dstBlock.block.id
 
     const srcBlockX = srcBlock.cords.x
-    let dstBlockX = dstBlock.cords.x
+    const dstBlockX = dstBlock.cords.x
 
     const srcBlockY = (srcBlock.cords.y || srcBlock.cords.y === 0) && (srcBlock.cords.y > -1) ? srcBlock.cords.y : -1
-    let dstBlockY = (dstBlock.cords.y || dstBlock.cords.y === 0) && (dstBlock.cords.y > -1) ? dstBlock.cords.y : -1
+    const dstBlockY = (dstBlock.cords.y || dstBlock.cords.y === 0) && (dstBlock.cords.y > -1) ? dstBlock.cords.y : -1
 
     if (srcBlockId === dstBlockId) {
         return
     }
 
-    // Delete Src Block
-    if (srcBlockY > -1) {
-        (contentOrder[srcBlockX] as string[]).splice(srcBlockY, 1)
-
-        if (contentOrder[srcBlockX].length === 1) {
-            contentOrder.splice(srcBlockX, 1, contentOrder[srcBlockX][0])
-        }
-    } else {
-        contentOrder.splice(srcBlockX, 1)
-
-        if (dstBlockX > srcBlockX) {
-            dstBlockX -= 1
-        }
-    }
-
-    if (moveTo === 'right') {
-        if (dstBlockY > -1) {
-            if (dstBlockX === srcBlockX && dstBlockY > srcBlockY) {
-                dstBlockY -= 1
-            }
-
-            (contentOrder[dstBlockX] as string[]).splice(dstBlockY + 1, 0, srcBlockId)
-        } else {
-            contentOrder.splice(dstBlockX, 1, [dstBlockId, srcBlockId])
-        }
-    } else if (moveTo === 'left') {
-        if (dstBlockY > -1) {
-            if (dstBlockX === srcBlockX && dstBlockY > srcBlockY) {
-                dstBlockY -= 1
-            }
-
-            (contentOrder[dstBlockX] as string[]).splice(dstBlockY, 0, srcBlockId)
-        } else {
-            contentOrder.splice(dstBlockX, 1, [srcBlockId, dstBlockId])
-        }
-    } else if (moveTo === 'aboveRow') {
-        contentOrder.splice(dstBlockX, 0, srcBlockId)
-    } else if (moveTo === 'belowRow') {
-        contentOrder.splice(dstBlockX + 1, 0, srcBlockId)
-    }
+    const newContentOrder = dragAndDropRearrange({contentOrder, srcBlockId, srcBlockX, srcBlockY, dstBlockId, dstBlockX, dstBlockY, moveTo})
 
     mutator.performAsUndoGroup(async () => {
         const description = intl.formatMessage({id: 'CardDetail.moveContent', defaultMessage: 'move card content'})
-        await mutator.changeCardContentOrder(card, contentOrder, description)
+        await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, newContentOrder, description)
     })
 }
 
 type ContentBlockWithDragAndDropProps = {
-    block: IContentBlock | IContentBlock[],
+    block: ContentBlockType | ContentBlockType[],
     x: number,
     card: Card,
-    cardTree: CardTree,
+    contents: Array<ContentBlockType|ContentBlockType[]>,
     intl: IntlShape,
     readonly: boolean,
 }
@@ -129,13 +102,13 @@ const ContentBlockWithDragAndDrop = (props: ContentBlockWithDragAndDropProps) =>
                             block={b}
                             card={props.card}
                             readonly={props.readonly}
-                            width={(1 / (props.block as IContentBlock[]).length) * 100}
+                            width={(1 / (props.block as ContentBlockType[]).length) * 100}
                             onDrop={(src, dst, moveTo) => moveBlock(props.card, src, dst, props.intl, moveTo)}
                             cords={{x: props.x, y}}
                         />
                     ))}
                 </div>
-                {props.x === props.cardTree.contents.length - 1 && (
+                {props.x === props.contents.length - 1 && (
                     <div
                         ref={itemRef2}
                         className={`addToRow ${isOver2 ? 'dragover' : ''}`}
@@ -162,7 +135,7 @@ const ContentBlockWithDragAndDrop = (props: ContentBlockWithDragAndDropProps) =>
                 onDrop={(src, dst, moveTo) => moveBlock(props.card, src, dst, props.intl, moveTo)}
                 cords={{x: props.x}}
             />
-            {props.x === props.cardTree.contents.length - 1 && (
+            {props.x === props.contents.length - 1 && (
                 <div
                     ref={itemRef2}
                     className={`addToRow ${isOver2 ? 'dragover' : ''}`}
@@ -176,22 +149,18 @@ const ContentBlockWithDragAndDrop = (props: ContentBlockWithDragAndDropProps) =>
 
 const CardDetailContents = React.memo((props: Props) => {
     const intl = useIntl()
-    const {cardTree} = props
-    if (!cardTree) {
-        return null
-    }
-    const {card} = cardTree
-    if (cardTree.contents.length > 0) {
+    const {contents, card, id} = props
+    if (contents.length) {
         return (
             <div className='octo-content'>
-                {cardTree.contents.map((block, x) =>
+                {contents.map((block, x) =>
                     (
                         <ContentBlockWithDragAndDrop
                             key={x}
                             block={block}
                             x={x}
                             card={card}
-                            cardTree={cardTree}
+                            contents={contents}
                             intl={intl}
                             readonly={props.readonly}
                         />
@@ -201,11 +170,12 @@ const CardDetailContents = React.memo((props: Props) => {
         )
     }
     return (
-        <div className='octo-content'>
+        <div className='octo-content CardDetailContents'>
             <div className='octo-block'>
                 <div className='octo-block-margin'/>
                 {!props.readonly &&
                     <MarkdownEditor
+                        id={id}
                         text=''
                         placeholderText='Add a description...'
                         onBlur={(text) => {

@@ -5,10 +5,10 @@ import React, {useState, useEffect} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Constants} from '../../constants'
-import {IPropertyOption} from '../../blocks/board'
+import {IPropertyOption, Board, IPropertyTemplate, BoardGroup} from '../../blocks/board'
+import {BoardView} from '../../blocks/boardView'
 import {useSortable} from '../../hooks/sortable'
 import mutator from '../../mutator'
-import {BoardTree, BoardTreeGroup} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
 import IconButton from '../../widgets/buttons/iconButton'
 import AddIcon from '../../widgets/icons/add'
@@ -22,8 +22,10 @@ import Editable from '../../widgets/editable'
 import Label from '../../widgets/label'
 
 type Props = {
-    boardTree: BoardTree
-    group: BoardTreeGroup
+    board: Board
+    activeView: BoardView
+    group: BoardGroup
+    groupByProperty?: IPropertyTemplate
     readonly: boolean
     hideGroup: (groupByOptionId: string) => void
     addCard: (groupByOptionId?: string) => Promise<void>
@@ -32,8 +34,7 @@ type Props = {
 }
 
 const TableGroupHeaderRow = React.memo((props: Props): JSX.Element => {
-    const {boardTree, group} = props
-    const {activeView} = boardTree
+    const {board, activeView, group, groupByProperty} = props
     const [groupTitle, setGroupTitle] = useState(group.option.value)
 
     const [isDragging, isOver, groupHeaderRef] = useSortable('groupHeader', group.option, !props.readonly, props.onDrop)
@@ -46,12 +47,12 @@ const TableGroupHeaderRow = React.memo((props: Props): JSX.Element => {
     if (isOver) {
         className += ' dragover'
     }
-    if (activeView.collapsedOptionIds.indexOf(group.option.id || 'undefined') < 0) {
+    if (activeView.fields.collapsedOptionIds.indexOf(group.option.id || 'undefined') < 0) {
         className += ' expanded'
     }
 
     const columnWidth = (templateId: string): number => {
-        return Math.max(Constants.minColumnWidth, props.boardTree.activeView.columnWidths[templateId] || 0)
+        return Math.max(Constants.minColumnWidth, props.activeView.fields.columnWidths[templateId] || 0)
     }
 
     return (
@@ -76,13 +77,13 @@ const TableGroupHeaderRow = React.memo((props: Props): JSX.Element => {
                         title={intl.formatMessage({
                             id: 'BoardComponent.no-property-title',
                             defaultMessage: 'Items with an empty {property} property will go here. This column cannot be removed.',
-                        }, {property: boardTree.groupByProperty!.name})}
+                        }, {property: groupByProperty?.name})}
                     >
                         <FormattedMessage
                             id='BoardComponent.no-property'
                             defaultMessage='No {property}'
                             values={{
-                                property: boardTree.groupByProperty!.name,
+                                property: groupByProperty?.name,
                             }}
                         />
                     </Label>}
@@ -124,7 +125,7 @@ const TableGroupHeaderRow = React.memo((props: Props): JSX.Element => {
                                         id='delete'
                                         icon={<DeleteIcon/>}
                                         name={intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
-                                        onClick={() => mutator.deletePropertyOption(boardTree, boardTree.groupByProperty!, group.option)}
+                                        onClick={() => mutator.deletePropertyOption(board, groupByProperty!, group.option)}
                                     />
                                     <Menu.Separator/>
                                     {Object.entries(Constants.menuColors).map(([key, color]) => (
@@ -132,7 +133,7 @@ const TableGroupHeaderRow = React.memo((props: Props): JSX.Element => {
                                             key={key}
                                             id={key}
                                             name={color}
-                                            onClick={() => mutator.changePropertyOptionColor(boardTree.board, boardTree.groupByProperty!, group.option, key)}
+                                            onClick={() => mutator.changePropertyOptionColor(board, groupByProperty!, group.option, key)}
                                         />
                                     ))}
                                 </>}

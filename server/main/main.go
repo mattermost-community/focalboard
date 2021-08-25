@@ -165,7 +165,7 @@ func main() {
 		logger.Fatal("server.NewStore ERROR", mlog.Err(err))
 	}
 
-	server, err := server.New(config, singleUserToken, db, logger)
+	server, err := server.New(config, singleUserToken, db, logger, "")
 	if err != nil {
 		logger.Fatal("server.New ERROR", mlog.Err(err))
 	}
@@ -245,7 +245,7 @@ func startServer(webPath string, filesPath string, port int, singleUserToken, db
 		logger.Fatal("server.NewStore ERROR", mlog.Err(err))
 	}
 
-	pServer, err = server.New(config, singleUserToken, db, logger)
+	pServer, err = server.New(config, singleUserToken, db, logger, "")
 	if err != nil {
 		logger.Fatal("server.New ERROR", mlog.Err(err))
 	}
@@ -281,7 +281,8 @@ func defaultLoggingConfig() string {
 				"delim": " ",
 				"min_level_len": 5,
 				"min_msg_len": 40,
-				"enable_color": true				
+				"enable_color": true,
+				"enable_caller": true
 			},
 			"levels": [
 				{"id": 5, "name": "debug"},
