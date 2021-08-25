@@ -22,49 +22,68 @@
     }
 
     .boardCount {
-        color: rgba(var(--center-channel-color-rgb), 0.9);
-        font-size: 10px;
-        text-transform: uppercase;
+        color: rgba(var(--center-channel-color-rgb), 0.56);
+        font-size: 12px;
     }
 }
 
 .WorkspaceOptions {
+    font-weight: 400;
+
+    &__menu-list {
+        padding-bottom: 0 !important;
+
+        > div {
+            height: 56px;
+            display: flex;
+            justify-content: center;
+
+            &.focused {
+                background: rgba(var(--center-channel-color-rgb), 0.08);
+            }
+        }
+    }
+
+    &__placeholder {
+        color: rgba(var(--center-channel-color-rgb), 0.64);
+    }
+
     &__indicators{
-        color: rgba(var(--center-channel-color-rgb), 0.9);
+        color: rgba(var(--center-channel-color-rgb), 0.64);
         font-size: 18px;
-        border: 2px solid var(--link-color);
-        border-left: none;
-        border-radius: 0 4px 4px 0;
-    }
-
-    &__control {
-        border-radius: 8px 8px 0 0 !important;
-        padding: 12px 16px 0;
-        border: none !important;
-    }
-
-    &__control, &__control--is-focused{
-        box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 0px 1px, rgba(0, 0, 0, 0.1) 0px 11px 11px !important;
-    }
-
-    &__menu {
-        margin-top: 0 !important;
-        border-radius: 0 0 8px 8px !important;
-        border-top: none;
-        box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 0px 1px, rgba(0, 0, 0, 0.1) 0px 11px 11px !important;
     }
 
     &__value-container {
-        border: 2px solid var(--link-color);
-        border-right: none;
-        border-radius: 4px 0 0 4px;
+        padding: 6px 2px !important;
     }
 
-    &__input, &__placeholder {
+    &__control {
+        flex-direction: row-reverse;
+        box-shadow: 0 0 0 1px rgba(var(--center-channel-color-rgb), 0.16);
+        padding: 0 12px;
+        border: none !important;
+
+        &--is-focused {
+            box-shadow: 0 0 0 2px rgba(var(--button-bg-rgb)) !important;
+        }
+    }
+
+    &__menu {
+        position: relative !important;
+        margin-top: 0 !important;
+        border-top: none;
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 -16px;
+        width: auto !important;
+        margin-bottom: 0 !important;
+    }
+
+    &__input {
         color: rgb(var(--center-channel-color-rgb)) !important;
     }
 
     &__control, &__menu {
-        background-color: rgb(var(--center-channel-bg-rgb)) !important;
+        background-color: transparent !important;
     }
 }
