@@ -60,11 +60,12 @@
 
         .timestamp_properties {
             margin-left: 12px;
-            max-width: 75%;
+            max-width: 90%;
 
             .properties {
                 display: flex;
                 align-items: center;
+                white-space: nowrap;
 
                 .remainder {
                     color: rgba(61, 60, 64, 0.48);
