@@ -1,14 +1,10 @@
-.attachment__content--FocalboardUnfurl {
-    width: 425px;
-}
-
-.app__body .attachment__container--FocalboardUnfurl {
-    border: 1px solid rgba(61, 60, 64, 0.24) !important;
-}
-
-
 .FocalboardUnfurl {
-    padding: 4px;
+    padding: 16px;
+    border: 1px solid rgba(61, 60, 64, 0.24) !important;
+    border-radius: 4px;
+    box-sizing: border-box;
+    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.08);
+    width: 425px;
 
     &:hover {
       cursor: pointer;  
@@ -54,6 +50,84 @@
         h1, h2, h3, h4, h5, h6 {
             margin-top: 0;
         }
+    }
+
+    .footer {
+        display: flex;
+        align-items: center;
+        height: 40px;
+        margin-top: 16px;
+
+        .timestamp_properties {
+            margin-left: 12px;
+            max-width: 75%;
+
+            .properties {
+                display: flex;
+                align-items: center;
+
+                .remainder {
+                    color: rgba(61, 60, 64, 0.48);
+                    font-weight: bold;
+                    font-size: 14px;
+                }
+
+                .property {
+                    border-radius: 4px;
+                    padding: 2px 4px;
+                    margin-right: 10px;
+                    max-width: 33%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    overflow-wrap: normal;
+
+                    &.propColorDefault {
+                        background-color: var(--prop-default);
+                    }
+                    
+                    &.propColorGray {
+                        background-color: var(--prop-gray);
+                    }
+                    
+                    &.propColorBrown {
+                        background-color: var(--prop-brown);
+                    }
+                    
+                     &.propColorOrange {
+                        background-color: var(--prop-orange);
+                    }
+                    
+                    &.propColorYellow {
+                        background-color: var(--prop-yellow);
+                    }
+                    
+                    &.propColorGreen {
+                        background-color: var(--prop-green);
+                    }
+                    
+                    &.propColorBlue {
+                        background-color: var(--prop-blue);
+                    }
+                    
+                    &.propColorPurple {
+                        background-color: var(--prop-purple);
+                    }
+                    
+                    &.propColorPink {
+                        background-color: var(--prop-pink);
+                    }
+                    
+                     &.propColorRed {
+                        background-color: var(--prop-red);
+                    }
+                }
+               
+            }
+
+
+
+        }
+
     }
 
 }

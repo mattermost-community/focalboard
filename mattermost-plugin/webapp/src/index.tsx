@@ -7,7 +7,6 @@ import {useHistory} from 'mm-react-router-dom'
 
 import {GlobalState} from 'mattermost-redux/types/store'
 import {getTheme} from 'mattermost-redux/selectors/entities/preferences'
-import {getChannelByName} from 'mattermost-redux/selectors/entities/channels'
 
 const windowAny = (window as any)
 windowAny.baseURL = '/plugins/focalboard'
