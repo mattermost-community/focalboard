@@ -11,7 +11,8 @@ import (
 	"text/template"
 
 	"github.com/gorilla/mux"
-	"github.com/mattermost/focalboard/server/services/mlog"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 // RoutedService defines the interface that is needed for any service to
