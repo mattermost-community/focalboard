@@ -121,7 +121,7 @@ export default class Plugin {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
                 window.open(`${window.location.origin}/boards/workspace/${currentChannel}`)
             }
-            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Focalboard Workspace')
+            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Boards')
 
             this.registry.registerCustomRoute('go-to-current-workspace', () => {
                 const history = useHistory()
@@ -147,7 +147,7 @@ export default class Plugin {
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
                 window.open(`${window.location.origin}/plug/focalboard/workspace/${currentChannel}`)
-            }, '', 'Boards Workspace')
+            }, '', 'Boards')
             this.registry.registerCustomRoute('/', MainApp)
         }
     }
