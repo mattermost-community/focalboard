@@ -58,10 +58,3 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 		logger: logger,
 	}, tearDown
 }
-
-func (h *TestHelper) TearDown() {
-	if h.logger != nil {
-		_ = h.logger.Shutdown()
-		h.logger = nil
-	}
-}
