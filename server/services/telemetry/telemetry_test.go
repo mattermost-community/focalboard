@@ -20,7 +20,9 @@ func mockServer() (chan []byte, *httptest.Server) {
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		buf := bytes.NewBuffer(nil)
-		io.Copy(buf, r.Body)
+		if _, err := io.Copy(buf, r.Body); err != nil {
+			panic(err)
+		}
 
 		var v interface{}
 		err := json.Unmarshal(buf.Bytes(), &v)
