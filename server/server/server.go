@@ -182,6 +182,9 @@ func New(cfg *config.Configuration, singleUserToken string, db store.Store, logg
 
 func NewStore(config *config.Configuration, logger *mlog.Logger) (store.Store, error) {
 	connectionStringToUse, err := utils2.EnsureCollation(config.DBType, config.DBConfigString)
+	fmt.Println("#################################################################################")
+	fmt.Println(connectionStringToUse)
+	fmt.Println("#################################################################################")
 	if err != nil {
 		logger.Error("Failed to ensure collation in database connection string", mlog.Err(err))
 		return nil, err

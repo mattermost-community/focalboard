@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/mattermost/focalboard/server/utils"
 
@@ -27,6 +28,9 @@ type SQLStore struct {
 // New creates a new SQL implementation of the store.
 func New(dbType, connectionString, tablePrefix string, logger *mlog.Logger, db *sql.DB) (*SQLStore, error) {
 	connectionStringToUse, err := utils.EnsureCollation(dbType, connectionString)
+	fmt.Println("#################################################################################")
+	fmt.Println(connectionStringToUse)
+	fmt.Println("#################################################################################")
 	if err != nil {
 		logger.Error("Failed to ensure collation in database connection string", mlog.Err(err))
 		return nil, err
