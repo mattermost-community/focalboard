@@ -5,4 +5,8 @@
     &.disabled {
         cursor: default;
     }
+
+    *:first-child {
+        user-select: text;
+    }
 }
