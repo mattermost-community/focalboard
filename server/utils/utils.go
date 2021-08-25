@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	mysqlDefaultCollation = "utf16_general_ci"
+	mysqlDefaultCollation = "utf8mb4_general_ci"
 )
 
 // CreateGUID returns a random GUID.
