@@ -17,8 +17,9 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -40,8 +41,9 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -75,8 +77,9 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -110,8 +113,9 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -415,8 +419,9 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -438,8 +443,9 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -473,8 +479,9 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -508,8 +515,9 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -813,8 +821,9 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -836,8 +845,9 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -871,8 +881,9 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -906,8 +917,9 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -1211,8 +1223,9 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -1234,8 +1247,9 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -1269,8 +1283,9 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -1304,8 +1319,9 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -1609,8 +1625,9 @@ exports[`components/table/Table should match snapshot 1`] = `
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -1632,8 +1649,9 @@ exports[`components/table/Table should match snapshot 1`] = `
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -1667,8 +1685,9 @@ exports[`components/table/Table should match snapshot 1`] = `
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -1864,8 +1883,9 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -1887,8 +1907,9 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -1922,8 +1943,9 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -1998,8 +2020,9 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
               </span>
             </button>
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
-              data-testid="menuwrapper"
+              role="button"
             >
               <div
                 class="Button IconButton"
@@ -2092,8 +2115,9 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper disabled"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -2111,8 +2135,9 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper disabled"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "
@@ -2142,8 +2167,9 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
           style="overflow: unset; width: 100px; opacity: 1;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper disabled"
-            data-testid="menuwrapper"
+            role="button"
           >
             <span
               class="Label empty "

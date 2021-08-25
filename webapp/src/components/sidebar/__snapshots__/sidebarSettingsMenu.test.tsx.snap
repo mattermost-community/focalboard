@@ -6,8 +6,9 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
     class="SidebarSettingsMenu"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
-      data-testid="menuwrapper"
+      role="button"
     >
       <div
         class="menu-entry"
@@ -387,8 +388,9 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu closed should matc
     class="SidebarSettingsMenu"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
-      data-testid="menuwrapper"
+      role="button"
     >
       <div
         class="menu-entry"
@@ -406,8 +408,9 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
     class="SidebarSettingsMenu"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
-      data-testid="menuwrapper"
+      role="button"
     >
       <div
         class="menu-entry"
@@ -558,8 +561,9 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
     class="SidebarSettingsMenu"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
-      data-testid="menuwrapper"
+      role="button"
     >
       <div
         class="menu-entry"

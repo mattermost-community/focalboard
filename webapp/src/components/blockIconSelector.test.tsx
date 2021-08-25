@@ -13,14 +13,13 @@ import {mocked} from 'ts-jest/utils'
 
 import mutator from '../mutator'
 
-import {BlockIcons} from '../blockIcons'
 import {TestBlockFactory} from '../test/testBlockFactory'
 
 import BlockIconSelector from './blockIconSelector'
 
 const wrapIntl = (children: ReactElement) => <IntlProvider locale='en'>{children}</IntlProvider>
 const board = TestBlockFactory.createBoard()
-const icon = BlockIcons.shared.randomIcon()
+const icon = '👍'
 
 jest.mock('../mutator')
 const mockedMutator = mocked(mutator, true)
@@ -31,13 +30,13 @@ describe('components/blockIconSelector', () => {
         jest.clearAllMocks()
     })
     test('return an icon correctly', () => {
-        render(wrapIntl(
+        const {container} = render(wrapIntl(
             <BlockIconSelector
                 block={board}
                 size='l'
             />,
         ))
-        expect(screen.queryByText(icon)).toBeTruthy()
+        expect(container).toMatchSnapshot()
     })
     test('return no element with no icon', () => {
         board.fields.icon = ''
@@ -47,19 +46,17 @@ describe('components/blockIconSelector', () => {
                 size='l'
             />,
         ))
-        expect(container).toBeEmptyDOMElement()
+        expect(container).toMatchSnapshot()
     })
     test('return menu on click', () => {
-        render(wrapIntl(
+        const {container} = render(wrapIntl(
             <BlockIconSelector
                 block={board}
                 size='l'
             />,
         ))
-        userEvent.click(screen.getByTestId('menuwrapper'))
-        expect(screen.queryByRole('button', {name: 'Random'})).not.toBeNull()
-        expect(screen.queryByText('Pick icon')).not.toBeNull()
-        expect(screen.queryByRole('button', {name: 'Remove icon'})).not.toBeNull()
+        userEvent.click(screen.getByRole('button', {name: 'menuwrapper'}))
+        expect(container).toMatchSnapshot()
     })
     test('return no menu in readonly', () => {
         const {container} = render(wrapIntl(
@@ -68,7 +65,7 @@ describe('components/blockIconSelector', () => {
                 readonly={true}
             />,
         ))
-        expect(container.querySelector('.readonly')).not.toBeEmptyDOMElement()
+        expect(container).toMatchSnapshot()
     })
 
     test('return a new icon after click on random menu', () => {
@@ -78,7 +75,7 @@ describe('components/blockIconSelector', () => {
                 size='l'
             />,
         ))
-        userEvent.click(screen.getByTestId('menuwrapper'))
+        userEvent.click(screen.getByRole('button', {name: 'menuwrapper'}))
         const buttonRandom = screen.queryByRole('button', {name: 'Random'})
         expect(buttonRandom).not.toBeNull()
         userEvent.click(buttonRandom!)
@@ -92,7 +89,7 @@ describe('components/blockIconSelector', () => {
                 size='l'
             />,
         ))
-        userEvent.click(screen.getByTestId('menuwrapper'))
+        userEvent.click(screen.getByRole('button', {name: 'menuwrapper'}))
         const menuPicker = container.querySelector('div#pick')
         expect(menuPicker).not.toBeNull()
         fireEvent.mouseEnter(menuPicker!)
@@ -110,7 +107,7 @@ describe('components/blockIconSelector', () => {
                 size='l'
             />,
         ))
-        userEvent.click(screen.getByTestId('menuwrapper'))
+        userEvent.click(screen.getByRole('button', {name: 'menuwrapper'}))
         const buttonRemove = screen.queryByRole('button', {name: 'Remove icon'})
         expect(buttonRemove).not.toBeNull()
         userEvent.click(buttonRemove!)
@@ -125,6 +122,6 @@ describe('components/blockIconSelector', () => {
                 block={board}
             />),
         )
-        expect(container).toBeEmptyDOMElement()
+        expect(container).toMatchSnapshot()
     })
 })

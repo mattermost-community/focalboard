@@ -82,10 +82,11 @@ const MenuWrapper = React.memo((props: Props) => {
 
     return (
         <div
+            role='button'
+            aria-label='menuwrapper'
             className={className}
             onClick={toggle}
             ref={node}
-            data-testid='menuwrapper'
         >
             {children ? Object.values(children)[0] : null}
             {children && !props.disabled && open ? Object.values(children)[1] : null}

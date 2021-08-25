@@ -164,8 +164,9 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
             class="octo-block-margin"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
-              data-testid="menuwrapper"
+              role="button"
             >
               <div
                 class="Button IconButton"
@@ -227,8 +228,9 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
               class="octo-block-margin"
             >
               <div
+                aria-label="menuwrapper"
                 class="MenuWrapper"
-                data-testid="menuwrapper"
+                role="button"
               >
                 <div
                   class="Button IconButton"
@@ -281,8 +283,9 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
               class="octo-block-margin"
             >
               <div
+                aria-label="menuwrapper"
                 class="MenuWrapper"
-                data-testid="menuwrapper"
+                role="button"
               >
                 <div
                   class="Button IconButton"
@@ -350,8 +353,9 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
             class="octo-block-margin"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
-              data-testid="menuwrapper"
+              role="button"
             >
               <div
                 class="Button IconButton"
@@ -409,8 +413,9 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
             class="octo-block-margin"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
-              data-testid="menuwrapper"
+              role="button"
             >
               <div
                 class="Button IconButton"
@@ -481,8 +486,9 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
             class="octo-block-margin"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
-              data-testid="menuwrapper"
+              role="button"
             >
               <div
                 class="Button IconButton"
@@ -540,8 +546,9 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
             class="octo-block-margin"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
-              data-testid="menuwrapper"
+              role="button"
             >
               <div
                 class="Button IconButton"
@@ -762,8 +769,9 @@ exports[`components/cardDetail/cardDetailContents should match snapshot with con
             class="octo-block-margin"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
-              data-testid="menuwrapper"
+              role="button"
             >
               <div
                 class="Button IconButton"
@@ -834,8 +842,9 @@ exports[`components/cardDetail/cardDetailContents should match snapshot with con
             class="octo-block-margin"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
-              data-testid="menuwrapper"
+              role="button"
             >
               <div
                 class="Button IconButton"
@@ -897,8 +906,9 @@ exports[`components/cardDetail/cardDetailContents should match snapshot with con
               class="octo-block-margin"
             >
               <div
+                aria-label="menuwrapper"
                 class="MenuWrapper"
-                data-testid="menuwrapper"
+                role="button"
               >
                 <div
                   class="Button IconButton"
@@ -951,8 +961,9 @@ exports[`components/cardDetail/cardDetailContents should match snapshot with con
               class="octo-block-margin"
             >
               <div
+                aria-label="menuwrapper"
                 class="MenuWrapper"
-                data-testid="menuwrapper"
+                role="button"
               >
                 <div
                   class="Button IconButton"
