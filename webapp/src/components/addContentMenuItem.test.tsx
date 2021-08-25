@@ -36,7 +36,7 @@ describe('components/addContentMenuItem', () => {
         jest.clearAllMocks()
     })
     test('return an image menu item', () => {
-        render(
+        const {container} = render(
             wrapIntl(
                 <AddContentMenuItem
                     type={'image'}
@@ -45,11 +45,11 @@ describe('components/addContentMenuItem', () => {
                 />,
             ),
         )
-        expect(screen.getByRole('button', {name: 'image'})).not.toBeEmptyDOMElement()
+        expect(container).toMatchSnapshot()
     })
 
     test('return a text menu item', async () => {
-        render(
+        const {container} = render(
             wrapIntl(
                 <AddContentMenuItem
                     type={'text'}
@@ -58,14 +58,14 @@ describe('components/addContentMenuItem', () => {
                 />,
             ),
         )
+        expect(container).toMatchSnapshot()
         const buttonElement = screen.getByRole('button', {name: 'text'})
-        expect(buttonElement).not.toBeEmptyDOMElement()
         userEvent.click(buttonElement)
         await waitFor(() => expect(mockedMutator.performAsUndoGroup).toBeCalled())
     })
 
     test('return a checkbox menu item', async () => {
-        render(
+        const {container} = render(
             wrapIntl(
                 <AddContentMenuItem
                     type={'checkbox'}
@@ -74,14 +74,14 @@ describe('components/addContentMenuItem', () => {
                 />,
             ),
         )
+        expect(container).toMatchSnapshot()
         const buttonElement = screen.getByRole('button', {name: 'checkbox'})
-        expect(buttonElement).not.toBeEmptyDOMElement()
         userEvent.click(buttonElement)
         await waitFor(() => expect(mockedMutator.performAsUndoGroup).toBeCalled())
     })
 
     test('return a divider menu item', async () => {
-        render(
+        const {container} = render(
             wrapIntl(
                 <AddContentMenuItem
                     type={'divider'}
@@ -90,8 +90,8 @@ describe('components/addContentMenuItem', () => {
                 />,
             ),
         )
+        expect(container).toMatchSnapshot()
         const buttonElement = screen.getByRole('button', {name: 'divider'})
-        expect(buttonElement).not.toBeEmptyDOMElement()
         userEvent.click(buttonElement)
         await waitFor(() => expect(mockedMutator.performAsUndoGroup).toBeCalled())
     })
@@ -106,6 +106,6 @@ describe('components/addContentMenuItem', () => {
                 />,
             ),
         )
-        expect(container).toBeEmptyDOMElement()
+        expect(container).toMatchSnapshot()
     })
 })
