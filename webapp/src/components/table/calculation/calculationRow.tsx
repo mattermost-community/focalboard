@@ -74,7 +74,7 @@ const CalculationRow = (props: Props): JSX.Element => {
                             }}
                             cards={props.cards}
                             property={template}
-                            hovered={true}
+                            hovered={hovered}
                         />
                     )
                 })

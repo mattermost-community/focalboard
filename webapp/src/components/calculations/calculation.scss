@@ -15,6 +15,14 @@
             font-size: 14px;
             margin-right: 0;
         }
+
+        &.hovered {
+            opacity: 0.6;
+        }
+
+        &.menuOpen {
+            opacity: 1;
+        }
     }
 
     .calculationLabel {
