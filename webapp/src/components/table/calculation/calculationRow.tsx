@@ -41,8 +41,15 @@ const CalculationRow = (props: Props): JSX.Element => {
 
     const selectedCalculations = props.board.fields.columnCalculations || []
 
+    const [hovered, setHovered] = useState(false)
+    const toggleHover = () => setHovered(!hovered)
+
     return (
-        <div className='CalculationRow octo-table-row'>
+        <div
+            className={'CalculationRow octo-table-row'}
+            onMouseEnter={toggleHover}
+            onMouseLeave={toggleHover}
+        >
             {
                 templates.map((template) => {
                     const style = {width: columnWidth(props.resizingColumn, props.activeView.fields.columnWidths, props.offset, template.id)}
@@ -67,6 +74,7 @@ const CalculationRow = (props: Props): JSX.Element => {
                             }}
                             cards={props.cards}
                             property={template}
+                            hovered={true}
                         />
                     )
                 })
