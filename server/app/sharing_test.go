@@ -14,7 +14,9 @@ import (
 )
 
 func TestGetSharing(t *testing.T) {
-	th := SetupTestHelper(t)
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
 	container := st.Container{
 		WorkspaceID: utils.CreateGUID(),
 	}
@@ -61,7 +63,8 @@ func TestGetSharing(t *testing.T) {
 }
 
 func TestUpsertSharing(t *testing.T) {
-	th := SetupTestHelper(t)
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
 
 	container := st.Container{
 		WorkspaceID: utils.CreateGUID(),

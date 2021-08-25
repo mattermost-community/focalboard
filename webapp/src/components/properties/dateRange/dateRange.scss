@@ -1,6 +1,5 @@
 .DateRange {
     width: 100%;
-    display: flex;
 
     .octo-propertyvalue {
         white-space: none;
@@ -46,6 +45,7 @@
 
     .Button {
         width: 100%;
+        height: 100%;
         justify-content: left;
 
         &.--empty {
@@ -103,12 +103,18 @@
         }
     }
 
-    .DayPicker {}
+    .DayPicker {
+        font-size: inherit;
+    }
 
     .DayPickerInput-Overlay {
         background-color: rgba(var(--center-channel-bg-rgb));
         box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1), 0 4px 11px hsla(0, 0%, 0%, 0.1);
         line-height: 100%;
+    }
+
+    .DayPicker-wrapper {
+        padding: 0;
     }
 
     .DayPicker-Month {
@@ -123,15 +129,26 @@
         flex-direction: column;
     }
 
+    .inputContainer {
+        max-width: 252px;
+    }
+
+    .DayPicker-Weekdays {
+        margin: 0;
+    }
+
     .DayPicker-WeekdaysRow {
         display: flex;
         flex-direction: row;
     }
 
     .DayPicker-Weekday {
-        display: block;
         width: 36px;
         height: 36px;
+    }
+
+    .DayPicker-NavButton {
+        right: 0;
     }
 
     .DayPicker-Week {
@@ -140,8 +157,11 @@
     }
 
     .DayPicker-Day {
+        padding: 0;
+        align-items: center;
+        display: flex;
+        justify-content: center;
         border-radius: unset;
-        display: block;
         width: 36px;
         height: 36px;
     }
@@ -162,14 +182,12 @@
 
     .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
         background-color: rgb(var(--button-bg-rgb));
-        ;
-        color: rgba(var(--button-color-rgb), 0.5);
+        color: rgba(var(--button-color-rgb), 1);
     }
 
     .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
         color: rgb(var(--button-bg-rgb));
-        ;
-        background-color: rgba(var(--button-bg-rgb), 0.2);
+        background-color: rgba(var(--button-bg-rgb), 0.08);
     }
 
     .DayPicker:not(.DayPicker--interactionDisabled) .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
