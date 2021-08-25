@@ -40,7 +40,7 @@ $tooltop-vertical-offset: 2px;
     z-index: 99;
 }
 
-.focalboard-body .octo-tooltip {
+.octo-tooltip {
     display: inline;
     // Tooltip itself needs to be relative so
     // content and arrow can be absolute to it
