@@ -224,16 +224,18 @@ func (s *Server) Start() error {
 		}
 	}
 
-	s.cleanUpSessionsTask = scheduler.CreateRecurringTask("cleanUpSessions", func() {
-		secondsAgo := minSessionExpiryTime
-		if secondsAgo < s.config.SessionExpireTime {
-			secondsAgo = s.config.SessionExpireTime
-		}
+	if s.config.AuthMode != MattermostAuthMod {
+		s.cleanUpSessionsTask = scheduler.CreateRecurringTask("cleanUpSessions", func() {
+			secondsAgo := minSessionExpiryTime
+			if secondsAgo < s.config.SessionExpireTime {
+				secondsAgo = s.config.SessionExpireTime
+			}
 
-		if err := s.store.CleanUpSessions(secondsAgo); err != nil {
-			s.logger.Error("Unable to clean up the sessions", mlog.Err(err))
-		}
-	}, cleanupSessionTaskFrequency)
+			if err := s.store.CleanUpSessions(secondsAgo); err != nil {
+				s.logger.Error("Unable to clean up the sessions", mlog.Err(err))
+			}
+		}, cleanupSessionTaskFrequency)
+	}
 
 	metricsUpdater := func() {
 		blockCounts, err := s.store.GetBlockCountsByType()
