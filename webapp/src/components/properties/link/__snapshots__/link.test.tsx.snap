@@ -7,7 +7,6 @@ exports[`components/properties/link returns link properties correctly 1`] = `
   >
     <input
       class="Editable octo-propertyvalue"
-      placeholder=""
       title="https://github.com/mattermost/focalboard"
       value="https://github.com/mattermost/focalboard"
     />
