@@ -93,6 +93,7 @@
         font-size: 14px;
         position: relative;
         text-overflow: ellipsis;
+        align-items: center;
 
         &:hover {
             background-color: rgba(var(--center-channel-color-rgb), 0.05);
@@ -107,6 +108,7 @@
 
             .octo-icon {
                 min-width: 20px;
+                margin-top: 3px;
             }
 
             .Editable {

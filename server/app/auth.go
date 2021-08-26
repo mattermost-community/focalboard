@@ -4,8 +4,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/auth"
-	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/store"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/pkg/errors"
 )
