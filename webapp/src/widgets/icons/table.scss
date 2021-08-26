@@ -1,6 +1,6 @@
 @use './standardIcon.scss';
 
-.focalboard-body .TableIcon {
+.TableIcon {
     @extend .StandardIcon;
     stroke-width: 8px;
 }
