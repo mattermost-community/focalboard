@@ -10,5 +10,4 @@ require (
 	github.com/mattermost/mattermost-server/v6 v6.0.0-20210824141503-6031b163d8e3
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.7.0
-	gopkg.in/square/go-jose.v2 v2.6.0
 )

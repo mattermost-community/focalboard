@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"path"
@@ -13,7 +14,6 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
-	"gopkg.in/square/go-jose.v2/json"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
 
