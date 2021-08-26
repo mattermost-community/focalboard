@@ -3,9 +3,10 @@ package metrics
 import (
 	"net/http"
 
-	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 // Service prometheus to run the server.
@@ -19,7 +20,7 @@ func NewMetricsServer(address string, metricsService *Metrics, logger *mlog.Logg
 		&http.Server{
 			Addr: address,
 			Handler: promhttp.HandlerFor(metricsService.registry, promhttp.HandlerOpts{
-				ErrorLog: logger.StdLogger(mlog.Error),
+				ErrorLog: logger.StdLogger(mlog.LvlError),
 			}),
 		},
 	}

@@ -39,7 +39,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/config"
 )
 import (
-	"github.com/mattermost/focalboard/server/services/mlog"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 // Active server used with shared code (dll)
@@ -94,7 +94,7 @@ func main() {
 		return
 	}
 
-	logger := mlog.NewLogger()
+	logger, _ := mlog.NewLogger()
 	cfgJSON := config.LoggingCfgJSON
 	if config.LoggingCfgFile == "" && cfgJSON == "" {
 		// if no logging defined, use default config (console output)
@@ -108,7 +108,7 @@ func main() {
 	defer func() { _ = logger.Shutdown() }()
 
 	if logger.HasTargets() {
-		restore := logger.RedirectStdLog(mlog.Info, mlog.String("src", "stdlog"))
+		restore := logger.RedirectStdLog(mlog.LvlInfo, mlog.String("src", "stdlog"))
 		defer restore()
 	}
 
@@ -215,7 +215,7 @@ func startServer(webPath string, filesPath string, port int, singleUserToken, db
 		return
 	}
 
-	logger := mlog.NewLogger()
+	logger, _ := mlog.NewLogger()
 	err = logger.Configure(config.LoggingCfgFile, config.LoggingCfgJSON)
 	if err != nil {
 		log.Fatal("Error in config file for logger: ", err)

@@ -1,7 +1,7 @@
 package audit
 
 import (
-	"github.com/mattermost/focalboard/server/services/mlog"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const (
@@ -34,12 +34,14 @@ type Audit struct {
 }
 
 // NewAudit creates a new Audit instance which can be configured via `(*Audit).Configure`.
-func NewAudit(options ...mlog.Option) *Audit {
-	logger := mlog.NewLogger(options...)
-
+func NewAudit(options ...mlog.Option) (*Audit, error) {
+	logger, err := mlog.NewLogger(options...)
+	if err != nil {
+		return nil, err
+	}
 	return &Audit{
 		auditLogger: logger,
-	}
+	}, nil
 }
 
 // Configure provides a new configuration for this audit service.
