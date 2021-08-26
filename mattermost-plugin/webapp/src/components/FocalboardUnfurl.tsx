@@ -121,17 +121,12 @@ export const FocalboardUnfurl = (props: Props): JSX.Element => {
         }
     }
 
-    const openCard = () => {
-        window.open(
-            `${baseURL}/boards/workspace/${workspaceID}/${boardID}/${viewID}?c=${blockID}`,
-            '_blank',
-        )
-    }
-
     return (
-        <div
+        <a
             className='FocalboardUnfurl'
-            onClick={openCard}
+            href={`${baseURL}/boards/workspace/${workspaceID}/${boardID}/${viewID}/${blockID}`}
+            rel='noopener noreferrer'
+            target='_blank'
         >
 
             {/* Header of the Card*/}
@@ -188,10 +183,8 @@ export const FocalboardUnfurl = (props: Props): JSX.Element => {
                             day={'numeric'}
                         />
                     </span>
-
                 </div>
-
             </div>
-        </div>
+        </a>
     )
 }
