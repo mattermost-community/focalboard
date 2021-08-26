@@ -1,5 +1,6 @@
 .Menu .menu-options .SubMenuOption.open-left {
     padding: 4px 5px;
+
     .menu-name {
         margin-left: 0;
     }
@@ -12,7 +13,7 @@
         .SubmenuTriangleIcon {
             position: relative;
             left: 5px;
-            transform: rotate(180deg)
+            transform: rotate(180deg);
         }
     }
 
@@ -27,16 +28,20 @@
         border-radius: var(--default-rad);
         box-shadow: var(--elevation-4);
         left: 100%;
+
         &.top {
             bottom: 0;
         }
+
         &.bottom {
             top: 0;
         }
+
         &.left {
             left: -100%;
             right: 100%;
         }
+
         &.left-bottom {
             left: -100%;
             right: 100%;

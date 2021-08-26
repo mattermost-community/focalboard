@@ -8,14 +8,17 @@
     &.active {
         min-width: 100px;
     }
+
     &::placeholder {
         color: rgba(var(--center-channel-color-rgb), 0.4);
         opacity: 1;
     }
+
     &.error {
         border: 1px solid var(--error-text-rgb);
         border-radius: var(--default-rad);
     }
+
     &.readonly {
         background-color: transparent;
         flex: 1;

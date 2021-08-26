@@ -3,7 +3,7 @@ package sqlstore
 import (
 	"database/sql"
 
-	"github.com/mattermost/focalboard/server/services/mlog"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 func (s *SQLStore) CloseRows(rows *sql.Rows) {
