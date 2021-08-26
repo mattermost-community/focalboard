@@ -222,8 +222,8 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *model.Post) (*mode
 	((\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1})\/
 	((\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1})\/
 	((\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1})$`, *mmconfig.ServiceSettings.SiteURL)
-	regexString = strings.ReplaceAll(regexString, "\n", "", -1)
-	regexString = strings.ReplaceAll(regexString, "\t", "", -1)
+	regexString = strings.ReplaceAll(regexString, "\n", "")
+	regexString = strings.ReplaceAll(regexString, "\t", "")
 	re := regexp.MustCompile(regexString)
 	matches := re.FindStringSubmatch(firstLink)
 
