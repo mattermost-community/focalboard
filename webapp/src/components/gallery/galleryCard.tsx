@@ -149,7 +149,7 @@ const GalleryCard = React.memo((props: Props) => {
                                 readOnly={true}
                                 card={card}
                                 propertyTemplate={template}
-                                emptyDisplayValue=''
+                                showEmptyPlaceholder={false}
                             />
                         </Tooltip>
                     ))}
