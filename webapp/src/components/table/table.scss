@@ -28,11 +28,13 @@
 
         .IconButton {
             background-color: unset;
+
             &:hover:not(.readonly) {
                 background-color: rgba(var(--center-channel-color-rgb), 0.1);
             }
+
             &.readonly {
-                opacity: .5;
+                opacity: 0.5;
             }
         }
 
@@ -62,11 +64,13 @@
         }
 
         > .Button {
+            cursor: auto;
+
             &.IconButton:not(.readonly) {
                 cursor: pointer;
             }
-            cursor: auto;
         }
+
         &.expanded {
             .DisclosureTriangleIcon {
                 transform: rotate(90deg);
@@ -141,6 +145,7 @@
             line-height: 17px;
             overflow: hidden;
             text-overflow: ellipsis;
+
             .Label {
                 margin: 0 5px;
                 padding: 0 8px;
@@ -167,6 +172,7 @@
         display: flex;
         flex-direction: row;
         border-bottom: solid 1px rgba(var(--center-channel-color-rgb), 0.09);
+
         &.hidden {
             display: none;
         }

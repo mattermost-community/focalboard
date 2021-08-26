@@ -367,6 +367,13 @@ class Mutator {
     }
 
     async changePropertyValue(card: Card, propertyId: string, value?: string | string[], description = 'change property') {
+        const oldValue = card.fields.properties[propertyId]
+
+        // dont save anything if property value was not changed.
+        if (oldValue === value) {
+            return
+        }
+
         const newCard = createCard(card)
         if (value) {
             newCard.fields.properties[propertyId] = value

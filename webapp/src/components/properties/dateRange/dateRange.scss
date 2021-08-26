@@ -32,8 +32,8 @@
 
     .Modal {
         position: absolute;
-        top: 0px;
-        left: 0px;
+        top: 0;
+        left: 0;
         margin-bottom: 100px;
     }
 
@@ -60,7 +60,7 @@
         line-height: 24px;
         font-weight: 400;
         height: 32px;
-        padding: 4px 0px;
+        padding: 4px 0;
         cursor: pointer;
 
         &:hover {
