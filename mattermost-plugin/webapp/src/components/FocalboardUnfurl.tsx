@@ -16,7 +16,7 @@ type Props = {
     }
 }
 
-export const FocalboardUnfurl = (props: Props) => {
+export const FocalboardUnfurl = (props: Props): JSX.Element => {
     const focalboardInformation = JSON.parse(props.embed.data)
     const workspaceID = focalboardInformation.workspaceID
     const blockID = focalboardInformation.blockID
@@ -27,8 +27,8 @@ export const FocalboardUnfurl = (props: Props) => {
     const [content, setContent] = useState<string>('')
     const [board, setBoard] = useState<{title?: string, fields?: { cardProperties: Array<unknown> }}>({})
 
-    if (!workspaceID || !blockID || !baseURL) {
-        return null
+    if (!workspaceID || !blockID || !baseURL || !boardID || !viewID) {
+        return <></>
     }
 
     useEffect(() => {
@@ -74,6 +74,7 @@ export const FocalboardUnfurl = (props: Props) => {
     }, [])
 
     useEffect(() => {
+        let isCancelled = false
         const fetchData = async () => {
             const response = await fetch(`${baseURL}/plugins/focalboard/api/v1/workspaces/${workspaceID}/blocks?block_id=${boardID}`, {
                 headers: {
@@ -95,9 +96,8 @@ export const FocalboardUnfurl = (props: Props) => {
     }, [])
 
     if (!Object.values(card).length || !Object.values(board).length) {
-        return null
+        return <></>
     }
-
 
     let remainder = 0
     const propertyKeyArray = Object.keys(card.fields?.properties || {})
@@ -175,20 +175,18 @@ export const FocalboardUnfurl = (props: Props) => {
                         {remainder > 0 && <span className='remainder'>{`+${remainder} more`} </span>}
                     </div>
                     <span className='post-preview__time'>
-                        {card?.updateAt && 'Updated '}
-                        {card?.updateAt &&
-                            <Timestamp
-                                value={card.updateAt}
-                                units={[
-                                    'now',
-                                    'minute',
-                                    'hour',
-                                    'day',
-                                ]}
-                                useTime={false}
-                                day={'numeric'}
-                            />
-                        }
+                        {'Updated '}
+                        <Timestamp
+                            value={card.updateAt}
+                            units={[
+                                'now',
+                                'minute',
+                                'hour',
+                                'day',
+                            ]}
+                            useTime={false}
+                            day={'numeric'}
+                        />
                     </span>
 
                 </div>
