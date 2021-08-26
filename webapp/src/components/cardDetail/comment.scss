@@ -27,7 +27,7 @@
         width: 20px;
         height: 20px;
         border-radius: 100%;
-        box-shadow: rgba(15, 15, 15, 0.1) 0px 2px 4px;
+        box-shadow: rgba(15, 15, 15, 0.1) 0 2px 4px;
     }
 
     .comment-username {
@@ -36,7 +36,7 @@
     }
 
     .comment-date {
-        color: #cccccc;
+        color: #ccc;
         font-size: 12px;
     }
 
@@ -53,9 +53,6 @@
     }
 
     .comment-text * {
-        -webkit-user-select: text; /* Chrome all / Safari all */
-        -moz-user-select: text; /* Firefox all */
-        -ms-user-select: text; /* IE 10+ */
-        user-select: text; /* Likely future */
+        user-select: text;
     }
 }

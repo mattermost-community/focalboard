@@ -21,14 +21,14 @@
         &.active {
             background: rgba(var(--sidebar-text-rgb), 0.1);
             position: relative;
-            color: white;
+            color: rgb(var(--sidebar-text-rgb));
 
             .Icon {
                 stroke: rgba(var(--sidebar-text-rgb), 1);
             }
 
             &:not(.subitem) {
-                &:before {
+                &::before {
                     content: '';
                     background: var(--sidebar-text-active-border);
                     width: 2px;
@@ -58,6 +58,7 @@
             width: 14px;
             margin-right: 8px;
             flex-shrink: 0;
+
             &.GalleryIcon {
                 fill: rgba(var(--sidebar-text-rgb), 0.3);
                 stroke: unset;
