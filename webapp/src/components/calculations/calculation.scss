@@ -7,7 +7,6 @@
 
     &.none {
         opacity: 0;
-        color: rgba(var(--center-channel-color-rgb), 0.64);
 
         .calculationLabel {
             text-transform: capitalize;
@@ -17,7 +16,7 @@
         }
 
         &.hovered {
-            opacity: 0.6;
+            opacity: 0.64;
         }
 
         &.menuOpen {
