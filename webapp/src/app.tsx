@@ -89,7 +89,7 @@ const App = React.memo((): JSX.Element => {
                                 <Route path='/shared/:boardId?/:viewId?'>
                                     <BoardPage readonly={true}/>
                                 </Route>
-                                <Route path='/board/:boardId?/:viewId?'>
+                                <Route path='/board/:boardId?/:viewId?/:cardId?'>
                                     {loggedIn === false && <Redirect to='/login'/>}
                                     {loggedIn === true && <BoardPage/>}
                                 </Route>
@@ -97,7 +97,7 @@ const App = React.memo((): JSX.Element => {
                                     <BoardPage readonly={true}/>
                                 </Route>
                                 <Route
-                                    path='/workspace/:workspaceId/:boardId?/:viewId?'
+                                    path='/workspace/:workspaceId/:boardId?/:viewId?/:cardId?'
                                     render={({match}) => {
                                         if (loggedIn === false) {
                                             let redirectUrl = '/' + Utils.buildURL(`/workspace/${match.params.workspaceId}/`)
@@ -120,7 +120,7 @@ const App = React.memo((): JSX.Element => {
                                 >
                                     <DashboardPage/>
                                 </Route>
-                                <Route path='/:boardId?/:viewId?'>
+                                <Route path='/:boardId?/:viewId?/:cardId?'>
                                     {loggedIn === false && <Redirect to='/login'/>}
                                     {loggedIn === true && <BoardPage/>}
                                 </Route>

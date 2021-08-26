@@ -19,7 +19,8 @@ func (be blockError) Error() string {
 }
 
 func TestGetParentID(t *testing.T) {
-	th := SetupTestHelper(t)
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
 
 	container := st.Container{
 		WorkspaceID: "0",
@@ -40,7 +41,8 @@ func TestGetParentID(t *testing.T) {
 }
 
 func TestInsertBlock(t *testing.T) {
-	th := SetupTestHelper(t)
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
 
 	container := st.Container{
 		WorkspaceID: "0",

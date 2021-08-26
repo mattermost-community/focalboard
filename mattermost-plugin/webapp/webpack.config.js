@@ -90,6 +90,7 @@ module.exports = {
                     'style-loader',
                     'css-loader',
                     'sass-loader',
+                    path.resolve(__dirname, 'loaders/globalScssClassLoader'),
                 ],
             },
             {

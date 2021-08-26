@@ -1,11 +1,12 @@
-@import "_compass-icons";
-@import "_typography";
+@import 'compass-icons';
+@import 'typography';
 
 html {
     height: 100%;
 }
 
-.focalboard-body, #focalboard-app {
+.focalboard-body,
+#focalboard-app {
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -23,13 +24,19 @@ html {
 }
 
 .focalboard-body {
+    --cursor-color: rgb(var(--center-channel-color-rgb));
+
+    padding: 0;
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+    /* -webkit-font-smoothing: auto; */
+    font-size: 14px;
+    line-height: 24px;
+
     * {
         box-sizing: border-box;
         outline: 0;
-        -webkit-user-select: none; /* Chrome all / Safari all */
-        -moz-user-select: none; /* Firefox all */
-        -ms-user-select: none; /* IE 10+ */
-        user-select: none; /* Likely future */
+        user-select: none;
     }
 
     input,
@@ -44,19 +51,8 @@ html {
         background: rgb(var(--center-channel-bg-rgb));
         color: rgb(var(--center-channel-color-rgb));
 
-        -webkit-user-select: text; /* Chrome all / Safari all */
-        -moz-user-select: text; /* Firefox all */
-        -ms-user-select: text; /* IE 10+ */
-        user-select: text; /* Likely future */
+        user-select: text;
     }
-
-    padding: 0;
-    margin: 0;
-    font-family: "Open Sans", sans-serif;
-    /* -webkit-font-smoothing: auto; */
-    font-size: 14px;
-    line-height: 24px;
-    --cursor-color: rgb(var(--center-channel-color-rgb));
 
     a {
         text-decoration: none;
@@ -74,7 +70,7 @@ html {
     hr {
         width: 100%;
         height: 1px;
-        border: none;
+        border: 0;
         color: rgba(var(--center-channel-color-rgb), 0.09);
         background-color: rgba(var(--center-channel-color-rgb), 0.09);
         margin-bottom: 8px;
@@ -84,7 +80,7 @@ html {
         button {
             &.style--none {
                 background: transparent;
-                border: none;
+                border: 0;
                 padding: 0;
             }
         }
@@ -125,8 +121,8 @@ html {
     /* Icons */
 
     .octo-icon {
-        font-family: "Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji,
-            "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols;
+        font-family: 'Apple Color Emoji', 'Segoe UI Emoji', NotoColorEmoji,
+            'Noto Color Emoji', 'Segoe UI Symbol', 'Android Emoji', EmojiSymbols;
         line-height: 1.2;
         align-self: baseline;
         overflow: visible;
@@ -149,10 +145,12 @@ html {
         &.empty {
             color: rgba(var(--center-channel-color-rgb), 0.4);
         }
+
         .IconButton.delete-value {
             width: 16px;
             min-width: 16px;
             height: 16px;
+
             i {
                 font-size: 16px;
             }
@@ -173,14 +171,11 @@ html {
         color: rgba(var(--center-channel-color-rgb), 0.4);
     }
 
-    [contentEditable="true"] {
-        -webkit-user-select: text; /* Chrome all / Safari all */
-        -moz-user-select: text; /* Firefox all */
-        -ms-user-select: text; /* IE 10+ */
-        user-select: text; /* Likely future */
+    [contentEditable='true'] {
+        user-select: text;
     }
 
-    [contentEditable="true"]:empty:before {
+    [contentEditable='true']:empty::before {
         content: attr(placeholder);
         display: block;
         color: rgba(var(--center-channel-color-rgb), 0.4);
@@ -189,8 +184,8 @@ html {
     .octo-propertyvalue.Editable.active,
     .octo-table-cell .Editable.active {
         border-radius: 3px;
-        box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px,
-            rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+        box-shadow: rgba(15, 15, 15, 0.05) 0 0 0 1px,
+            rgba(15, 15, 15, 0.1) 0 3px 6px, rgba(15, 15, 15, 0.2) 0 9px 24px;
     }
 
     .octo-block img {
@@ -212,15 +207,16 @@ html {
 
         width: 100%;
 
-        @media screen and (max-width: 975px) {
-            padding-right: 10px;
-        }
-
         > * {
             flex: 1 1 auto;
         }
+
         > .octo-block-margin {
             flex: 0 0 auto;
+        }
+
+        @media screen and (max-width: 975px) {
+            padding-right: 10px;
         }
     }
 

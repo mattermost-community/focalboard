@@ -22,7 +22,6 @@ import (
 	"github.com/mattermost/focalboard/server/services/audit"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/metrics"
-	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/scheduler"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
@@ -32,6 +31,8 @@ import (
 	"github.com/mattermost/focalboard/server/web"
 	"github.com/mattermost/focalboard/server/ws"
 	"github.com/oklog/run"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
 	"github.com/mattermost/mattermost-server/v6/utils"
@@ -104,9 +105,12 @@ func New(cfg *config.Configuration, singleUserToken string, db store.Store, logg
 	metricsService := metrics.NewMetrics(instanceInfo)
 
 	// Init audit
-	auditService := audit.NewAudit()
-	if err2 := auditService.Configure(cfg.AuditCfgFile, cfg.AuditCfgJSON); err2 != nil {
-		return nil, fmt.Errorf("unable to initialize the audit service: %w", err2)
+	auditService, errAudit := audit.NewAudit()
+	if errAudit != nil {
+		return nil, fmt.Errorf("unable to create the audit service: %w", errAudit)
+	}
+	if err := auditService.Configure(cfg.AuditCfgFile, cfg.AuditCfgJSON); err != nil {
+		return nil, fmt.Errorf("unable to initialize the audit service: %w", err)
 	}
 
 	appServices := app.Services{
@@ -220,16 +224,18 @@ func (s *Server) Start() error {
 		}
 	}
 
-	s.cleanUpSessionsTask = scheduler.CreateRecurringTask("cleanUpSessions", func() {
-		secondsAgo := minSessionExpiryTime
-		if secondsAgo < s.config.SessionExpireTime {
-			secondsAgo = s.config.SessionExpireTime
-		}
+	if s.config.AuthMode != MattermostAuthMod {
+		s.cleanUpSessionsTask = scheduler.CreateRecurringTask("cleanUpSessions", func() {
+			secondsAgo := minSessionExpiryTime
+			if secondsAgo < s.config.SessionExpireTime {
+				secondsAgo = s.config.SessionExpireTime
+			}
 
-		if err := s.store.CleanUpSessions(secondsAgo); err != nil {
-			s.logger.Error("Unable to clean up the sessions", mlog.Err(err))
-		}
-	}, cleanupSessionTaskFrequency)
+			if err := s.store.CleanUpSessions(secondsAgo); err != nil {
+				s.logger.Error("Unable to clean up the sessions", mlog.Err(err))
+			}
+		}, cleanupSessionTaskFrequency)
+	}
 
 	metricsUpdater := func() {
 		blockCounts, err := s.store.GetBlockCountsByType()
@@ -237,7 +243,7 @@ func (s *Server) Start() error {
 			s.logger.Error("Error updating metrics", mlog.String("group", "blocks"), mlog.Err(err))
 			return
 		}
-		s.logger.Log(mlog.Metrics, "Block metrics collected", mlog.Map("block_counts", blockCounts))
+		s.logger.Log(mlog.LvlFBMetrics, "Block metrics collected", mlog.Map("block_counts", blockCounts))
 		for blockType, count := range blockCounts {
 			s.metricsService.ObserveBlockCount(blockType, count)
 		}
@@ -246,7 +252,7 @@ func (s *Server) Start() error {
 			s.logger.Error("Error updating metrics", mlog.String("group", "workspaces"), mlog.Err(err))
 			return
 		}
-		s.logger.Log(mlog.Metrics, "Workspace metrics collected", mlog.Int64("workspace_count", workspaceCount))
+		s.logger.Log(mlog.LvlFBMetrics, "Workspace metrics collected", mlog.Int64("workspace_count", workspaceCount))
 		s.metricsService.ObserveWorkspaceCount(workspaceCount)
 	}
 	// metricsUpdater()   Calling this immediately causes integration unit tests to fail.
