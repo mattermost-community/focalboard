@@ -25,7 +25,9 @@ const TextElement = React.memo((props: Props): JSX.Element => {
             text={block.title}
             placeholderText={intl.formatMessage({id: 'ContentBlock.editText', defaultMessage: 'Edit text...'})}
             onBlur={(text) => {
-                mutator.changeTitle(block.id, block.title, text, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card text'}))
+                if (text !== block.title) {
+                    mutator.changeTitle(block.id, block.title, text, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card text'}))
+                }
             }}
             readonly={readonly}
         />

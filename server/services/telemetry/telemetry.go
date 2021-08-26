@@ -8,9 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/scheduler"
 	rudder "github.com/rudderlabs/analytics-go"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const (
@@ -91,7 +92,7 @@ func (ts *Service) sendTelemetry(event string, properties map[string]interface{}
 func (ts *Service) initRudder(endpoint, rudderKey string) {
 	if ts.rudderClient == nil {
 		config := rudder.Config{}
-		config.Logger = rudder.StdLogger(ts.logger.StdLogger(mlog.Telemetry))
+		config.Logger = rudder.StdLogger(ts.logger.StdLogger(mlog.LvlFBTelemetry))
 		config.Endpoint = endpoint
 		// For testing
 		if endpoint != rudderDataplaneURL {

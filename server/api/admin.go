@@ -8,7 +8,8 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/services/audit"
-	"github.com/mattermost/focalboard/server/services/mlog"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 type AdminSetPasswordData struct {

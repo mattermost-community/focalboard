@@ -7,7 +7,9 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/config"
-	"github.com/mattermost/focalboard/server/services/mlog"
+	"github.com/stretchr/testify/assert"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 func TestClientUpdateNotify(t *testing.T) {
@@ -21,7 +23,13 @@ func TestClientUpdateNotify(t *testing.T) {
 		WebhookUpdate: []string{ts.URL},
 	}
 
-	client := NewClient(cfg, mlog.CreateTestLogger(t))
+	logger := mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)
+	defer func() {
+		err := logger.Shutdown()
+		assert.NoError(t, err)
+	}()
+
+	client := NewClient(cfg, logger)
 
 	client.NotifyUpdate(model.Block{})
 
