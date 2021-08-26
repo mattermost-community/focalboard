@@ -53,6 +53,13 @@ const TELEMETRY_OPTIONS = {
     anonymousId: '00000000000000000000000000',
 }
 
+function getSubpath(siteURL: string): string {
+    const url = new URL(siteURL)
+
+    // remove trailing slashes
+    return url.pathname.replace(/\/+$/, '')
+}
+
 const MainApp = () => {
     useEffect(() => {
         document.body.classList.add('focalboard-body')
@@ -95,6 +102,10 @@ export default class Plugin {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
     async initialize(registry: PluginRegistry, mmStore: Store<GlobalState, Action<Record<string, unknown>>>): Promise<void> {
+        const siteURL = mmStore.getState().entities.general.config.SiteURL
+        const subpath = siteURL ? getSubpath(siteURL) : ''
+        windowAny.frontendBaseURL = subpath + windowAny.frontendBaseURL
+
         this.registry = registry
 
         let theme = getTheme(mmStore.getState())
@@ -116,7 +127,7 @@ export default class Plugin {
         })
 
         if (this.registry.registerProduct) {
-            windowAny.frontendBaseURL = '/boards'
+            windowAny.frontendBaseURL = subpath + '/boards'
             const goToFocalboardWorkspace = () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
                 window.open(`${window.location.origin}/boards/workspace/${currentChannel}`)
@@ -143,7 +154,8 @@ export default class Plugin {
             })
             this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/plug/focalboard/go-to-current-workspace', MainApp, HeaderComponent)
         } else {
-            windowAny.frontendBaseURL = '/plug/focalboard'
+            console.log('else this.registry.registerProduct')
+            windowAny.frontendBaseURL = subpath + '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
                 window.open(`${window.location.origin}/plug/focalboard/workspace/${currentChannel}`)
