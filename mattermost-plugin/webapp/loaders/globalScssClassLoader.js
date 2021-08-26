@@ -5,7 +5,8 @@ function blockList(line) {
     return line.startsWith('.focalboard-body') ||
         line.startsWith('.GlobalHeaderComponent') ||
         line.startsWith('.channel-header__icon .LogoIcon') ||
-        line.startsWith('.focalboard-plugin-root');
+        line.startsWith('.focalboard-plugin-root') ||
+        line.startsWith('.FocalboardUnfurl');
 }
 
 module.exports = function loader(source) {
