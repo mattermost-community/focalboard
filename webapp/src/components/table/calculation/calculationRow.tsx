@@ -71,6 +71,7 @@ const CalculationRow = (props: Props): JSX.Element => {
                                 const newBoard = createBoard(props.board)
                                 newBoard.fields.columnCalculations = calculations
                                 mutator.updateBlock(newBoard, props.board, 'update_calculation')
+                                toggleHover()
                             }}
                             cards={props.cards}
                             property={template}
