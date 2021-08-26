@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"path"
 	"regexp"
+	"strings"
 	"sync"
 
 	"github.com/mattermost/focalboard/server/server"
@@ -216,7 +217,14 @@ func defaultLoggingConfig() string {
 func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *model.Post) (*model.Post, string) {
 	mmconfig := p.API.GetUnsanitizedConfig()
 	firstLink := getFirstLink(post.Message)
-	re := regexp.MustCompile(fmt.Sprintf(`^(%s)(\/boards\/workspace\/)([a-z0-9]{26})\/((\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1})\/((\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1})\/((\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1})$`, *mmconfig.ServiceSettings.SiteURL))
+
+	regexString := fmt.Sprintf(`^(%s)(\/boards\/workspace\/)([a-z0-9]{26})\/
+	((\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1})\/
+	((\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1})\/
+	((\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1})$`, *mmconfig.ServiceSettings.SiteURL)
+	regexString = strings.Replace(regexString, "\n", "", -1)
+	regexString = strings.Replace(regexString, "\t", "", -1)
+	re := regexp.MustCompile(regexString)
 	matches := re.FindStringSubmatch(firstLink)
 
 	if len(matches) > 0 {
