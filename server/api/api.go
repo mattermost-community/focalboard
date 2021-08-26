@@ -246,20 +246,22 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("blockID", blockID)
 
 	var blocks []model.Block
-	if all != "" {
+	var block *model.Block
+	switch {
+	case all != "":
 		blocks, err = a.app.GetAllBlocks(*container)
 		if err != nil {
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 			return
 		}
-	} else if blockID != "" {
-		block, err := a.app.GetBlockWithID(*container, blockID)
+	case blockID != "":
+		block, err = a.app.GetBlockWithID(*container, blockID)
 		if err != nil {
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 			return
 		}
 		blocks = append(blocks, *block)
-	} else {
+	default:
 		blocks, err = a.app.GetBlocks(*container, parentID, blockType)
 		if err != nil {
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
