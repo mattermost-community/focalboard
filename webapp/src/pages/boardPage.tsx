@@ -81,6 +81,7 @@ const BoardPage = (props: Props) => {
             history.replace(newPath)
             return
         }
+
         // Backward compatibility end
 
         const boardId = match.params.boardId
