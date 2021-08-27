@@ -57,14 +57,14 @@ func (b *Backend) BlockChanged(evt notify.Event, block *model.Block, oldBlock *m
 			// the mention already existed; no need to notify again
 			continue
 		}
-		user, appErr := b.delivery.GetUserByUsername(username)
-		if appErr != nil {
+		user, err := b.delivery.GetUserByUsername(username)
+		if err != nil {
 			// not really an error; could just be someone typed "@sometext"
 			continue
 		}
-		channel, appErr := b.delivery.GetDirectChannel(user.Id, b.botID)
-		if appErr != nil {
-			merr.Append(appErr)
+		channel, err := b.delivery.GetDirectChannel(user.Id, b.botID)
+		if err != nil {
+			merr.Append(err)
 			continue
 		}
 
@@ -73,9 +73,9 @@ func (b *Backend) BlockChanged(evt notify.Event, block *model.Block, oldBlock *m
 			ChannelId: channel.Id,
 			Message:   "You got mentioned!!",
 		}
-		_, appErr = b.delivery.CreatePost(post)
-		if appErr != nil {
-			merr.Append(appErr)
+		err = b.delivery.CreatePost(post)
+		if err != nil {
+			merr.Append(err)
 		}
 	}
 	return merr.ErrorOrNil()

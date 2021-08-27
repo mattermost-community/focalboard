@@ -6,6 +6,10 @@ import (
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/notify/notifymentions"
 
+	pluginapi "github.com/mattermost/mattermost-plugin-api"
+
+	"github.com/mattermost/mattermost-server/v6/model"
+
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -15,22 +19,36 @@ const (
 	botDescription = "Created by Boards plugin."
 )
 
-func (p *Plugin) createMentionsBackend(delivery notifymentions.Delivery, logger *mlog.Logger) (*notify.Backend, error) {
+func createMentionsNotifyBackend(client *pluginapi.Client, logger *mlog.Logger) (notify.Backend, error) {
+	bot := &model.Bot{
+		Username:    botUsername,
+		DisplayName: botDisplayname,
+		Description: botDescription,
+	}
+	botID, err := client.Bot.EnsureBot(bot)
+	if err != nil {
+		return nil, fmt.Errorf("failed to ensure %s bot: %w", botDisplayname, err)
+	}
 
-	/*
-		// create/get the bot
-		botID, err := p.Helpers.EnsureBot(&model.Bot{
-			Username:    "github",
-			DisplayName: "GitHub",
-			Description: "Created by the GitHub plugin.",
-		})
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to ensure github bot")
-		}
+	delivery := &deliveryAdapter{client: client}
 
-		backend := notifymentions.New(delivery, logger)
-	*/
+	backend := notifymentions.New(delivery, botID, logger)
 
-	return nil, fmt.Errorf("not implemented yet")
+	return backend, nil
+}
 
+type deliveryAdapter struct {
+	client *pluginapi.Client
+}
+
+func (da *deliveryAdapter) GetDirectChannel(userID1, userID2 string) (*model.Channel, error) {
+	return da.client.Channel.GetDirect(userID1, userID2)
+}
+
+func (da *deliveryAdapter) CreatePost(post *model.Post) error {
+	return da.client.Post.CreatePost(post)
+}
+
+func (da *deliveryAdapter) GetUserByUsername(name string) (*model.User, error) {
+	return da.client.User.GetByUsername(name)
 }

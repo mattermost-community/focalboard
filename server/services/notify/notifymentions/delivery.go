@@ -9,11 +9,11 @@ type Delivery interface {
 
 	// GetDirectChannel gets a direct message channel.
 	// If the channel does not exist it will create it.
-	GetDirectChannel(userID1, userID2 string) (*model.Channel, *model.AppError)
+	GetDirectChannel(userID1, userID2 string) (*model.Channel, error)
 
 	// CreatePost creates a post.
-	CreatePost(post *model.Post) (*model.Post, *model.AppError)
+	CreatePost(post *model.Post) error
 
 	// GetUserByUsername gets a user by their username.
-	GetUserByUsername(name string) (*model.User, *model.AppError)
+	GetUserByUsername(name string) (*model.User, error)
 }
