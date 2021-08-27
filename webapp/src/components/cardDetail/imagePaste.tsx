@@ -11,6 +11,11 @@ export default function useImagePaste(cardId: string, contentOrder: Array<string
     const uploadItems = useCallback(async (items: FileList) => {
         let newImage: File|null = null
         const uploads: Promise<string|undefined>[] = []
+
+        if (!items.length) {
+            return
+        }
+
         for (const item of items) {
             newImage = item
             if (newImage?.type.indexOf('image/') === 0) {
@@ -30,10 +35,13 @@ export default function useImagePaste(cardId: string, contentOrder: Array<string
             block.fields.fileId = fileId || ''
             blocksToInsert.push(block)
         }
+
+        const newContentOrder = JSON.parse(JSON.stringify(contentOrder))
+        newContentOrder.push(...blocksToInsert.map((b: ImageBlock) => b.id))
+
         mutator.performAsUndoGroup(async () => {
             await mutator.insertBlocks(blocksToInsert, 'pasted images')
-            const newContentOrder = [...contentOrder, ...blocksToInsert.map((b: ImageBlock) => b.id)]
-            return mutator.changeCardContentOrder(cardId, contentOrder, newContentOrder, 'paste image')
+            await mutator.changeCardContentOrder(cardId, contentOrder, newContentOrder, 'paste image')
         })
     }, [cardId, contentOrder, rootId])
 
@@ -58,5 +66,5 @@ export default function useImagePaste(cardId: string, contentOrder: Array<string
             document.removeEventListener('paste', onPaste)
             document.removeEventListener('drop', onDrop)
         }
-    }, [])
+    }, [uploadItems])
 }

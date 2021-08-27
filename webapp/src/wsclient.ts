@@ -3,6 +3,7 @@
 
 import {Utils} from './utils'
 import {Block} from './blocks/block'
+import {OctoUtils} from './octoUtils'
 
 // These are outgoing commands to the server
 type WSCommand = {
@@ -278,7 +279,7 @@ class WSClient {
 
     private queueUpdateNotification(block: Block) {
         this.updatedBlocks = this.updatedBlocks.filter((o) => o.id !== block.id) // Remove existing queued update
-        this.updatedBlocks.push(block)
+        this.updatedBlocks.push(OctoUtils.hydrateBlock(block))
         if (this.updateTimeout) {
             clearTimeout(this.updateTimeout)
             this.updateTimeout = undefined

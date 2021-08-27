@@ -10,8 +10,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
-	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/webview/webview"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 var sessionToken string = "su-" + uuid.New().String()
@@ -31,7 +32,7 @@ func getFreePort() (int, error) {
 }
 
 func runServer(port int) (*server.Server, error) {
-	logger := mlog.NewLogger()
+	logger, _ := mlog.NewLogger()
 
 	config := &config.Configuration{
 		ServerRoot:              fmt.Sprintf("http://localhost:%d", port),

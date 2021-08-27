@@ -1,8 +1,12 @@
-.focalboard-body .MenuWrapper {
+.MenuWrapper {
     position: relative;
     cursor: pointer;
 
     &.disabled {
         cursor: default;
+    }
+
+    *:first-child {
+        user-select: text;
     }
 }
