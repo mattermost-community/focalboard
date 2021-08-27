@@ -6,24 +6,29 @@
     .dnd-handle {
         display: none;
     }
+
     &:hover {
         .MenuWrapper {
             display: flex;
         }
+
         .dnd-handle {
             display: flex;
             opacity: 0.8;
             height: 18px;
         }
     }
+
     > * {
         flex: 1 1 auto;
         max-width: 100%;
         min-height: 32px;
     }
+
     > .octo-block-margin {
         flex: 0 0 auto;
     }
+
     .ImageElement {
         pointer-events: none;
         width: 100%;

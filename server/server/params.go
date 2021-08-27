@@ -6,6 +6,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/ws"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -16,6 +17,7 @@ type Params struct {
 	DBStore         store.Store
 	Logger          *mlog.Logger
 	ServerID        string
+	WSAdapter       ws.Adapter
 	NotifyBackends  []notify.Backend
 }
 

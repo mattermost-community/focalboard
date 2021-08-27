@@ -51,7 +51,7 @@ const (
 
 type Server struct {
 	config                 *config.Configuration
-	wsServer               *ws.Server
+	wsAdapter              ws.Adapter
 	webServer              *web.Server
 	store                  store.Store
 	filesBackend           filestore.FileBackend
@@ -77,7 +77,11 @@ func New(params Params) (*Server, error) {
 
 	authenticator := auth.New(params.Cfg, params.DBStore)
 
-	wsServer := ws.NewServer(authenticator, params.SingleUserToken, params.Cfg.AuthMode == MattermostAuthMod, params.Logger)
+	// if no ws adapter is provided, we spin up a websocket server
+	wsAdapter := params.WSAdapter
+	if wsAdapter == nil {
+		wsAdapter = ws.NewServer(authenticator, params.SingleUserToken, params.Cfg.AuthMode == MattermostAuthMod, params.Logger)
+	}
 
 	filesBackendSettings := filestore.FileBackendSettings{}
 	filesBackendSettings.DriverName = params.Cfg.FilesDriver
@@ -135,7 +139,7 @@ func New(params Params) (*Server, error) {
 		Notifications: notificationService,
 		Logger:        params.Logger,
 	}
-	app := app.New(params.Cfg, wsServer, appServices)
+	app := app.New(params.Cfg, wsAdapter, appServices)
 
 	focalboardAPI := api.NewAPI(app, params.SingleUserToken, params.Cfg.AuthMode, params.Logger, auditService)
 
@@ -151,7 +155,10 @@ func New(params Params) (*Server, error) {
 
 	webServer := web.NewServer(params.Cfg.WebPath, params.Cfg.ServerRoot, params.Cfg.Port,
 		params.Cfg.UseSSL, params.Cfg.LocalOnly, params.Logger)
-	webServer.AddRoutes(wsServer)
+	// if the adapter is a routed service, register it before the API
+	if routedService, ok := wsAdapter.(web.RoutedService); ok {
+		webServer.AddRoutes(routedService)
+	}
 	webServer.AddRoutes(focalboardAPI)
 
 	settings, err := params.DBStore.GetSystemSettings()
@@ -178,19 +185,18 @@ func New(params Params) (*Server, error) {
 	telemetryService := initTelemetry(telemetryOpts)
 
 	server := Server{
-		config:              params.Cfg,
-		wsServer:            wsServer,
-		webServer:           webServer,
-		store:               params.DBStore,
-		filesBackend:        filesBackend,
-		telemetry:           telemetryService,
-		metricsServer:       metrics.NewMetricsServer(params.Cfg.PrometheusAddress, metricsService, params.Logger),
-		metricsService:      metricsService,
-		auditService:        auditService,
-		notificationService: notificationService,
-		logger:              params.Logger,
-		localRouter:         localRouter,
-		api:                 focalboardAPI,
+		config:         params.Cfg,
+		wsAdapter:      wsAdapter,
+		webServer:      webServer,
+		store:          params.DBStore,
+		filesBackend:   filesBackend,
+		telemetry:      telemetryService,
+		metricsServer:  metrics.NewMetricsServer(params.Cfg.PrometheusAddress, metricsService, params.Logger),
+		metricsService: metricsService,
+		auditService:   auditService,
+		logger:         params.Logger,
+		localRouter:    localRouter,
+		api:            focalboardAPI,
 	}
 
 	server.initHandlers()
@@ -240,16 +246,18 @@ func (s *Server) Start() error {
 		}
 	}
 
-	s.cleanUpSessionsTask = scheduler.CreateRecurringTask("cleanUpSessions", func() {
-		secondsAgo := minSessionExpiryTime
-		if secondsAgo < s.config.SessionExpireTime {
-			secondsAgo = s.config.SessionExpireTime
-		}
+	if s.config.AuthMode != MattermostAuthMod {
+		s.cleanUpSessionsTask = scheduler.CreateRecurringTask("cleanUpSessions", func() {
+			secondsAgo := minSessionExpiryTime
+			if secondsAgo < s.config.SessionExpireTime {
+				secondsAgo = s.config.SessionExpireTime
+			}
 
-		if err := s.store.CleanUpSessions(secondsAgo); err != nil {
-			s.logger.Error("Unable to clean up the sessions", mlog.Err(err))
-		}
-	}, cleanupSessionTaskFrequency)
+			if err := s.store.CleanUpSessions(secondsAgo); err != nil {
+				s.logger.Error("Unable to clean up the sessions", mlog.Err(err))
+			}
+		}, cleanupSessionTaskFrequency)
+	}
 
 	metricsUpdater := func() {
 		blockCounts, err := s.store.GetBlockCountsByType()
@@ -380,10 +388,6 @@ func (s *Server) stopLocalModeServer() {
 
 func (s *Server) GetRootRouter() *mux.Router {
 	return s.webServer.Router()
-}
-
-func (s *Server) SetWSHub(hub ws.Hub) {
-	s.wsServer.SetHub(hub)
 }
 
 type telemetryOptions struct {

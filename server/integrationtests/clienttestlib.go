@@ -75,6 +75,7 @@ func newTestServer(singleUserToken string) *server.Server {
 	if err != nil {
 		panic(err)
 	}
+
 	params := server.Params{
 		Cfg:             cfg,
 		SingleUserToken: singleUserToken,

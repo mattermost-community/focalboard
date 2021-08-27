@@ -2,22 +2,17 @@ package app
 
 import (
 	"github.com/mattermost/focalboard/server/auth"
-	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/metrics"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/webhook"
+	"github.com/mattermost/focalboard/server/ws"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
 )
-
-type WebsocketServer interface {
-	BroadcastBlockChange(workspaceID string, block model.Block)
-	BroadcastBlockDelete(workspaceID, blockID, parentID string)
-}
 
 type Services struct {
 	Auth          *auth.Auth
@@ -33,7 +28,7 @@ type App struct {
 	config        *config.Configuration
 	store         store.Store
 	auth          *auth.Auth
-	wsServer      WebsocketServer
+	wsAdapter     ws.Adapter
 	filesBackend  filestore.FileBackend
 	webhook       *webhook.Client
 	metrics       *metrics.Metrics
@@ -41,12 +36,12 @@ type App struct {
 	logger        *mlog.Logger
 }
 
-func New(config *config.Configuration, wsServer WebsocketServer, services Services) *App {
+func New(config *config.Configuration, wsAdapter ws.Adapter, services Services) *App {
 	return &App{
 		config:        config,
 		store:         services.Store,
 		auth:          services.Auth,
-		wsServer:      wsServer,
+		wsAdapter:     wsAdapter,
 		filesBackend:  services.FilesBackend,
 		webhook:       services.Webhook,
 		metrics:       services.Metrics,

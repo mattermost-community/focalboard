@@ -6,15 +6,17 @@ import (
 	"path"
 	"sync"
 
+	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
+	"github.com/mattermost/focalboard/server/ws"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
 
-	"github.com/mattermost/mattermost-server/v6/model"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -30,30 +32,8 @@ type Plugin struct {
 	// setConfiguration for usage.
 	configuration *configuration
 
-	server *server.Server
-	wsHub  *WSHub
-}
-
-type WSHub struct {
-	API             plugin.API
-	handleWSMessage func(data []byte)
-}
-
-func (h *WSHub) SendWSMessage(data []byte) {
-	err := h.API.PublishPluginClusterEvent(model.PluginClusterEvent{
-		Id:   "websocket_event",
-		Data: data,
-	}, model.PluginClusterEventSendOptions{
-		SendType: model.PluginClusterEventSendTypeReliable,
-	})
-
-	if err != nil {
-		h.API.LogError("Error sending websocket message", map[string]interface{}{"err": err})
-	}
-}
-
-func (h *WSHub) SetReceiveWSMessage(handler func(data []byte)) {
-	h.handleWSMessage = handler
+	server          *server.Server
+	wsPluginAdapter *ws.PluginAdapter
 }
 
 func (p *Plugin) OnActivate() error {
@@ -143,6 +123,7 @@ func (p *Plugin) OnActivate() error {
 	}
 
 	serverID := client.System.GetDiagnosticID()
+	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db))
 
 	params := server.Params{
 		Cfg:             cfg,
@@ -150,6 +131,7 @@ func (p *Plugin) OnActivate() error {
 		DBStore:         db,
 		Logger:          logger,
 		ServerID:        serverID,
+		WSAdapter:       p.wsPluginAdapter,
 	}
 
 	server, err := server.New(params)
@@ -158,16 +140,20 @@ func (p *Plugin) OnActivate() error {
 		return err
 	}
 
-	p.wsHub = &WSHub{API: p.API}
-	server.SetWSHub(p.wsHub)
 	p.server = server
 	return server.Start()
 }
 
-func (p *Plugin) OnPluginClusterEvent(_ *plugin.Context, ev model.PluginClusterEvent) {
-	if ev.Id == "websocket_event" {
-		p.wsHub.handleWSMessage(ev.Data)
-	}
+func (p *Plugin) OnWebSocketConnect(webConnID, userID string) {
+	p.wsPluginAdapter.OnWebSocketConnect(webConnID, userID)
+}
+
+func (p *Plugin) OnWebSocketDisconnect(webConnID, userID string) {
+	p.wsPluginAdapter.OnWebSocketDisconnect(webConnID, userID)
+}
+
+func (p *Plugin) WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest) {
+	p.wsPluginAdapter.WebSocketMessageHasBeenPosted(webConnID, userID, req)
 }
 
 func (p *Plugin) OnDeactivate() error {

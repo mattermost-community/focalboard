@@ -46,7 +46,7 @@ func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.Bl
 	if err != nil {
 		return nil
 	}
-	a.wsServer.BroadcastBlockChange(c.WorkspaceID, *block)
+	a.wsAdapter.BroadcastBlockChange(c.WorkspaceID, *block)
 	go func() {
 		a.webhook.NotifyUpdate(*block)
 		a.notifications.BlockChanged(notify.Update, block, oldBlock)
@@ -57,7 +57,7 @@ func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.Bl
 func (a *App) InsertBlock(c store.Container, block model.Block, userID string) error {
 	err := a.store.InsertBlock(c, &block, userID)
 	if err == nil {
-		a.wsServer.BroadcastBlockChange(c.WorkspaceID, block)
+		a.wsAdapter.BroadcastBlockChange(c.WorkspaceID, block)
 		a.metrics.IncrementBlocksInserted(1)
 		go func() {
 			a.webhook.NotifyUpdate(block)
@@ -77,7 +77,7 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block, userID strin
 
 		needsNotify = append(needsNotify, blocks[i])
 
-		a.wsServer.BroadcastBlockChange(c.WorkspaceID, blocks[i])
+		a.wsAdapter.BroadcastBlockChange(c.WorkspaceID, blocks[i])
 		a.metrics.IncrementBlocksInserted(1)
 	}
 
@@ -120,7 +120,7 @@ func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) 
 		return err
 	}
 
-	a.wsServer.BroadcastBlockDelete(c.WorkspaceID, blockID, parentID)
+	a.wsAdapter.BroadcastBlockDelete(c.WorkspaceID, blockID, parentID)
 	a.metrics.IncrementBlocksDeleted(1)
 	a.notifications.BlockChanged(notify.Update, block, nil)
 
