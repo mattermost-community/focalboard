@@ -1,5 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+
 import {Utils} from './utils'
 import {Block} from './blocks/block'
 import {OctoUtils} from './octoUtils'
@@ -19,6 +20,18 @@ type WSMessage = {
     error?: string
 }
 
+export const ACTION_UPDATE_BLOCK = 'UPDATE_BLOCK'
+export const ACTION_AUTH = 'AUTH'
+export const ACTION_SUBSCRIBE_BLOCKS = 'SUBSCRIBE_BLOCKS'
+export const ACTION_SUBSCRIBE_WORKSPACE = 'SUBSCRIBE_WORKSPACE'
+export const ACTION_UNSUBSCRIBE_WORKSPACE = 'UNSUBSCRIBE_WORKSPACE'
+export const ACTION_UNSUBSCRIBE_BLOCKS = 'UNSUBSCRIBE_BLOCKS'
+
+// The Mattermost websocket client interface
+export interface MMWebSocketClient {
+    sendMessage(action: string, data: any, responseCallback?: () => void): void
+}
+
 type OnChangeHandler = (client: WSClient, blocks: Block[]) => void
 type OnReconnectHandler = (client: WSClient) => void
 type OnStateChangeHandler = (client: WSClient, state: 'init' | 'open' | 'close') => void
@@ -26,6 +39,8 @@ type OnErrorHandler = (client: WSClient, e: Event) => void
 
 class WSClient {
     ws: WebSocket|null = null
+    client: MMWebSocketClient|null = null
+    clientPrefix = ''
     serverUrl: string | undefined
     state: 'init'|'open'|'close' = 'init'
     onStateChange: OnStateChangeHandler[] = []
@@ -59,6 +74,21 @@ class WSClient {
 
     constructor(serverUrl?: string) {
         this.serverUrl = serverUrl
+    }
+
+    initPlugin(pluginId: string, client: MMWebSocketClient): void {
+        this.clientPrefix = `custom_${pluginId}_`
+        this.client = client
+        Utils.log(`WSClient initialised for plugin id "${pluginId}"`)
+    }
+
+    sendCommand(command: WSCommand): void {
+        if (this.client !== null) {
+            const {action, ...data} = command
+            this.client.sendMessage(this.clientPrefix + action, data)
+        }
+
+        this.ws?.send(JSON.stringify(command))
     }
 
     addOnChange(handler: OnChangeHandler): void {
@@ -106,6 +136,13 @@ class WSClient {
     }
 
     open(): void {
+        // if running in plugin mode, no ws configuration needs to be done
+        if (this.client !== null) {
+            this.state = 'open'
+            Utils.log('Application in plugin mode, reusing Mattermost WS connection')
+            return
+        }
+
         const url = new URL(this.getBaseURL())
         const protocol = (url.protocol === 'https:') ? 'wss:' : 'ws:'
         const wsServerUrl = `${protocol}//${url.host}${url.pathname.replace(/\/$/, '')}/ws`
@@ -161,8 +198,8 @@ class WSClient {
                 }
 
                 switch (message.action) {
-                case 'UPDATE_BLOCK':
-                    this.queueUpdateNotification(message.block!)
+                case ACTION_UPDATE_BLOCK:
+                    this.updateBlockHandler(message)
                     break
                 default:
                     Utils.logError(`Unexpected action: ${message.action}`)
@@ -173,8 +210,16 @@ class WSClient {
         }
     }
 
+    hasConn(): boolean {
+        return this.ws !== null || this.client !== null
+    }
+
+    updateBlockHandler(message: WSMessage): void {
+        this.queueUpdateNotification(Utils.fixBlock(message.block!))
+    }
+
     authenticate(workspaceId: string, token: string): void {
-        if (!this.ws) {
+        if (!this.hasConn()) {
             Utils.assertFailure('WSClient.addBlocks: ws is not open')
             return
         }
@@ -183,71 +228,72 @@ class WSClient {
             return
         }
         const command = {
-            action: 'AUTH',
+            action: ACTION_AUTH,
             token,
             workspaceId,
         }
-        this.ws.send(JSON.stringify(command))
+
+        this.sendCommand(command)
     }
 
     subscribeToBlocks(workspaceId: string, blockIds: string[], readToken = ''): void {
-        if (!this.ws) {
+        if (!this.hasConn()) {
             Utils.assertFailure('WSClient.subscribeToBlocks: ws is not open')
             return
         }
 
         const command: WSCommand = {
-            action: 'SUBSCRIBE_BLOCKS',
+            action: ACTION_SUBSCRIBE_BLOCKS,
             blockIds,
             workspaceId,
             readToken,
         }
 
-        this.ws.send(JSON.stringify(command))
+        this.sendCommand(command)
     }
 
     unsubscribeToWorkspace(workspaceId: string): void {
-        if (!this.ws) {
+        if (!this.hasConn()) {
             Utils.assertFailure('WSClient.subscribeToWorkspace: ws is not open')
             return
         }
 
         const command: WSCommand = {
-            action: 'UNSUBSCRIBE_WORKSPACE',
+            action: ACTION_UNSUBSCRIBE_WORKSPACE,
             workspaceId,
         }
 
-        this.ws.send(JSON.stringify(command))
+        this.sendCommand(command)
     }
 
     subscribeToWorkspace(workspaceId: string): void {
-        if (!this.ws) {
+        if (!this.hasConn()) {
             Utils.assertFailure('WSClient.subscribeToWorkspace: ws is not open')
             return
         }
 
         const command: WSCommand = {
-            action: 'SUBSCRIBE_WORKSPACE',
+            action: ACTION_SUBSCRIBE_WORKSPACE,
             workspaceId,
         }
 
-        this.ws.send(JSON.stringify(command))
+        this.sendCommand(command)
     }
 
     unsubscribeFromBlocks(workspaceId: string, blockIds: string[], readToken = ''): void {
-        if (!this.ws) {
+        if (!this.hasConn()) {
             Utils.assertFailure('WSClient.removeBlocks: ws is not open')
             return
         }
 
         const command: WSCommand = {
-            action: 'UNSUBSCRIBE_BLOCKS',
+            action: ACTION_UNSUBSCRIBE_BLOCKS,
             blockIds,
             workspaceId,
             readToken,
         }
 
-        this.ws.send(JSON.stringify(command))
+        this.sendCommand(command)
     }
 
     private queueUpdateNotification(block: Block) {
@@ -274,11 +320,11 @@ class WSClient {
     }
 
     close(): void {
-        if (!this.ws) {
+        if (!this.hasConn()) {
             return
         }
 
-        Utils.log(`WSClient close: ${this.ws.url}`)
+        Utils.log(`WSClient close: ${this.ws?.url}`)
 
         // Use this sequence so the onclose method doesn't try to re-open
         const ws = this.ws
@@ -287,6 +333,12 @@ class WSClient {
         this.onReconnect = []
         this.onStateChange = []
         this.onError = []
+
+        // if running in plugin mode, nothing else needs to be done
+        if (this.client) {
+            return
+        }
+
         try {
             ws?.close()
         } catch {

@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Store, Action} from 'redux'
 import {Provider as ReduxProvider} from 'react-redux'
 import {useHistory} from 'mm-react-router-dom'
@@ -21,6 +21,7 @@ import store from '../../../webapp/src/store'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
 import {setMattermostTheme} from '../../../webapp/src/theme'
+import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK} from './../../../webapp/src/wsclient'
 
 import TelemetryClient from '../../../webapp/src/telemetry/telemetryClient'
 
@@ -60,7 +61,14 @@ function getSubpath(siteURL: string): string {
     return url.pathname.replace(/\/+$/, '')
 }
 
-const MainApp = () => {
+type Props = {
+    webSocketClient: MMWebSocketClient
+}
+
+const MainApp = (props: Props) => {
+    const [faviconStored, setFaviconStored] = useState(false)
+    wsClient.initPlugin(manifest.id, props.webSocketClient)
+
     useEffect(() => {
         document.body.classList.add('focalboard-body')
         const root = document.getElementById('root')
@@ -152,6 +160,7 @@ export default class Plugin {
             this.registry.registerCustomRoute('/', MainApp)
         }
 
+
         const config = await octoClient.getClientConfig()
         if (config?.telemetry) {
             let rudderKey = TELEMETRY_RUDDER_KEY
@@ -177,12 +186,18 @@ export default class Plugin {
                 TelemetryClient.setTelemetryHandler(new RudderTelemetryHandler())
             }
         }
+
+        // register websocket handlers
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BLOCK}`, (e: any) => wsClient.updateBlockHandler(e.data))
     }
 
     uninitialize(): void {
         if (this.channelHeaderButtonId) {
             this.registry?.unregisterComponent(this.channelHeaderButtonId)
         }
+
+        // unregister websocket handlers
+        this.registry?.unregisterWebSocketEventHandler(wsClient.clientPrefix + ACTION_UPDATE_BLOCK)
     }
 }
 
