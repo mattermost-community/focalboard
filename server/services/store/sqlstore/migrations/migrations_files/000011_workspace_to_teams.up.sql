@@ -24,6 +24,7 @@ CREATE TABLE {{.prefix}boards (
     type VARCHAR(1) NOT NULL,
     show_description BOOLEAN,
     is_template BOOLEAN,
+    scheme_id VARCHAR(26),
     {{if .mysql}}
     properties JSON,
     card_properties JSON,
