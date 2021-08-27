@@ -93,7 +93,6 @@
         font-size: 14px;
         position: relative;
         text-overflow: ellipsis;
-        align-items: center;
 
         &:hover {
             background-color: rgba(var(--center-channel-color-rgb), 0.05);
@@ -197,6 +196,10 @@
 
     .table-row-container {
         width: fit-content;
+        
+        .octo-table-cell {
+            align-items: center;
+        }
     }
 
     .octo-table-footer {
