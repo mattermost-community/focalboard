@@ -13,6 +13,11 @@ CREATE TABLE {{.prefix}board_members (
     schemeViewer boolean,
     lastviewedat bigint,
     mentioncount bigint,
+    {{if .mysql}}
+    notifyprops json,
+    {{else}}
+    notifyprops jsonb,
+    {{end}}
     notifyprops jsonb,
 	PRIMARY KEY (boardId, userId)
 );
