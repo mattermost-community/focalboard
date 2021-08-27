@@ -6,8 +6,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/utils"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
 )

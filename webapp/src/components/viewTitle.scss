@@ -1,4 +1,4 @@
-.focalboard-body .ViewTitle {
+.ViewTitle {
     > div {
         flex: 0 0 auto;
         display: flex;
@@ -40,7 +40,7 @@
     }
 
     .Editable {
-        margin-bottom: 0px;
+        margin-bottom: 0;
         flex-grow: 1;
     }
 

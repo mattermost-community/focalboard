@@ -5,10 +5,11 @@ import (
 	"os"
 	"testing"
 
-	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/storetests"
 	"github.com/stretchr/testify/require"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 func SetupTests(t *testing.T) (store.Store, func()) {
@@ -22,7 +23,7 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 		connectionString = ":memory:"
 	}
 
-	logger := mlog.CreateTestLogger(t)
+	logger := mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)
 
 	sqlDB, err := sql.Open(dbType, connectionString)
 	require.NoError(t, err)

@@ -5,7 +5,8 @@ import (
 	"testing"
 
 	"github.com/mattermost/focalboard/server/auth"
-	"github.com/mattermost/focalboard/server/services/mlog"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/gorilla/websocket"
 	"github.com/stretchr/testify/require"
@@ -13,7 +14,7 @@ import (
 
 func TestTeamSubscription(t *testing.T) {
 	server := NewServer(&auth.Auth{}, "token", false, &mlog.Logger{})
-	client := &wsClient{&websocket.Conn{}, &sync.Mutex{}, []string{}, []string{}}
+	client := &wsClient{&websocket.Conn{}, sync.Mutex{}, []string{}, []string{}}
 	session := &websocketSession{client: client}
 	teamID := "fake-team-id"
 
@@ -99,7 +100,7 @@ func TestTeamSubscription(t *testing.T) {
 
 func TestBlocksSubscription(t *testing.T) {
 	server := NewServer(&auth.Auth{}, "token", false, &mlog.Logger{})
-	client := &wsClient{&websocket.Conn{}, &sync.Mutex{}, []string{}, []string{}}
+	client := &wsClient{&websocket.Conn{}, sync.Mutex{}, []string{}, []string{}}
 	session := &websocketSession{client: client}
 	blockID1 := "block1"
 	blockID2 := "block2"

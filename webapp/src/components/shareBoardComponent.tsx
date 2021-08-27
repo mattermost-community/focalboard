@@ -76,8 +76,7 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
     shareUrl.searchParams.set('r', readToken)
 
     if (match.params.teamId) {
-        const newPath = generatePath(':basename/team/:teamId/shared/:boardId/:viewId', {
-            basename: Utils.getFrontendBaseURL(),
+        const newPath = generatePath('/plugins/focalboard/team/:teamId/shared/:boardId/:viewId', {
             boardId: match.params.boardId,
             viewId: match.params.viewId,
             teamId: match.params.teamId,

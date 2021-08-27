@@ -5,9 +5,10 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore/initializations"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 // InitializeTemplates imports default templates if the blocks table is empty.

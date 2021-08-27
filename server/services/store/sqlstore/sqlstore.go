@@ -4,7 +4,8 @@ import (
 	"database/sql"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/mattermost/focalboard/server/services/mlog"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const (

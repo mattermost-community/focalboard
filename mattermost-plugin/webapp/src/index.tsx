@@ -1,13 +1,12 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Store, Action} from 'redux'
 import {Provider as ReduxProvider} from 'react-redux'
 import {useHistory} from 'mm-react-router-dom'
 
 import {GlobalState} from 'mattermost-redux/types/store'
 import {getTheme} from 'mattermost-redux/selectors/entities/preferences'
-import {getChannelByName} from 'mattermost-redux/selectors/entities/channels'
 
 const windowAny = (window as any)
 windowAny.baseURL = '/plugins/focalboard'
@@ -19,6 +18,7 @@ import store from '../../../webapp/src/store'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
 import {setMattermostTheme} from '../../../webapp/src/theme'
+import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK} from './../../../webapp/src/wsclient'
 
 import '../../../webapp/src/styles/focalboard-variables.scss'
 import '../../../webapp/src/styles/main.scss'
@@ -32,7 +32,14 @@ import {PluginRegistry} from './types/mattermost-webapp'
 
 import './plugin.scss'
 
-const MainApp = () => {
+type Props = {
+    webSocketClient: MMWebSocketClient
+}
+
+const MainApp = (props: Props) => {
+    const [faviconStored, setFaviconStored] = useState(false)
+    wsClient.initPlugin(manifest.id, props.webSocketClient)
+
     useEffect(() => {
         document.body.classList.add('focalboard-body')
         const root = document.getElementById('root')
@@ -49,23 +56,15 @@ const MainApp = () => {
     }, [])
 
     useEffect(() => {
-        const oldLink = document.querySelector("link[rel*='icon']") as HTMLLinkElement
-        if (!oldLink) {
+        const oldLinks = document.querySelectorAll("link[rel*='icon']") as NodeListOf<HTMLLinkElement>
+        if (!oldLinks) {
             return () => null
         }
+        setFaviconStored(true)
 
-        const restoreData = {
-            type: oldLink.type,
-            rel: oldLink.rel,
-            href: oldLink.href,
-        }
         return () => {
             document.querySelectorAll("link[rel*='icon']").forEach((n) => n.remove())
-            const link = document.createElement('link') as HTMLLinkElement
-            link.type = restoreData.type
-            link.rel = restoreData.rel
-            link.href = restoreData.href
-            document.getElementsByTagName('head')[0].appendChild(link)
+            oldLinks.forEach((link) => document.getElementsByTagName('head')[0].appendChild(link))
         }
     }, [])
 
@@ -73,7 +72,7 @@ const MainApp = () => {
         <ErrorBoundary>
             <ReduxProvider store={store}>
                 <div id='focalboard-app'>
-                    <App/>
+                    {faviconStored && <App/>}
                 </div>
                 <div id='focalboard-root-portal'/>
             </ReduxProvider>
@@ -117,45 +116,51 @@ export default class Plugin {
 
         if (this.registry.registerProduct) {
             windowAny.frontendBaseURL = '/boards'
-            const goToFocalboardWorkspace = () => {
-                const currentChannel = mmStore.getState().entities.channels.currentChannelId
-                window.open(`${window.location.origin}/boards/workspace/${currentChannel}`)
+            const goToFocalboardTeam = () => {
+                const currentTeam = mmStore.getState().entities.teams.currentTeamId
+                window.open(`${window.location.origin}/boards/team/${currentTeam}`)
             }
-            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Focalboard Workspace')
+            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardTeam, '', 'Boards')
 
-            this.registry.registerCustomRoute('go-to-current-workspace', () => {
+            this.registry.registerCustomRoute('go-to-current-team', () => {
                 const history = useHistory()
                 useEffect(() => {
-                    const currentChannel = mmStore.getState().entities.channels.currentChannelId
-                    if (currentChannel) {
-                        history.replace(`/boards/workspace/${currentChannel}`)
+                    const currentTeam = mmStore.getState().entities.teams.currentTeamId
+                    if (currentTeam) {
+                        history.replace(`/boards/team/${currentTeam}`)
                         return
                     }
                     const currentUserId = mmStore.getState().entities.users.currentUserId
-                    const lastChannelId = localStorage.getItem('focalboardLastViewedChannel:' + currentUserId)
-                    if (lastChannelId) {
-                        history.replace(`/boards/workspace/${lastChannelId}`)
+                    const lastTeamId = localStorage.getItem('focalboardLastViewedTeam:' + currentUserId)
+                    if (lastTeamId) {
+                        history.replace(`/boards/team/${lastTeamId}`)
                         return
                     }
                     history.goBack()
                 }, [])
                 return <></>
             })
-            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/plug/focalboard/go-to-current-workspace', MainApp, HeaderComponent)
+            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/plug/focalboard/go-to-current-team', MainApp, HeaderComponent)
         } else {
             windowAny.frontendBaseURL = '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
-                const currentChannel = mmStore.getState().entities.channels.currentChannelId
-                window.open(`${window.location.origin}/plug/focalboard/workspace/${currentChannel}`)
-            }, '', 'Focalboard Workspace')
+                const currentTeam = mmStore.getState().entities.teams.currentTeamId
+                window.open(`${window.location.origin}/plug/focalboard/team/${currentTeam}`)
+            }, '', 'Boards')
             this.registry.registerCustomRoute('/', MainApp)
         }
+
+        // register websocket handlers
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BLOCK}`, (e: any) => wsClient.updateBlockHandler(e.data))
     }
 
     uninitialize(): void {
         if (this.channelHeaderButtonId) {
             this.registry?.unregisterComponent(this.channelHeaderButtonId)
         }
+
+        // unregister websocket handlers
+        this.registry?.unregisterWebSocketEventHandler(wsClient.clientPrefix + ACTION_UPDATE_BLOCK)
     }
 }
 

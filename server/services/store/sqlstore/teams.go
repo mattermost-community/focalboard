@@ -5,8 +5,9 @@ import (
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/utils"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	sq "github.com/Masterminds/squirrel"
 )

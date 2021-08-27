@@ -12,9 +12,10 @@ import (
 	sq "github.com/Masterminds/squirrel"
 	_ "github.com/lib/pq" // postgres driver
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/store"
 	_ "github.com/mattn/go-sqlite3" // sqlite driver
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 type RootIDNilError struct{}
