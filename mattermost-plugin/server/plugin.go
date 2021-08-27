@@ -144,7 +144,15 @@ func (p *Plugin) OnActivate() error {
 
 	serverID := client.System.GetDiagnosticID()
 
-	server, err := server.New(cfg, "", db, logger, serverID)
+	params := server.Params{
+		Cfg:             cfg,
+		SingleUserToken: "",
+		DBStore:         db,
+		Logger:          logger,
+		ServerID:        serverID,
+	}
+
+	server, err := server.New(params)
 	if err != nil {
 		fmt.Println("ERROR INITIALIZING THE SERVER", err)
 		return err

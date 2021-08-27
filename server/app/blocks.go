@@ -2,6 +2,7 @@ package app
 
 import (
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/store"
 )
 
@@ -30,39 +31,63 @@ func (a *App) GetParentID(c store.Container, blockID string) (string, error) {
 }
 
 func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.BlockPatch, userID string) error {
-	err := a.store.PatchBlock(c, blockID, blockPatch, userID)
+	oldBlock, err := a.store.GetBlock(c, blockID)
+	if err != nil {
+		return nil
+	}
+
+	err = a.store.PatchBlock(c, blockID, blockPatch, userID)
 	if err != nil {
 		return err
 	}
+
 	a.metrics.IncrementBlocksPatched(1)
 	block, err := a.store.GetBlock(c, blockID)
 	if err != nil {
 		return nil
 	}
 	a.wsServer.BroadcastBlockChange(c.WorkspaceID, *block)
-	go a.webhook.NotifyUpdate(*block)
+	go func() {
+		a.webhook.NotifyUpdate(*block)
+		a.notifications.BlockChanged(notify.Update, block, oldBlock)
+	}()
 	return nil
 }
 
 func (a *App) InsertBlock(c store.Container, block model.Block, userID string) error {
 	err := a.store.InsertBlock(c, &block, userID)
 	if err == nil {
+		a.wsServer.BroadcastBlockChange(c.WorkspaceID, block)
 		a.metrics.IncrementBlocksInserted(1)
+		go func() {
+			a.webhook.NotifyUpdate(block)
+			a.notifications.BlockChanged(notify.Add, &block, nil)
+		}()
 	}
 	return err
 }
 
 func (a *App) InsertBlocks(c store.Container, blocks []model.Block, userID string) error {
+	needsNotify := make([]model.Block, 0, len(blocks))
 	for i := range blocks {
 		err := a.store.InsertBlock(c, &blocks[i], userID)
 		if err != nil {
 			return err
 		}
 
+		needsNotify = append(needsNotify, blocks[i])
+
 		a.wsServer.BroadcastBlockChange(c.WorkspaceID, blocks[i])
-		a.metrics.IncrementBlocksInserted(len(blocks))
-		go a.webhook.NotifyUpdate(blocks[i])
+		a.metrics.IncrementBlocksInserted(1)
 	}
+
+	go func() {
+		for _, b := range needsNotify {
+			block := b
+			a.webhook.NotifyUpdate(block)
+			a.notifications.BlockChanged(notify.Add, &block, nil)
+		}
+	}()
 
 	return nil
 }
@@ -85,6 +110,11 @@ func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) 
 		return err
 	}
 
+	block, err := a.store.GetBlock(c, blockID)
+	if err != nil {
+		return err
+	}
+
 	err = a.store.DeleteBlock(c, blockID, modifiedBy)
 	if err != nil {
 		return err
@@ -92,6 +122,7 @@ func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) 
 
 	a.wsServer.BroadcastBlockDelete(c.WorkspaceID, blockID, parentID)
 	a.metrics.IncrementBlocksDeleted(1)
+	a.notifications.BlockChanged(notify.Update, block, nil)
 
 	return nil
 }
