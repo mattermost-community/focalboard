@@ -1,8 +1,8 @@
 package model
 
 type BoardMember struct {
-	BoardId       string                 `json:"board_id"`
-	UserId        string                 `json:"user_id"`
+	BoardID       string                 `json:"board_id"`
+	UserID        string                 `json:"user_id"`
 	Roles         string                 `json:"roles"`
 	SchemeGuest   bool                   `json:"scheme_guest"`
 	SchemeUser    bool                   `json:"scheme_user"`
