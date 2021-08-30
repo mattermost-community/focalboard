@@ -39,7 +39,7 @@ func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.Bl
 	if err != nil {
 		return nil
 	}
-	a.wsServer.BroadcastBlockChange(c.WorkspaceID, *block)
+	a.wsAdapter.BroadcastBlockChange(c.WorkspaceID, *block)
 	go a.webhook.NotifyUpdate(*block)
 	return nil
 }
@@ -59,7 +59,7 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block, userID strin
 			return err
 		}
 
-		a.wsServer.BroadcastBlockChange(c.WorkspaceID, blocks[i])
+		a.wsAdapter.BroadcastBlockChange(c.WorkspaceID, blocks[i])
 		a.metrics.IncrementBlocksInserted(len(blocks))
 		go a.webhook.NotifyUpdate(blocks[i])
 	}
@@ -90,7 +90,7 @@ func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) 
 		return err
 	}
 
-	a.wsServer.BroadcastBlockDelete(c.WorkspaceID, blockID, parentID)
+	a.wsAdapter.BroadcastBlockDelete(c.WorkspaceID, blockID, parentID)
 	a.metrics.IncrementBlocksDeleted(1)
 
 	return nil
