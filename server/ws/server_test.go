@@ -14,7 +14,7 @@ import (
 
 func TestWorkspaceSubscription(t *testing.T) {
 	server := NewServer(&auth.Auth{}, "token", false, &mlog.Logger{})
-	client := &wsClient{&websocket.Conn{}, &sync.Mutex{}, []string{}, []string{}}
+	client := &wsClient{&websocket.Conn{}, sync.Mutex{}, []string{}, []string{}}
 	session := &websocketSession{client: client}
 	workspaceID := "fake-workspace-id"
 
@@ -100,7 +100,7 @@ func TestWorkspaceSubscription(t *testing.T) {
 
 func TestBlocksSubscription(t *testing.T) {
 	server := NewServer(&auth.Auth{}, "token", false, &mlog.Logger{})
-	client := &wsClient{&websocket.Conn{}, &sync.Mutex{}, []string{}, []string{}}
+	client := &wsClient{&websocket.Conn{}, sync.Mutex{}, []string{}, []string{}}
 	session := &websocketSession{client: client}
 	blockID1 := "block1"
 	blockID2 := "block2"
