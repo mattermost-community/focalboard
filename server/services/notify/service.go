@@ -46,6 +46,8 @@ func New(logger *mlog.Logger, backends ...Backend) (*Service, error) {
 	for _, backend := range backends {
 		if err := notify.AddBackend(backend); err != nil {
 			merr.Append(err)
+		} else {
+			logger.Info("Initialized notification backend", mlog.String("name", backend.Name()))
 		}
 	}
 	return notify, merr.ErrorOrNil()

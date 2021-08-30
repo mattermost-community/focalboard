@@ -125,7 +125,7 @@ func New(params Params) (*Server, error) {
 	}
 
 	// Init notification services
-	notificationService, errNotify := initNotificationService(params.Logger)
+	notificationService, errNotify := initNotificationService(params.NotifyBackends, params.Logger)
 	if errNotify != nil {
 		return nil, fmt.Errorf("cannot initialize notification service: %w", errNotify)
 	}
@@ -470,9 +470,11 @@ func initTelemetry(opts telemetryOptions) *telemetry.Service {
 	return telemetryService
 }
 
-func initNotificationService(logger *mlog.Logger) (*notify.Service, error) {
+func initNotificationService(backends []notify.Backend, logger *mlog.Logger) (*notify.Service, error) {
 	loggerBackend := notifylogger.New(logger, mlog.LvlDebug)
 
-	service, err := notify.New(logger, loggerBackend)
+	backends = append(backends, loggerBackend)
+
+	service, err := notify.New(logger, backends...)
 	return service, err
 }
