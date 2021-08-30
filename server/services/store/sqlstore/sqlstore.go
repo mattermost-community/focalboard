@@ -2,10 +2,6 @@ package sqlstore
 
 import (
 	"database/sql"
-	"fmt"
-
-	"github.com/mattermost/focalboard/server/utils"
-
 	sq "github.com/Masterminds/squirrel"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -28,26 +24,17 @@ type SQLStore struct {
 
 // New creates a new SQL implementation of the store.
 func New(dbType, connectionString, tablePrefix string, logger *mlog.Logger, db *sql.DB) (*SQLStore, error) {
-	connectionStringToUse, err := utils.EnsureCollation(dbType, connectionString)
-	fmt.Println("#################################################################################")
-	fmt.Println(connectionStringToUse)
-	fmt.Println("#################################################################################")
-	if err != nil {
-		logger.Error("Failed to ensure collation in database connection string", mlog.Err(err))
-		return nil, err
-	}
-
-	logger.Info("connectDatabase", mlog.String("dbType", dbType), mlog.String("connStr", connectionStringToUse))
+	logger.Info("connectDatabase", mlog.String("dbType", dbType), mlog.String("connStr", connectionString))
 	store := &SQLStore{
 		// TODO: add replica DB support too.
 		db:               db,
 		dbType:           dbType,
 		tablePrefix:      tablePrefix,
-		connectionString: connectionStringToUse,
+		connectionString: connectionString,
 		logger:           logger,
 	}
 
-	err = store.Migrate()
+	err := store.Migrate()
 	if err != nil {
 		logger.Error(`Table creation / migration failed`, mlog.Err(err))
 

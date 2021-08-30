@@ -11,8 +11,6 @@ import (
 	"syscall"
 	"time"
 
-	utils2 "github.com/mattermost/focalboard/server/utils"
-
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
@@ -192,16 +190,7 @@ func New(cfg *config.Configuration, singleUserToken string, db store.Store,
 }
 
 func NewStore(config *config.Configuration, logger *mlog.Logger) (store.Store, error) {
-	connectionStringToUse, err := utils2.EnsureCollation(config.DBType, config.DBConfigString)
-	fmt.Println("#################################################################################")
-	fmt.Println(connectionStringToUse)
-	fmt.Println("#################################################################################")
-	if err != nil {
-		logger.Error("Failed to ensure collation in database connection string", mlog.Err(err))
-		return nil, err
-	}
-
-	sqlDB, err := sql.Open(config.DBType, connectionStringToUse)
+	sqlDB, err := sql.Open(config.DBType, config.DBConfigString)
 	if err != nil {
 		logger.Error("connectDatabase failed", mlog.Err(err))
 		return nil, err
@@ -214,7 +203,7 @@ func NewStore(config *config.Configuration, logger *mlog.Logger) (store.Store, e
 	}
 
 	var db store.Store
-	db, err = sqlstore.New(config.DBType, connectionStringToUse, config.DBTablePrefix, logger, sqlDB)
+	db, err = sqlstore.New(config.DBType, config.DBConfigString, config.DBTablePrefix, logger, sqlDB)
 	if err != nil {
 		return nil, err
 	}
