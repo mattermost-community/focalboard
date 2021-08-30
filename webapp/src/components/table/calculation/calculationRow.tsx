@@ -12,6 +12,7 @@ import Calculation from '../../calculations/calculation'
 import {columnWidth} from '../tableRow'
 import {BoardView} from '../../../blocks/boardView'
 import {Card} from '../../../blocks/card'
+import {Options} from '../../calculations/options'
 
 type Props = {
     board: Board
@@ -40,12 +41,20 @@ const CalculationRow = (props: Props): JSX.Element => {
 
     const selectedCalculations = props.board.fields.columnCalculations || []
 
+    const [hovered, setHovered] = useState(false)
+    const toggleHover = () => setHovered(!hovered)
+
     return (
-        <div className='CalculationRow octo-table-row'>
+        <div
+            className={'CalculationRow octo-table-row'}
+            onMouseEnter={toggleHover}
+            onMouseLeave={toggleHover}
+        >
             {
                 templates.map((template) => {
                     const style = {width: columnWidth(props.resizingColumn, props.activeView.fields.columnWidths, props.offset, template.id)}
-                    const value = selectedCalculations[template.id] || 'none'
+                    const defaultValue = template.id === Constants.titleColumnId ? Options.count.value : Options.none.value
+                    const value = selectedCalculations[template.id] || defaultValue
 
                     return (
                         <Calculation
@@ -62,9 +71,11 @@ const CalculationRow = (props: Props): JSX.Element => {
                                 const newBoard = createBoard(props.board)
                                 newBoard.fields.columnCalculations = calculations
                                 mutator.updateBlock(newBoard, props.board, 'update_calculation')
+                                toggleHover()
                             }}
                             cards={props.cards}
                             property={template}
+                            hovered={hovered}
                         />
                     )
                 })
