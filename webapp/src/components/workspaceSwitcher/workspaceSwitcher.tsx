@@ -19,17 +19,13 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
     const match = useRouteMatch()
 
     const [showMenu, setShowMenu] = useState<boolean>(false)
-    const [selectClosed, setSelectClosed] = useState<boolean>(false)
 
     return (
         <div className={'WorkspaceSwitcherWrapper'}>
             <div
                 className='WorkspaceSwitcher'
                 onClick={() => {
-                    if (selectClosed) {
-                        setSelectClosed(false)
-                        setShowMenu(false)
-                    } else {
+                    if (!showMenu) {
                         setShowMenu(true)
                     }
                 }}
@@ -41,13 +37,12 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
                 showMenu &&
                 <WorkspaceOptions
                     activeWorkspaceId={props.activeWorkspace.id}
-                    onClose={() => {
-                        setSelectClosed(true)
+                    onBlur={() => {
+                        setShowMenu(false)
                     }}
                     onChange={(workspaceId: string) => {
-                        const newPath = generatePath(match.path, {workspaceId})
-                        setSelectClosed(false)
                         setShowMenu(false)
+                        const newPath = generatePath(match.path, {workspaceId})
                         history.replace(newPath)
                     }}
                 />

@@ -13,7 +13,6 @@ import Search from '../../widgets/icons/search'
 import {getUserWorkspaceList} from '../../store/workspace'
 
 type Props = {
-    onClose?: () => void
     onBlur?: () => void
     onChange: (value: string) => void
     activeWorkspaceId: string
@@ -47,11 +46,6 @@ const WorkspaceOptions = (props: Props): JSX.Element => {
                 id: 'Sidebar.no-more-workspaces',
                 defaultMessage: 'No more workspaces',
             })}
-            onMenuClose={() => {
-                if (props.onClose) {
-                    props.onClose()
-                }
-            }}
             onBlur={() => {
                 if (props.onBlur) {
                     props.onBlur()

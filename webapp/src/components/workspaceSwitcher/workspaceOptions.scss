@@ -1,5 +1,5 @@
 .Option {
-    padding: 0px 20px;
+    padding: 0 20px;
     display: flex;
     flex-direction: column;
     cursor: pointer;
@@ -48,7 +48,7 @@
         color: rgba(var(--center-channel-color-rgb), 0.64);
     }
 
-    &__indicators{
+    &__indicators {
         color: rgba(var(--center-channel-color-rgb), 0.64);
         font-size: 18px;
     }
@@ -61,7 +61,7 @@
         flex-direction: row-reverse;
         box-shadow: 0 0 0 1px rgba(var(--center-channel-color-rgb), 0.16);
         padding: 0 12px;
-        border: none !important;
+        border: 0 !important;
 
         &--is-focused {
             box-shadow: 0 0 0 2px rgba(var(--button-bg-rgb)) !important;
@@ -71,9 +71,8 @@
     &__menu {
         position: relative !important;
         margin-top: 0 !important;
-        border-top: none;
         box-shadow: none !important;
-        border: none !important;
+        border: 0 !important;
         margin: 0 -16px;
         width: auto !important;
         margin-bottom: 0 !important;
@@ -83,7 +82,16 @@
         color: rgb(var(--center-channel-color-rgb)) !important;
     }
 
-    &__control, &__menu {
+    &__control,
+    &__menu {
         background-color: transparent !important;
+    }
+
+    &__value-container {
+        cursor: text !important;
+    }
+
+    &__indicators {
+        cursor: pointer !important;
     }
 }
