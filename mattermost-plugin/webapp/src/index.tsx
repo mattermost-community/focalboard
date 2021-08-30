@@ -154,7 +154,6 @@ export default class Plugin {
             })
             this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/plug/focalboard/go-to-current-workspace', MainApp, HeaderComponent)
         } else {
-            console.log('else this.registry.registerProduct')
             windowAny.frontendBaseURL = subpath + '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
