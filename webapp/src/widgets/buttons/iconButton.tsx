@@ -19,10 +19,12 @@ function IconButton(props: Props): JSX.Element {
     }
     return (
         <div
+            role='button'
             onClick={props.onClick}
             onMouseDown={props.onMouseDown}
             className={className}
             title={props.title}
+            aria-label={props.title}
         >
             {props.icon}
         </div>

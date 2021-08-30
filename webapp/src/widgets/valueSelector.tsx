@@ -70,7 +70,10 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
                 <Label color={option.color}>{option.value}</Label>
             </div>
             <MenuWrapper stopPropagationOnToggle={true}>
-                <IconButton icon={<OptionsIcon/>}/>
+                <IconButton
+                    title={intl.formatMessage({id: 'ValueSelectorLabel.openMenu', defaultMessage: 'Open Menu'})}
+                    icon={<OptionsIcon/>}
+                />
                 <Menu position='left'>
                     <Menu.Text
                         id='delete'
@@ -97,8 +100,8 @@ const valueSelectorStyle = {
     ...getSelectBaseStyle(),
     option: (provided: CSSObject, state: {isFocused: boolean}): CSSObject => ({
         ...provided,
-        background: state.isFocused ? 'rgba(var(--main-fg), 0.1)' : 'rgb(var(--main-bg))',
-        color: state.isFocused ? 'rgb(var(--main-fg))' : 'rgb(var(--main-fg))',
+        background: state.isFocused ? 'rgba(var(--center-channel-color-rgb), 0.1)' : 'rgb(var(--center-channel-bg-rgb))',
+        color: state.isFocused ? 'rgb(var(--center-channel-color-rgb))' : 'rgb(var(--center-channel-color-rgb))',
         padding: '8px',
     }),
     control: (): CSSObject => ({
@@ -129,14 +132,16 @@ const valueSelectorStyle = {
     menu: (provided: CSSObject): CSSObject => ({
         ...provided,
         width: 'unset',
-        background: 'rgb(var(--main-bg))',
+        background: 'rgb(var(--center-channel-bg-rgb))',
         minWidth: '260px',
     }),
 }
 
 function ValueSelector(props: Props): JSX.Element {
+    const intl = useIntl()
     return (
         <CreatableSelect
+            aria-label={intl.formatMessage({id: 'ValueSelector.valueSelector', defaultMessage: 'Value selector'})}
             captureMenuScroll={true}
             maxMenuHeight={1200}
             isMulti={props.isMulti}

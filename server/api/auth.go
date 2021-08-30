@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -14,7 +15,8 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
 	"github.com/mattermost/focalboard/server/services/auth"
-	"github.com/mattermost/focalboard/server/services/mlog"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const (
@@ -60,6 +62,14 @@ type LoginResponse struct {
 	// Session token
 	// required: true
 	Token string `json:"token"`
+}
+
+func LoginResponseFromJSON(data io.Reader) (*LoginResponse, error) {
+	var resp LoginResponse
+	if err := json.NewDecoder(data).Decode(&resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
 }
 
 // RegisterRequest is a user registration request

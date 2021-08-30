@@ -1,4 +1,4 @@
-.focalboard-body .Switch {
+.Switch {
     display: flex;
     flex-shrink: 0;
 
@@ -7,14 +7,15 @@
     width: 26px;
     border-radius: 44px;
     padding: 2px;
-    background-color: rgba(var(--body-color), 0.24);
+    background-color: rgba(var(--center-channel-color-rgb), 0.24);
     transition: background 200ms ease 0s, box-shadow 200ms ease 0s;
     cursor: pointer;
 
     &.on {
-        background-color: rgb(var(--button-bg));
+        background-color: rgb(var(--button-bg-rgb));
+
         .octo-switch-inner {
-            transform: translateX(12px) translateY(0px);
+            transform: translateX(12px) translateY(0);
         }
     }
 
@@ -22,8 +23,8 @@
         width: 14px;
         height: 14px;
         border-radius: 44px;
-        background: white;
+        background-color: rgb(var(--center-channel-bg-rgb));
         transition: transform 200ms ease-out 0s, background 200ms ease-out 0s;
-        transform: translateX(0px) translateY(0px);
+        transform: translateX(0) translateY(0);
     }
 }

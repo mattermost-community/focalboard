@@ -18,6 +18,7 @@ type BoardViewFields = {
     filter: FilterGroup
     cardOrder: string[]
     columnWidths: Record<string, number>
+    columnCalculations: Record<string, string>
 }
 
 type BoardView = Block & {
@@ -39,6 +40,7 @@ function createBoardView(block?: Block): BoardView {
             filter: createFilterGroup(block?.fields.filter),
             cardOrder: block?.fields.cardOrder?.slice() || [],
             columnWidths: {...(block?.fields.columnWidths || {})},
+            columnCalculations: {...(block?.fields.columnCalculations) || {}},
         },
     }
 }

@@ -21,6 +21,7 @@ import CommentsList from './commentsList'
 import CardDetailContents from './cardDetailContents'
 import CardDetailContentsMenu from './cardDetailContentsMenu'
 import CardDetailProperties from './cardDetailProperties'
+import useImagePaste from './imagePaste'
 
 import './cardDetail.scss'
 
@@ -42,12 +43,14 @@ const CardDetail = (props: Props): JSX.Element|null => {
     const titleRef = useRef<Focusable>(null)
     const saveTitle = useCallback(() => {
         if (title !== card.title) {
-            mutator.changeTitle(card, title)
+            mutator.changeTitle(card.id, card.title, title)
         }
     }, [card.title, title])
 
     const saveTitleRef = useRef<() => void>(saveTitle)
     saveTitleRef.current = saveTitle
+
+    useImagePaste(card.id, card.fields.contentOrder, card.rootId)
 
     useEffect(() => {
         if (!title) {
@@ -68,6 +71,11 @@ const CardDetail = (props: Props): JSX.Element|null => {
         }
     }, [])
 
+    const setRandomIcon = useCallback(() => {
+        const newIcon = BlockIcons.shared.randomIcon()
+        mutator.changeIcon(card.id, card.fields.icon, newIcon)
+    }, [card.id, card.fields.icon])
+
     if (!card) {
         return null
     }
@@ -83,10 +91,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 {!props.readonly && !card.fields.icon &&
                     <div className='add-buttons'>
                         <Button
-                            onClick={() => {
-                                const newIcon = BlockIcons.shared.randomIcon()
-                                mutator.changeIcon(card, newIcon)
-                            }}
+                            onClick={setRandomIcon}
                             icon={<EmojiIcon/>}
                         >
                             <FormattedMessage
@@ -124,32 +129,27 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
                 {/* Comments */}
 
-                {!props.readonly &&
-                <>
-                    <hr/>
-                    <CommentsList
-                        comments={comments}
-                        rootId={card.rootId}
-                        cardId={card.id}
-                    />
-                    <hr/>
-                </>
-                }
+                <hr/>
+                <CommentsList
+                    comments={comments}
+                    rootId={card.rootId}
+                    cardId={card.id}
+                    readonly={props.readonly}
+                />
             </div>
 
             {/* Content blocks */}
 
-            <div className='CardDetail content fullwidth'>
+            <div className='CardDetail content fullwidth content-blocks'>
                 <CardDetailContents
                     card={props.card}
                     contents={props.contents}
                     readonly={props.readonly}
                 />
+                {!props.readonly &&
+                    <CardDetailContentsMenu card={props.card}/>
+                }
             </div>
-
-            {!props.readonly &&
-                <CardDetailContentsMenu card={props.card}/>
-            }
         </>
     )
 }

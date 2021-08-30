@@ -1,4 +1,4 @@
-.focalboard-body .Comment {
+.Comment {
     display: flex;
     flex-direction: column;
     margin: 5px 0;
@@ -27,7 +27,7 @@
         width: 20px;
         height: 20px;
         border-radius: 100%;
-        box-shadow: rgba(15, 15, 15, 0.1) 0px 2px 4px;
+        box-shadow: rgba(15, 15, 15, 0.1) 0 2px 4px;
     }
 
     .comment-username {
@@ -36,12 +36,12 @@
     }
 
     .comment-date {
-        color: #cccccc;
+        color: #ccc;
         font-size: 12px;
     }
 
     .comment-text {
-        color: rgb(var(--body-color));
+        color: rgb(var(--center-channel-color-rgb));
         width: 100%;
         padding-left: 28px;
 
@@ -53,9 +53,6 @@
     }
 
     .comment-text * {
-        -webkit-user-select: text; /* Chrome all / Safari all */
-        -moz-user-select: text; /* Firefox all */
-        -ms-user-select: text; /* IE 10+ */
-        user-select: text; /* Likely future */
+        user-select: text;
     }
 }

@@ -1,6 +1,6 @@
 {
 	"name": "focalboard",
-	"version": "0.8.1",
+	"version": "0.9.0",
 	"private": true,
 	"description": "",
 	"scripts": {
@@ -9,8 +9,8 @@
 		"watchdev": "cross-env NODE_ENV=dev webpack --watch --config webpack.dev.js",
 		"test": "jest",
 		"updatesnapshot": "jest --updateSnapshot",
-		"check": "eslint --ext .tsx,.ts . --quiet --cache",
-		"fix": "eslint --ext .tsx,.ts . --quiet --fix --cache",
+		"check": "eslint --ext .tsx,.ts . --quiet --cache && stylelint **/*.scss",
+		"fix": "eslint --ext .tsx,.ts . --quiet --fix --cache && stylelint --fix **/*.scss",
 		"fix:scss": "prettier --write './src/**/*.scss'",
 		"i18n-extract": "formatjs extract src/*/*/*.ts? src/*/*.ts? src/*.ts? --out-file i18n/tmp.json; formatjs compile i18n/tmp.json --out-file i18n/en.json; rm i18n/tmp.json",
 		"runserver-test": "cd cypress && cross-env FOCALBOARD_SINGLE_USER_TOKEN=TESTTOKEN ../../bin/focalboard-server -single-user",
@@ -25,6 +25,7 @@
 	},
 	"dependencies": {
 		"@reduxjs/toolkit": "^1.6.0",
+		"color": "^4.0.0",
 		"easymde": "^2.15.0",
 		"emoji-mart": "^3.0.1",
 		"imagemin-gifsicle": "^7.0.0",
@@ -77,6 +78,7 @@
 		"@testing-library/jest-dom": "^5.11.10",
 		"@testing-library/react": "^11.2.5",
 		"@testing-library/user-event": "^13.1.9",
+		"@types/color": "^3.0.2",
 		"@types/emoji-mart": "^3.0.4",
 		"@types/jest": "^26.0.21",
 		"@types/marked": "^2.0.0",
@@ -116,6 +118,8 @@
 		"sass-loader": "^11.0.1",
 		"start-server-and-test": "^1.12.1",
 		"style-loader": "^2.0.0",
+		"stylelint": "^13.13.1",
+		"stylelint-config-sass-guidelines": "^8.0.0",
 		"terser-webpack-plugin": "^5.1.1",
 		"ts-jest": "^26.5.4",
 		"ts-loader": "^8.0.18",

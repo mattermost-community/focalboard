@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/mattermost/focalboard/server/utils"
@@ -11,15 +12,24 @@ import (
 	sq "github.com/Masterminds/squirrel"
 	_ "github.com/lib/pq" // postgres driver
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/store"
 	_ "github.com/mattn/go-sqlite3" // sqlite driver
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 type RootIDNilError struct{}
 
 func (re RootIDNilError) Error() string {
 	return "rootId is nil"
+}
+
+type BlockNotFoundErr struct {
+	blockID string
+}
+
+func (be BlockNotFoundErr) Error() string {
+	return fmt.Sprintf("block not found (block id: %s", be.blockID)
 }
 
 func (s *SQLStore) GetBlocksWithParentAndType(c store.Container, parentID string, blockType string) ([]model.Block, error) {
@@ -455,6 +465,19 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 	}
 
 	return nil
+}
+
+func (s *SQLStore) PatchBlock(c store.Container, blockID string, blockPatch *model.BlockPatch, userID string) error {
+	existingBlock, err := s.GetBlock(c, blockID)
+	if err != nil {
+		return err
+	}
+	if existingBlock == nil {
+		return BlockNotFoundErr{blockID}
+	}
+
+	block := blockPatch.Patch(existingBlock)
+	return s.InsertBlock(c, block, userID)
 }
 
 func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy string) error {

@@ -1,0 +1,196 @@
+.DateRange {
+    width: 100%;
+
+    .octo-propertyvalue {
+        white-space: none;
+    }
+
+    .inputContainer {
+        display: flex;
+
+        .Editable {
+            width: 50% !important;
+        }
+    }
+
+    input {
+        cursor: text;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-height: 24px;
+        width: 100%;
+        margin: 2px;
+
+        &.active {
+            min-width: 100px;
+        }
+
+        &::placeholder {
+            color: rgba(var(--body-color), 0.4);
+            opacity: 1;
+        }
+
+        &.error {
+            border: 1px solid var(--error-color);
+            border-radius: var(--default-rad);
+        }
+    }
+
+    .Modal {
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin-bottom: 100px;
+    }
+
+    .Button {
+        width: 100%;
+        height: 100%;
+        justify-content: left;
+
+        &.--empty {
+            opacity: 0;
+        }
+
+        &:hover {
+            background-color: transparent;
+        }
+    }
+
+    .menu-option {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        font-size: 14px;
+        line-height: 24px;
+        font-weight: 400;
+        height: 32px;
+        padding: 4px 0;
+        cursor: pointer;
+
+        &:hover {
+            background: rgba(var(--button-bg-rgb), 0.08);
+        }
+
+        >* {
+            margin-left: 6px;
+        }
+
+        >*:first-child {
+            margin-left: 0;
+        }
+
+        >.menu-name {
+            display: flex;
+            flex-grow: 1;
+            white-space: nowrap;
+        }
+
+        >.SubmenuTriangleIcon {
+            fill: rgba(var(--body-color), 0.7);
+        }
+
+        >.Icon {
+            opacity: 0.56;
+            width: 16px;
+            height: 16px;
+            line-height: 16px;
+        }
+
+        >.IconButton .Icon {
+            margin-right: 0;
+        }
+    }
+
+    .DayPicker {
+        font-size: inherit;
+    }
+
+    .DayPickerInput-Overlay {
+        background-color: rgba(var(--center-channel-bg-rgb));
+        box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1), 0 4px 11px hsla(0, 0%, 0%, 0.1);
+        line-height: 100%;
+    }
+
+    .DayPicker-wrapper {
+        padding: 0;
+    }
+
+    .DayPicker-Month {
+        margin: 0;
+        margin-top: 1em;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .DayPicker-Body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .inputContainer {
+        max-width: 252px;
+    }
+
+    .DayPicker-Weekdays {
+        margin: 0;
+    }
+
+    .DayPicker-WeekdaysRow {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .DayPicker-Weekday {
+        width: 36px;
+        height: 36px;
+    }
+
+    .DayPicker-NavButton {
+        right: 0;
+    }
+
+    .DayPicker-Week {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .DayPicker-Day {
+        padding: 0;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        border-radius: unset;
+        width: 36px;
+        height: 36px;
+    }
+
+    .DayPicker-Day--today {
+        color: #c74655;
+    }
+
+    .DayPicker-Day--start {
+        border-top-left-radius: 50% !important;
+        border-bottom-left-radius: 50% !important;
+    }
+
+    .DayPicker-Day--end {
+        border-top-right-radius: 50% !important;
+        border-bottom-right-radius: 50% !important;
+    }
+
+    .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
+        background-color: rgb(var(--button-bg-rgb));
+        color: rgba(var(--button-color-rgb), 1);
+    }
+
+    .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
+        color: rgb(var(--button-bg-rgb));
+        background-color: rgba(var(--button-bg-rgb), 0.08);
+    }
+
+    .DayPicker:not(.DayPicker--interactionDisabled) .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
+        background-color: rgba(var(--body-color), 0.2);
+    }
+}

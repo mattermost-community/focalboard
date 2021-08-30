@@ -43,7 +43,16 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
 
     const index = cords.x
     const colIndex = (cords.y || cords.y === 0) && cords.y > -1 ? cords.y : -1
-    const contentOrder = card.fields.contentOrder.slice()
+    const contentOrder: Array<string|string[]> = []
+    if (card.fields.contentOrder) {
+        for (const contentId of card.fields.contentOrder) {
+            if (typeof contentId === 'string') {
+                contentOrder.push(contentId)
+            } else {
+                contentOrder.push(contentId.slice())
+            }
+        }
+    }
 
     const className = 'ContentBlock octo-block'
     return (
@@ -67,7 +76,7 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
                                     icon={<SortUpIcon/>}
                                     onClick={() => {
                                         Utils.arrayMove(contentOrder, index, index - 1)
-                                        mutator.changeCardContentOrder(card, contentOrder)
+                                        mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder)
                                     }}
                                 />}
                             {index < (contentOrder.length - 1) &&
@@ -77,7 +86,7 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
                                     icon={<SortDownIcon/>}
                                     onClick={() => {
                                         Utils.arrayMove(contentOrder, index, index + 1)
-                                        mutator.changeCardContentOrder(card, contentOrder)
+                                        mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder)
                                     }}
                                 />}
                             <Menu.SubMenu
@@ -114,7 +123,7 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
 
                                     mutator.performAsUndoGroup(async () => {
                                         await mutator.deleteBlock(block, description)
-                                        await mutator.changeCardContentOrder(card, contentOrder, description)
+                                        await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder, description)
                                     })
                                 }}
                             />

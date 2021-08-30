@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useEffect, useState} from 'react'
 import {batch} from 'react-redux'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 import {useHotkeys} from 'react-hotkeys-hook'
 
@@ -26,6 +26,7 @@ import {updateContents} from '../store/contents'
 import {updateComments} from '../store/comments'
 import {initialLoad, initialReadOnlyLoad} from '../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
+import {UserSettings} from '../userSettings'
 
 type Props = {
     readonly?: boolean
@@ -34,13 +35,14 @@ type Props = {
 const websocketTimeoutForBanner = 5000
 
 const BoardPage = (props: Props) => {
+    const intl = useIntl()
     const board = useAppSelector(getCurrentBoard)
     const activeView = useAppSelector(getCurrentView)
     const boardViews = useAppSelector(getCurrentBoardViews)
     const dispatch = useAppDispatch()
 
     const history = useHistory()
-    const match = useRouteMatch<{boardId: string, viewId: string, workspaceId?: string}>()
+    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, workspaceId?: string}>()
     const [websocketClosed, setWebsocketClosed] = useState(false)
 
     // TODO: Make this less brittle. This only works because this is the root render function
@@ -51,53 +53,67 @@ const BoardPage = (props: Props) => {
     // Backward compatibility: This can be removed in the future, this is for
     // transform the old query params into routes
     useEffect(() => {
-        const queryString = new URLSearchParams(window.location.search)
+    }, [])
+
+    useEffect(() => {
+        // Backward compatibility: This can be removed in the future, this is for
+        // transform the old query params into routes
+        const queryString = new URLSearchParams(history.location.search)
         const queryBoardId = queryString.get('id')
-        const queryViewId = queryString.get('v')
+        const params = {...match.params}
+        let needsRedirect = false
         if (queryBoardId) {
-            const params = {...match.params, boardId: queryBoardId}
-            if (queryViewId) {
-                params.viewId = queryViewId
-            }
+            params.boardId = queryBoardId
+            needsRedirect = true
+        }
+        const queryViewId = queryString.get('v')
+        if (queryViewId) {
+            params.viewId = queryViewId
+            needsRedirect = true
+        }
+        const queryCardId = queryString.get('c')
+        if (queryCardId) {
+            params.cardId = queryCardId
+            needsRedirect = true
+        }
+        if (needsRedirect) {
             const newPath = generatePath(match.path, params)
-            history.push(newPath)
-        }
-    }, [])
-
-    useEffect(() => {
-        if (!match.params.boardId) {
-            // Load last viewed boardView
-            const boardId = localStorage.getItem('lastBoardId') || undefined
-            const viewId = localStorage.getItem('lastViewId') || undefined
-            if (boardId) {
-                const newPath = generatePath(match.path, {...match.params, boardId, viewId})
-                history.push(newPath)
-            }
-        }
-    }, [])
-
-    useEffect(() => {
-        const boardId = match.params.boardId
-        const viewId = match.params.viewId
-
-        Utils.log(`attachToBoard: ${boardId}`)
-        if (boardId && !viewId && boardViews.length > 0) {
-            const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
-            history.push(newPath)
-        }
-
-        const view = boardViews.find((v) => v.id === viewId)
-        if (!view && boardViews.length > 0) {
-            const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
-            history.push(newPath)
+            history.replace(newPath)
             return
         }
 
-        localStorage.setItem('lastBoardId', boardId || '')
-        localStorage.setItem('lastViewId', view?.id || '')
+        // Backward compatibility end
+
+        const boardId = match.params.boardId
+        const viewId = match.params.viewId
+
+        if (!boardId) {
+            // Load last viewed boardView
+            const lastBoardId = UserSettings.lastBoardId || undefined
+            const lastViewId = UserSettings.lastViewId || undefined
+            if (lastBoardId) {
+                let newPath = generatePath(match.path, {...match.params, boardId: lastBoardId})
+                if (lastViewId) {
+                    newPath = generatePath(match.path, {...match.params, boardId: lastBoardId, viewId: lastViewId})
+                }
+                history.replace(newPath)
+                return
+            }
+            return
+        }
+
+        Utils.log(`attachToBoard: ${boardId}`)
+        if (!viewId && boardViews.length > 0) {
+            const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
+            history.replace(newPath)
+            return
+        }
+
+        UserSettings.lastBoardId = boardId || ''
+        UserSettings.lastViewId = viewId || ''
         dispatch(setCurrentBoard(boardId || ''))
-        dispatch(setCurrentView(view?.id || ''))
-    }, [match.params.boardId, match.params.viewId, history, boardViews])
+        dispatch(setCurrentView(viewId || ''))
+    }, [match.params.boardId, match.params.viewId, boardViews])
 
     useEffect(() => {
         Utils.setFavicon(board?.fields.icon)
@@ -120,7 +136,7 @@ const BoardPage = (props: Props) => {
         let token = localStorage.getItem('focalboardSessionId') || ''
         if (props.readonly) {
             loadAction = initialReadOnlyLoad
-            const queryString = new URLSearchParams(window.location.search)
+            const queryString = new URLSearchParams(history.location.search)
             token = token || queryString.get('r') || ''
         }
         dispatch(loadAction(match.params.boardId))
@@ -221,6 +237,10 @@ const BoardPage = (props: Props) => {
                             defaultMessage='Websocket connection closed, connection interrupted. If this persists, check your server or web proxy configuration.'
                         />
                     </a>
+                </div>}
+            {props.readonly && board === undefined &&
+                <div className='error'>
+                    {intl.formatMessage({id: 'BoardPage.syncFailed', defaultMessage: 'Board may be deleted or access revoked.'})}
                 </div>}
             <Workspace readonly={props.readonly || false}/>
         </div>

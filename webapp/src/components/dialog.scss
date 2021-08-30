@@ -1,4 +1,4 @@
-.focalboard-body .Dialog {
+.Dialog {
     &.dialog-back {
         position: fixed;
         top: 0;
@@ -12,15 +12,15 @@
         position: absolute;
         width: 100%;
         height: 100%;
-        background-color: rgba(var(--body-color), 0.5);
+        background-color: rgba(var(--center-channel-color-rgb), 0.5);
     }
 
     .dialog {
         display: flex;
         flex-direction: column;
-        background-color: rgb(var(--main-bg));
-        box-shadow: rgba(var(--body-color), 0.1) 0px 0px 0px 1px,
-            rgba(var(--body-color), 0.1) 0px 2px 4px;
+        background-color: rgb(var(--center-channel-bg-rgb));
+        box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0 0 0 1px,
+            rgba(var(--center-channel-color-rgb), 0.1) 0 2px 4px;
         border-radius: var(--modal-rad);
         padding: 0;
 
@@ -48,6 +48,7 @@
         > * {
             flex-shrink: 0;
         }
+
         > .banner {
             background-color: rgba(230, 220, 192, 0.9);
             text-align: center;
@@ -64,6 +65,7 @@
             flex-direction: row;
             padding: 16px;
         }
+
         > .content {
             display: flex;
             flex-direction: column;
@@ -73,9 +75,10 @@
                 padding: 10px 126px;
             }
             @media screen and (max-width: 975px) {
-                padding: 10px 10px;
+                padding: 10px;
             }
         }
+
         > .content.fullwidth {
             padding-left: 78px;
         }

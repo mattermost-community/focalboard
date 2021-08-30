@@ -3,6 +3,12 @@
 import marked from 'marked'
 import {IntlShape} from 'react-intl'
 
+import {Block} from './blocks/block'
+import {createBoard} from './blocks/board'
+import {createBoardView} from './blocks/boardView'
+import {createCard} from './blocks/card'
+import {createCommentBlock} from './blocks/commentBlock'
+
 declare global {
     interface Window {
         msCrypto: Crypto
@@ -151,7 +157,7 @@ class Utils {
                 'rel="noreferrer" ' +
                 `href="${encodeURI(href || '')}" ` +
                 `title="${title ? encodeURI(title) : ''}" ` +
-                ((window as any).openInNewBrowser ? 'onclick="event.stopPropagation(); openInNewBrowser && openInNewBrowser(event.target.href);"' : '') +
+                `onclick="event.stopPropagation();${((window as any).openInNewBrowser ? ' openInNewBrowser && openInNewBrowser(event.target.href);' : '')}"` +
             '>' + contents + '</a>'
         }
         const html = marked(text.replace(/</g, '&lt;'), {renderer, breaks: true})
@@ -159,7 +165,6 @@ class Utils {
     }
 
     // Date and Time
-
     private static yearOption(date: Date) {
         const isCurrentYear = date.getFullYear() === new Date().getFullYear()
         return isCurrentYear ? undefined : 'numeric'
@@ -169,6 +174,14 @@ class Utils {
         return intl.formatDate(date, {
             year: Utils.yearOption(date),
             month: 'long',
+            day: '2-digit',
+        })
+    }
+
+    static inputDate(date: Date, intl: IntlShape): string {
+        return intl.formatDate(date, {
+            year: 'numeric',
+            month: '2-digit',
             day: '2-digit',
         })
     }
@@ -234,11 +247,15 @@ class Utils {
     // favicon
 
     static setFavicon(icon?: string): void {
-        const href = icon ? `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${icon}</text></svg>` : ''
-        const link = (document.querySelector("link[rel*='icon']") || document.createElement('link')) as HTMLLinkElement
+        if (!icon) {
+            document.querySelector("link[rel*='icon']")?.remove()
+            return
+        }
+        const link = document.createElement('link') as HTMLLinkElement
         link.type = 'image/x-icon'
         link.rel = 'shortcut icon'
-        link.href = href
+        link.href = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${icon}</text></svg>`
+        document.querySelectorAll("link[rel*='icon']").forEach((n) => n.remove())
         document.getElementsByTagName('head')[0].appendChild(link)
     }
 
@@ -396,6 +413,29 @@ class Utils {
             return window.location.origin + '/' + finalPath
         }
         return finalPath
+    }
+
+    static roundTo(num: number, decimalPlaces: number): number {
+        return Math.round(num * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces)
+    }
+
+    static isFocalboardPlugin(): boolean {
+        return Boolean((window as any).isFocalboardPlugin)
+    }
+
+    static fixBlock(block: Block): Block {
+        switch (block.type) {
+        case 'board':
+            return createBoard(block)
+        case 'view':
+            return createBoardView(block)
+        case 'card':
+            return createCard(block)
+        case 'comment':
+            return createCommentBlock(block)
+        default:
+            return block
+        }
     }
 }
 

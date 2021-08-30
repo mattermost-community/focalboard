@@ -15,6 +15,7 @@ import mutator from '../mutator'
 import {Utils} from '../utils'
 import {UserSettings} from '../userSettings'
 import {addCard, addTemplate} from '../store/cards'
+import {updateView} from '../store/views'
 
 import './centerPanel.scss'
 
@@ -37,11 +38,13 @@ type Props = {
     intl: IntlShape
     readonly: boolean
     addCard: (card: Card) => void
+    updateView: (view: BoardView) => void
     addTemplate: (template: Card) => void
+    shownCardId?: string
+    showCard: (cardId?: string) => void
 }
 
 type State = {
-    shownCardId?: string
     selectedCardIds: string[]
     cardIdToFocusOnRender: string
 }
@@ -78,10 +81,6 @@ class CenterPanel extends React.Component<Props, State> {
         }
     }
 
-    componentDidMount(): void {
-        this.showCardInUrl()
-    }
-
     constructor(props: Props) {
         super(props)
         this.state = {
@@ -92,14 +91,6 @@ class CenterPanel extends React.Component<Props, State> {
 
     shouldComponentUpdate(): boolean {
         return true
-    }
-
-    private showCardInUrl() {
-        const queryString = new URLSearchParams(window.location.search)
-        const cardId = queryString.get('c') || undefined
-        if (cardId !== this.state.shownCardId) {
-            this.setState({shownCardId: cardId})
-        }
     }
 
     render(): JSX.Element {
@@ -118,15 +109,15 @@ class CenterPanel extends React.Component<Props, State> {
                     keyName='ctrl+d,del,esc,backspace'
                     onKeyDown={this.keydownHandler}
                 />
-                {this.state.shownCardId &&
+                {this.props.shownCardId &&
                     <RootPortal>
                         <CardDialog
                             board={board}
                             activeView={activeView}
                             views={views}
                             cards={cards}
-                            key={this.state.shownCardId}
-                            cardId={this.state.shownCardId}
+                            key={this.props.shownCardId}
+                            cardId={this.props.shownCardId}
                             onClose={() => this.showCard(undefined)}
                             showCard={(cardId) => this.showCard(cardId)}
                             readonly={this.props.readonly}
@@ -212,17 +203,22 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     private addCardFromTemplate = async (cardTemplateId: string) => {
-        await mutator.duplicateCard(
-            cardTemplateId,
-            this.props.intl.formatMessage({id: 'Mutator.new-card-from-template', defaultMessage: 'new card from template'}),
-            false,
-            async (newCardId) => {
-                this.showCard(newCardId)
-            },
-            async () => {
-                this.showCard(undefined)
-            },
-        )
+        const {activeView} = this.props
+        mutator.performAsUndoGroup(async () => {
+            const [, newCardId] = await mutator.duplicateCard(
+                cardTemplateId,
+                this.props.intl.formatMessage({id: 'Mutator.new-card-from-template', defaultMessage: 'new card from template'}),
+                false,
+                async (cardId) => {
+                    this.props.updateView({...activeView, fields: {...activeView.fields, cardOrder: [...activeView.fields.cardOrder, cardId]}})
+                    this.showCard(cardId)
+                },
+                async () => {
+                    this.showCard(undefined)
+                },
+            )
+            await mutator.changeViewCardOrder(activeView, [...activeView.fields.cardOrder, newCardId], 'add-card')
+        })
     }
 
     addCard = async (groupByOptionId?: string, show = false): Promise<void> => {
@@ -244,23 +240,27 @@ class CenterPanel extends React.Component<Props, State> {
         if (!card.fields.icon && UserSettings.prefillRandomIcons) {
             card.fields.icon = BlockIcons.shared.randomIcon()
         }
-        await mutator.insertBlock(
-            card,
-            'add card',
-            async () => {
-                if (show) {
-                    this.props.addCard(card)
-                    this.showCard(card.id)
-                } else {
-                    // Focus on this card's title inline on next render
-                    this.setState({cardIdToFocusOnRender: card.id})
-                    setTimeout(() => this.setState({cardIdToFocusOnRender: ''}), 100)
-                }
-            },
-            async () => {
-                this.showCard(undefined)
-            },
-        )
+        mutator.performAsUndoGroup(async () => {
+            await mutator.insertBlock(
+                card,
+                'add card',
+                async () => {
+                    if (show) {
+                        this.props.addCard(card)
+                        this.props.updateView({...activeView, fields: {...activeView.fields, cardOrder: [...activeView.fields.cardOrder, card.id]}})
+                        this.showCard(card.id)
+                    } else {
+                        // Focus on this card's title inline on next render
+                        this.setState({cardIdToFocusOnRender: card.id})
+                        setTimeout(() => this.setState({cardIdToFocusOnRender: ''}), 100)
+                    }
+                },
+                async () => {
+                    this.showCard(undefined)
+                },
+            )
+            await mutator.changeViewCardOrder(activeView, [...activeView.fields.cardOrder, card.id], 'add-card')
+        })
     }
 
     private addCardTemplate = async () => {
@@ -321,8 +321,8 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     private showCard = (cardId?: string) => {
-        Utils.replaceUrlQueryParam('c', cardId)
-        this.setState({selectedCardIds: [], shownCardId: cardId})
+        this.setState({selectedCardIds: []})
+        this.props.showCard(cardId)
     }
 
     private async deleteSelectedCards() {
@@ -415,4 +415,4 @@ class CenterPanel extends React.Component<Props, State> {
     }
 }
 
-export default connect(undefined, {addCard, addTemplate})(injectIntl(CenterPanel))
+export default connect(undefined, {addCard, addTemplate, updateView})(injectIntl(CenterPanel))
