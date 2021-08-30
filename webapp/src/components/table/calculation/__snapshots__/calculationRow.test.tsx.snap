@@ -6,21 +6,7 @@ exports[`components/table/calculation/CalculationRow should match snapshot 1`] =
     class="CalculationRow octo-table-row"
   >
     <div
-      class="Calculation none octo-table-cell"
-      style="width: 100px;"
-      tabindex="0"
-    >
-      <span
-        class="calculationLabel"
-      >
-        Calculate
-      </span>
-      <i
-        class="CompassIcon icon-chevron-up ChevronUpIcon"
-      />
-    </div>
-    <div
-      class="Calculation count octo-table-cell"
+      class="Calculation count octo-table-cell  "
       style="width: 100px;"
       tabindex="0"
     >
@@ -36,7 +22,23 @@ exports[`components/table/calculation/CalculationRow should match snapshot 1`] =
       </span>
     </div>
     <div
-      class="Calculation countValue octo-table-cell"
+      class="Calculation count octo-table-cell  "
+      style="width: 100px;"
+      tabindex="0"
+    >
+      <span
+        class="calculationLabel"
+      >
+        Count
+      </span>
+      <span
+        class="calculationValue"
+      >
+        2
+      </span>
+    </div>
+    <div
+      class="Calculation countValue octo-table-cell  "
       style="width: 100px;"
       tabindex="0"
     >
@@ -52,7 +54,7 @@ exports[`components/table/calculation/CalculationRow should match snapshot 1`] =
       </span>
     </div>
     <div
-      class="Calculation countUniqueValue octo-table-cell"
+      class="Calculation countUniqueValue octo-table-cell  "
       style="width: 100px;"
       tabindex="0"
     >
@@ -77,7 +79,23 @@ exports[`components/table/calculation/CalculationRow should render three calcula
     class="CalculationRow octo-table-row"
   >
     <div
-      class="Calculation none octo-table-cell"
+      class="Calculation count octo-table-cell  "
+      style="width: 100px;"
+      tabindex="0"
+    >
+      <span
+        class="calculationLabel"
+      >
+        Count
+      </span>
+      <span
+        class="calculationValue"
+      >
+        2
+      </span>
+    </div>
+    <div
+      class="Calculation none octo-table-cell  "
       style="width: 100px;"
       tabindex="0"
     >
@@ -91,7 +109,7 @@ exports[`components/table/calculation/CalculationRow should render three calcula
       />
     </div>
     <div
-      class="Calculation none octo-table-cell"
+      class="Calculation none octo-table-cell  "
       style="width: 100px;"
       tabindex="0"
     >
@@ -105,21 +123,7 @@ exports[`components/table/calculation/CalculationRow should render three calcula
       />
     </div>
     <div
-      class="Calculation none octo-table-cell"
-      style="width: 100px;"
-      tabindex="0"
-    >
-      <span
-        class="calculationLabel"
-      >
-        Calculate
-      </span>
-      <i
-        class="CompassIcon icon-chevron-up ChevronUpIcon"
-      />
-    </div>
-    <div
-      class="Calculation none octo-table-cell"
+      class="Calculation none octo-table-cell  "
       style="width: 100px;"
       tabindex="0"
     >

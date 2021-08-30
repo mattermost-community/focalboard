@@ -1,6 +1,6 @@
 @use './standardIcon.scss';
 
 .TableIcon {
-    @extend .StandardIcon;
+    @extend %standard-icon;
     stroke-width: 8px;
 }

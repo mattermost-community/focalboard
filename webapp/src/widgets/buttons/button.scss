@@ -9,7 +9,7 @@
     cursor: pointer;
     overflow: hidden;
     background: transparent;
-    border: none;
+    border: 0;
     transition: background 100ms ease-out 0s;
     color: inherit;
 
@@ -18,7 +18,7 @@
     }
 
     &.filled {
-        color: #ffffff;
+        color: #fff;
         background-color: rgb(var(--button-bg-rgb));
         padding: 6px 12px;
 
@@ -55,6 +55,6 @@
     .Icon {
         width: 14px;
         height: 14px;
-        margin-right: 0px;
+        margin-right: 0;
     }
 }

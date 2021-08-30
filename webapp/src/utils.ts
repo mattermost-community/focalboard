@@ -3,6 +3,12 @@
 import marked from 'marked'
 import {IntlShape} from 'react-intl'
 
+import {Block} from './blocks/block'
+import {createBoard} from './blocks/board'
+import {createBoardView} from './blocks/boardView'
+import {createCard} from './blocks/card'
+import {createCommentBlock} from './blocks/commentBlock'
+
 declare global {
     interface Window {
         msCrypto: Crypto
@@ -415,6 +421,21 @@ class Utils {
 
     static isFocalboardPlugin(): boolean {
         return Boolean((window as any).isFocalboardPlugin)
+    }
+
+    static fixBlock(block: Block): Block {
+        switch (block.type) {
+        case 'board':
+            return createBoard(block)
+        case 'view':
+            return createBoardView(block)
+        case 'card':
+            return createCard(block)
+        case 'comment':
+            return createCommentBlock(block)
+        default:
+            return block
+        }
     }
 }
 
