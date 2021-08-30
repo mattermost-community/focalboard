@@ -60,7 +60,7 @@ func TestTelemetry(t *testing.T) {
 	}
 
 	t.Run("Register tracker and run telemetry job", func(t *testing.T) {
-		service := New("mockTelemetryID", mlog.CreateConsoleTestLogger(t))
+		service := New("mockTelemetryID", mlog.CreateConsoleTestLogger(false, mlog.LvlDebug))
 		service.RegisterTracker("mockTracker", func() (Tracker, error) {
 			return map[string]interface{}{
 				"mockTrackerKey": "mockTrackerValue",
