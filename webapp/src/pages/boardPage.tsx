@@ -42,7 +42,7 @@ const BoardPage = (props: Props) => {
     const dispatch = useAppDispatch()
 
     const history = useHistory()
-    const match = useRouteMatch<{boardId: string, viewId: string, workspaceId?: string}>()
+    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, workspaceId?: string}>()
     const [websocketClosed, setWebsocketClosed] = useState(false)
 
     // TODO: Make this less brittle. This only works because this is the root render function
@@ -53,20 +53,37 @@ const BoardPage = (props: Props) => {
     // Backward compatibility: This can be removed in the future, this is for
     // transform the old query params into routes
     useEffect(() => {
-        const queryString = new URLSearchParams(window.location.search)
-        const queryBoardId = queryString.get('id')
-        const queryViewId = queryString.get('v')
-        if (queryBoardId) {
-            const params = {...match.params, boardId: queryBoardId}
-            if (queryViewId) {
-                params.viewId = queryViewId
-            }
-            const newPath = generatePath(match.path, params)
-            history.replace(newPath)
-        }
     }, [])
 
     useEffect(() => {
+        // Backward compatibility: This can be removed in the future, this is for
+        // transform the old query params into routes
+        const queryString = new URLSearchParams(history.location.search)
+        const queryBoardId = queryString.get('id')
+        const params = {...match.params}
+        let needsRedirect = false
+        if (queryBoardId) {
+            params.boardId = queryBoardId
+            needsRedirect = true
+        }
+        const queryViewId = queryString.get('v')
+        if (queryViewId) {
+            params.viewId = queryViewId
+            needsRedirect = true
+        }
+        const queryCardId = queryString.get('c')
+        if (queryCardId) {
+            params.cardId = queryCardId
+            needsRedirect = true
+        }
+        if (needsRedirect) {
+            const newPath = generatePath(match.path, params)
+            history.replace(newPath)
+            return
+        }
+
+        // Backward compatibility end
+
         const boardId = match.params.boardId
         const viewId = match.params.viewId
 
@@ -96,7 +113,7 @@ const BoardPage = (props: Props) => {
         UserSettings.lastViewId = viewId || ''
         dispatch(setCurrentBoard(boardId || ''))
         dispatch(setCurrentView(viewId || ''))
-    }, [match.params.boardId, match.params.viewId, history, boardViews])
+    }, [match.params.boardId, match.params.viewId, boardViews])
 
     useEffect(() => {
         Utils.setFavicon(board?.fields.icon)
@@ -119,7 +136,7 @@ const BoardPage = (props: Props) => {
         let token = localStorage.getItem('focalboardSessionId') || ''
         if (props.readonly) {
             loadAction = initialReadOnlyLoad
-            const queryString = new URLSearchParams(window.location.search)
+            const queryString = new URLSearchParams(history.location.search)
             token = token || queryString.get('r') || ''
         }
         dispatch(loadAction(match.params.boardId))

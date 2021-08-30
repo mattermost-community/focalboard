@@ -13,8 +13,9 @@
 
     &.on {
         background-color: rgb(var(--button-bg-rgb));
+
         .octo-switch-inner {
-            transform: translateX(12px) translateY(0px);
+            transform: translateX(12px) translateY(0);
         }
     }
 
@@ -22,8 +23,8 @@
         width: 14px;
         height: 14px;
         border-radius: 44px;
-        background: white;
+        background-color: rgb(var(--center-channel-bg-rgb));
         transition: transform 200ms ease-out 0s, background 200ms ease-out 0s;
-        transform: translateX(0px) translateY(0px);
+        transform: translateX(0) translateY(0);
     }
 }
