@@ -23,6 +23,7 @@ type Props = {
     onChange: (value: string) => void
     cards: readonly Card[]
     property: IPropertyTemplate
+    hovered: boolean
 }
 
 const Calculation = (props: Props): JSX.Element => {
@@ -35,7 +36,7 @@ const Calculation = (props: Props): JSX.Element => {
         // See this for more details-
         // https://stackoverflow.com/questions/47308081/onblur-event-is-not-firing
         <div
-            className={`Calculation ${value} ${props.class}`}
+            className={`Calculation ${value} ${props.class} ${props.menuOpen ? 'menuOpen' : ''} ${props.hovered ? 'hovered' : ''}`}
             style={props.style}
             onClick={() => (props.menuOpen ? props.onMenuClose() : props.onMenuOpen())}
             tabIndex={0}
