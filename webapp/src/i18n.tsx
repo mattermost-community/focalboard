@@ -21,7 +21,7 @@ import messages_zhHant from '../i18n/zh_Hant.json'
 
 import {UserSettings} from './userSettings'
 
-const supportedLanguages = ['ca', 'de', 'el', 'en', 'es', 'fr', 'id', 'it', 'ja', 'nl', 'oc', 'pt-br', 'ru', 'sv', 'tr', 'zh-cn', 'zh-tw']
+const supportedLanguages = ['ca', 'de', 'el', 'en', 'es', 'fr', 'id', 'it', 'ja', 'nl', 'oc', 'pt-br', 'ru', 'sv', 'tr', 'zh-cn', 'zh-tx']
 
 export function getMessages(lang: string): {[key: string]: string} {
     switch (lang) {
@@ -55,7 +55,7 @@ export function getMessages(lang: string): {[key: string]: string} {
         return messages_tr
     case 'zh-cn':
         return messages_zhHant
-    case 'zh-tw':
+    case 'zh-tx':
         return messages_zhHans
     }
     return messages_en
