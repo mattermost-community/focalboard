@@ -13,8 +13,8 @@ var manifest *model.Manifest
 const manifestStr = `
 {
   "id": "focalboard",
-  "name": "Focalboard",
-  "description": "This provides focalboard integration with mattermost.",
+  "name": "Mattermost Boards",
+  "description": "The Mattermost Boards plugin",
   "homepage_url": "https://github.com/mattermost/focalboard",
   "support_url": "https://github.com/mattermost/focalboard/issues",
   "release_notes_url": "https://github.com/mattermost/focalboard/releases",
