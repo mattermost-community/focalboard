@@ -22,7 +22,9 @@ exports[`components/sidebar/GlobalHeader header menu should match snapshot 1`] =
       class="GlobalHeaderSettingsMenu"
     >
       <div
+        aria-label="menuwrapper"
         class="MenuWrapper"
+        role="button"
       >
         <div
           class="GlobalHeaderComponent__button menu-entry"

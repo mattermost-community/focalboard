@@ -9,7 +9,9 @@ exports[`components/cardDetail/CardDetailProperties should match snapshot 1`] = 
       class="octo-propertyrow"
     >
       <div
+        aria-label="menuwrapper"
         class="MenuWrapper"
+        role="button"
       >
         <div
           class="octo-propertyname"
