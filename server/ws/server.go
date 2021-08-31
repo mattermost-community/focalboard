@@ -2,7 +2,6 @@ package ws
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"sync"
 	"time"
@@ -16,30 +15,18 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-const (
-	singleUserID                        = "single-user-id"
-	websocketActionAuth                 = "AUTH"
-	websocketActionSubscribeWorkspace   = "SUBSCRIBE_WORKSPACE"
-	websocketActionUnsubscribeWorkspace = "UNSUBSCRIBE_WORKSPACE"
-	websocketActionSubscribeBlocks      = "SUBSCRIBE_BLOCKS"
-	websocketActionUnsubscribeBlocks    = "UNSUBSCRIBE_BLOCKS"
-)
-
-type Hub interface {
-	SendWSMessage(data []byte)
-	SetReceiveWSMessage(func(data []byte))
-}
+const singleUserID = "single-user-id"
 
 type wsClient struct {
 	*websocket.Conn
-	lock       *sync.Mutex
+	mu         sync.Mutex
 	workspaces []string
 	blocks     []string
 }
 
 func (c *wsClient) WriteJSON(v interface{}) error {
-	c.lock.Lock()
-	defer c.lock.Unlock()
+	c.mu.Lock()
+	defer c.mu.Unlock()
 	err := c.Conn.WriteJSON(v)
 	return err
 }
@@ -72,7 +59,6 @@ type Server struct {
 	listenersByBlock     map[string][]*wsClient
 	mu                   sync.RWMutex
 	auth                 *auth.Auth
-	hub                  Hub
 	singleUserToken      string
 	isMattermostAuth     bool
 	logger               *mlog.Logger
@@ -82,13 +68,6 @@ type Server struct {
 type UpdateMsg struct {
 	Action string      `json:"action"`
 	Block  model.Block `json:"block"`
-}
-
-// clusterUpdateMsg is sent on block updates.
-type clusterUpdateMsg struct {
-	UpdateMsg
-	BlockID     string `json:"block_id"`
-	WorkspaceID string `json:"workspace_id"`
 }
 
 // WebsocketCommand is an incoming command from the client.
@@ -142,7 +121,7 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 
 	// create an empty session with websocket client
 	wsSession := websocketSession{
-		client: &wsClient{client, &sync.Mutex{}, []string{}, []string{}},
+		client: &wsClient{client, sync.Mutex{}, []string{}, []string{}},
 		userID: "",
 	}
 
@@ -454,6 +433,10 @@ func (ws *Server) getUserIDForToken(token string) string {
 }
 
 func (ws *Server) authenticateListener(wsSession *websocketSession, token string) {
+	ws.logger.Debug("authenticateListener",
+		mlog.String("token", token),
+		mlog.String("wsSession.userID", wsSession.userID),
+	)
 	if wsSession.isAuthenticated() {
 		// Do not allow multiple auth calls (for security)
 		ws.logger.Debug(
@@ -474,38 +457,6 @@ func (ws *Server) authenticateListener(wsSession *websocketSession, token string
 	// Authenticated
 	wsSession.userID = userID
 	ws.logger.Debug("authenticateListener: Authenticated", mlog.String("userID", userID), mlog.Stringer("client", wsSession.client.RemoteAddr()))
-}
-
-func (ws *Server) SetHub(hub Hub) {
-	ws.hub = hub
-	ws.hub.SetReceiveWSMessage(func(data []byte) {
-		var msg clusterUpdateMsg
-		err := json.Unmarshal(data, &msg)
-		if err != nil {
-			log.Printf("unable to unmarshal cluster message")
-			return
-		}
-
-		listeners := ws.getListenersForBlock(msg.BlockID)
-		log.Printf("%d listener(s) for blockID: %s", len(listeners), msg.BlockID)
-		listeners = append(listeners, ws.getListenersForWorkspace(msg.WorkspaceID)...)
-		log.Printf("%d listener(s) for workspaceID: %s", len(listeners), msg.WorkspaceID)
-
-		message := UpdateMsg{
-			Action: msg.Action,
-			Block:  msg.Block,
-		}
-
-		for _, listener := range listeners {
-			log.Printf("Broadcast change, workspaceID: %s, blockID: %s, remoteAddr: %s", msg.WorkspaceID, msg.BlockID, listener.RemoteAddr())
-
-			err := listener.WriteJSON(message)
-			if err != nil {
-				log.Printf("broadcast error: %v", err)
-				listener.Close()
-			}
-		}
-	})
 }
 
 // getListenersForBlock returns the listeners subscribed to a
@@ -537,7 +488,7 @@ func (ws *Server) BroadcastBlockChange(workspaceID string, block model.Block) {
 	blockIDsToNotify := []string{block.ID, block.ParentID}
 
 	message := UpdateMsg{
-		Action: "UPDATE_BLOCK",
+		Action: websocketActionUpdateBlock,
 		Block:  block,
 	}
 
@@ -553,14 +504,6 @@ func (ws *Server) BroadcastBlockChange(workspaceID string, block model.Block) {
 			mlog.Int("listener_count", len(listeners)),
 			mlog.String("blockID", blockID),
 		)
-
-		if ws.hub != nil {
-			data, err := json.Marshal(clusterUpdateMsg{UpdateMsg: message, WorkspaceID: workspaceID, BlockID: blockID})
-			if err != nil {
-				log.Printf("unable to serialize websocket message %v with the error: %v", message, err)
-			}
-			ws.hub.SendWSMessage(data)
-		}
 	}
 
 	for _, listener := range listeners {
