@@ -63,7 +63,7 @@ class Constants {
             displayName: '中文 (繁體)',
         },
         {
-            code: 'zh-tx',
+            code: 'zh-tw',
             name: 'simplified-chinese',
             displayName: '中文 (简体)',
         },
