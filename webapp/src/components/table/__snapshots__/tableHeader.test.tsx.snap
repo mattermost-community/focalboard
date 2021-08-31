@@ -8,7 +8,9 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
     style="overflow: unset; width: 100px; opacity: 1;"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
       <span
         class="Label empty "
