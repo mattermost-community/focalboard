@@ -110,7 +110,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       </svg>
                     </div>
                     <div
-                      aria-label="Español"
+                      aria-label="Español (Alpha)"
                       class="MenuOption TextOption menu-option"
                       role="button"
                     >
@@ -120,7 +120,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       <div
                         class="menu-name"
                       >
-                        Español
+                        Español (Alpha)
                       </div>
                       <div
                         class="noicon"
@@ -161,7 +161,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       />
                     </div>
                     <div
-                      aria-label="Français"
+                      aria-label="Français (Beta)"
                       class="MenuOption TextOption menu-option"
                       role="button"
                     >
@@ -171,7 +171,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       <div
                         class="menu-name"
                       >
-                        Français
+                        Français (Beta)
                       </div>
                       <div
                         class="noicon"
@@ -195,7 +195,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       />
                     </div>
                     <div
-                      aria-label="Pусский"
+                      aria-label="Pусский (Beta)"
                       class="MenuOption TextOption menu-option"
                       role="button"
                     >
@@ -205,7 +205,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                       <div
                         class="menu-name"
                       >
-                        Pусский
+                        Pусский (Beta)
                       </div>
                       <div
                         class="noicon"
@@ -274,6 +274,108 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                         class="menu-name"
                       >
                         Occitan
+                      </div>
+                      <div
+                        class="noicon"
+                      />
+                    </div>
+                    <div
+                      aria-label="Português (Brasil) (Beta)"
+                      class="MenuOption TextOption menu-option"
+                      role="button"
+                    >
+                      <div
+                        class="noicon"
+                      />
+                      <div
+                        class="menu-name"
+                      >
+                        Português (Brasil) (Beta)
+                      </div>
+                      <div
+                        class="noicon"
+                      />
+                    </div>
+                    <div
+                      aria-label="Català (Beta)"
+                      class="MenuOption TextOption menu-option"
+                      role="button"
+                    >
+                      <div
+                        class="noicon"
+                      />
+                      <div
+                        class="menu-name"
+                      >
+                        Català (Beta)
+                      </div>
+                      <div
+                        class="noicon"
+                      />
+                    </div>
+                    <div
+                      aria-label="Ελληνικά (Alpha)"
+                      class="MenuOption TextOption menu-option"
+                      role="button"
+                    >
+                      <div
+                        class="noicon"
+                      />
+                      <div
+                        class="menu-name"
+                      >
+                        Ελληνικά (Alpha)
+                      </div>
+                      <div
+                        class="noicon"
+                      />
+                    </div>
+                    <div
+                      aria-label="bahasa Indonesia (Alpha)"
+                      class="MenuOption TextOption menu-option"
+                      role="button"
+                    >
+                      <div
+                        class="noicon"
+                      />
+                      <div
+                        class="menu-name"
+                      >
+                        bahasa Indonesia (Alpha)
+                      </div>
+                      <div
+                        class="noicon"
+                      />
+                    </div>
+                    <div
+                      aria-label="Italiano (Beta)"
+                      class="MenuOption TextOption menu-option"
+                      role="button"
+                    >
+                      <div
+                        class="noicon"
+                      />
+                      <div
+                        class="menu-name"
+                      >
+                        Italiano (Beta)
+                      </div>
+                      <div
+                        class="noicon"
+                      />
+                    </div>
+                    <div
+                      aria-label="Svenska (Beta)"
+                      class="MenuOption TextOption menu-option"
+                      role="button"
+                    >
+                      <div
+                        class="noicon"
+                      />
+                      <div
+                        class="menu-name"
+                      >
+                        Svenska (Beta)
                       </div>
                       <div
                         class="noicon"
