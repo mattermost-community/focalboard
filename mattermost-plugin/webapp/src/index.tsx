@@ -38,6 +38,19 @@ import './plugin.scss'
 
 const TELEMETRY_RUDDER_KEY = 'placeholder_rudder_key'
 const TELEMETRY_RUDDER_DATAPLANE_URL = 'placeholder_rudder_dataplane_url'
+const TELEMETRY_OPTIONS = {
+    context: {
+        ip: '0.0.0.0',
+    },
+    page: {
+        path: '',
+        referrer: '',
+        search: '',
+        title: '',
+        url: '',
+    },
+    anonymousId: '00000000000000000000000000',
+}
 
 const MainApp = () => {
     const [faviconStored, setFaviconStored] = useState(false)
@@ -162,36 +175,18 @@ export default class Plugin {
                 rudderUrl = process.env.RUDDER_DATAPLANE_URL as string //eslint-disable-line no-process-env
             }
 
-            if (rudderKey != null && rudderKey !== '') {
+            if (rudderKey !== '') {
                 rudderAnalytics.load(rudderKey, rudderUrl)
 
-                rudderAnalytics.identify(config?.telemetryid, {}, {
-                    context: {
-                        ip: '0.0.0.0',
-                    },
-                    page: {
-                        path: '',
-                        referrer: '',
-                        search: '',
-                        title: '',
-                        url: '',
-                    },
-                    anonymousId: '00000000000000000000000000',
-                })
+                rudderAnalytics.identify(config?.telemetryid, {}, TELEMETRY_OPTIONS)
 
-                rudderAnalytics.page('ApplicationLoaded', '', {
-                    path: '',
-                    referrer: '',
-                    search: '',
-                    title: '',
-                    url: '',
-                },
-                {
-                    context: {
-                        ip: '0.0.0.0',
-                    },
-                    anonymousId: '00000000000000000000000000',
-                })
+                rudderAnalytics.page('BoardsLoaded', '',
+                    TELEMETRY_OPTIONS.page,
+                    {
+                        context: TELEMETRY_OPTIONS.context,
+                        anonymousId: TELEMETRY_OPTIONS.anonymousId,
+                    })
+
                 TelemetryClient.setTelemetryHandler(new RudderTelemetryHandler())
             }
         }
