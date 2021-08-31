@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}users (
 	update_at    BIGINT,
 	delete_at    BIGINT,
 	PRIMARY KEY (id)
-);
+) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};
 
 CREATE TABLE IF NOT EXISTS {{.prefix}}sessions (
 	id VARCHAR(100),
@@ -21,4 +21,4 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}sessions (
 	create_at    BIGINT,
 	update_at    BIGINT,
 	PRIMARY KEY (id)
-);
+) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};

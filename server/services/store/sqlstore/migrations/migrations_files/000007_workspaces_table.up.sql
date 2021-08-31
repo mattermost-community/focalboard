@@ -5,4 +5,4 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}workspaces (
 	modified_by VARCHAR(36),
 	update_at BIGINT,
 	PRIMARY KEY (id)
-);
+) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};

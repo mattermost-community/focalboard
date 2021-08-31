@@ -7,10 +7,6 @@ import (
 	"time"
 )
 
-const (
-	mysqlDefaultCollation = "utf8mb4_general_ci"
-)
-
 // CreateGUID returns a random GUID.
 func CreateGUID() string {
 	b := make([]byte, 16)
