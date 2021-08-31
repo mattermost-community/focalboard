@@ -139,8 +139,7 @@ class WSClient {
                     Utils.log('WSClient Mattermost Websocket not ready, retrying')
                     setTimeout(setPluginOpen, this.mmWSRetryDelay)
                 } else {
-                    Utils.logError(`WSClient error on open: Mattermost Websocket client is not ready`)
-                    return
+                    Utils.logError('WSClient error on open: Mattermost Websocket client is not ready')
                 }
             }
 
