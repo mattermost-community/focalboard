@@ -22,6 +22,12 @@
         margin-left: 0.3em;
     }
 
+    .Button {
+        &.active {
+            color: rgb(var(--center-channel-color-rgb));
+        }
+    }
+
     .IconButton {
         background: none;
         padding: 0;
