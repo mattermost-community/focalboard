@@ -6,7 +6,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
     class="GlobalHeaderSettingsMenu"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
       <div
         class="GlobalHeaderComponent__button menu-entry"
@@ -366,7 +368,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu closed should
     class="GlobalHeaderSettingsMenu"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
       <div
         class="GlobalHeaderComponent__button menu-entry"
@@ -386,7 +390,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
     class="GlobalHeaderSettingsMenu"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
       <div
         class="GlobalHeaderComponent__button menu-entry"
