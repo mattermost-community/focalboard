@@ -19,9 +19,7 @@ const (
 
 type TestError struct{}
 
-func (err *TestError) Error() string {
-	return "Mocked File backend error"
-}
+func (err *TestError) Error() string { return "Mocked File backend error" }
 
 func TestGetFileReader(t *testing.T) {
 	th, _ := SetupTestHelper(t)
@@ -79,7 +77,6 @@ func TestGetFileReader(t *testing.T) {
 	})
 
 	t.Run("should return error, if get reader from file backend returns error", func(t *testing.T) {
-
 		mockedFileBackend := &mocks.FileBackend{}
 		th.App.filesBackend = mockedFileBackend
 		mockedError := &TestError{}
@@ -182,7 +179,6 @@ func TestSaveFile(t *testing.T) {
 	th, _ := SetupTestHelper(t)
 	mockedReadCloseSeek := &mocks.ReadCloseSeeker{}
 	t.Run("should save file to file store using file backend", func(t *testing.T) {
-
 		fileName := "temp-file-name.txt"
 		mockedFileBackend := &mocks.FileBackend{}
 		th.App.filesBackend = mockedFileBackend
@@ -206,7 +202,6 @@ func TestSaveFile(t *testing.T) {
 	})
 
 	t.Run("should save .jpeg file as jpg file to file store using file backend", func(t *testing.T) {
-
 		fileName := "temp-file-name.jpeg"
 		mockedFileBackend := &mocks.FileBackend{}
 		th.App.filesBackend = mockedFileBackend
@@ -230,7 +225,6 @@ func TestSaveFile(t *testing.T) {
 	})
 
 	t.Run("should return error when fileBackend.WriteFile returns error", func(t *testing.T) {
-
 		fileName := "temp-file-name.jpeg"
 		mockedFileBackend := &mocks.FileBackend{}
 		th.App.filesBackend = mockedFileBackend
