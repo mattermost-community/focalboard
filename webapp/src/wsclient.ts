@@ -70,6 +70,7 @@ class WSClient {
         if (this.client !== null) {
             const {action, ...data} = command
             this.client.sendMessage(this.clientPrefix + action, data)
+            return
         }
 
         this.ws?.send(JSON.stringify(command))
