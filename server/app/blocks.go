@@ -4,6 +4,8 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/store"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 func (a *App) GetBlocks(c store.Container, parentID string, blockType string) ([]model.Block, error) {
@@ -49,7 +51,7 @@ func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.Bl
 	a.wsAdapter.BroadcastBlockChange(c.WorkspaceID, *block)
 	go func() {
 		a.webhook.NotifyUpdate(*block)
-		a.notifications.BlockChanged(notify.Update, block, oldBlock)
+		a.notifyBlockChanged(notify.Update, c, block, oldBlock, userID)
 	}()
 	return nil
 }
@@ -61,7 +63,7 @@ func (a *App) InsertBlock(c store.Container, block model.Block, userID string) e
 		a.metrics.IncrementBlocksInserted(1)
 		go func() {
 			a.webhook.NotifyUpdate(block)
-			a.notifications.BlockChanged(notify.Add, &block, nil)
+			a.notifyBlockChanged(notify.Add, c, &block, nil, userID)
 		}()
 	}
 	return err
@@ -85,7 +87,7 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block, userID strin
 		for _, b := range needsNotify {
 			block := b
 			a.webhook.NotifyUpdate(block)
-			a.notifications.BlockChanged(notify.Add, &block, nil)
+			a.notifyBlockChanged(notify.Add, c, &block, nil, userID)
 		}
 	}()
 
@@ -105,11 +107,6 @@ func (a *App) GetAllBlocks(c store.Container) ([]model.Block, error) {
 }
 
 func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) error {
-	parentID, err := a.GetParentID(c, blockID)
-	if err != nil {
-		return err
-	}
-
 	block, err := a.store.GetBlock(c, blockID)
 	if err != nil {
 		return err
@@ -120,13 +117,60 @@ func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) 
 		return err
 	}
 
-	a.wsAdapter.BroadcastBlockDelete(c.WorkspaceID, blockID, parentID)
+	a.wsAdapter.BroadcastBlockDelete(c.WorkspaceID, blockID, block.ParentID)
 	a.metrics.IncrementBlocksDeleted(1)
-	a.notifications.BlockChanged(notify.Update, block, nil)
-
+	go func() {
+		a.notifyBlockChanged(notify.Update, c, block, block, modifiedBy)
+	}()
 	return nil
 }
 
 func (a *App) GetBlockCountsByType() (map[string]int64, error) {
 	return a.store.GetBlockCountsByType()
+}
+
+func (a *App) notifyBlockChanged(action notify.Action, c store.Container, block *model.Block, oldBlock *model.Block, userID string) {
+	// find card and board for the changed block.
+	board, card, err := a.getBoardAndCard(c, block)
+	if err != nil {
+		a.logger.Error("Error notifying for block change; cannot determine board or card", mlog.Err(err))
+		return
+	}
+
+	evt := notify.BlockChangeEvent{
+		Action:       action,
+		Workspace:    c.WorkspaceID,
+		Board:        board,
+		Card:         card,
+		BlockChanged: block,
+		BlockOld:     oldBlock,
+		UserID:       userID,
+	}
+	a.notifications.BlockChanged(evt)
+}
+
+// getBoardAndCard returns the first parent of type `card` and first parent of type `board` for the specified block.
+// `board` and/or `card` may return nil without error if the block does not belong to a board or card.
+func (a *App) getBoardAndCard(c store.Container, block *model.Block) (board *model.Block, card *model.Block, err error) {
+	// find card and board for the changed block.
+	iter := block
+	for {
+		if board == nil && iter.Type == "board" {
+			board = iter
+		}
+
+		if card == nil && iter.Type == "card" {
+			card = iter
+		}
+
+		if iter.ParentID == "" {
+			break
+		}
+
+		iter, err = a.store.GetBlock(c, iter.ParentID)
+		if err != nil {
+			return board, card, err
+		}
+	}
+	return board, card, nil
 }

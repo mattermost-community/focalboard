@@ -4,6 +4,8 @@
 package notifymentions
 
 import (
+	"fmt"
+
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/wiggin77/merror"
@@ -43,13 +45,25 @@ func (b *Backend) Name() string {
 	return backendName
 }
 
-func (b *Backend) BlockChanged(evt notify.Event, block *model.Block, oldBlock *model.Block) error {
-	if block.Type != "text" {
+func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
+	if evt.Board == nil || evt.Card == nil {
 		return nil
 	}
 
-	mentions := extractMentions(block)
-	oldMentions := extractMentions(oldBlock)
+	if evt.BlockChanged.Type != "text" && evt.BlockChanged.Type != "comment" {
+		return nil
+	}
+
+	mentions := extractMentions(evt.BlockChanged)
+	if len(mentions) == 0 {
+		return nil
+	}
+
+	oldMentions := extractMentions(evt.BlockOld)
+	author, err := b.delivery.GetUserByID(evt.UserID)
+	if err != nil {
+		return fmt.Errorf("cannot find user: %w", err)
+	}
 	merr := merror.New()
 
 	for username := range mentions {
@@ -67,11 +81,12 @@ func (b *Backend) BlockChanged(evt notify.Event, block *model.Block, oldBlock *m
 			merr.Append(err)
 			continue
 		}
+		link := makeLink(evt.Workspace, evt.Board.ID, evt.Card.ID)
 
 		post := &chatmodel.Post{
 			UserId:    b.botID,
 			ChannelId: channel.Id,
-			Message:   "You got mentioned!!",
+			Message:   formatMessage(author.Username, evt.Card.Title, link, evt.BlockChanged, username),
 		}
 		err = b.delivery.CreatePost(post)
 		if err != nil {
@@ -79,4 +94,26 @@ func (b *Backend) BlockChanged(evt notify.Event, block *model.Block, oldBlock *m
 		}
 	}
 	return merr.ErrorOrNil()
+}
+
+const (
+	// TODO: localize these when i18n is available.
+	defCommentTemplate     = "@%s mentioned you in a comment on the card [%s](%s)\n> %s"
+	defDescriptionTemplate = "@%s mentioned you in the card [%s](%s)\n> %s"
+)
+
+func formatMessage(author string, card string, link string, block *model.Block, _ /*mention*/ string) string {
+	template := defDescriptionTemplate
+	if block.Type == "comment" {
+		template = defCommentTemplate
+	}
+
+	// TODO: use mention to extract up 100 chars or max 5 lines from block text
+
+	return fmt.Sprintf(template, author, card, link, block.Title)
+}
+
+func makeLink(workspace string, board string, card string) string {
+	// TODO: get server IP/domain and port.
+	return fmt.Sprintf("https://placeholder:8065/boards/workspace/%s/%s/%s/", workspace, board, card)
 }

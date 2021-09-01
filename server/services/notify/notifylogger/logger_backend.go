@@ -4,7 +4,6 @@
 package notifylogger
 
 import (
-	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -35,10 +34,22 @@ func (b *Backend) ShutDown() error {
 	return nil
 }
 
-func (b *Backend) BlockChanged(evt notify.Event, block *model.Block, oldBlock *model.Block) error {
+func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
+	var board string
+	var card string
+
+	if evt.Board != nil {
+		board = evt.Board.Title
+	}
+	if evt.Card != nil {
+		card = evt.Card.Title
+	}
+
 	b.logger.Log(b.level, "Block change event",
-		mlog.String("event", string(evt)),
-		mlog.String("block_id", block.ID),
+		mlog.String("action", string(evt.Action)),
+		mlog.String("board", board),
+		mlog.String("card", card),
+		mlog.String("block_id", evt.BlockChanged.ID),
 	)
 	return nil
 }

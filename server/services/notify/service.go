@@ -12,19 +12,29 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-type Event string
+type Action string
 
 const (
-	Add    Event = "add"
-	Update Event = "update"
-	Delete Event = "delete"
+	Add    Action = "add"
+	Update Action = "update"
+	Delete Action = "delete"
 )
+
+type BlockChangeEvent struct {
+	Action       Action
+	Workspace    string
+	Board        *model.Block
+	Card         *model.Block
+	BlockChanged *model.Block
+	BlockOld     *model.Block
+	UserID       string
+}
 
 // Backend provides an interface for sending notifications.
 type Backend interface {
 	Start() error
 	ShutDown() error
-	BlockChanged(evt Event, block *model.Block, oldBlock *model.Block) error
+	BlockChanged(evt BlockChangeEvent) error
 	Name() string
 }
 
@@ -81,16 +91,16 @@ func (s *Service) Shutdown() error {
 
 // BlockChanged should be called whenever a block is added/updated/deleted.
 // All backends are informed of the event.
-func (s *Service) BlockChanged(evt Event, block *model.Block, oldBlock *model.Block) {
+func (s *Service) BlockChanged(evt BlockChangeEvent) {
 	s.mux.RLock()
 	defer s.mux.RUnlock()
 
 	for _, backend := range s.backends {
-		if err := backend.BlockChanged(evt, block, oldBlock); err != nil {
+		if err := backend.BlockChanged(evt); err != nil {
 			s.logger.Error("Error delivering notification",
 				mlog.String("backend", backend.Name()),
-				mlog.String("event", string(evt)),
-				mlog.String("block_id", block.ID),
+				mlog.String("action", string(evt.Action)),
+				mlog.String("block_id", evt.BlockChanged.ID),
 				mlog.Err(err),
 			)
 		}

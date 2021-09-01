@@ -14,6 +14,9 @@ type Delivery interface {
 	// CreatePost creates a post.
 	CreatePost(post *model.Post) error
 
+	// GetUserByIS gets a user by their ID.
+	GetUserByID(userID string) (*model.User, error)
+
 	// GetUserByUsername gets a user by their username.
 	GetUserByUsername(name string) (*model.User, error)
 }

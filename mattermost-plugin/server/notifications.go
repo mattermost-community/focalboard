@@ -49,6 +49,10 @@ func (da *deliveryAdapter) CreatePost(post *model.Post) error {
 	return da.client.Post.CreatePost(post)
 }
 
+func (da *deliveryAdapter) GetUserByID(userID string) (*model.User, error) {
+	return da.client.User.Get(userID)
+}
+
 func (da *deliveryAdapter) GetUserByUsername(name string) (*model.User, error) {
 	return da.client.User.GetByUsername(name)
 }
