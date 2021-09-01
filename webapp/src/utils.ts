@@ -235,6 +235,15 @@ class Utils {
         /// #!endif
     }
 
+    static logWarning(message: string): void {
+        /// #!if ENV !== "production"
+        const timestamp = (Date.now() / 1000).toFixed(2)
+        // eslint-disable-next-line no-console
+        console.warn(`[${timestamp}] ${message}`)
+
+        /// #!endif
+    }
+
     static logError(message: string): void {
         /// #!if ENV !== "production"
         const timestamp = (Date.now() / 1000).toFixed(2)

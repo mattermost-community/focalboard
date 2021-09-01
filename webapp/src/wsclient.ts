@@ -49,7 +49,7 @@ class WSClient {
     onChange: OnChangeHandler[] = []
     onError: OnErrorHandler[] = []
     private mmWSMaxRetries = 10
-    private mmWSRetryDelay = 300
+    private mmWSRetryDelay = 150
     private notificationDelay = 100
     private reopenDelay = 3000
     private updatedBlocks: Block[] = []
@@ -122,16 +122,20 @@ class WSClient {
 
     open(): void {
         if (this.client !== null) {
+            const markAsOpen = () => {
+                for (const handler of this.onStateChange) {
+                    handler(this, 'open')
+                }
+                this.state = 'open'
+                Utils.log('WSClient connected in plugin mode, reusing Mattermost WS connection')
+            }
+
             // WSClient needs to ensure that the Mattermost client has
             // correctly stablished the connection before opening
             let retries = 0
             const setPluginOpen = () => {
                 if (this.client?.connectionId !== '') {
-                    for (const handler of this.onStateChange) {
-                        handler(this, 'open')
-                    }
-                    this.state = 'open'
-                    Utils.log('WSClient in plugin mode, reusing Mattermost WS connection')
+                    markAsOpen()
                     return
                 }
 
@@ -140,7 +144,12 @@ class WSClient {
                     Utils.log('WSClient Mattermost Websocket not ready, retrying')
                     setTimeout(setPluginOpen, this.mmWSRetryDelay)
                 } else {
-                    Utils.logError('WSClient error on open: Mattermost Websocket client is not ready')
+                    // connectionId will be never set if
+                    // EnableReliableWebSockets is set to false, so if
+                    // the connectionId is not set after the retries,
+                    // we trust it to be ready
+                    Utils.logWarning("WSClient couldn't determine if Mattermost WebSocket is ready. Continuing")
+                    markAsOpen()
                 }
             }
 
