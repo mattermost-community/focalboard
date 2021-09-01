@@ -105,6 +105,7 @@ export default class Plugin {
         const siteURL = mmStore.getState().entities.general.config.SiteURL
         const subpath = siteURL ? getSubpath(siteURL) : ''
         windowAny.frontendBaseURL = subpath + windowAny.frontendBaseURL
+        windowAny.baseURL = subpath + windowAny.baseURL
 
         this.registry = registry
 
@@ -130,7 +131,7 @@ export default class Plugin {
             windowAny.frontendBaseURL = subpath + '/boards'
             const goToFocalboardWorkspace = () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
-                window.open(`${window.location.origin}/boards/workspace/${currentChannel}`)
+                window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`)
             }
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Boards')
 

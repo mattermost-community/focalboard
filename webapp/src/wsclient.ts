@@ -26,7 +26,7 @@ type OnErrorHandler = (client: WSClient, e: Event) => void
 
 class WSClient {
     ws: WebSocket|null = null
-    serverUrl: string
+    serverUrl: string | undefined
     state: 'init'|'open'|'close' = 'init'
     onStateChange: OnStateChangeHandler[] = []
     onReconnect: OnReconnectHandler[] = []
@@ -37,9 +37,28 @@ class WSClient {
     private updatedBlocks: Block[] = []
     private updateTimeout?: NodeJS.Timeout
 
+    private logged = false
+
+    // this need to be a function rather than a const because
+    // one of the global variable (`window.baseURL`) is set at runtime
+    // after the first instance of OctoClient is created.
+    // Avoiding the race condition becomes more complex than making
+    // the base URL dynamic though a function
+    private getBaseURL(): string {
+        const baseURL = (this.serverUrl || Utils.getBaseURL(true)).replace(/\/$/, '')
+
+        // Logging this for debugging.
+        // Logging just once to avoid log noise.
+        if (!this.logged) {
+            Utils.log(`WSClient serverUrl: ${baseURL}`)
+            this.logged = true
+        }
+
+        return baseURL
+    }
+
     constructor(serverUrl?: string) {
-        this.serverUrl = (serverUrl || Utils.getBaseURL(true)).replace(/\/$/, '')
-        Utils.log(`WSClient serverUrl: ${this.serverUrl}`)
+        this.serverUrl = serverUrl
     }
 
     addOnChange(handler: OnChangeHandler): void {
@@ -87,7 +106,7 @@ class WSClient {
     }
 
     open(): void {
-        const url = new URL(this.serverUrl)
+        const url = new URL(this.getBaseURL())
         const protocol = (url.protocol === 'https:') ? 'wss:' : 'ws:'
         const wsServerUrl = `${protocol}//${url.host}${url.pathname.replace(/\/$/, '')}/ws`
         Utils.log(`WSClient open: ${wsServerUrl}`)
