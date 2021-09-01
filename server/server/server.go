@@ -49,7 +49,7 @@ const (
 
 type Server struct {
 	config                 *config.Configuration
-	wsServer               *ws.Server
+	wsAdapter              ws.Adapter
 	webServer              *web.Server
 	store                  store.Store
 	filesBackend           filestore.FileBackend
@@ -67,10 +67,14 @@ type Server struct {
 	api             *api.API
 }
 
-func New(cfg *config.Configuration, singleUserToken string, db store.Store, logger *mlog.Logger, serverID string) (*Server, error) {
+func New(cfg *config.Configuration, singleUserToken string, db store.Store,
+	logger *mlog.Logger, serverID string, wsAdapter ws.Adapter) (*Server, error) {
 	authenticator := auth.New(cfg, db)
 
-	wsServer := ws.NewServer(authenticator, singleUserToken, cfg.AuthMode == MattermostAuthMod, logger)
+	// if no ws adapter is provided, we spin up a websocket server
+	if wsAdapter == nil {
+		wsAdapter = ws.NewServer(authenticator, singleUserToken, cfg.AuthMode == MattermostAuthMod, logger)
+	}
 
 	filesBackendSettings := filestore.FileBackendSettings{}
 	filesBackendSettings.DriverName = cfg.FilesDriver
@@ -121,7 +125,7 @@ func New(cfg *config.Configuration, singleUserToken string, db store.Store, logg
 		Metrics:      metricsService,
 		Logger:       logger,
 	}
-	app := app.New(cfg, wsServer, appServices)
+	app := app.New(cfg, wsAdapter, appServices)
 
 	focalboardAPI := api.NewAPI(app, singleUserToken, cfg.AuthMode, logger, auditService)
 
@@ -136,7 +140,10 @@ func New(cfg *config.Configuration, singleUserToken string, db store.Store, logg
 	}
 
 	webServer := web.NewServer(cfg.WebPath, cfg.ServerRoot, cfg.Port, cfg.UseSSL, cfg.LocalOnly, logger)
-	webServer.AddRoutes(wsServer)
+	// if the adapter is a routed service, register it before the API
+	if routedService, ok := wsAdapter.(web.RoutedService); ok {
+		webServer.AddRoutes(routedService)
+	}
 	webServer.AddRoutes(focalboardAPI)
 
 	settings, err := db.GetSystemSettings()
@@ -164,7 +171,7 @@ func New(cfg *config.Configuration, singleUserToken string, db store.Store, logg
 
 	server := Server{
 		config:         cfg,
-		wsServer:       wsServer,
+		wsAdapter:      wsAdapter,
 		webServer:      webServer,
 		store:          db,
 		filesBackend:   filesBackend,
@@ -362,10 +369,6 @@ func (s *Server) stopLocalModeServer() {
 
 func (s *Server) GetRootRouter() *mux.Router {
 	return s.webServer.Router()
-}
-
-func (s *Server) SetWSHub(hub ws.Hub) {
-	s.wsServer.SetHub(hub)
 }
 
 type telemetryOptions struct {

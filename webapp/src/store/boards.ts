@@ -96,4 +96,3 @@ export const getCurrentBoard = createSelector(
         return boards[boardId] || templates[boardId]
     },
 )
-
