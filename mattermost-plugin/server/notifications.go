@@ -19,7 +19,7 @@ const (
 	botDescription = "Created by Boards plugin."
 )
 
-func createMentionsNotifyBackend(client *pluginapi.Client, logger *mlog.Logger) (notify.Backend, error) {
+func createMentionsNotifyBackend(client *pluginapi.Client, serverRoot string, logger *mlog.Logger) (notify.Backend, error) {
 	bot := &model.Bot{
 		Username:    botUsername,
 		DisplayName: botDisplayname,
@@ -32,7 +32,7 @@ func createMentionsNotifyBackend(client *pluginapi.Client, logger *mlog.Logger) 
 
 	delivery := &deliveryAdapter{client: client}
 
-	backend := notifymentions.New(delivery, botID, logger)
+	backend := notifymentions.New(delivery, botID, serverRoot, logger)
 
 	return backend, nil
 }

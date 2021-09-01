@@ -19,16 +19,18 @@ const (
 )
 
 type Backend struct {
-	delivery Delivery
-	botID    string
-	logger   *mlog.Logger
+	delivery   Delivery
+	botID      string
+	serverRoot string
+	logger     *mlog.Logger
 }
 
-func New(delivery Delivery, botID string, logger *mlog.Logger) *Backend {
+func New(delivery Delivery, botID string, serverRoot string, logger *mlog.Logger) *Backend {
 	return &Backend{
-		delivery: delivery,
-		botID:    botID,
-		logger:   logger,
+		delivery:   delivery,
+		botID:      botID,
+		serverRoot: serverRoot,
+		logger:     logger,
 	}
 }
 
@@ -81,7 +83,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 			merr.Append(err)
 			continue
 		}
-		link := makeLink(evt.Workspace, evt.Board.ID, evt.Card.ID)
+		link := makeLink(b.serverRoot, evt.Workspace, evt.Board.ID, evt.Card.ID)
 
 		post := &chatmodel.Post{
 			UserId:    b.botID,
@@ -113,7 +115,6 @@ func formatMessage(author string, card string, link string, block *model.Block, 
 	return fmt.Sprintf(template, author, card, link, block.Title)
 }
 
-func makeLink(workspace string, board string, card string) string {
-	// TODO: get server IP/domain and port.
-	return fmt.Sprintf("https://placeholder:8065/boards/workspace/%s/%s/%s/", workspace, board, card)
+func makeLink(serverRoot string, workspace string, board string, card string) string {
+	return fmt.Sprintf("%s/workspace/%s/%s/%s/", serverRoot, workspace, board, card)
 }

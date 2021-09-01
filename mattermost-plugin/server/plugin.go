@@ -126,7 +126,7 @@ func (p *Plugin) OnActivate() error {
 	serverID := client.System.GetDiagnosticID()
 	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db))
 
-	mentionsBackend, err := createMentionsNotifyBackend(client, logger)
+	mentionsBackend, err := createMentionsNotifyBackend(client, cfg.ServerRoot, logger)
 	if err != nil {
 		return fmt.Errorf("error creating mentions notifications backend: %w", err)
 	}
