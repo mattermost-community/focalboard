@@ -1,6 +1,6 @@
 module github.com/mattermost/focalboard/mattermost-plugin
 
-go 1.12
+go 1.16
 
 replace github.com/mattermost/focalboard/server => ../server
 
