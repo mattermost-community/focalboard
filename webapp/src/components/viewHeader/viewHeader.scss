@@ -10,7 +10,7 @@
     align-items: center;
 
     > div {
-        margin-right: 16px;
+        margin-right: 12px;
         white-space: nowrap;
 
         &:last-child {
@@ -20,12 +20,6 @@
 
     #groupByLabel {
         margin-left: 0.3em;
-    }
-
-    .Button {
-        &.active {
-            color: rgb(var(--center-channel-color-rgb));
-        }
     }
 
     .IconButton {

@@ -16,7 +16,7 @@
             color: rgba(var(--center-channel-text-rgb), 1);
 
             i {
-                color: inherit;
+                color: var(--link-color-rgb);
             }
 
             &:hover {
