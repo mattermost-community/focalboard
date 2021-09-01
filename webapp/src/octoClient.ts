@@ -6,6 +6,7 @@ import {IWorkspace} from './blocks/workspace'
 import {OctoUtils} from './octoUtils'
 import {IUser} from './user'
 import {Utils} from './utils'
+import {ClientConfig} from './config/clientConfig'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -62,6 +63,20 @@ class OctoClient {
 
     logout() {
         localStorage.removeItem('focalboardSessionId')
+    }
+
+    async getClientConfig(): Promise<ClientConfig | null> {
+        const path = '/api/v1/clientConfig'
+        const response = await fetch(this.serverUrl + path, {
+            method: 'GET',
+            headers: this.headers(),
+        })
+        if (response.status !== 200) {
+            return null
+        }
+
+        const json = (await this.getJson(response, {})) as ClientConfig
+        return json
     }
 
     async register(email: string, username: string, password: string, token?: string): Promise<{code: number, json: any}> {

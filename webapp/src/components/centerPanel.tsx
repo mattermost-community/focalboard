@@ -18,6 +18,8 @@ import {addCard, addTemplate} from '../store/cards'
 
 import './centerPanel.scss'
 
+import TelemetryClient from '../../../webapp/src/telemetry/telemetryClient'
+
 import CardDialog from './cardDialog'
 import RootPortal from './rootPortal'
 import TopBar from './topBar'
@@ -79,6 +81,7 @@ class CenterPanel extends React.Component<Props, State> {
 
     componentDidMount(): void {
         this.showCardInUrl()
+        TelemetryClient.trackEvent('boards', 'view', {viewType: this.props.activeView.fields.viewType})
     }
 
     constructor(props: Props) {
@@ -99,6 +102,10 @@ class CenterPanel extends React.Component<Props, State> {
         if (cardId !== this.state.shownCardId) {
             this.setState({shownCardId: cardId})
         }
+    }
+
+    componentDidUpdate(): void {
+        TelemetryClient.trackEvent('boards', 'view', {viewType: this.props.activeView.fields.viewType})
     }
 
     render(): JSX.Element {
