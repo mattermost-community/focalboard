@@ -5,6 +5,8 @@ import {Store, Action} from 'redux'
 import {Provider as ReduxProvider} from 'react-redux'
 import {useHistory} from 'mm-react-router-dom'
 
+import {rudderAnalytics, RudderTelemetryHandler} from 'mattermost-redux/client/rudder'
+
 import {GlobalState} from 'mattermost-redux/types/store'
 import {getTheme} from 'mattermost-redux/selectors/entities/preferences'
 
@@ -20,9 +22,12 @@ import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
 import {setMattermostTheme} from '../../../webapp/src/theme'
 import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK} from './../../../webapp/src/wsclient'
 
+import TelemetryClient from '../../../webapp/src/telemetry/telemetryClient'
+
 import '../../../webapp/src/styles/focalboard-variables.scss'
 import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
+import octoClient from '../../../webapp/src/octoClient'
 
 import manifest from './manifest'
 import ErrorBoundary from './error_boundary'
@@ -31,6 +36,22 @@ import ErrorBoundary from './error_boundary'
 import {PluginRegistry} from './types/mattermost-webapp'
 
 import './plugin.scss'
+
+const TELEMETRY_RUDDER_KEY = 'placeholder_rudder_key'
+const TELEMETRY_RUDDER_DATAPLANE_URL = 'placeholder_rudder_dataplane_url'
+const TELEMETRY_OPTIONS = {
+    context: {
+        ip: '0.0.0.0',
+    },
+    page: {
+        path: '',
+        referrer: '',
+        search: '',
+        title: '',
+        url: '',
+    },
+    anonymousId: '00000000000000000000000000',
+}
 
 type Props = {
     webSocketClient: MMWebSocketClient
@@ -148,6 +169,32 @@ export default class Plugin {
                 window.open(`${window.location.origin}/plug/focalboard/workspace/${currentChannel}`)
             }, '', 'Boards')
             this.registry.registerCustomRoute('/', MainApp)
+        }
+
+        const config = await octoClient.getClientConfig()
+        if (config?.telemetry) {
+            let rudderKey = TELEMETRY_RUDDER_KEY
+            let rudderUrl = TELEMETRY_RUDDER_DATAPLANE_URL
+
+            if (rudderKey.startsWith('placeholder') && rudderUrl.startsWith('placeholder')) {
+                rudderKey = process.env.RUDDER_KEY as string //eslint-disable-line no-process-env
+                rudderUrl = process.env.RUDDER_DATAPLANE_URL as string //eslint-disable-line no-process-env
+            }
+
+            if (rudderKey !== '') {
+                rudderAnalytics.load(rudderKey, rudderUrl)
+
+                rudderAnalytics.identify(config?.telemetryid, {}, TELEMETRY_OPTIONS)
+
+                rudderAnalytics.page('BoardsLoaded', '',
+                    TELEMETRY_OPTIONS.page,
+                    {
+                        context: TELEMETRY_OPTIONS.context,
+                        anonymousId: TELEMETRY_OPTIONS.anonymousId,
+                    })
+
+                TelemetryClient.setTelemetryHandler(new RudderTelemetryHandler())
+            }
         }
 
         // register websocket handlers
