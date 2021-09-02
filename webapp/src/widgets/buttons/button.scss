@@ -1,4 +1,5 @@
 .Button {
+    font-family: 'Open Sans', sans-serif;
     display: flex;
     flex: 0 0 auto;
     align-items: center;
@@ -12,6 +13,8 @@
     border: 0;
     transition: background 100ms ease-out 0s;
     color: inherit;
+    height: 32px;
+    padding: 0 10px;
 
     &:hover {
         background-color: rgba(var(--center-channel-color-rgb), 0.1);
@@ -41,7 +44,8 @@
     }
 
     &.active {
-        color: rgb(var(--link-color));
+        background: rgba(var(--button-bg-rgb), 0.08);
+        color: rgb(var(--button-bg-rgb));
         font-weight: 600;
     }
 
