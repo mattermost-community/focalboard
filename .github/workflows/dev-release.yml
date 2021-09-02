@@ -16,11 +16,17 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Replace token 1
+    - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
 
-    - name: Replace token 2
+    - name: Replace token 1 webapp
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
+
+    - name: Replace token 2 server
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
+
+    - name: Replace token 2 webapp
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
 
     - name: npm install
       run: cd webapp; npm install --no-optional
@@ -69,11 +75,17 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Replace token 1
+    - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
 
-    - name: Replace token 2
+    - name: Replace token 1 webapp
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
+
+    - name: Replace token 2 server
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
+
+    - name: Replace token 2 webapp
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
 
     - name: npm install
       run: cd webapp; npm install --no-optional
@@ -105,11 +117,17 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Replace token 1
+    - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
 
-    - name: Replace token 2
+    - name: Replace token 1 webapp
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
+
+    - name: Replace token 2 server
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
+
+    - name: Replace token 2 webapp
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
@@ -154,11 +172,17 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Replace token 1
+    - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
 
-    - name: Replace token 2
+    - name: Replace token 1 webapp
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
+
+    - name: Replace token 2 server
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
+
+    - name: Replace token 2 webapp
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
 
     - name: npm install
       run: cd webapp; npm install --no-optional
