@@ -77,11 +77,13 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 			// the mention already existed; no need to notify again
 			continue
 		}
-		user, err := b.delivery.GetUserByUsername(username)
+
+		user, err := userFromUsername(b.delivery, username)
 		if err != nil {
 			// not really an error; could just be someone typed "@sometext"
 			continue
 		}
+
 		channel, err := b.delivery.GetDirectChannel(user.Id, b.botID)
 		if err != nil {
 			merr.Append(err)
