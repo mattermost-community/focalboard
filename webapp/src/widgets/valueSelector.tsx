@@ -41,16 +41,21 @@ type LabelProps = {
     onChangeColor: (option: IPropertyOption, color: string) => void
     onDeleteOption: (option: IPropertyOption) => void
     onDeleteValue?: (value: IPropertyOption) => void
+    isMulti?: boolean
 }
 
 const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
-    const {option, onDeleteValue, meta} = props
+    const {option, onDeleteValue, meta, isMulti} = props
     const intl = useIntl()
     if (meta.context === 'value') {
+        let className = onDeleteValue ? 'Label-no-padding' : 'Label-single-select'
+        if (!isMulti) {
+            className += ' Label-no-margin'
+        }
         return (
             <Label
                 color={option.color}
-                classNames={`${onDeleteValue ? 'Label-no-padding' : 'Label-single-select'}`}
+                className={className}
             >
                 <span className='Label-text'>{option.value}</span>
                 {onDeleteValue &&
@@ -114,6 +119,12 @@ const valueSelectorStyle = {
         padding: '0 8px',
         overflow: 'unset',
     }),
+    singleValue: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        position: 'static',
+        top: 'unset',
+        transform: 'unset',
+    }),
     multiValue: (provided: CSSObject): CSSObject => ({
         ...provided,
         margin: 0,
@@ -151,6 +162,7 @@ function ValueSelector(props: Props): JSX.Element {
                 <ValueSelectorLabel
                     option={option}
                     meta={meta}
+                    isMulti={props.isMulti}
                     onChangeColor={props.onChangeColor}
                     onDeleteOption={props.onDeleteOption}
                     onDeleteValue={props.onDeleteValue}
