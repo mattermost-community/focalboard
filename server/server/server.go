@@ -185,18 +185,19 @@ func New(params Params) (*Server, error) {
 	telemetryService := initTelemetry(telemetryOpts)
 
 	server := Server{
-		config:         params.Cfg,
-		wsAdapter:      wsAdapter,
-		webServer:      webServer,
-		store:          params.DBStore,
-		filesBackend:   filesBackend,
-		telemetry:      telemetryService,
-		metricsServer:  metrics.NewMetricsServer(params.Cfg.PrometheusAddress, metricsService, params.Logger),
-		metricsService: metricsService,
-		auditService:   auditService,
-		logger:         params.Logger,
-		localRouter:    localRouter,
-		api:            focalboardAPI,
+		config:              params.Cfg,
+		wsAdapter:           wsAdapter,
+		webServer:           webServer,
+		store:               params.DBStore,
+		filesBackend:        filesBackend,
+		telemetry:           telemetryService,
+		metricsServer:       metrics.NewMetricsServer(params.Cfg.PrometheusAddress, metricsService, params.Logger),
+		metricsService:      metricsService,
+		auditService:        auditService,
+		notificationService: notificationService,
+		logger:              params.Logger,
+		localRouter:         localRouter,
+		api:                 focalboardAPI,
 	}
 
 	server.initHandlers()
