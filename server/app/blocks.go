@@ -152,7 +152,6 @@ func (a *App) notifyBlockChanged(action notify.Action, c store.Container, block 
 // getBoardAndCard returns the first parent of type `card` and first parent of type `board` for the specified block.
 // `board` and/or `card` may return nil without error if the block does not belong to a board or card.
 func (a *App) getBoardAndCard(c store.Container, block *model.Block) (board *model.Block, card *model.Block, err error) {
-	// find card and board for the changed block.
 	iter := block
 	for {
 		if board == nil && iter.Type == "board" {
@@ -163,7 +162,7 @@ func (a *App) getBoardAndCard(c store.Container, block *model.Block) (board *mod
 			card = iter
 		}
 
-		if iter.ParentID == "" {
+		if iter.ParentID == "" || (board != nil && card != nil) {
 			break
 		}
 
