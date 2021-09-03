@@ -9,14 +9,14 @@ import (
 )
 
 const (
-	s0 = "Zero is in the mind.\n"
+	s0 = "Zero is in the mind @billy.\n"
 	s1 = "This is line 1.\n"
 	s2 = "Line two is right here.\n"
 	s3 = "Three is the line I am.\n"
 	s4 = "'Four score and seven years...', said @lincoln.\n"
 	s5 = "Fast Five was arguably the best F&F film.\n"
 	s6 = "Big Hero 6 may have an inflated sense of self.\n"
-	s7 = "The seventh sign will be a failed unit test.\n"
+	s7 = "The seventh sign, @sarah, will be a failed unit test.\n"
 )
 
 var (
@@ -47,7 +47,12 @@ func Test_extractText(t *testing.T) {
 		want string
 	}{
 		{name: "good", want: trim(s2 + s3 + s4 + s5 + s6), args: args{mention: "@lincoln", limits: extractLimits, s: allConcat}},
-		{name: "not found", want: trim(s0 + s1 + s4 + s5 + s6), args: args{mention: "@bogus", limits: extractLimits, s: allConcat}},
+		{name: "not found", want: trim(s0 + s1 + s2), args: args{mention: "@bogus", limits: extractLimits, s: allConcat}},
+		{name: "one line", want: trim(s4), args: args{mention: "@lincoln", limits: extractLimits, s: s4}},
+		{name: "two lines", want: trim(s4 + s5), args: args{mention: "@lincoln", limits: extractLimits, s: s4 + s5}},
+		{name: "zero lines", want: "", args: args{mention: "@lincoln", limits: extractLimits, s: ""}},
+		{name: "first line mention", want: trim(s0 + s1 + s2), args: args{mention: "@billy", limits: extractLimits, s: allConcat}},
+		{name: "last line mention", want: trim(s5[7:] + s6 + s7), args: args{mention: "@sarah", limits: extractLimits, s: allConcat}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

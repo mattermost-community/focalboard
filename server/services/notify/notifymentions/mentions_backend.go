@@ -104,15 +104,16 @@ const (
 	defDescriptionTemplate = "@%s mentioned you in the card [%s](%s)\n> %s"
 )
 
-func formatMessage(author string, card string, link string, block *model.Block, _ /*mention*/ string) string {
+func formatMessage(author string, card string, link string, block *model.Block, mention string) string {
 	template := defDescriptionTemplate
 	if block.Type == "comment" {
 		template = defCommentTemplate
 	}
 
 	// TODO: use mention to extract up 100 chars or max 5 lines from block text
+	msg := extractText(block.Title, mention, newLimits())
 
-	return fmt.Sprintf(template, author, card, link, block.Title)
+	return fmt.Sprintf(template, author, card, link, msg)
 }
 
 func makeLink(serverRoot string, workspace string, board string, card string) string {

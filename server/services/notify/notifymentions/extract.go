@@ -49,7 +49,7 @@ func extractText(s string, mention string, limits limits) string {
 
 	prefix := safeConcat(lines, found-limits.prefixLines, found)
 	suffix := safeConcat(lines, found+1, found+limits.suffixLines+1)
-	combined := strings.Join([]string{prefix, lines[found], suffix}, "\n")
+	combined := strings.TrimSpace(strings.Join([]string{prefix, lines[found], suffix}, "\n"))
 
 	// find mention position within
 	pos := strings.Index(combined, mention)
@@ -65,8 +65,10 @@ func safeConcat(lines []string, start int, end int) string {
 
 	var sb strings.Builder
 	for i := start; i < end; i++ {
-		sb.WriteString(lines[i])
-		sb.WriteByte('\n')
+		if lines[i] != "" {
+			sb.WriteString(lines[i])
+			sb.WriteByte('\n')
+		}
 	}
 	return strings.TrimSpace(sb.String())
 }
