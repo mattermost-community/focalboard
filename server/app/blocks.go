@@ -130,6 +130,10 @@ func (a *App) GetBlockCountsByType() (map[string]int64, error) {
 }
 
 func (a *App) notifyBlockChanged(action notify.Action, c store.Container, block *model.Block, oldBlock *model.Block, userID string) {
+	if a.notifications == nil {
+		return
+	}
+
 	// find card and board for the changed block.
 	board, card, err := a.getBoardAndCard(c, block)
 	if err != nil {
