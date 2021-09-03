@@ -61,6 +61,7 @@ const MultiSelectProperty = (props: Props): JSX.Element => {
             onDeleteOption={onDeleteOption}
             onDeleteValue={(valueToRemove) => onDeleteValue(valueToRemove, values)}
             onCreate={(newValue) => onCreate(newValue, values)}
+            onBlur={() => setOpen(false)}
         />
     )
 }

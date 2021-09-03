@@ -32,6 +32,7 @@ type Props = {
     onDeleteOption: (option: IPropertyOption) => void
     isMulti?: boolean
     onDeleteValue?: (value: IPropertyOption) => void
+    onBlur?: () => void
 }
 
 type LabelProps = {
@@ -55,7 +56,6 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
                 {onDeleteValue &&
                     <IconButton
                         onClick={() => onDeleteValue(option)}
-                        onMouseDown={(e) => e.stopPropagation()}
                         icon={<CloseIcon/>}
                         title='Clear'
                         className='margin-left delete-value'
@@ -171,6 +171,7 @@ function ValueSelector(props: Props): JSX.Element {
                     props.onChange('')
                 }
             }}
+            onBlur={props.onBlur}
             onCreateOption={props.onCreate}
             autoFocus={true}
             value={props.value}

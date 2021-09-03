@@ -145,7 +145,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 >
                     <Label color={displayValue ? propertyColorCssClassName : 'empty'}>
                         <span className='Label-text'>{finalDisplayValue}</span>
-                        {displayValue && !props.readOnly &&
+                        {displayValue && !props.readOnly && open &&
                             <IconButton
                                 onClick={onDeleteValue}
                                 onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
@@ -183,6 +183,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                     }
                 }
                 onDeleteValue={onDeleteValue}
+                onBlur={() => setOpen(false)}
             />
         )
     } else if (propertyTemplate.type === 'person') {

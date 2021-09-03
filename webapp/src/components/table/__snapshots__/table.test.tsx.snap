@@ -190,16 +190,6 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
                 >
                   value 1
                 </span>
-                <div
-                  aria-label="Clear"
-                  class="Button IconButton margin-left delete-value"
-                  role="button"
-                  title="Clear"
-                >
-                  <i
-                    class="CompassIcon icon-close CloseIcon"
-                  />
-                </div>
               </span>
             </div>
           </div>
@@ -286,16 +276,6 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
                 >
                   value 1
                 </span>
-                <div
-                  aria-label="Clear"
-                  class="Button IconButton margin-left delete-value"
-                  role="button"
-                  title="Clear"
-                >
-                  <i
-                    class="CompassIcon icon-close CloseIcon"
-                  />
-                </div>
               </span>
             </div>
           </div>
@@ -594,16 +574,6 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
                 >
                   value 1
                 </span>
-                <div
-                  aria-label="Clear"
-                  class="Button IconButton margin-left delete-value"
-                  role="button"
-                  title="Clear"
-                >
-                  <i
-                    class="CompassIcon icon-close CloseIcon"
-                  />
-                </div>
               </span>
             </div>
           </div>
@@ -690,16 +660,6 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
                 >
                   value 1
                 </span>
-                <div
-                  aria-label="Clear"
-                  class="Button IconButton margin-left delete-value"
-                  role="button"
-                  title="Clear"
-                >
-                  <i
-                    class="CompassIcon icon-close CloseIcon"
-                  />
-                </div>
               </span>
             </div>
           </div>
@@ -998,16 +958,6 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
                 >
                   value 1
                 </span>
-                <div
-                  aria-label="Clear"
-                  class="Button IconButton margin-left delete-value"
-                  role="button"
-                  title="Clear"
-                >
-                  <i
-                    class="CompassIcon icon-close CloseIcon"
-                  />
-                </div>
               </span>
             </div>
           </div>
@@ -1094,16 +1044,6 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
                 >
                   value 1
                 </span>
-                <div
-                  aria-label="Clear"
-                  class="Button IconButton margin-left delete-value"
-                  role="button"
-                  title="Clear"
-                >
-                  <i
-                    class="CompassIcon icon-close CloseIcon"
-                  />
-                </div>
               </span>
             </div>
           </div>
@@ -1402,16 +1342,6 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
                 >
                   value 1
                 </span>
-                <div
-                  aria-label="Clear"
-                  class="Button IconButton margin-left delete-value"
-                  role="button"
-                  title="Clear"
-                >
-                  <i
-                    class="CompassIcon icon-close CloseIcon"
-                  />
-                </div>
               </span>
             </div>
           </div>
@@ -1498,16 +1428,6 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
                 >
                   value 1
                 </span>
-                <div
-                  aria-label="Clear"
-                  class="Button IconButton margin-left delete-value"
-                  role="button"
-                  title="Clear"
-                >
-                  <i
-                    class="CompassIcon icon-close CloseIcon"
-                  />
-                </div>
               </span>
             </div>
           </div>
@@ -1782,16 +1702,6 @@ exports[`components/table/Table should match snapshot 1`] = `
                 >
                   value 1
                 </span>
-                <div
-                  aria-label="Clear"
-                  class="Button IconButton margin-left delete-value"
-                  role="button"
-                  title="Clear"
-                >
-                  <i
-                    class="CompassIcon icon-close CloseIcon"
-                  />
-                </div>
               </span>
             </div>
           </div>
