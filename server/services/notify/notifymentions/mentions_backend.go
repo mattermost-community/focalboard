@@ -52,6 +52,10 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 		return nil
 	}
 
+	if evt.Action == notify.Delete {
+		return nil
+	}
+
 	if evt.BlockChanged.Type != "text" && evt.BlockChanged.Type != "comment" {
 		return nil
 	}
