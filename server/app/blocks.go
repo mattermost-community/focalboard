@@ -153,11 +153,17 @@ func (a *App) notifyBlockChanged(action notify.Action, c store.Container, block 
 	a.notifications.BlockChanged(evt)
 }
 
+const (
+	maxSearchDepth = 50
+)
+
 // getBoardAndCard returns the first parent of type `card` and first parent of type `board` for the specified block.
 // `board` and/or `card` may return nil without error if the block does not belong to a board or card.
 func (a *App) getBoardAndCard(c store.Container, block *model.Block) (board *model.Block, card *model.Block, err error) {
+	var count int // don't let invalid blocks hierarchy cause infinite loop.
 	iter := block
 	for {
+		count++
 		if board == nil && iter.Type == "board" {
 			board = iter
 		}
@@ -166,7 +172,7 @@ func (a *App) getBoardAndCard(c store.Container, block *model.Block) (board *mod
 			card = iter
 		}
 
-		if iter.ParentID == "" || (board != nil && card != nil) {
+		if iter.ParentID == "" || (board != nil && card != nil) || count > maxSearchDepth {
 			break
 		}
 
