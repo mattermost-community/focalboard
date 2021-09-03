@@ -29,6 +29,7 @@ type PrefixedMigration struct {
 	postgres bool
 	sqlite   bool
 	mysql    bool
+	plugin   bool
 }
 
 func init() {
@@ -145,9 +146,15 @@ func (s *SQLStore) Migrate() error {
 	if err != nil {
 		return err
 	}
+
+	fmt.Println("############################################")
+	fmt.Println(s.isPlugin)
+	fmt.Println("############################################")
+
 	prefixedData := &PrefixedMigration{
 		Bindata:  d.(*bindata.Bindata),
 		prefix:   s.tablePrefix,
+		plugin:   s.isPlugin,
 		postgres: s.dbType == postgresDBType,
 		sqlite:   s.dbType == sqliteDBType,
 		mysql:    s.dbType == mysqlDBType,
