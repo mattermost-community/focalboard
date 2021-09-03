@@ -110,7 +110,6 @@ func formatMessage(author string, card string, link string, block *model.Block, 
 		template = defCommentTemplate
 	}
 
-	// TODO: use mention to extract up 100 chars or max 5 lines from block text
 	msg := extractText(block.Title, mention, newLimits())
 
 	return fmt.Sprintf(template, author, card, link, msg)
