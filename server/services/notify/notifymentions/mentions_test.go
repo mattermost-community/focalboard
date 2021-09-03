@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
-	mm_store "github.com/mattermost/mattermost-server/v6/store"
 )
 
 var (
@@ -77,9 +76,7 @@ func newDeliveryMock(users map[string]*mm_model.User) deliveryMock {
 func (dm deliveryMock) GetUserByUsername(name string) (*mm_model.User, error) {
 	user, ok := dm.users[name]
 	if !ok {
-		return nil, &mm_store.ErrNotFound{
-			ID: name,
-		}
+		return nil, ErrNotFound{}
 	}
 	return user, nil
 }
@@ -94,4 +91,10 @@ func (dm deliveryMock) CreatePost(post *mm_model.Post) error {
 
 func (dm deliveryMock) GetUserByID(userID string) (*mm_model.User, error) {
 	return nil, nil
+}
+
+type ErrNotFound struct{}
+
+func (e ErrNotFound) Error() string {
+	return "not found"
 }
