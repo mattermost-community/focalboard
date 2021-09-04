@@ -6,7 +6,7 @@ import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 import {IntlProvider} from 'react-intl'
 
-import {IPropertyOption, IPropertyTemplate} from '../../blocks/board'
+import {IPropertyOption, IPropertyTemplate} from '../../../blocks/board'
 
 import MultiSelect from './multiSelect'
 

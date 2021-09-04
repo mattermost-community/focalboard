@@ -3,11 +3,11 @@
 
 import React, {useState} from 'react'
 
-import {IPropertyOption, IPropertyTemplate} from '../../blocks/board'
+import {IPropertyOption, IPropertyTemplate} from '../../../blocks/board'
 
-import Label from '../../widgets/label'
+import Label from '../../../widgets/label'
 
-import ValueSelector from '../../widgets/valueSelector'
+import ValueSelector from '../../../widgets/valueSelector'
 
 type Props = {
     emptyValue: string;

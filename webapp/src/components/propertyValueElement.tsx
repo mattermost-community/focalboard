@@ -21,7 +21,7 @@ import IconButton from '../widgets/buttons/iconButton'
 import CloseIcon from '../widgets/icons/close'
 
 import UserProperty from './properties/user/user'
-import MultiSelectProperty from './properties/multiSelect'
+import MultiSelectProperty from './properties/multiSelect/multiSelect'
 import URLProperty from './properties/link/link'
 import LastModifiedBy from './properties/lastModifiedBy/lastModifiedBy'
 import LastModifiedAt from './properties/lastModifiedAt/lastModifiedAt'
