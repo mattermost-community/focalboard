@@ -7,8 +7,6 @@ import {IPropertyOption, IPropertyTemplate} from '../../../blocks/board'
 
 import Label from '../../../widgets/label'
 import ValueSelector from '../../../widgets/valueSelector'
-import IconButton from '../../../widgets/buttons/iconButton'
-import CloseIcon from '../../../widgets/icons/close'
 
 type Props = {
     emptyValue: string
@@ -40,14 +38,6 @@ const SelectProperty = React.memo((props: Props) => {
             >
                 <Label color={displayValue ? propertyColorCssClassName : 'empty'}>
                     <span className='Label-text'>{finalDisplayValue}</span>
-                    {displayValue && isEditable && open &&
-                    <IconButton
-                        onClick={props.onDeleteValue}
-                        onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
-                        icon={<CloseIcon/>}
-                        title='Clear'
-                        className='margin-left delete-value'
-                    />}
                 </Label>
             </div>
         )
