@@ -97,7 +97,7 @@ exports[`components/properties/dateRange set via text input, es locale 1`] = `
       type="button"
     >
       <span>
-        15 de junio → 20 de junio
+        June 15 → June 20
       </span>
     </button>
   </div>

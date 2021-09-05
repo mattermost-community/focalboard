@@ -93,8 +93,7 @@ const KanbanCard = React.memo((props: Props) => {
                             id='copy'
                             name={intl.formatMessage({id: 'KanbanCard.copyLink', defaultMessage: 'Copy link'})}
                             onClick={() => {
-                                const url = Utils.addQueryParamToCurrentURL('c', card.id)
-                                Utils.copyTextToClipboard(url)
+                                Utils.copyTextToClipboard(window.location.href)
                                 sendFlashMessage({content: intl.formatMessage({id: 'KanbanCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
                             }}
                         />

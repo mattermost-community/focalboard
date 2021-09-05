@@ -101,8 +101,7 @@ const GalleryCard = React.memo((props: Props) => {
                             id='copy'
                             name={intl.formatMessage({id: 'GalleryCard.copyLink', defaultMessage: 'Copy link'})}
                             onClick={() => {
-                                const url = Utils.addQueryParamToCurrentURL('c', cardTree.card.id)
-                                Utils.copyTextToClipboard(url)
+                                Utils.copyTextToClipboard(window.location.href)
                                 sendFlashMessage({content: intl.formatMessage({id: 'GalleryCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
                             }}
                         />
