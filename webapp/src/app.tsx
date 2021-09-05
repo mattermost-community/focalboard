@@ -12,6 +12,8 @@ import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
 import {TouchBackend} from 'react-dnd-touch-backend'
 
+import TelemetryClient from './telemetry/telemetryClient'
+
 import {getMessages} from './i18n'
 import {FlashMessages} from './components/flashMessages'
 import BoardPage from './pages/boardPage'
@@ -22,15 +24,18 @@ import LoginPage from './pages/loginPage'
 import RegisterPage from './pages/registerPage'
 import {Utils} from './utils'
 import wsClient from './wsclient'
-import {fetchMe, getLoggedIn} from './store/users'
+import {fetchMe, getLoggedIn, getMe} from './store/users'
 import {getLanguage, fetchLanguage} from './store/language'
 import {setGlobalError, getGlobalError} from './store/globalError'
 import {useAppSelector, useAppDispatch} from './store/hooks'
+
+import {IUser} from './user'
 
 const App = React.memo((): JSX.Element => {
     const language = useAppSelector<string>(getLanguage)
     const loggedIn = useAppSelector<boolean|null>(getLoggedIn)
     const globalError = useAppSelector<string>(getGlobalError)
+    const me = useAppSelector<IUser|null>(getMe)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
@@ -44,6 +49,12 @@ const App = React.memo((): JSX.Element => {
             wsClient.close()
         }
     }, [])
+
+    useEffect(() => {
+        if (me) {
+            TelemetryClient.setUser(me)
+        }
+    }, [me])
 
     let globalErrorRedirect = null
     if (globalError) {
@@ -78,7 +89,7 @@ const App = React.memo((): JSX.Element => {
                                 <Route path='/shared/:boardId?/:viewId?'>
                                     <BoardPage readonly={true}/>
                                 </Route>
-                                <Route path='/board/:boardId?/:viewId?'>
+                                <Route path='/board/:boardId?/:viewId?/:cardId?'>
                                     {loggedIn === false && <Redirect to='/login'/>}
                                     {loggedIn === true && <BoardPage/>}
                                 </Route>
@@ -86,7 +97,7 @@ const App = React.memo((): JSX.Element => {
                                     <BoardPage readonly={true}/>
                                 </Route>
                                 <Route
-                                    path='/workspace/:workspaceId/:boardId?/:viewId?'
+                                    path='/workspace/:workspaceId/:boardId?/:viewId?/:cardId?'
                                     render={({match}) => {
                                         if (loggedIn === false) {
                                             let redirectUrl = '/' + Utils.buildURL(`/workspace/${match.params.workspaceId}/`)
@@ -109,7 +120,7 @@ const App = React.memo((): JSX.Element => {
                                 >
                                     <DashboardPage/>
                                 </Route>
-                                <Route path='/:boardId?/:viewId?'>
+                                <Route path='/:boardId?/:viewId?/:cardId?'>
                                     {loggedIn === false && <Redirect to='/login'/>}
                                     {loggedIn === true && <BoardPage/>}
                                 </Route>

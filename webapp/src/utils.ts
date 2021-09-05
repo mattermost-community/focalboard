@@ -3,6 +3,12 @@
 import marked from 'marked'
 import {IntlShape} from 'react-intl'
 
+import {Block} from './blocks/block'
+import {createBoard} from './blocks/board'
+import {createBoardView} from './blocks/boardView'
+import {createCard} from './blocks/card'
+import {createCommentBlock} from './blocks/commentBlock'
+
 declare global {
     interface Window {
         msCrypto: Crypto
@@ -151,7 +157,7 @@ class Utils {
                 'rel="noreferrer" ' +
                 `href="${encodeURI(href || '')}" ` +
                 `title="${title ? encodeURI(title) : ''}" ` +
-                ((window as any).openInNewBrowser ? 'onclick="event.stopPropagation(); openInNewBrowser && openInNewBrowser(event.target.href);"' : '') +
+                `onclick="event.stopPropagation();${((window as any).openInNewBrowser ? ' openInNewBrowser && openInNewBrowser(event.target.href);' : '')}"` +
             '>' + contents + '</a>'
         }
         const html = marked(text.replace(/</g, '&lt;'), {renderer, breaks: true})
@@ -423,6 +429,21 @@ class Utils {
 
     static isFocalboardPlugin(): boolean {
         return Boolean((window as any).isFocalboardPlugin)
+    }
+
+    static fixBlock(block: Block): Block {
+        switch (block.type) {
+        case 'board':
+            return createBoard(block)
+        case 'view':
+            return createBoardView(block)
+        case 'card':
+            return createCard(block)
+        case 'comment':
+            return createCommentBlock(block)
+        default:
+            return block
+        }
     }
 }
 

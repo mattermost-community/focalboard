@@ -1,4 +1,4 @@
-.focalboard-body .CenterPanel {
+.CenterPanel {
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
@@ -12,7 +12,7 @@
 }
 
 
-.focalboard-body .BoardComponent {
+.BoardComponent {
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
@@ -47,7 +47,7 @@
     }
 
     > div:nth-child(2) {
-        padding: 0;
+        padding: 0 0 0 1px;
         margin-left: 80px;
     }
 }

@@ -90,6 +90,7 @@ module.exports = {
                     'style-loader',
                     'css-loader',
                     'sass-loader',
+                    path.resolve(__dirname, 'loaders/globalScssClassLoader'),
                 ],
             },
             {
@@ -142,3 +143,11 @@ module.exports = {
     mode,
     plugins,
 };
+
+const env = {};
+env.RUDDER_KEY = JSON.stringify(process.env.RUDDER_KEY || ''); //eslint-disable-line no-process-env
+env.RUDDER_DATAPLANE_URL = JSON.stringify(process.env.RUDDER_DATAPLANE_URL || ''); //eslint-disable-line no-process-env
+
+module.exports.plugins.push(new webpack.DefinePlugin({
+    'process.env': env,
+}));

@@ -15,9 +15,10 @@ import (
 	"github.com/mattermost/focalboard/server/app"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
-	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const (
@@ -89,6 +90,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	apiv1.HandleFunc("/login", a.handleLogin).Methods("POST")
 	apiv1.HandleFunc("/register", a.handleRegister).Methods("POST")
+	apiv1.HandleFunc("/clientConfig", a.getClientConfig).Methods("GET")
 
 	apiv1.HandleFunc("/workspaces/{workspaceID}/{rootID}/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
 
@@ -112,6 +114,17 @@ func (a *API) requireCSRFToken(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
+}
+
+func (a *API) getClientConfig(w http.ResponseWriter, r *http.Request) {
+	clientConfig := a.app.GetClientConfig()
+
+	configData, err := json.Marshal(clientConfig)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	jsonBytesResponse(w, http.StatusOK, configData)
 }
 
 func (a *API) checkCSRFToken(r *http.Request) bool {

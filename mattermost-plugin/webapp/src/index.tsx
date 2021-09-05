@@ -1,13 +1,14 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Store, Action} from 'redux'
 import {Provider as ReduxProvider} from 'react-redux'
 import {useHistory} from 'mm-react-router-dom'
 
+import {rudderAnalytics, RudderTelemetryHandler} from 'mattermost-redux/client/rudder'
+
 import {GlobalState} from 'mattermost-redux/types/store'
 import {getTheme} from 'mattermost-redux/selectors/entities/preferences'
-import {getChannelByName} from 'mattermost-redux/selectors/entities/channels'
 
 const windowAny = (window as any)
 windowAny.baseURL = '/plugins/focalboard'
@@ -19,10 +20,14 @@ import store from '../../../webapp/src/store'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
 import {setMattermostTheme} from '../../../webapp/src/theme'
+import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK} from './../../../webapp/src/wsclient'
+
+import TelemetryClient from '../../../webapp/src/telemetry/telemetryClient'
 
 import '../../../webapp/src/styles/focalboard-variables.scss'
 import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
+import octoClient from '../../../webapp/src/octoClient'
 
 import manifest from './manifest'
 import ErrorBoundary from './error_boundary'
@@ -32,7 +37,30 @@ import {PluginRegistry} from './types/mattermost-webapp'
 
 import './plugin.scss'
 
-const MainApp = () => {
+const TELEMETRY_RUDDER_KEY = 'placeholder_rudder_key'
+const TELEMETRY_RUDDER_DATAPLANE_URL = 'placeholder_rudder_dataplane_url'
+const TELEMETRY_OPTIONS = {
+    context: {
+        ip: '0.0.0.0',
+    },
+    page: {
+        path: '',
+        referrer: '',
+        search: '',
+        title: '',
+        url: '',
+    },
+    anonymousId: '00000000000000000000000000',
+}
+
+type Props = {
+    webSocketClient: MMWebSocketClient
+}
+
+const MainApp = (props: Props) => {
+    const [faviconStored, setFaviconStored] = useState(false)
+    wsClient.initPlugin(manifest.id, props.webSocketClient)
+
     useEffect(() => {
         document.body.classList.add('focalboard-body')
         const root = document.getElementById('root')
@@ -49,23 +77,15 @@ const MainApp = () => {
     }, [])
 
     useEffect(() => {
-        const oldLink = document.querySelector("link[rel*='icon']") as HTMLLinkElement
-        if (!oldLink) {
+        const oldLinks = document.querySelectorAll("link[rel*='icon']") as NodeListOf<HTMLLinkElement>
+        if (!oldLinks) {
             return () => null
         }
+        setFaviconStored(true)
 
-        const restoreData = {
-            type: oldLink.type,
-            rel: oldLink.rel,
-            href: oldLink.href,
-        }
         return () => {
             document.querySelectorAll("link[rel*='icon']").forEach((n) => n.remove())
-            const link = document.createElement('link') as HTMLLinkElement
-            link.type = restoreData.type
-            link.rel = restoreData.rel
-            link.href = restoreData.href
-            document.getElementsByTagName('head')[0].appendChild(link)
+            oldLinks.forEach((link) => document.getElementsByTagName('head')[0].appendChild(link))
         }
     }, [])
 
@@ -73,7 +93,7 @@ const MainApp = () => {
         <ErrorBoundary>
             <ReduxProvider store={store}>
                 <div id='focalboard-app'>
-                    <App/>
+                    {faviconStored && <App/>}
                 </div>
                 <div id='focalboard-root-portal'/>
             </ReduxProvider>
@@ -121,7 +141,7 @@ export default class Plugin {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
                 window.open(`${window.location.origin}/boards/workspace/${currentChannel}`)
             }
-            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Focalboard Workspace')
+            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Boards')
 
             this.registry.registerCustomRoute('go-to-current-workspace', () => {
                 const history = useHistory()
@@ -147,15 +167,47 @@ export default class Plugin {
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
                 window.open(`${window.location.origin}/plug/focalboard/workspace/${currentChannel}`)
-            }, '', 'Focalboard Workspace')
+            }, '', 'Boards')
             this.registry.registerCustomRoute('/', MainApp)
         }
+
+        const config = await octoClient.getClientConfig()
+        if (config?.telemetry) {
+            let rudderKey = TELEMETRY_RUDDER_KEY
+            let rudderUrl = TELEMETRY_RUDDER_DATAPLANE_URL
+
+            if (rudderKey.startsWith('placeholder') && rudderUrl.startsWith('placeholder')) {
+                rudderKey = process.env.RUDDER_KEY as string //eslint-disable-line no-process-env
+                rudderUrl = process.env.RUDDER_DATAPLANE_URL as string //eslint-disable-line no-process-env
+            }
+
+            if (rudderKey !== '') {
+                rudderAnalytics.load(rudderKey, rudderUrl)
+
+                rudderAnalytics.identify(config?.telemetryid, {}, TELEMETRY_OPTIONS)
+
+                rudderAnalytics.page('BoardsLoaded', '',
+                    TELEMETRY_OPTIONS.page,
+                    {
+                        context: TELEMETRY_OPTIONS.context,
+                        anonymousId: TELEMETRY_OPTIONS.anonymousId,
+                    })
+
+                TelemetryClient.setTelemetryHandler(new RudderTelemetryHandler())
+            }
+        }
+
+        // register websocket handlers
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BLOCK}`, (e: any) => wsClient.updateBlockHandler(e.data))
     }
 
     uninitialize(): void {
         if (this.channelHeaderButtonId) {
             this.registry?.unregisterComponent(this.channelHeaderButtonId)
         }
+
+        // unregister websocket handlers
+        this.registry?.unregisterWebSocketEventHandler(wsClient.clientPrefix + ACTION_UPDATE_BLOCK)
     }
 }
 

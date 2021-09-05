@@ -1,4 +1,4 @@
-.focalboard-body .ViewHeader {
+.ViewHeader {
     flex: 0 0 auto;
     display: flex;
     flex-direction: row;
@@ -10,7 +10,7 @@
     align-items: center;
 
     > div {
-        margin-right: 16px;
+        margin-right: 12px;
         white-space: nowrap;
 
         &:last-child {
@@ -25,11 +25,13 @@
     .IconButton {
         background: none;
         padding: 0;
+
         .Icon {
             width: 24px;
             height: 24px;
             margin: 0;
         }
+
         &:hover {
             background: rgba(var(--center-channel-color-rgb), 0.1);
         }

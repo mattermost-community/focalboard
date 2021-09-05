@@ -82,6 +82,8 @@ const MenuWrapper = React.memo((props: Props) => {
 
     return (
         <div
+            role='button'
+            aria-label='menuwrapper'
             className={className}
             onClick={toggle}
             ref={node}
