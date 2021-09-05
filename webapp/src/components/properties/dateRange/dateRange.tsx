@@ -234,6 +234,7 @@ function DateRange(props: Props): JSX.Element {
                                 localeUtils={MomentLocaleUtils}
                                 todayButton={intl.formatMessage({id: 'DateRange.today', defaultMessage: 'Today'})}
                                 onTodayButtonClick={handleDayClick}
+                                month={dateFrom}
                                 selectedDays={[dateFrom, dateTo ? {from: dateFrom, to: dateTo} : {from: dateFrom, to: dateFrom}]}
                                 modifiers={dateTo ? {start: dateFrom, end: dateTo} : {start: dateFrom, end: dateFrom}}
                             />
