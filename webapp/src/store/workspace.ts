@@ -18,25 +18,25 @@ export const fetchWorkspace = createAsyncThunk(
 )
 
 type WorkspaceState = {
-    value: IWorkspace|null
+    current: IWorkspace|null
     userWorkspaces: UserWorkspace[]
 }
 
 const workspaceSlice = createSlice({
     name: 'workspace',
-    initialState: {value: null} as WorkspaceState,
+    initialState: {current: null} as WorkspaceState,
     reducers: {
         setWorkspace: (state, action: PayloadAction<IWorkspace>) => {
-            state.value = action.payload
+            state.current = action.payload
         },
     },
     extraReducers: (builder) => {
         builder.addCase(initialLoad.fulfilled, (state, action) => {
-            state.value = action.payload.workspace || null
+            state.current = action.payload.workspace || null
             state.userWorkspaces = action.payload.userWorkspaces
         })
         builder.addCase(fetchWorkspace.fulfilled, (state, action) => {
-            state.value = action.payload || null
+            state.current = action.payload || null
         })
     },
 })
@@ -51,6 +51,6 @@ export const getUserWorkspaceList = createSelector(
     (userWorkspaces) => userWorkspaces,
 )
 
-export function getWorkspace(state: RootState): IWorkspace|null {
-    return state.workspace.value
+export function getCurrentWorkspace(state: RootState): IWorkspace|null {
+    return state.workspace.current
 }

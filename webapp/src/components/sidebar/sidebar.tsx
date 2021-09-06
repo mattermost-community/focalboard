@@ -9,7 +9,7 @@ import HideSidebarIcon from '../../widgets/icons/hideSidebar'
 import ShowSidebarIcon from '../../widgets/icons/showSidebar'
 import {getSortedBoards} from '../../store/boards'
 import {getSortedViews} from '../../store/views'
-import {getWorkspace} from '../../store/workspace'
+import {getCurrentWorkspace} from '../../store/workspace'
 import {useAppSelector} from '../../store/hooks'
 import {Utils} from '../../utils'
 
@@ -36,7 +36,7 @@ const Sidebar = React.memo((props: Props) => {
         loadTheme()
     }, [])
 
-    const workspace = useAppSelector(getWorkspace)
+    const workspace = useAppSelector(getCurrentWorkspace)
     if (!boards) {
         return <div/>
     }

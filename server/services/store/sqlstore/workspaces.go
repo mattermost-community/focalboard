@@ -3,6 +3,8 @@ package sqlstore
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -11,6 +13,10 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	sq "github.com/Masterminds/squirrel"
+)
+
+var (
+	errUnsupportedDatabaseError = errors.New("method is unsupported on current database. Supported databases are - MySQL and PostgreSQL")
 )
 
 func (s *SQLStore) UpsertWorkspaceSignupToken(workspace model.Workspace) error {
@@ -150,30 +156,26 @@ func (s *SQLStore) GetWorkspaceCount() (int64, error) {
 func (s *SQLStore) GetUserWorkspaces(userID string) ([]model.UserWorkspace, error) {
 	var query sq.SelectBuilder
 
-	if s.dbType == mysqlDBType {
-		query = s.getQueryBuilder().
-			Select("Channels.ID", "Channels.DisplayName", "COUNT(focalboard_blocks.id)").
-			From("focalboard_blocks").
-			Join("ChannelMembers ON focalboard_blocks.workspace_id = ChannelMembers.ChannelId").
-			Join("Channels ON ChannelMembers.ChannelId = Channels.Id").
-			Where(sq.Eq{"ChannelMembers.UserId": userID}).
-			Where(sq.Eq{"focalboard_blocks.type": "board"}).
-			Where(sq.Like{"focalboard_blocks.fields": "%\"isTemplate\":false%"}).
-			GroupBy("Channels.Id", "Channels.DisplayName")
-	} else {
-		query = s.getQueryBuilder().
-			Select("channels.id", "channels.displayname", "count(focalboard_blocks.id)").
-			From("focalboard_blocks").
-			Join("channelmembers ON focalboard_blocks.workspace_id = channelmembers.channelid").
-			Join("channels ON channelmembers.channelid = channels.id").
-			Where(sq.Eq{"channelmembers.userid": userID}).
-			Where(sq.Eq{"focalboard_blocks.type": "board"}).
-			Where("focalboard_blocks.fields ->> 'isTemplate' = 'false'").
-			GroupBy("channels.id", "channels.displayname")
+	query = s.getQueryBuilder().
+		Select("Channels.ID", "Channels.DisplayName", "COUNT(focalboard_blocks.id)").
+		From("focalboard_blocks").
+		Join("ChannelMembers ON focalboard_blocks.workspace_id = ChannelMembers.ChannelId").
+		Join("Channels ON ChannelMembers.ChannelId = Channels.Id").
+		Where(sq.Eq{"ChannelMembers.UserId": userID}).
+		Where(sq.Eq{"focalboard_blocks.type": "board"})
+
+	switch s.dbType {
+	case mysqlDBType:
+		query = query.Where(sq.Like{"focalboard_blocks.fields": "%\"isTemplate\":false%"})
+	case postgresDBType:
+		query = query.Where("focalboard_blocks.fields ->> 'isTemplate' = 'false'")
+	default:
+		return nil, fmt.Errorf("GetUserWorkspaces - %w", errUnsupportedDatabaseError)
 	}
 
-	rows, err := query.Query()
+	query = query.GroupBy("Channels.Id", "Channels.DisplayName")
 
+	rows, err := query.Query()
 	if err != nil {
 		s.logger.Error("ERROR GetUserWorkspaces", mlog.Err(err))
 		return nil, err

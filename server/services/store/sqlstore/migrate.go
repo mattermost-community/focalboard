@@ -159,10 +159,6 @@ func (s *SQLStore) Migrate() error {
 		return err
 	}
 
-	fmt.Println("############################################")
-	fmt.Println(s.isPlugin)
-	fmt.Println("############################################")
-
 	prefixedData := &PrefixedMigration{
 		Bindata:  d.(*bindata.Bindata),
 		prefix:   s.tablePrefix,
