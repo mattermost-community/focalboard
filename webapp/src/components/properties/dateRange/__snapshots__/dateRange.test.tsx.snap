@@ -37,7 +37,7 @@ exports[`components/properties/dateRange handle clear 1`] = `
 exports[`components/properties/dateRange returns default correctly 1`] = `
 <div>
   <div
-    class="DateRange "
+    class="DateRange empty"
   >
     <button
       class="Button    "

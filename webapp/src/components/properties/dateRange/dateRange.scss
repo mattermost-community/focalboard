@@ -1,10 +1,6 @@
 .DateRange {
     width: 100%;
 
-    .octo-propertyvalue {
-        white-space: none;
-    }
-
     .inputContainer {
         display: flex;
 
@@ -41,6 +37,11 @@
         top: 0;
         left: 0;
         margin-bottom: 100px;
+    }
+
+    &.empty .Button {
+        color: rgba(var(--center-channel-color-rgb), 0.4);
+        padding: 0 3px;
     }
 
     .Button {

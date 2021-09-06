@@ -12,6 +12,13 @@
     margin-right: 5px;
     margin-bottom: 5px;
 
+    &.empty {
+        color: rgba(var(--center-channel-color-rgb), 0.4);
+        padding: 3px;
+        text-transform: none;
+        font-weight: normal;
+    }
+
     input {
         line-height: 20px;
         color: rgba(var(--center-channel-color-rgb), 0.8);

@@ -114,6 +114,10 @@ const valueSelectorStyle = {
         padding: '0 8px',
         overflow: 'unset',
     }),
+    placeholder: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        color: 'rgba(var(--center-channel-color-rgb), 0.4)',
+    }),
     multiValue: (provided: CSSObject): CSSObject => ({
         ...provided,
         margin: 0,
