@@ -10,10 +10,9 @@ ALTER TABLE {{.prefix}}sessions CHANGE props props JSON;
 ALTER TABLE {{.prefix}}blocks CHANGE fields fields JSON;
 ALTER TABLE {{.prefix}}blocks_history CHANGE fields fields JSON;
 ALTER TABLE {{.prefix}}teams CHANGE settings settings JSON;
-{{end}
+{{end}}
 
-ALTER TABLE features CHANGE feature feature JSON NOT NULL;
-CREATE TABLE {{.prefix}boards (
+CREATE TABLE {{.prefix}}boards (
     id VARCHAR(26) NOT NULL PRIMARY KEY,
     team_id VARCHAR(26) NOT NULL,
     channel_id VARCHAR(26),
@@ -30,22 +29,26 @@ CREATE TABLE {{.prefix}boards (
     card_properties JSON,
     column_calculations JSON,
     {{end}}
-	{{if .postgres}},
+	{{if .postgres}}
     properties JSONB,
     card_properties JSONB,
     column_calculations JSONB,
     {{end}}
-	{{if .sqlite}},
+	{{if .sqlite}}
     properties TEXT,
     card_properties TEXT,
     column_calculations TEXT,
     {{end}}
 	create_at BIGINT,
 	update_at BIGINT,
-	delete_at BIGINT,
+	delete_at BIGINT
 );
 
+{{if .plugin}}
 INSERT INTO {{.prefix}}boards (SELECT B.Id, C.TeamId, B.channel_id, B.creator_id, B.title, B.fields.description, B.fields.icon, B.fields.description, B.fields.show_description, B.fields.is_template, '{}', B.fields.card_properties, B.fields.column_calculations, B.create_at, B.update_at, B.delete_at FROM {{.prefix}}blocks AS B INNER JOIN Channel as C ON C.Id=B.channel_id WHERE B.type='board')
+{{else}}
+INSERT INTO {{.prefix}}boards (SELECT B.Id, '0', B.channel_id, B.creator_id, B.title, B.fields.description, B.fields.icon, B.fields.description, B.fields.show_description, B.fields.is_template, '{}', B.fields.card_properties, B.fields.column_calculations, B.create_at, B.update_at, B.delete_at FROM {{.prefix}}blocks AS B WHERE B.type='board')
+{{end}}
 
 {{if .mysql}}
 UPDATE {{.prefix}}blocks as B, {{.prefix}}blocks as P ON P.Id=B.parent_id SET B.board_id=P.id WHERE P.type = 'board';
@@ -75,7 +78,7 @@ UPDATE {{.prefix}}blocks_history as B SET B.board_id=GGP.id FROM {{.prefix}}bloc
 DELETE FROM {{.prefix}}blocks WHERE type='board';
 
 {{if .plugin}}
-CREATE TABLE {{.prefix}board_members (
+CREATE TABLE {{.prefix}}board_members (
     board_id VARCHAR(26) NOT NULL,
     user_id VARCHAR(26) NOT NULL,
     roles VARCHAR(64),
