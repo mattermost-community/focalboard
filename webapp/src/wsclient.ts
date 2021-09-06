@@ -30,6 +30,7 @@ export const ACTION_UNSUBSCRIBE_BLOCKS = 'UNSUBSCRIBE_BLOCKS'
 // The Mattermost websocket client interface
 export interface MMWebSocketClient {
     sendMessage(action: string, data: any, responseCallback?: () => void): void
+    connectionId: string
 }
 
 type OnChangeHandler = (client: WSClient, blocks: Block[]) => void
@@ -47,6 +48,8 @@ class WSClient {
     onReconnect: OnReconnectHandler[] = []
     onChange: OnChangeHandler[] = []
     onError: OnErrorHandler[] = []
+    private mmWSMaxRetries = 10
+    private mmWSRetryDelay = 300
     private notificationDelay = 100
     private reopenDelay = 3000
     private updatedBlocks: Block[] = []
@@ -67,6 +70,7 @@ class WSClient {
         if (this.client !== null) {
             const {action, ...data} = command
             this.client.sendMessage(this.clientPrefix + action, data)
+            return
         }
 
         this.ws?.send(JSON.stringify(command))
@@ -117,10 +121,30 @@ class WSClient {
     }
 
     open(): void {
-        // if running in plugin mode, no ws configuration needs to be done
         if (this.client !== null) {
-            this.state = 'open'
-            Utils.log('Application in plugin mode, reusing Mattermost WS connection')
+            // WSClient needs to ensure that the Mattermost client has
+            // correctly stablished the connection before opening
+            let retries = 0
+            const setPluginOpen = () => {
+                if (this.client?.connectionId !== '') {
+                    for (const handler of this.onStateChange) {
+                        handler(this, 'open')
+                    }
+                    this.state = 'open'
+                    Utils.log('WSClient in plugin mode, reusing Mattermost WS connection')
+                    return
+                }
+
+                retries++
+                if (retries <= this.mmWSMaxRetries) {
+                    Utils.log('WSClient Mattermost Websocket not ready, retrying')
+                    setTimeout(setPluginOpen, this.mmWSRetryDelay)
+                } else {
+                    Utils.logError('WSClient error on open: Mattermost Websocket client is not ready')
+                }
+            }
+
+            setPluginOpen()
             return
         }
 
