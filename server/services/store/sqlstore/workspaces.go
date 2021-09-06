@@ -162,7 +162,8 @@ func (s *SQLStore) GetUserWorkspaces(userID string) ([]model.UserWorkspace, erro
 		Join("ChannelMembers ON focalboard_blocks.workspace_id = ChannelMembers.ChannelId").
 		Join("Channels ON ChannelMembers.ChannelId = Channels.Id").
 		Where(sq.Eq{"ChannelMembers.UserId": userID}).
-		Where(sq.Eq{"focalboard_blocks.type": "board"})
+		Where(sq.Eq{"focalboard_blocks.type": "board"}).
+		GroupBy("Channels.Id", "Channels.DisplayName")
 
 	switch s.dbType {
 	case mysqlDBType:
@@ -172,8 +173,6 @@ func (s *SQLStore) GetUserWorkspaces(userID string) ([]model.UserWorkspace, erro
 	default:
 		return nil, fmt.Errorf("GetUserWorkspaces - %w", errUnsupportedDatabaseError)
 	}
-
-	query = query.GroupBy("Channels.Id", "Channels.DisplayName")
 
 	rows, err := query.Query()
 	if err != nil {
