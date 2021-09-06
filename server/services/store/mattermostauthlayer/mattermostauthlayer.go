@@ -11,6 +11,7 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -235,6 +236,184 @@ func (s *MattermostAuthLayer) HasWorkspaceAccess(userID string, workspaceID stri
 	}
 
 	return count > 0, nil
+}
+
+func (s *MattermostAuthLayer) getTeamRoles(userID, teamID string) ([]string, error) {
+	row := s.getQueryBuilder().
+		Select("Roles, SchemeGuest, SchemeUser, SchemeAdmin").
+		From("TeamMembers").
+		Where(sq.Eq{"TeamId": teamID, "UserId": userID}).
+		QueryRow()
+
+	var result struct {
+		roles       string
+		schemeGuest bool
+		schemeUser  bool
+		schemeAdmin bool
+	}
+	err := row.Scan(&result.roles, &result.schemeGuest, &result.schemeUser, &result.schemeAdmin)
+	if err != nil {
+		return nil, err
+	}
+
+	teamRoles := []string{}
+	roles := strings.Split(result.roles, " ")
+	for _, role := range roles {
+		if role == mmModel.TeamAdminRoleId || role == mmModel.TeamUserRoleId || role == mmModel.TeamGuestRoleId {
+			teamRoles = append(teamRoles, role)
+		}
+	}
+
+	if len(teamRoles) == 0 {
+		if result.schemeGuest {
+			teamRoles = append(teamRoles, mmModel.TeamGuestRoleId)
+		}
+
+		if result.schemeUser {
+			teamRoles = append(teamRoles, mmModel.TeamUserRoleId)
+		}
+
+		if result.schemeAdmin {
+			teamRoles = append(teamRoles, mmModel.TeamAdminRoleId)
+		}
+	}
+
+	return teamRoles, nil
+}
+
+func (s *MattermostAuthLayer) HasTeamPermission(userID, teamID, permissionID string) bool {
+	roleNames, err := s.getTeamRoles(userID, teamID)
+	if err != nil {
+		s.logger.Error("error getting team roles to determine permission", mlog.String("userID", userID), mlog.String("teamID", teamID), mlog.Err(err))
+		return false
+	}
+
+	rows, err := s.getQueryBuilder().
+		Select("Permissions, DeleteAt").
+		From("Roles").
+		Where(sq.Eq{"Name": roleNames}).
+		Query()
+	if err != nil {
+		s.logger.Error("error getting role permissions", mlog.String("userID", userID), mlog.String("teamID", teamID), mlog.Err(err))
+		return false
+	}
+	defer s.CloseRows(rows)
+
+	var role struct {
+		permissions string
+		deleteAt    int
+	}
+	for rows.Next() {
+		err = rows.Scan(&role.permissions, &role.deleteAt)
+		if err != nil {
+			s.logger.Error("error scanning role", mlog.Err(err))
+			continue
+		}
+
+		if role.deleteAt != 0 {
+			continue
+		}
+
+		for _, permission := range strings.Fields(role.permissions) {
+			if permission == permissionID {
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
+func (s *MattermostAuthLayer) getBoardRoles(userID, boardID string) ([]string, error) {
+	// ToDo: this query will only work after the migration PR is merged
+	row := s.getQueryBuilder().
+		Select("Roles, SchemeViewer, SchemeCommenter, SchemeEditor, SchemeAdmin").
+		From("BoardMembers").
+		Where(sq.Eq{"BoardId": boardID, "UserId": userID}).
+		QueryRow()
+
+	var result struct {
+		roles           string
+		schemeViewer    bool
+		schemeCommenter bool
+		schemeEditor    bool
+		schemeAdmin     bool
+	}
+	err := row.Scan(&result.roles, &result.schemeViewer, &result.schemeCommenter, &result.schemeEditor, &result.schemeAdmin)
+	if err != nil {
+		return nil, err
+	}
+
+	boardRoles := []string{}
+	roles := strings.Split(result.roles, " ")
+	for _, role := range roles {
+		if role == mmModel.BoardViewerRoleId || role == mmModel.BoardCommenterRoleId || role == mmModel.BoardEditorRoleId || role == mmModel.BoardAdminRoleId {
+			boardRoles = append(boardRoles, role)
+		}
+	}
+
+	if len(boardRoles) == 0 {
+		if result.schemeViewer {
+			boardRoles = append(boardRoles, mmModel.BoardViewerRoleId)
+		}
+
+		if result.schemeCommenter {
+			boardRoles = append(boardRoles, mmModel.BoardCommenterRoleId)
+		}
+
+		if result.schemeEditor {
+			boardRoles = append(boardRoles, mmModel.BoardEditorRoleId)
+		}
+
+		if result.schemeAdmin {
+			boardRoles = append(boardRoles, mmModel.BoardAdminRoleId)
+		}
+	}
+
+	return boardRoles, nil
+}
+
+func (s *MattermostAuthLayer) HasBoardPermission(userID, boardID, permissionID string) bool {
+	roleNames, err := s.getBoardRoles(userID, boardID)
+	if err != nil {
+		s.logger.Error("error getting board roles to determine permission", mlog.String("userID", userID), mlog.String("boardID", boardID), mlog.Err(err))
+		return false
+	}
+
+	rows, err := s.getQueryBuilder().
+		Select("Permissions, DeleteAt").
+		From("Roles").
+		Where(sq.Eq{"Name": roleNames}).
+		Query()
+	if err != nil {
+		s.logger.Error("error getting role permissions", mlog.String("userID", userID), mlog.String("boardID", boardID), mlog.Err(err))
+		return false
+	}
+	defer s.CloseRows(rows)
+
+	var role struct {
+		permissions string
+		deleteAt    int
+	}
+	for rows.Next() {
+		err = rows.Scan(&role.permissions, &role.deleteAt)
+		if err != nil {
+			s.logger.Error("error scanning role", mlog.Err(err))
+			continue
+		}
+
+		if role.deleteAt != 0 {
+			continue
+		}
+
+		for _, permission := range strings.Fields(role.permissions) {
+			if permission == permissionID {
+				return true
+			}
+		}
+	}
+
+	return false
 }
 
 func (s *MattermostAuthLayer) getQueryBuilder() sq.StatementBuilderType {

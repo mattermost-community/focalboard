@@ -359,6 +359,15 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+
+	// ToDo: will not work right now as workspaceID is not a valid
+	// teamID. Will work straight away after migration
+	canCreateBoards := a.app.CanCreateBoards(session.UserID, container.WorkspaceID)
+	// ToDo: workspaceID -> boardID
+	canCreateCards := a.app.CanCreateCards(session.UserID, container.WorkspaceID)
+
 	for _, block := range blocks {
 		// Error checking
 		if len(block.Type) < 1 {
@@ -378,15 +387,24 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, message, nil)
 			return
 		}
+
+		if block.Type == "board" && !canCreateBoards {
+			message := fmt.Sprintf("permission denied for block id %s", block.ID)
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, message, nil)
+			return
+		}
+
+		if block.Type == "card" && !canCreateCards {
+			message := fmt.Sprintf("permission denied for block id %s", block.ID)
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, message, nil)
+			return
+		}
 	}
 
 	auditRec := a.makeAuditRecord(r, "postBlocks", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 
 	stampModificationMetadata(r, blocks, auditRec)
-
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
 
 	err = a.app.InsertBlocks(*container, blocks, session.UserID)
 	if err != nil {

@@ -34,7 +34,7 @@ func (s *SQLStore) UpsertWorkspaceSignupToken(workspace model.Workspace) error {
 			workspace.SignupToken, workspace.ModifiedBy, now)
 	} else {
 		query = query.Suffix(
-			`ON CONFLICT (id) 
+			`ON CONFLICT (id)
 			 DO UPDATE SET signup_token = EXCLUDED.signup_token, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at`,
 		)
 	}
@@ -72,7 +72,7 @@ func (s *SQLStore) UpsertWorkspaceSettings(workspace model.Workspace) error {
 		query = query.Suffix("ON DUPLICATE KEY UPDATE settings = ?, modified_by = ?, update_at = ?", settingsJSON, workspace.ModifiedBy, now)
 	} else {
 		query = query.Suffix(
-			`ON CONFLICT (id) 
+			`ON CONFLICT (id)
 			 DO UPDATE SET settings = EXCLUDED.settings, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at`,
 		)
 	}
@@ -144,4 +144,14 @@ func (s *SQLStore) GetWorkspaceCount() (int64, error) {
 		return 0, err
 	}
 	return count, nil
+}
+
+// ToDo: should be moved to team.go
+func (s *SQLStore) HasTeamPermission(userID, teamID, permissionID string) bool {
+	return true
+}
+
+// ToDo: should be moved to boards.go
+func (s *SQLStore) HasBoardPermission(userID, boardID, permissionID string) bool {
+	return true
 }
