@@ -34,6 +34,7 @@ default: all
 
 # Verify environment, and define PLUGIN_ID, PLUGIN_VERSION, HAS_SERVER and HAS_WEBAPP as needed.
 include build/setup.mk
+include build/legacy.mk
 
 BUNDLE_NAME ?= $(PLUGIN_ID)-$(PLUGIN_VERSION).tar.gz
 
@@ -45,11 +46,6 @@ endif
 ## Checks the code style, tests, builds and bundles the plugin.
 .PHONY: all
 all: check-style test dist
-
-## Propagates plugin manifest information into the server/ and webapp/ folders.
-.PHONY: apply
-apply:
-	./build/bin/manifest apply
 
 ## Runs eslint and golangci-lint
 .PHONY: check-style
@@ -134,7 +130,7 @@ endif
 
 ## Builds and bundles the plugin.
 .PHONY: dist
-dist:	apply server webapp bundle
+dist: server webapp bundle
 
 ## Builds and installs the plugin to a server.
 .PHONY: deploy
@@ -143,7 +139,7 @@ deploy: dist
 
 ## Builds and installs the plugin to a server, updating the webapp automatically when changed.
 .PHONY: watch
-watch: apply server bundle
+watch: server bundle
 ifeq ($(MM_DEBUG),)
 	cd webapp && $(NPM) run build:watch
 else
