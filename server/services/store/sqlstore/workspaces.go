@@ -156,23 +156,33 @@ func (s *SQLStore) GetWorkspaceCount() (int64, error) {
 func (s *SQLStore) GetUserWorkspaces(userID string) ([]model.UserWorkspace, error) {
 	var query sq.SelectBuilder
 
-	query = s.getQueryBuilder().
-		Select("Channels.ID", "Channels.DisplayName", "COUNT(focalboard_blocks.id)").
-		From("focalboard_blocks").
-		Join("ChannelMembers ON focalboard_blocks.workspace_id = ChannelMembers.ChannelId").
-		Join("Channels ON ChannelMembers.ChannelId = Channels.Id").
-		Where(sq.Eq{"ChannelMembers.UserId": userID}).
-		Where(sq.Eq{"focalboard_blocks.type": "board"}).
-		GroupBy("Channels.Id", "Channels.DisplayName")
+	var nonTemplateFilter sq.Like
 
 	switch s.dbType {
 	case mysqlDBType:
-		query = query.Where(sq.Like{"focalboard_blocks.fields": "%\"isTemplate\":false%"})
+		nonTemplateFilter = sq.Like{"focalboard_blocks.fields": "%\"isTemplate\":false%"}
 	case postgresDBType:
-		query = query.Where("focalboard_blocks.fields ->> 'isTemplate' = 'false'")
+		nonTemplateFilter = sq.Like{"focalboard_blocks.fields ->> 'isTemplate'": "false"}
 	default:
 		return nil, fmt.Errorf("GetUserWorkspaces - %w", errUnsupportedDatabaseError)
 	}
+
+	query = s.getQueryBuilder().
+		Select("Channels.ID", "Channels.DisplayName", "COUNT(focalboard_blocks.id)").
+		From("focalboard_blocks").
+		RightJoin("ChannelMembers ON focalboard_blocks.workspace_id = ChannelMembers.ChannelId").
+		Join("Channels ON ChannelMembers.ChannelId = Channels.Id").
+		Where(sq.Eq{"ChannelMembers.UserId": userID}).
+		Where(
+			sq.Or{
+				sq.Eq{"focalboard_blocks.type": nil},
+				sq.And{
+					sq.Eq{"focalboard_blocks.type": "board"},
+					nonTemplateFilter,
+				},
+			},
+		).
+		GroupBy("Channels.Id", "Channels.DisplayName")
 
 	rows, err := query.Query()
 	if err != nil {
