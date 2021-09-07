@@ -26,27 +26,28 @@ type AmazonS3Config struct {
 
 // Configuration is the app configuration stored in a json file.
 type Configuration struct {
-	ServerRoot              string         `json:"serverRoot" mapstructure:"serverRoot"`
-	Port                    int            `json:"port" mapstructure:"port"`
-	DBType                  string         `json:"dbtype" mapstructure:"dbtype"`
-	DBConfigString          string         `json:"dbconfig" mapstructure:"dbconfig"`
-	DBTablePrefix           string         `json:"dbtableprefix" mapstructure:"dbtableprefix"`
-	UseSSL                  bool           `json:"useSSL" mapstructure:"useSSL"`
-	SecureCookie            bool           `json:"secureCookie" mapstructure:"secureCookie"`
-	WebPath                 string         `json:"webpath" mapstructure:"webpath"`
-	FilesDriver             string         `json:"filesdriver" mapstructure:"filesdriver"`
-	FilesS3Config           AmazonS3Config `json:"filess3config" mapstructure:"filess3config"`
-	FilesPath               string         `json:"filespath" mapstructure:"filespath"`
-	Telemetry               bool           `json:"telemetry" mapstructure:"telemetry"`
-	TelemetryID             string         `json:"telemetryid" mapstructure:"telemetryid"`
-	PrometheusAddress       string         `json:"prometheus_address" mapstructure:"prometheus_address"`
-	WebhookUpdate           []string       `json:"webhook_update" mapstructure:"webhook_update"`
-	Secret                  string         `json:"secret" mapstructure:"secret"`
-	SessionExpireTime       int64          `json:"session_expire_time" mapstructure:"session_expire_time"`
-	SessionRefreshTime      int64          `json:"session_refresh_time" mapstructure:"session_refresh_time"`
-	LocalOnly               bool           `json:"localonly" mapstructure:"localonly"`
-	EnableLocalMode         bool           `json:"enableLocalMode" mapstructure:"enableLocalMode"`
-	LocalModeSocketLocation string         `json:"localModeSocketLocation" mapstructure:"localModeSocketLocation"`
+	ServerRoot               string         `json:"serverRoot" mapstructure:"serverRoot"`
+	Port                     int            `json:"port" mapstructure:"port"`
+	DBType                   string         `json:"dbtype" mapstructure:"dbtype"`
+	DBConfigString           string         `json:"dbconfig" mapstructure:"dbconfig"`
+	DBTablePrefix            string         `json:"dbtableprefix" mapstructure:"dbtableprefix"`
+	UseSSL                   bool           `json:"useSSL" mapstructure:"useSSL"`
+	SecureCookie             bool           `json:"secureCookie" mapstructure:"secureCookie"`
+	WebPath                  string         `json:"webpath" mapstructure:"webpath"`
+	FilesDriver              string         `json:"filesdriver" mapstructure:"filesdriver"`
+	FilesS3Config            AmazonS3Config `json:"filess3config" mapstructure:"filess3config"`
+	FilesPath                string         `json:"filespath" mapstructure:"filespath"`
+	Telemetry                bool           `json:"telemetry" mapstructure:"telemetry"`
+	TelemetryID              string         `json:"telemetryid" mapstructure:"telemetryid"`
+	PrometheusAddress        string         `json:"prometheus_address" mapstructure:"prometheus_address"`
+	WebhookUpdate            []string       `json:"webhook_update" mapstructure:"webhook_update"`
+	Secret                   string         `json:"secret" mapstructure:"secret"`
+	SessionExpireTime        int64          `json:"session_expire_time" mapstructure:"session_expire_time"`
+	SessionRefreshTime       int64          `json:"session_refresh_time" mapstructure:"session_refresh_time"`
+	LocalOnly                bool           `json:"localonly" mapstructure:"localonly"`
+	EnableLocalMode          bool           `json:"enableLocalMode" mapstructure:"enableLocalMode"`
+	LocalModeSocketLocation  string         `json:"localModeSocketLocation" mapstructure:"localModeSocketLocation"`
+	EnablePublicSharedBoards bool           `json:"enablePublicSharedBoards" mapstructure:"enablePublicSharedBoards"`
 
 	AuthMode string `json:"authMode" mapstructure:"authMode"`
 
@@ -81,6 +82,7 @@ func ReadConfigFile() (*Configuration, error) {
 	viper.SetDefault("LocalOnly", false)
 	viper.SetDefault("EnableLocalMode", false)
 	viper.SetDefault("LocalModeSocketLocation", "/var/tmp/focalboard_local.socket")
+	viper.SetDefault("EnablePublicSharedBoards", false)
 
 	viper.SetDefault("AuthMode", "native")
 

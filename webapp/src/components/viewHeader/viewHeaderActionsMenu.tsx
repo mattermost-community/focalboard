@@ -24,6 +24,7 @@ type Props = {
     board: Board
     activeView: BoardView
     cards: Card[]
+    showShared: boolean
 }
 
 // import {mutator} from '../../mutator'
@@ -99,7 +100,7 @@ function onExportCsvTrigger(board: Board, activeView: BoardView, cards: Card[], 
 const ViewHeaderActionsMenu = React.memo((props: Props) => {
     const [showShareDialog, setShowShareDialog] = useState(false)
 
-    const {board, activeView, cards} = props
+    const {board, activeView, cards, showShared} = props
     const user = useAppSelector<IUser|null>(getMe)
     const intl = useIntl()
 
@@ -118,7 +119,7 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
                         name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
                         onClick={() => Archiver.exportBoardArchive(board)}
                     />
-                    {user && user.id !== 'single-user' &&
+                    {user && user.id !== 'single-user' && showShared &&
                         <Menu.Text
                             id='shareBoard'
                             name={intl.formatMessage({id: 'ViewHeader.share-board', defaultMessage: 'Share board'})}

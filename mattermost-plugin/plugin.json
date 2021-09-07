@@ -21,6 +21,12 @@
     "settings_schema": {
         "header": "For additional setup steps, please [see here](https://focalboard.com/fwlink/plugin-setup.html)",
         "footer": "",
-        "settings": []
+        "settings": [{
+            "key": "EnablePublicSharedBoards",
+            "type": "bool",
+            "display_name": "Enable Public Shared Boards",
+            "default": false,
+            "help_text": "Allows users to create links to publically available read-only boards"
+        }]
     }
 }
