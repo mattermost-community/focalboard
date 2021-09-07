@@ -124,6 +124,7 @@ func (a *API) getClientConfig(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
+
 	jsonBytesResponse(w, http.StatusOK, configData)
 }
 
@@ -173,7 +174,9 @@ func (a *API) getContainerAllowingReadTokenForBlock(r *http.Request, blockID str
 
 		// No session, but has valid read token (read-only mode)
 		if len(blockID) > 0 && a.hasValidReadTokenForBlock(r, container, blockID) {
-			return &container, nil
+			if a.app.GetClientConfig().EnablePublicSharedBoards {
+				return &container, nil
+			}
 		}
 
 		return nil, PermissionError{"access denied to workspace"}

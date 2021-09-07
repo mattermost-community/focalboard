@@ -3,6 +3,7 @@ package ws
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"strings"
 	"sync"
 	"time"
@@ -11,6 +12,7 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const websocketMessagePrefix = "custom_focalboard_"
@@ -283,6 +285,43 @@ func (pa *PluginAdapter) getUserIDsForWorkspace(workspaceID string) []string {
 		userIDs = append(userIDs, userID)
 	}
 	return userIDs
+}
+
+func (pa *PluginAdapter) getUserIDsForAllWorkspaces() []string {
+	userMap := map[string]bool{}
+
+	for _, listener := range pa.listeners {
+		userMap[listener.userID] = true
+	}
+
+	userIDs := []string{}
+	for userID := range userMap {
+		userIDs = append(userIDs, userID)
+	}
+	return userIDs
+}
+
+func (pa *PluginAdapter) BroadcastConfigChange() {
+	pluginConfig := pa.api.GetPluginConfig()
+
+	for key, element := range pluginConfig {
+		mlog.Debug("key " + key)
+		mlog.Debug("element " + fmt.Sprintf("%v", element))
+		mlog.Debug(reflect.TypeOf(element).String())
+	}
+
+	enable := pluginConfig["enablepublicsharedboards"]
+	if enable == nil {
+		enable = false
+	}
+	clientConfig := &model.ClientConfig{
+		EnablePublicSharedBoards: enable == true,
+	}
+
+	userIDs := pa.getUserIDsForAllWorkspaces()
+	for _, userID := range userIDs {
+		pa.api.PublishWebSocketEvent(websocketActionUpdateConfig, structToMap(clientConfig), &mmModel.WebsocketBroadcast{UserId: userID})
+	}
 }
 
 func (pa *PluginAdapter) BroadcastBlockChange(workspaceID string, block model.Block) {

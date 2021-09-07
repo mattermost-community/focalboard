@@ -520,3 +520,42 @@ func (ws *Server) BroadcastBlockChange(workspaceID string, block model.Block) {
 		}
 	}
 }
+
+// BroadcastBlockChange broadcasts update messages to clients.
+func (ws *Server) BroadcastConfigChange() {
+	mlog.Debug("BroadcastConfigChange")
+	// blockIDsToNotify := []string{block.ID, block.ParentID}
+
+	// message := UpdateMsg{
+	// 	Action: websocketActionUpdateBlock,
+	// 	Block:  block,
+	// }
+
+	// listeners := ws.getListenersForWorkspace(workspaceID)
+	// ws.logger.Debug("listener(s) for workspaceID",
+	// 	mlog.Int("listener_count", len(listeners)),
+	// 	mlog.String("workspaceID", workspaceID),
+	// )
+
+	// for _, blockID := range blockIDsToNotify {
+	// 	listeners = append(listeners, ws.getListenersForBlock(blockID)...)
+	// 	ws.logger.Debug("listener(s) for blockID",
+	// 		mlog.Int("listener_count", len(listeners)),
+	// 		mlog.String("blockID", blockID),
+	// 	)
+	// }
+
+	// for _, listener := range listeners {
+	// 	ws.logger.Debug("Broadcast change",
+	// 		mlog.String("workspaceID", workspaceID),
+	// 		mlog.String("blockID", block.ID),
+	// 		mlog.Stringer("remoteAddr", listener.RemoteAddr()),
+	// 	)
+
+	// 	err := listener.WriteJSON(message)
+	// 	if err != nil {
+	// 		ws.logger.Error("broadcast error", mlog.Err(err))
+	// 		listener.Close()
+	// 	}
+	// }
+}

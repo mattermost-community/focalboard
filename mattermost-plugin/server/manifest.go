@@ -35,7 +35,16 @@ const manifestStr = `
   "settings_schema": {
     "header": "For additional setup steps, please [see here](https://focalboard.com/fwlink/plugin-setup.html)",
     "footer": "",
-    "settings": []
+    "settings": [
+      {
+        "key": "EnablePublicSharedBoards",
+        "display_name": "Enable Public Shared Boards",
+        "type": "bool",
+        "help_text": "Allows users to create links to publically available read-only boards",
+        "placeholder": "",
+        "default": false
+      }
+    ]
   }
 }
 `
