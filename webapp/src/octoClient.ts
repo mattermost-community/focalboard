@@ -418,7 +418,7 @@ class OctoClient {
 
     async getUserWorkspaces(): Promise<UserWorkspace[]> {
         const path = '/api/v1/workspaces'
-        const response = await fetch(this.serverUrl + path, {headers: this.headers()})
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return []
         }
