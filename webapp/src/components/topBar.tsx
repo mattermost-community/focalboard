@@ -12,13 +12,14 @@ import {Constants} from '../constants'
 
 const TopBar = React.memo((): JSX.Element => {
     if (Utils.isFocalboardPlugin()) {
+        const feedbackUrl = 'https://www.focalboard.com/fwlink/feedback-boards.html?v=' + Constants.versionString
         return (
             <div
                 className='TopBar'
             >
                 <a
                     className='link'
-                    href='https://www.focalboard.com/fwlink/feedback-boards.html'
+                    href={feedbackUrl}
                 >
                     <FormattedMessage
                         id='TopBar.give-feedback'
@@ -35,13 +36,14 @@ const TopBar = React.memo((): JSX.Element => {
         )
     }
 
+    const focalboardFeedbackUrl = 'https://www.focalboard.com/fwlink/feedback-focalboard.html?v=' + Constants.versionString
     return (
         <div
             className='TopBar'
         >
             <a
                 className='link'
-                href='https://www.focalboard.com/fwlink/feedback-focalboard.html'
+                href={focalboardFeedbackUrl}
             >
                 <FormattedMessage
                     id='TopBar.give-feedback'
