@@ -137,6 +137,7 @@ exports[`components/table/TableRow should match snapshot, display properties 1`]
     >
       <div
         class="octo-propertyvalue"
+        data-testid="select-non-editable"
         tabindex="0"
       >
         <span
@@ -156,6 +157,7 @@ exports[`components/table/TableRow should match snapshot, display properties 1`]
     >
       <div
         class="octo-propertyvalue"
+        data-testid="select-non-editable"
         tabindex="0"
       >
         <span
@@ -309,6 +311,7 @@ exports[`components/table/TableRow should match snapshot, resizing column 1`] = 
     >
       <div
         class="octo-propertyvalue"
+        data-testid="select-non-editable"
         tabindex="0"
       >
         <span
@@ -328,6 +331,7 @@ exports[`components/table/TableRow should match snapshot, resizing column 1`] = 
     >
       <div
         class="octo-propertyvalue"
+        data-testid="select-non-editable"
         tabindex="0"
       >
         <span

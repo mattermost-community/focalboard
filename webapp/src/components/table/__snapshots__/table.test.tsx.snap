@@ -180,6 +180,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -199,6 +200,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -266,6 +268,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -285,6 +288,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -564,6 +568,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -583,6 +588,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -650,6 +656,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -669,6 +676,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -948,6 +956,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -967,6 +976,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -1034,6 +1044,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -1053,6 +1064,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -1332,6 +1344,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -1351,6 +1364,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -1418,6 +1432,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -1437,6 +1452,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -1692,6 +1708,7 @@ exports[`components/table/Table should match snapshot 1`] = `
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -1711,6 +1728,7 @@ exports[`components/table/Table should match snapshot 1`] = `
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -2165,6 +2183,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -2184,6 +2203,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span

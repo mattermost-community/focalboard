@@ -28,6 +28,7 @@ exports[`components/cardDetail/CardDetailProperties should match snapshot 1`] = 
       </div>
       <div
         class="octo-propertyvalue"
+        data-testid="select-non-editable"
         tabindex="0"
       >
         <span
