@@ -4,6 +4,8 @@
 import React from 'react'
 
 import './topBar.scss'
+import {FormattedMessage} from 'react-intl'
+
 import HelpIcon from '../widgets/icons/help'
 import {Utils} from '../utils'
 import {Constants} from '../constants'
@@ -14,6 +16,15 @@ const TopBar = React.memo((): JSX.Element => {
             <div
                 className='TopBar'
             >
+                <a
+                    className='link'
+                    href='https://www.focalboard.com/fwlink/feedback-boards.html'
+                >
+                    <FormattedMessage
+                        id='TopBar.give-feedback'
+                        defaultMessage='Give Feedback'
+                    />
+                </a>
                 <div className='versionFrame'>
                     <div className='version'>
                         {`v${Constants.versionString}`}
@@ -28,6 +39,15 @@ const TopBar = React.memo((): JSX.Element => {
         <div
             className='TopBar'
         >
+            <a
+                className='link'
+                href='https://www.focalboard.com/fwlink/feedback-focalboard.html'
+            >
+                <FormattedMessage
+                    id='TopBar.give-feedback'
+                    defaultMessage='Give Feedback'
+                />
+            </a>
             <a
                 href='https://www.focalboard.com/guide/user?utm_source=webapp'
                 target='_blank'
