@@ -8,6 +8,8 @@ import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 import {IWorkspace} from '../../blocks/workspace'
 import ChevronDown from '../../widgets/icons/chevronDown'
 
+import {UserSettings} from '../../userSettings'
+
 import WorkspaceOptions from './workspaceOptions'
 
 type Props = {
@@ -43,6 +45,7 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
                     onChange={(workspaceId: string) => {
                         setShowMenu(false)
                         const newPath = generatePath(match.path, {workspaceId})
+                        UserSettings.lastWorkspaceId = workspaceId
                         history.replace(newPath)
                     }}
                 />
