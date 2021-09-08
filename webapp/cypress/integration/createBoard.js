@@ -31,12 +31,16 @@ describe('Create and delete board / card', () => {
             should('have.value', boardTitle);
     });
 
-    it('Can hide and show the sidebar with active board', () => {
-        // Hide and show the sidebar
-        cy.get('.Sidebar .heading ~ .Button').click();
+    it('Can hide and show the sidebar with active board', async () => {
+        // Hide and show the sidebar option available on mobile devices
+        cy.viewport(767, 1024);
+        cy.get('.sidebarSwitcher').click();
         cy.get('.Sidebar .heading').should('not.exist');
         cy.get('.Sidebar .show-button').click();
         cy.get('.Sidebar .heading').should('exist');
+
+        cy.viewport(1024, 1024);
+        cy.get('.sidebarSwitcher').should('not.exist');
     });
 
     it('Can rename the board view', () => {
