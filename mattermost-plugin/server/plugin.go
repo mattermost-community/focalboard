@@ -33,7 +33,7 @@ type Plugin struct {
 	configuration *configuration
 
 	server          *server.Server
-	wsPluginAdapter *ws.PluginAdapter
+	wsPluginAdapter ws.PluginAdapterInterface
 }
 
 func (p *Plugin) OnActivate() error {
