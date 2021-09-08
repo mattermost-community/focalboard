@@ -20,5 +20,6 @@
 	"localModeSocketLocation": "/var/tmp/focalboard_local.socket",
 	"authMode": "native",
     "logging_cfg_file": "",
-    "audit_cfg_file": ""
+    "audit_cfg_file": "",
+	"enablepublicsharedboards": false
 }
