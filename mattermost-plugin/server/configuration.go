@@ -3,6 +3,7 @@ package main
 import (
 	"reflect"
 
+	"github.com/mattermost/focalboard/server/model"
 	"github.com/pkg/errors"
 )
 
@@ -76,10 +77,21 @@ func (p *Plugin) OnConfigurationChange() error {
 		return nil
 	}
 
+	configuration := &configuration{}
 	// Load the public configuration fields from the Mattermost server configuration.
-	if err := p.API.LoadPluginConfiguration(&p.configuration); err != nil {
+	if err := p.API.LoadPluginConfiguration(&configuration); err != nil {
 		return errors.Wrap(err, "failed to load plugin configuration")
 	}
+
+	t := &model.ClientConfig{
+		Telemetry:                false,
+		TelemetryID:              "0",
+		EnablePublicSharedBoards: configuration.EnablePublicSharedBoards,
+	}
+
+	p.server.SetClientConfig(*t)
+
+	p.setConfiguration(configuration)
 	p.wsPluginAdapter.BroadcastConfigChange()
 
 	return nil

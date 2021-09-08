@@ -59,6 +59,7 @@ function CenterContent(props: Props) {
     }, [])
 
     if (board && activeView) {
+        Utils.log('ENABLE' + (clientConfig?.enablePublicSharedBoards || 'NULL'))
         let property = groupByProperty
         if ((!property || property.type !== 'select') && activeView.fields.viewType === 'board') {
             property = board?.fields.cardProperties.find((o) => o.type === 'select')
