@@ -33,6 +33,7 @@ const SelectProperty = React.memo((props: Props) => {
         return (
             <div
                 className='octo-propertyvalue'
+                data-testid='select-non-editable'
                 tabIndex={0}
                 onClick={() => setOpen(true)}
             >
