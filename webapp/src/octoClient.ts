@@ -7,6 +7,7 @@ import {OctoUtils} from './octoUtils'
 import {IUser, UserWorkspace} from './user'
 import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
+import {UserSettings} from './userSettings'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -132,7 +133,8 @@ class OctoClient {
     }
 
     private workspacePath() {
-        return `/api/v1/workspaces/${this.workspaceId}`
+        console.log('workspacePath() UserSettings.lastWorkspaceId: ' + UserSettings.lastWorkspaceId)
+        return `/api/v1/workspaces/${this.workspaceId === '0' ? UserSettings.lastWorkspaceId : this.workspaceId}`
     }
 
     async getMe(): Promise<IUser | undefined> {
@@ -332,6 +334,7 @@ class OctoClient {
 
     async getWorkspace(): Promise<IWorkspace | undefined> {
         const path = this.workspacePath()
+        console.log('getWorkspace() path: ' + path)
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return undefined

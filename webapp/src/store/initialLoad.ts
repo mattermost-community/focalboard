@@ -23,6 +23,7 @@ export const initialLoad = createAsyncThunk(
             getUserWorkspaces(),
         ])
         if (!workspace) {
+            console.log('Yo!!!')
             throw new Error('no_workspace')
         }
         return {
