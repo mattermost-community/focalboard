@@ -76,14 +76,10 @@ func (p *Plugin) OnConfigurationChange() error {
 		return nil
 	}
 
-	var configuration = new(configuration)
-
 	// Load the public configuration fields from the Mattermost server configuration.
-	if err := p.API.LoadPluginConfiguration(&configuration); err != nil {
+	if err := p.API.LoadPluginConfiguration(&p.configuration); err != nil {
 		return errors.Wrap(err, "failed to load plugin configuration")
 	}
-
-	p.setConfiguration(configuration)
 	p.wsPluginAdapter.BroadcastConfigChange()
 
 	return nil

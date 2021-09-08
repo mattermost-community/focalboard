@@ -53,6 +53,24 @@ func (pac *PluginAdapterClient) isSubscribedToBlock(blockID string) bool {
 	return false
 }
 
+type PluginAdapterInterface interface {
+	addListener(pac *PluginAdapterClient)
+	removeListener(pac *PluginAdapterClient)
+	removeListenerFromWorkspace(pac *PluginAdapterClient, workspaceID string)
+	removeListenerFromBlock(pac *PluginAdapterClient, blockID string)
+	subscribeListenerToWorkspace(pac *PluginAdapterClient, workspaceID string)
+	unsubscribeListenerFromWorkspace(pac *PluginAdapterClient, workspaceID string)
+	unsubscribeListenerFromBlocks(pac *PluginAdapterClient, blockIDs []string)
+	OnWebSocketConnect(webConnID, userID string)
+	OnWebSocketDisconnect(webConnID, userID string)
+	WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest)
+	getUserIDsForWorkspace(workspaceID string) []string
+	getUserIDsForAllWorkspaces() []string
+	BroadcastConfigChange()
+	BroadcastBlockChange(workspaceID string, block model.Block)
+	BroadcastBlockDelete(workspaceID, blockID, parentID string)
+}
+
 type PluginAdapter struct {
 	api  plugin.API
 	auth *auth.Auth
