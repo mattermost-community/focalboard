@@ -12,4 +12,4 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}blocks (
 	update_at BIGINT,
 	delete_at BIGINT,
 	PRIMARY KEY (id, insert_at)
-){{if .mysql}}CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci{{end}};
+) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};
