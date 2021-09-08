@@ -65,6 +65,7 @@ type Server struct {
 	localRouter     *mux.Router
 	localModeServer *http.Server
 	api             *api.API
+	app             *app.App
 }
 
 func New(cfg *config.Configuration, singleUserToken string, db store.Store,
@@ -182,6 +183,7 @@ func New(cfg *config.Configuration, singleUserToken string, db store.Store,
 		logger:         logger,
 		localRouter:    localRouter,
 		api:            focalboardAPI,
+		app:            app,
 	}
 
 	server.initHandlers()
@@ -325,6 +327,15 @@ func (s *Server) Config() *config.Configuration {
 
 func (s *Server) Logger() *mlog.Logger {
 	return s.logger
+}
+
+func (s *Server) App() *app.App {
+	return s.app
+}
+
+func (s *Server) SetClientConfig(clientConfig appModel.ClientConfig) {
+	s.config.EnablePublicSharedBoards = clientConfig.EnablePublicSharedBoards
+	s.app.SetConfig(s.config)
 }
 
 // Local server

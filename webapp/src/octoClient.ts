@@ -86,7 +86,7 @@ class OctoClient {
 
     async getClientConfig(): Promise<ClientConfig | null> {
         const path = '/api/v1/clientConfig'
-        const response = await fetch(this.serverUrl + path, {
+        const response = await fetch(this.getBaseURL() + path, {
             method: 'GET',
             headers: this.headers(),
         })
