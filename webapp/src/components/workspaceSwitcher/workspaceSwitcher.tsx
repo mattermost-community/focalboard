@@ -45,7 +45,24 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
                     onChange={(workspaceId: string) => {
                         setShowMenu(false)
                         const newPath = generatePath(match.path, {workspaceId})
+
+                        console.log('newPath:  ' + newPath)
                         UserSettings.lastWorkspaceId = workspaceId
+
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        window.WebappUtils.browserHistory.push(newPath)
+
+                        // window.postMessage(
+                        //     {
+                        //         type: 'browser-history-push',
+                        //         message: {
+                        //             path: newPath,
+                        //         },
+                        //     },
+                        //     window.location.origin,
+                        // )
+
                         history.replace(newPath)
                     }}
                 />
@@ -53,5 +70,15 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
         </div>
     )
 }
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+window.addEventListener('message', ({origin, data: {type, message = {}} = {}} = {}) => {
+    if (origin !== window.location.origin) {
+        return
+    }
+
+    console.log('message received: ' + JSON.stringify(origin))
+})
 
 export default WorkspaceSwitcher
