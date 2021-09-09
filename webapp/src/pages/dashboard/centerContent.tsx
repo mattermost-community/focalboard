@@ -8,6 +8,8 @@ import {getUserWorkspaceList, setUserWorkspaces} from '../../store/workspace'
 import {initialLoad} from '../../store/initialLoad'
 import octoClient from '../../octoClient'
 
+import SearchIcon from '../../widgets/icons/search'
+
 const DashboardCenterContent = (): JSX.Element => {
     const rawWorkspaces = useAppSelector<UserWorkspace[]>(getUserWorkspaceList) || []
     const dispatch = useAppDispatch()
@@ -40,19 +42,29 @@ const DashboardCenterContent = (): JSX.Element => {
 
     return (
         <div className='DashboardCenterContent'>
+            <div className='DashboardPage__header'>
+                <h1 className='h1'>{'Dashboard'}</h1>
+                <div className='DashboardPage__search'>
+                    <SearchIcon/>
+                    <input
+                        type='text'
+                        placeholder='Search'
+                    />
+                </div>
+            </div>
             <div>
-                <div>{'All Channels'}</div>
-                <div>
+                <div className='text-heading3'>{'All Channels'}</div>
+                <div className='DashboardPage__workspace-container'>
                     {
                         userWorkspaces.map((workspace) => (
                             <div
                                 key={workspace.id}
-                                className='workspace'
+                                className='DashboardPage__workspace'
                             >
-                                <div className='workspaceName'>
+                                <div className='text-heading2'>
                                     {workspace.title}
                                 </div>
-                                <div className='boardCount'>
+                                <div className='small'>
                                     {`${workspace.boardCount} board${workspace.boardCount > 1 ? 's' : ''}`}
                                 </div>
                             </div>

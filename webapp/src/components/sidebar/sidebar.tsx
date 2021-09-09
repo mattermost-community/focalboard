@@ -2,6 +2,8 @@
 // See LICENSE.txt for license information.
 import React, {useEffect, useState} from 'react'
 
+import DashboardOnboardingSvg from '../../svg/dashboard-onboarding'
+
 import {getActiveThemeName, loadTheme} from '../../theme'
 import IconButton from '../../widgets/buttons/iconButton'
 import HamburgerIcon from '../../widgets/icons/hamburger'
@@ -112,7 +114,12 @@ const Sidebar = React.memo((props: Props) => {
 
             {
                 props.isDashboard &&
-                <p>{'Yo! I\'m in dashboard'}</p>
+                <div className='Sidebar__onboarding'>
+                    <DashboardOnboardingSvg/>
+                    <div>
+                        {'Use the switcher to easily change channels'}
+                    </div>
+                </div>
             }
 
             <div className='octo-sidebar-list'>
