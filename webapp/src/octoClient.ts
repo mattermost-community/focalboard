@@ -4,7 +4,7 @@ import {Block, BlockPatch} from './blocks/block'
 import {ISharing} from './blocks/sharing'
 import {IWorkspace} from './blocks/workspace'
 import {OctoUtils} from './octoUtils'
-import {IUser} from './user'
+import {IUser, UserWorkspace} from './user'
 import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 
@@ -86,7 +86,7 @@ class OctoClient {
 
     async getClientConfig(): Promise<ClientConfig | null> {
         const path = '/api/v1/clientConfig'
-        const response = await fetch(this.serverUrl + path, {
+        const response = await fetch(this.getBaseURL() + path, {
             method: 'GET',
             headers: this.headers(),
         })
@@ -414,6 +414,16 @@ class OctoClient {
             return []
         }
         return (await this.getJson(response, [])) as IUser[]
+    }
+
+    async getUserWorkspaces(): Promise<UserWorkspace[]> {
+        const path = '/api/v1/workspaces'
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return []
+        }
+
+        return (await this.getJson(response, [])) as UserWorkspace[]
     }
 }
 
