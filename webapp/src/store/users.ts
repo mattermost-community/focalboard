@@ -23,7 +23,7 @@ type UsersStatus = {
 
 const usersSlice = createSlice({
     name: 'users',
-    initialState: {me: null, workspaceUsers: {}, loggedIn: null} as UsersStatus,
+    initialState: {me: null, workspaceUsers: {}, loggedIn: null, userWorkspaces: []} as UsersStatus,
     reducers: {
         setMe: (state, action: PayloadAction<IUser>) => {
             state.me = action.payload
