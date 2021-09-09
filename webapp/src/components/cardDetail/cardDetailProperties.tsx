@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {Board, PropertyType, IPropertyTemplate} from '../../blocks/board'
@@ -28,6 +28,14 @@ type Props = {
 
 const CardDetailProperties = React.memo((props: Props) => {
     const {board, card, cards, views, activeView, contents, comments} = props
+    const [newTemplateId, setNewTemplateId] = useState('')
+
+    useEffect(() => {
+        const newProperty = board.fields.cardProperties.find((property) => property.id === newTemplateId)
+        if (newProperty) {
+            setNewTemplateId('')
+        }
+    }, [newTemplateId, board.fields.cardProperties])
 
     return (
         <div className='octo-propertylist CardDetailProperties'>
@@ -40,7 +48,7 @@ const CardDetailProperties = React.memo((props: Props) => {
                     >
                         {props.readonly && <div className='octo-propertyname'>{propertyTemplate.name}</div>}
                         {!props.readonly &&
-                            <MenuWrapper>
+                            <MenuWrapper isOpen={propertyTemplate.id === newTemplateId}>
                                 <div className='octo-propertyname'><Button>{propertyTemplate.name}</Button></div>
                                 <PropertyMenu
                                     propertyId={propertyTemplate.id}
@@ -68,8 +76,7 @@ const CardDetailProperties = React.memo((props: Props) => {
                 <div className='octo-propertyname add-property'>
                     <Button
                         onClick={async () => {
-                            // TODO: Show UI
-                            await mutator.insertPropertyTemplate(board, activeView)
+                            setNewTemplateId(await mutator.insertPropertyTemplate(board, activeView))
                         }}
                     >
                         <FormattedMessage
