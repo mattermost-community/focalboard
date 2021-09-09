@@ -157,7 +157,6 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 </div>
             )
         }
-        Utils.log('ValueSelector')
         return (
             <ValueSelector
                 emptyValue={emptyDisplayValue}
