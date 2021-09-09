@@ -17,6 +17,10 @@ import './sidebar.scss'
 
 import WorkspaceSwitcher from '../workspaceSwitcher/workspaceSwitcher'
 
+import {DashboardOption} from '../workspaceSwitcher/workspaceOptions'
+
+import {IWorkspace} from '../../blocks/workspace'
+
 import SidebarAddBoardMenu from './sidebarAddBoardMenu'
 import SidebarBoardItem from './sidebarBoardItem'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
@@ -25,6 +29,7 @@ import SidebarUserMenu from './sidebarUserMenu'
 type Props = {
     activeBoardId?: string
     activeViewId?: string
+    isDashboard?: boolean
 }
 
 const Sidebar = React.memo((props: Props) => {
@@ -81,7 +86,6 @@ const Sidebar = React.memo((props: Props) => {
 
             {workspace && workspace.id !== '0' &&
                 <div className='WorkspaceTitle'>
-                    <WorkspaceSwitcher activeWorkspace={workspace}/>
                     {Utils.isFocalboardPlugin() &&
                     <>
                         <div className='octo-spacer'/>
@@ -95,6 +99,22 @@ const Sidebar = React.memo((props: Props) => {
                     }
                 </div>
             }
+
+            {
+                workspace && workspace.id !== '0' && !props.isDashboard &&
+                <WorkspaceSwitcher activeWorkspace={workspace}/>
+            }
+
+            {
+                props.isDashboard &&
+                <WorkspaceSwitcher/>
+            }
+
+            {
+                props.isDashboard &&
+                <p>{'Yo! I\'m in dashboard'}</p>
+            }
+
             <div className='octo-sidebar-list'>
                 {
                     boards.map((board) => {

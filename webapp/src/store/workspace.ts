@@ -29,10 +29,16 @@ const workspaceSlice = createSlice({
         setWorkspace: (state, action: PayloadAction<IWorkspace>) => {
             state.current = action.payload
         },
+        setUserWorkspaces: (state, action: PayloadAction<UserWorkspace[]>) => {
+            console.log('workspaceSlice.setUserWorkspaces called')
+            state.userWorkspaces = action.payload
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(initialLoad.fulfilled, (state, action) => {
             state.current = action.payload.workspace || null
+
+            console.log('workspaceSlice: setting user workspaces ')
             state.userWorkspaces = action.payload.userWorkspaces
         })
         builder.addCase(fetchWorkspace.fulfilled, (state, action) => {
@@ -41,7 +47,7 @@ const workspaceSlice = createSlice({
     },
 })
 
-export const {setWorkspace} = workspaceSlice.actions
+export const {setWorkspace, setUserWorkspaces} = workspaceSlice.actions
 export const {reducer} = workspaceSlice
 
 export const getUserWorkspaces = (state: RootState): UserWorkspace[] => state.workspace.userWorkspaces
