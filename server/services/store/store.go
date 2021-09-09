@@ -57,4 +57,5 @@ type Store interface {
 	GetWorkspace(ID string) (*model.Workspace, error)
 	HasWorkspaceAccess(userID string, workspaceID string) (bool, error)
 	GetWorkspaceCount() (int64, error)
+	GetUserWorkspaces(userID string) ([]model.UserWorkspace, error)
 }

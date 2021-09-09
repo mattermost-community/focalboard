@@ -29,6 +29,7 @@ type PrefixedMigration struct {
 	postgres bool
 	sqlite   bool
 	mysql    bool
+	plugin   bool
 }
 
 func init() {
@@ -45,10 +46,22 @@ func (pm *PrefixedMigration) executeTemplate(r io.ReadCloser, identifier string)
 		return nil, "", err
 	}
 	buffer := bytes.NewBufferString("")
-	err = tmpl.Execute(buffer, map[string]interface{}{"prefix": pm.prefix, "postgres": pm.postgres, "sqlite": pm.sqlite, "mysql": pm.mysql})
+	params := map[string]interface{}{
+		"prefix":   pm.prefix,
+		"postgres": pm.postgres,
+		"sqlite":   pm.sqlite,
+		"mysql":    pm.mysql,
+		"plugin":   pm.plugin,
+	}
+	err = tmpl.Execute(buffer, params)
 	if err != nil {
 		return nil, "", err
 	}
+
+	if identifier == "match_collation" {
+		fmt.Println(buffer.String())
+	}
+
 	return ioutil.NopCloser(bytes.NewReader(buffer.Bytes())), identifier, nil
 }
 
@@ -145,9 +158,11 @@ func (s *SQLStore) Migrate() error {
 	if err != nil {
 		return err
 	}
+
 	prefixedData := &PrefixedMigration{
 		Bindata:  d.(*bindata.Bindata),
 		prefix:   s.tablePrefix,
+		plugin:   s.isPlugin,
 		postgres: s.dbType == postgresDBType,
 		sqlite:   s.dbType == sqliteDBType,
 		mysql:    s.dbType == mysqlDBType,
