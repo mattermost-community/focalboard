@@ -94,6 +94,8 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	apiv1.HandleFunc("/workspaces/{workspaceID}/{rootID}/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
 
+	apiv1.HandleFunc("/workspaces", a.sessionRequired(a.handleGetUserWorkspaces)).Methods("GET")
+
 	// Get Files API
 
 	files := r.PathPrefix("/files").Subrouter()
@@ -1459,4 +1461,22 @@ func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) { //nolint:
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	_, _ = w.Write(json)
+}
+
+func (a *API) handleGetUserWorkspaces(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	userWorkspaces, err := a.app.GetUserWorkspaces(session.UserID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	data, err := json.Marshal(userWorkspaces)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
 }
