@@ -2,7 +2,7 @@
 name: Enhancement / Feature Idea
 about: Suggest a new capability
 title: 'Feature Idea: '
-labels: enhancement
+labels: Enhancement
 assignees: ''
 
 ---

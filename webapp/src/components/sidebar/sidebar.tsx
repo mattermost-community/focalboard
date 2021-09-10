@@ -9,11 +9,13 @@ import HideSidebarIcon from '../../widgets/icons/hideSidebar'
 import ShowSidebarIcon from '../../widgets/icons/showSidebar'
 import {getSortedBoards} from '../../store/boards'
 import {getSortedViews} from '../../store/views'
-import {getWorkspace} from '../../store/workspace'
+import {getCurrentWorkspace} from '../../store/workspace'
 import {useAppSelector} from '../../store/hooks'
 import {Utils} from '../../utils'
 
 import './sidebar.scss'
+
+import WorkspaceSwitcher from '../workspaceSwitcher/workspaceSwitcher'
 
 import SidebarAddBoardMenu from './sidebarAddBoardMenu'
 import SidebarBoardItem from './sidebarBoardItem'
@@ -34,7 +36,7 @@ const Sidebar = React.memo((props: Props) => {
         loadTheme()
     }, [])
 
-    const workspace = useAppSelector(getWorkspace)
+    const workspace = useAppSelector(getCurrentWorkspace)
     if (!boards) {
         return <div/>
     }
@@ -69,21 +71,26 @@ const Sidebar = React.memo((props: Props) => {
                     </div>
 
                     <div className='octo-spacer'/>
-                    <IconButton
-                        onClick={() => setHidden(true)}
-                        icon={<HideSidebarIcon/>}
-                    />
-                </div>}
-            {workspace && workspace.id !== '0' &&
-                <div className='WorkspaceTitle'>
-                    {workspace.title}
-                    {Utils.isFocalboardPlugin() &&
-                    <>
-                        <div className='octo-spacer'/>
+                    <div className='sidebarSwitcher'>
                         <IconButton
                             onClick={() => setHidden(true)}
                             icon={<HideSidebarIcon/>}
                         />
+                    </div>
+                </div>}
+
+            {workspace && workspace.id !== '0' &&
+                <div className='WorkspaceTitle'>
+                    <WorkspaceSwitcher activeWorkspace={workspace}/>
+                    {Utils.isFocalboardPlugin() &&
+                    <>
+                        <div className='octo-spacer'/>
+                        <div className='sidebarSwitcher'>
+                            <IconButton
+                                onClick={() => setHidden(true)}
+                                icon={<HideSidebarIcon/>}
+                            />
+                        </div>
                     </>
                     }
                 </div>

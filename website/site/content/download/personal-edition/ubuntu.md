@@ -195,6 +195,15 @@ nano /opt/focalboard/config.json
 
 Change the dbconfig setting to use the MySQL database you created:
 
+When MySQL is being used, using collation is recommended over using charset.
+
+Using a variant of `utf8mb4` collation is required. For example, `utf8mb4_general_ci` 
+is used by default when no collation is specified.
+
+If you're using Focalboard as a Mattermost Plugin prior to version 0.9 with MySQL,
+please ensure the collations of focalboard tables (tables with the prefix `focalboard_`)
+is the same as the collation of mattermost tables.
+
 ```
 "dbtype": "mysql",
 "dbconfig": "boardsuser:boardsuser-password@tcp(127.0.0.1:3306)/boards",
