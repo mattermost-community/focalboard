@@ -76,8 +76,26 @@
     }
 
     &__workspace-container {
-        max-height: calc(100% - 24px - 16px);
         overflow-y: auto;
+    }
+
+    &__emptyResult {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 20px;
+        overflow: hidden;
+        padding: 24px 0 20px;
+        width: 100%;
+
+        h3 {
+            margin: 40px 0 12px;
+        }
+
+        p {
+            opacity: .6;
+            font-size: 18px;
+        }
     }
 }
 
@@ -90,5 +108,5 @@
     display: flex;
     flex-direction: column;
     gap: 40px;
-    // background: url('img/onboardingBg.jpg');
+    background: url('../../../static/onboardingBg.jpg');
 }

@@ -6,6 +6,8 @@ import {useHistory} from 'react-router-dom'
 
 import {useIntl} from 'react-intl'
 
+import SearchIllustration from '../../svg/search-illustration'
+
 import {UserWorkspace} from '../../user'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {getUserWorkspaceList, setUserWorkspaces} from '../../store/workspace'
@@ -59,12 +61,17 @@ const DashboardCenterContent = (): JSX.Element => {
                 </div>
             </div>
             <div className='DashboardPage__content'>
-                <div className='text-heading3'>{'All Channels'}</div>
+                {
+                    userWorkspaces.length !== 0 &&
+                    <div className='text-heading3'>{'All Channels'}</div>
+                }
                 <div className='DashboardPage__workspace-container'>
                     {
                         userWorkspaces.length === 0 &&
-                            <div className='emptyResult'>
-                                {intl.formatMessage({id: 'DashboardPage.CenterPanel.NoWorkspaces', defaultMessage: 'No channels found'})}
+                            <div className='DashboardPage__emptyResult'>
+                                <SearchIllustration/>
+                                <h3>{intl.formatMessage({id: 'DashboardPage.CenterPanel.NoWorkspaces', defaultMessage: 'Sorry, we could not find any channels matching that term'})}</h3>
+                                <p className='small'>{intl.formatMessage({id: 'DashboardPage.CenterPanel.NoWorkspacesDescription', defaultMessage: 'Please try searching for another term'})}</p>
                             </div>
                     }
                     {
