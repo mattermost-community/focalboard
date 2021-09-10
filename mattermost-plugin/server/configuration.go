@@ -85,7 +85,7 @@ func (p *Plugin) OnConfigurationChange() error {
 
 	p.setConfiguration(configuration)
 	p.server.UpdateClientConfig(utils.StructToMap(configuration))
-	p.wsPluginAdapter.BroadcastConfigChange()
+	p.wsPluginAdapter.BroadcastConfigChange(*p.server.App().GetClientConfig())
 
 	return nil
 }

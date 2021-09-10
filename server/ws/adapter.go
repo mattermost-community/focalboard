@@ -17,5 +17,5 @@ const (
 type Adapter interface {
 	BroadcastBlockChange(workspaceID string, block model.Block)
 	BroadcastBlockDelete(workspaceID, blockID, parentID string)
-	BroadcastConfigChange()
+	BroadcastConfigChange(clientConfig model.ClientConfig)
 }
