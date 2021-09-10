@@ -30,15 +30,12 @@ const workspaceSlice = createSlice({
             state.current = action.payload
         },
         setUserWorkspaces: (state, action: PayloadAction<UserWorkspace[]>) => {
-            console.log('workspaceSlice.setUserWorkspaces called')
             state.userWorkspaces = action.payload
         },
     },
     extraReducers: (builder) => {
         builder.addCase(initialLoad.fulfilled, (state, action) => {
             state.current = action.payload.workspace || null
-
-            console.log('workspaceSlice: setting user workspaces ')
             state.userWorkspaces = action.payload.userWorkspaces
         })
         builder.addCase(fetchWorkspace.fulfilled, (state, action) => {

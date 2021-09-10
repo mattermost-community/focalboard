@@ -52,7 +52,7 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
                             newPath = generatePath(match.path, {workspaceId})
                         }
 
-                        history.replace(newPath)
+                        history.push(newPath)
                     }}
                 />
             }

@@ -18,22 +18,20 @@ const DashboardCenterContent = (): JSX.Element => {
     const dispatch = useAppDispatch()
     const history = useHistory()
     const intl = useIntl()
-
-    useEffect(() => {
-        if (rawWorkspaces.length > 0) {
-            console.log('useEffect: rawWorkspaces populated')
-            return
-        }
-
-        initializeUserWorkspaces()
-    })
-
     const [searchFilter, setSearchFilter] = useState('')
 
     const initializeUserWorkspaces = async () => {
         const userWorkspaces = await octoClient.getUserWorkspaces()
         dispatch(setUserWorkspaces(userWorkspaces))
     }
+
+    useEffect(() => {
+        if (rawWorkspaces.length > 0) {
+            return
+        }
+
+        initializeUserWorkspaces()
+    })
 
     const userWorkspaces = rawWorkspaces.
         filter((workspace) => workspace.title.toLowerCase().includes(searchFilter) || workspace.boardCount.toString().includes(searchFilter)).
@@ -75,8 +73,7 @@ const DashboardCenterContent = (): JSX.Element => {
                                 key={workspace.id}
                                 className='DashboardPage__workspace'
                                 onClick={() => {
-                                    const newPath = `/workspace/${workspace.id}`
-                                    history.replace(newPath)
+                                    history.push(`/workspace/${workspace.id}`)
                                 }}
                             >
                                 <div className='text-heading2'>

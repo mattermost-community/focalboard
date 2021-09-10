@@ -180,13 +180,6 @@ func (s *SQLStore) GetUserWorkspaces(userID string) ([]model.UserWorkspace, erro
 		Where(sq.Eq{"ChannelMembers.UserId": userID}).
 		GroupBy("Channels.Id", "Channels.DisplayName")
 
-	qq, pp, _ := query.ToSql()
-	fmt.Println("######################################################################################################")
-	fmt.Println(qq)
-	fmt.Println(fmt.Sprintf("%v", pp))
-
-	fmt.Println("######################################################################################################")
-
 	rows, err := query.Query()
 	if err != nil {
 		s.logger.Error("ERROR GetUserWorkspaces", mlog.Err(err))
@@ -216,8 +209,6 @@ func (s *SQLStore) userWorkspacesFromRows(rows *sql.Rows) ([]model.UserWorkspace
 
 		userWorkspaces = append(userWorkspaces, userWorkspace)
 	}
-
-	fmt.Println(fmt.Sprintf("%v", userWorkspaces))
 
 	return userWorkspaces, nil
 }

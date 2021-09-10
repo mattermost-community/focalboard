@@ -109,17 +109,17 @@ const Sidebar = React.memo((props: Props) => {
 
             {
                 props.isDashboard &&
-                <WorkspaceSwitcher/>
-            }
-
-            {
-                props.isDashboard &&
-                <div className='Sidebar__onboarding'>
-                    <DashboardOnboardingSvg/>
-                    <div>
-                        {'Use the switcher to easily change channels'}
-                    </div>
-                </div>
+                (
+                    <React.Fragment>
+                        <WorkspaceSwitcher/>
+                        <div className='Sidebar__onboarding'>
+                            <DashboardOnboardingSvg/>
+                            <div>
+                                {'Use the switcher to easily change channels'}
+                            </div>
+                        </div>
+                    </React.Fragment>
+                )
             }
 
             {
