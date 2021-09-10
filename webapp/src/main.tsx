@@ -7,6 +7,8 @@ import {Provider as ReduxProvider} from 'react-redux'
 import App from './app'
 import {initThemes} from './theme'
 
+import '@mattermost/compass-icons/css/compass-icons.css'
+
 import './styles/variables.scss'
 import './styles/main.scss'
 import './styles/labels.scss'

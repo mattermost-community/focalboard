@@ -24,6 +24,7 @@
 		"updatesnapshots": "jest --updateSnapshot"
 	},
 	"dependencies": {
+		"@mattermost/compass-icons": "^0.1.10",
 		"@reduxjs/toolkit": "^1.6.0",
 		"color": "^4.0.0",
 		"easymde": "^2.15.0",
