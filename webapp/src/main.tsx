@@ -11,6 +11,7 @@ import {importNativeAppSettings} from './nativeApp'
 import {UserSettings} from './userSettings'
 
 import './styles/variables.scss'
+import './styles/compass-icons.scss'
 import './styles/main.scss'
 import './styles/labels.scss'
 
