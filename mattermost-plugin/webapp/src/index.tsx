@@ -66,7 +66,6 @@ type Props = {
 }
 
 const MainApp = (props: Props) => {
-    const [faviconStored, setFaviconStored] = useState(false)
     wsClient.initPlugin(manifest.id, props.webSocketClient)
 
     useEffect(() => {
@@ -84,24 +83,11 @@ const MainApp = (props: Props) => {
         }
     }, [])
 
-    useEffect(() => {
-        const oldLinks = document.querySelectorAll("link[rel*='icon']") as NodeListOf<HTMLLinkElement>
-        if (!oldLinks) {
-            return () => null
-        }
-        setFaviconStored(true)
-
-        return () => {
-            document.querySelectorAll("link[rel*='icon']").forEach((n) => n.remove())
-            oldLinks.forEach((link) => document.getElementsByTagName('head')[0].appendChild(link))
-        }
-    }, [])
-
     return (
         <ErrorBoundary>
             <ReduxProvider store={store}>
                 <div id='focalboard-app'>
-                    {faviconStored && <App/>}
+                    <App/>
                 </div>
                 <div id='focalboard-root-portal'/>
             </ReduxProvider>
