@@ -65,7 +65,7 @@ describe('components/propertyValueElement', () => {
         expect(container).toMatchSnapshot()
     })
 
-    test('should match snapshot, multi-select', async () => {
+    test('should match snapshot, multi-select', () => {
         const options: IPropertyOption[] = []
         for (let i = 0; i < 3; i++) {
             const propertyOption: IPropertyOption = {
@@ -99,7 +99,7 @@ describe('components/propertyValueElement', () => {
         expect(container).toMatchSnapshot()
     })
 
-    test('should match snapshot, url, array value', async () => {
+    test('should match snapshot, url, array value', () => {
         const propertyTemplate: IPropertyTemplate = {
             id: 'property_url',
             name: 'Property URL',
@@ -124,7 +124,7 @@ describe('components/propertyValueElement', () => {
         expect(container).toMatchSnapshot()
     })
 
-    test('should match snapshot, url, array value', async () => {
+    test('should match snapshot, url, array value', () => {
         const propertyTemplate: IPropertyTemplate = {
             id: 'property_url',
             name: 'Property URL',
@@ -149,7 +149,7 @@ describe('components/propertyValueElement', () => {
         expect(container).toMatchSnapshot()
     })
 
-    test('should match snapshot, person, array value', async () => {
+    test('should match snapshot, person, array value', () => {
         const propertyTemplate: IPropertyTemplate = {
             id: 'text',
             name: 'Generic Text',
@@ -174,7 +174,7 @@ describe('components/propertyValueElement', () => {
         expect(container).toMatchSnapshot()
     })
 
-    test('should match snapshot, date, array value', async () => {
+    test('should match snapshot, date, array value', () => {
         const propertyTemplate: IPropertyTemplate = {
             id: 'date',
             name: 'Date',
