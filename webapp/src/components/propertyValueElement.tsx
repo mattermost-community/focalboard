@@ -207,7 +207,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     } else if (propertyTemplate.type === 'url') {
         return (
             <URLProperty
-                value={value.toString()}
+                value={value as string}
                 readonly={readOnly}
                 onChange={setValue}
                 onSave={saveTextProperty}

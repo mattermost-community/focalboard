@@ -529,8 +529,6 @@ func (ws *Server) BroadcastBlockChange(workspaceID string, block model.Block) {
 
 // BroadcastConfigChange broadcasts update messages to clients.
 func (ws *Server) BroadcastConfigChange(clientConfig model.ClientConfig) {
-	mlog.Debug("BroadcastConfigChange")
-
 	message := UpdateClientConfig{
 		Action:       websocketActionUpdateConfig,
 		ClientConfig: clientConfig,

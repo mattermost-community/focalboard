@@ -126,7 +126,6 @@ func (a *API) getClientConfig(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
-
 	jsonBytesResponse(w, http.StatusOK, configData)
 }
 
