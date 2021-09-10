@@ -2,13 +2,10 @@
 name: Bug report
 about: Create a report to help us improve
 title: 'Bug: '
-labels: bug
+labels: Bug
 assignees: ''
 
 ---
-
-**Summary:**
-A clear and concise description of what the bug is.
 
 **Steps to reproduce the behavior:**
 1. Go to ...
