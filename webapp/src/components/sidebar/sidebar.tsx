@@ -19,10 +19,6 @@ import './sidebar.scss'
 
 import WorkspaceSwitcher from '../workspaceSwitcher/workspaceSwitcher'
 
-import {DashboardOption} from '../workspaceSwitcher/workspaceOptions'
-
-import {IWorkspace} from '../../blocks/workspace'
-
 import SidebarAddBoardMenu from './sidebarAddBoardMenu'
 import SidebarBoardItem from './sidebarBoardItem'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
