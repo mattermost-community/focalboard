@@ -3,8 +3,6 @@
 
 import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit'
 
-import {Utils} from '../utils'
-
 import {ClientConfig} from '../config/clientConfig'
 
 import {default as client} from '../octoClient'
@@ -26,14 +24,7 @@ const clientConfigSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(fetchClientConfig.fulfilled, (state, action) => {
-            Utils.log('add case' + action.payload?.enablePublicSharedBoards || 'empty')
-            Utils.log('add case' + action.payload?.telemetry || 'empty')
-            Utils.log('add case' + action.payload?.telemetryid || 'empty')
             state.value = action.payload || {telemetry: false, telemetryid: '', enablePublicSharedBoards: false}
-        })
-        builder.addCase(fetchClientConfig.rejected, (state) => {
-            Utils.log('rejected')
-            state.value = {telemetry: false, telemetryid: '', enablePublicSharedBoards: false}
         })
     },
 })

@@ -45,7 +45,6 @@ function CenterContent(props: Props) {
 
     useEffect(() => {
         const onConfigChangeHandler = (_: WSClient, config: ClientConfig) => {
-            Utils.log('dispatch')
             dispatch(setClientConfig(config))
         }
         wsClient.addOnConfigChange(onConfigChangeHandler)
