@@ -17,7 +17,7 @@ type Props = {
     onDelete: (id: string) => void
 }
 
-function typeDisplayName(intl: IntlShape, type: PropertyType): string {
+export function typeDisplayName(intl: IntlShape, type: PropertyType): string {
     switch (type) {
     case 'text': return intl.formatMessage({id: 'PropertyType.Text', defaultMessage: 'Text'})
     case 'number': return intl.formatMessage({id: 'PropertyType.Number', defaultMessage: 'Number'})
@@ -44,6 +44,23 @@ function typeMenuTitle(intl: IntlShape, type: PropertyType): string {
     return `${intl.formatMessage({id: 'PropertyMenu.typeTitle', defaultMessage: 'Type'})}: ${typeDisplayName(intl, type)}`
 }
 
+export const propertyTypes: PropertyType[] = [
+    'text',
+    'number',
+    'email',
+    'phone',
+    'url',
+    'select',
+    'multiSelect',
+    'date',
+    'person',
+    'checkbox',
+    'createdTime',
+    'createdBy',
+    'updatedTime',
+    'updatedBy',
+]
+
 const PropertyMenu = React.memo((props: Props) => {
     const intl = useIntl()
     const nameTextbox = useRef<HTMLInputElement>(null)
@@ -60,23 +77,6 @@ const PropertyMenu = React.memo((props: Props) => {
         nameTextbox.current?.focus()
         nameTextbox.current?.setSelectionRange(0, name.length)
     }, [])
-
-    const propertyTypes = [
-        {type: 'text'},
-        {type: 'number'},
-        {type: 'email'},
-        {type: 'phone'},
-        {type: 'url'},
-        {type: 'select'},
-        {type: 'multiSelect'},
-        {type: 'date'},
-        {type: 'person'},
-        {type: 'checkbox'},
-        {type: 'createdTime'},
-        {type: 'createdBy'},
-        {type: 'updatedTime'},
-        {type: 'updatedBy'},
-    ]
 
     return (
         <Menu>
@@ -109,12 +109,12 @@ const PropertyMenu = React.memo((props: Props) => {
                 <Menu.Separator/>
 
                 {
-                    propertyTypes.map((propertyType) => (
+                    propertyTypes.map((type) => (
                         <Menu.Text
-                            key={propertyType.type}
-                            id={propertyType.type}
-                            name={typeDisplayName(intl, propertyType.type as PropertyType)}
-                            onClick={() => debouncedOnTypeAndNameChanged(propertyType.type as PropertyType)()}
+                            key={type}
+                            id={type}
+                            name={typeDisplayName(intl, type)}
+                            onClick={() => debouncedOnTypeAndNameChanged(type)()}
                         />
                     ))
                 }

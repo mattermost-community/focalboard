@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useEffect, useState} from 'react'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Board, PropertyType, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
@@ -11,9 +11,11 @@ import {CommentBlock} from '../../blocks/commentBlock'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import MenuWrapper from '../../widgets/menuWrapper'
-import PropertyMenu from '../../widgets/propertyMenu'
+import PropertyMenu, {propertyTypes, typeDisplayName} from '../../widgets/propertyMenu'
 
 import PropertyValueElement from '../propertyValueElement'
+import Menu from '../../widgets/menu'
+import {Utils} from '../../utils'
 
 type Props = {
     board: Board
@@ -29,6 +31,7 @@ type Props = {
 const CardDetailProperties = React.memo((props: Props) => {
     const {board, card, cards, views, activeView, contents, comments} = props
     const [newTemplateId, setNewTemplateId] = useState('')
+    const intl = useIntl()
 
     useEffect(() => {
         const newProperty = board.fields.cardProperties.find((property) => property.id === newTemplateId)
@@ -73,18 +76,44 @@ const CardDetailProperties = React.memo((props: Props) => {
             })}
 
             {!props.readonly &&
-                <div className='octo-propertyname add-property'>
-                    <Button
-                        onClick={async () => {
-                            setNewTemplateId(await mutator.insertPropertyTemplate(board, activeView))
-                        }}
-                    >
-                        <FormattedMessage
-                            id='CardDetail.add-property'
-                            defaultMessage='+ Add a property'
-                        />
-                    </Button>
-                </div>
+                <MenuWrapper>
+                    <div className='octo-propertyname add-property'>
+                        <Button>
+                            <FormattedMessage
+                                id='CardDetail.add-property'
+                                defaultMessage='+ Add a property'
+                            />
+                        </Button>
+                    </div>
+                    <Menu>
+                        <Menu.Label>
+                            <b>
+                                {intl.formatMessage({id: 'PropertyMenu.selectType', defaultMessage: 'Select property type'})}
+                            </b>
+                        </Menu.Label>
+
+                        <Menu.Separator/>
+
+                        {
+                            propertyTypes.map((type) => (
+                                <Menu.Text
+                                    key={type}
+                                    id={type}
+                                    name={typeDisplayName(intl, type)}
+                                    onClick={async () => {
+                                        const template: IPropertyTemplate = {
+                                            id: Utils.createGuid(),
+                                            name: typeDisplayName(intl, type),
+                                            type,
+                                            options: [],
+                                        }
+                                        setNewTemplateId(await mutator.insertPropertyTemplate(board, activeView, -1, template))
+                                    }}
+                                />
+                            ))
+                        }
+                    </Menu>
+                </MenuWrapper>
             }
         </div>
     )
