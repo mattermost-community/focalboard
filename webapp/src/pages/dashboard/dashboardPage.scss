@@ -16,18 +16,23 @@
 
     &__workspace-container {
         display: flex;
+        flex-wrap: wrap;
+        gap: 16px 32px;
+        margin-top: 16px;
     }
 
     &__workspace {
-        margin: 16px 32px 0 0;
         padding: 24px;
         width: 220px;
+        min-width: 220px;
+        max-width: 220px;
         border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
         box-sizing: border-box;
         /* Elevation 1 */
 
         box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.08);
         border-radius: 8px;
+        cursor: pointer;
     }
 
     &__header {
@@ -65,15 +70,26 @@
             font-size: 18px;
         }
     }
+
+    &__content {
+        overflow-y: hidden;
+    }
+
+    &__workspace-container {
+        max-height: calc(100% - 24px - 16px);
+        padding-bottom: 4px;
+        overflow-y: auto;
+    }
 }
 
 .DashboardCenterContent {
     width: 100%;
     padding: 48px;
-    display: grid;
     align-content: flex-start;
-    grid-gap: 40px;
     max-width: 1600px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
     // background: url('img/onboardingBg.jpg');
 }

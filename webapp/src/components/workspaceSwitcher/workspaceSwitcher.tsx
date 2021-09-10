@@ -42,7 +42,16 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
                     }}
                     onChange={(workspaceId: string) => {
                         setShowMenu(false)
-                        const newPath = workspaceId === 'dashboard' ? '/dashboard' : generatePath(match.path, {workspaceId})
+                        let newPath: string
+
+                        if (workspaceId === DashboardOption.value) {
+                            newPath = '/dashboard'
+                        } else if (props.activeWorkspace === undefined) {
+                            newPath = `/workspace/${workspaceId}`
+                        } else {
+                            newPath = generatePath(match.path, {workspaceId})
+                        }
+
                         history.replace(newPath)
                     }}
                 />

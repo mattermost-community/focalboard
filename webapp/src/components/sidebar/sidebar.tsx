@@ -122,23 +122,26 @@ const Sidebar = React.memo((props: Props) => {
                 </div>
             }
 
-            <div className='octo-sidebar-list'>
-                {
-                    boards.map((board) => {
-                        const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id)?.id : undefined
-                        return (
-                            <SidebarBoardItem
-                                key={board.id}
-                                views={views}
-                                board={board}
-                                activeBoardId={props.activeBoardId}
-                                activeViewId={props.activeViewId}
-                                nextBoardId={board.id === props.activeBoardId ? nextBoardId : undefined}
-                            />
-                        )
-                    })
-                }
-            </div>
+            {
+                !props.isDashboard &&
+                <div className='octo-sidebar-list'>
+                    {
+                        boards.map((board) => {
+                            const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id)?.id : undefined
+                            return (
+                                <SidebarBoardItem
+                                    key={board.id}
+                                    views={views}
+                                    board={board}
+                                    activeBoardId={props.activeBoardId}
+                                    activeViewId={props.activeViewId}
+                                    nextBoardId={board.id === props.activeBoardId ? nextBoardId : undefined}
+                                />
+                            )
+                        })
+                    }
+                </div>
+            }
 
             <div className='octo-spacer'/>
 
