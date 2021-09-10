@@ -224,7 +224,6 @@ class WSClient {
         }
 
         ws.onmessage = (e) => {
-            Utils.log('WSClient websocket onmessage. ')
             if (ws !== this.ws) {
                 Utils.log('Ignoring closed ws')
                 return
@@ -239,8 +238,6 @@ class WSClient {
 
                 switch (message.action) {
                 case ACTION_UPDATE_BLOCK:
-                    Utils.log('updateBlockHandler')
-
                     this.updateBlockHandler(message)
                     break
                 default:
@@ -257,14 +254,11 @@ class WSClient {
     }
 
     updateBlockHandler(message: WSMessage): void {
-        Utils.log('queueUpdateNotification')
         this.queueUpdateNotification(Utils.fixBlock(message.block!))
     }
 
     updateClientConfigHandler(config: ClientConfig): void {
-        Utils.log('updateClientConfigHandler')
         for (const handler of this.onConfigChange) {
-            Utils.log('loop updateClientConfigHandler')
             handler(this, config)
         }
     }
@@ -356,8 +350,6 @@ class WSClient {
         }
 
         this.updateTimeout = setTimeout(() => {
-            Utils.log('WSClient flushUpdateNotifications')
-
             this.flushUpdateNotifications()
         }, this.notificationDelay)
     }

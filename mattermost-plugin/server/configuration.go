@@ -3,7 +3,7 @@ package main
 import (
 	"reflect"
 
-	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/utils"
 	"github.com/pkg/errors"
 )
 
@@ -83,15 +83,8 @@ func (p *Plugin) OnConfigurationChange() error {
 		return errors.Wrap(err, "failed to load plugin configuration")
 	}
 
-	t := &model.ClientConfig{
-		Telemetry:                false,
-		TelemetryID:              "0",
-		EnablePublicSharedBoards: configuration.EnablePublicSharedBoards,
-	}
-
-	p.server.SetClientConfig(*t)
-
 	p.setConfiguration(configuration)
+	p.server.UpdateClientConfig(utils.StructToMap(configuration))
 	p.wsPluginAdapter.BroadcastConfigChange()
 
 	return nil

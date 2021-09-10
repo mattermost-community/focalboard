@@ -49,17 +49,12 @@ function CenterContent(props: Props) {
             dispatch(setClientConfig(config))
         }
         wsClient.addOnConfigChange(onConfigChangeHandler)
-
-        // wsClient.addOnReconnect(onReconnect)
         return () => {
             wsClient.removeOnConfigChange(onConfigChangeHandler)
-
-            // wsClient.removeOnReconnect(onReconnect)
         }
     }, [])
 
     if (board && activeView) {
-        Utils.log('ENABLE' + (clientConfig?.enablePublicSharedBoards || 'NULL'))
         let property = groupByProperty
         if ((!property || property.type !== 'select') && activeView.fields.viewType === 'board') {
             property = board?.fields.cardProperties.find((o) => o.type === 'select')

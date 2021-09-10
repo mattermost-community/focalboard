@@ -175,10 +175,10 @@ func (a *API) getContainerAllowingReadTokenForBlock(r *http.Request, blockID str
 		}
 
 		// No session, but has valid read token (read-only mode)
-		if len(blockID) > 0 && a.hasValidReadTokenForBlock(r, container, blockID) {
-			if a.app.GetClientConfig().EnablePublicSharedBoards {
-				return &container, nil
-			}
+		if len(blockID) > 0 &&
+			a.hasValidReadTokenForBlock(r, container, blockID) &&
+			a.app.GetClientConfig().EnablePublicSharedBoards {
+			return &container, nil
 		}
 
 		return nil, PermissionError{"access denied to workspace"}

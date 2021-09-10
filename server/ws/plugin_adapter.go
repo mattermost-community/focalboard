@@ -1,7 +1,6 @@
 package ws
 
 import (
-	"encoding/json"
 	"fmt"
 	"reflect"
 	"strings"
@@ -10,6 +9,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/utils"
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -18,12 +18,6 @@ import (
 const websocketMessagePrefix = "custom_focalboard_"
 
 var errMissingWorkspaceInCommand = fmt.Errorf("command doesn't contain workspaceId")
-
-func structToMap(v interface{}) (m map[string]interface{}) {
-	b, _ := json.Marshal(v)
-	_ = json.Unmarshal(b, &m)
-	return
-}
 
 type PluginAdapterClient struct {
 	webConnID  string
@@ -338,7 +332,7 @@ func (pa *PluginAdapter) BroadcastConfigChange() {
 
 	userIDs := pa.getUserIDsForAllWorkspaces()
 	for _, userID := range userIDs {
-		pa.api.PublishWebSocketEvent(websocketActionUpdateConfig, structToMap(clientConfig), &mmModel.WebsocketBroadcast{UserId: userID})
+		pa.api.PublishWebSocketEvent(websocketActionUpdateConfig, utils.StructToMap(clientConfig), &mmModel.WebsocketBroadcast{UserId: userID})
 	}
 }
 
@@ -355,7 +349,7 @@ func (pa *PluginAdapter) BroadcastBlockChange(workspaceID string, block model.Bl
 
 	userIDs := pa.getUserIDsForWorkspace(workspaceID)
 	for _, userID := range userIDs {
-		pa.api.PublishWebSocketEvent(websocketActionUpdateBlock, structToMap(message), &mmModel.WebsocketBroadcast{UserId: userID})
+		pa.api.PublishWebSocketEvent(websocketActionUpdateBlock, utils.StructToMap(message), &mmModel.WebsocketBroadcast{UserId: userID})
 	}
 }
 

@@ -70,6 +70,12 @@ type UpdateMsg struct {
 	Block  model.Block `json:"block"`
 }
 
+// UpdateClientConfig is sent on block updates.
+type UpdateClientConfig struct {
+	Action       string             `json:"action"`
+	ClientConfig model.ClientConfig `json:"clientconfig"`
+}
+
 // WebsocketCommand is an incoming command from the client.
 type WebsocketCommand struct {
 	Action      string   `json:"action"`
@@ -521,41 +527,28 @@ func (ws *Server) BroadcastBlockChange(workspaceID string, block model.Block) {
 	}
 }
 
-// BroadcastBlockChange broadcasts update messages to clients.
-func (ws *Server) BroadcastConfigChange() {
+// BroadcastConfigChange broadcasts update messages to clients.
+func (ws *Server) BroadcastConfigChange(clientConfig model.ClientConfig) {
 	mlog.Debug("BroadcastConfigChange")
-	// blockIDsToNotify := []string{block.ID, block.ParentID}
 
-	// message := UpdateMsg{
-	// 	Action: websocketActionUpdateBlock,
-	// 	Block:  block,
-	// }
+	message := UpdateClientConfig{
+		Action:       websocketActionUpdateConfig,
+		ClientConfig: clientConfig,
+	}
 
-	// listeners := ws.getListenersForWorkspace(workspaceID)
-	// ws.logger.Debug("listener(s) for workspaceID",
-	// 	mlog.Int("listener_count", len(listeners)),
-	// 	mlog.String("workspaceID", workspaceID),
-	// )
+	listeners := ws.listeners
+	ws.logger.Debug("listener(s)",
+		mlog.Int("listener_count", len(listeners)),
+	)
 
-	// for _, blockID := range blockIDsToNotify {
-	// 	listeners = append(listeners, ws.getListenersForBlock(blockID)...)
-	// 	ws.logger.Debug("listener(s) for blockID",
-	// 		mlog.Int("listener_count", len(listeners)),
-	// 		mlog.String("blockID", blockID),
-	// 	)
-	// }
-
-	// for _, listener := range listeners {
-	// 	ws.logger.Debug("Broadcast change",
-	// 		mlog.String("workspaceID", workspaceID),
-	// 		mlog.String("blockID", block.ID),
-	// 		mlog.Stringer("remoteAddr", listener.RemoteAddr()),
-	// 	)
-
-	// 	err := listener.WriteJSON(message)
-	// 	if err != nil {
-	// 		ws.logger.Error("broadcast error", mlog.Err(err))
-	// 		listener.Close()
-	// 	}
-	// }
+	for listener, _ := range listeners {
+		ws.logger.Debug("Broadcast Config change",
+			mlog.Stringer("remoteAddr", listener.RemoteAddr()),
+		)
+		err := listener.WriteJSON(message)
+		if err != nil {
+			ws.logger.Error("broadcast error", mlog.Err(err))
+			listener.Close()
+		}
+	}
 }
