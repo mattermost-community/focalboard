@@ -69,27 +69,6 @@ const MainApp = () => {
         }
     }, [])
 
-    useEffect(() => {
-        const oldLink = document.querySelector("link[rel*='icon']") as HTMLLinkElement
-        if (!oldLink) {
-            return () => null
-        }
-
-        const restoreData = {
-            type: oldLink.type,
-            rel: oldLink.rel,
-            href: oldLink.href,
-        }
-        return () => {
-            document.querySelectorAll("link[rel*='icon']").forEach((n) => n.remove())
-            const link = document.createElement('link') as HTMLLinkElement
-            link.type = restoreData.type
-            link.rel = restoreData.rel
-            link.href = restoreData.href
-            document.getElementsByTagName('head')[0].appendChild(link)
-        }
-    }, [])
-
     return (
         <ErrorBoundary>
             <ReduxProvider store={store}>
