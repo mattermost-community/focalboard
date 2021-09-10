@@ -11,17 +11,16 @@
     .Menu {
         position: unset;
         min-width: unset;
-        a,
-        button {
-            color: rgba(var(--center-channel-text-rgb), 1);
 
-            i {
-                color: var(--link-color-rgb);
-            }
+        a, button {
+            color: inherit;
 
             &:hover {
-                color: var(--link-color-rgb);
                 background: rgba(var(--center-channel-color-rgb), 0.08);
+
+                div {
+                    color: var(--link-color-rgb);
+                }
             }
         }
     }
