@@ -24,9 +24,9 @@
         "settings": [{
             "key": "EnablePublicSharedBoards",
             "type": "bool",
-            "display_name": "Enable Public Shared Boards",
+            "display_name": "Enable Publicly Shared Boards",
             "default": false,
-            "help_text": "Allows users to create links to publically available read-only boards"
+            "help_text": "This allows board editors to share boards that are accessible to anyone with the link."
         }]
     }
 }
