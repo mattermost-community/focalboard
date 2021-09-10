@@ -19,7 +19,7 @@
         "bundle_path": "webapp/dist/main.js"
     },
     "settings_schema": {
-        "header": "For additional setup steps, please [see here](https://focalboard.com/fwlink/plugin-setup.html)",
+        "header": "For additional setup steps, please [see here](https://docs.mattermost.com/boards/getting-started.html)",
         "footer": "",
         "settings": []
     }
