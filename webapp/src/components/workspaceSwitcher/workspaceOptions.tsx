@@ -27,13 +27,26 @@ export const DashboardOption = {
 const WorkspaceOptions = (props: Props): JSX.Element => {
     const intl = useIntl()
     const userWorkspaces = useAppSelector<UserWorkspace[]>(getUserWorkspaceList)
-    let options = userWorkspaces.filter((workspace) => workspace.id !== props.activeWorkspaceId).map((workspace) => {
-        return {
-            label: workspace.title,
-            value: workspace.id,
-            boardCount: workspace.boardCount,
-        }
-    })
+    let options = userWorkspaces.
+        filter((workspace) => workspace.id !== props.activeWorkspaceId).
+        map((workspace) => {
+            return {
+                label: workspace.title,
+                value: workspace.id,
+                boardCount: workspace.boardCount,
+            }
+        }).
+        sort((a, b) => {
+            // This will arrange into two groups -
+            // on the top we'll have workspaces with boards
+            // and below that we'll have onces with no boards,
+            // and each group will be sorted alphabetically within itself.
+            if ((a.boardCount === 0 && b.boardCount === 0) || (a.boardCount !== 0 && b.boardCount !== 0)) {
+                return a.label.localeCompare(b.label)
+            }
+
+            return b.boardCount - a.boardCount
+        })
 
     options = [DashboardOption, ...options]
 
