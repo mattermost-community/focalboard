@@ -44,7 +44,7 @@ function typeMenuTitle(intl: IntlShape, type: PropertyType): string {
     return `${intl.formatMessage({id: 'PropertyMenu.typeTitle', defaultMessage: 'Type'})}: ${typeDisplayName(intl, type)}`
 }
 
-export const propertyTypes: PropertyType[] = [
+const propertyTypes: PropertyType[] = [
     'text',
     'number',
     'email',
@@ -60,6 +60,35 @@ export const propertyTypes: PropertyType[] = [
     'updatedTime',
     'updatedBy',
 ]
+
+type TypesProps = {
+    label: string
+    onTypeSelected: (type: PropertyType) => void
+}
+
+export const PropertyTypes = (props: TypesProps): JSX.Element => {
+    const intl = useIntl()
+    return (
+        <>
+            <Menu.Label>
+                <b>{props.label}</b>
+            </Menu.Label>
+
+            <Menu.Separator/>
+
+            {
+                propertyTypes.map((type) => (
+                    <Menu.Text
+                        key={type}
+                        id={type}
+                        name={typeDisplayName(intl, type)}
+                        onClick={() => props.onTypeSelected(type)}
+                    />
+                ))
+            }
+        </>
+    )
+}
 
 const PropertyMenu = React.memo((props: Props) => {
     const intl = useIntl()
@@ -100,24 +129,10 @@ const PropertyMenu = React.memo((props: Props) => {
                 id='type'
                 name={typeMenuTitle(intl, props.propertyType)}
             >
-                <Menu.Label>
-                    <b>
-                        {intl.formatMessage({id: 'PropertyMenu.changeType', defaultMessage: 'Change property type'})}
-                    </b>
-                </Menu.Label>
-
-                <Menu.Separator/>
-
-                {
-                    propertyTypes.map((type) => (
-                        <Menu.Text
-                            key={type}
-                            id={type}
-                            name={typeDisplayName(intl, type)}
-                            onClick={() => debouncedOnTypeAndNameChanged(type)()}
-                        />
-                    ))
-                }
+                <PropertyTypes
+                    label={intl.formatMessage({id: 'PropertyMenu.changeType', defaultMessage: 'Change property type'})}
+                    onTypeSelected={(type) => debouncedOnTypeAndNameChanged(type)()}
+                />
             </Menu.SubMenu>
             <Menu.Text
                 id='delete'

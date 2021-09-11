@@ -11,7 +11,7 @@ import {CommentBlock} from '../../blocks/commentBlock'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import MenuWrapper from '../../widgets/menuWrapper'
-import PropertyMenu, {propertyTypes, typeDisplayName} from '../../widgets/propertyMenu'
+import PropertyMenu, {PropertyTypes, typeDisplayName} from '../../widgets/propertyMenu'
 
 import PropertyValueElement from '../propertyValueElement'
 import Menu from '../../widgets/menu'
@@ -86,32 +86,18 @@ const CardDetailProperties = React.memo((props: Props) => {
                         </Button>
                     </div>
                     <Menu>
-                        <Menu.Label>
-                            <b>
-                                {intl.formatMessage({id: 'PropertyMenu.selectType', defaultMessage: 'Select property type'})}
-                            </b>
-                        </Menu.Label>
-
-                        <Menu.Separator/>
-
-                        {
-                            propertyTypes.map((type) => (
-                                <Menu.Text
-                                    key={type}
-                                    id={type}
-                                    name={typeDisplayName(intl, type)}
-                                    onClick={async () => {
-                                        const template: IPropertyTemplate = {
-                                            id: Utils.createGuid(),
-                                            name: typeDisplayName(intl, type),
-                                            type,
-                                            options: [],
-                                        }
-                                        setNewTemplateId(await mutator.insertPropertyTemplate(board, activeView, -1, template))
-                                    }}
-                                />
-                            ))
-                        }
+                        <PropertyTypes
+                            label={intl.formatMessage({id: 'PropertyMenu.selectType', defaultMessage: 'Select property type'})}
+                            onTypeSelected={async (type) => {
+                                const template: IPropertyTemplate = {
+                                    id: Utils.createGuid(),
+                                    name: typeDisplayName(intl, type),
+                                    type,
+                                    options: [],
+                                }
+                                setNewTemplateId(await mutator.insertPropertyTemplate(board, activeView, -1, template))
+                            }}
+                        />
                     </Menu>
                 </MenuWrapper>
             }
