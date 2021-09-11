@@ -337,7 +337,7 @@ func (s *Server) UpdateClientConfig(pluginConfig map[string]interface{}) {
 	for index, value := range pluginConfig {
 		if index == "EnablePublicSharedBoards" {
 			b, ok := value.(bool)
-			if ok != true {
+			if !ok {
 				s.logger.Warn("Invalid value for config value", mlog.String(index, value.(string)))
 			}
 			s.config.EnablePublicSharedBoards = b

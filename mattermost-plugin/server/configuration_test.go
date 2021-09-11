@@ -12,6 +12,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+var errLoadPluginConfiguration = errors.New("loadPluginConfiguration Error")
+
 func TestConfiguration(t *testing.T) {
 	t.Run("null configuration", func(t *testing.T) {
 		plugin := &Plugin{}
@@ -57,12 +59,11 @@ func TestConfiguration(t *testing.T) {
 }
 
 func TestOnConfigurationChange(t *testing.T) {
-	var loadError = errors.New("loadPluginConfiguration Error")
 	t.Run("Test LoadPlugin Error", func(t *testing.T) {
 		api := &plugintest.API{}
 		api.On("LoadPluginConfiguration",
 			mock.Anything).Return(func(dest interface{}) error {
-			return loadError
+			return errLoadPluginConfiguration
 		})
 
 		p := Plugin{}

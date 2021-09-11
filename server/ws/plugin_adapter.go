@@ -34,7 +34,6 @@ func (pac *PluginAdapterClient) isSubscribedToWorkspace(workspaceID string) bool
 	return false
 }
 
-//nolint:unused
 func (pac *PluginAdapterClient) isSubscribedToBlock(blockID string) bool {
 	for _, id := range pac.blocks {
 		if id == blockID {
@@ -166,7 +165,6 @@ func (pa *PluginAdapter) unsubscribeListenerFromWorkspace(pac *PluginAdapterClie
 	pa.removeListenerFromWorkspace(pac, workspaceID)
 }
 
-//nolint:unused
 func (pa *PluginAdapter) unsubscribeListenerFromBlocks(pac *PluginAdapterClient, blockIDs []string) {
 	pa.mu.Lock()
 	defer pa.mu.Unlock()
