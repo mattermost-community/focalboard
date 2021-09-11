@@ -19,7 +19,6 @@ import {useAppSelector} from '../../store/hooks'
 import ModalWrapper from '../modalWrapper'
 import ShareBoardComponent from '../shareBoardComponent'
 import {sendFlashMessage} from '../flashMessages'
-import {Utils} from '../../utils'
 
 type Props = {
     board: Board

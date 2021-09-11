@@ -9,8 +9,6 @@ import {getCurrentViewCardsSortedFilteredAndGrouped} from '../store/cards'
 import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentView} from '../store/views'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
-import {Utils} from '../utils'
-
 import {getClientConfig, setClientConfig} from '../store/clientConfig'
 
 import wsClient, {WSClient} from '../wsclient'
