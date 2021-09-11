@@ -100,7 +100,9 @@ const PropertyMenu = React.memo((props: Props) => {
         defaultMessage: 'Delete',
     })
 
-    const debouncedOnTypeAndNameChanged = (newType: PropertyType) => debounce(() => props.onTypeAndNameChanged(newType, name), 150)
+    const debouncedOnTypeAndNameChanged = (newType: PropertyType, newName: string) => {
+        debounce(() => props.onTypeAndNameChanged(newType, newName), 150)()
+    }
 
     useEffect(() => {
         nameTextbox.current?.focus()
@@ -114,13 +116,18 @@ const PropertyMenu = React.memo((props: Props) => {
                 type='text'
                 className='PropertyMenu menu-textbox'
                 onClick={(e) => e.stopPropagation()}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                    setName(e.target.value)
+                }}
                 value={name}
                 onBlur={() => props.onTypeAndNameChanged(props.propertyType, name)}
                 onKeyDown={(e) => {
-                    if (e.keyCode === 13 || e.keyCode === 27) {
+                    if (e.key === 'Enter' || e.key === 'Escape') {
                         props.onTypeAndNameChanged(props.propertyType, name)
                         e.stopPropagation()
+                        if (e.key === 'Enter') {
+                            e.target.dispatchEvent(new Event('menuItemClicked'))
+                        }
                     }
                 }}
                 spellCheck={true}
@@ -131,7 +138,7 @@ const PropertyMenu = React.memo((props: Props) => {
             >
                 <PropertyTypes
                     label={intl.formatMessage({id: 'PropertyMenu.changeType', defaultMessage: 'Change property type'})}
-                    onTypeSelected={(type) => debouncedOnTypeAndNameChanged(type)()}
+                    onTypeSelected={(type) => debouncedOnTypeAndNameChanged(type, name)}
                 />
             </Menu.SubMenu>
             <Menu.Text
