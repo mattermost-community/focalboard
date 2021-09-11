@@ -539,7 +539,7 @@ func (ws *Server) BroadcastConfigChange(clientConfig model.ClientConfig) {
 		mlog.Int("listener_count", len(listeners)),
 	)
 
-	for listener, _ := range listeners {
+	for listener := range listeners {
 		ws.logger.Debug("Broadcast Config change",
 			mlog.Stringer("remoteAddr", listener.RemoteAddr()),
 		)

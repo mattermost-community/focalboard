@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/ws"
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest"
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest/mock"
@@ -56,11 +57,12 @@ func TestConfiguration(t *testing.T) {
 }
 
 func TestOnConfigurationChange(t *testing.T) {
+	var loadError = errors.New("loadPluginConfiguration Error")
 	t.Run("Test LoadPlugin Error", func(t *testing.T) {
 		api := &plugintest.API{}
 		api.On("LoadPluginConfiguration",
 			mock.Anything).Return(func(dest interface{}) error {
-			return errors.New("loadPluginConfiguration Error")
+			return loadError
 		})
 
 		p := Plugin{}
@@ -91,6 +93,6 @@ type FakePluginAdapter struct {
 	ws.PluginAdapter
 }
 
-func (c *FakePluginAdapter) BroadcastConfigChange() {
+func (c *FakePluginAdapter) BroadcastConfigChange(clientConfig model.ClientConfig) {
 	count++
 }
