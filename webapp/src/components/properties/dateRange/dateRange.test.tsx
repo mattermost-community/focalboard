@@ -251,6 +251,7 @@ describe('components/properties/dateRange', () => {
             <DateRange
                 className='octo-propertyvalue'
                 value={''}
+                showEmptyPlaceholder={true}
                 onChange={callback}
             />,
         )
@@ -263,7 +264,7 @@ describe('components/properties/dateRange', () => {
         const today = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
 
         const {getByText, getByTitle} = render(component)
-        const dayDisplay = getByTitle('Empty')
+        const dayDisplay = getByText('Empty')
         userEvent.click(dayDisplay)
 
         const day = getByText('Today')
