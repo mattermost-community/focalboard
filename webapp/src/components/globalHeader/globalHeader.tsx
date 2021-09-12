@@ -11,12 +11,16 @@ import {useAppSelector} from '../../store/hooks'
 import {getLanguage} from '../../store/language'
 import {getMessages} from '../../i18n'
 
+import {Constants} from '../../constants'
+
 import GlobalHeaderSettingsMenu from './globalHeaderSettingsMenu'
 
 import './globalHeader.scss'
 
 const HeaderItems = () => {
     const language = useAppSelector<string>(getLanguage)
+    const helpUrl = 'https://www.focalboard.com/fwlink/doc-boards.html?v=' + Constants.versionString
+
     return (
         <IntlProvider
             locale={language.split(/[_]/)[0]}
@@ -25,7 +29,7 @@ const HeaderItems = () => {
             <div className='GlobalHeaderComponent'>
                 <span className='spacer'/>
                 <a
-                    href='https://www.focalboard.com/guide/user?utm_source=webapp'
+                    href={helpUrl}
                     target='_blank'
                     rel='noreferrer'
                     className='GlobalHeaderComponent__button help-button'

@@ -90,8 +90,11 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	apiv1.HandleFunc("/login", a.handleLogin).Methods("POST")
 	apiv1.HandleFunc("/register", a.handleRegister).Methods("POST")
+	apiv1.HandleFunc("/clientConfig", a.getClientConfig).Methods("GET")
 
 	apiv1.HandleFunc("/workspaces/{workspaceID}/{rootID}/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
+
+	apiv1.HandleFunc("/workspaces", a.sessionRequired(a.handleGetUserWorkspaces)).Methods("GET")
 
 	// Get Files API
 
@@ -113,6 +116,17 @@ func (a *API) requireCSRFToken(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
+}
+
+func (a *API) getClientConfig(w http.ResponseWriter, r *http.Request) {
+	clientConfig := a.app.GetClientConfig()
+
+	configData, err := json.Marshal(clientConfig)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	jsonBytesResponse(w, http.StatusOK, configData)
 }
 
 func (a *API) checkCSRFToken(r *http.Request) bool {
@@ -1447,4 +1461,22 @@ func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) { //nolint:
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	_, _ = w.Write(json)
+}
+
+func (a *API) handleGetUserWorkspaces(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	userWorkspaces, err := a.app.GetUserWorkspaces(session.UserID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	data, err := json.Marshal(userWorkspaces)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
 }

@@ -5,6 +5,8 @@ import {Store, Action} from 'redux'
 import {Provider as ReduxProvider} from 'react-redux'
 import {useHistory} from 'mm-react-router-dom'
 
+import {rudderAnalytics, RudderTelemetryHandler} from 'mattermost-redux/client/rudder'
+
 import {GlobalState} from 'mattermost-redux/types/store'
 import {getTheme} from 'mattermost-redux/selectors/entities/preferences'
 
@@ -18,11 +20,15 @@ import store from '../../../webapp/src/store'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
 import {setMattermostTheme} from '../../../webapp/src/theme'
+
 import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK} from './../../../webapp/src/wsclient'
+
+import TelemetryClient from '../../../webapp/src/telemetry/telemetryClient'
 
 import '../../../webapp/src/styles/focalboard-variables.scss'
 import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
+import octoClient from '../../../webapp/src/octoClient'
 
 import manifest from './manifest'
 import ErrorBoundary from './error_boundary'
@@ -32,12 +38,34 @@ import {PluginRegistry} from './types/mattermost-webapp'
 
 import './plugin.scss'
 
+function getSubpath(siteURL: string): string {
+    const url = new URL(siteURL)
+
+    // remove trailing slashes
+    return url.pathname.replace(/\/+$/, '')
+}
+
+const TELEMETRY_RUDDER_KEY = 'placeholder_rudder_key'
+const TELEMETRY_RUDDER_DATAPLANE_URL = 'placeholder_rudder_dataplane_url'
+const TELEMETRY_OPTIONS = {
+    context: {
+        ip: '0.0.0.0',
+    },
+    page: {
+        path: '',
+        referrer: '',
+        search: '',
+        title: '',
+        url: '',
+    },
+    anonymousId: '00000000000000000000000000',
+}
+
 type Props = {
     webSocketClient: MMWebSocketClient
 }
 
 const MainApp = (props: Props) => {
-    const [faviconStored, setFaviconStored] = useState(false)
     wsClient.initPlugin(manifest.id, props.webSocketClient)
 
     useEffect(() => {
@@ -55,24 +83,11 @@ const MainApp = (props: Props) => {
         }
     }, [])
 
-    useEffect(() => {
-        const oldLinks = document.querySelectorAll("link[rel*='icon']") as NodeListOf<HTMLLinkElement>
-        if (!oldLinks) {
-            return () => null
-        }
-        setFaviconStored(true)
-
-        return () => {
-            document.querySelectorAll("link[rel*='icon']").forEach((n) => n.remove())
-            oldLinks.forEach((link) => document.getElementsByTagName('head')[0].appendChild(link))
-        }
-    }, [])
-
     return (
         <ErrorBoundary>
             <ReduxProvider store={store}>
                 <div id='focalboard-app'>
-                    {faviconStored && <App/>}
+                    <App/>
                 </div>
                 <div id='focalboard-root-portal'/>
             </ReduxProvider>
@@ -94,6 +109,11 @@ export default class Plugin {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
     async initialize(registry: PluginRegistry, mmStore: Store<GlobalState, Action<Record<string, unknown>>>): Promise<void> {
+        const siteURL = mmStore.getState().entities.general.config.SiteURL
+        const subpath = siteURL ? getSubpath(siteURL) : ''
+        windowAny.frontendBaseURL = subpath + windowAny.frontendBaseURL
+        windowAny.baseURL = subpath + windowAny.baseURL
+
         this.registry = registry
 
         let theme = getTheme(mmStore.getState())
@@ -115,10 +135,10 @@ export default class Plugin {
         })
 
         if (this.registry.registerProduct) {
-            windowAny.frontendBaseURL = '/boards'
+            windowAny.frontendBaseURL = subpath + '/boards'
             const goToFocalboardWorkspace = () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
-                window.open(`${window.location.origin}/boards/workspace/${currentChannel}`)
+                window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`)
             }
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Boards')
 
@@ -142,12 +162,38 @@ export default class Plugin {
             })
             this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/plug/focalboard/go-to-current-workspace', MainApp, HeaderComponent)
         } else {
-            windowAny.frontendBaseURL = '/plug/focalboard'
+            windowAny.frontendBaseURL = subpath + '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
                 window.open(`${window.location.origin}/plug/focalboard/workspace/${currentChannel}`)
             }, '', 'Boards')
             this.registry.registerCustomRoute('/', MainApp)
+        }
+
+        const config = await octoClient.getClientConfig()
+        if (config?.telemetry) {
+            let rudderKey = TELEMETRY_RUDDER_KEY
+            let rudderUrl = TELEMETRY_RUDDER_DATAPLANE_URL
+
+            if (rudderKey.startsWith('placeholder') && rudderUrl.startsWith('placeholder')) {
+                rudderKey = process.env.RUDDER_KEY as string //eslint-disable-line no-process-env
+                rudderUrl = process.env.RUDDER_DATAPLANE_URL as string //eslint-disable-line no-process-env
+            }
+
+            if (rudderKey !== '') {
+                rudderAnalytics.load(rudderKey, rudderUrl)
+
+                rudderAnalytics.identify(config?.telemetryid, {}, TELEMETRY_OPTIONS)
+
+                rudderAnalytics.page('BoardsLoaded', '',
+                    TELEMETRY_OPTIONS.page,
+                    {
+                        context: TELEMETRY_OPTIONS.context,
+                        anonymousId: TELEMETRY_OPTIONS.anonymousId,
+                    })
+
+                TelemetryClient.setTelemetryHandler(new RudderTelemetryHandler())
+            }
         }
 
         // register websocket handlers
