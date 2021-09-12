@@ -189,7 +189,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     } else if (propertyTemplate.type === 'person') {
         return (
             <UserProperty
-                value={propertyValue as string}
+                value={propertyValue.toString()}
                 readonly={readOnly}
                 onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
             />
@@ -201,7 +201,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         return (
             <DateRange
                 className='octo-propertyvalue'
-                value={value as string}
+                value={value.toString()}
                 showEmptyPlaceholder={showEmptyPlaceholder}
                 onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
             />
@@ -209,7 +209,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     } else if (propertyTemplate.type === 'url') {
         return (
             <URLProperty
-                value={value as string}
+                value={value.toString()}
                 readonly={readOnly}
                 placeholder={emptyDisplayValue}
                 onChange={setValue}
@@ -264,7 +264,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 <Editable
                     className='octo-propertyvalue'
                     placeholderText={emptyDisplayValue}
-                    value={value as string}
+                    value={value.toString()}
                     onChange={setValue}
                     onSave={saveTextProperty}
                     onCancel={() => setValue(propertyValue)}
