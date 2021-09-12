@@ -8,7 +8,7 @@ import {sendFlashMessage} from '../../components/flashMessages'
 import client from '../../octoClient'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
-import {getWorkspace, fetchWorkspace} from '../../store/workspace'
+import {getCurrentWorkspace, fetchWorkspace} from '../../store/workspace'
 import {useAppSelector, useAppDispatch} from '../../store/hooks'
 
 import Modal from '../modal'
@@ -22,7 +22,7 @@ type Props = {
 const RegistrationLink = React.memo((props: Props) => {
     const {onClose} = props
     const intl = useIntl()
-    const workspace = useAppSelector<IWorkspace|null>(getWorkspace)
+    const workspace = useAppSelector<IWorkspace|null>(getCurrentWorkspace)
     const dispatch = useAppDispatch()
 
     const [wasCopied, setWasCopied] = useState(false)

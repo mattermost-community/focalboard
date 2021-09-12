@@ -88,6 +88,13 @@ func (p *Plugin) OnActivate() error {
 		baseURL = *mmconfig.ServiceSettings.SiteURL
 	}
 
+	serverID := client.System.GetDiagnosticID()
+
+	enableTelemetry := false
+	if mmconfig.LogSettings.EnableDiagnostics != nil {
+		enableTelemetry = *mmconfig.LogSettings.EnableDiagnostics
+	}
+
 	cfg := &config.Configuration{
 		ServerRoot:              baseURL + "/plugins/focalboard",
 		Port:                    -1,
@@ -100,7 +107,8 @@ func (p *Plugin) OnActivate() error {
 		FilesDriver:             *mmconfig.FileSettings.DriverName,
 		FilesPath:               *mmconfig.FileSettings.Directory,
 		FilesS3Config:           filesS3Config,
-		Telemetry:               true,
+		Telemetry:               enableTelemetry,
+		TelemetryID:             serverID,
 		WebhookUpdate:           []string{},
 		SessionExpireTime:       2592000,
 		SessionRefreshTime:      18000,
@@ -110,7 +118,7 @@ func (p *Plugin) OnActivate() error {
 		AuthMode:                "mattermost",
 	}
 	var db store.Store
-	db, err = sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger, sqlDB)
+	db, err = sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger, sqlDB, true)
 	if err != nil {
 		return fmt.Errorf("error initializing the DB: %w", err)
 	}
@@ -122,7 +130,6 @@ func (p *Plugin) OnActivate() error {
 		db = layeredStore
 	}
 
-	serverID := client.System.GetDiagnosticID()
 	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db))
 
 	server, err := server.New(cfg, "", db, logger, serverID, p.wsPluginAdapter)

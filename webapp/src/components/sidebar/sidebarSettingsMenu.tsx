@@ -22,6 +22,7 @@ import {UserSettings} from '../../userSettings'
 
 import './sidebarSettingsMenu.scss'
 import CheckIcon from '../../widgets/icons/check'
+import {Constants} from '../../constants'
 
 type Props = {
     activeTheme: string
@@ -46,64 +47,6 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
         UserSettings.prefillRandomIcons = !UserSettings.prefillRandomIcons
         setRandomIcons(!randomIcons)
     }
-
-    const languages = [
-        {
-            code: 'en',
-            name: 'english',
-            displayName: 'English',
-        },
-        {
-            code: 'es',
-            name: 'spanish',
-            displayName: 'Español',
-        },
-        {
-            code: 'de',
-            name: 'german',
-            displayName: 'Deutsch',
-        },
-        {
-            code: 'ja',
-            name: 'japanese',
-            displayName: '日本語',
-        },
-        {
-            code: 'fr',
-            name: 'french',
-            displayName: 'Français',
-        },
-        {
-            code: 'nl',
-            name: 'dutch',
-            displayName: 'Nederlands',
-        },
-        {
-            code: 'ru',
-            name: 'russian',
-            displayName: 'Pусский',
-        },
-        {
-            code: 'zh-cn',
-            name: 'chinese',
-            displayName: '中文 (繁體)',
-        },
-        {
-            code: 'zh-tx',
-            name: 'simplified-chinese',
-            displayName: '中文 (简体)',
-        },
-        {
-            code: 'tr',
-            name: 'turkish',
-            displayName: 'Türkçe',
-        },
-        {
-            code: 'oc',
-            name: 'occitan',
-            displayName: 'Occitan',
-        },
-    ]
 
     const themes = [
         {
@@ -154,7 +97,7 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
                         position='top'
                     >
                         {
-                            languages.map((language) => (
+                            Constants.languages.map((language) => (
                                 <Menu.Text
                                     key={language.code}
                                     id={`${language.name}-lang`}

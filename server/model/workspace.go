@@ -27,3 +27,19 @@ type Workspace struct {
 	// required: true
 	UpdateAt int64 `json:"updateAt"`
 }
+
+// UserWorkspace is a summary of a single association between
+// a user and a workspace
+// swagger:model
+type UserWorkspace struct {
+	// ID of the workspace
+	// required: true
+	ID string `json:"id"`
+
+	// Title of the workspace
+	// required: false
+	Title string `json:"title"`
+
+	// Number of boards in the workspace
+	BoardCount int `json:"boardCount"`
+}
