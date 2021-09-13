@@ -204,6 +204,11 @@ html {
         flex-direction: row;
         align-items: flex-start;
 
+        &:hover {
+            position: relative;
+            z-index: 1;
+        }
+
         width: 100%;
 
         > * {
