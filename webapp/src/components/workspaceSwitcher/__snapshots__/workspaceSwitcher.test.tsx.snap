@@ -17,7 +17,7 @@ exports[`components/workspaceSwitcher/WorkspaceSwitcher 2 more workspaces availa
       <span
         id="aria-context"
       >
-         3 results available. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu.
+         3 results available. Use the Up and Down arrows on your keyboard to choose options. Press Enter to select the currently focused option. Press Escape to exit the menu.
       </span>
     </span>
     <div
@@ -140,7 +140,7 @@ exports[`components/workspaceSwitcher/WorkspaceSwitcher no more workspaces avail
       <span
         id="aria-context"
       >
-         1 result available. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu.
+         1 result available. Use the Up and Down arrows on your keyboard to choose options. Press Enter to select the currently focused option. Press Escape to exit the menu.
       </span>
     </span>
     <div
