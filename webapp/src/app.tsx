@@ -2,15 +2,17 @@
 // See LICENSE.txt for license information.
 import React, {useEffect} from 'react'
 import {
-    BrowserRouter as Router,
+    Router,
     Redirect,
     Route,
-    Switch,
+    Switch, useHistory,
 } from 'react-router-dom'
 import {IntlProvider} from 'react-intl'
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
 import {TouchBackend} from 'react-dnd-touch-backend'
+
+import {createBrowserHistory} from 'history'
 
 import TelemetryClient from './telemetry/telemetryClient'
 
@@ -30,6 +32,48 @@ import {setGlobalError, getGlobalError} from './store/globalError'
 import {useAppSelector, useAppDispatch} from './store/hooks'
 
 import {IUser} from './user'
+
+export const b = createBrowserHistory({basename: Utils.getFrontendBaseURL()})
+
+if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    window.addEventListener('message', ({origin, data: {type, message = {}} = {}} = {}) => {
+        if (origin !== window.location.origin) {
+            return
+        }
+
+        const {pathName} = message
+        if (!pathName) {
+            return
+        }
+        console.log('message received: ' + JSON.stringify(pathName))
+
+        // b.push(pathName.replace('/boards', ''))
+    })
+}
+
+const browserHistory = {
+    ...b,
+    push: (path: string, ...args: any[]) => {
+        console.log('Pushing to history: ' + path)
+        if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
+            console.log('Desktop aware: ' + path)
+
+            // window.postMessage(
+            //     {
+            //         type: 'browser-history-push',
+            //         message: {
+            //             path: `${(window as any).frontendBaseURL}${path}`,
+            //         },
+            //     },
+            //     window.location.origin,
+            // )
+        } else {
+            b.push(path, ...args)
+        }
+    },
+}
 
 const App = React.memo((): JSX.Element => {
     const language = useAppSelector<string>(getLanguage)
@@ -69,7 +113,11 @@ const App = React.memo((): JSX.Element => {
         >
             <DndProvider backend={Utils.isMobile() ? TouchBackend : HTML5Backend}>
                 <FlashMessages milliseconds={2000}/>
-                <Router basename={Utils.getFrontendBaseURL()}>
+                <Router
+
+                    // basename={Utils.getFrontendBaseURL()}
+                    history={browserHistory}
+                >
                     <div id='frame'>
                         <div id='main'>
                             <Switch>
@@ -100,6 +148,7 @@ const App = React.memo((): JSX.Element => {
                                     path='/workspace/:workspaceId/:boardId?/:viewId?/:cardId?'
                                     render={({match}) => {
                                         if (loggedIn === false) {
+                                            console.log('route')
                                             let redirectUrl = '/' + Utils.buildURL(`/workspace/${match.params.workspaceId}/`)
                                             if (redirectUrl.indexOf('//') === 0) {
                                                 redirectUrl = redirectUrl.slice(1)
@@ -124,6 +173,7 @@ const App = React.memo((): JSX.Element => {
                                     {loggedIn === false && <Redirect to='/login'/>}
                                     {loggedIn === true && <BoardPage/>}
                                 </Route>
+                                // add default handler to at least print an error
                             </Switch>
                         </div>
                     </div>

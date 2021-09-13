@@ -27,6 +27,7 @@ import {updateComments} from '../store/comments'
 import {initialLoad, initialReadOnlyLoad} from '../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 import {UserSettings} from '../userSettings'
+import {b} from '../app'
 
 type Props = {
     readonly?: boolean
@@ -91,6 +92,7 @@ const BoardPage = (props: Props) => {
 
         // Backward compatibility end
 
+        console.log('LOLOL')
         const boardId = match.params.boardId
         const viewId = match.params.viewId
 

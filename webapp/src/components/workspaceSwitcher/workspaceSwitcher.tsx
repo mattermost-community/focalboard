@@ -3,12 +3,14 @@
 import React, {useState} from 'react'
 
 import './workspaceSwitcher.scss'
-import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
+import {useHistory} from 'react-router-dom'
 
 import {IWorkspace} from '../../blocks/workspace'
 import ChevronDown from '../../widgets/icons/chevronDown'
 
 import {UserSettings} from '../../userSettings'
+
+import {Utils} from '../../utils'
 
 import WorkspaceOptions from './workspaceOptions'
 
@@ -18,7 +20,6 @@ type Props = {
 
 const WorkspaceSwitcher = (props: Props): JSX.Element => {
     const history = useHistory()
-    const match = useRouteMatch()
 
     const [showMenu, setShowMenu] = useState<boolean>(false)
 
@@ -44,41 +45,17 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
                     }}
                     onChange={(workspaceId: string) => {
                         setShowMenu(false)
-                        const newPath = generatePath(match.path, {workspaceId})
-
+                        const newPath = `/workspace/${workspaceId}`
                         console.log('newPath:  ' + newPath)
                         UserSettings.lastWorkspaceId = workspaceId
+                        console.log('isDesktop: ' + Utils.isDesktop())
 
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore
-                        window.WebappUtils.browserHistory.push(newPath)
-
-                        // window.postMessage(
-                        //     {
-                        //         type: 'browser-history-push',
-                        //         message: {
-                        //             path: newPath,
-                        //         },
-                        //     },
-                        //     window.location.origin,
-                        // )
-
-                        history.replace(newPath)
+                        history.push(newPath)
                     }}
                 />
             }
         </div>
     )
 }
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-window.addEventListener('message', ({origin, data: {type, message = {}} = {}} = {}) => {
-    if (origin !== window.location.origin) {
-        return
-    }
-
-    console.log('message received: ' + JSON.stringify(origin))
-})
 
 export default WorkspaceSwitcher
