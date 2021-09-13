@@ -34,6 +34,7 @@ describe('components/calculations/Calculation', () => {
                 onMenuOpen={() => {}}
                 onChange={() => {}}
                 cards={[card, card2]}
+                hovered={true}
                 property={{
                     id: 'property_2',
                     name: '',
@@ -58,6 +59,7 @@ describe('components/calculations/Calculation', () => {
                 onMenuOpen={() => {}}
                 onChange={() => {}}
                 cards={[card, card2]}
+                hovered={true}
                 property={{
                     id: 'property_2',
                     name: '',
@@ -82,6 +84,7 @@ describe('components/calculations/Calculation', () => {
                 onMenuOpen={() => {}}
                 onChange={() => {}}
                 cards={[card, card2]}
+                hovered={true}
                 property={{
                     id: 'property_3',
                     name: '',
@@ -106,6 +109,7 @@ describe('components/calculations/Calculation', () => {
                 onMenuOpen={() => {}}
                 onChange={() => {}}
                 cards={[card, card2]}
+                hovered={true}
                 property={{
                     id: 'property_4',
                     name: '',
@@ -134,6 +138,7 @@ describe('components/calculations/Calculation', () => {
                 onMenuOpen={onMenuOpen}
                 onChange={onChange}
                 cards={[card, card2]}
+                hovered={true}
                 property={{
                     id: 'property_2',
                     name: '',

@@ -18,6 +18,7 @@ interface BlockPatch {
     deletedFields?: string[]
     deleteAt?: number
 }
+
 interface Block {
     id: string
     parentId: string

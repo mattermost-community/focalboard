@@ -9,17 +9,18 @@
     z-index: 1000;
 
     .Menu {
-        a,
-        button {
-            color: rgba(var(--center-channel-text-rgb), 1);
+        position: unset;
+        min-width: unset;
 
-            i {
-                color: inherit;
-            }
+        a, button {
+            color: inherit;
 
             &:hover {
-                color: var(--link-color-rgb);
                 background: rgba(var(--center-channel-color-rgb), 0.08);
+
+                div {
+                    color: var(--link-color-rgb);
+                }
             }
         }
     }

@@ -3,7 +3,7 @@
 exports[`components/calculations/Calculation should match snapshot - count 1`] = `
 <div>
   <div
-    class="Calculation count fooClass"
+    class="Calculation count fooClass  hovered"
     tabindex="0"
   >
     <span
@@ -23,7 +23,7 @@ exports[`components/calculations/Calculation should match snapshot - count 1`] =
 exports[`components/calculations/Calculation should match snapshot - countUniqueValue 1`] = `
 <div>
   <div
-    class="Calculation countUniqueValue fooClass"
+    class="Calculation countUniqueValue fooClass  hovered"
     tabindex="0"
   >
     <span
@@ -43,7 +43,7 @@ exports[`components/calculations/Calculation should match snapshot - countUnique
 exports[`components/calculations/Calculation should match snapshot - countValue 1`] = `
 <div>
   <div
-    class="Calculation countValue fooClass"
+    class="Calculation countValue fooClass  hovered"
     tabindex="0"
   >
     <span
@@ -63,7 +63,7 @@ exports[`components/calculations/Calculation should match snapshot - countValue 
 exports[`components/calculations/Calculation should match snapshot - none 1`] = `
 <div>
   <div
-    class="Calculation none fooClass"
+    class="Calculation none fooClass  hovered"
     tabindex="0"
   >
     <span
@@ -81,7 +81,7 @@ exports[`components/calculations/Calculation should match snapshot - none 1`] = 
 exports[`components/calculations/Calculation should match snapshot - option change 1`] = `
 <div>
   <div
-    class="Calculation none fooClass"
+    class="Calculation none fooClass menuOpen hovered"
     tabindex="0"
   >
     <div>
