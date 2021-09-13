@@ -164,7 +164,7 @@
   "error.relogin": "Log in again",
   "login.log-in-button": "Log in",
   "login.log-in-title": "Log in",
-  "login.register-button": "or create an account if you don't have one.",
-  "register.login-button": "or log in if you already have an account.",
+  "login.register-button": "or create an account if you don't have one",
+  "register.login-button": "or log in if you already have an account",
   "register.signup-title": "Sign up for your account"
 }
