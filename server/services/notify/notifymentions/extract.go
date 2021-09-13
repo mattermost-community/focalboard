@@ -39,12 +39,15 @@ func extractText(s string, mention string, limits limits) string {
 	lines := strings.Split(s, "\n")
 
 	// find first line with mention
-	var found int
+	found := -1
 	for i, l := range lines {
 		if strings.Contains(l, mention) {
 			found = i
 			break
 		}
+	}
+	if found == -1 {
+		return ""
 	}
 
 	prefix := safeConcat(lines, found-limits.prefixLines, found)

@@ -6,11 +6,9 @@ package notifymentions
 import (
 	"fmt"
 
-	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/wiggin77/merror"
 
-	chatmodel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -19,18 +17,14 @@ const (
 )
 
 type Backend struct {
-	delivery   Delivery
-	botID      string
-	serverRoot string
-	logger     *mlog.Logger
+	delivery Delivery
+	logger   *mlog.Logger
 }
 
-func New(delivery Delivery, botID string, serverRoot string, logger *mlog.Logger) *Backend {
+func New(delivery Delivery, logger *mlog.Logger) *Backend {
 	return &Backend{
-		delivery:   delivery,
-		botID:      botID,
-		serverRoot: serverRoot,
-		logger:     logger,
+		delivery: delivery,
+		logger:   logger,
 	}
 }
 
@@ -66,10 +60,6 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 	}
 
 	oldMentions := extractMentions(evt.BlockOld)
-	author, err := b.delivery.GetUserByID(evt.UserID)
-	if err != nil {
-		return fmt.Errorf("cannot find user: %w", err)
-	}
 	merr := merror.New()
 
 	for username := range mentions {
@@ -78,49 +68,12 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 			continue
 		}
 
-		user, err := userFromUsername(b.delivery, username)
-		if err != nil {
-			// not really an error; could just be someone typed "@sometext"
-			continue
-		}
+		extract := extractText(evt.BlockChanged.Title, username, newLimits())
 
-		channel, err := b.delivery.GetDirectChannel(user.Id, b.botID)
+		err := b.delivery.Deliver(username, extract, evt)
 		if err != nil {
-			merr.Append(err)
-			continue
-		}
-		link := makeLink(b.serverRoot, evt.Workspace, evt.Board.ID, evt.Card.ID)
-
-		post := &chatmodel.Post{
-			UserId:    b.botID,
-			ChannelId: channel.Id,
-			Message:   formatMessage(author.Username, evt.Card.Title, link, evt.BlockChanged, username),
-		}
-		err = b.delivery.CreatePost(post)
-		if err != nil {
-			merr.Append(err)
+			merr.Append(fmt.Errorf("cannot deliver notification for @%s: %w", username, err))
 		}
 	}
 	return merr.ErrorOrNil()
-}
-
-const (
-	// TODO: localize these when i18n is available.
-	defCommentTemplate     = "@%s mentioned you in a comment on the card [%s](%s)\n> %s"
-	defDescriptionTemplate = "@%s mentioned you in the card [%s](%s)\n> %s"
-)
-
-func formatMessage(author string, card string, link string, block *model.Block, mention string) string {
-	template := defDescriptionTemplate
-	if block.Type == "comment" {
-		template = defCommentTemplate
-	}
-
-	msg := extractText(block.Title, mention, newLimits())
-
-	return fmt.Sprintf(template, author, card, link, msg)
-}
-
-func makeLink(serverRoot string, workspace string, board string, card string) string {
-	return fmt.Sprintf("%s/workspace/%s/%s/%s/", serverRoot, workspace, board, card)
 }

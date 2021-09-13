@@ -47,7 +47,7 @@ func Test_extractText(t *testing.T) {
 		want string
 	}{
 		{name: "good", want: join(s2, s3, s4, s5, s6), args: args{mention: "@lincoln", limits: extractLimits, s: allConcat}},
-		{name: "not found", want: join(s0, s1, s2), args: args{mention: "@bogus", limits: extractLimits, s: allConcat}},
+		{name: "not found", want: "", args: args{mention: "@bogus", limits: extractLimits, s: allConcat}},
 		{name: "one line", want: join(s4), args: args{mention: "@lincoln", limits: extractLimits, s: s4}},
 		{name: "two lines", want: join(s4, s5), args: args{mention: "@lincoln", limits: extractLimits, s: join(s4, s5)}},
 		{name: "zero lines", want: "", args: args{mention: "@lincoln", limits: extractLimits, s: ""}},
