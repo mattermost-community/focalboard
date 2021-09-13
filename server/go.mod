@@ -2,8 +2,6 @@ module github.com/mattermost/focalboard/server
 
 go 1.16
 
-replace github.com/mattermost/mattermost-server/v6 => ../../mattermost-server
-
 require (
 	github.com/Masterminds/squirrel v1.5.0
 	github.com/go-sql-driver/mysql v1.6.0
@@ -14,7 +12,7 @@ require (
 	github.com/gorilla/websocket v1.4.2
 	github.com/lib/pq v1.10.2
 	github.com/magiconair/properties v1.8.5 // indirect
-	github.com/mattermost/mattermost-server/v6 v6.0.0-20210824141503-6031b163d8e3
+	github.com/mattermost/mattermost-server/v6 v6.0.0-20210913141218-bb659d03fde0
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
 	github.com/oklog/run v1.1.0
