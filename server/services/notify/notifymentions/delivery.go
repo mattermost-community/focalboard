@@ -3,20 +3,10 @@
 
 package notifymentions
 
-import "github.com/mattermost/mattermost-server/v6/model"
+import "github.com/mattermost/focalboard/server/services/notify"
 
+// Delivery provides an interface for delivering notifications to other systems, such as
+// MM server or email.
 type Delivery interface {
-
-	// GetDirectChannel gets a direct message channel.
-	// If the channel does not exist it will create it.
-	GetDirectChannel(userID1, userID2 string) (*model.Channel, error)
-
-	// CreatePost creates a post.
-	CreatePost(post *model.Post) error
-
-	// GetUserByIS gets a user by their ID.
-	GetUserByID(userID string) (*model.User, error)
-
-	// GetUserByUsername gets a user by their username.
-	GetUserByUsername(name string) (*model.User, error)
+	Deliver(mentionUsername string, extract string, evt notify.BlockChangeEvent) error
 }

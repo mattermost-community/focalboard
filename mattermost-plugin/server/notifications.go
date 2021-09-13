@@ -5,6 +5,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/notify/notifymentions"
+	"github.com/mattermost/focalboard/server/services/notify/plugindelivery"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
 
@@ -30,29 +31,31 @@ func createMentionsNotifyBackend(client *pluginapi.Client, serverRoot string, lo
 		return nil, fmt.Errorf("failed to ensure %s bot: %w", botDisplayname, err)
 	}
 
-	delivery := &deliveryAdapter{client: client}
+	pluginAPI := &pluginAPIAdapter{client: client}
 
-	backend := notifymentions.New(delivery, botID, serverRoot, logger)
+	delivery := plugindelivery.New(botID, serverRoot, pluginAPI)
+
+	backend := notifymentions.New(delivery, logger)
 
 	return backend, nil
 }
 
-type deliveryAdapter struct {
+type pluginAPIAdapter struct {
 	client *pluginapi.Client
 }
 
-func (da *deliveryAdapter) GetDirectChannel(userID1, userID2 string) (*model.Channel, error) {
+func (da *pluginAPIAdapter) GetDirectChannel(userID1, userID2 string) (*model.Channel, error) {
 	return da.client.Channel.GetDirect(userID1, userID2)
 }
 
-func (da *deliveryAdapter) CreatePost(post *model.Post) error {
+func (da *pluginAPIAdapter) CreatePost(post *model.Post) error {
 	return da.client.Post.CreatePost(post)
 }
 
-func (da *deliveryAdapter) GetUserByID(userID string) (*model.User, error) {
+func (da *pluginAPIAdapter) GetUserByID(userID string) (*model.User, error) {
 	return da.client.User.Get(userID)
 }
 
-func (da *deliveryAdapter) GetUserByUsername(name string) (*model.User, error) {
+func (da *pluginAPIAdapter) GetUserByUsername(name string) (*model.User, error) {
 	return da.client.User.GetByUsername(name)
 }

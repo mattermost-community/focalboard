@@ -7,94 +7,46 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/mattermost/focalboard/server/model"
+
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 )
 
-var (
-	user1 = &mm_model.User{
-		Id:       mm_model.NewId(),
-		Username: "dlauder",
-	}
-	user2 = &mm_model.User{
-		Id:       mm_model.NewId(),
-		Username: "steve.mqueen",
-	}
-	user3 = &mm_model.User{
-		Id:       mm_model.NewId(),
-		Username: "bart_",
-	}
-
-	mockUsers = map[string]*mm_model.User{
-		"dlauder":      user1,
-		"steve.mqueen": user2,
-		"bart_":        user3,
-	}
-)
-
-func Test_userFromUsername(t *testing.T) {
-	delivery := newDeliveryMock(mockUsers)
-
+func Test_extractMentions(t *testing.T) {
 	tests := []struct {
-		name    string
-		uname   string
-		want    *mm_model.User
-		wantErr bool
+		name  string
+		block *model.Block
+		want  map[string]struct{}
 	}{
-		{name: "user1", uname: user1.Username, want: user1, wantErr: false},
-		{name: "user1 with period", uname: user1.Username + ".", want: user1, wantErr: false},
-		{name: "user1 with period plus more", uname: user1.Username + ". ", want: user1, wantErr: false},
-		{name: "user2 with periods", uname: user2.Username + "...", want: user2, wantErr: false},
-		{name: "user2 with underscore", uname: user2.Username + "_", want: user2, wantErr: false},
-		{name: "user2 with hyphen plus more", uname: user2.Username + "- ", want: user2, wantErr: false},
-		{name: "user2 with hyphen plus all", uname: user2.Username + ".-_ ", want: user2, wantErr: false},
-		{name: "user3 with underscore", uname: user3.Username + "_", want: user3, wantErr: false},
+		{name: "empty", block: makeBlock(""), want: makeMap()},
+		{name: "zero mentions", block: makeBlock("This is some text."), want: makeMap()},
+		{name: "one mention", block: makeBlock("Hello @user1"), want: makeMap("user1")},
+		{name: "multiple mentions", block: makeBlock("Hello @user1, @user2 and @user3"), want: makeMap("user1", "user2", "user3")},
+		{name: "include period", block: makeBlock("Hello @user1."), want: makeMap("user1.")},
+		{name: "include underscore", block: makeBlock("Hello @user1_"), want: makeMap("user1_")},
+		{name: "don't include comma", block: makeBlock("Hello @user1,"), want: makeMap("user1")},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := userFromUsername(delivery, tt.uname)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("userFromUsername() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("userFromUsername() = %v, want %v", got, tt.want)
+			if got := extractMentions(tt.block); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("extractMentions() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-type deliveryMock struct {
-	users map[string]*mm_model.User
-}
-
-func newDeliveryMock(users map[string]*mm_model.User) deliveryMock {
-	return deliveryMock{
-		users: users,
+func makeBlock(text string) *model.Block {
+	return &model.Block{
+		ID:    mm_model.NewId(),
+		Type:  "comment",
+		Title: text,
 	}
 }
 
-func (dm deliveryMock) GetUserByUsername(name string) (*mm_model.User, error) {
-	user, ok := dm.users[name]
-	if !ok {
-		return nil, ErrNotFound{}
+func makeMap(mentions ...string) map[string]struct{} {
+	m := make(map[string]struct{})
+	for _, mention := range mentions {
+		m[mention] = struct{}{}
 	}
-	return user, nil
-}
-
-func (dm deliveryMock) GetDirectChannel(userID1, userID2 string) (*mm_model.Channel, error) {
-	return nil, nil
-}
-
-func (dm deliveryMock) CreatePost(post *mm_model.Post) error {
-	return nil
-}
-
-func (dm deliveryMock) GetUserByID(userID string) (*mm_model.User, error) {
-	return nil, nil
-}
-
-type ErrNotFound struct{}
-
-func (e ErrNotFound) Error() string {
-	return "not found"
+	return m
 }
