@@ -1,0 +1,151 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/propertyValueElement should match snapshot, date, array value 1`] = `
+<div>
+  <div
+    class="DateRange "
+  >
+    <button
+      class="Button    "
+      type="button"
+    >
+      <span>
+        <span
+          title="Empty"
+        />
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`components/propertyValueElement should match snapshot, multi-select 1`] = `
+<div>
+  <div
+    class="octo-propertyvalue"
+    data-testid="multiselect-non-editable"
+    tabindex="0"
+  >
+    <span
+      class="Label propColorBrown "
+    >
+      value 1
+    </span>
+    <span
+      class="Label propColorBrown "
+    >
+      value 2
+    </span>
+  </div>
+</div>
+`;
+
+exports[`components/propertyValueElement should match snapshot, person, array value 1`] = `
+<div>
+  <input
+    class="Editable octo-propertyvalue"
+    placeholder=""
+    spellcheck="true"
+    title=""
+    value=""
+  />
+</div>
+`;
+
+exports[`components/propertyValueElement should match snapshot, select 1`] = `
+<div>
+  <div
+    class="octo-propertyvalue"
+    tabindex="0"
+  >
+    <span
+      class="Label propColorBrown "
+    >
+      <span
+        class="Label-text"
+      >
+        value 1
+      </span>
+      <div
+        aria-label="Clear"
+        class="Button IconButton margin-left delete-value"
+        role="button"
+        title="Clear"
+      >
+        <i
+          class="CompassIcon icon-close CloseIcon"
+        />
+      </div>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`components/propertyValueElement should match snapshot, select, read-only 1`] = `
+<div>
+  <div
+    class="octo-propertyvalue"
+    tabindex="0"
+  >
+    <span
+      class="Label propColorBrown "
+    >
+      <span
+        class="Label-text"
+      >
+        value 1
+      </span>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`components/propertyValueElement should match snapshot, url, array value 1`] = `
+<div>
+  <div
+    class="URLProperty property-link url"
+  >
+    <input
+      class="Editable octo-propertyvalue"
+      placeholder=""
+      title="http://localhost"
+      value="http://localhost"
+    />
+    <a
+      class="Link__button"
+      href="http://localhost"
+      rel="noreferrer"
+      target="_blank"
+    >
+      <i
+        class="CompassIcon icon-link-variant LinkIcon"
+      />
+    </a>
+  </div>
+</div>
+`;
+
+exports[`components/propertyValueElement should match snapshot, url, array value 2`] = `
+<div>
+  <div
+    class="URLProperty property-link url"
+  >
+    <input
+      class="Editable octo-propertyvalue"
+      placeholder=""
+      title="http://localhost"
+      value="http://localhost"
+    />
+    <a
+      class="Link__button"
+      href="http://localhost"
+      rel="noreferrer"
+      target="_blank"
+    >
+      <i
+        class="CompassIcon icon-link-variant LinkIcon"
+      />
+    </a>
+  </div>
+</div>
+`;
