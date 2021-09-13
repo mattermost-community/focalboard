@@ -25,7 +25,7 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-const PostEmbedFocalboard model.PostEmbedType = "focalboard"
+const PostEmbedFocalboard mmModel.PostEmbedType = "focalboard"
 
 type FocalboardEmbed struct {
 	WorkspaceID string `json:"workspaceID"`
@@ -206,7 +206,7 @@ func defaultLoggingConfig() string {
 	}`
 }
 
-func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *model.Post) (*model.Post, string) {
+func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mmModel.Post, string) {
 	mmconfig := p.API.GetUnsanitizedConfig()
 	firstLink := getFirstLink(post.Message)
 
@@ -233,11 +233,11 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *model.Post) (*mode
 			BaseURL:     *mmconfig.ServiceSettings.SiteURL,
 		})
 
-		focalboardPostEmbed := &model.PostEmbed{
+		focalboardPostEmbed := &mmModel.PostEmbed{
 			Type: PostEmbedFocalboard,
 			Data: string(b),
 		}
-		post.Metadata.Embeds = []*model.PostEmbed{focalboardPostEmbed}
+		post.Metadata.Embeds = []*mmModel.PostEmbed{focalboardPostEmbed}
 		post.AddProp("focalboard", string(b))
 	}
 	return post, ""
