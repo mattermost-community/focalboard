@@ -1,7 +1,6 @@
 package sqlstore
 
 import (
-	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -16,7 +15,7 @@ import (
 )
 
 var (
-	errUnsupportedDatabaseError = errors.New("method is unsupported on current database. Supported databases are - MySQL and PostgreSQL")
+	errUnsupportedOperation = errors.New("unsupported operation")
 )
 
 func (s *SQLStore) UpsertWorkspaceSignupToken(workspace model.Workspace) error {
@@ -154,55 +153,5 @@ func (s *SQLStore) GetWorkspaceCount() (int64, error) {
 }
 
 func (s *SQLStore) GetUserWorkspaces(userID string) ([]model.UserWorkspace, error) {
-	var query sq.SelectBuilder
-
-	query = s.getQueryBuilder().
-		Select("Channels.ID", "Channels.DisplayName", "COUNT(focalboard_blocks.id)").
-		From("focalboard_blocks").
-		Join("ChannelMembers ON focalboard_blocks.workspace_id = ChannelMembers.ChannelId").
-		Join("Channels ON ChannelMembers.ChannelId = Channels.Id").
-		Where(sq.Eq{"ChannelMembers.UserId": userID}).
-		Where(sq.Eq{"focalboard_blocks.type": "board"}).
-		GroupBy("Channels.Id", "Channels.DisplayName")
-
-	switch s.dbType {
-	case mysqlDBType:
-		query = query.Where(sq.Like{"focalboard_blocks.fields": "%\"isTemplate\":false%"})
-	case postgresDBType:
-		query = query.Where("focalboard_blocks.fields ->> 'isTemplate' = 'false'")
-	default:
-		return nil, fmt.Errorf("GetUserWorkspaces - %w", errUnsupportedDatabaseError)
-	}
-
-	rows, err := query.Query()
-	if err != nil {
-		s.logger.Error("ERROR GetUserWorkspaces", mlog.Err(err))
-		return nil, err
-	}
-
-	defer s.CloseRows(rows)
-	return s.userWorkspacesFromRows(rows)
-}
-
-func (s *SQLStore) userWorkspacesFromRows(rows *sql.Rows) ([]model.UserWorkspace, error) {
-	userWorkspaces := []model.UserWorkspace{}
-
-	for rows.Next() {
-		var userWorkspace model.UserWorkspace
-
-		err := rows.Scan(
-			&userWorkspace.ID,
-			&userWorkspace.Title,
-			&userWorkspace.BoardCount,
-		)
-
-		if err != nil {
-			s.logger.Error("ERROR userWorkspacesFromRows", mlog.Err(err))
-			return nil, err
-		}
-
-		userWorkspaces = append(userWorkspaces, userWorkspace)
-	}
-
-	return userWorkspaces, nil
+	return nil, fmt.Errorf("GetUserWorkspaces %w", errUnsupportedOperation)
 }

@@ -165,7 +165,14 @@ func main() {
 		logger.Fatal("server.NewStore ERROR", mlog.Err(err))
 	}
 
-	server, err := server.New(config, singleUserToken, db, logger, "", nil)
+	params := server.Params{
+		Cfg:             config,
+		SingleUserToken: singleUserToken,
+		DBStore:         db,
+		Logger:          logger,
+	}
+
+	server, err := server.New(params)
 	if err != nil {
 		logger.Fatal("server.New ERROR", mlog.Err(err))
 	}
@@ -245,7 +252,14 @@ func startServer(webPath string, filesPath string, port int, singleUserToken, db
 		logger.Fatal("server.NewStore ERROR", mlog.Err(err))
 	}
 
-	pServer, err = server.New(config, singleUserToken, db, logger, "", nil)
+	params := server.Params{
+		Cfg:             config,
+		SingleUserToken: singleUserToken,
+		DBStore:         db,
+		Logger:          logger,
+	}
+
+	pServer, err = server.New(params)
 	if err != nil {
 		logger.Fatal("server.New ERROR", mlog.Err(err))
 	}
