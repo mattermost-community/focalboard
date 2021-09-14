@@ -55,6 +55,7 @@ if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
 const browserHistory = {
     ...b,
     push: (path: string, ...args: any[]) => {
+        console.log('******** pushing: ' + path)
         if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
             window.postMessage(
                 {
@@ -67,6 +68,20 @@ const browserHistory = {
             )
         } else {
             b.push(path, ...args)
+        }
+    },
+    replace: (path: string, ...args: any[]) => {
+        console.log('******** replacing: ' + path)
+        if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
+            window.postMessage(
+                {
+                    type: 'browser-history-push',
+                    message: `${(window as any).frontendBaseURL}${path}`,
+                },
+                window.location.href,
+            )
+        } else {
+            b.replace(path, ...args)
         }
     },
 }
