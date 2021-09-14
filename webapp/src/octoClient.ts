@@ -333,7 +333,6 @@ class OctoClient {
 
     async getWorkspace(): Promise<IWorkspace | undefined> {
         const path = this.workspacePath()
-        console.log('getWorkspace() path: ' + path)
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return undefined
