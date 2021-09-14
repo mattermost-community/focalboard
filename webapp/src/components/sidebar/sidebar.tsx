@@ -2,6 +2,8 @@
 // See LICENSE.txt for license information.
 import React, {useEffect, useState} from 'react'
 
+import {useIntl} from 'react-intl'
+
 import DashboardOnboardingSvg from '../../svg/dashboard-onboarding'
 
 import {getActiveThemeName, loadTheme} from '../../theme'
@@ -34,6 +36,7 @@ const Sidebar = React.memo((props: Props) => {
     const [isHidden, setHidden] = useState(false)
     const boards = useAppSelector(getSortedBoards)
     const views = useAppSelector(getSortedViews)
+    const intl = useIntl()
 
     useEffect(() => {
         loadTheme()
@@ -111,7 +114,7 @@ const Sidebar = React.memo((props: Props) => {
                         <div className='Sidebar__onboarding'>
                             <DashboardOnboardingSvg/>
                             <div>
-                                {'Use the switcher to easily change channels'}
+                                {intl.formatMessage({id: 'DashboardPage.CenterPanel.ChangeChannels', defaultMessage: 'Use the switcher to easily change channels'})}
                             </div>
                         </div>
                     </React.Fragment>
@@ -141,9 +144,12 @@ const Sidebar = React.memo((props: Props) => {
 
             <div className='octo-spacer'/>
 
-            <SidebarAddBoardMenu
-                activeBoardId={props.activeBoardId}
-            />
+            {
+                !props.isDashboard &&
+                <SidebarAddBoardMenu
+                    activeBoardId={props.activeBoardId}
+                />
+            }
 
             {!Utils.isFocalboardPlugin() &&
                 <SidebarSettingsMenu activeTheme={getActiveThemeName()}/>}
