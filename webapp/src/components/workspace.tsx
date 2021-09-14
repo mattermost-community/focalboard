@@ -74,7 +74,7 @@ const Workspace = React.memo((props: Props) => {
                 <div className='banner'>
                     <FormattedMessage
                         id='Workspace.editing-board-template'
-                        defaultMessage="You're editing a board template"
+                        defaultMessage="You're editing a board template."
                     />
                 </div>}
                 <CenterContent readonly={props.readonly}/>
