@@ -8,7 +8,6 @@ import {useHistory} from 'mm-react-router-dom'
 import {rudderAnalytics, RudderTelemetryHandler} from 'mattermost-redux/client/rudder'
 
 import {GlobalState} from 'mattermost-redux/types/store'
-import {getTheme} from 'mattermost-redux/selectors/entities/preferences'
 
 const windowAny = (window as any)
 windowAny.baseURL = '/plugins/focalboard'
@@ -116,11 +115,11 @@ export default class Plugin {
 
         this.registry = registry
 
-        let theme = getTheme(mmStore.getState())
+        let theme = mmStore.getState().entities.preferences.myPreferences.theme
         setMattermostTheme(theme)
         let lastViewedChannel = mmStore.getState().entities.channels.currentChannelId
         mmStore.subscribe(() => {
-            const currentTheme = getTheme(mmStore.getState())
+            const currentTheme = mmStore.getState().entities.preferences.myPreferences.theme
             if (currentTheme !== theme && currentTheme) {
                 setMattermostTheme(currentTheme)
                 theme = currentTheme
