@@ -42,12 +42,12 @@ export const defaultThemeName = 'default-theme'
 
 export const defaultTheme = {
     mainBg: '255, 255, 255',
-    mainFg: '55, 53, 47',
-    buttonBg: '22, 109, 224',
+    mainFg: '63, 67, 80',
+    buttonBg: '28, 88, 217',
     buttonFg: '255, 255, 255',
-    sidebarBg: '20, 93, 191',
+    sidebarBg: '30, 50, 92',
     sidebarFg: '255, 255, 255',
-    sidebarTextActiveBorder: '#579eff',
+    sidebarTextActiveBorder: '#5d89ea',
     sidebarWhiteLogo: 'true',
 
     link: '#0000ee',
@@ -172,6 +172,10 @@ export function setTheme(theme: Theme | null): Theme {
 }
 
 export function setMattermostTheme(theme: any): Theme {
+    if (!theme) {
+        return setTheme(defaultTheme)
+    }
+
     document.documentElement.style.setProperty('--center-channel-bg-rgb', color(theme.centerChannelBg).rgb().array().join(', '))
     document.documentElement.style.setProperty('--center-channel-color-rgb', color(theme.centerChannelColor).rgb().array().join(', '))
     document.documentElement.style.setProperty('--button-bg-rgb', color(theme.buttonBg).rgb().array().join(', '))

@@ -238,7 +238,7 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   />
                 </div>
                 <div
-                  aria-label="Created Time"
+                  aria-label="Created time"
                   class="MenuOption TextOption menu-option"
                   role="button"
                 >
@@ -248,14 +248,14 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   <div
                     class="menu-name"
                   >
-                    Created Time
+                    Created time
                   </div>
                   <div
                     class="noicon"
                   />
                 </div>
                 <div
-                  aria-label="Created By"
+                  aria-label="Created by"
                   class="MenuOption TextOption menu-option"
                   role="button"
                 >
@@ -265,14 +265,14 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   <div
                     class="menu-name"
                   >
-                    Created By
+                    Created by
                   </div>
                   <div
                     class="noicon"
                   />
                 </div>
                 <div
-                  aria-label="Last Updated Time"
+                  aria-label="Last updated time"
                   class="MenuOption TextOption menu-option"
                   role="button"
                 >
@@ -282,14 +282,14 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   <div
                     class="menu-name"
                   >
-                    Last Updated Time
+                    Last updated time
                   </div>
                   <div
                     class="noicon"
                   />
                 </div>
                 <div
-                  aria-label="Last Updated By"
+                  aria-label="Last updated by"
                   class="MenuOption TextOption menu-option"
                   role="button"
                 >
@@ -299,7 +299,7 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                   <div
                     class="menu-name"
                   >
-                    Last Updated By
+                    Last updated by
                   </div>
                   <div
                     class="noicon"
