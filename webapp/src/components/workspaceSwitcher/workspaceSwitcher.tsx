@@ -10,8 +10,6 @@ import ChevronDown from '../../widgets/icons/chevronDown'
 
 import {UserSettings} from '../../userSettings'
 
-import {Utils} from '../../utils'
-
 import WorkspaceOptions from './workspaceOptions'
 
 type Props = {
@@ -46,10 +44,7 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
                     onChange={(workspaceId: string) => {
                         setShowMenu(false)
                         const newPath = `/workspace/${workspaceId}`
-                        console.log('newPath:  ' + newPath)
                         UserSettings.lastWorkspaceId = workspaceId
-                        console.log('isDesktop: ' + Utils.isDesktop())
-
                         history.push(newPath)
                     }}
                 />

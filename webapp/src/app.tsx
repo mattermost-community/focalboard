@@ -47,28 +47,24 @@ if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
         if (!pathName) {
             return
         }
-        console.log('message received: ' + JSON.stringify(pathName))
 
-        // b.push(pathName.replace('/boards', ''))
+        b.push(pathName.replace((window as any).frontendBaseURL, ''))
     })
 }
 
 const browserHistory = {
     ...b,
     push: (path: string, ...args: any[]) => {
-        console.log('Pushing to history: ' + path)
         if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
-            console.log('Desktop aware: ' + path)
-
-            // window.postMessage(
-            //     {
-            //         type: 'browser-history-push',
-            //         message: {
-            //             path: `${(window as any).frontendBaseURL}${path}`,
-            //         },
-            //     },
-            //     window.location.origin,
-            // )
+            window.postMessage(
+                {
+                    type: 'browser-history-push',
+                    message: {
+                        path: `${(window as any).frontendBaseURL}${path}`,
+                    },
+                },
+                window.location.origin,
+            )
         } else {
             b.push(path, ...args)
         }
@@ -148,7 +144,6 @@ const App = React.memo((): JSX.Element => {
                                     path='/workspace/:workspaceId/:boardId?/:viewId?/:cardId?'
                                     render={({match}) => {
                                         if (loggedIn === false) {
-                                            console.log('route')
                                             let redirectUrl = '/' + Utils.buildURL(`/workspace/${match.params.workspaceId}/`)
                                             if (redirectUrl.indexOf('//') === 0) {
                                                 redirectUrl = redirectUrl.slice(1)
