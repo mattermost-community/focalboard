@@ -12,22 +12,17 @@ import mutator from '../mutator'
 import {OctoUtils} from '../octoUtils'
 import {Utils} from '../utils'
 import Editable from '../widgets/editable'
-import ValueSelector from '../widgets/valueSelector'
-
-import Label from '../widgets/label'
-
 import Switch from '../widgets/switch'
-import IconButton from '../widgets/buttons/iconButton'
-import CloseIcon from '../widgets/icons/close'
 
 import UserProperty from './properties/user/user'
-import MultiSelectProperty from './properties/multiSelect'
+import MultiSelectProperty from './properties/multiSelect/multiSelect'
 import URLProperty from './properties/link/link'
 import LastModifiedBy from './properties/lastModifiedBy/lastModifiedBy'
 import LastModifiedAt from './properties/lastModifiedAt/lastModifiedAt'
 import CreatedAt from './properties/createdAt/createdAt'
 import CreatedBy from './properties/createdBy/createdBy'
 import DateRange from './properties/dateRange/dateRange'
+import SelectProperty from './properties/select/select'
 
 type Props = {
     board: Board
@@ -48,7 +43,6 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     const propertyValue = card.fields.properties[propertyTemplate.id]
     const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate, intl)
     const finalDisplayValue = displayValue || emptyDisplayValue
-    const [open, setOpen] = useState(false)
 
     const editableFields: Array<PropertyType> = ['text', 'number', 'email', 'url', 'phone']
 
@@ -130,47 +124,12 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     }
 
     if (propertyTemplate.type === 'select') {
-        let propertyColorCssClassName = ''
-        const cardPropertyValue = propertyTemplate.options.find((o) => o.id === propertyValue)
-        if (cardPropertyValue) {
-            propertyColorCssClassName = cardPropertyValue.color
-        }
-
-        if (readOnly || !board || !open) {
-            return (
-                <div
-                    className='octo-propertyvalue'
-                    tabIndex={0}
-                    onClick={() => setOpen(true)}
-                >
-                    <Label color={displayValue ? propertyColorCssClassName : 'empty'}>
-                        <span className='Label-text'>{finalDisplayValue}</span>
-                        {displayValue && !props.readOnly &&
-                            <IconButton
-                                onClick={onDeleteValue}
-                                onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
-                                icon={<CloseIcon/>}
-                                title='Clear'
-                                className='margin-left delete-value'
-                            />}
-                    </Label>
-                </div>
-            )
-        }
         return (
-            <ValueSelector
+            <SelectProperty
+                isEditable={!readOnly && Boolean(board)}
                 emptyValue={emptyDisplayValue}
-                options={propertyTemplate.options}
-                value={propertyTemplate.options.find((p) => p.id === propertyValue)}
-                onChange={(newValue) => {
-                    mutator.changePropertyValue(card, propertyTemplate.id, newValue)
-                }}
-                onChangeColor={(option: IPropertyOption, colorId: string): void => {
-                    mutator.changePropertyOptionColor(board, propertyTemplate, option, colorId)
-                }}
-                onDeleteOption={(option: IPropertyOption): void => {
-                    mutator.deletePropertyOption(board, propertyTemplate, option)
-                }}
+                propertyValue={propertyValue as string}
+                propertyTemplate={propertyTemplate}
                 onCreate={
                     async (newValue) => {
                         const option: IPropertyOption = {
@@ -182,6 +141,15 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                         mutator.changePropertyValue(card, propertyTemplate.id, option.id)
                     }
                 }
+                onChange={(newValue) => {
+                    mutator.changePropertyValue(card, propertyTemplate.id, newValue)
+                }}
+                onChangeColor={(option: IPropertyOption, colorId: string): void => {
+                    mutator.changePropertyOptionColor(board, propertyTemplate, option, colorId)
+                }}
+                onDeleteOption={(option: IPropertyOption): void => {
+                    mutator.deletePropertyOption(board, propertyTemplate, option)
+                }}
                 onDeleteValue={onDeleteValue}
             />
         )

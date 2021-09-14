@@ -137,6 +137,7 @@ exports[`components/table/TableRow should match snapshot, display properties 1`]
     >
       <div
         class="octo-propertyvalue"
+        data-testid="select-non-editable"
         tabindex="0"
       >
         <span
@@ -147,16 +148,6 @@ exports[`components/table/TableRow should match snapshot, display properties 1`]
           >
             value 1
           </span>
-          <div
-            aria-label="Clear"
-            class="Button IconButton margin-left delete-value"
-            role="button"
-            title="Clear"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </div>
         </span>
       </div>
     </div>
@@ -166,6 +157,7 @@ exports[`components/table/TableRow should match snapshot, display properties 1`]
     >
       <div
         class="octo-propertyvalue"
+        data-testid="select-non-editable"
         tabindex="0"
       >
         <span
@@ -319,6 +311,7 @@ exports[`components/table/TableRow should match snapshot, resizing column 1`] = 
     >
       <div
         class="octo-propertyvalue"
+        data-testid="select-non-editable"
         tabindex="0"
       >
         <span
@@ -329,16 +322,6 @@ exports[`components/table/TableRow should match snapshot, resizing column 1`] = 
           >
             value 1
           </span>
-          <div
-            aria-label="Clear"
-            class="Button IconButton margin-left delete-value"
-            role="button"
-            title="Clear"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </div>
         </span>
       </div>
     </div>
@@ -348,6 +331,7 @@ exports[`components/table/TableRow should match snapshot, resizing column 1`] = 
     >
       <div
         class="octo-propertyvalue"
+        data-testid="select-non-editable"
         tabindex="0"
       >
         <span
