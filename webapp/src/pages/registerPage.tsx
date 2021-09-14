@@ -86,7 +86,7 @@ const RegisterPage = React.memo(() => {
             <Link to='/login'>
                 <FormattedMessage
                     id='register.login-button'
-                    defaultMessage={'or login if you already have an account'}
+                    defaultMessage={'or log in if you already have an account'}
                 />
             </Link>
             {errorMessage &&

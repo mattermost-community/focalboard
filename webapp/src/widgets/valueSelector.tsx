@@ -71,7 +71,7 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
             </div>
             <MenuWrapper stopPropagationOnToggle={true}>
                 <IconButton
-                    title={intl.formatMessage({id: 'ValueSelectorLabel.openMenu', defaultMessage: 'Open Menu'})}
+                    title={intl.formatMessage({id: 'ValueSelectorLabel.openMenu', defaultMessage: 'Open menu'})}
                     icon={<OptionsIcon/>}
                 />
                 <Menu position='left'>
