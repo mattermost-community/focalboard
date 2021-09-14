@@ -44,10 +44,44 @@ CREATE TABLE {{.prefix}}boards (
 	delete_at BIGINT
 );
 
+CREATE TABLE {{.prefix}}boards_history (
+    id VARCHAR(26) NOT NULL PRIMARY KEY,
+    team_id VARCHAR(26) NOT NULL,
+    channel_id VARCHAR(26),
+    creatord_id VARCHAR(26) NOT NULL,
+    title TEXT,
+    description TEXT,
+    icon VARCHAR(256),
+    type VARCHAR(1) NOT NULL,
+    show_description BOOLEAN,
+    is_template BOOLEAN,
+    scheme_id VARCHAR(26),
+    {{if .mysql}}
+    properties JSON,
+    card_properties JSON,
+    column_calculations JSON,
+    {{end}}
+	{{if .postgres}}
+    properties JSONB,
+    card_properties JSONB,
+    column_calculations JSONB,
+    {{end}}
+	{{if .sqlite}}
+    properties TEXT,
+    card_properties TEXT,
+    column_calculations TEXT,
+    {{end}}
+	create_at BIGINT,
+	update_at BIGINT,
+	delete_at BIGINT
+);
+
 {{if .plugin}}
 INSERT INTO {{.prefix}}boards (SELECT B.Id, C.TeamId, B.channel_id, B.creator_id, B.title, B.fields.description, B.fields.icon, B.fields.description, B.fields.show_description, B.fields.is_template, '{}', B.fields.card_properties, B.fields.column_calculations, B.create_at, B.update_at, B.delete_at FROM {{.prefix}}blocks AS B INNER JOIN Channel as C ON C.Id=B.channel_id WHERE B.type='board')
+INSERT INTO {{.prefix}}boards_history (SELECT B.Id, C.TeamId, B.channel_id, B.creator_id, B.title, B.fields.description, B.fields.icon, B.fields.description, B.fields.show_description, B.fields.is_template, '{}', B.fields.card_properties, B.fields.column_calculations, B.create_at, B.update_at, B.delete_at FROM {{.prefix}}blocks_history AS B INNER JOIN Channel as C ON C.Id=B.channel_id WHERE B.type='board')
 {{else}}
 INSERT INTO {{.prefix}}boards (SELECT B.Id, '0', B.channel_id, B.creator_id, B.title, B.fields.description, B.fields.icon, B.fields.description, B.fields.show_description, B.fields.is_template, '{}', B.fields.card_properties, B.fields.column_calculations, B.create_at, B.update_at, B.delete_at FROM {{.prefix}}blocks AS B WHERE B.type='board')
+INSERT INTO {{.prefix}}boards_history (SELECT B.Id, '0', B.channel_id, B.creator_id, B.title, B.fields.description, B.fields.icon, B.fields.description, B.fields.show_description, B.fields.is_template, '{}', B.fields.card_properties, B.fields.column_calculations, B.create_at, B.update_at, B.delete_at FROM {{.prefix}}blocks_history AS B WHERE B.type='board')
 {{end}}
 
 {{if .mysql}}
