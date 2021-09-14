@@ -18,7 +18,7 @@ describe('Create and delete board / card', () => {
 
     it('Can create and delete a board and card', () => {
         cy.visit('/');
-        cy.contains('+ Add Board').click({force: true});
+        cy.contains('+ Add board').click({force: true});
         cy.contains('Empty board').click({force: true});
         cy.get('.BoardComponent').should('exist');
     });
@@ -76,9 +76,9 @@ describe('Create and delete board / card', () => {
         // Create table view
         // cy.intercept('POST', '/api/v1/blocks').as('insertBlocks');
         cy.get('.ViewHeader').get('.DropdownIcon').first().parent().click();
-        cy.get('.ViewHeader').contains('Add View').click();
-        cy.get('.ViewHeader').contains('Add View').click();
-        cy.get('.ViewHeader').contains('Add View').parent().contains('Table').click();
+        cy.get('.ViewHeader').contains('Add view').click();
+        cy.get('.ViewHeader').contains('Add view').click();
+        cy.get('.ViewHeader').contains('Add view').parent().contains('Table').click();
 
         // cy.wait('@insertBlocks');
 
