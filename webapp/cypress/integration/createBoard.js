@@ -18,7 +18,7 @@ describe('Create and delete board / card', () => {
 
     it('Can create and delete a board and card', () => {
         cy.visit('/');
-        cy.contains('+ Add Board').click({force: true});
+        cy.contains('+ Add board').click({force: true});
         cy.contains('Empty board').click({force: true});
         cy.get('.BoardComponent').should('exist');
     });
