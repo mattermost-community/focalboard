@@ -9,6 +9,7 @@ import (
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
+	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
@@ -132,7 +133,22 @@ func (p *Plugin) OnActivate() error {
 
 	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db))
 
-	server, err := server.New(cfg, "", db, logger, serverID, p.wsPluginAdapter)
+	mentionsBackend, err := createMentionsNotifyBackend(client, cfg.ServerRoot, logger)
+	if err != nil {
+		return fmt.Errorf("error creating mentions notifications backend: %w", err)
+	}
+
+	params := server.Params{
+		Cfg:             cfg,
+		SingleUserToken: "",
+		DBStore:         db,
+		Logger:          logger,
+		ServerID:        serverID,
+		WSAdapter:       p.wsPluginAdapter,
+		NotifyBackends:  []notify.Backend{mentionsBackend},
+	}
+
+	server, err := server.New(params)
 	if err != nil {
 		fmt.Println("ERROR INITIALIZING THE SERVER", err)
 		return err
