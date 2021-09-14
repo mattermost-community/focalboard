@@ -133,7 +133,6 @@ class OctoClient {
     }
 
     private workspacePath() {
-        console.log('workspacePath() UserSettings.lastWorkspaceId: ' + UserSettings.lastWorkspaceId)
         return `/api/v1/workspaces/${this.workspaceId === '0' ? UserSettings.lastWorkspaceId : this.workspaceId}`
     }
 
