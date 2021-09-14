@@ -75,7 +75,15 @@ func newTestServer(singleUserToken string) *server.Server {
 	if err != nil {
 		panic(err)
 	}
-	srv, err := server.New(cfg, singleUserToken, db, logger, "", nil)
+
+	params := server.Params{
+		Cfg:             cfg,
+		SingleUserToken: singleUserToken,
+		DBStore:         db,
+		Logger:          logger,
+	}
+
+	srv, err := server.New(params)
 	if err != nil {
 		panic(err)
 	}
