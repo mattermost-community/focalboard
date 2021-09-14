@@ -10,4 +10,10 @@ interface IUser {
     updateAt: number,
 }
 
-export {IUser}
+interface UserWorkspace {
+    id: string
+    title: string
+    boardCount: number
+}
+
+export {IUser, UserWorkspace}

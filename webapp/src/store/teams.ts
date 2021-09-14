@@ -17,18 +17,18 @@ export const fetchTeam = createAsyncThunk(
 
 const teamSlice = createSlice({
     name: 'team',
-    initialState: {value: null} as {value: ITeam|null},
+    initialState: {current: null} as {current: ITeam|null},
     reducers: {
         setTeam: (state, action: PayloadAction<ITeam>) => {
-            state.value = action.payload
+            state.current = action.payload
         },
     },
     extraReducers: (builder) => {
         builder.addCase(initialLoad.fulfilled, (state, action) => {
-            state.value = action.payload.team || null
+            state.current = action.payload.team || null
         })
         builder.addCase(fetchTeam.fulfilled, (state, action) => {
-            state.value = action.payload || null
+            state.current = action.payload || null
         })
     },
 })
@@ -37,5 +37,5 @@ export const {setTeam} = teamSlice.actions
 export const {reducer} = teamSlice
 
 export function getTeam(state: RootState): ITeam|null {
-    return state.teams.value
+    return state.teams.current
 }

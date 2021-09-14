@@ -52,9 +52,10 @@ type Store interface {
 	UpsertSharing(c Container, sharing model.Sharing) error
 	GetSharing(c Container, rootID string) (*model.Sharing, error)
 
-	UpsertTeamSignupToken(team model.Team) error
-	UpsertTeamSettings(team model.Team) error
+	UpsertTeamSignupToken(workspace model.Team) error
+	UpsertTeamSettings(workspace model.Team) error
 	GetTeam(ID string) (*model.Team, error)
-	HasTeamAccess(userID string, teamID string) (bool, error)
+	HasTeamAccess(userID string, workspaceID string) (bool, error)
 	GetTeamCount() (int64, error)
+	GetUserTeams(userID string) ([]model.UserTeam, error)
 }

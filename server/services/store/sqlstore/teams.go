@@ -2,6 +2,8 @@ package sqlstore
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -10,6 +12,10 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	sq "github.com/Masterminds/squirrel"
+)
+
+var (
+	errUnsupportedOperation = errors.New("unsupported operation")
 )
 
 func (s *SQLStore) UpsertTeamSignupToken(team model.Team) error {
@@ -34,7 +40,7 @@ func (s *SQLStore) UpsertTeamSignupToken(team model.Team) error {
 			team.SignupToken, team.ModifiedBy, now)
 	} else {
 		query = query.Suffix(
-			`ON CONFLICT (id) 
+			`ON CONFLICT (id)
 			 DO UPDATE SET signup_token = EXCLUDED.signup_token, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at`,
 		)
 	}
@@ -72,7 +78,7 @@ func (s *SQLStore) UpsertTeamSettings(team model.Team) error {
 		query = query.Suffix("ON DUPLICATE KEY UPDATE settings = ?, modified_by = ?, update_at = ?", settingsJSON, team.ModifiedBy, now)
 	} else {
 		query = query.Suffix(
-			`ON CONFLICT (id) 
+			`ON CONFLICT (id)
 			 DO UPDATE SET settings = EXCLUDED.settings, modified_by = EXCLUDED.modified_by, update_at = EXCLUDED.update_at`,
 		)
 	}
@@ -144,4 +150,8 @@ func (s *SQLStore) GetTeamCount() (int64, error) {
 		return 0, err
 	}
 	return count, nil
+}
+
+func (s *SQLStore) GetUserTeams(userID string) ([]model.UserTeam, error) {
+	return nil, fmt.Errorf("GetUserTeams %w", errUnsupportedOperation)
 }

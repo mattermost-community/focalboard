@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/pkg/errors"
+
 	sq "github.com/Masterminds/squirrel"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -16,6 +18,13 @@ import (
 const (
 	sqliteDBType   = "sqlite3"
 	postgresDBType = "postgres"
+	mysqlDBType    = "mysql"
+
+	directChannelType = "D"
+)
+
+var (
+	errUnsupportedDatabaseError = errors.New("method is unsupported on current database. Supported databases are - MySQL and PostgreSQL")
 )
 
 type NotSupportedError struct {
@@ -68,28 +77,53 @@ func (s *MattermostAuthLayer) GetRegisteredUserCount() (int, error) {
 }
 
 func (s *MattermostAuthLayer) getUserByCondition(condition sq.Eq) (*model.User, error) {
+	users, err := s.getUsersByCondition(condition)
+	if err != nil {
+		return nil, err
+	}
+
+	var user *model.User
+	for _, u := range users {
+		user = u
+		break
+	}
+
+	return user, nil
+}
+
+func (s *MattermostAuthLayer) getUsersByCondition(condition sq.Eq) (map[string]*model.User, error) {
 	query := s.getQueryBuilder().
 		Select("id", "username", "email", "password", "MFASecret as mfa_secret", "AuthService as auth_service", "COALESCE(AuthData, '') as auth_data",
 			"props", "CreateAt as create_at", "UpdateAt as update_at", "DeleteAt as delete_at").
 		From("Users").
 		Where(sq.Eq{"deleteAt": 0}).
 		Where(condition)
-	row := query.QueryRow()
-	user := model.User{}
-
-	var propsBytes []byte
-	err := row.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.MfaSecret, &user.AuthService,
-		&user.AuthData, &propsBytes, &user.CreateAt, &user.UpdateAt, &user.DeleteAt)
+	row, err := query.Query()
 	if err != nil {
 		return nil, err
 	}
 
-	err = json.Unmarshal(propsBytes, &user.Props)
-	if err != nil {
-		return nil, err
+	users := map[string]*model.User{}
+
+	for row.Next() {
+		user := model.User{}
+
+		var propsBytes []byte
+		err := row.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.MfaSecret, &user.AuthService,
+			&user.AuthData, &propsBytes, &user.CreateAt, &user.UpdateAt, &user.DeleteAt)
+		if err != nil {
+			return nil, err
+		}
+
+		err = json.Unmarshal(propsBytes, &user.Props)
+		if err != nil {
+			return nil, err
+		}
+
+		users[user.ID] = &user
 	}
 
-	return &user, nil
+	return users, nil
 }
 
 func (s *MattermostAuthLayer) GetUserByID(userID string) (*model.User, error) {
