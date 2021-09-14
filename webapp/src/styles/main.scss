@@ -208,16 +208,21 @@ html {
         display: flex;
         flex-direction: row;
         align-items: flex-start;
-
         width: 100%;
 
         @media screen and (max-width: 975px) {
             padding-right: 10px;
         }
 
+        &:hover {
+            position: relative;
+            z-index: 1;
+        }
+
         > * {
             flex: 1 1 auto;
         }
+
         > .octo-block-margin {
             flex: 0 0 auto;
         }
