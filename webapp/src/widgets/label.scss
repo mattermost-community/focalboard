@@ -2,6 +2,8 @@
     display: inline-flex;
     align-items: center;
     padding: 2px 8px;
+    margin-right: 5px;
+    margin-bottom: 5px;
     border-radius: 3px;
     line-height: 20px;
     color: rgba(var(--center-channel-color-rgb), 0.8);
@@ -9,8 +11,6 @@
     text-transform: uppercase;
     font-weight: 600;
     font-size: 13px;
-    margin-right: 5px;
-    margin-bottom: 5px;
 
     input {
         line-height: 20px;

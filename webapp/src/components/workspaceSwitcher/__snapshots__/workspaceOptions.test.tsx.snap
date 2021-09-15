@@ -17,7 +17,7 @@ exports[`components/workspaceSwitcher/WorkspaceOptions 2 more workspaces availab
       <span
         id="aria-context"
       >
-         2 results available. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu.
+         3 results available. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu.
       </span>
     </span>
     <div
@@ -78,6 +78,17 @@ exports[`components/workspaceSwitcher/WorkspaceOptions 2 more workspaces availab
           <div
             class="workspaceTitle"
           >
+            Dashboard
+          </div>
+        </div>
+        <div
+          class="Option "
+          id="react-select-2-option-1"
+          tabindex="-1"
+        >
+          <div
+            class="workspaceTitle"
+          >
             Workspace 2
           </div>
           <div
@@ -90,7 +101,7 @@ exports[`components/workspaceSwitcher/WorkspaceOptions 2 more workspaces availab
         </div>
         <div
           class="Option "
-          id="react-select-2-option-1"
+          id="react-select-2-option-2"
           tabindex="-1"
         >
           <div
@@ -129,7 +140,7 @@ exports[`components/workspaceSwitcher/WorkspaceOptions no more workspaces availa
       <span
         id="aria-context"
       >
-          Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu.
+         1 result available. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu.
       </span>
     </span>
     <div
@@ -183,9 +194,15 @@ exports[`components/workspaceSwitcher/WorkspaceOptions no more workspaces availa
         class="WorkspaceOptions__menu-list css-4ljt47-MenuList"
       >
         <div
-          class="WorkspaceOptions__menu-notice WorkspaceOptions__menu-notice--no-options css-gg45go-NoOptionsMessage"
+          class="Option "
+          id="react-select-3-option-0"
+          tabindex="-1"
         >
-          No more workspaces
+          <div
+            class="workspaceTitle"
+          >
+            Dashboard
+          </div>
         </div>
       </div>
     </div>

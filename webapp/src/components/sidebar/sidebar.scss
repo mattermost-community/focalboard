@@ -32,6 +32,17 @@
         flex: 0 0 auto;
     }
 
+    &__onboarding {
+        text-align: center;
+        padding: 16px 32px;
+
+        div {
+            margin-top: 32px;
+            font-weight: 600;
+            opacity: 0.6;
+        }
+    }
+
     .IconButton {
         padding: 0;
 
