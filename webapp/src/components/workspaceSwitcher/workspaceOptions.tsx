@@ -88,6 +88,10 @@ const WorkspaceOptions = (props: Props): JSX.Element => {
 
 const Option = (props: any): JSX.Element => {
     const {innerProps, innerRef} = props
+    const intl = useIntl()
+
+    const singular = intl.formatMessage({id: 'General.BoardSingular', defaultMessage: 'Board'})
+    const plural = intl.formatMessage({id: 'General.BoardPlural', defaultMessage: 'Boards'})
 
     return (
         <div
@@ -102,7 +106,7 @@ const Option = (props: any): JSX.Element => {
             {
                 props.data.value !== DashboardOption.value &&
                 <div className='boardCount'>
-                    {props.data.boardCount} {props.data.boardCount === 1 ? 'Board' : 'Boards'}
+                    {props.data.boardCount} {props.data.boardCount === 1 ? singular : plural}
                 </div>
             }
 

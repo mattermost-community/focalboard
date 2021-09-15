@@ -52,6 +52,8 @@
   "GalleryCard.delete": "Delete",
   "GalleryCard.duplicate": "Duplicate",
   "GroupBy.ungroup": "Ungroup",
+  "General.BoardSingular": "Board",
+  "General.BoardPlural": "Boards",
   "KanbanCard.delete": "Delete",
   "KanbanCard.duplicate": "Duplicate",
   "KanbanCard.untitled": "Untitled",
