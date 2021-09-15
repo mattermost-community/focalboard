@@ -35,7 +35,9 @@ const Dialog = React.memo((props: Props) => {
                 className='wrapper'
                 onMouseDown={(e) => {
                     if (e.target === e.currentTarget) {
-                        props.onClose()
+                        setTimeout(() => {
+                            props.onClose()
+                        }, 0)
                     }
                 }}
             >
