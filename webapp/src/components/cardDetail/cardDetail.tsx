@@ -14,6 +14,7 @@ import Button from '../../widgets/buttons/button'
 import {Focusable} from '../../widgets/editable'
 import EditableArea from '../../widgets/editableArea'
 import EmojiIcon from '../../widgets/icons/emoji'
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
 
 import BlockIconSelector from '../blockIconSelector'
 
@@ -56,6 +57,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
         if (!title) {
             titleRef.current?.focus()
         }
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewCard, {card: card.id})
     }, [])
 
     useEffect(() => {
