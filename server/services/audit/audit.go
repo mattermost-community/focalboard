@@ -53,7 +53,7 @@ func NewAudit(options ...mlog.Option) (*Audit, error) {
 // using the following precedence:
 //     cfgFile > cfgEscaped
 func (a *Audit) Configure(cfgFile string, cfgEscaped string) error {
-	return a.auditLogger.Configure(cfgFile, cfgEscaped)
+	return a.auditLogger.Configure(cfgFile, cfgEscaped, nil)
 }
 
 // Shutdown shuts down the audit service after making best efforts to flush any
