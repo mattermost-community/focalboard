@@ -102,7 +102,7 @@ const Option = (props: any): JSX.Element => {
             {
                 props.data.value !== DashboardOption.value &&
                 <div className='boardCount'>
-                    {props.data.boardCount} {props.data.boardCount > 1 ? 'Boards' : 'Board'}
+                    {props.data.boardCount} {props.data.boardCount === 1 ? 'Board' : 'Boards'}
                 </div>
             }
 
