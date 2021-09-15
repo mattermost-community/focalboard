@@ -5,7 +5,7 @@ import {
     Router,
     Redirect,
     Route,
-    Switch, useHistory,
+    Switch,
 } from 'react-router-dom'
 import {IntlProvider} from 'react-intl'
 import {DndProvider} from 'react-dnd'
@@ -33,29 +33,26 @@ import {useAppSelector, useAppDispatch} from './store/hooks'
 
 import {IUser} from './user'
 
-export const b = createBrowserHistory({basename: Utils.getFrontendBaseURL()})
+export const history = createBrowserHistory({basename: Utils.getFrontendBaseURL()})
 
 if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    window.addEventListener('message', ({origin, data: {type, message = {}} = {}} = {}) => {
-        if (origin !== window.location.origin) {
+    window.addEventListener('message', (event: MessageEvent) => {
+        if (event.origin !== window.location.origin) {
             return
         }
 
-        const {pathName} = message
+        const {pathName} = event.data.message.pathName
         if (!pathName) {
             return
         }
 
-        b.push(pathName.replace((window as any).frontendBaseURL, ''))
+        history.replace(pathName.replace((window as any).frontendBaseURL, ''))
     })
 }
 
 const browserHistory = {
-    ...b,
+    ...history,
     push: (path: string, ...args: any[]) => {
-        console.log('******** pushing: ' + path)
         if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
             window.postMessage(
                 {
@@ -67,21 +64,7 @@ const browserHistory = {
                 window.location.origin,
             )
         } else {
-            b.push(path, ...args)
-        }
-    },
-    replace: (path: string, ...args: any[]) => {
-        console.log('******** replacing: ' + path)
-        if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
-            window.postMessage(
-                {
-                    type: 'browser-history-push',
-                    message: `${(window as any).frontendBaseURL}${path}`,
-                },
-                window.location.href,
-            )
-        } else {
-            b.replace(path, ...args)
+            history.push(path, ...args)
         }
     },
 }
@@ -183,7 +166,6 @@ const App = React.memo((): JSX.Element => {
                                     {loggedIn === false && <Redirect to='/login'/>}
                                     {loggedIn === true && <BoardPage/>}
                                 </Route>
-                                // add default handler to at least print an error
                             </Switch>
                         </div>
                     </div>
