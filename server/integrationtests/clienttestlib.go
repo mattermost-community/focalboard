@@ -67,7 +67,7 @@ func getTestConfig() *config.Configuration {
 
 func newTestServer(singleUserToken string) *server.Server {
 	logger, _ := mlog.NewLogger()
-	if err := logger.Configure("", getTestConfig().LoggingCfgJSON); err != nil {
+	if err := logger.Configure("", getTestConfig().LoggingCfgJSON, nil); err != nil {
 		panic(err)
 	}
 	cfg := getTestConfig()
