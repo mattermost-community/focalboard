@@ -3,7 +3,7 @@
 import {IntlProvider} from 'react-intl'
 import React from 'react'
 
-export const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
+export const wrapIntl = (children?: React.ReactNode): JSX.Element => <IntlProvider locale='en'>{children}</IntlProvider>
 
 export function mockDOM(): void {
     window.focus = jest.fn()

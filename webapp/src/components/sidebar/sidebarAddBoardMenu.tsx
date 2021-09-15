@@ -106,7 +106,7 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
                 <div className='menu-entry'>
                     <FormattedMessage
                         id='Sidebar.add-board'
-                        defaultMessage='+ Add Board'
+                        defaultMessage='+ Add board'
                     />
                 </div>
                 <Menu position='top'>

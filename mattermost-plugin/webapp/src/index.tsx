@@ -8,7 +8,6 @@ import {useHistory} from 'mm-react-router-dom'
 import {rudderAnalytics, RudderTelemetryHandler} from 'mattermost-redux/client/rudder'
 
 import {GlobalState} from 'mattermost-redux/types/store'
-import {getTheme} from 'mattermost-redux/selectors/entities/preferences'
 
 const windowAny = (window as any)
 windowAny.baseURL = '/plugins/focalboard'
@@ -66,7 +65,6 @@ type Props = {
 }
 
 const MainApp = (props: Props) => {
-    const [faviconStored, setFaviconStored] = useState(false)
     wsClient.initPlugin(manifest.id, props.webSocketClient)
 
     useEffect(() => {
@@ -84,24 +82,11 @@ const MainApp = (props: Props) => {
         }
     }, [])
 
-    useEffect(() => {
-        const oldLinks = document.querySelectorAll("link[rel*='icon']") as NodeListOf<HTMLLinkElement>
-        if (!oldLinks) {
-            return () => null
-        }
-        setFaviconStored(true)
-
-        return () => {
-            document.querySelectorAll("link[rel*='icon']").forEach((n) => n.remove())
-            oldLinks.forEach((link) => document.getElementsByTagName('head')[0].appendChild(link))
-        }
-    }, [])
-
     return (
         <ErrorBoundary>
             <ReduxProvider store={store}>
                 <div id='focalboard-app'>
-                    {faviconStored && <App/>}
+                    <App/>
                 </div>
                 <div id='focalboard-root-portal'/>
             </ReduxProvider>
@@ -130,11 +115,11 @@ export default class Plugin {
 
         this.registry = registry
 
-        let theme = getTheme(mmStore.getState())
+        let theme = mmStore.getState().entities.preferences.myPreferences.theme
         setMattermostTheme(theme)
         let lastViewedChannel = mmStore.getState().entities.channels.currentChannelId
         mmStore.subscribe(() => {
-            const currentTheme = getTheme(mmStore.getState())
+            const currentTheme = mmStore.getState().entities.preferences.myPreferences.theme
             if (currentTheme !== theme && currentTheme) {
                 setMattermostTheme(currentTheme)
                 theme = currentTheme
@@ -159,18 +144,7 @@ export default class Plugin {
             this.registry.registerCustomRoute('go-to-current-workspace', () => {
                 const history = useHistory()
                 useEffect(() => {
-                    const currentChannel = mmStore.getState().entities.channels.currentChannelId
-                    if (currentChannel) {
-                        history.replace(`/boards/workspace/${currentChannel}`)
-                        return
-                    }
-                    const currentUserId = mmStore.getState().entities.users.currentUserId
-                    const lastChannelId = localStorage.getItem('focalboardLastViewedChannel:' + currentUserId)
-                    if (lastChannelId) {
-                        history.replace(`/boards/workspace/${lastChannelId}`)
-                        return
-                    }
-                    history.goBack()
+                    history.replace(`${windowAny.frontendBaseURL}/dashboard`)
                 }, [])
                 return <></>
             })

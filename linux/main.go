@@ -60,7 +60,17 @@ func runServer(port int) (*server.Server, error) {
 		return nil, err
 	}
 
-	server, err := server.New(config, sessionToken, db, logger, "", nil)
+	params := server.Params{
+		Cfg:             config,
+		SingleUserToken: sessionToken,
+		DBStore:         db,
+		Logger:          logger,
+		ServerID:        "",
+		WSAdapter:       nil,
+		NotifyBackends:  nil,
+	}
+
+	server, err := server.New(params)
 	if err != nil {
 		fmt.Println("ERROR INITIALIZING THE SERVER", err)
 		return nil, err

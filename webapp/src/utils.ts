@@ -247,6 +247,11 @@ class Utils {
     // favicon
 
     static setFavicon(icon?: string): void {
+        if (Utils.isFocalboardPlugin()) {
+            // Do not change the icon from focalboard plugin
+            return
+        }
+
         if (!icon) {
             document.querySelector("link[rel*='icon']")?.remove()
             return

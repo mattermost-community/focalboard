@@ -55,7 +55,6 @@ export class UserSettings {
     }
 
     static set lastWorkspaceId(newValue: string | null) {
-        console.log('setting lastWorkspaceId: ' + newValue)
         UserSettings.set(UserSettingKey.LastWorkspaceId, newValue)
     }
 
