@@ -87,8 +87,6 @@ const BoardPage = (props: Props) => {
         }
 
         // Backward compatibility end
-
-        console.log('LOLOL')
         const boardId = match.params.boardId
         const viewId = match.params.viewId
 
