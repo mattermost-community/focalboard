@@ -3,11 +3,11 @@
 
 import React, {useState} from 'react'
 
-import {IPropertyOption, IPropertyTemplate} from '../../blocks/board'
+import {IPropertyOption, IPropertyTemplate} from '../../../blocks/board'
 
-import Label from '../../widgets/label'
+import Label from '../../../widgets/label'
 
-import ValueSelector from '../../widgets/valueSelector'
+import ValueSelector from '../../../widgets/valueSelector'
 
 type Props = {
     emptyValue: string;
@@ -44,7 +44,9 @@ const MultiSelectProperty = (props: Props): JSX.Element => {
                     </Label>
                 ))}
                 {values.length === 0 && (
-                    <Label color='empty'>{''}</Label>
+                    <Label
+                        color='empty'
+                    >{''}</Label>
                 )}
             </div>
         )
@@ -61,6 +63,7 @@ const MultiSelectProperty = (props: Props): JSX.Element => {
             onDeleteOption={onDeleteOption}
             onDeleteValue={(valueToRemove) => onDeleteValue(valueToRemove, values)}
             onCreate={(newValue) => onCreate(newValue, values)}
+            onBlur={() => setOpen(false)}
         />
     )
 }

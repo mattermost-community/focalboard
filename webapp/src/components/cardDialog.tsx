@@ -89,7 +89,7 @@ const CardDialog = (props: Props) => {
                 <div className='banner'>
                     <FormattedMessage
                         id='CardDialog.editing-template'
-                        defaultMessage="You're editing a template"
+                        defaultMessage="You're editing a template."
                     />
                 </div>}
 
@@ -109,7 +109,7 @@ const CardDialog = (props: Props) => {
                 <div className='banner error'>
                     <FormattedMessage
                         id='CardDialog.nocard'
-                        defaultMessage="This card doesn't exist or is inaccessible"
+                        defaultMessage="This card doesn't exist or is inaccessible."
                     />
                 </div>}
         </Dialog>
