@@ -9,6 +9,18 @@ export class UserSettings {
     static set prefillRandomIcons(newValue: boolean) {
         localStorage.setItem('randomIcons', JSON.stringify(newValue))
     }
+
+    static get lastWorkspaceId(): string | null {
+        return localStorage.getItem('lastWorkspaceId')
+    }
+
+    static set lastWorkspaceId(newValue: string | null) {
+        if (newValue === null) {
+            localStorage.removeItem('lastWorkspaceId')
+        } else {
+            localStorage.setItem('lastWorkspaceId', newValue)
+        }
+    }
 }
 
 const keys = ['language', 'theme', 'lastBoardId', 'lastViewId', 'emoji-mart.last', 'emoji-mart.frequently', 'randomIcons']

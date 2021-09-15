@@ -26,6 +26,7 @@ import {updateContents} from '../store/contents'
 import {updateComments} from '../store/comments'
 import {initialLoad, initialReadOnlyLoad} from '../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
+import {UserSettings} from '../userSettings'
 
 type Props = {
     readonly?: boolean
@@ -44,9 +45,14 @@ const BoardPage = (props: Props) => {
     const match = useRouteMatch<{boardId: string, viewId: string, workspaceId?: string}>()
     const [websocketClosed, setWebsocketClosed] = useState(false)
 
+    let workspaceId = UserSettings.lastWorkspaceId || '0'
+
     // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {
-        octoClient.workspaceId = match.params.workspaceId || '0'
+        workspaceId = match.params.workspaceId || workspaceId
+        UserSettings.lastWorkspaceId = workspaceId
+
+        octoClient.workspaceId = workspaceId
     }, [match.params.workspaceId])
 
     // Backward compatibility: This can be removed in the future, this is for
@@ -93,6 +99,8 @@ const BoardPage = (props: Props) => {
 
         localStorage.setItem('lastBoardId', boardId || '')
         localStorage.setItem('lastViewId', viewId || '')
+        UserSettings.lastWorkspaceId = workspaceId
+
         dispatch(setCurrentBoard(boardId || ''))
         dispatch(setCurrentView(viewId || ''))
     }, [match.params.boardId, match.params.viewId, history, boardViews])
