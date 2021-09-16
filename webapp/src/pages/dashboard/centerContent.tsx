@@ -87,7 +87,13 @@ const DashboardCenterContent = (): JSX.Element => {
                                     {workspace.title}
                                 </div>
                                 <div className='small'>
-                                    {`${workspace.boardCount} board${workspace.boardCount > 1 ? 's' : ''}`}
+                                    {
+                                        intl.formatMessage({
+                                            id: 'General.BoardCount',
+                                            defaultMessage: `${workspace.boardCount} Board${workspace.boardCount === 1 ? '' : 's'}`,
+                                        },
+                                        {count: workspace.boardCount})
+                                    }
                                 </div>
                             </div>
                         ))
