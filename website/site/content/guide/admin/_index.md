@@ -42,4 +42,4 @@ fi
 curl --unix-socket /var/tmp/focalboard_local.socket http://localhost/api/v1/admin/users/$1/password -X POST -H 'Content-Type: application/json' -d '{ "password": "'$2'" }'
 ```
 
-After resetting a user's password (e.g. if they forgot it), direct them to change it from the user menu, by clicking on their username at the top of the sidebar.
+After resetting a user's password (e.g. if they forgot it), direct them to change it from the user menu by clicking on their username at the top of the sidebar.
