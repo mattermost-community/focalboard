@@ -106,7 +106,7 @@ const Option = (props: any): JSX.Element => {
                     {
                         intl.formatMessage({
                             id: 'General.BoardCount',
-                            defaultMessage: `${props.data.boardCount} Board${props.data.boardCount === 1 ? '' : 's'}`,
+                            defaultMessage: '{count, plural, one {# Board} other {# Boards}}',
                         },
                         {count: props.data.boardCount})
                     }

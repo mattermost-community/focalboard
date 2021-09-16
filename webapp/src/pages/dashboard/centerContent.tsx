@@ -90,7 +90,7 @@ const DashboardCenterContent = (): JSX.Element => {
                                     {
                                         intl.formatMessage({
                                             id: 'General.BoardCount',
-                                            defaultMessage: `${workspace.boardCount} Board${workspace.boardCount === 1 ? '' : 's'}`,
+                                            defaultMessage: '{count, plural, one {# Board} other {# Boards}}',
                                         },
                                         {count: workspace.boardCount})
                                     }
