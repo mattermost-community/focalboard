@@ -71,17 +71,21 @@ func (p *Plugin) OnActivate() error {
 		filesS3Config.Trace = *mmconfig.FileSettings.AmazonS3Trace
 	}
 
-	logger, _ := mlog.NewLogger()
-	cfgJSON := defaultLoggingConfig()
-	err := logger.Configure("", cfgJSON)
-	if err != nil {
-		return err
-	}
-
 	client := pluginapi.NewClient(p.API, p.Driver)
 	sqlDB, err := client.Store.GetMasterDB()
 	if err != nil {
 		return fmt.Errorf("error initializing the DB: %w", err)
+	}
+
+	logger, _ := mlog.NewLogger()
+	pluginTargetFactory := newPluginTargetFactory(&client.Log)
+	factories := &mlog.Factories{
+		TargetFactory: pluginTargetFactory.createTarget,
+	}
+	cfgJSON := defaultLoggingConfig()
+	err = logger.Configure("", cfgJSON, factories)
+	if err != nil {
+		return err
 	}
 
 	baseURL := ""
@@ -180,6 +184,10 @@ func (p *Plugin) OnDeactivate() error {
 	return p.server.Shutdown()
 }
 
+func (p *Plugin) OnPluginClusterEvent(_ *plugin.Context, ev mmModel.PluginClusterEvent) {
+	p.wsPluginAdapter.HandleClusterEvent(ev)
+}
+
 // ServeHTTP demonstrates a plugin that handles HTTP requests by greeting the world.
 func (p *Plugin) ServeHTTP(_ *plugin.Context, w http.ResponseWriter, r *http.Request) {
 	router := p.server.GetRootRouter()
@@ -190,10 +198,8 @@ func defaultLoggingConfig() string {
 	return `
 	{
 		"def": {
-			"type": "console",
-			"options": {
-				"out": "stdout"
-			},
+			"type": "focalboard_plugin_adapter",
+			"options": {},
 			"format": "plain",
 			"format_options": {
 				"delim": " ",

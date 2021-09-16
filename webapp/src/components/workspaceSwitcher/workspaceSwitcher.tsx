@@ -3,10 +3,12 @@
 import React, {useState} from 'react'
 
 import './workspaceSwitcher.scss'
-import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
+import {useHistory} from 'react-router-dom'
 
 import {IWorkspace} from '../../blocks/workspace'
 import ChevronDown from '../../widgets/icons/chevronDown'
+
+import {UserSettings} from '../../userSettings'
 
 import WorkspaceOptions, {DashboardOption} from './workspaceOptions'
 
@@ -16,7 +18,6 @@ type Props = {
 
 const WorkspaceSwitcher = (props: Props): JSX.Element => {
     const history = useHistory()
-    const match = useRouteMatch()
 
     const [showMenu, setShowMenu] = useState<boolean>(false)
 
@@ -46,12 +47,11 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
 
                         if (workspaceId === DashboardOption.value) {
                             newPath = '/dashboard'
-                        } else if (props.activeWorkspace === undefined) {
-                            newPath = `/workspace/${workspaceId}`
                         } else {
-                            newPath = generatePath(match.path, {workspaceId})
+                            newPath = `/workspace/${workspaceId}`
                         }
 
+                        UserSettings.lastWorkspaceId = workspaceId
                         history.push(newPath)
                     }}
                 />

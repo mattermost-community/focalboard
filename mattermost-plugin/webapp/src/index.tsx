@@ -144,18 +144,7 @@ export default class Plugin {
             this.registry.registerCustomRoute('go-to-current-workspace', () => {
                 const history = useHistory()
                 useEffect(() => {
-                    const currentChannel = mmStore.getState().entities.channels.currentChannelId
-                    if (currentChannel) {
-                        history.replace(`/boards/workspace/${currentChannel}`)
-                        return
-                    }
-                    const currentUserId = mmStore.getState().entities.users.currentUserId
-                    const lastChannelId = localStorage.getItem('focalboardLastViewedChannel:' + currentUserId)
-                    if (lastChannelId) {
-                        history.replace(`/boards/workspace/${lastChannelId}`)
-                        return
-                    }
-                    history.goBack()
+                    history.replace(`${windowAny.frontendBaseURL}/dashboard`)
                 }, [])
                 return <></>
             })
