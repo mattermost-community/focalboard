@@ -178,6 +178,10 @@ func (p *Plugin) OnDeactivate() error {
 	return p.server.Shutdown()
 }
 
+func (p *Plugin) OnPluginClusterEvent(_ *plugin.Context, ev mmModel.PluginClusterEvent) {
+	p.wsPluginAdapter.HandleClusterEvent(ev)
+}
+
 // ServeHTTP demonstrates a plugin that handles HTTP requests by greeting the world.
 func (p *Plugin) ServeHTTP(_ *plugin.Context, w http.ResponseWriter, r *http.Request) {
 	router := p.server.GetRootRouter()
