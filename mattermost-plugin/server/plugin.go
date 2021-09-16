@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"path"
-	"regexp"
 	"strings"
 	"sync"
 
@@ -28,12 +28,12 @@ import (
 
 const PostEmbedBoards mmModel.PostEmbedType = "boards"
 
-type FocalboardEmbed struct {
+type BoardsEmbed struct {
 	WorkspaceID string `json:"workspaceID"`
 	ViewID      string `json:"viewID"`
 	BoardID     string `json:"boardID"`
-	BlockID     string `json:"blockID"`
-	BaseURL     string `json:"baseURL"`
+	CardID      string `json:"cardID"`
+	ReadToken   string `json:"cardID, omitempty"`
 }
 
 // Plugin implements the interface expected by the Mattermost server to communicate between the server and plugin processes.
@@ -223,38 +223,72 @@ func defaultLoggingConfig() string {
 }
 
 func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mmModel.Post, string) {
-	mmconfig := p.API.GetUnsanitizedConfig()
 	firstLink := getFirstLink(post.Message)
+	u, err := url.Parse(firstLink)
 
-	regexString := fmt.Sprintf(`^(%s)(\/boards\/workspace\/)([a-z0-9]{26})\/
-	((\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1})\/
-	((\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1})\/
-	((\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1})$`, *mmconfig.ServiceSettings.SiteURL)
-	regexString = strings.ReplaceAll(regexString, "\n", "")
-	regexString = strings.ReplaceAll(regexString, "\t", "")
-	re := regexp.MustCompile(regexString)
-	matches := re.FindStringSubmatch(firstLink)
+	if err != nil {
+		return post, ""
+	}
 
-	if len(matches) > 0 {
-		workspaceID := matches[3]
-		boardID := matches[4]
-		viewID := matches[7]
-		blockID := matches[10]
+	pathSplit := strings.Split(u.Path, "/")
+	queryParams := u.Query()
 
-		b, _ := json.Marshal(FocalboardEmbed{
+	// For card links copied on a non-shared board, the path looks like boards/workspace/workspaceID/boardID/viewID/cardID
+	// For card links copied on a shared board, the path looks like plugins/focalboard/workspace/workspaceID/shared/boardID/viewID?r=read_token&c=card_token
+	if len(pathSplit) == 0 {
+		return post, ""
+	}
+
+	workspaceID := ""
+	boardID := ""
+	viewID := ""
+	cardID := ""
+	readToken := ""
+
+	// If the first parameter in the path is boards, we've copied this directly as logged in user of that board
+	// For card links copied on a non-shared board, the path looks like boards/workspace/workspaceID/boardID/viewID/cardID
+	// For card links copied on a shared board, the path looks like plugins/focalboard/workspace/workspaceID/shared/boardID/viewID?r=read_token&c=card_token
+	fmt.Printf("\n\n\n\n\n pathSplit: %+v \n\n\n\n\n\n", pathSplit)
+	fmt.Printf("\n\n\n\n\n pathSplit: %+v \n\n\n\n\n\n", len(pathSplit))
+	fmt.Printf("\n\n\n\n\n pathSplit: %+v \n\n\n\n\n\n", pathSplit)
+
+	// This is a non-shared board card link
+	if len(pathSplit) == 6 && pathSplit[0] == "boards" {
+		fmt.Printf("\n\n\n\n\n 4565465465465464654 \n\n\n\n\n\n")
+
+		workspaceID = pathSplit[2]
+		boardID = pathSplit[3]
+		viewID = pathSplit[4]
+		cardID = pathSplit[5]
+	} else if len(pathSplit) == 7 && pathSplit[0] == "plugins" { // This is a shared board card link
+		workspaceID = pathSplit[3]
+		boardID = pathSplit[5]
+		viewID = pathSplit[6]
+		cardID = queryParams.Get("c")
+		readToken = queryParams.Get("r")
+	}
+	fmt.Printf("\n\n\n\n\n workspaceID: %+v \n\n\n\n\n\n", workspaceID)
+	fmt.Printf("\n\n\n\n\n boardID: %+v \n\n\n\n\n\n", boardID)
+	fmt.Printf("\n\n\n\n\n viewID: %+v \n\n\n\n\n\n", viewID)
+	fmt.Printf("\n\n\n\n\n cardID: %+v \n\n\n\n\n\n", cardID)
+	fmt.Printf("\n\n\n\n\n readToken: %+v \n\n\n\n\n\n", readToken)
+
+	if workspaceID != "" && boardID != "" && viewID != "" && cardID != "" {
+		fmt.Printf("\n\n\n\n\n HELLO HERE!!!! ()*())(*)( \n\n\n\n\n\n")
+		b, _ := json.Marshal(BoardsEmbed{
 			WorkspaceID: workspaceID,
 			BoardID:     boardID,
 			ViewID:      viewID,
-			BlockID:     blockID,
-			BaseURL:     *mmconfig.ServiceSettings.SiteURL,
+			CardID:      cardID,
+			ReadToken:   readToken,
 		})
 
-		focalboardPostEmbed := &mmModel.PostEmbed{
+		BoardsPostEmbed := &mmModel.PostEmbed{
 			Type: PostEmbedBoards,
 			Data: string(b),
 		}
-		post.Metadata.Embeds = []*mmModel.PostEmbed{focalboardPostEmbed}
-		post.AddProp("focalboard", string(b))
+		post.Metadata.Embeds = []*mmModel.PostEmbed{BoardsPostEmbed}
+		post.AddProp("boards", string(b))
 	}
 	return post, ""
 }

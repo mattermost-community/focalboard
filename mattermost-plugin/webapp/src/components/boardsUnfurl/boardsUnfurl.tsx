@@ -18,21 +18,21 @@ type Props = {
 export const FocalboardUnfurl = (props: Props): JSX.Element => {
     const focalboardInformation = JSON.parse(props.embed.data)
     const workspaceID = focalboardInformation.workspaceID
-    const blockID = focalboardInformation.blockID
-    const baseURL = focalboardInformation.baseURL
+    const cardID = focalboardInformation.cardID
     const boardID = focalboardInformation.boardID
     const viewID = focalboardInformation.viewID
+    const baseURL = window.location.origin
     const [card, setCard] = useState<{title?: string, type?: string, updateAt?: number, createdBy?: string, fields?: { icon: string, contentOrder: Array<string | string[]>, properties: {key?: string}}}>({})
     const [content, setContent] = useState<string>('')
     const [board, setBoard] = useState<{title?: string, fields?: { cardProperties: Array<unknown> }}>({})
 
-    if (!workspaceID || !blockID || !baseURL || !boardID || !viewID) {
+    if (!workspaceID || !cardID || !boardID || !viewID) {
         return <></>
     }
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch(`${baseURL}/plugins/focalboard/api/v1/workspaces/${workspaceID}/blocks?block_id=${blockID}`, {
+            const response = await fetch(`${baseURL}/plugins/focalboard/api/v1/workspaces/${workspaceID}/blocks?block_id=${cardID}`, {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
                 },
@@ -73,7 +73,6 @@ export const FocalboardUnfurl = (props: Props): JSX.Element => {
     }, [])
 
     useEffect(() => {
-        let isCancelled = false
         const fetchData = async () => {
             const response = await fetch(`${baseURL}/plugins/focalboard/api/v1/workspaces/${workspaceID}/blocks?block_id=${boardID}`, {
                 headers: {
@@ -123,7 +122,7 @@ export const FocalboardUnfurl = (props: Props): JSX.Element => {
     return (
         <a
             className='FocalboardUnfurl'
-            href={`${baseURL}/boards/workspace/${workspaceID}/${boardID}/${viewID}/${blockID}`}
+            href={`${baseURL}/boards/workspace/${workspaceID}/${boardID}/${viewID}/${cardID}`}
             rel='noopener noreferrer'
             target='_blank'
         >
