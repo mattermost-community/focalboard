@@ -30,13 +30,13 @@ const WelcomePage = React.memo((props: Props) => {
 
     return (
         <div className='WelcomePage'>
-            <h1> Welcome To Boards </h1>
-            <h3> Boards is a project management tool that helps define, organize, track and manage work across teams, using a familiar kanban board view</h3>
+            <h1> {'Welcome To Boards'} </h1>
+            <h3> {'Boards is a project management tool that helps define, organize, track and manage work across teams, using a familiar kanban board view'} </h3>
 
             {/*Picture */}
 
             <button onClick={goForward}>
-                Explore
+                {'Explore'}
             </button>
         </div>
     )
