@@ -51,7 +51,6 @@ const BoardPage = (props: Props) => {
     useEffect(() => {
         workspaceId = match.params.workspaceId || workspaceId
         UserSettings.lastWorkspaceId = workspaceId
-
         octoClient.workspaceId = workspaceId
     }, [match.params.workspaceId])
 
