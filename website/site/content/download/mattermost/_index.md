@@ -21,7 +21,7 @@ The Focalboard plugin requires websocket traffic to be passed by the proxy. Upda
 
 ### With NGINX
 
-After following the standard [Mattermost install steps](https://docs.mattermost.com/install/installing-ubuntu-1804-LTS.html#configuring-nginx-as-a-proxy-for-mattermost-server), edit `/etc/nginx/sites-available/mattermost` and add this section to it:
+After following the standard [Mattermost install steps](https://docs.mattermost.com/configure/configuring-apache2.html#configuring-apache2-as-a-proxy-for-mattermost-server-unofficial), edit `/etc/nginx/sites-available/mattermost` and add this section to it:
 
 ```
    location ~ /plugins/focalboard/ws/* {
