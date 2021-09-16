@@ -28,7 +28,7 @@ import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
 
-import {FocalboardUnfurl} from './components/FocalboardUnfurl'
+import {FocalboardUnfurl} from './components/boardsUnfurl/boardsUnfurl'
 import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK} from './../../../webapp/src/wsclient'
 
 import manifest from './manifest'
@@ -162,7 +162,7 @@ export default class Plugin {
                 return <></>
             })
             this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/plug/focalboard/go-to-current-workspace', MainApp, HeaderComponent)
-            this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'focalboard', FocalboardUnfurl, false)
+            this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', FocalboardUnfurl, false)
         } else {
             windowAny.frontendBaseURL = subpath + '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {

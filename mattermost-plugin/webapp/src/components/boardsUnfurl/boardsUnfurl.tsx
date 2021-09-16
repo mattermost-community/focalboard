@@ -7,11 +7,10 @@ const Avatar = (window as any).Components.Avatar
 const Timestamp = (window as any).Components.Timestamp
 const imageURLForUser = (window as any).Components.imageURLForUser
 
-import './FocalboardUnfurl.scss'
+import './boardsUnfurl.scss'
 
 type Props = {
     embed: {
-        type: string,
         data: string,
     }
 }

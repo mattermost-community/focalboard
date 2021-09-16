@@ -25,7 +25,7 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-const PostEmbedFocalboard mmModel.PostEmbedType = "focalboard"
+const PostEmbedBoards mmModel.PostEmbedType = "boards"
 
 type FocalboardEmbed struct {
 	WorkspaceID string `json:"workspaceID"`
@@ -234,7 +234,7 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 		})
 
 		focalboardPostEmbed := &mmModel.PostEmbed{
-			Type: PostEmbedFocalboard,
+			Type: PostEmbedBoards,
 			Data: string(b),
 		}
 		post.Metadata.Embeds = []*mmModel.PostEmbed{focalboardPostEmbed}
