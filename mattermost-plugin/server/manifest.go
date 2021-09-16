@@ -39,9 +39,9 @@ const manifestStr = `
     "settings": [
       {
         "key": "EnablePublicSharedBoards",
-        "display_name": "Enable Publicly Shared Boards",
+        "display_name": "Enable Publicly-Shared Boards:",
         "type": "bool",
-        "help_text": "This allows board editors to share boards that are accessible to anyone with the link.",
+        "help_text": "This allows board editors to share boards that can be accessed by anyone with the link.",
         "placeholder": "",
         "default": false
       }

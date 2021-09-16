@@ -520,7 +520,7 @@ func (ws *Server) BroadcastConfigChange(clientConfig model.ClientConfig) {
 	}
 
 	listeners := ws.listeners
-	ws.logger.Debug("listener(s)",
+	ws.logger.Debug("broadcasting config change to listener(s)",
 		mlog.Int("listener_count", len(listeners)),
 	)
 

@@ -56,10 +56,10 @@ type PluginAdapterInterface interface {
 	OnWebSocketDisconnect(webConnID, userID string)
 	WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest)
 	getUserIDsForWorkspace(workspaceID string) []string
-	getUserIDsForAllWorkspaces() []string
 	BroadcastConfigChange(clientConfig model.ClientConfig)
 	BroadcastBlockChange(workspaceID string, block model.Block)
 	BroadcastBlockDelete(workspaceID, blockID, parentID string)
+	HandleClusterEvent(ev mmModel.PluginClusterEvent)
 }
 
 type PluginAdapter struct {
@@ -295,25 +295,22 @@ func (pa *PluginAdapter) getUserIDsForWorkspace(workspaceID string) []string {
 	return userIDs
 }
 
-func (pa *PluginAdapter) getUserIDsForAllWorkspaces() []string {
-	userMap := map[string]bool{}
+func (pa *PluginAdapter) sendMessageToAllSkipCluster(payload map[string]interface{}) {
+	// Empty &mmModel.WebsocketBroadcast will send to all users
+	pa.api.PublishWebSocketEvent(websocketActionUpdateConfig, payload, &mmModel.WebsocketBroadcast{})
+}
 
-	for _, listener := range pa.listeners {
-		userMap[listener.userID] = true
-	}
+func (pa *PluginAdapter) sendMessageToAll(payload map[string]interface{}) {
+	go func() {
+		clusterMessage := &ClusterMessage{Payload: payload}
+		pa.sendMessageToCluster("websocket_message", clusterMessage)
+	}()
 
-	userIDs := []string{}
-	for userID := range userMap {
-		userIDs = append(userIDs, userID)
-	}
-	return userIDs
+	pa.sendMessageToAllSkipCluster(payload)
 }
 
 func (pa *PluginAdapter) BroadcastConfigChange(pluginConfig model.ClientConfig) {
-	userIDs := pa.getUserIDsForAllWorkspaces()
-	for _, userID := range userIDs {
-		pa.api.PublishWebSocketEvent(websocketActionUpdateConfig, utils.StructToMap(pluginConfig), &mmModel.WebsocketBroadcast{UserId: userID})
-	}
+	pa.sendMessageToAll(utils.StructToMap(pluginConfig))
 }
 
 // sendWorkspaceMessageSkipCluster sends a message to all the users
