@@ -42,13 +42,12 @@ const CalculationRow = (props: Props): JSX.Element => {
     const selectedCalculations = props.board.fields.columnCalculations || []
 
     const [hovered, setHovered] = useState(false)
-    const toggleHover = () => setHovered(!hovered)
 
     return (
         <div
             className={'CalculationRow octo-table-row'}
-            onMouseEnter={toggleHover}
-            onMouseLeave={toggleHover}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
         >
             {
                 templates.map((template) => {
@@ -71,7 +70,7 @@ const CalculationRow = (props: Props): JSX.Element => {
                                 const newBoard = createBoard(props.board)
                                 newBoard.fields.columnCalculations = calculations
                                 mutator.updateBlock(newBoard, props.board, 'update_calculation')
-                                toggleHover()
+                                setHovered(false)
                             }}
                             cards={props.cards}
                             property={template}
