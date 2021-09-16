@@ -8,6 +8,7 @@ import {Utils} from './utils'
 enum UserSettingKey {
     Language = 'language',
     Theme = 'theme',
+    LastWorkspaceId = 'lastWorkspaceId',
     LastBoardId = 'lastBoardId',
     LastViewId = 'lastViewId',
     EmojiMartSkin = 'emoji-mart.skin',
@@ -47,6 +48,14 @@ export class UserSettings {
 
     static set theme(newValue: string | null) {
         UserSettings.set(UserSettingKey.Theme, newValue)
+    }
+
+    static get lastWorkspaceId(): string | null {
+        return UserSettings.get(UserSettingKey.LastWorkspaceId)
+    }
+
+    static set lastWorkspaceId(newValue: string | null) {
+        UserSettings.set(UserSettingKey.LastWorkspaceId, newValue)
     }
 
     static get lastBoardId(): string | null {

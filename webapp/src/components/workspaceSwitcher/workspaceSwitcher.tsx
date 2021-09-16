@@ -8,10 +8,12 @@ import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 import {IWorkspace} from '../../blocks/workspace'
 import ChevronDown from '../../widgets/icons/chevronDown'
 
-import WorkspaceOptions from './workspaceOptions'
+import {UserSettings} from '../../userSettings'
+
+import WorkspaceOptions, {DashboardOption} from './workspaceOptions'
 
 type Props = {
-    activeWorkspace: IWorkspace
+    activeWorkspace?: IWorkspace
 }
 
 const WorkspaceSwitcher = (props: Props): JSX.Element => {
@@ -30,20 +32,30 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
                     }
                 }}
             >
-                <span>{props.activeWorkspace.title}</span>
+                <span>{props.activeWorkspace?.title || DashboardOption.label}</span>
                 <ChevronDown/>
             </div>
             {
                 showMenu &&
                 <WorkspaceOptions
-                    activeWorkspaceId={props.activeWorkspace.id}
+                    activeWorkspaceId={props.activeWorkspace?.id || DashboardOption.value}
                     onBlur={() => {
                         setShowMenu(false)
                     }}
                     onChange={(workspaceId: string) => {
                         setShowMenu(false)
-                        const newPath = generatePath(match.path, {workspaceId})
-                        history.replace(newPath)
+                        let newPath: string
+
+                        if (workspaceId === DashboardOption.value) {
+                            newPath = '/dashboard'
+                        } else if (props.activeWorkspace === undefined) {
+                            newPath = `/workspace/${workspaceId}`
+                        } else {
+                            newPath = generatePath(match.path, {workspaceId})
+                        }
+
+                        UserSettings.lastWorkspaceId = workspaceId
+                        history.push(newPath)
                     }}
                 />
             }

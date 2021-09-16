@@ -164,15 +164,15 @@ const ViewMenu = React.memo((props: Props) => {
 
     const duplicateViewText = intl.formatMessage({
         id: 'View.DuplicateView',
-        defaultMessage: 'Duplicate View',
+        defaultMessage: 'Duplicate view',
     })
     const deleteViewText = intl.formatMessage({
         id: 'View.DeleteView',
-        defaultMessage: 'Delete View',
+        defaultMessage: 'Delete view',
     })
     const addViewText = intl.formatMessage({
         id: 'View.AddView',
-        defaultMessage: 'Add View',
+        defaultMessage: 'Add view',
     })
     const boardText = intl.formatMessage({
         id: 'View.Board',
