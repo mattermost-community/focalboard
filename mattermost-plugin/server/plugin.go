@@ -34,7 +34,7 @@ type Plugin struct {
 	configuration *configuration
 
 	server          *server.Server
-	wsPluginAdapter *ws.PluginAdapter
+	wsPluginAdapter ws.PluginAdapterInterface
 }
 
 func (p *Plugin) OnActivate() error {
@@ -100,27 +100,33 @@ func (p *Plugin) OnActivate() error {
 		enableTelemetry = *mmconfig.LogSettings.EnableDiagnostics
 	}
 
+	enablePublicSharedBoards := false
+	if mmconfig.PluginSettings.Plugins["focalboard"]["enablepublicsharedboards"] == true {
+		enablePublicSharedBoards = true
+	}
+
 	cfg := &config.Configuration{
-		ServerRoot:              baseURL + "/plugins/focalboard",
-		Port:                    -1,
-		DBType:                  *mmconfig.SqlSettings.DriverName,
-		DBConfigString:          *mmconfig.SqlSettings.DataSource,
-		DBTablePrefix:           "focalboard_",
-		UseSSL:                  false,
-		SecureCookie:            true,
-		WebPath:                 path.Join(*mmconfig.PluginSettings.Directory, "focalboard", "pack"),
-		FilesDriver:             *mmconfig.FileSettings.DriverName,
-		FilesPath:               *mmconfig.FileSettings.Directory,
-		FilesS3Config:           filesS3Config,
-		Telemetry:               enableTelemetry,
-		TelemetryID:             serverID,
-		WebhookUpdate:           []string{},
-		SessionExpireTime:       2592000,
-		SessionRefreshTime:      18000,
-		LocalOnly:               false,
-		EnableLocalMode:         false,
-		LocalModeSocketLocation: "",
-		AuthMode:                "mattermost",
+		ServerRoot:               baseURL + "/plugins/focalboard",
+		Port:                     -1,
+		DBType:                   *mmconfig.SqlSettings.DriverName,
+		DBConfigString:           *mmconfig.SqlSettings.DataSource,
+		DBTablePrefix:            "focalboard_",
+		UseSSL:                   false,
+		SecureCookie:             true,
+		WebPath:                  path.Join(*mmconfig.PluginSettings.Directory, "focalboard", "pack"),
+		FilesDriver:              *mmconfig.FileSettings.DriverName,
+		FilesPath:                *mmconfig.FileSettings.Directory,
+		FilesS3Config:            filesS3Config,
+		Telemetry:                enableTelemetry,
+		TelemetryID:              serverID,
+		WebhookUpdate:            []string{},
+		SessionExpireTime:        2592000,
+		SessionRefreshTime:       18000,
+		LocalOnly:                false,
+		EnableLocalMode:          false,
+		LocalModeSocketLocation:  "",
+		AuthMode:                 "mattermost",
+		EnablePublicSharedBoards: enablePublicSharedBoards,
 	}
 	var db store.Store
 	db, err = sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger, sqlDB, true)

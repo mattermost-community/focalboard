@@ -6,7 +6,8 @@ import (
 
 func (a *App) GetClientConfig() *model.ClientConfig {
 	return &model.ClientConfig{
-		Telemetry:   a.config.Telemetry,
-		TelemetryID: a.config.TelemetryID,
+		Telemetry:                a.config.Telemetry,
+		TelemetryID:              a.config.TelemetryID,
+		EnablePublicSharedBoards: a.config.EnablePublicSharedBoards,
 	}
 }
