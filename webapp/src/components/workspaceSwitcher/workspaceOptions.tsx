@@ -3,7 +3,7 @@
 import React from 'react'
 
 import Select from 'react-select'
-import {useIntl} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {UserWorkspace} from '../../user'
 import {useAppSelector} from '../../store/hooks'
@@ -103,13 +103,11 @@ const Option = (props: any): JSX.Element => {
             {
                 props.data.value !== DashboardOption.value &&
                 <div className='boardCount'>
-                    {
-                        intl.formatMessage({
-                            id: 'General.BoardCount',
-                            defaultMessage: '{count, plural, one {# Board} other {# Boards}}',
-                        },
-                        {count: props.data.boardCount})
-                    }
+                    <FormattedMessage
+                        values={{count: props.data.boardCount}}
+                        id='General.BoardCount'
+                        defaultMessage='{count, plural, one {# Board} other {# Boards}}'
+                    />
                 </div>
             }
 

@@ -52,7 +52,7 @@
   "GalleryCard.delete": "Delete",
   "GalleryCard.duplicate": "Duplicate",
   "GroupBy.ungroup": "Ungroup",
-  "General.BoardCount": "{count, plural, =0 {# Boards} one {# Board} other {# Boards}}",
+  "General.BoardCount": "{count, plural, one {# Board} other {# Boards}}",
   "KanbanCard.delete": "Delete",
   "KanbanCard.duplicate": "Duplicate",
   "KanbanCard.untitled": "Untitled",
