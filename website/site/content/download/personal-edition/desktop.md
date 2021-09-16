@@ -5,7 +5,7 @@ subsection: Personal Edition
 weight: 1
 ---
 
-Personal Desktop is a fully contained, standalone app meant for a single user, that is quick to install on Mac, Windows, or Linux.
+Personal Desktop is a fully contained, standalone app meant for a single user that is quick to install on Mac, Windows, or Linux.
 
 #### macOS
 
