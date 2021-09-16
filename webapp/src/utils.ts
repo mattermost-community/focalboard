@@ -459,15 +459,15 @@ class Utils {
     }
 
     /**
-     * Boolean function to check if a server version is greater than another.
+     * Boolean function to check if a desktop version is greater than another.
      *
-     * currentVersionParam: The server version being checked
+     * currentVersionParam: The desktop version being checked
      * compareVersionParam: The version to compare the former version against
      *
      * eg.  currentVersionParam = 4.16.0, compareVersionParam = 4.17.0 returns false
      *      currentVersionParam = 4.16.1, compareVersionParam = 4.16.1 returns true
      */
-    static isServerVersionGreaterThanOrEqualTo(currentVersionParam: string, compareVersionParam: string): boolean {
+    static isVersionGreaterThanOrEqualTo(currentVersionParam: string, compareVersionParam: string): boolean {
         if (currentVersionParam === compareVersionParam) {
             return true
         }
@@ -493,7 +493,7 @@ class Utils {
     }
 
     static isDesktop(): boolean {
-        return Utils.isDesktopApp() && Utils.isServerVersionGreaterThanOrEqualTo(Utils.getDesktopVersion(), '5.0.0')
+        return Utils.isDesktopApp() && Utils.isVersionGreaterThanOrEqualTo(Utils.getDesktopVersion(), '5.0.0')
     }
 }
 
