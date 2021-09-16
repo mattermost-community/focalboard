@@ -34,9 +34,18 @@ const manifestStr = `
     "bundle_path": "webapp/dist/main.js"
   },
   "settings_schema": {
-    "header": "For additional setup steps, please [see here](https://focalboard.com/fwlink/plugin-setup.html)",
+    "header": "",
     "footer": "",
-    "settings": []
+    "settings": [
+      {
+        "key": "EnablePublicSharedBoards",
+        "display_name": "Enable Publicly-Shared Boards:",
+        "type": "bool",
+        "help_text": "This allows board editors to share boards that can be accessed by anyone with the link.",
+        "placeholder": "",
+        "default": false
+      }
+    ]
   }
 }
 `

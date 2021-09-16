@@ -39,6 +39,7 @@ type Props = {
     readonly: boolean
     addCard: (card: Card) => void
     addTemplate: (template: Card) => void
+    showShared: boolean
 }
 
 type State = {
@@ -157,6 +158,7 @@ class CenterPanel extends React.Component<Props, State> {
                         addCardTemplate={this.addCardTemplate}
                         editCardTemplate={this.editCardTemplate}
                         readonly={this.props.readonly}
+                        showShared={this.props.showShared}
                     />
                 </div>
 
