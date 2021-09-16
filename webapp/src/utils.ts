@@ -459,9 +459,9 @@ class Utils {
     }
 
     /**
-     * Boolean function to check if a desktop version is greater than another.
+     * Boolean function to check if a version is greater than another.
      *
-     * currentVersionParam: The desktop version being checked
+     * currentVersionParam: The version being checked
      * compareVersionParam: The version to compare the former version against
      *
      * eg.  currentVersionParam = 4.16.0, compareVersionParam = 4.17.0 returns false
