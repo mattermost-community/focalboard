@@ -30,6 +30,7 @@ import {fetchMe, getLoggedIn, getMe} from './store/users'
 import {getLanguage, fetchLanguage} from './store/language'
 import {setGlobalError, getGlobalError} from './store/globalError'
 import {useAppSelector, useAppDispatch} from './store/hooks'
+import {fetchClientConfig} from './store/clientConfig'
 
 import {IUser} from './user'
 
@@ -79,6 +80,7 @@ const App = React.memo((): JSX.Element => {
     useEffect(() => {
         dispatch(fetchLanguage())
         dispatch(fetchMe())
+        dispatch(fetchClientConfig())
     }, [])
 
     useEffect(() => {

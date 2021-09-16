@@ -64,6 +64,12 @@ type Server struct {
 	logger               *mlog.Logger
 }
 
+// UpdateClientConfig is sent on block updates.
+type UpdateClientConfig struct {
+	Action       string             `json:"action"`
+	ClientConfig model.ClientConfig `json:"clientconfig"`
+}
+
 type websocketSession struct {
 	client *wsClient
 	userID string
@@ -498,6 +504,30 @@ func (ws *Server) BroadcastBlockChange(workspaceID string, block model.Block) {
 			mlog.Stringer("remoteAddr", listener.RemoteAddr()),
 		)
 
+		err := listener.WriteJSON(message)
+		if err != nil {
+			ws.logger.Error("broadcast error", mlog.Err(err))
+			listener.Close()
+		}
+	}
+}
+
+// BroadcastConfigChange broadcasts update messages to clients.
+func (ws *Server) BroadcastConfigChange(clientConfig model.ClientConfig) {
+	message := UpdateClientConfig{
+		Action:       websocketActionUpdateConfig,
+		ClientConfig: clientConfig,
+	}
+
+	listeners := ws.listeners
+	ws.logger.Debug("broadcasting config change to listener(s)",
+		mlog.Int("listener_count", len(listeners)),
+	)
+
+	for listener := range listeners {
+		ws.logger.Debug("Broadcast Config change",
+			mlog.Stringer("remoteAddr", listener.RemoteAddr()),
+		)
 		err := listener.WriteJSON(message)
 		if err != nil {
 			ws.logger.Error("broadcast error", mlog.Err(err))
