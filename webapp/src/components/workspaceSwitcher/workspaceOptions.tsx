@@ -88,7 +88,6 @@ const WorkspaceOptions = (props: Props): JSX.Element => {
 
 const Option = (props: any): JSX.Element => {
     const {innerProps, innerRef} = props
-    const intl = useIntl()
 
     return (
         <div
