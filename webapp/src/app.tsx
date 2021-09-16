@@ -148,6 +148,15 @@ const App = React.memo((): JSX.Element => {
                                             const loginUrl = `/login?r=${encodeURIComponent(redirectUrl)}`
                                             return <Redirect to={loginUrl}/>
                                         } else if (loggedIn === true) {
+                                            if (!localStorage.getItem('welcomePageViewed')) {
+                                                return (
+                                                    <WelcomePage
+                                                        workspaceID={match.params.workspaceId}
+                                                        userID={me?.id}
+                                                    />
+                                                )
+                                            }
+
                                             return (
                                                 <BoardPage/>
                                             )
