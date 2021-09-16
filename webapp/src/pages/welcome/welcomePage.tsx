@@ -6,7 +6,14 @@ import './welcomePage.scss'
 
 const WelcomePage = React.memo(() => (
     <div className='WelcomePage'>
-        <h1> TEST 123 123 123 </h1>
+        <h1> Welcome To Boards </h1>
+        <h3> Boards is a project management tool that helps define, organize, track and manage work across teams, using a familiar kanban board view</h3>
+
+        {/*Picture */}
+
+        <button>
+            Explore
+        </button>
     </div>
 ))
 
