@@ -21,6 +21,7 @@ import {FlashMessages} from './components/flashMessages'
 import BoardPage from './pages/boardPage'
 import ChangePasswordPage from './pages/changePasswordPage'
 import DashboardPage from './pages/dashboard/dashboardPage'
+import WelcomePage from './pages/welcome/welcomePage'
 import ErrorPage from './pages/errorPage'
 import LoginPage from './pages/loginPage'
 import RegisterPage from './pages/registerPage'
@@ -159,6 +160,12 @@ const App = React.memo((): JSX.Element => {
                                     path='/dashboard'
                                 >
                                     <DashboardPage/>
+                                </Route>
+                                <Route
+                                    exact={true}
+                                    path='/welcome'
+                                >
+                                    <WelcomePage/>
                                 </Route>
                                 <Route path='/:boardId?/:viewId?/:cardId?'>
                                     {loggedIn === false && <Redirect to='/login'/>}
