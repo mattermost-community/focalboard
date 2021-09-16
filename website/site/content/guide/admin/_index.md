@@ -15,6 +15,7 @@ Personal server settings are stored in `config.json` and are read when the serve
 | port          | Server port                   | 8000
 | dbtype        | Type of database. `sqlite3`, `postgres`, or `mysql` | sqlite3
 | dbconfig      | Database connection string    | `postgres://user:pass@localhost/boards?sslmode=disable&connect_timeout=10`
+| useSSL        | Enable or disable SSL         | false 
 | webpath       | Path to web files             | `./webapp/pack`
 | filespath     | Path to uploaded files folder | `./files`
 | telemetry     | Enable health diagnostics telemetry | `true`
