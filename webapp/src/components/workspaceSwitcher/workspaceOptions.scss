@@ -19,6 +19,9 @@
     .workspaceTitle {
         color: rgb(var(--center-channel-color-rgb));
         font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .boardCount {

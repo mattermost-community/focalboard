@@ -2,7 +2,7 @@
 	"serverRoot": "http://localhost:8000",
 	"port": 8000,
 	"dbtype": "sqlite3",
-    "dbconfig": "./focalboard.db",
+	"dbconfig": "./focalboard.db",
 	"dbtableprefix": "",
 	"postgres_dbconfig": "dbname=focalboard sslmode=disable",
 	"test_dbconfig": "file::memory:?cache=shared",
@@ -19,6 +19,7 @@
 	"enableLocalMode": true,
 	"localModeSocketLocation": "/var/tmp/focalboard_local.socket",
 	"authMode": "native",
-    "logging_cfg_file": "",
-    "audit_cfg_file": ""
+	"logging_cfg_file": "",
+	"audit_cfg_file": "",
+	"enablepublicsharedboards": false
 }

@@ -33,7 +33,7 @@ const Dialog = React.memo((props: Props) => {
         <div className={`Dialog dialog-back ${props.className}`}>
             <div
                 className='wrapper'
-                onMouseDown={(e) => {
+                onClick={(e) => {
                     if (e.target === e.currentTarget) {
                         props.onClose()
                     }
