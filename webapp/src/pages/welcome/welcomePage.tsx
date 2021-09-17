@@ -1,6 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
+import {useIntl} from 'react-intl'
+
 import {useHistory} from 'react-router-dom'
 
 import CompassIcon from '../../widgets/icons/compassIcon'
@@ -14,6 +16,7 @@ type Props = {
 
 const WelcomePage = React.memo((props: Props) => {
     const history = useHistory()
+    const intl = useIntl()
 
     const goForward = () => {
         localStorage.setItem('welcomePageViewed', 'true')
@@ -33,8 +36,8 @@ const WelcomePage = React.memo((props: Props) => {
     return (
         <div className='WelcomePage'>
             <div>
-                <h1 className='text-heading6'> {'Welcome To Boards'} </h1>
-                <div className='text-base'> {'Boards is a project management tool that helps define, organize, track and manage work across teams, using a familiar kanban board view'} </div>
+                <h1 className='text-heading6'> {intl.formatMessage({id: 'WelcomePage.Heading', defaultMessage: 'Welcome To Boards'})} </h1>
+                <div className='text-base'> {intl.formatMessage({id: 'WelcomePage.Description', defaultMessage: 'Boards is a project management tool that helps define, organize, track and manage work across teams, using a familiar kanban board view'})} </div>
 
                 <div className='WelcomePage__image'>
                     <img
@@ -47,7 +50,7 @@ const WelcomePage = React.memo((props: Props) => {
                     onClick={goForward}
                     className='Button filled size--large'
                 >
-                    {'Explore'}
+                    {intl.formatMessage({id: 'WelcomePage.Explore.Button', defaultMessage: 'Explore'})}
                     <CompassIcon
                         icon='chevron-right'
                         className='Icon Icon--right'
