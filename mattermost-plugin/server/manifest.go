@@ -3,9 +3,10 @@
 package main
 
 import (
+	"encoding/json"
 	"strings"
 
-	"github.com/mattermost/mattermost-server/v5/model"
+	"github.com/mattermost/mattermost-server/v6/model"
 )
 
 var manifest *model.Manifest
@@ -23,8 +24,8 @@ const manifestStr = `
   "min_server_version": "5.38.0",
   "server": {
     "executables": {
-      "linux-amd64": "server/dist/plugin-linux-amd64",
       "darwin-amd64": "server/dist/plugin-darwin-amd64",
+      "linux-amd64": "server/dist/plugin-linux-amd64",
       "windows-amd64": "server/dist/plugin-windows-amd64.exe"
     },
     "executable": ""
@@ -41,5 +42,5 @@ const manifestStr = `
 `
 
 func init() {
-	manifest = model.ManifestFromJson(strings.NewReader(manifestStr))
+	_ = json.NewDecoder(strings.NewReader(manifestStr)).Decode(&manifest)
 }
