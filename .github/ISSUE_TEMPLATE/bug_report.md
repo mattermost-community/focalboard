@@ -19,9 +19,10 @@ A clear and concise description of what you expected to happen.
 **Screenshots:**
 If applicable, add screenshots to help explain your problem.
 
-**Platform:**
- - Browser and version: [e.g. Chrome 88, Safari 12]
- - OS and version: [e.g. Windows, macOS 10.15.7, iOS 13.1]
+**Edition and Platform:**
+ - Edition: Personal Desktop / Personal Server / Mattermost plugin
+ - Version: [e.g. v0.9.0]
+ - Browser and OS: [e.g. Chrome 91 on macOS, Edge 93 on Windows]
 
 **Additional context:**
 Add any other context about the problem here.
