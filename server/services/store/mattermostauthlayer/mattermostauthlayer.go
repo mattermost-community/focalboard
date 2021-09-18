@@ -3,8 +3,11 @@ package mattermostauthlayer
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"strings"
 	"time"
+
+	"github.com/pkg/errors"
 
 	sq "github.com/Masterminds/squirrel"
 
@@ -17,6 +20,13 @@ import (
 const (
 	sqliteDBType   = "sqlite3"
 	postgresDBType = "postgres"
+	mysqlDBType    = "mysql"
+
+	directChannelType = "D"
+)
+
+var (
+	errUnsupportedDatabaseError = errors.New("method is unsupported on current database. Supported databases are - MySQL and PostgreSQL")
 )
 
 type NotSupportedError struct {
@@ -69,28 +79,53 @@ func (s *MattermostAuthLayer) GetRegisteredUserCount() (int, error) {
 }
 
 func (s *MattermostAuthLayer) getUserByCondition(condition sq.Eq) (*model.User, error) {
+	users, err := s.getUsersByCondition(condition)
+	if err != nil {
+		return nil, err
+	}
+
+	var user *model.User
+	for _, u := range users {
+		user = u
+		break
+	}
+
+	return user, nil
+}
+
+func (s *MattermostAuthLayer) getUsersByCondition(condition sq.Eq) (map[string]*model.User, error) {
 	query := s.getQueryBuilder().
 		Select("id", "username", "email", "password", "MFASecret as mfa_secret", "AuthService as auth_service", "COALESCE(AuthData, '') as auth_data",
 			"props", "CreateAt as create_at", "UpdateAt as update_at", "DeleteAt as delete_at").
 		From("Users").
 		Where(sq.Eq{"deleteAt": 0}).
 		Where(condition)
-	row := query.QueryRow()
-	user := model.User{}
-
-	var propsBytes []byte
-	err := row.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.MfaSecret, &user.AuthService,
-		&user.AuthData, &propsBytes, &user.CreateAt, &user.UpdateAt, &user.DeleteAt)
+	row, err := query.Query()
 	if err != nil {
 		return nil, err
 	}
 
-	err = json.Unmarshal(propsBytes, &user.Props)
-	if err != nil {
-		return nil, err
+	users := map[string]*model.User{}
+
+	for row.Next() {
+		user := model.User{}
+
+		var propsBytes []byte
+		err := row.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.MfaSecret, &user.AuthService,
+			&user.AuthData, &propsBytes, &user.CreateAt, &user.UpdateAt, &user.DeleteAt)
+		if err != nil {
+			return nil, err
+		}
+
+		err = json.Unmarshal(propsBytes, &user.Props)
+		if err != nil {
+			return nil, err
+		}
+
+		users[user.ID] = &user
 	}
 
-	return &user, nil
+	return users, nil
 }
 
 func (s *MattermostAuthLayer) GetUserByID(userID string) (*model.User, error) {
@@ -308,4 +343,113 @@ func (s *MattermostAuthLayer) CloseRows(rows *sql.Rows) {
 	if err := rows.Close(); err != nil {
 		s.logger.Error("error closing MattermostAuthLayer row set", mlog.Err(err))
 	}
+}
+
+func (s *MattermostAuthLayer) GetUserWorkspaces(userID string) ([]model.UserWorkspace, error) {
+	var query sq.SelectBuilder
+
+	var nonTemplateFilter string
+
+	switch s.dbType {
+	case mysqlDBType:
+		nonTemplateFilter = "focalboard_blocks.fields LIKE %\"isTemplate\":false%"
+	case postgresDBType:
+		nonTemplateFilter = "focalboard_blocks.fields ->> 'isTemplate' = 'false'"
+	default:
+		return nil, fmt.Errorf("GetUserWorkspaces - %w", errUnsupportedDatabaseError)
+	}
+
+	query = s.getQueryBuilder().
+		Select("Channels.ID", "Channels.DisplayName", "COUNT(focalboard_blocks.id), Channels.Type, Channels.Name").
+		From("ChannelMembers").
+		// select channels without a corresponding workspace
+		LeftJoin(
+			"focalboard_blocks ON focalboard_blocks.workspace_id = ChannelMembers.ChannelId AND "+
+				"focalboard_blocks.type = 'board' AND "+
+				nonTemplateFilter,
+		).
+		Join("Channels ON ChannelMembers.ChannelId = Channels.Id").
+		Where(sq.Eq{"ChannelMembers.UserId": userID}).
+		GroupBy("Channels.Id", "Channels.DisplayName")
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error("ERROR GetUserWorkspaces", mlog.Err(err))
+		return nil, err
+	}
+
+	defer s.CloseRows(rows)
+	return s.userWorkspacesFromRows(rows)
+}
+
+type UserWorkspaceRawModel struct {
+	ID         string `json:"id"`
+	Title      string `json:"title"`
+	BoardCount int    `json:"boardCount"`
+	Type       string `json:"type"`
+	Name       string `json:"name"`
+}
+
+func (s *MattermostAuthLayer) userWorkspacesFromRows(rows *sql.Rows) ([]model.UserWorkspace, error) {
+	rawUserWorkspaces := []UserWorkspaceRawModel{}
+	usersToFetch := []string{}
+
+	for rows.Next() {
+		var rawUserWorkspace UserWorkspaceRawModel
+
+		err := rows.Scan(
+			&rawUserWorkspace.ID,
+			&rawUserWorkspace.Title,
+			&rawUserWorkspace.BoardCount,
+			&rawUserWorkspace.Type,
+			&rawUserWorkspace.Name,
+		)
+
+		if err != nil {
+			s.logger.Error("ERROR userWorkspacesFromRows", mlog.Err(err))
+			return nil, err
+		}
+
+		if rawUserWorkspace.Type == directChannelType {
+			userIDs := strings.Split(rawUserWorkspace.Name, "__")
+			usersToFetch = append(usersToFetch, userIDs...)
+		}
+
+		rawUserWorkspaces = append(rawUserWorkspaces, rawUserWorkspace)
+	}
+
+	var users map[string]*model.User
+
+	if len(usersToFetch) > 0 {
+		var err error
+		users, err = s.getUsersByCondition(sq.Eq{"id": usersToFetch})
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	userWorkspaces := []model.UserWorkspace{}
+
+	for i := range rawUserWorkspaces {
+		if rawUserWorkspaces[i].Type == directChannelType {
+			userIDs := strings.Split(rawUserWorkspaces[i].Name, "__")
+			names := []string{}
+
+			for _, userID := range userIDs {
+				names = append(names, users[userID].Username)
+			}
+
+			rawUserWorkspaces[i].Title = strings.Join(names, ", ")
+		}
+
+		userWorkspace := model.UserWorkspace{
+			ID:         rawUserWorkspaces[i].ID,
+			Title:      rawUserWorkspaces[i].Title,
+			BoardCount: rawUserWorkspaces[i].BoardCount,
+		}
+
+		userWorkspaces = append(userWorkspaces, userWorkspace)
+	}
+
+	return userWorkspaces, nil
 }

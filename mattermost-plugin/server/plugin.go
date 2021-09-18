@@ -9,6 +9,7 @@ import (
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
+	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
@@ -33,7 +34,7 @@ type Plugin struct {
 	configuration *configuration
 
 	server          *server.Server
-	wsPluginAdapter *ws.PluginAdapter
+	wsPluginAdapter ws.PluginAdapterInterface
 }
 
 func (p *Plugin) OnActivate() error {
@@ -70,17 +71,21 @@ func (p *Plugin) OnActivate() error {
 		filesS3Config.Trace = *mmconfig.FileSettings.AmazonS3Trace
 	}
 
-	logger, _ := mlog.NewLogger()
-	cfgJSON := defaultLoggingConfig()
-	err := logger.Configure("", cfgJSON)
-	if err != nil {
-		return err
-	}
-
 	client := pluginapi.NewClient(p.API, p.Driver)
 	sqlDB, err := client.Store.GetMasterDB()
 	if err != nil {
 		return fmt.Errorf("error initializing the DB: %w", err)
+	}
+
+	logger, _ := mlog.NewLogger()
+	pluginTargetFactory := newPluginTargetFactory(&client.Log)
+	factories := &mlog.Factories{
+		TargetFactory: pluginTargetFactory.createTarget,
+	}
+	cfgJSON := defaultLoggingConfig()
+	err = logger.Configure("", cfgJSON, factories)
+	if err != nil {
+		return err
 	}
 
 	baseURL := ""
@@ -95,30 +100,36 @@ func (p *Plugin) OnActivate() error {
 		enableTelemetry = *mmconfig.LogSettings.EnableDiagnostics
 	}
 
+	enablePublicSharedBoards := false
+	if mmconfig.PluginSettings.Plugins["focalboard"]["enablepublicsharedboards"] == true {
+		enablePublicSharedBoards = true
+	}
+
 	cfg := &config.Configuration{
-		ServerRoot:              baseURL + "/plugins/focalboard",
-		Port:                    -1,
-		DBType:                  *mmconfig.SqlSettings.DriverName,
-		DBConfigString:          *mmconfig.SqlSettings.DataSource,
-		DBTablePrefix:           "focalboard_",
-		UseSSL:                  false,
-		SecureCookie:            true,
-		WebPath:                 path.Join(*mmconfig.PluginSettings.Directory, "focalboard", "pack"),
-		FilesDriver:             *mmconfig.FileSettings.DriverName,
-		FilesPath:               *mmconfig.FileSettings.Directory,
-		FilesS3Config:           filesS3Config,
-		Telemetry:               enableTelemetry,
-		TelemetryID:             serverID,
-		WebhookUpdate:           []string{},
-		SessionExpireTime:       2592000,
-		SessionRefreshTime:      18000,
-		LocalOnly:               false,
-		EnableLocalMode:         false,
-		LocalModeSocketLocation: "",
-		AuthMode:                "mattermost",
+		ServerRoot:               baseURL + "/plugins/focalboard",
+		Port:                     -1,
+		DBType:                   *mmconfig.SqlSettings.DriverName,
+		DBConfigString:           *mmconfig.SqlSettings.DataSource,
+		DBTablePrefix:            "focalboard_",
+		UseSSL:                   false,
+		SecureCookie:             true,
+		WebPath:                  path.Join(*mmconfig.PluginSettings.Directory, "focalboard", "pack"),
+		FilesDriver:              *mmconfig.FileSettings.DriverName,
+		FilesPath:                *mmconfig.FileSettings.Directory,
+		FilesS3Config:            filesS3Config,
+		Telemetry:                enableTelemetry,
+		TelemetryID:              serverID,
+		WebhookUpdate:            []string{},
+		SessionExpireTime:        2592000,
+		SessionRefreshTime:       18000,
+		LocalOnly:                false,
+		EnableLocalMode:          false,
+		LocalModeSocketLocation:  "",
+		AuthMode:                 "mattermost",
+		EnablePublicSharedBoards: enablePublicSharedBoards,
 	}
 	var db store.Store
-	db, err = sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger, sqlDB)
+	db, err = sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger, sqlDB, true)
 	if err != nil {
 		return fmt.Errorf("error initializing the DB: %w", err)
 	}
@@ -132,7 +143,22 @@ func (p *Plugin) OnActivate() error {
 
 	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db))
 
-	server, err := server.New(cfg, "", db, logger, serverID, p.wsPluginAdapter)
+	mentionsBackend, err := createMentionsNotifyBackend(client, cfg.ServerRoot, logger)
+	if err != nil {
+		return fmt.Errorf("error creating mentions notifications backend: %w", err)
+	}
+
+	params := server.Params{
+		Cfg:             cfg,
+		SingleUserToken: "",
+		DBStore:         db,
+		Logger:          logger,
+		ServerID:        serverID,
+		WSAdapter:       p.wsPluginAdapter,
+		NotifyBackends:  []notify.Backend{mentionsBackend},
+	}
+
+	server, err := server.New(params)
 	if err != nil {
 		fmt.Println("ERROR INITIALIZING THE SERVER", err)
 		return err
@@ -158,6 +184,10 @@ func (p *Plugin) OnDeactivate() error {
 	return p.server.Shutdown()
 }
 
+func (p *Plugin) OnPluginClusterEvent(_ *plugin.Context, ev mmModel.PluginClusterEvent) {
+	p.wsPluginAdapter.HandleClusterEvent(ev)
+}
+
 // ServeHTTP demonstrates a plugin that handles HTTP requests by greeting the world.
 func (p *Plugin) ServeHTTP(_ *plugin.Context, w http.ResponseWriter, r *http.Request) {
 	router := p.server.GetRootRouter()
@@ -168,10 +198,8 @@ func defaultLoggingConfig() string {
 	return `
 	{
 		"def": {
-			"type": "console",
-			"options": {
-				"out": "stdout"
-			},
+			"type": "focalboard_plugin_adapter",
+			"options": {},
 			"format": "plain",
 			"format_options": {
 				"delim": " ",

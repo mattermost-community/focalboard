@@ -4,4 +4,5 @@
 export type ClientConfig = {
     telemetry: boolean,
     telemetryid: string,
+    enablePublicSharedBoards: boolean,
 }

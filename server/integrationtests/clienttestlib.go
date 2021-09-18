@@ -67,7 +67,7 @@ func getTestConfig() *config.Configuration {
 
 func newTestServer(singleUserToken string) *server.Server {
 	logger, _ := mlog.NewLogger()
-	if err := logger.Configure("", getTestConfig().LoggingCfgJSON); err != nil {
+	if err := logger.Configure("", getTestConfig().LoggingCfgJSON, nil); err != nil {
 		panic(err)
 	}
 	cfg := getTestConfig()
@@ -75,7 +75,15 @@ func newTestServer(singleUserToken string) *server.Server {
 	if err != nil {
 		panic(err)
 	}
-	srv, err := server.New(cfg, singleUserToken, db, logger, "", nil)
+
+	params := server.Params{
+		Cfg:             cfg,
+		SingleUserToken: singleUserToken,
+		DBStore:         db,
+		Logger:          logger,
+	}
+
+	srv, err := server.New(params)
 	if err != nil {
 		panic(err)
 	}

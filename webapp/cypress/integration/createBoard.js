@@ -18,7 +18,7 @@ describe('Create and delete board / card', () => {
 
     it('Can create and delete a board and card', () => {
         cy.visit('/');
-        cy.contains('+ Add Board').click({force: true});
+        cy.contains('+ Add board').click({force: true});
         cy.contains('Empty board').click({force: true});
         cy.get('.BoardComponent').should('exist');
     });
@@ -31,12 +31,16 @@ describe('Create and delete board / card', () => {
             should('have.value', boardTitle);
     });
 
-    it('Can hide and show the sidebar with active board', () => {
-        // Hide and show the sidebar
-        cy.get('.Sidebar .heading ~ .Button').click();
+    it('Can hide and show the sidebar with active board', async () => {
+        // Hide and show the sidebar option available on mobile devices
+        cy.viewport(767, 1024);
+        cy.get('.sidebarSwitcher').click();
         cy.get('.Sidebar .heading').should('not.exist');
         cy.get('.Sidebar .show-button').click();
         cy.get('.Sidebar .heading').should('exist');
+
+        cy.viewport(1024, 1024);
+        cy.get('.sidebarSwitcher').should('not.exist');
     });
 
     it('Can rename the board view', () => {
@@ -72,9 +76,9 @@ describe('Create and delete board / card', () => {
         // Create table view
         // cy.intercept('POST', '/api/v1/blocks').as('insertBlocks');
         cy.get('.ViewHeader').get('.DropdownIcon').first().parent().click();
-        cy.get('.ViewHeader').contains('Add View').click();
-        cy.get('.ViewHeader').contains('Add View').click();
-        cy.get('.ViewHeader').contains('Add View').parent().contains('Table').click();
+        cy.get('.ViewHeader').contains('Add view').click();
+        cy.get('.ViewHeader').contains('Add view').click();
+        cy.get('.ViewHeader').contains('Add view').parent().contains('Table').click();
 
         // cy.wait('@insertBlocks');
 

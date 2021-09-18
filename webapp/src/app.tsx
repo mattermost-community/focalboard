@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useEffect} from 'react'
 import {
-    BrowserRouter as Router,
+    Router,
     Redirect,
     Route,
     Switch,
@@ -12,13 +12,15 @@ import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
 import {TouchBackend} from 'react-dnd-touch-backend'
 
+import {createBrowserHistory} from 'history'
+
 import TelemetryClient from './telemetry/telemetryClient'
 
 import {getMessages} from './i18n'
 import {FlashMessages} from './components/flashMessages'
 import BoardPage from './pages/boardPage'
 import ChangePasswordPage from './pages/changePasswordPage'
-import DashboardPage from './pages/dashboardPage'
+import DashboardPage from './pages/dashboard/dashboardPage'
 import ErrorPage from './pages/errorPage'
 import LoginPage from './pages/loginPage'
 import RegisterPage from './pages/registerPage'
@@ -28,8 +30,45 @@ import {fetchMe, getLoggedIn, getMe} from './store/users'
 import {getLanguage, fetchLanguage} from './store/language'
 import {setGlobalError, getGlobalError} from './store/globalError'
 import {useAppSelector, useAppDispatch} from './store/hooks'
+import {fetchClientConfig} from './store/clientConfig'
 
 import {IUser} from './user'
+
+export const history = createBrowserHistory({basename: Utils.getFrontendBaseURL()})
+
+if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
+    window.addEventListener('message', (event: MessageEvent) => {
+        if (event.origin !== window.location.origin) {
+            return
+        }
+
+        const pathName = event.data.message.pathName
+        if (!pathName) {
+            return
+        }
+
+        history.replace(pathName.replace((window as any).frontendBaseURL, ''))
+    })
+}
+
+const browserHistory = {
+    ...history,
+    push: (path: string, ...args: any[]) => {
+        if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
+            window.postMessage(
+                {
+                    type: 'browser-history-push',
+                    message: {
+                        path: `${(window as any).frontendBaseURL}${path}`,
+                    },
+                },
+                window.location.origin,
+            )
+        } else {
+            history.push(path, ...args)
+        }
+    },
+}
 
 const App = React.memo((): JSX.Element => {
     const language = useAppSelector<string>(getLanguage)
@@ -41,6 +80,7 @@ const App = React.memo((): JSX.Element => {
     useEffect(() => {
         dispatch(fetchLanguage())
         dispatch(fetchMe())
+        dispatch(fetchClientConfig())
     }, [])
 
     useEffect(() => {
@@ -69,7 +109,9 @@ const App = React.memo((): JSX.Element => {
         >
             <DndProvider backend={Utils.isMobile() ? TouchBackend : HTML5Backend}>
                 <FlashMessages milliseconds={2000}/>
-                <Router basename={Utils.getFrontendBaseURL()}>
+                <Router
+                    history={browserHistory}
+                >
                     <div id='frame'>
                         <div id='main'>
                             <Switch>

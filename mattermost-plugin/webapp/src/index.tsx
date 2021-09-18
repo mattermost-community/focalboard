@@ -8,7 +8,6 @@ import {useHistory} from 'mm-react-router-dom'
 import {rudderAnalytics, RudderTelemetryHandler} from 'mattermost-redux/client/rudder'
 
 import {GlobalState} from 'mattermost-redux/types/store'
-import {getTheme} from 'mattermost-redux/selectors/entities/preferences'
 
 const windowAny = (window as any)
 windowAny.baseURL = '/plugins/focalboard'
@@ -20,7 +19,6 @@ import store from '../../../webapp/src/store'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
 import {setMattermostTheme} from '../../../webapp/src/theme'
-import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK} from './../../../webapp/src/wsclient'
 
 import TelemetryClient from '../../../webapp/src/telemetry/telemetryClient'
 
@@ -29,6 +27,8 @@ import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
 
+import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK, ACTION_UPDATE_CLIENT_CONFIG} from './../../../webapp/src/wsclient'
+
 import manifest from './manifest'
 import ErrorBoundary from './error_boundary'
 
@@ -36,6 +36,13 @@ import ErrorBoundary from './error_boundary'
 import {PluginRegistry} from './types/mattermost-webapp'
 
 import './plugin.scss'
+
+function getSubpath(siteURL: string): string {
+    const url = new URL(siteURL)
+
+    // remove trailing slashes
+    return url.pathname.replace(/\/+$/, '')
+}
 
 const TELEMETRY_RUDDER_KEY = 'placeholder_rudder_key'
 const TELEMETRY_RUDDER_DATAPLANE_URL = 'placeholder_rudder_dataplane_url'
@@ -58,7 +65,6 @@ type Props = {
 }
 
 const MainApp = (props: Props) => {
-    const [faviconStored, setFaviconStored] = useState(false)
     wsClient.initPlugin(manifest.id, props.webSocketClient)
 
     useEffect(() => {
@@ -76,24 +82,11 @@ const MainApp = (props: Props) => {
         }
     }, [])
 
-    useEffect(() => {
-        const oldLinks = document.querySelectorAll("link[rel*='icon']") as NodeListOf<HTMLLinkElement>
-        if (!oldLinks) {
-            return () => null
-        }
-        setFaviconStored(true)
-
-        return () => {
-            document.querySelectorAll("link[rel*='icon']").forEach((n) => n.remove())
-            oldLinks.forEach((link) => document.getElementsByTagName('head')[0].appendChild(link))
-        }
-    }, [])
-
     return (
         <ErrorBoundary>
             <ReduxProvider store={store}>
                 <div id='focalboard-app'>
-                    {faviconStored && <App/>}
+                    <App/>
                 </div>
                 <div id='focalboard-root-portal'/>
             </ReduxProvider>
@@ -115,13 +108,18 @@ export default class Plugin {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
     async initialize(registry: PluginRegistry, mmStore: Store<GlobalState, Action<Record<string, unknown>>>): Promise<void> {
+        const siteURL = mmStore.getState().entities.general.config.SiteURL
+        const subpath = siteURL ? getSubpath(siteURL) : ''
+        windowAny.frontendBaseURL = subpath + windowAny.frontendBaseURL
+        windowAny.baseURL = subpath + windowAny.baseURL
+
         this.registry = registry
 
-        let theme = getTheme(mmStore.getState())
+        let theme = mmStore.getState().entities.preferences.myPreferences.theme
         setMattermostTheme(theme)
         let lastViewedChannel = mmStore.getState().entities.channels.currentChannelId
         mmStore.subscribe(() => {
-            const currentTheme = getTheme(mmStore.getState())
+            const currentTheme = mmStore.getState().entities.preferences.myPreferences.theme
             if (currentTheme !== theme && currentTheme) {
                 setMattermostTheme(currentTheme)
                 theme = currentTheme
@@ -136,34 +134,23 @@ export default class Plugin {
         })
 
         if (this.registry.registerProduct) {
-            windowAny.frontendBaseURL = '/boards'
+            windowAny.frontendBaseURL = subpath + '/boards'
             const goToFocalboardWorkspace = () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
-                window.open(`${window.location.origin}/boards/workspace/${currentChannel}`)
+                window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`)
             }
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Boards')
 
             this.registry.registerCustomRoute('go-to-current-workspace', () => {
                 const history = useHistory()
                 useEffect(() => {
-                    const currentChannel = mmStore.getState().entities.channels.currentChannelId
-                    if (currentChannel) {
-                        history.replace(`/boards/workspace/${currentChannel}`)
-                        return
-                    }
-                    const currentUserId = mmStore.getState().entities.users.currentUserId
-                    const lastChannelId = localStorage.getItem('focalboardLastViewedChannel:' + currentUserId)
-                    if (lastChannelId) {
-                        history.replace(`/boards/workspace/${lastChannelId}`)
-                        return
-                    }
-                    history.goBack()
+                    history.replace(`${windowAny.frontendBaseURL}/dashboard`)
                 }, [])
                 return <></>
             })
             this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/plug/focalboard/go-to-current-workspace', MainApp, HeaderComponent)
         } else {
-            windowAny.frontendBaseURL = '/plug/focalboard'
+            windowAny.frontendBaseURL = subpath + '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
                 window.open(`${window.location.origin}/plug/focalboard/workspace/${currentChannel}`)
@@ -199,6 +186,7 @@ export default class Plugin {
 
         // register websocket handlers
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BLOCK}`, (e: any) => wsClient.updateBlockHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
     }
 
     uninitialize(): void {

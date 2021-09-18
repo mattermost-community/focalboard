@@ -13,6 +13,8 @@ import './dialog.scss'
 type Props = {
     children: React.ReactNode
     toolsMenu: React.ReactNode
+    hideCloseButton?: boolean
+    className?: string
     onClose: () => void,
 }
 
@@ -28,10 +30,10 @@ const Dialog = React.memo((props: Props) => {
     useHotkeys('esc', () => props.onClose())
 
     return (
-        <div className='Dialog dialog-back'>
+        <div className={`Dialog dialog-back ${props.className}`}>
             <div
                 className='wrapper'
-                onMouseDown={(e) => {
+                onClick={(e) => {
                     if (e.target === e.currentTarget) {
                         props.onClose()
                     }
@@ -39,12 +41,15 @@ const Dialog = React.memo((props: Props) => {
             >
                 <div className='dialog' >
                     <div className='toolbar'>
-                        <IconButton
-                            onClick={props.onClose}
-                            icon={<CloseIcon/>}
-                            title={closeDialogText}
-                            className='IconButton--large'
-                        />
+                        {
+                            !props.hideCloseButton &&
+                            <IconButton
+                                onClick={props.onClose}
+                                icon={<CloseIcon/>}
+                                title={closeDialogText}
+                                className='IconButton--large'
+                            />
+                        }
                         <div className='octo-spacer'/>
                         {toolsMenu && <MenuWrapper>
                             <IconButton
