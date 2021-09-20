@@ -1,16 +1,22 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
 import {useRouteMatch} from 'react-router-dom'
+import React, {useEffect} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {getCurrentBoard} from '../store/boards'
 import {getCurrentViewCardsSortedFilteredAndGrouped} from '../store/cards'
 import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentView} from '../store/views'
-import {useAppSelector} from '../store/hooks'
+import {useAppSelector, useAppDispatch} from '../store/hooks'
+
+import {getClientConfig, setClientConfig} from '../store/clientConfig'
+
+import wsClient, {WSClient} from '../wsclient'
+import {ClientConfig} from '../config/clientConfig'
 
 import CenterPanel from './centerPanel'
 import EmptyCenterPanel from './emptyCenterPanel'
+
 import Sidebar from './sidebar/sidebar'
 import './workspace.scss'
 
@@ -25,6 +31,18 @@ function CenterContent(props: Props) {
     const activeView = useAppSelector(getView(match.params.viewId))
     const views = useAppSelector(getCurrentBoardViews)
     const groupByProperty = useAppSelector(getCurrentViewGroupBy)
+    const clientConfig = useAppSelector(getClientConfig)
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        const onConfigChangeHandler = (_: WSClient, config: ClientConfig) => {
+            dispatch(setClientConfig(config))
+        }
+        wsClient.addOnConfigChange(onConfigChangeHandler)
+        return () => {
+            wsClient.removeOnConfigChange(onConfigChangeHandler)
+        }
+    }, [])
 
     if (board && activeView) {
         let property = groupByProperty
@@ -39,6 +57,7 @@ function CenterContent(props: Props) {
                 activeView={activeView}
                 groupByProperty={property}
                 views={views}
+                showShared={clientConfig?.enablePublicSharedBoards || false}
             />
         )
     }

@@ -1,7 +1,6 @@
 package ws
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 	"sync"
@@ -9,6 +8,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/utils"
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
 )
@@ -16,12 +16,6 @@ import (
 const websocketMessagePrefix = "custom_focalboard_"
 
 var errMissingWorkspaceInCommand = fmt.Errorf("command doesn't contain workspaceId")
-
-func structToMap(v interface{}) (m map[string]interface{}) {
-	b, _ := json.Marshal(v)
-	_ = json.Unmarshal(b, &m)
-	return
-}
 
 type PluginAdapterClient struct {
 	webConnID  string
@@ -40,7 +34,6 @@ func (pac *PluginAdapterClient) isSubscribedToWorkspace(workspaceID string) bool
 	return false
 }
 
-//nolint:unused
 func (pac *PluginAdapterClient) isSubscribedToBlock(blockID string) bool {
 	for _, id := range pac.blocks {
 		if id == blockID {
@@ -49,6 +42,24 @@ func (pac *PluginAdapterClient) isSubscribedToBlock(blockID string) bool {
 	}
 
 	return false
+}
+
+type PluginAdapterInterface interface {
+	addListener(pac *PluginAdapterClient)
+	removeListener(pac *PluginAdapterClient)
+	removeListenerFromWorkspace(pac *PluginAdapterClient, workspaceID string)
+	removeListenerFromBlock(pac *PluginAdapterClient, blockID string)
+	subscribeListenerToWorkspace(pac *PluginAdapterClient, workspaceID string)
+	unsubscribeListenerFromWorkspace(pac *PluginAdapterClient, workspaceID string)
+	unsubscribeListenerFromBlocks(pac *PluginAdapterClient, blockIDs []string)
+	OnWebSocketConnect(webConnID, userID string)
+	OnWebSocketDisconnect(webConnID, userID string)
+	WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest)
+	getUserIDsForWorkspace(workspaceID string) []string
+	BroadcastConfigChange(clientConfig model.ClientConfig)
+	BroadcastBlockChange(workspaceID string, block model.Block)
+	BroadcastBlockDelete(workspaceID, blockID, parentID string)
+	HandleClusterEvent(ev mmModel.PluginClusterEvent)
 }
 
 type PluginAdapter struct {
@@ -154,7 +165,6 @@ func (pa *PluginAdapter) unsubscribeListenerFromWorkspace(pac *PluginAdapterClie
 	pa.removeListenerFromWorkspace(pac, workspaceID)
 }
 
-//nolint:unused
 func (pa *PluginAdapter) unsubscribeListenerFromBlocks(pac *PluginAdapterClient, blockIDs []string) {
 	pa.mu.Lock()
 	defer pa.mu.Unlock()
@@ -285,6 +295,24 @@ func (pa *PluginAdapter) getUserIDsForWorkspace(workspaceID string) []string {
 	return userIDs
 }
 
+func (pa *PluginAdapter) sendMessageToAllSkipCluster(payload map[string]interface{}) {
+	// Empty &mmModel.WebsocketBroadcast will send to all users
+	pa.api.PublishWebSocketEvent(websocketActionUpdateConfig, payload, &mmModel.WebsocketBroadcast{})
+}
+
+func (pa *PluginAdapter) sendMessageToAll(payload map[string]interface{}) {
+	go func() {
+		clusterMessage := &ClusterMessage{Payload: payload}
+		pa.sendMessageToCluster("websocket_message", clusterMessage)
+	}()
+
+	pa.sendMessageToAllSkipCluster(payload)
+}
+
+func (pa *PluginAdapter) BroadcastConfigChange(pluginConfig model.ClientConfig) {
+	pa.sendMessageToAll(utils.StructToMap(pluginConfig))
+}
+
 // sendWorkspaceMessageSkipCluster sends a message to all the users
 // with a websocket client connected to.
 func (pa *PluginAdapter) sendWorkspaceMessageSkipCluster(workspaceID string, payload map[string]interface{}) {
@@ -320,7 +348,7 @@ func (pa *PluginAdapter) BroadcastBlockChange(workspaceID string, block model.Bl
 		Block:  block,
 	}
 
-	pa.sendWorkspaceMessage(workspaceID, structToMap(message))
+	pa.sendWorkspaceMessage(workspaceID, utils.StructToMap(message))
 }
 
 func (pa *PluginAdapter) BroadcastBlockDelete(workspaceID, blockID, parentID string) {

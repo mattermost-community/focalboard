@@ -37,12 +37,13 @@ type Props = {
     addCardTemplate: () => void
     editCardTemplate: (cardTemplateId: string) => void
     readonly: boolean
+    showShared: boolean
 }
 
 const ViewHeader = React.memo((props: Props) => {
     const [showFilter, setShowFilter] = useState(false)
 
-    const {board, activeView, views, groupByProperty, cards} = props
+    const {board, activeView, views, groupByProperty, cards, showShared} = props
 
     const withGroupBy = activeView.fields.viewType === 'board' || activeView.fields.viewType === 'table'
 
@@ -142,6 +143,7 @@ const ViewHeader = React.memo((props: Props) => {
                     board={board}
                     activeView={activeView}
                     cards={cards}
+                    showShared={showShared}
                 />
 
                 {/* New card button */}

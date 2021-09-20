@@ -64,6 +64,7 @@ type Server struct {
 	localRouter     *mux.Router
 	localModeServer *http.Server
 	api             *api.API
+	app             *app.App
 }
 
 func New(cfg *config.Configuration, singleUserToken string, db store.Store,
@@ -178,6 +179,7 @@ func New(cfg *config.Configuration, singleUserToken string, db store.Store,
 		logger:         logger,
 		localRouter:    localRouter,
 		api:            focalboardAPI,
+		app:            app,
 	}
 
 	server.initHandlers()
@@ -319,6 +321,23 @@ func (s *Server) Config() *config.Configuration {
 
 func (s *Server) Logger() *mlog.Logger {
 	return s.logger
+}
+
+func (s *Server) App() *app.App {
+	return s.app
+}
+
+func (s *Server) UpdateClientConfig(pluginConfig map[string]interface{}) {
+	for index, value := range pluginConfig {
+		if index == "EnablePublicSharedBoards" {
+			b, ok := value.(bool)
+			if !ok {
+				s.logger.Warn("Invalid value for config value", mlog.String(index, value.(string)))
+			}
+			s.config.EnablePublicSharedBoards = b
+		}
+	}
+	s.app.SetConfig(s.config)
 }
 
 // Local server
