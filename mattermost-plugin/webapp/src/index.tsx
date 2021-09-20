@@ -141,14 +141,14 @@ export default class Plugin {
             }
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Boards')
 
-            this.registry.registerCustomRoute('go-to-current-workspace', () => {
+            this.registry.registerCustomRoute('go-to-dashboard', () => {
                 const history = useHistory()
                 useEffect(() => {
                     history.replace(`${windowAny.frontendBaseURL}/dashboard`)
                 }, [])
                 return <></>
             })
-            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/plug/focalboard/go-to-current-workspace', MainApp, HeaderComponent)
+            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/plug/focalboard/go-to-dashboard', MainApp, HeaderComponent)
         } else {
             windowAny.frontendBaseURL = subpath + '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {

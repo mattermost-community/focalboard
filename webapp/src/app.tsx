@@ -42,7 +42,7 @@ if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
             return
         }
 
-        const pathName = event.data.message.pathName
+        const pathName = event.data.message?.pathName
         if (!pathName) {
             return
         }
@@ -116,6 +116,10 @@ const App = React.memo((): JSX.Element => {
                         <div id='main'>
                             <Switch>
                                 {globalErrorRedirect}
+                                <Route
+                                    path={'/plug/focalboard/go-to-dashboard'}
+                                    render={() => (<Redirect to={'/dashboard'}/>)}
+                                />
                                 <Route path='/error'>
                                     <ErrorPage/>
                                 </Route>
