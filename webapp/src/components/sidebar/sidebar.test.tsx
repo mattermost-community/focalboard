@@ -11,9 +11,9 @@ import {render} from '@testing-library/react'
 
 import {IntlProvider} from 'react-intl'
 
-import {UserWorkspace} from '../../user'
+import userEvent from '@testing-library/user-event'
 
-import {FetchMock} from '../../test/fetchMock'
+import {UserWorkspace} from '../../user'
 
 import {mockMatchMedia} from '../../testUtils'
 
@@ -24,10 +24,6 @@ const wrapProviders = (children: any) => {
         <IntlProvider locale='en'>{children}</IntlProvider>
     )
 }
-
-beforeEach(() => {
-    FetchMock.fn.mockReset()
-})
 
 beforeAll(() => {
     mockMatchMedia({matches: true})
@@ -80,5 +76,53 @@ describe('components/sidebarSidebar', () => {
         )
         const {container} = render(component)
         expect(container).toMatchSnapshot()
+    })
+
+    test('global templates', () => {
+        const store = mockStore({
+            workspace: {
+                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3),
+            },
+            boards: {
+                boards: [],
+                templates: [
+                    {id: '1', title: 'Template 1', fields: {icon: '🚴🏻‍♂️'}},
+                    {id: '2', title: 'Template 2', fields: {icon: '🚴🏻‍♂️'}},
+                    {id: '3', title: 'Template 3', fields: {icon: '🚴🏻‍♂️'}},
+                    {id: '4', title: 'Template 4', fields: {icon: '🚴🏻‍♂️'}},
+                ],
+            },
+            views: {
+                views: [],
+            },
+            users: {
+                me: {},
+            },
+            globalTemplates: {
+                value: [],
+            },
+        })
+
+        const history = createMemoryHistory()
+
+        const component = wrapProviders(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <Sidebar/>
+                </Router>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        const addBoardButton = container.querySelector('.SidebarAddBoardMenu > .MenuWrapper')
+        expect(addBoardButton).toBeDefined()
+        userEvent.click(addBoardButton as Element)
+        const templates = container.querySelectorAll('.SidebarAddBoardMenu > .MenuWrapper div:not(.hideOnWidescreen).menu-options .menu-name')
+        expect(templates).toBeDefined()
+
+        console.log(templates[0].innerHTML)
+        console.log(templates[1].innerHTML)
+
+        // 4 mocked templates, one "Select a template", one "Empty Board" and one "+ New Template"
+        expect(templates.length).toBe(7)
     })
 })
