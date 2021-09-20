@@ -352,7 +352,7 @@ func (s *MattermostAuthLayer) GetUserWorkspaces(userID string) ([]model.UserWork
 
 	switch s.dbType {
 	case mysqlDBType:
-		nonTemplateFilter = "focalboard_blocks.fields LIKE %\"isTemplate\":false%"
+		nonTemplateFilter = "focalboard_blocks.fields LIKE '%\"isTemplate\":false%'"
 	case postgresDBType:
 		nonTemplateFilter = "focalboard_blocks.fields ->> 'isTemplate' = 'false'"
 	default:

@@ -24,6 +24,7 @@ type Props = {
     board: Board
     activeView: BoardView
     cards: Card[]
+    showShared: boolean
 }
 
 // import {mutator} from '../../mutator'
@@ -103,6 +104,8 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
     const user = useAppSelector<IUser|null>(getMe)
     const intl = useIntl()
 
+    const showShareBoard = user && user.id !== 'single-user' && props.showShared
+
     return (
         <ModalWrapper>
             <MenuWrapper>
@@ -118,7 +121,7 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
                         name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
                         onClick={() => Archiver.exportBoardArchive(board)}
                     />
-                    {user && user.id !== 'single-user' &&
+                    {showShareBoard &&
                         <Menu.Text
                             id='shareBoard'
                             name={intl.formatMessage({id: 'ViewHeader.share-board', defaultMessage: 'Share board'})}

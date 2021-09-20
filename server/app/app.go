@@ -36,6 +36,10 @@ type App struct {
 	logger        *mlog.Logger
 }
 
+func (a *App) SetConfig(config *config.Configuration) {
+	a.config = config
+}
+
 func New(config *config.Configuration, wsAdapter ws.Adapter, services Services) *App {
 	return &App{
 		config:        config,
