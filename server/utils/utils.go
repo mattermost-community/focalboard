@@ -2,6 +2,7 @@ package utils
 
 import (
 	"crypto/rand"
+	"encoding/json"
 	"fmt"
 	"log"
 	"time"
@@ -22,4 +23,10 @@ func CreateGUID() string {
 // GetMillis is a convenience method to get milliseconds since epoch.
 func GetMillis() int64 {
 	return time.Now().UnixNano() / int64(time.Millisecond)
+}
+
+func StructToMap(v interface{}) (m map[string]interface{}) {
+	b, _ := json.Marshal(v)
+	_ = json.Unmarshal(b, &m)
+	return
 }

@@ -1,13 +1,13 @@
 .Sidebar {
     flex: 0 0 240px;
-
+    max-width: 240px;
     display: flex;
     flex-direction: column;
 
     min-height: 100%;
     color: rgb(var(--sidebar-text-rgb));
     background-color: rgb(var(--sidebar-bg-rgb));
-    padding: 12px 0;
+    padding: 24px 0 12px;
 
     &.hidden {
         position: absolute;
@@ -56,9 +56,7 @@
     .WorkspaceTitle {
         display: flex;
         flex-direction: row;
-
         padding: 0 16px;
-        margin-bottom: 12px;
         font-weight: 600;
     }
 
