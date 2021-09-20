@@ -20,6 +20,7 @@ import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
+import {setMattermostTheme} from '../../../webapp/src/theme'
 
 import TelemetryClient from '../../../webapp/src/telemetry/telemetryClient'
 
