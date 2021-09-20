@@ -86,20 +86,20 @@ server-lint: ## Run linters on server code.
 	cd server; golangci-lint run ./...
 	cd mattermost-plugin; golangci-lint run ./...
 
+watch: ## Run both server and webapp watching for changes
+	modd
+
+watch-single-user: ## Run both server and webapp in single user mode watching for changes
+	env FOCALBOARDSERVER_ARGS=--single-user modd
+
+watch-server-test: ## Run server tests watching for changes
+	modd -f modd-servertest.conf
+
 server-test: ## Run server tests
 	cd server; go test -race -v -count=1 ./...
 
-watch-server: ## Run server watching for changes with modd (https://github.com/cortesi/modd).
-	cd server; modd
-
-watch-server-single-user: ## Run server watching for changes with modd (https://github.com/cortesi/modd) using single user config.
-	cd server; env FOCALBOARDSERVER_ARGS=--single-user modd
-
 webapp: ## Build webapp.
 	cd webapp; npm run pack
-
-watch-webapp: ## Run webapp watching for changes.
-	cd webapp; npm run watchdev
 
 mac-app: server-mac webapp ## Build Mac application.
 	rm -rf mac/temp
