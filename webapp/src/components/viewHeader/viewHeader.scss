@@ -9,6 +9,11 @@
     color: rgba(var(--center-channel-color-rgb), 0.64);
     align-items: center;
 
+    @media (max-width: 768px) {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
     > div {
         margin-right: 12px;
         white-space: nowrap;
