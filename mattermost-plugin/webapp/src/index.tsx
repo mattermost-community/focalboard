@@ -139,7 +139,7 @@ export default class Plugin {
                 window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`)
             }
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Boards')
-            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards', MainApp, HeaderComponent)
+            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/welcome', MainApp, HeaderComponent)
         } else {
             windowAny.frontendBaseURL = subpath + '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
