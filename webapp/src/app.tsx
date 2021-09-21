@@ -132,31 +132,38 @@ const App = React.memo((): JSX.Element => {
                                 <Route path='/shared/:boardId?/:viewId?'>
                                     <BoardPage readonly={true}/>
                                 </Route>
-                                <Route path='/board/:boardId?/:viewId?/:cardId?'>
-                                    {loggedIn === false && <Redirect to='/login'/>}
-                                    {loggedIn === true && <BoardPage/>}
-                                </Route>
+                                <Route
+                                    path='/board/:boardId?/:viewId?/:cardId?'
+                                    render={({match}) => {
+                                        if (!loggedIn) {
+                                            return <Redirect to='/login'/>
+                                        }
+
+                                        if (loggedIn && !localStorage.getItem('welcomePageViewed')) {
+                                            const originalPath = `/board/${match.params.boardId || ''}/${match.params.viewId || ''}/${match.params.cardId || ''}`
+                                            return <Redirect to={`/welcome?r=${originalPath}`}/>
+                                        }
+
+                                        return <BoardPage/>
+                                    }}
+                                />
                                 <Route path='/workspace/:workspaceId/shared/:boardId?/:viewId?'>
                                     <BoardPage readonly={true}/>
                                 </Route>
                                 <Route
                                     path='/workspace/:workspaceId/:boardId?/:viewId?/:cardId?'
                                     render={({match}) => {
+                                        const originalPath = `/workspace/${match.params.workspaceId}/${match.params.boardId || ''}/${match.params.viewId || ''}/${match.params.cardId || ''}`
+                                        let redirectUrl = '/' + Utils.buildURL(originalPath)
+                                        if (redirectUrl.indexOf('//') === 0) {
+                                            redirectUrl = redirectUrl.slice(1)
+                                        }
                                         if (loggedIn === false) {
-                                            let redirectUrl = '/' + Utils.buildURL(`/workspace/${match.params.workspaceId}/`)
-                                            if (redirectUrl.indexOf('//') === 0) {
-                                                redirectUrl = redirectUrl.slice(1)
-                                            }
                                             const loginUrl = `/login?r=${encodeURIComponent(redirectUrl)}`
                                             return <Redirect to={loginUrl}/>
                                         } else if (loggedIn === true) {
                                             if (!localStorage.getItem('welcomePageViewed')) {
-                                                return (
-                                                    <WelcomePage
-                                                        workspaceID={match.params.workspaceId}
-                                                        userID={me?.id}
-                                                    />
-                                                )
+                                                return <Redirect to={`/welcome?r=${originalPath}`}/>
                                             }
 
                                             return (
@@ -178,10 +185,21 @@ const App = React.memo((): JSX.Element => {
                                 >
                                     <WelcomePage/>
                                 </Route>
-                                <Route path='/:boardId?/:viewId?/:cardId?'>
-                                    {loggedIn === false && <Redirect to='/login'/>}
-                                    {loggedIn === true && <BoardPage/>}
-                                </Route>
+                                <Route
+                                    path='/:boardId?/:viewId?/:cardId?'
+                                    render={({match}) => {
+                                        if (!loggedIn) {
+                                            return <Redirect to='/login'/>
+                                        }
+
+                                        if (loggedIn && !localStorage.getItem('welcomePageViewed')) {
+                                            const originalPath = `/${match.params.boardId || ''}/${match.params.viewId || ''}/${match.params.cardId || ''}`
+                                            return <Redirect to={`/welcome?r=${originalPath}`}/>
+                                        }
+
+                                        return <BoardPage/>
+                                    }}
+                                />
                             </Switch>
                         </div>
                     </div>
