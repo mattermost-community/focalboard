@@ -59,3 +59,11 @@ func (da *pluginAPIAdapter) GetUserByID(userID string) (*model.User, error) {
 func (da *pluginAPIAdapter) GetUserByUsername(name string) (*model.User, error) {
 	return da.client.User.GetByUsername(name)
 }
+
+func (da *pluginAPIAdapter) GetTeamMember(teamID string, userID string) (*model.TeamMember, error) {
+	return da.client.Team.GetMember(teamID, userID)
+}
+
+func (da *pluginAPIAdapter) GetChannelByID(channelID string) (*model.Channel, error) {
+	return da.client.Channel.Get(channelID)
+}
