@@ -69,6 +69,7 @@ const MainApp = (props: Props) => {
 
     useEffect(() => {
         document.body.classList.add('focalboard-body')
+        document.body.classList.add('app__body')
         const root = document.getElementById('root')
         if (root) {
             root.classList.add('focalboard-plugin-root')
@@ -76,6 +77,7 @@ const MainApp = (props: Props) => {
 
         return () => {
             document.body.classList.remove('focalboard-body')
+            document.body.classList.remove('app__body')
             if (root) {
                 root.classList.remove('focalboard-plugin-root')
             }
