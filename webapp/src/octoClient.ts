@@ -132,8 +132,18 @@ class OctoClient {
         }
     }
 
-    private workspacePath() {
-        return `/api/v1/workspaces/${this.workspaceId === '0' ? UserSettings.lastWorkspaceId : this.workspaceId}`
+    /**
+     * Generates workspace's path.
+     * Uses workspace ID from `workspaceId` param is provided,
+     * Else uses Client's workspaceID if available, else the user's last visited workspace ID.
+     */
+    private workspacePath(workspaceId?: string) {
+        let workspaceIdToUse = workspaceId
+        if (!workspaceId) {
+            workspaceIdToUse = this.workspaceId === '0' ? UserSettings.lastWorkspaceId || this.workspaceId : this.workspaceId
+        }
+
+        return `/api/v1/workspaces/${workspaceIdToUse}`
     }
 
     async getMe(): Promise<IUser | undefined> {
@@ -425,6 +435,11 @@ class OctoClient {
         }
 
         return (await this.getJson(response, [])) as UserWorkspace[]
+    }
+
+    async getGlobalTemplates(): Promise<Block[]> {
+        const path = this.workspacePath('0') + '/blocks?type=board'
+        return this.getBlocksWithPath(path)
     }
 }
 
