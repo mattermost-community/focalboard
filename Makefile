@@ -101,6 +101,9 @@ webapp: ## Build webapp.
 watch-webapp: ## Run webapp watching for changes.
 	cd webapp; npm run watchdev
 
+watch-plugin: ## Run and upload the plugin to a development server
+	modd -f modd-watchplugin.conf
+
 mac-app: server-mac webapp ## Build Mac application.
 	rm -rf mac/temp
 	rm -rf mac/dist
