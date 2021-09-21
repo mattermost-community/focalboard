@@ -13,30 +13,36 @@ const (
 	usernameSpecialChars = ".-_ "
 )
 
-func userFromUsername(api PluginAPI, username string) (*mm_model.User, error) {
-	user, err := api.GetUserByUsername(username)
-	if err == nil {
-		return user, nil
+func teamMemberFromUsername(api PluginAPI, username string, teamID string) (*mm_model.TeamMember, error) {
+	// check for usernames that might have trailing punctuation
+	var user *mm_model.User
+	var err error
+	ok := true
+	trimmed := username
+	for ok {
+		user, err = api.GetUserByUsername(trimmed)
+		if err != nil && !isErrNotFound(err) {
+			return nil, err
+		}
+
+		if err == nil {
+			break
+		}
+
+		trimmed, ok = trimUsernameSpecialChar(trimmed)
 	}
 
-	// only continue if the error is `ErrNotFound`
-	if !isErrNotFound(err) {
+	if user == nil {
 		return nil, err
 	}
 
-	// check for usernames in substrings without trailing punctuation
-	trimmed, ok := trimUsernameSpecialChar(username)
-	for ; ok; trimmed, ok = trimUsernameSpecialChar(trimmed) {
-		userFromTrimmed, err2 := api.GetUserByUsername(trimmed)
-		if err2 != nil && !isErrNotFound(err2) {
-			return nil, err2
-		}
-
-		if err2 == nil {
-			return userFromTrimmed, nil
-		}
+	// make sure user is member of team.
+	member, err := api.GetTeamMember(teamID, user.Id)
+	if err != nil {
+		return nil, err
 	}
-	return nil, err
+
+	return member, nil
 }
 
 // trimUsernameSpecialChar tries to remove the last character from word if it

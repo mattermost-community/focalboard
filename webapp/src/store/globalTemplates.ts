@@ -12,7 +12,7 @@ export const fetchGlobalTemplates = createAsyncThunk(
     'globalTemplates/fetch',
     async () => {
         const rootClient = new OctoClient(client.serverUrl, '0')
-        const rawBlocks = await rootClient.getBlocksWithType('board')
+        const rawBlocks = await rootClient.getGlobalTemplates()
         const allBoards = rawBlocks as Board[]
         return allBoards.filter((block) => block.fields.isTemplate).sort((a, b) => a.title.localeCompare(b.title)) as Board[]
     },
