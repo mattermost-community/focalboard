@@ -5,6 +5,8 @@ import {FormattedMessage} from 'react-intl'
 
 import {useLocation, useHistory} from 'react-router-dom'
 
+import BoardWelcomePNG from '../../../static/boards-welcome.png'
+
 import CompassIcon from '../../widgets/icons/compassIcon'
 
 import './welcomePage.scss'
@@ -17,11 +19,11 @@ const WelcomePage = React.memo(() => {
         localStorage.setItem('welcomePageViewed', 'true')
 
         if (queryString.get('r')) {
-            history.push(queryString.get('r')!)
+            history.replace(queryString.get('r')!)
             return
         }
 
-        history.push('/dashboard')
+        history.replace('/dashboard')
     }
 
     if (localStorage.getItem('welcomePageViewed')) {
@@ -47,7 +49,7 @@ const WelcomePage = React.memo(() => {
 
                 <div className='WelcomePage__image'>
                     <img
-                        src='../../../../boards-welcome.png'
+                        src={BoardWelcomePNG}
                         alt='Boards Welcome Image'
                     />
                 </div>

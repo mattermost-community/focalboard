@@ -135,16 +135,18 @@ const App = React.memo((): JSX.Element => {
                                 <Route
                                     path='/board/:boardId?/:viewId?/:cardId?'
                                     render={({match}) => {
-                                        if (!loggedIn) {
+                                        if (loggedIn === false) {
                                             return <Redirect to='/login'/>
                                         }
 
-                                        if (loggedIn && !localStorage.getItem('welcomePageViewed')) {
+                                        if (loggedIn === true && !localStorage.getItem('welcomePageViewed')) {
                                             const originalPath = `/board/${match.params.boardId || ''}/${match.params.viewId || ''}/${match.params.cardId || ''}`
                                             return <Redirect to={`/welcome?r=${originalPath}`}/>
                                         }
 
-                                        return <BoardPage/>
+                                        if (loggedIn === true) {
+                                            return <BoardPage/>
+                                        }
                                     }}
                                 />
                                 <Route path='/workspace/:workspaceId/shared/:boardId?/:viewId?'>
@@ -188,16 +190,18 @@ const App = React.memo((): JSX.Element => {
                                 <Route
                                     path='/:boardId?/:viewId?/:cardId?'
                                     render={({match}) => {
-                                        if (!loggedIn) {
+                                        if (loggedIn === false) {
                                             return <Redirect to='/login'/>
                                         }
 
-                                        if (loggedIn && !localStorage.getItem('welcomePageViewed')) {
+                                        if (loggedIn === true && !localStorage.getItem('welcomePageViewed')) {
                                             const originalPath = `/${match.params.boardId || ''}/${match.params.viewId || ''}/${match.params.cardId || ''}`
                                             return <Redirect to={`/welcome?r=${originalPath}`}/>
                                         }
 
-                                        return <BoardPage/>
+                                        if (loggedIn === true) {
+                                            return <BoardPage/>
+                                        }
                                     }}
                                 />
                             </Switch>
