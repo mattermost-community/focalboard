@@ -147,6 +147,8 @@ const App = React.memo((): JSX.Element => {
                                         if (loggedIn === true) {
                                             return <BoardPage/>
                                         }
+
+                                        return null
                                     }}
                                 />
                                 <Route path='/workspace/:workspaceId/shared/:boardId?/:viewId?'>
@@ -202,6 +204,8 @@ const App = React.memo((): JSX.Element => {
                                         if (loggedIn === true) {
                                             return <BoardPage/>
                                         }
+
+                                        return null
                                     }}
                                 />
                             </Switch>
