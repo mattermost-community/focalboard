@@ -139,7 +139,7 @@ const App = React.memo((): JSX.Element => {
                                             return <Redirect to='/login'/>
                                         }
 
-                                        if (loggedIn === true && !localStorage.getItem('welcomePageViewed')) {
+                                        if (Utils.isFocalboardPlugin() && loggedIn === true && !localStorage.getItem('welcomePageViewed')) {
                                             const originalPath = `/board/${match.params.boardId || ''}/${match.params.viewId || ''}/${match.params.cardId || ''}`
                                             return <Redirect to={`/welcome?r=${originalPath}`}/>
                                         }
@@ -166,7 +166,7 @@ const App = React.memo((): JSX.Element => {
                                             const loginUrl = `/login?r=${encodeURIComponent(redirectUrl)}`
                                             return <Redirect to={loginUrl}/>
                                         } else if (loggedIn === true) {
-                                            if (!localStorage.getItem('welcomePageViewed')) {
+                                            if (Utils.isFocalboardPlugin() && !localStorage.getItem('welcomePageViewed')) {
                                                 return <Redirect to={`/welcome?r=${originalPath}`}/>
                                             }
 
@@ -201,16 +201,7 @@ const App = React.memo((): JSX.Element => {
                                             return <Redirect to='/login'/>
                                         }
 
-                                        if (
-                                            (
-                                                loggedIn === true &&
-                                                !localStorage.getItem('welcomePageViewed')
-                                            ) ||
-                                            (
-                                                !boardIdIsValidUUIDV4 &&
-                                                Utils.isFocalboardPlugin()
-                                            )
-                                        ) {
+                                        if (Utils.isFocalboardPlugin() && loggedIn === true && (!localStorage.getItem('welcomePageViewed') || !boardIdIsValidUUIDV4)) {
                                             const originalPath = `/${match.params.boardId || ''}/${match.params.viewId || ''}/${match.params.cardId || ''}`
                                             const queryString = boardIdIsValidUUIDV4 ? `r=${originalPath}` : ''
                                             return <Redirect to={`/welcome?${queryString}`}/>
