@@ -206,7 +206,10 @@ const App = React.memo((): JSX.Element => {
                                                 loggedIn === true &&
                                                 !localStorage.getItem('welcomePageViewed')
                                             ) ||
-                                            !boardIdIsValidUUIDV4
+                                            (
+                                                !boardIdIsValidUUIDV4 &&
+                                                Utils.isFocalboardPlugin()
+                                            )
                                         ) {
                                             const originalPath = `/${match.params.boardId || ''}/${match.params.viewId || ''}/${match.params.cardId || ''}`
                                             const queryString = boardIdIsValidUUIDV4 ? `r=${originalPath}` : ''
