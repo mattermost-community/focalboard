@@ -9,6 +9,7 @@ BUILD_HASH = $(shell git rev-parse HEAD)
 # If we don't set the build number it defaults to dev
 ifeq ($(BUILD_NUMBER),)
 	BUILD_NUMBER := dev
+	BUILD_DATE := n/a
 endif
 
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildNumber=$(BUILD_NUMBER)"
@@ -86,26 +87,26 @@ server-lint: ## Run linters on server code.
 	cd server; golangci-lint run ./...
 	cd mattermost-plugin; golangci-lint run ./...
 
-server-test: ## Run server tests
-	cd server; go test -race -v -count=1 ./...
-
 modd-precheck:
 	@if ! [ -x "$$(command -v modd)" ]; then \
 		echo "modd is not installed. Please see https://github.com/cortesi/modd#install for installation instructions"; \
 		exit 1; \
 	fi; \
 
-watch-server: modd-precheck ## Run server watching for changes with modd (https://github.com/cortesi/modd).
-	cd server; modd
+watch: modd-precheck ## Run both server and webapp watching for changes
+	modd
 
-watch-server-single-user: modd-precheck ## Run server watching for changes with modd (https://github.com/cortesi/modd) using single user config.
-	cd server; env FOCALBOARDSERVER_ARGS=--single-user modd
+watch-single-user: modd-precheck ## Run both server and webapp in single user mode watching for changes
+	env FOCALBOARDSERVER_ARGS=--single-user modd
+
+watch-server-test: modd-precheck ## Run server tests watching for changes
+	modd -f modd-servertest.conf
+
+server-test: ## Run server tests
+	cd server; go test -race -v -count=1 ./...
 
 webapp: ## Build webapp.
 	cd webapp; npm run pack
-
-watch-webapp: ## Run webapp watching for changes.
-	cd webapp; npm run watchdev
 
 watch-plugin: modd-precheck ## Run and upload the plugin to a development server
 	modd -f modd-watchplugin.conf
