@@ -108,6 +108,9 @@ server-test: ## Run server tests
 webapp: ## Build webapp.
 	cd webapp; npm run pack
 
+watch-plugin: modd-precheck ## Run and upload the plugin to a development server
+	modd -f modd-watchplugin.conf
+
 mac-app: server-mac webapp ## Build Mac application.
 	rm -rf mac/temp
 	rm -rf mac/dist
