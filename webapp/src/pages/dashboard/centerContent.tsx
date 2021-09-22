@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react'
 
 import {useHistory} from 'react-router-dom'
 
-import {useIntl} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import SearchIllustration from '../../svg/search-illustration'
 
@@ -87,7 +87,11 @@ const DashboardCenterContent = (): JSX.Element => {
                                     {workspace.title}
                                 </div>
                                 <div className='small'>
-                                    {`${workspace.boardCount} board${workspace.boardCount > 1 ? 's' : ''}`}
+                                    <FormattedMessage
+                                        values={{count: workspace.boardCount}}
+                                        id='General.BoardCount'
+                                        defaultMessage='{count, plural, one {# Board} other {# Boards}}'
+                                    />
                                 </div>
                             </div>
                         ))
