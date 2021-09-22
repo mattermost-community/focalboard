@@ -192,13 +192,25 @@ const App = React.memo((): JSX.Element => {
                                 <Route
                                     path='/:boardId?/:viewId?/:cardId?'
                                     render={({match}) => {
+                                        // Since these 3 path values are optional and they can be anything, we can pass /x/y/z and it will
+                                        // match this route however these values may not be valid so we should at the very least check
+                                        // board id for descisions made below
+                                        const boardIdIsValidUUIDV4 = (/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/).test(match.params.boardId || '')
+
                                         if (loggedIn === false) {
                                             return <Redirect to='/login'/>
                                         }
 
-                                        if (loggedIn === true && !localStorage.getItem('welcomePageViewed')) {
+                                        if (
+                                            (
+                                                loggedIn === true &&
+                                                !localStorage.getItem('welcomePageViewed')
+                                            ) ||
+                                            !boardIdIsValidUUIDV4
+                                        ) {
                                             const originalPath = `/${match.params.boardId || ''}/${match.params.viewId || ''}/${match.params.cardId || ''}`
-                                            return <Redirect to={`/welcome?r=${originalPath}`}/>
+                                            const queryString = boardIdIsValidUUIDV4 ? `r=${originalPath}` : ''
+                                            return <Redirect to={`/welcome?${queryString}`}/>
                                         }
 
                                         if (loggedIn === true) {
