@@ -19,11 +19,17 @@ type PluginAPI interface {
 	// CreatePost creates a post.
 	CreatePost(post *model.Post) error
 
-	// GetUserByIS gets a user by their ID.
+	// GetUserByID gets a user by their ID.
 	GetUserByID(userID string) (*model.User, error)
 
 	// GetUserByUsername gets a user by their username.
 	GetUserByUsername(name string) (*model.User, error)
+
+	// GetTeamMember gets a team member by their user id.
+	GetTeamMember(teamID string, userID string) (*model.TeamMember, error)
+
+	// GetChannelByID gets a Channel by its ID.
+	GetChannelByID(channelID string) (*model.Channel, error)
 }
 
 // PluginDelivery provides ability to send notifications to direct message channels via Mattermost plugin API.
@@ -42,7 +48,13 @@ func New(botID string, serverRoot string, api PluginAPI) *PluginDelivery {
 }
 
 func (pd *PluginDelivery) Deliver(mentionUsername string, extract string, evt notify.BlockChangeEvent) error {
-	user, err := userFromUsername(pd.api, mentionUsername)
+	// determine which team the workspace is associated with
+	teamID, err := pd.getTeamID(evt)
+	if err != nil {
+		return fmt.Errorf("cannot determine teamID for block change notification: %w", err)
+	}
+
+	member, err := teamMemberFromUsername(pd.api, mentionUsername, teamID)
 	if err != nil {
 		if isErrNotFound(err) {
 			// not really an error; could just be someone typed "@sometext"
@@ -57,7 +69,7 @@ func (pd *PluginDelivery) Deliver(mentionUsername string, extract string, evt no
 		return fmt.Errorf("cannot find user: %w", err)
 	}
 
-	channel, err := pd.api.GetDirectChannel(user.Id, pd.botID)
+	channel, err := pd.api.GetDirectChannel(member.UserId, pd.botID)
 	if err != nil {
 		return fmt.Errorf("cannot get direct channel: %w", err)
 	}
@@ -69,4 +81,13 @@ func (pd *PluginDelivery) Deliver(mentionUsername string, extract string, evt no
 		Message:   formatMessage(author.Username, extract, evt.Card.Title, link, evt.BlockChanged),
 	}
 	return pd.api.CreatePost(post)
+}
+
+func (pd *PluginDelivery) getTeamID(evt notify.BlockChangeEvent) (string, error) {
+	// for now, the workspace ID is also the channel ID
+	channel, err := pd.api.GetChannelByID(evt.Workspace)
+	if err != nil {
+		return "", err
+	}
+	return channel.TeamId, nil
 }

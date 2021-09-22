@@ -42,7 +42,7 @@ if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
             return
         }
 
-        const pathName = event.data.message.pathName
+        const pathName = event.data.message?.pathName
         if (!pathName) {
             return
         }

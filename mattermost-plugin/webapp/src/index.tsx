@@ -69,6 +69,7 @@ const MainApp = (props: Props) => {
 
     useEffect(() => {
         document.body.classList.add('focalboard-body')
+        document.body.classList.add('app__body')
         const root = document.getElementById('root')
         if (root) {
             root.classList.add('focalboard-plugin-root')
@@ -76,6 +77,7 @@ const MainApp = (props: Props) => {
 
         return () => {
             document.body.classList.remove('focalboard-body')
+            document.body.classList.remove('app__body')
             if (root) {
                 root.classList.remove('focalboard-plugin-root')
             }
@@ -140,15 +142,7 @@ export default class Plugin {
                 window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`)
             }
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Boards')
-
-            this.registry.registerCustomRoute('go-to-current-workspace', () => {
-                const history = useHistory()
-                useEffect(() => {
-                    history.replace(`${windowAny.frontendBaseURL}/dashboard`)
-                }, [])
-                return <></>
-            })
-            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/plug/focalboard/go-to-current-workspace', MainApp, HeaderComponent)
+            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/dashboard', MainApp, HeaderComponent)
         } else {
             windowAny.frontendBaseURL = subpath + '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
