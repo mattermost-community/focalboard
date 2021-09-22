@@ -289,6 +289,8 @@ func TestDeleteBlock(t *testing.T) {
 }
 
 func TestGetSubtree(t *testing.T) {
+	t.Skip("TODO: fix flaky test")
+
 	th := SetupTestHelper().InitBasic()
 	defer th.TearDown()
 
