@@ -358,6 +358,7 @@ func (pa *PluginAdapter) BroadcastBlockDelete(workspaceID, blockID, parentID str
 	block.ParentID = parentID
 	block.UpdateAt = now
 	block.DeleteAt = now
+	block.WorkspaceID = workspaceID
 
 	pa.BroadcastBlockChange(workspaceID, block)
 }

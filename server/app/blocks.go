@@ -58,6 +58,7 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block, userID strin
 		if err != nil {
 			return err
 		}
+		blocks[i].WorkspaceID = c.WorkspaceID
 
 		a.wsAdapter.BroadcastBlockChange(c.WorkspaceID, blocks[i])
 		a.metrics.IncrementBlocksInserted(len(blocks))

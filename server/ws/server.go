@@ -469,6 +469,7 @@ func (ws *Server) BroadcastBlockDelete(workspaceID, blockID, parentID string) {
 	block.ParentID = parentID
 	block.UpdateAt = now
 	block.DeleteAt = now
+	block.WorkspaceID = workspaceID
 
 	ws.BroadcastBlockChange(workspaceID, block)
 }
