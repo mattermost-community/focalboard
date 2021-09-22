@@ -49,5 +49,11 @@
     > div:nth-child(2) {
         padding: 0 0 0 1px;
         margin-left: 80px;
+
+        @media (max-width: 768px) {
+            margin-left: 0;
+            padding-left: 20px;
+            -webkit-overflow-scrolling: touch;
+        }
     }
 }
