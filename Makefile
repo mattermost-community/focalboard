@@ -1,4 +1,4 @@
-.PHONY: prebuild clean cleanall ci server server-mac server-linux server-win server-linux-package generate watch-server webapp mac-app win-app-wpf linux-app
+.PHONY: prebuild clean cleanall ci server server-mac server-linux server-win server-linux-package generate watch-server webapp mac-app win-app-wpf linux-app modd-precheck
 
 PACKAGE_FOLDER = focalboard
 
@@ -89,10 +89,16 @@ server-lint: ## Run linters on server code.
 server-test: ## Run server tests
 	cd server; go test -race -v -count=1 ./...
 
-watch-server: ## Run server watching for changes with modd (https://github.com/cortesi/modd).
+modd-precheck:
+	@if ! [ -x "$$(command -v modd)" ]; then \
+		echo "modd is not installed. Please see https://github.com/cortesi/modd#install for installation instructions"; \
+		exit 1; \
+	fi; \
+
+watch-server: modd-precheck ## Run server watching for changes with modd (https://github.com/cortesi/modd).
 	cd server; modd
 
-watch-server-single-user: ## Run server watching for changes with modd (https://github.com/cortesi/modd) using single user config.
+watch-server-single-user: modd-precheck ## Run server watching for changes with modd (https://github.com/cortesi/modd) using single user config.
 	cd server; env FOCALBOARDSERVER_ARGS=--single-user modd
 
 webapp: ## Build webapp.
@@ -101,7 +107,7 @@ webapp: ## Build webapp.
 watch-webapp: ## Run webapp watching for changes.
 	cd webapp; npm run watchdev
 
-watch-plugin: ## Run and upload the plugin to a development server
+watch-plugin: modd-precheck ## Run and upload the plugin to a development server
 	modd -f modd-watchplugin.conf
 
 mac-app: server-mac webapp ## Build Mac application.
