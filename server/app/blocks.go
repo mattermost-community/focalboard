@@ -76,7 +76,7 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block, userID strin
 		if err != nil {
 			return err
 		}
-
+		blocks[i].WorkspaceID = c.WorkspaceID
 		needsNotify = append(needsNotify, blocks[i])
 
 		a.wsAdapter.BroadcastBlockChange(c.WorkspaceID, blocks[i])

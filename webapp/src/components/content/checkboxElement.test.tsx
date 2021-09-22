@@ -17,6 +17,7 @@ const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlPr
 describe('components/content/CheckboxElement', () => {
     const defaultBlock: ContentBlock = {
         id: 'test-id',
+        workspaceId: '',
         parentId: '',
         rootId: '',
         modifiedBy: 'test-user-id',

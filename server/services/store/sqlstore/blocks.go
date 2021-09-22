@@ -32,22 +32,27 @@ func (be BlockNotFoundErr) Error() string {
 	return fmt.Sprintf("block not found (block id: %s", be.blockID)
 }
 
+func (s *SQLStore) blockFields() []string {
+	return []string{
+		"id",
+		"parent_id",
+		"root_id",
+		"created_by",
+		"modified_by",
+		s.escapeField("schema"),
+		"type",
+		"title",
+		"COALESCE(fields, '{}')",
+		"create_at",
+		"update_at",
+		"delete_at",
+		"COALESCE(workspace_id, '0')",
+	}
+}
+
 func (s *SQLStore) GetBlocksWithParentAndType(c store.Container, parentID string, blockType string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
-		Select(
-			"id",
-			"parent_id",
-			"root_id",
-			"created_by",
-			"modified_by",
-			s.escapeField("schema"),
-			"type",
-			"title",
-			"COALESCE(fields, '{}')",
-			"create_at",
-			"update_at",
-			"delete_at",
-		).
+		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Eq{"COALESCE(workspace_id, '0')": c.WorkspaceID}).
 		Where(sq.Eq{"parent_id": parentID}).
@@ -66,20 +71,7 @@ func (s *SQLStore) GetBlocksWithParentAndType(c store.Container, parentID string
 
 func (s *SQLStore) GetBlocksWithParent(c store.Container, parentID string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
-		Select(
-			"id",
-			"parent_id",
-			"root_id",
-			"created_by",
-			"modified_by",
-			s.escapeField("schema"),
-			"type",
-			"title",
-			"COALESCE(fields, '{}')",
-			"create_at",
-			"update_at",
-			"delete_at",
-		).
+		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Eq{"parent_id": parentID}).
 		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
@@ -97,20 +89,7 @@ func (s *SQLStore) GetBlocksWithParent(c store.Container, parentID string) ([]mo
 
 func (s *SQLStore) GetBlocksWithRootID(c store.Container, rootID string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
-		Select(
-			"id",
-			"parent_id",
-			"root_id",
-			"created_by",
-			"modified_by",
-			s.escapeField("schema"),
-			"type",
-			"title",
-			"COALESCE(fields, '{}')",
-			"create_at",
-			"update_at",
-			"delete_at",
-		).
+		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Eq{"root_id": rootID}).
 		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
@@ -128,20 +107,7 @@ func (s *SQLStore) GetBlocksWithRootID(c store.Container, rootID string) ([]mode
 
 func (s *SQLStore) GetBlocksWithType(c store.Container, blockType string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
-		Select(
-			"id",
-			"parent_id",
-			"root_id",
-			"created_by",
-			"modified_by",
-			s.escapeField("schema"),
-			"type",
-			"title",
-			"COALESCE(fields, '{}')",
-			"create_at",
-			"update_at",
-			"delete_at",
-		).
+		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Eq{"type": blockType}).
 		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
@@ -160,20 +126,7 @@ func (s *SQLStore) GetBlocksWithType(c store.Container, blockType string) ([]mod
 // GetSubTree2 returns blocks within 2 levels of the given blockID.
 func (s *SQLStore) GetSubTree2(c store.Container, blockID string) ([]model.Block, error) {
 	query := s.getQueryBuilder().
-		Select(
-			"id",
-			"parent_id",
-			"root_id",
-			"created_by",
-			"modified_by",
-			s.escapeField("schema"),
-			"type",
-			"title",
-			"COALESCE(fields, '{}')",
-			"create_at",
-			"update_at",
-			"delete_at",
-		).
+		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}}).
 		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
@@ -205,6 +158,7 @@ func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block
 		"l3.create_at",
 		"l3.update_at",
 		"l3.delete_at",
+		"COALESCE(l3.workspace_id, '0')",
 	).
 		From(s.tablePrefix + "blocks as l1").
 		Join(s.tablePrefix + "blocks as l2 on l2.parent_id = l1.id or l2.id = l1.id").
@@ -231,20 +185,7 @@ func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block
 
 func (s *SQLStore) GetAllBlocks(c store.Container) ([]model.Block, error) {
 	query := s.getQueryBuilder().
-		Select(
-			"id",
-			"parent_id",
-			"root_id",
-			"created_by",
-			"modified_by",
-			s.escapeField("schema"),
-			"type",
-			"title",
-			"COALESCE(fields, '{}')",
-			"create_at",
-			"update_at",
-			"delete_at",
-		).
+		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
 
@@ -279,7 +220,8 @@ func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 			&fieldsJSON,
 			&block.CreateAt,
 			&block.UpdateAt,
-			&block.DeleteAt)
+			&block.DeleteAt,
+			&block.WorkspaceID)
 		if err != nil {
 			// handle this error
 			s.logger.Error(`ERROR blocksFromRows`, mlog.Err(err))
@@ -568,20 +510,7 @@ func (s *SQLStore) GetBlockCountsByType() (map[string]int64, error) {
 
 func (s *SQLStore) GetBlock(c store.Container, blockID string) (*model.Block, error) {
 	query := s.getQueryBuilder().
-		Select(
-			"id",
-			"parent_id",
-			"root_id",
-			"created_by",
-			"modified_by",
-			s.escapeField("schema"),
-			"type",
-			"title",
-			"COALESCE(fields, '{}')",
-			"create_at",
-			"update_at",
-			"delete_at",
-		).
+		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Eq{"id": blockID}).
 		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
