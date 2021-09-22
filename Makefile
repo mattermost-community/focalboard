@@ -1,4 +1,4 @@
-.PHONY: prebuild clean cleanall ci server server-mac server-linux server-win server-linux-package generate watch-server webapp mac-app win-app-wpf linux-app
+.PHONY: prebuild clean cleanall ci server server-mac server-linux server-win server-linux-package generate watch-server webapp mac-app win-app-wpf linux-app modd-precheck
 
 PACKAGE_FOLDER = focalboard
 
@@ -86,13 +86,19 @@ server-lint: ## Run linters on server code.
 	cd server; golangci-lint run ./...
 	cd mattermost-plugin; golangci-lint run ./...
 
-watch: ## Run both server and webapp watching for changes
+modd-precheck:
+	@if ! [ -x "$$(command -v modd)" ]; then \
+		echo "modd is not installed. Please see https://github.com/cortesi/modd#install for installation instructions"; \
+		exit 1; \
+	fi; \
+
+watch: modd-precheck ## Run both server and webapp watching for changes
 	modd
 
-watch-single-user: ## Run both server and webapp in single user mode watching for changes
+watch-single-user: modd-precheck ## Run both server and webapp in single user mode watching for changes
 	env FOCALBOARDSERVER_ARGS=--single-user modd
 
-watch-server-test: ## Run server tests watching for changes
+watch-server-test: modd-precheck ## Run server tests watching for changes
 	modd -f modd-servertest.conf
 
 server-test: ## Run server tests
