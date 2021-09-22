@@ -94,9 +94,7 @@ exports[`components/workspaceSwitcher/WorkspaceOptions 2 more workspaces availab
           <div
             class="boardCount"
           >
-            2
-             
-            Boards
+            2 Boards
           </div>
         </div>
         <div
@@ -112,9 +110,7 @@ exports[`components/workspaceSwitcher/WorkspaceOptions 2 more workspaces availab
           <div
             class="boardCount"
           >
-            3
-             
-            Boards
+            3 Boards
           </div>
         </div>
       </div>

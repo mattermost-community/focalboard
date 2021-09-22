@@ -361,7 +361,7 @@ exports[`pages/dashboard/DashboardPage base case 1`] = `
             <div
               class="small"
             >
-              1 board
+              1 Board
             </div>
           </div>
           <div
@@ -375,7 +375,7 @@ exports[`pages/dashboard/DashboardPage base case 1`] = `
             <div
               class="small"
             >
-              2 boards
+              2 Boards
             </div>
           </div>
           <div
@@ -389,7 +389,7 @@ exports[`pages/dashboard/DashboardPage base case 1`] = `
             <div
               class="small"
             >
-              0 board
+              0 Boards
             </div>
           </div>
         </div>

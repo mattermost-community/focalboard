@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react'
 import {batch} from 'react-redux'
 import {FormattedMessage, useIntl} from 'react-intl'
-import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
+import {generatePath, Redirect, useHistory, useRouteMatch} from 'react-router-dom'
 import {useHotkeys} from 'react-hotkeys-hook'
 
 import {Block} from '../blocks/block'
@@ -227,6 +227,13 @@ const BoardPage = (props: Props) => {
             sendFlashMessage({content: 'Nothing to Redo', severity: 'low'})
         }
     })
+
+    // this is needed to redirect to dashboard
+    // when opening Focalboard for the first time
+    const shouldGoToDashboard = Utils.isFocalboardPlugin() && workspaceId === '0' && !match.params.boardId && !match.params.viewId
+    if (shouldGoToDashboard) {
+        return (<Redirect to={'/dashboard'}/>)
+    }
 
     return (
         <div className='BoardPage'>
