@@ -23,3 +23,19 @@ export function mockDOM(): void {
         return range
     }
 }
+
+export function mockMatchMedia(result: any): void {
+    // We check if system preference is dark or light theme.
+    // This is required to provide it's definition since
+    // window.matchMedia doesn't exist in Jest.
+    Object.defineProperty(window, 'matchMedia', {
+        writable: true,
+        value: jest.fn().mockImplementation(() => {
+            return result
+
+            // return ({
+            //     matches: true,
+            // })
+        }),
+    })
+}

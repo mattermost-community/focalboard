@@ -9,6 +9,7 @@ BUILD_HASH = $(shell git rev-parse HEAD)
 # If we don't set the build number it defaults to dev
 ifeq ($(BUILD_NUMBER),)
 	BUILD_NUMBER := dev
+	BUILD_DATE := n/a
 endif
 
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildNumber=$(BUILD_NUMBER)"
