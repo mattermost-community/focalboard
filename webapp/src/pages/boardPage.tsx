@@ -131,6 +131,8 @@ const BoardPage = (props: Props) => {
                 title += ` | ${activeView.title}`
             }
             document.title = title
+        } else if (Utils.isFocalboardPlugin()) {
+            document.title = 'Mattermost - Boards'
         } else {
             document.title = 'Focalboard'
         }
