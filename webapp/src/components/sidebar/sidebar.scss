@@ -63,7 +63,7 @@
     .octo-sidebar-list {
         flex: 1 1 auto;
         overflow-y: auto;
-        width: 250px;
+        max-width: 100%;
 
         > div {
             margin-bottom: 16px;
