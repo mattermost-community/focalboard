@@ -10,7 +10,6 @@ import {IPropertyOption, IPropertyTemplate, Board, BoardGroup} from '../../block
 import {BoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
 import mutator from '../../mutator'
-import Button from '../../widgets/buttons/button'
 import IconButton from '../../widgets/buttons/iconButton'
 import AddIcon from '../../widgets/icons/add'
 import DeleteIcon from '../../widgets/icons/delete'
@@ -20,6 +19,8 @@ import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import Editable from '../../widgets/editable'
 import Label from '../../widgets/label'
+
+import KanbanCalculation from './calculation/calculation'
 
 type Props = {
     board: Board
@@ -31,6 +32,9 @@ type Props = {
     addCard: (groupByOptionId?: string) => Promise<void>
     propertyNameChanged: (option: IPropertyOption, text: string) => Promise<void>
     onDropToColumn: (srcOption: IPropertyOption, card?: Card, dstOption?: IPropertyOption) => void
+    calculationMenuOpen: boolean
+    onCalculationMenuOpen: () => void
+    onCalculationMenuClose: () => void
 }
 
 export default function KanbanColumnHeader(props: Props): JSX.Element {
@@ -108,7 +112,13 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                         spellCheck={true}
                     />
                 </Label>}
-            <Button>{`${group.cards.length}`}</Button>
+            <KanbanCalculation
+                cards={group.cards}
+                menuOpen={props.calculationMenuOpen}
+                property={board.fields.cardProperties[0]}
+                onMenuClose={props.onCalculationMenuClose}
+                onMenuOpen={() => props.onCalculationMenuOpen()}
+            />
             <div className='octo-spacer'/>
             {!props.readonly &&
                 <>

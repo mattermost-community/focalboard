@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
-import React, {useCallback} from 'react'
+import React, {useCallback, useState} from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import {Board, IPropertyOption, IPropertyTemplate, BoardGroup} from '../../blocks/board'
@@ -166,6 +166,13 @@ const Kanban = (props: Props) => {
         })
     }, [cards, activeView, groupByProperty, props.selectedCardIds])
 
+    const [showCalculationsMenu, setShowCalculationsMenu] = useState<Map<string, boolean>>(new Map<string, boolean>())
+    const toggleOptions = (templateId: string, show: boolean) => {
+        const newShowOptions = new Map<string, boolean>(showCalculationsMenu)
+        newShowOptions.set(templateId, show)
+        setShowCalculationsMenu(newShowOptions)
+    }
+
     return (
         <div className='Kanban'>
             <div
@@ -186,6 +193,9 @@ const Kanban = (props: Props) => {
                         readonly={props.readonly}
                         propertyNameChanged={propertyNameChanged}
                         onDropToColumn={onDropToColumn}
+                        calculationMenuOpen={showCalculationsMenu.get(group.option.id) || false}
+                        onCalculationMenuOpen={() => toggleOptions(group.option.id, true)}
+                        onCalculationMenuClose={() => toggleOptions(group.option.id, false)}
                     />
                 ))}
 
