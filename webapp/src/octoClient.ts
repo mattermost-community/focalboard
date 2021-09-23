@@ -166,8 +166,8 @@ class OctoClient {
         return user
     }
 
-    async getSubtree(rootId?: string, levels = 2): Promise<Block[]> {
-        let path = this.workspacePath() + `/blocks/${encodeURIComponent(rootId || '')}/subtree?l=${levels}`
+    async getSubtree(rootId?: string, levels = 2, workspaceID?: string): Promise<Block[]> {
+        let path = this.workspacePath(workspaceID) + `/blocks/${encodeURIComponent(rootId || '')}/subtree?l=${levels}`
         const readToken = this.readToken()
         if (readToken) {
             path += `&read_token=${readToken}`
