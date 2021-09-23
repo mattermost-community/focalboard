@@ -1,3 +1,4 @@
+//go:generate mockgen --build_flags=--mod=mod -destination=mocks/mockpluginapi.go -package mocks github.com/mattermost/mattermost-server/v6/plugin API
 package ws
 
 import (
@@ -18,10 +19,19 @@ const websocketMessagePrefix = "custom_focalboard_"
 var errMissingWorkspaceInCommand = fmt.Errorf("command doesn't contain workspaceId")
 
 type PluginAdapterClient struct {
+	inactiveAt int64
 	webConnID  string
 	userID     string
 	workspaces []string
 	blocks     []string
+}
+
+func (pac *PluginAdapterClient) isActive() bool {
+	return pac.inactiveAt == 0
+}
+
+func (pac *PluginAdapterClient) hasExpired(threshold time.Duration) bool {
+	return !mmModel.GetTimeForMillis(pac.inactiveAt).Add(threshold).After(time.Now())
 }
 
 func (pac *PluginAdapterClient) isSubscribedToWorkspace(workspaceID string) bool {
@@ -63,20 +73,24 @@ type PluginAdapterInterface interface {
 }
 
 type PluginAdapter struct {
-	api  plugin.API
-	auth *auth.Auth
+	api            plugin.API
+	auth           auth.AuthInterface
+	staleThreshold time.Duration
 
 	listeners            map[string]*PluginAdapterClient
+	listenersByUserID    map[string][]*PluginAdapterClient
 	listenersByWorkspace map[string][]*PluginAdapterClient
 	listenersByBlock     map[string][]*PluginAdapterClient
 	mu                   sync.RWMutex
 }
 
-func NewPluginAdapter(api plugin.API, auth *auth.Auth) *PluginAdapter {
+func NewPluginAdapter(api plugin.API, auth auth.AuthInterface) *PluginAdapter {
 	return &PluginAdapter{
 		api:                  api,
 		auth:                 auth,
+		staleThreshold:       5 * time.Minute,
 		listeners:            make(map[string]*PluginAdapterClient),
+		listenersByUserID:    make(map[string][]*PluginAdapterClient),
 		listenersByWorkspace: make(map[string][]*PluginAdapterClient),
 		listenersByBlock:     make(map[string][]*PluginAdapterClient),
 		mu:                   sync.RWMutex{},
@@ -87,6 +101,7 @@ func (pa *PluginAdapter) addListener(pac *PluginAdapterClient) {
 	pa.mu.Lock()
 	defer pa.mu.Unlock()
 	pa.listeners[pac.webConnID] = pac
+	pa.listenersByUserID[pac.userID] = append(pa.listenersByUserID[pac.userID], pac)
 }
 
 func (pa *PluginAdapter) removeListener(pac *PluginAdapterClient) {
@@ -103,7 +118,24 @@ func (pa *PluginAdapter) removeListener(pac *PluginAdapterClient) {
 		pa.removeListenerFromBlock(pac, block)
 	}
 
+	// user ID list
+	newUserListeners := []*PluginAdapterClient{}
+	for _, listener := range pa.listenersByUserID[pac.userID] {
+		if listener.webConnID != pac.webConnID {
+			newUserListeners = append(newUserListeners, listener)
+		}
+	}
+	pa.listenersByUserID[pac.userID] = newUserListeners
+
 	delete(pa.listeners, pac.webConnID)
+}
+
+func (pa *PluginAdapter) removeExpiredForUserID(userID string) {
+	for _, pac := range pa.listenersByUserID[userID] {
+		if !pac.isActive() && pac.hasExpired(pa.staleThreshold) {
+			pa.removeListener(pac)
+		}
+	}
 }
 
 func (pa *PluginAdapter) removeListenerFromWorkspace(pac *PluginAdapterClient, workspaceID string) {
@@ -165,6 +197,21 @@ func (pa *PluginAdapter) unsubscribeListenerFromWorkspace(pac *PluginAdapterClie
 	pa.removeListenerFromWorkspace(pac, workspaceID)
 }
 
+func (pa *PluginAdapter) getUserIDsForWorkspace(workspaceID string) []string {
+	userMap := map[string]bool{}
+	for _, pac := range pa.listenersByWorkspace[workspaceID] {
+		if pac.isActive() {
+			userMap[pac.userID] = true
+		}
+	}
+
+	userIDs := []string{}
+	for userID := range userMap {
+		userIDs = append(userIDs, userID)
+	}
+	return userIDs
+}
+
 func (pa *PluginAdapter) unsubscribeListenerFromBlocks(pac *PluginAdapterClient, blockIDs []string) {
 	pa.mu.Lock()
 	defer pa.mu.Unlock()
@@ -177,14 +224,25 @@ func (pa *PluginAdapter) unsubscribeListenerFromBlocks(pac *PluginAdapterClient,
 }
 
 func (pa *PluginAdapter) OnWebSocketConnect(webConnID, userID string) {
-	pac := &PluginAdapterClient{
+	if existingPAC, ok := pa.listeners[webConnID]; ok {
+		pa.api.LogDebug("inactive connection found for webconn, reusing",
+			"webConnID", webConnID,
+			"userID", userID,
+		)
+		existingPAC.inactiveAt = 0
+		return
+	}
+
+	newPAC := &PluginAdapterClient{
+		inactiveAt: 0,
 		webConnID:  webConnID,
 		userID:     userID,
 		workspaces: []string{},
 		blocks:     []string{},
 	}
 
-	pa.addListener(pac)
+	pa.addListener(newPAC)
+	pa.removeExpiredForUserID(userID)
 }
 
 func (pa *PluginAdapter) OnWebSocketDisconnect(webConnID, userID string) {
@@ -197,7 +255,7 @@ func (pa *PluginAdapter) OnWebSocketDisconnect(webConnID, userID string) {
 		return
 	}
 
-	pa.removeListener(pac)
+	pac.inactiveAt = mmModel.GetMillis()
 }
 
 func commandFromRequest(req *mmModel.WebSocketRequest) (*WebsocketCommand, error) {
@@ -280,19 +338,6 @@ func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string,
 
 		pa.unsubscribeListenerFromWorkspace(pac, command.WorkspaceID)
 	}
-}
-
-func (pa *PluginAdapter) getUserIDsForWorkspace(workspaceID string) []string {
-	userMap := map[string]bool{}
-	for _, pac := range pa.listenersByWorkspace[workspaceID] {
-		userMap[pac.userID] = true
-	}
-
-	userIDs := []string{}
-	for userID := range userMap {
-		userIDs = append(userIDs, userID)
-	}
-	return userIDs
 }
 
 func (pa *PluginAdapter) sendMessageToAllSkipCluster(payload map[string]interface{}) {
