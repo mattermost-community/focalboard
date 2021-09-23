@@ -258,7 +258,6 @@ const BoardPage = (props: Props) => {
                     </a>
                 </div>}
 
-            {/* {Utils.isMobile() && */}
             {!mobileWarningClosed &&
                 <div className='mobileWarning'>
                     <div>
