@@ -101,7 +101,13 @@ const GalleryCard = React.memo((props: Props) => {
                             id='copy'
                             name={intl.formatMessage({id: 'GalleryCard.copyLink', defaultMessage: 'Copy link'})}
                             onClick={() => {
-                                Utils.copyTextToClipboard(window.location.href)
+                                let cardLink = window.location.href
+
+                                if (!cardLink.includes(card.id)) {
+                                    cardLink += `/${card.id}`
+                                }
+
+                                Utils.copyTextToClipboard(cardLink)
                                 sendFlashMessage({content: intl.formatMessage({id: 'GalleryCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
                             }}
                         />

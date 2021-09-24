@@ -78,7 +78,13 @@ const CardDialog = (props: Props) => {
                 id='copy'
                 name={intl.formatMessage({id: 'CardDialog.copyLink', defaultMessage: 'Copy link'})}
                 onClick={() => {
-                    Utils.copyTextToClipboard(window.location.href)
+                    let cardLink = window.location.href
+
+                    if (!cardLink.includes(props.cardId)) {
+                        cardLink += `/${props.cardId}`
+                    }
+
+                    Utils.copyTextToClipboard(cardLink)
                     sendFlashMessage({content: intl.formatMessage({id: 'CardDialog.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
                 }}
             />
