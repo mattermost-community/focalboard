@@ -8,6 +8,7 @@ import {useLocation, useHistory} from 'react-router-dom'
 import BoardWelcomePNG from '../../../static/boards-welcome.png'
 
 import CompassIcon from '../../widgets/icons/compassIcon'
+import {UserSettings} from '../../userSettings'
 
 import './welcomePage.scss'
 
@@ -16,7 +17,7 @@ const WelcomePage = React.memo(() => {
     const queryString = new URLSearchParams(useLocation().search)
 
     const goForward = () => {
-        localStorage.setItem('welcomePageViewed', 'true')
+        UserSettings.welcomePageViewed = 'true'
 
         if (queryString.get('r')) {
             history.replace(queryString.get('r')!)
@@ -26,7 +27,7 @@ const WelcomePage = React.memo(() => {
         history.replace('/dashboard')
     }
 
-    if (localStorage.getItem('welcomePageViewed')) {
+    if (UserSettings.welcomePageViewed) {
         goForward()
         return null
     }
