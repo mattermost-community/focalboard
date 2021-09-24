@@ -85,7 +85,7 @@ type CalculationOptionsProps = {
     onClose?: () => void
     onChange: (value: string) => void
     property: IPropertyTemplate
-    components?: (() => JSX.Element)[]
+    components?: {[key:string]: (props: any) => JSX.Element}
 }
 
 type BaseOptionsProps = CalculationOptionsProps & {
@@ -104,7 +104,7 @@ const CalculationOptions = (props: BaseOptionsProps): JSX.Element => {
             options={props.options}
             menuPlacement={'auto'}
             isSearchable={false}
-            components={{DropdownIndicator, ...(props.components || [])}}
+            components={{DropdownIndicator, ...(props.components || {})}}
             defaultMenuIsOpen={props.menuOpen}
             autoFocus={true}
             formatOptionLabel={(option: Option, meta) => {

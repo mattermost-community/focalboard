@@ -114,7 +114,9 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                 </Label>}
             <KanbanCalculation
                 cards={group.cards}
-                menuOpen={props.calculationMenuOpen}
+
+                // menuOpen={props.calculationMenuOpen}
+                menuOpen={true}
                 property={board.fields.cardProperties[0]}
                 onMenuClose={props.onCalculationMenuClose}
                 onMenuOpen={() => props.onCalculationMenuOpen()}

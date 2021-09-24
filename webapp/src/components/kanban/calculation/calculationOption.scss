@@ -1,0 +1,15 @@
+.KanbanCalculationOptions_CustomOption {
+    color: rgba(var(--center-channel-color-rgb), 1);
+    min-height: 24px;
+    max-width: 180px;
+    padding: 2px 8px;
+    cursor: pointer;
+
+    &:hover {
+        background: rgba(var(--center-channel-color-rgb), 0.1);
+    }
+
+    span {
+        overflow: hidden;
+    }
+}
