@@ -22,6 +22,7 @@ import {Utils} from '../../../utils'
 type Props = {
     className: string
     value: string
+    showEmptyPlaceholder?: boolean
     onChange: (value: string) => void
 }
 
@@ -35,7 +36,7 @@ type DateProperty = {
 const loadedLocales: Record<string, any> = {}
 
 function DateRange(props: Props): JSX.Element {
-    const {className, value, onChange} = props
+    const {className, value, showEmptyPlaceholder, onChange} = props
     const intl = useIntl()
     const timeZoneOffset = new Date().getTimezoneOffset() * 60 * 1000
 
@@ -151,12 +152,17 @@ function DateRange(props: Props): JSX.Element {
         setShowDialog(false)
     }
 
+    let buttonText = displayValue
+    if (!buttonText && showEmptyPlaceholder) {
+        buttonText = intl.formatMessage({id: 'DateRange.empty', defaultMessage: 'Empty'})
+    }
+
     return (
-        <div className={'DateRange '}>
+        <div className={`DateRange ${displayValue ? '' : 'empty'}`}>
             <Button
                 onClick={() => setShowDialog(true)}
             >
-                {displayValue || <span title={intl.formatMessage({id: 'DateRange.empty', defaultMessage: 'Empty'})}/>}
+                {buttonText}
             </Button>
 
             {showDialog &&

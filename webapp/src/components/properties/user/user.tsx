@@ -3,6 +3,7 @@
 
 import React from 'react'
 import Select from 'react-select'
+import {CSSObject} from '@emotion/serialize'
 
 import {IUser} from '../../../user'
 import {getWorkspaceUsersList, getWorkspaceUsers} from '../../../store/users'
@@ -15,6 +16,14 @@ type Props = {
     value: string,
     readonly: boolean,
     onChange: (value: string) => void,
+}
+
+const selectStyles = {
+    ...getSelectBaseStyle(),
+    placeholder: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        color: 'rgba(var(--center-channel-color-rgb), 0.4)',
+    }),
 }
 
 const UserProperty = (props: Props): JSX.Element => {
@@ -32,7 +41,8 @@ const UserProperty = (props: Props): JSX.Element => {
             isClearable={true}
             backspaceRemovesValue={true}
             className={'UserProperty'}
-            styles={getSelectBaseStyle()}
+            styles={selectStyles}
+            placeholder={'Empty'}
             getOptionLabel={(o: IUser) => o.username}
             getOptionValue={(a: IUser) => a.id}
             value={workspaceUsersById[props.value] || null}

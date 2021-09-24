@@ -12,6 +12,7 @@ import LinkIcon from '../../../widgets/icons/Link'
 type Props = {
     value: string
     readonly?: boolean
+    placeholder?: string
     onChange: (value: string) => void
     onSave: () => void
     onCancel: () => void
@@ -38,7 +39,7 @@ const URLProperty = (props: Props): JSX.Element => {
         <div className='URLProperty property-link url'>
             <Editable
                 className='octo-propertyvalue'
-                placeholderText=''
+                placeholderText={props.placeholder}
                 value={props.value}
                 readonly={props.readonly}
                 onChange={props.onChange}
