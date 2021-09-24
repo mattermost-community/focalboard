@@ -4,10 +4,8 @@
 package storetests
 
 import (
-	"fmt"
 	"testing"
 
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -30,6 +28,24 @@ func StoreTestSubscriptionsStore(t *testing.T, setup func(t *testing.T) (store.S
 		store, tearDown := setup(t)
 		defer tearDown()
 		testDeleteSubscription(t, store, container)
+	})
+
+	t.Run("GetSubscription", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testGetSubscription(t, store, container)
+	})
+
+	t.Run("GetSubscriptions", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testGetSubscriptions(t, store, container)
+	})
+
+	t.Run("GetSubscribersForBlock", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testGetSubscribersForBlock(t, store, container)
 	})
 }
 
@@ -156,35 +172,98 @@ func testDeleteSubscription(t *testing.T, store store.Store, container store.Con
 	})
 }
 
-func createTestUsers(t *testing.T, store store.Store, num int) []*model.User {
-	var users []*model.User
-	for i := 0; i < num; i++ {
-		user := &model.User{
-			ID:       uuid.New().String(),
-			Username: fmt.Sprintf("mooncake.%d", i),
-			Email:    fmt.Sprintf("mooncake.%d@example.com", i),
-		}
-		err := store.CreateUser(user)
-		require.NoError(t, err)
+func testGetSubscription(t *testing.T, store store.Store, container store.Container) {
+	t.Run("get subscription", func(t *testing.T) {
+		user := createTestUsers(t, store, 1)[0]
+		block := createTestBlocks(t, store, container, user.ID, 1)[0]
 
-		users = append(users, user)
-	}
-	return users
+		sub := &model.Subscription{
+			BlockType:      block.Type,
+			BlockID:        block.ID,
+			SubscriberType: "user",
+			SubscriberID:   user.ID,
+		}
+		subNew, err := store.CreateSubscription(sub)
+		require.NoError(t, err, "create subscription should not error")
+
+		// make sure subscription can be fetched
+		sub, err = store.GetSubscription(block.ID, user.ID)
+		require.NoError(t, err, "get subscription should not error")
+		assert.Equal(t, subNew, sub)
+	})
+
+	t.Run("get non-existent subscription", func(t *testing.T) {
+		sub, err := store.GetSubscription("bogus", "bogus")
+		require.NoError(t, err, "get subscription should not error")
+		require.Nil(t, sub, "get subscription should return nil")
+	})
 }
 
-func createTestBlocks(t *testing.T, store store.Store, container store.Container, userID string, num int) []*model.Block {
-	var blocks []*model.Block
-	for i := 0; i < num; i++ {
-		block := &model.Block{
-			ID:        uuid.New().String(),
-			RootID:    uuid.New().String(),
-			Type:      "card",
-			CreatedBy: userID,
-		}
-		err := store.InsertBlock(container, block, userID)
-		require.NoError(t, err)
+func testGetSubscriptions(t *testing.T, store store.Store, container store.Container) {
+	t.Run("get subscriptions", func(t *testing.T) {
+		author := createTestUsers(t, store, 1)[0]
+		user := createTestUsers(t, store, 1)[0]
+		blocks := createTestBlocks(t, store, container, author.ID, 50)
 
-		blocks = append(blocks, block)
-	}
-	return blocks
+		for _, block := range blocks {
+			sub := &model.Subscription{
+				BlockType:      block.Type,
+				BlockID:        block.ID,
+				SubscriberType: "user",
+				SubscriberID:   user.ID,
+			}
+			_, err := store.CreateSubscription(sub)
+			require.NoError(t, err, "create subscription should not error")
+		}
+
+		// ensure user has the right number of subscriptions
+		subs, err := store.GetSubscriptions(user.ID)
+		require.NoError(t, err, "get subscriptions should not error")
+		assert.Len(t, subs, len(blocks))
+
+		// ensure author has no subscriptions
+		subs, err = store.GetSubscriptions(author.ID)
+		require.NoError(t, err, "get subscriptions should not error")
+		assert.Empty(t, subs)
+	})
+
+	t.Run("get subscriptions for invalid user", func(t *testing.T) {
+		subs, err := store.GetSubscriptions("bogus")
+		require.NoError(t, err, "get subscriptions should not error")
+		assert.Empty(t, subs)
+	})
+}
+
+func testGetSubscribersForBlock(t *testing.T, store store.Store, container store.Container) {
+	t.Run("get subscribers for block", func(t *testing.T) {
+		users := createTestUsers(t, store, 50)
+		blocks := createTestBlocks(t, store, container, users[0].ID, 2)
+
+		for _, user := range users {
+			sub := &model.Subscription{
+				BlockType:      blocks[1].Type,
+				BlockID:        blocks[1].ID,
+				SubscriberType: "user",
+				SubscriberID:   user.ID,
+			}
+			_, err := store.CreateSubscription(sub)
+			require.NoError(t, err, "create subscription should not error")
+		}
+
+		// make sure block[1] has the right number of users subscribed
+		subs, err := store.GetSubscribersForBlock(blocks[1].ID)
+		require.NoError(t, err, "get subscribers for block should not error")
+		assert.Len(t, subs, 50)
+
+		// make sure block[0] has zero users subscribed
+		subs, err = store.GetSubscribersForBlock(blocks[0].ID)
+		require.NoError(t, err, "get subscribers for block should not error")
+		assert.Empty(t, subs)
+	})
+
+	t.Run("get subscribers for invalid block", func(t *testing.T) {
+		subs, err := store.GetSubscribersForBlock("bogus")
+		require.NoError(t, err, "get subscribers for block should not error")
+		assert.Empty(t, subs)
+	})
 }
