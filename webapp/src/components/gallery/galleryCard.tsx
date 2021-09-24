@@ -7,11 +7,13 @@ import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {ContentBlock} from '../../blocks/contentBlock'
 import mutator from '../../mutator'
+import {Utils} from '../../utils'
 
 import IconButton from '../../widgets/buttons/iconButton'
 import DeleteIcon from '../../widgets/icons/delete'
 import DuplicateIcon from '../../widgets/icons/duplicate'
 import OptionsIcon from '../../widgets/icons/options'
+import LinkIcon from '../../widgets/icons/Link'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {useSortable} from '../../hooks/sortable'
@@ -19,6 +21,7 @@ import {useSortable} from '../../hooks/sortable'
 import ImageElement from '../content/imageElement'
 import ContentElement from '../content/contentElement'
 import PropertyValueElement from '../propertyValueElement'
+import {sendFlashMessage} from '../flashMessages'
 import Tooltip from '../../widgets/tooltip'
 import {useAppSelector} from '../../store/hooks'
 import {getCardContents} from '../../store/contents'
@@ -91,6 +94,21 @@ const GalleryCard = React.memo((props: Props) => {
                             name={intl.formatMessage({id: 'GalleryCard.duplicate', defaultMessage: 'Duplicate'})}
                             onClick={() => {
                                 mutator.duplicateCard(card.id)
+                            }}
+                        />
+                        <Menu.Text
+                            icon={<LinkIcon/>}
+                            id='copy'
+                            name={intl.formatMessage({id: 'GalleryCard.copyLink', defaultMessage: 'Copy link'})}
+                            onClick={() => {
+                                let cardLink = window.location.href
+
+                                if (!cardLink.includes(card.id)) {
+                                    cardLink += `/${card.id}`
+                                }
+
+                                Utils.copyTextToClipboard(cardLink)
+                                sendFlashMessage({content: intl.formatMessage({id: 'GalleryCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
                             }}
                         />
                     </Menu>

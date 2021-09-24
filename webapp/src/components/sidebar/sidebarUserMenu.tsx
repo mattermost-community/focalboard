@@ -65,7 +65,7 @@ const SidebarUserMenu = React.memo(() => {
                             />
                             <Menu.Text
                                 id='invite'
-                                name={intl.formatMessage({id: 'Sidebar.invite-users', defaultMessage: 'Invite Users'})}
+                                name={intl.formatMessage({id: 'Sidebar.invite-users', defaultMessage: 'Invite users'})}
                                 onClick={async () => {
                                     setShowRegistrationLinkDialog(true)
                                 }}

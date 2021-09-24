@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react'
 import {batch} from 'react-redux'
 import {FormattedMessage, useIntl} from 'react-intl'
-import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
+import {generatePath, Redirect, useHistory, useRouteMatch} from 'react-router-dom'
 import {useHotkeys} from 'react-hotkeys-hook'
 
 import {Block} from '../blocks/block'
@@ -45,9 +45,13 @@ const BoardPage = (props: Props) => {
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, workspaceId?: string}>()
     const [websocketClosed, setWebsocketClosed] = useState(false)
 
+    let workspaceId = UserSettings.lastWorkspaceId || '0'
+
     // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {
-        octoClient.workspaceId = match.params.workspaceId || '0'
+        workspaceId = match.params.workspaceId || workspaceId
+        UserSettings.lastWorkspaceId = workspaceId
+        octoClient.workspaceId = workspaceId
     }, [match.params.workspaceId])
 
     // Backward compatibility: This can be removed in the future, this is for
@@ -83,7 +87,6 @@ const BoardPage = (props: Props) => {
         }
 
         // Backward compatibility end
-
         const boardId = match.params.boardId
         const viewId = match.params.viewId
 
@@ -111,6 +114,8 @@ const BoardPage = (props: Props) => {
 
         UserSettings.lastBoardId = boardId || ''
         UserSettings.lastViewId = viewId || ''
+        UserSettings.lastWorkspaceId = workspaceId
+
         dispatch(setCurrentBoard(boardId || ''))
         dispatch(setCurrentView(viewId || ''))
     }, [match.params.boardId, match.params.viewId, boardViews])
@@ -147,12 +152,15 @@ const BoardPage = (props: Props) => {
         }
 
         const incrementalUpdate = (_: WSClient, blocks: Block[]) => {
+            // only takes into account the blocks that belong to the workspace
+            const workspaceBlocks = blocks.filter((b: Block) => b.workspaceId === '0' || b.workspaceId === workspaceId)
+
             batch(() => {
-                dispatch(updateBoards(blocks.filter((b: Block) => b.type === 'board' || b.deleteAt !== 0) as Board[]))
-                dispatch(updateViews(blocks.filter((b: Block) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
-                dispatch(updateCards(blocks.filter((b: Block) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
-                dispatch(updateComments(blocks.filter((b: Block) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
-                dispatch(updateContents(blocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
+                dispatch(updateBoards(workspaceBlocks.filter((b: Block) => b.type === 'board' || b.deleteAt !== 0) as Board[]))
+                dispatch(updateViews(workspaceBlocks.filter((b: Block) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
+                dispatch(updateCards(workspaceBlocks.filter((b: Block) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
+                dispatch(updateComments(workspaceBlocks.filter((b: Block) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
+                dispatch(updateContents(workspaceBlocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
             })
         }
 
@@ -222,6 +230,13 @@ const BoardPage = (props: Props) => {
             sendFlashMessage({content: 'Nothing to Redo', severity: 'low'})
         }
     })
+
+    // this is needed to redirect to dashboard
+    // when opening Focalboard for the first time
+    const shouldGoToDashboard = Utils.isFocalboardPlugin() && workspaceId === '0' && !match.params.boardId && !match.params.viewId
+    if (shouldGoToDashboard) {
+        return (<Redirect to={'/dashboard'}/>)
+    }
 
     return (
         <div className='BoardPage'>

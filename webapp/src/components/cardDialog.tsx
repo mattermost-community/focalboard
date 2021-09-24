@@ -9,6 +9,7 @@ import {BoardView} from '../blocks/boardView'
 import {Board} from '../blocks/board'
 import {Card} from '../blocks/card'
 import DeleteIcon from '../widgets/icons/delete'
+import LinkIcon from '../widgets/icons/Link'
 import Menu from '../widgets/menu'
 
 import {useAppSelector} from '../store/hooks'
@@ -18,6 +19,7 @@ import {getCardComments} from '../store/comments'
 
 import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
+import {sendFlashMessage} from './flashMessages'
 
 type Props = {
     board: Board
@@ -71,6 +73,21 @@ const CardDialog = (props: Props) => {
                     props.onClose()
                 }}
             />
+            <Menu.Text
+                icon={<LinkIcon/>}
+                id='copy'
+                name={intl.formatMessage({id: 'CardDialog.copyLink', defaultMessage: 'Copy link'})}
+                onClick={() => {
+                    let cardLink = window.location.href
+
+                    if (!cardLink.includes(props.cardId)) {
+                        cardLink += `/${props.cardId}`
+                    }
+
+                    Utils.copyTextToClipboard(cardLink)
+                    sendFlashMessage({content: intl.formatMessage({id: 'CardDialog.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
+                }}
+            />
             {(card && !card.fields.isTemplate) &&
                 <Menu.Text
                     id='makeTemplate'
@@ -89,7 +106,7 @@ const CardDialog = (props: Props) => {
                 <div className='banner'>
                     <FormattedMessage
                         id='CardDialog.editing-template'
-                        defaultMessage="You're editing a template"
+                        defaultMessage="You're editing a template."
                     />
                 </div>}
 
@@ -109,7 +126,7 @@ const CardDialog = (props: Props) => {
                 <div className='banner error'>
                     <FormattedMessage
                         id='CardDialog.nocard'
-                        defaultMessage="This card doesn't exist or is inaccessible"
+                        defaultMessage="This card doesn't exist or is inaccessible."
                     />
                 </div>}
         </Dialog>

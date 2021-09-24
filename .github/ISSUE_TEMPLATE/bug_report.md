@@ -22,10 +22,11 @@ A clear and concise description of what you expected to happen.
 
 If applicable, add screenshots to elaborate on the problem.
 
-## Platform
+## Edition and Platform:
 
- - Browser and version: [e.g. Chrome 88, Safari 12]
- - OS and version: [e.g. Windows, macOS 10.15.7, iOS 13.1]
+ - Edition: Personal Desktop / Personal Server / Mattermost plugin
+ - Version: [e.g. v0.9.0]
+ - Browser and OS: [e.g. Chrome 91 on macOS, Edge 93 on Windows]
 
 ## Additional context
 

@@ -8,7 +8,6 @@ import {useHistory} from 'mm-react-router-dom'
 import {rudderAnalytics, RudderTelemetryHandler} from 'mattermost-redux/client/rudder'
 
 import {GlobalState} from 'mattermost-redux/types/store'
-import {getTheme} from 'mattermost-redux/selectors/entities/preferences'
 
 const windowAny = (window as any)
 windowAny.baseURL = '/plugins/focalboard'
@@ -21,14 +20,14 @@ import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHead
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
 import {setMattermostTheme} from '../../../webapp/src/theme'
 
-import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK} from './../../../webapp/src/wsclient'
-
 import TelemetryClient from '../../../webapp/src/telemetry/telemetryClient'
 
 import '../../../webapp/src/styles/focalboard-variables.scss'
 import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
+
+import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK, ACTION_UPDATE_CLIENT_CONFIG} from './../../../webapp/src/wsclient'
 
 import manifest from './manifest'
 import ErrorBoundary from './error_boundary'
@@ -66,11 +65,11 @@ type Props = {
 }
 
 const MainApp = (props: Props) => {
-    const [faviconStored, setFaviconStored] = useState(false)
     wsClient.initPlugin(manifest.id, props.webSocketClient)
 
     useEffect(() => {
         document.body.classList.add('focalboard-body')
+        document.body.classList.add('app__body')
         const root = document.getElementById('root')
         if (root) {
             root.classList.add('focalboard-plugin-root')
@@ -78,22 +77,10 @@ const MainApp = (props: Props) => {
 
         return () => {
             document.body.classList.remove('focalboard-body')
+            document.body.classList.remove('app__body')
             if (root) {
                 root.classList.remove('focalboard-plugin-root')
             }
-        }
-    }, [])
-
-    useEffect(() => {
-        const oldLinks = document.querySelectorAll("link[rel*='icon']") as NodeListOf<HTMLLinkElement>
-        if (!oldLinks) {
-            return () => null
-        }
-        setFaviconStored(true)
-
-        return () => {
-            document.querySelectorAll("link[rel*='icon']").forEach((n) => n.remove())
-            oldLinks.forEach((link) => document.getElementsByTagName('head')[0].appendChild(link))
         }
     }, [])
 
@@ -101,7 +88,7 @@ const MainApp = (props: Props) => {
         <ErrorBoundary>
             <ReduxProvider store={store}>
                 <div id='focalboard-app'>
-                    {faviconStored && <App/>}
+                    <App/>
                 </div>
                 <div id='focalboard-root-portal'/>
             </ReduxProvider>
@@ -130,11 +117,11 @@ export default class Plugin {
 
         this.registry = registry
 
-        let theme = getTheme(mmStore.getState())
+        let theme = mmStore.getState().entities.preferences.myPreferences.theme
         setMattermostTheme(theme)
         let lastViewedChannel = mmStore.getState().entities.channels.currentChannelId
         mmStore.subscribe(() => {
-            const currentTheme = getTheme(mmStore.getState())
+            const currentTheme = mmStore.getState().entities.preferences.myPreferences.theme
             if (currentTheme !== theme && currentTheme) {
                 setMattermostTheme(currentTheme)
                 theme = currentTheme
@@ -155,26 +142,7 @@ export default class Plugin {
                 window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`)
             }
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Boards')
-
-            this.registry.registerCustomRoute('go-to-current-workspace', () => {
-                const history = useHistory()
-                useEffect(() => {
-                    const currentChannel = mmStore.getState().entities.channels.currentChannelId
-                    if (currentChannel) {
-                        history.replace(`/boards/workspace/${currentChannel}`)
-                        return
-                    }
-                    const currentUserId = mmStore.getState().entities.users.currentUserId
-                    const lastChannelId = localStorage.getItem('focalboardLastViewedChannel:' + currentUserId)
-                    if (lastChannelId) {
-                        history.replace(`/boards/workspace/${lastChannelId}`)
-                        return
-                    }
-                    history.goBack()
-                }, [])
-                return <></>
-            })
-            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/plug/focalboard/go-to-current-workspace', MainApp, HeaderComponent)
+            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/dashboard', MainApp, HeaderComponent)
         } else {
             windowAny.frontendBaseURL = subpath + '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
@@ -212,6 +180,7 @@ export default class Plugin {
 
         // register websocket handlers
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BLOCK}`, (e: any) => wsClient.updateBlockHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
     }
 
     uninitialize(): void {

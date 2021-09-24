@@ -55,6 +55,10 @@ type Block struct {
 	// The deleted time. Set to indicate this block is deleted
 	// required: false
 	DeleteAt int64 `json:"deleteAt"`
+
+	// The workspace id that the block belongs to
+	// required: true
+	WorkspaceID string `json:"workspaceId"`
 }
 
 // BlockPatch is a patch for modify blocks

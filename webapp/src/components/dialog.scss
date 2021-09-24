@@ -23,7 +23,7 @@
             rgba(var(--center-channel-color-rgb), 0.1) 0 2px 4px;
         border-radius: var(--modal-rad);
         padding: 0;
-
+        -webkit-overflow-scrolling: touch;
         overflow-x: hidden;
         overflow-y: auto;
 
