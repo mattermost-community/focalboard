@@ -3,7 +3,7 @@
 import React from 'react'
 
 import Select from 'react-select'
-import {useIntl} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {UserWorkspace} from '../../user'
 import {useAppSelector} from '../../store/hooks'
@@ -18,10 +18,16 @@ type Props = {
     activeWorkspaceId: string
 }
 
+export const DashboardOption = {
+    label: 'Dashboard',
+    value: 'dashboard',
+    boardCount: 0,
+}
+
 const WorkspaceOptions = (props: Props): JSX.Element => {
     const intl = useIntl()
     const userWorkspaces = useAppSelector<UserWorkspace[]>(getUserWorkspaceList)
-    const options = userWorkspaces.
+    let options = userWorkspaces.
         filter((workspace) => workspace.id !== props.activeWorkspaceId).
         map((workspace) => {
             return {
@@ -41,6 +47,8 @@ const WorkspaceOptions = (props: Props): JSX.Element => {
 
             return b.boardCount - a.boardCount
         })
+
+    options = [DashboardOption, ...options]
 
     return (
         <Select
@@ -90,9 +98,18 @@ const Option = (props: any): JSX.Element => {
             <div className='workspaceTitle'>
                 {props.data.label}
             </div>
-            <div className='boardCount'>
-                {props.data.boardCount} {props.data.boardCount > 1 ? 'Boards' : 'Board'}
-            </div>
+
+            {
+                props.data.value !== DashboardOption.value &&
+                <div className='boardCount'>
+                    <FormattedMessage
+                        values={{count: props.data.boardCount}}
+                        id='General.BoardCount'
+                        defaultMessage='{count, plural, one {# Board} other {# Boards}}'
+                    />
+                </div>
+            }
+
         </div>
     )
 }

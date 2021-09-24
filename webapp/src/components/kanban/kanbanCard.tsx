@@ -10,9 +10,12 @@ import IconButton from '../../widgets/buttons/iconButton'
 import DeleteIcon from '../../widgets/icons/delete'
 import DuplicateIcon from '../../widgets/icons/duplicate'
 import OptionsIcon from '../../widgets/icons/options'
+import LinkIcon from '../../widgets/icons/Link'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {useSortable} from '../../hooks/sortable'
+import {Utils} from '../../utils'
+import {sendFlashMessage} from '../flashMessages'
 import {useAppSelector} from '../../store/hooks'
 import {getCardContents} from '../../store/contents'
 import {getCardComments} from '../../store/comments'
@@ -83,6 +86,21 @@ const KanbanCard = React.memo((props: Props) => {
                                         props.showCard(undefined)
                                     },
                                 )
+                            }}
+                        />
+                        <Menu.Text
+                            icon={<LinkIcon/>}
+                            id='copy'
+                            name={intl.formatMessage({id: 'KanbanCard.copyLink', defaultMessage: 'Copy link'})}
+                            onClick={() => {
+                                let cardLink = window.location.href
+
+                                if (!cardLink.includes(card.id)) {
+                                    cardLink += `/${card.id}`
+                                }
+
+                                Utils.copyTextToClipboard(cardLink)
+                                sendFlashMessage({content: intl.formatMessage({id: 'KanbanCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
                             }}
                         />
                     </Menu>

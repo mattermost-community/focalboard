@@ -1,6 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
+import {ClientConfig} from './config/clientConfig'
+
 import {Utils} from './utils'
 import {Block} from './blocks/block'
 import {OctoUtils} from './octoUtils'
@@ -26,6 +28,7 @@ export const ACTION_SUBSCRIBE_BLOCKS = 'SUBSCRIBE_BLOCKS'
 export const ACTION_SUBSCRIBE_WORKSPACE = 'SUBSCRIBE_WORKSPACE'
 export const ACTION_UNSUBSCRIBE_WORKSPACE = 'UNSUBSCRIBE_WORKSPACE'
 export const ACTION_UNSUBSCRIBE_BLOCKS = 'UNSUBSCRIBE_BLOCKS'
+export const ACTION_UPDATE_CLIENT_CONFIG = 'UPDATE_CLIENT_CONFIG'
 
 // The Mattermost websocket client interface
 export interface MMWebSocketClient {
@@ -37,6 +40,7 @@ type OnChangeHandler = (client: WSClient, blocks: Block[]) => void
 type OnReconnectHandler = (client: WSClient) => void
 type OnStateChangeHandler = (client: WSClient, state: 'init' | 'open' | 'close') => void
 type OnErrorHandler = (client: WSClient, e: Event) => void
+type OnConfigChangeHandler = (client: WSClient, clientConfig: ClientConfig) => void
 
 class WSClient {
     ws: WebSocket|null = null
@@ -48,6 +52,7 @@ class WSClient {
     onReconnect: OnReconnectHandler[] = []
     onChange: OnChangeHandler[] = []
     onError: OnErrorHandler[] = []
+    onConfigChange: OnConfigChangeHandler[] = []
     private mmWSMaxRetries = 100
     private mmWSRetryDelay = 300
     private notificationDelay = 100
@@ -139,6 +144,17 @@ class WSClient {
         }
     }
 
+    addOnConfigChange(handler: OnConfigChangeHandler): void {
+        this.onConfigChange.push(handler)
+    }
+
+    removeOnConfigChange(handler: OnConfigChangeHandler): void {
+        const index = this.onConfigChange.indexOf(handler)
+        if (index !== -1) {
+            this.onConfigChange.splice(index, 1)
+        }
+    }
+
     open(): void {
         if (this.client !== null) {
             // WSClient needs to ensure that the Mattermost client has
@@ -208,7 +224,6 @@ class WSClient {
         }
 
         ws.onmessage = (e) => {
-            // Utils.log(`WSClient websocket onmessage. data: ${e.data}`)
             if (ws !== this.ws) {
                 Utils.log('Ignoring closed ws')
                 return
@@ -240,6 +255,12 @@ class WSClient {
 
     updateBlockHandler(message: WSMessage): void {
         this.queueUpdateNotification(Utils.fixBlock(message.block!))
+    }
+
+    updateClientConfigHandler(config: ClientConfig): void {
+        for (const handler of this.onConfigChange) {
+            handler(this, config)
+        }
     }
 
     authenticate(workspaceId: string, token: string): void {

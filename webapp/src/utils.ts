@@ -442,6 +442,59 @@ class Utils {
             return block
         }
     }
+
+    static userAgent(): string {
+        return window.navigator.userAgent
+    }
+
+    static isDesktopApp(): boolean {
+        return Utils.userAgent().indexOf('Mattermost') !== -1 && Utils.userAgent().indexOf('Electron') !== -1
+    }
+
+    static getDesktopVersion(): string {
+        // use if the value window.desktop.version is not set yet
+        const regex = /Mattermost\/(\d+\.\d+\.\d+)/gm
+        const match = regex.exec(window.navigator.appVersion)?.[1] || ''
+        return match
+    }
+
+    /**
+     * Boolean function to check if a version is greater than another.
+     *
+     * currentVersionParam: The version being checked
+     * compareVersionParam: The version to compare the former version against
+     *
+     * eg.  currentVersionParam = 4.16.0, compareVersionParam = 4.17.0 returns false
+     *      currentVersionParam = 4.16.1, compareVersionParam = 4.16.1 returns true
+     */
+    static isVersionGreaterThanOrEqualTo(currentVersionParam: string, compareVersionParam: string): boolean {
+        if (currentVersionParam === compareVersionParam) {
+            return true
+        }
+
+        // We only care about the numbers
+        const currentVersionNumber = (currentVersionParam || '').split('.').filter((x) => (/^[0-9]+$/).exec(x) !== null)
+        const compareVersionNumber = (compareVersionParam || '').split('.').filter((x) => (/^[0-9]+$/).exec(x) !== null)
+
+        for (let i = 0; i < Math.max(currentVersionNumber.length, compareVersionNumber.length); i++) {
+            const currentVersion = parseInt(currentVersionNumber[i], 10) || 0
+            const compareVersion = parseInt(compareVersionNumber[i], 10) || 0
+            if (currentVersion > compareVersion) {
+                return true
+            }
+
+            if (currentVersion < compareVersion) {
+                return false
+            }
+        }
+
+        // If all components are equal, then return true
+        return true
+    }
+
+    static isDesktop(): boolean {
+        return Utils.isDesktopApp() && Utils.isVersionGreaterThanOrEqualTo(Utils.getDesktopVersion(), '5.0.0')
+    }
 }
 
 export {Utils}

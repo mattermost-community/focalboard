@@ -174,7 +174,9 @@ func (a *API) getContainerAllowingReadTokenForBlock(r *http.Request, blockID str
 		}
 
 		// No session, but has valid read token (read-only mode)
-		if len(blockID) > 0 && a.hasValidReadTokenForBlock(r, container, blockID) {
+		if len(blockID) > 0 &&
+			a.hasValidReadTokenForBlock(r, container, blockID) &&
+			a.app.GetClientConfig().EnablePublicSharedBoards {
 			return &container, nil
 		}
 

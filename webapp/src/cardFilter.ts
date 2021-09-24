@@ -118,20 +118,6 @@ class CardFilter {
             return {id: filterClause.propertyId, value: filterClause.values[0]}
         }
         case 'notIncludes': {
-            if (filterClause.values.length < 1) {
-                return {id: filterClause.propertyId}
-            }
-            if (template.type === 'select') {
-                const option = template.options.find((o) => !filterClause.values.includes(o.id))
-                if (option) {
-                    return {id: filterClause.propertyId, value: option.id}
-                }
-
-                // No other options exist
-                return {id: filterClause.propertyId}
-            }
-
-            // TODO: Handle non-select types
             return {id: filterClause.propertyId}
         }
         case 'isEmpty': {
