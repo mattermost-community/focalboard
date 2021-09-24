@@ -33,12 +33,7 @@ func TestPluginAdapterWorkspaceSubscription(t *testing.T) {
 	t.Run("Should correctly subscribe to a workspace", func(t *testing.T) {
 		require.False(t, pac.isSubscribedToWorkspace(workspaceID))
 
-		th.auth.EXPECT().
-			DoesUserHaveWorkspaceAccess(pac.userID, workspaceID).
-			Return(true)
-
-		msgData := map[string]interface{}{"workspaceId": workspaceID}
-		th.ReceiveWebSocketMessage(pac.webConnID, pac.userID, websocketActionSubscribeWorkspace, msgData)
+		th.SubscribeWebConnToWorkspace(pac.webConnID, pac.userID, workspaceID)
 
 		require.Len(t, th.pa.listenersByWorkspace[workspaceID], 1)
 		require.Contains(t, th.pa.listenersByWorkspace[workspaceID], pac)
@@ -51,12 +46,7 @@ func TestPluginAdapterWorkspaceSubscription(t *testing.T) {
 	t.Run("Subscribing again to a subscribed workspace would have no effect", func(t *testing.T) {
 		require.True(t, pac.isSubscribedToWorkspace(workspaceID))
 
-		th.auth.EXPECT().
-			DoesUserHaveWorkspaceAccess(pac.userID, workspaceID).
-			Return(true)
-
-		msgData := map[string]interface{}{"workspaceId": workspaceID}
-		th.ReceiveWebSocketMessage(pac.webConnID, pac.userID, websocketActionSubscribeWorkspace, msgData)
+		th.SubscribeWebConnToWorkspace(pac.webConnID, pac.userID, workspaceID)
 
 		require.Len(t, th.pa.listenersByWorkspace[workspaceID], 1)
 		require.Contains(t, th.pa.listenersByWorkspace[workspaceID], pac)
@@ -69,8 +59,7 @@ func TestPluginAdapterWorkspaceSubscription(t *testing.T) {
 	t.Run("Should correctly unsubscribe to a workspace", func(t *testing.T) {
 		require.True(t, pac.isSubscribedToWorkspace(workspaceID))
 
-		msgData := map[string]interface{}{"workspaceId": workspaceID}
-		th.ReceiveWebSocketMessage(pac.webConnID, pac.userID, websocketActionUnsubscribeWorkspace, msgData)
+		th.UnsubscribeWebConnFromWorkspace(pac.webConnID, pac.userID, workspaceID)
 
 		require.Empty(t, th.pa.listenersByWorkspace[workspaceID])
 		require.Empty(t, pac.workspaces)
@@ -81,8 +70,7 @@ func TestPluginAdapterWorkspaceSubscription(t *testing.T) {
 	t.Run("Unsubscribing again to an unsubscribed workspace would have no effect", func(t *testing.T) {
 		require.False(t, pac.isSubscribedToWorkspace(workspaceID))
 
-		msgData := map[string]interface{}{"workspaceId": workspaceID}
-		th.ReceiveWebSocketMessage(pac.webConnID, pac.userID, websocketActionUnsubscribeWorkspace, msgData)
+		th.UnsubscribeWebConnFromWorkspace(pac.webConnID, pac.userID, workspaceID)
 
 		require.Empty(t, th.pa.listenersByWorkspace[workspaceID])
 		require.Empty(t, pac.workspaces)
@@ -131,13 +119,7 @@ func TestPluginAdapterClientReconnect(t *testing.T) {
 		require.True(t, ok)
 		require.NotNil(t, pac)
 
-		// subscribe to a workspace
-		th.auth.EXPECT().
-			DoesUserHaveWorkspaceAccess(pac.userID, workspaceID).
-			Return(true)
-
-		msgData := map[string]interface{}{"workspaceId": workspaceID}
-		th.ReceiveWebSocketMessage(pac.webConnID, pac.userID, websocketActionSubscribeWorkspace, msgData)
+		th.SubscribeWebConnToWorkspace(pac.webConnID, pac.userID, workspaceID)
 		require.True(t, pac.isSubscribedToWorkspace(workspaceID))
 
 		// disconnect
@@ -200,5 +182,58 @@ func TestPluginAdapterClientReconnect(t *testing.T) {
 		for _, listener := range th.pa.listeners {
 			require.True(t, listener.isActive())
 		}
+	})
+}
+
+func TestGetUserIDsForWorkspace(t *testing.T) {
+	th := SetupTestHelper(t)
+
+	// we have two workspaces
+	workspaceID1 := mmModel.NewId()
+	workspaceID2 := mmModel.NewId()
+
+	// user 1 has two connections
+	userID1 := mmModel.NewId()
+	webConnID1 := mmModel.NewId()
+	th.pa.OnWebSocketConnect(webConnID1, userID1)
+	th.SubscribeWebConnToWorkspace(webConnID1, userID1, workspaceID1)
+
+	webConnID2 := mmModel.NewId()
+	th.pa.OnWebSocketConnect(webConnID2, userID1)
+	th.SubscribeWebConnToWorkspace(webConnID2, userID1, workspaceID2)
+
+	// user 2 has one connection
+	userID2 := mmModel.NewId()
+	webConnID3 := mmModel.NewId()
+	th.pa.OnWebSocketConnect(webConnID3, userID2)
+	th.SubscribeWebConnToWorkspace(webConnID3, userID2, workspaceID2)
+
+	t.Run("should find that only user1 is connected to workspace 1", func(t *testing.T) {
+		userIDs := th.pa.getUserIDsForWorkspace(workspaceID1)
+		require.ElementsMatch(t, []string{userID1}, userIDs)
+	})
+
+	t.Run("should find that both users are connected to workspace 2", func(t *testing.T) {
+		userIDs := th.pa.getUserIDsForWorkspace(workspaceID2)
+		require.ElementsMatch(t, []string{userID1, userID2}, userIDs)
+	})
+
+	t.Run("should ignore user1 if webConn 2 inactive when getting workspace 2 user ids", func(t *testing.T) {
+		th.pa.OnWebSocketDisconnect(webConnID2, userID1)
+
+		userIDs := th.pa.getUserIDsForWorkspace(workspaceID2)
+		require.ElementsMatch(t, []string{userID2}, userIDs)
+	})
+
+	t.Run("should still find user 1 in workspace 1 after the webConn 2 disconnection", func(t *testing.T) {
+		userIDs := th.pa.getUserIDsForWorkspace(workspaceID1)
+		require.ElementsMatch(t, []string{userID1}, userIDs)
+	})
+
+	t.Run("should find again both users if the webConn 2 comes back", func(t *testing.T) {
+		th.pa.OnWebSocketConnect(webConnID2, userID1)
+
+		userIDs := th.pa.getUserIDsForWorkspace(workspaceID2)
+		require.ElementsMatch(t, []string{userID1, userID2}, userIDs)
 	})
 }

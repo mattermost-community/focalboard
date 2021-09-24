@@ -41,3 +41,17 @@ func (th *TestHelper) ReceiveWebSocketMessage(webConnID, userID, action string, 
 
 	th.pa.WebSocketMessageHasBeenPosted(webConnID, userID, req)
 }
+
+func (th *TestHelper) SubscribeWebConnToWorkspace(webConnID, userID, workspaceID string) {
+	th.auth.EXPECT().
+		DoesUserHaveWorkspaceAccess(userID, workspaceID).
+		Return(true)
+
+	msgData := map[string]interface{}{"workspaceId": workspaceID}
+	th.ReceiveWebSocketMessage(webConnID, userID, websocketActionSubscribeWorkspace, msgData)
+}
+
+func (th *TestHelper) UnsubscribeWebConnFromWorkspace(webConnID, userID, workspaceID string) {
+	msgData := map[string]interface{}{"workspaceId": workspaceID}
+	th.ReceiveWebSocketMessage(webConnID, userID, websocketActionUnsubscribeWorkspace, msgData)
+}
