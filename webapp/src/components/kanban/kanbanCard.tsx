@@ -123,7 +123,7 @@ const KanbanCard = React.memo((props: Props) => {
                         contents={contents}
                         comments={comments}
                         propertyTemplate={template}
-                        emptyDisplayValue=''
+                        showEmptyPlaceholder={false}
                     />
                 </Tooltip>
             ))}

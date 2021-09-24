@@ -39,7 +39,7 @@ describe('components/propertyValueElement', () => {
                 contents={[]}
                 comments={[comments]}
                 propertyTemplate={propertyTemplate || board.fields.cardProperties[0]}
-                emptyDisplayValue={'empty'}
+                showEmptyPlaceholder={true}
             />,
         )
 
@@ -57,7 +57,7 @@ describe('components/propertyValueElement', () => {
                 contents={[]}
                 comments={[comments]}
                 propertyTemplate={propertyTemplate || board.fields.cardProperties[0]}
-                emptyDisplayValue={'empty'}
+                showEmptyPlaceholder={true}
             />,
         )
 
@@ -91,7 +91,7 @@ describe('components/propertyValueElement', () => {
                 contents={[]}
                 comments={[comments]}
                 propertyTemplate={propertyTemplate}
-                emptyDisplayValue={'empty'}
+                showEmptyPlaceholder={true}
             />,
         )
 
@@ -116,7 +116,7 @@ describe('components/propertyValueElement', () => {
                 contents={[]}
                 comments={[comments]}
                 propertyTemplate={propertyTemplate}
-                emptyDisplayValue={'empty'}
+                showEmptyPlaceholder={true}
             />,
         )
 
@@ -141,7 +141,7 @@ describe('components/propertyValueElement', () => {
                 contents={[]}
                 comments={[comments]}
                 propertyTemplate={propertyTemplate}
-                emptyDisplayValue={'empty'}
+                showEmptyPlaceholder={true}
             />,
         )
 
@@ -166,7 +166,7 @@ describe('components/propertyValueElement', () => {
                 contents={[]}
                 comments={[comments]}
                 propertyTemplate={propertyTemplate}
-                emptyDisplayValue={'empty'}
+                showEmptyPlaceholder={true}
             />,
         )
 
@@ -191,7 +191,7 @@ describe('components/propertyValueElement', () => {
                 contents={[]}
                 comments={[comments]}
                 propertyTemplate={propertyTemplate}
-                emptyDisplayValue={'empty'}
+                showEmptyPlaceholder={true}
             />,
         )
         const {container} = render(component)

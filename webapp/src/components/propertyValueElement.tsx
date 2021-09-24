@@ -31,17 +31,18 @@ type Props = {
     contents: Array<ContentBlock|ContentBlock[]>
     comments: CommentBlock[]
     propertyTemplate: IPropertyTemplate
-    emptyDisplayValue: string
+    showEmptyPlaceholder: boolean
 }
 
 const PropertyValueElement = (props:Props): JSX.Element => {
     const [value, setValue] = useState(props.card.fields.properties[props.propertyTemplate.id] || '')
     const [serverValue, setServerValue] = useState(props.card.fields.properties[props.propertyTemplate.id] || '')
 
-    const {card, propertyTemplate, readOnly, emptyDisplayValue, board, contents, comments} = props
+    const {card, propertyTemplate, readOnly, showEmptyPlaceholder, board, contents, comments} = props
     const intl = useIntl()
     const propertyValue = card.fields.properties[propertyTemplate.id]
     const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate, intl)
+    const emptyDisplayValue = showEmptyPlaceholder ? intl.formatMessage({id: 'PropertyValueElement.empty', defaultMessage: 'Empty'}) : ''
     const finalDisplayValue = displayValue || emptyDisplayValue
 
     const editableFields: Array<PropertyType> = ['text', 'number', 'email', 'url', 'phone']
@@ -169,6 +170,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             <DateRange
                 className='octo-propertyvalue'
                 value={value.toString()}
+                showEmptyPlaceholder={showEmptyPlaceholder}
                 onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
             />
         )
@@ -177,6 +179,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             <URLProperty
                 value={value.toString()}
                 readonly={readOnly}
+                placeholder={emptyDisplayValue}
                 onChange={setValue}
                 onSave={saveTextProperty}
                 onCancel={() => setValue(propertyValue)}
@@ -228,7 +231,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             return (
                 <Editable
                     className='octo-propertyvalue'
-                    placeholderText=''
+                    placeholderText={emptyDisplayValue}
                     value={value.toString()}
                     onChange={setValue}
                     onSave={saveTextProperty}
