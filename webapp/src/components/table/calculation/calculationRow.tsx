@@ -14,7 +14,7 @@ import {BoardView} from '../../../blocks/boardView'
 import {Card} from '../../../blocks/card'
 import {Options} from '../../calculations/options'
 
-import {TableCalculationOptions} from './TableCalculationOptions'
+import {TableCalculationOptions} from './tableCalculationOptions'
 
 type Props = {
     board: Board

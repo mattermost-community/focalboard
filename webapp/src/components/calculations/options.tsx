@@ -81,7 +81,7 @@ export const DropdownIndicator = (props: any) => {
 
 type CalculationOptionsProps = {
     value: string,
-    menuOpen?: boolean
+    menuOpen: boolean
     onClose?: () => void
     onChange: (value: string) => void
     property: IPropertyTemplate

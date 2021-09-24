@@ -119,6 +119,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                 onMenuClose={props.onCalculationMenuClose}
                 onMenuOpen={() => props.onCalculationMenuOpen()}
                 calculation={'count'}
+                cardProperties={board.fields.cardProperties}
             />
             <div className='octo-spacer'/>
             {!props.readonly &&

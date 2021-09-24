@@ -6,6 +6,7 @@ import './button.scss'
 
 type Props = {
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
+    onBlur?: (e: React.FocusEvent<HTMLButtonElement>) => void
     children?: React.ReactNode
     title?: string
     icon?: React.ReactNode
@@ -24,6 +25,7 @@ function Button(props: Props): JSX.Element {
             onClick={props.onClick}
             className={`Button ${props.active ? 'active' : ''} ${props.filled ? 'filled' : ''} ${props.emphasis ? 'emphasis--' + props.emphasis : ''} ${props.size ? 'size--' + props.size : ''} ${props.className || ''}`}
             title={props.title}
+            onBlur={props.onBlur}
         >
             {props.icon}
             <span>{props.children}</span>
