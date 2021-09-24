@@ -14,6 +14,8 @@ import {BoardView} from '../../../blocks/boardView'
 import {Card} from '../../../blocks/card'
 import {Options} from '../../calculations/options'
 
+import {TableCalculationOptions} from './TableCalculationOptions'
+
 type Props = {
     board: Board
     cards: Card[]
@@ -75,6 +77,7 @@ const CalculationRow = (props: Props): JSX.Element => {
                             cards={props.cards}
                             property={template}
                             hovered={hovered}
+                            optionsComponent={TableCalculationOptions}
                         />
                     )
                 })

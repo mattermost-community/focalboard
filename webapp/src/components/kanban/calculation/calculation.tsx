@@ -11,11 +11,13 @@ type Props = {
     property: IPropertyTemplate
     onMenuClose: () => void
     onMenuOpen: () => void
+    calculation: string
 }
 
 import './calculation.scss'
-import {CalculationOptions} from '../../calculations/options'
 import {IPropertyTemplate} from '../../../blocks/board'
+
+const defaultCalculation = 'count'
 
 export default function KanbanCalculation(props: Props): JSX.Element {
     return (
@@ -34,21 +36,21 @@ export default function KanbanCalculation(props: Props): JSX.Element {
                 {`${props.cards.length + 10}`}
             </Button>
 
-            {
-                props.menuOpen && (
-                    <div>
-                        <CalculationOptions
-                            value={'count'}
-                            onChange={() => {
-                                console.log('on change triggered')
-                            }}
-                            property={props.property}
-                            menuOpen={props.menuOpen}
-                            onClose={props.onMenuClose}
-                        />
-                    </div>
-                )
-            }
+            {/*{*/}
+            {/*    props.menuOpen && (*/}
+            {/*        <div>*/}
+            {/*            <CalculationOptionsGrouped*/}
+            {/*                value={props.calculation || defaultCalculation}*/}
+            {/*                onChange={() => {*/}
+            {/*                    console.log('on change triggered')*/}
+            {/*                }}*/}
+            {/*                property={props.property}*/}
+            {/*                menuOpen={props.menuOpen}*/}
+            {/*                onClose={props.onMenuClose}*/}
+            {/*            />*/}
+            {/*        </div>*/}
+            {/*    )*/}
+            {/*}*/}
         </React.Fragment>
     )
 }

@@ -9,38 +9,38 @@ import {IPropertyTemplate} from '../../blocks/board'
 import {CalculationOptions} from './options'
 
 describe('components/calculations/Options', () => {
-    test('should match snapshot', () => {
-        const property = {
-            type: 'number',
-        } as IPropertyTemplate
-
-        const component = (
-            <CalculationOptions
-                value={'none'}
-                onChange={() => {}}
-                property={property}
-            />
-        )
-
-        const {container} = render(component)
-        expect(container).toMatchSnapshot()
-    })
-
-    test('should match snapshot menu open', () => {
-        const property = {
-            type: 'number',
-        } as IPropertyTemplate
-
-        const component = (
-            <CalculationOptions
-                value={'none'}
-                menuOpen={true}
-                onChange={() => {}}
-                property={property}
-            />
-        )
-
-        const {container} = render(component)
-        expect(container).toMatchSnapshot()
-    })
+    // test('should match snapshot', () => {
+    //     const property = {
+    //         type: 'number',
+    //     } as IPropertyTemplate
+    //
+    //     const component = (
+    //         <CalculationOptions
+    //             value={'none'}
+    //             onChange={() => {}}
+    //             property={property}
+    //         />
+    //     )
+    //
+    //     const {container} = render(component)
+    //     expect(container).toMatchSnapshot()
+    // })
+    //
+    // test('should match snapshot menu open', () => {
+    //     const property = {
+    //         type: 'number',
+    //     } as IPropertyTemplate
+    //
+    //     const component = (
+    //         <CalculationOptions
+    //             value={'none'}
+    //             menuOpen={true}
+    //             onChange={() => {}}
+    //             property={property}
+    //         />
+    //     )
+    //
+    //     const {container} = render(component)
+    //     expect(container).toMatchSnapshot()
+    // })
 })

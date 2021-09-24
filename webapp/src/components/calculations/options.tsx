@@ -16,7 +16,7 @@ type Option = {
     displayName: string
 }
 
-const Options:Record<string, Option> = {
+export const Options:Record<string, Option> = {
     none: {value: 'none', label: 'None', displayName: 'Calculate'},
     count: {value: 'count', label: 'Count', displayName: 'Count'},
     countValue: {value: 'countValue', label: 'Count Value', displayName: 'Values'},
@@ -29,14 +29,14 @@ const Options:Record<string, Option> = {
     range: {value: 'range', label: 'Range', displayName: 'Range'},
 }
 
-const optionsByType: Map<string, Option[]> = new Map([
+export const optionsByType: Map<string, Option[]> = new Map([
     ['common', [Options.none, Options.count, Options.countValue, Options.countUniqueValue]],
     ['number', [Options.sum, Options.average, Options.median, Options.min, Options.max, Options.range]],
 ])
 
 const baseStyles = getSelectBaseStyle()
 
-const styles = {
+export const styles = {
     ...baseStyles,
     dropdownIndicator: (provided: CSSObject): CSSObject => ({
         ...baseStyles.dropdownIndicator(provided),
@@ -71,7 +71,7 @@ const styles = {
     }),
 }
 
-const DropdownIndicator = (props: any) => {
+export const DropdownIndicator = (props: any) => {
     return (
         <components.DropdownIndicator {...props}>
             <ChevronUp/>
@@ -79,20 +79,20 @@ const DropdownIndicator = (props: any) => {
     )
 }
 
-type Props = {
+type CalculationOptionsProps = {
     value: string,
     menuOpen?: boolean
     onClose?: () => void
     onChange: (value: string) => void
     property: IPropertyTemplate
+    components?: (() => JSX.Element)[]
 }
 
-const CalculationOptions = (props: Props): JSX.Element => {
-    const options = [...optionsByType.get('common')!]
-    if (optionsByType.get(props.property.type)) {
-        options.push(...optionsByType.get(props.property.type)!)
-    }
+type BaseOptionsProps = CalculationOptionsProps & {
+    options: Option[]
+}
 
+const CalculationOptions = (props: BaseOptionsProps): JSX.Element => {
     return (
         <Select
             styles={styles}
@@ -101,10 +101,10 @@ const CalculationOptions = (props: Props): JSX.Element => {
             isClearable={true}
             name={'calculation_options'}
             className={'CalculationOptions'}
-            options={options}
+            options={props.options}
             menuPlacement={'auto'}
             isSearchable={false}
-            components={{DropdownIndicator}}
+            components={{DropdownIndicator, ...(props.components || [])}}
             defaultMenuIsOpen={props.menuOpen}
             autoFocus={true}
             formatOptionLabel={(option: Option, meta) => {
@@ -126,6 +126,6 @@ const CalculationOptions = (props: Props): JSX.Element => {
 
 export {
     CalculationOptions,
-    Options,
     Option,
+    CalculationOptionsProps,
 }

@@ -173,6 +173,8 @@ const Kanban = (props: Props) => {
         setShowCalculationsMenu(newShowOptions)
     }
 
+    const selectedCalculations = board.fields.columnCalculations || []
+
     return (
         <div className='Kanban'>
             <div
