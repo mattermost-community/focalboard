@@ -22,7 +22,7 @@ A clear and concise description of what you expected to happen.
 
 If applicable, add screenshots to elaborate on the problem.
 
-## Edition and Platform:
+## Edition and Platform
 
  - Edition: Personal Desktop / Personal Server / Mattermost plugin
  - Version: [e.g. v0.9.0]
