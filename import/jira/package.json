@@ -1,0 +1,29 @@
+{
+  "name": "focalboard-jira-importer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "main": "importJira.js",
+  "scripts": {
+    "lint": "eslint --ext .tsx,.ts . --quiet --cache",
+    "fix": "eslint --ext .tsx,.ts . --quiet --fix --cache",
+    "test": "ts-node importJira.ts -i test/jira_export.xml -o test/jira-import.focalboard",
+    "debug:test": "node --inspect=5858 -r ts-node/register importJira.ts -i test/jira_export.xml -o test/jira-import.focalboard"
+  },
+  "keywords": [],
+  "author": "",
+  "devDependencies": {
+    "@types/minimist": "^1.2.1",
+    "@types/node": "^14.14.28",
+    "@types/xml2js": "^0.4.9",
+    "@typescript-eslint/eslint-plugin": "^4.15.0",
+    "@typescript-eslint/parser": "^4.15.0",
+    "eslint": "^7.20.0",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.5"
+  },
+  "dependencies": {
+    "minimist": "^1.2.5",
+    "xml2js": "^0.4.23"
+  }
+}
