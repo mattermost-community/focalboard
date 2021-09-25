@@ -80,7 +80,7 @@ async function main() {
     // TODO: Stream output
     const outputData = ArchiveUtils.buildBlockArchive(blocks)
     fs.writeFileSync(outputFile, outputData)
-    console.log(`Exported to ${outputFile}`)
+    console.log(`Exported ${blocks.length} block(s) to ${outputFile}`)
 }
 
 function convert(items: any[]) {
@@ -94,13 +94,13 @@ function convert(items: any[]) {
     // Compile standard properties
     board.fields.cardProperties = []
 
-    const priorityProperty = buildCardPropertyFromValues('Priority', items.map(o => o.priority._))
+    const priorityProperty = buildCardPropertyFromValues('Priority', items.map(o => o.priority?._))
     board.fields.cardProperties.push(priorityProperty)
 
-    const statusProperty = buildCardPropertyFromValues('Status', items.map(o => o.status._))
+    const statusProperty = buildCardPropertyFromValues('Status', items.map(o => o.status?._))
     board.fields.cardProperties.push(statusProperty)
 
-    const typeProperty = buildCardPropertyFromValues('Type', items.map(o => o.type._))
+    const typeProperty = buildCardPropertyFromValues('Type', items.map(o => o.type?._))
     board.fields.cardProperties.push(typeProperty)
 
     blocks.push(board)
@@ -116,9 +116,9 @@ function convert(items: any[]) {
     for (const item of items) {
         console.log(
             `Item: ${item.summary}, ` +
-            `priority: ${item.priority._}, ` +
-            `status: ${item.status._}, ` +
-            `type: ${item.type._}`)
+            `priority: ${item.priority?._}, ` +
+            `status: ${item.status?._}, ` +
+            `type: ${item.type?._}`)
 
         const card = createCard()
         card.title = item.summary
@@ -126,9 +126,9 @@ function convert(items: any[]) {
         card.parentId = board.id
 
         // Map standard properties
-        setProperty(card, priorityProperty, item.priority._)
-        setProperty(card, statusProperty, item.status._)
-        setProperty(card, typeProperty, item.type._)
+        if (item.priority?._) { setProperty(card, priorityProperty, item.priority._) }
+        if (item.status?._) { setProperty(card, statusProperty, item.status._) }
+        if (item.type?._) { setProperty(card, typeProperty, item.type._) }
 
         // TODO: Map custom properties
 
@@ -153,8 +153,10 @@ function convert(items: any[]) {
 function buildCardPropertyFromValues(propertyName: string, allValues: string[]) {
     const options: IPropertyOption[] = []
 
-    // Remove duplicate values
-    const values = allValues.filter((x, y) => allValues.indexOf(x) == y);
+    // Remove empty and duplicate values
+    const values = allValues.
+        filter(o => !!o).
+        filter((x, y) => allValues.indexOf(x) == y);
 
     for (const value of values) {
         const optionId = Utils.createGuid()
