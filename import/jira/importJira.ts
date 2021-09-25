@@ -100,6 +100,9 @@ function convert(items: any[]) {
     const statusProperty = buildCardPropertyFromValues('Status', items.map(o => o.status?._))
     board.fields.cardProperties.push(statusProperty)
 
+    const resolutionProperty = buildCardPropertyFromValues('Resolution', items.map(o => o.resolution?._))
+    board.fields.cardProperties.push(resolutionProperty)
+
     const typeProperty = buildCardPropertyFromValues('Type', items.map(o => o.type?._))
     board.fields.cardProperties.push(typeProperty)
 
@@ -116,6 +119,14 @@ function convert(items: any[]) {
         options: []
     }
     board.fields.cardProperties.push(originalUrlProperty)
+
+    const createdDateProperty: IPropertyTemplate = {
+        id: Utils.createGuid(),
+        name: 'Issue Created Date',
+        type: 'date',
+        options: []
+    }
+    board.fields.cardProperties.push(createdDateProperty)
 
     blocks.push(board)
 
@@ -142,11 +153,16 @@ function convert(items: any[]) {
         // Map standard properties
         if (item.priority?._) { setSelectProperty(card, priorityProperty, item.priority._) }
         if (item.status?._) { setSelectProperty(card, statusProperty, item.status._) }
+        if (item.resolution?._) { setSelectProperty(card, resolutionProperty, item.resolution._) }
         if (item.type?._) { setSelectProperty(card, typeProperty, item.type._) }
         if (item.assignee?._) { setSelectProperty(card, assigneeProperty, item.assignee._) }
         if (item.reporter?._) { setSelectProperty(card, reporterProperty, item.reporter._) }
 
         if (item.link) { setProperty(card, originalUrlProperty.id, item.link)}
+        if (item.created) {
+            const dateInMs = Date.parse(item.created)
+            setProperty(card, createdDateProperty.id, dateInMs.toString())
+        }
 
         // TODO: Map custom properties
 
