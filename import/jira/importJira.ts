@@ -7,7 +7,7 @@ import {ArchiveUtils} from '../../webapp/src/blocks/archive'
 import {Block} from '../../webapp/src/blocks/block'
 import {IPropertyOption, IPropertyTemplate, createBoard} from '../../webapp/src/blocks/board'
 import {createBoardView} from '../../webapp/src/blocks/boardView'
-import {createCard} from '../../webapp/src/blocks/card'
+import {Card, createCard} from '../../webapp/src/blocks/card'
 import {createTextBlock} from '../../webapp/src/blocks/textBlock'
 import {Utils} from './utils'
 import xml2js from 'xml2js'
@@ -85,6 +85,15 @@ function convert(items: any[]) {
     board.rootId = board.id
     board.title = 'Jira import'
 
+    // Convert Priority to a Select property
+    board.fields.cardProperties = []
+
+    const priorityProperty = buildCardPropertyFromValues('Priority', items.map(o => o.priority[0]._))
+    board.fields.cardProperties.push(priorityProperty)
+
+    const statusProperty = buildCardPropertyFromValues('Status', items.map(o => o.status[0]._))
+    board.fields.cardProperties.push(statusProperty)
+
     blocks.push(board)
 
     // Board view
@@ -95,29 +104,83 @@ function convert(items: any[]) {
     view.parentId = board.id
     blocks.push(view)
 
-    for (const item of items) {
-        console.log(`Card: ${item.title}`)
+    items.forEach(item => {
+        console.log(`Item: ${item.summary}, priority: ${item.priority[0]._}, status: ${item.status[0]._}`)
 
-        const outCard = createCard()
-        outCard.title = item.title
-        outCard.rootId = board.id
-        outCard.parentId = board.id
+        const card = createCard()
+        card.title = item.title
+        card.rootId = board.id
+        card.parentId = board.id
 
-        // TODO: Map properties
-        blocks.push(outCard)
+        // Map standard properties
+        setProperty(card, priorityProperty, item.priority[0]._)
+        setProperty(card, statusProperty, item.status[0]._)
+
+        // TODO: Map custom properties
 
         if (item.description) {
             console.log(`\t${item.description}`)
             const text = createTextBlock()
             text.title = item.description
             text.rootId = board.id
-            text.parentId = outCard.id
+            text.parentId = card.id
             blocks.push(text)
 
-            outCard.fields.contentOrder = [text.id]
+            card.fields.contentOrder = [text.id]
         }
-    }
+
+        blocks.push(card)
+
+    })
+
     return blocks
+}
+
+function buildCardPropertyFromValues(propertyName: string, allValues: string[]) {
+    const options: IPropertyOption[] = []
+
+    // Remove duplicate values
+    const values = allValues.filter((x, y) => allValues.indexOf(x) == y);
+
+    values.forEach(value => {
+        const optionId = Utils.createGuid()
+        const color = optionColors[optionColorIndex % optionColors.length]
+        optionColorIndex += 1
+        const option: IPropertyOption = {
+            id: optionId,
+            value,
+            color,
+        }
+        options.push(option)
+    })
+
+    const cardProperty: IPropertyTemplate = {
+        id: Utils.createGuid(),
+        name: propertyName,
+        type: 'select',
+        options
+    }
+
+    console.log(`Property: ${propertyName}, values: ${values}`)
+
+    return cardProperty
+}
+
+function setProperty(card: Card, cardProperty: IPropertyTemplate, propertyValue: string) {
+    const option = optionForPropertyValue(cardProperty, propertyValue)
+    if (option) {
+        card.fields.properties[cardProperty.id] = option.id
+    }
+}
+
+function optionForPropertyValue(cardProperty: IPropertyTemplate, propertyValue: string): IPropertyOption | null {
+    const option = cardProperty.options.find(o => o.value === propertyValue)
+    if (!option) {
+        console.error(`Property value not found: ${propertyValue}`)
+        return null
+    }
+
+    return option
 }
 
 function showHelp() {
