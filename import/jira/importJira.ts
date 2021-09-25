@@ -109,6 +109,14 @@ function convert(items: any[]) {
     const reporterProperty = buildCardPropertyFromValues('Reporter', items.map(o => o.reporter?._))
     board.fields.cardProperties.push(reporterProperty)
 
+    const originalUrlProperty: IPropertyTemplate = {
+        id: Utils.createGuid(),
+        name: 'Original URL',
+        type: 'url',
+        options: []
+    }
+    board.fields.cardProperties.push(originalUrlProperty)
+
     blocks.push(board)
 
     // Board view
@@ -132,11 +140,13 @@ function convert(items: any[]) {
         card.parentId = board.id
 
         // Map standard properties
-        if (item.priority?._) { setProperty(card, priorityProperty, item.priority._) }
-        if (item.status?._) { setProperty(card, statusProperty, item.status._) }
-        if (item.type?._) { setProperty(card, typeProperty, item.type._) }
-        if (item.assignee?._) { setProperty(card, assigneeProperty, item.assignee._) }
-        if (item.reporter?._) { setProperty(card, reporterProperty, item.reporter._) }
+        if (item.priority?._) { setSelectProperty(card, priorityProperty, item.priority._) }
+        if (item.status?._) { setSelectProperty(card, statusProperty, item.status._) }
+        if (item.type?._) { setSelectProperty(card, typeProperty, item.type._) }
+        if (item.assignee?._) { setSelectProperty(card, assigneeProperty, item.assignee._) }
+        if (item.reporter?._) { setSelectProperty(card, reporterProperty, item.reporter._) }
+
+        if (item.link) { setProperty(card, originalUrlProperty.id, item.link)}
 
         // TODO: Map custom properties
 
@@ -190,11 +200,15 @@ function buildCardPropertyFromValues(propertyName: string, allValues: string[]) 
     return cardProperty
 }
 
-function setProperty(card: Card, cardProperty: IPropertyTemplate, propertyValue: string) {
+function setSelectProperty(card: Card, cardProperty: IPropertyTemplate, propertyValue: string) {
     const option = optionForPropertyValue(cardProperty, propertyValue)
     if (option) {
         card.fields.properties[cardProperty.id] = option.id
     }
+}
+
+function setProperty(card: Card, cardPropertyId: string, propertyValue: string) {
+    card.fields.properties[cardPropertyId] = propertyValue
 }
 
 function optionForPropertyValue(cardProperty: IPropertyTemplate, propertyValue: string): IPropertyOption | null {
