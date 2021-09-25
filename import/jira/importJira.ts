@@ -104,7 +104,7 @@ function convert(items: any[]) {
     view.parentId = board.id
     blocks.push(view)
 
-    items.forEach(item => {
+    for (const item of items) {
         console.log(`Item: ${item.summary}, priority: ${item.priority[0]._}, status: ${item.status[0]._}`)
 
         const card = createCard()
@@ -130,8 +130,7 @@ function convert(items: any[]) {
         }
 
         blocks.push(card)
-
-    })
+    }
 
     return blocks
 }
@@ -142,7 +141,7 @@ function buildCardPropertyFromValues(propertyName: string, allValues: string[]) 
     // Remove duplicate values
     const values = allValues.filter((x, y) => allValues.indexOf(x) == y);
 
-    values.forEach(value => {
+    for (const value of values) {
         const optionId = Utils.createGuid()
         const color = optionColors[optionColorIndex % optionColors.length]
         optionColorIndex += 1
@@ -152,7 +151,7 @@ function buildCardPropertyFromValues(propertyName: string, allValues: string[]) 
             color,
         }
         options.push(option)
-    })
+    }
 
     const cardProperty: IPropertyTemplate = {
         id: Utils.createGuid(),
