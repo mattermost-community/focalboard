@@ -58,7 +58,7 @@ const CardDetailProperties = React.memo((props: Props) => {
                             contents={contents}
                             comments={comments}
                             propertyTemplate={propertyTemplate}
-                            emptyDisplayValue='Empty'
+                            showEmptyPlaceholder={true}
                         />
                     </div>
                 )
