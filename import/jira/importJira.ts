@@ -10,7 +10,7 @@ import {createBoardView} from '../../webapp/src/blocks/boardView'
 import {Card, createCard} from '../../webapp/src/blocks/card'
 import {createTextBlock} from '../../webapp/src/blocks/textBlock'
 import {Utils} from './utils'
-import xml2js from 'xml2js'
+import xml2js, {ParserOptions} from 'xml2js'
 
 // HACKHACK: To allow Utils.CreateGuid to work
 (global.window as any) = {}
@@ -55,14 +55,17 @@ async function main() {
 
 	console.log(`Read ${Math.round(inputData.length / 1024)} KB`)
 
-	const parser = new xml2js.Parser();
+    const parserOptions: ParserOptions = {
+        explicitArray: false
+    }
+	const parser = new xml2js.Parser(parserOptions);
 	const input = await parser.parseStringPromise(inputData)
 
-	if (input?.rss?.channel?.length < 1) {
+	if (!input?.rss?.channel) {
         console.error(`No channels in xml: ${inputFile}`)
         exit(2)
     }
-    const channel = input.rss.channel[0]
+    const channel = input.rss.channel
     const items = channel.item
 
 	// console.dir(items);
@@ -88,13 +91,13 @@ function convert(items: any[]) {
     // Compile standard properties
     board.fields.cardProperties = []
 
-    const priorityProperty = buildCardPropertyFromValues('Priority', items.map(o => o.priority[0]._))
+    const priorityProperty = buildCardPropertyFromValues('Priority', items.map(o => o.priority._))
     board.fields.cardProperties.push(priorityProperty)
 
-    const statusProperty = buildCardPropertyFromValues('Status', items.map(o => o.status[0]._))
+    const statusProperty = buildCardPropertyFromValues('Status', items.map(o => o.status._))
     board.fields.cardProperties.push(statusProperty)
 
-    const typeProperty = buildCardPropertyFromValues('Type', items.map(o => o.type[0]._))
+    const typeProperty = buildCardPropertyFromValues('Type', items.map(o => o.type._))
     board.fields.cardProperties.push(typeProperty)
 
     blocks.push(board)
@@ -110,19 +113,19 @@ function convert(items: any[]) {
     for (const item of items) {
         console.log(
             `Item: ${item.summary}, ` +
-            `priority: ${item.priority[0]._}, ` +
-            `status: ${item.status[0]._}, ` +
-            `type: ${item.type[0]._}`)
+            `priority: ${item.priority._}, ` +
+            `status: ${item.status._}, ` +
+            `type: ${item.type._}`)
 
         const card = createCard()
-        card.title = item.title
+        card.title = item.summary
         card.rootId = board.id
         card.parentId = board.id
 
         // Map standard properties
-        setProperty(card, priorityProperty, item.priority[0]._)
-        setProperty(card, statusProperty, item.status[0]._)
-        setProperty(card, typeProperty, item.type[0]._)
+        setProperty(card, priorityProperty, item.priority._)
+        setProperty(card, statusProperty, item.status._)
+        setProperty(card, typeProperty, item.type._)
 
         // TODO: Map custom properties
 
