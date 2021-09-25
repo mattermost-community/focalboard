@@ -11,6 +11,7 @@ import {Card, createCard} from '../../webapp/src/blocks/card'
 import {createTextBlock} from '../../webapp/src/blocks/textBlock'
 import {Utils} from './utils'
 import xml2js, {ParserOptions} from 'xml2js'
+import TurndownService from 'turndown'
 
 // HACKHACK: To allow Utils.CreateGuid to work
 (global.window as any) = {}
@@ -28,6 +29,8 @@ const optionColors = [
     'propColorRed',
 ]
 let optionColorIndex = 0
+
+var turndownService = new TurndownService()
 
 async function main() {
     const args: minimist.ParsedArgs = minimist(process.argv.slice(2))
@@ -130,9 +133,8 @@ function convert(items: any[]) {
         // TODO: Map custom properties
 
         if (item.description) {
-            console.log(`\t${item.description}`)
-            let description = item.description.replace('<p>', '')
-            description = description.replace('</p>', '\n\n')
+            const description = turndownService.turndown(item.description)
+            console.log(`\t${description}`)
             const text = createTextBlock()
             text.title = description
             text.rootId = board.id
