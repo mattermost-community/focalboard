@@ -122,7 +122,7 @@ function convert(items: any[]) {
 
     const createdDateProperty: IPropertyTemplate = {
         id: Utils.createGuid(),
-        name: 'Issue Created Date',
+        name: 'Created Date',
         type: 'date',
         options: []
     }
