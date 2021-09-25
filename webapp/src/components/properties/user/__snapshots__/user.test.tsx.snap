@@ -111,9 +111,9 @@ exports[`components/properties/user not readonly not existing user 1`] = `
         class=" css-kpfmlq-ValueContainer"
       >
         <div
-          class=" css-1wa3eu0-placeholder"
+          class=" css-1oswhd8-placeholder"
         >
-          Select...
+          Empty
         </div>
         <div
           class="css-1shkodo-Input"

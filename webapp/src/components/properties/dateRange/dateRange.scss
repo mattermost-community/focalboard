@@ -37,6 +37,11 @@
         margin-bottom: 100px;
     }
 
+    &.empty .Button {
+        color: rgba(var(--center-channel-color-rgb), 0.4);
+        padding: 0 3px;
+    }
+
     .Button {
         width: 100%;
         height: 100%;

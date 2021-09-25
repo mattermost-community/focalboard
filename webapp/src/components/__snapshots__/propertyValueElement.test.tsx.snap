@@ -3,16 +3,14 @@
 exports[`components/propertyValueElement should match snapshot, date, array value 1`] = `
 <div>
   <div
-    class="DateRange octo-propertyvalue"
+    class="DateRange empty octo-propertyvalue"
   >
     <button
       class="Button    "
       type="button"
     >
       <span>
-        <span
-          title="Empty"
-        />
+        Empty
       </span>
     </button>
   </div>
@@ -44,7 +42,7 @@ exports[`components/propertyValueElement should match snapshot, person, array va
 <div>
   <input
     class="Editable octo-propertyvalue"
-    placeholder=""
+    placeholder="Empty"
     spellcheck="true"
     style="width: 5px;"
     title=""
@@ -100,7 +98,7 @@ exports[`components/propertyValueElement should match snapshot, url, array value
   >
     <input
       class="Editable octo-propertyvalue"
-      placeholder=""
+      placeholder="Empty"
       style="width: 5px;"
       title="http://localhost"
       value="http://localhost"
@@ -126,7 +124,7 @@ exports[`components/propertyValueElement should match snapshot, url, array value
   >
     <input
       class="Editable octo-propertyvalue"
-      placeholder=""
+      placeholder="Empty"
       style="width: 5px;"
       title="http://localhost"
       value="http://localhost"
