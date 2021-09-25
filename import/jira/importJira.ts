@@ -103,6 +103,12 @@ function convert(items: any[]) {
     const typeProperty = buildCardPropertyFromValues('Type', items.map(o => o.type?._))
     board.fields.cardProperties.push(typeProperty)
 
+    const assigneeProperty = buildCardPropertyFromValues('Assignee', items.map(o => o.assignee?._))
+    board.fields.cardProperties.push(assigneeProperty)
+
+    const reporterProperty = buildCardPropertyFromValues('Reporter', items.map(o => o.reporter?._))
+    board.fields.cardProperties.push(reporterProperty)
+
     blocks.push(board)
 
     // Board view
@@ -129,6 +135,8 @@ function convert(items: any[]) {
         if (item.priority?._) { setProperty(card, priorityProperty, item.priority._) }
         if (item.status?._) { setProperty(card, statusProperty, item.status._) }
         if (item.type?._) { setProperty(card, typeProperty, item.type._) }
+        if (item.assignee?._) { setProperty(card, assigneeProperty, item.assignee._) }
+        if (item.reporter?._) { setProperty(card, reporterProperty, item.reporter._) }
 
         // TODO: Map custom properties
 
