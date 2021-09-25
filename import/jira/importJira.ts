@@ -65,16 +65,16 @@ async function main() {
     const channel = input.rss.channel[0]
     const items = channel.item
 
-	console.dir(items);
+	// console.dir(items);
 
     // Convert
     const blocks = convert(items)
 
     // Save output
     // TODO: Stream output
-    // const outputData = ArchiveUtils.buildBlockArchive(blocks)
-    // fs.writeFileSync(outputFile, outputData)
-    // console.log(`Exported to ${outputFile}`)
+    const outputData = ArchiveUtils.buildBlockArchive(blocks)
+    fs.writeFileSync(outputFile, outputData)
+    console.log(`Exported to ${outputFile}`)
 }
 
 function convert(items: any[]) {
@@ -85,7 +85,7 @@ function convert(items: any[]) {
     board.rootId = board.id
     board.title = 'Jira import'
 
-    // Convert Priority to a Select property
+    // Compile standard properties
     board.fields.cardProperties = []
 
     const priorityProperty = buildCardPropertyFromValues('Priority', items.map(o => o.priority[0]._))
@@ -93,6 +93,9 @@ function convert(items: any[]) {
 
     const statusProperty = buildCardPropertyFromValues('Status', items.map(o => o.status[0]._))
     board.fields.cardProperties.push(statusProperty)
+
+    const typeProperty = buildCardPropertyFromValues('Type', items.map(o => o.type[0]._))
+    board.fields.cardProperties.push(typeProperty)
 
     blocks.push(board)
 
@@ -105,7 +108,11 @@ function convert(items: any[]) {
     blocks.push(view)
 
     for (const item of items) {
-        console.log(`Item: ${item.summary}, priority: ${item.priority[0]._}, status: ${item.status[0]._}`)
+        console.log(
+            `Item: ${item.summary}, ` +
+            `priority: ${item.priority[0]._}, ` +
+            `status: ${item.status[0]._}, ` +
+            `type: ${item.type[0]._}`)
 
         const card = createCard()
         card.title = item.title
@@ -115,6 +122,7 @@ function convert(items: any[]) {
         // Map standard properties
         setProperty(card, priorityProperty, item.priority[0]._)
         setProperty(card, statusProperty, item.status[0]._)
+        setProperty(card, typeProperty, item.type[0]._)
 
         // TODO: Map custom properties
 
