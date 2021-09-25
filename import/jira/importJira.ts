@@ -131,8 +131,10 @@ function convert(items: any[]) {
 
         if (item.description) {
             console.log(`\t${item.description}`)
+            let description = item.description.replace('<p>', '')
+            description = description.replace('</p>', '\n\n')
             const text = createTextBlock()
-            text.title = item.description
+            text.title = description
             text.rootId = board.id
             text.parentId = card.id
             blocks.push(text)
