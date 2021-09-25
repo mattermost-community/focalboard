@@ -3,7 +3,7 @@
 exports[`components/properties/dateRange cancel set via text input 1`] = `
 <div>
   <div
-    class="DateRange "
+    class="DateRange  octo-propertyvalue"
   >
     <button
       class="Button    "
@@ -20,7 +20,7 @@ exports[`components/properties/dateRange cancel set via text input 1`] = `
 exports[`components/properties/dateRange handle clear 1`] = `
 <div>
   <div
-    class="DateRange "
+    class="DateRange  octo-propertyvalue"
   >
     <button
       class="Button    "
@@ -37,7 +37,7 @@ exports[`components/properties/dateRange handle clear 1`] = `
 exports[`components/properties/dateRange returns default correctly 1`] = `
 <div>
   <div
-    class="DateRange empty"
+    class="DateRange empty octo-propertyvalue"
   >
     <button
       class="Button    "
@@ -52,7 +52,7 @@ exports[`components/properties/dateRange returns default correctly 1`] = `
 exports[`components/properties/dateRange returns local correctly - es local 1`] = `
 <div>
   <div
-    class="DateRange "
+    class="DateRange  octo-propertyvalue"
   >
     <button
       class="Button    "
@@ -69,7 +69,7 @@ exports[`components/properties/dateRange returns local correctly - es local 1`] 
 exports[`components/properties/dateRange set via text input 1`] = `
 <div>
   <div
-    class="DateRange "
+    class="DateRange  octo-propertyvalue"
   >
     <button
       class="Button    "
@@ -86,7 +86,7 @@ exports[`components/properties/dateRange set via text input 1`] = `
 exports[`components/properties/dateRange set via text input, es locale 1`] = `
 <div>
   <div
-    class="DateRange "
+    class="DateRange  octo-propertyvalue"
   >
     <button
       class="Button    "

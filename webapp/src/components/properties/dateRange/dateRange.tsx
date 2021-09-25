@@ -158,7 +158,7 @@ function DateRange(props: Props): JSX.Element {
     }
 
     return (
-        <div className={`DateRange ${displayValue ? '' : 'empty'}`}>
+        <div className={`DateRange ${displayValue ? '' : 'empty'} ` + className}>
             <Button
                 onClick={() => setShowDialog(true)}
             >
