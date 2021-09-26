@@ -117,6 +117,8 @@ describe('Create and delete board / card', () => {
 
         cy.contains('Delete board').click({force: true});
 
+        cy.get('.DeleteBoardDialog button.danger').click({force: true});
+
         // Board should not exist
         cy.contains(boardTitle).should('not.exist');
     });
