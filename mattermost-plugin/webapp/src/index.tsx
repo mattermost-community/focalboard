@@ -139,7 +139,7 @@ export default class Plugin {
             windowAny.frontendBaseURL = subpath + '/boards'
             const goToFocalboardWorkspace = () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
-                window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`)
+                window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`, '_blank', 'noopener')
             }
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Boards')
             this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/dashboard', MainApp, HeaderComponent)
