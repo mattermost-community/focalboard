@@ -125,6 +125,10 @@ const valueSelectorStyle = {
         top: 'unset',
         transform: 'unset',
     }),
+    placeholder: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        color: 'rgba(var(--center-channel-color-rgb), 0.4)',
+    }),
     multiValue: (provided: CSSObject): CSSObject => ({
         ...provided,
         margin: 0,

@@ -140,7 +140,7 @@ const TableRow = React.memo((props: Props) => {
                             contents={contents}
                             comments={comments}
                             propertyTemplate={template}
-                            emptyDisplayValue=''
+                            showEmptyPlaceholder={false}
                         />
                     </div>)
             })}
