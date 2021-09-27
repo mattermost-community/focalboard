@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/mattermost/focalboard/server/auth"
@@ -27,11 +28,11 @@ type PluginAdapterClient struct {
 }
 
 func (pac *PluginAdapterClient) isActive() bool {
-	return pac.inactiveAt == 0
+	return atomic.LoadInt64(&pac.inactiveAt) == 0
 }
 
 func (pac *PluginAdapterClient) hasExpired(threshold time.Duration) bool {
-	return !mmModel.GetTimeForMillis(pac.inactiveAt).Add(threshold).After(time.Now())
+	return !mmModel.GetTimeForMillis(atomic.LoadInt64(&pac.inactiveAt)).Add(threshold).After(time.Now())
 }
 
 func (pac *PluginAdapterClient) isSubscribedToWorkspace(workspaceID string) bool {
@@ -97,9 +98,25 @@ func NewPluginAdapter(api plugin.API, auth auth.AuthInterface) *PluginAdapter {
 	}
 }
 
+func (pa *PluginAdapter) GetListenerByWebConnID(webConnID string) (pac *PluginAdapterClient, ok bool) {
+	pa.mu.RLock()
+	defer pa.mu.RUnlock()
+
+	pac, ok = pa.listeners[webConnID]
+	return
+}
+
+func (pa *PluginAdapter) ListenersByUserID(userID string) []*PluginAdapterClient {
+	pa.mu.RLock()
+	defer pa.mu.RUnlock()
+
+	return pa.listenersByUserID[userID]
+}
+
 func (pa *PluginAdapter) addListener(pac *PluginAdapterClient) {
 	pa.mu.Lock()
 	defer pa.mu.Unlock()
+
 	pa.listeners[pac.webConnID] = pac
 	pa.listenersByUserID[pac.userID] = append(pa.listenersByUserID[pac.userID], pac)
 }
@@ -131,7 +148,7 @@ func (pa *PluginAdapter) removeListener(pac *PluginAdapterClient) {
 }
 
 func (pa *PluginAdapter) removeExpiredForUserID(userID string) {
-	for _, pac := range pa.listenersByUserID[userID] {
+	for _, pac := range pa.ListenersByUserID(userID) {
 		if !pac.isActive() && pac.hasExpired(pa.staleThreshold) {
 			pa.removeListener(pac)
 		}
@@ -198,6 +215,9 @@ func (pa *PluginAdapter) unsubscribeListenerFromWorkspace(pac *PluginAdapterClie
 }
 
 func (pa *PluginAdapter) getUserIDsForWorkspace(workspaceID string) []string {
+	pa.mu.RLock()
+	defer pa.mu.RUnlock()
+
 	userMap := map[string]bool{}
 	for _, pac := range pa.listenersByWorkspace[workspaceID] {
 		if pac.isActive() {
@@ -224,12 +244,12 @@ func (pa *PluginAdapter) unsubscribeListenerFromBlocks(pac *PluginAdapterClient,
 }
 
 func (pa *PluginAdapter) OnWebSocketConnect(webConnID, userID string) {
-	if existingPAC, ok := pa.listeners[webConnID]; ok {
+	if existingPAC, ok := pa.GetListenerByWebConnID(webConnID); ok {
 		pa.api.LogDebug("inactive connection found for webconn, reusing",
 			"webConnID", webConnID,
 			"userID", userID,
 		)
-		existingPAC.inactiveAt = 0
+		atomic.StoreInt64(&existingPAC.inactiveAt, 0)
 		return
 	}
 
@@ -246,7 +266,7 @@ func (pa *PluginAdapter) OnWebSocketConnect(webConnID, userID string) {
 }
 
 func (pa *PluginAdapter) OnWebSocketDisconnect(webConnID, userID string) {
-	pac, ok := pa.listeners[webConnID]
+	pac, ok := pa.GetListenerByWebConnID(webConnID)
 	if !ok {
 		pa.api.LogError("received a disconnect for an unregistered webconn",
 			"webConnID", webConnID,
@@ -255,7 +275,7 @@ func (pa *PluginAdapter) OnWebSocketDisconnect(webConnID, userID string) {
 		return
 	}
 
-	pac.inactiveAt = mmModel.GetMillis()
+	atomic.StoreInt64(&pac.inactiveAt, mmModel.GetMillis())
 }
 
 func commandFromRequest(req *mmModel.WebSocketRequest) (*WebsocketCommand, error) {
@@ -279,7 +299,7 @@ func commandFromRequest(req *mmModel.WebSocketRequest) (*WebsocketCommand, error
 }
 
 func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest) {
-	pac, ok := pa.listeners[webConnID]
+	pac, ok := pa.GetListenerByWebConnID(webConnID)
 	if !ok {
 		pa.api.LogError("received a message for an unregistered webconn",
 			"webConnID", webConnID,

@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"sync"
 	"testing"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
@@ -195,18 +196,34 @@ func TestGetUserIDsForWorkspace(t *testing.T) {
 	// user 1 has two connections
 	userID1 := mmModel.NewId()
 	webConnID1 := mmModel.NewId()
-	th.pa.OnWebSocketConnect(webConnID1, userID1)
-	th.SubscribeWebConnToWorkspace(webConnID1, userID1, workspaceID1)
-
 	webConnID2 := mmModel.NewId()
-	th.pa.OnWebSocketConnect(webConnID2, userID1)
-	th.SubscribeWebConnToWorkspace(webConnID2, userID1, workspaceID2)
 
 	// user 2 has one connection
 	userID2 := mmModel.NewId()
 	webConnID3 := mmModel.NewId()
-	th.pa.OnWebSocketConnect(webConnID3, userID2)
-	th.SubscribeWebConnToWorkspace(webConnID3, userID2, workspaceID2)
+
+	wg := new(sync.WaitGroup)
+	wg.Add(3)
+
+	go func(wg *sync.WaitGroup) {
+		th.pa.OnWebSocketConnect(webConnID1, userID1)
+		th.SubscribeWebConnToWorkspace(webConnID1, userID1, workspaceID1)
+		wg.Done()
+	}(wg)
+
+	go func(wg *sync.WaitGroup) {
+		th.pa.OnWebSocketConnect(webConnID2, userID1)
+		th.SubscribeWebConnToWorkspace(webConnID2, userID1, workspaceID2)
+		wg.Done()
+	}(wg)
+
+	go func(wg *sync.WaitGroup) {
+		th.pa.OnWebSocketConnect(webConnID3, userID2)
+		th.SubscribeWebConnToWorkspace(webConnID3, userID2, workspaceID2)
+		wg.Done()
+	}(wg)
+
+	wg.Wait()
 
 	t.Run("should find that only user1 is connected to workspace 1", func(t *testing.T) {
 		userIDs := th.pa.getUserIDsForWorkspace(workspaceID1)
