@@ -35,7 +35,6 @@ export interface MMWebSocketClient {
     conn: WebSocket | null;
     sendMessage(action: string, data: any, responseCallback?: () => void): void
     setReconnectCallback(callback: () => void): void
-    setMissedEventCallback(callback: () => void): void
     setErrorCallback(callback: (event: Event) => void): void
     setCloseCallback(callback: (connectFailCount: number) => void): void
     connectionId: string
@@ -64,6 +63,7 @@ class WSClient {
     private reopenDelay = 3000
     private updatedBlocks: Block[] = []
     private updateTimeout?: NodeJS.Timeout
+    private errorPollId?: NodeJS.Timeout
 
     private logged = false
 
@@ -184,13 +184,16 @@ class WSClient {
                 // reliable websockets schema, so we poll the raw
                 // websockets client for its state directly until it
                 // reconnects
-                const pollId = setInterval(() => {
-                    Utils.logWarn(`Polling websockets connection for state: ${this.client?.conn?.readyState}`)
-                    if (this.client?.conn?.readyState === 1) {
-                        onReconnect()
-                        clearInterval(pollId)
-                    }
-                }, 500)
+                if (!this.errorPollId) {
+                    this.errorPollId = setInterval(() => {
+                        Utils.logWarn(`Polling websockets connection for state: ${this.client?.conn?.readyState}`)
+                        if (this.client?.conn?.readyState === 1) {
+                            onReconnect()
+                            clearInterval(this.errorPollId!)
+                            this.errorPollId = undefined
+                        }
+                    }, 500)
+                }
             }
 
             const onError = (event: Event) => {
@@ -204,11 +207,6 @@ class WSClient {
             this.client.setErrorCallback(onError)
             this.client.setCloseCallback(onClose)
             this.client.setReconnectCallback(onReconnect)
-            // missed event callback is triggered when reliable
-            // websockets is enabled and the client connects to a node
-            // that is different to the one that contains its state,
-            // so we treat it effectively like a reconnection
-            this.client.setMissedEventCallback(onReconnect)
 
             // WSClient needs to ensure that the Mattermost client has
             // correctly stablished the connection before opening
