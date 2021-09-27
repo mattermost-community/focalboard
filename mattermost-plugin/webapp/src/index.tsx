@@ -27,11 +27,7 @@ import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
 
-<<<<<<< HEAD
 import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK, ACTION_UPDATE_CLIENT_CONFIG} from './../../../webapp/src/wsclient'
-=======
-import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK} from './../../../webapp/src/wsclient'
->>>>>>> dcd45ef97aca9b80a678597bfb9e04c963e2b61c
 
 import manifest from './manifest'
 import ErrorBoundary from './error_boundary'
@@ -144,7 +140,7 @@ export default class Plugin {
             const goToFocalboardWorkspace = () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelHeader, {workspaceID: currentChannel})
-                window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`)
+                window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`, '_blank', 'noopener')
             }
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Boards')
             this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/dashboard', MainApp, HeaderComponent)

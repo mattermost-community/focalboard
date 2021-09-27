@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {forwardRef, useImperativeHandle, useRef} from 'react'
+import React, {forwardRef, useImperativeHandle, useLayoutEffect, useRef} from 'react'
 
 import './editable.scss'
 
@@ -12,6 +12,7 @@ export type EditableProps = {
     saveOnEsc?: boolean
     readonly?: boolean
     spellCheck?: boolean
+    autoExpand?: boolean
 
     validator?: (value: string) => boolean
     onCancel?: () => void
@@ -115,9 +116,26 @@ export function useEditable(
     }
 }
 
+function borderWidth(style: CSSStyleDeclaration): number {
+    return (
+        parseInt(style.borderLeftWidth || '0', 10) +
+        parseInt(style.borderRightWidth || '0', 10)
+    )
+}
+
 const Editable = (props: EditableProps, ref: React.Ref<Focusable>): JSX.Element => {
     const elementRef = useRef<HTMLInputElement>(null)
     const elementProps = useEditable(props, ref, elementRef)
+
+    useLayoutEffect(() => {
+        if (props.autoExpand && elementRef.current) {
+            const input = elementRef.current
+            const computed = getComputedStyle(input)
+            input.style.width = 'auto'
+            input.style.width = `${input.scrollWidth + borderWidth(computed) + 1}px`
+        }
+    })
+
     return (
         <input
             {...elementProps}
