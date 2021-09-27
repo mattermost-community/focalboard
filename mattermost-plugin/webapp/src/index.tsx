@@ -139,7 +139,7 @@ export default class Plugin {
             windowAny.frontendBaseURL = subpath + '/boards'
             const goToFocalboardWorkspace = () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
-                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ChannelHeader, {workspace: currentChannel})
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelHeader, {workspaceID: currentChannel})
                 window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`)
             }
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Boards')
@@ -157,6 +157,9 @@ export default class Plugin {
         if (config?.telemetry) {
             let rudderKey = TELEMETRY_RUDDER_KEY
             let rudderUrl = TELEMETRY_RUDDER_DATAPLANE_URL
+
+            Console.log(rudderKey)
+            Console.log(rudderUrl)
 
             if (rudderKey.startsWith('placeholder') && rudderUrl.startsWith('placeholder')) {
                 rudderKey = process.env.RUDDER_KEY as string //eslint-disable-line no-process-env

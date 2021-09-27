@@ -7,7 +7,7 @@ import {TelemetryHandler} from './telemetry'
 export const TelemetryCategory = 'boards'
 
 export const TelemetryActions = {
-    ChannelHeader: 'channelHeader',
+    ClickChannelHeader: 'clickChannelHeader',
     CreateBoard: 'createBoard',
     CreateBoardViaTemplate: 'createBoardViaTemplate',
     CreateBoardView: 'createBoardView',
