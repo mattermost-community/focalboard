@@ -158,8 +158,8 @@ export default class Plugin {
             let rudderKey = TELEMETRY_RUDDER_KEY
             let rudderUrl = TELEMETRY_RUDDER_DATAPLANE_URL
 
-            Console.log(rudderKey)
-            Console.log(rudderUrl)
+            console.log(rudderKey)
+            console.log(rudderUrl)
 
             if (rudderKey.startsWith('placeholder') && rudderUrl.startsWith('placeholder')) {
                 rudderKey = process.env.RUDDER_KEY as string //eslint-disable-line no-process-env
