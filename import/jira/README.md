@@ -9,6 +9,15 @@ This node app converts a Jira xml export into a Focalboard archive. To use:
 6. Run `npx ts-node importJira.ts -i <path-to-jira.xml> -o archive.focalboard` (also from within `focalboard/import/jira`)
 7. In Focalboard, click `Settings`, then `Import archive` and select `archive.focalboard`
 
-## Import scope
+## Import scope and known limitations
 
-Currently, the script imports each item as a card into a single board. [Contribute code](https://www.focalboard.com/contribute/getting-started/) to expand this.
+Currently, the script imports each item as a card into a single board.
+
+Users are imported as Select properties, with the name of the user.
+
+The following aren't imported:
+* Custom properties
+* Comments
+* Embedded files
+
+[Contribute code](https://www.focalboard.com/contribute/getting-started/) to expand this.
