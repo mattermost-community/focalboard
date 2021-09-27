@@ -32,7 +32,12 @@ export const ACTION_UPDATE_CLIENT_CONFIG = 'UPDATE_CLIENT_CONFIG'
 
 // The Mattermost websocket client interface
 export interface MMWebSocketClient {
+    conn: WebSocket | null;
     sendMessage(action: string, data: any, responseCallback?: () => void): void
+    setReconnectCallback(callback: () => void): void
+    setMissedEventCallback(callback: () => void): void
+    setErrorCallback(callback: (event: Event) => void): void
+    setCloseCallback(callback: (connectFailCount: number) => void): void
     connectionId: string
 }
 
@@ -157,16 +162,65 @@ class WSClient {
 
     open(): void {
         if (this.client !== null) {
+            // configure the Mattermost websocket client callbacks
+            const onReconnect = () => {
+                Utils.logWarn('WSClient reconnected')
+
+                this.open()
+                for (const handler of this.onReconnect) {
+                    handler(this)
+                }
+            }
+
+            const onClose = (connectFailCount: number) => {
+                Utils.logError(`WSClient has been closed, connect fail count: ${connectFailCount}`)
+
+                for (const handler of this.onStateChange) {
+                    handler(this, 'close')
+                }
+                this.state = 'close'
+
+                // there is no way to react to a reconnection with the
+                // reliable websockets schema, so we poll the raw
+                // websockets client for its state directly until it
+                // reconnects
+                const pollId = setInterval(() => {
+                    Utils.logWarn(`Polling websockets connection for state: ${this.client?.conn?.readyState}`)
+                    if (this.client?.conn?.readyState === 1) {
+                        onReconnect()
+                        clearInterval(pollId)
+                    }
+                }, 500)
+            }
+
+            const onError = (event: Event) => {
+                Utils.logError(`WSClient websocket onerror. data: ${JSON.stringify(event)}`)
+
+                for (const handler of this.onError) {
+                    handler(this, event)
+                }
+            }
+
+            this.client.setErrorCallback(onError)
+            this.client.setCloseCallback(onClose)
+            this.client.setReconnectCallback(onReconnect)
+            // missed event callback is triggered when reliable
+            // websockets is enabled and the client connects to a node
+            // that is different to the one that contains its state,
+            // so we treat it effectively like a reconnection
+            this.client.setMissedEventCallback(onReconnect)
+
             // WSClient needs to ensure that the Mattermost client has
             // correctly stablished the connection before opening
             let retries = 0
             const setPluginOpen = () => {
                 if (this.client?.connectionId !== '') {
+                    Utils.log('WSClient in plugin mode, reusing Mattermost WS connection')
+
                     for (const handler of this.onStateChange) {
                         handler(this, 'open')
                     }
                     this.state = 'open'
-                    Utils.log('WSClient in plugin mode, reusing Mattermost WS connection')
                     return
                 }
 
