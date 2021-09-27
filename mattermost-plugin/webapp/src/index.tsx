@@ -27,7 +27,11 @@ import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
 
+<<<<<<< HEAD
 import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK, ACTION_UPDATE_CLIENT_CONFIG} from './../../../webapp/src/wsclient'
+=======
+import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK} from './../../../webapp/src/wsclient'
+>>>>>>> dcd45ef97aca9b80a678597bfb9e04c963e2b61c
 
 import manifest from './manifest'
 import ErrorBoundary from './error_boundary'
