@@ -20,6 +20,21 @@
         background-color: rgba(var(--center-channel-color-rgb), 0.08);
     }
 
+    .Icon {
+        align-items: center;
+        display: flex;
+        height: 14px;
+        justify-content: center;
+        margin-right: 0;
+        width: 14px;
+    }
+
+    .Icon--right {
+        height: 14px;
+        margin-left: 4px;
+        width: 14px;
+    }
+
     &.filled {
         color: #fff;
         background-color: rgb(var(--button-bg-rgb));
@@ -56,9 +71,17 @@
         height: 32px;
     }
 
-    .Icon {
-        width: 14px;
-        height: 14px;
-        margin-right: 0;
+    &.size--large {
+        font-size: 16px;
+        font-weight: 600;
+        height: 48px;
+        padding: 0 24px;
+
+        .Icon--right {
+            font-size: 24px;
+            height: 20px;
+            margin-left: 10px;
+            width: 20px;
+        }
     }
 }
