@@ -64,7 +64,6 @@ type Props = {
 }
 
 const MainApp = (props: Props) => {
-    const [faviconStored, setFaviconStored] = useState(false)
     wsClient.initPlugin(manifest.id, props.webSocketClient)
 
     useEffect(() => {
@@ -151,7 +150,6 @@ export default class Plugin {
             }, '', 'Boards')
             this.registry.registerCustomRoute('/', MainApp)
         }
-
 
         const config = await octoClient.getClientConfig()
         if (config?.telemetry) {
