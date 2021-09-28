@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {ReactElement} from 'react'
 import {IntlProvider} from 'react-intl'
 
 import {render} from '@testing-library/react'
@@ -21,7 +21,7 @@ import {mockMatchMedia} from '../../testUtils'
 
 import DashboardPage from './dashboardPage'
 
-const wrapProviders = (children: any) => {
+const wrapProviders = (children: ReactElement) => {
     return (
         <IntlProvider locale='en'>{children}</IntlProvider>
     )

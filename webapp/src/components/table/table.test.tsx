@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React from 'react'
+import React, {ReactElement} from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import {render} from '@testing-library/react'
 import configureStore from 'redux-mock-store'
@@ -29,7 +29,7 @@ beforeEach(() => {
     FetchMock.fn.mockReset()
 })
 
-const wrapProviders = (children: any) => {
+const wrapProviders = (children: ReactElement) => {
     return (
         <DndProvider backend={HTML5Backend}>
             <IntlProvider locale='en'>{children}</IntlProvider>

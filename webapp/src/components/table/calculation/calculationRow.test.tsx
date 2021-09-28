@@ -4,7 +4,7 @@
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
 import {IntlProvider} from 'react-intl'
-import React from 'react'
+import React, {ReactElement} from 'react'
 
 import {render} from '@testing-library/react'
 import '@testing-library/jest-dom'
@@ -21,7 +21,7 @@ beforeEach(() => {
     FetchMock.fn.mockReset()
 })
 
-const wrapProviders = (children: any) => {
+const wrapProviders = (children: ReactElement) => {
     return (
         <DndProvider backend={HTML5Backend}>
             <IntlProvider locale='en'>{children}</IntlProvider>

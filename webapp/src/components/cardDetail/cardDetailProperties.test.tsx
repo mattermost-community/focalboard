@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {ReactElement} from 'react'
 
 import {fireEvent, render} from '@testing-library/react'
 import {IntlProvider} from 'react-intl'
@@ -19,7 +19,7 @@ beforeEach(() => {
     FetchMock.fn.mockReset()
 })
 
-const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
+const wrapIntl = (children: ReactElement) => <IntlProvider locale='en'>{children}</IntlProvider>
 
 describe('components/cardDetail/CardDetailProperties', () => {
     const board = TestBlockFactory.createBoard()

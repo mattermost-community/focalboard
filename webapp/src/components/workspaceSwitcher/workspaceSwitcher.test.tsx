@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {ReactElement} from 'react'
 import configureStore from 'redux-mock-store'
 
 import {Provider as ReduxProvider} from 'react-redux'
@@ -13,7 +13,7 @@ import {UserWorkspace} from '../../user'
 
 import WorkspaceOptions from './workspaceOptions'
 
-const wrapProviders = (children: any) => {
+const wrapProviders = (children: ReactElement) => {
     return (
         <IntlProvider locale='en'>{children}</IntlProvider>
     )

@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React from 'react'
+import React, {ReactElement} from 'react'
 import {fireEvent, render} from '@testing-library/react'
 import '@testing-library/jest-dom'
 import {IntlProvider} from 'react-intl'
@@ -19,7 +19,7 @@ import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import TableGroupHeaderRowElement from './tableGroupHeaderRow'
 
-const wrapProviders = (children: any) => {
+const wrapProviders = (children: ReactElement) => {
     return (
         <DndProvider backend={HTML5Backend}>
             <IntlProvider locale='en'>{children}</IntlProvider>

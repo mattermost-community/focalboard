@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React from 'react'
+import React, {ReactElement} from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import {IntlProvider} from 'react-intl'
 import {render, waitFor} from '@testing-library/react'
@@ -13,7 +13,7 @@ import userEvent from '@testing-library/user-event'
 
 import UserProperty from './user'
 
-const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
+const wrapIntl = (children: ReactElement) => <IntlProvider locale='en'>{children}</IntlProvider>
 
 describe('components/properties/user', () => {
     const mockStore = configureStore([])
