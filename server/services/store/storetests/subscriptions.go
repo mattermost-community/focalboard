@@ -65,7 +65,6 @@ func testCreateSubscription(t *testing.T, store store.Store, container store.Con
 				subNew, err := store.CreateSubscription(sub)
 				require.NoError(t, err, "create subscription should not error")
 
-				assert.NotEmpty(t, subNew.ID)
 				assert.NotZero(t, subNew.NotifiedAt)
 				assert.NotZero(t, subNew.CreateAt)
 				assert.Zero(t, subNew.DeleteAt)
@@ -155,7 +154,8 @@ func testDeleteSubscription(t *testing.T, store store.Store, container store.Con
 		subs, err := store.GetSubscriptions(user.ID)
 		require.NoError(t, err, "get subscriptions should not error")
 		assert.Len(t, subs, 1)
-		assert.Equal(t, subNew.ID, subs[0].ID)
+		assert.Equal(t, subNew.BlockID, subs[0].BlockID)
+		assert.Equal(t, subNew.SubscriberID, subs[0].SubscriberID)
 
 		err = store.DeleteSubscription(block.ID, user.ID)
 		require.NoError(t, err, "delete subscription should not error")
@@ -255,10 +255,18 @@ func testGetSubscribersForBlock(t *testing.T, store store.Store, container store
 		require.NoError(t, err, "get subscribers for block should not error")
 		assert.Len(t, subs, 50)
 
+		count, err := store.GetSubscribersCountForBlock(blocks[1].ID)
+		require.NoError(t, err, "get subscribers for block should not error")
+		assert.Equal(t, 50, count)
+
 		// make sure block[0] has zero users subscribed
 		subs, err = store.GetSubscribersForBlock(blocks[0].ID)
 		require.NoError(t, err, "get subscribers for block should not error")
 		assert.Empty(t, subs)
+
+		count, err = store.GetSubscribersCountForBlock(blocks[0].ID)
+		require.NoError(t, err, "get subscribers for block should not error")
+		assert.Zero(t, count)
 	})
 
 	t.Run("get subscribers for invalid block", func(t *testing.T) {

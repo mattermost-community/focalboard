@@ -5,6 +5,7 @@ package notifymentions
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/wiggin77/merror"
@@ -16,9 +17,17 @@ const (
 	backendName = "notifyMentions"
 )
 
+type MentionListener interface {
+	OnMention(userID string, evt notify.BlockChangeEvent)
+}
+
+// Backend provides the notification backend for @mentions.
 type Backend struct {
 	delivery Delivery
 	logger   *mlog.Logger
+
+	mux       sync.RWMutex
+	listeners []MentionListener
 }
 
 func New(delivery Delivery, logger *mlog.Logger) *Backend {
@@ -39,6 +48,24 @@ func (b *Backend) ShutDown() error {
 
 func (b *Backend) Name() string {
 	return backendName
+}
+
+func (b *Backend) AddListener(l MentionListener) {
+	b.mux.Lock()
+	defer b.mux.Unlock()
+	b.listeners = append(b.listeners, l)
+}
+
+func (b *Backend) RemoveListener(l MentionListener) {
+	b.mux.Lock()
+	defer b.mux.Unlock()
+	list := make([]MentionListener, 0, len(b.listeners))
+	for _, listener := range b.listeners {
+		if listener != l {
+			list = append(list, listener)
+		}
+	}
+	b.listeners = list
 }
 
 func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
@@ -62,6 +89,11 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 	oldMentions := extractMentions(evt.BlockOld)
 	merr := merror.New()
 
+	b.mux.RLock()
+	listeners := make([]MentionListener, 0, len(b.listeners))
+	copy(listeners, b.listeners)
+	b.mux.RUnlock()
+
 	for username := range mentions {
 		if _, exists := oldMentions[username]; exists {
 			// the mention already existed; no need to notify again
@@ -70,10 +102,23 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 
 		extract := extractText(evt.BlockChanged.Title, username, newLimits())
 
-		err := b.delivery.Deliver(username, extract, evt)
+		userID, err := b.delivery.Deliver(username, extract, evt)
 		if err != nil {
 			merr.Append(fmt.Errorf("cannot deliver notification for @%s: %w", username, err))
 		}
+		for _, listener := range listeners {
+			safeCallListener(listener, userID, evt, b.logger)
+		}
 	}
 	return merr.ErrorOrNil()
+}
+
+func safeCallListener(listener MentionListener, userID string, evt notify.BlockChangeEvent, logger *mlog.Logger) {
+	// don't let panicky listeners stop notifications
+	defer func() {
+		if r := recover(); r != nil {
+			logger.Error("panic calling @mention notification listener", mlog.Any("err", r))
+		}
+	}()
+	listener.OnMention(userID, evt)
 }

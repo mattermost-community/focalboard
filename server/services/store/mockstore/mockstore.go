@@ -106,6 +106,20 @@ func (mr *MockStoreMockRecorder) DeleteBlock(arg0, arg1, arg2 interface{}) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteBlock", reflect.TypeOf((*MockStore)(nil).DeleteBlock), arg0, arg1, arg2)
 }
 
+// DeleteNotificationHint mocks base method.
+func (m *MockStore) DeleteNotificationHint(arg0 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteNotificationHint", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteNotificationHint indicates an expected call of DeleteNotificationHint.
+func (mr *MockStoreMockRecorder) DeleteNotificationHint(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteNotificationHint", reflect.TypeOf((*MockStore)(nil).DeleteNotificationHint), arg0)
+}
+
 // DeleteSession mocks base method.
 func (m *MockStore) DeleteSession(arg0 string) error {
 	m.ctrl.T.Helper()
@@ -254,6 +268,21 @@ func (mr *MockStoreMockRecorder) GetBlocksWithType(arg0, arg1 interface{}) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlocksWithType", reflect.TypeOf((*MockStore)(nil).GetBlocksWithType), arg0, arg1)
 }
 
+// GetNotificationHint mocks base method.
+func (m *MockStore) GetNotificationHint(arg0 string) (*model.NotificationHint, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetNotificationHint", arg0)
+	ret0, _ := ret[0].(*model.NotificationHint)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetNotificationHint indicates an expected call of GetNotificationHint.
+func (mr *MockStoreMockRecorder) GetNotificationHint(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNotificationHint", reflect.TypeOf((*MockStore)(nil).GetNotificationHint), arg0)
+}
+
 // GetParentID mocks base method.
 func (m *MockStore) GetParentID(arg0 store.Container, arg1 string) (string, error) {
 	m.ctrl.T.Helper()
@@ -357,6 +386,21 @@ func (m *MockStore) GetSubTree3(arg0 store.Container, arg1 string) ([]model.Bloc
 func (mr *MockStoreMockRecorder) GetSubTree3(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSubTree3", reflect.TypeOf((*MockStore)(nil).GetSubTree3), arg0, arg1)
+}
+
+// GetSubscribersCountForBlock mocks base method.
+func (m *MockStore) GetSubscribersCountForBlock(arg0 string) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSubscribersCountForBlock", arg0)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSubscribersCountForBlock indicates an expected call of GetSubscribersCountForBlock.
+func (mr *MockStoreMockRecorder) GetSubscribersCountForBlock(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSubscribersCountForBlock", reflect.TypeOf((*MockStore)(nil).GetSubscribersCountForBlock), arg0)
 }
 
 // GetSubscribersForBlock mocks base method.
@@ -663,6 +707,21 @@ func (m *MockStore) UpdateUserPasswordByID(arg0, arg1 string) error {
 func (mr *MockStoreMockRecorder) UpdateUserPasswordByID(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateUserPasswordByID", reflect.TypeOf((*MockStore)(nil).UpdateUserPasswordByID), arg0, arg1)
+}
+
+// UpsertNotificationHint mocks base method.
+func (m *MockStore) UpsertNotificationHint(arg0 *model.NotificationHint) (*model.NotificationHint, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertNotificationHint", arg0)
+	ret0, _ := ret[0].(*model.NotificationHint)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpsertNotificationHint indicates an expected call of UpsertNotificationHint.
+func (mr *MockStoreMockRecorder) UpsertNotificationHint(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertNotificationHint", reflect.TypeOf((*MockStore)(nil).UpsertNotificationHint), arg0)
 }
 
 // UpsertSharing mocks base method.

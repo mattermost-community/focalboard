@@ -8,10 +8,6 @@ import (
 // Subscription is a subscription to a board, card, etc, for a user or channel.
 // swagger:model
 type Subscription struct {
-	// ID is the subscription id
-	// required: true
-	ID string `json:"id"`
-
 	// BlockType is the block type of the entity (e.g. board, card) subscribed to
 	// required: true
 	BlockType string `json:"block_type"`

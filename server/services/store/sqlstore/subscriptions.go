@@ -1,11 +1,12 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 package sqlstore
 
 import (
 	"database/sql"
-	"time"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/google/uuid"
 	"github.com/mattermost/focalboard/server/model"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -13,7 +14,6 @@ import (
 
 func subscriptionFields() []string {
 	return []string{
-		"id",
 		"block_type",
 		"block_id",
 		"subscriber_type",
@@ -26,7 +26,6 @@ func subscriptionFields() []string {
 
 func valuesForSubscription(sub *model.Subscription) []interface{} {
 	return []interface{}{
-		sub.ID,
 		sub.BlockType,
 		sub.BlockID,
 		sub.SubscriberType,
@@ -43,7 +42,6 @@ func (s *SQLStore) subscriptionsFromRows(rows *sql.Rows) ([]*model.Subscription,
 	for rows.Next() {
 		var sub model.Subscription
 		err := rows.Scan(
-			&sub.ID,
 			&sub.BlockType,
 			&sub.BlockID,
 			&sub.SubscriberType,
@@ -72,10 +70,9 @@ func (s *SQLStore) CreateSubscription(sub *model.Subscription) (*model.Subscript
 		return subscription, err
 	}
 
-	now := time.Now().Unix()
+	now := model.GetMillis()
 
 	subAdd := *sub
-	subAdd.ID = uuid.New().String()
 	subAdd.NotifiedAt = now // notified_at set so first notification doesn't pick up all history
 	subAdd.CreateAt = now
 	subAdd.DeleteAt = 0
@@ -98,7 +95,7 @@ func (s *SQLStore) CreateSubscription(sub *model.Subscription) (*model.Subscript
 
 // DeleteSubscription soft deletes the subscription for a specific block and subscriber.
 func (s *SQLStore) DeleteSubscription(blockID string, subscriberID string) error {
-	now := time.Now().Unix()
+	now := model.GetMillis()
 
 	query := s.getQueryBuilder().
 		Update(s.tablePrefix+"subscriptions").
@@ -201,4 +198,26 @@ func (s *SQLStore) GetSubscribersForBlock(blockID string) ([]*model.Subscriber, 
 		subscribers = append(subscribers, &sub)
 	}
 	return subscribers, nil
+}
+
+// GetSubscribersCountForBlock returns a count of all subscribers for a block.
+func (s *SQLStore) GetSubscribersCountForBlock(blockID string) (int, error) {
+	query := s.getQueryBuilder().
+		Select("count(subscriber_id)").
+		From(s.tablePrefix + "subscriptions").
+		Where(sq.Eq{"block_id": blockID}).
+		Where(sq.Eq{"delete_at": 0})
+
+	row := query.QueryRow()
+
+	var count int
+	err := row.Scan(&count)
+	if err != nil {
+		s.logger.Error("Cannot count subscribers for block",
+			mlog.String("block_id", blockID),
+			mlog.Err(err),
+		)
+		return 0, err
+	}
+	return count, nil
 }

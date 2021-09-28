@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 
-	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/notify/notifymentions"
 	"github.com/mattermost/focalboard/server/services/notify/plugindelivery"
 
@@ -20,7 +19,7 @@ const (
 	botDescription = "Created by Boards plugin."
 )
 
-func createMentionsNotifyBackend(client *pluginapi.Client, serverRoot string, logger *mlog.Logger) (notify.Backend, error) {
+func createMentionsNotifyBackend(client *pluginapi.Client, serverRoot string, logger *mlog.Logger) (*notifymentions.Backend, error) {
 	bot := &model.Bot{
 		Username:    botUsername,
 		DisplayName: botDisplayname,

@@ -64,4 +64,9 @@ type Store interface {
 	GetSubscription(blockID string, subscriberID string) (*model.Subscription, error)
 	GetSubscriptions(subscriberID string) ([]*model.Subscription, error)
 	GetSubscribersForBlock(blockID string) ([]*model.Subscriber, error)
+	GetSubscribersCountForBlock(blockID string) (int, error)
+
+	UpsertNotificationHint(hint *model.NotificationHint) (*model.NotificationHint, error)
+	DeleteNotificationHint(blockID string) error
+	GetNotificationHint(blockID string) (*model.NotificationHint, error)
 }
