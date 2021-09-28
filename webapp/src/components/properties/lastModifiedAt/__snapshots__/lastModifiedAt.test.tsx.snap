@@ -3,7 +3,7 @@
 exports[`componnets/properties/lastModifiedAt should match snapshot 1`] = `
 <div>
   <div
-    class="LastModifiedAt octo-propertyvalue"
+    class="LastModifiedAt octo-propertyvalue readonly"
   >
     June 15, 4:22 PM
   </div>

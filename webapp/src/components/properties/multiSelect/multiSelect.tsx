@@ -46,7 +46,7 @@ const MultiSelectProperty = (props: Props): JSX.Element => {
                 {values.length === 0 && (
                     <Label
                         color='empty'
-                    >{''}</Label>
+                    >{emptyValue}</Label>
                 )}
             </div>
         )

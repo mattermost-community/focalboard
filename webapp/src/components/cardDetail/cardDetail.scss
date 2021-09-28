@@ -35,18 +35,32 @@
 
     .octo-propertyrow {
         display: flex;
-        flex-direction: row;
         margin: 4px 0;
         height: 32px;
 
         .octo-propertyvalue {
             font-size: 14px;
-            width: 100%;
+
+            &:not(.readonly) {
+                min-width: 180px;
+                transition: background 100ms ease-out 0s;
+                cursor: pointer;
+                padding: 4px 8px;
+                border-radius: 4px;
+
+                &:hover {
+                    background-color: rgba(var(--center-channel-color-rgb), 0.08);
+                }
+            }
 
             .MenuWrapper {
                 display: flex;
                 align-items: center;
             }
+        }
+
+        .Label {
+            margin: 0 4px 0 0;
         }
     }
 
@@ -56,6 +70,9 @@
         color: rgba(var(--center-channel-color-rgb), 0.6);
 
         .Button {
+            width: 100%;
+            height: 100%;
+            padding: 8px;
             text-align: left;
             justify-content: unset;
         }
