@@ -34,6 +34,9 @@ type Props = {
 
 const websocketTimeoutForBanner = 5000
 
+const appSwitcherSourceKey = 'source'
+const appSwitcherSourceValue = 'appSwitcher'
+
 const BoardPage = (props: Props) => {
     const intl = useIntl()
     const board = useAppSelector(getCurrentBoard)
@@ -234,7 +237,10 @@ const BoardPage = (props: Props) => {
     // this is needed to redirect to dashboard
     // when opening Focalboard for the first time
     const shouldGoToDashboard = Utils.isFocalboardPlugin() && workspaceId === '0' && !match.params.boardId && !match.params.viewId
-    if (shouldGoToDashboard) {
+
+    const search = new URLSearchParams(window.location.search)
+    const cameFromAppSwitcher = search.get(appSwitcherSourceKey) === appSwitcherSourceValue
+    if (shouldGoToDashboard || cameFromAppSwitcher) {
         return (<Redirect to={'/dashboard'}/>)
     }
 
