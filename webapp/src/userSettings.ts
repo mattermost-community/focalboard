@@ -14,7 +14,8 @@ enum UserSettingKey {
     EmojiMartSkin = 'emoji-mart.skin',
     EmojiMartLast = 'emoji-mart.last',
     EmojiMartFrequently = 'emoji-mart.frequently',
-    RandomIcons = 'randomIcons'
+    RandomIcons = 'randomIcons',
+    WelcomePageViewed = 'welcomePageViewed'
 }
 
 export class UserSettings {
@@ -40,6 +41,14 @@ export class UserSettings {
 
     static set language(newValue: string | null) {
         UserSettings.set(UserSettingKey.Language, newValue)
+    }
+
+    static get welcomePageViewed(): string | null {
+        return UserSettings.get(UserSettingKey.WelcomePageViewed)
+    }
+
+    static set welcomePageViewed(newValue: string | null) {
+        UserSettings.set(UserSettingKey.WelcomePageViewed, newValue)
     }
 
     static get theme(): string | null {

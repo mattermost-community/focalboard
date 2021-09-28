@@ -397,6 +397,7 @@ const Table = (props: Props): JSX.Element => {
                     activeView={activeView}
                     resizingColumn={resizingColumn}
                     offset={offset}
+                    readonly={props.readonly}
                 />
             </div>
         </div>

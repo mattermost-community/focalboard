@@ -9,6 +9,7 @@ import {BoardView} from '../blocks/boardView'
 import {Board} from '../blocks/board'
 import {Card} from '../blocks/card'
 import DeleteIcon from '../widgets/icons/delete'
+import LinkIcon from '../widgets/icons/Link'
 import Menu from '../widgets/menu'
 
 import {useAppSelector} from '../store/hooks'
@@ -18,6 +19,7 @@ import {getCardComments} from '../store/comments'
 
 import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
+import {sendFlashMessage} from './flashMessages'
 
 type Props = {
     board: Board
@@ -69,6 +71,21 @@ const CardDialog = (props: Props) => {
                     }
                     await mutator.deleteBlock(card, 'delete card')
                     props.onClose()
+                }}
+            />
+            <Menu.Text
+                icon={<LinkIcon/>}
+                id='copy'
+                name={intl.formatMessage({id: 'CardDialog.copyLink', defaultMessage: 'Copy link'})}
+                onClick={() => {
+                    let cardLink = window.location.href
+
+                    if (!cardLink.includes(props.cardId)) {
+                        cardLink += `/${props.cardId}`
+                    }
+
+                    Utils.copyTextToClipboard(cardLink)
+                    sendFlashMessage({content: intl.formatMessage({id: 'CardDialog.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
                 }}
             />
             {(card && !card.fields.isTemplate) &&

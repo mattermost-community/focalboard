@@ -35,6 +35,11 @@
         right: 0;
     }
 
+    .octo-tooltip {
+        display: flex;
+        max-width: 100%;
+    }
+
     .octo-propertyvalue {
         margin: 4px 0 0;
         font-size: 12px;
