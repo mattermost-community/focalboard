@@ -132,7 +132,7 @@ const BoardPage = (props: Props) => {
             }
             document.title = title
         } else if (Utils.isFocalboardPlugin()) {
-            document.title = 'Mattermost - Boards'
+            document.title = 'Boards - Mattermost'
         } else {
             document.title = 'Focalboard'
         }
