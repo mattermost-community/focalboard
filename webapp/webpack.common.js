@@ -42,7 +42,7 @@ function makeCommonConfig() {
 
                 },
                 {
-                    test: /\.html$/,
+                    test: /\.(png|jpg|jpeg|gif|html)$/,
                     type: 'asset/resource',
                 },
                 {
@@ -67,7 +67,7 @@ function makeCommonConfig() {
                     exclude: [/node_modules/],
                 },
                 {
-                    test: /\.(png|eot|tiff|svg|woff2|woff|ttf|jpg)$/,
+                    test: /\.(eot|tiff|svg|woff2|woff|ttf)$/,
                     use: [
                         {
                             loader: 'file-loader',

@@ -49,7 +49,7 @@ const BoardPage = (props: Props) => {
     const [websocketClosed, setWebsocketClosed] = useState(false)
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
 
-    let workspaceId = UserSettings.lastWorkspaceId || '0'
+    let workspaceId = match.params.workspaceId || UserSettings.lastWorkspaceId || '0'
 
     // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {
@@ -135,6 +135,8 @@ const BoardPage = (props: Props) => {
                 title += ` | ${activeView.title}`
             }
             document.title = title
+        } else if (Utils.isFocalboardPlugin()) {
+            document.title = 'Boards - Mattermost'
         } else {
             document.title = 'Focalboard'
         }

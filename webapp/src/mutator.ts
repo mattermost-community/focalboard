@@ -645,7 +645,7 @@ class Mutator {
         beforeUndo?: () => Promise<void>,
     ): Promise<[Block[], string]> {
         const rootClient = new OctoClient(octoClient.serverUrl, '0')
-        const blocks = await rootClient.getSubtree(boardId, 3)
+        const blocks = await rootClient.getSubtree(boardId, 3, '0')
         const [newBlocks1, newBoard] = OctoUtils.duplicateBlockTree(blocks, boardId) as [Block[], Board, Record<string, string>]
         const newBlocks = newBlocks1.filter((o) => o.type !== 'comment')
         Utils.log(`duplicateBoard: duplicating ${newBlocks.length} blocks`)
