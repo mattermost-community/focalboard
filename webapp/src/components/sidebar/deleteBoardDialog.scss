@@ -1,7 +1,9 @@
 .DeleteBoardDialog {
     .dialog {
-        max-width: 512px;
-        height: max-content;
+        @media not screen and (max-width: 975px) {
+            max-width: 512px;
+            height: max-content;
+        }
 
         > .toolbar {
             padding-bottom: 0;
