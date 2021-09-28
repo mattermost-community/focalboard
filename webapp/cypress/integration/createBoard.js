@@ -14,6 +14,7 @@ describe('Create and delete board / card', () => {
         localStorage.setItem('focalboardSessionId', 'TESTTOKEN');
         localStorage.setItem('language', 'en');
         cy.expect(localStorage.getItem('focalboardSessionId')).to.eq('TESTTOKEN');
+        localStorage.setItem('welcomePageViewed', 'true');
     });
 
     it('Can create and delete a board and card', () => {

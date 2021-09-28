@@ -21,6 +21,18 @@ export class UserSettings {
             localStorage.setItem('lastWorkspaceId', newValue)
         }
     }
+
+    static get welcomePageViewed(): string | null {
+        return localStorage.getItem('welcomePageViewed')
+    }
+
+    static set welcomePageViewed(newValue: string | null) {
+        if (newValue === null) {
+            localStorage.removeItem('welcomePageViewed')
+        } else {
+            localStorage.setItem('welcomePageViewed', newValue)
+        }
+    }
 }
 
 const keys = ['language', 'theme', 'lastBoardId', 'lastViewId', 'emoji-mart.last', 'emoji-mart.frequently', 'randomIcons']
