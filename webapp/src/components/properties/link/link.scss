@@ -4,11 +4,8 @@
 
     &.url {
         width: 100%;
-    }
-
-    a {
-        padding: 0 8px; // increases clickable area for better UX
-        align-self: stretch;
+        display: flex;
+        overflow: hidden;
     }
 
     .Link__button {
@@ -32,10 +29,6 @@
             color: var(--button-bg-rgb);
             background-color: rgb(var(--button-bg-rgb), 0.16);
         }
-    }
-
-    a:hover {
-        background: unset;
     }
 
     &:hover {

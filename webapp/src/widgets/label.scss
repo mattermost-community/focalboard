@@ -12,6 +12,13 @@
     font-weight: 600;
     font-size: 13px;
 
+    &.empty {
+        color: rgba(var(--center-channel-color-rgb), 0.4);
+        padding: 3px;
+        text-transform: none;
+        font-weight: normal;
+    }
+
     input {
         line-height: 20px;
         color: rgba(var(--center-channel-color-rgb), 0.8);
