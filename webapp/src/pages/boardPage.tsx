@@ -45,7 +45,7 @@ const BoardPage = (props: Props) => {
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, workspaceId?: string}>()
     const [websocketClosed, setWebsocketClosed] = useState(false)
 
-    let workspaceId = UserSettings.lastWorkspaceId || '0'
+    let workspaceId = match.params.workspaceId || UserSettings.lastWorkspaceId || '0'
 
     // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {
