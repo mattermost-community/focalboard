@@ -4,6 +4,8 @@
     max-width: 180px;
     padding: 2px 8px;
     cursor: pointer;
+    //height: 24px;
+    position: relative;
 
     &:hover {
         background: rgba(var(--center-channel-color-rgb), 0.1);
@@ -11,5 +13,28 @@
 
     span {
         overflow: hidden;
+    }
+
+    .drops {
+        height: 36px;
+        padding: 8px;
+    }
+
+    .customs:hover, .drops:hover {
+        background: rgba(var(--center-channel-color-rgb), 0.1);
+    }
+
+    .dropdown-submenu {
+        position: fixed;
+        min-height: 36px;
+        overflow: auto;
+        background: rgb(var(--center-channel-bg-rgb));
+        border: none;
+        box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1),0 4px 11px hsla(0, 0%, 0%, 0.1);
+        z-index: 999;
+    }
+
+    .CompassIcon.icon-chevron-right {
+        float: right;
     }
 }
