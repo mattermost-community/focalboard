@@ -244,6 +244,15 @@ class Utils {
         /// #!endif
     }
 
+    static logWarn(message: string): void {
+        /// #!if ENV !== "production"
+        const timestamp = (Date.now() / 1000).toFixed(2)
+        // eslint-disable-next-line no-console
+        console.warn(`[${timestamp}] ${message}`)
+
+        /// #!endif
+    }
+
     // favicon
 
     static setFavicon(icon?: string): void {
