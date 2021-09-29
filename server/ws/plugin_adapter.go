@@ -19,94 +19,10 @@ const websocketMessagePrefix = "custom_focalboard_"
 
 var errMissingWorkspaceInCommand = fmt.Errorf("command doesn't contain workspaceId")
 
-type PluginAdapterClient struct {
-	inactiveAt int64
-	webConnID  string
-	userID     string
-	workspaces []string
-	blocks     []string
-	mu         sync.RWMutex
-}
-
-func (pac *PluginAdapterClient) isActive() bool {
-	return atomic.LoadInt64(&pac.inactiveAt) == 0
-}
-
-func (pac *PluginAdapterClient) hasExpired(threshold time.Duration) bool {
-	return !mmModel.GetTimeForMillis(atomic.LoadInt64(&pac.inactiveAt)).Add(threshold).After(time.Now())
-}
-
-func (pac *PluginAdapterClient) subscribeToWorkspace(workspaceID string) {
-	pac.mu.Lock()
-	defer pac.mu.Unlock()
-
-	pac.workspaces = append(pac.workspaces, workspaceID)
-}
-
-func (pac *PluginAdapterClient) unsubscribeFromWorkspace(workspaceID string) {
-	pac.mu.Lock()
-	defer pac.mu.Unlock()
-
-	newClientWorkspaces := []string{}
-	for _, id := range pac.workspaces {
-		if id != workspaceID {
-			newClientWorkspaces = append(newClientWorkspaces, id)
-		}
-	}
-	pac.workspaces = newClientWorkspaces
-}
-
-func (pac *PluginAdapterClient) unsubscribeFromBlock(blockID string) {
-	pac.mu.Lock()
-	defer pac.mu.Unlock()
-
-	newClientBlocks := []string{}
-	for _, id := range pac.blocks {
-		if id != blockID {
-			newClientBlocks = append(newClientBlocks, id)
-		}
-	}
-	pac.blocks = newClientBlocks
-}
-
-func (pac *PluginAdapterClient) isSubscribedToWorkspace(workspaceID string) bool {
-	pac.mu.RLock()
-	defer pac.mu.RUnlock()
-
-	for _, id := range pac.workspaces {
-		if id == workspaceID {
-			return true
-		}
-	}
-
-	return false
-}
-
-func (pac *PluginAdapterClient) isSubscribedToBlock(blockID string) bool {
-	pac.mu.RLock()
-	defer pac.mu.RUnlock()
-
-	for _, id := range pac.blocks {
-		if id == blockID {
-			return true
-		}
-	}
-
-	return false
-}
-
 type PluginAdapterInterface interface {
-	addListener(pac *PluginAdapterClient)
-	removeListener(pac *PluginAdapterClient)
-	removeListenerFromWorkspace(pac *PluginAdapterClient, workspaceID string)
-	removeListenerFromBlock(pac *PluginAdapterClient, blockID string)
-	subscribeListenerToWorkspace(pac *PluginAdapterClient, workspaceID string)
-	unsubscribeListenerFromWorkspace(pac *PluginAdapterClient, workspaceID string)
-	unsubscribeListenerFromBlocks(pac *PluginAdapterClient, blockIDs []string)
 	OnWebSocketConnect(webConnID, userID string)
 	OnWebSocketDisconnect(webConnID, userID string)
 	WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest)
-	getUserIDsForWorkspace(workspaceID string) []string
 	BroadcastConfigChange(clientConfig model.ClientConfig)
 	BroadcastBlockChange(workspaceID string, block model.Block)
 	BroadcastBlockDelete(workspaceID, blockID, parentID string)
@@ -122,7 +38,8 @@ type PluginAdapter struct {
 	listenersByUserID    map[string][]*PluginAdapterClient
 	listenersByWorkspace map[string][]*PluginAdapterClient
 	listenersByBlock     map[string][]*PluginAdapterClient
-	mu                   sync.RWMutex
+	listenersMU          sync.RWMutex
+	subscriptionsMU      sync.RWMutex
 }
 
 func NewPluginAdapter(api plugin.API, auth auth.AuthInterface) *PluginAdapter {
@@ -134,36 +51,51 @@ func NewPluginAdapter(api plugin.API, auth auth.AuthInterface) *PluginAdapter {
 		listenersByUserID:    make(map[string][]*PluginAdapterClient),
 		listenersByWorkspace: make(map[string][]*PluginAdapterClient),
 		listenersByBlock:     make(map[string][]*PluginAdapterClient),
-		mu:                   sync.RWMutex{},
+		listenersMU:          sync.RWMutex{},
+		subscriptionsMU:      sync.RWMutex{},
 	}
 }
 
 func (pa *PluginAdapter) GetListenerByWebConnID(webConnID string) (pac *PluginAdapterClient, ok bool) {
-	pa.mu.RLock()
-	defer pa.mu.RUnlock()
+	pa.listenersMU.RLock()
+	defer pa.listenersMU.RUnlock()
 
 	pac, ok = pa.listeners[webConnID]
 	return
 }
 
-func (pa *PluginAdapter) ListenersByUserID(userID string) []*PluginAdapterClient {
-	pa.mu.RLock()
-	defer pa.mu.RUnlock()
+func (pa *PluginAdapter) GetListenersByUserID(userID string) []*PluginAdapterClient {
+	pa.listenersMU.RLock()
+	defer pa.listenersMU.RUnlock()
 
 	return pa.listenersByUserID[userID]
 }
 
+func (pa *PluginAdapter) GetListenersByWorkspace(workspaceID string) []*PluginAdapterClient {
+	pa.subscriptionsMU.RLock()
+	defer pa.subscriptionsMU.RUnlock()
+
+	return pa.listenersByWorkspace[workspaceID]
+}
+
+func (pa *PluginAdapter) GetListenersByBlock(blockID string) []*PluginAdapterClient {
+	pa.subscriptionsMU.RLock()
+	defer pa.subscriptionsMU.RUnlock()
+
+	return pa.listenersByBlock[blockID]
+}
+
 func (pa *PluginAdapter) addListener(pac *PluginAdapterClient) {
-	pa.mu.Lock()
-	defer pa.mu.Unlock()
+	pa.listenersMU.Lock()
+	defer pa.listenersMU.Unlock()
 
 	pa.listeners[pac.webConnID] = pac
 	pa.listenersByUserID[pac.userID] = append(pa.listenersByUserID[pac.userID], pac)
 }
 
 func (pa *PluginAdapter) removeListener(pac *PluginAdapterClient) {
-	pa.mu.Lock()
-	defer pa.mu.Unlock()
+	pa.listenersMU.Lock()
+	defer pa.listenersMU.Unlock()
 
 	// workspace subscriptions
 	for _, workspace := range pac.workspaces {
@@ -188,7 +120,7 @@ func (pa *PluginAdapter) removeListener(pac *PluginAdapterClient) {
 }
 
 func (pa *PluginAdapter) removeExpiredForUserID(userID string) {
-	for _, pac := range pa.ListenersByUserID(userID) {
+	for _, pac := range pa.GetListenersByUserID(userID) {
 		if !pac.isActive() && pac.hasExpired(pa.staleThreshold) {
 			pa.removeListener(pac)
 		}
@@ -197,24 +129,28 @@ func (pa *PluginAdapter) removeExpiredForUserID(userID string) {
 
 func (pa *PluginAdapter) removeListenerFromWorkspace(pac *PluginAdapterClient, workspaceID string) {
 	newWorkspaceListeners := []*PluginAdapterClient{}
-	for _, listener := range pa.listenersByWorkspace[workspaceID] {
+	for _, listener := range pa.GetListenersByWorkspace(workspaceID) {
 		if listener.webConnID != pac.webConnID {
 			newWorkspaceListeners = append(newWorkspaceListeners, listener)
 		}
 	}
+	pa.subscriptionsMU.Lock()
 	pa.listenersByWorkspace[workspaceID] = newWorkspaceListeners
+	pa.subscriptionsMU.Unlock()
 
 	pac.unsubscribeFromWorkspace(workspaceID)
 }
 
 func (pa *PluginAdapter) removeListenerFromBlock(pac *PluginAdapterClient, blockID string) {
 	newBlockListeners := []*PluginAdapterClient{}
-	for _, listener := range pa.listenersByBlock[blockID] {
+	for _, listener := range pa.GetListenersByBlock(blockID) {
 		if listener.webConnID != pac.webConnID {
 			newBlockListeners = append(newBlockListeners, listener)
 		}
 	}
+	pa.subscriptionsMU.Lock()
 	pa.listenersByBlock[blockID] = newBlockListeners
+	pa.subscriptionsMU.Unlock()
 
 	pac.unsubscribeFromBlock(blockID)
 }
@@ -224,10 +160,10 @@ func (pa *PluginAdapter) subscribeListenerToWorkspace(pac *PluginAdapterClient, 
 		return
 	}
 
-	pa.mu.Lock()
-	defer pa.mu.Unlock()
-
+	pa.subscriptionsMU.Lock()
 	pa.listenersByWorkspace[workspaceID] = append(pa.listenersByWorkspace[workspaceID], pac)
+	pa.subscriptionsMU.Unlock()
+
 	pac.subscribeToWorkspace(workspaceID)
 }
 
@@ -236,18 +172,12 @@ func (pa *PluginAdapter) unsubscribeListenerFromWorkspace(pac *PluginAdapterClie
 		return
 	}
 
-	pa.mu.Lock()
-	defer pa.mu.Unlock()
-
 	pa.removeListenerFromWorkspace(pac, workspaceID)
 }
 
 func (pa *PluginAdapter) getUserIDsForWorkspace(workspaceID string) []string {
-	pa.mu.RLock()
-	defer pa.mu.RUnlock()
-
 	userMap := map[string]bool{}
-	for _, pac := range pa.listenersByWorkspace[workspaceID] {
+	for _, pac := range pa.GetListenersByWorkspace(workspaceID) {
 		if pac.isActive() {
 			userMap[pac.userID] = true
 		}
@@ -260,10 +190,8 @@ func (pa *PluginAdapter) getUserIDsForWorkspace(workspaceID string) []string {
 	return userIDs
 }
 
+//nolint:unused
 func (pa *PluginAdapter) unsubscribeListenerFromBlocks(pac *PluginAdapterClient, blockIDs []string) {
-	pa.mu.Lock()
-	defer pa.mu.Unlock()
-
 	for _, blockID := range blockIDs {
 		if pac.isSubscribedToBlock(blockID) {
 			pa.removeListenerFromBlock(pac, blockID)
