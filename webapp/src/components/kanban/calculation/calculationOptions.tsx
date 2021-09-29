@@ -2,7 +2,13 @@
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
 
-import {CalculationOptions, CalculationOptionsProps, optionsByType} from '../../calculations/options'
+import {
+    CalculationOptions,
+    CalculationOptionsProps,
+    optionsByType,
+    Option as SelectOption,
+    typesByOptions,
+} from '../../calculations/options'
 import {IPropertyTemplate} from '../../../blocks/board'
 import './calculationOption.scss'
 import ChevronRight from '../../../widgets/icons/chevronRight'
@@ -11,16 +17,17 @@ type Props = CalculationOptionsProps & {
     cardProperties: IPropertyTemplate[]
 }
 
-const Option = (props: any): JSX.Element => {
+type Foo = SelectOption & {
+    cardProperties: IPropertyTemplate[]
+}
+
+const Option = (props: {data: Foo}): JSX.Element => {
     const [submenu, setSubmenu] = useState(false)
     const [height, setHeight] = useState(0)
     const [x, setX] = useState(0)
+    const [calculationToProperties, setCalculationToProperties] = useState<Map<string, IPropertyTemplate[]>>(new Map())
 
     const showOption = (e: any) => {
-        console.log('showOption')
-        console.log(e.target.getBoundingClientRect())
-        console.log(e.target.getBoundingClientRect().x + e.target)
-        console.log(e.target.getBoundingClientRect().y)
         if (submenu) {
             setSubmenu(false)
         } else {
@@ -35,7 +42,23 @@ const Option = (props: any): JSX.Element => {
         console.log('clicked')
     }
 
-    console.log(props)
+    if (!calculationToProperties.get(props.data.value)) {
+        console.log('computing')
+        const supportedPropertyTypes = new Map<string, boolean>([])
+        if (typesByOptions.get(props.data.value)) {
+            (typesByOptions.get(props.data.value) || []).
+                forEach((propertyType) => supportedPropertyTypes.set(propertyType, true))
+        }
+
+        const supportedProperties = props.data.cardProperties.
+            filter((property) => supportedPropertyTypes.get(property.type) || supportedPropertyTypes.get('common'))
+
+        calculationToProperties.set(props.data.value, supportedProperties)
+        setCalculationToProperties(calculationToProperties)
+    } else {
+        console.log('reusing')
+    }
+
     return (
         <div
             className='KanbanCalculationOptions_CustomOption'
@@ -52,24 +75,19 @@ const Option = (props: any): JSX.Element => {
                         className='dropdown-submenu'
                         style={{top: `${height - 10}px`, left: `${x}px`}}
                     >
-                        <div
-                            className='drops'
-                            onClick={handleSubOption}
-                        >
-                            {'Test dropdown 1'}
-                        </div>
-                        <div
-                            className='drops'
-                            onClick={handleSubOption}
-                        >
-                            {'Test dropdown 2'}
-                        </div>
-                        <div
-                            className='drops'
-                            onClick={handleSubOption}
-                        >
-                            {'Test dropdown 3'}
-                        </div>
+
+                        {
+                            calculationToProperties.get(props.data.value) &&
+                            calculationToProperties.get(props.data.value)!.map((property) => (
+                                <div
+                                    key={property.id}
+                                    className='drops'
+                                    onClick={handleSubOption}
+                                >
+                                    {property.name}
+                                </div>
+                            ))
+                        }
                     </div>
                 )
             }
@@ -78,12 +96,25 @@ const Option = (props: any): JSX.Element => {
 }
 
 export const KanbanCalculationOptions = (props: Props): JSX.Element => {
-    const options = props.cardProperties.map((property) => optionsByType.get(property.type) || []).reduce((acc, propertyOptions) => {
-        acc.push(...propertyOptions)
-        return acc
-    })
+    const options: Foo[] = []
 
-    options.push(...optionsByType.get('common')!)
+    props.cardProperties.
+        map((property) => optionsByType.get(property.type) || []).
+        forEach((typeOptions) => {
+            typeOptions.forEach((typeOption) => {
+                options.push({
+                    ...typeOption,
+                    cardProperties: props.cardProperties,
+                })
+            })
+        })
+
+    optionsByType.get('common')!.forEach((typeOption) => {
+        options.push({
+            ...typeOption,
+            cardProperties: props.cardProperties,
+        })
+    })
 
     return (
         <CalculationOptions

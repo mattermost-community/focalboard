@@ -39,6 +39,22 @@ export const optionsByType: Map<string, Option[]> = new Map([
     ['number', [Options.sum, Options.average, Options.median, Options.min, Options.max, Options.range]],
 ])
 
+export const typesByOptions: Map<string, string[]> = generateTypesByOption()
+
+function generateTypesByOption(): Map<string, string[]> {
+    const mapping = new Map<string, string[]>()
+
+    optionsByType.forEach((options, type) => {
+        options.forEach((option) => {
+            const types = mapping.get(option.value) || []
+            types.push(type)
+            mapping.set(option.value, types)
+        })
+    })
+
+    return mapping
+}
+
 const baseStyles = getSelectBaseStyle()
 
 export const styles = {
