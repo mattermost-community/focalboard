@@ -8,7 +8,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -47,7 +46,7 @@ func testGetWorkspaceUsers(t *testing.T, store store.Store) {
 		require.Equal(t, 0, len(users))
 		require.Equal(t, sql.ErrNoRows, err)
 
-		userID := uuid.New().String()
+		userID := model.NewID("user")
 
 		err = store.CreateUser(&model.User{
 			ID:       userID,
@@ -71,7 +70,7 @@ func testGetWorkspaceUsers(t *testing.T, store store.Store) {
 
 func testCreateAndGetUser(t *testing.T, store store.Store) {
 	user := &model.User{
-		ID:       uuid.New().String(),
+		ID:       model.NewID("user"),
 		Username: "damao",
 		Email:    "mock@email.com",
 	}
@@ -108,7 +107,7 @@ func testCreateAndGetUser(t *testing.T, store store.Store) {
 
 func testCreateAndUpdateUser(t *testing.T, store store.Store) {
 	user := &model.User{
-		ID: uuid.New().String(),
+		ID: model.NewID("user"),
 	}
 	err := store.CreateUser(user)
 	require.NoError(t, err)
@@ -129,7 +128,7 @@ func testCreateAndUpdateUser(t *testing.T, store store.Store) {
 	})
 
 	t.Run("UpdateUserPassword", func(t *testing.T) {
-		newPassword := uuid.New().String()
+		newPassword := model.NewID("")
 		err := store.UpdateUserPassword(user.Username, newPassword)
 		require.NoError(t, err)
 
@@ -140,7 +139,7 @@ func testCreateAndUpdateUser(t *testing.T, store store.Store) {
 	})
 
 	t.Run("UpdateUserPasswordByID", func(t *testing.T) {
-		newPassword := uuid.New().String()
+		newPassword := model.NewID("")
 		err := store.UpdateUserPasswordByID(user.ID, newPassword)
 		require.NoError(t, err)
 
@@ -155,7 +154,7 @@ func testCreateAndGetRegisteredUserCount(t *testing.T, store store.Store) {
 	randomN := int(time.Now().Unix() % 10)
 	for i := 0; i < randomN; i++ {
 		err := store.CreateUser(&model.User{
-			ID: uuid.New().String(),
+			ID: model.NewID("user"),
 		})
 		require.NoError(t, err)
 	}

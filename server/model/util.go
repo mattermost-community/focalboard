@@ -24,6 +24,10 @@ func NewID(idType string) string {
 		prefix = "c"
 	case "view":
 		prefix = "v"
+	case "session":
+		prefix = "s"
+	case "user":
+		prefix = "u"
 	default:
 		prefix = "8"
 	}

@@ -11,7 +11,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 
@@ -170,8 +169,8 @@ func New(params Params) (*Server, error) {
 	// Init telemetry
 	telemetryID := settings["TelemetryID"]
 	if len(telemetryID) == 0 {
-		telemetryID = uuid.New().String()
-		if err = params.DBStore.SetSystemSetting("TelemetryID", uuid.New().String()); err != nil {
+		telemetryID = appModel.NewID("")
+		if err = params.DBStore.SetSystemSetting("TelemetryID", telemetryID); err != nil {
 			return nil, err
 		}
 	}
