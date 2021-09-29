@@ -15,7 +15,7 @@ enum UserSettingKey {
     EmojiMartLast = 'emoji-mart.last',
     EmojiMartFrequently = 'emoji-mart.frequently',
     RandomIcons = 'randomIcons',
-    MobileWarningClosed = 'mobileWarningClosed'
+    MobileWarningClosed = 'mobileWarningClosed',
     WelcomePageViewed = 'welcomePageViewed'
 }
 
