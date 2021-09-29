@@ -25,6 +25,7 @@ type PluginAdapterClient struct {
 	userID     string
 	workspaces []string
 	blocks     []string
+	mu         sync.RWMutex
 }
 
 func (pac *PluginAdapterClient) isActive() bool {
@@ -35,7 +36,43 @@ func (pac *PluginAdapterClient) hasExpired(threshold time.Duration) bool {
 	return !mmModel.GetTimeForMillis(atomic.LoadInt64(&pac.inactiveAt)).Add(threshold).After(time.Now())
 }
 
+func (pac *PluginAdapterClient) subscribeToWorkspace(workspaceID string) {
+	pac.mu.Lock()
+	defer pac.mu.Unlock()
+
+	pac.workspaces = append(pac.workspaces, workspaceID)
+}
+
+func (pac *PluginAdapterClient) unsubscribeFromWorkspace(workspaceID string) {
+	pac.mu.Lock()
+	defer pac.mu.Unlock()
+
+	newClientWorkspaces := []string{}
+	for _, id := range pac.workspaces {
+		if id != workspaceID {
+			newClientWorkspaces = append(newClientWorkspaces, id)
+		}
+	}
+	pac.workspaces = newClientWorkspaces
+}
+
+func (pac *PluginAdapterClient) unsubscribeFromBlock(blockID string) {
+	pac.mu.Lock()
+	defer pac.mu.Unlock()
+
+	newClientBlocks := []string{}
+	for _, id := range pac.blocks {
+		if id != blockID {
+			newClientBlocks = append(newClientBlocks, id)
+		}
+	}
+	pac.blocks = newClientBlocks
+}
+
 func (pac *PluginAdapterClient) isSubscribedToWorkspace(workspaceID string) bool {
+	pac.mu.RLock()
+	defer pac.mu.RUnlock()
+
 	for _, id := range pac.workspaces {
 		if id == workspaceID {
 			return true
@@ -46,6 +83,9 @@ func (pac *PluginAdapterClient) isSubscribedToWorkspace(workspaceID string) bool
 }
 
 func (pac *PluginAdapterClient) isSubscribedToBlock(blockID string) bool {
+	pac.mu.RLock()
+	defer pac.mu.RUnlock()
+
 	for _, id := range pac.blocks {
 		if id == blockID {
 			return true
@@ -164,13 +204,7 @@ func (pa *PluginAdapter) removeListenerFromWorkspace(pac *PluginAdapterClient, w
 	}
 	pa.listenersByWorkspace[workspaceID] = newWorkspaceListeners
 
-	newClientWorkspaces := []string{}
-	for _, id := range pac.workspaces {
-		if id != workspaceID {
-			newClientWorkspaces = append(newClientWorkspaces, id)
-		}
-	}
-	pac.workspaces = newClientWorkspaces
+	pac.unsubscribeFromWorkspace(workspaceID)
 }
 
 func (pa *PluginAdapter) removeListenerFromBlock(pac *PluginAdapterClient, blockID string) {
@@ -182,13 +216,7 @@ func (pa *PluginAdapter) removeListenerFromBlock(pac *PluginAdapterClient, block
 	}
 	pa.listenersByBlock[blockID] = newBlockListeners
 
-	newClientBlocks := []string{}
-	for _, id := range pac.blocks {
-		if id != blockID {
-			newClientBlocks = append(newClientBlocks, id)
-		}
-	}
-	pac.blocks = newClientBlocks
+	pac.unsubscribeFromBlock(blockID)
 }
 
 func (pa *PluginAdapter) subscribeListenerToWorkspace(pac *PluginAdapterClient, workspaceID string) {
@@ -200,7 +228,7 @@ func (pa *PluginAdapter) subscribeListenerToWorkspace(pac *PluginAdapterClient, 
 	defer pa.mu.Unlock()
 
 	pa.listenersByWorkspace[workspaceID] = append(pa.listenersByWorkspace[workspaceID], pac)
-	pac.workspaces = append(pac.workspaces, workspaceID)
+	pac.subscribeToWorkspace(workspaceID)
 }
 
 func (pa *PluginAdapter) unsubscribeListenerFromWorkspace(pac *PluginAdapterClient, workspaceID string) {

@@ -254,3 +254,93 @@ func TestGetUserIDsForWorkspace(t *testing.T) {
 		require.ElementsMatch(t, []string{userID1, userID2}, userIDs)
 	})
 }
+
+func TestParallelSubscriptionsOnMultipleConnections(t *testing.T) {
+	th := SetupTestHelper(t)
+
+	workspaceID1 := mmModel.NewId()
+	workspaceID2 := mmModel.NewId()
+	workspaceID3 := mmModel.NewId()
+	workspaceID4 := mmModel.NewId()
+
+	userID := mmModel.NewId()
+	webConnID1 := mmModel.NewId()
+	webConnID2 := mmModel.NewId()
+
+	th.pa.OnWebSocketConnect(webConnID1, userID)
+	pac1, ok := th.pa.GetListenerByWebConnID(webConnID1)
+	require.True(t, ok)
+
+	th.pa.OnWebSocketConnect(webConnID2, userID)
+	pac2, ok := th.pa.GetListenerByWebConnID(webConnID2)
+	require.True(t, ok)
+
+	wg := new(sync.WaitGroup)
+	wg.Add(4)
+
+	go func(wg *sync.WaitGroup) {
+		th.SubscribeWebConnToWorkspace(webConnID1, userID, workspaceID1)
+		require.True(t, pac1.isSubscribedToWorkspace(workspaceID1))
+
+		th.SubscribeWebConnToWorkspace(webConnID2, userID, workspaceID1)
+		require.True(t, pac2.isSubscribedToWorkspace(workspaceID1))
+
+		th.UnsubscribeWebConnFromWorkspace(webConnID1, userID, workspaceID1)
+		require.False(t, pac1.isSubscribedToWorkspace(workspaceID1))
+
+		th.UnsubscribeWebConnFromWorkspace(webConnID2, userID, workspaceID1)
+		require.False(t, pac2.isSubscribedToWorkspace(workspaceID1))
+
+		wg.Done()
+	}(wg)
+
+	go func(wg *sync.WaitGroup) {
+		th.SubscribeWebConnToWorkspace(webConnID1, userID, workspaceID2)
+		require.True(t, pac1.isSubscribedToWorkspace(workspaceID2))
+
+		th.SubscribeWebConnToWorkspace(webConnID2, userID, workspaceID2)
+		require.True(t, pac2.isSubscribedToWorkspace(workspaceID2))
+
+		th.UnsubscribeWebConnFromWorkspace(webConnID1, userID, workspaceID2)
+		require.False(t, pac1.isSubscribedToWorkspace(workspaceID2))
+
+		th.UnsubscribeWebConnFromWorkspace(webConnID2, userID, workspaceID2)
+		require.False(t, pac2.isSubscribedToWorkspace(workspaceID2))
+
+		wg.Done()
+	}(wg)
+
+	go func(wg *sync.WaitGroup) {
+		th.SubscribeWebConnToWorkspace(webConnID1, userID, workspaceID3)
+		require.True(t, pac1.isSubscribedToWorkspace(workspaceID3))
+
+		th.SubscribeWebConnToWorkspace(webConnID2, userID, workspaceID3)
+		require.True(t, pac2.isSubscribedToWorkspace(workspaceID3))
+
+		th.UnsubscribeWebConnFromWorkspace(webConnID1, userID, workspaceID3)
+		require.False(t, pac1.isSubscribedToWorkspace(workspaceID3))
+
+		th.UnsubscribeWebConnFromWorkspace(webConnID2, userID, workspaceID3)
+		require.False(t, pac2.isSubscribedToWorkspace(workspaceID3))
+
+		wg.Done()
+	}(wg)
+
+	go func(wg *sync.WaitGroup) {
+		th.SubscribeWebConnToWorkspace(webConnID1, userID, workspaceID4)
+		require.True(t, pac1.isSubscribedToWorkspace(workspaceID4))
+
+		th.SubscribeWebConnToWorkspace(webConnID2, userID, workspaceID4)
+		require.True(t, pac2.isSubscribedToWorkspace(workspaceID4))
+
+		th.UnsubscribeWebConnFromWorkspace(webConnID1, userID, workspaceID4)
+		require.False(t, pac1.isSubscribedToWorkspace(workspaceID4))
+
+		th.UnsubscribeWebConnFromWorkspace(webConnID2, userID, workspaceID4)
+		require.False(t, pac2.isSubscribedToWorkspace(workspaceID4))
+
+		wg.Done()
+	}(wg)
+
+	wg.Wait()
+}
