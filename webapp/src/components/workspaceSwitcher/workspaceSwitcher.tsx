@@ -7,6 +7,7 @@ import {useHistory} from 'react-router-dom'
 
 import {IWorkspace} from '../../blocks/workspace'
 import ChevronDown from '../../widgets/icons/chevronDown'
+import AddIcon from '../../widgets/icons/add'
 
 import {UserSettings} from '../../userSettings'
 
@@ -18,7 +19,7 @@ type Props = {
 
 const WorkspaceSwitcher = (props: Props): JSX.Element => {
     const history = useHistory()
-
+    const {activeWorkspace} = props
     const [showMenu, setShowMenu] = useState<boolean>(false)
 
     return (
@@ -31,13 +32,13 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
                     }
                 }}
             >
-                <span>{props.activeWorkspace?.title || DashboardOption.label}</span>
+                <span>{activeWorkspace?.title || DashboardOption.label}</span>
                 <ChevronDown/>
             </div>
             {
                 showMenu &&
                 <WorkspaceOptions
-                    activeWorkspaceId={props.activeWorkspace?.id || DashboardOption.value}
+                    activeWorkspaceId={activeWorkspace?.id || DashboardOption.value}
                     onBlur={() => {
                         setShowMenu(false)
                     }}
@@ -55,6 +56,11 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
                         history.push(newPath)
                     }}
                 />
+            }
+            {activeWorkspace &&
+                <div onClick={() => history.push(`/workspace/${activeWorkspace?.id}?showEmptyCenterPanel=true`)}>
+                    <AddIcon/>
+                </div>
             }
         </div>
     )

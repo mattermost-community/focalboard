@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react'
 import {batch} from 'react-redux'
 import {FormattedMessage, useIntl} from 'react-intl'
-import {generatePath, Redirect, useHistory, useRouteMatch} from 'react-router-dom'
+import {generatePath, Redirect, useHistory, useRouteMatch, useLocation} from 'react-router-dom'
 import {useHotkeys} from 'react-hotkeys-hook'
 
 import {Block} from '../blocks/block'
@@ -44,6 +44,7 @@ const BoardPage = (props: Props) => {
     const history = useHistory()
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, workspaceId?: string}>()
     const [websocketClosed, setWebsocketClosed] = useState(false)
+    const queryString = new URLSearchParams(useLocation().search)
 
     let workspaceId = match.params.workspaceId || UserSettings.lastWorkspaceId || '0'
 
@@ -62,7 +63,6 @@ const BoardPage = (props: Props) => {
     useEffect(() => {
         // Backward compatibility: This can be removed in the future, this is for
         // transform the old query params into routes
-        const queryString = new URLSearchParams(history.location.search)
         const queryBoardId = queryString.get('id')
         const params = {...match.params}
         let needsRedirect = false
@@ -90,7 +90,7 @@ const BoardPage = (props: Props) => {
         const boardId = match.params.boardId
         const viewId = match.params.viewId
 
-        if (!boardId) {
+        if (!boardId && !queryString.get('showEmptyCenterPanel')) {
             // Load last viewed boardView
             const lastBoardId = UserSettings.lastBoardId || undefined
             const lastViewId = UserSettings.lastViewId || undefined
@@ -106,7 +106,7 @@ const BoardPage = (props: Props) => {
         }
 
         Utils.log(`attachToBoard: ${boardId}`)
-        if (!viewId && boardViews.length > 0) {
+        if (!viewId && boardViews.length > 0 && !queryString.get('showEmptyCenterPanel')) {
             const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
             history.replace(newPath)
             return
@@ -259,7 +259,10 @@ const BoardPage = (props: Props) => {
                 <div className='error'>
                     {intl.formatMessage({id: 'BoardPage.syncFailed', defaultMessage: 'Board may be deleted or access revoked.'})}
                 </div>}
-            <Workspace readonly={props.readonly || false}/>
+            <Workspace
+                readonly={props.readonly || false}
+                showEmptyCenterPanel={queryString.get('showEmptyCenterPanel')}
+            />
         </div>
     )
 }
