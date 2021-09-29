@@ -2,7 +2,6 @@
 // See LICENSE.txt for license information.
 import marked from 'marked'
 import {IntlShape} from 'react-intl'
-import { createWatchCompilerHost } from 'typescript'
 
 import {Block} from './blocks/block'
 import {createBoard} from './blocks/board'
