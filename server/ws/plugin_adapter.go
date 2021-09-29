@@ -34,12 +34,13 @@ type PluginAdapter struct {
 	auth           auth.AuthInterface
 	staleThreshold time.Duration
 
-	listeners            map[string]*PluginAdapterClient
-	listenersByUserID    map[string][]*PluginAdapterClient
+	listenersMU       sync.RWMutex
+	listeners         map[string]*PluginAdapterClient
+	listenersByUserID map[string][]*PluginAdapterClient
+
+	subscriptionsMU      sync.RWMutex
 	listenersByWorkspace map[string][]*PluginAdapterClient
 	listenersByBlock     map[string][]*PluginAdapterClient
-	listenersMU          sync.RWMutex
-	subscriptionsMU      sync.RWMutex
 }
 
 func NewPluginAdapter(api plugin.API, auth auth.AuthInterface) *PluginAdapter {
