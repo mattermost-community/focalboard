@@ -1,3 +1,4 @@
+//go:generate mockgen --build_flags=--mod=mod -destination=mocks/mockauth_interface.go -package mocks . AuthInterface
 package auth
 
 import (
@@ -9,6 +10,12 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/pkg/errors"
 )
+
+type AuthInterface interface {
+	GetSession(token string) (*model.Session, error)
+	IsValidReadToken(c store.Container, blockID string, readToken string) (bool, error)
+	DoesUserHaveWorkspaceAccess(userID string, workspaceID string) bool
+}
 
 // Auth authenticates sessions.
 type Auth struct {
