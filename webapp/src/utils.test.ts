@@ -23,6 +23,21 @@ describe('utils', () => {
         })
     })
 
+    describe('createGuid', () => {
+        test('should create 27 char random id for workspace', () => {
+            expect(Utils.createGuid('workspace')).toMatch(/^w[ybndrfg8ejkmcpqxot1uwisza345h769]{26}$/)
+        })
+        test('should create 27 char random id for board', () => {
+            expect(Utils.createGuid('board')).toMatch(/^b[ybndrfg8ejkmcpqxot1uwisza345h769]{26}$/)
+        })
+        test('should create 27 char random id for card', () => {
+            expect(Utils.createGuid('card')).toMatch(/^c[ybndrfg8ejkmcpqxot1uwisza345h769]{26}$/)
+        })
+        test('should create 27 char random id', () => {
+            expect(Utils.createGuid('')).toMatch(/^8[ybndrfg8ejkmcpqxot1uwisza345h769]{26}$/)
+        })
+    })
+
     describe('htmlFromMarkdown', () => {
         test('should not allow XSS on links href on the webapp', () => {
             expect(Utils.htmlFromMarkdown('[]("xss-attack="true"other="whatever)')).toBe('<p><a target="_blank" rel="noreferrer" href="%22xss-attack=%22true%22other=%22whatever" title="" onclick="event.stopPropagation();"></a></p>')

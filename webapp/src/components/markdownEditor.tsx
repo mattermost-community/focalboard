@@ -23,7 +23,7 @@ type Props = {
 const MarkdownEditor = (props: Props): JSX. Element => {
     const {placeholderText, onFocus, onBlur, onChange, text, id} = props
     const [isEditing, setIsEditing] = useState(false)
-    const [uniqueId] = useState(id || Utils.createGuid())
+    const [uniqueId] = useState(id || Utils.createGuid(''))
 
     const [active, setActive] = useState(false)
     const [editorInstance, setEditorInstance] = useState<any>()

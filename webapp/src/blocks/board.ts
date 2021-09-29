@@ -38,7 +38,7 @@ function createBoard(block?: Block): Board {
     const selectProperties = cardProperties.find((o) => o.type === 'select')
     if (!selectProperties) {
         const property: IPropertyTemplate = {
-            id: Utils.createGuid(),
+            id: Utils.createGuid(''),
             name: 'Status',
             type: 'select',
             options: [],

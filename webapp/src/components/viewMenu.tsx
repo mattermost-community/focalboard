@@ -40,7 +40,7 @@ const ViewMenu = React.memo((props: Props) => {
         const currentViewId = activeView.id
         const newView = createBoardView(activeView)
         newView.title = `${activeView.title} copy`
-        newView.id = Utils.createGuid()
+        newView.id = Utils.createGuid('view')
         mutator.insertBlock(
             newView,
             'duplicate view',

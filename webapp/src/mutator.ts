@@ -24,7 +24,7 @@ class Mutator {
             Utils.assertFailure('UndoManager does not support nested groups')
             return undefined
         }
-        this.undoGroupId = Utils.createGuid()
+        this.undoGroupId = Utils.createGuid('')
         return this.undoGroupId
     }
 
@@ -204,7 +204,7 @@ class Mutator {
         }
 
         const newTemplate = template || {
-            id: Utils.createGuid(),
+            id: Utils.createGuid(''),
             name: 'New Property',
             type: 'text',
             options: [],
@@ -249,7 +249,7 @@ class Mutator {
         }
         const srcTemplate = newBoard.fields.cardProperties[index]
         const newTemplate: IPropertyTemplate = {
-            id: Utils.createGuid(),
+            id: Utils.createGuid(''),
             name: `${srcTemplate.name} copy`,
             type: srcTemplate.type,
             options: srcTemplate.options.slice(),
@@ -434,7 +434,7 @@ class Mutator {
                         let option = newTemplate.options.find((o: IPropertyOption) => o.value === oldValue)
                         if (!option) {
                             option = {
-                                id: Utils.createGuid(),
+                                id: Utils.createGuid(''),
                                 value: oldValue,
                                 color: 'propColorDefault',
                             }

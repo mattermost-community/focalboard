@@ -189,7 +189,7 @@ describe('components/table/Table extended', () => {
     test('should match snapshot with CreatedBy', async () => {
         const board = TestBlockFactory.createBoard()
 
-        const dateCreatedId = Utils.createGuid()
+        const dateCreatedId = Utils.createGuid('')
         board.fields.cardProperties.push({
             id: dateCreatedId,
             name: 'Date Created',
@@ -246,7 +246,7 @@ describe('components/table/Table extended', () => {
     test('should match snapshot with UpdatedAt', async () => {
         const board = TestBlockFactory.createBoard()
 
-        const dateUpdatedId = Utils.createGuid()
+        const dateUpdatedId = Utils.createGuid('')
         board.fields.cardProperties.push({
             id: dateUpdatedId,
             name: 'Date Updated',
@@ -325,7 +325,7 @@ describe('components/table/Table extended', () => {
     test('should match snapshot with CreatedBy', async () => {
         const board = TestBlockFactory.createBoard()
 
-        const createdById = Utils.createGuid()
+        const createdById = Utils.createGuid('')
         board.fields.cardProperties.push({
             id: createdById,
             name: 'Created By',
@@ -383,7 +383,7 @@ describe('components/table/Table extended', () => {
     test('should match snapshot with UpdatedBy', async () => {
         const board = TestBlockFactory.createBoard()
 
-        const modifiedById = Utils.createGuid()
+        const modifiedById = Utils.createGuid('')
         board.fields.cardProperties.push({
             id: modifiedById,
             name: 'Last Modified By',
