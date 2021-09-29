@@ -48,7 +48,7 @@ function count(cards: readonly Card[], property: IPropertyTemplate): string {
     return String(cards.length)
 }
 
-function countValue(cards: readonly Card[], property: IPropertyTemplate): string {
+function countValueHelper(cards: readonly Card[], property: IPropertyTemplate): number {
     let values = 0
 
     if (property.type === 'multiSelect') {
@@ -60,7 +60,33 @@ function countValue(cards: readonly Card[], property: IPropertyTemplate): string
         values = cardsWithValue(cards, property).length
     }
 
-    return String(values)
+    return values
+}
+
+function countValue(cards: readonly Card[], property: IPropertyTemplate): string {
+    return String(countValueHelper(cards, property))
+}
+
+function countChecked(cards: readonly Card[], property: IPropertyTemplate): string {
+    return countValue(cards, property)
+}
+
+function countUnchecked(cards: readonly Card[], property: IPropertyTemplate): string {
+    return String(cards.length - countValueHelper(cards, property))
+}
+
+function percentChecked(cards: readonly Card[], property: IPropertyTemplate): string {
+    const total = cards.length
+    const checked = countValueHelper(cards, property)
+
+    return String(Math.round((checked * 100) / total)) + '%'
+}
+
+function percentUnchecked(cards: readonly Card[], property: IPropertyTemplate): string {
+    const total = cards.length
+    const checked = countValueHelper(cards, property)
+
+    return String(Math.round(((total - checked) * 100) / total)) + '%'
 }
 
 function countUniqueValue(cards: readonly Card[], property: IPropertyTemplate): string {
@@ -175,6 +201,10 @@ const Calculations: Record<string, (cards: readonly Card[], property: IPropertyT
     count,
     countValue,
     countUniqueValue,
+    countChecked,
+    countUnchecked,
+    percentChecked,
+    percentUnchecked,
     sum,
     average,
     median,

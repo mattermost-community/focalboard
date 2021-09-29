@@ -436,7 +436,13 @@ func (s *MattermostAuthLayer) userWorkspacesFromRows(rows *sql.Rows) ([]model.Us
 			names := []string{}
 
 			for _, userID := range userIDs {
-				names = append(names, users[userID].Username)
+				user, exists := users[userID]
+				username := userID
+				if exists {
+					username = user.Username
+				}
+
+				names = append(names, username)
 			}
 
 			rawUserWorkspaces[i].Title = strings.Join(names, ", ")

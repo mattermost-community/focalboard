@@ -14,7 +14,7 @@ Please file a [GitHub issue](https://github.com/mattermost/focalboard/issues) if
 
 # Documentation 
 
-You can contribute to our documentation and website in the [/website](/website) folder.
+You can contribute to our documentation in the [Mattermost Boards documentation](https://docs.mattermost.com/guides/boards.html). Read more about how the contribution process works in the repo [README](https://github.com/mattermost/docs/blob/master/README.md). Visit the [Documentation Working Group channel](https://community.mattermost.com/core/channels/dwg-documentation-working-group) on our Community server if you have any questions!
 
 # Contributors
 

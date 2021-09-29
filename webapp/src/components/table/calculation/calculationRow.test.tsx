@@ -73,6 +73,7 @@ describe('components/table/calculation/CalculationRow', () => {
                 activeView={view}
                 resizingColumn={''}
                 offset={0}
+                readonly={false}
             />,
         )
 
@@ -94,6 +95,7 @@ describe('components/table/calculation/CalculationRow', () => {
                 activeView={view}
                 resizingColumn={''}
                 offset={0}
+                readonly={false}
             />,
         )
 
