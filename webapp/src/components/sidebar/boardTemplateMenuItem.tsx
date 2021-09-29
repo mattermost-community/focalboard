@@ -19,7 +19,7 @@ type Props = {
     activeBoardId?: string
 }
 
-const addBoardFromTemplate = async (intl: IntlShape, showBoard: (id: string) => void, boardTemplateId: string, activeBoardId?: string, global = false) => {
+export const addBoardFromTemplate = async (intl: IntlShape, showBoard: (id: string) => void, boardTemplateId: string, activeBoardId?: string, global = false) => {
     const oldBoardId = activeBoardId
     const afterRedo = async (newBoardId: string) => {
         showBoard(newBoardId)
