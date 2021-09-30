@@ -58,9 +58,12 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
                 />
             }
             {activeWorkspace &&
-                <div onClick={() => history.push(`/workspace/${activeWorkspace?.id}?showEmptyCenterPanel=true`)}>
+                <span
+                    className='add-workspace-icon'
+                    onClick={() => history.push(`/workspace/${activeWorkspace?.id}?showEmptyCenterPanel=true`)}
+                >
                     <AddIcon/>
-                </div>
+                </span>
             }
         </div>
     )
