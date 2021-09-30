@@ -437,7 +437,6 @@ class Utils {
         return Boolean((window as any).isFocalboardPlugin)
     }
 
-
     static userAgent(): string {
         return window.navigator.userAgent
     }
