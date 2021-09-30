@@ -7,6 +7,7 @@
 
         > .toolbar {
             padding-bottom: 0;
+            justify-content: end;
         }
     }
 
@@ -28,6 +29,7 @@
             display: flex;
             flex-grow: 1;
             justify-content: center;
+            text-align: center;
         }
 
         .footer {
@@ -36,6 +38,10 @@
             flex-shrink: 0;
             justify-content: center;
             padding: 20px 0 40px;
+
+            button:first-child {
+                margin-right: 10px;
+            }
         }
     }
 }

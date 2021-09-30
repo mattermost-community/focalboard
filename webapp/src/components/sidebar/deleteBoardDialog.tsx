@@ -28,7 +28,7 @@ export default function DeleteBoardDialog(props: Props): JSX.Element {
                 className='DeleteBoardDialog'
             >
                 <div className='container'>
-                    <h2 className='header'>
+                    <h2 className='header text-heading5'>
                         <FormattedMessage
                             id='DeleteBoardDialog.confirm-tite'
                             defaultMessage='Confirm Delete Board'
@@ -44,13 +44,18 @@ export default function DeleteBoardDialog(props: Props): JSX.Element {
                         />
                     </p>
                     <div className='footer'>
-                        <Button onClick={() => !isSubmitting && props.onClose()}>
+                        <Button
+                            size={'medium'}
+                            emphasis={'tertiary'}
+                            onClick={() => !isSubmitting && props.onClose()}
+                        >
                             <FormattedMessage
                                 id='DeleteBoardDialog.confirm-cancel'
                                 defaultMessage='Cancel'
                             />
                         </Button>
                         <Button
+                            size={'medium'}
                             filled={true}
                             danger={true}
                             onClick={async () => {

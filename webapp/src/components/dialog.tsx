@@ -50,7 +50,6 @@ const Dialog = React.memo((props: Props) => {
                                 className='IconButton--large'
                             />
                         }
-                        <div className='octo-spacer'/>
                         {toolsMenu && <MenuWrapper>
                             <IconButton
                                 className='IconButton--large'

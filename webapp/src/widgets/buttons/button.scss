@@ -15,6 +15,7 @@
     color: inherit;
     height: 32px;
     padding: 0 10px;
+    font-weight: 600;
 
     &:hover {
         background-color: rgba(var(--center-channel-color-rgb), 0.08);
@@ -45,10 +46,14 @@
         }
 
         &.danger {
-            background-color: rgb(var(--danger-button-bg-rgb));
+            background: linear-gradient(rgb(var(--danger-button-bg-rgb)), rgb(var(--danger-button-bg-rgb)));
 
             &:hover {
-                background-color: rgb(var(--danger-button-bg-rgb), 0.8);
+                background: linear-gradient(rgba(0,0,0,0.08), rgba(0,0,0,0.08)), linear-gradient(rgb(var(--danger-button-bg-rgb)), rgb(var(--danger-button-bg-rgb)));
+            }
+
+            &:active {
+                background: linear-gradient(rgba(0,0,0,0.16), rgba(0,0,0,0.16)), linear-gradient(rgb(var(--danger-button-bg-rgb)), rgb(var(--danger-button-bg-rgb)));
             }
         }
     }
@@ -66,22 +71,38 @@
         }
     }
 
+    &.emphasis--tertiary {
+        color: rgb(var(--button-bg-rgb));
+        background-color: rgb(var(--button-bg-rgb), 0.08);
+
+        &:hover {
+            background-color: rgb(var(--button-bg-rgb), 0.12);
+        }
+
+        &:active {
+            background-color: rgb(var(--button-bg-rgb), 0.16);
+        }
+    }
+
     &.active {
         background: rgba(var(--button-bg-rgb), 0.08);
         color: rgb(var(--button-bg-rgb));
-        font-weight: 600;
     }
 
     &.size--small {
         font-size: 12px;
-        font-weight: 600;
         padding: 0 16px;
         height: 32px;
     }
 
+    &.size--medium {
+        font-size: 14px;
+        padding: 0 20px;
+        height: 40px;
+    }
+
     &.size--large {
         font-size: 16px;
-        font-weight: 600;
         height: 48px;
         padding: 0 24px;
 
