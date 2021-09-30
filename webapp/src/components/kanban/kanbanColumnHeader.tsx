@@ -7,7 +7,7 @@ import {useDrop, useDrag} from 'react-dnd'
 
 import {Constants} from '../../constants'
 import {IPropertyOption, IPropertyTemplate, Board, BoardGroup} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
+import {BoardView, KanbanCalculationFields} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
 import mutator from '../../mutator'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -35,6 +35,11 @@ type Props = {
     calculationMenuOpen: boolean
     onCalculationMenuOpen: () => void
     onCalculationMenuClose: () => void
+}
+
+const defaultCalculation: KanbanCalculationFields = {
+    calculation: 'count',
+    propertyId: Constants.titleColumnId,
 }
 
 export default function KanbanColumnHeader(props: Props): JSX.Element {
@@ -115,12 +120,13 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
             <KanbanCalculation
                 cards={group.cards}
 
-                // menuOpen={props.calculationMenuOpen}
-                menuOpen={true}
+                menuOpen={props.calculationMenuOpen}
+
+                // menuOpen={true}
                 property={board.fields.cardProperties[0]}
                 onMenuClose={props.onCalculationMenuClose}
                 onMenuOpen={() => props.onCalculationMenuOpen()}
-                calculation={'count'}
+                calculationData={activeView.fields.kanbanCalculations[group.option.id] || defaultCalculation}
                 cardProperties={board.fields.cardProperties}
             />
             <div className='octo-spacer'/>
