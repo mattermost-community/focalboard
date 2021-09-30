@@ -24,12 +24,13 @@
 
     .add-workspace-icon {
         display: flex;
+
         i {
             color: rgb(var(--sidebar-text-rgb));
             align-self: center;
         }
 
-        &:hover{
+        &:hover {
             cursor: pointer;
         }
     }

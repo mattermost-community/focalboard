@@ -143,7 +143,6 @@ const BoardPage = (props: Props) => {
         let token = localStorage.getItem('focalboardSessionId') || ''
         if (props.readonly) {
             loadAction = initialReadOnlyLoad
-            const queryString = new URLSearchParams(history.location.search)
             token = token || queryString.get('r') || ''
         }
         dispatch(loadAction(match.params.boardId))
