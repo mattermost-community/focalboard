@@ -8,8 +8,7 @@ import (
 )
 
 func TestGetClientConfig(t *testing.T) {
-	th, tearDown := SetupTestHelper(t)
-	defer tearDown()
+	th := SetupTestHelper(t)
 
 	t.Run("Test Get Client Config", func(t *testing.T) {
 		newConfiguration := config.Configuration{}
