@@ -73,9 +73,6 @@ const EmptyCenterPanel = React.memo(() => {
     const newTemplateClicked = () => addBoardTemplateClicked(showBoard, intl)
     const emptyBoardClicked = () => addBoardClicked(showBoard, intl)
 
-    // const workspace: any = {}
-    // workspace.title = 'Town Square'
-
     let contentDisplay = (
         <div className='Hint'>
             <FormattedMessage
