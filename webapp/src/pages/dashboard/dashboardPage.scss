@@ -73,6 +73,8 @@
 
     &__content {
         overflow-y: hidden;
+        display: flex;
+        flex-direction: column;
     }
 
     &__workspace-container {
