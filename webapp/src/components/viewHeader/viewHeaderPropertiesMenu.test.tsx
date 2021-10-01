@@ -20,7 +20,7 @@ const wrapIntl = (children: ReactElement) => (
 const board = TestBlockFactory.createBoard()
 const activeView = TestBlockFactory.createBoardView(board)
 
-describe('components/viewHeader/viewHeaderGroupByMenu', () => {
+describe('components/viewHeader/viewHeaderPropertiesMenu', () => {
     const state = {
         users: {
             me: {
