@@ -80,6 +80,9 @@ const App = React.memo((): JSX.Element => {
     const globalError = useAppSelector<string>(getGlobalError)
     const me = useAppSelector<IUser|null>(getMe)
     const dispatch = useAppDispatch()
+    // this is used to detect if we're running inside the plugin but
+    // in a legacy route
+    const inPluginLegacy = window.location.pathname.includes('/plugins/focalboard/')
 
     useEffect(() => {
         dispatch(fetchLanguage())
@@ -87,12 +90,14 @@ const App = React.memo((): JSX.Element => {
         dispatch(fetchClientConfig())
     }, [])
 
-    useEffect(() => {
-        wsClient.open()
-        return () => {
-            wsClient.close()
-        }
-    }, [])
+    if (!inPluginLegacy) {
+        useEffect(() => {
+            wsClient.open()
+            return () => {
+                wsClient.close()
+            }
+        }, [])
+    }
 
     useEffect(() => {
         if (me) {
