@@ -35,25 +35,24 @@ const WelcomePage = React.memo(() => {
     return (
         <div className='WelcomePage'>
             <div>
-                <h1 className='text-heading6'>
+                <h1 className='text-heading9'>
                     <FormattedMessage
                         id='WelcomePage.Heading'
                         defaultMessage='Welcome To Boards'
                     />
                 </h1>
-                <div className='text-base'>
+                <div className='WelcomePage__subtitle'>
                     <FormattedMessage
                         id='WelcomePage.Description'
                         defaultMessage='Boards is a project management tool that helps define, organize, track and manage work across teams, using a familiar kanban board view'
                     />
                 </div>
 
-                <div className='WelcomePage__image'>
-                    <img
-                        src={BoardWelcomePNG}
-                        alt='Boards Welcome Image'
-                    />
-                </div>
+                <img
+                    src={BoardWelcomePNG}
+                    className='WelcomePage__image'
+                    alt='Boards Welcome Image'
+                />
 
                 <button
                     onClick={goForward}

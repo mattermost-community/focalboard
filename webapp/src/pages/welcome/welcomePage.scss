@@ -8,7 +8,9 @@
     text-align: center;
 
     > div {
-        max-width: 640px;
+        max-width: 1600px;
+        width: 100%;
+        padding: 0 80px;
     }
 
     .Button {
@@ -17,6 +19,18 @@
 }
 
 .WelcomePage__image {
-    margin: 32px 0;
-    text-align: center;
+    margin: 48px auto;
+    max-width: 850px;
+    display: block;
+    width: 100%;
+
+    @media (min-width: 1800px) {
+        max-width: 1120px;
+    }
+}
+
+.WelcomePage__subtitle {
+    font-size: 20px;
+    line-height: 1.6;
+    margin: 24px 0 0;
 }
