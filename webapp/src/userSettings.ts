@@ -52,6 +52,14 @@ export class UserSettings {
         UserSettings.set(UserSettingKey.WelcomePageViewed, newValue)
     }
 
+    static get dashboardShowEmpty(): boolean {
+        return localStorage.getItem('dashboardShowEmpty') !== 'false'
+    }
+
+    static set dashboardShowEmpty(newValue: boolean) {
+        localStorage.setItem('dashboardShowEmpty', JSON.stringify(newValue))
+    }
+
     static get theme(): string | null {
         return UserSettings.get(UserSettingKey.Theme)
     }
