@@ -73,5 +73,26 @@ describe('components/viewHeader/viewHeaderGroupByMenu', () => {
         const buttonStatus = screen.getByRole('button', {name: 'Status'})
         userEvent.click(buttonStatus)
         expect(container).toMatchSnapshot()
+        expect(mockedMutator.changeViewGroupById).toBeCalledTimes(1)
+    })
+    test('return groupBy menu and ungroup in viewType table', () => {
+        activeView.fields.viewType = 'table'
+        const {container} = render(
+            wrapIntl(
+                <ReduxProvider store={store}>
+                    <ViewHeaderGroupByMenu
+                        activeView={activeView}
+                        groupByPropertyName={propertyName}
+                        properties={board.fields.cardProperties}
+                    />
+                </ReduxProvider>,
+            ),
+        )
+        const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
+        userEvent.click(buttonElement)
+        expect(container).toMatchSnapshot()
+        const buttonStatus = screen.getByRole('button', {name: 'Ungroup'})
+        userEvent.click(buttonStatus)
+        expect(mockedMutator.changeViewGroupById).toBeCalledTimes(1)
     })
 })
