@@ -2,8 +2,17 @@
 // See LICENSE.txt for license information.
 import {IntlProvider} from 'react-intl'
 import React from 'react'
+import {DndProvider} from 'react-dnd'
+import {HTML5Backend} from 'react-dnd-html5-backend'
 
 export const wrapIntl = (children?: React.ReactNode): JSX.Element => <IntlProvider locale='en'>{children}</IntlProvider>
+export const wrapDNDIntl = (children?: React.ReactNode): JSX.Element => {
+    return (
+        <DndProvider backend={HTML5Backend}>
+            {wrapIntl(children)}
+        </DndProvider>
+    )
+}
 
 export function mockDOM(): void {
     window.focus = jest.fn()

@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {ReactElement} from 'react'
+import React from 'react'
 import configureStore from 'redux-mock-store'
 
 import {createMemoryHistory} from 'history'
@@ -8,22 +8,13 @@ import {Provider as ReduxProvider} from 'react-redux'
 import {Router} from 'react-router-dom'
 
 import {render} from '@testing-library/react'
-
-import {IntlProvider} from 'react-intl'
-
 import userEvent from '@testing-library/user-event'
 
 import {UserWorkspace} from '../../user'
 
-import {mockMatchMedia} from '../../testUtils'
+import {mockMatchMedia, wrapIntl} from '../../testUtils'
 
 import Sidebar from './sidebar'
-
-const wrapProviders = (children: ReactElement) => {
-    return (
-        <IntlProvider locale='en'>{children}</IntlProvider>
-    )
-}
 
 beforeAll(() => {
     mockMatchMedia({matches: true})
@@ -67,7 +58,7 @@ describe('components/sidebarSidebar', () => {
 
         const history = createMemoryHistory()
 
-        const component = wrapProviders(
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
                     <Sidebar isDashboard={true}/>
@@ -105,7 +96,7 @@ describe('components/sidebarSidebar', () => {
 
         const history = createMemoryHistory()
 
-        const component = wrapProviders(
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
                     <Sidebar/>

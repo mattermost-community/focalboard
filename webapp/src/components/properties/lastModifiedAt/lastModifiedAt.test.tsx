@@ -1,16 +1,15 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {ReactElement} from 'react'
+import React from 'react'
 import {render} from '@testing-library/react'
-import {IntlProvider} from 'react-intl'
+
+import {wrapIntl} from '../../../testUtils'
 
 import {createCard} from '../../../blocks/card'
 import {createCommentBlock} from '../../../blocks/commentBlock'
 
 import LastModifiedAt from './lastModifiedAt'
-
-const wrapIntl = (children: ReactElement) => <IntlProvider locale='en'>{children}</IntlProvider>
 
 describe('componnets/properties/lastModifiedAt', () => {
     test('should match snapshot', () => {

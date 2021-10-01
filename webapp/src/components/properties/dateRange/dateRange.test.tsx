@@ -1,16 +1,16 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {ReactElement} from 'react'
+import React from 'react'
 import {render} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-
-import '@testing-library/jest-dom'
 import {IntlProvider} from 'react-intl'
 
-import DateRange from '../dateRange/dateRange'
+import '@testing-library/jest-dom'
 
-const wrapIntl = (children: ReactElement) => <IntlProvider locale='en'>{children}</IntlProvider>
+import {wrapIntl} from '../../../testUtils'
+
+import DateRange from '../dateRange/dateRange'
 
 // create Dates for specific days for this year.
 const June15 = new Date(Date.UTC(new Date().getFullYear(), 5, 15, 12))

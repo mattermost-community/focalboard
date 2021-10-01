@@ -1,18 +1,16 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {ReactElement} from 'react'
+import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 
 import {render} from '@testing-library/react'
 
-import {IntlProvider} from 'react-intl'
-
 import configureStore from 'redux-mock-store'
 
-import GlobalHeader from './globalHeader'
+import {wrapIntl} from '../../testUtils'
 
-const wrapIntl = (children: ReactElement) => <IntlProvider locale='en'>{children}</IntlProvider>
+import GlobalHeader from './globalHeader'
 
 describe('components/sidebar/GlobalHeader', () => {
     const mockStore = configureStore([])

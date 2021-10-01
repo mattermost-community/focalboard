@@ -1,21 +1,19 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {ReactElement} from 'react'
+import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 
 import {render} from '@testing-library/react'
 
-import {IntlProvider} from 'react-intl'
-
 import userEvent from '@testing-library/user-event'
 import configureStore from 'redux-mock-store'
+
+import {wrapIntl} from '../../testUtils'
 
 import {defaultThemeName} from '../../theme'
 
 import SidebarSettingsMenu from './sidebarSettingsMenu'
-
-const wrapIntl = (children: ReactElement) => <IntlProvider locale='en'>{children}</IntlProvider>
 
 describe('components/sidebar/SidebarSettingsMenu', () => {
     const mockStore = configureStore([])

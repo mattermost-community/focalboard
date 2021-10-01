@@ -1,10 +1,11 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {ReactElement} from 'react'
+import React from 'react'
 
 import {fireEvent, render} from '@testing-library/react'
-import {IntlProvider} from 'react-intl'
 import userEvent from '@testing-library/user-event'
+
+import {wrapIntl} from '../../testUtils'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import {FetchMock} from '../../test/fetchMock'
@@ -18,8 +19,6 @@ global.fetch = FetchMock.fn
 beforeEach(() => {
     FetchMock.fn.mockReset()
 })
-
-const wrapIntl = (children: ReactElement) => <IntlProvider locale='en'>{children}</IntlProvider>
 
 describe('components/cardDetail/CardDetailProperties', () => {
     const board = TestBlockFactory.createBoard()

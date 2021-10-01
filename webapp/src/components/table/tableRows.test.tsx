@@ -1,12 +1,11 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {ReactElement} from 'react'
+import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import {fireEvent, render} from '@testing-library/react'
 import configureStore from 'redux-mock-store'
 import '@testing-library/jest-dom'
-import {IntlProvider} from 'react-intl'
 
 import 'isomorphic-fetch'
 
@@ -19,6 +18,7 @@ import userEvent from '@testing-library/user-event'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import {FetchMock} from '../../test/fetchMock'
+import {wrapDNDIntl} from '../../testUtils'
 
 import TableRows from './tableRows'
 
@@ -27,14 +27,6 @@ global.fetch = FetchMock.fn
 beforeEach(() => {
     FetchMock.fn.mockReset()
 })
-
-const wrapProviders = (children: ReactElement) => {
-    return (
-        <DndProvider backend={HTML5Backend}>
-            <IntlProvider locale='en'>{children}</IntlProvider>
-        </DndProvider>
-    )
-}
 
 describe('components/table/TableRows', () => {
     const board = TestBlockFactory.createBoard()
@@ -71,7 +63,7 @@ describe('components/table/TableRows', () => {
         const addCard = jest.fn()
 
         const store = mockStore(state)
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <TableRows
                     board={board}
