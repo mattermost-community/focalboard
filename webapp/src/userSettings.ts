@@ -23,7 +23,7 @@ export class UserSettings {
         return localStorage.getItem(key)
     }
 
-    static set(key: UserSettingKey, value: string | null) {
+    static set(key: UserSettingKey, value: string | null): void {
         if (!Object.values(UserSettingKey).includes(key)) {
             return
         }
@@ -98,7 +98,7 @@ export class UserSettings {
         return json ? JSON.parse(json) : null
     }
 
-    static setEmojiMartSetting(key: string, value: any) {
+    static setEmojiMartSetting(key: string, value: any): void {
         const prefixed = `emoji-mart.${key}`
         Utils.assert((Object as any).values(UserSettingKey).includes(prefixed))
         UserSettings.set(prefixed as UserSettingKey, JSON.stringify(value))

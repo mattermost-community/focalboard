@@ -34,7 +34,7 @@ type Props = {
 
 const websocketTimeoutForBanner = 5000
 
-const BoardPage = (props: Props) => {
+const BoardPage = (props: Props): JSX.Element => {
     const intl = useIntl()
     const board = useAppSelector(getCurrentBoard)
     const activeView = useAppSelector(getCurrentView)

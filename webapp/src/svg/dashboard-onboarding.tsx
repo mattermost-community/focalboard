@@ -3,7 +3,7 @@
 
 import React from 'react'
 
-export default function DashboardOnboardingSvg(props: React.HTMLAttributes<HTMLSpanElement>) {
+export default function DashboardOnboardingSvg(props: React.HTMLAttributes<HTMLSpanElement>): JSX.Element {
     return (
         <span {...props}>
             <svg

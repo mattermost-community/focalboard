@@ -81,7 +81,7 @@ class OctoClient {
         return false
     }
 
-    logout() {
+    logout(): void {
         localStorage.removeItem('focalboardSessionId')
     }
 

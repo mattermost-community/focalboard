@@ -10,7 +10,7 @@ import Editable from '../../widgets/editable'
 import {useAppSelector, useAppDispatch} from '../../store/hooks'
 import {getSearchText, setSearchText} from '../../store/searchText'
 
-const ViewHeaderSearch = () => {
+const ViewHeaderSearch = (): JSX.Element => {
     const searchText = useAppSelector<string>(getSearchText)
     const dispatch = useAppDispatch()
     const intl = useIntl()
