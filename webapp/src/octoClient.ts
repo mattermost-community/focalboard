@@ -41,12 +41,6 @@ class OctoClient {
         localStorage.setItem('focalboardSessionId', value)
     }
 
-    private readToken(): string {
-        const queryString = new URLSearchParams(window.location.search)
-        const readToken = queryString.get('r') || ''
-        return readToken
-    }
-
     constructor(serverUrl?: string, public workspaceId = '0') {
         this.serverUrl = serverUrl
     }
@@ -168,7 +162,7 @@ class OctoClient {
 
     async getSubtree(rootId?: string, levels = 2, workspaceID?: string): Promise<Block[]> {
         let path = this.workspacePath(workspaceID) + `/blocks/${encodeURIComponent(rootId || '')}/subtree?l=${levels}`
-        const readToken = this.readToken()
+        const readToken = Utils.getReadToken()
         if (readToken) {
             path += `&read_token=${readToken}`
         }
@@ -406,7 +400,7 @@ class OctoClient {
 
     async getFileAsDataUrl(rootId: string, fileId: string): Promise<string> {
         let path = '/files/workspaces/' + this.workspaceId + '/' + rootId + '/' + fileId
-        const readToken = this.readToken()
+        const readToken = Utils.getReadToken()
         if (readToken) {
             path += `?read_token=${readToken}`
         }

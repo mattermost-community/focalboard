@@ -504,6 +504,12 @@ class Utils {
     static isDesktop(): boolean {
         return Utils.isDesktopApp() && Utils.isVersionGreaterThanOrEqualTo(Utils.getDesktopVersion(), '5.0.0')
     }
+
+    static getReadToken(): string {
+        const queryString = new URLSearchParams(window.location.search)
+        const readToken = queryString.get('r') || ''
+        return readToken
+    }
 }
 
 export {Utils}
