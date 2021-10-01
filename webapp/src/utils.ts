@@ -151,7 +151,7 @@ class Utils {
     static htmlFromMarkdown(text: string): string {
         // HACKHACK: Somehow, marked doesn't encode angle brackets
         const renderer = new marked.Renderer()
-        renderer.link = (href, title, contents) => {
+        renderer.link = (href: string | null, title: string | null, contents: string | null) => {
             return '<a ' +
                 'target="_blank" ' +
                 'rel="noreferrer" ' +
