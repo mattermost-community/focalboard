@@ -51,9 +51,7 @@ if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
             return
         }
 
-        if (Utils.isFocalboardPlugin()) {
-            history.replace(pathName.replace((window as any).frontendBaseURL, ''))
-        }
+        history.replace(pathName.replace((window as any).frontendBaseURL, ''))
     })
 }
 
