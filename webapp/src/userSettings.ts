@@ -33,6 +33,18 @@ export class UserSettings {
             localStorage.setItem('welcomePageViewed', newValue)
         }
     }
+
+    static get mobileWarningClosed(): boolean {
+        return localStorage.getItem('mobileWarningClosed') === 'true'
+    }
+
+    static set mobileWarningClosed(newValue: boolean) {
+        if (newValue === null) {
+            localStorage.removeItem('mobileWarningClosed')
+        } else {
+            localStorage.setItem('mobileWarningClosed', String(newValue))
+        }
+    }
 }
 
 const keys = ['language', 'theme', 'lastBoardId', 'lastViewId', 'emoji-mart.last', 'emoji-mart.frequently', 'randomIcons']
