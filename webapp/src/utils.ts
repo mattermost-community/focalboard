@@ -23,7 +23,7 @@ const base32Alphabet = 'ybndrfg8ejkmcpqxot1uwisza345h769'
 
 class Utils {
     static createGuid(idType: string): string {
-        let prefix = '8'
+        let prefix = '7'
         switch (idType) {
         case 'workspace': prefix = 'w'
             break

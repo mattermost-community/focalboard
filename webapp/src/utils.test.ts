@@ -34,7 +34,7 @@ describe('utils', () => {
             expect(Utils.createGuid('card')).toMatch(/^c[ybndrfg8ejkmcpqxot1uwisza345h769]{26}$/)
         })
         test('should create 27 char random id', () => {
-            expect(Utils.createGuid('')).toMatch(/^8[ybndrfg8ejkmcpqxot1uwisza345h769]{26}$/)
+            expect(Utils.createGuid('')).toMatch(/^7[ybndrfg8ejkmcpqxot1uwisza345h769]{26}$/)
         })
     })
 
