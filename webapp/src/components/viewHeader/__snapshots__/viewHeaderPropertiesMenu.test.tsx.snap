@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/viewHeader/viewHeaderGroupByMenu return properties menu 1`] = `
+exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1`] = `
 <div>
   <div
     aria-label="menuwrapper"
@@ -131,7 +131,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return properties menu 1`] 
 </div>
 `;
 
-exports[`components/viewHeader/viewHeaderGroupByMenu return properties menu with gallery typeview 1`] = `
+exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu with gallery typeview 1`] = `
 <div>
   <div
     aria-label="menuwrapper"
