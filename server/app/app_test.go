@@ -8,8 +8,7 @@ import (
 )
 
 func TestSetConfig(t *testing.T) {
-	th, tearDown := SetupTestHelper(t)
-	defer tearDown()
+	th := SetupTestHelper(t)
 
 	t.Run("Test Update Config", func(t *testing.T) {
 		require.False(t, th.App.config.EnablePublicSharedBoards)
