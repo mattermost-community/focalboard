@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"log"
 	"time"
+
+	mm_model "github.com/mattermost/mattermost-server/v6/model"
 )
 
 // CreateGUID returns a random GUID.
@@ -22,7 +24,22 @@ func CreateGUID() string {
 
 // GetMillis is a convenience method to get milliseconds since epoch.
 func GetMillis() int64 {
-	return time.Now().UnixNano() / int64(time.Millisecond)
+	return mm_model.GetMillis()
+}
+
+// GetMillisForTime is a convenience method to get milliseconds since epoch for provided Time.
+func GetMillisForTime(thisTime time.Time) int64 {
+	return mm_model.GetMillisForTime(thisTime)
+}
+
+// GetTimeForMillis is a convenience method to get time.Time for milliseconds since epoch.
+func GetTimeForMillis(millis int64) time.Time {
+	return mm_model.GetTimeForMillis(millis)
+}
+
+// SecondsToMillis is a convenience method to convert seconds to milliseconds.
+func SecondsToMillis(seconds int64) int64 {
+	return seconds * 1000
 }
 
 func StructToMap(v interface{}) (m map[string]interface{}) {

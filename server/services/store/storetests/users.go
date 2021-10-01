@@ -13,6 +13,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/utils"
 )
 
 func StoreTestUserStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
@@ -58,7 +59,7 @@ func testGetWorkspaceUsers(t *testing.T, store store.Store) {
 		defer func() {
 			_ = store.UpdateUser(&model.User{
 				ID:       userID,
-				DeleteAt: time.Now().Unix(),
+				DeleteAt: utils.GetMillis(),
 			})
 		}()
 

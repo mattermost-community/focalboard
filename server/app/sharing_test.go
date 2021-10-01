@@ -3,7 +3,6 @@ package app
 import (
 	"database/sql"
 	"testing"
-	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mattermost/focalboard/server/model"
@@ -27,7 +26,7 @@ func TestGetSharing(t *testing.T) {
 			Enabled:    true,
 			Token:      "token",
 			ModifiedBy: "otherid",
-			UpdateAt:   time.Now().Unix(),
+			UpdateAt:   utils.GetMillis(),
 		}
 		th.Store.EXPECT().GetSharing(gomock.Eq(container), gomock.Eq("test-id")).Return(want, nil)
 
@@ -74,7 +73,7 @@ func TestUpsertSharing(t *testing.T) {
 		Enabled:    true,
 		Token:      "token",
 		ModifiedBy: "otherid",
-		UpdateAt:   time.Now().Unix(),
+		UpdateAt:   utils.GetMillis(),
 	}
 
 	t.Run("should success to upsert sharing", func(t *testing.T) {
