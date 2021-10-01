@@ -17,8 +17,8 @@ func TestGetBlocks(t *testing.T) {
 	require.NoError(t, resp.Error)
 	initialCount := len(blocks)
 
-	blockID1 := utils.CreateGUID()
-	blockID2 := utils.CreateGUID()
+	blockID1 := utils.NewID(utils.IDTypeBlock)
+	blockID2 := utils.NewID(utils.IDTypeBlock)
 	newBlocks := []model.Block{
 		{
 			ID:       blockID1,
@@ -58,9 +58,9 @@ func TestPostBlock(t *testing.T) {
 	require.NoError(t, resp.Error)
 	initialCount := len(blocks)
 
-	blockID1 := utils.CreateGUID()
-	blockID2 := utils.CreateGUID()
-	blockID3 := utils.CreateGUID()
+	blockID1 := utils.NewID(utils.IDTypeBlock)
+	blockID2 := utils.NewID(utils.IDTypeBlock)
+	blockID3 := utils.NewID(utils.IDTypeBlock)
 
 	t.Run("Create a single block", func(t *testing.T) {
 		block := model.Block{
@@ -152,7 +152,7 @@ func TestPatchBlock(t *testing.T) {
 	th := SetupTestHelper().InitBasic()
 	defer th.TearDown()
 
-	blockID := utils.CreateGUID()
+	blockID := utils.NewID(utils.IDTypeBlock)
 
 	block := model.Block{
 		ID:       blockID,
@@ -253,7 +253,7 @@ func TestDeleteBlock(t *testing.T) {
 	require.NoError(t, resp.Error)
 	initialCount := len(blocks)
 
-	blockID := utils.CreateGUID()
+	blockID := utils.NewID(utils.IDTypeBlock)
 	t.Run("Create a block", func(t *testing.T) {
 		block := model.Block{
 			ID:       blockID,
@@ -298,9 +298,10 @@ func TestGetSubtree(t *testing.T) {
 	require.NoError(t, resp.Error)
 	initialCount := len(blocks)
 
-	parentBlockID := utils.CreateGUID()
-	childBlockID1 := utils.CreateGUID()
-	childBlockID2 := utils.CreateGUID()
+	parentBlockID := utils.NewID(utils.IDTypeBlock)
+	childBlockID1 := utils.NewID(utils.IDTypeBlock)
+	childBlockID2 := utils.NewID(utils.IDTypeBlock)
+
 	t.Run("Create the block structure", func(t *testing.T) {
 		newBlocks := []model.Block{
 			{

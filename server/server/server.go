@@ -29,6 +29,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 	"github.com/mattermost/focalboard/server/services/telemetry"
 	"github.com/mattermost/focalboard/server/services/webhook"
+	"github.com/mattermost/focalboard/server/utils"
 	"github.com/mattermost/focalboard/server/web"
 	"github.com/mattermost/focalboard/server/ws"
 	"github.com/oklog/run"
@@ -36,7 +37,6 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
-	"github.com/mattermost/mattermost-server/v6/utils"
 )
 
 const (
@@ -169,7 +169,7 @@ func New(params Params) (*Server, error) {
 	// Init telemetry
 	telemetryID := settings["TelemetryID"]
 	if len(telemetryID) == 0 {
-		telemetryID = appModel.NewID("")
+		telemetryID = utils.NewID(utils.IDTypeNone)
 		if err = params.DBStore.SetSystemSetting("TelemetryID", telemetryID); err != nil {
 			return nil, err
 		}
@@ -283,7 +283,7 @@ func (s *Server) Start() error {
 	s.metricsUpdaterTask = scheduler.CreateRecurringTask("updateMetrics", metricsUpdater, updateMetricsTaskFrequency)
 
 	if s.config.Telemetry {
-		firstRun := utils.MillisFromTime(time.Now())
+		firstRun := utils.GetMillis()
 		s.telemetry.RunTelemetryJob(firstRun)
 	}
 
