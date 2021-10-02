@@ -1,28 +1,24 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {ReactElement} from 'react'
+import React from 'react'
 import {render, screen} from '@testing-library/react'
 import {Provider as ReduxProvider} from 'react-redux'
-import configureStore from 'redux-mock-store'
 
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
-
-import {IntlProvider} from 'react-intl'
 import {mocked} from 'ts-jest/utils'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import mutator from '../../mutator'
 
+import {wrapIntl, mockStateStore} from '../../testUtils'
+
 import ViewHeaderGroupByMenu from './viewHeaderGroupByMenu'
 
 jest.mock('../../mutator')
 const mockedMutator = mocked(mutator, true)
 
-const wrapIntl = (children: ReactElement) => (
-    <IntlProvider locale='en'>{children}</IntlProvider>
-)
 const board = TestBlockFactory.createBoard()
 const activeView = TestBlockFactory.createBoardView(board)
 const propertyName = 'Status'
@@ -35,8 +31,7 @@ describe('components/viewHeader/viewHeaderGroupByMenu', () => {
                 username: 'username_1'},
         },
     }
-    const mockStore = configureStore([])
-    const store = mockStore(state)
+    const store = mockStateStore([], state)
     beforeEach(() => {
         jest.clearAllMocks()
     })
