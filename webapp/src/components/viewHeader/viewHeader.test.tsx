@@ -2,11 +2,10 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {render, screen} from '@testing-library/react'
+import {render} from '@testing-library/react'
 import {Provider as ReduxProvider} from 'react-redux'
 
 import '@testing-library/jest-dom'
-import userEvent from '@testing-library/user-event'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
