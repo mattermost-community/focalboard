@@ -43,16 +43,22 @@ exports[`components/cardDetail/CardDetailProperties should match snapshot 1`] = 
       </div>
     </div>
     <div
-      class="octo-propertyname add-property"
+      aria-label="menuwrapper"
+      class="MenuWrapper"
+      role="button"
     >
-      <button
-        class="Button    "
-        type="button"
+      <div
+        class="octo-propertyname add-property"
       >
-        <span>
-          + Add a property
-        </span>
-      </button>
+        <button
+          class="Button    "
+          type="button"
+        >
+          <span>
+            + Add a property
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
