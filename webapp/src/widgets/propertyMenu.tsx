@@ -44,7 +44,7 @@ function typeMenuTitle(intl: IntlShape, type: PropertyType): string {
     return `${intl.formatMessage({id: 'PropertyMenu.typeTitle', defaultMessage: 'Type'})}: ${typeDisplayName(intl, type)}`
 }
 
-const propertyTypes: PropertyType[] = [
+export const propertyTypesList: PropertyType[] = [
     'text',
     'number',
     'email',
@@ -77,7 +77,7 @@ export const PropertyTypes = (props: TypesProps): JSX.Element => {
             <Menu.Separator/>
 
             {
-                propertyTypes.map((type) => (
+                propertyTypesList.map((type) => (
                     <Menu.Text
                         key={type}
                         id={type}
