@@ -7,6 +7,9 @@ import {Board, IPropertyTemplate} from './blocks/board'
 import {Card} from './blocks/card'
 import {OctoUtils} from './octoUtils'
 import {Utils} from './utils'
+import {IAppWindow} from './types'
+
+declare let window: IAppWindow
 
 class CsvExporter {
     static exportTableCsv(board: Board, activeView: BoardView, cards: Card[], intl: IntlShape, view?: BoardView): void {
@@ -36,8 +39,8 @@ class CsvExporter {
         link.click()
 
         // TODO: Review if this is needed in the future, this is to fix the problem with linux webview links
-        if ((window as any).openInNewBrowser) {
-            (window as any).openInNewBrowser(encodedUri)
+        if (window.openInNewBrowser) {
+            window.openInNewBrowser(encodedUri)
         }
 
         // TODO: Remove or reuse link
