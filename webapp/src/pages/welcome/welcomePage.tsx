@@ -6,6 +6,7 @@ import {FormattedMessage} from 'react-intl'
 import {useLocation, useHistory} from 'react-router-dom'
 
 import BoardWelcomePNG from '../../../static/boards-welcome.png'
+import BoardWelcomeSmallPNG from '../../../static/boards-welcome-small.png'
 
 import CompassIcon from '../../widgets/icons/compassIcon'
 import {UserSettings} from '../../userSettings'
@@ -50,7 +51,13 @@ const WelcomePage = React.memo(() => {
 
                 <img
                     src={BoardWelcomePNG}
-                    className='WelcomePage__image'
+                    className='WelcomePage__image WelcomePage__image--large'
+                    alt='Boards Welcome Image'
+                />
+
+                <img
+                    src={BoardWelcomeSmallPNG}
+                    className='WelcomePage__image WelcomePage__image--small'
                     alt='Boards Welcome Image'
                 />
 
