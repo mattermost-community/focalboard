@@ -39,7 +39,9 @@ describe('components/viewHeader/viewHeaderActionsMenu', () => {
         },
     }
     const store = mockStateStore([], state)
-
+    beforeEach(() => {
+        jest.clearAllMocks()
+    })
     test('return menu with Share Boards', () => {
         const {container} = render(
             wrapIntl(
