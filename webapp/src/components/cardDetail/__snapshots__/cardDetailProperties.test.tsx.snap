@@ -64,7 +64,7 @@ exports[`components/cardDetail/CardDetailProperties should match snapshot 1`] = 
 </div>
 `;
 
-exports[`components/cardDetail/CardDetailProperties shows menu with property types when adding new property 1`] = `
+exports[`components/cardDetail/CardDetailProperties should show property types menu 1`] = `
 <div>
   <div
     class="octo-propertylist CardDetailProperties"
