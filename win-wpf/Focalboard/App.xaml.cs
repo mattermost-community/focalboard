@@ -117,7 +117,6 @@ namespace Focalboard {
             byte[] sessionTokenBytes = Encoding.UTF8.GetBytes(sessionToken);
             byte[] dbPathBytes = Encoding.UTF8.GetBytes(dbPath);
             byte[] configFilePathBytes = Encoding.UTF8.GetBytes("");
-
             GoFunctions.StartServer(webFolderBytes, filesPathBytes, port, sessionTokenBytes, dbPathBytes, configFilePathBytes);
 
             Debug.WriteLine("Server started");

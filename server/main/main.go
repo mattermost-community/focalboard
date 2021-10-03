@@ -87,7 +87,6 @@ func logInfo(logger *mlog.Logger) {
 }
 
 func main() {
-
 	// Command line args
 	pMonitorPid := flag.Int("monitorpid", -1, "a process ID")
 	pPort := flag.Int("port", 0, "the port number")
