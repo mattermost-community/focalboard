@@ -158,7 +158,7 @@ const App = React.memo((): JSX.Element => {
                                 <Route path='/change_password'>
                                     <ChangePasswordPage/>
                                 </Route>
-                                <Route path='/shared/:boardId?/:viewId?'>
+                                <Route path='/shared/:boardId?/:viewId?/:cardId?'>
                                     <BoardPage readonly={true}/>
                                 </Route>
                                 <Route
@@ -180,7 +180,7 @@ const App = React.memo((): JSX.Element => {
                                         return null
                                     }}
                                 />
-                                <Route path='/workspace/:workspaceId/shared/:boardId?/:viewId?'>
+                                <Route path='/workspace/:workspaceId/shared/:boardId?/:viewId?/:cardId?'>
                                     <BoardPage readonly={true}/>
                                 </Route>
                                 <Route

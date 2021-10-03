@@ -15,6 +15,7 @@ enum UserSettingKey {
     EmojiMartLast = 'emoji-mart.last',
     EmojiMartFrequently = 'emoji-mart.frequently',
     RandomIcons = 'randomIcons',
+    MobileWarningClosed = 'mobileWarningClosed',
     WelcomePageViewed = 'welcomePageViewed'
 }
 
@@ -102,6 +103,14 @@ export class UserSettings {
         const prefixed = `emoji-mart.${key}`
         Utils.assert((Object as any).values(UserSettingKey).includes(prefixed))
         UserSettings.set(prefixed as UserSettingKey, JSON.stringify(value))
+    }
+
+    static get mobileWarningClosed(): boolean {
+        return UserSettings.get(UserSettingKey.MobileWarningClosed) === 'true'
+    }
+
+    static set mobileWarningClosed(newValue: boolean) {
+        UserSettings.set(UserSettingKey.MobileWarningClosed, String(newValue))
     }
 }
 
