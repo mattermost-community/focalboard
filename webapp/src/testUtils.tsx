@@ -2,6 +2,8 @@
 // See LICENSE.txt for license information.
 import {IntlProvider} from 'react-intl'
 import React from 'react'
+import configureStore, {MockStoreEnhanced} from 'redux-mock-store'
+import {Middleware} from 'redux'
 
 export const wrapIntl = (children?: React.ReactNode): JSX.Element => <IntlProvider locale='en'>{children}</IntlProvider>
 
@@ -9,9 +11,7 @@ export function mockDOM(): void {
     window.focus = jest.fn()
     document.createRange = () => {
         const range = new Range()
-
         range.getBoundingClientRect = jest.fn()
-
         range.getClientRects = () => {
             return {
                 item: () => null,
@@ -19,11 +19,9 @@ export function mockDOM(): void {
                 [Symbol.iterator]: jest.fn(),
             }
         }
-
         return range
     }
 }
-
 export function mockMatchMedia(result: any): void {
     // We check if system preference is dark or light theme.
     // This is required to provide it's definition since
@@ -38,4 +36,9 @@ export function mockMatchMedia(result: any): void {
             // })
         }),
     })
+}
+
+export function mockStateStore(middleware:Middleware[], state:unknown): MockStoreEnhanced<unknown, unknown> {
+    const mockStore = configureStore(middleware)
+    return mockStore(state)
 }
