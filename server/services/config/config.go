@@ -60,7 +60,12 @@ type Configuration struct {
 
 // ReadConfigFile read the configuration from the filesystem.
 func ReadConfigFile(configFilePath string) (*Configuration, error) {
-	viper.SetConfigFile(configFilePath)
+	if configFilePath == "" {
+		viper.SetConfigFile("./config.json")
+	} else {
+		viper.SetConfigFile(configFilePath)
+	}
+
 	viper.SetEnvPrefix("focalboard")
 	viper.AutomaticEnv() // read config values from env like FOCALBOARD_SERVERROOT=...
 	viper.SetDefault("ServerRoot", DefaultServerRoot)

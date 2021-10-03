@@ -96,7 +96,7 @@ func main() {
 	pDBConfig := flag.String("dbconfig", "", "Database config")
 	pConfigFilePath := flag.String(
 		"config",
-		"./config.json",
+		"",
 		"Location of the JSON config file",
 	)
 	flag.Parse()
@@ -198,13 +198,14 @@ func main() {
 
 // StartServer starts the server
 //export StartServer
-func StartServer(webPath *C.char, filesPath *C.char, port int, singleUserToken, dbConfigString *C.char) {
+func StartServer(webPath *C.char, filesPath *C.char, port int, singleUserToken, dbConfigString, configFilePath *C.char) {
 	startServer(
 		C.GoString(webPath),
 		C.GoString(filesPath),
 		port,
 		C.GoString(singleUserToken),
 		C.GoString(dbConfigString),
+		C.GoString(configFilePath),
 	)
 }
 
@@ -214,14 +215,14 @@ func StopServer() {
 	stopServer()
 }
 
-func startServer(webPath string, filesPath string, port int, singleUserToken, dbConfigString string) {
+func startServer(webPath string, filesPath string, port int, singleUserToken, dbConfigString, configFilePath string) {
 	if pServer != nil {
 		stopServer()
 		pServer = nil
 	}
 
 	// config.json file
-	config, err := config.ReadConfigFile()
+	config, err := config.ReadConfigFile(configFilePath)
 	if err != nil {
 		log.Fatal("Unable to read the config file: ", err)
 		return
