@@ -3,7 +3,7 @@
 import React, {useRef} from 'react'
 import {useDrag, useDrop, DragElementWrapper, DragSourceOptions, DragPreviewOptions} from 'react-dnd'
 
-function useSortableBase(itemType: string, item: any, enabled: boolean, handler: (src: any, st: any) => void): [boolean, boolean, DragElementWrapper<DragSourceOptions>, DragElementWrapper<any>, DragElementWrapper<DragPreviewOptions>] {
+function useSortableBase(itemType: string, item: unknown, enabled: boolean, handler: (src: unknown, st: unknown) => void): [boolean, boolean, DragElementWrapper<DragSourceOptions>, DragElementWrapper<unknown>, DragElementWrapper<DragPreviewOptions>] {
     const [{isDragging}, drag, preview] = useDrag(() => ({
         type: itemType,
         item,
@@ -17,7 +17,7 @@ function useSortableBase(itemType: string, item: any, enabled: boolean, handler:
         collect: (monitor) => ({
             isOver: monitor.isOver(),
         }),
-        drop: (dragItem: any) => {
+        drop: (dragItem) => {
             handler(dragItem, item)
         },
         canDrop: () => enabled,
@@ -26,14 +26,14 @@ function useSortableBase(itemType: string, item: any, enabled: boolean, handler:
     return [isDragging, isOver, drag, drop, preview]
 }
 
-export function useSortable(itemType: string, item: any, enabled: boolean, handler: (src: any, st: any) => void): [boolean, boolean, React.RefObject<HTMLDivElement>] {
+export function useSortable(itemType: string, item: unknown, enabled: boolean, handler: (src: unknown, st: unknown) => void): [boolean, boolean, React.RefObject<HTMLDivElement>] {
     const ref = useRef<HTMLDivElement>(null)
     const [isDragging, isOver, drag, drop] = useSortableBase(itemType, item, enabled, handler)
     drop(drag(ref))
     return [isDragging, isOver, ref]
 }
 
-export function useSortableWithGrip(itemType: string, item: any, enabled: boolean, handler: (src: any, st: any) => void): [boolean, boolean, React.RefObject<HTMLDivElement>, React.RefObject<HTMLDivElement>] {
+export function useSortableWithGrip(itemType: string, item: unknown, enabled: boolean, handler: (src: unknown, st: unknown) => void): [boolean, boolean, React.RefObject<HTMLDivElement>, React.RefObject<HTMLDivElement>] {
     const ref = useRef<HTMLDivElement>(null)
     const previewRef = useRef<HTMLDivElement>(null)
     const [isDragging, isOver, drag, drop, preview] = useSortableBase(itemType, item, enabled, handler)
