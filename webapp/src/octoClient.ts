@@ -45,7 +45,7 @@ class OctoClient {
         this.serverUrl = serverUrl
     }
 
-    private async getJson(response: Response, defaultValue: any): Promise<any> {
+    private async getJson(response: Response, defaultValue: unknown): Promise<unknown> {
         // The server may return null or malformed json
         try {
             const value = await response.json()
@@ -93,7 +93,7 @@ class OctoClient {
         return json
     }
 
-    async register(email: string, username: string, password: string, token?: string): Promise<{code: number, json: any}> {
+    async register(email: string, username: string, password: string, token?: string): Promise<{code: number, json: {error?: string}}> {
         const path = '/api/v1/register'
         const body = JSON.stringify({email, username, password, token})
         const response = await fetch(this.getBaseURL() + path, {
@@ -101,11 +101,11 @@ class OctoClient {
             headers: this.headers(),
             body,
         })
-        const json = (await this.getJson(response, {}))
+        const json = (await this.getJson(response, {})) as {error?: string}
         return {code: response.status, json}
     }
 
-    async changePassword(userId: string, oldPassword: string, newPassword: string): Promise<{code: number, json: any}> {
+    async changePassword(userId: string, oldPassword: string, newPassword: string): Promise<{code: number, json: {error?: string}}> {
         const path = `/api/v1/users/${encodeURIComponent(userId)}/changepassword`
         const body = JSON.stringify({oldPassword, newPassword})
         const response = await fetch(this.getBaseURL() + path, {
@@ -113,7 +113,7 @@ class OctoClient {
             headers: this.headers(),
             body,
         })
-        const json = (await this.getJson(response, {}))
+        const json = (await this.getJson(response, {})) as {error?: string}
         return {code: response.status, json}
     }
 
@@ -236,7 +236,7 @@ class OctoClient {
         // Hydrate is important, as it ensures that each block is complete to the current model
         const fixedBlocks = OctoUtils.hydrateBlocks(blocks)
 
-        // TODO: Remove this fixup code
+        // !TODO: Remove this fixup code
         for (const block of fixedBlocks) {
             if (!block.fields) {
                 block.fields = {}
