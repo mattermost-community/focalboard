@@ -23,7 +23,7 @@ export default function DeleteBoardDialog(props: Props): JSX.Element {
     return (
         <RootPortal>
             <Dialog
-                onClose={close}
+                onClose={props.onClose}
                 toolsMenu={null}
                 className='DeleteBoardDialog'
             >
