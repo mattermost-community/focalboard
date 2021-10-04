@@ -4,8 +4,6 @@ import React from 'react'
 import configureStore from 'redux-mock-store'
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {IntlProvider} from 'react-intl'
-
 import {createMemoryHistory} from 'history'
 
 import {fireEvent, render} from '@testing-library/react'
@@ -14,15 +12,11 @@ import userEvent from '@testing-library/user-event'
 
 import {Router} from 'react-router-dom'
 
+import {wrapIntl} from '../../testUtils'
+
 import {UserWorkspace} from '../../user'
 
 import DashboardCenterContent from './centerContent'
-
-const wrapProviders = (children: any) => {
-    return (
-        <IntlProvider locale='en'>{children}</IntlProvider>
-    )
-}
 
 describe('pages/dashboard/CenterContent', () => {
     const mockStore = configureStore([])
@@ -51,7 +45,7 @@ describe('pages/dashboard/CenterContent', () => {
             },
         })
 
-        const component = wrapProviders(
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <DashboardCenterContent/>
             </ReduxProvider>,
@@ -67,7 +61,7 @@ describe('pages/dashboard/CenterContent', () => {
             },
         })
 
-        const component = wrapProviders(
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <DashboardCenterContent/>
             </ReduxProvider>,
@@ -86,7 +80,7 @@ describe('pages/dashboard/CenterContent', () => {
             },
         })
 
-        const component = wrapProviders(
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <DashboardCenterContent/>
             </ReduxProvider>,
@@ -107,7 +101,7 @@ describe('pages/dashboard/CenterContent', () => {
 
         const history = createMemoryHistory()
 
-        const component = wrapProviders(
+        const component = wrapIntl(
             <Router history={history}>
                 <ReduxProvider store={store}>
                     <DashboardCenterContent/>

@@ -5,25 +5,15 @@ import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import {render} from '@testing-library/react'
 import configureStore from 'redux-mock-store'
+
 import '@testing-library/jest-dom'
-import {IntlProvider} from 'react-intl'
+import {wrapDNDIntl} from '../../testUtils'
 
 import 'isomorphic-fetch'
-
-import {DndProvider} from 'react-dnd'
-import {HTML5Backend} from 'react-dnd-html5-backend'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import TableRow from './tableRow'
-
-const wrapProviders = (children: any) => {
-    return (
-        <DndProvider backend={HTML5Backend}>
-            <IntlProvider locale='en'>{children}</IntlProvider>
-        </DndProvider>
-    )
-}
 
 describe('components/table/TableRow', () => {
     const board = TestBlockFactory.createBoard()
@@ -55,7 +45,7 @@ describe('components/table/TableRow', () => {
 
     test('should match snapshot', async () => {
         const store = mockStore(state)
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <TableRow
                     board={board}
@@ -80,7 +70,7 @@ describe('components/table/TableRow', () => {
 
     test('should match snapshot, read-only', async () => {
         const store = mockStore(state)
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <TableRow
                     board={board}
@@ -105,7 +95,7 @@ describe('components/table/TableRow', () => {
 
     test('should match snapshot, isSelected', async () => {
         const store = mockStore(state)
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <TableRow
                     board={board}
@@ -133,7 +123,7 @@ describe('components/table/TableRow', () => {
         view.fields.hiddenOptionIds = []
 
         const store = mockStore(state)
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <TableRow
                     board={board}
@@ -160,7 +150,7 @@ describe('components/table/TableRow', () => {
         view.fields.visiblePropertyIds = ['property1', 'property2']
 
         const store = mockStore(state)
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <TableRow
                     board={board}
@@ -186,7 +176,7 @@ describe('components/table/TableRow', () => {
         view.fields.visiblePropertyIds = ['property1', 'property2']
 
         const store = mockStore(state)
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <TableRow
                     board={board}
