@@ -8,6 +8,12 @@ ifeq ($(BUILD_NUMBER),)
 	BUILD_DATE := n/a
 endif
 
+MM_SERVER_PATH ?= $(MM_SERVER_PATH:)
+ifeq ($(MM_SERVER_PATH),)
+	MM_SERVER_PATH := ../../mattermost-server
+endif
+
+
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildNumber=$(BUILD_NUMBER)"
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildDate=$(BUILD_DATE)"
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildHash=$(BUILD_HASH)"
@@ -23,6 +29,8 @@ GO_TEST_FLAGS ?= -race
 GO_BUILD_FLAGS ?= -ldflags '$(LDFLAGS)'
 MM_UTILITIES_DIR ?= ../mattermost-utilities
 DLV_DEBUG_PORT := 2346
+MATTERMOST_PLUGINS_PATH=$(MM_SERVER_PATH)/plugins
+FOCALBOARD_PLUGIN_PATH=$(MATTERMOST_PLUGINS_PATH)/focalboard
 
 export GO111MODULE=on
 
@@ -276,6 +284,36 @@ ifndef STARTERTEMPLATE_PATH
 	@exit 1
 endif
 	cd ${STARTERTEMPLATE_PATH} && go run ./build/sync/main.go ./build/sync/plan.yml $(PWD)
+
+## Watch webapp and server changes and redeploy locally using local filesystem (MM_SERVER_PATH)
+.PHONY: live-watch
+live-watch:
+	make -j2 live-watch-server live-watch-webapp
+
+## Watch server changes and redeploy locally using local filesystem (MM_SERVER_PATH)
+.PHONY: live-watch-server
+live-watch-server: apply
+	cd ../ && modd -f mattermost-plugin/modd.conf
+
+## Watch webapp changes and redeploy locally using local filesystem (MM_SERVER_PATH)
+.PHONY: live-watch-webapp
+live-watch-webapp: apply
+	cd webapp && $(NPM) run live-watch
+
+.PHONY: deploy-to-mattermost-directory
+deploy-to-mattermost-directory:
+	./build/bin/pluginctl disable $(PLUGIN_ID)
+	mkdir -p $(FOCALBOARD_PLUGIN_PATH)
+	cp $(MANIFEST_FILE) $(FOCALBOARD_PLUGIN_PATH)/
+	cp -r ../webapp/pack $(FOCALBOARD_PLUGIN_PATH)/
+	cp -r $(ASSETS_DIR) $(FOCALBOARD_PLUGIN_PATH)/
+	cp -r public $(FOCALBOARD_PLUGIN_PATH)/
+	mkdir -p $(FOCALBOARD_PLUGIN_PATH)/server
+	cp -r server/dist $(FOCALBOARD_PLUGIN_PATH)/server/
+	mkdir -p $(FOCALBOARD_PLUGIN_PATH)/webapp
+	cp -r webapp/dist $(FOCALBOARD_PLUGIN_PATH)/webapp/
+	./build/bin/pluginctl enable $(PLUGIN_ID)
+	@echo plugin built at: $(FOCALBOARD_PLUGIN_PATH)
 
 # Help documentation à la https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 help:

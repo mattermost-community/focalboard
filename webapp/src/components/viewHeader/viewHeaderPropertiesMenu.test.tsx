@@ -1,25 +1,24 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-
 import React from 'react'
 import {render, screen} from '@testing-library/react'
 import {Provider as ReduxProvider} from 'react-redux'
-import configureStore from 'redux-mock-store'
 
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
-import {wrapIntl} from '../../testUtils'
+import {BoardView} from '../../blocks/boardView'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
-import ViewHeaderActionsMenu from './viewHeaderActionsMenu'
+import {mockStateStore, wrapIntl} from '../../testUtils'
+
+import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'
 
 const board = TestBlockFactory.createBoard()
-const activeView = TestBlockFactory.createBoardView(board)
-const card = TestBlockFactory.createCard(board)
+let activeView:BoardView
 
-describe('components/viewHeader/viewHeaderActionsMenu', () => {
+describe('components/viewHeader/viewHeaderPropertiesMenu', () => {
     const state = {
         users: {
             me: {
@@ -27,18 +26,18 @@ describe('components/viewHeader/viewHeaderActionsMenu', () => {
                 username: 'username_1'},
         },
     }
-    const mockStore = configureStore([])
-    const store = mockStore(state)
-
-    test('return menu with Share Boards', () => {
+    const store = mockStateStore([], state)
+    beforeEach(() => {
+        jest.clearAllMocks()
+        activeView = TestBlockFactory.createBoardView(board)
+    })
+    test('return properties menu', () => {
         const {container} = render(
             wrapIntl(
                 <ReduxProvider store={store}>
-                    <ViewHeaderActionsMenu
-                        board={board}
+                    <ViewHeaderPropertiesMenu
                         activeView={activeView}
-                        cards={[card]}
-                        showShared={true}
+                        properties={board.fields.cardProperties}
                     />
                 </ReduxProvider>,
             ),
@@ -47,16 +46,14 @@ describe('components/viewHeader/viewHeaderActionsMenu', () => {
         userEvent.click(buttonElement)
         expect(container).toMatchSnapshot()
     })
-
-    test('return menu without Share Boards', () => {
+    test('return properties menu with gallery typeview', () => {
+        activeView.fields.viewType = 'gallery'
         const {container} = render(
             wrapIntl(
                 <ReduxProvider store={store}>
-                    <ViewHeaderActionsMenu
-                        board={board}
+                    <ViewHeaderPropertiesMenu
                         activeView={activeView}
-                        cards={[card]}
-                        showShared={false}
+                        properties={board.fields.cardProperties}
                     />
                 </ReduxProvider>,
             ),

@@ -41,12 +41,14 @@
     }
 
     .octo-propertyvalue {
-        margin: 4px 0 0;
-        font-size: 12px;
-        line-height: 18px;
-
-        &:empty {
+        input[value=''] {
             display: none;
+        }
+
+        .Label.empty {
+            display: block;
+            padding: 0;
+            margin: 0;
         }
     }
 

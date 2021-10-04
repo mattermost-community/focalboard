@@ -10,7 +10,7 @@ export default function LogoIcon(): JSX.Element {
     return (
         <CompassIcon
             icon='product-boards'
-            className='LogoIcon'
+            className='boards-rhs-icon'
         />
     )
 }

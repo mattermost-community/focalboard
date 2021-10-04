@@ -21,6 +21,7 @@ type BoardViewFields = {
     cardOrder: string[]
     columnWidths: Record<string, number>
     columnCalculations: Record<string, string>
+    defaultTemplateId: string
 }
 
 type BoardView = Block & {
@@ -44,6 +45,7 @@ function createBoardView(block?: Block): BoardView {
             cardOrder: block?.fields.cardOrder?.slice() || [],
             columnWidths: {...(block?.fields.columnWidths || {})},
             columnCalculations: {...(block?.fields.columnCalculations) || {}},
+            defaultTemplateId: block?.fields.defaultTemplateId || '',
         },
     }
 }
