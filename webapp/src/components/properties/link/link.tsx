@@ -21,7 +21,8 @@ type Props = {
 
 const URLProperty = (props: Props): JSX.Element => {
     let link: ReactNode = null
-    if (props.value?.trim()) {
+    const hasValue = Boolean(props.value?.trim())
+    if (hasValue) {
         link = (
             <a
                 className='Link__button'
@@ -37,6 +38,7 @@ const URLProperty = (props: Props): JSX.Element => {
 
     return (
         <div className='URLProperty property-link url'>
+            {(hasValue || props.placeholder) &&
             <Editable
                 className='octo-propertyvalue'
                 placeholderText={props.placeholder}
@@ -47,7 +49,7 @@ const URLProperty = (props: Props): JSX.Element => {
                 onSave={props.onSave}
                 onCancel={props.onCancel}
                 validator={props.validator}
-            />
+            />}
             {link}
         </div>
     )
