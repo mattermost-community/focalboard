@@ -34,6 +34,14 @@ export class UserSettings {
         }
     }
 
+    static get dashboardShowEmpty(): boolean {
+        return localStorage.getItem('dashboardShowEmpty') !== 'false'
+    }
+
+    static set dashboardShowEmpty(newValue: boolean) {
+        localStorage.setItem('dashboardShowEmpty', JSON.stringify(newValue))
+    }
+
     static get mobileWarningClosed(): boolean {
         return localStorage.getItem('mobileWarningClosed') === 'true'
     }
