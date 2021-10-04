@@ -53,7 +53,7 @@ class CsvExporter {
 
         {
             // Header row
-            const row: string[] = [intl.formatMessage({id: 'TableComponent.name'})]
+            const row: string[] = [intl.formatMessage({id: 'TableComponent.name', defaultMessage='Name'})]
             visibleProperties.forEach((template: IPropertyTemplate) => {
                 row.push(template.name)
             })
