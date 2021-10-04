@@ -49,11 +49,11 @@
             background: linear-gradient(rgb(var(--danger-button-bg-rgb)), rgb(var(--danger-button-bg-rgb)));
 
             &:hover {
-                background: linear-gradient(rgba(0,0,0,0.08), rgba(0,0,0,0.08)), linear-gradient(rgb(var(--danger-button-bg-rgb)), rgb(var(--danger-button-bg-rgb)));
+                background: linear-gradient(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08)), linear-gradient(rgb(var(--danger-button-bg-rgb)), rgb(var(--danger-button-bg-rgb)));
             }
 
             &:active {
-                background: linear-gradient(rgba(0,0,0,0.16), rgba(0,0,0,0.16)), linear-gradient(rgb(var(--danger-button-bg-rgb)), rgb(var(--danger-button-bg-rgb)));
+                background: linear-gradient(rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0.16)), linear-gradient(rgb(var(--danger-button-bg-rgb)), rgb(var(--danger-button-bg-rgb)));
             }
         }
     }
