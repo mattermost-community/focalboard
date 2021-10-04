@@ -58,10 +58,6 @@ func (pm *PrefixedMigration) executeTemplate(r io.ReadCloser, identifier string)
 		return nil, "", err
 	}
 
-	if identifier == "match_collation" {
-		fmt.Println(buffer.String())
-	}
-
 	return ioutil.NopCloser(bytes.NewReader(buffer.Bytes())), identifier, nil
 }
 

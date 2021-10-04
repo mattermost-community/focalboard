@@ -1,23 +1,23 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {ReactElement} from 'react'
+import React from 'react'
 import {fireEvent, render, screen} from '@testing-library/react'
 
 import userEvent from '@testing-library/user-event'
 
 import '@testing-library/jest-dom'
-import {IntlProvider} from 'react-intl'
 
 import {mocked} from 'ts-jest/utils'
 
 import mutator from '../mutator'
 
+import {wrapIntl} from '../testUtils'
+
 import {TestBlockFactory} from '../test/testBlockFactory'
 
 import BlockIconSelector from './blockIconSelector'
 
-const wrapIntl = (children: ReactElement) => <IntlProvider locale='en'>{children}</IntlProvider>
 const board = TestBlockFactory.createBoard()
 const icon = '👍'
 
