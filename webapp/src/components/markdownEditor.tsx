@@ -1,7 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useRef, useMemo} from 'react'
-import SimpleMDE from 'react-simplemde-editor'
+import SimpleMdeReact from 'react-simplemde-editor'
+import {Editor} from 'codemirror'
+import SimpleMDE from 'easymde'
 import 'easymde/dist/easymde.min.css'
 
 import {Utils} from '../utils'
@@ -26,7 +28,7 @@ const MarkdownEditor = (props: Props): JSX. Element => {
     const [uniqueId] = useState(id || Utils.createGuid())
 
     const [active, setActive] = useState(false)
-    const [editorInstance, setEditorInstance] = useState<any>()
+    const [editorInstance, setEditorInstance] = useState<SimpleMDE>()
     const editorOptions = useMemo(() => ({
         autoDownloadFontAwesome: true,
         toolbar: false,
@@ -71,13 +73,13 @@ const MarkdownEditor = (props: Props): JSX. Element => {
     stateAndPropsRef.current = stateAndPropsValue
 
     const editorEvents = useMemo(() => ({
-        change: (instance: any) => {
+        change: (instance: Editor) => {
             if (stateAndPropsRef.current.isEditing) {
                 const newText = instance.getValue()
                 stateAndPropsRef.current.onChange?.(newText)
             }
         },
-        blur: (instance: any) => {
+        blur: (instance: Editor) => {
             const newText = instance.getValue()
             const oldText = text || ''
             if (newText !== oldText && stateAndPropsRef.current.onChange) {
@@ -137,7 +139,7 @@ const MarkdownEditor = (props: Props): JSX. Element => {
                 }
             }}
         >
-            <SimpleMDE
+            <SimpleMdeReact
                 id={uniqueId}
                 getMdeInstance={setEditorInstance}
                 value={text}
