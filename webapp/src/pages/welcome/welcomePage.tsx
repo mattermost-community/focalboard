@@ -49,12 +49,14 @@ const WelcomePage = React.memo(() => {
                     />
                 </div>
 
+                {/* This image will be rendered on large screens over 2000px */}
                 <img
                     src={BoardWelcomePNG}
                     className='WelcomePage__image WelcomePage__image--large'
                     alt='Boards Welcome Image'
                 />
 
+                {/* This image will be rendered on small screens below 2000px */}
                 <img
                     src={BoardWelcomeSmallPNG}
                     className='WelcomePage__image WelcomePage__image--small'
