@@ -15,10 +15,12 @@ import ChevronRight from '../../../widgets/icons/chevronRight'
 
 type Props = CalculationOptionsProps & {
     cardProperties: IPropertyTemplate[]
+    onChange: (calculation: string, property: string) => void
 }
 
 type Foo = SelectOption & {
     cardProperties: IPropertyTemplate[]
+    onChange: (calculation: string, property: string) => void
 }
 
 const Option = (props: {data: Foo}): JSX.Element => {
@@ -36,10 +38,6 @@ const Option = (props: {data: Foo}): JSX.Element => {
             setX(rect.x + rect.width)
             setSubmenu(true)
         }
-    }
-
-    const handleSubOption = (e: any) => {
-        console.log('clicked')
     }
 
     if (!calculationToProperties.get(props.data.value)) {
@@ -82,7 +80,9 @@ const Option = (props: {data: Foo}): JSX.Element => {
                                 <div
                                     key={property.id}
                                     className='drops'
-                                    onClick={handleSubOption}
+                                    onClick={() => {
+                                        props.data.onChange(props.data.value, property.id)
+                                    }}
                                 >
                                     {property.name}
                                 </div>
@@ -105,6 +105,7 @@ export const KanbanCalculationOptions = (props: Props): JSX.Element => {
                 options.push({
                     ...typeOption,
                     cardProperties: props.cardProperties,
+                    onChange: props.onChange,
                 })
             })
         })
@@ -113,6 +114,7 @@ export const KanbanCalculationOptions = (props: Props): JSX.Element => {
         options.push({
             ...typeOption,
             cardProperties: props.cardProperties,
+            onChange: props.onChange,
         })
     })
 

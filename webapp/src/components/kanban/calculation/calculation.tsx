@@ -7,7 +7,7 @@ import Button from '../../../widgets/buttons/button'
 import './calculation.scss'
 import {IPropertyTemplate} from '../../../blocks/board'
 
-import {KanbanCalculationFields} from '../../../blocks/boardView'
+import Calculations from '../../calculations/calculations'
 
 import {KanbanCalculationOptions} from './calculationOptions'
 
@@ -17,7 +17,9 @@ type Props = {
     menuOpen: boolean
     onMenuClose: () => void
     onMenuOpen: () => void
-    calculationData: KanbanCalculationFields
+    onChange: (calculation: string, property: string) => void
+    value: string
+    property: IPropertyTemplate
 }
 
 export default function KanbanCalculation(props: Props): JSX.Element {
@@ -34,17 +36,15 @@ export default function KanbanCalculation(props: Props): JSX.Element {
                 }}
                 onBlur={props.onMenuClose}
             >
-                {`${props.cards.length + 10}`}
+                {Calculations[props.value] ? Calculations[props.value](props.cards, props.property) : ''}
             </Button>
 
             {
                 props.menuOpen && (
                     <KanbanCalculationOptions
+                        value={props.value}
                         menuOpen={props.menuOpen}
-                        calculationData={props.calculationData}
-                        onChange={() => {
-                            console.log('KanbanCalculation onChange called')
-                        }}
+                        onChange={props.onChange}
                         cardProperties={props.cardProperties}
                     />
                 )

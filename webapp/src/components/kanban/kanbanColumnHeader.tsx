@@ -6,7 +6,7 @@ import {FormattedMessage, IntlShape} from 'react-intl'
 import {useDrop, useDrag} from 'react-dnd'
 
 import {Constants} from '../../constants'
-import {IPropertyOption, IPropertyTemplate, Board, BoardGroup} from '../../blocks/board'
+import {IPropertyOption, IPropertyTemplate, Board, BoardGroup, createBoard} from '../../blocks/board'
 import {BoardView, KanbanCalculationFields} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
 import mutator from '../../mutator'
@@ -37,10 +37,10 @@ type Props = {
     onCalculationMenuClose: () => void
 }
 
-const defaultCalculation: KanbanCalculationFields = {
-    calculation: 'count',
-    propertyId: Constants.titleColumnId,
-}
+const defaultCalculation = 'count'
+const defaultProperty: IPropertyTemplate = {
+    id: Constants.titleColumnId,
+} as IPropertyTemplate
 
 export default function KanbanColumnHeader(props: Props): JSX.Element {
     const {board, activeView, intl, group, groupByProperty} = props
@@ -74,6 +74,11 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
     if (isOver) {
         className += ' dragover'
     }
+
+    const groupCalculation = props.board.fields.kanbanCalculations[props.group.option.id]
+
+    const calculationValue = groupCalculation ? groupCalculation.calculation : defaultCalculation
+    const calculationProperty = groupCalculation ? props.board.fields.cardProperties.find((property) => property.id === groupCalculation.propertyId) || defaultProperty : defaultProperty
 
     return (
         <div
@@ -119,15 +124,24 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                 </Label>}
             <KanbanCalculation
                 cards={group.cards}
-
                 menuOpen={props.calculationMenuOpen}
-
-                // menuOpen={true}
-                property={board.fields.cardProperties[0]}
+                value={calculationValue}
+                property={calculationProperty}
                 onMenuClose={props.onCalculationMenuClose}
                 onMenuOpen={() => props.onCalculationMenuOpen()}
-                calculationData={activeView.fields.kanbanCalculations[group.option.id] || defaultCalculation}
                 cardProperties={board.fields.cardProperties}
+                onChange={(calculation: string, propertyId: string) => {
+                    const newBoard = createBoard(props.board)
+                    const newCalculations = {
+                        ...newBoard.fields.kanbanCalculations,
+                    }
+                    newCalculations[props.group.option.id] = {
+                        calculation,
+                        propertyId,
+                    }
+                    newBoard.fields.kanbanCalculations = newCalculations
+                    mutator.updateBlock(newBoard, props.board, 'update_calculation')
+                }}
             />
             <div className='octo-spacer'/>
             {!props.readonly &&
