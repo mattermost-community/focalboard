@@ -9,7 +9,8 @@ import {IPropertyOption, IPropertyTemplate, createBoard} from '../../webapp/src/
 import {createBoardView} from '../../webapp/src/blocks/boardView'
 import {createCard} from '../../webapp/src/blocks/card'
 import {createTextBlock} from '../../webapp/src/blocks/textBlock'
-import {Trello} from './trello'
+import {createCheckboxBlock, CheckboxBlock} from '../../webapp/src/blocks/checkboxBlock'
+import {ChecklistElement, Trello} from './trello'
 import {Utils} from './utils'
 
 // HACKHACK: To allow Utils.CreateGuid to work
@@ -134,6 +135,29 @@ function convert(input: Trello): Block[] {
             blocks.push(text)
 
             outCard.fields.contentOrder = [text.id]
+        }
+
+        // Add Checklists
+        if (card.idChecklists && card.idChecklists.length) {
+            card.idChecklists.forEach(checklistID => {
+                const lookup = input.checklists.find(e => e.id === checklistID)
+                if (lookup !== undefined) {
+                    lookup.checkItems.forEach(trelloCheckBox=> {
+                        const checkBlock = createCheckboxBlock()
+                        checkBlock.title = trelloCheckBox.name
+                        if (trelloCheckBox.state == 'complete') {
+                            checkBlock.fields.value = true
+                        } else {
+                            checkBlock.fields.value = false
+                        }
+                        checkBlock.rootId = outCard.rootId
+                        checkBlock.parentId = outCard.id
+                        blocks.push(checkBlock)
+
+                        outCard.fields.contentOrder.push(checkBlock.id)
+                    })
+                }
+            })
         }
     })
 
