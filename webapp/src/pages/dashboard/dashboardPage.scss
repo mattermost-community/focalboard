@@ -73,6 +73,8 @@
 
     &__content {
         overflow-y: hidden;
+        display: flex;
+        flex-direction: column;
     }
 
     &__workspace-container {
@@ -109,4 +111,9 @@
     flex-direction: column;
     gap: 40px;
     //background: url('../../../static/onboardingBg.jpg');
+
+    .text-heading2 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }

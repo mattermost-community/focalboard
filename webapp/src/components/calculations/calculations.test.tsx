@@ -222,6 +222,46 @@ describe('components/calculations/calculation logic', () => {
         expect(result).toBe('2')
     })
 
+    test('countChecked for cards', () => {
+        const result = Calculations.countChecked(cards, properties.checkbox)
+        expect(result).toBe('3')
+    })
+
+    test('countChecked for cards, one set, other unset', () => {
+        const result = Calculations.countChecked([card1, card5], properties.checkbox)
+        expect(result).toBe('1')
+    })
+
+    test('countUnchecked for cards', () => {
+        const result = Calculations.countUnchecked(cards, properties.checkbox)
+        expect(result).toBe('1')
+    })
+
+    test('countUnchecked for cards, two set, one unset', () => {
+        const result = Calculations.countUnchecked([card1, card1, card5], properties.checkbox)
+        expect(result).toBe('1')
+    })
+
+    test('countUnchecked for cards, one set, other unset', () => {
+        const result = Calculations.countUnchecked([card1, card5], properties.checkbox)
+        expect(result).toBe('1')
+    })
+
+    test('countUnchecked for cards, one set, two unset', () => {
+        const result = Calculations.countUnchecked([card1, card5, card5], properties.checkbox)
+        expect(result).toBe('2')
+    })
+
+    test('percentChecked for cards', () => {
+        const result = Calculations.percentChecked(cards, properties.checkbox)
+        expect(result).toBe('75%')
+    })
+
+    test('percentUnchecked for cards', () => {
+        const result = Calculations.percentUnchecked(cards, properties.checkbox)
+        expect(result).toBe('25%')
+    })
+
     test('sum', () => {
         const result = Calculations.sum(cards, properties.number)
         expect(result).toBe('170')

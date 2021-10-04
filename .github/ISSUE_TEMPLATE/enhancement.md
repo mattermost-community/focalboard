@@ -1,5 +1,5 @@
 ---
-name: Enhancement / Feature Idea
+name: Enhancement/Feature Idea
 about: Suggest a new capability
 title: 'Feature Idea: '
 labels: Enhancement
@@ -7,10 +7,11 @@ assignees: ''
 
 ---
 
-**Summary:**
+## Summary
+
 What the new capability is.
 
-**How important this is to me and why:**
+## How important this is to me and why
 
 Importance: High/Medium/Low
 
@@ -19,5 +20,6 @@ Use cases:
 2.
 3.
 
-**Additional context / similar features:**
+## Additional context/similar features
+
 Any examples of good implementations of this capability.

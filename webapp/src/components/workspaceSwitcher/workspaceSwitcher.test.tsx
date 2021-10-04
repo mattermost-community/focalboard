@@ -7,17 +7,11 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import {render} from '@testing-library/react'
 
-import {IntlProvider} from 'react-intl'
+import {wrapIntl} from '../../testUtils'
 
 import {UserWorkspace} from '../../user'
 
 import WorkspaceOptions from './workspaceOptions'
-
-const wrapProviders = (children: any) => {
-    return (
-        <IntlProvider locale='en'>{children}</IntlProvider>
-    )
-}
 
 describe('components/workspaceSwitcher/WorkspaceSwitcher', () => {
     const mockStore = configureStore([])
@@ -47,7 +41,7 @@ describe('components/workspaceSwitcher/WorkspaceSwitcher', () => {
             },
         })
 
-        const component = wrapProviders(
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <WorkspaceOptions
                     onChange={() => {}}
@@ -67,7 +61,7 @@ describe('components/workspaceSwitcher/WorkspaceSwitcher', () => {
             },
         })
 
-        const component = wrapProviders(
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <WorkspaceOptions
                     onChange={() => {}}

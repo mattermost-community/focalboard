@@ -4,6 +4,18 @@ import {IUser} from '../user'
 
 import {TelemetryHandler} from './telemetry'
 
+export const TelemetryCategory = 'boards'
+
+export const TelemetryActions = {
+    ClickChannelHeader: 'clickChannelHeader',
+    CreateBoard: 'createBoard',
+    CreateBoardViaTemplate: 'createBoardViaTemplate',
+    CreateBoardView: 'createBoardView',
+    EditCardProperty: 'editCardProperty',
+    ViewBoard: 'viewBoard',
+    ViewCard: 'viewCard',
+}
+
 class TelemetryClient {
     public telemetryHandler?: TelemetryHandler
     public user?: IUser

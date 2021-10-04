@@ -11,6 +11,7 @@ import {OctoUtils} from './octoUtils'
 import undoManager from './undomanager'
 import {Utils} from './utils'
 import {UserSettings} from './userSettings'
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from './telemetry/telemetryClient'
 
 //
 // The Mutator is used to make all changes to server state
@@ -132,6 +133,32 @@ class Mutator {
             },
             async () => {
                 await octoClient.patchBlock(blockId, {title: oldTitle})
+            },
+            description,
+            this.undoGroupId,
+        )
+    }
+
+    async setDefaultTemplate(blockId: string, oldTemplateId: string, templateId: string, description = 'set default template') {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(blockId, {updatedFields: {defaultTemplateId: templateId}})
+            },
+            async () => {
+                await octoClient.patchBlock(blockId, {updatedFields: {defaultTemplateId: oldTemplateId}})
+            },
+            description,
+            this.undoGroupId,
+        )
+    }
+
+    async clearDefaultTemplate(blockId: string, oldTemplateId: string, description = 'set default template') {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(blockId, {updatedFields: {defaultTemplateId: ''}})
+            },
+            async () => {
+                await octoClient.patchBlock(blockId, {updatedFields: {defaultTemplateId: oldTemplateId}})
             },
             description,
             this.undoGroupId,
@@ -381,6 +408,7 @@ class Mutator {
             delete newCard.fields.properties[propertyId]
         }
         await this.updateBlock(newCard, card, description)
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.EditCardProperty, {card: card.id})
     }
 
     async changePropertyTypeAndName(board: Board, cards: Card[], propertyTemplate: IPropertyTemplate, newType: PropertyType, newName: string) {

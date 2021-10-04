@@ -9,7 +9,7 @@ declare interface INativeApp {
 
 declare const NativeApp: INativeApp
 
-export function importNativeAppSettings() {
+export function importNativeAppSettings(): void {
     if (typeof NativeApp === 'undefined' || !NativeApp.settingsBlob) {
         return
     }
@@ -19,7 +19,7 @@ export function importNativeAppSettings() {
     NativeApp.settingsBlob = null
 }
 
-export function notifySettingsChanged(key: string) {
+export function notifySettingsChanged(key: string): void {
     postWebKitMessage({type: 'didChangeUserSettings', settingsBlob: exportUserSettingsBlob(), key})
 }
 

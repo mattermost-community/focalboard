@@ -4,28 +4,18 @@
 import React from 'react'
 import {fireEvent, render} from '@testing-library/react'
 import '@testing-library/jest-dom'
-import {IntlProvider} from 'react-intl'
 
 import 'isomorphic-fetch'
-
-import {DndProvider} from 'react-dnd'
-import {HTML5Backend} from 'react-dnd-html5-backend'
 
 import {act} from 'react-dom/test-utils'
 
 import userEvent from '@testing-library/user-event'
 
+import {wrapDNDIntl} from '../../testUtils'
+
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import TableGroupHeaderRowElement from './tableGroupHeaderRow'
-
-const wrapProviders = (children: any) => {
-    return (
-        <DndProvider backend={HTML5Backend}>
-            <IntlProvider locale='en'>{children}</IntlProvider>
-        </DndProvider>
-    )
-}
 
 const board = TestBlockFactory.createBoard()
 const view = TestBlockFactory.createBoardView(board)
@@ -52,7 +42,7 @@ const boardTreeGroup = {
 }
 
 test('should match snapshot, no groups', async () => {
-    const component = wrapProviders(
+    const component = wrapDNDIntl(
         <TableGroupHeaderRowElement
             board={board}
             activeView={view}
@@ -75,7 +65,7 @@ test('should match snapshot, no groups', async () => {
 })
 
 test('should match snapshot with Group', async () => {
-    const component = wrapProviders(
+    const component = wrapDNDIntl(
         <TableGroupHeaderRowElement
             board={board}
             activeView={view}
@@ -92,7 +82,7 @@ test('should match snapshot with Group', async () => {
 })
 
 test('should match snapshot on read only', async () => {
-    const component = wrapProviders(
+    const component = wrapDNDIntl(
         <TableGroupHeaderRowElement
             board={board}
             activeView={view}
@@ -114,7 +104,7 @@ test('should match snapshot, hide group', async () => {
     const collapsedOptionsView = TestBlockFactory.createBoardView(board)
     collapsedOptionsView.fields.collapsedOptionIds = [boardTreeGroup.option.id]
 
-    const component = wrapProviders(
+    const component = wrapDNDIntl(
         <TableGroupHeaderRowElement
             board={board}
             activeView={collapsedOptionsView}
@@ -141,7 +131,7 @@ test('should match snapshot, hide group', async () => {
 test('should match snapshot, add new', async () => {
     const addNew = jest.fn()
 
-    const component = wrapProviders(
+    const component = wrapDNDIntl(
         <TableGroupHeaderRowElement
             board={board}
             activeView={view}
@@ -167,7 +157,7 @@ test('should match snapshot, add new', async () => {
 })
 
 test('should match snapshot, edit title', async () => {
-    const component = wrapProviders(
+    const component = wrapDNDIntl(
         <TableGroupHeaderRowElement
             board={board}
             activeView={view}

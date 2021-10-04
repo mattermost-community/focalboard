@@ -8,22 +8,13 @@ import {Provider as ReduxProvider} from 'react-redux'
 import {Router} from 'react-router-dom'
 
 import {render} from '@testing-library/react'
-
-import {IntlProvider} from 'react-intl'
-
 import userEvent from '@testing-library/user-event'
 
 import {UserWorkspace} from '../../user'
 
-import {mockMatchMedia} from '../../testUtils'
+import {mockMatchMedia, wrapIntl} from '../../testUtils'
 
 import Sidebar from './sidebar'
-
-const wrapProviders = (children: any) => {
-    return (
-        <IntlProvider locale='en'>{children}</IntlProvider>
-    )
-}
 
 beforeAll(() => {
     mockMatchMedia({matches: true})
@@ -67,7 +58,7 @@ describe('components/sidebarSidebar', () => {
 
         const history = createMemoryHistory()
 
-        const component = wrapProviders(
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
                     <Sidebar isDashboard={true}/>
@@ -105,7 +96,7 @@ describe('components/sidebarSidebar', () => {
 
         const history = createMemoryHistory()
 
-        const component = wrapProviders(
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
                     <Sidebar/>
