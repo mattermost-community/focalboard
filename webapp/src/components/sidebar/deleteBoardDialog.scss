@@ -16,6 +16,7 @@
         flex-direction: column;
         flex-grow: 1;
         padding: 0 40px;
+        max-width: 100%;
 
         .header {
             flex-shrink: 0;
@@ -25,11 +26,12 @@
             margin-bottom: 0;
         }
 
-        .body {
+        p.body {
             display: flex;
             flex-grow: 1;
             justify-content: center;
             text-align: center;
+            margin: 10px 0px;
         }
 
         .footer {
