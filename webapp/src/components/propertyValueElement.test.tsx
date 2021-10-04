@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {render} from '@testing-library/react'
+import {render, screen} from '@testing-library/react'
 import '@testing-library/jest-dom'
 
 import {wrapDNDIntl} from '../testUtils'
@@ -14,6 +14,8 @@ import {IPropertyTemplate, IPropertyOption} from '../blocks/board'
 import {TestBlockFactory} from '../test/testBlockFactory'
 
 import PropertyValueElement from './propertyValueElement'
+
+import userEvent from '@testing-library/user-event'
 
 describe('components/propertyValueElement', () => {
     const board = TestBlockFactory.createBoard()
@@ -186,6 +188,62 @@ describe('components/propertyValueElement', () => {
             />,
         )
         const {container} = render(component)
+        expect(container).toMatchSnapshot()
+    })
+
+    test('URL fields should allow cancel', () => {
+        const propertyTemplate: IPropertyTemplate = {
+            id: 'property_url',
+            name: 'Property URL',
+            type: 'url',
+            options: [],
+        }
+
+        const component = wrapDNDIntl(
+            <PropertyValueElement
+                board={board}
+                readOnly={false}
+                card={card}
+                contents={[]}
+                comments={[comments]}
+                propertyTemplate={propertyTemplate}
+                showEmptyPlaceholder={true}
+            />,
+        )
+
+        const {container} = render(component)
+        const editElement = container.querySelector('.Editable')
+        expect(editElement).toBeDefined()
+
+        userEvent.type(editElement!, 'http://test{esc}')
+        expect(container).toMatchSnapshot()
+    })
+
+    test('Generic fields should allow cancel', () => {
+        const propertyTemplate: IPropertyTemplate = {
+            id: 'text',
+            name: 'Generic Text',
+            type: 'text',
+            options: [],
+        }
+
+        const component = wrapDNDIntl(
+            <PropertyValueElement
+                board={board}
+                readOnly={false}
+                card={card}
+                contents={[]}
+                comments={[comments]}
+                propertyTemplate={propertyTemplate}
+                showEmptyPlaceholder={true}
+            />,
+        )
+
+        const {container} = render(component)
+        const editElement = container.querySelector('.Editable')
+        expect(editElement).toBeDefined()
+
+        userEvent.type(editElement!, 'http://test{esc}')
         expect(container).toMatchSnapshot()
     })
 })
