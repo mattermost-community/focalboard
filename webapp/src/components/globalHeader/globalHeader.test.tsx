@@ -6,13 +6,11 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import {render} from '@testing-library/react'
 
-import {IntlProvider} from 'react-intl'
-
 import configureStore from 'redux-mock-store'
 
-import GlobalHeader from './globalHeader'
+import {wrapIntl} from '../../testUtils'
 
-const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
+import GlobalHeader from './globalHeader'
 
 describe('components/sidebar/GlobalHeader', () => {
     const mockStore = configureStore([])
