@@ -86,18 +86,14 @@
     .octo-board-hidden-item {
         display: flex;
         flex-direction: row;
-        margin-bottom: 5px;
+        align-items: center;
 
         > div {
             margin-right: 5px;
         }
 
         .Label {
-            height: 100%;
-        }
-
-        > .Button {
-            height: 100%;
+            margin: 5px;
         }
     }
 }
