@@ -33,6 +33,12 @@ describe('components/viewHeader/viewHeader', () => {
         cards: {
             templates: [card],
         },
+        views: {
+            views: {
+                boardView: activeView,
+            },
+            current: 'boardView',
+        },
     }
     const store = mockStateStore([], state)
     test('return viewHeader', () => {
