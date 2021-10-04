@@ -9,8 +9,8 @@ import {IPropertyOption, IPropertyTemplate, createBoard} from '../../webapp/src/
 import {createBoardView} from '../../webapp/src/blocks/boardView'
 import {createCard} from '../../webapp/src/blocks/card'
 import {createTextBlock} from '../../webapp/src/blocks/textBlock'
-import {createCheckboxBlock, CheckboxBlock} from '../../webapp/src/blocks/checkboxBlock'
-import {ChecklistElement, Trello} from './trello'
+import {createCheckboxBlock} from '../../webapp/src/blocks/checkboxBlock'
+import {Trello} from './trello'
 import {Utils} from './utils'
 
 // HACKHACK: To allow Utils.CreateGuid to work
@@ -138,14 +138,14 @@ function convert(input: Trello): Block[] {
         }
 
         // Add Checklists
-        if (card.idChecklists && card.idChecklists.length) {
+        if (card.idChecklists && card.idChecklists.length > 0) {
             card.idChecklists.forEach(checklistID => {
                 const lookup = input.checklists.find(e => e.id === checklistID)
-                if (lookup !== undefined) {
+                if (lookup) {
                     lookup.checkItems.forEach(trelloCheckBox=> {
                         const checkBlock = createCheckboxBlock()
                         checkBlock.title = trelloCheckBox.name
-                        if (trelloCheckBox.state == 'complete') {
+                        if (trelloCheckBox.state === 'complete') {
                             checkBlock.fields.value = true
                         } else {
                             checkBlock.fields.value = false
