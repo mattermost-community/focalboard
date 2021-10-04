@@ -117,7 +117,7 @@ module.exports = {
                         loader: 'file-loader',
                         options: {
                             name: '[name].[ext]',
-                            outputPath: path.join(__dirname, '/dist'),
+                            outputPath: 'static',
                             publicPath: '/plugins/focalboard/static/',
                         },
                     },
