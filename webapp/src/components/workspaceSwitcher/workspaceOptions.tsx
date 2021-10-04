@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import Select from 'react-select'
+import Select, {OptionProps} from 'react-select'
 import {FormattedMessage, useIntl} from 'react-intl'
 
 import {UserWorkspace} from '../../user'
@@ -86,7 +86,7 @@ const WorkspaceOptions = (props: Props): JSX.Element => {
     )
 }
 
-const Option = (props: any): JSX.Element => {
+const Option = (props: OptionProps<typeof DashboardOption, false>): JSX.Element => {
     const {innerProps, innerRef} = props
 
     return (
