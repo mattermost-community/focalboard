@@ -11,9 +11,7 @@ export function mockDOM(): void {
     window.focus = jest.fn()
     document.createRange = () => {
         const range = new Range()
-
         range.getBoundingClientRect = jest.fn()
-
         range.getClientRects = () => {
             return {
                 item: () => null,
@@ -21,11 +19,9 @@ export function mockDOM(): void {
                 [Symbol.iterator]: jest.fn(),
             }
         }
-
         return range
     }
 }
-
 export function mockMatchMedia(result: any): void {
     // We check if system preference is dark or light theme.
     // This is required to provide it's definition since
