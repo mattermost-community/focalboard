@@ -38,6 +38,7 @@
   "DashboardPage.CenterPanel.ChangeChannels": "Use the switcher to easily change channels",
   "DashboardPage.CenterPanel.NoWorkspaces": "Sorry, we could not find any channels matching that term",
   "DashboardPage.CenterPanel.NoWorkspacesDescription": "Please try searching for another term",
+  "DashboardPage.showEmpty": "Show empty",
   "DashboardPage.title": "Dashboard",
   "Dialog.closeDialog": "Close dialog",
   "EditableDayPicker.today": "Today",
