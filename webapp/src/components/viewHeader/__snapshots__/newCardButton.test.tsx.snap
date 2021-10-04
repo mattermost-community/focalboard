@@ -33,7 +33,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
           >
             <div
               aria-label="Empty card"
-              class="MenuOption TextOption menu-option"
+              class="MenuOption TextOption menu-option bold-menu-text"
               role="button"
             >
               <svg
@@ -56,8 +56,19 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
                 Empty card
               </div>
               <div
-                class="noicon"
-              />
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <div
+                  class="Button IconButton"
+                  role="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </div>
+              </div>
             </div>
             <div
               aria-label="New template"
@@ -141,7 +152,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
           >
             <div
               aria-label="Empty card"
-              class="MenuOption TextOption menu-option"
+              class="MenuOption TextOption menu-option bold-menu-text"
               role="button"
             >
               <svg
@@ -164,8 +175,19 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
                 Empty card
               </div>
               <div
-                class="noicon"
-              />
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <div
+                  class="Button IconButton"
+                  role="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </div>
+              </div>
             </div>
             <div
               aria-label="New template"
@@ -249,7 +271,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
           >
             <div
               aria-label="Empty card"
-              class="MenuOption TextOption menu-option"
+              class="MenuOption TextOption menu-option bold-menu-text"
               role="button"
             >
               <svg
@@ -272,8 +294,19 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
                 Empty card
               </div>
               <div
-                class="noicon"
-              />
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <div
+                  class="Button IconButton"
+                  role="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </div>
+              </div>
             </div>
             <div
               aria-label="New template"

@@ -14,6 +14,7 @@ import {TestBlockFactory} from '../../test/testBlockFactory'
 import NewCardButton from './newCardButton'
 
 const board = TestBlockFactory.createBoard()
+const activeView = TestBlockFactory.createBoardView(board)
 
 describe('components/viewHeader/newCardButton', () => {
     const state = {
@@ -27,6 +28,10 @@ describe('components/viewHeader/newCardButton', () => {
         },
         cards: {
             templates: [],
+        },
+        views: {
+            current: 0,
+            views: [activeView],
         },
     }
 
