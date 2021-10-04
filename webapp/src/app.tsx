@@ -80,6 +80,7 @@ const App = React.memo((): JSX.Element => {
     const globalError = useAppSelector<string>(getGlobalError)
     const me = useAppSelector<IUser|null>(getMe)
     const dispatch = useAppDispatch()
+
     // this is a temporary solution while we're using legacy routes
     // for shared boards as a way to disable websockets, and should be
     // removed when anonymous plugin routes are implemented. This
