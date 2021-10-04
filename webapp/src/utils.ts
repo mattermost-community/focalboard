@@ -504,6 +504,12 @@ class Utils {
             return block
         }
     }
+
+    static getReadToken(): string {
+        const queryString = new URLSearchParams(window.location.search)
+        const readToken = queryString.get('r') || ''
+        return readToken
+    }
 }
 
 export {Utils}
