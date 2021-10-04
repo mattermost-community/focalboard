@@ -1,6 +1,7 @@
 package sqlstore
 
 import (
+	"database/sql"
 	"encoding/json"
 	"time"
 
@@ -9,8 +10,8 @@ import (
 )
 
 // GetActiveUserCount returns the number of users with active sessions within N seconds ago.
-func (s *SQLStore) GetActiveUserCount(updatedSecondsAgo int64) (int, error) {
-	query := s.getQueryBuilder().
+func (s *SQLStore) getActiveUserCount(tx *sql.Tx, updatedSecondsAgo int64) (int, error) {
+	query := s.getQueryBuilder(tx).
 		Select("count(distinct user_id)").
 		From(s.tablePrefix + "sessions").
 		Where(sq.Gt{"update_at": time.Now().Unix() - updatedSecondsAgo})
@@ -26,8 +27,8 @@ func (s *SQLStore) GetActiveUserCount(updatedSecondsAgo int64) (int, error) {
 	return count, nil
 }
 
-func (s *SQLStore) GetSession(token string, expireTime int64) (*model.Session, error) {
-	query := s.getQueryBuilder().
+func (s *SQLStore) getSession(tx *sql.Tx, token string, expireTime int64) (*model.Session, error) {
+	query := s.getQueryBuilder(tx).
 		Select("id", "token", "user_id", "auth_service", "props").
 		From(s.tablePrefix + "sessions").
 		Where(sq.Eq{"token": token}).
@@ -50,7 +51,7 @@ func (s *SQLStore) GetSession(token string, expireTime int64) (*model.Session, e
 	return &session, nil
 }
 
-func (s *SQLStore) CreateSession(session *model.Session) error {
+func (s *SQLStore) createSession(tx *sql.Tx, session *model.Session) error {
 	now := time.Now().Unix()
 
 	propsBytes, err := json.Marshal(session.Props)
@@ -58,7 +59,7 @@ func (s *SQLStore) CreateSession(session *model.Session) error {
 		return err
 	}
 
-	query := s.getQueryBuilder().Insert(s.tablePrefix+"sessions").
+	query := s.getQueryBuilder(tx).Insert(s.tablePrefix+"sessions").
 		Columns("id", "token", "user_id", "auth_service", "props", "create_at", "update_at").
 		Values(session.ID, session.Token, session.UserID, session.AuthService, propsBytes, now, now)
 
@@ -66,10 +67,10 @@ func (s *SQLStore) CreateSession(session *model.Session) error {
 	return err
 }
 
-func (s *SQLStore) RefreshSession(session *model.Session) error {
+func (s *SQLStore) refreshSession(tx *sql.Tx, session *model.Session) error {
 	now := time.Now().Unix()
 
-	query := s.getQueryBuilder().Update(s.tablePrefix+"sessions").
+	query := s.getQueryBuilder(tx).Update(s.tablePrefix+"sessions").
 		Where(sq.Eq{"token": session.Token}).
 		Set("update_at", now)
 
@@ -77,7 +78,7 @@ func (s *SQLStore) RefreshSession(session *model.Session) error {
 	return err
 }
 
-func (s *SQLStore) UpdateSession(session *model.Session) error {
+func (s *SQLStore) updateSession(tx *sql.Tx, session *model.Session) error {
 	now := time.Now().Unix()
 
 	propsBytes, err := json.Marshal(session.Props)
@@ -85,7 +86,7 @@ func (s *SQLStore) UpdateSession(session *model.Session) error {
 		return err
 	}
 
-	query := s.getQueryBuilder().Update(s.tablePrefix+"sessions").
+	query := s.getQueryBuilder(tx).Update(s.tablePrefix+"sessions").
 		Where(sq.Eq{"token": session.Token}).
 		Set("update_at", now).
 		Set("props", propsBytes)
@@ -94,16 +95,16 @@ func (s *SQLStore) UpdateSession(session *model.Session) error {
 	return err
 }
 
-func (s *SQLStore) DeleteSession(sessionID string) error {
-	query := s.getQueryBuilder().Delete(s.tablePrefix + "sessions").
+func (s *SQLStore) deleteSession(tx *sql.Tx, sessionID string) error {
+	query := s.getQueryBuilder(tx).Delete(s.tablePrefix + "sessions").
 		Where(sq.Eq{"id": sessionID})
 
 	_, err := query.Exec()
 	return err
 }
 
-func (s *SQLStore) CleanUpSessions(expireTime int64) error {
-	query := s.getQueryBuilder().Delete(s.tablePrefix + "sessions").
+func (s *SQLStore) cleanUpSessions(tx *sql.Tx, expireTime int64) error {
+	query := s.getQueryBuilder(tx).Delete(s.tablePrefix + "sessions").
 		Where(sq.Lt{"update_at": time.Now().Unix() - expireTime})
 
 	_, err := query.Exec()

@@ -1,7 +1,11 @@
 package sqlstore
 
-func (s *SQLStore) GetSystemSettings() (map[string]string, error) {
-	query := s.getQueryBuilder().Select("*").From(s.tablePrefix + "system_settings")
+import (
+	"database/sql"
+)
+
+func (s *SQLStore) getSystemSettings(tx *sql.Tx) (map[string]string, error) {
+	query := s.getQueryBuilder(tx).Select("*").From(s.tablePrefix + "system_settings")
 
 	rows, err := query.Query()
 	if err != nil {
@@ -26,8 +30,8 @@ func (s *SQLStore) GetSystemSettings() (map[string]string, error) {
 	return results, nil
 }
 
-func (s *SQLStore) SetSystemSetting(id, value string) error {
-	query := s.getQueryBuilder().Insert(s.tablePrefix+"system_settings").Columns("id", "value").Values(id, value)
+func (s *SQLStore) setSystemSetting(tx *sql.Tx, id, value string) error {
+	query := s.getQueryBuilder(tx).Insert(s.tablePrefix+"system_settings").Columns("id", "value").Values(id, value)
 
 	if s.dbType == mysqlDBType {
 		query = query.Suffix("ON DUPLICATE KEY UPDATE value = ?", value)

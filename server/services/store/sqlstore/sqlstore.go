@@ -66,12 +66,15 @@ func (s *SQLStore) DBHandle() *sql.DB {
 	return s.db
 }
 
-func (s *SQLStore) getQueryBuilder() sq.StatementBuilderType {
+func (s *SQLStore) getQueryBuilder(tx *sql.Tx) sq.StatementBuilderType {
 	builder := sq.StatementBuilder
 	if s.dbType == postgresDBType || s.dbType == sqliteDBType {
 		builder = builder.PlaceholderFormat(sq.Dollar)
 	}
 
+	if tx != nil {
+		return builder.RunWith(tx)
+	}
 	return builder.RunWith(s.db)
 }
 
