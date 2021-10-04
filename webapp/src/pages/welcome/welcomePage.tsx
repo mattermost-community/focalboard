@@ -8,6 +8,7 @@ import {useLocation, useHistory} from 'react-router-dom'
 import BoardWelcomePNG from '../../../static/boards-welcome.png'
 
 import CompassIcon from '../../widgets/icons/compassIcon'
+import Button from '../../widgets/buttons/button'
 import {UserSettings} from '../../userSettings'
 
 import './welcomePage.scss'
@@ -55,7 +56,7 @@ const WelcomePage = React.memo(() => {
                     />
                 </div>
 
-                <button
+                <Button
                     onClick={goForward}
                     className='Button filled size--large'
                 >
@@ -67,7 +68,7 @@ const WelcomePage = React.memo(() => {
                         icon='chevron-right'
                         className='Icon Icon--right'
                     />
-                </button>
+                </Button>
             </div>
         </div>
     )
