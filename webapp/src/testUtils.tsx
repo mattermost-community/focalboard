@@ -31,7 +31,7 @@ export function mockDOM(): void {
         return range
     }
 }
-export function mockMatchMedia(result: any): void {
+export function mockMatchMedia(result: {matches: boolean}): void {
     // We check if system preference is dark or light theme.
     // This is required to provide it's definition since
     // window.matchMedia doesn't exist in Jest.
