@@ -4,6 +4,8 @@ import {IntlProvider} from 'react-intl'
 import React from 'react'
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
+import configureStore, {MockStoreEnhanced} from 'redux-mock-store'
+import {Middleware} from 'redux'
 
 export const wrapIntl = (children?: React.ReactNode): JSX.Element => <IntlProvider locale='en'>{children}</IntlProvider>
 export const wrapDNDIntl = (children?: React.ReactNode): JSX.Element => {
@@ -47,4 +49,9 @@ export function mockMatchMedia(result: any): void {
             // })
         }),
     })
+}
+
+export function mockStateStore(middleware:Middleware[], state:unknown): MockStoreEnhanced<unknown, unknown> {
+    const mockStore = configureStore(middleware)
+    return mockStore(state)
 }

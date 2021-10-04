@@ -32,7 +32,7 @@ type Props = {
     readonly: boolean
 }
 
-const CardDialog = (props: Props) => {
+const CardDialog = (props: Props): JSX.Element => {
     const {board, activeView, cards, views} = props
     const card = useAppSelector(getCard(props.cardId))
     const contents = useAppSelector(getCardContents(props.cardId))
