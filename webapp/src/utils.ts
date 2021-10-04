@@ -244,6 +244,15 @@ class Utils {
         /// #!endif
     }
 
+    static logWarn(message: string): void {
+        /// #!if ENV !== "production"
+        const timestamp = (Date.now() / 1000).toFixed(2)
+        // eslint-disable-next-line no-console
+        console.warn(`[${timestamp}] ${message}`)
+
+        /// #!endif
+    }
+
     // favicon
 
     static setFavicon(icon?: string): void {
@@ -494,6 +503,12 @@ class Utils {
 
     static isDesktop(): boolean {
         return Utils.isDesktopApp() && Utils.isVersionGreaterThanOrEqualTo(Utils.getDesktopVersion(), '5.0.0')
+    }
+
+    static getReadToken(): string {
+        const queryString = new URLSearchParams(window.location.search)
+        const readToken = queryString.get('r') || ''
+        return readToken
     }
 }
 

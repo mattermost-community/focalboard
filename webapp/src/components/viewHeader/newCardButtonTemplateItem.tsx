@@ -12,6 +12,9 @@ import EditIcon from '../../widgets/icons/edit'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
+import CheckIcon from '../../widgets/icons/check'
+import {useAppSelector} from '../../store/hooks'
+import {getCurrentView} from '../../store/views'
 
 type Props = {
     cardTemplate: Card
@@ -20,15 +23,19 @@ type Props = {
 }
 
 const NewCardButtonTemplateItem = React.memo((props: Props) => {
+    const currentView = useAppSelector(getCurrentView)
     const {cardTemplate} = props
     const intl = useIntl()
     const displayName = cardTemplate.title || intl.formatMessage({id: 'ViewHeader.untitled', defaultMessage: 'Untitled'})
+    const isDefaultTemplate = currentView.fields.defaultTemplateId === cardTemplate.id
+
     return (
         <Menu.Text
             key={cardTemplate.id}
             id={cardTemplate.id}
             name={displayName}
             icon={<div className='Icon'>{cardTemplate.fields.icon}</div>}
+            className={isDefaultTemplate ? 'bold-menu-text' : ''}
             onClick={() => {
                 props.addCardFromTemplate(cardTemplate.id)
             }}
@@ -36,6 +43,14 @@ const NewCardButtonTemplateItem = React.memo((props: Props) => {
                 <MenuWrapper stopPropagationOnToggle={true}>
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu position='left'>
+                        <Menu.Text
+                            icon={<CheckIcon/>}
+                            id='default'
+                            name={intl.formatMessage({id: 'ViewHeader.set-default-template', defaultMessage: 'Set as default'})}
+                            onClick={async () => {
+                                await mutator.setDefaultTemplate(currentView.id, currentView.fields.defaultTemplateId, cardTemplate.id)
+                            }}
+                        />
                         <Menu.Text
                             icon={<EditIcon/>}
                             id='edit'
@@ -49,7 +64,12 @@ const NewCardButtonTemplateItem = React.memo((props: Props) => {
                             id='delete'
                             name={intl.formatMessage({id: 'ViewHeader.delete-template', defaultMessage: 'Delete'})}
                             onClick={async () => {
-                                await mutator.deleteBlock(cardTemplate, 'delete card template')
+                                await mutator.performAsUndoGroup(async () => {
+                                    if (currentView.fields.defaultTemplateId === cardTemplate.id) {
+                                        await mutator.clearDefaultTemplate(currentView.id, currentView.fields.defaultTemplateId)
+                                    }
+                                    await mutator.deleteBlock(cardTemplate, 'delete card template')
+                                })
                             }}
                         />
                     </Menu>

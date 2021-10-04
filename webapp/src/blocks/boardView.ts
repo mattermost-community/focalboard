@@ -1,6 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../telemetry/telemetryClient'
+
 import {Block, createBlock} from './block'
 import {FilterGroup, createFilterGroup} from './filterGroup'
 
@@ -25,6 +27,7 @@ type BoardViewFields = {
     columnWidths: Record<string, number>
     columnCalculations: Record<string, string>
     kanbanCalculations: Record<string, KanbanCalculationFields>
+    defaultTemplateId: string
 }
 
 type BoardView = Block & {
@@ -32,6 +35,7 @@ type BoardView = Block & {
 }
 
 function createBoardView(block?: Block): BoardView {
+    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardView, {viewType: block?.fields.viewType || 'board'})
     return {
         ...createBlock(block),
         type: 'view',
@@ -48,6 +52,7 @@ function createBoardView(block?: Block): BoardView {
             columnWidths: {...(block?.fields.columnWidths || {})},
             columnCalculations: {...(block?.fields.columnCalculations) || {}},
             kanbanCalculations: {...(block?.fields.KanbanCalculationFields) || {}},
+            defaultTemplateId: block?.fields.defaultTemplateId || '',
         },
     }
 }

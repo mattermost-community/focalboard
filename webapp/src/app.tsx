@@ -85,6 +85,7 @@ const App = React.memo((): JSX.Element => {
         dispatch(fetchLanguage())
         dispatch(fetchMe())
         dispatch(fetchClientConfig())
+        history.replace(window.location.pathname.replace((window as any).frontendBaseURL, ''))
     }, [])
 
     useEffect(() => {
@@ -106,8 +107,8 @@ const App = React.memo((): JSX.Element => {
         setTimeout(() => dispatch(setGlobalError('')), 0)
     }
 
-    const continueToWelcomeScreen = (boardIdIsValidUUIDV4 = true) => {
-        return Utils.isFocalboardPlugin() && loggedIn === true && (!UserSettings.welcomePageViewed || !boardIdIsValidUUIDV4)
+    const continueToWelcomeScreen = () => {
+        return Utils.isFocalboardPlugin() && loggedIn === true && !UserSettings.welcomePageViewed
     }
 
     const buildOriginalPath = (workspaceId = '', boardId = '', viewId = '', cardId = '') => {
@@ -158,7 +159,7 @@ const App = React.memo((): JSX.Element => {
                                 <Route path='/change_password'>
                                     <ChangePasswordPage/>
                                 </Route>
-                                <Route path='/shared/:boardId?/:viewId?'>
+                                <Route path='/shared/:boardId?/:viewId?/:cardId?'>
                                     <BoardPage readonly={true}/>
                                 </Route>
                                 <Route
@@ -180,7 +181,7 @@ const App = React.memo((): JSX.Element => {
                                         return null
                                     }}
                                 />
-                                <Route path='/workspace/:workspaceId/shared/:boardId?/:viewId?'>
+                                <Route path='/workspace/:workspaceId/shared/:boardId?/:viewId?/:cardId?'>
                                     <BoardPage readonly={true}/>
                                 </Route>
                                 <Route
@@ -231,7 +232,7 @@ const App = React.memo((): JSX.Element => {
                                             return <Redirect to='/login'/>
                                         }
 
-                                        if (continueToWelcomeScreen(boardIdIsValidUUIDV4)) {
+                                        if (continueToWelcomeScreen()) {
                                             const originalPath = `/${buildOriginalPath('', boardId, viewId, cardId)}`
                                             const queryString = boardIdIsValidUUIDV4 ? `r=${originalPath}` : ''
                                             return <Redirect to={`/welcome?${queryString}`}/>
