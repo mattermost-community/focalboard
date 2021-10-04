@@ -22,6 +22,7 @@ jest.mock('../../mutator')
 const mockedMutator = mocked(mutator, true)
 
 const board = TestBlockFactory.createBoard()
+const activeView = TestBlockFactory.createBoardView(board)
 const card = TestBlockFactory.createCard(board)
 
 describe('components/viewHeader/newCardButtonTemplateItem', () => {
@@ -30,6 +31,10 @@ describe('components/viewHeader/newCardButtonTemplateItem', () => {
             me: {
                 id: 'user-id-1',
                 username: 'username_1'},
+        },
+        views: {
+            current: 0,
+            views: [activeView],
         },
     }
 
@@ -73,6 +78,7 @@ describe('components/viewHeader/newCardButtonTemplateItem', () => {
         const buttonEdit = screen.getByRole('button', {name: 'Edit'})
         userEvent.click(buttonEdit)
         expect(mockFunction).toBeCalledTimes(1)
+        expect(mockFunction).toBeCalledWith(card.id)
     })
 
     test('return NewCardButtonTemplateItem and add Card from template', () => {
@@ -109,7 +115,26 @@ describe('components/viewHeader/newCardButtonTemplateItem', () => {
         expect(container).toMatchSnapshot()
         const buttonDelete = screen.getByRole('button', {name: 'Delete'})
         userEvent.click(buttonDelete)
-        expect(mockedMutator.deleteBlock).toBeCalledTimes(1)
-        expect(mockedMutator.deleteBlock).toBeCalledWith(card, 'delete card template')
+        expect(mockedMutator.performAsUndoGroup).toBeCalledTimes(1)
+    })
+    test('return NewCardButtonTemplateItem and Set as default', () => {
+        const {container} = render(
+            wrapIntl(
+                <ReduxProvider store={store}>
+                    <NewCardButtonTemplateItem
+                        cardTemplate={card}
+                        addCardFromTemplate={jest.fn()}
+                        editCardTemplate={jest.fn()}
+                    />
+                </ReduxProvider>,
+            ),
+        )
+        const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
+        userEvent.click(buttonElement)
+        expect(container).toMatchSnapshot()
+        const buttonSetAsDefault = screen.getByRole('button', {name: 'Set as default'})
+        userEvent.click(buttonSetAsDefault)
+        expect(mockedMutator.setDefaultTemplate).toBeCalledTimes(1)
+        expect(mockedMutator.setDefaultTemplate).toBeCalledWith(activeView.id, activeView.fields.defaultTemplateId, card.id)
     })
 })
