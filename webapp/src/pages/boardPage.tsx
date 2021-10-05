@@ -28,13 +28,16 @@ import {initialLoad, initialReadOnlyLoad} from '../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 import {UserSettings} from '../userSettings'
 
+import IconButton from '../widgets/buttons/iconButton'
+import CloseIcon from '../widgets/icons/close'
+
 type Props = {
     readonly?: boolean
 }
 
 const websocketTimeoutForBanner = 5000
 
-const BoardPage = (props: Props) => {
+const BoardPage = (props: Props): JSX.Element => {
     const intl = useIntl()
     const board = useAppSelector(getCurrentBoard)
     const activeView = useAppSelector(getCurrentView)
@@ -44,8 +47,9 @@ const BoardPage = (props: Props) => {
     const history = useHistory()
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, workspaceId?: string}>()
     const [websocketClosed, setWebsocketClosed] = useState(false)
+    const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
 
-    let workspaceId = UserSettings.lastWorkspaceId || '0'
+    let workspaceId = match.params.workspaceId || UserSettings.lastWorkspaceId || '0'
 
     // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {
@@ -131,6 +135,8 @@ const BoardPage = (props: Props) => {
                 title += ` | ${activeView.title}`
             }
             document.title = title
+        } else if (Utils.isFocalboardPlugin()) {
+            document.title = 'Boards - Mattermost'
         } else {
             document.title = 'Focalboard'
         }
@@ -253,6 +259,26 @@ const BoardPage = (props: Props) => {
                         />
                     </a>
                 </div>}
+
+            {!mobileWarningClosed &&
+                <div className='mobileWarning'>
+                    <div>
+                        <FormattedMessage
+                            id='Error.mobileweb'
+                            defaultMessage='Mobile web support is currently in early beta. Not all functionality may be present.'
+                        />
+                    </div>
+                    <IconButton
+                        onClick={() => {
+                            UserSettings.mobileWarningClosed = true
+                            setMobileWarningClosed(true)
+                        }}
+                        icon={<CloseIcon/>}
+                        title='Close'
+                        className='margin-right'
+                    />
+                </div>}
+
             {props.readonly && board === undefined &&
                 <div className='error'>
                     {intl.formatMessage({id: 'BoardPage.syncFailed', defaultMessage: 'Board may be deleted or access revoked.'})}

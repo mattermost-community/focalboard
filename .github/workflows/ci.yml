@@ -2,9 +2,9 @@ name: Check-in tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, release-** ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, release-** ]
 
 jobs:
 

@@ -9,6 +9,9 @@
     margin-bottom: 10px;
     cursor: pointer;
 
+    // HACK: Fixes Chrome drag and drop preview
+    transform: translate3d(0, 0, 0);
+
     &.selected {
         background-color: rgba(90, 200, 255, 0.2);
     }
@@ -45,6 +48,7 @@
         opacity: 0.7;
         max-height: 160px;
         min-height: 160px;
+        pointer-events: none;
 
         .CheckboxElement {
             .Editable {

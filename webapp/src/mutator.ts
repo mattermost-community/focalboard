@@ -11,6 +11,7 @@ import {OctoUtils} from './octoUtils'
 import undoManager from './undomanager'
 import {Utils} from './utils'
 import {UserSettings} from './userSettings'
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from './telemetry/telemetryClient'
 
 //
 // The Mutator is used to make all changes to server state
@@ -381,6 +382,7 @@ class Mutator {
             delete newCard.fields.properties[propertyId]
         }
         await this.updateBlock(newCard, card, description)
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.EditCardProperty, {card: card.id})
     }
 
     async changePropertyTypeAndName(board: Board, cards: Card[], propertyTemplate: IPropertyTemplate, newType: PropertyType, newName: string) {
