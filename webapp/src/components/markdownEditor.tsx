@@ -4,7 +4,7 @@ import React, {useState, useRef, useMemo} from 'react'
 import SimpleMDE from 'react-simplemde-editor'
 import 'easymde/dist/easymde.min.css'
 
-import {Utils} from '../utils'
+import {Utils, IDType} from '../utils'
 import './markdownEditor.scss'
 
 type Props = {
@@ -23,7 +23,7 @@ type Props = {
 const MarkdownEditor = (props: Props): JSX. Element => {
     const {placeholderText, onFocus, onBlur, onChange, text, id} = props
     const [isEditing, setIsEditing] = useState(false)
-    const [uniqueId] = useState(id || Utils.createGuid(''))
+    const [uniqueId] = useState(id || Utils.createGuid(IDType.None))
 
     const [active, setActive] = useState(false)
     const [editorInstance, setEditorInstance] = useState<any>()

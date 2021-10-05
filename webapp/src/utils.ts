@@ -21,19 +21,42 @@ const SpacerClass = 'octo-spacer'
 const HorizontalGripClass = 'HorizontalGrip'
 const base32Alphabet = 'ybndrfg8ejkmcpqxot1uwisza345h769'
 
+// eslint-disable-next-line no-shadow
+enum IDType {
+    None = '7',
+    Workspace = 'w',
+    Board = 'b',
+    Card = 'c',
+    View = 'v',
+    Session = 's',
+    User = 'u',
+    Token = 'k',
+    BlockID = 'a',
+}
+
 class Utils {
-    static createGuid(idType: string): string {
-        let prefix = '7'
-        switch (idType) {
-        case 'workspace': prefix = 'w'
+    static createGuid(idType: IDType): string {
+        const data = Utils.randomArray(16)
+        return idType + this.base32encode(data, false)
+    }
+
+    static blockTypeToIDType(blockType: string | undefined): IDType {
+        let ret: IDType = IDType.None
+        switch (blockType) {
+        case 'workspace':
+            ret = IDType.Workspace
             break
-        case 'board': prefix = 'b'
+        case 'board':
+            ret = IDType.Board
             break
-        case 'card': prefix = 'c'
+        case 'card':
+            ret = IDType.Card
+            break
+        case 'view':
+            ret = IDType.View
             break
         }
-        const data = Utils.randomArray(16)
-        return prefix + this.base32encode(data, false)
+        return ret
     }
 
     static randomArray(size: number): Uint8Array {
@@ -547,4 +570,4 @@ class Utils {
     }
 }
 
-export {Utils}
+export {Utils, IDType}
