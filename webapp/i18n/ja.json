@@ -14,6 +14,8 @@
   "CardDetail.addCardText": "カードテキストを追加する",
   "CardDetail.moveContent": "カード内容の移動",
   "CardDetail.new-comment-placeholder": "コメントを追加する...",
+  "CardDialog.copiedLink": "コピーしました！",
+  "CardDialog.copyLink": "リンクをコピー",
   "CardDialog.editing-template": "テンプレートを編集しています。",
   "CardDialog.nocard": "このカードは存在しないか、アクセスできません。",
   "ColorOption.selectColor": "{color} 色を選択",
