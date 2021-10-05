@@ -27,7 +27,6 @@ function KanbanCalculation(props: Props): JSX.Element {
     return (
         <div className='KanbanCalculation'>
             <Button
-                className='KanbanCalculation'
                 onClick={() => (props.menuOpen ? props.onMenuClose : props.onMenuOpen)()}
                 onBlur={props.onMenuClose}
             >
