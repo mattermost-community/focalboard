@@ -15,7 +15,7 @@ import BoardIcon from '../widgets/icons/board'
 import octoClient from '../octoClient'
 
 import {addBoardTemplateClicked, addBoardClicked} from './sidebar/sidebarAddBoardMenu'
-import {addBoardFromTemplate, BoardTemplateMenuItemOptionsButton} from './sidebar/boardTemplateMenuItem'
+import {addBoardFromTemplate, BoardTemplateButtonMenu} from './sidebar/boardTemplateMenuItem'
 
 import './emptyCenterPanel.scss'
 
@@ -28,7 +28,7 @@ type ButtonProps = {
     boardTemplate?: Board
 }
 
-const EmptyCenterPanelButton = React.memo((props: ButtonProps) => {
+const PanelButton = React.memo((props: ButtonProps) => {
     const {onClick, buttonIcon, title, readonly, showBoard, boardTemplate} = props
 
     return (
@@ -38,10 +38,10 @@ const EmptyCenterPanelButton = React.memo((props: ButtonProps) => {
         >
             <i>{buttonIcon}</i>
             <span className='button-title'>{title}</span>
-            {!readonly &&
-                <BoardTemplateMenuItemOptionsButton
-                    showBoard={showBoard!}
-                    boardTemplate={boardTemplate!}
+            {!readonly && showBoard && boardTemplate &&
+                <BoardTemplateButtonMenu
+                    showBoard={showBoard}
+                    boardTemplate={boardTemplate}
                 />
             }
         </div>
@@ -102,7 +102,7 @@ const EmptyCenterPanel = React.memo(() => {
                         }}
                     />
                 </span>
-                <span className='bold-grey'>
+                <span className='choose-template-text'>
                     <FormattedMessage
                         id='EmptyCenterPanel.plugin.choose-a-template'
                         defaultMessage='Choose a template'
@@ -111,7 +111,7 @@ const EmptyCenterPanel = React.memo(() => {
                 <div className='button-container'>
                     {templates.map((template) =>
                         (
-                            <EmptyCenterPanelButton
+                            <PanelButton
                                 key={template.id}
                                 title={template.title}
                                 buttonIcon={template.fields.icon}
@@ -124,7 +124,7 @@ const EmptyCenterPanel = React.memo(() => {
                     )}
                     {globalTemplates.map((template) =>
                         (
-                            <EmptyCenterPanelButton
+                            <PanelButton
                                 key={template.id}
                                 title={template.title}
                                 buttonIcon={template.fields.icon}
@@ -133,7 +133,7 @@ const EmptyCenterPanel = React.memo(() => {
                             />
                         ),
                     )}
-                    <EmptyCenterPanelButton
+                    <PanelButton
                         key={'new-template'}
                         title={intl.formatMessage({id: 'EmptyCenterPanel.plugin.new-template', defaultMessage: 'New template'})}
                         buttonIcon={<AddIcon/>}
@@ -141,13 +141,13 @@ const EmptyCenterPanel = React.memo(() => {
                         onClick={newTemplateClicked}
                     />
                 </div>
-                <span className='bold-grey'>
+                <span className='choose-template-text'>
                     <FormattedMessage
                         id='EmptyCenterPanel.plugin.no-content-or'
                         defaultMessage='or'
                     />
                 </span>
-                <EmptyCenterPanelButton
+                <PanelButton
                     key={'start-with-an-empty-board'}
                     title={intl.formatMessage({id: 'EmptyCenterPanel.plugin.empty-board', defaultMessage: 'Start with an Empty Board'})}
                     buttonIcon={<BoardIcon/>}

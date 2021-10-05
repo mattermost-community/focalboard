@@ -39,7 +39,7 @@ type ButtonProps = {
     boardTemplate: Board
 }
 
-export const BoardTemplateMenuItemOptionsButton = React.memo((props: ButtonProps) => {
+export const BoardTemplateButtonMenu = React.memo((props: ButtonProps) => {
     const intl = useIntl()
     const {showBoard, boardTemplate} = props
 
@@ -91,7 +91,7 @@ const BoardTemplateMenuItem = React.memo((props: Props) => {
                 addBoardFromTemplate(intl, showBoard, boardTemplate.id || '', activeBoardId, isGlobal)
             }}
             rightIcon={!isGlobal &&
-                <BoardTemplateMenuItemOptionsButton
+                <BoardTemplateButtonMenu
                     boardTemplate={boardTemplate}
                     showBoard={showBoard}
                 />
