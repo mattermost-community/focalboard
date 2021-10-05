@@ -3,17 +3,18 @@
 
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
-import {IntlProvider} from 'react-intl'
+
 import {render, waitFor} from '@testing-library/react'
+
 import configureStore from 'redux-mock-store'
 
 import {act} from 'react-dom/test-utils'
 
 import userEvent from '@testing-library/user-event'
 
-import UserProperty from './user'
+import {wrapIntl} from '../../../testUtils'
 
-const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
+import UserProperty from './user'
 
 describe('components/properties/user', () => {
     const mockStore = configureStore([])

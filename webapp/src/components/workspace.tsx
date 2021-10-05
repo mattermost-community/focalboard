@@ -13,6 +13,7 @@ import {getClientConfig, setClientConfig} from '../store/clientConfig'
 
 import wsClient, {WSClient} from '../wsclient'
 import {ClientConfig} from '../config/clientConfig'
+import {Utils} from '../utils'
 
 import CenterPanel from './centerPanel'
 import EmptyCenterPanel from './emptyCenterPanel'
@@ -37,7 +38,10 @@ function CenterContent(props: Props) {
 
     const showCard = useCallback((cardId?: string) => {
         const params = {...match.params, cardId}
-        const newPath = generatePath(match.path, params)
+        let newPath = generatePath(match.path, params)
+        if (props.readonly) {
+            newPath += `?r=${Utils.getReadToken()}`
+        }
         history.push(newPath)
     }, [match, history])
 

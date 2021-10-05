@@ -1,8 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {IntlProvider} from 'react-intl'
-
 import {render} from '@testing-library/react'
 
 import configureStore from 'redux-mock-store'
@@ -17,15 +15,9 @@ import {UserWorkspace} from '../../user'
 
 import {FetchMock} from '../../test/fetchMock'
 
-import {mockMatchMedia} from '../../testUtils'
+import {mockMatchMedia, wrapIntl} from '../../testUtils'
 
 import DashboardPage from './dashboardPage'
-
-const wrapProviders = (children: any) => {
-    return (
-        <IntlProvider locale='en'>{children}</IntlProvider>
-    )
-}
 
 beforeEach(() => {
     FetchMock.fn.mockReset()
@@ -73,7 +65,7 @@ describe('pages/dashboard/DashboardPage', () => {
 
         const history = createMemoryHistory()
 
-        const component = wrapProviders(
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
                     <DashboardPage/>

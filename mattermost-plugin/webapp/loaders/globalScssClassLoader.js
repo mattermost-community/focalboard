@@ -4,7 +4,7 @@
 function blockList(line) {
     return line.startsWith('.focalboard-body') ||
         line.startsWith('.GlobalHeaderComponent') ||
-        line.startsWith('.channel-header__icon .LogoIcon') ||
+        line.startsWith('.boards-rhs-icon') ||
         line.startsWith('.focalboard-plugin-root');
 }
 

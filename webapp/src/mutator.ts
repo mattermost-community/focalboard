@@ -139,6 +139,32 @@ class Mutator {
         )
     }
 
+    async setDefaultTemplate(blockId: string, oldTemplateId: string, templateId: string, description = 'set default template') {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(blockId, {updatedFields: {defaultTemplateId: templateId}})
+            },
+            async () => {
+                await octoClient.patchBlock(blockId, {updatedFields: {defaultTemplateId: oldTemplateId}})
+            },
+            description,
+            this.undoGroupId,
+        )
+    }
+
+    async clearDefaultTemplate(blockId: string, oldTemplateId: string, description = 'set default template') {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(blockId, {updatedFields: {defaultTemplateId: ''}})
+            },
+            async () => {
+                await octoClient.patchBlock(blockId, {updatedFields: {defaultTemplateId: oldTemplateId}})
+            },
+            description,
+            this.undoGroupId,
+        )
+    }
+
     async changeIcon(blockId: string, oldIcon: string|undefined, icon: string, description = 'change icon') {
         await undoManager.perform(
             async () => {

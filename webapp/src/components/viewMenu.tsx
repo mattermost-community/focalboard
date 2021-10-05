@@ -30,7 +30,10 @@ const ViewMenu = React.memo((props: Props) => {
     const match = useRouteMatch()
 
     const showView = useCallback((viewId) => {
-        const newPath = generatePath(match.path, {...match.params, viewId: viewId || ''})
+        let newPath = generatePath(match.path, {...match.params, viewId: viewId || ''})
+        if (props.readonly) {
+            newPath += `?r=${Utils.getReadToken()}`
+        }
         history.push(newPath)
     }, [match, history])
 

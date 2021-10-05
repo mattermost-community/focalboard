@@ -15,7 +15,9 @@ enum UserSettingKey {
     EmojiMartLast = 'emoji-mart.last',
     EmojiMartFrequently = 'emoji-mart.frequently',
     RandomIcons = 'randomIcons',
-    WelcomePageViewed = 'welcomePageViewed'
+    MobileWarningClosed = 'mobileWarningClosed',
+    WelcomePageViewed = 'welcomePageViewed',
+    DashboardShowEmpty = 'dashboardShowEmpty'
 }
 
 export class UserSettings {
@@ -91,6 +93,14 @@ export class UserSettings {
         UserSettings.set(UserSettingKey.RandomIcons, JSON.stringify(newValue))
     }
 
+    static get dashboardShowEmpty(): boolean {
+        return localStorage.getItem(UserSettingKey.DashboardShowEmpty) !== 'false'
+    }
+
+    static set dashboardShowEmpty(newValue: boolean) {
+        localStorage.setItem(UserSettingKey.DashboardShowEmpty, JSON.stringify(newValue))
+    }
+
     static getEmojiMartSetting(key: string): any {
         const prefixed = `emoji-mart.${key}`
         Utils.assert((Object as any).values(UserSettingKey).includes(prefixed))
@@ -102,6 +112,14 @@ export class UserSettings {
         const prefixed = `emoji-mart.${key}`
         Utils.assert((Object as any).values(UserSettingKey).includes(prefixed))
         UserSettings.set(prefixed as UserSettingKey, JSON.stringify(value))
+    }
+
+    static get mobileWarningClosed(): boolean {
+        return UserSettings.get(UserSettingKey.MobileWarningClosed) === 'true'
+    }
+
+    static set mobileWarningClosed(newValue: boolean) {
+        UserSettings.set(UserSettingKey.MobileWarningClosed, String(newValue))
     }
 }
 
