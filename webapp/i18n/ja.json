@@ -38,7 +38,6 @@
   "DashboardPage.CenterPanel.ChangeChannels": "スイッチャーで簡単にチャンネルを変更できます",
   "DashboardPage.CenterPanel.NoWorkspaces": "その言葉に一致するチャンネルは見つかりませんでした。",
   "DashboardPage.CenterPanel.NoWorkspacesDescription": "別の言葉で検索してみてください。",
-  "DashboardPage.message": "Focalboardにより、大小さまざまなプロジェクトのタスクを、カンバンやテーブル、その他のビューを使って作成・管理できるようになります。",
   "DashboardPage.title": "ダッシュボード",
   "Dialog.closeDialog": "ダイアログを閉じる",
   "EditableDayPicker.today": "今日",

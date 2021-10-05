@@ -36,7 +36,6 @@
   "DashboardPage.CenterPanel.ChangeChannels": "Använd kanalväljaren för att smidigt växla mellan kanaler",
   "DashboardPage.CenterPanel.NoWorkspaces": "Tyvärr hittade vi inga kanaler som matchar den termen.",
   "DashboardPage.CenterPanel.NoWorkspacesDescription": "Försök att söka efter en annan term.",
-  "DashboardPage.message": "Använd Focalboard för att hantera uppgifter för stora och små projekt med hjälp av kanbantavlor, tabeller och andra vyer.",
   "DashboardPage.title": "Dashboard",
   "Dialog.closeDialog": "Stäng dialog",
   "EditableDayPicker.today": "Idag",
