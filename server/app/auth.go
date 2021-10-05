@@ -1,10 +1,10 @@
 package app
 
 import (
-	"github.com/google/uuid"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/auth"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
@@ -102,8 +102,8 @@ func (a *App) Login(username, email, password, mfaToken string) (string, error) 
 	}
 
 	session := model.Session{
-		ID:          uuid.New().String(),
-		Token:       uuid.New().String(),
+		ID:          utils.NewID(utils.IDTypeSession),
+		Token:       utils.NewID(utils.IDTypeToken),
 		UserID:      user.ID,
 		AuthService: authService,
 		Props:       map[string]interface{}{},
@@ -149,7 +149,7 @@ func (a *App) RegisterUser(username, email, password string) error {
 	}
 
 	err = a.store.CreateUser(&model.User{
-		ID:          uuid.New().String(),
+		ID:          utils.NewID(utils.IDTypeUser),
 		Username:    username,
 		Email:       email,
 		Password:    auth.HashPassword(password),

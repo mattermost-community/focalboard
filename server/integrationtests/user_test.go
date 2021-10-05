@@ -23,7 +23,7 @@ func TestUserRegister(t *testing.T) {
 	registerRequest := &api.RegisterRequest{
 		Username: fakeUsername,
 		Email:    fakeEmail,
-		Password: utils.CreateGUID(),
+		Password: utils.NewID(utils.IDTypeNone),
 	}
 	success, resp := th.Client.Register(registerRequest)
 	require.NoError(t, resp.Error)
@@ -44,7 +44,7 @@ func TestUserLogin(t *testing.T) {
 			Type:     "normal",
 			Username: "nonexistuser",
 			Email:    "",
-			Password: utils.CreateGUID(),
+			Password: utils.NewID(utils.IDTypeNone),
 		}
 		data, resp := th.Client.Login(loginRequest)
 		require.Error(t, resp.Error)
@@ -52,7 +52,7 @@ func TestUserLogin(t *testing.T) {
 	})
 
 	t.Run("with registered user", func(t *testing.T) {
-		password := utils.CreateGUID()
+		password := utils.NewID(utils.IDTypeNone)
 		// register
 		registerRequest := &api.RegisterRequest{
 			Username: fakeUsername,
@@ -89,7 +89,7 @@ func TestGetMe(t *testing.T) {
 
 	t.Run("logged in", func(t *testing.T) {
 		// register
-		password := utils.CreateGUID()
+		password := utils.NewID(utils.IDTypeNone)
 		registerRequest := &api.RegisterRequest{
 			Username: fakeUsername,
 			Email:    fakeEmail,
@@ -124,7 +124,7 @@ func TestGetUser(t *testing.T) {
 	defer th.TearDown()
 
 	// register
-	password := utils.CreateGUID()
+	password := utils.NewID(utils.IDTypeNone)
 	registerRequest := &api.RegisterRequest{
 		Username: fakeUsername,
 		Email:    fakeEmail,
@@ -169,7 +169,7 @@ func TestUserChangePassword(t *testing.T) {
 	defer th.TearDown()
 
 	// register
-	password := utils.CreateGUID()
+	password := utils.NewID(utils.IDTypeNone)
 	registerRequest := &api.RegisterRequest{
 		Username: fakeUsername,
 		Email:    fakeEmail,
@@ -197,7 +197,7 @@ func TestUserChangePassword(t *testing.T) {
 	// change password
 	success, resp = th.Client.UserChangePassword(originalMe.ID, &api.ChangePasswordRequest{
 		OldPassword: password,
-		NewPassword: utils.CreateGUID(),
+		NewPassword: utils.NewID(utils.IDTypeNone),
 	})
 	require.NoError(t, resp.Error)
 	require.True(t, success)
@@ -216,7 +216,7 @@ func TestWorkspaceUploadFile(t *testing.T) {
 		defer th.TearDown()
 
 		workspaceID := "0"
-		rootID := utils.CreateGUID()
+		rootID := utils.NewID(utils.IDTypeBlock)
 		data := randomBytes(t, 1024)
 		result, resp := th.Client.WorkspaceUploadFile(workspaceID, rootID, bytes.NewReader(data))
 		require.Error(t, resp.Error)
@@ -228,7 +228,7 @@ func TestWorkspaceUploadFile(t *testing.T) {
 		defer th.TearDown()
 
 		workspaceID := "0"
-		rootID := utils.CreateGUID()
+		rootID := utils.NewID(utils.IDTypeBlock)
 		data := randomBytes(t, 1024)
 		result, resp := th.Client.WorkspaceUploadFile(workspaceID, rootID, bytes.NewReader(data))
 		require.NoError(t, resp.Error)

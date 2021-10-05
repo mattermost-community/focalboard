@@ -18,12 +18,12 @@ func TestGetSharing(t *testing.T) {
 	defer tearDown()
 
 	container := st.Container{
-		WorkspaceID: utils.CreateGUID(),
+		WorkspaceID: utils.NewID(utils.IDTypeWorkspace),
 	}
 
 	t.Run("should get a sharing successfully", func(t *testing.T) {
 		want := &model.Sharing{
-			ID:         utils.CreateGUID(),
+			ID:         utils.NewID(utils.IDTypeBlock),
 			Enabled:    true,
 			Token:      "token",
 			ModifiedBy: "otherid",
@@ -67,10 +67,10 @@ func TestUpsertSharing(t *testing.T) {
 	defer tearDown()
 
 	container := st.Container{
-		WorkspaceID: utils.CreateGUID(),
+		WorkspaceID: utils.NewID(utils.IDTypeWorkspace),
 	}
 	sharing := model.Sharing{
-		ID:         utils.CreateGUID(),
+		ID:         utils.NewID(utils.IDTypeBlock),
 		Enabled:    true,
 		Token:      "token",
 		ModifiedBy: "otherid",
