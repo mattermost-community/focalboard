@@ -39,7 +39,20 @@
         position: relative;
         display: flex;
         justify-content: space-between;
-        align-items: flex-end;
+        align-items: center;
+    }
+
+    &__showEmpty {
+        margin-right: 20px;
+        margin-left: auto;
+        padding-left: 20px;
+        min-width: 150px;
+        display: flex;
+        align-items: center;
+
+        .Switch {
+            margin-left: 10px;
+        }
     }
 
     &__search {
@@ -73,6 +86,8 @@
 
     &__content {
         overflow-y: hidden;
+        display: flex;
+        flex-direction: column;
     }
 
     &__workspace-container {
@@ -109,4 +124,9 @@
     flex-direction: column;
     gap: 40px;
     //background: url('../../../static/onboardingBg.jpg');
+
+    .text-heading2 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }

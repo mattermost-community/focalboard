@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import Select, {components} from 'react-select'
+import Select, {components, IndicatorProps} from 'react-select'
 
 import {CSSObject} from '@emotion/serialize'
 
@@ -20,6 +20,10 @@ const Options:Record<string, Option> = {
     none: {value: 'none', label: 'None', displayName: 'Calculate'},
     count: {value: 'count', label: 'Count', displayName: 'Count'},
     countValue: {value: 'countValue', label: 'Count Value', displayName: 'Values'},
+    countChecked: {value: 'countChecked', label: 'Count Checked', displayName: 'Checked'},
+    percentChecked: {value: 'percentChecked', label: 'Percent Checked', displayName: 'Checked'},
+    percentUnchecked: {value: 'percentUnchecked', label: 'Percent Unchecked', displayName: 'Unchecked'},
+    countUnchecked: {value: 'countUnchecked', label: 'Count Unchecked', displayName: 'Unchecked'},
     countUniqueValue: {value: 'countUniqueValue', label: 'Count Unique Values', displayName: 'Unique'},
     sum: {value: 'sum', label: 'Sum', displayName: 'Sum'},
     average: {value: 'average', label: 'Average', displayName: 'Average'},
@@ -31,6 +35,7 @@ const Options:Record<string, Option> = {
 
 const optionsByType: Map<string, Option[]> = new Map([
     ['common', [Options.none, Options.count, Options.countValue, Options.countUniqueValue]],
+    ['checkbox', [Options.countChecked, Options.countUnchecked, Options.percentChecked, Options.percentUnchecked]],
     ['number', [Options.sum, Options.average, Options.median, Options.min, Options.max, Options.range]],
 ])
 
@@ -71,7 +76,7 @@ const styles = {
     }),
 }
 
-const DropdownIndicator = (props: any) => {
+const DropdownIndicator = (props: IndicatorProps<Option, false>) => {
     return (
         <components.DropdownIndicator {...props}>
             <ChevronUp/>

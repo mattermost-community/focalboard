@@ -1,9 +1,11 @@
+//go:generate mockgen --build_flags=--mod=mod -destination=mocks/mockpluginapi.go -package mocks github.com/mattermost/mattermost-server/v6/plugin API
 package ws
 
 import (
 	"fmt"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/mattermost/focalboard/server/auth"
@@ -17,45 +19,10 @@ const websocketMessagePrefix = "custom_focalboard_"
 
 var errMissingWorkspaceInCommand = fmt.Errorf("command doesn't contain workspaceId")
 
-type PluginAdapterClient struct {
-	webConnID  string
-	userID     string
-	workspaces []string
-	blocks     []string
-}
-
-func (pac *PluginAdapterClient) isSubscribedToWorkspace(workspaceID string) bool {
-	for _, id := range pac.workspaces {
-		if id == workspaceID {
-			return true
-		}
-	}
-
-	return false
-}
-
-func (pac *PluginAdapterClient) isSubscribedToBlock(blockID string) bool {
-	for _, id := range pac.blocks {
-		if id == blockID {
-			return true
-		}
-	}
-
-	return false
-}
-
 type PluginAdapterInterface interface {
-	addListener(pac *PluginAdapterClient)
-	removeListener(pac *PluginAdapterClient)
-	removeListenerFromWorkspace(pac *PluginAdapterClient, workspaceID string)
-	removeListenerFromBlock(pac *PluginAdapterClient, blockID string)
-	subscribeListenerToWorkspace(pac *PluginAdapterClient, workspaceID string)
-	unsubscribeListenerFromWorkspace(pac *PluginAdapterClient, workspaceID string)
-	unsubscribeListenerFromBlocks(pac *PluginAdapterClient, blockIDs []string)
 	OnWebSocketConnect(webConnID, userID string)
 	OnWebSocketDisconnect(webConnID, userID string)
 	WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest)
-	getUserIDsForWorkspace(workspaceID string) []string
 	BroadcastConfigChange(clientConfig model.ClientConfig)
 	BroadcastBlockChange(workspaceID string, block model.Block)
 	BroadcastBlockDelete(workspaceID, blockID, parentID string)
@@ -63,35 +30,73 @@ type PluginAdapterInterface interface {
 }
 
 type PluginAdapter struct {
-	api  plugin.API
-	auth *auth.Auth
+	api            plugin.API
+	auth           auth.AuthInterface
+	staleThreshold time.Duration
 
-	listeners            map[string]*PluginAdapterClient
+	listenersMU       sync.RWMutex
+	listeners         map[string]*PluginAdapterClient
+	listenersByUserID map[string][]*PluginAdapterClient
+
+	subscriptionsMU      sync.RWMutex
 	listenersByWorkspace map[string][]*PluginAdapterClient
 	listenersByBlock     map[string][]*PluginAdapterClient
-	mu                   sync.RWMutex
 }
 
-func NewPluginAdapter(api plugin.API, auth *auth.Auth) *PluginAdapter {
+func NewPluginAdapter(api plugin.API, auth auth.AuthInterface) *PluginAdapter {
 	return &PluginAdapter{
 		api:                  api,
 		auth:                 auth,
+		staleThreshold:       5 * time.Minute,
 		listeners:            make(map[string]*PluginAdapterClient),
+		listenersByUserID:    make(map[string][]*PluginAdapterClient),
 		listenersByWorkspace: make(map[string][]*PluginAdapterClient),
 		listenersByBlock:     make(map[string][]*PluginAdapterClient),
-		mu:                   sync.RWMutex{},
+		listenersMU:          sync.RWMutex{},
+		subscriptionsMU:      sync.RWMutex{},
 	}
 }
 
+func (pa *PluginAdapter) GetListenerByWebConnID(webConnID string) (pac *PluginAdapterClient, ok bool) {
+	pa.listenersMU.RLock()
+	defer pa.listenersMU.RUnlock()
+
+	pac, ok = pa.listeners[webConnID]
+	return
+}
+
+func (pa *PluginAdapter) GetListenersByUserID(userID string) []*PluginAdapterClient {
+	pa.listenersMU.RLock()
+	defer pa.listenersMU.RUnlock()
+
+	return pa.listenersByUserID[userID]
+}
+
+func (pa *PluginAdapter) GetListenersByWorkspace(workspaceID string) []*PluginAdapterClient {
+	pa.subscriptionsMU.RLock()
+	defer pa.subscriptionsMU.RUnlock()
+
+	return pa.listenersByWorkspace[workspaceID]
+}
+
+func (pa *PluginAdapter) GetListenersByBlock(blockID string) []*PluginAdapterClient {
+	pa.subscriptionsMU.RLock()
+	defer pa.subscriptionsMU.RUnlock()
+
+	return pa.listenersByBlock[blockID]
+}
+
 func (pa *PluginAdapter) addListener(pac *PluginAdapterClient) {
-	pa.mu.Lock()
-	defer pa.mu.Unlock()
+	pa.listenersMU.Lock()
+	defer pa.listenersMU.Unlock()
+
 	pa.listeners[pac.webConnID] = pac
+	pa.listenersByUserID[pac.userID] = append(pa.listenersByUserID[pac.userID], pac)
 }
 
 func (pa *PluginAdapter) removeListener(pac *PluginAdapterClient) {
-	pa.mu.Lock()
-	defer pa.mu.Unlock()
+	pa.listenersMU.Lock()
+	defer pa.listenersMU.Unlock()
 
 	// workspace subscriptions
 	for _, workspace := range pac.workspaces {
@@ -103,43 +108,52 @@ func (pa *PluginAdapter) removeListener(pac *PluginAdapterClient) {
 		pa.removeListenerFromBlock(pac, block)
 	}
 
+	// user ID list
+	newUserListeners := []*PluginAdapterClient{}
+	for _, listener := range pa.listenersByUserID[pac.userID] {
+		if listener.webConnID != pac.webConnID {
+			newUserListeners = append(newUserListeners, listener)
+		}
+	}
+	pa.listenersByUserID[pac.userID] = newUserListeners
+
 	delete(pa.listeners, pac.webConnID)
+}
+
+func (pa *PluginAdapter) removeExpiredForUserID(userID string) {
+	for _, pac := range pa.GetListenersByUserID(userID) {
+		if !pac.isActive() && pac.hasExpired(pa.staleThreshold) {
+			pa.removeListener(pac)
+		}
+	}
 }
 
 func (pa *PluginAdapter) removeListenerFromWorkspace(pac *PluginAdapterClient, workspaceID string) {
 	newWorkspaceListeners := []*PluginAdapterClient{}
-	for _, listener := range pa.listenersByWorkspace[workspaceID] {
+	for _, listener := range pa.GetListenersByWorkspace(workspaceID) {
 		if listener.webConnID != pac.webConnID {
 			newWorkspaceListeners = append(newWorkspaceListeners, listener)
 		}
 	}
+	pa.subscriptionsMU.Lock()
 	pa.listenersByWorkspace[workspaceID] = newWorkspaceListeners
+	pa.subscriptionsMU.Unlock()
 
-	newClientWorkspaces := []string{}
-	for _, id := range pac.workspaces {
-		if id != workspaceID {
-			newClientWorkspaces = append(newClientWorkspaces, id)
-		}
-	}
-	pac.workspaces = newClientWorkspaces
+	pac.unsubscribeFromWorkspace(workspaceID)
 }
 
 func (pa *PluginAdapter) removeListenerFromBlock(pac *PluginAdapterClient, blockID string) {
 	newBlockListeners := []*PluginAdapterClient{}
-	for _, listener := range pa.listenersByBlock[blockID] {
+	for _, listener := range pa.GetListenersByBlock(blockID) {
 		if listener.webConnID != pac.webConnID {
 			newBlockListeners = append(newBlockListeners, listener)
 		}
 	}
+	pa.subscriptionsMU.Lock()
 	pa.listenersByBlock[blockID] = newBlockListeners
+	pa.subscriptionsMU.Unlock()
 
-	newClientBlocks := []string{}
-	for _, id := range pac.blocks {
-		if id != blockID {
-			newClientBlocks = append(newClientBlocks, id)
-		}
-	}
-	pac.blocks = newClientBlocks
+	pac.unsubscribeFromBlock(blockID)
 }
 
 func (pa *PluginAdapter) subscribeListenerToWorkspace(pac *PluginAdapterClient, workspaceID string) {
@@ -147,11 +161,11 @@ func (pa *PluginAdapter) subscribeListenerToWorkspace(pac *PluginAdapterClient, 
 		return
 	}
 
-	pa.mu.Lock()
-	defer pa.mu.Unlock()
-
+	pa.subscriptionsMU.Lock()
 	pa.listenersByWorkspace[workspaceID] = append(pa.listenersByWorkspace[workspaceID], pac)
-	pac.workspaces = append(pac.workspaces, workspaceID)
+	pa.subscriptionsMU.Unlock()
+
+	pac.subscribeToWorkspace(workspaceID)
 }
 
 func (pa *PluginAdapter) unsubscribeListenerFromWorkspace(pac *PluginAdapterClient, workspaceID string) {
@@ -159,16 +173,26 @@ func (pa *PluginAdapter) unsubscribeListenerFromWorkspace(pac *PluginAdapterClie
 		return
 	}
 
-	pa.mu.Lock()
-	defer pa.mu.Unlock()
-
 	pa.removeListenerFromWorkspace(pac, workspaceID)
 }
 
-func (pa *PluginAdapter) unsubscribeListenerFromBlocks(pac *PluginAdapterClient, blockIDs []string) {
-	pa.mu.Lock()
-	defer pa.mu.Unlock()
+func (pa *PluginAdapter) getUserIDsForWorkspace(workspaceID string) []string {
+	userMap := map[string]bool{}
+	for _, pac := range pa.GetListenersByWorkspace(workspaceID) {
+		if pac.isActive() {
+			userMap[pac.userID] = true
+		}
+	}
 
+	userIDs := []string{}
+	for userID := range userMap {
+		userIDs = append(userIDs, userID)
+	}
+	return userIDs
+}
+
+//nolint:unused
+func (pa *PluginAdapter) unsubscribeListenerFromBlocks(pac *PluginAdapterClient, blockIDs []string) {
 	for _, blockID := range blockIDs {
 		if pac.isSubscribedToBlock(blockID) {
 			pa.removeListenerFromBlock(pac, blockID)
@@ -177,18 +201,29 @@ func (pa *PluginAdapter) unsubscribeListenerFromBlocks(pac *PluginAdapterClient,
 }
 
 func (pa *PluginAdapter) OnWebSocketConnect(webConnID, userID string) {
-	pac := &PluginAdapterClient{
+	if existingPAC, ok := pa.GetListenerByWebConnID(webConnID); ok {
+		pa.api.LogDebug("inactive connection found for webconn, reusing",
+			"webConnID", webConnID,
+			"userID", userID,
+		)
+		atomic.StoreInt64(&existingPAC.inactiveAt, 0)
+		return
+	}
+
+	newPAC := &PluginAdapterClient{
+		inactiveAt: 0,
 		webConnID:  webConnID,
 		userID:     userID,
 		workspaces: []string{},
 		blocks:     []string{},
 	}
 
-	pa.addListener(pac)
+	pa.addListener(newPAC)
+	pa.removeExpiredForUserID(userID)
 }
 
 func (pa *PluginAdapter) OnWebSocketDisconnect(webConnID, userID string) {
-	pac, ok := pa.listeners[webConnID]
+	pac, ok := pa.GetListenerByWebConnID(webConnID)
 	if !ok {
 		pa.api.LogError("received a disconnect for an unregistered webconn",
 			"webConnID", webConnID,
@@ -197,7 +232,7 @@ func (pa *PluginAdapter) OnWebSocketDisconnect(webConnID, userID string) {
 		return
 	}
 
-	pa.removeListener(pac)
+	atomic.StoreInt64(&pac.inactiveAt, mmModel.GetMillis())
 }
 
 func commandFromRequest(req *mmModel.WebSocketRequest) (*WebsocketCommand, error) {
@@ -221,7 +256,7 @@ func commandFromRequest(req *mmModel.WebSocketRequest) (*WebsocketCommand, error
 }
 
 func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest) {
-	pac, ok := pa.listeners[webConnID]
+	pac, ok := pa.GetListenerByWebConnID(webConnID)
 	if !ok {
 		pa.api.LogError("received a message for an unregistered webconn",
 			"webConnID", webConnID,
@@ -280,19 +315,6 @@ func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string,
 
 		pa.unsubscribeListenerFromWorkspace(pac, command.WorkspaceID)
 	}
-}
-
-func (pa *PluginAdapter) getUserIDsForWorkspace(workspaceID string) []string {
-	userMap := map[string]bool{}
-	for _, pac := range pa.listenersByWorkspace[workspaceID] {
-		userMap[pac.userID] = true
-	}
-
-	userIDs := []string{}
-	for userID := range userMap {
-		userIDs = append(userIDs, userID)
-	}
-	return userIDs
 }
 
 func (pa *PluginAdapter) sendMessageToAllSkipCluster(payload map[string]interface{}) {

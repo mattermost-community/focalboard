@@ -6,6 +6,7 @@ import {FormattedMessage} from 'react-intl'
 import {useLocation, useHistory} from 'react-router-dom'
 
 import BoardWelcomePNG from '../../../static/boards-welcome.png'
+import BoardWelcomeSmallPNG from '../../../static/boards-welcome-small.png'
 
 import CompassIcon from '../../widgets/icons/compassIcon'
 import {UserSettings} from '../../userSettings'
@@ -35,25 +36,32 @@ const WelcomePage = React.memo(() => {
     return (
         <div className='WelcomePage'>
             <div>
-                <h1 className='text-heading6'>
+                <h1 className='text-heading9'>
                     <FormattedMessage
                         id='WelcomePage.Heading'
                         defaultMessage='Welcome To Boards'
                     />
                 </h1>
-                <div className='text-base'>
+                <div className='WelcomePage__subtitle'>
                     <FormattedMessage
                         id='WelcomePage.Description'
                         defaultMessage='Boards is a project management tool that helps define, organize, track and manage work across teams, using a familiar kanban board view'
                     />
                 </div>
 
-                <div className='WelcomePage__image'>
-                    <img
-                        src={BoardWelcomePNG}
-                        alt='Boards Welcome Image'
-                    />
-                </div>
+                {/* This image will be rendered on large screens over 2000px */}
+                <img
+                    src={BoardWelcomePNG}
+                    className='WelcomePage__image WelcomePage__image--large'
+                    alt='Boards Welcome Image'
+                />
+
+                {/* This image will be rendered on small screens below 2000px */}
+                <img
+                    src={BoardWelcomeSmallPNG}
+                    className='WelcomePage__image WelcomePage__image--small'
+                    alt='Boards Welcome Image'
+                />
 
                 <button
                     onClick={goForward}

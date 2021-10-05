@@ -42,7 +42,7 @@ func testUpsertWorkspaceSignupToken(t *testing.T, store store.Store) {
 		workspaceID := "0"
 		workspace := &model.Workspace{
 			ID:          workspaceID,
-			SignupToken: utils.CreateGUID(),
+			SignupToken: utils.NewID(utils.IDTypeToken),
 		}
 
 		// insert
@@ -55,7 +55,7 @@ func testUpsertWorkspaceSignupToken(t *testing.T, store store.Store) {
 		require.Equal(t, workspace.SignupToken, got.SignupToken)
 
 		// update signup token
-		workspace.SignupToken = utils.CreateGUID()
+		workspace.SignupToken = utils.NewID(utils.IDTypeToken)
 		err = store.UpsertWorkspaceSignupToken(*workspace)
 		require.NoError(t, err)
 
@@ -108,7 +108,7 @@ func testGetWorkspaceCount(t *testing.T, store store.Store) {
 			workspaceID := fmt.Sprintf("%d", i)
 			workspace := &model.Workspace{
 				ID:          workspaceID,
-				SignupToken: utils.CreateGUID(),
+				SignupToken: utils.NewID(utils.IDTypeToken),
 			}
 
 			err := store.UpsertWorkspaceSignupToken(*workspace)
