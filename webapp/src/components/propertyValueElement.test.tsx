@@ -2,20 +2,16 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {render, screen} from '@testing-library/react'
+import {render} from '@testing-library/react'
 import '@testing-library/jest-dom'
+import userEvent from '@testing-library/user-event'
 
 import {wrapDNDIntl} from '../testUtils'
-
 import 'isomorphic-fetch'
-
 import {IPropertyTemplate, IPropertyOption} from '../blocks/board'
-
 import {TestBlockFactory} from '../test/testBlockFactory'
 
 import PropertyValueElement from './propertyValueElement'
-
-import userEvent from '@testing-library/user-event'
 
 describe('components/propertyValueElement', () => {
     const board = TestBlockFactory.createBoard()
