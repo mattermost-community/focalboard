@@ -28,7 +28,7 @@ class TelemetryClient {
         this.user = user
     }
 
-    trackEvent(category: string, event: string, props?: any): void {
+    trackEvent(category: string, event: string, props?: unknown): void {
         if (this.telemetryHandler) {
             const userId = this.user?.id
             this.telemetryHandler.trackEvent(userId || '', '', category, event, props)

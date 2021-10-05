@@ -6,12 +6,8 @@ import {Provider as ReduxProvider} from 'react-redux'
 import {render} from '@testing-library/react'
 import configureStore from 'redux-mock-store'
 import '@testing-library/jest-dom'
-import {IntlProvider} from 'react-intl'
 
 import 'isomorphic-fetch'
-
-import {DndProvider} from 'react-dnd'
-import {HTML5Backend} from 'react-dnd-html5-backend'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import {FetchMock} from '../../test/fetchMock'
@@ -21,6 +17,8 @@ import {IUser} from '../../user'
 
 import {Utils} from '../../utils'
 
+import {wrapDNDIntl} from '../../testUtils'
+
 import Table from './table'
 
 global.fetch = FetchMock.fn
@@ -28,14 +26,6 @@ global.fetch = FetchMock.fn
 beforeEach(() => {
     FetchMock.fn.mockReset()
 })
-
-const wrapProviders = (children: any) => {
-    return (
-        <DndProvider backend={HTML5Backend}>
-            <IntlProvider locale='en'>{children}</IntlProvider>
-        </DndProvider>
-    )
-}
 
 describe('components/table/Table', () => {
     const board = TestBlockFactory.createBoard()
@@ -80,7 +70,7 @@ describe('components/table/Table', () => {
         const mockStore = configureStore([])
         const store = mockStore(state)
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <Table
                     board={board}
@@ -108,7 +98,7 @@ describe('components/table/Table', () => {
         const mockStore = configureStore([])
         const store = mockStore(state)
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <Table
                     board={board}
@@ -137,7 +127,7 @@ describe('components/table/Table', () => {
         const mockStore = configureStore([])
         const store = mockStore(state)
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <Table
                     board={board}
@@ -222,7 +212,7 @@ describe('components/table/Table extended', () => {
             },
         })
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <Table
                     board={board}
@@ -301,7 +291,7 @@ describe('components/table/Table extended', () => {
             },
         })
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <Table
                     board={board}
@@ -358,7 +348,7 @@ describe('components/table/Table extended', () => {
             },
         })
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <Table
                     board={board}
@@ -442,7 +432,7 @@ describe('components/table/Table extended', () => {
             },
         })
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <Table
                     board={board}
