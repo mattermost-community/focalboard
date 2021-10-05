@@ -18,9 +18,7 @@ exports[`components/sidebarSidebar sidebar in dashboard page 1`] = `
             class="ModalWrapper"
           >
             <div
-              aria-label="menuwrapper"
               class="MenuWrapper"
-              role="button"
             >
               <div
                 class="logo"
@@ -69,7 +67,6 @@ exports[`components/sidebarSidebar sidebar in dashboard page 1`] = `
       >
         <div
           class="Button IconButton"
-          role="button"
         >
           <svg
             class="HideSidebarIcon Icon"
@@ -301,9 +298,7 @@ exports[`components/sidebarSidebar sidebar in dashboard page 1`] = `
       class="SidebarSettingsMenu"
     >
       <div
-        aria-label="menuwrapper"
         class="MenuWrapper"
-        role="button"
       >
         <div
           class="menu-entry"

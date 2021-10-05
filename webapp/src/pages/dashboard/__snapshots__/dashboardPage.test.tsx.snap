@@ -21,9 +21,7 @@ exports[`pages/dashboard/DashboardPage base case 1`] = `
               class="ModalWrapper"
             >
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
                 <div
                   class="logo"
@@ -72,7 +70,6 @@ exports[`pages/dashboard/DashboardPage base case 1`] = `
         >
           <div
             class="Button IconButton"
-            role="button"
           >
             <svg
               class="HideSidebarIcon Icon"
@@ -304,9 +301,7 @@ exports[`pages/dashboard/DashboardPage base case 1`] = `
         class="SidebarSettingsMenu"
       >
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
           <div
             class="menu-entry"
