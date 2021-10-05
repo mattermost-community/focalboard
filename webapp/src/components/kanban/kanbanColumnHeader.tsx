@@ -7,7 +7,7 @@ import {useDrop, useDrag} from 'react-dnd'
 
 import {Constants} from '../../constants'
 import {IPropertyOption, IPropertyTemplate, Board, BoardGroup, createBoard} from '../../blocks/board'
-import {BoardView, KanbanCalculationFields} from '../../blocks/boardView'
+import {BoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
 import mutator from '../../mutator'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -20,7 +20,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import Editable from '../../widgets/editable'
 import Label from '../../widgets/label'
 
-import KanbanCalculation from './calculation/calculation'
+import {KanbanCalculation} from './calculation/calculation'
 
 type Props = {
     board: Board
@@ -128,12 +128,10 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                 value={calculationValue}
                 property={calculationProperty}
                 onMenuClose={props.onCalculationMenuClose}
-                onMenuOpen={() => props.onCalculationMenuOpen()}
+                onMenuOpen={props.onCalculationMenuOpen}
                 cardProperties={board.fields.cardProperties}
+                readonly={props.readonly}
                 onChange={(data: {calculation: string, propertyId: string}) => {
-                    console.log('data data data')
-                    console.log(data)
-
                     const newBoard = createBoard(props.board)
                     const newCalculations = {
                         ...newBoard.fields.kanbanCalculations,

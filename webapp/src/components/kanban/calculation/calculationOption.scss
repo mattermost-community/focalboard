@@ -1,8 +1,9 @@
 .KanbanCalculationOptions_CustomOption {
     color: rgba(var(--center-channel-color-rgb), 1);
     min-height: 24px;
-    max-width: 180px;
-    padding: 2px 8px;
+    max-width: 220px;
+    width: 200px;
+    padding: 2px 12px;
     cursor: pointer;
     //height: 24px;
     position: relative;
@@ -16,8 +17,8 @@
     }
 
     .drops {
-        height: 36px;
-        padding: 8px;
+        padding: 2px 8px;
+        width: 200px;
     }
 
     .customs:hover, .drops:hover {
@@ -26,15 +27,25 @@
 
     .dropdown-submenu {
         position: fixed;
-        min-height: 36px;
         overflow: auto;
         background: rgb(var(--center-channel-bg-rgb));
         border: none;
-        box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1),0 4px 11px hsla(0, 0%, 0%, 0.1);
+        box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1), 0 4px 11px hsla(0, 0%, 0%, 0.1);
         z-index: 999;
+        padding: 6px;
+        border-radius: 4px;
     }
 
     .CompassIcon.icon-chevron-right {
         float: right;
+    }
+}
+
+.CalculationOptions__menu {
+    left: -100px;
+
+    .CalculationOptions__menu-list {
+        max-height: 400px;
+        padding: 8px 0;
     }
 }

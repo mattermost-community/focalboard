@@ -2,9 +2,9 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {CalculationOptions, CalculationOptionsProps, optionsByType} from '../../calculations/options'
+import {CalculationOptions, CommonCalculationOptionProps, optionsByType} from '../../calculations/options'
 
-export const TableCalculationOptions = (props: CalculationOptionsProps): JSX.Element => {
+export const TableCalculationOptions = (props: CommonCalculationOptionProps): JSX.Element => {
     const options = [...optionsByType.get('common')!]
     if (props.property && optionsByType.get(props.property.type)) {
         options.push(...optionsByType.get(props.property.type)!)

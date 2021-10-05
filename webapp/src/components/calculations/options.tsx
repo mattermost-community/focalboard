@@ -57,7 +57,7 @@ function generateTypesByOption(): Map<string, string[]> {
 
 const baseStyles = getSelectBaseStyle()
 
-export const styles = {
+const styles = {
     ...baseStyles,
     dropdownIndicator: (provided: CSSObject): CSSObject => ({
         ...baseStyles.dropdownIndicator(provided),
@@ -92,7 +92,7 @@ export const styles = {
     }),
 }
 
-export const DropdownIndicator = (props: IndicatorProps<Option, false>) => {
+const DropdownIndicator = (props: IndicatorProps<Option, false>) => {
     return (
         <components.DropdownIndicator {...props}>
             <ChevronUp/>
@@ -100,7 +100,8 @@ export const DropdownIndicator = (props: IndicatorProps<Option, false>) => {
     )
 }
 
-type CalculationOptionsProps = {
+// Calculation option props shared by all implementations of calculation options
+type CommonCalculationOptionProps = {
     value: string,
     menuOpen: boolean
     onClose?: () => void
@@ -109,11 +110,12 @@ type CalculationOptionsProps = {
     property?: IPropertyTemplate
 }
 
-type BaseOptionsProps = CalculationOptionsProps & {
+// Props used by the base calculation option component
+type BaseCalculationOptionProps = CommonCalculationOptionProps & {
     options: Option[]
 }
 
-const CalculationOptions = (props: BaseOptionsProps): JSX.Element => {
+const CalculationOptions = (props: BaseCalculationOptionProps): JSX.Element => {
     return (
         <Select
             styles={styles}
@@ -122,6 +124,7 @@ const CalculationOptions = (props: BaseOptionsProps): JSX.Element => {
             isClearable={true}
             name={'calculation_options'}
             className={'CalculationOptions'}
+            classNamePrefix={'CalculationOptions'}
             options={props.options}
             menuPlacement={'auto'}
             isSearchable={false}
@@ -148,5 +151,5 @@ const CalculationOptions = (props: BaseOptionsProps): JSX.Element => {
 export {
     CalculationOptions,
     Option,
-    CalculationOptionsProps,
+    CommonCalculationOptionProps,
 }

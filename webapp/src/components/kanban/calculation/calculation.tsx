@@ -20,28 +20,25 @@ type Props = {
     onChange: (data: {calculation: string, propertyId: string}) => void
     value: string
     property: IPropertyTemplate
+    readonly: boolean
 }
 
-export default function KanbanCalculation(props: Props): JSX.Element {
-    console.log('Calculation: ' + props.value)
+function KanbanCalculation(props: Props): JSX.Element {
     return (
         <React.Fragment>
             <Button
                 className='KanbanCalculation'
-                onClick={() => {
-                    if (props.menuOpen) {
-                        props.onMenuClose()
-                    } else {
-                        props.onMenuOpen()
-                    }
+                onClick={() => (props.menuOpen ? props.onMenuClose : props.onMenuOpen)()}
+                onBlur={() => {
+                    console.log('closing menu')
+                    props.onMenuClose()
                 }}
-                onBlur={props.onMenuClose}
             >
-                {Calculations[props.value] ? Calculations[props.value](props.cards, props.property) : 'AAA'}
+                {Calculations[props.value] ? Calculations[props.value](props.cards, props.property) : ''}
             </Button>
 
             {
-                props.menuOpen && (
+                !props.readonly && props.menuOpen && (
                     <KanbanCalculationOptions
                         value={props.value}
                         menuOpen={props.menuOpen}
@@ -52,4 +49,8 @@ export default function KanbanCalculation(props: Props): JSX.Element {
             }
         </React.Fragment>
     )
+}
+
+export {
+    KanbanCalculation,
 }
