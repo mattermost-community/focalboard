@@ -10,9 +10,7 @@ exports[`components/propertyValueElement should match snapshot, date, array valu
       type="button"
     >
       <span>
-        <span
-          title="Empty"
-        />
+        Empty
       </span>
     </button>
   </div>
@@ -23,7 +21,6 @@ exports[`components/propertyValueElement should match snapshot, multi-select 1`]
 <div>
   <div
     class="octo-propertyvalue"
-    data-testid="multiselect-non-editable"
     tabindex="0"
   >
     <span
@@ -44,7 +41,7 @@ exports[`components/propertyValueElement should match snapshot, person, array va
 <div>
   <input
     class="Editable octo-propertyvalue"
-    placeholder=""
+    placeholder="Empty"
     spellcheck="true"
     title=""
     value=""
@@ -67,9 +64,7 @@ exports[`components/propertyValueElement should match snapshot, select 1`] = `
         value 1
       </span>
       <div
-        aria-label="Clear"
         class="Button IconButton margin-left delete-value"
-        role="button"
         title="Clear"
       >
         <i
@@ -107,7 +102,7 @@ exports[`components/propertyValueElement should match snapshot, url, array value
   >
     <input
       class="Editable octo-propertyvalue"
-      placeholder=""
+      placeholder="Empty"
       title="http://localhost"
       value="http://localhost"
     />
@@ -132,7 +127,7 @@ exports[`components/propertyValueElement should match snapshot, url, array value
   >
     <input
       class="Editable octo-propertyvalue"
-      placeholder=""
+      placeholder="Empty"
       title="http://localhost"
       value="http://localhost"
     />
