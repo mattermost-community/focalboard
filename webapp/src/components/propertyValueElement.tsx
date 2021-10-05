@@ -110,7 +110,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 onCreate={
                     async (newValue, currentValues) => {
                         const option: IPropertyOption = {
-                            id: Utils.createGuid(IDType.None),
+                            id: Utils.createGuid(IDType.BlockID),
                             value: newValue,
                             color: 'propColorDefault',
                         }
@@ -134,7 +134,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 onCreate={
                     async (newValue) => {
                         const option: IPropertyOption = {
-                            id: Utils.createGuid(IDType.None),
+                            id: Utils.createGuid(IDType.BlockID),
                             value: newValue,
                             color: 'propColorDefault',
                         }

@@ -55,7 +55,7 @@ const Kanban = (props: Props) => {
         Utils.log('onAddGroupClicked')
 
         const option: IPropertyOption = {
-            id: Utils.createGuid(IDType.None),
+            id: Utils.createGuid(IDType.BlockID),
             value: 'New group',
             color: 'propColorDefault',
         }
