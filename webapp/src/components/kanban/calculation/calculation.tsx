@@ -29,10 +29,7 @@ function KanbanCalculation(props: Props): JSX.Element {
             <Button
                 className='KanbanCalculation'
                 onClick={() => (props.menuOpen ? props.onMenuClose : props.onMenuOpen)()}
-                onBlur={() => {
-                    console.log('closing menu')
-                    props.onMenuClose()
-                }}
+                onBlur={props.onMenuClose}
             >
                 {Calculations[props.value] ? Calculations[props.value](props.cards, props.property) : ''}
             </Button>

@@ -30,7 +30,6 @@ const Option = (props: {data: OptionProps}): JSX.Element => {
     }
 
     if (!calculationToProperties.get(props.data.value)) {
-        console.log('computing')
         const supportedPropertyTypes = new Map<string, boolean>([])
         if (typesByOptions.get(props.data.value)) {
             (typesByOptions.get(props.data.value) || []).
@@ -42,8 +41,6 @@ const Option = (props: {data: OptionProps}): JSX.Element => {
 
         calculationToProperties.set(props.data.value, supportedProperties)
         setCalculationToProperties(calculationToProperties)
-    } else {
-        console.log('reusing')
     }
 
     return (

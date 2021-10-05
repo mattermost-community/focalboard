@@ -76,7 +76,6 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
     }
 
     const groupCalculation = props.board.fields.kanbanCalculations[props.group.option.id]
-
     const calculationValue = groupCalculation ? groupCalculation.calculation : defaultCalculation
     const calculationProperty = groupCalculation ? props.board.fields.cardProperties.find((property) => property.id === groupCalculation.propertyId) || defaultProperty : defaultProperty
 
