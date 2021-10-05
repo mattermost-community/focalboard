@@ -179,6 +179,10 @@
         border-bottom-right-radius: 50% !important;
     }
 
+    .DayPicker-Day--selected.DayPicker-Day--outside {
+        background-color: rgba(var(--button-bg-rgb), 0.08);
+    }
+
     .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
         background-color: rgb(var(--button-bg-rgb));
         color: rgba(var(--button-color-rgb), 1);
