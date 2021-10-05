@@ -17,12 +17,13 @@ type Props = {
     menuOpen: boolean
     onMenuClose: () => void
     onMenuOpen: () => void
-    onChange: (calculation: string, property: string) => void
+    onChange: (data: {calculation: string, propertyId: string}) => void
     value: string
     property: IPropertyTemplate
 }
 
 export default function KanbanCalculation(props: Props): JSX.Element {
+    console.log('Calculation: ' + props.value)
     return (
         <React.Fragment>
             <Button
@@ -36,7 +37,7 @@ export default function KanbanCalculation(props: Props): JSX.Element {
                 }}
                 onBlur={props.onMenuClose}
             >
-                {Calculations[props.value] ? Calculations[props.value](props.cards, props.property) : ''}
+                {Calculations[props.value] ? Calculations[props.value](props.cards, props.property) : 'AAA'}
             </Button>
 
             {

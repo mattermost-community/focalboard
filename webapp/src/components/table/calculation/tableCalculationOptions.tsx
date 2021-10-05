@@ -6,7 +6,7 @@ import {CalculationOptions, CalculationOptionsProps, optionsByType} from '../../
 
 export const TableCalculationOptions = (props: CalculationOptionsProps): JSX.Element => {
     const options = [...optionsByType.get('common')!]
-    if (optionsByType.get(props.property.type)) {
+    if (props.property && optionsByType.get(props.property.type)) {
         options.push(...optionsByType.get(props.property.type)!)
     }
 

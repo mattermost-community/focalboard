@@ -130,14 +130,17 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                 onMenuClose={props.onCalculationMenuClose}
                 onMenuOpen={() => props.onCalculationMenuOpen()}
                 cardProperties={board.fields.cardProperties}
-                onChange={(calculation: string, propertyId: string) => {
+                onChange={(data: {calculation: string, propertyId: string}) => {
+                    console.log('data data data')
+                    console.log(data)
+
                     const newBoard = createBoard(props.board)
                     const newCalculations = {
                         ...newBoard.fields.kanbanCalculations,
                     }
                     newCalculations[props.group.option.id] = {
-                        calculation,
-                        propertyId,
+                        calculation: data.calculation,
+                        propertyId: data.propertyId,
                     }
                     newBoard.fields.kanbanCalculations = newCalculations
                     mutator.updateBlock(newBoard, props.board, 'update_calculation')

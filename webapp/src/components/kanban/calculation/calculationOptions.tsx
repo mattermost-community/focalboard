@@ -15,12 +15,12 @@ import ChevronRight from '../../../widgets/icons/chevronRight'
 
 type Props = CalculationOptionsProps & {
     cardProperties: IPropertyTemplate[]
-    onChange: (calculation: string, property: string) => void
+    onChange: (data: {calculation: string, propertyId: string}) => void
 }
 
 type Foo = SelectOption & {
     cardProperties: IPropertyTemplate[]
-    onChange: (calculation: string, property: string) => void
+    onChange: (data: {calculation: string, propertyId: string}) => void
 }
 
 const Option = (props: {data: Foo}): JSX.Element => {
@@ -81,7 +81,10 @@ const Option = (props: {data: Foo}): JSX.Element => {
                                     key={property.id}
                                     className='drops'
                                     onClick={() => {
-                                        props.data.onChange(props.data.value, property.id)
+                                        props.data.onChange({
+                                            calculation: props.data.value,
+                                            propertyId: property.id,
+                                        })
                                     }}
                                 >
                                     {property.name}

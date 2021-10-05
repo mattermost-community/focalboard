@@ -105,11 +105,12 @@ type CalculationOptionsProps = {
     menuOpen: boolean
     onClose?: () => void
     components?: {[key:string]: (props: any) => JSX.Element}
+    onChange: (data: any) => void
+    property?: IPropertyTemplate
 }
 
 type BaseOptionsProps = CalculationOptionsProps & {
     options: Option[]
-    onChange: (value: string) => void
 }
 
 const CalculationOptions = (props: BaseOptionsProps): JSX.Element => {
