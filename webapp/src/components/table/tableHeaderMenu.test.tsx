@@ -3,8 +3,9 @@
 
 import React from 'react'
 import {fireEvent, render} from '@testing-library/react'
+
 import '@testing-library/jest-dom'
-import {IntlProvider} from 'react-intl'
+import {wrapIntl} from '../../testUtils'
 
 import 'isomorphic-fetch'
 
@@ -32,8 +33,6 @@ beforeEach(() => {
     jest.resetAllMocks()
     FetchMock.fn.mockReset()
 })
-
-const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
 
 describe('components/table/TableHeaderMenu', () => {
     const board = TestBlockFactory.createBoard()

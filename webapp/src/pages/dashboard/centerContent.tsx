@@ -12,8 +12,10 @@ import {UserWorkspace} from '../../user'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {getUserWorkspaceList, setUserWorkspaces} from '../../store/workspace'
 import octoClient from '../../octoClient'
+import Switch from '../../widgets/switch'
 
 import SearchIcon from '../../widgets/icons/search'
+import {UserSettings} from '../../userSettings'
 
 const DashboardCenterContent = (): JSX.Element => {
     const rawWorkspaces = useAppSelector<UserWorkspace[]>(getUserWorkspaceList) || []
@@ -21,6 +23,7 @@ const DashboardCenterContent = (): JSX.Element => {
     const history = useHistory()
     const intl = useIntl()
     const [searchFilter, setSearchFilter] = useState('')
+    const [showEmptyWorkspaces, setShowEmptyWorkspaces] = useState(UserSettings.dashboardShowEmpty)
 
     const initializeUserWorkspaces = async () => {
         const userWorkspaces = await octoClient.getUserWorkspaces()
@@ -36,7 +39,7 @@ const DashboardCenterContent = (): JSX.Element => {
     })
 
     const userWorkspaces = rawWorkspaces.
-        filter((workspace) => workspace.title.toLowerCase().includes(searchFilter) || workspace.boardCount.toString().includes(searchFilter)).
+        filter((workspace) => (workspace.boardCount > 0 || showEmptyWorkspaces) && (workspace.title.toLowerCase().includes(searchFilter) || workspace.boardCount.toString().includes(searchFilter))).
         sort((a, b) => {
             if ((a.boardCount === 0 && b.boardCount === 0) || (a.boardCount !== 0 && b.boardCount !== 0)) {
                 return a.title.localeCompare(b.title)
@@ -49,6 +52,16 @@ const DashboardCenterContent = (): JSX.Element => {
         <div className='DashboardCenterContent'>
             <div className='DashboardPage__header'>
                 <h1 className='h1'>{intl.formatMessage({id: 'DashboardPage.title', defaultMessage: 'Dashboard'})}</h1>
+                <div className='DashboardPage__showEmpty'>
+                    {intl.formatMessage({id: 'DashboardPage.showEmpty', defaultMessage: 'Show empty'})}
+                    <Switch
+                        isOn={showEmptyWorkspaces}
+                        onChanged={() => {
+                            UserSettings.dashboardShowEmpty = !showEmptyWorkspaces
+                            setShowEmptyWorkspaces(!showEmptyWorkspaces)
+                        }}
+                    />
+                </div>
                 <div className='DashboardPage__search'>
                     <SearchIcon/>
                     <input

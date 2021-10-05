@@ -4,25 +4,16 @@
 import React from 'react'
 import {render} from '@testing-library/react'
 import '@testing-library/jest-dom'
-import {IntlProvider} from 'react-intl'
+
+import {wrapDNDIntl} from '../testUtils'
 
 import 'isomorphic-fetch'
-import {DndProvider} from 'react-dnd'
-import {HTML5Backend} from 'react-dnd-html5-backend'
 
 import {IPropertyTemplate, IPropertyOption} from '../blocks/board'
 
 import {TestBlockFactory} from '../test/testBlockFactory'
 
 import PropertyValueElement from './propertyValueElement'
-
-const wrapProviders = (children: any) => {
-    return (
-        <DndProvider backend={HTML5Backend}>
-            <IntlProvider locale='en'>{children}</IntlProvider>
-        </DndProvider>
-    )
-}
 
 describe('components/propertyValueElement', () => {
     const board = TestBlockFactory.createBoard()
@@ -31,7 +22,7 @@ describe('components/propertyValueElement', () => {
 
     test('should match snapshot, select', async () => {
         const propertyTemplate = board.fields.cardProperties.find((p) => p.id === 'property1')
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <PropertyValueElement
                 board={board}
                 readOnly={false}
@@ -49,7 +40,7 @@ describe('components/propertyValueElement', () => {
 
     test('should match snapshot, select, read-only', async () => {
         const propertyTemplate = board.fields.cardProperties.find((p) => p.id === 'property1')
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <PropertyValueElement
                 board={board}
                 readOnly={true}
@@ -83,7 +74,7 @@ describe('components/propertyValueElement', () => {
             options,
         }
         card.fields.properties.multiSelect = ['ms1', 'ms2']
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <PropertyValueElement
                 board={board}
                 readOnly={false}
@@ -108,7 +99,7 @@ describe('components/propertyValueElement', () => {
         }
         card.fields.properties.property_url = ['http://localhost']
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <PropertyValueElement
                 board={board}
                 readOnly={false}
@@ -133,7 +124,7 @@ describe('components/propertyValueElement', () => {
         }
         card.fields.properties.property_url = ['http://localhost']
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <PropertyValueElement
                 board={board}
                 readOnly={false}
@@ -158,7 +149,7 @@ describe('components/propertyValueElement', () => {
         }
         card.fields.properties.person = ['value1', 'value2']
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <PropertyValueElement
                 board={board}
                 readOnly={false}
@@ -183,7 +174,7 @@ describe('components/propertyValueElement', () => {
         }
         card.fields.properties.date = ['invalid date']
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <PropertyValueElement
                 board={board}
                 readOnly={false}
