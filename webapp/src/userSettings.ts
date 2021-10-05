@@ -16,7 +16,8 @@ enum UserSettingKey {
     EmojiMartFrequently = 'emoji-mart.frequently',
     RandomIcons = 'randomIcons',
     MobileWarningClosed = 'mobileWarningClosed',
-    WelcomePageViewed = 'welcomePageViewed'
+    WelcomePageViewed = 'welcomePageViewed',
+    DashboardShowEmpty = 'dashboardShowEmpty'
 }
 
 export class UserSettings {
@@ -90,6 +91,14 @@ export class UserSettings {
 
     static set prefillRandomIcons(newValue: boolean) {
         UserSettings.set(UserSettingKey.RandomIcons, JSON.stringify(newValue))
+    }
+
+    static get dashboardShowEmpty(): boolean {
+        return localStorage.getItem(UserSettingKey.DashboardShowEmpty) !== 'false'
+    }
+
+    static set dashboardShowEmpty(newValue: boolean) {
+        localStorage.setItem(UserSettingKey.DashboardShowEmpty, JSON.stringify(newValue))
     }
 
     static getEmojiMartSetting(key: string): any {
