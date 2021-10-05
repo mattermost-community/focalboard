@@ -156,9 +156,6 @@ func generateLayer(name, templateFile string) ([]byte, error) {
 	metadata.Name = name
 
 	myFuncs := template.FuncMap{
-		"joinResults": func(results []string) string {
-			return strings.Join(results, ", ")
-		},
 		"joinResultsForSignature": func(results []string) string {
 			if len(results) == 0 {
 				return ""
@@ -185,14 +182,6 @@ func generateLayer(name, templateFile string) ([]byte, error) {
 				}
 			}
 			return strings.Join(vars, ", ")
-		},
-		"errorToBoolean": func(results []string) string {
-			for _, typeName := range results {
-				if isError(typeName) {
-					return "err == nil"
-				}
-			}
-			return "true"
 		},
 		"errorPresent": func(results []string) bool {
 			for _, typeName := range results {
@@ -222,18 +211,6 @@ func generateLayer(name, templateFile string) ([]byte, error) {
 			return strings.Join(paramsNames, ", ")
 		},
 		"joinParamsWithType": func(params []methodParam) string {
-			paramsWithType := []string{}
-			for _, param := range params {
-				switch param.Type {
-				case "Container":
-					paramsWithType = append(paramsWithType, fmt.Sprintf("%s store.%s", param.Name, param.Type))
-				default:
-					paramsWithType = append(paramsWithType, fmt.Sprintf("%s %s", param.Name, param.Type))
-				}
-			}
-			return strings.Join(paramsWithType, ", ")
-		},
-		"joinParamsWithTypeOutsideStore": func(params []methodParam) string {
 			paramsWithType := []string{}
 			for _, param := range params {
 				switch param.Type {
