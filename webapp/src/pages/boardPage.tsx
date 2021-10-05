@@ -94,7 +94,7 @@ const BoardPage = (props: Props): JSX.Element => {
         const boardId = match.params.boardId
         const viewId = match.params.viewId
 
-        if (!boardId && !queryString.get('showEmptyCenterPanel')) {
+        if (!boardId) {
             // Load last viewed boardView
             const lastBoardId = UserSettings.lastBoardId || undefined
             const lastViewId = UserSettings.lastViewId || undefined
@@ -110,7 +110,7 @@ const BoardPage = (props: Props): JSX.Element => {
         }
 
         Utils.log(`attachToBoard: ${boardId}`)
-        if (!viewId && boardViews.length > 0 && !queryString.get('showEmptyCenterPanel')) {
+        if (!viewId && boardViews.length > 0) {
             const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
             history.replace(newPath)
             return
@@ -284,7 +284,6 @@ const BoardPage = (props: Props): JSX.Element => {
                 </div>}
             <Workspace
                 readonly={props.readonly || false}
-                showEmptyCenterPanel={queryString.get('showEmptyCenterPanel')}
             />
         </div>
     )

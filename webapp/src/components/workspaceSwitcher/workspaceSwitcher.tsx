@@ -22,6 +22,13 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
     const {activeWorkspace} = props
     const [showMenu, setShowMenu] = useState<boolean>(false)
 
+    const sendUserToEmptyCenterPanel = () => {
+        UserSettings.lastBoardId = ''
+        UserSettings.lastViewId = ''
+        UserSettings.lastWorkspaceId = ''
+        history.push(`/workspace/${activeWorkspace?.id}`)
+    }
+
     return (
         <div className={'WorkspaceSwitcherWrapper'}>
             <div
@@ -60,7 +67,7 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
             {activeWorkspace &&
                 <span
                     className='add-workspace-icon'
-                    onClick={() => history.push(`/workspace/${activeWorkspace?.id}?showEmptyCenterPanel=true`)}
+                    onClick={sendUserToEmptyCenterPanel}
                 >
                     <AddIcon/>
                 </span>

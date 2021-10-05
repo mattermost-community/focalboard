@@ -23,7 +23,6 @@ import './workspace.scss'
 
 type Props = {
     readonly: boolean
-    showEmptyCenterPanel: string | null
 }
 
 function CenterContent(props: Props) {
@@ -56,7 +55,7 @@ function CenterContent(props: Props) {
         }
     }, [])
 
-    if (board && activeView && !props.showEmptyCenterPanel) {
+    if (board && activeView) {
         let property = groupByProperty
         if ((!property || property.type !== 'select') && activeView.fields.viewType === 'board') {
             property = board?.fields.cardProperties.find((o) => o.type === 'select')
@@ -103,7 +102,6 @@ const Workspace = React.memo((props: Props) => {
                 </div>}
                 <CenterContent
                     readonly={props.readonly}
-                    showEmptyCenterPanel={props.showEmptyCenterPanel}
                 />
             </div>
         </div>
