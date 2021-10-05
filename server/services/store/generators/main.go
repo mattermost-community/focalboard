@@ -19,13 +19,12 @@ import (
 )
 
 const (
-	OpenTracingParamsMarker = "@openTracingParams"
-	ErrorType               = "error"
-	StringType              = "string"
-	IntType                 = "int"
-	Int32Type               = "int32"
-	Int64Type               = "int64"
-	BoolType                = "bool"
+	ErrorType  = "error"
+	StringType = "string"
+	IntType    = "int"
+	Int32Type  = "int32"
+	Int64Type  = "int64"
+	BoolType   = "bool"
 )
 
 func isError(typeName string) bool {
@@ -69,9 +68,8 @@ type methodParam struct {
 }
 
 type methodData struct {
-	Params        []methodParam
-	Results       []string
-	ParamsToTrace map[string]bool
+	Params  []methodParam
+	Results []string
 }
 
 type storeMetadata struct {
@@ -86,21 +84,10 @@ var blacklistedStoreMethodNames = map[string]bool{
 func extractMethodMetadata(method *ast.Field, src []byte) methodData {
 	params := []methodParam{}
 	results := []string{}
-	paramsToTrace := map[string]bool{}
 	ast.Inspect(method.Type, func(expr ast.Node) bool {
 		//nolint:gocritic
 		switch e := expr.(type) {
 		case *ast.FuncType:
-			if method.Doc != nil {
-				for _, comment := range method.Doc.List {
-					s := comment.Text
-					if idx := strings.Index(s, OpenTracingParamsMarker); idx != -1 {
-						for _, p := range strings.Split(s[idx+len(OpenTracingParamsMarker):], ",") {
-							paramsToTrace[strings.TrimSpace(p)] = true
-						}
-					}
-				}
-			}
 			if e.Params != nil {
 				for _, param := range e.Params.List {
 					for _, paramName := range param.Names {
@@ -113,26 +100,10 @@ func extractMethodMetadata(method *ast.Field, src []byte) methodData {
 					results = append(results, string(src[result.Type.Pos()-1:result.Type.End()-1]))
 				}
 			}
-
-			for paramName := range paramsToTrace {
-				found := false
-				for _, param := range params {
-					if param.Name == paramName {
-						found = true
-						break
-					}
-				}
-				if !found {
-					log.Fatalf("Unable to find a parameter called '%s' (method '%s') that is mentioned in the '%s' comment. Maybe it was renamed?",
-						paramName,
-						method.Names[0].Name,
-						OpenTracingParamsMarker)
-				}
-			}
 		}
 		return true
 	})
-	return methodData{Params: params, Results: results, ParamsToTrace: paramsToTrace}
+	return methodData{Params: params, Results: results}
 }
 
 func extractStoreMetadata() (*storeMetadata, error) {
