@@ -54,6 +54,7 @@ export const addBoardTemplateClicked = async (showBoard: (id: string) => void, i
     const boardTemplate = createBoard()
     boardTemplate.rootId = boardTemplate.id
     boardTemplate.fields.isTemplate = true
+    boardTemplate.title = intl.formatMessage({id: 'View.NewTemplateTitle', defaultMessage: 'Untitled Template'})
 
     const view = createBoardView()
     view.fields.viewType = 'board'

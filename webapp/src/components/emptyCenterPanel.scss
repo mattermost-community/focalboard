@@ -4,7 +4,7 @@
     overflow: auto;
     padding: 80px;
     font-size: 15px;
-    color: rgba(var(--center-channel-color-rgb), 0.7);
+    color: rgba(var(--center-channel-color-rgb));
 
     .WorkspaceInfo {
         b {
@@ -46,13 +46,13 @@
             justify-items: center;
             align-items: center;
             padding: 16px 32px;
-            border: 1px solid rgba(61, 60, 64, 0.16);
+            border: 1px solid rgba(var(--center-channel-color-rgb),0.16);
             box-sizing: border-box;
             box-shadow: 0 2px 3px rgb(0 0 0 / 8%);
             border-radius: 8px;
             margin: 20px;
 
-            i {
+            span {
                 margin-right: 10px;
             }
 

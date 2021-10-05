@@ -23,9 +23,8 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
     const [showMenu, setShowMenu] = useState<boolean>(false)
 
     const sendUserToEmptyCenterPanel = () => {
-        UserSettings.lastBoardId = ''
-        UserSettings.lastViewId = ''
-        UserSettings.lastWorkspaceId = ''
+        UserSettings.lastBoardId = null
+        UserSettings.lastViewId = null
         history.push(`/workspace/${activeWorkspace?.id}`)
     }
 

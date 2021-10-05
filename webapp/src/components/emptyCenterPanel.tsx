@@ -36,7 +36,7 @@ const PanelButton = React.memo((props: ButtonProps) => {
             onClick={onClick}
             className='button'
         >
-            <i>{buttonIcon}</i>
+            <span>{buttonIcon}</span>
             <span className='button-title'>{title}</span>
             {!readonly && showBoard && boardTemplate &&
                 <BoardTemplateButtonMenu
@@ -73,17 +73,21 @@ const EmptyCenterPanel = React.memo(() => {
     const newTemplateClicked = () => addBoardTemplateClicked(showBoard, intl)
     const emptyBoardClicked = () => addBoardClicked(showBoard, intl)
 
-    let contentDisplay = (
-        <div className='Hint'>
-            <FormattedMessage
-                id='EmptyCenterPanel.no-content'
-                defaultMessage='Add or select a board from the sidebar to get started.'
-            />
-        </div>
-    )
+    if (!Utils.isFocalboardPlugin()) {
+        return (
+            <div className='EmptyCenterPanel'>
+                <div className='Hint'>
+                    <FormattedMessage
+                        id='EmptyCenterPanel.no-content'
+                        defaultMessage='Add or select a board from the sidebar to get started.'
+                    />
+                </div>
+            </div>
+        )
+    }
 
-    if (Utils.isFocalboardPlugin()) {
-        contentDisplay = (
+    return (
+        <div className='EmptyCenterPanel'>
             <div className='content'>
                 <span className='title'>
                     <FormattedMessage
@@ -159,13 +163,8 @@ const EmptyCenterPanel = React.memo(() => {
                     defaultMessage='You can change the channel using the switcher in the sidebar.'
                 />
             </div>
-        )
-    }
-
-    return (
-        <div className='EmptyCenterPanel'>
-            {contentDisplay}
         </div>
+
     )
 })
 
