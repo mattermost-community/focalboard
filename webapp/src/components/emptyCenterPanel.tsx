@@ -26,15 +26,16 @@ type ButtonProps = {
     onClick: () => void,
     showBoard?: (boardId: string) => void
     boardTemplate?: Board
+    classNames?: string
 }
 
 const PanelButton = React.memo((props: ButtonProps) => {
-    const {onClick, buttonIcon, title, readonly, showBoard, boardTemplate} = props
+    const {onClick, buttonIcon, title, readonly, showBoard, boardTemplate, classNames} = props
 
     return (
         <div
             onClick={onClick}
-            className='button'
+            className={`button ${classNames || ''}`}
         >
             <span>{buttonIcon}</span>
             <span className='button-title'>{title}</span>
@@ -143,6 +144,7 @@ const EmptyCenterPanel = React.memo(() => {
                         buttonIcon={<AddIcon/>}
                         readonly={true}
                         onClick={newTemplateClicked}
+                        classNames='new-template'
                     />
                 </div>
                 <span className='choose-template-text'>
