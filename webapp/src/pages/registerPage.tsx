@@ -20,7 +20,7 @@ const RegisterPage = React.memo(() => {
     const dispatch = useAppDispatch()
 
     const handleRegister = async (): Promise<void> => {
-        const queryString = new URLSearchParams(window.location.search)
+        const queryString = new URLSearchParams(history.location.search)
         const signupToken = queryString.get('t') || ''
 
         const response = await client.register(email, username, password, signupToken)
