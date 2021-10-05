@@ -75,7 +75,7 @@ const styles = {
         minWidth: '100%',
         width: 'max-content',
         background: 'rgb(var(--center-channel-bg-rgb))',
-        right: '0',
+        left: '0',
         marginBottom: '0',
     }),
     singleValue: (provided: CSSObject): CSSObject => ({

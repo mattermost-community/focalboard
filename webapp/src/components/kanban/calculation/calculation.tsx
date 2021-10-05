@@ -25,7 +25,7 @@ type Props = {
 
 function KanbanCalculation(props: Props): JSX.Element {
     return (
-        <React.Fragment>
+        <div className='KanbanCalculation'>
             <Button
                 className='KanbanCalculation'
                 onClick={() => (props.menuOpen ? props.onMenuClose : props.onMenuOpen)()}
@@ -44,7 +44,7 @@ function KanbanCalculation(props: Props): JSX.Element {
                     />
                 )
             }
-        </React.Fragment>
+        </div>
     )
 }
 

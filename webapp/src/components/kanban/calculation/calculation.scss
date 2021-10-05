@@ -1,7 +1,14 @@
 .KanbanCalculation {
-    cursor: pointer !important;
+    position: relative;
 
-    &:hover {
-        background-color: rgba(var(--center-channel-color-rgb), 0.1);
+    button {
+        cursor: pointer !important;
+        height: 24px;
+        padding: 0 6px;
+        min-width: 24px;
+
+        &:hover {
+            background-color: rgba(var(--center-channel-color-rgb), 0.1);
+        }
     }
 }
