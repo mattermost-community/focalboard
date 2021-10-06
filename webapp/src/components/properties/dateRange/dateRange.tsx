@@ -156,7 +156,6 @@ function DateRange(props: Props): JSX.Element {
     if (!buttonText && showEmptyPlaceholder) {
         buttonText = intl.formatMessage({id: 'DateRange.empty', defaultMessage: 'Empty'})
     }
-    console.log(dateFrom, dateTo)
     return (
         <div className={`DateRange ${displayValue ? '' : 'empty'} ` + className}>
             <Button
