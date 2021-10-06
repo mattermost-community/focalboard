@@ -95,11 +95,13 @@ const App = React.memo((): JSX.Element => {
         dispatch(fetchClientConfig())
     }, [])
 
-    if (!inPluginLegacy) {
+    if (Utils.isFocalboardPlugin()) {
         useEffect(() => {
             history.replace(window.location.pathname.replace((window as any).frontendBaseURL, ''))
         }, [])
+    }
 
+    if (!inPluginLegacy) {
         useEffect(() => {
             wsClient.open()
             return () => {
