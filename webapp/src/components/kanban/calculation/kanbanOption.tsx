@@ -10,6 +10,8 @@ import {Constants} from '../../../constants'
 type OptionProps = SelectOption & {
     cardProperties: IPropertyTemplate[]
     onChange: (data: {calculation: string, propertyId: string}) => void
+    activeValue: string
+    activeProperty: IPropertyTemplate
 }
 
 const Option = (props: {data: OptionProps}): JSX.Element => {
@@ -45,7 +47,7 @@ const Option = (props: {data: OptionProps}): JSX.Element => {
 
     return (
         <div
-            className='KanbanCalculationOptions_CustomOption'
+            className={`KanbanCalculationOptions_CustomOption ${props.data.activeValue === props.data.value ? 'active' : ''}`}
             onMouseEnter={toggleOption}
             onMouseLeave={toggleOption}
             onClick={() => {
@@ -75,7 +77,7 @@ const Option = (props: {data: OptionProps}): JSX.Element => {
                             calculationToProperties.get(props.data.value)!.map((property) => (
                                 <div
                                     key={property.id}
-                                    className='drops'
+                                    className={`drops ${props.data.activeProperty.id === property.id ? 'active' : ''}`}
                                     onClick={() => {
                                         props.data.onChange({
                                             calculation: props.data.value,

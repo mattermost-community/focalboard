@@ -37,6 +37,7 @@ function KanbanCalculation(props: Props): JSX.Element {
                 !props.readonly && props.menuOpen && (
                     <KanbanCalculationOptions
                         value={props.value}
+                        property={props.property}
                         menuOpen={props.menuOpen}
                         onChange={props.onChange}
                         cardProperties={props.cardProperties}

@@ -17,8 +17,13 @@
     }
 
     .drops {
-        padding: 2px 8px;
+        padding: 2px 14px;
         width: 200px;
+
+        &.active, &.active:hover {
+            background-color: rgb(var(--sidebar-bg-rgb));
+            color: white;
+        }
     }
 
     .customs:hover, .drops:hover {
@@ -32,12 +37,20 @@
         border: none;
         box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1), 0 4px 11px hsla(0, 0%, 0%, 0.1);
         z-index: 999;
-        padding: 6px;
+        padding: 6px 0;
         border-radius: 4px;
     }
 
     .CompassIcon.icon-chevron-right {
         float: right;
+    }
+
+    &.active {
+        background-color: rgb(var(--sidebar-bg-rgb));
+
+        > span {
+            color: white;
+        }
     }
 }
 

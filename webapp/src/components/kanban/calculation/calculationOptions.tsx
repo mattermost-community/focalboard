@@ -28,6 +28,8 @@ export const KanbanCalculationOptions = (props: Props): JSX.Element => {
                 ...typeOption,
                 cardProperties: props.cardProperties,
                 onChange: props.onChange,
+                activeValue: props.value,
+                activeProperty: props.property!,
             })
         }
     })
@@ -40,6 +42,8 @@ export const KanbanCalculationOptions = (props: Props): JSX.Element => {
                     ...typeOption,
                     cardProperties: props.cardProperties,
                     onChange: props.onChange,
+                    activeValue: props.value,
+                    activeProperty: props.property!,
                 })
             })
         })
