@@ -20,13 +20,15 @@
         padding: 2px 14px;
         width: 200px;
 
-        &.active, &.active:hover {
+        &.active,
+        &.active:hover {
             background-color: rgb(var(--sidebar-bg-rgb));
-            color: white;
+            color: rgb(var(--sidebar-text-rgb));
         }
     }
 
-    .customs:hover, .drops:hover {
+    .customs:hover,
+    .drops:hover {
         background: rgba(var(--center-channel-color-rgb), 0.1);
     }
 
@@ -34,7 +36,7 @@
         position: fixed;
         overflow: auto;
         background: rgb(var(--center-channel-bg-rgb));
-        border: none;
+        border: 0;
         box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1), 0 4px 11px hsla(0, 0%, 0%, 0.1);
         z-index: 999;
         padding: 6px 0;
@@ -49,14 +51,12 @@
         background-color: rgb(var(--sidebar-bg-rgb));
 
         > span {
-            color: white;
+            color: rgb(var(--sidebar-text-rgb));
         }
     }
 }
 
 .CalculationOptions__menu {
-    left: -100px;
-
     .CalculationOptions__menu-list {
         max-height: 400px;
         padding: 8px 0;

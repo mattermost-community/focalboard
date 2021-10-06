@@ -123,7 +123,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                 </Label>}
             <KanbanCalculation
                 cards={group.cards}
-                menuOpen={props.calculationMenuOpen}
+                menuOpen={true}
                 value={calculationValue}
                 property={calculationProperty}
                 onMenuClose={props.onCalculationMenuClose}
