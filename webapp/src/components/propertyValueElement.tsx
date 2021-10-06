@@ -10,7 +10,7 @@ import {ContentBlock} from '../blocks/contentBlock'
 import {CommentBlock} from '../blocks/commentBlock'
 import mutator from '../mutator'
 import {OctoUtils} from '../octoUtils'
-import {Utils} from '../utils'
+import {Utils, IDType} from '../utils'
 import Editable from '../widgets/editable'
 import Switch from '../widgets/switch'
 
@@ -110,7 +110,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 onCreate={
                     async (newValue, currentValues) => {
                         const option: IPropertyOption = {
-                            id: Utils.createGuid(),
+                            id: Utils.createGuid(IDType.BlockID),
                             value: newValue,
                             color: 'propColorDefault',
                         }
@@ -134,7 +134,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 onCreate={
                     async (newValue) => {
                         const option: IPropertyOption = {
-                            id: Utils.createGuid(),
+                            id: Utils.createGuid(IDType.BlockID),
                             value: newValue,
                             color: 'propColorDefault',
                         }

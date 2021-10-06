@@ -8,7 +8,7 @@ import {Board, IPropertyOption, IPropertyTemplate, BoardGroup} from '../../block
 import {Card} from '../../blocks/card'
 import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
-import {Utils} from '../../utils'
+import {Utils, IDType} from '../../utils'
 import Button from '../../widgets/buttons/button'
 
 import KanbanCard from './kanbanCard'
@@ -55,7 +55,7 @@ const Kanban = (props: Props) => {
         Utils.log('onAddGroupClicked')
 
         const option: IPropertyOption = {
-            id: Utils.createGuid(),
+            id: Utils.createGuid(IDType.BlockID),
             value: 'New group',
             color: 'propColorDefault',
         }

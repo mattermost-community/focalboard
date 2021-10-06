@@ -16,7 +16,7 @@ func (a *App) GetRootWorkspace() (*model.Workspace, error) {
 	if workspace == nil {
 		workspace = &model.Workspace{
 			ID:          workspaceID,
-			SignupToken: utils.CreateGUID(),
+			SignupToken: utils.NewID(utils.IDTypeToken),
 		}
 		err := a.store.UpsertWorkspaceSignupToken(*workspace)
 		if err != nil {

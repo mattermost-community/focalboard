@@ -9,7 +9,7 @@ import {FilterGroup} from './blocks/filterGroup'
 import octoClient, {OctoClient} from './octoClient'
 import {OctoUtils} from './octoUtils'
 import undoManager from './undomanager'
-import {Utils} from './utils'
+import {Utils, IDType} from './utils'
 import {UserSettings} from './userSettings'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from './telemetry/telemetryClient'
 
@@ -25,7 +25,7 @@ class Mutator {
             Utils.assertFailure('UndoManager does not support nested groups')
             return undefined
         }
-        this.undoGroupId = Utils.createGuid()
+        this.undoGroupId = Utils.createGuid(IDType.None)
         return this.undoGroupId
     }
 
@@ -231,7 +231,7 @@ class Mutator {
         }
 
         const newTemplate = template || {
-            id: Utils.createGuid(),
+            id: Utils.createGuid(IDType.BlockID),
             name: 'New Property',
             type: 'text',
             options: [],
@@ -276,7 +276,7 @@ class Mutator {
         }
         const srcTemplate = newBoard.fields.cardProperties[index]
         const newTemplate: IPropertyTemplate = {
-            id: Utils.createGuid(),
+            id: Utils.createGuid(IDType.BlockID),
             name: `${srcTemplate.name} copy`,
             type: srcTemplate.type,
             options: srcTemplate.options.slice(),
@@ -462,7 +462,7 @@ class Mutator {
                         let option = newTemplate.options.find((o: IPropertyOption) => o.value === oldValue)
                         if (!option) {
                             option = {
-                                id: Utils.createGuid(),
+                                id: Utils.createGuid(IDType.None),
                                 value: oldValue,
                                 color: 'propColorDefault',
                             }

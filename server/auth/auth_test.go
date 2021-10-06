@@ -22,7 +22,7 @@ type TestHelper struct {
 }
 
 var mockSession = &model.Session{
-	ID:       utils.CreateGUID(),
+	ID:       utils.NewID(utils.IDTypeSession),
 	Token:    "goodToken",
 	UserID:   "12345",
 	CreateAt: time.Now().Unix() - 2000,
