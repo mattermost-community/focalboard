@@ -133,3 +133,33 @@ func (s *SQLStore) GetNotificationHint(blockID string) (*model.NotificationHint,
 	}
 	return hint[0], nil
 }
+
+// GetNextNotificationHint fetches the next scheduled notification hint .
+func (s *SQLStore) GetNextNotificationHint() (*model.NotificationHint, error) {
+	query := s.getQueryBuilder().
+		Select(notificationHintFields()...).
+		From(s.tablePrefix + "notification_hints").
+		OrderBy("update_at DESC").
+		Limit(1)
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error("Cannot fetch next notification hint",
+			mlog.Err(err),
+		)
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	hint, err := s.notificationHintFromRows(rows)
+	if err != nil {
+		s.logger.Error("Cannot get next notification hint",
+			mlog.Err(err),
+		)
+		return nil, err
+	}
+	if len(hint) == 0 {
+		return nil, nil
+	}
+	return hint[0], nil
+}

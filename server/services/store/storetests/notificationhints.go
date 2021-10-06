@@ -7,12 +7,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/utils"
 )
 
 func StoreTestNotificationHintsStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
@@ -39,7 +39,7 @@ func testUpsertNotificationHint(t *testing.T, store store.Store) {
 	t.Run("create notification hint", func(t *testing.T) {
 		hint := &model.NotificationHint{
 			BlockType: "card",
-			BlockID:   uuid.New().String(),
+			BlockID:   utils.NewID(utils.IDTypeBlock),
 		}
 
 		hintNew, err := store.UpsertNotificationHint(hint)
@@ -51,7 +51,7 @@ func testUpsertNotificationHint(t *testing.T, store store.Store) {
 	t.Run("duplicate notification hint", func(t *testing.T) {
 		hint := &model.NotificationHint{
 			BlockType: "card",
-			BlockID:   uuid.New().String(),
+			BlockID:   utils.NewID(utils.IDTypeBlock),
 		}
 		hintNew, err := store.UpsertNotificationHint(hint)
 		require.NoError(t, err, "upsert notification hint should not error")
@@ -81,7 +81,7 @@ func testUpsertNotificationHint(t *testing.T, store store.Store) {
 		_, err = store.UpsertNotificationHint(hint)
 		assert.ErrorAs(t, err, &model.ErrInvalidNotificationHint{}, "invalid notification hint should error")
 
-		hint.BlockID = uuid.New().String()
+		hint.BlockID = utils.NewID(utils.IDTypeBlock)
 		hintNew, err := store.UpsertNotificationHint(hint)
 		assert.NoError(t, err, "valid notification hint should not error")
 		assert.NoError(t, hintNew.IsValid(), "created notification hint should be valid")
@@ -92,7 +92,7 @@ func testDeleteNotificationHint(t *testing.T, store store.Store) {
 	t.Run("delete notification hint", func(t *testing.T) {
 		hint := &model.NotificationHint{
 			BlockType: "card",
-			BlockID:   uuid.New().String(),
+			BlockID:   utils.NewID(utils.IDTypeBlock),
 		}
 		hintNew, err := store.UpsertNotificationHint(hint)
 		require.NoError(t, err, "create notification hint should not error")
@@ -122,7 +122,7 @@ func testGetNotificationHint(t *testing.T, store store.Store) {
 	t.Run("get notification hint", func(t *testing.T) {
 		hint := &model.NotificationHint{
 			BlockType: "card",
-			BlockID:   uuid.New().String(),
+			BlockID:   utils.NewID(utils.IDTypeBlock),
 		}
 		hintNew, err := store.UpsertNotificationHint(hint)
 		require.NoError(t, err, "create notification hint should not error")

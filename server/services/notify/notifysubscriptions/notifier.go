@@ -4,6 +4,7 @@
 package notifysubscriptions
 
 import (
+	"errors"
 	"sync"
 	"time"
 
@@ -12,6 +13,7 @@ import (
 
 const (
 	defBlockNotificationFreq = time.Minute * 1
+	enqueueNotifyHintTimeout = time.Second * 10
 )
 
 var (
@@ -21,6 +23,8 @@ var (
 		"board": time.Hour * 24,
 		"card":  time.Minute * 1,
 	}
+
+	errEnqueueNotifyHintTimeout = errors.New("enqueue notify hint timed out")
 )
 
 func getBlockUpdateFreq(blockType string) time.Duration {
@@ -81,24 +85,35 @@ func (n *notifier) loop() {
 		select {
 		case hint := <-n.hints:
 			// if this hint suggests a notification is due before the next scheduled notification
-			// then bring forward the nextNotify
+			// then update the nextNotify
 			updateAt := model.GetTimeForMillis(hint.UpdateAt)
 			freq := getBlockUpdateFreq(hint.BlockType)
 			notifyAt := updateAt.Add(freq)
 			if notifyAt.Before(nextNotify) {
 				nextNotify = notifyAt
 			}
+
 		case <-time.After(time.Until(nextNotify)):
 			n.notify()
 			nextNotify = n.calcNextNotify()
+
 		case <-done:
 			return
 		}
 	}
 }
 
-func (n *notifier) calcNextNotify() time.Time {
+func (n *notifier) onNotifyHint(hint *model.NotificationHint) error {
+	select {
+	case n.hints <- hint:
+	case <-time.After(enqueueNotifyHintTimeout):
+		return errEnqueueNotifyHintTimeout
+	}
+	return nil
+}
 
+func (n *notifier) calcNextNotify() time.Time {
+	return time.Now().Add(20 * time.Second)
 }
 
 func (n *notifier) notify() {

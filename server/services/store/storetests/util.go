@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/google/uuid"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/utils"
 	"github.com/stretchr/testify/require"
 )
 
@@ -17,7 +17,7 @@ func createTestUsers(t *testing.T, store store.Store, num int) []*model.User {
 	var users []*model.User
 	for i := 0; i < num; i++ {
 		user := &model.User{
-			ID:       uuid.New().String(),
+			ID:       utils.NewID(utils.IDTypeUser),
 			Username: fmt.Sprintf("mooncake.%d", i),
 			Email:    fmt.Sprintf("mooncake.%d@example.com", i),
 		}
@@ -33,8 +33,8 @@ func createTestBlocks(t *testing.T, store store.Store, container store.Container
 	var blocks []*model.Block
 	for i := 0; i < num; i++ {
 		block := &model.Block{
-			ID:        uuid.New().String(),
-			RootID:    uuid.New().String(),
+			ID:        utils.NewID(utils.IDTypeBlock),
+			RootID:    utils.NewID(utils.IDTypeBlock),
 			Type:      "card",
 			CreatedBy: userID,
 		}

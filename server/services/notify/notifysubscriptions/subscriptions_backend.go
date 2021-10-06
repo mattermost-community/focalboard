@@ -21,6 +21,7 @@ const (
 type Backend struct {
 	store    Store
 	delivery Delivery
+	notifier *notifier
 	logger   *mlog.Logger
 }
 
@@ -28,15 +29,18 @@ func New(store Store, delivery Delivery, logger *mlog.Logger) *Backend {
 	return &Backend{
 		store:    store,
 		delivery: delivery,
+		notifier: newNotifier(store, delivery),
 		logger:   logger,
 	}
 }
 
 func (b *Backend) Start() error {
+	b.notifier.start()
 	return nil
 }
 
 func (b *Backend) ShutDown() error {
+	b.notifier.stop()
 	_ = b.logger.Flush()
 	return nil
 }
@@ -95,5 +99,6 @@ func (b *Backend) notifySubscribers(subs []*model.Subscriber, block *model.Block
 	if err != nil {
 		return fmt.Errorf("cannot upsert notification hint: %w", err)
 	}
-	return nil
+
+	return b.notifier.onNotifyHint(hint)
 }
