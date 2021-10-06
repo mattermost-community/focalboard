@@ -116,7 +116,7 @@ exports[`components/calculations/Options should match snapshot menu open 1`] = `
         <input
           aria-autocomplete="list"
           class="css-wmatm6-dummyInput-DummyInput"
-          id="react-select-2-input"
+          id="react-select-3-input"
           readonly=""
           tabindex="0"
           value=""
@@ -163,14 +163,14 @@ exports[`components/calculations/Options should match snapshot menu open 1`] = `
       >
         <div
           class="CalculationOptions__option css-14xsrqy-option"
-          id="react-select-2-option-0"
+          id="react-select-3-option-0"
           tabindex="-1"
         >
           Count
         </div>
         <div
           class="CalculationOptions__option css-14xsrqy-option"
-          id="react-select-2-option-1"
+          id="react-select-3-option-1"
           tabindex="-1"
         >
           Max
