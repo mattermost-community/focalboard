@@ -5,23 +5,23 @@ import userEvent from '@testing-library/user-event'
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
-
 import {wrapIntl, mockStateStore} from '../../testUtils'
 
+import {TestBlockFactory} from '../../test/testBlockFactory'
+
 import CardDetailContentsMenu from './cardDetailContentsMenu'
+
+//for contentRegistry
+import '../content/textElement'
+import '../content/imageElement'
+import '../content/dividerElement'
+import '../content/checkboxElement'
+
+jest.mock('../../mutator')
 
 const board = TestBlockFactory.createBoard()
 const card = TestBlockFactory.createCard(board)
 describe('components/cardDetail/cardDetailContentsMenu', () => {
-    // const state = {
-    //     users: {
-    //         me: {
-    //             id: 'user-id-1',
-    //             username: 'username_1',
-    //         },
-    //     },
-    // }
     const store = mockStateStore([], {})
     beforeEach(() => {
         jest.clearAllMocks()
@@ -37,19 +37,17 @@ describe('components/cardDetail/cardDetailContentsMenu', () => {
         expect(container).toMatchSnapshot()
     })
 
-    test('return cardDetailContentsMenu and add content', () => {
+    test('return cardDetailContentsMenu and add Text content', async () => {
         const {container} = render(wrapIntl(
             <ReduxProvider store={store}>
                 <CardDetailContentsMenu card={card}/>
             </ReduxProvider>,
         ))
-        screen.debug()
         const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
         userEvent.click(buttonElement)
-        screen.debug()
-        const buttonAdd = screen.getByRole('button', {name: 'Add content'})
-        userEvent.click(buttonAdd)
-        screen.debug()
+        expect(container).toMatchSnapshot()
+        const buttonAddText = screen.getByRole('button', {name: 'text'})
+        userEvent.click(buttonAddText)
         expect(container).toMatchSnapshot()
     })
 })
