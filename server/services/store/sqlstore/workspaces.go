@@ -152,7 +152,6 @@ func (s *SQLStore) getWorkspaceCount(db sq.BaseRunner) (int64, error) {
 	return count, nil
 }
 
-//nolint:unparam
 func (s *SQLStore) getUserWorkspaces(_ sq.BaseRunner, _ string) ([]model.UserWorkspace, error) {
 	return nil, fmt.Errorf("GetUserWorkspaces %w", errUnsupportedOperation)
 }
