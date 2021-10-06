@@ -93,7 +93,9 @@ const App = React.memo((): JSX.Element => {
         dispatch(fetchLanguage())
         dispatch(fetchMe())
         dispatch(fetchClientConfig())
-        history.replace(window.location.pathname.replace((window as any).frontendBaseURL, ''))
+        if (Utils.isFocalboardPlugin()) {
+            history.replace(window.location.pathname.replace((window as any).frontendBaseURL, ''))
+        }
     }, [])
 
     if (!inPluginLegacy) {
