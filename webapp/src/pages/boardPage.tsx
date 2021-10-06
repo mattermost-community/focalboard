@@ -110,7 +110,8 @@ const BoardPage = (props: Props): JSX.Element => {
         }
 
         Utils.log(`attachToBoard: ${boardId}`)
-        if (!viewId && boardViews.length > 0) {
+        const viewIsFromBoard = boardViews.some((view) => view.id === viewId)
+        if ((!viewId || !viewIsFromBoard) && boardViews.length > 0) {
             const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
             history.replace(newPath)
             return
