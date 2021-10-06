@@ -156,7 +156,6 @@ function DateRange(props: Props): JSX.Element {
     if (!buttonText && showEmptyPlaceholder) {
         buttonText = intl.formatMessage({id: 'DateRange.empty', defaultMessage: 'Empty'})
     }
-
     return (
         <div className={`DateRange ${displayValue ? '' : 'empty'} ` + className}>
             <Button
@@ -235,7 +234,7 @@ function DateRange(props: Props): JSX.Element {
                             <DayPicker
                                 onDayClick={handleDayClick}
                                 initialMonth={dateFrom || new Date()}
-                                showOutsideDays={true}
+                                showOutsideDays={false}
                                 locale={locale}
                                 localeUtils={MomentLocaleUtils}
                                 todayButton={intl.formatMessage({id: 'DateRange.today', defaultMessage: 'Today'})}
