@@ -10,8 +10,9 @@ import 'isomorphic-fetch'
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
 
-import {IPropertyTemplate, IPropertyOption} from '../blocks/board'
+import userEvent from '@testing-library/user-event'
 
+import {IPropertyTemplate, IPropertyOption} from '../blocks/board'
 import {TestBlockFactory} from '../test/testBlockFactory'
 
 import PropertyValueElement from './propertyValueElement'
@@ -195,6 +196,62 @@ describe('components/propertyValueElement', () => {
             />,
         )
         const {container} = render(component)
+        expect(container).toMatchSnapshot()
+    })
+
+    test('URL fields should allow cancel', () => {
+        const propertyTemplate: IPropertyTemplate = {
+            id: 'property_url',
+            name: 'Property URL',
+            type: 'url',
+            options: [],
+        }
+
+        const component = wrapProviders(
+            <PropertyValueElement
+                board={board}
+                readOnly={false}
+                card={card}
+                contents={[]}
+                comments={[comments]}
+                propertyTemplate={propertyTemplate}
+                emptyDisplayValue={'empty'}
+            />,
+        )
+
+        const {container} = render(component)
+        const editElement = container.querySelector('.Editable')
+        expect(editElement).toBeDefined()
+
+        userEvent.type(editElement!, 'http://test{esc}')
+        expect(container).toMatchSnapshot()
+    })
+
+    test('Generic fields should allow cancel', () => {
+        const propertyTemplate: IPropertyTemplate = {
+            id: 'text',
+            name: 'Generic Text',
+            type: 'text',
+            options: [],
+        }
+
+        const component = wrapProviders(
+            <PropertyValueElement
+                board={board}
+                readOnly={false}
+                card={card}
+                contents={[]}
+                comments={[comments]}
+                propertyTemplate={propertyTemplate}
+                emptyDisplayValue={'empty'}
+            />,
+        )
+
+        const {container} = render(component)
+        const editElement = container.querySelector('.Editable')
+        expect(editElement).toBeDefined()
+
+        userEvent.type(editElement!, 'http://test{esc}')
         expect(container).toMatchSnapshot()
     })
 })

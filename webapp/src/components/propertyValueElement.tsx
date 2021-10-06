@@ -210,7 +210,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 value={value.toString()}
                 onChange={setValue}
                 onSave={saveTextProperty}
-                onCancel={() => setValue(propertyValue)}
+                onCancel={() => setValue(propertyValue || '')}
                 validator={(newValue) => validateProp(propertyTemplate.type, newValue)}
             />
         )
@@ -263,7 +263,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                     value={value.toString()}
                     onChange={setValue}
                     onSave={saveTextProperty}
-                    onCancel={() => setValue(propertyValue)}
+                    onCancel={() => setValue(propertyValue || '')}
                     validator={(newValue) => validateProp(propertyTemplate.type, newValue)}
                     spellCheck={propertyTemplate.type === 'text'}
                 />
