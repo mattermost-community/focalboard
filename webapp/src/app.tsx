@@ -47,10 +47,11 @@ if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
         }
 
         const pathName = event.data.message?.pathName
-        if (!pathName) {
+        if (!pathName || !pathName.startsWith((window as any).frontendBaseURL)) {
             return
         }
 
+        Utils.log(`Navigating Boards to ${pathName}`)
         history.replace(pathName.replace((window as any).frontendBaseURL, ''))
     })
 }
