@@ -19,12 +19,13 @@ import (
 )
 
 const (
-	ErrorType  = "error"
-	StringType = "string"
-	IntType    = "int"
-	Int32Type  = "int32"
-	Int64Type  = "int64"
-	BoolType   = "bool"
+	WithTransactionComment = "@withTransaction"
+	ErrorType              = "error"
+	StringType             = "string"
+	IntType                = "int"
+	Int32Type              = "int32"
+	Int64Type              = "int64"
+	BoolType               = "bool"
 )
 
 func isError(typeName string) bool {
@@ -68,8 +69,9 @@ type methodParam struct {
 }
 
 type methodData struct {
-	Params  []methodParam
-	Results []string
+	Params          []methodParam
+	Results         []string
+	WithTransaction bool
 }
 
 type storeMetadata struct {
@@ -84,10 +86,19 @@ var blacklistedStoreMethodNames = map[string]bool{
 func extractMethodMetadata(method *ast.Field, src []byte) methodData {
 	params := []methodParam{}
 	results := []string{}
+	withTransaction := false
 	ast.Inspect(method.Type, func(expr ast.Node) bool {
 		//nolint:gocritic
 		switch e := expr.(type) {
 		case *ast.FuncType:
+			if method.Doc != nil {
+				for _, comment := range method.Doc.List {
+					if strings.Contains(comment.Text, WithTransactionComment) {
+						withTransaction = true
+						break
+					}
+				}
+			}
 			if e.Params != nil {
 				for _, param := range e.Params.List {
 					for _, paramName := range param.Names {
@@ -103,7 +114,7 @@ func extractMethodMetadata(method *ast.Field, src []byte) methodData {
 		}
 		return true
 	})
-	return methodData{Params: params, Results: results}
+	return methodData{Params: params, Results: results, WithTransaction: withTransaction}
 }
 
 func extractStoreMetadata() (*storeMetadata, error) {

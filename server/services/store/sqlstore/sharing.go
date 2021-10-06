@@ -1,7 +1,6 @@
 package sqlstore
 
 import (
-	"database/sql"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -10,10 +9,10 @@ import (
 	sq "github.com/Masterminds/squirrel"
 )
 
-func (s *SQLStore) upsertSharing(tx *sql.Tx, _ store.Container, sharing model.Sharing) error {
+func (s *SQLStore) upsertSharing(db sq.BaseRunner, _ store.Container, sharing model.Sharing) error {
 	now := time.Now().Unix()
 
-	query := s.getQueryBuilder(tx).
+	query := s.getQueryBuilder(db).
 		Insert(s.tablePrefix+"sharing").
 		Columns(
 			"id",
@@ -43,8 +42,8 @@ func (s *SQLStore) upsertSharing(tx *sql.Tx, _ store.Container, sharing model.Sh
 	return err
 }
 
-func (s *SQLStore) getSharing(tx *sql.Tx, _ store.Container, rootID string) (*model.Sharing, error) {
-	query := s.getQueryBuilder(tx).
+func (s *SQLStore) getSharing(db sq.BaseRunner, _ store.Container, rootID string) (*model.Sharing, error) {
+	query := s.getQueryBuilder(db).
 		Select(
 			"id",
 			"enabled",

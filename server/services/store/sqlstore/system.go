@@ -1,11 +1,11 @@
 package sqlstore
 
 import (
-	"database/sql"
+	sq "github.com/Masterminds/squirrel"
 )
 
-func (s *SQLStore) getSystemSettings(tx *sql.Tx) (map[string]string, error) {
-	query := s.getQueryBuilder(tx).Select("*").From(s.tablePrefix + "system_settings")
+func (s *SQLStore) getSystemSettings(db sq.BaseRunner) (map[string]string, error) {
+	query := s.getQueryBuilder(db).Select("*").From(s.tablePrefix + "system_settings")
 
 	rows, err := query.Query()
 	if err != nil {
@@ -30,8 +30,8 @@ func (s *SQLStore) getSystemSettings(tx *sql.Tx) (map[string]string, error) {
 	return results, nil
 }
 
-func (s *SQLStore) setSystemSetting(tx *sql.Tx, id, value string) error {
-	query := s.getQueryBuilder(tx).Insert(s.tablePrefix+"system_settings").Columns("id", "value").Values(id, value)
+func (s *SQLStore) setSystemSetting(db sq.BaseRunner, id, value string) error {
+	query := s.getQueryBuilder(db).Insert(s.tablePrefix+"system_settings").Columns("id", "value").Values(id, value)
 
 	if s.dbType == mysqlDBType {
 		query = query.Suffix("ON DUPLICATE KEY UPDATE value = ?", value)
