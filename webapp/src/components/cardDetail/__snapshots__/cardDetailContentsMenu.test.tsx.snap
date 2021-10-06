@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsMenu 1`] = `
+<div>
+  <div
+    class="CardDetailContentsMenu content add-content"
+  >
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper"
+      role="button"
+    >
+      <button
+        class="Button    "
+        type="button"
+      >
+        <span>
+          Add content
+        </span>
+      </button>
+      <div
+        class="Menu noselect top"
+      >
+        <div
+          class="menu-contents"
+        >
+          <div
+            class="menu-options"
+          />
+          <div
+            class="menu-spacer hideOnWidescreen"
+          />
+          <div
+            class="menu-options hideOnWidescreen"
+          >
+            <div
+              aria-label="Cancel"
+              class="MenuOption TextOption menu-option menu-cancel"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsMenu and add content 1`] = `
+<div>
+  <div
+    class="CardDetailContentsMenu content add-content"
+  >
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper"
+      role="button"
+    >
+      <button
+        class="Button    "
+        type="button"
+      >
+        <span>
+          Add content
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+`;
