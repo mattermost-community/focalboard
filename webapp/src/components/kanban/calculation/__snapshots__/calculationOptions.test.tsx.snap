@@ -236,7 +236,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with submenu op
         <input
           aria-autocomplete="list"
           class="css-wmatm6-dummyInput-DummyInput"
-          id="react-select-4-input"
+          id="react-select-2-input"
           readonly=""
           tabindex="0"
           value=""
