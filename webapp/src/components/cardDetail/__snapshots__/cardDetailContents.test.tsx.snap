@@ -623,7 +623,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after on
         </div>
         <div
           class="octo-editor-active Editor"
-          style="visibility: hidden; position: absolute; top: 0px; left: 0px;"
+          style=""
         >
           <div
             id="test-id-wrapper"
