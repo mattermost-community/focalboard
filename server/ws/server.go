@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"net/http"
 	"sync"
-	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -464,7 +464,7 @@ func (ws *Server) getListenersForWorkspace(workspaceID string) []*wsClient {
 
 // BroadcastBlockDelete broadcasts delete messages to clients.
 func (ws *Server) BroadcastBlockDelete(workspaceID, blockID, parentID string) {
-	now := time.Now().Unix()
+	now := utils.GetMillis()
 	block := model.Block{}
 	block.ID = blockID
 	block.ParentID = parentID

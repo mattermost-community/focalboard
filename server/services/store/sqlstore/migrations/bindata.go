@@ -24,6 +24,8 @@
 // migrations_files/000011_match_collation.up.sql
 // migrations_files/000012_match_column_collation.down.sql
 // migrations_files/000012_match_column_collation.up.sql
+// migrations_files/000013_millisecond_timestamps.down.sql
+// migrations_files/000013_millisecond_timestamps.up.sql
 // migrations_files/000013_subscriptions_table.down.sql
 // migrations_files/000013_subscriptions_table.up.sql
 // DO NOT EDIT!
@@ -573,6 +575,46 @@ func _000012_match_column_collationUpSql() (*asset, error) {
 	return a, nil
 }
 
+var __000013_millisecond_timestampsDownSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xe2\x0a\x0d\x70\x71\x0c\x71\x55\xa8\xae\xd6\x2b\x28\x4a\x4d\xcb\xac\xa8\xad\x2d\x2d\x4e\x2d\x2a\x56\x08\x76\x0d\x51\x48\x2e\x4a\x4d\x2c\x49\x8d\x4f\x2c\x51\xb0\x45\xb0\xf5\x0d\x0d\x0c\x0c\x74\x14\x4a\x0b\x52\xe0\x72\x70\x36\x54\x2e\x25\x35\x27\x15\x26\x07\x67\x83\xe5\xb8\x38\xc3\x3d\x5c\x83\x5c\x91\x4c\xb6\x53\x00\x89\xc3\x81\x35\x17\x16\x17\x25\xe5\xe4\x27\x67\x0f\x46\x27\xc5\x67\x64\x16\x97\xe4\x17\x55\x0e\x2a\xa7\x95\xe7\x17\x65\x17\x17\x24\x26\xa7\x42\x42\x0c\xb7\xd5\x30\xe3\x11\x2a\x88\x31\xbe\x38\x23\xb1\x28\x33\x2f\x9d\x36\x66\xa7\x16\x17\x67\xe6\xe7\x51\x12\xd5\x44\x84\x19\x20\x00\x00\xff\xff\x27\x62\xfb\x7c\xf4\x02\x00\x00")
+
+func _000013_millisecond_timestampsDownSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__000013_millisecond_timestampsDownSql,
+		"000013_millisecond_timestamps.down.sql",
+	)
+}
+
+func _000013_millisecond_timestampsDownSql() (*asset, error) {
+	bytes, err := _000013_millisecond_timestampsDownSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "000013_millisecond_timestamps.down.sql", size: 756, mode: os.FileMode(436), modTime: time.Unix(1633610888, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var __000013_millisecond_timestampsUpSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xe2\x0a\x0d\x70\x71\x0c\x71\x55\xa8\xae\xd6\x2b\x28\x4a\x4d\xcb\xac\xa8\xad\x2d\x2d\x4e\x2d\x2a\x56\x08\x76\x0d\x51\x48\x2e\x4a\x4d\x2c\x49\x8d\x4f\x2c\x51\xb0\x45\xb0\xb5\x0c\x0d\x0c\x0c\x74\x14\x4a\x0b\x52\xe0\x72\x70\x36\x54\x2e\x25\x35\x27\x15\x26\x07\x67\x83\xe5\xb8\x38\xc3\x3d\x5c\x83\x5c\x91\x4c\xb6\x51\x00\x89\xc3\x81\x35\x17\x16\x17\x25\xe5\xe4\x27\x67\x0f\x46\x27\xc5\x67\x64\x16\x97\xe4\x17\x55\x0e\x2a\xa7\x95\xe7\x17\x65\x17\x17\x24\x26\xa7\x42\x42\x0c\xb7\xd5\x30\xe3\x11\x2a\x88\x31\xbe\x38\x23\xb1\x28\x33\x2f\x9d\x36\x66\xa7\x16\x17\x67\xe6\xe7\x51\x12\xd5\x44\x84\x19\x20\x00\x00\xff\xff\x35\xca\x68\xeb\xf4\x02\x00\x00")
+
+func _000013_millisecond_timestampsUpSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__000013_millisecond_timestampsUpSql,
+		"000013_millisecond_timestamps.up.sql",
+	)
+}
+
+func _000013_millisecond_timestampsUpSql() (*asset, error) {
+	bytes, err := _000013_millisecond_timestampsUpSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "000013_millisecond_timestamps.up.sql", size: 756, mode: os.FileMode(436), modTime: time.Unix(1633610888, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 var __000013_subscriptions_tableDownSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\x09\xf2\x0f\x50\x08\x71\x74\xf2\x71\x55\xa8\xae\xd6\x2b\x28\x4a\x4d\xcb\xac\xa8\xad\x2d\x2e\x4d\x2a\x4e\x2e\xca\x2c\x28\xc9\xcc\xcf\x2b\xb6\xe6\xc2\xae\x28\x2f\xbf\x24\x33\x2d\x33\x39\x11\xa4\x28\x3e\x23\x33\xaf\xa4\xd8\x9a\x0b\x10\x00\x00\xff\xff\x8c\x8f\xec\x6f\x4f\x00\x00\x00")
 
 func _000013_subscriptions_tableDownSqlBytes() ([]byte, error) {
@@ -689,6 +731,8 @@ var _bindata = map[string]func() (*asset, error){
 	"000011_match_collation.up.sql": _000011_match_collationUpSql,
 	"000012_match_column_collation.down.sql": _000012_match_column_collationDownSql,
 	"000012_match_column_collation.up.sql": _000012_match_column_collationUpSql,
+	"000013_millisecond_timestamps.down.sql": _000013_millisecond_timestampsDownSql,
+	"000013_millisecond_timestamps.up.sql": _000013_millisecond_timestampsUpSql,
 	"000013_subscriptions_table.down.sql": _000013_subscriptions_tableDownSql,
 	"000013_subscriptions_table.up.sql": _000013_subscriptions_tableUpSql,
 }
@@ -757,6 +801,8 @@ var _bintree = &bintree{nil, map[string]*bintree{
 	"000011_match_collation.up.sql": &bintree{_000011_match_collationUpSql, map[string]*bintree{}},
 	"000012_match_column_collation.down.sql": &bintree{_000012_match_column_collationDownSql, map[string]*bintree{}},
 	"000012_match_column_collation.up.sql": &bintree{_000012_match_column_collationUpSql, map[string]*bintree{}},
+	"000013_millisecond_timestamps.down.sql": &bintree{_000013_millisecond_timestampsDownSql, map[string]*bintree{}},
+	"000013_millisecond_timestamps.up.sql": &bintree{_000013_millisecond_timestampsUpSql, map[string]*bintree{}},
 	"000013_subscriptions_table.down.sql": &bintree{_000013_subscriptions_tableDownSql, map[string]*bintree{}},
 	"000013_subscriptions_table.up.sql": &bintree{_000013_subscriptions_tableUpSql, map[string]*bintree{}},
 }}

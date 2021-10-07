@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/utils"
 
 	sq "github.com/Masterminds/squirrel"
 )
@@ -99,7 +99,7 @@ func (s *SQLStore) GetUserByUsername(username string) (*model.User, error) {
 }
 
 func (s *SQLStore) CreateUser(user *model.User) error {
-	now := time.Now().Unix()
+	now := utils.GetMillis()
 
 	propsBytes, err := json.Marshal(user.Props)
 	if err != nil {
@@ -115,7 +115,7 @@ func (s *SQLStore) CreateUser(user *model.User) error {
 }
 
 func (s *SQLStore) UpdateUser(user *model.User) error {
-	now := time.Now().Unix()
+	now := utils.GetMillis()
 
 	propsBytes, err := json.Marshal(user.Props)
 	if err != nil {
@@ -147,7 +147,7 @@ func (s *SQLStore) UpdateUser(user *model.User) error {
 }
 
 func (s *SQLStore) UpdateUserPassword(username, password string) error {
-	now := time.Now().Unix()
+	now := utils.GetMillis()
 
 	query := s.getQueryBuilder().Update(s.tablePrefix+"users").
 		Set("password", password).
@@ -172,7 +172,7 @@ func (s *SQLStore) UpdateUserPassword(username, password string) error {
 }
 
 func (s *SQLStore) UpdateUserPasswordByID(userID, password string) error {
-	now := time.Now().Unix()
+	now := utils.GetMillis()
 
 	query := s.getQueryBuilder().Update(s.tablePrefix+"users").
 		Set("password", password).

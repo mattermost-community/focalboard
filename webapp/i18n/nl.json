@@ -38,6 +38,7 @@
   "DashboardPage.CenterPanel.ChangeChannels": "Gebruik de wisselaar om gemakkelijk van kanaal te veranderen",
   "DashboardPage.CenterPanel.NoWorkspaces": "Sorry, we konden geen kanalen vinden die aan deze term voldoen",
   "DashboardPage.CenterPanel.NoWorkspacesDescription": "Probeer op een andere term te zoeken",
+  "DashboardPage.showEmpty": "Leeg tonen",
   "DashboardPage.title": "Dashboard",
   "Dialog.closeDialog": "Dialoogvenster sluiten",
   "EditableDayPicker.today": "Vandaag",
