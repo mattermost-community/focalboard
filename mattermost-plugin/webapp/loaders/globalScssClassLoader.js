@@ -7,6 +7,7 @@ function blockList(line) {
         line.startsWith('.boards-rhs-icon') ||
         line.startsWith('.focalboard-plugin-root') ||
         line.startsWith('.FocalboardUnfurl');
+}
 
 module.exports = function loader(source) {
     var newSource = [];
