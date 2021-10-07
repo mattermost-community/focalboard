@@ -69,7 +69,6 @@ const Gallery = (props: Props): JSX.Element => {
                         isManualSort={isManualSort}
                     />
                 )
-                return null
             })}
 
             {/* Add New row */}

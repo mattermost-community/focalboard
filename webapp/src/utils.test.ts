@@ -3,7 +3,7 @@
 
 import {createIntl} from 'react-intl'
 
-import {Utils} from './utils'
+import {Utils, IDType} from './utils'
 
 describe('utils', () => {
     describe('assureProtocol', () => {
@@ -20,6 +20,21 @@ describe('utils', () => {
 
         test('should add a https for empty protocol', () => {
             expect(Utils.ensureProtocol('focalboard.com')).toBe('https://focalboard.com')
+        })
+    })
+
+    describe('createGuid', () => {
+        test('should create 27 char random id for workspace', () => {
+            expect(Utils.createGuid(IDType.Workspace)).toMatch(/^w[ybndrfg8ejkmcpqxot1uwisza345h769]{26}$/)
+        })
+        test('should create 27 char random id for board', () => {
+            expect(Utils.createGuid(IDType.Board)).toMatch(/^b[ybndrfg8ejkmcpqxot1uwisza345h769]{26}$/)
+        })
+        test('should create 27 char random id for card', () => {
+            expect(Utils.createGuid(IDType.Card)).toMatch(/^c[ybndrfg8ejkmcpqxot1uwisza345h769]{26}$/)
+        })
+        test('should create 27 char random id', () => {
+            expect(Utils.createGuid(IDType.None)).toMatch(/^7[ybndrfg8ejkmcpqxot1uwisza345h769]{26}$/)
         })
     })
 

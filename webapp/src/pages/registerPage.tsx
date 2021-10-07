@@ -33,7 +33,7 @@ const RegisterPage = React.memo(() => {
         } else if (response.code === 401) {
             setErrorMessage('Invalid registration link, please contact your administrator')
         } else {
-            setErrorMessage(response.json?.error)
+            setErrorMessage(`${response.json?.error}`)
         }
     }
 

@@ -9,12 +9,12 @@ import (
 	"net"
 	"net/http"
 	"strings"
-	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
 	"github.com/mattermost/focalboard/server/services/auth"
+	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -386,7 +386,7 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 				return
 			}
 
-			now := time.Now().Unix()
+			now := utils.GetMillis()
 			session := &model.Session{
 				ID:          SingleUser,
 				Token:       token,
@@ -403,7 +403,7 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 
 		if a.MattermostAuth && r.Header.Get("Mattermost-User-Id") != "" {
 			userID := r.Header.Get("Mattermost-User-Id")
-			now := time.Now().Unix()
+			now := utils.GetMillis()
 			session := &model.Session{
 				ID:          userID,
 				Token:       userID,

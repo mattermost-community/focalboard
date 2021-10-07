@@ -8,7 +8,13 @@
     text-align: center;
 
     > div {
-        max-width: 640px;
+        max-width: 808px;
+        width: 100%;
+        padding: 0;
+
+        @media (min-width: 2000px) {
+            max-width: 1120px;
+        }
     }
 
     .Button {
@@ -17,6 +23,35 @@
 }
 
 .WelcomePage__image {
-    margin: 32px 0;
-    text-align: center;
+    max-width: 100%;
+    width: 808px;
+    display: none;
+
+    &--small {
+        margin: 24px auto 32px;
+        display: block;
+    }
+
+    @media (min-width: 2000px) {
+        width: 1120px;
+
+        &--small {
+            display: none;
+        }
+
+        &--large {
+            margin: 48px auto;
+            display: block;
+        }
+    }
+}
+
+.WelcomePage__subtitle {
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 24px 0 0;
+
+    @media (min-width: 2000px) {
+        font-size: 20px;
+    }
 }

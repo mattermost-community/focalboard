@@ -20,7 +20,7 @@ func (a *App) SaveFile(reader io.Reader, workspaceID, rootID, filename string) (
 		fileExtension = ".jpg"
 	}
 
-	createdFilename := fmt.Sprintf(`%s%s`, utils.CreateGUID(), fileExtension)
+	createdFilename := fmt.Sprintf(`%s%s`, utils.NewID(utils.IDTypeNone), fileExtension)
 	filePath := filepath.Join(workspaceID, rootID, createdFilename)
 
 	_, appErr := a.filesBackend.WriteFile(reader, filePath)

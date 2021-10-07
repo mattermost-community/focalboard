@@ -3,8 +3,9 @@
 import React from 'react'
 
 import {fireEvent, render} from '@testing-library/react'
-import {IntlProvider} from 'react-intl'
 import userEvent from '@testing-library/user-event'
+
+import {wrapIntl} from '../../testUtils'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import {FetchMock} from '../../test/fetchMock'
@@ -18,8 +19,6 @@ global.fetch = FetchMock.fn
 beforeEach(() => {
     FetchMock.fn.mockReset()
 })
-
-const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
 
 describe('components/cardDetail/CardDetailProperties', () => {
     const board = TestBlockFactory.createBoard()

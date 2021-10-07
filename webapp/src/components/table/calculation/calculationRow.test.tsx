@@ -1,9 +1,5 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-
-import {DndProvider} from 'react-dnd'
-import {HTML5Backend} from 'react-dnd-html5-backend'
-import {IntlProvider} from 'react-intl'
 import React from 'react'
 
 import {render} from '@testing-library/react'
@@ -12,6 +8,7 @@ import '@testing-library/jest-dom'
 import {TestBlockFactory} from '../../../test/testBlockFactory'
 import {FetchMock} from '../../../test/fetchMock'
 import 'isomorphic-fetch'
+import {wrapDNDIntl} from '../../../testUtils'
 
 import CalculationRow from './calculationRow'
 
@@ -20,14 +17,6 @@ global.fetch = FetchMock.fn
 beforeEach(() => {
     FetchMock.fn.mockReset()
 })
-
-const wrapProviders = (children: any) => {
-    return (
-        <DndProvider backend={HTML5Backend}>
-            <IntlProvider locale='en'>{children}</IntlProvider>
-        </DndProvider>
-    )
-}
 
 describe('components/table/calculation/CalculationRow', () => {
     const board = TestBlockFactory.createBoard()
@@ -66,7 +55,7 @@ describe('components/table/calculation/CalculationRow', () => {
     test('should render three calculation elements', async () => {
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, card])))
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <CalculationRow
                 board={board}
                 cards={[card, card2]}
@@ -88,7 +77,7 @@ describe('components/table/calculation/CalculationRow', () => {
             property_4: 'countUniqueValue',
         }
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <CalculationRow
                 board={board}
                 cards={[card, card2]}
