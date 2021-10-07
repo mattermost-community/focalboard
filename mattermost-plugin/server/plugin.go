@@ -259,7 +259,7 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 	// If the first parameter in the path is boards,
 	// then we've copied this directly as logged in user of that board
 
-	// If the first paramter in the path is plugins,
+	// If the first parameter in the path is plugins,
 	// then we've copied this from a shared board
 
 	// For card links copied on a non-shared board, the path looks like boards/workspace/workspaceID/boardID/viewID/cardID
