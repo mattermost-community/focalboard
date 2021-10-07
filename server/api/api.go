@@ -483,7 +483,7 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 
 	if session.UserID == SingleUser {
-		now := time.Now().Unix()
+		now := utils.GetMillis()
 		user = &model.User{
 			ID:       SingleUser,
 			Username: SingleUser,
