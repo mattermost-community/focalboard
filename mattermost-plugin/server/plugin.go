@@ -33,7 +33,7 @@ type BoardsEmbed struct {
 	ViewID      string `json:"viewID"`
 	BoardID     string `json:"boardID"`
 	CardID      string `json:"cardID"`
-	ReadToken   string `json:"cardID, omitempty"`
+	ReadToken   string `json:"readToken, omitempty"`
 }
 
 // Plugin implements the interface expected by the Mattermost server to communicate between the server and plugin processes.
@@ -242,7 +242,8 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 		return post, ""
 	}
 
-	pathSplit := strings.Split(u.Path, "/")
+	// Trim away the first / because otherwise after we split the string, the first element in the array is a empty element
+	pathSplit := strings.Split(u.Path[1:], "/")
 	queryParams := u.Query()
 
 	// For card links copied on a non-shared board, the path looks like boards/workspace/workspaceID/boardID/viewID/cardID
@@ -260,14 +261,8 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 	// If the first parameter in the path is boards, we've copied this directly as logged in user of that board
 	// For card links copied on a non-shared board, the path looks like boards/workspace/workspaceID/boardID/viewID/cardID
 	// For card links copied on a shared board, the path looks like plugins/focalboard/workspace/workspaceID/shared/boardID/viewID?r=read_token&c=card_token
-	fmt.Printf("\n\n\n\n\n pathSplit: %+v \n\n\n\n\n\n", pathSplit)
-	fmt.Printf("\n\n\n\n\n pathSplit: %+v \n\n\n\n\n\n", len(pathSplit))
-	fmt.Printf("\n\n\n\n\n pathSplit: %+v \n\n\n\n\n\n", pathSplit)
-
 	// This is a non-shared board card link
 	if len(pathSplit) == 6 && pathSplit[0] == "boards" {
-		fmt.Printf("\n\n\n\n\n 4565465465465464654 \n\n\n\n\n\n")
-
 		workspaceID = pathSplit[2]
 		boardID = pathSplit[3]
 		viewID = pathSplit[4]
@@ -279,14 +274,8 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 		cardID = queryParams.Get("c")
 		readToken = queryParams.Get("r")
 	}
-	fmt.Printf("\n\n\n\n\n workspaceID: %+v \n\n\n\n\n\n", workspaceID)
-	fmt.Printf("\n\n\n\n\n boardID: %+v \n\n\n\n\n\n", boardID)
-	fmt.Printf("\n\n\n\n\n viewID: %+v \n\n\n\n\n\n", viewID)
-	fmt.Printf("\n\n\n\n\n cardID: %+v \n\n\n\n\n\n", cardID)
-	fmt.Printf("\n\n\n\n\n readToken: %+v \n\n\n\n\n\n", readToken)
 
 	if workspaceID != "" && boardID != "" && viewID != "" && cardID != "" {
-		fmt.Printf("\n\n\n\n\n HELLO HERE!!!! ()*())(*)( \n\n\n\n\n\n")
 		b, _ := json.Marshal(BoardsEmbed{
 			WorkspaceID: workspaceID,
 			BoardID:     boardID,

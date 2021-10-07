@@ -1,7 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useEffect} from 'react'
-import ReactMarkdown from 'react-markdown'
+
+import {Utils} from './../../../../../webapp/src/utils'
 
 const Avatar = (window as any).Components.Avatar
 const Timestamp = (window as any).Components.Timestamp
@@ -16,6 +17,10 @@ type Props = {
 }
 
 export const FocalboardUnfurl = (props: Props): JSX.Element => {
+    if (!props.embed || !props.embed.data) {
+        return <></>
+    }
+
     const focalboardInformation = JSON.parse(props.embed.data)
     const workspaceID = focalboardInformation.workspaceID
     const cardID = focalboardInformation.cardID
@@ -97,27 +102,29 @@ export const FocalboardUnfurl = (props: Props): JSX.Element => {
         return <></>
     }
 
-    let remainder = 0
     const propertyKeyArray = Object.keys(card.fields?.properties || {})
     const propertyValueArray = Object.values(card.fields?.properties || {})
     const options = board.fields?.cardProperties
     const propertiesToDisplay = []
 
-    // We will just display the first 3 properties and do a +n for remainder if any remainder
+    // We will just display the first 3 or less select/multi-select properties and do a +n for remainder if any remainder
     if (propertyKeyArray.length > 0) {
-        const numberOfLoops = propertyKeyArray.length > 3 ? 3 : propertyKeyArray.length
-        remainder = propertyKeyArray.length - 3
-
-        for (let i = 0; i < numberOfLoops; i++) {
+        for (let i = 0; i < propertyKeyArray.length || propertiesToDisplay.length === 3; i++) {
             const keyToLookUp = propertyKeyArray[i]
             const correspondingOption = options?.find((option: any) => option.id === keyToLookUp) as any
 
             const valueToLookUp = Array.isArray(propertyValueArray[i]) ? propertyValueArray[i]![0] : propertyValueArray[i] as any
             const optionSelected = correspondingOption.options.find((option: any) => option.id === valueToLookUp)
 
+            if (!optionSelected) {
+                continue
+            }
+
             propertiesToDisplay.push({optionName: correspondingOption.name, optionValue: optionSelected.value, optionValueColour: optionSelected.color})
         }
     }
+    const remainder = propertyKeyArray.length - propertiesToDisplay.length
+    const html: string = Utils.htmlFromMarkdown(content)
 
     return (
         <a
@@ -139,9 +146,9 @@ export const FocalboardUnfurl = (props: Props): JSX.Element => {
             {/* Body of the Card*/}
             {content !== '' &&
                 <div className='body'>
-                    <ReactMarkdown>
-                        {content}
-                    </ReactMarkdown>
+                    <div
+                        dangerouslySetInnerHTML={{__html: html}}
+                    />
                 </div>
             }
 
