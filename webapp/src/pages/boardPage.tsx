@@ -151,6 +151,7 @@ const BoardPage = (props: Props): JSX.Element => {
             const queryString = new URLSearchParams(history.location.search)
             token = token || queryString.get('r') || ''
         }
+
         dispatch(loadAction(match.params.boardId))
 
         if (wsClient.state === 'open') {

@@ -72,7 +72,7 @@ class Archiver {
                         Utils.log(`Import archive, version: ${header.version}, date/time: ${date.toLocaleString()}.`)
                     }
                 } else {
-                    const row = JSON.parse(line) as ArchiveLine<Block>
+                    const row = JSON.parse(line) as ArchiveLine
                     if (!row || !row.type || !row.data) {
                         Utils.logError('importFullArchive ERROR parsing line')
                         return

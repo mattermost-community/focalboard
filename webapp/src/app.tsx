@@ -59,9 +59,9 @@ if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
     })
 }
 
-const browserHistory = {
+const browserHistory: typeof history = {
     ...history,
-    push: (path: string) => {
+    push: (path: string, state?: unknown) => {
         if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
             window.postMessage(
                 {
@@ -73,7 +73,7 @@ const browserHistory = {
                 window.location.origin,
             )
         } else {
-            history.push(path)
+            history.push(path, state)
         }
     },
 }
