@@ -36,10 +36,11 @@ const SidebarBoardItem = React.memo((props: Props) => {
 
     const showBoard = useCallback((boardId) => {
         // if the same board, reuse the match params
-        // otherwise remove viewId, results in first view being selected
-        let params = {...match.params, boardId: boardId || ''}
+        // otherwise remove viewId and cardId, results in first view being selected
+        const params = {...match.params, boardId: boardId || ''}
         if (boardId !== match.params.boardId) {
-            params = {boardId: boardId || ''}
+            params.viewId = undefined
+            params.cardId = undefined
         }
         const newPath = generatePath(match.path, params)
         history.push(newPath)
