@@ -234,12 +234,12 @@ func defaultLoggingConfig() string {
 	}`
 }
 
-func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) *mmModel.Post {
+func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mmModel.Post, string) { //nolint
 	firstLink := getFirstLink(post.Message)
 	u, err := url.Parse(firstLink)
 
 	if err != nil {
-		return post
+		return post, ""
 	}
 
 	// Trim away the first / because otherwise after we split the string, the first element in the array is a empty element
@@ -251,7 +251,7 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) *mmM
 	// For card links copied on a shared board, the path looks like
 	// plugins/focalboard/workspace/workspaceID/shared/boardID/viewID?r=read_token&c=card_token
 	if len(pathSplit) == 0 {
-		return post
+		return post, ""
 	}
 
 	workspaceID := ""
@@ -266,7 +266,7 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) *mmM
 	// For card links copied on a non-shared board, the path looks like boards/workspace/workspaceID/boardID/viewID/cardID
 
 	// For card links copied on a shared board, the path looks like
-	// plugins/focalboard/workspace/workspaceID/shared/boardID/viewID?r=read_token&c=card_token
+	// plugins/focalboard/workspace/workspaceID/shared/boardID/viewID/cardID?r=read_token
 
 	// This is a non-shared board card link
 	if len(pathSplit) == 6 && pathSplit[0] == "boards" {
@@ -274,11 +274,11 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) *mmM
 		boardID = pathSplit[3]
 		viewID = pathSplit[4]
 		cardID = pathSplit[5]
-	} else if len(pathSplit) == 7 && pathSplit[0] == "plugins" { // This is a shared board card link
+	} else if len(pathSplit) == 8 && pathSplit[0] == "plugins" { // This is a shared board card link
 		workspaceID = pathSplit[3]
 		boardID = pathSplit[5]
 		viewID = pathSplit[6]
-		cardID = queryParams.Get("c")
+		cardID = pathSplit[7]
 		readToken = queryParams.Get("r")
 	}
 
@@ -298,7 +298,7 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) *mmM
 		post.Metadata.Embeds = []*mmModel.PostEmbed{BoardsPostEmbed}
 		post.AddProp("boards", string(b))
 	}
-	return post
+	return post, ""
 }
 
 func getFirstLink(str string) string {

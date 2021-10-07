@@ -248,7 +248,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	blockType := query.Get("type")
 	all := query.Get("all")
 	blockID := query.Get("block_id")
-	container, err := a.getContainer(r)
+	container, err := a.getContainerAllowingReadTokenForBlock(r, blockID)
 	if err != nil {
 		a.noContainerErrorResponse(w, r.URL.Path, err)
 		return

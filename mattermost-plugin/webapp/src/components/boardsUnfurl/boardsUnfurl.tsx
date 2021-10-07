@@ -26,6 +26,7 @@ export const FocalboardUnfurl = (props: Props): JSX.Element => {
     const cardID = focalboardInformation.cardID
     const boardID = focalboardInformation.boardID
     const viewID = focalboardInformation.viewID
+    const readToken = focalboardInformation.readToken
     const baseURL = window.location.origin
     const [card, setCard] = useState<{title?: string, type?: string, updateAt?: number, createdBy?: string, fields?: { icon: string, contentOrder: Array<string | string[]>, properties: {key?: string}}}>({})
     const [content, setContent] = useState<string>('')
@@ -37,7 +38,7 @@ export const FocalboardUnfurl = (props: Props): JSX.Element => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch(`${baseURL}/plugins/focalboard/api/v1/workspaces/${workspaceID}/blocks?block_id=${cardID}`, {
+            const response = await fetch(`${baseURL}/plugins/focalboard/api/v1/workspaces/${workspaceID}/blocks?block_id=${cardID}${readToken ? `&read_token=${readToken}` : ''}`, {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
                 },
@@ -57,7 +58,7 @@ export const FocalboardUnfurl = (props: Props): JSX.Element => {
                     contentID = blocks[0].fields?.contentOrder[0][0]
                 }
 
-                const contentResponse = await fetch(`${baseURL}/plugins/focalboard/api/v1/workspaces/${workspaceID}/blocks?block_id=${contentID}`, {
+                const contentResponse = await fetch(`${baseURL}/plugins/focalboard/api/v1/workspaces/${workspaceID}/blocks?block_id=${contentID}${readToken ? `&read_token=${readToken}` : ''}`, {
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',
                     },
@@ -79,7 +80,7 @@ export const FocalboardUnfurl = (props: Props): JSX.Element => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch(`${baseURL}/plugins/focalboard/api/v1/workspaces/${workspaceID}/blocks?block_id=${boardID}`, {
+            const response = await fetch(`${baseURL}/plugins/focalboard/api/v1/workspaces/${workspaceID}/blocks?block_id=${boardID}${readToken ? `&read_token=${readToken}` : ''}`, {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
                 },
@@ -129,7 +130,7 @@ export const FocalboardUnfurl = (props: Props): JSX.Element => {
     return (
         <a
             className='FocalboardUnfurl'
-            href={`${baseURL}/boards/workspace/${workspaceID}/${boardID}/${viewID}/${cardID}`}
+            href={readToken ? `${baseURL}/plugins/focalboard/workspace/${workspaceID}/shared/${boardID}/${viewID}/${cardID}?r=${readToken}` : `${baseURL}/boards/workspace/${workspaceID}/${boardID}/${viewID}/${cardID}`}
             rel='noopener noreferrer'
             target='_blank'
         >
