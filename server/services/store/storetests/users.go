@@ -58,7 +58,7 @@ func testGetWorkspaceUsers(t *testing.T, store store.Store) {
 		defer func() {
 			_ = store.UpdateUser(&model.User{
 				ID:       userID,
-				DeleteAt: time.Now().Unix(),
+				DeleteAt: utils.GetMillis(),
 			})
 		}()
 
