@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}notification_hints (
 	block_type VARCHAR(10),
 	block_id VARCHAR(36),
 	create_at BIGINT,
-	update_at BIGINT,
+	notify_at BIGINT,
 	PRIMARY KEY (block_id)
 ) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};
 

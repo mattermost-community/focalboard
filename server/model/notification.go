@@ -16,9 +16,9 @@ type NotificationHint struct {
 	// required: true
 	CreateAt int64 `json:"create_at"`
 
-	// UpdateAt is the timestamp this notification hint was last updated
+	// NotifyAt is the timestamp this notification should be scheduled
 	// required: true
-	UpdateAt int64 `json:"udpate_at"`
+	NotifyAt int64 `json:"notify_at"`
 }
 
 func (s *NotificationHint) IsValid() error {
@@ -39,7 +39,7 @@ func (s *NotificationHint) Copy() *NotificationHint {
 		BlockType: s.BlockType,
 		BlockID:   s.BlockID,
 		CreateAt:  s.CreateAt,
-		UpdateAt:  s.UpdateAt,
+		NotifyAt:  s.NotifyAt,
 	}
 }
 

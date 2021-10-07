@@ -5,9 +5,11 @@ package sqlstore
 
 import (
 	"database/sql"
+	"time"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -17,7 +19,7 @@ func notificationHintFields() []string {
 		"block_type",
 		"block_id",
 		"create_at",
-		"update_at",
+		"notify_at",
 	}
 }
 
@@ -26,7 +28,7 @@ func valuesForNotificationHint(hint *model.NotificationHint) []interface{} {
 		hint.BlockType,
 		hint.BlockID,
 		hint.CreateAt,
-		hint.UpdateAt,
+		hint.NotifyAt,
 	}
 }
 
@@ -39,7 +41,7 @@ func (s *SQLStore) notificationHintFromRows(rows *sql.Rows) ([]*model.Notificati
 			&hint.BlockType,
 			&hint.BlockID,
 			&hint.CreateAt,
-			&hint.UpdateAt,
+			&hint.NotifyAt,
 		)
 		if err != nil {
 			return nil, err
@@ -49,9 +51,9 @@ func (s *SQLStore) notificationHintFromRows(rows *sql.Rows) ([]*model.Notificati
 	return hints, nil
 }
 
-// UpsertNotificationHint creates or updates a notification hint. When updating the `update_at` is set
-// to the current time.
-func (s *SQLStore) UpsertNotificationHint(hint *model.NotificationHint) (*model.NotificationHint, error) {
+// UpsertNotificationHint creates or updates a notification hint. When updating the `notify_at` is set
+// to the current time plus `notificationFreq`.
+func (s *SQLStore) UpsertNotificationHint(hint *model.NotificationHint, notificationFreq time.Duration) (*model.NotificationHint, error) {
 	if err := hint.IsValid(); err != nil {
 		return nil, err
 	}
@@ -62,12 +64,13 @@ func (s *SQLStore) UpsertNotificationHint(hint *model.NotificationHint) (*model.
 	}
 
 	now := model.GetMillis()
+	notifyAt := utils.GetMillisForTime(time.Now().Add(notificationFreq))
 
 	if hintRet == nil {
 		// insert
 		hintRet = hint.Copy()
 		hintRet.CreateAt = now
-		hintRet.UpdateAt = now
+		hintRet.NotifyAt = notifyAt
 
 		query := s.getQueryBuilder().Insert(s.tablePrefix + "notification_hints").
 			Columns(notificationHintFields()...).
@@ -75,10 +78,10 @@ func (s *SQLStore) UpsertNotificationHint(hint *model.NotificationHint) (*model.
 		_, err = query.Exec()
 	} else {
 		// update
-		hintRet.UpdateAt = now
+		hintRet.NotifyAt = notifyAt
 
 		query := s.getQueryBuilder().Update(s.tablePrefix+"notification_hints").
-			Set("update_at", now).
+			Set("notify_at", now).
 			Where(sq.Eq{"block_id": hintRet.BlockID})
 		_, err = query.Exec()
 	}
@@ -134,12 +137,12 @@ func (s *SQLStore) GetNotificationHint(blockID string) (*model.NotificationHint,
 	return hint[0], nil
 }
 
-// GetNextNotificationHint fetches the next scheduled notification hint .
+// GetNextNotificationHint fetches the next scheduled notification hint.
 func (s *SQLStore) GetNextNotificationHint() (*model.NotificationHint, error) {
 	query := s.getQueryBuilder().
 		Select(notificationHintFields()...).
 		From(s.tablePrefix + "notification_hints").
-		OrderBy("update_at DESC").
+		OrderBy("notify_at").
 		Limit(1)
 
 	rows, err := query.Query()

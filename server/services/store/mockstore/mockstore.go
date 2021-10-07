@@ -6,6 +6,7 @@ package mockstore
 
 import (
 	reflect "reflect"
+	time "time"
 
 	gomock "github.com/golang/mock/gomock"
 	model "github.com/mattermost/focalboard/server/model"
@@ -266,6 +267,21 @@ func (m *MockStore) GetBlocksWithType(arg0 store.Container, arg1 string) ([]mode
 func (mr *MockStoreMockRecorder) GetBlocksWithType(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlocksWithType", reflect.TypeOf((*MockStore)(nil).GetBlocksWithType), arg0, arg1)
+}
+
+// GetNextNotificationHint mocks base method.
+func (m *MockStore) GetNextNotificationHint() (*model.NotificationHint, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetNextNotificationHint")
+	ret0, _ := ret[0].(*model.NotificationHint)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetNextNotificationHint indicates an expected call of GetNextNotificationHint.
+func (mr *MockStoreMockRecorder) GetNextNotificationHint() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNextNotificationHint", reflect.TypeOf((*MockStore)(nil).GetNextNotificationHint))
 }
 
 // GetNotificationHint mocks base method.
@@ -710,18 +726,18 @@ func (mr *MockStoreMockRecorder) UpdateUserPasswordByID(arg0, arg1 interface{}) 
 }
 
 // UpsertNotificationHint mocks base method.
-func (m *MockStore) UpsertNotificationHint(arg0 *model.NotificationHint) (*model.NotificationHint, error) {
+func (m *MockStore) UpsertNotificationHint(arg0 *model.NotificationHint, arg1 time.Duration) (*model.NotificationHint, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpsertNotificationHint", arg0)
+	ret := m.ctrl.Call(m, "UpsertNotificationHint", arg0, arg1)
 	ret0, _ := ret[0].(*model.NotificationHint)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // UpsertNotificationHint indicates an expected call of UpsertNotificationHint.
-func (mr *MockStoreMockRecorder) UpsertNotificationHint(arg0 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) UpsertNotificationHint(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertNotificationHint", reflect.TypeOf((*MockStore)(nil).UpsertNotificationHint), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertNotificationHint", reflect.TypeOf((*MockStore)(nil).UpsertNotificationHint), arg0, arg1)
 }
 
 // UpsertSharing mocks base method.

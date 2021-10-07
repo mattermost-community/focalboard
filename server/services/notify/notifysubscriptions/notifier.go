@@ -86,7 +86,7 @@ func (n *notifier) loop() {
 		case hint := <-n.hints:
 			// if this hint suggests a notification is due before the next scheduled notification
 			// then update the nextNotify
-			updateAt := model.GetTimeForMillis(hint.UpdateAt)
+			updateAt := model.GetTimeForMillis(hint.NotifyAt)
 			freq := getBlockUpdateFreq(hint.BlockType)
 			notifyAt := updateAt.Add(freq)
 			if notifyAt.Before(nextNotify) {

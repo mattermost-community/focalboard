@@ -24,8 +24,8 @@
 // migrations_files/000011_match_collation.up.sql
 // migrations_files/000012_match_column_collation.down.sql
 // migrations_files/000012_match_column_collation.up.sql
-// migrations_files/000012_subscriptions_table.down.sql
-// migrations_files/000012_subscriptions_table.up.sql
+// migrations_files/000013_subscriptions_table.down.sql
+// migrations_files/000013_subscriptions_table.up.sql
 // DO NOT EDIT!
 
 package migrations
@@ -548,7 +548,7 @@ func _000012_match_column_collationDownSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000012_match_column_collation.down.sql", size: 78, mode: os.FileMode(436), modTime: time.Unix(1632841616, 0)}
+	info := bindataFileInfo{name: "000012_match_column_collation.down.sql", size: 78, mode: os.FileMode(436), modTime: time.Unix(1633447591, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -568,47 +568,47 @@ func _000012_match_column_collationUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000012_match_column_collation.up.sql", size: 2610, mode: os.FileMode(436), modTime: time.Unix(1632841616, 0)}
+	info := bindataFileInfo{name: "000012_match_column_collation.up.sql", size: 2610, mode: os.FileMode(436), modTime: time.Unix(1633447591, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
 
-var __000012_subscriptions_tableDownSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\x09\xf2\x0f\x50\x08\x71\x74\xf2\x71\x55\xa8\xae\xd6\x2b\x28\x4a\x4d\xcb\xac\xa8\xad\x2d\x2e\x4d\x2a\x4e\x2e\xca\x2c\x28\xc9\xcc\xcf\x2b\xb6\xe6\xc2\xae\x28\x2f\xbf\x24\x33\x2d\x33\x39\x11\xa4\x28\x3e\x23\x33\xaf\xa4\xd8\x9a\x0b\x10\x00\x00\xff\xff\x8c\x8f\xec\x6f\x4f\x00\x00\x00")
+var __000013_subscriptions_tableDownSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\x09\xf2\x0f\x50\x08\x71\x74\xf2\x71\x55\xa8\xae\xd6\x2b\x28\x4a\x4d\xcb\xac\xa8\xad\x2d\x2e\x4d\x2a\x4e\x2e\xca\x2c\x28\xc9\xcc\xcf\x2b\xb6\xe6\xc2\xae\x28\x2f\xbf\x24\x33\x2d\x33\x39\x11\xa4\x28\x3e\x23\x33\xaf\xa4\xd8\x9a\x0b\x10\x00\x00\xff\xff\x8c\x8f\xec\x6f\x4f\x00\x00\x00")
 
-func _000012_subscriptions_tableDownSqlBytes() ([]byte, error) {
+func _000013_subscriptions_tableDownSqlBytes() ([]byte, error) {
 	return bindataRead(
-		__000012_subscriptions_tableDownSql,
-		"000012_subscriptions_table.down.sql",
+		__000013_subscriptions_tableDownSql,
+		"000013_subscriptions_table.down.sql",
 	)
 }
 
-func _000012_subscriptions_tableDownSql() (*asset, error) {
-	bytes, err := _000012_subscriptions_tableDownSqlBytes()
+func _000013_subscriptions_tableDownSql() (*asset, error) {
+	bytes, err := _000013_subscriptions_tableDownSqlBytes()
 	if err != nil {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000012_subscriptions_table.down.sql", size: 79, mode: os.FileMode(436), modTime: time.Unix(1632602876, 0)}
+	info := bindataFileInfo{name: "000013_subscriptions_table.down.sql", size: 79, mode: os.FileMode(436), modTime: time.Unix(1633558407, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
 
-var __000012_subscriptions_tableUpSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x9c\x90\x51\x4b\xc3\x30\x14\x85\x9f\x97\x5f\x71\x1f\x5b\x28\x43\x51\x44\xf0\x29\xab\x99\x06\xe7\x94\x34\x8a\x7b\x2a\x6d\x73\x8b\xc1\xae\xad\x4d\x0a\x8e\x90\xff\x2e\x45\x27\x6e\xf6\x41\xfa\xfa\x1d\xce\xbd\xe7\x9c\x58\x30\x2a\x19\x48\xba\x58\x31\xe0\x4b\x58\x3f\x48\x60\x2f\x3c\x91\x09\x38\x37\x6f\x3b\x2c\xf5\x87\xf7\xa6\xcf\x4d\xd1\xe9\xd6\xea\xa6\x36\x10\x90\x59\x5e\x35\xc5\x5b\x6a\x77\x2d\xc2\x33\x15\xf1\x2d\x15\xc1\xe9\x49\x18\xed\x05\xad\x7e\xf0\xd9\xc5\x80\xbf\x0f\xe4\xd8\x8d\x99\x7e\xa9\x7f\x9c\x75\x63\x75\xa9\x51\xa5\x99\x85\x05\xbf\xe1\x6b\x19\x91\x59\xd1\x61\x66\xf1\x00\x29\xac\xf0\x08\x3d\x0a\x7e\x4f\xc5\x06\xee\xd8\x06\x82\x7d\xb0\x08\x0e\xbe\x85\x24\x04\xe7\x74\x09\xf3\xed\xce\xbc\x57\xde\x5f\xb3\x25\x7d\x5a\x49\x18\x22\xd0\x58\x32\x01\x09\x93\xd0\xdb\xf2\x72\x9b\x9f\x3b\x87\xb5\xf2\xfe\x8a\x90\xff\xed\xf6\x15\xbe\xc8\x86\xdd\xd2\x57\x5d\xdb\x49\xe3\x8d\xb4\xed\x5b\x75\x8c\x46\xdb\x4e\xad\xf7\x19\x00\x00\xff\xff\xe2\x09\x51\x40\x17\x02\x00\x00")
+var __000013_subscriptions_tableUpSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x9c\x90\x4f\x4b\xc3\x40\x10\xc5\xcf\xdd\x4f\x31\xc7\x04\x42\x51\x14\x11\x3c\x6d\xe3\x56\x17\x6b\x95\xcd\x2a\xf6\x14\xf2\x67\x82\x83\x69\x12\x93\x2d\x18\x96\xfd\xee\x12\xb5\x62\xb5\x60\xc9\xf5\x37\xbc\x37\xef\xbd\x50\x09\xae\x05\x68\x3e\x5b\x08\x90\x73\x58\xde\x69\x10\x4f\x32\xd2\x11\x58\x3b\x6d\x5a\x2c\xe8\xcd\xb9\x6e\x93\x76\x59\x4b\x8d\xa1\xba\xea\xc0\x63\x93\xb4\xac\xb3\x97\xd8\xf4\x0d\xc2\x23\x57\xe1\x35\x57\xde\xf1\x91\x1f\x6c\x0f\x94\x7f\xe3\x93\xb3\x01\x7f\x19\xa4\xd8\xee\x13\xfd\xb8\xfe\x51\x56\xb5\xa1\x82\x30\x8f\x13\x03\x33\x79\x25\x97\x3a\x60\x93\xac\xc5\xc4\xe0\x0e\xca\xb1\xc4\x5f\xe8\x5e\xc9\x5b\xae\x56\x70\x23\x56\xe0\x6d\x83\x05\xb0\xf3\xcd\x67\x3e\x58\x4b\x05\x4c\xd7\x7d\xf7\x5a\x3a\x77\x29\xe6\xfc\x61\xa1\x61\x88\xc0\x43\x2d\x14\x44\x42\xc3\xc6\x14\xe7\xeb\xf4\xd4\x5a\xac\x72\xe7\x2e\x18\x3b\x6c\xb7\xcf\xf0\x59\x32\xec\x16\x3f\x53\x65\x46\x8d\xb7\xa7\xed\x87\x71\xff\x7f\xdb\xb1\xf5\xde\x03\x00\x00\xff\xff\xb1\xb7\xf3\xc8\x17\x02\x00\x00")
 
-func _000012_subscriptions_tableUpSqlBytes() ([]byte, error) {
+func _000013_subscriptions_tableUpSqlBytes() ([]byte, error) {
 	return bindataRead(
-		__000012_subscriptions_tableUpSql,
-		"000012_subscriptions_table.up.sql",
+		__000013_subscriptions_tableUpSql,
+		"000013_subscriptions_table.up.sql",
 	)
 }
 
-func _000012_subscriptions_tableUpSql() (*asset, error) {
-	bytes, err := _000012_subscriptions_tableUpSqlBytes()
+func _000013_subscriptions_tableUpSql() (*asset, error) {
+	bytes, err := _000013_subscriptions_tableUpSqlBytes()
 	if err != nil {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000012_subscriptions_table.up.sql", size: 535, mode: os.FileMode(436), modTime: time.Unix(1632602860, 0)}
+	info := bindataFileInfo{name: "000013_subscriptions_table.up.sql", size: 535, mode: os.FileMode(436), modTime: time.Unix(1633558419, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -689,8 +689,8 @@ var _bindata = map[string]func() (*asset, error){
 	"000011_match_collation.up.sql": _000011_match_collationUpSql,
 	"000012_match_column_collation.down.sql": _000012_match_column_collationDownSql,
 	"000012_match_column_collation.up.sql": _000012_match_column_collationUpSql,
-	"000012_subscriptions_table.down.sql": _000012_subscriptions_tableDownSql,
-	"000012_subscriptions_table.up.sql": _000012_subscriptions_tableUpSql,
+	"000013_subscriptions_table.down.sql": _000013_subscriptions_tableDownSql,
+	"000013_subscriptions_table.up.sql": _000013_subscriptions_tableUpSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -757,8 +757,8 @@ var _bintree = &bintree{nil, map[string]*bintree{
 	"000011_match_collation.up.sql": &bintree{_000011_match_collationUpSql, map[string]*bintree{}},
 	"000012_match_column_collation.down.sql": &bintree{_000012_match_column_collationDownSql, map[string]*bintree{}},
 	"000012_match_column_collation.up.sql": &bintree{_000012_match_column_collationUpSql, map[string]*bintree{}},
-	"000012_subscriptions_table.down.sql": &bintree{_000012_subscriptions_tableDownSql, map[string]*bintree{}},
-	"000012_subscriptions_table.up.sql": &bintree{_000012_subscriptions_tableUpSql, map[string]*bintree{}},
+	"000013_subscriptions_table.down.sql": &bintree{_000013_subscriptions_tableDownSql, map[string]*bintree{}},
+	"000013_subscriptions_table.up.sql": &bintree{_000013_subscriptions_tableUpSql, map[string]*bintree{}},
 }}
 
 // RestoreAsset restores an asset under the given directory

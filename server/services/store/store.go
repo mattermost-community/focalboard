@@ -1,7 +1,11 @@
 //go:generate mockgen --build_flags=--mod=mod -destination=mockstore/mockstore.go -package mockstore . Store
 package store
 
-import "github.com/mattermost/focalboard/server/model"
+import (
+	"time"
+
+	"github.com/mattermost/focalboard/server/model"
+)
 
 // Conainer represents a container in a store
 // Using a struct to make extending this easier in the future.
@@ -66,7 +70,8 @@ type Store interface {
 	GetSubscribersForBlock(blockID string) ([]*model.Subscriber, error)
 	GetSubscribersCountForBlock(blockID string) (int, error)
 
-	UpsertNotificationHint(hint *model.NotificationHint) (*model.NotificationHint, error)
+	UpsertNotificationHint(hint *model.NotificationHint, notificationFreq time.Duration) (*model.NotificationHint, error)
 	DeleteNotificationHint(blockID string) error
 	GetNotificationHint(blockID string) (*model.NotificationHint, error)
+	GetNextNotificationHint() (*model.NotificationHint, error)
 }
