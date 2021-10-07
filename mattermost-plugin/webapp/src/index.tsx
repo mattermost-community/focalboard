@@ -3,7 +3,6 @@
 import React, {useEffect} from 'react'
 import {Store, Action} from 'redux'
 import {Provider as ReduxProvider} from 'react-redux'
-import {useHistory} from 'mm-react-router-dom'
 
 import {rudderAnalytics, RudderTelemetryHandler} from 'mattermost-redux/client/rudder'
 
@@ -20,7 +19,7 @@ import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHead
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
 import {setMattermostTheme} from '../../../webapp/src/theme'
 
-import TelemetryClient from '../../../webapp/src/telemetry/telemetryClient'
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
 
 import '../../../webapp/src/styles/focalboard-variables.scss'
 import '../../../webapp/src/styles/main.scss'
@@ -28,7 +27,7 @@ import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
 
 import {FocalboardUnfurl} from './components/boardsUnfurl/boardsUnfurl'
-import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK} from './../../../webapp/src/wsclient'
+import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK, ACTION_UPDATE_CLIENT_CONFIG} from './../../../webapp/src/wsclient'
 
 import manifest from './manifest'
 import ErrorBoundary from './error_boundary'
@@ -70,6 +69,7 @@ const MainApp = (props: Props) => {
 
     useEffect(() => {
         document.body.classList.add('focalboard-body')
+        document.body.classList.add('app__body')
         const root = document.getElementById('root')
         if (root) {
             root.classList.add('focalboard-plugin-root')
@@ -77,6 +77,7 @@ const MainApp = (props: Props) => {
 
         return () => {
             document.body.classList.remove('focalboard-body')
+            document.body.classList.remove('app__body')
             if (root) {
                 root.classList.remove('focalboard-plugin-root')
             }
@@ -138,30 +139,11 @@ export default class Plugin {
             windowAny.frontendBaseURL = subpath + '/boards'
             const goToFocalboardWorkspace = () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
-                window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`)
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelHeader, {workspaceID: currentChannel})
+                window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`, '_blank', 'noopener')
             }
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Boards')
-
-            this.registry.registerCustomRoute('go-to-current-workspace', () => {
-                const history = useHistory()
-                useEffect(() => {
-                    const currentChannel = mmStore.getState().entities.channels.currentChannelId
-                    if (currentChannel) {
-                        history.replace(`/boards/workspace/${currentChannel}`)
-                        return
-                    }
-                    const currentUserId = mmStore.getState().entities.users.currentUserId
-                    const lastChannelId = localStorage.getItem('focalboardLastViewedChannel:' + currentUserId)
-                    if (lastChannelId) {
-                        history.replace(`/boards/workspace/${lastChannelId}`)
-                        return
-                    }
-                    history.goBack()
-                }, [])
-                return <></>
-            })
-            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/plug/focalboard/go-to-current-workspace', MainApp, HeaderComponent)
-            this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', FocalboardUnfurl, false)
+            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/welcome', MainApp, HeaderComponent)
         } else {
             windowAny.frontendBaseURL = subpath + '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
@@ -199,6 +181,7 @@ export default class Plugin {
 
         // register websocket handlers
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BLOCK}`, (e: any) => wsClient.updateBlockHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
     }
 
     uninitialize(): void {

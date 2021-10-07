@@ -1,17 +1,11 @@
-.channel-header__icon .LogoIcon {
-    height: 24px;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
+.boards-rhs-icon {
+    font-size: 20px;
 }
 
 .focalboard-body .feature-global-header>header {
     z-index: 1000;
 
     .Menu {
-        position: unset;
-        min-width: unset;
-
         a, button {
             color: inherit;
 

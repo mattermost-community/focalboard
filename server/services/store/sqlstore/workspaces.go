@@ -51,7 +51,7 @@ func (s *SQLStore) UpsertWorkspaceSignupToken(workspace model.Workspace) error {
 
 func (s *SQLStore) UpsertWorkspaceSettings(workspace model.Workspace) error {
 	now := time.Now().Unix()
-	signupToken := utils.CreateGUID()
+	signupToken := utils.NewID(utils.IDTypeToken)
 
 	settingsJSON, err := json.Marshal(workspace.Settings)
 	if err != nil {

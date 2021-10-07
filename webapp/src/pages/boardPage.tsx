@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react'
 import {batch} from 'react-redux'
 import {FormattedMessage, useIntl} from 'react-intl'
-import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
+import {generatePath, Redirect, useHistory, useRouteMatch} from 'react-router-dom'
 import {useHotkeys} from 'react-hotkeys-hook'
 
 import {Block} from '../blocks/block'
@@ -28,13 +28,16 @@ import {initialLoad, initialReadOnlyLoad} from '../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 import {UserSettings} from '../userSettings'
 
+import IconButton from '../widgets/buttons/iconButton'
+import CloseIcon from '../widgets/icons/close'
+
 type Props = {
     readonly?: boolean
 }
 
 const websocketTimeoutForBanner = 5000
 
-const BoardPage = (props: Props) => {
+const BoardPage = (props: Props): JSX.Element => {
     const intl = useIntl()
     const board = useAppSelector(getCurrentBoard)
     const activeView = useAppSelector(getCurrentView)
@@ -44,10 +47,15 @@ const BoardPage = (props: Props) => {
     const history = useHistory()
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, workspaceId?: string}>()
     const [websocketClosed, setWebsocketClosed] = useState(false)
+    const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
+
+    let workspaceId = match.params.workspaceId || UserSettings.lastWorkspaceId || '0'
 
     // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {
-        octoClient.workspaceId = match.params.workspaceId || '0'
+        workspaceId = match.params.workspaceId || workspaceId
+        UserSettings.lastWorkspaceId = workspaceId
+        octoClient.workspaceId = workspaceId
     }, [match.params.workspaceId])
 
     // Backward compatibility: This can be removed in the future, this is for
@@ -83,7 +91,6 @@ const BoardPage = (props: Props) => {
         }
 
         // Backward compatibility end
-
         const boardId = match.params.boardId
         const viewId = match.params.viewId
 
@@ -103,7 +110,8 @@ const BoardPage = (props: Props) => {
         }
 
         Utils.log(`attachToBoard: ${boardId}`)
-        if (!viewId && boardViews.length > 0) {
+        const viewIsFromBoard = boardViews.some((view) => view.id === viewId)
+        if ((!viewId || !viewIsFromBoard) && boardViews.length > 0) {
             const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
             history.replace(newPath)
             return
@@ -111,6 +119,8 @@ const BoardPage = (props: Props) => {
 
         UserSettings.lastBoardId = boardId || ''
         UserSettings.lastViewId = viewId || ''
+        UserSettings.lastWorkspaceId = workspaceId
+
         dispatch(setCurrentBoard(boardId || ''))
         dispatch(setCurrentView(viewId || ''))
     }, [match.params.boardId, match.params.viewId, boardViews])
@@ -126,6 +136,8 @@ const BoardPage = (props: Props) => {
                 title += ` | ${activeView.title}`
             }
             document.title = title
+        } else if (Utils.isFocalboardPlugin()) {
+            document.title = 'Boards - Mattermost'
         } else {
             document.title = 'Focalboard'
         }
@@ -147,12 +159,15 @@ const BoardPage = (props: Props) => {
         }
 
         const incrementalUpdate = (_: WSClient, blocks: Block[]) => {
+            // only takes into account the blocks that belong to the workspace
+            const workspaceBlocks = blocks.filter((b: Block) => b.workspaceId === '0' || b.workspaceId === workspaceId)
+
             batch(() => {
-                dispatch(updateBoards(blocks.filter((b: Block) => b.type === 'board' || b.deleteAt !== 0) as Board[]))
-                dispatch(updateViews(blocks.filter((b: Block) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
-                dispatch(updateCards(blocks.filter((b: Block) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
-                dispatch(updateComments(blocks.filter((b: Block) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
-                dispatch(updateContents(blocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
+                dispatch(updateBoards(workspaceBlocks.filter((b: Block) => b.type === 'board' || b.deleteAt !== 0) as Board[]))
+                dispatch(updateViews(workspaceBlocks.filter((b: Block) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
+                dispatch(updateCards(workspaceBlocks.filter((b: Block) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
+                dispatch(updateComments(workspaceBlocks.filter((b: Block) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
+                dispatch(updateContents(workspaceBlocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
             })
         }
 
@@ -223,6 +238,13 @@ const BoardPage = (props: Props) => {
         }
     })
 
+    // this is needed to redirect to dashboard
+    // when opening Focalboard for the first time
+    const shouldGoToDashboard = Utils.isFocalboardPlugin() && workspaceId === '0' && !match.params.boardId && !match.params.viewId
+    if (shouldGoToDashboard) {
+        return (<Redirect to={'/dashboard'}/>)
+    }
+
     return (
         <div className='BoardPage'>
             {websocketClosed &&
@@ -238,6 +260,26 @@ const BoardPage = (props: Props) => {
                         />
                     </a>
                 </div>}
+
+            {!mobileWarningClosed &&
+                <div className='mobileWarning'>
+                    <div>
+                        <FormattedMessage
+                            id='Error.mobileweb'
+                            defaultMessage='Mobile web support is currently in early beta. Not all functionality may be present.'
+                        />
+                    </div>
+                    <IconButton
+                        onClick={() => {
+                            UserSettings.mobileWarningClosed = true
+                            setMobileWarningClosed(true)
+                        }}
+                        icon={<CloseIcon/>}
+                        title='Close'
+                        className='margin-right'
+                    />
+                </div>}
+
             {props.readonly && board === undefined &&
                 <div className='error'>
                     {intl.formatMessage({id: 'BoardPage.syncFailed', defaultMessage: 'Board may be deleted or access revoked.'})}

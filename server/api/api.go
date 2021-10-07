@@ -174,7 +174,9 @@ func (a *API) getContainerAllowingReadTokenForBlock(r *http.Request, blockID str
 		}
 
 		// No session, but has valid read token (read-only mode)
-		if len(blockID) > 0 && a.hasValidReadTokenForBlock(r, container, blockID) {
+		if len(blockID) > 0 &&
+			a.hasValidReadTokenForBlock(r, container, blockID) &&
+			a.app.GetClientConfig().EnablePublicSharedBoards {
 			return &container, nil
 		}
 
@@ -1180,7 +1182,7 @@ func (a *API) handlePostWorkspaceRegenerateSignupToken(w http.ResponseWriter, r 
 	auditRec := a.makeAuditRecord(r, "regenerateSignupToken", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 
-	workspace.SignupToken = utils.CreateGUID()
+	workspace.SignupToken = utils.NewID(utils.IDTypeToken)
 
 	err = a.app.UpsertWorkspaceSignupToken(*workspace)
 	if err != nil {

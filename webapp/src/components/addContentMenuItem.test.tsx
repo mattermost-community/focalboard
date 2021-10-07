@@ -1,11 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {ReactElement} from 'react'
+import React from 'react'
 import {render, screen, waitFor} from '@testing-library/react'
 
 import '@testing-library/jest-dom'
-import {IntlProvider} from 'react-intl'
 
 import {mocked} from 'ts-jest/utils'
 
@@ -15,6 +14,8 @@ import mutator from '../mutator'
 
 import {TestBlockFactory} from '../test/testBlockFactory'
 
+import {wrapIntl} from '../testUtils'
+
 import AddContentMenuItem from './addContentMenuItem'
 
 import './content/textElement'
@@ -22,9 +23,6 @@ import './content/imageElement'
 import './content/dividerElement'
 import './content/checkboxElement'
 
-const wrapIntl = (children: ReactElement) => (
-    <IntlProvider locale='en'>{children}</IntlProvider>
-)
 const board = TestBlockFactory.createBoard()
 const card = TestBlockFactory.createCard(board)
 

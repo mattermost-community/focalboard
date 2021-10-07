@@ -7,6 +7,7 @@ import {OctoUtils} from './octoUtils'
 import {IUser, UserWorkspace} from './user'
 import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
+import {UserSettings} from './userSettings'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -40,17 +41,11 @@ class OctoClient {
         localStorage.setItem('focalboardSessionId', value)
     }
 
-    private readToken(): string {
-        const queryString = new URLSearchParams(window.location.search)
-        const readToken = queryString.get('r') || ''
-        return readToken
-    }
-
     constructor(serverUrl?: string, public workspaceId = '0') {
         this.serverUrl = serverUrl
     }
 
-    private async getJson(response: Response, defaultValue: any): Promise<any> {
+    private async getJson(response: Response, defaultValue: unknown): Promise<unknown> {
         // The server may return null or malformed json
         try {
             const value = await response.json()
@@ -80,7 +75,7 @@ class OctoClient {
         return false
     }
 
-    logout() {
+    logout(): void {
         localStorage.removeItem('focalboardSessionId')
     }
 
@@ -98,7 +93,7 @@ class OctoClient {
         return json
     }
 
-    async register(email: string, username: string, password: string, token?: string): Promise<{code: number, json: any}> {
+    async register(email: string, username: string, password: string, token?: string): Promise<{code: number, json: {error?: string}}> {
         const path = '/api/v1/register'
         const body = JSON.stringify({email, username, password, token})
         const response = await fetch(this.getBaseURL() + path, {
@@ -106,11 +101,11 @@ class OctoClient {
             headers: this.headers(),
             body,
         })
-        const json = (await this.getJson(response, {}))
+        const json = (await this.getJson(response, {})) as {error?: string}
         return {code: response.status, json}
     }
 
-    async changePassword(userId: string, oldPassword: string, newPassword: string): Promise<{code: number, json: any}> {
+    async changePassword(userId: string, oldPassword: string, newPassword: string): Promise<{code: number, json: {error?: string}}> {
         const path = `/api/v1/users/${encodeURIComponent(userId)}/changepassword`
         const body = JSON.stringify({oldPassword, newPassword})
         const response = await fetch(this.getBaseURL() + path, {
@@ -118,7 +113,7 @@ class OctoClient {
             headers: this.headers(),
             body,
         })
-        const json = (await this.getJson(response, {}))
+        const json = (await this.getJson(response, {})) as {error?: string}
         return {code: response.status, json}
     }
 
@@ -131,8 +126,18 @@ class OctoClient {
         }
     }
 
-    private workspacePath() {
-        return `/api/v1/workspaces/${this.workspaceId}`
+    /**
+     * Generates workspace's path.
+     * Uses workspace ID from `workspaceId` param is provided,
+     * Else uses Client's workspaceID if available, else the user's last visited workspace ID.
+     */
+    private workspacePath(workspaceId?: string) {
+        let workspaceIdToUse = workspaceId
+        if (!workspaceId) {
+            workspaceIdToUse = this.workspaceId === '0' ? UserSettings.lastWorkspaceId || this.workspaceId : this.workspaceId
+        }
+
+        return `/api/v1/workspaces/${workspaceIdToUse}`
     }
 
     async getMe(): Promise<IUser | undefined> {
@@ -155,9 +160,9 @@ class OctoClient {
         return user
     }
 
-    async getSubtree(rootId?: string, levels = 2): Promise<Block[]> {
-        let path = this.workspacePath() + `/blocks/${encodeURIComponent(rootId || '')}/subtree?l=${levels}`
-        const readToken = this.readToken()
+    async getSubtree(rootId?: string, levels = 2, workspaceID?: string): Promise<Block[]> {
+        let path = this.workspacePath(workspaceID) + `/blocks/${encodeURIComponent(rootId || '')}/subtree?l=${levels}`
+        const readToken = Utils.getReadToken()
         if (readToken) {
             path += `&read_token=${readToken}`
         }
@@ -231,7 +236,7 @@ class OctoClient {
         // Hydrate is important, as it ensures that each block is complete to the current model
         const fixedBlocks = OctoUtils.hydrateBlocks(blocks)
 
-        // TODO: Remove this fixup code
+        // !TODO: Remove this fixup code
         for (const block of fixedBlocks) {
             if (!block.fields) {
                 block.fields = {}
@@ -395,7 +400,7 @@ class OctoClient {
 
     async getFileAsDataUrl(rootId: string, fileId: string): Promise<string> {
         let path = '/files/workspaces/' + this.workspaceId + '/' + rootId + '/' + fileId
-        const readToken = this.readToken()
+        const readToken = Utils.getReadToken()
         if (readToken) {
             path += `?read_token=${readToken}`
         }
@@ -424,6 +429,11 @@ class OctoClient {
         }
 
         return (await this.getJson(response, [])) as UserWorkspace[]
+    }
+
+    async getGlobalTemplates(): Promise<Block[]> {
+        const path = this.workspacePath('0') + '/blocks?type=board'
+        return this.getBlocksWithPath(path)
     }
 }
 

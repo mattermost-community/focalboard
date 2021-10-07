@@ -13,7 +13,7 @@ import (
 )
 
 var mockUser = &model.User{
-	ID:       utils.CreateGUID(),
+	ID:       utils.NewID(utils.IDTypeUser),
 	Username: "testUsername",
 	Email:    "testEmail",
 	Password: auth.HashPassword("testPassword"),

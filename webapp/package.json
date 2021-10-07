@@ -1,12 +1,12 @@
 {
 	"name": "focalboard",
-	"version": "0.9.0",
+	"version": "0.9.1",
 	"private": true,
 	"description": "",
 	"scripts": {
 		"pack": "cross-env NODE_ENV=production webpack --config webpack.prod.js",
 		"packdev": "cross-env NODE_ENV=dev webpack --config webpack.dev.js",
-		"watchdev": "cross-env NODE_ENV=dev webpack --watch --config webpack.dev.js",
+		"watchdev": "cross-env NODE_ENV=dev webpack --watch --progress --config webpack.dev.js",
 		"test": "jest",
 		"updatesnapshot": "jest --updateSnapshot",
 		"check": "eslint --ext .tsx,.ts . --quiet --cache && stylelint **/*.scss",

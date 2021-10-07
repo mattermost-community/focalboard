@@ -20,6 +20,8 @@ const TopBar = React.memo((): JSX.Element => {
                 <a
                     className='link'
                     href={feedbackUrl}
+                    target='_blank'
+                    rel='noreferrer'
                 >
                     <FormattedMessage
                         id='TopBar.give-feedback'
@@ -44,6 +46,8 @@ const TopBar = React.memo((): JSX.Element => {
             <a
                 className='link'
                 href={focalboardFeedbackUrl}
+                target='_blank'
+                rel='noreferrer'
             >
                 <FormattedMessage
                     id='TopBar.give-feedback'

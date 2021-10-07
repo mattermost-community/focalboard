@@ -180,6 +180,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -190,16 +191,6 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
                 >
                   value 1
                 </span>
-                <div
-                  aria-label="Clear"
-                  class="Button IconButton margin-left delete-value"
-                  role="button"
-                  title="Clear"
-                >
-                  <i
-                    class="CompassIcon icon-close CloseIcon"
-                  />
-                </div>
               </span>
             </div>
           </div>
@@ -209,6 +200,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -225,7 +217,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
             style="width: 100px;"
           >
             <div
-              class="CreatedAt octo-propertyvalue"
+              class="CreatedAt octo-propertyvalue readonly"
             >
               June 15, 4:22 PM
             </div>
@@ -276,6 +268,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -286,16 +279,6 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
                 >
                   value 1
                 </span>
-                <div
-                  aria-label="Clear"
-                  class="Button IconButton margin-left delete-value"
-                  role="button"
-                  title="Clear"
-                >
-                  <i
-                    class="CompassIcon icon-close CloseIcon"
-                  />
-                </div>
               </span>
             </div>
           </div>
@@ -305,6 +288,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -321,7 +305,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
             style="width: 100px;"
           >
             <div
-              class="CreatedAt octo-propertyvalue"
+              class="CreatedAt octo-propertyvalue readonly"
             >
               June 15, 4:22 PM
             </div>
@@ -341,7 +325,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
         class="CalculationRow octo-table-row"
       >
         <div
-          class="Calculation count octo-table-cell  "
+          class="Calculation count octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -357,7 +341,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           </span>
         </div>
         <div
-          class="Calculation none octo-table-cell  "
+          class="Calculation none octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -371,7 +355,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           />
         </div>
         <div
-          class="Calculation none octo-table-cell  "
+          class="Calculation none octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -385,7 +369,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           />
         </div>
         <div
-          class="Calculation none octo-table-cell  "
+          class="Calculation none octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -584,6 +568,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -594,16 +579,6 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
                 >
                   value 1
                 </span>
-                <div
-                  aria-label="Clear"
-                  class="Button IconButton margin-left delete-value"
-                  role="button"
-                  title="Clear"
-                >
-                  <i
-                    class="CompassIcon icon-close CloseIcon"
-                  />
-                </div>
               </span>
             </div>
           </div>
@@ -613,6 +588,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -680,6 +656,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -690,16 +667,6 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
                 >
                   value 1
                 </span>
-                <div
-                  aria-label="Clear"
-                  class="Button IconButton margin-left delete-value"
-                  role="button"
-                  title="Clear"
-                >
-                  <i
-                    class="CompassIcon icon-close CloseIcon"
-                  />
-                </div>
               </span>
             </div>
           </div>
@@ -709,6 +676,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -745,7 +713,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
         class="CalculationRow octo-table-row"
       >
         <div
-          class="Calculation count octo-table-cell  "
+          class="Calculation count octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -761,7 +729,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           </span>
         </div>
         <div
-          class="Calculation none octo-table-cell  "
+          class="Calculation none octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -775,7 +743,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           />
         </div>
         <div
-          class="Calculation none octo-table-cell  "
+          class="Calculation none octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -789,7 +757,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           />
         </div>
         <div
-          class="Calculation none octo-table-cell  "
+          class="Calculation none octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -988,6 +956,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -998,16 +967,6 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
                 >
                   value 1
                 </span>
-                <div
-                  aria-label="Clear"
-                  class="Button IconButton margin-left delete-value"
-                  role="button"
-                  title="Clear"
-                >
-                  <i
-                    class="CompassIcon icon-close CloseIcon"
-                  />
-                </div>
               </span>
             </div>
           </div>
@@ -1017,6 +976,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -1033,7 +993,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
             style="width: 100px;"
           >
             <div
-              class="LastModifiedAt octo-propertyvalue"
+              class="LastModifiedAt octo-propertyvalue readonly"
             >
               June 20, 12:22 PM
             </div>
@@ -1084,6 +1044,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -1094,16 +1055,6 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
                 >
                   value 1
                 </span>
-                <div
-                  aria-label="Clear"
-                  class="Button IconButton margin-left delete-value"
-                  role="button"
-                  title="Clear"
-                >
-                  <i
-                    class="CompassIcon icon-close CloseIcon"
-                  />
-                </div>
               </span>
             </div>
           </div>
@@ -1113,6 +1064,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -1129,7 +1081,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
             style="width: 100px;"
           >
             <div
-              class="LastModifiedAt octo-propertyvalue"
+              class="LastModifiedAt octo-propertyvalue readonly"
             >
               June 22, 11:23 AM
             </div>
@@ -1149,7 +1101,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
         class="CalculationRow octo-table-row"
       >
         <div
-          class="Calculation count octo-table-cell  "
+          class="Calculation count octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -1165,7 +1117,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           </span>
         </div>
         <div
-          class="Calculation none octo-table-cell  "
+          class="Calculation none octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -1179,7 +1131,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           />
         </div>
         <div
-          class="Calculation none octo-table-cell  "
+          class="Calculation none octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -1193,7 +1145,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           />
         </div>
         <div
-          class="Calculation none octo-table-cell  "
+          class="Calculation none octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -1392,6 +1344,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -1402,16 +1355,6 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
                 >
                   value 1
                 </span>
-                <div
-                  aria-label="Clear"
-                  class="Button IconButton margin-left delete-value"
-                  role="button"
-                  title="Clear"
-                >
-                  <i
-                    class="CompassIcon icon-close CloseIcon"
-                  />
-                </div>
               </span>
             </div>
           </div>
@@ -1421,6 +1364,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -1437,7 +1381,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
             style="width: 100px;"
           >
             <div
-              class="LastModifiedBy octo-propertyvalue"
+              class="LastModifiedBy octo-propertyvalue readonly"
             >
               username_4
             </div>
@@ -1488,6 +1432,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -1498,16 +1443,6 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
                 >
                   value 1
                 </span>
-                <div
-                  aria-label="Clear"
-                  class="Button IconButton margin-left delete-value"
-                  role="button"
-                  title="Clear"
-                >
-                  <i
-                    class="CompassIcon icon-close CloseIcon"
-                  />
-                </div>
               </span>
             </div>
           </div>
@@ -1517,6 +1452,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -1533,7 +1469,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
             style="width: 100px;"
           >
             <div
-              class="LastModifiedBy octo-propertyvalue"
+              class="LastModifiedBy octo-propertyvalue readonly"
             >
               username_3
             </div>
@@ -1553,7 +1489,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
         class="CalculationRow octo-table-row"
       >
         <div
-          class="Calculation count octo-table-cell  "
+          class="Calculation count octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -1569,7 +1505,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           </span>
         </div>
         <div
-          class="Calculation none octo-table-cell  "
+          class="Calculation none octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -1583,7 +1519,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           />
         </div>
         <div
-          class="Calculation none octo-table-cell  "
+          class="Calculation none octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -1597,7 +1533,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           />
         </div>
         <div
-          class="Calculation none octo-table-cell  "
+          class="Calculation none octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -1772,6 +1708,7 @@ exports[`components/table/Table should match snapshot 1`] = `
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -1782,16 +1719,6 @@ exports[`components/table/Table should match snapshot 1`] = `
                 >
                   value 1
                 </span>
-                <div
-                  aria-label="Clear"
-                  class="Button IconButton margin-left delete-value"
-                  role="button"
-                  title="Clear"
-                >
-                  <i
-                    class="CompassIcon icon-close CloseIcon"
-                  />
-                </div>
               </span>
             </div>
           </div>
@@ -1801,6 +1728,7 @@ exports[`components/table/Table should match snapshot 1`] = `
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -1827,7 +1755,7 @@ exports[`components/table/Table should match snapshot 1`] = `
         class="CalculationRow octo-table-row"
       >
         <div
-          class="Calculation count octo-table-cell  "
+          class="Calculation count octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -1843,7 +1771,7 @@ exports[`components/table/Table should match snapshot 1`] = `
           </span>
         </div>
         <div
-          class="Calculation none octo-table-cell  "
+          class="Calculation none octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -1857,7 +1785,7 @@ exports[`components/table/Table should match snapshot 1`] = `
           />
         </div>
         <div
-          class="Calculation none octo-table-cell  "
+          class="Calculation none octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -2061,7 +1989,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
         class="CalculationRow octo-table-row"
       >
         <div
-          class="Calculation count octo-table-cell  "
+          class="Calculation count octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -2077,7 +2005,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           </span>
         </div>
         <div
-          class="Calculation none octo-table-cell  "
+          class="Calculation none octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -2091,7 +2019,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           />
         </div>
         <div
-          class="Calculation none octo-table-cell  "
+          class="Calculation none octo-table-cell   "
           style="width: 100px;"
           tabindex="0"
         >
@@ -2255,6 +2183,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -2274,6 +2203,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
           >
             <div
               class="octo-propertyvalue"
+              data-testid="select-non-editable"
               tabindex="0"
             >
               <span
@@ -2294,7 +2224,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
         class="CalculationRow octo-table-row"
       >
         <div
-          class="Calculation count octo-table-cell  "
+          class="Calculation count octo-table-cell disabled  "
           style="width: 100px;"
           tabindex="0"
         >
@@ -2310,7 +2240,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
           </span>
         </div>
         <div
-          class="Calculation none octo-table-cell  "
+          class="Calculation none octo-table-cell disabled  "
           style="width: 100px;"
           tabindex="0"
         >
@@ -2324,7 +2254,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
           />
         </div>
         <div
-          class="Calculation none octo-table-cell  "
+          class="Calculation none octo-table-cell disabled  "
           style="width: 100px;"
           tabindex="0"
         >

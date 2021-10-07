@@ -352,7 +352,7 @@ func (s *MattermostAuthLayer) GetUserWorkspaces(userID string) ([]model.UserWork
 
 	switch s.dbType {
 	case mysqlDBType:
-		nonTemplateFilter = "focalboard_blocks.fields LIKE %\"isTemplate\":false%"
+		nonTemplateFilter = "focalboard_blocks.fields LIKE '%\"isTemplate\":false%'"
 	case postgresDBType:
 		nonTemplateFilter = "focalboard_blocks.fields ->> 'isTemplate' = 'false'"
 	default:
@@ -436,7 +436,13 @@ func (s *MattermostAuthLayer) userWorkspacesFromRows(rows *sql.Rows) ([]model.Us
 			names := []string{}
 
 			for _, userID := range userIDs {
-				names = append(names, users[userID].Username)
+				user, exists := users[userID]
+				username := userID
+				if exists {
+					username = user.Username
+				}
+
+				names = append(names, username)
 			}
 
 			rawUserWorkspaces[i].Title = strings.Join(names, ", ")

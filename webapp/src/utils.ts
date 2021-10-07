@@ -19,20 +19,84 @@ const IconClass = 'octo-icon'
 const OpenButtonClass = 'open-button'
 const SpacerClass = 'octo-spacer'
 const HorizontalGripClass = 'HorizontalGrip'
+const base32Alphabet = 'ybndrfg8ejkmcpqxot1uwisza345h769'
+
+// eslint-disable-next-line no-shadow
+enum IDType {
+    None = '7',
+    Workspace = 'w',
+    Board = 'b',
+    Card = 'c',
+    View = 'v',
+    Session = 's',
+    User = 'u',
+    Token = 'k',
+    BlockID = 'a',
+}
 
 class Utils {
-    static createGuid(): string {
-        const crypto = window.crypto || window.msCrypto
-        function randomDigit() {
-            if (crypto && crypto.getRandomValues) {
-                const rands = new Uint8Array(1)
-                crypto.getRandomValues(rands)
-                return (rands[0] % 16).toString(16)
-            }
+    static createGuid(idType: IDType): string {
+        const data = Utils.randomArray(16)
+        return idType + this.base32encode(data, false)
+    }
 
-            return (Math.floor((Math.random() * 16))).toString(16)
+    static blockTypeToIDType(blockType: string | undefined): IDType {
+        let ret: IDType = IDType.None
+        switch (blockType) {
+        case 'workspace':
+            ret = IDType.Workspace
+            break
+        case 'board':
+            ret = IDType.Board
+            break
+        case 'card':
+            ret = IDType.Card
+            break
+        case 'view':
+            ret = IDType.View
+            break
         }
-        return 'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g, randomDigit)
+        return ret
+    }
+
+    static randomArray(size: number): Uint8Array {
+        const crypto = window.crypto || window.msCrypto
+        const rands = new Uint8Array(size)
+        if (crypto && crypto.getRandomValues) {
+            crypto.getRandomValues(rands)
+        } else {
+            for (let i = 0; i < size; i++) {
+                rands[i] = Math.floor((Math.random() * 255))
+            }
+        }
+        return rands
+    }
+
+    static base32encode(data: Int8Array | Uint8Array | Uint8ClampedArray, pad: boolean): string {
+        const dview = new DataView(data.buffer, data.byteOffset, data.byteLength)
+        let bits = 0
+        let value = 0
+        let output = ''
+
+        // adapted from https://github.com/LinusU/base32-encode
+        for (let i = 0; i < dview.byteLength; i++) {
+            value = (value << 8) | dview.getUint8(i)
+            bits += 8
+
+            while (bits >= 5) {
+                output += base32Alphabet[(value >>> (bits - 5)) & 31]
+                bits -= 5
+            }
+        }
+        if (bits > 0) {
+            output += base32Alphabet[(value << (5 - bits)) & 31]
+        }
+        if (pad) {
+            while ((output.length % 8) !== 0) {
+                output += '='
+            }
+        }
+        return output
     }
 
     static htmlToElement(html: string): HTMLElement {
@@ -244,6 +308,15 @@ class Utils {
         /// #!endif
     }
 
+    static logWarn(message: string): void {
+        /// #!if ENV !== "production"
+        const timestamp = (Date.now() / 1000).toFixed(2)
+        // eslint-disable-next-line no-console
+        console.warn(`[${timestamp}] ${message}`)
+
+        /// #!endif
+    }
+
     // favicon
 
     static setFavicon(icon?: string): void {
@@ -442,6 +515,65 @@ class Utils {
             return block
         }
     }
+
+    static userAgent(): string {
+        return window.navigator.userAgent
+    }
+
+    static isDesktopApp(): boolean {
+        return Utils.userAgent().indexOf('Mattermost') !== -1 && Utils.userAgent().indexOf('Electron') !== -1
+    }
+
+    static getDesktopVersion(): string {
+        // use if the value window.desktop.version is not set yet
+        const regex = /Mattermost\/(\d+\.\d+\.\d+)/gm
+        const match = regex.exec(window.navigator.appVersion)?.[1] || ''
+        return match
+    }
+
+    /**
+     * Boolean function to check if a version is greater than another.
+     *
+     * currentVersionParam: The version being checked
+     * compareVersionParam: The version to compare the former version against
+     *
+     * eg.  currentVersionParam = 4.16.0, compareVersionParam = 4.17.0 returns false
+     *      currentVersionParam = 4.16.1, compareVersionParam = 4.16.1 returns true
+     */
+    static isVersionGreaterThanOrEqualTo(currentVersionParam: string, compareVersionParam: string): boolean {
+        if (currentVersionParam === compareVersionParam) {
+            return true
+        }
+
+        // We only care about the numbers
+        const currentVersionNumber = (currentVersionParam || '').split('.').filter((x) => (/^[0-9]+$/).exec(x) !== null)
+        const compareVersionNumber = (compareVersionParam || '').split('.').filter((x) => (/^[0-9]+$/).exec(x) !== null)
+
+        for (let i = 0; i < Math.max(currentVersionNumber.length, compareVersionNumber.length); i++) {
+            const currentVersion = parseInt(currentVersionNumber[i], 10) || 0
+            const compareVersion = parseInt(compareVersionNumber[i], 10) || 0
+            if (currentVersion > compareVersion) {
+                return true
+            }
+
+            if (currentVersion < compareVersion) {
+                return false
+            }
+        }
+
+        // If all components are equal, then return true
+        return true
+    }
+
+    static isDesktop(): boolean {
+        return Utils.isDesktopApp() && Utils.isVersionGreaterThanOrEqualTo(Utils.getDesktopVersion(), '5.0.0')
+    }
+
+    static getReadToken(): string {
+        const queryString = new URLSearchParams(window.location.search)
+        const readToken = queryString.get('r') || ''
+        return readToken
+    }
 }
 
-export {Utils}
+export {Utils, IDType}

@@ -6,12 +6,8 @@ import {Provider as ReduxProvider} from 'react-redux'
 import {render} from '@testing-library/react'
 import configureStore from 'redux-mock-store'
 import '@testing-library/jest-dom'
-import {IntlProvider} from 'react-intl'
 
 import 'isomorphic-fetch'
-
-import {DndProvider} from 'react-dnd'
-import {HTML5Backend} from 'react-dnd-html5-backend'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import {FetchMock} from '../../test/fetchMock'
@@ -19,7 +15,9 @@ import {BoardView} from '../../blocks/boardView'
 
 import {IUser} from '../../user'
 
-import {Utils} from '../../utils'
+import {Utils, IDType} from '../../utils'
+
+import {wrapDNDIntl} from '../../testUtils'
 
 import Table from './table'
 
@@ -28,14 +26,6 @@ global.fetch = FetchMock.fn
 beforeEach(() => {
     FetchMock.fn.mockReset()
 })
-
-const wrapProviders = (children: any) => {
-    return (
-        <DndProvider backend={HTML5Backend}>
-            <IntlProvider locale='en'>{children}</IntlProvider>
-        </DndProvider>
-    )
-}
 
 describe('components/table/Table', () => {
     const board = TestBlockFactory.createBoard()
@@ -80,7 +70,7 @@ describe('components/table/Table', () => {
         const mockStore = configureStore([])
         const store = mockStore(state)
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <Table
                     board={board}
@@ -108,7 +98,7 @@ describe('components/table/Table', () => {
         const mockStore = configureStore([])
         const store = mockStore(state)
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <Table
                     board={board}
@@ -137,7 +127,7 @@ describe('components/table/Table', () => {
         const mockStore = configureStore([])
         const store = mockStore(state)
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <Table
                     board={board}
@@ -189,7 +179,7 @@ describe('components/table/Table extended', () => {
     test('should match snapshot with CreatedBy', async () => {
         const board = TestBlockFactory.createBoard()
 
-        const dateCreatedId = Utils.createGuid()
+        const dateCreatedId = Utils.createGuid(IDType.User)
         board.fields.cardProperties.push({
             id: dateCreatedId,
             name: 'Date Created',
@@ -222,7 +212,7 @@ describe('components/table/Table extended', () => {
             },
         })
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <Table
                     board={board}
@@ -246,7 +236,7 @@ describe('components/table/Table extended', () => {
     test('should match snapshot with UpdatedAt', async () => {
         const board = TestBlockFactory.createBoard()
 
-        const dateUpdatedId = Utils.createGuid()
+        const dateUpdatedId = Utils.createGuid(IDType.User)
         board.fields.cardProperties.push({
             id: dateUpdatedId,
             name: 'Date Updated',
@@ -301,7 +291,7 @@ describe('components/table/Table extended', () => {
             },
         })
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <Table
                     board={board}
@@ -325,7 +315,7 @@ describe('components/table/Table extended', () => {
     test('should match snapshot with CreatedBy', async () => {
         const board = TestBlockFactory.createBoard()
 
-        const createdById = Utils.createGuid()
+        const createdById = Utils.createGuid(IDType.User)
         board.fields.cardProperties.push({
             id: createdById,
             name: 'Created By',
@@ -358,7 +348,7 @@ describe('components/table/Table extended', () => {
             },
         })
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <Table
                     board={board}
@@ -383,7 +373,7 @@ describe('components/table/Table extended', () => {
     test('should match snapshot with UpdatedBy', async () => {
         const board = TestBlockFactory.createBoard()
 
-        const modifiedById = Utils.createGuid()
+        const modifiedById = Utils.createGuid(IDType.User)
         board.fields.cardProperties.push({
             id: modifiedById,
             name: 'Last Modified By',
@@ -442,7 +432,7 @@ describe('components/table/Table extended', () => {
             },
         })
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <Table
                     board={board}

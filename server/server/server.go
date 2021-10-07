@@ -11,7 +11,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 
@@ -30,6 +29,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 	"github.com/mattermost/focalboard/server/services/telemetry"
 	"github.com/mattermost/focalboard/server/services/webhook"
+	"github.com/mattermost/focalboard/server/utils"
 	"github.com/mattermost/focalboard/server/web"
 	"github.com/mattermost/focalboard/server/ws"
 	"github.com/oklog/run"
@@ -37,7 +37,6 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
-	"github.com/mattermost/mattermost-server/v6/utils"
 )
 
 const (
@@ -68,6 +67,7 @@ type Server struct {
 	localRouter     *mux.Router
 	localModeServer *http.Server
 	api             *api.API
+	app             *app.App
 }
 
 func New(params Params) (*Server, error) {
@@ -169,8 +169,8 @@ func New(params Params) (*Server, error) {
 	// Init telemetry
 	telemetryID := settings["TelemetryID"]
 	if len(telemetryID) == 0 {
-		telemetryID = uuid.New().String()
-		if err = params.DBStore.SetSystemSetting("TelemetryID", uuid.New().String()); err != nil {
+		telemetryID = utils.NewID(utils.IDTypeNone)
+		if err = params.DBStore.SetSystemSetting("TelemetryID", telemetryID); err != nil {
 			return nil, err
 		}
 	}
@@ -198,6 +198,7 @@ func New(params Params) (*Server, error) {
 		logger:              params.Logger,
 		localRouter:         localRouter,
 		api:                 focalboardAPI,
+		app:                 app,
 	}
 
 	server.initHandlers()
@@ -282,7 +283,7 @@ func (s *Server) Start() error {
 	s.metricsUpdaterTask = scheduler.CreateRecurringTask("updateMetrics", metricsUpdater, updateMetricsTaskFrequency)
 
 	if s.config.Telemetry {
-		firstRun := utils.MillisFromTime(time.Now())
+		firstRun := utils.GetMillis()
 		s.telemetry.RunTelemetryJob(firstRun)
 	}
 
@@ -345,6 +346,23 @@ func (s *Server) Config() *config.Configuration {
 
 func (s *Server) Logger() *mlog.Logger {
 	return s.logger
+}
+
+func (s *Server) App() *app.App {
+	return s.app
+}
+
+func (s *Server) UpdateClientConfig(pluginConfig map[string]interface{}) {
+	for index, value := range pluginConfig {
+		if index == "EnablePublicSharedBoards" {
+			b, ok := value.(bool)
+			if !ok {
+				s.logger.Warn("Invalid value for config value", mlog.String(index, value.(string)))
+			}
+			s.config.EnablePublicSharedBoards = b
+		}
+	}
+	s.app.SetConfig(s.config)
 }
 
 // Local server

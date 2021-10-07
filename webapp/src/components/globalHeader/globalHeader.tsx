@@ -42,7 +42,7 @@ const HeaderItems = () => {
     )
 }
 
-const GlobalHeader = () => {
+const GlobalHeader = (): JSX.Element => {
     return (
         <ReduxProvider store={store}>
             <HeaderItems/>

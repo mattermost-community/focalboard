@@ -4,7 +4,8 @@
 import React from 'react'
 import {fireEvent, render} from '@testing-library/react'
 import '@testing-library/jest-dom'
-import {IntlProvider} from 'react-intl'
+
+import {wrapIntl} from '../../testUtils'
 
 import {ContentBlock} from '../../blocks/contentBlock'
 
@@ -12,11 +13,10 @@ import CheckboxElement from './checkboxElement'
 
 const fetchMock = require('fetch-mock-jest')
 
-const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
-
 describe('components/content/CheckboxElement', () => {
     const defaultBlock: ContentBlock = {
         id: 'test-id',
+        workspaceId: '',
         parentId: '',
         rootId: '',
         modifiedBy: 'test-user-id',

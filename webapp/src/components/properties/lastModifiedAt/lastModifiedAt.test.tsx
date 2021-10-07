@@ -3,14 +3,13 @@
 
 import React from 'react'
 import {render} from '@testing-library/react'
-import {IntlProvider} from 'react-intl'
+
+import {wrapIntl} from '../../../testUtils'
 
 import {createCard} from '../../../blocks/card'
 import {createCommentBlock} from '../../../blocks/commentBlock'
 
 import LastModifiedAt from './lastModifiedAt'
-
-const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
 
 describe('componnets/properties/lastModifiedAt', () => {
     test('should match snapshot', () => {
