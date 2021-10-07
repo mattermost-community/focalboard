@@ -246,10 +246,6 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 	pathSplit := strings.Split(u.Path[1:], "/")
 	queryParams := u.Query()
 
-	// For card links copied on a non-shared board, the path looks like boards/workspace/workspaceID/boardID/viewID/cardID
-
-	// For card links copied on a shared board, the path looks like
-	// plugins/focalboard/workspace/workspaceID/shared/boardID/viewID?r=read_token&c=card_token
 	if len(pathSplit) == 0 {
 		return post, ""
 	}
@@ -261,7 +257,10 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 	readToken := ""
 
 	// If the first parameter in the path is boards,
-	// we've copied this directly as logged in user of that board
+	// then we've copied this directly as logged in user of that board
+
+	// If the first paramter in the path is plugins,
+	// then we've copied this from a shared board
 
 	// For card links copied on a non-shared board, the path looks like boards/workspace/workspaceID/boardID/viewID/cardID
 
