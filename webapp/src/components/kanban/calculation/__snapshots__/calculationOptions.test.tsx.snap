@@ -17,7 +17,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions base case 1`] =
       <span
         id="aria-context"
       >
-          Select is focused , press Down to open the menu, 
+          Select is focused , press Down to open the menu,
       </span>
     </span>
     <div
@@ -166,7 +166,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with menu open 
         >
           <span>
             Count
-             
+
           </span>
         </div>
         <div
@@ -174,7 +174,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with menu open 
         >
           <span>
             Count Value
-             
+
             <i
               class="CompassIcon icon-chevron-right ChevronRightIcon"
             />
@@ -185,7 +185,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with menu open 
         >
           <span>
             Count Unique Values
-             
+
             <i
               class="CompassIcon icon-chevron-right ChevronRightIcon"
             />
@@ -236,7 +236,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with submenu op
         <input
           aria-autocomplete="list"
           class="css-wmatm6-dummyInput-DummyInput"
-          id="react-select-2-input"
+          id="react-select-4-input"
           readonly=""
           tabindex="0"
           value=""
@@ -286,7 +286,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with submenu op
         >
           <span>
             Count
-             
+
           </span>
         </div>
         <div
@@ -294,7 +294,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with submenu op
         >
           <span>
             Count Value
-             
+
             <i
               class="CompassIcon icon-chevron-right ChevronRightIcon"
             />
@@ -305,7 +305,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with submenu op
         >
           <span>
             Count Unique Values
-             
+
             <i
               class="CompassIcon icon-chevron-right ChevronRightIcon"
             />
