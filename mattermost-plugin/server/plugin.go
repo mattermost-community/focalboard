@@ -33,7 +33,7 @@ type BoardsEmbed struct {
 	ViewID      string `json:"viewID"`
 	BoardID     string `json:"boardID"`
 	CardID      string `json:"cardID"`
-	ReadToken   string `json:"readToken, omitempty"`
+	ReadToken   string `json:"readToken,omitempty"`
 }
 
 // Plugin implements the interface expected by the Mattermost server to communicate between the server and plugin processes.
@@ -234,12 +234,12 @@ func defaultLoggingConfig() string {
 	}`
 }
 
-func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mmModel.Post, string) {
+func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) *mmModel.Post {
 	firstLink := getFirstLink(post.Message)
 	u, err := url.Parse(firstLink)
 
 	if err != nil {
-		return post, ""
+		return post
 	}
 
 	// Trim away the first / because otherwise after we split the string, the first element in the array is a empty element
@@ -247,9 +247,11 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 	queryParams := u.Query()
 
 	// For card links copied on a non-shared board, the path looks like boards/workspace/workspaceID/boardID/viewID/cardID
-	// For card links copied on a shared board, the path looks like plugins/focalboard/workspace/workspaceID/shared/boardID/viewID?r=read_token&c=card_token
+
+	// For card links copied on a shared board, the path looks like
+	// plugins/focalboard/workspace/workspaceID/shared/boardID/viewID?r=read_token&c=card_token
 	if len(pathSplit) == 0 {
-		return post, ""
+		return post
 	}
 
 	workspaceID := ""
@@ -258,9 +260,14 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 	cardID := ""
 	readToken := ""
 
-	// If the first parameter in the path is boards, we've copied this directly as logged in user of that board
+	// If the first parameter in the path is boards,
+	// we've copied this directly as logged in user of that board
+
 	// For card links copied on a non-shared board, the path looks like boards/workspace/workspaceID/boardID/viewID/cardID
-	// For card links copied on a shared board, the path looks like plugins/focalboard/workspace/workspaceID/shared/boardID/viewID?r=read_token&c=card_token
+
+	// For card links copied on a shared board, the path looks like
+	// plugins/focalboard/workspace/workspaceID/shared/boardID/viewID?r=read_token&c=card_token
+
 	// This is a non-shared board card link
 	if len(pathSplit) == 6 && pathSplit[0] == "boards" {
 		workspaceID = pathSplit[2]
@@ -291,7 +298,7 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 		post.Metadata.Embeds = []*mmModel.PostEmbed{BoardsPostEmbed}
 		post.AddProp("boards", string(b))
 	}
-	return post, ""
+	return post
 }
 
 func getFirstLink(str string) string {
