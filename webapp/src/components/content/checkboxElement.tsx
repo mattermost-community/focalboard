@@ -15,6 +15,7 @@ import './checkboxElement.scss'
 type Props = {
     block: ContentBlock
     readonly: boolean
+    onAddNewElement?: () => void
 }
 
 const CheckboxElement = React.memo((props: Props) => {
@@ -45,11 +46,15 @@ const CheckboxElement = React.memo((props: Props) => {
                 value={title}
                 placeholderText={intl.formatMessage({id: 'ContentBlock.editText', defaultMessage: 'Edit text...'})}
                 onChange={setTitle}
-                onSave={() => {
+                saveOnEsc={true}
+                onSave={async (saveType) => {
                     const newBlock = createCheckboxBlock(block)
                     newBlock.title = title
                     newBlock.fields.value = active
-                    mutator.updateBlock(newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckboxText', defaultMessage: 'edit card text'}))
+                    await mutator.updateBlock(newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckboxText', defaultMessage: 'edit card text'}))
+                    if (saveType === 'onEnter' && props.onAddNewElement) {
+                        props.onAddNewElement()
+                    }
                 }}
                 readonly={readonly}
                 spellCheck={true}
@@ -65,11 +70,12 @@ contentRegistry.registerContentType({
     createBlock: async () => {
         return createCheckboxBlock()
     },
-    createComponent: (block, readonly) => {
+    createComponent: (block, readonly, onAddNewElement) => {
         return (
             <CheckboxElement
                 block={block}
                 readonly={readonly}
+                onAddNewElement={onAddNewElement}
             />
         )
     },
