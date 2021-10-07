@@ -11,6 +11,7 @@ import (
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
+
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
 )
@@ -374,7 +375,7 @@ func (pa *PluginAdapter) BroadcastBlockChange(workspaceID string, block model.Bl
 }
 
 func (pa *PluginAdapter) BroadcastBlockDelete(workspaceID, blockID, parentID string) {
-	now := time.Now().Unix()
+	now := utils.GetMillis()
 	block := model.Block{}
 	block.ID = blockID
 	block.ParentID = parentID
