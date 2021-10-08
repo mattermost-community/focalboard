@@ -1,9 +1,6 @@
 .Menu {
     .LabelOption.menu-option {
         cursor: auto;
-
-        &:hover {
-            background: inherit;
-        }
+        pointer-events: none;
     }
 }
