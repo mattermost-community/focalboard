@@ -31,12 +31,8 @@ const DashboardCenterContent = (): JSX.Element => {
     }
 
     useEffect(() => {
-        if (rawWorkspaces.length > 0) {
-            return
-        }
-
         initializeUserWorkspaces()
-    })
+    }, [])
 
     const userWorkspaces = rawWorkspaces.
         filter((workspace) => (workspace.boardCount > 0 || showEmptyWorkspaces) && (workspace.title.toLowerCase().includes(searchFilter) || workspace.boardCount.toString().includes(searchFilter))).
