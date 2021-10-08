@@ -38,5 +38,10 @@ export default function ContentElement(props: Props): JSX.Element|null {
         cardDetail.addNewBlock(handler, index)
     }, [cardDetail, cords, handler])
 
-    return handler.createComponent(block, readonly, addNewElement)
+    const deleteElement = useCallback(() => {
+        const index = cords.x
+        cardDetail.deleteBlock(block, index)
+    }, [block, cords, cardDetail])
+
+    return handler.createComponent(block, readonly, addNewElement, deleteElement)
 }

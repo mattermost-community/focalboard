@@ -18,6 +18,7 @@ type Props = {
     block: ContentBlock
     readonly: boolean
     onAddNewElement?: () => void
+    onDeleteElement?: () => void
 }
 
 const CheckboxElement = React.memo((props: Props) => {
@@ -25,13 +26,14 @@ const CheckboxElement = React.memo((props: Props) => {
     const intl = useIntl()
     const titleRef = useRef<Focusable>(null)
     const cardDetail = useContext(CardDetailContext)
+    const [addedBlockId, setAddedBlockId] = useState(cardDetail.lastAddedBlockId)
 
     useEffect(() => {
-        if (block.id === cardDetail.newBlockId) {
+        if (block.id === addedBlockId) {
             titleRef.current?.focus()
-            cardDetail.resetNewBlockId()
+            setAddedBlockId('')
         }
-    }, [block, cardDetail, titleRef])
+    }, [block, addedBlockId, titleRef])
 
     const [active, setActive] = useState(Boolean(block.fields.value))
     const [title, setTitle] = useState(block.title)
@@ -60,12 +62,16 @@ const CheckboxElement = React.memo((props: Props) => {
                 onChange={setTitle}
                 saveOnEsc={true}
                 onSave={async (saveType) => {
-                    const newBlock = createCheckboxBlock(block)
-                    newBlock.title = title
-                    newBlock.fields.value = active
-                    await mutator.updateBlock(newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckboxText', defaultMessage: 'edit card text'}))
-                    if (saveType === 'onEnter' && props.onAddNewElement) {
-                        props.onAddNewElement()
+                    if (title === '' && block.id === cardDetail.lastAddedBlockId && props.onDeleteElement) {
+                        props.onDeleteElement()
+                    } else {
+                        const newBlock = createCheckboxBlock(block)
+                        newBlock.title = title
+                        newBlock.fields.value = active
+                        await mutator.updateBlock(newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckboxText', defaultMessage: 'edit card text'}))
+                        if (saveType === 'onEnter' && title !== '' && props.onAddNewElement) {
+                            props.onAddNewElement()
+                        }
                     }
                 }}
                 readonly={readonly}
@@ -82,12 +88,13 @@ contentRegistry.registerContentType({
     createBlock: async () => {
         return createCheckboxBlock()
     },
-    createComponent: (block, readonly, onAddNewElement) => {
+    createComponent: (block, readonly, onAddNewElement, onDeleteElement) => {
         return (
             <CheckboxElement
                 block={block}
                 readonly={readonly}
                 onAddNewElement={onAddNewElement}
+                onDeleteElement={onDeleteElement}
             />
         )
     },

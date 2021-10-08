@@ -28,6 +28,7 @@ import CardDetailProperties from './cardDetailProperties'
 import useImagePaste from './imagePaste'
 
 import './cardDetail.scss'
+import {Block} from '../../blocks/block'
 
 type Props = {
     board: Board
@@ -86,25 +87,18 @@ const CardDetail = (props: Props): JSX.Element|null => {
     }
 
     const intl = useIntl()
-    const [newBlockId, setNewBlockId] = useState('')
+    const [lastAddedBlockId, setLastAddedBlockId] = useState('')
 
     const contextValue = useMemo<CardDetailContextType>(() => ({
         card,
-        newBlockId,
-        resetNewBlockId: () => {
-            setNewBlockId('')
-        },
+        lastAddedBlockId,
         addNewBlock: async (handler: ContentHandler, index: number) => {
             const block = await handler.createBlock(card.rootId)
             block.parentId = card.id
             block.rootId = card.rootId
             const contentOrder = card.fields.contentOrder.slice()
             contentOrder.splice(index, 0, block.id)
-            if (!handler) {
-                Utils.logError(`ContentElement, unknown content type: ${block.type}`)
-                return
-            }
-            setNewBlockId(block.id)
+            setLastAddedBlockId(block.id)
             const typeName = handler.getDisplayText(intl)
             const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
             await mutator.performAsUndoGroup(async () => {
@@ -112,7 +106,16 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder, description)
             })
         },
-    }), [intl, card, newBlockId, setNewBlockId])
+        deleteBlock: async (block: Block, index: number) => {
+            const contentOrder = card.fields.contentOrder.slice()
+            contentOrder.splice(index, 1)
+            const description = intl.formatMessage({id: 'ContentBlock.DeleteAction', defaultMessage: 'delete'})
+            await mutator.performAsUndoGroup(async () => {
+                await mutator.deleteBlock(block, description)
+                await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder, description)
+            })
+        },
+    }), [intl, card, lastAddedBlockId])
 
     return (
         <>
