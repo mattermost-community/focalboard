@@ -38,7 +38,6 @@ export interface MMWebSocketClient {
     setReconnectCallback(callback: () => void): void
     setErrorCallback(callback: (event: Event) => void): void
     setCloseCallback(callback: (connectFailCount: number) => void): void
-    connectionId: string
 }
 
 type OnChangeHandler = (client: WSClient, blocks: Block[]) => void
@@ -58,8 +57,6 @@ class WSClient {
     onChange: OnChangeHandler[] = []
     onError: OnErrorHandler[] = []
     onConfigChange: OnConfigChangeHandler[] = []
-    private mmWSMaxRetries = 100
-    private mmWSRetryDelay = 300
     private notificationDelay = 100
     private reopenDelay = 3000
     private updatedBlocks: Block[] = []
