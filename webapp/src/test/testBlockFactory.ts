@@ -121,15 +121,6 @@ class TestBlockFactory {
 
         return block
     }
-
-    static createCheckbox(card: Card): CheckboxBlock {
-        const block = createCheckboxBlock()
-        block.parentId = card.id
-        block.rootId = card.rootId
-        block.title = 'title'
-
-        return block
-    }
 }
 
 export {TestBlockFactory}
