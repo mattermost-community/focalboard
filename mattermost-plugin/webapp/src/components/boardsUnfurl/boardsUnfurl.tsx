@@ -28,6 +28,7 @@ export const FocalboardUnfurl = (props: Props): JSX.Element => {
     const viewID = focalboardInformation.viewID
     const readToken = focalboardInformation.readToken
     const baseURL = window.location.origin
+    const originalPath = focalboardInformation.originalPath
     const [card, setCard] = useState<{title?: string, type?: string, updateAt?: number, createdBy?: string, fields?: { icon: string, contentOrder: Array<string | string[]>, properties: {key?: string}}}>({})
     const [content, setContent] = useState<string>('')
     const [board, setBoard] = useState<{title?: string, fields?: { cardProperties: Array<unknown> }}>({})
@@ -130,7 +131,7 @@ export const FocalboardUnfurl = (props: Props): JSX.Element => {
     return (
         <a
             className='FocalboardUnfurl'
-            href={readToken ? `${baseURL}/plugins/focalboard/workspace/${workspaceID}/shared/${boardID}/${viewID}/${cardID}?r=${readToken}` : `${baseURL}/boards/workspace/${workspaceID}/${boardID}/${viewID}/${cardID}`}
+            href={`${baseURL}${originalPath}`}
             rel='noopener noreferrer'
             target='_blank'
         >

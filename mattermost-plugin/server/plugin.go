@@ -29,11 +29,12 @@ import (
 const PostEmbedBoards mmModel.PostEmbedType = "boards"
 
 type BoardsEmbed struct {
-	WorkspaceID string `json:"workspaceID"`
-	ViewID      string `json:"viewID"`
-	BoardID     string `json:"boardID"`
-	CardID      string `json:"cardID"`
-	ReadToken   string `json:"readToken,omitempty"`
+	OriginalPath string `json:"originalPath"`
+	WorkspaceID  string `json:"workspaceID"`
+	ViewID       string `json:"viewID"`
+	BoardID      string `json:"boardID"`
+	CardID       string `json:"cardID"`
+	ReadToken    string `json:"readToken,omitempty"`
 }
 
 // Plugin implements the interface expected by the Mattermost server to communicate between the server and plugin processes.
@@ -243,7 +244,8 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 	}
 
 	// Trim away the first / because otherwise after we split the string, the first element in the array is a empty element
-	pathSplit := strings.Split(u.Path[1:], "/")
+	path := strings.ToLower(u.Path[1:])
+	pathSplit := strings.Split(path, "/")
 	queryParams := u.Query()
 
 	if len(pathSplit) == 0 {
@@ -268,12 +270,12 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 	// plugins/focalboard/workspace/workspaceID/shared/boardID/viewID/cardID?r=read_token
 
 	// This is a non-shared board card link
-	if len(pathSplit) == 6 && pathSplit[0] == "boards" {
+	if len(pathSplit) == 6 && pathSplit[0] == "boards" && pathSplit[1] == "workspace" {
 		workspaceID = pathSplit[2]
 		boardID = pathSplit[3]
 		viewID = pathSplit[4]
 		cardID = pathSplit[5]
-	} else if len(pathSplit) == 8 && pathSplit[0] == "plugins" { // This is a shared board card link
+	} else if len(pathSplit) == 8 && pathSplit[0] == "plugins" && pathSplit[1] == "focalboard" && pathSplit[2] == "workspace" && pathSplit[4] == "shared" { // This is a shared board card link
 		workspaceID = pathSplit[3]
 		boardID = pathSplit[5]
 		viewID = pathSplit[6]
@@ -283,11 +285,12 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 
 	if workspaceID != "" && boardID != "" && viewID != "" && cardID != "" {
 		b, _ := json.Marshal(BoardsEmbed{
-			WorkspaceID: workspaceID,
-			BoardID:     boardID,
-			ViewID:      viewID,
-			CardID:      cardID,
-			ReadToken:   readToken,
+			WorkspaceID:  workspaceID,
+			BoardID:      boardID,
+			ViewID:       viewID,
+			CardID:       cardID,
+			ReadToken:    readToken,
+			OriginalPath: u.RequestURI(),
 		})
 
 		BoardsPostEmbed := &mmModel.PostEmbed{
