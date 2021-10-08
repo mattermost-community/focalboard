@@ -59,10 +59,10 @@ class CardFilter {
             return (filter.values.find((cValue) => (Array.isArray(value) ? value.includes(cValue) : cValue === value)) === undefined)
         }
         case 'isEmpty': {
-            return value?.length <= 0
+            return (value || '').length <= 0
         }
         case 'isNotEmpty': {
-            return value?.length > 0
+            return (value || '').length > 0
         }
         default: {
             Utils.assertFailure(`Invalid filter condition ${filter.condition}`)
