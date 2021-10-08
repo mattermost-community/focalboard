@@ -149,7 +149,6 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
                 <ContentElement
                     block={block}
                     readonly={readonly}
-                    card={card}
                     cords={cords}
                 />
             </div>

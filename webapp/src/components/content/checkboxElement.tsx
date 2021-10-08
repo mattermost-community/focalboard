@@ -1,15 +1,17 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React, {useContext, useEffect, useRef, useState} from 'react'
 import {useIntl} from 'react-intl'
 
 import {createCheckboxBlock} from '../../blocks/checkboxBlock'
 import {ContentBlock} from '../../blocks/contentBlock'
 import CheckIcon from '../../widgets/icons/check'
 import mutator from '../../mutator'
-import Editable from '../../widgets/editable'
+import Editable, {Focusable} from '../../widgets/editable'
+import CardDetailContext from '../cardDetail/cardDetailContext'
 
 import {contentRegistry} from './contentRegistry'
+
 import './checkboxElement.scss'
 
 type Props = {
@@ -21,6 +23,15 @@ type Props = {
 const CheckboxElement = React.memo((props: Props) => {
     const {block, readonly} = props
     const intl = useIntl()
+    const titleRef = useRef<Focusable>(null)
+    const cardDetail = useContext(CardDetailContext)
+
+    useEffect(() => {
+        if (block.id === cardDetail.newBlockId) {
+            titleRef.current?.focus()
+            cardDetail.resetNewBlockId()
+        }
+    }, [block, cardDetail, titleRef])
 
     const [active, setActive] = useState(Boolean(block.fields.value))
     const [title, setTitle] = useState(block.title)
@@ -43,6 +54,7 @@ const CheckboxElement = React.memo((props: Props) => {
                 }}
             />
             <Editable
+                ref={titleRef}
                 value={title}
                 placeholderText={intl.formatMessage({id: 'ContentBlock.editText', defaultMessage: 'Edit text...'})}
                 onChange={setTitle}

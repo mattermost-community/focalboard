@@ -7,7 +7,7 @@ import {BlockTypes} from '../../blocks/block'
 import {ContentBlock} from '../../blocks/contentBlock'
 import {Utils} from '../../utils'
 
-type ContentHandler = {
+export type ContentHandler = {
     type: BlockTypes,
     getDisplayText: (intl: IntlShape) => string,
     getIcon: () => JSX.Element,
@@ -41,6 +41,4 @@ class ContentRegistry {
 
 const contentRegistry = new ContentRegistry()
 
-export type {ContentHandler}
 export {contentRegistry}
-

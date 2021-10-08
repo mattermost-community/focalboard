@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useRef, useEffect, useCallback} from 'react'
-import {FormattedMessage} from 'react-intl'
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {BlockIcons} from '../../blockIcons'
 import {Card} from '../../blocks/card'
@@ -9,16 +9,19 @@ import {BoardView} from '../../blocks/boardView'
 import {Board} from '../../blocks/board'
 import {CommentBlock} from '../../blocks/commentBlock'
 import {ContentBlock} from '../../blocks/contentBlock'
+import {ContentHandler} from '../content/contentRegistry'
+import {Utils} from '../../utils'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import {Focusable} from '../../widgets/editable'
 import EditableArea from '../../widgets/editableArea'
 import EmojiIcon from '../../widgets/icons/emoji'
-import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
 import BlockIconSelector from '../blockIconSelector'
 
 import CommentsList from './commentsList'
+import CardDetailContext, {CardDetailContextType} from './cardDetailContext'
 import CardDetailContents from './cardDetailContents'
 import CardDetailContentsMenu from './cardDetailContentsMenu'
 import CardDetailProperties from './cardDetailProperties'
@@ -82,6 +85,35 @@ const CardDetail = (props: Props): JSX.Element|null => {
         return null
     }
 
+    const intl = useIntl()
+    const [newBlockId, setNewBlockId] = useState('')
+
+    const contextValue = useMemo<CardDetailContextType>(() => ({
+        card,
+        newBlockId,
+        resetNewBlockId: () => {
+            setNewBlockId('')
+        },
+        addNewBlock: async (handler: ContentHandler, index: number) => {
+            const block = await handler.createBlock(card.rootId)
+            block.parentId = card.id
+            block.rootId = card.rootId
+            const contentOrder = card.fields.contentOrder.slice()
+            contentOrder.splice(index, 0, block.id)
+            if (!handler) {
+                Utils.logError(`ContentElement, unknown content type: ${block.type}`)
+                return
+            }
+            setNewBlockId(block.id)
+            const typeName = handler.getDisplayText(intl)
+            const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
+            await mutator.performAsUndoGroup(async () => {
+                await mutator.insertBlock(block, description)
+                await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder, description)
+            })
+        },
+    }), [intl, card, newBlockId, setNewBlockId])
+
     return (
         <>
             <div className='CardDetail content'>
@@ -143,14 +175,14 @@ const CardDetail = (props: Props): JSX.Element|null => {
             {/* Content blocks */}
 
             <div className='CardDetail content fullwidth content-blocks'>
-                <CardDetailContents
-                    card={props.card}
-                    contents={props.contents}
-                    readonly={props.readonly}
-                />
-                {!props.readonly &&
-                    <CardDetailContentsMenu card={props.card}/>
-                }
+                <CardDetailContext.Provider value={contextValue}>
+                    <CardDetailContents
+                        card={props.card}
+                        contents={props.contents}
+                        readonly={props.readonly}
+                    />
+                    {!props.readonly && <CardDetailContentsMenu/>}
+                </CardDetailContext.Provider>
             </div>
         </>
     )
