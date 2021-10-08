@@ -10,6 +10,7 @@ import {createFilterClause} from '../blocks/filterClause'
 import {createFilterGroup} from '../blocks/filterGroup'
 import {ImageBlock, createImageBlock} from '../blocks/imageBlock'
 import {TextBlock, createTextBlock} from '../blocks/textBlock'
+import {CheckboxBlock, createCheckboxBlock} from '../blocks/checkboxBlock'
 
 class TestBlockFactory {
     static createBoard(): Board {
@@ -114,6 +115,15 @@ class TestBlockFactory {
 
     static createDivider(card: Card): DividerBlock {
         const block = createDividerBlock()
+        block.parentId = card.id
+        block.rootId = card.rootId
+        block.title = 'title'
+
+        return block
+    }
+
+    static createCheckbox(card: Card): CheckboxBlock {
+        const block = createCheckboxBlock()
         block.parentId = card.id
         block.rootId = card.rootId
         block.title = 'title'
