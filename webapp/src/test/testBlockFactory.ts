@@ -10,7 +10,6 @@ import {createFilterClause} from '../blocks/filterClause'
 import {createFilterGroup} from '../blocks/filterGroup'
 import {ImageBlock, createImageBlock} from '../blocks/imageBlock'
 import {TextBlock, createTextBlock} from '../blocks/textBlock'
-import {CheckboxBlock, createCheckboxBlock} from '../blocks/checkboxBlock'
 
 class TestBlockFactory {
     static createBoard(): Board {
