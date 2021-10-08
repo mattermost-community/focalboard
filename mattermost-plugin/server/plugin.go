@@ -275,7 +275,8 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 		boardID = pathSplit[3]
 		viewID = pathSplit[4]
 		cardID = pathSplit[5]
-	} else if len(pathSplit) == 8 && pathSplit[0] == "plugins" && pathSplit[1] == "focalboard" && pathSplit[2] == "workspace" && pathSplit[4] == "shared" { // This is a shared board card link
+	} else if len(pathSplit) == 8 && pathSplit[0] == "plugins" &&
+		pathSplit[1] == "focalboard" && pathSplit[2] == "workspace" && pathSplit[4] == "shared" { // This is a shared board card link
 		workspaceID = pathSplit[3]
 		boardID = pathSplit[5]
 		viewID = pathSplit[6]
