@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import {Board, PropertyType, IPropertyTemplate} from '../../blocks/board'
+import {Board, IPropertyTemplate, PropertyType} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {BoardView} from '../../blocks/boardView'
 import {ContentBlock} from '../../blocks/contentBlock'
@@ -15,7 +15,7 @@ import PropertyMenu, {PropertyTypes, typeDisplayName} from '../../widgets/proper
 
 import PropertyValueElement from '../propertyValueElement'
 import Menu from '../../widgets/menu'
-import {Utils} from '../../utils'
+import {IDType, Utils} from '../../utils'
 
 type Props = {
     board: Board
@@ -90,7 +90,7 @@ const CardDetailProperties = React.memo((props: Props) => {
                             label={intl.formatMessage({id: 'PropertyMenu.selectType', defaultMessage: 'Select property type'})}
                             onTypeSelected={async (type) => {
                                 const template: IPropertyTemplate = {
-                                    id: Utils.createGuid(),
+                                    id: Utils.createGuid(IDType.BlockID),
                                     name: typeDisplayName(intl, type),
                                     type,
                                     options: [],
