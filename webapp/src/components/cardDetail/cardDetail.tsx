@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {FormattedMessage, useIntl} from 'react-intl'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
+import {FormattedMessage} from 'react-intl'
 
 import {BlockIcons} from '../../blockIcons'
 import {Card} from '../../blocks/card'
@@ -9,8 +9,6 @@ import {BoardView} from '../../blocks/boardView'
 import {Board} from '../../blocks/board'
 import {CommentBlock} from '../../blocks/commentBlock'
 import {ContentBlock} from '../../blocks/contentBlock'
-import {ContentHandler} from '../content/contentRegistry'
-import {Utils} from '../../utils'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import {Focusable} from '../../widgets/editable'
@@ -21,14 +19,13 @@ import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../teleme
 import BlockIconSelector from '../blockIconSelector'
 
 import CommentsList from './commentsList'
-import CardDetailContext, {CardDetailContextType} from './cardDetailContext'
+import {CardDetailProvider} from './cardDetailContext'
 import CardDetailContents from './cardDetailContents'
 import CardDetailContentsMenu from './cardDetailContentsMenu'
 import CardDetailProperties from './cardDetailProperties'
 import useImagePaste from './imagePaste'
 
 import './cardDetail.scss'
-import {Block} from '../../blocks/block'
 
 type Props = {
     board: Board
@@ -85,37 +82,6 @@ const CardDetail = (props: Props): JSX.Element|null => {
     if (!card) {
         return null
     }
-
-    const intl = useIntl()
-    const [lastAddedBlockId, setLastAddedBlockId] = useState('')
-
-    const contextValue = useMemo<CardDetailContextType>(() => ({
-        card,
-        lastAddedBlockId,
-        addBlock: async (handler: ContentHandler, index: number) => {
-            const block = await handler.createBlock(card.rootId)
-            block.parentId = card.id
-            block.rootId = card.rootId
-            const contentOrder = card.fields.contentOrder.slice()
-            contentOrder.splice(index, 0, block.id)
-            setLastAddedBlockId(block.id)
-            const typeName = handler.getDisplayText(intl)
-            const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
-            await mutator.performAsUndoGroup(async () => {
-                await mutator.insertBlock(block, description)
-                await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder, description)
-            })
-        },
-        deleteBlock: async (block: Block, index: number) => {
-            const contentOrder = card.fields.contentOrder.slice()
-            contentOrder.splice(index, 1)
-            const description = intl.formatMessage({id: 'ContentBlock.DeleteAction', defaultMessage: 'delete'})
-            await mutator.performAsUndoGroup(async () => {
-                await mutator.deleteBlock(block, description)
-                await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder, description)
-            })
-        },
-    }), [intl, card, lastAddedBlockId])
 
     return (
         <>
@@ -178,14 +144,14 @@ const CardDetail = (props: Props): JSX.Element|null => {
             {/* Content blocks */}
 
             <div className='CardDetail content fullwidth content-blocks'>
-                <CardDetailContext.Provider value={contextValue}>
+                <CardDetailProvider card={card}>
                     <CardDetailContents
                         card={props.card}
                         contents={props.contents}
                         readonly={props.readonly}
                     />
                     {!props.readonly && <CardDetailContentsMenu/>}
-                </CardDetailContext.Provider>
+                </CardDetailProvider>
             </div>
         </>
     )

@@ -1,12 +1,12 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {useCallback, useContext} from 'react'
+import {useCallback} from 'react'
 
 import {ContentBlock} from '../../blocks/contentBlock'
 import {Utils} from '../../utils'
 
-import CardDetailContext from '../cardDetail/cardDetailContext'
+import {useCardDetailContext} from '../cardDetail/cardDetailContext'
 
 import {contentRegistry} from './contentRegistry'
 
@@ -25,7 +25,7 @@ type Props = {
 
 export default function ContentElement(props: Props): JSX.Element|null {
     const {block, readonly, cords} = props
-    const cardDetail = useContext(CardDetailContext)
+    const cardDetail = useCardDetailContext()
 
     const handler = contentRegistry.getHandler(block.type)
     if (!handler) {

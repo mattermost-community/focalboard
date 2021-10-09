@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useContext} from 'react'
+import React, {useCallback} from 'react'
 import {FormattedMessage, IntlShape, useIntl} from 'react-intl'
 
 import {BlockTypes} from '../../blocks/block'
@@ -11,7 +11,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 
 import {contentRegistry} from '../content/contentRegistry'
 
-import CardDetailContext from './cardDetailContext'
+import {useCardDetailContext} from './cardDetailContext'
 
 function addContentMenu(intl: IntlShape, type: BlockTypes): JSX.Element {
     const handler = contentRegistry.getHandler(type)
@@ -19,7 +19,7 @@ function addContentMenu(intl: IntlShape, type: BlockTypes): JSX.Element {
         Utils.logError(`addContentMenu, unknown content type: ${type}`)
         return <></>
     }
-    const cardDetail = useContext(CardDetailContext)
+    const cardDetail = useCardDetailContext()
     const addElement = useCallback(async () => {
         const {card} = cardDetail
         const index = card.fields.contentOrder.length

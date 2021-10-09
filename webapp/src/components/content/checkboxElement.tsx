@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useContext, useEffect, useRef, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {useIntl} from 'react-intl'
 
 import {createCheckboxBlock} from '../../blocks/checkboxBlock'
@@ -8,7 +8,7 @@ import {ContentBlock} from '../../blocks/contentBlock'
 import CheckIcon from '../../widgets/icons/check'
 import mutator from '../../mutator'
 import Editable, {Focusable} from '../../widgets/editable'
-import CardDetailContext from '../cardDetail/cardDetailContext'
+import {useCardDetailContext} from '../cardDetail/cardDetailContext'
 
 import {contentRegistry} from './contentRegistry'
 
@@ -25,8 +25,8 @@ const CheckboxElement = React.memo((props: Props) => {
     const {block, readonly} = props
     const intl = useIntl()
     const titleRef = useRef<Focusable>(null)
-    const cardDetail = useContext(CardDetailContext)
-    const [addedBlockId, setAddedBlockId] = useState(cardDetail.lastAddedBlockId)
+    const cardDetail = useCardDetailContext()
+    const [addedBlockId, setAddedBlockId] = useState(cardDetail.lastAddedBlock.id)
 
     useEffect(() => {
         if (block.id === addedBlockId) {
@@ -62,7 +62,7 @@ const CheckboxElement = React.memo((props: Props) => {
                 onChange={setTitle}
                 saveOnEsc={true}
                 onSave={async (saveType) => {
-                    if (title === '' && block.id === cardDetail.lastAddedBlockId && props.onDeleteElement) {
+                    if (title === '' && block.id === cardDetail.lastAddedBlock.id && props.onDeleteElement) {
                         props.onDeleteElement()
                     } else {
                         const newBlock = createCheckboxBlock(block)
