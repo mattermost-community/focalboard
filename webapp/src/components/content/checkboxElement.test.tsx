@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React from 'react'
+import React, {ReactElement, ReactNode} from 'react'
 import {fireEvent, render} from '@testing-library/react'
 import '@testing-library/jest-dom'
 
@@ -9,9 +9,24 @@ import {wrapIntl} from '../../testUtils'
 
 import {ContentBlock} from '../../blocks/contentBlock'
 
+import {CardDetailProvider} from '../cardDetail/cardDetailContext'
+
+import {TestBlockFactory} from '../../test/testBlockFactory'
+
 import CheckboxElement from './checkboxElement'
 
 const fetchMock = require('fetch-mock-jest')
+
+const board = TestBlockFactory.createBoard()
+const card = TestBlockFactory.createCard(board)
+
+const wrap = (child: ReactNode): ReactElement => (
+    wrapIntl(
+        <CardDetailProvider card={card}>
+            {child}
+        </CardDetailProvider>,
+    )
+)
 
 describe('components/content/CheckboxElement', () => {
     const defaultBlock: ContentBlock = {
@@ -39,7 +54,7 @@ describe('components/content/CheckboxElement', () => {
     })
 
     test('should match snapshot', () => {
-        const component = wrapIntl(
+        const component = wrap(
             <CheckboxElement
                 block={defaultBlock}
                 readonly={false}
@@ -50,7 +65,7 @@ describe('components/content/CheckboxElement', () => {
     })
 
     test('should match snapshot on read only', () => {
-        const component = wrapIntl(
+        const component = wrap(
             <CheckboxElement
                 block={defaultBlock}
                 readonly={true}
@@ -61,7 +76,7 @@ describe('components/content/CheckboxElement', () => {
     })
 
     test('should match snapshot on change title', () => {
-        const component = wrapIntl(
+        const component = wrap(
             <CheckboxElement
                 block={defaultBlock}
                 readonly={false}
@@ -74,7 +89,7 @@ describe('components/content/CheckboxElement', () => {
     })
 
     test('should match snapshot on toggle', () => {
-        const component = wrapIntl(
+        const component = wrap(
             <CheckboxElement
                 block={defaultBlock}
                 readonly={false}
