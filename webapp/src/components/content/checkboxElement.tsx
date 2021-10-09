@@ -62,7 +62,8 @@ const CheckboxElement = React.memo((props: Props) => {
                 onChange={setTitle}
                 saveOnEsc={true}
                 onSave={async (saveType) => {
-                    if (title === '' && block.id === cardDetail.lastAddedBlock.id && props.onDeleteElement) {
+                    const {lastAddedBlock} = cardDetail
+                    if (title === '' && block.id === lastAddedBlock.id && lastAddedBlock.autoAdded && props.onDeleteElement) {
                         props.onDeleteElement()
                     } else {
                         const newBlock = createCheckboxBlock(block)

@@ -11,12 +11,13 @@ import mutator from '../../mutator'
 
 export type AddedBlock = {
     id: string
+    autoAdded: boolean
 }
 
 export type CardDetailContextType = {
     card: Card
     lastAddedBlock: AddedBlock
-    addBlock: (handler: ContentHandler, index: number) => void
+    addBlock: (handler: ContentHandler, index: number, auto: boolean) => void
     deleteBlock: (block: Block, index: number) => void
 }
 
@@ -39,12 +40,13 @@ export const CardDetailProvider = (props: CardDetailProps): ReactElement => {
     const intl = useIntl()
     const [lastAddedBlock, setLastAddedBlock] = useState<AddedBlock>({
         id: '',
+        autoAdded: false,
     })
     const {card} = props
     const contextValue = useMemo(() => ({
         card,
         lastAddedBlock,
-        addBlock: async (handler: ContentHandler, index: number) => {
+        addBlock: async (handler: ContentHandler, index: number, auto: boolean) => {
             const block = await handler.createBlock(card.rootId)
             block.parentId = card.id
             block.rootId = card.rootId
@@ -52,6 +54,7 @@ export const CardDetailProvider = (props: CardDetailProps): ReactElement => {
             contentOrder.splice(index, 0, block.id)
             setLastAddedBlock({
                 id: block.id,
+                autoAdded: auto,
             })
             const typeName = handler.getDisplayText(intl)
             const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
