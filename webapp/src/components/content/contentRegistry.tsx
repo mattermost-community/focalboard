@@ -12,7 +12,7 @@ export type ContentHandler = {
     getDisplayText: (intl: IntlShape) => string,
     getIcon: () => JSX.Element,
     createBlock: (rootId: string) => Promise<ContentBlock>,
-    createComponent: (block: ContentBlock, readonly: boolean, onAddNewElement?: () => void, onDeleteElement?: () => void) => JSX.Element,
+    createComponent: (block: ContentBlock, readonly: boolean, onAddElement?: () => void, onDeleteElement?: () => void) => JSX.Element,
 }
 
 class ContentRegistry {

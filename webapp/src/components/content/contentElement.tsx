@@ -33,9 +33,9 @@ export default function ContentElement(props: Props): JSX.Element|null {
         return null
     }
 
-    const addNewElement = useCallback(() => {
+    const addElement = useCallback(() => {
         const index = cords.x + 1
-        cardDetail.addNewBlock(handler, index)
+        cardDetail.addBlock(handler, index)
     }, [cardDetail, cords, handler])
 
     const deleteElement = useCallback(() => {
@@ -43,5 +43,5 @@ export default function ContentElement(props: Props): JSX.Element|null {
         cardDetail.deleteBlock(block, index)
     }, [block, cords, cardDetail])
 
-    return handler.createComponent(block, readonly, addNewElement, deleteElement)
+    return handler.createComponent(block, readonly, addElement, deleteElement)
 }

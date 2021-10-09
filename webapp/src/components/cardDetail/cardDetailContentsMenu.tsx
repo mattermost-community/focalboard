@@ -20,10 +20,10 @@ function addContentMenu(intl: IntlShape, type: BlockTypes): JSX.Element {
         return <></>
     }
     const cardDetail = useContext(CardDetailContext)
-    const addNewElement = useCallback(async () => {
+    const addElement = useCallback(async () => {
         const {card} = cardDetail
         const index = card.fields.contentOrder.length
-        cardDetail.addNewBlock(handler, index)
+        cardDetail.addBlock(handler, index)
     }, [cardDetail, handler])
 
     return (
@@ -32,7 +32,7 @@ function addContentMenu(intl: IntlShape, type: BlockTypes): JSX.Element {
             id={type}
             name={handler.getDisplayText(intl)}
             icon={handler.getIcon()}
-            onClick={addNewElement}
+            onClick={addElement}
         />
     )
 }

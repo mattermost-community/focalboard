@@ -92,7 +92,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
     const contextValue = useMemo<CardDetailContextType>(() => ({
         card,
         lastAddedBlockId,
-        addNewBlock: async (handler: ContentHandler, index: number) => {
+        addBlock: async (handler: ContentHandler, index: number) => {
             const block = await handler.createBlock(card.rootId)
             block.parentId = card.id
             block.rootId = card.rootId

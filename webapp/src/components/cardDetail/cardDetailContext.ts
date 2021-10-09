@@ -9,7 +9,7 @@ import {ContentHandler} from '../content/contentRegistry'
 export type CardDetailContextType = {
     card: Card
     lastAddedBlockId: string
-    addNewBlock: (handler: ContentHandler, index: number) => void
+    addBlock: (handler: ContentHandler, index: number) => void
     deleteBlock: (block: Block, index: number) => void
 }
 
