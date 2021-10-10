@@ -21,7 +21,7 @@ export type CardDetailContextType = {
     deleteBlock: (block: Block, index: number) => void
 }
 
-const CardDetailContext = createContext<CardDetailContextType | null>(null)
+export const CardDetailContext = createContext<CardDetailContextType | null>(null)
 
 export function useCardDetailContext(): CardDetailContextType {
     const cardDetailContext = useContext(CardDetailContext)
