@@ -3,6 +3,7 @@
 import React, {useState, useRef, useEffect} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {useHotkeys} from 'react-hotkeys-hook'
+import {debounce} from 'lodash'
 
 import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
@@ -19,6 +20,10 @@ const ViewHeaderSearch = (): JSX.Element => {
     const [isSearching, setIsSearching] = useState(Boolean(searchText))
     const [searchValue, setSearchValue] = useState(searchText)
 
+    const dispatchSearchText = debounce((value: string) => {
+        dispatch(setSearchText(value))
+    }, 200)
+
     useEffect(() => {
         searchFieldRef.current?.focus()
     }, [isSearching])
@@ -34,17 +39,20 @@ const ViewHeaderSearch = (): JSX.Element => {
                 ref={searchFieldRef}
                 value={searchValue}
                 placeholderText={intl.formatMessage({id: 'ViewHeader.search-text', defaultMessage: 'Search text'})}
-                onChange={setSearchValue}
+                onChange={(value) => {
+                    setSearchValue(value)
+                    dispatchSearchText(value)
+                }}
                 onCancel={() => {
                     setSearchValue('')
                     setIsSearching(false)
-                    dispatch(setSearchText(''))
+                    dispatchSearchText('')
                 }}
                 onSave={() => {
                     if (searchValue === '') {
                         setIsSearching(false)
                     }
-                    dispatch(setSearchText(searchValue))
+                    dispatchSearchText(searchValue)
                 }}
             />
         )
