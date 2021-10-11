@@ -47,10 +47,11 @@ if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
         }
 
         const pathName = event.data.message?.pathName
-        if (!pathName) {
+        if (!pathName || !pathName.startsWith((window as any).frontendBaseURL)) {
             return
         }
 
+        Utils.log(`Navigating Boards to ${pathName}`)
         history.replace(pathName.replace((window as any).frontendBaseURL, ''))
     })
 }
@@ -92,8 +93,13 @@ const App = React.memo((): JSX.Element => {
         dispatch(fetchLanguage())
         dispatch(fetchMe())
         dispatch(fetchClientConfig())
-        history.replace(window.location.pathname.replace((window as any).frontendBaseURL, ''))
     }, [])
+
+    if (Utils.isFocalboardPlugin()) {
+        useEffect(() => {
+            history.replace(window.location.pathname.replace((window as any).frontendBaseURL, ''))
+        }, [])
+    }
 
     if (!inPluginLegacy) {
         useEffect(() => {

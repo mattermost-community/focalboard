@@ -3,7 +3,6 @@ package auth
 import (
 	"database/sql"
 	"testing"
-	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mattermost/focalboard/server/model"
@@ -25,8 +24,8 @@ var mockSession = &model.Session{
 	ID:       utils.NewID(utils.IDTypeSession),
 	Token:    "goodToken",
 	UserID:   "12345",
-	CreateAt: time.Now().Unix() - 2000,
-	UpdateAt: time.Now().Unix() - 2000,
+	CreateAt: utils.GetMillis() - utils.SecondsToMillis(2000),
+	UpdateAt: utils.GetMillis() - utils.SecondsToMillis(2000),
 }
 
 func setupTestHelper(t *testing.T) *TestHelper {
