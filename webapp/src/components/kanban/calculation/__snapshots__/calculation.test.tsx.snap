@@ -6,7 +6,7 @@ exports[`components/kanban/calculation/KanbanCalculation base case 1`] = `
     class="KanbanCalculation"
   >
     <button
-      class="Button     "
+      class="Button"
       type="button"
     >
       <span>
@@ -23,7 +23,7 @@ exports[`components/kanban/calculation/KanbanCalculation calculations menu open 
     class="KanbanCalculation"
   >
     <button
-      class="Button     "
+      class="Button"
       type="button"
     >
       <span>
@@ -155,7 +155,7 @@ exports[`components/kanban/calculation/KanbanCalculation no menu should appear i
     class="KanbanCalculation"
   >
     <button
-      class="Button     "
+      class="Button"
       type="button"
     >
       <span>
