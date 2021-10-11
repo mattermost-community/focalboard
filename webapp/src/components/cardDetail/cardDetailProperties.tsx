@@ -95,7 +95,8 @@ const CardDetailProperties = React.memo((props: Props) => {
                                     type,
                                     options: [],
                                 }
-                                setNewTemplateId(await mutator.insertPropertyTemplate(board, activeView, -1, template))
+                                const templateId = await mutator.insertPropertyTemplate(board, activeView, -1, template)
+                                setNewTemplateId(templateId)
                             }}
                         />
                     </Menu>

@@ -1,7 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useRef, useEffect} from 'react'
-import debounce from 'lodash/debounce'
 import {useIntl, IntlShape} from 'react-intl'
 
 import {PropertyType} from '../blocks/board'
@@ -100,10 +99,6 @@ const PropertyMenu = React.memo((props: Props) => {
         defaultMessage: 'Delete',
     })
 
-    const debouncedOnTypeAndNameChanged = (newType: PropertyType, newName: string) => {
-        debounce(() => props.onTypeAndNameChanged(newType, newName), 150)()
-    }
-
     useEffect(() => {
         nameTextbox.current?.focus()
         nameTextbox.current?.setSelectionRange(0, name.length)
@@ -138,7 +133,7 @@ const PropertyMenu = React.memo((props: Props) => {
             >
                 <PropertyTypes
                     label={intl.formatMessage({id: 'PropertyMenu.changeType', defaultMessage: 'Change property type'})}
-                    onTypeSelected={(type) => debouncedOnTypeAndNameChanged(type, name)}
+                    onTypeSelected={(type: PropertyType) => props.onTypeAndNameChanged(type, name)}
                 />
             </Menu.SubMenu>
             <Menu.Text
