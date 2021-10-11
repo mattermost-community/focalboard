@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Utils} from '../utils'
+import {Utils, IDType} from '../utils'
 
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../telemetry/telemetryClient'
 
@@ -40,7 +40,7 @@ function createBoard(block?: Block): Board {
     const selectProperties = cardProperties.find((o) => o.type === 'select')
     if (!selectProperties) {
         const property: IPropertyTemplate = {
-            id: Utils.createGuid(),
+            id: Utils.createGuid(IDType.BlockID),
             name: 'Status',
             type: 'select',
             options: [],

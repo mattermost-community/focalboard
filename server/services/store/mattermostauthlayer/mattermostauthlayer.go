@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/pkg/errors"
 
@@ -13,6 +12,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -161,7 +161,7 @@ func (s *MattermostAuthLayer) GetActiveUserCount(updatedSecondsAgo int64) (int, 
 	query := s.getQueryBuilder().
 		Select("count(distinct userId)").
 		From("Sessions").
-		Where(sq.Gt{"LastActivityAt": time.Now().Unix() - updatedSecondsAgo})
+		Where(sq.Gt{"LastActivityAt": utils.GetMillis() - utils.SecondsToMillis(updatedSecondsAgo)})
 
 	row := query.QueryRow()
 
