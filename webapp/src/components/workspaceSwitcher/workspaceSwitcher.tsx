@@ -31,7 +31,7 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
         UserSettings.lastViewId = null
         dispatch(setCurrentBoard(''))
         dispatch(setCurrentView(''))
-        history.push(`/workspace/${activeWorkspace?.id}`)
+        history.replace(`/workspace/${activeWorkspace?.id}`)
     }
 
     return (
