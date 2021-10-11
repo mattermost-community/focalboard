@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
+import button from './button'
 
 import './iconButton.scss'
 
@@ -18,7 +19,7 @@ function IconButton(props: Props): JSX.Element {
         className += ' ' + props.className
     }
     return (
-        <div
+        <button
             role='button'
             onClick={props.onClick}
             onMouseDown={props.onMouseDown}
@@ -27,7 +28,7 @@ function IconButton(props: Props): JSX.Element {
             aria-label={props.title}
         >
             {props.icon}
-        </div>
+        </button>
     )
 }
 
