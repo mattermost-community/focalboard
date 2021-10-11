@@ -17,7 +17,7 @@ type OptionProps = SelectOption & {
 const Option = (props: {data: OptionProps}): JSX.Element => {
     const [submenu, setSubmenu] = useState(false)
     const [height, setHeight] = useState(0)
-    const [x, setX] = useState(0)
+    const [menuOptionRight, setMenuOptionRight] = useState(0)
     const [calculationToProperties, setCalculationToProperties] = useState<Map<string, IPropertyTemplate[]>>(new Map())
 
     const toggleOption = (e: any) => {
@@ -26,7 +26,7 @@ const Option = (props: {data: OptionProps}): JSX.Element => {
         } else {
             const rect = e.target.getBoundingClientRect()
             setHeight(rect.y)
-            setX(rect.x + rect.width)
+            setMenuOptionRight(rect.x + rect.width)
             setSubmenu(true)
         }
     }
@@ -69,7 +69,7 @@ const Option = (props: {data: OptionProps}): JSX.Element => {
                 submenu && props.data.value !== 'count' && (
                     <div
                         className='dropdown-submenu'
-                        style={{top: `${height - 10}px`, left: `${x}px`}}
+                        style={{top: `${height - 10}px`, left: `${menuOptionRight}px`}}
                     >
 
                         {

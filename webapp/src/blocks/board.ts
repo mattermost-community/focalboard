@@ -6,7 +6,6 @@ import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../telemetry
 
 import {Block, createBlock} from './block'
 import {Card} from './card'
-import {KanbanCalculationFields} from './boardView'
 
 type PropertyType = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy'
 
@@ -31,7 +30,6 @@ type BoardFields = {
     isTemplate?: boolean
     cardProperties: IPropertyTemplate[]
     columnCalculations: Record<string, string>
-    kanbanCalculations: Record<string, KanbanCalculationFields>
 }
 
 type Board = Block & {
@@ -73,7 +71,6 @@ function createBoard(block?: Block): Board {
             icon: block?.fields.icon || '',
             isTemplate: block?.fields.isTemplate || false,
             columnCalculations: block?.fields.columnCalculations || [],
-            kanbanCalculations: block?.fields.kanbanCalculations || {},
             cardProperties,
         },
     }

@@ -51,7 +51,7 @@ function createBoardView(block?: Block): BoardView {
             cardOrder: block?.fields.cardOrder?.slice() || [],
             columnWidths: {...(block?.fields.columnWidths || {})},
             columnCalculations: {...(block?.fields.columnCalculations) || {}},
-            kanbanCalculations: {...(block?.fields.KanbanCalculationFields) || {}},
+            kanbanCalculations: {...(block?.fields.kanbanCalculations) || {}},
             defaultTemplateId: block?.fields.defaultTemplateId || '',
         },
     }

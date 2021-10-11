@@ -3,6 +3,7 @@
 import React from 'react'
 
 import './button.scss'
+import {Utils} from '../../utils'
 
 type Props = {
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
@@ -19,11 +20,20 @@ type Props = {
 }
 
 function Button(props: Props): JSX.Element {
+    const classNames: Record<string, boolean> = {
+        Button: true,
+        active: Boolean(props.active),
+        filled: Boolean(props.filled),
+    }
+    classNames[`emphasis--${props.emphasis}`] = Boolean(props.emphasis)
+    classNames[`size--${props.size}`] = Boolean(props.size)
+    classNames[`${props.className}`] = Boolean(props.className)
+
     return (
         <button
             type={props.submit ? 'submit' : 'button'}
             onClick={props.onClick}
-            className={`Button ${props.active ? 'active' : ''} ${props.filled ? 'filled' : ''} ${props.emphasis ? 'emphasis--' + props.emphasis : ''} ${props.size ? 'size--' + props.size : ''} ${props.className || ''}`}
+            className={Utils.generateClassName(classNames)}
             title={props.title}
             onBlur={props.onBlur}
         >

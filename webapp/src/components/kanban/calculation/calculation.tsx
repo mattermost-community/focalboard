@@ -39,7 +39,10 @@ function KanbanCalculation(props: Props): JSX.Element {
                         value={props.value}
                         property={props.property}
                         menuOpen={props.menuOpen}
-                        onChange={props.onChange}
+                        onChange={(data: {calculation: string, propertyId: string}) => {
+                            props.onChange(data)
+                            props.onMenuClose()
+                        }}
                         cardProperties={props.cardProperties}
                     />
                 )
