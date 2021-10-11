@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react'
 import {batch} from 'react-redux'
 import {FormattedMessage, useIntl} from 'react-intl'
-import {generatePath, Redirect, useHistory, useRouteMatch} from 'react-router-dom'
+import {generatePath, Redirect, useHistory, useRouteMatch, useLocation} from 'react-router-dom'
 import {useHotkeys} from 'react-hotkeys-hook'
 
 import {Block} from '../blocks/block'
@@ -47,6 +47,7 @@ const BoardPage = (props: Props): JSX.Element => {
     const history = useHistory()
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, workspaceId?: string}>()
     const [websocketClosed, setWebsocketClosed] = useState(false)
+    const queryString = new URLSearchParams(useLocation().search)
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
 
     let workspaceId = match.params.workspaceId || UserSettings.lastWorkspaceId || '0'
@@ -66,7 +67,6 @@ const BoardPage = (props: Props): JSX.Element => {
     useEffect(() => {
         // Backward compatibility: This can be removed in the future, this is for
         // transform the old query params into routes
-        const queryString = new URLSearchParams(history.location.search)
         const queryBoardId = queryString.get('id')
         const params = {...match.params}
         let needsRedirect = false
@@ -150,7 +150,6 @@ const BoardPage = (props: Props): JSX.Element => {
         let token = localStorage.getItem('focalboardSessionId') || ''
         if (props.readonly) {
             loadAction = initialReadOnlyLoad
-            const queryString = new URLSearchParams(history.location.search)
             token = token || queryString.get('r') || ''
         }
         dispatch(loadAction(match.params.boardId))
@@ -286,7 +285,9 @@ const BoardPage = (props: Props): JSX.Element => {
                 <div className='error'>
                     {intl.formatMessage({id: 'BoardPage.syncFailed', defaultMessage: 'Board may be deleted or access revoked.'})}
                 </div>}
-            <Workspace readonly={props.readonly || false}/>
+            <Workspace
+                readonly={props.readonly || false}
+            />
         </div>
     )
 }
