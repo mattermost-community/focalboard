@@ -38,6 +38,7 @@
   "DashboardPage.CenterPanel.ChangeChannels": "Kanalları kolayca değiştirmek için değiştiriciyi kullanın",
   "DashboardPage.CenterPanel.NoWorkspaces": "Maalesef, bu arama ifadesine uyan bir kanal bulunamadı",
   "DashboardPage.CenterPanel.NoWorkspacesDescription": "Lütfen başka bir ifade ile aramayı deneyin",
+  "DashboardPage.showEmpty": "Boş olanları görüntüle",
   "DashboardPage.title": "Pano",
   "Dialog.closeDialog": "Pencereyi kapat",
   "EditableDayPicker.today": "Bugün",
