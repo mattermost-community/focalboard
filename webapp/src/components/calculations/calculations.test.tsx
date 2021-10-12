@@ -1,6 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
+import {createIntl} from 'react-intl'
+
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import {IPropertyTemplate} from '../../blocks/board'
@@ -149,10 +151,12 @@ describe('components/calculations/calculation logic', () => {
         updatedBy: {id: 'property_lastUpdatedBy', type: 'updatedBy', name: '', options: []},
     }
 
+    const intl = createIntl({locale: 'en-us'})
+
     // testing count
     Object.values(properties).forEach((property) => {
         it(`should correctly count for property type "${property.type}"`, function() {
-            expect(Calculations.count(cards, property)).toBe('4')
+            expect(Calculations.count(cards, property, intl)).toBe('4')
         })
     })
 
@@ -175,7 +179,7 @@ describe('components/calculations/calculation logic', () => {
     }
     Object.keys(countValueTests).forEach((propertyType) => {
         it(`should correctly count values for property type ${propertyType}`, function() {
-            expect(Calculations.countValue(cards, properties[propertyType]!)).toBe(countValueTests[propertyType]!)
+            expect(Calculations.countValue(cards, properties[propertyType]!, intl)).toBe(countValueTests[propertyType]!)
         })
     })
 
@@ -198,97 +202,97 @@ describe('components/calculations/calculation logic', () => {
     }
     Object.keys(countUniqueValueTests).forEach((propertyType) => {
         it(`should correctly count unique values for property type ${propertyType}`, function() {
-            expect(Calculations.countUniqueValue(cards, properties[propertyType]!)).toBe(countUniqueValueTests[propertyType]!)
+            expect(Calculations.countUniqueValue(cards, properties[propertyType]!, intl)).toBe(countUniqueValueTests[propertyType]!)
         })
     })
 
     test('countUniqueValue for cards created 1 second apart', () => {
-        const result = Calculations.countUniqueValue([card3, card6], properties.createdTime)
+        const result = Calculations.countUniqueValue([card3, card6], properties.createdTime, intl)
         expect(result).toBe('1')
     })
 
     test('countUniqueValue for cards updated 1 second apart', () => {
-        const result = Calculations.countUniqueValue([card3, card6], properties.updatedTime)
+        const result = Calculations.countUniqueValue([card3, card6], properties.updatedTime, intl)
         expect(result).toBe('1')
     })
 
     test('countUniqueValue for cards created 1 minute apart', () => {
-        const result = Calculations.countUniqueValue([card3, card7], properties.createdTime)
+        const result = Calculations.countUniqueValue([card3, card7], properties.createdTime, intl)
         expect(result).toBe('2')
     })
 
     test('countUniqueValue for cards updated 1 minute apart', () => {
-        const result = Calculations.countUniqueValue([card3, card7], properties.updatedTime)
+        const result = Calculations.countUniqueValue([card3, card7], properties.updatedTime, intl)
         expect(result).toBe('2')
     })
 
     test('countChecked for cards', () => {
-        const result = Calculations.countChecked(cards, properties.checkbox)
+        const result = Calculations.countChecked(cards, properties.checkbox, intl)
         expect(result).toBe('3')
     })
 
     test('countChecked for cards, one set, other unset', () => {
-        const result = Calculations.countChecked([card1, card5], properties.checkbox)
+        const result = Calculations.countChecked([card1, card5], properties.checkbox, intl)
         expect(result).toBe('1')
     })
 
     test('countUnchecked for cards', () => {
-        const result = Calculations.countUnchecked(cards, properties.checkbox)
+        const result = Calculations.countUnchecked(cards, properties.checkbox, intl)
         expect(result).toBe('1')
     })
 
     test('countUnchecked for cards, two set, one unset', () => {
-        const result = Calculations.countUnchecked([card1, card1, card5], properties.checkbox)
+        const result = Calculations.countUnchecked([card1, card1, card5], properties.checkbox, intl)
         expect(result).toBe('1')
     })
 
     test('countUnchecked for cards, one set, other unset', () => {
-        const result = Calculations.countUnchecked([card1, card5], properties.checkbox)
+        const result = Calculations.countUnchecked([card1, card5], properties.checkbox, intl)
         expect(result).toBe('1')
     })
 
     test('countUnchecked for cards, one set, two unset', () => {
-        const result = Calculations.countUnchecked([card1, card5, card5], properties.checkbox)
+        const result = Calculations.countUnchecked([card1, card5, card5], properties.checkbox, intl)
         expect(result).toBe('2')
     })
 
     test('percentChecked for cards', () => {
-        const result = Calculations.percentChecked(cards, properties.checkbox)
+        const result = Calculations.percentChecked(cards, properties.checkbox, intl)
         expect(result).toBe('75%')
     })
 
     test('percentUnchecked for cards', () => {
-        const result = Calculations.percentUnchecked(cards, properties.checkbox)
+        const result = Calculations.percentUnchecked(cards, properties.checkbox, intl)
         expect(result).toBe('25%')
     })
 
     test('sum', () => {
-        const result = Calculations.sum(cards, properties.number)
+        const result = Calculations.sum(cards, properties.number, intl)
         expect(result).toBe('170')
     })
 
     test('average', () => {
-        const result = Calculations.average(cards, properties.number)
+        const result = Calculations.average(cards, properties.number, intl)
         expect(result).toBe('56.67')
     })
 
     test('median', () => {
-        const result = Calculations.median(cards, properties.number)
+        const result = Calculations.median(cards, properties.number, intl)
         expect(result).toBe('100')
     })
 
     test('min', () => {
-        const result = Calculations.min(cards, properties.number)
+        const result = Calculations.min(cards, properties.number, intl)
         expect(result).toBe('-30')
     })
 
     test('max', () => {
-        const result = Calculations.max(cards, properties.number)
+        const result = Calculations.max(cards, properties.number, intl)
         expect(result).toBe('100')
     })
 
     test('range', () => {
-        const result = Calculations.range(cards, properties.number)
+        const result = Calculations.range(cards, properties.number, intl)
         expect(result).toBe('-30 - 100')
     })
 })

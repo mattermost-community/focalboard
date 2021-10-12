@@ -3,6 +3,7 @@
 import React from 'react'
 import configureStore from 'redux-mock-store'
 import {Provider as ReduxProvider} from 'react-redux'
+import 'isomorphic-fetch'
 
 import {createMemoryHistory} from 'history'
 
@@ -16,7 +17,15 @@ import {wrapIntl} from '../../testUtils'
 
 import {UserWorkspace} from '../../user'
 
+import {FetchMock} from '../../test/fetchMock'
+
 import DashboardCenterContent from './centerContent'
+
+global.fetch = FetchMock.fn
+
+beforeEach(() => {
+    FetchMock.fn.mockReset()
+})
 
 describe('pages/dashboard/CenterContent', () => {
     const mockStore = configureStore([])
@@ -45,6 +54,8 @@ describe('pages/dashboard/CenterContent', () => {
             },
         })
 
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace1, workspace2, workspace3))))
+
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <DashboardCenterContent/>
@@ -60,6 +71,8 @@ describe('pages/dashboard/CenterContent', () => {
                 userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3),
             },
         })
+
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace1, workspace2, workspace3))))
 
         const component = wrapIntl(
             <ReduxProvider store={store}>
@@ -80,6 +93,8 @@ describe('pages/dashboard/CenterContent', () => {
             },
         })
 
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace1, workspace2, workspace3))))
+
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <DashboardCenterContent/>
@@ -98,6 +113,8 @@ describe('pages/dashboard/CenterContent', () => {
                 userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3),
             },
         })
+
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace1, workspace2, workspace3))))
 
         const history = createMemoryHistory()
 
