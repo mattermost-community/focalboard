@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"time"
 
 	"github.com/mattermost/focalboard/server/utils"
 
@@ -429,7 +428,7 @@ func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy str
 		return err
 	}
 
-	now := time.Now().Unix()
+	now := utils.GetMillis()
 	insertQuery := s.getQueryBuilder().Insert(s.tablePrefix+"blocks_history").
 		Columns(
 			"workspace_id",

@@ -3,11 +3,11 @@ package auth
 
 import (
 	"database/sql"
-	"time"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/utils"
 	"github.com/pkg/errors"
 )
 
@@ -38,7 +38,7 @@ func (a *Auth) GetSession(token string) (*model.Session, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get the session for the token")
 	}
-	if session.UpdateAt < (time.Now().Unix() - a.config.SessionRefreshTime) {
+	if session.UpdateAt < (utils.GetMillis() - utils.SecondsToMillis(a.config.SessionRefreshTime)) {
 		_ = a.store.RefreshSession(session)
 	}
 	return session, nil

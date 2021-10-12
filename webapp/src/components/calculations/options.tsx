@@ -31,12 +31,18 @@ const Options:Record<string, Option> = {
     min: {value: 'min', label: 'Min', displayName: 'Min'},
     max: {value: 'max', label: 'Max', displayName: 'Max'},
     range: {value: 'range', label: 'Range', displayName: 'Range'},
+    earliest: {value: 'earliest', label: 'Earliest', displayName: 'Earliest'},
+    latest: {value: 'latest', label: 'Latest', displayName: 'Latest'},
+    dateRange: {value: 'dateRange', label: 'Range', displayName: 'Range'},
 }
 
 const optionsByType: Map<string, Option[]> = new Map([
     ['common', [Options.none, Options.count, Options.countValue, Options.countUniqueValue]],
     ['checkbox', [Options.countChecked, Options.countUnchecked, Options.percentChecked, Options.percentUnchecked]],
     ['number', [Options.sum, Options.average, Options.median, Options.min, Options.max, Options.range]],
+    ['date', [Options.earliest, Options.latest, Options.dateRange]],
+    ['createdTime', [Options.earliest, Options.latest, Options.dateRange]],
+    ['updatedTime', [Options.earliest, Options.latest, Options.dateRange]],
 ])
 
 const baseStyles = getSelectBaseStyle()

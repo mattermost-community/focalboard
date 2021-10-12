@@ -3,8 +3,8 @@
 
 .WorkspaceSwitcherWrapper {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    flex-direction: row;
+    gap: 10px;
     width: 100%;
     position: relative;
     padding: 0 16px;
@@ -21,7 +21,21 @@
         border-radius: 4px;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     }
+
+    .add-workspace-icon {
+        display: flex;
+
+        i {
+            color: rgb(var(--sidebar-text-rgb));
+            align-self: center;
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
 }
+
 
 .WorkspaceSwitcher {
     display: flex;
@@ -31,6 +45,8 @@
     padding: 10px 16px;
     cursor: pointer;
     white-space: nowrap;
+    flex: 1;
+    max-width: 175px;
 
     span {
         max-width: 90%;

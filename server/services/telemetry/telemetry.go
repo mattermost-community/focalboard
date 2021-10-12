@@ -12,6 +12,7 @@ import (
 	rudder "github.com/rudderlabs/analytics-go"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost-server/v6/utils"
 )
 
 const (
@@ -134,11 +135,11 @@ func (ts *Service) doTelemetryIfNeeded(firstRun time.Time) {
 	}
 }
 
-func (ts *Service) RunTelemetryJob(firstRun int64) {
+func (ts *Service) RunTelemetryJob(firstRunMillis int64) {
 	// Send on boot
 	ts.doTelemetry()
 	scheduler.CreateRecurringTask("Telemetry", func() {
-		ts.doTelemetryIfNeeded(time.Unix(0, firstRun*int64(time.Millisecond)))
+		ts.doTelemetryIfNeeded(utils.TimeFromMillis(firstRunMillis))
 	}, timeBetweenTelemetryChecks)
 }
 

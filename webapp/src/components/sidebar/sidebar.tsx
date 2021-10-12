@@ -145,7 +145,7 @@ const Sidebar = React.memo((props: Props) => {
             <div className='octo-spacer'/>
 
             {
-                !props.isDashboard &&
+                (!props.isDashboard && !Utils.isFocalboardPlugin()) &&
                 <SidebarAddBoardMenu
                     activeBoardId={props.activeBoardId}
                 />
