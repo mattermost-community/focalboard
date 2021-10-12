@@ -224,6 +224,11 @@ class Utils {
                 `onclick="event.stopPropagation();${((window as any).openInNewBrowser ? ' openInNewBrowser && openInNewBrowser(event.target.href);' : '')}"` +
             '>' + contents + '</a>'
         }
+
+        renderer.table = (header, body) => {
+            return `<div class="table-responsive"><table class="markdown__table"><thead>${header}</thead><tbody>${body}</tbody></table></div>`
+        }
+
         const html = marked(text.replace(/</g, '&lt;'), {renderer, breaks: true})
         return html.trim()
     }
