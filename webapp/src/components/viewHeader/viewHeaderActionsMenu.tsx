@@ -89,6 +89,7 @@ function onExportCsvTrigger(board: Board, activeView: BoardView, cards: Card[], 
         })
         sendFlashMessage({content: exportCompleteMessage, severity: 'normal'})
     } catch (e) {
+        console.error(e)
         const exportFailedMessage = intl.formatMessage({
             id: 'ViewHeader.export-failed',
             defaultMessage: 'Export failed!',
