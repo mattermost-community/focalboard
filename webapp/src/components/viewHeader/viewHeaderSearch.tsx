@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useRef, useEffect} from 'react'
+import React, {useState, useRef, useEffect, useMemo} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {useHotkeys} from 'react-hotkeys-hook'
 import {debounce} from 'lodash'
@@ -20,9 +20,12 @@ const ViewHeaderSearch = (): JSX.Element => {
     const [isSearching, setIsSearching] = useState(Boolean(searchText))
     const [searchValue, setSearchValue] = useState(searchText)
 
-    const dispatchSearchText = debounce((value: string) => {
+    const dispatchSearchText = (value: string) => {
         dispatch(setSearchText(value))
-    }, 200)
+    }
+
+    const debouncedDispatchSearchText = useMemo(
+        () => debounce(dispatchSearchText, 200), [])
 
     useEffect(() => {
         searchFieldRef.current?.focus()
@@ -41,18 +44,18 @@ const ViewHeaderSearch = (): JSX.Element => {
                 placeholderText={intl.formatMessage({id: 'ViewHeader.search-text', defaultMessage: 'Search text'})}
                 onChange={(value) => {
                     setSearchValue(value)
-                    dispatchSearchText(value)
+                    debouncedDispatchSearchText(value)
                 }}
                 onCancel={() => {
                     setSearchValue('')
                     setIsSearching(false)
-                    dispatchSearchText('')
+                    debouncedDispatchSearchText('')
                 }}
                 onSave={() => {
                     if (searchValue === '') {
                         setIsSearching(false)
                     }
-                    dispatchSearchText(searchValue)
+                    debouncedDispatchSearchText(searchValue)
                 }}
             />
         )
