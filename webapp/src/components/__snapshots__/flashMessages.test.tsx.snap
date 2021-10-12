@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/flashMessages renders a flash message with high severity 1`] = `
+<div>
+  <div
+    class="FlashMessages high flashIn"
+  >
+    Mock Content
+  </div>
+</div>
+`;
