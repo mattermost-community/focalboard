@@ -13,6 +13,8 @@ windowAny.baseURL = '/plugins/focalboard'
 windowAny.frontendBaseURL = '/boards'
 windowAny.isFocalboardPlugin = true
 
+import {ClientConfig} from 'mattermost-redux/types/config'
+
 import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
@@ -144,7 +146,10 @@ export default class Plugin {
             }
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Boards')
             this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/welcome', MainApp, HeaderComponent)
-            this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', FocalboardUnfurl, false)
+
+            if (mmStore.getState().entities.general.config?.['FeatureFlagBoardsUnfurl' as keyof Partial<ClientConfig>] === 'true') {
+                this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', FocalboardUnfurl, false)
+            }
         } else {
             windowAny.frontendBaseURL = subpath + '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {

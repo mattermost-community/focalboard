@@ -236,6 +236,10 @@ func defaultLoggingConfig() string {
 }
 
 func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mmModel.Post, string) { //nolint
+	if !p.API.GetConfig().FeatureFlags.BoardsUnfurl {
+		return post, ""
+	}
+
 	firstLink := getFirstLink(post.Message)
 	u, err := url.Parse(firstLink)
 
