@@ -18,8 +18,8 @@ function IconButton(props: Props): JSX.Element {
         className += ' ' + props.className
     }
     return (
-        <div
-            role='button'
+        <button
+            type='button'
             onClick={props.onClick}
             onMouseDown={props.onMouseDown}
             className={className}
@@ -27,7 +27,7 @@ function IconButton(props: Props): JSX.Element {
             aria-label={props.title}
         >
             {props.icon}
-        </div>
+        </button>
     )
 }
 
