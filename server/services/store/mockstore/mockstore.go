@@ -108,17 +108,17 @@ func (mr *MockStoreMockRecorder) DeleteBlock(arg0, arg1, arg2 interface{}) *gomo
 }
 
 // DeleteNotificationHint mocks base method.
-func (m *MockStore) DeleteNotificationHint(arg0 string) error {
+func (m *MockStore) DeleteNotificationHint(arg0 store.Container, arg1 string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteNotificationHint", arg0)
+	ret := m.ctrl.Call(m, "DeleteNotificationHint", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteNotificationHint indicates an expected call of DeleteNotificationHint.
-func (mr *MockStoreMockRecorder) DeleteNotificationHint(arg0 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) DeleteNotificationHint(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteNotificationHint", reflect.TypeOf((*MockStore)(nil).DeleteNotificationHint), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteNotificationHint", reflect.TypeOf((*MockStore)(nil).DeleteNotificationHint), arg0, arg1)
 }
 
 // DeleteSession mocks base method.
@@ -136,17 +136,17 @@ func (mr *MockStoreMockRecorder) DeleteSession(arg0 interface{}) *gomock.Call {
 }
 
 // DeleteSubscription mocks base method.
-func (m *MockStore) DeleteSubscription(arg0, arg1 string) error {
+func (m *MockStore) DeleteSubscription(arg0 store.Container, arg1, arg2 string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteSubscription", arg0, arg1)
+	ret := m.ctrl.Call(m, "DeleteSubscription", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteSubscription indicates an expected call of DeleteSubscription.
-func (mr *MockStoreMockRecorder) DeleteSubscription(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) DeleteSubscription(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteSubscription", reflect.TypeOf((*MockStore)(nil).DeleteSubscription), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteSubscription", reflect.TypeOf((*MockStore)(nil).DeleteSubscription), arg0, arg1, arg2)
 }
 
 // GetActiveUserCount mocks base method.
@@ -270,33 +270,33 @@ func (mr *MockStoreMockRecorder) GetBlocksWithType(arg0, arg1 interface{}) *gomo
 }
 
 // GetNextNotificationHint mocks base method.
-func (m *MockStore) GetNextNotificationHint() (*model.NotificationHint, error) {
+func (m *MockStore) GetNextNotificationHint(arg0 bool) (*model.NotificationHint, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetNextNotificationHint")
+	ret := m.ctrl.Call(m, "GetNextNotificationHint", arg0)
 	ret0, _ := ret[0].(*model.NotificationHint)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetNextNotificationHint indicates an expected call of GetNextNotificationHint.
-func (mr *MockStoreMockRecorder) GetNextNotificationHint() *gomock.Call {
+func (mr *MockStoreMockRecorder) GetNextNotificationHint(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNextNotificationHint", reflect.TypeOf((*MockStore)(nil).GetNextNotificationHint))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNextNotificationHint", reflect.TypeOf((*MockStore)(nil).GetNextNotificationHint), arg0)
 }
 
 // GetNotificationHint mocks base method.
-func (m *MockStore) GetNotificationHint(arg0 string) (*model.NotificationHint, error) {
+func (m *MockStore) GetNotificationHint(arg0 store.Container, arg1 string) (*model.NotificationHint, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetNotificationHint", arg0)
+	ret := m.ctrl.Call(m, "GetNotificationHint", arg0, arg1)
 	ret0, _ := ret[0].(*model.NotificationHint)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetNotificationHint indicates an expected call of GetNotificationHint.
-func (mr *MockStoreMockRecorder) GetNotificationHint(arg0 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) GetNotificationHint(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNotificationHint", reflect.TypeOf((*MockStore)(nil).GetNotificationHint), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNotificationHint", reflect.TypeOf((*MockStore)(nil).GetNotificationHint), arg0, arg1)
 }
 
 // GetParentID mocks base method.
@@ -405,48 +405,48 @@ func (mr *MockStoreMockRecorder) GetSubTree3(arg0, arg1 interface{}) *gomock.Cal
 }
 
 // GetSubscribersCountForBlock mocks base method.
-func (m *MockStore) GetSubscribersCountForBlock(arg0 string) (int, error) {
+func (m *MockStore) GetSubscribersCountForBlock(arg0 store.Container, arg1 string) (int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetSubscribersCountForBlock", arg0)
+	ret := m.ctrl.Call(m, "GetSubscribersCountForBlock", arg0, arg1)
 	ret0, _ := ret[0].(int)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetSubscribersCountForBlock indicates an expected call of GetSubscribersCountForBlock.
-func (mr *MockStoreMockRecorder) GetSubscribersCountForBlock(arg0 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) GetSubscribersCountForBlock(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSubscribersCountForBlock", reflect.TypeOf((*MockStore)(nil).GetSubscribersCountForBlock), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSubscribersCountForBlock", reflect.TypeOf((*MockStore)(nil).GetSubscribersCountForBlock), arg0, arg1)
 }
 
 // GetSubscribersForBlock mocks base method.
-func (m *MockStore) GetSubscribersForBlock(arg0 string) ([]*model.Subscriber, error) {
+func (m *MockStore) GetSubscribersForBlock(arg0 store.Container, arg1 string) ([]*model.Subscriber, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetSubscribersForBlock", arg0)
+	ret := m.ctrl.Call(m, "GetSubscribersForBlock", arg0, arg1)
 	ret0, _ := ret[0].([]*model.Subscriber)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetSubscribersForBlock indicates an expected call of GetSubscribersForBlock.
-func (mr *MockStoreMockRecorder) GetSubscribersForBlock(arg0 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) GetSubscribersForBlock(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSubscribersForBlock", reflect.TypeOf((*MockStore)(nil).GetSubscribersForBlock), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSubscribersForBlock", reflect.TypeOf((*MockStore)(nil).GetSubscribersForBlock), arg0, arg1)
 }
 
 // GetSubscription mocks base method.
-func (m *MockStore) GetSubscription(arg0, arg1 string) (*model.Subscription, error) {
+func (m *MockStore) GetSubscription(arg0 store.Container, arg1, arg2 string) (*model.Subscription, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetSubscription", arg0, arg1)
+	ret := m.ctrl.Call(m, "GetSubscription", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*model.Subscription)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetSubscription indicates an expected call of GetSubscription.
-func (mr *MockStoreMockRecorder) GetSubscription(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) GetSubscription(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSubscription", reflect.TypeOf((*MockStore)(nil).GetSubscription), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSubscription", reflect.TypeOf((*MockStore)(nil).GetSubscription), arg0, arg1, arg2)
 }
 
 // GetSubscriptions mocks base method.
@@ -611,6 +611,20 @@ func (m *MockStore) InsertBlock(arg0 store.Container, arg1 *model.Block, arg2 st
 func (mr *MockStoreMockRecorder) InsertBlock(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertBlock", reflect.TypeOf((*MockStore)(nil).InsertBlock), arg0, arg1, arg2)
+}
+
+// IsErrNotFound mocks base method.
+func (m *MockStore) IsErrNotFound(arg0 error) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsErrNotFound", arg0)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// IsErrNotFound indicates an expected call of IsErrNotFound.
+func (mr *MockStoreMockRecorder) IsErrNotFound(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsErrNotFound", reflect.TypeOf((*MockStore)(nil).IsErrNotFound), arg0)
 }
 
 // PatchBlock mocks base method.

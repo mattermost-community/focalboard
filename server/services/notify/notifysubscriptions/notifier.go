@@ -5,10 +5,15 @@ package notifysubscriptions
 
 import (
 	"errors"
+	"fmt"
 	"sync"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/wiggin77/merror"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const (
@@ -41,6 +46,7 @@ func getBlockUpdateFreq(blockType string) time.Duration {
 type notifier struct {
 	store    Store
 	delivery Delivery
+	logger   *mlog.Logger
 
 	hints chan *model.NotificationHint
 
@@ -48,10 +54,11 @@ type notifier struct {
 	done chan struct{}
 }
 
-func newNotifier(store Store, delivery Delivery) *notifier {
+func newNotifier(store Store, delivery Delivery, logger *mlog.Logger) *notifier {
 	return &notifier{
 		store:    store,
 		delivery: delivery,
+		logger:   logger,
 		done:     make(chan struct{}, 1),
 		hints:    make(chan *model.NotificationHint, 20),
 	}
@@ -79,7 +86,7 @@ func (n *notifier) stop() {
 
 func (n *notifier) loop() {
 	done := n.done
-	nextNotify := n.calcNextNotify()
+	nextNotify := n.notify()
 
 	for {
 		select {
@@ -94,8 +101,7 @@ func (n *notifier) loop() {
 			}
 
 		case <-time.After(time.Until(nextNotify)):
-			n.notify()
-			nextNotify = n.calcNextNotify()
+			nextNotify = n.notify()
 
 		case <-done:
 			return
@@ -112,10 +118,58 @@ func (n *notifier) onNotifyHint(hint *model.NotificationHint) error {
 	return nil
 }
 
-func (n *notifier) calcNextNotify() time.Time {
-	return time.Now().Add(20 * time.Second)
+func (n *notifier) notify() time.Time {
+	var hint *model.NotificationHint
+	var err error
+
+	for {
+		hint, err = n.store.GetNextNotificationHint(true)
+		if n.store.IsErrNotFound(err) {
+			// no more hints in table; wait up to an hour or when `onNotifyHint` is called again
+			return time.Now().Add(time.Hour * 1)
+		}
+
+		if err != nil {
+			n.logger.Error("Error fetching next notification", mlog.Err(err))
+			// try again in a minute
+			return time.Now().Add(time.Minute * 1)
+		}
+
+		if err = n.notifySubscribers(hint); err != nil {
+			n.logger.Error("Error notifying subscribers", mlog.Err(err))
+		}
+	}
 }
 
-func (n *notifier) notify() {
+func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
+	c := store.Container{
+		WorkspaceID: hint.WorkspaceID,
+	}
 
+	// 	get the subscriber list
+	subs, err := n.store.GetSubscribersForBlock(c, hint.BlockID)
+	if err != nil {
+		return err
+	}
+	if len(subs) == 0 {
+		return nil
+	}
+
+	diffs, err := n.generateDiffs(c, hint)
+	if err != nil {
+		return err
+	}
+
+	merr := merror.New()
+	for _, sub := range subs {
+		if err := n.delivery.Deliver(sub.SubscriberID, sub.SubscriberType, diffs); err != nil {
+			merr.Append(fmt.Errorf("cannot deliver notification to subscriber %s [%s]: %w",
+				sub.SubscriberID, sub.SubscriberType, err))
+		}
+	}
+	return merr.ErrorOrNil()
+}
+
+func (n *notifier) generateDiffs(c store.Container, hint *model.NotificationHint) ([]Diff, error) {
+	return nil, fmt.Errorf("not implemented yet")
 }

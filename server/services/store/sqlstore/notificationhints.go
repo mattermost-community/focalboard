@@ -5,10 +5,12 @@ package sqlstore
 
 import (
 	"database/sql"
+	"fmt"
 	"time"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -18,6 +20,7 @@ func notificationHintFields() []string {
 	return []string{
 		"block_type",
 		"block_id",
+		"workspace_id",
 		"create_at",
 		"notify_at",
 	}
@@ -27,6 +30,7 @@ func valuesForNotificationHint(hint *model.NotificationHint) []interface{} {
 	return []interface{}{
 		hint.BlockType,
 		hint.BlockID,
+		hint.WorkspaceID,
 		hint.CreateAt,
 		hint.NotifyAt,
 	}
@@ -40,6 +44,7 @@ func (s *SQLStore) notificationHintFromRows(rows *sql.Rows) ([]*model.Notificati
 		err := rows.Scan(
 			&hint.BlockType,
 			&hint.BlockID,
+			&hint.WorkspaceID,
 			&hint.CreateAt,
 			&hint.NotifyAt,
 		)
@@ -58,8 +63,12 @@ func (s *SQLStore) UpsertNotificationHint(hint *model.NotificationHint, notifica
 		return nil, err
 	}
 
-	hintRet, err := s.GetNotificationHint(hint.BlockID)
-	if err != nil {
+	c := store.Container{
+		WorkspaceID: hint.WorkspaceID,
+	}
+
+	hintRet, err := s.GetNotificationHint(c, hint.BlockID)
+	if err != nil && !s.IsErrNotFound(err) {
 		return nil, err
 	}
 
@@ -82,13 +91,15 @@ func (s *SQLStore) UpsertNotificationHint(hint *model.NotificationHint, notifica
 
 		query := s.getQueryBuilder().Update(s.tablePrefix+"notification_hints").
 			Set("notify_at", now).
-			Where(sq.Eq{"block_id": hintRet.BlockID})
+			Where(sq.Eq{"block_id": hintRet.BlockID}).
+			Where(sq.Eq{"workspace_id": hintRet.WorkspaceID})
 		_, err = query.Exec()
 	}
 
 	if err != nil {
 		s.logger.Error("Cannot upsert notification hint",
 			mlog.String("block_id", hint.BlockID),
+			mlog.String("workspace_id", hint.WorkspaceID),
 			mlog.Err(err),
 		)
 		return nil, err
@@ -97,26 +108,42 @@ func (s *SQLStore) UpsertNotificationHint(hint *model.NotificationHint, notifica
 }
 
 // DeleteNotificationHint deletes the notification hint for the specified block.
-func (s *SQLStore) DeleteNotificationHint(blockID string) error {
+func (s *SQLStore) DeleteNotificationHint(c store.Container, blockID string) error {
 	query := s.getQueryBuilder().
 		Delete(s.tablePrefix + "notification_hints").
-		Where(sq.Eq{"block_id": blockID})
+		Where(sq.Eq{"block_id": blockID}).
+		Where(sq.Eq{"workspace_id": c.WorkspaceID})
 
-	_, err := query.Exec()
-	return err
+	result, err := query.Exec()
+	if err != nil {
+		return err
+	}
+
+	count, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if count == 0 {
+		return store.NewErrNotFound(blockID)
+	}
+
+	return nil
 }
 
 // GetNotificationHint fetches the notification hint for the specified block.
-func (s *SQLStore) GetNotificationHint(blockID string) (*model.NotificationHint, error) {
+func (s *SQLStore) GetNotificationHint(c store.Container, blockID string) (*model.NotificationHint, error) {
 	query := s.getQueryBuilder().
 		Select(notificationHintFields()...).
 		From(s.tablePrefix + "notification_hints").
-		Where(sq.Eq{"block_id": blockID})
+		Where(sq.Eq{"block_id": blockID}).
+		Where(sq.Eq{"workspace_id": c.WorkspaceID})
 
 	rows, err := query.Query()
 	if err != nil {
 		s.logger.Error("Cannot fetch notification hint",
 			mlog.String("block_id", blockID),
+			mlog.String("workspace_id", c.WorkspaceID),
 			mlog.Err(err),
 		)
 		return nil, err
@@ -127,25 +154,27 @@ func (s *SQLStore) GetNotificationHint(blockID string) (*model.NotificationHint,
 	if err != nil {
 		s.logger.Error("Cannot get notification hint",
 			mlog.String("block_id", blockID),
+			mlog.String("workspace_id", c.WorkspaceID),
 			mlog.Err(err),
 		)
 		return nil, err
 	}
 	if len(hint) == 0 {
-		return nil, nil
+		return nil, store.NewErrNotFound(blockID)
 	}
 	return hint[0], nil
 }
 
-// GetNextNotificationHint fetches the next scheduled notification hint.
-func (s *SQLStore) GetNextNotificationHint() (*model.NotificationHint, error) {
-	query := s.getQueryBuilder().
+// GetNextNotificationHint fetches the next scheduled notification hint. If remove is true
+// then the hint is removed from the database as well, as if popping from a stack.
+func (s *SQLStore) GetNextNotificationHint(remove bool) (*model.NotificationHint, error) {
+	selectQuery := s.getQueryBuilder().
 		Select(notificationHintFields()...).
 		From(s.tablePrefix + "notification_hints").
 		OrderBy("notify_at").
 		Limit(1)
 
-	rows, err := query.Query()
+	rows, err := selectQuery.Query()
 	if err != nil {
 		s.logger.Error("Cannot fetch next notification hint",
 			mlog.Err(err),
@@ -154,15 +183,38 @@ func (s *SQLStore) GetNextNotificationHint() (*model.NotificationHint, error) {
 	}
 	defer s.CloseRows(rows)
 
-	hint, err := s.notificationHintFromRows(rows)
+	hints, err := s.notificationHintFromRows(rows)
 	if err != nil {
 		s.logger.Error("Cannot get next notification hint",
 			mlog.Err(err),
 		)
 		return nil, err
 	}
-	if len(hint) == 0 {
-		return nil, nil
+	if len(hints) == 0 {
+		return nil, store.NewErrNotFound("")
 	}
-	return hint[0], nil
+
+	hint := hints[0]
+
+	if remove {
+		deleteQuery := s.getQueryBuilder().
+			Delete(s.tablePrefix + "notification_hints").
+			Where(sq.Eq{"block_id": hint.BlockID})
+
+		result, err := deleteQuery.Exec()
+		if err != nil {
+			return nil, fmt.Errorf("cannot delete while getting next notification hint: %w", err)
+		}
+		rows, err := result.RowsAffected()
+		if err != nil {
+			return nil, fmt.Errorf("cannot verify delete while getting next notification hint: %w", err)
+		}
+		if rows == 0 {
+			// another node likely has grabbed this hint for processing concurrently; let that node handle it
+			// and we'll return an error here so we try again.
+			return nil, fmt.Errorf("cannot delete missing hint while getting next notification hint: %w", err)
+		}
+	}
+
+	return hint, nil
 }

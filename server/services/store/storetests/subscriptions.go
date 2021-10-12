@@ -59,6 +59,7 @@ func testCreateSubscription(t *testing.T, store store.Store, container store.Con
 				sub := &model.Subscription{
 					BlockType:      blocks[j].Type,
 					BlockID:        blocks[j].ID,
+					WorkspaceID:    container.WorkspaceID,
 					SubscriberType: "user",
 					SubscriberID:   user.ID,
 				}
@@ -87,6 +88,7 @@ func testCreateSubscription(t *testing.T, store store.Store, container store.Con
 		sub := &model.Subscription{
 			BlockType:      block.Type,
 			BlockID:        block.ID,
+			WorkspaceID:    container.WorkspaceID,
 			SubscriberType: "user",
 			SubscriberID:   user.ID,
 		}
@@ -96,6 +98,7 @@ func testCreateSubscription(t *testing.T, store store.Store, container store.Con
 		sub = &model.Subscription{
 			BlockType:      block.Type,
 			BlockID:        block.ID,
+			WorkspaceID:    container.WorkspaceID,
 			SubscriberType: "user",
 			SubscriberID:   user.ID,
 		}
@@ -124,6 +127,10 @@ func testCreateSubscription(t *testing.T, store store.Store, container store.Con
 		_, err = store.CreateSubscription(sub)
 		assert.ErrorAs(t, err, &model.ErrInvalidSubscription{}, "invalid subscription should error")
 
+		sub.WorkspaceID = block.WorkspaceID
+		_, err = store.CreateSubscription(sub)
+		assert.ErrorAs(t, err, &model.ErrInvalidSubscription{}, "invalid subscription should error")
+
 		sub.SubscriberType = "user"
 		_, err = store.CreateSubscription(sub)
 		assert.ErrorAs(t, err, &model.ErrInvalidSubscription{}, "invalid subscription should error")
@@ -136,65 +143,73 @@ func testCreateSubscription(t *testing.T, store store.Store, container store.Con
 	})
 }
 
-func testDeleteSubscription(t *testing.T, store store.Store, container store.Container) {
+func testDeleteSubscription(t *testing.T, s store.Store, container store.Container) {
 	t.Run("delete subscription", func(t *testing.T) {
-		user := createTestUsers(t, store, 1)[0]
-		block := createTestBlocks(t, store, container, user.ID, 1)[0]
+		user := createTestUsers(t, s, 1)[0]
+		block := createTestBlocks(t, s, container, user.ID, 1)[0]
 
 		sub := &model.Subscription{
 			BlockType:      block.Type,
 			BlockID:        block.ID,
+			WorkspaceID:    container.WorkspaceID,
 			SubscriberType: "user",
 			SubscriberID:   user.ID,
 		}
-		subNew, err := store.CreateSubscription(sub)
+		subNew, err := s.CreateSubscription(sub)
 		require.NoError(t, err, "create subscription should not error")
 
 		// check the subscription exists
-		subs, err := store.GetSubscriptions(user.ID)
+		subs, err := s.GetSubscriptions(user.ID)
 		require.NoError(t, err, "get subscriptions should not error")
 		assert.Len(t, subs, 1)
 		assert.Equal(t, subNew.BlockID, subs[0].BlockID)
 		assert.Equal(t, subNew.SubscriberID, subs[0].SubscriberID)
 
-		err = store.DeleteSubscription(block.ID, user.ID)
+		err = s.DeleteSubscription(container, block.ID, user.ID)
 		require.NoError(t, err, "delete subscription should not error")
 
 		// check the subscription was deleted
-		subs, err = store.GetSubscriptions(user.ID)
+		subs, err = s.GetSubscriptions(user.ID)
 		require.NoError(t, err, "get subscriptions should not error")
 		assert.Empty(t, subs)
 	})
 
 	t.Run("delete non-existent subscription", func(t *testing.T) {
-		err := store.DeleteSubscription("bogus", "bogus")
-		require.NoError(t, err, "delete non-existent subscription should not error")
+		err := s.DeleteSubscription(container, "bogus", "bogus")
+		require.Error(t, err, "delete non-existent subscription should error")
+		var nf *store.ErrNotFound
+		require.ErrorAs(t, err, &nf, "error should be of type store.ErrNotFound")
+		require.True(t, store.IsErrNotFound(err))
 	})
 }
 
-func testGetSubscription(t *testing.T, store store.Store, container store.Container) {
+func testGetSubscription(t *testing.T, s store.Store, container store.Container) {
 	t.Run("get subscription", func(t *testing.T) {
-		user := createTestUsers(t, store, 1)[0]
-		block := createTestBlocks(t, store, container, user.ID, 1)[0]
+		user := createTestUsers(t, s, 1)[0]
+		block := createTestBlocks(t, s, container, user.ID, 1)[0]
 
 		sub := &model.Subscription{
 			BlockType:      block.Type,
 			BlockID:        block.ID,
+			WorkspaceID:    container.WorkspaceID,
 			SubscriberType: "user",
 			SubscriberID:   user.ID,
 		}
-		subNew, err := store.CreateSubscription(sub)
+		subNew, err := s.CreateSubscription(sub)
 		require.NoError(t, err, "create subscription should not error")
 
 		// make sure subscription can be fetched
-		sub, err = store.GetSubscription(block.ID, user.ID)
+		sub, err = s.GetSubscription(container, block.ID, user.ID)
 		require.NoError(t, err, "get subscription should not error")
 		assert.Equal(t, subNew, sub)
 	})
 
 	t.Run("get non-existent subscription", func(t *testing.T) {
-		sub, err := store.GetSubscription("bogus", "bogus")
-		require.NoError(t, err, "get subscription should not error")
+		sub, err := s.GetSubscription(container, "bogus", "bogus")
+		require.Error(t, err, "get non-existent subscription should error")
+		var nf *store.ErrNotFound
+		require.ErrorAs(t, err, &nf, "error should be of type store.ErrNotFound")
+		require.True(t, store.IsErrNotFound(err))
 		require.Nil(t, sub, "get subscription should return nil")
 	})
 }
@@ -209,6 +224,7 @@ func testGetSubscriptions(t *testing.T, store store.Store, container store.Conta
 			sub := &model.Subscription{
 				BlockType:      block.Type,
 				BlockID:        block.ID,
+				WorkspaceID:    container.WorkspaceID,
 				SubscriberType: "user",
 				SubscriberID:   user.ID,
 			}
@@ -243,6 +259,7 @@ func testGetSubscribersForBlock(t *testing.T, store store.Store, container store
 			sub := &model.Subscription{
 				BlockType:      blocks[1].Type,
 				BlockID:        blocks[1].ID,
+				WorkspaceID:    container.WorkspaceID,
 				SubscriberType: "user",
 				SubscriberID:   user.ID,
 			}
@@ -251,26 +268,26 @@ func testGetSubscribersForBlock(t *testing.T, store store.Store, container store
 		}
 
 		// make sure block[1] has the right number of users subscribed
-		subs, err := store.GetSubscribersForBlock(blocks[1].ID)
+		subs, err := store.GetSubscribersForBlock(container, blocks[1].ID)
 		require.NoError(t, err, "get subscribers for block should not error")
 		assert.Len(t, subs, 50)
 
-		count, err := store.GetSubscribersCountForBlock(blocks[1].ID)
+		count, err := store.GetSubscribersCountForBlock(container, blocks[1].ID)
 		require.NoError(t, err, "get subscribers for block should not error")
 		assert.Equal(t, 50, count)
 
 		// make sure block[0] has zero users subscribed
-		subs, err = store.GetSubscribersForBlock(blocks[0].ID)
+		subs, err = store.GetSubscribersForBlock(container, blocks[0].ID)
 		require.NoError(t, err, "get subscribers for block should not error")
 		assert.Empty(t, subs)
 
-		count, err = store.GetSubscribersCountForBlock(blocks[0].ID)
+		count, err = store.GetSubscribersCountForBlock(container, blocks[0].ID)
 		require.NoError(t, err, "get subscribers for block should not error")
 		assert.Zero(t, count)
 	})
 
 	t.Run("get subscribers for invalid block", func(t *testing.T) {
-		subs, err := store.GetSubscribersForBlock("bogus")
+		subs, err := store.GetSubscribersForBlock(container, "bogus")
 		require.NoError(t, err, "get subscribers for block should not error")
 		assert.Empty(t, subs)
 	})

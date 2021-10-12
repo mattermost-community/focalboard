@@ -2,6 +2,8 @@
 package store
 
 import (
+	"errors"
+	"fmt"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -64,14 +66,42 @@ type Store interface {
 	GetUserWorkspaces(userID string) ([]model.UserWorkspace, error)
 
 	CreateSubscription(sub *model.Subscription) (*model.Subscription, error)
-	DeleteSubscription(blockID string, subscriberID string) error
-	GetSubscription(blockID string, subscriberID string) (*model.Subscription, error)
+	DeleteSubscription(c Container, blockID string, subscriberID string) error
+	GetSubscription(c Container, blockID string, subscriberID string) (*model.Subscription, error)
 	GetSubscriptions(subscriberID string) ([]*model.Subscription, error)
-	GetSubscribersForBlock(blockID string) ([]*model.Subscriber, error)
-	GetSubscribersCountForBlock(blockID string) (int, error)
+	GetSubscribersForBlock(c Container, blockID string) ([]*model.Subscriber, error)
+	GetSubscribersCountForBlock(c Container, blockID string) (int, error)
 
 	UpsertNotificationHint(hint *model.NotificationHint, notificationFreq time.Duration) (*model.NotificationHint, error)
-	DeleteNotificationHint(blockID string) error
-	GetNotificationHint(blockID string) (*model.NotificationHint, error)
-	GetNextNotificationHint() (*model.NotificationHint, error)
+	DeleteNotificationHint(c Container, blockID string) error
+	GetNotificationHint(c Container, blockID string) (*model.NotificationHint, error)
+	GetNextNotificationHint(remove bool) (*model.NotificationHint, error)
+
+	IsErrNotFound(err error) bool
+}
+
+// ErrNotFound is an error type that can be returned by store APIs when a query unexpectedly fetches no records.
+type ErrNotFound struct {
+	resource string
+}
+
+// NewErrNotFound creates a new ErrNotFound instance.
+func NewErrNotFound(resource string) *ErrNotFound {
+	return &ErrNotFound{
+		resource: resource,
+	}
+}
+
+func (nf *ErrNotFound) Error() string {
+	return fmt.Sprintf("{%s} not found", nf.resource)
+}
+
+// IsErrNotFound returns true if `err` is or wraps a ErrNotFound.
+func IsErrNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	var nf *ErrNotFound
+	return errors.As(err, &nf)
 }

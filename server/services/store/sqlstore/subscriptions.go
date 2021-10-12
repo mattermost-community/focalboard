@@ -8,6 +8,7 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/store"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -16,6 +17,7 @@ func subscriptionFields() []string {
 	return []string{
 		"block_type",
 		"block_id",
+		"workspace_id",
 		"subscriber_type",
 		"subscriber_id",
 		"notified_at",
@@ -28,6 +30,7 @@ func valuesForSubscription(sub *model.Subscription) []interface{} {
 	return []interface{}{
 		sub.BlockType,
 		sub.BlockID,
+		sub.WorkspaceID,
 		sub.SubscriberType,
 		sub.SubscriberID,
 		sub.NotifiedAt,
@@ -44,6 +47,7 @@ func (s *SQLStore) subscriptionsFromRows(rows *sql.Rows) ([]*model.Subscription,
 		err := rows.Scan(
 			&sub.BlockType,
 			&sub.BlockID,
+			&sub.WorkspaceID,
 			&sub.SubscriberType,
 			&sub.SubscriberID,
 			&sub.NotifiedAt,
@@ -65,8 +69,12 @@ func (s *SQLStore) CreateSubscription(sub *model.Subscription) (*model.Subscript
 		return nil, err
 	}
 
-	subscription, err := s.GetSubscription(sub.BlockID, sub.SubscriberID)
-	if subscription != nil || err != nil {
+	c := store.Container{
+		WorkspaceID: sub.WorkspaceID,
+	}
+
+	subscription, err := s.GetSubscription(c, sub.BlockID, sub.SubscriberID)
+	if subscription != nil || (err != nil && !s.IsErrNotFound(err)) {
 		return subscription, err
 	}
 
@@ -85,6 +93,7 @@ func (s *SQLStore) CreateSubscription(sub *model.Subscription) (*model.Subscript
 	if _, err = query.Exec(); err != nil {
 		s.logger.Error("Cannot create subscription",
 			mlog.String("block_id", sub.BlockID),
+			mlog.String("workspace_id", sub.WorkspaceID),
 			mlog.String("subscriber_id", sub.SubscriberID),
 			mlog.Err(err),
 		)
@@ -94,25 +103,40 @@ func (s *SQLStore) CreateSubscription(sub *model.Subscription) (*model.Subscript
 }
 
 // DeleteSubscription soft deletes the subscription for a specific block and subscriber.
-func (s *SQLStore) DeleteSubscription(blockID string, subscriberID string) error {
+func (s *SQLStore) DeleteSubscription(c store.Container, blockID string, subscriberID string) error {
 	now := model.GetMillis()
 
 	query := s.getQueryBuilder().
 		Update(s.tablePrefix+"subscriptions").
 		Set("delete_at", now).
 		Where(sq.Eq{"block_id": blockID}).
+		Where(sq.Eq{"workspace_id": c.WorkspaceID}).
 		Where(sq.Eq{"subscriber_id": subscriberID})
 
-	_, err := query.Exec()
-	return err
+	result, err := query.Exec()
+	if err != nil {
+		return err
+	}
+
+	count, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if count == 0 {
+		return store.NewErrNotFound(c.WorkspaceID + "," + blockID + "," + subscriberID)
+	}
+
+	return nil
 }
 
 // GetSubscription fetches the subscription for a specific block and subscriber.
-func (s *SQLStore) GetSubscription(blockID string, subscriberID string) (*model.Subscription, error) {
+func (s *SQLStore) GetSubscription(c store.Container, blockID string, subscriberID string) (*model.Subscription, error) {
 	query := s.getQueryBuilder().
 		Select(subscriptionFields()...).
 		From(s.tablePrefix + "subscriptions").
 		Where(sq.Eq{"block_id": blockID}).
+		Where(sq.Eq{"workspace_id": c.WorkspaceID}).
 		Where(sq.Eq{"subscriber_id": subscriberID}).
 		Where(sq.Eq{"delete_at": 0})
 
@@ -120,6 +144,7 @@ func (s *SQLStore) GetSubscription(blockID string, subscriberID string) (*model.
 	if err != nil {
 		s.logger.Error("Cannot fetch subscription for block & subscriber",
 			mlog.String("block_id", blockID),
+			mlog.String("workspace_id", c.WorkspaceID),
 			mlog.String("subscriber_id", subscriberID),
 			mlog.Err(err),
 		)
@@ -131,13 +156,14 @@ func (s *SQLStore) GetSubscription(blockID string, subscriberID string) (*model.
 	if err != nil {
 		s.logger.Error("Cannot get subscription for block & subscriber",
 			mlog.String("block_id", blockID),
+			mlog.String("workspace_id", c.WorkspaceID),
 			mlog.String("subscriber_id", subscriberID),
 			mlog.Err(err),
 		)
 		return nil, err
 	}
 	if len(subscriptions) == 0 {
-		return nil, nil
+		return nil, store.NewErrNotFound(c.WorkspaceID + "," + blockID + "," + subscriberID)
 	}
 	return subscriptions[0], nil
 }
@@ -164,7 +190,7 @@ func (s *SQLStore) GetSubscriptions(subscriberID string) ([]*model.Subscription,
 }
 
 // GetSubscribersForBlock fetches all subscribers for a block.
-func (s *SQLStore) GetSubscribersForBlock(blockID string) ([]*model.Subscriber, error) {
+func (s *SQLStore) GetSubscribersForBlock(c store.Container, blockID string) ([]*model.Subscriber, error) {
 	query := s.getQueryBuilder().
 		Select(
 			"subscriber_type",
@@ -172,12 +198,14 @@ func (s *SQLStore) GetSubscribersForBlock(blockID string) ([]*model.Subscriber, 
 		).
 		From(s.tablePrefix + "subscriptions").
 		Where(sq.Eq{"block_id": blockID}).
+		Where(sq.Eq{"workspace_id": c.WorkspaceID}).
 		Where(sq.Eq{"delete_at": 0})
 
 	rows, err := query.Query()
 	if err != nil {
 		s.logger.Error("Cannot fetch subscribers for block",
 			mlog.String("block_id", blockID),
+			mlog.String("workspace_id", c.WorkspaceID),
 			mlog.Err(err),
 		)
 		return nil, err
@@ -201,11 +229,12 @@ func (s *SQLStore) GetSubscribersForBlock(blockID string) ([]*model.Subscriber, 
 }
 
 // GetSubscribersCountForBlock returns a count of all subscribers for a block.
-func (s *SQLStore) GetSubscribersCountForBlock(blockID string) (int, error) {
+func (s *SQLStore) GetSubscribersCountForBlock(c store.Container, blockID string) (int, error) {
 	query := s.getQueryBuilder().
 		Select("count(subscriber_id)").
 		From(s.tablePrefix + "subscriptions").
 		Where(sq.Eq{"block_id": blockID}).
+		Where(sq.Eq{"workspace_id": c.WorkspaceID}).
 		Where(sq.Eq{"delete_at": 0})
 
 	row := query.QueryRow()
@@ -215,6 +244,7 @@ func (s *SQLStore) GetSubscribersCountForBlock(blockID string) (int, error) {
 	if err != nil {
 		s.logger.Error("Cannot count subscribers for block",
 			mlog.String("block_id", blockID),
+			mlog.String("workspace_id", c.WorkspaceID),
 			mlog.Err(err),
 		)
 		return 0, err

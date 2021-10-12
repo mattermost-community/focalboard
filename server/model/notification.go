@@ -12,6 +12,10 @@ type NotificationHint struct {
 	// required: true
 	BlockID string `json:"block_id"`
 
+	// WorkspaceID is id of workspace the block belongs to
+	// required: true
+	WorkspaceID string `json:"workspace_id"`
+
 	// CreatedAt is the timestamp this notification hint was created
 	// required: true
 	CreateAt int64 `json:"create_at"`
@@ -28,6 +32,9 @@ func (s *NotificationHint) IsValid() error {
 	if s.BlockID == "" {
 		return ErrInvalidNotificationHint{"missing block id"}
 	}
+	if s.WorkspaceID == "" {
+		return ErrInvalidNotificationHint{"missing workspace id"}
+	}
 	if s.BlockType == "" {
 		return ErrInvalidNotificationHint{"missing block type"}
 	}
@@ -36,10 +43,11 @@ func (s *NotificationHint) IsValid() error {
 
 func (s *NotificationHint) Copy() *NotificationHint {
 	return &NotificationHint{
-		BlockType: s.BlockType,
-		BlockID:   s.BlockID,
-		CreateAt:  s.CreateAt,
-		NotifyAt:  s.NotifyAt,
+		BlockType:   s.BlockType,
+		BlockID:     s.BlockID,
+		WorkspaceID: s.WorkspaceID,
+		CreateAt:    s.CreateAt,
+		NotifyAt:    s.NotifyAt,
 	}
 }
 

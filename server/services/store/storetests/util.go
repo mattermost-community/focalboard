@@ -33,10 +33,11 @@ func createTestBlocks(t *testing.T, store store.Store, container store.Container
 	var blocks []*model.Block
 	for i := 0; i < num; i++ {
 		block := &model.Block{
-			ID:        utils.NewID(utils.IDTypeBlock),
-			RootID:    utils.NewID(utils.IDTypeBlock),
-			Type:      "card",
-			CreatedBy: userID,
+			ID:          utils.NewID(utils.IDTypeBlock),
+			RootID:      utils.NewID(utils.IDTypeBlock),
+			Type:        "card",
+			CreatedBy:   userID,
+			WorkspaceID: container.WorkspaceID,
 		}
 		err := store.InsertBlock(container, block, userID)
 		require.NoError(t, err)
@@ -44,4 +45,10 @@ func createTestBlocks(t *testing.T, store store.Store, container store.Container
 		blocks = append(blocks, block)
 	}
 	return blocks
+}
+
+func containerForWorkspace(workspaceID string) store.Container {
+	return store.Container{
+		WorkspaceID: workspaceID,
+	}
 }

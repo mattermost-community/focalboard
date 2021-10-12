@@ -8,6 +8,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
+	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/wiggin77/merror"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -29,7 +30,7 @@ func New(store Store, delivery Delivery, logger *mlog.Logger) *Backend {
 	return &Backend{
 		store:    store,
 		delivery: delivery,
-		notifier: newNotifier(store, delivery),
+		notifier: newNotifier(store, delivery, logger),
 		logger:   logger,
 	}
 }
@@ -53,8 +54,12 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 	merr := merror.New()
 	var err error
 
+	c := store.Container{
+		WorkspaceID: evt.Workspace,
+	}
+
 	// notify board subscribers
-	subs, err := b.store.GetSubscribersForBlock(evt.Board.ID)
+	subs, err := b.store.GetSubscribersForBlock(c, evt.Board.ID)
 	if err != nil {
 		merr.Append(fmt.Errorf("cannot fetch subscribers for board %s: %w", evt.Board.ID, err))
 	}
@@ -63,7 +68,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 	}
 
 	// notify card subscribers
-	subs, err = b.store.GetSubscribersForBlock(evt.Card.ID)
+	subs, err = b.store.GetSubscribersForBlock(c, evt.Card.ID)
 	if err != nil {
 		merr.Append(fmt.Errorf("cannot fetch subscribers for card %s: %w", evt.Card.ID, err))
 	}
@@ -73,7 +78,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 
 	// notify block subscribers (if/when other types can be subscribed to)
 	if evt.Board.ID != evt.BlockChanged.ID && evt.Card.ID != evt.BlockChanged.ID {
-		subs, err = b.store.GetSubscribersForBlock(evt.BlockChanged.ID)
+		subs, err = b.store.GetSubscribersForBlock(c, evt.BlockChanged.ID)
 		if err != nil {
 			merr.Append(fmt.Errorf("cannot fetch subscribers for block %s: %w", evt.BlockChanged.ID, err))
 		}
@@ -91,8 +96,9 @@ func (b *Backend) notifySubscribers(subs []*model.Subscriber, block *model.Block
 	}
 
 	hint := &model.NotificationHint{
-		BlockType: block.Type,
-		BlockID:   block.ID,
+		BlockType:   block.Type,
+		BlockID:     block.ID,
+		WorkspaceID: block.WorkspaceID,
 	}
 
 	_, err := b.store.UpsertNotificationHint(hint)
