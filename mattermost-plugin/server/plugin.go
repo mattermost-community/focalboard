@@ -26,8 +26,6 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-const PostEmbedBoards mmModel.PostEmbedType = "boards"
-
 type BoardsEmbed struct {
 	OriginalPath string `json:"originalPath"`
 	WorkspaceID  string `json:"workspaceID"`
@@ -299,7 +297,7 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 		})
 
 		BoardsPostEmbed := &mmModel.PostEmbed{
-			Type: PostEmbedBoards,
+			Type: mmModel.PostEmbedBoards,
 			Data: string(b),
 		}
 		post.Metadata.Embeds = []*mmModel.PostEmbed{BoardsPostEmbed}
