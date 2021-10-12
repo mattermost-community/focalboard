@@ -5,11 +5,11 @@ import React from 'react'
 import './iconButton.scss'
 
 type Props = {
-    onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
+    onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
     title?: string
     icon?: React.ReactNode
     className?: string
-    onMouseDown?: (e: React.MouseEvent<HTMLDivElement>) => void
+    onMouseDown?: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 function IconButton(props: Props): JSX.Element {
@@ -18,14 +18,12 @@ function IconButton(props: Props): JSX.Element {
         className += ' ' + props.className
     }
     return (
-        <button 
-            type = "button"
-            onClick={props.onClick}
-            onMouseDown={props.onMouseDown}
-            className={className}
-            title={props.title}   
-            aria-label={props.title}
-        >
+        <button type='button'
+                onClick={props.onClick}
+                onMouseDown={props.onMouseDown}
+                class={className}
+                title={props.title}
+                aria-label={props.title}>
             {props.icon}
         </button>
     )
