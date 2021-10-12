@@ -44,10 +44,12 @@ describe('components/flashMessages', () => {
         })
 
         expect(screen.queryByText('Mock Content')).toBeNull()
+    })
 
-        /**
-         * Check for normal severity
-         */
+    test('renders a flash message with normal severity', () => {
+        const {container} = render(
+            wrapIntl(<FlashMessages milliseconds={200}/>),
+        )
 
         act(() => {
             sendFlashMessage({content: 'Mock Content', severity: 'normal'})
@@ -55,15 +57,19 @@ describe('components/flashMessages', () => {
 
         expect(screen.getByText('Mock Content')).toHaveClass('normal')
 
+        expect(container).toMatchSnapshot()
+
         act(() => {
             jest.advanceTimersByTime(200)
         })
 
         expect(screen.queryByText('Mock Content')).toBeNull()
+    })
 
-        /**
-         * Check for low severity
-         */
+    test('renders a flash message with low severity', () => {
+        const {container} = render(
+            wrapIntl(<FlashMessages milliseconds={200}/>),
+        )
 
         act(() => {
             sendFlashMessage({content: 'Mock Content', severity: 'low'})
@@ -71,15 +77,19 @@ describe('components/flashMessages', () => {
 
         expect(screen.getByText('Mock Content')).toHaveClass('low')
 
+        expect(container).toMatchSnapshot()
+
         act(() => {
             jest.advanceTimersByTime(200)
         })
 
         expect(screen.queryByText('Mock Content')).toBeNull()
+    })
 
-        /**
-         * Check with a custom HTML in flash message
-         */
+    test('renders a flash message with low severity and custom HTML in flash message', () => {
+        const {container} = render(
+            wrapIntl(<FlashMessages milliseconds={200}/>),
+        )
 
         act(() => {
             sendFlashMessage({content: <div data-testid='mock-test-id'>{'Mock Content'}</div>, severity: 'low'})
@@ -87,21 +97,27 @@ describe('components/flashMessages', () => {
 
         expect(screen.getByTestId('mock-test-id')).toBeVisible()
 
+        expect(container).toMatchSnapshot()
+
         act(() => {
             jest.advanceTimersByTime(200)
         })
 
         expect(screen.queryByText('Mock Content')).toBeNull()
+    })
 
-        /**
-         * Check that onClick on flash works
-         */
+    test('renders a flash message with low severity and check onClick on flash works', () => {
+        const {container} = render(
+            wrapIntl(<FlashMessages milliseconds={200}/>),
+        )
 
         act(() => {
             sendFlashMessage({content: 'Mock Content', severity: 'low'})
         })
 
         userEvent.click(screen.getByText('Mock Content'))
+
+        expect(container).toMatchSnapshot()
 
         act(() => {
             jest.advanceTimersByTime(200)
