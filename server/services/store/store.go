@@ -3,7 +3,7 @@ package store
 
 import "github.com/mattermost/focalboard/server/model"
 
-// Conainer represents a container in a store
+// Container represents a container in a store
 // Using a struct to make extending this easier in the future.
 type Container struct {
 	WorkspaceID string
@@ -58,4 +58,6 @@ type Store interface {
 	HasWorkspaceAccess(userID string, workspaceID string) (bool, error)
 	GetWorkspaceCount() (int64, error)
 	GetUserWorkspaces(userID string) ([]model.UserWorkspace, error)
+
+	GetBoards(userID string) ([]model.Block, error)
 }

@@ -96,6 +96,8 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	apiv1.HandleFunc("/workspaces", a.sessionRequired(a.handleGetUserWorkspaces)).Methods("GET")
 
+	apiv1.HandleFunc("/boards", a.sessionRequired(a.handleGetBoards)).Methods("GET")
+
 	// Get Files API
 
 	files := r.PathPrefix("/files").Subrouter()
@@ -1475,6 +1477,29 @@ func (a *API) handleGetUserWorkspaces(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data, err := json.Marshal(userWorkspaces)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
+}
+
+func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	userID := session.UserID
+	if userID == SingleUser {
+		userID = ""
+	}
+
+	blocks, err := a.app.GetBoards(userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	data, err := json.Marshal(blocks)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

@@ -108,8 +108,11 @@ func (s *SQLStore) GetBlocksWithType(c store.Container, blockType string) ([]mod
 	query := s.getQueryBuilder().
 		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks").
-		Where(sq.Eq{"type": blockType}).
-		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
+		Where(sq.Eq{"type": blockType})
+
+	if c.WorkspaceID != "" {
+		query = query.Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
+	}
 
 	rows, err := query.Query()
 	if err != nil {
@@ -530,4 +533,12 @@ func (s *SQLStore) GetBlock(c store.Container, blockID string) (*model.Block, er
 	}
 
 	return &blocks[0], nil
+}
+
+func (s *SQLStore) GetBoards(userID string) ([]model.Block, error) {
+	container := store.Container{
+		WorkspaceID: "",
+	}
+
+	return s.GetBlocksWithType(container, "board")
 }

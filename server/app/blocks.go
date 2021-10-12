@@ -129,6 +129,10 @@ func (a *App) GetBlockCountsByType() (map[string]int64, error) {
 	return a.store.GetBlockCountsByType()
 }
 
+func (a *App) GetBoards(userID string) ([]model.Block, error) {
+	return a.store.GetBoards(userID)
+}
+
 func (a *App) notifyBlockChanged(action notify.Action, c store.Container, block *model.Block, oldBlock *model.Block, userID string) {
 	if a.notifications == nil {
 		return
