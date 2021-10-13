@@ -45,7 +45,7 @@ exports[`components/propertyValueElement should match snapshot, date, array valu
     class="DateRange empty octo-propertyvalue"
   >
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>

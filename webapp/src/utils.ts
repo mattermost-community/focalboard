@@ -579,6 +579,10 @@ class Utils {
         const readToken = queryString.get('r') || ''
         return readToken
     }
+
+    static generateClassName(conditions: Record<string, boolean>): string {
+        return Object.entries(conditions).map(([className, condition]) => (condition ? className : '')).filter((className) => className !== '').join(' ')
+    }
 }
 
 export {Utils, IDType}

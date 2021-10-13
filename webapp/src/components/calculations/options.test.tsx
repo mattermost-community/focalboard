@@ -19,6 +19,12 @@ describe('components/calculations/Options', () => {
                 value={'none'}
                 onChange={() => {}}
                 property={property}
+                menuOpen={false}
+                options={[{
+                    label: 'Count',
+                    value: 'count',
+                    displayName: 'Count',
+                }]}
             />
         )
 
@@ -37,6 +43,18 @@ describe('components/calculations/Options', () => {
                 menuOpen={true}
                 onChange={() => {}}
                 property={property}
+                options={[
+                    {
+                        label: 'Count',
+                        value: 'count',
+                        displayName: 'Count',
+                    },
+                    {
+                        label: 'Max',
+                        value: 'max',
+                        displayName: 'Max',
+                    },
+                ]}
             />
         )
 
