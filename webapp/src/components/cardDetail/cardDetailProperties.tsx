@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
-import {FormattedMessage} from 'react-intl'
+import React,{useState} from 'react'
+import { useIntl, FormattedMessage } from "react-intl";
 
 import {Board, PropertyType, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
@@ -12,8 +12,10 @@ import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import MenuWrapper from '../../widgets/menuWrapper'
 import PropertyMenu from '../../widgets/propertyMenu'
-
 import PropertyValueElement from '../propertyValueElement'
+import { ConfirmationDialogBox } from '../confirmationDialogBox';
+import {sendFlashMessage} from '../flashMessages';
+
 
 type Props = {
     board: Board
@@ -27,7 +29,12 @@ type Props = {
 }
 
 const CardDetailProperties = React.memo((props: Props) => {
-    const {board, card, cards, views, activeView, contents, comments} = props
+    const intl = useIntl();
+    const { board, card, cards, views, activeView, contents, comments } = props;
+
+    let [showConfirmationDialog, setShowConfirmationDialog] = useState<boolean>(false);
+    let [deletingPropId, setDeletingPropId] = useState<string>('');
+    let [deletingPropName, setDeletingPropName] = useState<string>('');
 
     return (
         <div className='octo-propertylist CardDetailProperties'>
@@ -47,7 +54,12 @@ const CardDetailProperties = React.memo((props: Props) => {
                                     propertyName={propertyTemplate.name}
                                     propertyType={propertyTemplate.type}
                                     onTypeAndNameChanged={(newType: PropertyType, newName: string) => mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType, newName)}
-                                    onDelete={(id: string) => mutator.deleteProperty(board, views, cards, id)}
+                                    onDelete={(id: string) => {
+                                            setDeletingPropId(id);
+                                            setDeletingPropName(propertyTemplate.name);
+                                            setShowConfirmationDialog(true); 
+                                        }
+                                    }
                                 />
                             </MenuWrapper>
                         }
@@ -63,6 +75,23 @@ const CardDetailProperties = React.memo((props: Props) => {
                     </div>
                 )
             })}
+
+            {showConfirmationDialog && (
+                <ConfirmationDialogBox
+                    propertyId={deletingPropId}
+                    onClose={() => setShowConfirmationDialog(false)}
+                    onConfirm={() => {
+                        mutator.deleteProperty(board,views,cards,deletingPropId);
+                        setShowConfirmationDialog(false);
+                        sendFlashMessage({content: intl.formatMessage({id: 'CardDetailProperty.property-deleted', defaultMessage: `Deleted ${deletingPropName}!`}), severity: 'high'})
+                    }}
+
+                    heading={intl.formatMessage({id: "CardDetailProperty.confirm-delete",defaultMessage: "Confirm Delete Property", })}
+                    subText={intl.formatMessage({id: "CardDetailProperty.confirm-delete-subtext",defaultMessage: `Are you sure you want to delete the property "${deletingPropName}"? Deleting it will delete the property from all cards in this board.`,
+                    
+                })}
+                />
+            )}
 
             {!props.readonly &&
                 <div className='octo-propertyname add-property'>
