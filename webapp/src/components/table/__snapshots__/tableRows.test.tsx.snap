@@ -32,7 +32,7 @@ exports[`components/table/TableRows should match snapshot, fire events 1`] = `
         class="open-button"
       >
         <button
-          class="Button    "
+          class="Button"
           type="button"
         >
           <span>
