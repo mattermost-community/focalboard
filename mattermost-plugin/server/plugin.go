@@ -1,9 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"path"
+	"strings"
 	"sync"
 
 	"github.com/mattermost/focalboard/server/auth"
@@ -19,8 +22,18 @@ import (
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
+	"github.com/mattermost/mattermost-server/v6/shared/markdown"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
+
+type BoardsEmbed struct {
+	OriginalPath string `json:"originalPath"`
+	WorkspaceID  string `json:"workspaceID"`
+	ViewID       string `json:"viewID"`
+	BoardID      string `json:"boardID"`
+	CardID       string `json:"cardID"`
+	ReadToken    string `json:"readToken,omitempty"`
+}
 
 // Plugin implements the interface expected by the Mattermost server to communicate between the server and plugin processes.
 type Plugin struct {
@@ -218,4 +231,92 @@ func defaultLoggingConfig() string {
 			]
 		}
 	}`
+}
+
+func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mmModel.Post, string) { //nolint
+	if !p.API.GetConfig().FeatureFlags.BoardsUnfurl {
+		return post, ""
+	}
+
+	firstLink := getFirstLink(post.Message)
+	u, err := url.Parse(firstLink)
+
+	if err != nil {
+		return post, ""
+	}
+
+	// Trim away the first / because otherwise after we split the string, the first element in the array is a empty element
+	path := strings.ToLower(u.Path[1:])
+	pathSplit := strings.Split(path, "/")
+	queryParams := u.Query()
+
+	if len(pathSplit) == 0 {
+		return post, ""
+	}
+
+	workspaceID := ""
+	boardID := ""
+	viewID := ""
+	cardID := ""
+	readToken := ""
+
+	// If the first parameter in the path is boards,
+	// then we've copied this directly as logged in user of that board
+
+	// If the first parameter in the path is plugins,
+	// then we've copied this from a shared board
+
+	// For card links copied on a non-shared board, the path looks like boards/workspace/workspaceID/boardID/viewID/cardID
+
+	// For card links copied on a shared board, the path looks like
+	// plugins/focalboard/workspace/workspaceID/shared/boardID/viewID/cardID?r=read_token
+
+	// This is a non-shared board card link
+	if len(pathSplit) == 6 && pathSplit[0] == "boards" && pathSplit[1] == "workspace" {
+		workspaceID = pathSplit[2]
+		boardID = pathSplit[3]
+		viewID = pathSplit[4]
+		cardID = pathSplit[5]
+	} else if len(pathSplit) == 8 && pathSplit[0] == "plugins" &&
+		pathSplit[1] == "focalboard" && pathSplit[2] == "workspace" && pathSplit[4] == "shared" { // This is a shared board card link
+		workspaceID = pathSplit[3]
+		boardID = pathSplit[5]
+		viewID = pathSplit[6]
+		cardID = pathSplit[7]
+		readToken = queryParams.Get("r")
+	}
+
+	if workspaceID != "" && boardID != "" && viewID != "" && cardID != "" {
+		b, _ := json.Marshal(BoardsEmbed{
+			WorkspaceID:  workspaceID,
+			BoardID:      boardID,
+			ViewID:       viewID,
+			CardID:       cardID,
+			ReadToken:    readToken,
+			OriginalPath: u.RequestURI(),
+		})
+
+		BoardsPostEmbed := &mmModel.PostEmbed{
+			Type: mmModel.PostEmbedBoards,
+			Data: string(b),
+		}
+		post.Metadata.Embeds = []*mmModel.PostEmbed{BoardsPostEmbed}
+		post.AddProp("boards", string(b))
+	}
+	return post, ""
+}
+
+func getFirstLink(str string) string {
+	firstLink := ""
+
+	markdown.Inspect(str, func(blockOrInline interface{}) bool {
+		if _, ok := blockOrInline.(*markdown.Autolink); ok {
+			if link := blockOrInline.(*markdown.Autolink).Destination(); firstLink == "" {
+				firstLink = link
+			}
+		}
+		return true
+	})
+
+	return firstLink
 }
