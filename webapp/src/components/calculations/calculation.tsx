@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {CSSProperties} from 'react'
+import {useIntl} from 'react-intl'
 
 import {Card} from '../../blocks/card'
 
@@ -30,6 +31,7 @@ type Props = {
 const Calculation = (props: Props): JSX.Element => {
     const value = props.value || Options.none.value
     const valueOption = Options[value]
+    const intl = useIntl()
 
     const option = (
         <props.optionsComponent
@@ -73,7 +75,7 @@ const Calculation = (props: Props): JSX.Element => {
             {
                 value !== Options.none.value &&
                 <span className='calculationValue'>
-                    {Calculations[value] ? Calculations[value](props.cards, props.property) : ''}
+                    {Calculations[value] ? Calculations[value](props.cards, props.property, intl) : ''}
                 </span>
             }
 

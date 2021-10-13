@@ -7,6 +7,7 @@ import {render} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
+import {wrapIntl} from '../../testUtils'
 
 import {TableCalculationOptions} from '../table/calculation/tableCalculationOptions'
 
@@ -26,7 +27,7 @@ describe('components/calculations/Calculation', () => {
     card2.fields.properties.property_4 = 'Baz'
 
     test('should match snapshot - none', () => {
-        const component = (
+        const component = wrapIntl(
             <Calculation
                 style={{}}
                 class={'fooClass'}
@@ -44,7 +45,7 @@ describe('components/calculations/Calculation', () => {
                     options: [],
                 }}
                 optionsComponent={TableCalculationOptions}
-            />
+            />,
         )
 
         const {container} = render(component)
@@ -52,7 +53,7 @@ describe('components/calculations/Calculation', () => {
     })
 
     test('should match snapshot - count', () => {
-        const component = (
+        const component = wrapIntl(
             <Calculation
                 style={{}}
                 class={'fooClass'}
@@ -70,7 +71,7 @@ describe('components/calculations/Calculation', () => {
                     options: [],
                 }}
                 optionsComponent={TableCalculationOptions}
-            />
+            />,
         )
 
         const {container} = render(component)
@@ -78,7 +79,7 @@ describe('components/calculations/Calculation', () => {
     })
 
     test('should match snapshot - countValue', () => {
-        const component = (
+        const component = wrapIntl(
             <Calculation
                 style={{}}
                 class={'fooClass'}
@@ -96,7 +97,7 @@ describe('components/calculations/Calculation', () => {
                     options: [],
                 }}
                 optionsComponent={TableCalculationOptions}
-            />
+            />,
         )
 
         const {container} = render(component)
@@ -104,7 +105,7 @@ describe('components/calculations/Calculation', () => {
     })
 
     test('should match snapshot - countUniqueValue', () => {
-        const component = (
+        const component = wrapIntl(
             <Calculation
                 style={{}}
                 class={'fooClass'}
@@ -122,7 +123,7 @@ describe('components/calculations/Calculation', () => {
                     options: [],
                 }}
                 optionsComponent={TableCalculationOptions}
-            />
+            />,
         )
 
         const {container} = render(component)
@@ -134,7 +135,7 @@ describe('components/calculations/Calculation', () => {
         const onMenuClose = jest.fn()
         const onChange = jest.fn()
 
-        const component = (
+        const component = wrapIntl(
             <Calculation
                 style={{}}
                 class={'fooClass'}
@@ -152,7 +153,7 @@ describe('components/calculations/Calculation', () => {
                     options: [],
                 }}
                 optionsComponent={TableCalculationOptions}
-            />
+            />,
         )
 
         const {container} = render(component)
