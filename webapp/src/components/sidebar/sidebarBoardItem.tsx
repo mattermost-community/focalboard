@@ -102,7 +102,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
 
     return (
         <div className='SidebarBoardItem'>
-            <div
+            <button
                 className={`octo-sidebar-item ' ${collapsed ? 'collapsed' : 'expanded'} ${board.id === props.activeBoardId ? 'active' : ''}`}
                 onClick={() => showBoard(board.id)}
             >
@@ -160,16 +160,16 @@ const SidebarBoardItem = React.memo((props: Props) => {
                         />
                     </Menu>
                 </MenuWrapper>
-            </div>
+            </button>
             {!collapsed && boardViews.length === 0 &&
-                <div className='octo-sidebar-item subitem no-views'>
+                <button className='octo-sidebar-item subitem no-views'>
                     <FormattedMessage
                         id='Sidebar.no-views-in-board'
                         defaultMessage='No pages inside'
                     />
-                </div>}
+                </button>}
             {!collapsed && boardViews.map((view) => (
-                <div
+                <button
                     key={view.id}
                     className={`octo-sidebar-item subitem ${view.id === props.activeViewId ? 'active' : ''}`}
                     onClick={() => showView(view.id, board.id)}
@@ -181,7 +181,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                     >
                         {view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}
                     </div>
-                </div>
+                </button>
             ))}
         </div>
     )

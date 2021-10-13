@@ -6,6 +6,10 @@
         padding: 0 16px 0 8px;
         height: 36px;
         align-items: center;
+        border: none;
+        color: rgba(var(--sidebar-text-rgb), 0.64);
+        background-color: rgb(var(--sidebar-bg-rgb));
+        width: 100%;
 
         &:hover {
             background-color: rgba(var(--sidebar-text-rgb), 0.08);
@@ -95,5 +99,6 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        text-align: left;
     }
 }
