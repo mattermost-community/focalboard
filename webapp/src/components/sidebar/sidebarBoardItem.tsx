@@ -32,10 +32,17 @@ const SidebarBoardItem = React.memo((props: Props) => {
     const [collapsed, setCollapsed] = useState(false)
     const intl = useIntl()
     const history = useHistory()
-    const match = useRouteMatch()
+    const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, workspaceId?: string}>()
 
     const showBoard = useCallback((boardId) => {
-        const newPath = generatePath(match.path, {...match.params, boardId: boardId || ''})
+        // if the same board, reuse the match params
+        // otherwise remove viewId and cardId, results in first view being selected
+        const params = {...match.params, boardId: boardId || ''}
+        if (boardId !== match.params.boardId) {
+            params.viewId = undefined
+            params.cardId = undefined
+        }
+        const newPath = generatePath(match.path, params)
         history.push(newPath)
     }, [match, history])
 

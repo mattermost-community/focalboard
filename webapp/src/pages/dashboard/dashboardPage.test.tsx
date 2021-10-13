@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 import {render} from '@testing-library/react'
+import 'isomorphic-fetch'
 
 import configureStore from 'redux-mock-store'
 
@@ -26,6 +27,8 @@ beforeEach(() => {
 beforeAll(() => {
     mockMatchMedia({matches: true})
 })
+
+global.fetch = FetchMock.fn
 
 describe('pages/dashboard/DashboardPage', () => {
     const mockStore = configureStore([])
@@ -62,6 +65,8 @@ describe('pages/dashboard/DashboardPage', () => {
                 me: {},
             },
         })
+
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace1, workspace2, workspace3))))
 
         const history = createMemoryHistory()
 

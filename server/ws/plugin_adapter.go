@@ -226,7 +226,7 @@ func (pa *PluginAdapter) OnWebSocketConnect(webConnID, userID string) {
 func (pa *PluginAdapter) OnWebSocketDisconnect(webConnID, userID string) {
 	pac, ok := pa.GetListenerByWebConnID(webConnID)
 	if !ok {
-		pa.api.LogError("received a disconnect for an unregistered webconn",
+		pa.api.LogDebug("received a disconnect for an unregistered webconn",
 			"webConnID", webConnID,
 			"userID", userID,
 		)

@@ -28,6 +28,20 @@ On Linux, to build the Linux app:
 
 Clone the [GitHub repo here](https://github.com/mattermost/focalboard).
 
+## Build and run from the terminal
+
+Follow the steps in the [main readme file](https://github.com/mattermost/focalboard#building-the-server). In summary, to build and run the server:
+
+```
+make prebuild
+make
+ ./bin/focalboard-server
+```
+
+Then open a browser to `http://localhost:8000` to access it. The port is configured in `config.json`.
+
+Once the server is running, you can rebuild just the webapp with `make webapp` (in a separate terminal window), then reload the browser.
+
 ## VSCode Setup
 
 Here's a recommended dev-test loop using VSCode:
@@ -78,5 +92,11 @@ Before checking-in commits, run: `make ci`, which is simlar to the ci.yml workfl
 * Webapp eslint: `cd webapp; npm run check`
 * Webapp unit tests: `cd webapp; npm run test`
 * Webapp UI tests: `cd webapp; npm run cypress:ci`
+
+## Running into problems or have questions?
+
+If you run into any issues with the steps here, or have any general questions, please don't hesitate to reach out either on [GitHub](https://github.com/mattermost/focalboard) or our [Mattermost community channel](https://community.mattermost.com/core/channels/focalboard).
+
+We welcome everyone, and appreciate any feedback.
 
 glhf! :)

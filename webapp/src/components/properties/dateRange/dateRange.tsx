@@ -26,7 +26,7 @@ type Props = {
     onChange: (value: string) => void
 }
 
-type DateProperty = {
+export type DateProperty = {
     from?: number
     to?: number
     includeTime?: boolean
