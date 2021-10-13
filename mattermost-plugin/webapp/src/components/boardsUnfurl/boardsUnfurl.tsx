@@ -111,7 +111,7 @@ export const FocalboardUnfurl = (props: Props): JSX.Element => {
 
     // We will just display the first 3 or less select/multi-select properties and do a +n for remainder if any remainder
     if (propertyKeyArray.length > 0) {
-        for (let i = 0; i < propertyKeyArray.length || propertiesToDisplay.length === 3; i++) {
+        for (let i = 0; i < propertyKeyArray.length && propertiesToDisplay.length < 3; i++) {
             const keyToLookUp = propertyKeyArray[i]
             const correspondingOption = options?.find((option: any) => option.id === keyToLookUp) as any
 
