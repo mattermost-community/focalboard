@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React,{useState} from 'react'
+import React, {useState} from 'react'
 import {useIntl, FormattedMessage} from 'react-intl'
 
 import {Board, PropertyType, IPropertyTemplate} from '../../blocks/board'
@@ -15,9 +15,8 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import PropertyMenu from '../../widgets/propertyMenu'
 
 import PropertyValueElement from '../propertyValueElement'
-import {ConfirmationDialogBox} from '../confirmationDialogBox';
-import {sendFlashMessage} from '../flashMessages';
-
+import {ConfirmationDialogBox} from '../confirmationDialogBox'
+import {sendFlashMessage} from '../flashMessages'
 
 type Props = {
     board: Board
@@ -31,12 +30,12 @@ type Props = {
 }
 
 const CardDetailProperties = React.memo((props: Props) => {
-    const intl = useIntl();
-    const { board, card, cards, views, activeView, contents, comments } = props;
+    const intl = useIntl()
+    const {board, card, cards, views, activeView, contents, comments} = props
 
-    let [showConfirmationDialog, setShowConfirmationDialog] = useState<boolean>(false);
-    let [deletingPropId, setDeletingPropId] = useState<string>('');
-    let [deletingPropName, setDeletingPropName] = useState<string>('');
+    let [showConfirmationDialog, setShowConfirmationDialog] = useState<boolean>(false)
+    let [deletingPropId, setDeletingPropId] = useState<string>('')
+    let [deletingPropName, setDeletingPropName] = useState<string>('')
 
     return (
         <div className='octo-propertylist CardDetailProperties'>
@@ -57,9 +56,9 @@ const CardDetailProperties = React.memo((props: Props) => {
                                     propertyType={propertyTemplate.type}
                                     onTypeAndNameChanged={(newType: PropertyType, newName: string) => mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType, newName)}
                                     onDelete={(id: string) => {
-                                            setDeletingPropId(id);
-                                            setDeletingPropName(propertyTemplate.name);
-                                            setShowConfirmationDialog(true); 
+                                        setDeletingPropId(id)
+                                        setDeletingPropName(propertyTemplate.name)
+                                        setShowConfirmationDialog(true)
                                         }
                                     }
                                 />
@@ -83,7 +82,7 @@ const CardDetailProperties = React.memo((props: Props) => {
                     propertyId={deletingPropId}
                     onClose={() => setShowConfirmationDialog(false)}
                     onConfirm={() => {
-                        mutator.deleteProperty(board,views,cards,deletingPropId);
+                        mutator.deleteProperty(board, views, cards, deletingPropId);
                         setShowConfirmationDialog(false);
                         sendFlashMessage({content: intl.formatMessage({id: 'CardDetailProperty.property-deleted', defaultMessage: `Deleted ${deletingPropName}!`}), severity: 'high'})
                     }}

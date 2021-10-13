@@ -2,11 +2,11 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
+import {FormattedMessage} from 'react-intl';
 
 import Button from '../widgets/buttons/button'
 import Dialog from './dialog'
 import './confirmationDialogBox.scss'
-import {FormattedMessage} from 'react-intl';
 
 type Props = {
     propertyId: string;
