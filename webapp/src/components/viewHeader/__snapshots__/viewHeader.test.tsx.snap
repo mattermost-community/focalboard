@@ -35,7 +35,7 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       role="button"
     >
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>
@@ -49,7 +49,7 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       role="button"
     >
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>
@@ -66,7 +66,7 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       class="ModalWrapper"
     >
       <button
-        class="Button active   "
+        class="Button active"
         type="button"
       >
         <span>
@@ -80,7 +80,7 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       role="button"
     >
       <button
-        class="Button active   "
+        class="Button active"
         type="button"
       >
         <span>
@@ -89,7 +89,7 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       </button>
     </div>
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
@@ -171,7 +171,7 @@ exports[`components/viewHeader/viewHeader return viewHeader readonly 1`] = `
       class="octo-spacer"
     />
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>

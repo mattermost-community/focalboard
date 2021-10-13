@@ -29,6 +29,7 @@ type BoardFields = {
     showDescription?: boolean
     isTemplate?: boolean
     cardProperties: IPropertyTemplate[]
+    columnCalculations: Record<string, string>
 }
 
 type Board = Block & {

@@ -165,7 +165,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
               class="open-button"
             >
               <button
-                class="Button    "
+                class="Button"
                 type="button"
               >
                 <span>
@@ -253,7 +253,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
               class="open-button"
             >
               <button
-                class="Button    "
+                class="Button"
                 type="button"
               >
                 <span>
@@ -553,7 +553,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
               class="open-button"
             >
               <button
-                class="Button    "
+                class="Button"
                 type="button"
               >
                 <span>
@@ -641,7 +641,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
               class="open-button"
             >
               <button
-                class="Button    "
+                class="Button"
                 type="button"
               >
                 <span>
@@ -941,7 +941,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
               class="open-button"
             >
               <button
-                class="Button    "
+                class="Button"
                 type="button"
               >
                 <span>
@@ -1029,7 +1029,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
               class="open-button"
             >
               <button
-                class="Button    "
+                class="Button"
                 type="button"
               >
                 <span>
@@ -1329,7 +1329,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
               class="open-button"
             >
               <button
-                class="Button    "
+                class="Button"
                 type="button"
               >
                 <span>
@@ -1417,7 +1417,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
               class="open-button"
             >
               <button
-                class="Button    "
+                class="Button"
                 type="button"
               >
                 <span>
@@ -1693,7 +1693,7 @@ exports[`components/table/Table should match snapshot 1`] = `
               class="open-button"
             >
               <button
-                class="Button    "
+                class="Button"
                 type="button"
               >
                 <span>
@@ -1950,7 +1950,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
               
             </div>
             <button
-              class="Button    "
+              class="Button"
               type="button"
             >
               <span>
@@ -2168,7 +2168,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
               class="open-button"
             >
               <button
-                class="Button    "
+                class="Button"
                 type="button"
               >
                 <span>

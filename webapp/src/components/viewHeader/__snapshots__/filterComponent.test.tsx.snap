@@ -31,7 +31,7 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
           role="button"
         >
           <button
-            class="Button    "
+            class="Button"
             type="button"
           >
             <span>
@@ -149,7 +149,7 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
           role="button"
         >
           <button
-            class="Button    "
+            class="Button"
             type="button"
           >
             <span>
@@ -161,7 +161,7 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
           class="octo-spacer"
         />
         <button
-          class="Button    "
+          class="Button"
           type="button"
         >
           <span>
@@ -171,7 +171,7 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
       </div>
       <br />
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>
@@ -214,7 +214,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
           role="button"
         >
           <button
-            class="Button    "
+            class="Button"
             type="button"
           >
             <span>
@@ -332,7 +332,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
           role="button"
         >
           <button
-            class="Button    "
+            class="Button"
             type="button"
           >
             <span>
@@ -344,7 +344,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
           class="octo-spacer"
         />
         <button
-          class="Button    "
+          class="Button"
           type="button"
         >
           <span>
@@ -354,7 +354,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
       </div>
       <br />
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>
@@ -397,7 +397,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
           role="button"
         >
           <button
-            class="Button    "
+            class="Button"
             type="button"
           >
             <span>
@@ -411,7 +411,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
           role="button"
         >
           <button
-            class="Button    "
+            class="Button"
             type="button"
           >
             <span>
@@ -527,7 +527,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
           class="octo-spacer"
         />
         <button
-          class="Button    "
+          class="Button"
           type="button"
         >
           <span>
@@ -537,7 +537,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
       </div>
       <br />
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>
@@ -580,7 +580,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
           role="button"
         >
           <button
-            class="Button    "
+            class="Button"
             type="button"
           >
             <span>
@@ -698,7 +698,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
           role="button"
         >
           <button
-            class="Button    "
+            class="Button"
             type="button"
           >
             <span>
@@ -710,7 +710,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
           class="octo-spacer"
         />
         <button
-          class="Button    "
+          class="Button"
           type="button"
         >
           <span>
@@ -720,7 +720,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
       </div>
       <br />
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>
