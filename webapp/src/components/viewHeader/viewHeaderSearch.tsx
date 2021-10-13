@@ -28,6 +28,12 @@ const ViewHeaderSearch = (): JSX.Element => {
         () => debounce(dispatchSearchText, 200), [])
 
     useEffect(() => {
+        return () => {
+            debouncedDispatchSearchText.cancel()
+        }
+    }, [])
+
+    useEffect(() => {
         searchFieldRef.current?.focus()
     }, [isSearching])
 
