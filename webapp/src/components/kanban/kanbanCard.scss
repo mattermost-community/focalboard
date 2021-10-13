@@ -62,6 +62,15 @@
             font-size: 16px;
             margin-right: 8px;
         }
+
+        .octo-titletext {
+            display: -webkit-box;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 100px;
+            -webkit-line-clamp: 5;
+            -webkit-box-orient: vertical;
+        }
     }
 
     .IconButton {
