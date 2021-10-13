@@ -8,7 +8,7 @@ import {Board, IPropertyTemplate} from '../blocks/board'
 import {IViewType, BoardView, createBoardView} from '../blocks/boardView'
 import {Constants} from '../constants'
 import mutator from '../mutator'
-import {Utils} from '../utils'
+import {Utils, IDType} from '../utils'
 import AddIcon from '../widgets/icons/add'
 import BoardIcon from '../widgets/icons/board'
 import DeleteIcon from '../widgets/icons/delete'
@@ -30,7 +30,10 @@ const ViewMenu = React.memo((props: Props) => {
     const match = useRouteMatch()
 
     const showView = useCallback((viewId) => {
-        const newPath = generatePath(match.path, {...match.params, viewId: viewId || ''})
+        let newPath = generatePath(match.path, {...match.params, viewId: viewId || ''})
+        if (props.readonly) {
+            newPath += `?r=${Utils.getReadToken()}`
+        }
         history.push(newPath)
     }, [match, history])
 
@@ -40,7 +43,7 @@ const ViewMenu = React.memo((props: Props) => {
         const currentViewId = activeView.id
         const newView = createBoardView(activeView)
         newView.title = `${activeView.title} copy`
-        newView.id = Utils.createGuid()
+        newView.id = Utils.createGuid(IDType.View)
         mutator.insertBlock(
             newView,
             'duplicate view',

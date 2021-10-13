@@ -39,7 +39,7 @@ exports[`should match snapshot on read only 1`] = `
       </span>
     </div>
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
@@ -88,7 +88,7 @@ exports[`should match snapshot with Group 1`] = `
       </span>
     </div>
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
@@ -159,7 +159,7 @@ exports[`should match snapshot, add new 1`] = `
       </span>
     </div>
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
@@ -230,7 +230,7 @@ exports[`should match snapshot, edit title 1`] = `
       </span>
     </div>
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
@@ -301,7 +301,7 @@ exports[`should match snapshot, hide group 1`] = `
       </span>
     </div>
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
@@ -368,7 +368,7 @@ exports[`should match snapshot, no groups 1`] = `
       
     </div>
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>

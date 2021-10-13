@@ -10,7 +10,6 @@ import {IPropertyOption, IPropertyTemplate, Board, BoardGroup} from '../../block
 import {BoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
 import mutator from '../../mutator'
-import Button from '../../widgets/buttons/button'
 import IconButton from '../../widgets/buttons/iconButton'
 import AddIcon from '../../widgets/icons/add'
 import DeleteIcon from '../../widgets/icons/delete'
@@ -20,6 +19,8 @@ import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import Editable from '../../widgets/editable'
 import Label from '../../widgets/label'
+
+import {KanbanCalculation} from './calculation/calculation'
 
 type Props = {
     board: Board
@@ -31,7 +32,15 @@ type Props = {
     addCard: (groupByOptionId?: string) => Promise<void>
     propertyNameChanged: (option: IPropertyOption, text: string) => Promise<void>
     onDropToColumn: (srcOption: IPropertyOption, card?: Card, dstOption?: IPropertyOption) => void
+    calculationMenuOpen: boolean
+    onCalculationMenuOpen: () => void
+    onCalculationMenuClose: () => void
 }
+
+const defaultCalculation = 'count'
+const defaultProperty: IPropertyTemplate = {
+    id: Constants.titleColumnId,
+} as IPropertyTemplate
 
 export default function KanbanColumnHeader(props: Props): JSX.Element {
     const {board, activeView, intl, group, groupByProperty} = props
@@ -65,6 +74,10 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
     if (isOver) {
         className += ' dragover'
     }
+
+    const groupCalculation = props.activeView.fields.kanbanCalculations[props.group.option.id]
+    const calculationValue = groupCalculation ? groupCalculation.calculation : defaultCalculation
+    const calculationProperty = groupCalculation ? props.board.fields.cardProperties.find((property) => property.id === groupCalculation.propertyId) || defaultProperty : defaultProperty
 
     return (
         <div
@@ -108,7 +121,31 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                         spellCheck={true}
                     />
                 </Label>}
-            <Button>{`${group.cards.length}`}</Button>
+            <KanbanCalculation
+                cards={group.cards}
+                menuOpen={props.calculationMenuOpen}
+                value={calculationValue}
+                property={calculationProperty}
+                onMenuClose={props.onCalculationMenuClose}
+                onMenuOpen={props.onCalculationMenuOpen}
+                cardProperties={board.fields.cardProperties}
+                readonly={props.readonly}
+                onChange={(data: {calculation: string, propertyId: string}) => {
+                    if (data.calculation === calculationValue && data.propertyId === calculationProperty.id) {
+                        return
+                    }
+
+                    const newCalculations = {
+                        ...props.activeView.fields.kanbanCalculations,
+                    }
+                    newCalculations[props.group.option.id] = {
+                        calculation: data.calculation,
+                        propertyId: data.propertyId,
+                    }
+
+                    mutator.changeViewKanbanCalculations(props.activeView.id, props.activeView.fields.kanbanCalculations, newCalculations)
+                }}
+            />
             <div className='octo-spacer'/>
             {!props.readonly &&
                 <>

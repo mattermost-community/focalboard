@@ -1,28 +1,17 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {ReactElement, ReactNode} from 'react'
 
 import {fireEvent, render} from '@testing-library/react'
 
-import {IntlProvider} from 'react-intl'
 import {act} from 'react-dom/test-utils'
-
-import {DndProvider} from 'react-dnd'
-import {HTML5Backend} from 'react-dnd-html5-backend'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
-import {mockDOM} from '../../testUtils'
+import {mockDOM, wrapDNDIntl} from '../../testUtils'
 
 import CardDetailContents from './cardDetailContents'
-
-const wrapProviders = (children: any) => {
-    return (
-        <DndProvider backend={HTML5Backend}>
-            <IntlProvider locale='en'>{children}</IntlProvider>
-        </DndProvider>
-    )
-}
+import {CardDetailProvider} from './cardDetailContext'
 
 global.fetch = jest.fn()
 
@@ -59,8 +48,16 @@ describe('components/cardDetail/cardDetailContents', () => {
 
     const card = TestBlockFactory.createCard(board)
 
+    const wrap = (child: ReactNode): ReactElement => (
+        wrapDNDIntl(
+            <CardDetailProvider card={card}>
+                {child}
+            </CardDetailProvider>,
+        )
+    )
+
     test('should match snapshot', async () => {
-        const component = wrapProviders((
+        const component = wrap((
             <CardDetailContents
                 id='test-id'
                 card={card}
@@ -79,7 +76,7 @@ describe('components/cardDetail/cardDetailContents', () => {
 
     test('should match snapshot with contents array', async () => {
         const contents = [TestBlockFactory.createDivider(card)]
-        const component = wrapProviders((
+        const component = wrap((
             <CardDetailContents
                 id='test-id'
                 card={card}
@@ -97,7 +94,7 @@ describe('components/cardDetail/cardDetailContents', () => {
     })
 
     test('should match snapshot after onBlur triggers', async () => {
-        const component = wrapProviders((
+        const component = wrap((
             <CardDetailContents
                 id='test-id'
                 card={card}
@@ -144,7 +141,7 @@ describe('components/cardDetail/cardDetailContents', () => {
 
     test('should match snapshot with contents array that has array inside it', async () => {
         const contents = [TestBlockFactory.createDivider(card), [TestBlockFactory.createDivider(card), TestBlockFactory.createDivider(card)]]
-        const component = wrapProviders((
+        const component = wrap((
             <CardDetailContents
                 id='test-id'
                 card={card}
@@ -164,7 +161,7 @@ describe('components/cardDetail/cardDetailContents', () => {
     test('should match snapshot after drag and drop event', async () => {
         const contents = [TestBlockFactory.createDivider(card), [TestBlockFactory.createDivider(card), TestBlockFactory.createDivider(card)]]
         card.fields.contentOrder = contents.map((content) => (Array.isArray(content) ? content.map((c) => c.id) : (content as any).id))
-        const component = wrapProviders((
+        const component = wrap((
             <CardDetailContents
                 id='test-id'
                 card={card}
@@ -193,7 +190,7 @@ describe('components/cardDetail/cardDetailContents', () => {
     test('should match snapshot after drag and drop event 2', async () => {
         const contents = [TestBlockFactory.createDivider(card), TestBlockFactory.createDivider(card)]
         card.fields.contentOrder = contents.map((content) => (Array.isArray(content) ? content.map((c) => c.id) : (content as any).id))
-        const component = wrapProviders((
+        const component = wrap((
             <CardDetailContents
                 id='test-id'
                 card={card}
@@ -222,7 +219,7 @@ describe('components/cardDetail/cardDetailContents', () => {
     test('should match snapshot after drag and drop event 3', async () => {
         const contents = [TestBlockFactory.createDivider(card), TestBlockFactory.createDivider(card)]
         card.fields.contentOrder = contents.map((content) => (Array.isArray(content) ? content.map((c) => c.id) : (content as any).id))
-        const component = wrapProviders((
+        const component = wrap((
             <CardDetailContents
                 id='test-id'
                 card={card}

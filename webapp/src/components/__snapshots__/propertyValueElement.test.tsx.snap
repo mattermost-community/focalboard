@@ -1,18 +1,55 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`components/propertyValueElement Generic fields should allow cancel 1`] = `
+<div>
+  <input
+    class="Editable octo-propertyvalue"
+    placeholder="Empty"
+    spellcheck="true"
+    style="width: 5px;"
+    title=""
+    value=""
+  />
+</div>
+`;
+
+exports[`components/propertyValueElement URL fields should allow cancel 1`] = `
+<div>
+  <div
+    class="URLProperty property-link url"
+  >
+    <input
+      class="Editable octo-propertyvalue"
+      placeholder="Empty"
+      style="width: 5px;"
+      title="http://localhost"
+      value="http://localhost"
+    />
+    <a
+      class="Link__button"
+      href="http://localhost"
+      rel="noreferrer"
+      target="_blank"
+    >
+      <i
+        class="CompassIcon icon-link-variant LinkIcon"
+      />
+    </a>
+  </div>
+</div>
+`;
+
 exports[`components/propertyValueElement should match snapshot, date, array value 1`] = `
 <div>
   <div
-    class="DateRange "
+    class="DateRange empty octo-propertyvalue"
   >
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
-        <span
-          title="Empty"
-        />
+        Empty
       </span>
     </button>
   </div>
@@ -44,8 +81,9 @@ exports[`components/propertyValueElement should match snapshot, person, array va
 <div>
   <input
     class="Editable octo-propertyvalue"
-    placeholder=""
+    placeholder="Empty"
     spellcheck="true"
+    style="width: 5px;"
     title=""
     value=""
   />
@@ -99,7 +137,8 @@ exports[`components/propertyValueElement should match snapshot, url, array value
   >
     <input
       class="Editable octo-propertyvalue"
-      placeholder=""
+      placeholder="Empty"
+      style="width: 5px;"
       title="http://localhost"
       value="http://localhost"
     />
@@ -124,7 +163,8 @@ exports[`components/propertyValueElement should match snapshot, url, array value
   >
     <input
       class="Editable octo-propertyvalue"
-      placeholder=""
+      placeholder="Empty"
+      style="width: 5px;"
       title="http://localhost"
       value="http://localhost"
     />

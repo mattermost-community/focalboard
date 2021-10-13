@@ -9,7 +9,7 @@ interface ArchiveHeader {
 
 interface ArchiveLine {
     type: string,
-    data: any,
+    data: unknown,
 }
 
 // This schema allows the expansion of additional line types in the future

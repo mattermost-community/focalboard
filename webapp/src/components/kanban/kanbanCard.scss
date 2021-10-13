@@ -35,13 +35,20 @@
         right: 0;
     }
 
-    .octo-propertyvalue {
-        margin: 4px 0 0;
-        font-size: 12px;
-        line-height: 18px;
+    .octo-tooltip {
+        display: flex;
+        max-width: 100%;
+    }
 
-        &:empty {
+    .octo-propertyvalue {
+        input[value=''] {
             display: none;
+        }
+
+        .Label.empty {
+            display: block;
+            padding: 0;
+            margin: 0;
         }
     }
 

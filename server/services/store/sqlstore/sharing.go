@@ -1,16 +1,15 @@
 package sqlstore
 
 import (
-	"time"
-
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/utils"
 
 	sq "github.com/Masterminds/squirrel"
 )
 
 func (s *SQLStore) UpsertSharing(c store.Container, sharing model.Sharing) error {
-	now := time.Now().Unix()
+	now := utils.GetMillis()
 
 	query := s.getQueryBuilder().
 		Insert(s.tablePrefix+"sharing").

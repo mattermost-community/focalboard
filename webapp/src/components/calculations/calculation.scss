@@ -5,6 +5,10 @@
     cursor: pointer;
     transition: opacity 0.1s ease-in;
 
+    &.disabled {
+        cursor: unset;
+    }
+
     &.none {
         opacity: 0;
 
