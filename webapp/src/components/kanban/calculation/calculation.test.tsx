@@ -6,6 +6,8 @@ import {render} from '@testing-library/react'
 
 import {TestBlockFactory} from '../../../test/testBlockFactory'
 
+import {wrapIntl} from '../../../testUtils'
+
 import {KanbanCalculation} from './calculation'
 
 describe('components/kanban/calculation/KanbanCalculation', () => {
@@ -17,7 +19,7 @@ describe('components/kanban/calculation/KanbanCalculation', () => {
     ]
 
     test('base case', () => {
-        const component = (
+        const component = wrapIntl((
             <KanbanCalculation
                 cards={cards}
                 cardProperties={board.fields.cardProperties}
@@ -29,14 +31,14 @@ describe('components/kanban/calculation/KanbanCalculation', () => {
                 property={board.fields.cardProperties[0]}
                 readonly={false}
             />
-        )
+        ))
 
         const {container} = render(component)
         expect(container).toMatchSnapshot()
     })
 
     test('calculations menu open', () => {
-        const component = (
+        const component = wrapIntl((
             <KanbanCalculation
                 cards={cards}
                 cardProperties={board.fields.cardProperties}
@@ -48,14 +50,14 @@ describe('components/kanban/calculation/KanbanCalculation', () => {
                 property={board.fields.cardProperties[0]}
                 readonly={false}
             />
-        )
+        ))
 
         const {container} = render(component)
         expect(container).toMatchSnapshot()
     })
 
     test('no menu should appear in readonly mode', () => {
-        const component = (
+        const component = wrapIntl((
             <KanbanCalculation
                 cards={cards}
                 cardProperties={board.fields.cardProperties}
@@ -67,7 +69,7 @@ describe('components/kanban/calculation/KanbanCalculation', () => {
                 property={board.fields.cardProperties[0]}
                 readonly={true}
             />
-        )
+        ))
 
         const {container} = render(component)
         expect(container).toMatchSnapshot()
