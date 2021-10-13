@@ -70,7 +70,7 @@ class CsvExporter {
                     const numericValue = propertyValue ? Number(propertyValue).toString() : ''
                     row.push(numericValue)
                 } else if (template.type === 'multiSelect') {
-                    const multiSelectValue = ((displayValue as unknown || []) as string[]).join("|")
+                    const multiSelectValue = ((displayValue as unknown || []) as string[]).join('|')
                     row.push(multiSelectValue)
                 } else {
                     // Export as string
