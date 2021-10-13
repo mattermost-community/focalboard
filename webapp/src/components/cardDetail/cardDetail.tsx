@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useRef, useEffect, useCallback} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {BlockIcons} from '../../blockIcons'
@@ -14,11 +14,12 @@ import Button from '../../widgets/buttons/button'
 import {Focusable} from '../../widgets/editable'
 import EditableArea from '../../widgets/editableArea'
 import EmojiIcon from '../../widgets/icons/emoji'
-import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
 import BlockIconSelector from '../blockIconSelector'
 
 import CommentsList from './commentsList'
+import {CardDetailProvider} from './cardDetailContext'
 import CardDetailContents from './cardDetailContents'
 import CardDetailContentsMenu from './cardDetailContentsMenu'
 import CardDetailProperties from './cardDetailProperties'
@@ -143,14 +144,14 @@ const CardDetail = (props: Props): JSX.Element|null => {
             {/* Content blocks */}
 
             <div className='CardDetail content fullwidth content-blocks'>
-                <CardDetailContents
-                    card={props.card}
-                    contents={props.contents}
-                    readonly={props.readonly}
-                />
-                {!props.readonly &&
-                    <CardDetailContentsMenu card={props.card}/>
-                }
+                <CardDetailProvider card={card}>
+                    <CardDetailContents
+                        card={props.card}
+                        contents={props.contents}
+                        readonly={props.readonly}
+                    />
+                    {!props.readonly && <CardDetailContentsMenu/>}
+                </CardDetailProvider>
             </div>
         </>
     )
