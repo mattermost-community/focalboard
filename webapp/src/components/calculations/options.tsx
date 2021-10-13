@@ -38,7 +38,7 @@ export const Options:Record<string, Option> = {
     dateRange: {value: 'dateRange', label: 'Range', displayName: 'Range'},
 }
 
-const optionLabelString = (option: Option, intl: IntlShape): string => {
+export const optionLabelString = (option: Option, intl: IntlShape): string => {
     switch (option.value) {
     case 'none': return intl.formatMessage({id: 'Calculations.Options.none.label', defaultMessage: 'None'})
     case 'count': return intl.formatMessage({id: 'Calculations.Options.count.label', defaultMessage: 'Count'})
@@ -61,7 +61,7 @@ const optionLabelString = (option: Option, intl: IntlShape): string => {
     }
 }
 
-const optionDisplayNameString = (option: Option, intl: IntlShape): string => {
+export const optionDisplayNameString = (option: Option, intl: IntlShape): string => {
     switch (option.value) {
     case 'none': return intl.formatMessage({id: 'Calculations.Options.none.displayName', defaultMessage: 'Calculate'})
     case 'count': return intl.formatMessage({id: 'Calculations.Options.count.displayName', defaultMessage: 'Count'})
@@ -173,12 +173,6 @@ type BaseCalculationOptionProps = CommonCalculationOptionProps & {
 const CalculationOptions = (props: BaseCalculationOptionProps): JSX.Element => {
     const intl = useIntl()
 
-    // apply translations to options
-    options.map((option) => {
-        option.displayName = optionDisplayNameString(option, intl)
-        option.label = optionLabelString(option, intl)
-    })
-  
     return (
         <Select
             styles={styles}
@@ -195,7 +189,7 @@ const CalculationOptions = (props: BaseCalculationOptionProps): JSX.Element => {
             defaultMenuIsOpen={props.menuOpen}
             autoFocus={true}
             formatOptionLabel={(option: Option, meta) => {
-                return meta.context === 'menu' ? option.label : option.displayName
+                return meta.context === 'menu' ? optionLabelString(option, intl) : optionDisplayNameString(option, intl)
             }}
             onMenuClose={() => {
                 if (props.onClose) {
