@@ -1,7 +1,12 @@
-import React from "react";
-import Dialog from "./dialog";
-import Button from "../widgets/buttons/button";
-import "./confirmationDialogBox.scss";
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
+import React from 'react'
+
+import Button from '../widgets/buttons/button'
+import Dialog from './dialog'
+import './confirmationDialogBox.scss'
+import {FormattedMessage} from 'react-intl';
 
 type Props = {
     propertyId: string;
@@ -13,29 +18,37 @@ type Props = {
 
 export const ConfirmationDialogBox = (props: Props) => {
     return (
-        <Dialog className="confirmation-dialog-box" onClose={props.onClose}>
-            <div className="box-area">
-                <h3 className="heading">{props.heading}</h3>
-                <p className="sub-text">{props.subText}</p>
+        <Dialog className='confirmation-dialog-box' onClose={props.onClose}>
+            <div className='box-area'>
+                <h3 className='heading'>{props.heading}</h3>
+                <p className='sub-text'>{props.subText}</p>
 
-                <div className="action-buttons">
+                <div className='action-buttons'>
                     <Button
-                        title="Cancel"
+                        title='cancel-button'
                         active={true}
                         onClick={props.onClose}
                     >
-                        Cancel
+                        <FormattedMessage
+                            id='ConfirmationDialog.cancel-action'
+                            defaultMessage='Cancel'
+                        />
                     </Button>
                     <Button
-                        title="Delete"
+                        title='delete-button'
                         submit={true}
-                        emphasis="danger"
+                        emphasis='danger'
                         onClick={props.onConfirm}
                     >
-                        Delete
+                        <FormattedMessage
+                            id='ConfirmationDialog.delete-action'
+                            defaultMessage='Delete'
+                        />
                     </Button>
                 </div>
             </div>
         </Dialog>
     );
 };
+
+

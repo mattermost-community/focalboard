@@ -25,7 +25,7 @@ describe('components/content/contentElement', () => {
             updateAt: 0,
             deleteAt: 0,
         }
-        const checkBoxElement = ContentElement({block: contentBlock, readonly: false})
+        const checkBoxElement = ContentElement({block: contentBlock, readonly: false,cords:{x:5,y:6,z:7}})
         const {container} = render(wrapIntl(checkBoxElement))
         expect(container).toMatchSnapshot()
     })
@@ -46,7 +46,7 @@ describe('components/content/contentElement', () => {
             updateAt: 0,
             deleteAt: 0,
         }
-        const contentElement = ContentElement({block: contentBlock, readonly: false})
+        const contentElement = ContentElement({block: contentBlock, readonly: false,cords:{x:5,y:6,z:7}})
         expect(contentElement).toBeNull()
     })
 })

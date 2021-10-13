@@ -1,7 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+
 import React,{useState} from 'react'
-import { useIntl, FormattedMessage } from "react-intl";
+import {useIntl, FormattedMessage} from 'react-intl'
 
 import {Board, PropertyType, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
@@ -12,8 +13,9 @@ import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import MenuWrapper from '../../widgets/menuWrapper'
 import PropertyMenu from '../../widgets/propertyMenu'
+
 import PropertyValueElement from '../propertyValueElement'
-import { ConfirmationDialogBox } from '../confirmationDialogBox';
+import {ConfirmationDialogBox} from '../confirmationDialogBox';
 import {sendFlashMessage} from '../flashMessages';
 
 
@@ -86,8 +88,8 @@ const CardDetailProperties = React.memo((props: Props) => {
                         sendFlashMessage({content: intl.formatMessage({id: 'CardDetailProperty.property-deleted', defaultMessage: `Deleted ${deletingPropName}!`}), severity: 'high'})
                     }}
 
-                    heading={intl.formatMessage({id: "CardDetailProperty.confirm-delete",defaultMessage: "Confirm Delete Property", })}
-                    subText={intl.formatMessage({id: "CardDetailProperty.confirm-delete-subtext",defaultMessage: `Are you sure you want to delete the property "${deletingPropName}"? Deleting it will delete the property from all cards in this board.`,
+                    heading={intl.formatMessage({id: 'CardDetailProperty.confirm-delete', defaultMessage: 'Confirm Delete Property', })}
+                    subText={intl.formatMessage({id: 'CardDetailProperty.confirm-delete-subtext', defaultMessage: 'Are you sure you want to delete the property "${deletingPropName}"? Deleting it will delete the property from all cards in this board.',
                     
                 })}
                 />
