@@ -97,9 +97,9 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block, userID strin
 func (a *App) GetSubTree(c store.Container, blockID string, levels int) ([]model.Block, error) {
 	// Only 2 or 3 levels are supported for now
 	if levels >= 3 {
-		return a.store.GetSubTree3(c, blockID)
+		return a.store.GetSubTree3(c, blockID, model.BlockQueryOptions{})
 	}
-	return a.store.GetSubTree2(c, blockID)
+	return a.store.GetSubTree2(c, blockID, model.BlockQueryOptions{})
 }
 
 func (a *App) GetAllBlocks(c store.Container) ([]model.Block, error) {
@@ -135,7 +135,7 @@ func (a *App) notifyBlockChanged(action notify.Action, c store.Container, block 
 	}
 
 	// find card and board for the changed block.
-	board, card, err := a.getBoardAndCard(c, block)
+	board, card, err := a.store.GetBoardAndCard(c, block)
 	if err != nil {
 		a.logger.Error("Error notifying for block change; cannot determine board or card", mlog.Err(err))
 		return
@@ -151,35 +151,4 @@ func (a *App) notifyBlockChanged(action notify.Action, c store.Container, block 
 		UserID:       userID,
 	}
 	a.notifications.BlockChanged(evt)
-}
-
-const (
-	maxSearchDepth = 50
-)
-
-// getBoardAndCard returns the first parent of type `card` and first parent of type `board` for the specified block.
-// `board` and/or `card` may return nil without error if the block does not belong to a board or card.
-func (a *App) getBoardAndCard(c store.Container, block *model.Block) (board *model.Block, card *model.Block, err error) {
-	var count int // don't let invalid blocks hierarchy cause infinite loop.
-	iter := block
-	for {
-		count++
-		if board == nil && iter.Type == "board" {
-			board = iter
-		}
-
-		if card == nil && iter.Type == "card" {
-			card = iter
-		}
-
-		if iter.ParentID == "" || (board != nil && card != nil) || count > maxSearchDepth {
-			break
-		}
-
-		iter, err = a.store.GetBlock(c, iter.ParentID)
-		if err != nil {
-			return board, card, err
-		}
-	}
-	return board, card, nil
 }

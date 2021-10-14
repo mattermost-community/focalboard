@@ -153,3 +153,10 @@ func (p *BlockPatch) Patch(block *Block) *Block {
 
 	return block
 }
+
+// BlockQueryOptions are query options that can be passed to GetSubTree methods and GetBlockHistory.
+type BlockQueryOptions struct {
+	UseBlocksHistory bool  // if true then the blocks_history table is queried
+	InsertAfterAt    int64 // filter for records with insert_at greater than insert_after_at
+	OrderByInsertAt  bool  // if true then `ORDER BY insert_at` is added
+}

@@ -362,7 +362,15 @@ func testGetSubTree2(t *testing.T, store store.Store, container store.Container)
 	require.Len(t, blocks, initialCount+6)
 
 	t.Run("from root id", func(t *testing.T) {
-		blocks, err = store.GetSubTree2(container, "parent")
+		blocks, err = store.GetSubTree2(container, "parent", model.BlockQueryOptions{})
+		require.NoError(t, err)
+		require.Len(t, blocks, 3)
+		require.True(t, ContainsBlockWithID(blocks, "parent"))
+		require.True(t, ContainsBlockWithID(blocks, "child1"))
+		require.True(t, ContainsBlockWithID(blocks, "child2"))
+
+		// check history table as well
+		blocks, err = store.GetSubTree2(container, "parent", model.BlockQueryOptions{UseBlocksHistory: true})
 		require.NoError(t, err)
 		require.Len(t, blocks, 3)
 		require.True(t, ContainsBlockWithID(blocks, "parent"))
@@ -371,7 +379,14 @@ func testGetSubTree2(t *testing.T, store store.Store, container store.Container)
 	})
 
 	t.Run("from child id", func(t *testing.T) {
-		blocks, err = store.GetSubTree2(container, "child1")
+		blocks, err = store.GetSubTree2(container, "child1", model.BlockQueryOptions{})
+		require.NoError(t, err)
+		require.Len(t, blocks, 2)
+		require.True(t, ContainsBlockWithID(blocks, "child1"))
+		require.True(t, ContainsBlockWithID(blocks, "grandchild1"))
+
+		// check history table
+		blocks, err = store.GetSubTree2(container, "child1", model.BlockQueryOptions{UseBlocksHistory: true})
 		require.NoError(t, err)
 		require.Len(t, blocks, 2)
 		require.True(t, ContainsBlockWithID(blocks, "child1"))
@@ -379,7 +394,12 @@ func testGetSubTree2(t *testing.T, store store.Store, container store.Container)
 	})
 
 	t.Run("from not existing id", func(t *testing.T) {
-		blocks, err = store.GetSubTree2(container, "not-exists")
+		blocks, err = store.GetSubTree2(container, "not-exists", model.BlockQueryOptions{})
+		require.NoError(t, err)
+		require.Len(t, blocks, 0)
+
+		// check history table
+		blocks, err = store.GetSubTree2(container, "not-exists", model.BlockQueryOptions{UseBlocksHistory: true})
 		require.NoError(t, err)
 		require.Len(t, blocks, 0)
 	})
@@ -398,7 +418,17 @@ func testGetSubTree3(t *testing.T, store store.Store, container store.Container)
 	require.Len(t, blocks, initialCount+6)
 
 	t.Run("from root id", func(t *testing.T) {
-		blocks, err = store.GetSubTree3(container, "parent")
+		blocks, err = store.GetSubTree3(container, "parent", model.BlockQueryOptions{})
+		require.NoError(t, err)
+		require.Len(t, blocks, 5)
+		require.True(t, ContainsBlockWithID(blocks, "parent"))
+		require.True(t, ContainsBlockWithID(blocks, "child1"))
+		require.True(t, ContainsBlockWithID(blocks, "child2"))
+		require.True(t, ContainsBlockWithID(blocks, "grandchild1"))
+		require.True(t, ContainsBlockWithID(blocks, "grandchild2"))
+
+		// check history table
+		blocks, err = store.GetSubTree3(container, "parent", model.BlockQueryOptions{UseBlocksHistory: true})
 		require.NoError(t, err)
 		require.Len(t, blocks, 5)
 		require.True(t, ContainsBlockWithID(blocks, "parent"))
@@ -409,7 +439,15 @@ func testGetSubTree3(t *testing.T, store store.Store, container store.Container)
 	})
 
 	t.Run("from child id", func(t *testing.T) {
-		blocks, err = store.GetSubTree3(container, "child1")
+		blocks, err = store.GetSubTree3(container, "child1", model.BlockQueryOptions{})
+		require.NoError(t, err)
+		require.Len(t, blocks, 3)
+		require.True(t, ContainsBlockWithID(blocks, "child1"))
+		require.True(t, ContainsBlockWithID(blocks, "grandchild1"))
+		require.True(t, ContainsBlockWithID(blocks, "greatgrandchild1"))
+
+		// check history table
+		blocks, err = store.GetSubTree3(container, "child1", model.BlockQueryOptions{UseBlocksHistory: true})
 		require.NoError(t, err)
 		require.Len(t, blocks, 3)
 		require.True(t, ContainsBlockWithID(blocks, "child1"))
@@ -418,7 +456,12 @@ func testGetSubTree3(t *testing.T, store store.Store, container store.Container)
 	})
 
 	t.Run("from not existing id", func(t *testing.T) {
-		blocks, err = store.GetSubTree3(container, "not-exists")
+		blocks, err = store.GetSubTree3(container, "not-exists", model.BlockQueryOptions{})
+		require.NoError(t, err)
+		require.Len(t, blocks, 0)
+
+		// check history table
+		blocks, err = store.GetSubTree3(container, "not-exists", model.BlockQueryOptions{UseBlocksHistory: true})
 		require.NoError(t, err)
 		require.Len(t, blocks, 0)
 	})

@@ -17,6 +17,10 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
+const (
+	maxSearchDepth = 50
+)
+
 type RootIDNilError struct{}
 
 func (re RootIDNilError) Error() string {
@@ -123,12 +127,25 @@ func (s *SQLStore) GetBlocksWithType(c store.Container, blockType string) ([]mod
 }
 
 // GetSubTree2 returns blocks within 2 levels of the given blockID.
-func (s *SQLStore) GetSubTree2(c store.Container, blockID string) ([]model.Block, error) {
+func (s *SQLStore) GetSubTree2(c store.Container, blockID string, opts model.BlockQueryOptions) ([]model.Block, error) {
+	table := "blocks"
+	if opts.UseBlocksHistory {
+		table = "blocks_history"
+	}
+
 	query := s.getQueryBuilder().
 		Select(s.blockFields()...).
-		From(s.tablePrefix + "blocks").
+		From(s.tablePrefix + table).
 		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}}).
 		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
+
+	if opts.InsertAfterAt != 0 {
+		query = query.Where(sq.Gt{"insert_at": opts.InsertAfterAt})
+	}
+
+	if opts.OrderByInsertAt {
+		query = query.OrderBy("insert_at")
+	}
 
 	rows, err := query.Query()
 	if err != nil {
@@ -142,7 +159,12 @@ func (s *SQLStore) GetSubTree2(c store.Container, blockID string) ([]model.Block
 }
 
 // GetSubTree3 returns blocks within 3 levels of the given blockID.
-func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block, error) {
+func (s *SQLStore) GetSubTree3(c store.Container, blockID string, opts model.BlockQueryOptions) ([]model.Block, error) {
+	table := "blocks"
+	if opts.UseBlocksHistory {
+		table = "blocks_history"
+	}
+
 	// This first subquery returns repeated blocks
 	query := s.getQueryBuilder().Select(
 		"l3.id",
@@ -159,16 +181,24 @@ func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block
 		"l3.delete_at",
 		"COALESCE(l3.workspace_id, '0')",
 	).
-		From(s.tablePrefix + "blocks as l1").
-		Join(s.tablePrefix + "blocks as l2 on l2.parent_id = l1.id or l2.id = l1.id").
-		Join(s.tablePrefix + "blocks as l3 on l3.parent_id = l2.id or l3.id = l2.id").
+		From(s.tablePrefix + table + " as l1").
+		Join(s.tablePrefix + table + " as l2 on l2.parent_id = l1.id or l2.id = l1.id").
+		Join(s.tablePrefix + table + " as l3 on l3.parent_id = l2.id or l3.id = l2.id").
 		Where(sq.Eq{"l1.id": blockID}).
 		Where(sq.Eq{"COALESCE(l3.workspace_id, '0')": c.WorkspaceID})
+
+	if opts.InsertAfterAt != 0 {
+		query = query.Where(sq.Gt{"l3.insert_at": opts.InsertAfterAt})
+	}
 
 	if s.dbType == postgresDBType {
 		query = query.Options("DISTINCT ON (l3.id)")
 	} else {
 		query = query.Distinct()
+	}
+
+	if opts.OrderByInsertAt {
+		query = query.OrderBy("insert_at")
 	}
 
 	rows, err := query.Query()
@@ -530,4 +560,54 @@ func (s *SQLStore) GetBlock(c store.Container, blockID string) (*model.Block, er
 	}
 
 	return &blocks[0], nil
+}
+
+func (s *SQLStore) GetBlockHistory(c store.Container, blockID string, opts model.BlockQueryOptions) ([]model.Block, error) {
+	query := s.getQueryBuilder().
+		Select(s.blockFields()...).
+		From(s.tablePrefix + "blocks_history").
+		Where(sq.Eq{"id": blockID}).
+		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
+
+	if opts.InsertAfterAt != 0 {
+		query = query.Where(sq.Gt{"insert_at": opts.InsertAfterAt})
+	}
+
+	if opts.OrderByInsertAt {
+		query = query.OrderBy("insert_at")
+	}
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`GetBlockHistory ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	return s.blocksFromRows(rows)
+}
+
+// GetBoardAndCard returns the first parent of type `card` and first parent of type `board` for the specified block.
+// `board` and/or `card` may return nil without error if the block does not belong to a board or card.
+func (s *SQLStore) GetBoardAndCard(c store.Container, block *model.Block) (board *model.Block, card *model.Block, err error) {
+	var count int // don't let invalid blocks hierarchy cause infinite loop.
+	iter := block
+	for {
+		count++
+		if board == nil && iter.Type == "board" {
+			board = iter
+		}
+
+		if card == nil && iter.Type == "card" {
+			card = iter
+		}
+
+		if iter.ParentID == "" || (board != nil && card != nil) || count > maxSearchDepth {
+			break
+		}
+
+		iter, err = s.GetBlock(c, iter.ParentID)
+		if err != nil {
+			return board, card, err
+		}
+	}
+	return board, card, nil
 }

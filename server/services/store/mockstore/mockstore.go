@@ -209,6 +209,21 @@ func (mr *MockStoreMockRecorder) GetBlockCountsByType() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlockCountsByType", reflect.TypeOf((*MockStore)(nil).GetBlockCountsByType))
 }
 
+// GetBlockHistory mocks base method.
+func (m *MockStore) GetBlockHistory(arg0 store.Container, arg1 string, arg2 model.BlockQueryOptions) ([]model.Block, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBlockHistory", arg0, arg1, arg2)
+	ret0, _ := ret[0].([]model.Block)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBlockHistory indicates an expected call of GetBlockHistory.
+func (mr *MockStoreMockRecorder) GetBlockHistory(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlockHistory", reflect.TypeOf((*MockStore)(nil).GetBlockHistory), arg0, arg1, arg2)
+}
+
 // GetBlocksWithParent mocks base method.
 func (m *MockStore) GetBlocksWithParent(arg0 store.Container, arg1 string) ([]model.Block, error) {
 	m.ctrl.T.Helper()
@@ -267,6 +282,22 @@ func (m *MockStore) GetBlocksWithType(arg0 store.Container, arg1 string) ([]mode
 func (mr *MockStoreMockRecorder) GetBlocksWithType(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlocksWithType", reflect.TypeOf((*MockStore)(nil).GetBlocksWithType), arg0, arg1)
+}
+
+// GetBoardAndCard mocks base method.
+func (m *MockStore) GetBoardAndCard(arg0 store.Container, arg1 *model.Block) (*model.Block, *model.Block, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBoardAndCard", arg0, arg1)
+	ret0, _ := ret[0].(*model.Block)
+	ret1, _ := ret[1].(*model.Block)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// GetBoardAndCard indicates an expected call of GetBoardAndCard.
+func (mr *MockStoreMockRecorder) GetBoardAndCard(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBoardAndCard", reflect.TypeOf((*MockStore)(nil).GetBoardAndCard), arg0, arg1)
 }
 
 // GetNextNotificationHint mocks base method.
@@ -375,33 +406,33 @@ func (mr *MockStoreMockRecorder) GetSharing(arg0, arg1 interface{}) *gomock.Call
 }
 
 // GetSubTree2 mocks base method.
-func (m *MockStore) GetSubTree2(arg0 store.Container, arg1 string) ([]model.Block, error) {
+func (m *MockStore) GetSubTree2(arg0 store.Container, arg1 string, arg2 model.BlockQueryOptions) ([]model.Block, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetSubTree2", arg0, arg1)
+	ret := m.ctrl.Call(m, "GetSubTree2", arg0, arg1, arg2)
 	ret0, _ := ret[0].([]model.Block)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetSubTree2 indicates an expected call of GetSubTree2.
-func (mr *MockStoreMockRecorder) GetSubTree2(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) GetSubTree2(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSubTree2", reflect.TypeOf((*MockStore)(nil).GetSubTree2), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSubTree2", reflect.TypeOf((*MockStore)(nil).GetSubTree2), arg0, arg1, arg2)
 }
 
 // GetSubTree3 mocks base method.
-func (m *MockStore) GetSubTree3(arg0 store.Container, arg1 string) ([]model.Block, error) {
+func (m *MockStore) GetSubTree3(arg0 store.Container, arg1 string, arg2 model.BlockQueryOptions) ([]model.Block, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetSubTree3", arg0, arg1)
+	ret := m.ctrl.Call(m, "GetSubTree3", arg0, arg1, arg2)
 	ret0, _ := ret[0].([]model.Block)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetSubTree3 indicates an expected call of GetSubTree3.
-func (mr *MockStoreMockRecorder) GetSubTree3(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) GetSubTree3(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSubTree3", reflect.TypeOf((*MockStore)(nil).GetSubTree3), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSubTree3", reflect.TypeOf((*MockStore)(nil).GetSubTree3), arg0, arg1, arg2)
 }
 
 // GetSubscribersCountForBlock mocks base method.

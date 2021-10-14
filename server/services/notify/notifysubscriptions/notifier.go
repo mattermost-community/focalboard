@@ -171,5 +171,73 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 }
 
 func (n *notifier) generateDiffs(c store.Container, hint *model.NotificationHint) ([]Diff, error) {
+	block, err := n.store.GetBlock(c, hint.BlockID)
+	if err != nil {
+		return nil, fmt.Errorf("could not get block for notification: %w", err)
+	}
+
+	board, card, err := n.store.GetBoardAndCard(c, block)
+	if err != nil {
+		return nil, fmt.Errorf("could not get block's board & card for notification: %w", err)
+	}
+
+	switch block.Type {
+	case "board":
+		return n.generateDiffsForBoard(c, block, hint)
+	case "card":
+		return n.generateDiffsForCard(c, board, block, hint)
+	default:
+		return n.generateDiffForBlock(c, board, card, block, hint)
+	}
+}
+
+func (n *notifier) generateDiffsForBoard(c store.Container, board *model.Block, hint *model.NotificationHint) ([]Diff, error) {
+	opts := model.BlockQueryOptions{
+		UseBlocksHistory: true,
+		InsertAfterAt:    hint.NotifyAt,
+		OrderByInsertAt:  true,
+	}
+
+	blocks, err := n.store.GetSubTree2FromHistory(c, board.ID, opts)
+	if err != nil {
+		return nil, fmt.Errorf("could not get subtree for board %s: %w", board.ID, err)
+	}
+
+	var diffs []Diff
+	for _, b := range blocks {
+		if b.Type == "card" {
+			cardDiffs, err := n.generateDiffsForCard(c, board, &b, hint)
+			if err != nil {
+				return nil, err
+			}
+			diffs = append(diffs, cardDiffs...)
+		}
+	}
+
+	return nil, fmt.Errorf("not implemented yet")
+}
+
+func (n *notifier) generateDiffsForCard(c store.Container, board *model.Block, card *model.Block, hint *model.NotificationHint) ([]Diff, error) {
+	// first
+
+	return nil, fmt.Errorf("not implemented yet")
+}
+
+func (n *notifier) generateDiffForBlock(c store.Container, board *model.Block, card *model.Block, block *model.Block, hint *model.NotificationHint) ([]Diff, error) {
+	// create diffs for properties & summary
+	// todo
+
+	opts := model.BlockQueryOptions{
+		UseBlocksHistory: true,
+		InsertAfterAt:    hint.NotifyAt,
+		OrderByInsertAt:  true,
+	}
+
+	// find the oldest block in blocks_history that is newer than the hint.NotifyAt.
+	history, err := n.store.GetBlockHistory(c, block.ID, opts)
+	if err != nil {
+		return nil, fmt.Errorf("could not get block history for block %s: %w", block.ID, err)
+	}
+
 	return nil, fmt.Errorf("not implemented yet")
 }
