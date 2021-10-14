@@ -27,7 +27,7 @@ type SQLStore struct {
 
 // New creates a new SQL implementation of the store.
 func New(dbType, connectionString string, tablePrefix string, logger *mlog.Logger) (*SQLStore, error) {
-	logger.Info("connectDatabase", mlog.String("dbType", dbType), mlog.String("connStr", connectionString))
+	logger.Info("connectDatabase", mlog.String("dbType", dbType))
 	var err error
 
 	db, err := sql.Open(dbType, connectionString)
