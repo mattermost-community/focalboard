@@ -5,7 +5,7 @@ subsection: Personal Edition
 weight: 2
 ---
 
-Focalboard Personal Server allows your team to work together on shared project boards.
+Focalboard Personal Server is a standalone server for development and personal use. For team use, check out [Mattermost Boards](../../mattermost/), which supports private boards, team communication, and more.
 
 Follow these steps it up on an Ubuntu server. To upgrade an existing installation, see [the upgrade guide](../ubuntu-upgrade).
 
