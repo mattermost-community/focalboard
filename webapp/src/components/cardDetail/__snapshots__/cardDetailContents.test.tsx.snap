@@ -590,11 +590,11 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after on
         class="octo-block-margin"
       />
       <div
-        class="MarkdownEditor octo-editor  "
+        class="MarkdownEditor octo-editor  active"
       >
         <div
           class="octo-editor-preview octo-placeholder"
-          style=""
+          style="display: none;"
         >
           <p>
             Add a description...
@@ -602,7 +602,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after on
         </div>
         <div
           class="octo-editor-active Editor"
-          style="visibility: hidden; position: absolute; top: 0px; left: 0px;"
+          style=""
         >
           <div
             id="test-id-wrapper"
@@ -615,7 +615,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after on
               class="EasyMDEContainer"
             >
               <div
-                class="CodeMirror cm-s-easymde CodeMirror-wrap"
+                class="CodeMirror cm-s-easymde CodeMirror-wrap CodeMirror-focused"
               >
                 <div
                   style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 0px;"
