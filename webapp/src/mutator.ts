@@ -3,13 +3,13 @@
 import {BlockIcons} from './blockIcons'
 import {Block} from './blocks/block'
 import {Board, IPropertyOption, IPropertyTemplate, PropertyType, createBoard} from './blocks/board'
-import {BoardView, ISortOption, createBoardView} from './blocks/boardView'
+import {BoardView, ISortOption, createBoardView, KanbanCalculationFields} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
 import {FilterGroup} from './blocks/filterGroup'
 import octoClient, {OctoClient} from './octoClient'
 import {OctoUtils} from './octoUtils'
 import undoManager from './undomanager'
-import {Utils} from './utils'
+import {Utils, IDType} from './utils'
 import {UserSettings} from './userSettings'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from './telemetry/telemetryClient'
 
@@ -25,7 +25,7 @@ class Mutator {
             Utils.assertFailure('UndoManager does not support nested groups')
             return undefined
         }
-        this.undoGroupId = Utils.createGuid()
+        this.undoGroupId = Utils.createGuid(IDType.None)
         return this.undoGroupId
     }
 
@@ -139,6 +139,32 @@ class Mutator {
         )
     }
 
+    async setDefaultTemplate(blockId: string, oldTemplateId: string, templateId: string, description = 'set default template') {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(blockId, {updatedFields: {defaultTemplateId: templateId}})
+            },
+            async () => {
+                await octoClient.patchBlock(blockId, {updatedFields: {defaultTemplateId: oldTemplateId}})
+            },
+            description,
+            this.undoGroupId,
+        )
+    }
+
+    async clearDefaultTemplate(blockId: string, oldTemplateId: string, description = 'set default template') {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(blockId, {updatedFields: {defaultTemplateId: ''}})
+            },
+            async () => {
+                await octoClient.patchBlock(blockId, {updatedFields: {defaultTemplateId: oldTemplateId}})
+            },
+            description,
+            this.undoGroupId,
+        )
+    }
+
     async changeIcon(blockId: string, oldIcon: string|undefined, icon: string, description = 'change icon') {
         await undoManager.perform(
             async () => {
@@ -205,7 +231,7 @@ class Mutator {
         }
 
         const newTemplate = template || {
-            id: Utils.createGuid(),
+            id: Utils.createGuid(IDType.BlockID),
             name: 'New Property',
             type: 'text',
             options: [],
@@ -250,7 +276,7 @@ class Mutator {
         }
         const srcTemplate = newBoard.fields.cardProperties[index]
         const newTemplate: IPropertyTemplate = {
-            id: Utils.createGuid(),
+            id: Utils.createGuid(IDType.BlockID),
             name: `${srcTemplate.name} copy`,
             type: srcTemplate.type,
             options: srcTemplate.options.slice(),
@@ -436,7 +462,7 @@ class Mutator {
                         let option = newTemplate.options.find((o: IPropertyOption) => o.value === oldValue)
                         if (!option) {
                             option = {
-                                id: Utils.createGuid(),
+                                id: Utils.createGuid(IDType.None),
                                 value: oldValue,
                                 color: 'propColorDefault',
                             }
@@ -530,6 +556,19 @@ class Mutator {
             },
             async () => {
                 await octoClient.patchBlock(viewId, {updatedFields: {hiddenOptionIds: oldHiddenOptionIds}})
+            },
+            description,
+            this.undoGroupId,
+        )
+    }
+
+    async changeViewKanbanCalculations(viewId: string, oldCalculations: Record<string, KanbanCalculationFields>, calculations: Record<string, KanbanCalculationFields>, description = 'updated kanban calculations'): Promise<void> {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {kanbanCalculations: calculations}})
+            },
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {kanbanCalculations: oldCalculations}})
             },
             description,
             this.undoGroupId,

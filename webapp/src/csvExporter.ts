@@ -53,7 +53,7 @@ class CsvExporter {
 
         {
             // Header row
-            const row: string[] = ['Title']
+            const row: string[] = [intl.formatMessage({id: 'TableComponent.name', defaultMessage: 'Name'})]
             visibleProperties.forEach((template: IPropertyTemplate) => {
                 row.push(template.name)
             })
@@ -69,6 +69,9 @@ class CsvExporter {
                 if (template.type === 'number') {
                     const numericValue = propertyValue ? Number(propertyValue).toString() : ''
                     row.push(numericValue)
+                } else if (template.type === 'multiSelect') {
+                    const multiSelectValue = ((displayValue as unknown || []) as string[]).join('|')
+                    row.push(multiSelectValue)
                 } else {
                     // Export as string
                     row.push(`"${this.encodeText(displayValue)}"`)

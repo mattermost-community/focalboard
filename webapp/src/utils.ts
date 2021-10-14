@@ -19,20 +19,84 @@ const IconClass = 'octo-icon'
 const OpenButtonClass = 'open-button'
 const SpacerClass = 'octo-spacer'
 const HorizontalGripClass = 'HorizontalGrip'
+const base32Alphabet = 'ybndrfg8ejkmcpqxot1uwisza345h769'
+
+// eslint-disable-next-line no-shadow
+enum IDType {
+    None = '7',
+    Workspace = 'w',
+    Board = 'b',
+    Card = 'c',
+    View = 'v',
+    Session = 's',
+    User = 'u',
+    Token = 'k',
+    BlockID = 'a',
+}
 
 class Utils {
-    static createGuid(): string {
-        const crypto = window.crypto || window.msCrypto
-        function randomDigit() {
-            if (crypto && crypto.getRandomValues) {
-                const rands = new Uint8Array(1)
-                crypto.getRandomValues(rands)
-                return (rands[0] % 16).toString(16)
-            }
+    static createGuid(idType: IDType): string {
+        const data = Utils.randomArray(16)
+        return idType + this.base32encode(data, false)
+    }
 
-            return (Math.floor((Math.random() * 16))).toString(16)
+    static blockTypeToIDType(blockType: string | undefined): IDType {
+        let ret: IDType = IDType.None
+        switch (blockType) {
+        case 'workspace':
+            ret = IDType.Workspace
+            break
+        case 'board':
+            ret = IDType.Board
+            break
+        case 'card':
+            ret = IDType.Card
+            break
+        case 'view':
+            ret = IDType.View
+            break
         }
-        return 'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g, randomDigit)
+        return ret
+    }
+
+    static randomArray(size: number): Uint8Array {
+        const crypto = window.crypto || window.msCrypto
+        const rands = new Uint8Array(size)
+        if (crypto && crypto.getRandomValues) {
+            crypto.getRandomValues(rands)
+        } else {
+            for (let i = 0; i < size; i++) {
+                rands[i] = Math.floor((Math.random() * 255))
+            }
+        }
+        return rands
+    }
+
+    static base32encode(data: Int8Array | Uint8Array | Uint8ClampedArray, pad: boolean): string {
+        const dview = new DataView(data.buffer, data.byteOffset, data.byteLength)
+        let bits = 0
+        let value = 0
+        let output = ''
+
+        // adapted from https://github.com/LinusU/base32-encode
+        for (let i = 0; i < dview.byteLength; i++) {
+            value = (value << 8) | dview.getUint8(i)
+            bits += 8
+
+            while (bits >= 5) {
+                output += base32Alphabet[(value >>> (bits - 5)) & 31]
+                bits -= 5
+            }
+        }
+        if (bits > 0) {
+            output += base32Alphabet[(value << (5 - bits)) & 31]
+        }
+        if (pad) {
+            while ((output.length % 8) !== 0) {
+                output += '='
+            }
+        }
+        return output
     }
 
     static htmlToElement(html: string): HTMLElement {
@@ -160,6 +224,11 @@ class Utils {
                 `onclick="event.stopPropagation();${((window as any).openInNewBrowser ? ' openInNewBrowser && openInNewBrowser(event.target.href);' : '')}"` +
             '>' + contents + '</a>'
         }
+
+        renderer.table = (header, body) => {
+            return `<div class="table-responsive"><table class="markdown__table"><thead>${header}</thead><tbody>${body}</tbody></table></div>`
+        }
+
         const html = marked(text.replace(/</g, '&lt;'), {renderer, breaks: true})
         return html.trim()
     }
@@ -510,6 +579,10 @@ class Utils {
         const readToken = queryString.get('r') || ''
         return readToken
     }
+
+    static generateClassName(conditions: Record<string, boolean>): string {
+        return Object.entries(conditions).map(([className, condition]) => (condition ? className : '')).filter((className) => className !== '').join(' ')
+    }
 }
 
-export {Utils}
+export {Utils, IDType}

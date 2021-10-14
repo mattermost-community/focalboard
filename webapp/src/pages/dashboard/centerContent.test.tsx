@@ -3,8 +3,7 @@
 import React from 'react'
 import configureStore from 'redux-mock-store'
 import {Provider as ReduxProvider} from 'react-redux'
-
-import {IntlProvider} from 'react-intl'
+import 'isomorphic-fetch'
 
 import {createMemoryHistory} from 'history'
 
@@ -14,15 +13,19 @@ import userEvent from '@testing-library/user-event'
 
 import {Router} from 'react-router-dom'
 
+import {wrapIntl} from '../../testUtils'
+
 import {UserWorkspace} from '../../user'
+
+import {FetchMock} from '../../test/fetchMock'
 
 import DashboardCenterContent from './centerContent'
 
-const wrapProviders = (children: any) => {
-    return (
-        <IntlProvider locale='en'>{children}</IntlProvider>
-    )
-}
+global.fetch = FetchMock.fn
+
+beforeEach(() => {
+    FetchMock.fn.mockReset()
+})
 
 describe('pages/dashboard/CenterContent', () => {
     const mockStore = configureStore([])
@@ -51,7 +54,9 @@ describe('pages/dashboard/CenterContent', () => {
             },
         })
 
-        const component = wrapProviders(
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace1, workspace2, workspace3))))
+
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <DashboardCenterContent/>
             </ReduxProvider>,
@@ -67,7 +72,9 @@ describe('pages/dashboard/CenterContent', () => {
             },
         })
 
-        const component = wrapProviders(
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace1, workspace2, workspace3))))
+
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <DashboardCenterContent/>
             </ReduxProvider>,
@@ -86,7 +93,9 @@ describe('pages/dashboard/CenterContent', () => {
             },
         })
 
-        const component = wrapProviders(
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace1, workspace2, workspace3))))
+
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <DashboardCenterContent/>
             </ReduxProvider>,
@@ -105,9 +114,11 @@ describe('pages/dashboard/CenterContent', () => {
             },
         })
 
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace1, workspace2, workspace3))))
+
         const history = createMemoryHistory()
 
-        const component = wrapProviders(
+        const component = wrapIntl(
             <Router history={history}>
                 <ReduxProvider store={store}>
                     <DashboardCenterContent/>

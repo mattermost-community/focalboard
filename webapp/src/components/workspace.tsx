@@ -100,7 +100,9 @@ const Workspace = React.memo((props: Props) => {
                         defaultMessage="You're editing a board template."
                     />
                 </div>}
-                <CenterContent readonly={props.readonly}/>
+                <CenterContent
+                    readonly={props.readonly}
+                />
             </div>
         </div>
     )

@@ -29,8 +29,6 @@
         }
 
         > div {
-            margin-right: 8px;
-
             &:last-child {
                 margin: 0;
             }
@@ -47,6 +45,7 @@
         .Label {
             max-width: 165px;
             margin-right: 5px;
+            margin-bottom: 0;
 
             .Editable {
                 background: transparent;
