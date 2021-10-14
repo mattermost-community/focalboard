@@ -5,6 +5,7 @@ import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import Button from '../widgets/buttons/button'
+
 import Dialog from './dialog'
 import './confirmationDialogBox.scss'
 
@@ -18,8 +19,8 @@ type Props = {
 
 export const ConfirmationDialogBox = (props: Props) => {
     return (
-        <Dialog 
-            className='confirmation-dialog-box' 
+        <Dialog
+            className='confirmation-dialog-box'
             onClose={props.onClose}
         >
             <div className='box-area'>

@@ -89,7 +89,7 @@ const CardDetailProperties = React.memo((props: Props) => {
 
                     heading={intl.formatMessage({id: 'CardDetailProperty.confirm-delete', defaultMessage: 'Confirm Delete Property'})}
                     subText={intl.formatMessage({
-                        id: 'CardDetailProperty.confirm-delete-subtext', 
+                        id: 'CardDetailProperty.confirm-delete-subtext',
                         defaultMessage: 'Are you sure you want to delete the property flas"{propertyName}"? Deleting it will delete the property from all cards in this board.',
                     },
                     {propertyName: deletingPropName})
