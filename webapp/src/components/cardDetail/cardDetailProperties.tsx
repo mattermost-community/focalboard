@@ -59,7 +59,7 @@ const CardDetailProperties = React.memo((props: Props) => {
                                         setDeletingPropId(id)
                                         setDeletingPropName(propertyTemplate.name)
                                         setShowConfirmationDialog(true)
-                                        }
+                                    }
                                     }
                                 />
                             </MenuWrapper>
@@ -82,18 +82,18 @@ const CardDetailProperties = React.memo((props: Props) => {
                     propertyId={deletingPropId}
                     onClose={() => setShowConfirmationDialog(false)}
                     onConfirm={() => {
-                        mutator.deleteProperty(board, views, cards, deletingPropId);
-                        setShowConfirmationDialog(false);
-                        sendFlashMessage({content: intl.formatMessage({id: 'CardDetailProperty.property-deleted', defaultMessage: `Deleted {propertyName} Successfully!`},{propertyName: deletingPropName}), severity: 'high'})
+                        mutator.deleteProperty(board, views, cards, deletingPropId)
+                        setShowConfirmationDialog(false)
+                        sendFlashMessage({content: intl.formatMessage({id: 'CardDetailProperty.property-deleted', defaultMessage: 'Deleted {propertyName} Successfully!'}, {propertyName: deletingPropName}), severity: 'high'})
                     }}
 
                     heading={intl.formatMessage({id: 'CardDetailProperty.confirm-delete', defaultMessage: 'Confirm Delete Property'})}
                     subText={intl.formatMessage({
-                                    id: 'CardDetailProperty.confirm-delete-subtext', 
-                                    defaultMessage: 'Are you sure you want to delete the property flas"{propertyName}"? Deleting it will delete the property from all cards in this board.',
-                                },
-                                {propertyName: deletingPropName})
-                            }
+                        id: 'CardDetailProperty.confirm-delete-subtext', 
+                        defaultMessage: 'Are you sure you want to delete the property flas"{propertyName}"? Deleting it will delete the property from all cards in this board.',
+                    },
+                    {propertyName: deletingPropName})
+                    }
                 />
             )}
 
