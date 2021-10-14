@@ -59,11 +59,11 @@
     }
 
     &.emphasis--danger {
-        color:rgb(var(--button-danger-color-rgb));
-        background-color: rgb(var(--button-danger-bg-rgb)) ;
+        color: rgb(var(--button-danger-color-rgb));
+        background-color: rgb(var(--button-danger-bg-rgb));
 
         &:hover {
-            background-color: rgb(var(--button-danger-bg-rgb),0.8);
+            background-color: rgb(var(--button-danger-bg-rgb), 0.8);
         }
 
     }

@@ -1,6 +1,5 @@
-.confirmation-dialog-box{
-
-    .dialog{   
+.confirmation-dialog-box {
+    .dialog {   
         position: fixed;
         top: 30%;
         left: 50%;
@@ -11,7 +10,7 @@
 
         background-color: rgb(var(--center-channel-bg-rgb));
         box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0 0 0 1px,
-                rgba(var(--center-channel-color-rgb), 0.1) 0 2px 4px;
+            rgba(var(--center-channel-color-rgb), 0.1) 0 2px 4px;
 
         border-radius: var(--modal-rad);
         padding: 0;
@@ -21,41 +20,41 @@
 
         > .toolbar {
             position: absolute;
-            top:0;
-            right:0;
+            top: 0;
+            right: 0;
             padding: 16px;
         }
     }
    
 }
 
-.box-area{
-
+.box-area {
     display: grid;
     place-items: center;
 
-    .heading{
+    .heading {
         margin-top: 2rem;
         padding: 2px 4px;      
     }
-    .sub-text{
+
+    .sub-text {
         width: 26rem;
         word-wrap: normal;
         margin: 0.5rem 3rem;
         padding: 2px;
 
-        @media screen and (max-width: 400px){
+        @media screen and (max-width: 400px) {
             width: 12rem;
         }
     }
 }
 
-.action-buttons{
+.action-buttons {
     display: flex;
     margin: 1rem;
     justify-content: space-between;
 
-    .Button{
+    .Button {
         margin: 2px 1rem;
     }
 }
