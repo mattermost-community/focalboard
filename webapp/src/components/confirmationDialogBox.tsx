@@ -5,6 +5,7 @@ import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import Button from '../widgets/buttons/button'
+
 import Dialog from './dialog'
 import './confirmationDialogBox.scss'
 
@@ -14,12 +15,13 @@ type Props = {
     onConfirm: () => void;
     heading: string;
     subText?: string;
-};
+}
 
 export const ConfirmationDialogBox = (props: Props) => {
     return (
-        <Dialog className='confirmation-dialog-box' 
-                onClose={props.onClose}
+        <Dialog
+            className='confirmation-dialog-box'
+            onClose={props.onClose}
         >
             <div className='box-area'>
                 <h3 className='heading'>{props.heading}</h3>
@@ -52,5 +54,3 @@ export const ConfirmationDialogBox = (props: Props) => {
         </Dialog>
     )
 }
-
-
