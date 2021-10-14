@@ -44,7 +44,7 @@ type LabelProps = {
     isMulti?: boolean
 }
 
-const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
+const ValueSelectorLabel = (props: LabelProps): JSX.Element => {
     const {option, onDeleteValue, meta, isMulti} = props
     const intl = useIntl()
     if (meta.context === 'value') {
@@ -99,7 +99,7 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
             </MenuWrapper>
         </div>
     )
-})
+}
 
 const valueSelectorStyle = {
     ...getSelectBaseStyle(),
@@ -153,6 +153,8 @@ const valueSelectorStyle = {
 }
 
 function ValueSelector(props: Props): JSX.Element {
+    console.log("props", props.value)
+
     const intl = useIntl()
     return (
         <CreatableSelect
@@ -190,7 +192,7 @@ function ValueSelector(props: Props): JSX.Element {
             onBlur={props.onBlur}
             onCreateOption={props.onCreate}
             autoFocus={true}
-            value={props.value}
+            value={props.value || null}
             closeMenuOnSelect={true}
             placeholder={props.emptyValue}
             hideSelectedOptions={false}
