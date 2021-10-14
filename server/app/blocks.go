@@ -69,7 +69,7 @@ func (a *App) InsertBlock(c store.Container, block model.Block, userID string) e
 	return err
 }
 
-func (a *App) InsertBlocks(c store.Container, blocks []model.Block, userID string) error {
+func (a *App) InsertBlocks(c store.Container, blocks []model.Block, userID string, allowNotifications bool) error {
 	needsNotify := make([]model.Block, 0, len(blocks))
 	for i := range blocks {
 		err := a.store.InsertBlock(c, &blocks[i], userID)
@@ -87,7 +87,9 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block, userID strin
 		for _, b := range needsNotify {
 			block := b
 			a.webhook.NotifyUpdate(block)
-			a.notifyBlockChanged(notify.Add, c, &block, nil, userID)
+			if allowNotifications {
+				a.notifyBlockChanged(notify.Add, c, &block, nil, userID)
+			}
 		}
 	}()
 
