@@ -30,7 +30,6 @@ function SubMenuOption(props: SubMenuOptionProps): JSX.Element {
                     setIsOpen(true)
                 }, 50)
             }}
-            onMouseLeave={() => setIsOpen(false)}
             onClick={(e: React.MouseEvent) => {
                 e.preventDefault()
                 e.stopPropagation()
