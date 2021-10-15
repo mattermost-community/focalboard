@@ -128,6 +128,7 @@ const GalleryCard = React.memo((props: Props) => {
                                     key={b.id}
                                     block={b}
                                     readonly={true}
+                                    cords={{x: 0}}
                                 />
                             ))
                         }
@@ -137,6 +138,7 @@ const GalleryCard = React.memo((props: Props) => {
                                 key={block.id}
                                 block={block}
                                 readonly={true}
+                                cords={{x: 0}}
                             />
                         )
                     })}
