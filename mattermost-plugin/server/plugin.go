@@ -239,6 +239,11 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 	}
 
 	firstLink := getFirstLink(post.Message)
+
+	if firstLink == "" {
+		return post, ""
+	}
+
 	u, err := url.Parse(firstLink)
 
 	if err != nil {
@@ -246,19 +251,16 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 	}
 
 	// Trim away the first / because otherwise after we split the string, the first element in the array is a empty element
-	path := strings.ToLower(u.Path[1:])
-	pathSplit := strings.Split(path, "/")
+	urlPath := u.Path
+	if strings.HasPrefix(urlPath, "/") {
+		urlPath = u.Path[1:]
+	}
+	pathSplit := strings.Split(strings.ToLower(urlPath), "/")
 	queryParams := u.Query()
 
 	if len(pathSplit) == 0 {
 		return post, ""
 	}
-
-	workspaceID := ""
-	boardID := ""
-	viewID := ""
-	cardID := ""
-	readToken := ""
 
 	// If the first parameter in the path is boards,
 	// then we've copied this directly as logged in user of that board
@@ -271,20 +273,7 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 	// For card links copied on a shared board, the path looks like
 	// plugins/focalboard/workspace/workspaceID/shared/boardID/viewID/cardID?r=read_token
 
-	// This is a non-shared board card link
-	if len(pathSplit) == 6 && pathSplit[0] == "boards" && pathSplit[1] == "workspace" {
-		workspaceID = pathSplit[2]
-		boardID = pathSplit[3]
-		viewID = pathSplit[4]
-		cardID = pathSplit[5]
-	} else if len(pathSplit) == 8 && pathSplit[0] == "plugins" &&
-		pathSplit[1] == "focalboard" && pathSplit[2] == "workspace" && pathSplit[4] == "shared" { // This is a shared board card link
-		workspaceID = pathSplit[3]
-		boardID = pathSplit[5]
-		viewID = pathSplit[6]
-		cardID = pathSplit[7]
-		readToken = queryParams.Get("r")
-	}
+	workspaceID, boardID, viewID, cardID := returnBoardsParams(pathSplit)
 
 	if workspaceID != "" && boardID != "" && viewID != "" && cardID != "" {
 		b, _ := json.Marshal(BoardsEmbed{
@@ -292,7 +281,7 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 			BoardID:      boardID,
 			ViewID:       viewID,
 			CardID:       cardID,
-			ReadToken:    readToken,
+			ReadToken:    queryParams.Get("r"),
 			OriginalPath: u.RequestURI(),
 		})
 
@@ -319,4 +308,30 @@ func getFirstLink(str string) string {
 	})
 
 	return firstLink
+}
+
+func returnBoardsParams(pathArray []string) (string, string, string, string) {
+	index := -1
+	for i := 0; i < len(pathArray); i++ {
+		if pathArray[i] == "boards" || pathArray[i] == "plugins" {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		return "", "", "", ""
+	}
+
+	// This is a non-shared board card link
+	if len(pathArray)-index == 6 && pathArray[index] == "boards" && pathArray[index+1] == "workspace" {
+		return pathArray[index+2], pathArray[index+3], pathArray[index+4], pathArray[index+5]
+	} else if len(pathArray)-index == 8 && pathArray[index] == "plugins" &&
+		pathArray[index+1] == "focalboard" &&
+		pathArray[index+2] == "workspace" &&
+		pathArray[index+4] == "shared" { // This is a shared board card link
+		return pathArray[index+3], pathArray[index+5], pathArray[index+6], pathArray[index+7]
+	}
+
+	return "", "", "", ""
 }
