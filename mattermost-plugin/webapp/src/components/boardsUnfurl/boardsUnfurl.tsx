@@ -1,8 +1,21 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useEffect} from 'react'
+import {IntlProvider, FormattedMessage} from 'react-intl'
+import {connect} from 'react-redux'
 
+import {GlobalState} from 'mattermost-redux/types/store'
+import {getCurrentUserLocale} from 'mattermost-redux/selectors/entities/i18n'
+
+import {getMessages} from './../../../../../webapp/src/i18n'
 import {Utils} from './../../../../../webapp/src/utils'
+import {Card} from './../../../../../webapp/src/blocks/card'
+import {Board, IPropertyOption} from './../../../../../webapp/src/blocks/board'
+import {ContentBlock} from './../../../../../webapp/src/blocks/contentBlock'
+import octoClient from './../../../../../webapp/src/octoClient'
+import {getCard, addCard} from './../../../../../webapp/src/store/cards'
+import {useAppSelector} from './../../../../../webapp/src/store/hooks'
+
 
 const Avatar = (window as any).Components.Avatar
 const Timestamp = (window as any).Components.Timestamp
@@ -13,110 +26,101 @@ import './boardsUnfurl.scss'
 type Props = {
     embed: {
         data: string,
+    },
+    locale: string,
+}
+
+function mapStateToProps(state: GlobalState) {
+    const locale = getCurrentUserLocale(state)
+
+    return {
+        locale,
     }
 }
 
-export const FocalboardUnfurl = (props: Props): JSX.Element => {
+const BoardsUnfurl = (props: Props): JSX.Element => {
     if (!props.embed || !props.embed.data) {
         return <></>
     }
 
-    const focalboardInformation = JSON.parse(props.embed.data)
-    const workspaceID = focalboardInformation.workspaceID
-    const cardID = focalboardInformation.cardID
-    const boardID = focalboardInformation.boardID
-    const viewID = focalboardInformation.viewID
-    const readToken = focalboardInformation.readToken
+    const {embed, locale} = props
+    const focalboardInformation = JSON.parse(embed.data)
+    const {workspaceID, cardID, boardID, readToken, originalPath} = focalboardInformation
     const baseURL = window.location.origin
-    const originalPath = focalboardInformation.originalPath
-    const [card, setCard] = useState<{title?: string, type?: string, updateAt?: number, createdBy?: string, fields?: { icon: string, contentOrder: Array<string | string[]>, properties: {key?: string}}}>({})
-    const [content, setContent] = useState<string>('')
-    const [board, setBoard] = useState<{title?: string, fields?: { cardProperties: Array<unknown> }}>({})
 
-    if (!workspaceID || !cardID || !boardID || !viewID) {
+
+    if (!workspaceID || !cardID || !boardID) {
         return <></>
     }
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch(`${baseURL}/plugins/focalboard/api/v1/workspaces/${workspaceID}/blocks?block_id=${cardID}${readToken ? `&read_token=${readToken}` : ''}`, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-            })
-            if (!response.ok) {
-                return null
-            }
-            const blocks = await response.json()
-            if (!blocks.length) {
-                return null
-            }
-            setCard(blocks[0])
-
-            if (blocks[0].fields?.contentOrder.length > 0) {
-                let contentID = blocks[0].fields?.contentOrder[0]
-                if (Array.isArray(blocks[0].fields?.contentOrder[0])) {
-                    contentID = blocks[0].fields?.contentOrder[0][0]
-                }
-
-                const contentResponse = await fetch(`${baseURL}/plugins/focalboard/api/v1/workspaces/${workspaceID}/blocks?block_id=${contentID}${readToken ? `&read_token=${readToken}` : ''}`, {
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                    },
-                })
-                if (!contentResponse.ok) {
-                    return null
-                }
-                const contentJSON = await contentResponse.json()
-                if (!contentJSON.length) {
-                    return null
-                }
-                setContent(contentJSON[0].title)
-            }
-            return null
-        }
-
-        fetchData()
-    }, [])
+    const cardzz = useAppSelector(getCard(cardID))
+    console.log(cardzz)
+    const [card, setCard] = useState<Card>()
+    const [content, setContent] = useState<ContentBlock>()
+    const [board, setBoard] = useState<Board>()
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch(`${baseURL}/plugins/focalboard/api/v1/workspaces/${workspaceID}/blocks?block_id=${boardID}${readToken ? `&read_token=${readToken}` : ''}`, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-            })
-            if (!response.ok) {
+            const [cards, boards] = await Promise.all(
+                [
+                    octoClient.getBlocksWithBlockID(cardID, workspaceID, readToken),
+                    octoClient.getBlocksWithBlockID(boardID, workspaceID, readToken),
+                ],
+            )
+            const [firstCard] = cards as Card[]
+            const [firstBoard] = boards as Board[]
+            if (!firstCard || !firstBoard) {
                 return null
             }
-            const blocks = await response.json()
-            if (!blocks.length) {
-                return null
+            addCard(firstCard)
+            setCard(firstCard)
+            setBoard(firstBoard)
+
+            if (firstCard.fields.contentOrder.length) {
+                let [firstContentBlockID] = firstCard.fields?.contentOrder
+
+                if (Array.isArray(firstContentBlockID)) {
+                    [firstContentBlockID] = firstContentBlockID
+                }
+
+                const contentBlock = await octoClient.getBlocksWithBlockID(firstContentBlockID, workspaceID, readToken) as ContentBlock[]
+                const [firstContentBlock] = contentBlock
+                if (!firstContentBlock) {
+                    return null
+                }
+                setContent(firstContentBlock)
             }
-            setBoard(blocks[0])
+
             return null
         }
-
         fetchData()
     }, [])
 
-    if (!Object.values(card).length || !Object.values(board).length) {
+    if (!card || !board) {
         return <></>
     }
 
-    const propertyKeyArray = Object.keys(card.fields?.properties || {})
-    const propertyValueArray = Object.values(card.fields?.properties || {})
-    const options = board.fields?.cardProperties
-    const propertiesToDisplay = []
+    const propertyKeyArray = Object.keys(card.fields.properties)
+    const propertyValueArray = Object.values(card.fields.properties)
+    const options = board.fields.cardProperties
+    const propertiesToDisplay: Array<Record<string, string>> = []
 
     // We will just display the first 3 or less select/multi-select properties and do a +n for remainder if any remainder
     if (propertyKeyArray.length > 0) {
         for (let i = 0; i < propertyKeyArray.length && propertiesToDisplay.length < 3; i++) {
             const keyToLookUp = propertyKeyArray[i]
-            const correspondingOption = options?.find((option: any) => option.id === keyToLookUp) as any
+            const correspondingOption = options.find((option) => option.id === keyToLookUp)
 
-            const valueToLookUp = Array.isArray(propertyValueArray[i]) ? propertyValueArray[i]![0] : propertyValueArray[i] as any
-            const optionSelected = correspondingOption.options.find((option: any) => option.id === valueToLookUp)
+            if (!correspondingOption) {
+                continue
+            }
+
+            let valueToLookUp = propertyValueArray[i]
+            if (Array.isArray(valueToLookUp)) {
+                valueToLookUp = valueToLookUp[0]
+            }
+
+            const optionSelected = correspondingOption.options.find((option) => option.id === valueToLookUp)
 
             if (!optionSelected) {
                 continue
@@ -126,72 +130,95 @@ export const FocalboardUnfurl = (props: Props): JSX.Element => {
         }
     }
     const remainder = propertyKeyArray.length - propertiesToDisplay.length
-    const html: string = Utils.htmlFromMarkdown(content)
-
+    const html: string = Utils.htmlFromMarkdown(content?.title || '')
     return (
-        <a
-            className='FocalboardUnfurl'
-            href={`${baseURL}${originalPath}`}
-            rel='noopener noreferrer'
-            target='_blank'
+        <IntlProvider
+            messages={getMessages(locale)}
+            locale={locale}
         >
+            <a
+                className='FocalboardUnfurl'
+                href={`${baseURL}${originalPath}`}
+                rel='noopener noreferrer'
+                target='_blank'
+            >
 
-            {/* Header of the Card*/}
-            <div className='header'>
-                <span className='icon'>{card.fields?.icon}</span>
-                <div className='information'>
-                    <span className='card_title'>{card.title}</span>
-                    <span className='board_title'>{board.title}</span>
-                </div>
-            </div>
-
-            {/* Body of the Card*/}
-            {content !== '' &&
-                <div className='body'>
-                    <div
-                        dangerouslySetInnerHTML={{__html: html}}
-                    />
-                </div>
-            }
-
-            {/* Footer of the Card*/}
-            <div className='footer'>
-                <div className='avatar'>
-                    <Avatar
-                        size={'md'}
-                        url={imageURLForUser(card.createdBy)}
-                        className={'avatar-post-preview'}
-                    />
-                </div>
-                <div className='timestamp_properties'>
-                    <div className='properties'>
-                        {propertiesToDisplay.map((property) => (
-                            <div
-                                key={property.optionValue}
-                                className={`property ${property.optionValueColour}`}
-                                title={`${property.optionName}`}
-                            >
-                                {property.optionValue}
-                            </div>
-                        ))}
-                        {remainder > 0 && <span className='remainder'>{`+${remainder} more`} </span>}
+                {/* Header of the Card*/}
+                <div className='header'>
+                    <span className='icon'>{card.fields?.icon}</span>
+                    <div className='information'>
+                        <span className='card_title'>{card.title}</span>
+                        <span className='board_title'>{board.title}</span>
                     </div>
-                    <span className='post-preview__time'>
-                        {'Updated '}
-                        <Timestamp
-                            value={card.updateAt}
-                            units={[
-                                'now',
-                                'minute',
-                                'hour',
-                                'day',
-                            ]}
-                            useTime={false}
-                            day={'numeric'}
-                        />
-                    </span>
                 </div>
-            </div>
-        </a>
+
+                {/* Body of the Card*/}
+                {html !== '' &&
+                    <div className='body'>
+                        <div
+                            dangerouslySetInnerHTML={{__html: html}}
+                        />
+                    </div>
+                }
+
+                {/* Footer of the Card*/}
+                <div className='footer'>
+                    <div className='avatar'>
+                        <Avatar
+                            size={'md'}
+                            url={imageURLForUser(card.createdBy)}
+                            className={'avatar-post-preview'}
+                        />
+                    </div>
+                    <div className='timestamp_properties'>
+                        <div className='properties'>
+                            {propertiesToDisplay.map((property) => (
+                                <div
+                                    key={property.optionValue}
+                                    className={`property ${property.optionValueColour}`}
+                                    title={`${property.optionName}`}
+                                >
+                                    {property.optionValue}
+                                </div>
+                            ))}
+                            {remainder > 0 &&
+                                <span className='remainder'>
+                                    <FormattedMessage
+                                        id='BoardsUnfurl.Remainder'
+                                        defaultMessage='+{remainder} more'
+                                        values={{
+                                            remainder,
+                                        }}
+                                    />
+                                </span>
+                            }
+                        </div>
+                        <span className='post-preview__time'>
+                            <FormattedMessage
+                                id='BoardsUnfurl.Updated'
+                                defaultMessage='Updated {time}'
+                                values={{
+                                    time: (
+                                        <Timestamp
+                                            value={card.updateAt}
+                                            units={[
+                                                'now',
+                                                'minute',
+                                                'hour',
+                                                'day',
+                                            ]}
+                                            useTime={false}
+                                            day={'numeric'}
+                                        />
+                                    ),
+                                }}
+                            />
+                        </span>
+                    </div>
+                </div>
+            </a>
+        </IntlProvider>
     )
 }
+
+export default connect(mapStateToProps)(BoardsUnfurl)

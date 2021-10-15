@@ -28,7 +28,7 @@ import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
 
-import {FocalboardUnfurl} from './components/boardsUnfurl/boardsUnfurl'
+import BoardsUnfurl from './components/boardsUnfurl/boardsUnfurl'
 import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK, ACTION_UPDATE_CLIENT_CONFIG} from './../../../webapp/src/wsclient'
 
 import manifest from './manifest'
@@ -148,7 +148,7 @@ export default class Plugin {
             this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/welcome', MainApp, HeaderComponent)
 
             if (mmStore.getState().entities.general.config?.['FeatureFlagBoardsUnfurl' as keyof Partial<ClientConfig>] === 'true') {
-                this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', FocalboardUnfurl, false)
+                this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
             }
         } else {
             windowAny.frontendBaseURL = subpath + '/plug/focalboard'
