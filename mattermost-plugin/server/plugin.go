@@ -143,7 +143,7 @@ func (p *Plugin) OnActivate() error {
 
 	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db))
 
-	mentionsBackend, err := createMentionsNotifyBackend(client, cfg.ServerRoot, logger)
+	mentionsBackend, err := createMentionsNotifyBackend(client, baseURL+"/boards", logger)
 	if err != nil {
 		return fmt.Errorf("error creating mentions notifications backend: %w", err)
 	}

@@ -21,13 +21,13 @@ exports[`components/calculations/Options should match snapshot 1`] = `
       </span>
     </span>
     <div
-      class=" css-1s59geg-Control"
+      class="CalculationOptions__control CalculationOptions__control--is-focused css-1s59geg-Control"
     >
       <div
-        class=" css-1mxrbau-ValueContainer"
+        class="CalculationOptions__value-container CalculationOptions__value-container--has-value css-1mxrbau-ValueContainer"
       >
         <div
-          class=" css-1brck82-singleValue"
+          class="CalculationOptions__single-value css-1brck82-singleValue"
         >
           Calculate
         </div>
@@ -41,11 +41,11 @@ exports[`components/calculations/Options should match snapshot 1`] = `
         />
       </div>
       <div
-        class=" css-1hb7zxy-IndicatorsContainer"
+        class="CalculationOptions__indicators css-1hb7zxy-IndicatorsContainer"
       >
         <div
           aria-hidden="true"
-          class=" css-13eygzs-indicatorContainer"
+          class="CalculationOptions__indicator CalculationOptions__clear-indicator css-13eygzs-indicatorContainer"
         >
           <svg
             aria-hidden="true"
@@ -61,11 +61,11 @@ exports[`components/calculations/Options should match snapshot 1`] = `
           </svg>
         </div>
         <span
-          class=" css-43ykx9-indicatorSeparator"
+          class="CalculationOptions__indicator-separator css-43ykx9-indicatorSeparator"
         />
         <div
           aria-hidden="true"
-          class=" css-1f9iddu-indicatorContainer"
+          class="CalculationOptions__indicator CalculationOptions__dropdown-indicator css-1f9iddu-indicatorContainer"
         >
           <i
             class="CompassIcon icon-chevron-up ChevronUpIcon"
@@ -99,17 +99,17 @@ exports[`components/calculations/Options should match snapshot menu open 1`] = `
       <span
         id="aria-context"
       >
-         10 results available. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+         2 results available. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
       </span>
     </span>
     <div
-      class=" css-1s59geg-Control"
+      class="CalculationOptions__control CalculationOptions__control--is-focused CalculationOptions__control--menu-is-open css-1s59geg-Control"
     >
       <div
-        class=" css-1mxrbau-ValueContainer"
+        class="CalculationOptions__value-container CalculationOptions__value-container--has-value css-1mxrbau-ValueContainer"
       >
         <div
-          class=" css-1brck82-singleValue"
+          class="CalculationOptions__single-value css-1brck82-singleValue"
         >
           Calculate
         </div>
@@ -123,11 +123,11 @@ exports[`components/calculations/Options should match snapshot menu open 1`] = `
         />
       </div>
       <div
-        class=" css-1hb7zxy-IndicatorsContainer"
+        class="CalculationOptions__indicators css-1hb7zxy-IndicatorsContainer"
       >
         <div
           aria-hidden="true"
-          class=" css-13eygzs-indicatorContainer"
+          class="CalculationOptions__indicator CalculationOptions__clear-indicator css-13eygzs-indicatorContainer"
         >
           <svg
             aria-hidden="true"
@@ -143,11 +143,11 @@ exports[`components/calculations/Options should match snapshot menu open 1`] = `
           </svg>
         </div>
         <span
-          class=" css-43ykx9-indicatorSeparator"
+          class="CalculationOptions__indicator-separator css-43ykx9-indicatorSeparator"
         />
         <div
           aria-hidden="true"
-          class=" css-1f9iddu-indicatorContainer"
+          class="CalculationOptions__indicator CalculationOptions__dropdown-indicator css-1f9iddu-indicatorContainer"
         >
           <i
             class="CompassIcon icon-chevron-up ChevronUpIcon"
@@ -156,80 +156,24 @@ exports[`components/calculations/Options should match snapshot menu open 1`] = `
       </div>
     </div>
     <div
-      class=" css-1kslk4z-menu"
+      class="CalculationOptions__menu css-1rsmi4x-menu"
     >
       <div
-        class=" css-g29tl0-MenuList"
+        class="CalculationOptions__menu-list css-g29tl0-MenuList"
       >
         <div
-          class=" css-1cnkr6z-option"
+          class="CalculationOptions__option css-14xsrqy-option"
           id="react-select-3-option-0"
-          tabindex="-1"
-        >
-          None
-        </div>
-        <div
-          class=" css-14xsrqy-option"
-          id="react-select-3-option-1"
           tabindex="-1"
         >
           Count
         </div>
         <div
-          class=" css-14xsrqy-option"
-          id="react-select-3-option-2"
-          tabindex="-1"
-        >
-          Count Value
-        </div>
-        <div
-          class=" css-14xsrqy-option"
-          id="react-select-3-option-3"
-          tabindex="-1"
-        >
-          Count Unique Values
-        </div>
-        <div
-          class=" css-14xsrqy-option"
-          id="react-select-3-option-4"
-          tabindex="-1"
-        >
-          Sum
-        </div>
-        <div
-          class=" css-14xsrqy-option"
-          id="react-select-3-option-5"
-          tabindex="-1"
-        >
-          Average
-        </div>
-        <div
-          class=" css-14xsrqy-option"
-          id="react-select-3-option-6"
-          tabindex="-1"
-        >
-          Median
-        </div>
-        <div
-          class=" css-14xsrqy-option"
-          id="react-select-3-option-7"
-          tabindex="-1"
-        >
-          Min
-        </div>
-        <div
-          class=" css-14xsrqy-option"
-          id="react-select-3-option-8"
+          class="CalculationOptions__option css-14xsrqy-option"
+          id="react-select-3-option-1"
           tabindex="-1"
         >
           Max
-        </div>
-        <div
-          class=" css-14xsrqy-option"
-          id="react-select-3-option-9"
-          tabindex="-1"
-        >
-          Range
         </div>
       </div>
     </div>
