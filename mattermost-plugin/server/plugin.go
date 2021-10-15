@@ -106,7 +106,7 @@ func (p *Plugin) OnActivate() error {
 	}
 
 	cfg := &config.Configuration{
-		ServerRoot:               baseURL + "/plugins/focalboard",
+		ServerRoot:               baseURL + "/boards",
 		Port:                     -1,
 		DBType:                   *mmconfig.SqlSettings.DriverName,
 		DBConfigString:           *mmconfig.SqlSettings.DataSource,
