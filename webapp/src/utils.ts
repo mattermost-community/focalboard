@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 import marked from 'marked'
 import {IntlShape} from 'react-intl'
+import moment from 'moment'
 
 import {Block} from './blocks/block'
 import {createBoard} from './blocks/board'
@@ -263,6 +264,10 @@ class Utils {
             hour: 'numeric',
             minute: 'numeric',
         })
+    }
+
+    static relativeDisplayDateTime(date: Date, intl: IntlShape): string {
+        return moment(date).locale(intl.locale.toLowerCase()).fromNow()
     }
 
     static sleep(miliseconds: number): Promise<void> {
