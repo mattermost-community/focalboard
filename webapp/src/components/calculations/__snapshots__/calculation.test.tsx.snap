@@ -95,13 +95,13 @@ exports[`components/calculations/Calculation should match snapshot - option chan
           class="css-1f43avz-a11yText-A11yText"
         />
         <div
-          class=" css-1s59geg-Control"
+          class="CalculationOptions__control css-1s59geg-Control"
         >
           <div
-            class=" css-1mxrbau-ValueContainer"
+            class="CalculationOptions__value-container CalculationOptions__value-container--has-value css-1mxrbau-ValueContainer"
           >
             <div
-              class=" css-1brck82-singleValue"
+              class="CalculationOptions__single-value css-1brck82-singleValue"
             >
               Calculate
             </div>
@@ -115,11 +115,11 @@ exports[`components/calculations/Calculation should match snapshot - option chan
             />
           </div>
           <div
-            class=" css-1hb7zxy-IndicatorsContainer"
+            class="CalculationOptions__indicators css-1hb7zxy-IndicatorsContainer"
           >
             <div
               aria-hidden="true"
-              class=" css-tpaeio-indicatorContainer"
+              class="CalculationOptions__indicator CalculationOptions__clear-indicator css-tpaeio-indicatorContainer"
             >
               <svg
                 aria-hidden="true"
@@ -135,11 +135,11 @@ exports[`components/calculations/Calculation should match snapshot - option chan
               </svg>
             </div>
             <span
-              class=" css-43ykx9-indicatorSeparator"
+              class="CalculationOptions__indicator-separator css-43ykx9-indicatorSeparator"
             />
             <div
               aria-hidden="true"
-              class=" css-wpsttr-indicatorContainer"
+              class="CalculationOptions__indicator CalculationOptions__dropdown-indicator css-wpsttr-indicatorContainer"
             >
               <i
                 class="CompassIcon icon-chevron-up ChevronUpIcon"

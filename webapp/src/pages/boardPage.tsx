@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react'
 import {batch} from 'react-redux'
 import {FormattedMessage, useIntl} from 'react-intl'
-import {generatePath, Redirect, useHistory, useRouteMatch} from 'react-router-dom'
+import {generatePath, Redirect, useHistory, useRouteMatch, useLocation} from 'react-router-dom'
 import {useHotkeys} from 'react-hotkeys-hook'
 
 import {Block} from '../blocks/block'
@@ -47,6 +47,7 @@ const BoardPage = (props: Props): JSX.Element => {
     const history = useHistory()
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, workspaceId?: string}>()
     const [websocketClosed, setWebsocketClosed] = useState(false)
+    const queryString = new URLSearchParams(useLocation().search)
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
 
     let workspaceId = match.params.workspaceId || UserSettings.lastWorkspaceId || '0'
@@ -66,7 +67,6 @@ const BoardPage = (props: Props): JSX.Element => {
     useEffect(() => {
         // Backward compatibility: This can be removed in the future, this is for
         // transform the old query params into routes
-        const queryString = new URLSearchParams(history.location.search)
         const queryBoardId = queryString.get('id')
         const params = {...match.params}
         let needsRedirect = false
@@ -92,7 +92,7 @@ const BoardPage = (props: Props): JSX.Element => {
 
         // Backward compatibility end
         const boardId = match.params.boardId
-        const viewId = match.params.viewId
+        const viewId = match.params.viewId === '0' ? '' : match.params.viewId
 
         if (!boardId) {
             // Load last viewed boardView
@@ -110,8 +110,10 @@ const BoardPage = (props: Props): JSX.Element => {
         }
 
         Utils.log(`attachToBoard: ${boardId}`)
-        const viewIsFromBoard = boardViews.some((view) => view.id === viewId)
-        if ((!viewId || !viewIsFromBoard) && boardViews.length > 0) {
+
+        // Ensure boardViews is for our boardId before redirecting
+        const isCorrectBoardView = boardViews.length > 0 && boardViews[0].parentId === boardId
+        if (!viewId && isCorrectBoardView) {
             const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
             history.replace(newPath)
             return
@@ -148,7 +150,6 @@ const BoardPage = (props: Props): JSX.Element => {
         let token = localStorage.getItem('focalboardSessionId') || ''
         if (props.readonly) {
             loadAction = initialReadOnlyLoad
-            const queryString = new URLSearchParams(history.location.search)
             token = token || queryString.get('r') || ''
         }
 
@@ -285,7 +286,9 @@ const BoardPage = (props: Props): JSX.Element => {
                 <div className='error'>
                     {intl.formatMessage({id: 'BoardPage.syncFailed', defaultMessage: 'Board may be deleted or access revoked.'})}
                 </div>}
-            <Workspace readonly={props.readonly || false}/>
+            <Workspace
+                readonly={props.readonly || false}
+            />
         </div>
     )
 }

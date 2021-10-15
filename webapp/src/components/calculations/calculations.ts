@@ -1,10 +1,15 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
+import {IntlShape} from 'react-intl'
+
+import moment from 'moment'
+
 import {Card} from '../../blocks/card'
 import {IPropertyTemplate} from '../../blocks/board'
 import {Utils} from '../../utils'
 import {Constants} from '../../constants'
+import {DateProperty} from '../properties/dateRange/dateRange'
 
 const ROUNDED_DECIMAL_PLACES = 2
 
@@ -46,6 +51,28 @@ function cardsWithValue(cards: readonly Card[], property: IPropertyTemplate): Ca
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function count(cards: readonly Card[], property: IPropertyTemplate): string {
     return String(cards.length)
+}
+
+function countEmpty(cards: readonly Card[], property: IPropertyTemplate): string {
+    return String(cards.length - cardsWithValue(cards, property).length)
+}
+
+function countNotEmpty(cards: readonly Card[], property: IPropertyTemplate): string {
+    return String(cardsWithValue(cards, property).length)
+}
+
+function percentEmpty(cards: readonly Card[], property: IPropertyTemplate): string {
+    if (cards.length === 0) {
+        return ''
+    }
+    return String((((cards.length - cardsWithValue(cards, property).length) / cards.length) * 100).toFixed(0)) + '%'
+}
+
+function percentNotEmpty(cards: readonly Card[], property: IPropertyTemplate): string {
+    if (cards.length === 0) {
+        return ''
+    }
+    return String(((cardsWithValue(cards, property).length / cards.length) * 100).toFixed(0)) + '%'
 }
 
 function countValueHelper(cards: readonly Card[], property: IPropertyTemplate): number {
@@ -197,8 +224,82 @@ function range(cards: readonly Card[], property: IPropertyTemplate): string {
     return min(cards, property) + ' - ' + max(cards, property)
 }
 
-const Calculations: Record<string, (cards: readonly Card[], property: IPropertyTemplate) => string> = {
+function earliest(cards: readonly Card[], property: IPropertyTemplate, intl: IntlShape): string {
+    const result = earliestEpoch(cards, property)
+    if (result === Number.POSITIVE_INFINITY) {
+        return ''
+    }
+    const date = new Date(result)
+    return property.type === 'date' ? Utils.displayDate(date, intl) : Utils.displayDateTime(date, intl)
+}
+
+function earliestEpoch(cards: readonly Card[], property: IPropertyTemplate): number {
+    let result = Number.POSITIVE_INFINITY
+    cards.forEach((card) => {
+        const timestamps = getTimestampsFromPropertyValue(getCardProperty(card, property))
+        for (const timestamp of timestamps) {
+            result = Math.min(result, timestamp)
+        }
+    })
+    return result
+}
+
+function latest(cards: readonly Card[], property: IPropertyTemplate, intl: IntlShape): string {
+    const result = latestEpoch(cards, property)
+    if (result === Number.NEGATIVE_INFINITY) {
+        return ''
+    }
+    const date = new Date(result)
+    return property.type === 'date' ? Utils.displayDate(date, intl) : Utils.displayDateTime(date, intl)
+}
+
+function latestEpoch(cards: readonly Card[], property: IPropertyTemplate): number {
+    let result = Number.NEGATIVE_INFINITY
+    cards.forEach((card) => {
+        const timestamps = getTimestampsFromPropertyValue(getCardProperty(card, property))
+        for (const timestamp of timestamps) {
+            result = Math.max(result, timestamp)
+        }
+    })
+    return result
+}
+
+function getTimestampsFromPropertyValue(value: number | string | string[]): number[] {
+    if (typeof value === 'number') {
+        return [value]
+    }
+    if (typeof value === 'string') {
+        let property: DateProperty
+        try {
+            property = JSON.parse(value)
+        } catch {
+            return []
+        }
+        return [property.from, property.to].flatMap((e) => {
+            return e ? [e] : []
+        })
+    }
+    return []
+}
+
+function dateRange(cards: readonly Card[], property: IPropertyTemplate): string {
+    const resultEarliest = earliestEpoch(cards, property)
+    if (resultEarliest === Number.POSITIVE_INFINITY) {
+        return ''
+    }
+    const resultLatest = latestEpoch(cards, property)
+    if (resultLatest === Number.NEGATIVE_INFINITY) {
+        return ''
+    }
+    return moment.duration(resultLatest - resultEarliest, 'milliseconds').humanize()
+}
+
+const Calculations: Record<string, (cards: readonly Card[], property: IPropertyTemplate, intl: IntlShape) => string> = {
     count,
+    countEmpty,
+    countNotEmpty,
+    percentEmpty,
+    percentNotEmpty,
     countValue,
     countUniqueValue,
     countChecked,
@@ -211,6 +312,9 @@ const Calculations: Record<string, (cards: readonly Card[], property: IPropertyT
     min,
     max,
     range,
+    earliest,
+    latest,
+    dateRange,
 }
 
 export default Calculations

@@ -26,7 +26,7 @@ type SQLStore struct {
 
 // New creates a new SQL implementation of the store.
 func New(dbType, connectionString, tablePrefix string, logger *mlog.Logger, db *sql.DB, isPlugin bool) (*SQLStore, error) {
-	logger.Info("connectDatabase", mlog.String("dbType", dbType), mlog.String("connStr", connectionString))
+	logger.Info("connectDatabase", mlog.String("dbType", dbType))
 	store := &SQLStore{
 		// TODO: add replica DB support too.
 		db:               db,

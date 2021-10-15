@@ -3,7 +3,7 @@
 import {BlockIcons} from './blockIcons'
 import {Block} from './blocks/block'
 import {Board, IPropertyOption, IPropertyTemplate, PropertyType, createBoard} from './blocks/board'
-import {BoardView, ISortOption, createBoardView} from './blocks/boardView'
+import {BoardView, ISortOption, createBoardView, KanbanCalculationFields} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
 import {FilterGroup} from './blocks/filterGroup'
 import octoClient, {OctoClient} from './octoClient'
@@ -556,6 +556,19 @@ class Mutator {
             },
             async () => {
                 await octoClient.patchBlock(viewId, {updatedFields: {hiddenOptionIds: oldHiddenOptionIds}})
+            },
+            description,
+            this.undoGroupId,
+        )
+    }
+
+    async changeViewKanbanCalculations(viewId: string, oldCalculations: Record<string, KanbanCalculationFields>, calculations: Record<string, KanbanCalculationFields>, description = 'updated kanban calculations'): Promise<void> {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {kanbanCalculations: calculations}})
+            },
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {kanbanCalculations: oldCalculations}})
             },
             description,
             this.undoGroupId,

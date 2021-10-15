@@ -6,7 +6,7 @@ exports[`components/properties/dateRange cancel set via text input 1`] = `
     class="DateRange  octo-propertyvalue"
   >
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
@@ -23,7 +23,7 @@ exports[`components/properties/dateRange handle clear 1`] = `
     class="DateRange  octo-propertyvalue"
   >
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
@@ -40,7 +40,7 @@ exports[`components/properties/dateRange returns default correctly 1`] = `
     class="DateRange empty octo-propertyvalue"
   >
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span />
@@ -55,7 +55,7 @@ exports[`components/properties/dateRange returns local correctly - es local 1`] 
     class="DateRange  octo-propertyvalue"
   >
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
@@ -72,7 +72,7 @@ exports[`components/properties/dateRange set via text input 1`] = `
     class="DateRange  octo-propertyvalue"
   >
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
@@ -89,7 +89,7 @@ exports[`components/properties/dateRange set via text input, es locale 1`] = `
     class="DateRange  octo-propertyvalue"
   >
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>

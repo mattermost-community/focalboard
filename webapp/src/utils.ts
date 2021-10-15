@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 import marked from 'marked'
 import {IntlShape} from 'react-intl'
+import moment from 'moment'
 
 import {Block} from './blocks/block'
 import {createBoard} from './blocks/board'
@@ -221,6 +222,11 @@ class Utils {
                 `onclick="event.stopPropagation();${(window.openInNewBrowser ? ' openInNewBrowser && openInNewBrowser(event.target.href);' : '')}"` +
             '>' + contents + '</a>'
         }
+
+        renderer.table = (header, body) => {
+            return `<div class="table-responsive"><table class="markdown__table"><thead>${header}</thead><tbody>${body}</tbody></table></div>`
+        }
+
         const html = marked(text.replace(/</g, '&lt;'), {renderer, breaks: true})
         return html.trim()
     }
@@ -255,6 +261,10 @@ class Utils {
             hour: 'numeric',
             minute: 'numeric',
         })
+    }
+
+    static relativeDisplayDateTime(date: Date, intl: IntlShape): string {
+        return moment(date).locale(intl.locale.toLowerCase()).fromNow()
     }
 
     static sleep(miliseconds: number): Promise<void> {
@@ -570,6 +580,10 @@ class Utils {
         const queryString = new URLSearchParams(window.location.search)
         const readToken = queryString.get('r') || ''
         return readToken
+    }
+
+    static generateClassName(conditions: Record<string, boolean>): string {
+        return Object.entries(conditions).map(([className, condition]) => (condition ? className : '')).filter((className) => className !== '').join(' ')
     }
 }
 
