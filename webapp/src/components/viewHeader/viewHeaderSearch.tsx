@@ -1,8 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useRef, useEffect} from 'react'
+import React, {useState, useRef, useEffect, useMemo} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {useHotkeys} from 'react-hotkeys-hook'
+import {debounce} from 'lodash'
 
 import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
@@ -19,6 +20,19 @@ const ViewHeaderSearch = (): JSX.Element => {
     const [isSearching, setIsSearching] = useState(Boolean(searchText))
     const [searchValue, setSearchValue] = useState(searchText)
 
+    const dispatchSearchText = (value: string) => {
+        dispatch(setSearchText(value))
+    }
+
+    const debouncedDispatchSearchText = useMemo(
+        () => debounce(dispatchSearchText, 200), [])
+
+    useEffect(() => {
+        return () => {
+            debouncedDispatchSearchText.cancel()
+        }
+    }, [])
+
     useEffect(() => {
         searchFieldRef.current?.focus()
     }, [isSearching])
@@ -34,17 +48,20 @@ const ViewHeaderSearch = (): JSX.Element => {
                 ref={searchFieldRef}
                 value={searchValue}
                 placeholderText={intl.formatMessage({id: 'ViewHeader.search-text', defaultMessage: 'Search text'})}
-                onChange={setSearchValue}
+                onChange={(value) => {
+                    setSearchValue(value)
+                    debouncedDispatchSearchText(value)
+                }}
                 onCancel={() => {
                     setSearchValue('')
                     setIsSearching(false)
-                    dispatch(setSearchText(''))
+                    debouncedDispatchSearchText('')
                 }}
                 onSave={() => {
                     if (searchValue === '') {
                         setIsSearching(false)
                     }
-                    dispatch(setSearchText(searchValue))
+                    debouncedDispatchSearchText(searchValue)
                 }}
             />
         )
