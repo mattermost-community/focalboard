@@ -92,7 +92,7 @@ const BoardPage = (props: Props): JSX.Element => {
 
         // Backward compatibility end
         const boardId = match.params.boardId
-        const viewId = match.params.viewId
+        const viewId = match.params.viewId === '0' ? '' : match.params.viewId
 
         if (!boardId) {
             // Load last viewed boardView
