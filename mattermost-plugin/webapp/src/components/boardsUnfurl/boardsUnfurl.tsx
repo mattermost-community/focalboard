@@ -10,12 +10,9 @@ import {getCurrentUserLocale} from 'mattermost-redux/selectors/entities/i18n'
 import {getMessages} from './../../../../../webapp/src/i18n'
 import {Utils} from './../../../../../webapp/src/utils'
 import {Card} from './../../../../../webapp/src/blocks/card'
-import {Board, IPropertyOption} from './../../../../../webapp/src/blocks/board'
+import {Board} from './../../../../../webapp/src/blocks/board'
 import {ContentBlock} from './../../../../../webapp/src/blocks/contentBlock'
 import octoClient from './../../../../../webapp/src/octoClient'
-import {getCard, addCard} from './../../../../../webapp/src/store/cards'
-import {useAppSelector} from './../../../../../webapp/src/store/hooks'
-
 
 const Avatar = (window as any).Components.Avatar
 const Timestamp = (window as any).Components.Timestamp
@@ -53,8 +50,6 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
         return <></>
     }
 
-    const cardzz = useAppSelector(getCard(cardID))
-    console.log(cardzz)
     const [card, setCard] = useState<Card>()
     const [content, setContent] = useState<ContentBlock>()
     const [board, setBoard] = useState<Board>()
@@ -72,7 +67,6 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
             if (!firstCard || !firstBoard) {
                 return null
             }
-            addCard(firstCard)
             setCard(firstCard)
             setBoard(firstBoard)
 
