@@ -1,0 +1,60 @@
+.confirmation-dialog-box {
+    .dialog {   
+        position: fixed;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: max-content;
+        height: max-content;
+        z-index: 300;
+
+        background-color: rgb(var(--center-channel-bg-rgb));
+        box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0 0 0 1px,
+            rgba(var(--center-channel-color-rgb), 0.1) 0 2px 4px;
+
+        border-radius: var(--modal-rad);
+        padding: 0;
+        -webkit-overflow-scrolling: touch;
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        > .toolbar {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 16px;
+        }
+    }
+   
+}
+
+.box-area {
+    display: grid;
+    place-items: center;
+
+    .heading {
+        margin-top: 2rem;
+        padding: 2px 4px;      
+    }
+
+    .sub-text {
+        width: 26rem;
+        word-wrap: normal;
+        margin: 0.5rem 3rem;
+        padding: 2px;
+
+        @media screen and (max-width: 400px) {
+            width: 12rem;
+        }
+    }
+}
+
+.action-buttons {
+    display: flex;
+    margin: 1rem;
+    justify-content: space-between;
+
+    .Button {
+        margin: 2px 1rem;
+    }
+}
