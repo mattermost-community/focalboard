@@ -146,12 +146,13 @@ const BoardPage = (props: Props): JSX.Element => {
     }, [board?.title, activeView?.title])
 
     useEffect(() => {
-        let loadAction: any = initialLoad
+        let loadAction: any = initialLoad /* eslint-disable-line @typescript-eslint/no-explicit-any */
         let token = localStorage.getItem('focalboardSessionId') || ''
         if (props.readonly) {
             loadAction = initialReadOnlyLoad
             token = token || queryString.get('r') || ''
         }
+
         dispatch(loadAction(match.params.boardId))
 
         if (wsClient.state === 'open') {
