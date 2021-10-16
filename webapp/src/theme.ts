@@ -275,7 +275,6 @@ export function getSelectBaseStyle() {
         control: (): CSSObject => ({
             border: 0,
             width: '100%',
-            margin: '4px 0 0 0',
 
             // display: 'flex',
             // marginTop: 0,
