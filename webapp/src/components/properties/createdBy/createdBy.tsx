@@ -4,6 +4,7 @@
 import React from 'react'
 
 import UserProperty from '../user/user'
+import './createdBy.scss'
 
 type Props = {
     userID: string
