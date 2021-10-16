@@ -1,0 +1,32 @@
+{
+  "name": "focalboard-web-clipper",
+  "version": "0.0.0",
+  "targets": {
+    "dev": {
+      "sourceMap": {
+        "inline": true,
+        "inlineSources": true
+      }
+    },
+    "prod": {}
+  },
+  "scripts": {
+    "watchdev": "parcel watch manifest.json --target dev",
+    "servedev": "web-ext run -s dist/dev/",
+    "watchprod": "parcel watch manifest.json --target prod",
+    "serveprod": "web-ext run -s dist/prod/",
+    "build": "parcel build manifest.json --target prod && web-ext build -s dist/prod/"
+  },
+  "devDependencies": {
+    "@parcel/config-webextension": "^2.0.0",
+    "@parcel/transformer-sass": "^2.0.0",
+    "@types/react": "^17.0.32",
+    "@types/react-dom": "^17.0.10",
+    "parcel": "^2.0.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "typescript": "^4.4.4",
+    "web-ext": "^6.4.0",
+    "webextension-polyfill-ts": "^0.26.0"
+  }
+}
