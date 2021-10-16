@@ -97,7 +97,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
         expect(mockedMutator.changePropertyTypeAndName).toHaveBeenCalledWith(board, cards, propertyTemplate, 'select', newName)
     })
 
-    it('should delete existing select property', () => {
+    it('should show confirmation dialog when deleting existing select property', () => {
         render(
             wrapIntl(
                 <CardDetailProperties {...cardDetailProps}/>,
@@ -110,9 +110,8 @@ describe('components/cardDetail/CardDetailProperties', () => {
         const deleteButton = screen.getByRole('button', {name: /delete/i})
         userEvent.click(deleteButton)
 
-        const propertyId = board.fields.cardProperties[0].id
-        expect(mockedMutator.deleteProperty).toHaveBeenCalledTimes(1)
-        expect(mockedMutator.deleteProperty).toHaveBeenCalledWith(board, views, cards, propertyId)
+        expect(screen.getByRole('heading', {name: 'Confirm Delete Property'})).toBeInTheDocument()
+        expect(screen.getByRole('button', {name: /delete/i})).toBeInTheDocument()
     })
 
     it('should show property types menu', () => {
