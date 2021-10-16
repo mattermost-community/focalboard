@@ -357,3 +357,114 @@ func TestGetSubtree(t *testing.T) {
 		require.Contains(t, blockIDs, childBlockID2)
 	})
 }
+
+func TestExportBlocks(t *testing.T) {
+	th := SetupTestHelper().InitBasic()
+	defer th.TearDown()
+
+	blocks, resp := th.Client.ExportBlocks(nil)
+	require.NoError(t, resp.Error)
+	initialCount := len(blocks)
+
+	blockID1 := utils.NewID(utils.IDTypeBlock)
+	blockID2 := utils.NewID(utils.IDTypeBlock)
+	newBlocks := []model.Block{
+		{
+			ID:       blockID1,
+			RootID:   blockID1,
+			CreateAt: 1,
+			UpdateAt: 1,
+			Type:     "board",
+		},
+		{
+			ID:       blockID2,
+			RootID:   blockID2,
+			CreateAt: 1,
+			UpdateAt: 1,
+			Type:     "board",
+		},
+	}
+	_, resp = th.Client.InsertBlocks(newBlocks)
+	require.NoError(t, resp.Error)
+
+	t.Run("export without root id", func(t *testing.T) {
+		blocks, resp = th.Client.ExportBlocks(nil)
+		require.NoError(t, resp.Error)
+		require.Len(t, blocks, initialCount+2)
+
+		blockIDs := make([]string, len(blocks))
+		for i, b := range blocks {
+			blockIDs[i] = b.ID
+		}
+		require.Contains(t, blockIDs, blockID1)
+		require.Contains(t, blockIDs, blockID2)
+	})
+
+	t.Run("export with root id", func(t *testing.T) {
+		blocks, resp = th.Client.ExportBlocks(&blockID2)
+		require.NoError(t, resp.Error)
+		require.Len(t, blocks, 1)
+
+		blockIDs := make([]string, len(blocks))
+		for i, b := range blocks {
+			blockIDs[i] = b.ID
+		}
+		require.NotContains(t, blockIDs, blockID1)
+		require.Contains(t, blockIDs, blockID2)
+	})
+}
+
+func TestImportBlocks(t *testing.T) {
+	th := SetupTestHelper().InitBasic()
+	defer th.TearDown()
+
+	blocks, resp := th.Client.ExportBlocks(nil)
+	require.NoError(t, resp.Error)
+	initialCount := len(blocks)
+
+	blockID1 := utils.NewID(utils.IDTypeBlock)
+	blockID2 := utils.NewID(utils.IDTypeBlock)
+	blockID3 := utils.NewID(utils.IDTypeBlock)
+
+	t.Run("Import blocks", func(t *testing.T) {
+		blocks := []model.Block{
+			{
+				ID:       blockID1,
+				RootID:   blockID1,
+				CreateAt: 1,
+				UpdateAt: 1,
+				Type:     "board",
+				Title:    "New title",
+			},
+			{
+				ID:       blockID2,
+				RootID:   blockID2,
+				CreateAt: 1,
+				UpdateAt: 1,
+				Type:     "board",
+			},
+			{
+				ID:       blockID3,
+				RootID:   blockID3,
+				CreateAt: 1,
+				UpdateAt: 1,
+				Type:     "board",
+			},
+		}
+
+		_, resp := th.Client.InsertBlocks(blocks)
+		require.NoError(t, resp.Error)
+
+		resultBlocks, resp := th.Client.ExportBlocks(nil)
+		require.NoError(t, resp.Error)
+		require.Len(t, resultBlocks, initialCount+3)
+
+		blockIDs := make([]string, len(resultBlocks))
+		for i, b := range resultBlocks {
+			blockIDs[i] = b.ID
+		}
+		require.Contains(t, blockIDs, blockID1)
+		require.Contains(t, blockIDs, blockID2)
+		require.Contains(t, blockIDs, blockID3)
+	})
+}

@@ -17,7 +17,7 @@ type TestHelper struct {
 	Client *client.Client
 }
 
-func getTestConfig() *config.Configuration {
+func getTestConfig(authMode string) *config.Configuration {
 	dbType := os.Getenv("FB_STORE_TEST_DB_TYPE")
 	if dbType == "" {
 		dbType = "sqlite3"
@@ -61,16 +61,18 @@ func getTestConfig() *config.Configuration {
 		FilesPath:         "./files",
 		LoggingCfgJSON:    logging,
 		SessionExpireTime: int64(30 * time.Second),
-		AuthMode:          "native",
+		AuthMode:          authMode,
 	}
 }
 
-func newTestServer(singleUserToken string) *server.Server {
+func newTestServer(singleUserToken string, authMode string) *server.Server {
 	logger, _ := mlog.NewLogger()
-	if err := logger.Configure("", getTestConfig().LoggingCfgJSON, nil); err != nil {
+	cfg := getTestConfig(authMode)
+
+	if err := logger.Configure("", cfg.LoggingCfgJSON, nil); err != nil {
 		panic(err)
 	}
-	cfg := getTestConfig()
+
 	db, err := server.NewStore(cfg, logger)
 	if err != nil {
 		panic(err)
@@ -94,15 +96,23 @@ func newTestServer(singleUserToken string) *server.Server {
 func SetupTestHelper() *TestHelper {
 	sessionToken := "TESTTOKEN"
 	th := &TestHelper{}
-	th.Server = newTestServer(sessionToken)
+	th.Server = newTestServer(sessionToken, "native")
 	th.Client = client.NewClient(th.Server.Config().ServerRoot, sessionToken)
 	return th
 }
 
 func SetupTestHelperWithoutToken() *TestHelper {
 	th := &TestHelper{}
-	th.Server = newTestServer("")
+	th.Server = newTestServer("", "native")
 	th.Client = client.NewClient(th.Server.Config().ServerRoot, "")
+	return th
+}
+
+func SetupTestHelperWithMattermostAuthMode() *TestHelper {
+	sessionToken := "TESTTOKEN"
+	th := &TestHelper{}
+	th.Server = newTestServer(sessionToken, server.MattermostAuthMod)
+	th.Client = client.NewClient(th.Server.Config().ServerRoot, sessionToken)
 	return th
 }
 

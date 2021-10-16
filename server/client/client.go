@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"mime/multipart"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/mattermost/focalboard/server/api"
@@ -164,6 +165,14 @@ func (c *Client) GetSubtreeRoute(id string) string {
 	return fmt.Sprintf("%s/subtree", c.GetBlockRoute(id))
 }
 
+func (c *Client) ExportBlocksRoute() string {
+	return fmt.Sprintf("%s/export", c.GetBlocksRoute())
+}
+
+func (c *Client) ImportBlocksRoute() string {
+	return fmt.Sprintf("%s/import", c.GetBlocksRoute())
+}
+
 func (c *Client) GetBlocks() ([]model.Block, *Response) {
 	r, err := c.DoAPIGet(c.GetBlocksRoute(), "")
 	if err != nil {
@@ -212,6 +221,37 @@ func (c *Client) GetSubtree(blockID string) ([]model.Block, *Response) {
 	defer closeBody(r)
 
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) ExportBlocks(rootID *string) ([]model.Block, *Response) {
+	route := c.ExportBlocksRoute()
+
+	if rootID != nil {
+		parsedUrl, _ := url.Parse(route)
+		query := parsedUrl.Query()
+		query.Set("root_id", *rootID)
+		parsedUrl.RawQuery = query.Encode()
+
+		route = parsedUrl.String()
+	}
+
+	r, err := c.DoAPIGet(route, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BlocksFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) ImportBlocks(blocks []model.Block) (bool, *Response) {
+	r, err := c.DoAPIPost(c.ImportBlocksRoute(), toJSON(blocks))
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
 }
 
 // Sharing
@@ -326,6 +366,44 @@ func (c *Client) UserChangePassword(id string, data *api.ChangePasswordRequest) 
 	defer closeBody(r)
 
 	return true, BuildResponse(r)
+}
+
+// Workspaces
+
+func (c *Client) GetWorkspacesRoute() string {
+	return "/workspaces"
+}
+
+func (c *Client) GetWorkspaceRoute(id string) string {
+	return fmt.Sprintf("%s/%s", c.GetWorkspacesRoute(), id)
+}
+
+func (c *Client) GetWorkspace(id string) (*model.Workspace, *Response) {
+	r, err := c.DoAPIGet(c.GetWorkspaceRoute(id), "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	workspace, err := model.WorkspaceFromJSON(r.Body)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return workspace, BuildResponse(r)
+}
+
+func (c *Client) RegenerateSignupTokenRoute(id string) string {
+	return fmt.Sprintf("%s/%s", c.GetWorkspaceRoute(id), "regenerate_signup_token")
+}
+
+func (c *Client) RegenerateSignupToken(id string) *Response {
+	r, err := c.DoAPIPost(c.RegenerateSignupTokenRoute(id), "")
+	if err != nil {
+		return BuildErrorResponse(r, err)
+	}
+
+	return BuildResponse(r)
 }
 
 func (c *Client) GetWorkspaceUploadFileRoute(workspaceID, rootID string) string {
