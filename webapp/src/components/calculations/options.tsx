@@ -70,7 +70,7 @@ export const optionDisplayNameString = (option: Option, intl: IntlShape): string
     case 'percentChecked': return intl.formatMessage({id: 'Calculations.Options.percentChecked.displayName', defaultMessage: 'Checked'})
     case 'percentUnchecked': return intl.formatMessage({id: 'Calculations.Options.percentUnchecked.displayName', defaultMessage: 'Unchecked'})
     case 'countUnchecked': return intl.formatMessage({id: 'Calculations.Options.countUnchecked.displayName', defaultMessage: 'Unchecked'})
-    case 'countUniqueValue': return intl.formatMessage({id: 'Calculations.Options.countUniqueValue.displayName', defaultMessage: 'Unique Values'})
+    case 'countUniqueValue': return intl.formatMessage({id: 'Calculations.Options.countUniqueValue.displayName', defaultMessage: 'Unique'})
     case 'sum': return intl.formatMessage({id: 'Calculations.Options.sum.displayName', defaultMessage: 'Sum'})
     case 'average': return intl.formatMessage({id: 'Calculations.Options.average.displayName', defaultMessage: 'Average'})
     case 'median': return intl.formatMessage({id: 'Calculations.Options.median.displayName', defaultMessage: 'Median'})

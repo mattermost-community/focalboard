@@ -6,6 +6,8 @@ import React from 'react'
 
 import {IPropertyTemplate} from '../../blocks/board'
 
+import {wrapIntl} from '../../testUtils'
+
 import {CalculationOptions} from './options'
 
 describe('components/calculations/Options', () => {
@@ -14,7 +16,7 @@ describe('components/calculations/Options', () => {
             type: 'number',
         } as IPropertyTemplate
 
-        const component = (
+        const component = wrapIntl(
             <CalculationOptions
                 value={'none'}
                 onChange={() => {}}
@@ -25,7 +27,7 @@ describe('components/calculations/Options', () => {
                     value: 'count',
                     displayName: 'Count',
                 }]}
-            />
+            />,
         )
 
         const {container} = render(component)
@@ -37,7 +39,7 @@ describe('components/calculations/Options', () => {
             type: 'number',
         } as IPropertyTemplate
 
-        const component = (
+        const component = wrapIntl(
             <CalculationOptions
                 value={'none'}
                 menuOpen={true}
@@ -55,7 +57,7 @@ describe('components/calculations/Options', () => {
                         displayName: 'Max',
                     },
                 ]}
-            />
+            />,
         )
 
         const {container} = render(component)

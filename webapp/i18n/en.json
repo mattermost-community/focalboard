@@ -16,7 +16,7 @@
   "Calculations.Options.countChecked.label": "Count Checked",
   "Calculations.Options.countUnchecked.displayName": "Unchecked",
   "Calculations.Options.countUnchecked.label": "Count Unchecked",
-  "Calculations.Options.countUniqueValue.displayName": "Unique Values",
+  "Calculations.Options.countUniqueValue.displayName": "Unique",
   "Calculations.Options.countUniqueValue.label": "Count Unique Values",
   "Calculations.Options.countValue.displayName": "Values",
   "Calculations.Options.countValue.label": "Count Value",

@@ -7,6 +7,7 @@ import {render} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import {TestBlockFactory} from '../../../test/testBlockFactory'
+import {wrapIntl} from '../../../testUtils'
 
 import {KanbanCalculationOptions} from './calculationOptions'
 
@@ -14,14 +15,14 @@ describe('components/kanban/calculations/KanbanCalculationOptions', () => {
     const board = TestBlockFactory.createBoard()
 
     test('base case', () => {
-        const component = (
+        const component = wrapIntl(
             <KanbanCalculationOptions
                 value={'count'}
                 property={board.fields.cardProperties[1]}
                 menuOpen={false}
                 onChange={() => {}}
                 cardProperties={board.fields.cardProperties}
-            />
+            />,
         )
 
         const {container} = render(component)
@@ -29,14 +30,14 @@ describe('components/kanban/calculations/KanbanCalculationOptions', () => {
     })
 
     test('with menu open', () => {
-        const component = (
+        const component = wrapIntl(
             <KanbanCalculationOptions
                 value={'count'}
                 property={board.fields.cardProperties[1]}
                 menuOpen={true}
                 onChange={() => {}}
                 cardProperties={board.fields.cardProperties}
-            />
+            />,
         )
 
         const {container} = render(component)
@@ -44,14 +45,14 @@ describe('components/kanban/calculations/KanbanCalculationOptions', () => {
     })
 
     test('with submenu open', () => {
-        const component = (
+        const component = wrapIntl(
             <KanbanCalculationOptions
                 value={'count'}
                 property={board.fields.cardProperties[1]}
                 menuOpen={true}
                 onChange={() => {}}
                 cardProperties={board.fields.cardProperties}
-            />
+            />,
         )
 
         const {container, getByText} = render(component)
