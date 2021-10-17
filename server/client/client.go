@@ -227,12 +227,12 @@ func (c *Client) ExportBlocks(rootID *string) ([]model.Block, *Response) {
 	route := c.ExportBlocksRoute()
 
 	if rootID != nil {
-		parsedUrl, _ := url.Parse(route)
-		query := parsedUrl.Query()
+		parsedURL, _ := url.Parse(route)
+		query := parsedURL.Query()
 		query.Set("root_id", *rootID)
-		parsedUrl.RawQuery = query.Encode()
+		parsedURL.RawQuery = query.Encode()
 
-		route = parsedUrl.String()
+		route = parsedURL.String()
 	}
 
 	r, err := c.DoAPIGet(route, "")
