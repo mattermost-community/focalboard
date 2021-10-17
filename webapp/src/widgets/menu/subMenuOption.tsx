@@ -14,6 +14,7 @@ type SubMenuOptionProps = {
     position?: 'bottom' | 'top' | 'left' | 'left-bottom'
     icon?: React.ReactNode
     children: React.ReactNode
+    closeOnLeave?: boolean,
 }
 
 function SubMenuOption(props: SubMenuOptionProps): JSX.Element {
@@ -30,6 +31,7 @@ function SubMenuOption(props: SubMenuOptionProps): JSX.Element {
                     setIsOpen(true)
                 }, 50)
             }}
+            onMouseLeave={() => (props.closeOnLeave ? setIsOpen(false) : null)}
             onClick={(e: React.MouseEvent) => {
                 e.preventDefault()
                 e.stopPropagation()
