@@ -16,9 +16,13 @@ type Option = {
     displayName: string
 }
 
-const Options:Record<string, Option> = {
+export const Options:Record<string, Option> = {
     none: {value: 'none', label: 'None', displayName: 'Calculate'},
     count: {value: 'count', label: 'Count', displayName: 'Count'},
+    countEmpty: {value: 'countEmpty', label: 'Count Empty', displayName: 'Empty'},
+    countNotEmpty: {value: 'countNotEmpty', label: 'Count Not Empty', displayName: 'Not Empty'},
+    percentEmpty: {value: 'percentEmpty', label: 'Percent Empty', displayName: 'Empty'},
+    percentNotEmpty: {value: 'percentNotEmpty', label: 'Percent Not Empty', displayName: 'Not Empty'},
     countValue: {value: 'countValue', label: 'Count Value', displayName: 'Values'},
     countChecked: {value: 'countChecked', label: 'Count Checked', displayName: 'Checked'},
     percentChecked: {value: 'percentChecked', label: 'Percent Checked', displayName: 'Checked'},
@@ -36,14 +40,31 @@ const Options:Record<string, Option> = {
     dateRange: {value: 'dateRange', label: 'Range', displayName: 'Range'},
 }
 
-const optionsByType: Map<string, Option[]> = new Map([
-    ['common', [Options.none, Options.count, Options.countValue, Options.countUniqueValue]],
+export const optionsByType: Map<string, Option[]> = new Map([
+    ['common', [Options.none, Options.count, Options.countEmpty, Options.countNotEmpty, Options.percentEmpty,
+        Options.percentNotEmpty, Options.countValue, Options.countUniqueValue]],
     ['checkbox', [Options.countChecked, Options.countUnchecked, Options.percentChecked, Options.percentUnchecked]],
     ['number', [Options.sum, Options.average, Options.median, Options.min, Options.max, Options.range]],
     ['date', [Options.earliest, Options.latest, Options.dateRange]],
     ['createdTime', [Options.earliest, Options.latest, Options.dateRange]],
     ['updatedTime', [Options.earliest, Options.latest, Options.dateRange]],
 ])
+
+export const typesByOptions: Map<string, string[]> = generateTypesByOption()
+
+function generateTypesByOption(): Map<string, string[]> {
+    const mapping = new Map<string, string[]>()
+
+    optionsByType.forEach((options, type) => {
+        options.forEach((option) => {
+            const types = mapping.get(option.value) || []
+            types.push(type)
+            mapping.set(option.value, types)
+        })
+    })
+
+    return mapping
+}
 
 const baseStyles = getSelectBaseStyle()
 
@@ -65,7 +86,7 @@ const styles = {
         minWidth: '100%',
         width: 'max-content',
         background: 'rgb(var(--center-channel-bg-rgb))',
-        right: '0',
+        left: '0',
         marginBottom: '0',
     }),
     singleValue: (provided: CSSObject): CSSObject => ({
@@ -90,20 +111,22 @@ const DropdownIndicator = (props: IndicatorProps<Option, false>) => {
     )
 }
 
-type Props = {
+// Calculation option props shared by all implementations of calculation options
+type CommonCalculationOptionProps = {
     value: string,
-    menuOpen?: boolean
+    menuOpen: boolean
     onClose?: () => void
-    onChange: (value: string) => void
-    property: IPropertyTemplate
+    components?: {[key:string]: (props: any) => JSX.Element}
+    onChange: (data: any) => void
+    property?: IPropertyTemplate
 }
 
-const CalculationOptions = (props: Props): JSX.Element => {
-    const options = [...optionsByType.get('common')!]
-    if (optionsByType.get(props.property.type)) {
-        options.push(...optionsByType.get(props.property.type)!)
-    }
+// Props used by the base calculation option component
+type BaseCalculationOptionProps = CommonCalculationOptionProps & {
+    options: Option[]
+}
 
+const CalculationOptions = (props: BaseCalculationOptionProps): JSX.Element => {
     return (
         <Select
             styles={styles}
@@ -112,10 +135,11 @@ const CalculationOptions = (props: Props): JSX.Element => {
             isClearable={true}
             name={'calculation_options'}
             className={'CalculationOptions'}
-            options={options}
+            classNamePrefix={'CalculationOptions'}
+            options={props.options}
             menuPlacement={'auto'}
             isSearchable={false}
-            components={{DropdownIndicator}}
+            components={{DropdownIndicator, ...(props.components || {})}}
             defaultMenuIsOpen={props.menuOpen}
             autoFocus={true}
             formatOptionLabel={(option: Option, meta) => {
@@ -137,6 +161,6 @@ const CalculationOptions = (props: Props): JSX.Element => {
 
 export {
     CalculationOptions,
-    Options,
     Option,
+    CommonCalculationOptionProps,
 }

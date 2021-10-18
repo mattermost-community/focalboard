@@ -9,6 +9,8 @@ import userEvent from '@testing-library/user-event'
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import {wrapIntl} from '../../testUtils'
 
+import {TableCalculationOptions} from '../table/calculation/tableCalculationOptions'
+
 import Calculation from './calculation'
 
 describe('components/calculations/Calculation', () => {
@@ -42,6 +44,7 @@ describe('components/calculations/Calculation', () => {
                     type: 'text',
                     options: [],
                 }}
+                optionsComponent={TableCalculationOptions}
             />,
         )
 
@@ -67,6 +70,7 @@ describe('components/calculations/Calculation', () => {
                     type: 'text',
                     options: [],
                 }}
+                optionsComponent={TableCalculationOptions}
             />,
         )
 
@@ -92,6 +96,7 @@ describe('components/calculations/Calculation', () => {
                     type: 'text',
                     options: [],
                 }}
+                optionsComponent={TableCalculationOptions}
             />,
         )
 
@@ -117,6 +122,7 @@ describe('components/calculations/Calculation', () => {
                     type: 'text',
                     options: [],
                 }}
+                optionsComponent={TableCalculationOptions}
             />,
         )
 
@@ -146,6 +152,7 @@ describe('components/calculations/Calculation', () => {
                     type: 'text',
                     options: [],
                 }}
+                optionsComponent={TableCalculationOptions}
             />,
         )
 

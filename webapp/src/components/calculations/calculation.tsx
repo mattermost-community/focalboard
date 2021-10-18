@@ -9,7 +9,7 @@ import {IPropertyTemplate} from '../../blocks/board'
 
 import ChevronUp from '../../widgets/icons/chevronUp'
 
-import {CalculationOptions, Options} from './options'
+import {CommonCalculationOptionProps, Options} from './options'
 
 import Calculations from './calculations'
 import './calculation.scss'
@@ -25,12 +25,23 @@ type Props = {
     cards: readonly Card[]
     property: IPropertyTemplate
     hovered: boolean
+    optionsComponent: React.ComponentType<CommonCalculationOptionProps>
 }
 
 const Calculation = (props: Props): JSX.Element => {
     const value = props.value || Options.none.value
     const valueOption = Options[value]
     const intl = useIntl()
+
+    const option = (
+        <props.optionsComponent
+            value={value}
+            menuOpen={props.menuOpen}
+            onClose={props.onMenuClose}
+            onChange={props.onChange}
+            property={props.property}
+        />
+    )
 
     return (
 
@@ -46,14 +57,8 @@ const Calculation = (props: Props): JSX.Element => {
         >
             {
                 props.menuOpen && (
-                    <div >
-                        <CalculationOptions
-                            value={value}
-                            menuOpen={props.menuOpen}
-                            onClose={props.onMenuClose}
-                            onChange={props.onChange}
-                            property={props.property}
-                        />
+                    <div>
+                        {option}
                     </div>
                 )
             }

@@ -392,7 +392,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 
-	err = a.app.InsertBlocks(*container, blocks, session.UserID)
+	err = a.app.InsertBlocks(*container, blocks, session.UserID, true)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -898,7 +898,7 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
-	err = a.app.InsertBlocks(*container, blocks, session.UserID)
+	err = a.app.InsertBlocks(*container, blocks, session.UserID, false)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

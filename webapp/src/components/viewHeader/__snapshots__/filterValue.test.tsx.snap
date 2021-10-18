@@ -8,7 +8,7 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
     role="button"
   >
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
@@ -82,7 +82,7 @@ exports[`components/viewHeader/filterValue return filterValue and click Status 1
     role="button"
   >
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
@@ -101,7 +101,7 @@ exports[`components/viewHeader/filterValue return filterValue and click Status w
     role="button"
   >
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
