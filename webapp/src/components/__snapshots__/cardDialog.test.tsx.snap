@@ -1,0 +1,1312 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/cardDialog return a cardDialog readonly 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back undefined"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <div
+            aria-label="Close dialog"
+            class="Button IconButton IconButton--large"
+            role="button"
+            title="Close dialog"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <div
+              class="Button IconButton IconButton--large"
+              role="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="CardDetail content"
+        >
+          <div
+            class="BlockIconSelector"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
+            >
+              <div
+                class="octo-icon size-l"
+              >
+                <span>
+                  i
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="EditableAreaWrap"
+          >
+            <textarea
+              class="EditableArea Editable title"
+              height="0"
+              placeholder="Untitled"
+              rows="1"
+              spellcheck="true"
+              title="title"
+            >
+              title
+            </textarea>
+            <div
+              class="EditableAreaContainer"
+            >
+              <textarea
+                aria-hidden="true"
+                class="EditableAreaReference Editable title"
+                dir="auto"
+                disabled=""
+                rows="1"
+              >
+                title
+              </textarea>
+            </div>
+          </div>
+          <div
+            class="octo-propertylist CardDetailProperties"
+          >
+            <div
+              class="octo-propertyname add-property"
+            >
+              <button
+                type="button"
+              >
+                <span>
+                  + Add a property
+                </span>
+              </button>
+            </div>
+          </div>
+          <hr />
+          <div
+            class="CommentsList"
+          >
+            <div
+              class="commentrow"
+            >
+              <img
+                class="comment-avatar"
+                src="data:image/svg+xml,<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 100 100\\" style=\\"fill: rgb(192, 192, 192);\\"><rect width=\\"100\\" height=\\"100\\" /></svg>"
+              />
+              <div
+                class="MarkdownEditor octo-editor newcomment "
+              >
+                <div
+                  class="octo-editor-preview octo-placeholder"
+                />
+                <div
+                  class="octo-editor-active Editor"
+                  style="visibility: hidden; position: absolute; top: 0px; left: 0px;"
+                >
+                  <div
+                    id="test-id-wrapper"
+                  >
+                    <textarea
+                      id="test-id"
+                      style="display: none;"
+                    />
+                    <div
+                      class="EasyMDEContainer"
+                    >
+                      <div
+                        class="CodeMirror cm-s-easymde CodeMirror-wrap"
+                      >
+                        <div
+                          style="overflow: hidden; position: relative; width: 3px; height: 0px;"
+                        >
+                          <textarea
+                            autocapitalize="off"
+                            autocorrect="off"
+                            spellcheck="false"
+                            style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"
+                            tabindex="0"
+                          />
+                        </div>
+                        <div
+                          class="CodeMirror-vscrollbar"
+                          cm-not-content="true"
+                          tabindex="-1"
+                        >
+                          <div
+                            style="min-width: 1px;"
+                          />
+                        </div>
+                        <div
+                          class="CodeMirror-hscrollbar"
+                          cm-not-content="true"
+                          tabindex="-1"
+                        >
+                          <div
+                            style="height: 100%; min-height: 1px;"
+                          />
+                        </div>
+                        <div
+                          class="CodeMirror-scrollbar-filler"
+                          cm-not-content="true"
+                        />
+                        <div
+                          class="CodeMirror-gutter-filler"
+                          cm-not-content="true"
+                        />
+                        <div
+                          class="CodeMirror-scroll"
+                          style="min-height: 10px;"
+                          tabindex="-1"
+                        >
+                          <div
+                            class="CodeMirror-sizer"
+                            style="margin-left: 0px;"
+                          >
+                            <div
+                              style="position: relative;"
+                            >
+                              <div
+                                class="CodeMirror-lines"
+                                role="presentation"
+                              >
+                                <div
+                                  role="presentation"
+                                  style="position: relative; outline: none;"
+                                >
+                                  <div
+                                    class="CodeMirror-measure"
+                                  >
+                                    <pre
+                                      class="CodeMirror-line-like"
+                                    >
+                                      <span>
+                                        xxxxxxxxxx
+                                      </span>
+                                    </pre>
+                                  </div>
+                                  <div
+                                    class="CodeMirror-measure"
+                                  />
+                                  <div
+                                    style="position: relative; z-index: 1;"
+                                  />
+                                  <div
+                                    class="CodeMirror-cursors"
+                                  />
+                                  <div
+                                    class="CodeMirror-code"
+                                    role="presentation"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            style="position: absolute; height: 50px; width: 1px;"
+                          />
+                          <div
+                            class="CodeMirror-gutters"
+                            style="display: none;"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="editor-preview-side editor-preview"
+                      />
+                    </div>
+                    <div
+                      class="EasyMDEContainer"
+                    >
+                      <div
+                        class="CodeMirror cm-s-easymde CodeMirror-wrap"
+                      >
+                        <div
+                          style="overflow: hidden; position: relative; width: 3px; height: 0px;"
+                        >
+                          <textarea
+                            autocapitalize="off"
+                            autocorrect="off"
+                            spellcheck="false"
+                            style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"
+                            tabindex="0"
+                          />
+                        </div>
+                        <div
+                          class="CodeMirror-vscrollbar"
+                          cm-not-content="true"
+                          tabindex="-1"
+                        >
+                          <div
+                            style="min-width: 1px;"
+                          />
+                        </div>
+                        <div
+                          class="CodeMirror-hscrollbar"
+                          cm-not-content="true"
+                          tabindex="-1"
+                        >
+                          <div
+                            style="height: 100%; min-height: 1px;"
+                          />
+                        </div>
+                        <div
+                          class="CodeMirror-scrollbar-filler"
+                          cm-not-content="true"
+                        />
+                        <div
+                          class="CodeMirror-gutter-filler"
+                          cm-not-content="true"
+                        />
+                        <div
+                          class="CodeMirror-scroll"
+                          style="min-height: 10px;"
+                          tabindex="-1"
+                        >
+                          <div
+                            class="CodeMirror-sizer"
+                            style="margin-left: 0px;"
+                          >
+                            <div
+                              style="position: relative;"
+                            >
+                              <div
+                                class="CodeMirror-lines"
+                                role="presentation"
+                              >
+                                <div
+                                  role="presentation"
+                                  style="position: relative; outline: none;"
+                                >
+                                  <div
+                                    class="CodeMirror-measure"
+                                  >
+                                    <pre
+                                      class="CodeMirror-line-like"
+                                    >
+                                      <span>
+                                        xxxxxxxxxx
+                                      </span>
+                                    </pre>
+                                  </div>
+                                  <div
+                                    class="CodeMirror-measure"
+                                  />
+                                  <div
+                                    style="position: relative; z-index: 1;"
+                                  />
+                                  <div
+                                    class="CodeMirror-cursors"
+                                  />
+                                  <div
+                                    class="CodeMirror-code"
+                                    role="presentation"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            style="position: absolute; height: 50px; width: 1px;"
+                          />
+                          <div
+                            class="CodeMirror-gutters"
+                            style="display: none;"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="editor-preview-side editor-preview"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+            <hr />
+          </div>
+        </div>
+        <div
+          class="CardDetail content fullwidth content-blocks"
+        >
+          <div
+            class="octo-content CardDetailContents"
+          >
+            <div
+              class="octo-block"
+            >
+              <div
+                class="octo-block-margin"
+              />
+              <div
+                class="MarkdownEditor octo-editor  "
+              >
+                <div
+                  class="octo-editor-preview octo-placeholder"
+                />
+                <div
+                  class="octo-editor-active Editor"
+                  style="visibility: hidden; position: absolute; top: 0px; left: 0px;"
+                >
+                  <div
+                    id="test-id-wrapper"
+                  >
+                    <textarea
+                      id="test-id"
+                      style="display: none;"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="CardDetailContentsMenu content add-content"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
+            >
+              <button
+                type="button"
+              >
+                <span>
+                  Add content
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/cardDialog return cardDialog menu content 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back undefined"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <div
+            aria-label="Close dialog"
+            class="Button IconButton IconButton--large"
+            role="button"
+            title="Close dialog"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <div
+              class="Button IconButton IconButton--large"
+              role="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </div>
+            <div
+              class="Menu noselect left"
+            >
+              <div
+                class="menu-contents"
+              >
+                <div
+                  class="menu-options"
+                >
+                  <div
+                    aria-label="Delete"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
+                  >
+                    <svg
+                      class="DeleteIcon Icon"
+                      viewBox="0 0 448 512"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M268 416h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12zM432 80h-82.41l-34-56.7A48 48 0 0 0 274.41 0H173.59a48 48 0 0 0-41.16 23.3L98.41 80H16A16 16 0 0 0 0 96v16a16 16 0 0 0 16 16h16v336a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128h16a16 16 0 0 0 16-16V96a16 16 0 0 0-16-16zM171.84 50.91A6 6 0 0 1 177 48h94a6 6 0 0 1 5.15 2.91L293.61 80H154.39zM368 464H80V128h288zm-212-48h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12z"
+                      />
+                    </svg>
+                    <div
+                      class="menu-name"
+                    >
+                      Delete
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    aria-label="Copy link"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
+                  >
+                    <i
+                      class="CompassIcon icon-link-variant LinkIcon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      Copy link
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    aria-label="New template from card"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      New template from card
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="menu-spacer hideOnWidescreen"
+                />
+                <div
+                  class="menu-options hideOnWidescreen"
+                >
+                  <div
+                    aria-label="Cancel"
+                    class="MenuOption TextOption menu-option menu-cancel"
+                    role="button"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      Cancel
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="CardDetail content"
+        >
+          <div
+            class="BlockIconSelector"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
+            >
+              <div
+                class="octo-icon size-l"
+              >
+                <span>
+                  i
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="EditableAreaWrap"
+          >
+            <textarea
+              class="EditableArea Editable title"
+              height="0"
+              placeholder="Untitled"
+              rows="1"
+              spellcheck="true"
+              title="title"
+            >
+              title
+            </textarea>
+            <div
+              class="EditableAreaContainer"
+            >
+              <textarea
+                aria-hidden="true"
+                class="EditableAreaReference Editable title"
+                dir="auto"
+                disabled=""
+                rows="1"
+              >
+                title
+              </textarea>
+            </div>
+          </div>
+          <div
+            class="octo-propertylist CardDetailProperties"
+          >
+            <div
+              class="octo-propertyname add-property"
+            >
+              <button
+                type="button"
+              >
+                <span>
+                  + Add a property
+                </span>
+              </button>
+            </div>
+          </div>
+          <hr />
+          <div
+            class="CommentsList"
+          >
+            <div
+              class="commentrow"
+            >
+              <img
+                class="comment-avatar"
+                src="data:image/svg+xml,<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 100 100\\" style=\\"fill: rgb(192, 192, 192);\\"><rect width=\\"100\\" height=\\"100\\" /></svg>"
+              />
+              <div
+                class="MarkdownEditor octo-editor newcomment "
+              >
+                <div
+                  class="octo-editor-preview octo-placeholder"
+                />
+                <div
+                  class="octo-editor-active Editor"
+                  style="visibility: hidden; position: absolute; top: 0px; left: 0px;"
+                >
+                  <div
+                    id="test-id-wrapper"
+                  >
+                    <textarea
+                      id="test-id"
+                      style="display: none;"
+                    />
+                    <div
+                      class="EasyMDEContainer"
+                    >
+                      <div
+                        class="CodeMirror cm-s-easymde CodeMirror-wrap"
+                      >
+                        <div
+                          style="overflow: hidden; position: relative; width: 3px; height: 0px;"
+                        >
+                          <textarea
+                            autocapitalize="off"
+                            autocorrect="off"
+                            spellcheck="false"
+                            style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"
+                            tabindex="0"
+                          />
+                        </div>
+                        <div
+                          class="CodeMirror-vscrollbar"
+                          cm-not-content="true"
+                          tabindex="-1"
+                        >
+                          <div
+                            style="min-width: 1px;"
+                          />
+                        </div>
+                        <div
+                          class="CodeMirror-hscrollbar"
+                          cm-not-content="true"
+                          tabindex="-1"
+                        >
+                          <div
+                            style="height: 100%; min-height: 1px;"
+                          />
+                        </div>
+                        <div
+                          class="CodeMirror-scrollbar-filler"
+                          cm-not-content="true"
+                        />
+                        <div
+                          class="CodeMirror-gutter-filler"
+                          cm-not-content="true"
+                        />
+                        <div
+                          class="CodeMirror-scroll"
+                          style="min-height: 10px;"
+                          tabindex="-1"
+                        >
+                          <div
+                            class="CodeMirror-sizer"
+                            style="margin-left: 0px;"
+                          >
+                            <div
+                              style="position: relative;"
+                            >
+                              <div
+                                class="CodeMirror-lines"
+                                role="presentation"
+                              >
+                                <div
+                                  role="presentation"
+                                  style="position: relative; outline: none;"
+                                >
+                                  <div
+                                    class="CodeMirror-measure"
+                                  >
+                                    <pre
+                                      class="CodeMirror-line-like"
+                                    >
+                                      <span>
+                                        xxxxxxxxxx
+                                      </span>
+                                    </pre>
+                                  </div>
+                                  <div
+                                    class="CodeMirror-measure"
+                                  />
+                                  <div
+                                    style="position: relative; z-index: 1;"
+                                  />
+                                  <div
+                                    class="CodeMirror-cursors"
+                                  />
+                                  <div
+                                    class="CodeMirror-code"
+                                    role="presentation"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            style="position: absolute; height: 50px; width: 1px;"
+                          />
+                          <div
+                            class="CodeMirror-gutters"
+                            style="display: none;"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="editor-preview-side editor-preview"
+                      />
+                    </div>
+                    <div
+                      class="EasyMDEContainer"
+                    >
+                      <div
+                        class="CodeMirror cm-s-easymde CodeMirror-wrap"
+                      >
+                        <div
+                          style="overflow: hidden; position: relative; width: 3px; height: 0px;"
+                        >
+                          <textarea
+                            autocapitalize="off"
+                            autocorrect="off"
+                            spellcheck="false"
+                            style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"
+                            tabindex="0"
+                          />
+                        </div>
+                        <div
+                          class="CodeMirror-vscrollbar"
+                          cm-not-content="true"
+                          tabindex="-1"
+                        >
+                          <div
+                            style="min-width: 1px;"
+                          />
+                        </div>
+                        <div
+                          class="CodeMirror-hscrollbar"
+                          cm-not-content="true"
+                          tabindex="-1"
+                        >
+                          <div
+                            style="height: 100%; min-height: 1px;"
+                          />
+                        </div>
+                        <div
+                          class="CodeMirror-scrollbar-filler"
+                          cm-not-content="true"
+                        />
+                        <div
+                          class="CodeMirror-gutter-filler"
+                          cm-not-content="true"
+                        />
+                        <div
+                          class="CodeMirror-scroll"
+                          style="min-height: 10px;"
+                          tabindex="-1"
+                        >
+                          <div
+                            class="CodeMirror-sizer"
+                            style="margin-left: 0px;"
+                          >
+                            <div
+                              style="position: relative;"
+                            >
+                              <div
+                                class="CodeMirror-lines"
+                                role="presentation"
+                              >
+                                <div
+                                  role="presentation"
+                                  style="position: relative; outline: none;"
+                                >
+                                  <div
+                                    class="CodeMirror-measure"
+                                  >
+                                    <pre
+                                      class="CodeMirror-line-like"
+                                    >
+                                      <span>
+                                        xxxxxxxxxx
+                                      </span>
+                                    </pre>
+                                  </div>
+                                  <div
+                                    class="CodeMirror-measure"
+                                  />
+                                  <div
+                                    style="position: relative; z-index: 1;"
+                                  />
+                                  <div
+                                    class="CodeMirror-cursors"
+                                  />
+                                  <div
+                                    class="CodeMirror-code"
+                                    role="presentation"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            style="position: absolute; height: 50px; width: 1px;"
+                          />
+                          <div
+                            class="CodeMirror-gutters"
+                            style="display: none;"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="editor-preview-side editor-preview"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+            <hr />
+          </div>
+        </div>
+        <div
+          class="CardDetail content fullwidth content-blocks"
+        >
+          <div
+            class="octo-content CardDetailContents"
+          >
+            <div
+              class="octo-block"
+            >
+              <div
+                class="octo-block-margin"
+              />
+              <div
+                class="MarkdownEditor octo-editor  "
+              >
+                <div
+                  class="octo-editor-preview octo-placeholder"
+                />
+                <div
+                  class="octo-editor-active Editor"
+                  style="visibility: hidden; position: absolute; top: 0px; left: 0px;"
+                >
+                  <div
+                    id="test-id-wrapper"
+                  >
+                    <textarea
+                      id="test-id"
+                      style="display: none;"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="CardDetailContentsMenu content add-content"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
+            >
+              <button
+                type="button"
+              >
+                <span>
+                  Add content
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/cardDialog should match snapshot 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back undefined"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <div
+            aria-label="Close dialog"
+            class="Button IconButton IconButton--large"
+            role="button"
+            title="Close dialog"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <div
+              class="Button IconButton IconButton--large"
+              role="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="CardDetail content"
+        >
+          <div
+            class="BlockIconSelector"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
+            >
+              <div
+                class="octo-icon size-l"
+              >
+                <span>
+                  i
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="EditableAreaWrap"
+          >
+            <textarea
+              class="EditableArea Editable title"
+              height="0"
+              placeholder="Untitled"
+              rows="1"
+              spellcheck="true"
+              title="title"
+            >
+              title
+            </textarea>
+            <div
+              class="EditableAreaContainer"
+            >
+              <textarea
+                aria-hidden="true"
+                class="EditableAreaReference Editable title"
+                dir="auto"
+                disabled=""
+                rows="1"
+              >
+                title
+              </textarea>
+            </div>
+          </div>
+          <div
+            class="octo-propertylist CardDetailProperties"
+          >
+            <div
+              class="octo-propertyname add-property"
+            >
+              <button
+                type="button"
+              >
+                <span>
+                  + Add a property
+                </span>
+              </button>
+            </div>
+          </div>
+          <hr />
+          <div
+            class="CommentsList"
+          >
+            <div
+              class="commentrow"
+            >
+              <img
+                class="comment-avatar"
+                src="data:image/svg+xml,<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 100 100\\" style=\\"fill: rgb(192, 192, 192);\\"><rect width=\\"100\\" height=\\"100\\" /></svg>"
+              />
+              <div
+                class="MarkdownEditor octo-editor newcomment "
+              >
+                <div
+                  class="octo-editor-preview octo-placeholder"
+                />
+                <div
+                  class="octo-editor-active Editor"
+                  style="visibility: hidden; position: absolute; top: 0px; left: 0px;"
+                >
+                  <div
+                    id="test-id-wrapper"
+                  >
+                    <textarea
+                      id="test-id"
+                      style="display: none;"
+                    />
+                    <div
+                      class="EasyMDEContainer"
+                    >
+                      <div
+                        class="CodeMirror cm-s-easymde CodeMirror-wrap"
+                      >
+                        <div
+                          style="overflow: hidden; position: relative; width: 3px; height: 0px;"
+                        >
+                          <textarea
+                            autocapitalize="off"
+                            autocorrect="off"
+                            spellcheck="false"
+                            style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"
+                            tabindex="0"
+                          />
+                        </div>
+                        <div
+                          class="CodeMirror-vscrollbar"
+                          cm-not-content="true"
+                          tabindex="-1"
+                        >
+                          <div
+                            style="min-width: 1px;"
+                          />
+                        </div>
+                        <div
+                          class="CodeMirror-hscrollbar"
+                          cm-not-content="true"
+                          tabindex="-1"
+                        >
+                          <div
+                            style="height: 100%; min-height: 1px;"
+                          />
+                        </div>
+                        <div
+                          class="CodeMirror-scrollbar-filler"
+                          cm-not-content="true"
+                        />
+                        <div
+                          class="CodeMirror-gutter-filler"
+                          cm-not-content="true"
+                        />
+                        <div
+                          class="CodeMirror-scroll"
+                          style="min-height: 10px;"
+                          tabindex="-1"
+                        >
+                          <div
+                            class="CodeMirror-sizer"
+                            style="margin-left: 0px;"
+                          >
+                            <div
+                              style="position: relative;"
+                            >
+                              <div
+                                class="CodeMirror-lines"
+                                role="presentation"
+                              >
+                                <div
+                                  role="presentation"
+                                  style="position: relative; outline: none;"
+                                >
+                                  <div
+                                    class="CodeMirror-measure"
+                                  >
+                                    <pre
+                                      class="CodeMirror-line-like"
+                                    >
+                                      <span>
+                                        xxxxxxxxxx
+                                      </span>
+                                    </pre>
+                                  </div>
+                                  <div
+                                    class="CodeMirror-measure"
+                                  />
+                                  <div
+                                    style="position: relative; z-index: 1;"
+                                  />
+                                  <div
+                                    class="CodeMirror-cursors"
+                                  />
+                                  <div
+                                    class="CodeMirror-code"
+                                    role="presentation"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            style="position: absolute; height: 50px; width: 1px;"
+                          />
+                          <div
+                            class="CodeMirror-gutters"
+                            style="display: none;"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="editor-preview-side editor-preview"
+                      />
+                    </div>
+                    <div
+                      class="EasyMDEContainer"
+                    >
+                      <div
+                        class="CodeMirror cm-s-easymde CodeMirror-wrap"
+                      >
+                        <div
+                          style="overflow: hidden; position: relative; width: 3px; height: 0px;"
+                        >
+                          <textarea
+                            autocapitalize="off"
+                            autocorrect="off"
+                            spellcheck="false"
+                            style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"
+                            tabindex="0"
+                          />
+                        </div>
+                        <div
+                          class="CodeMirror-vscrollbar"
+                          cm-not-content="true"
+                          tabindex="-1"
+                        >
+                          <div
+                            style="min-width: 1px;"
+                          />
+                        </div>
+                        <div
+                          class="CodeMirror-hscrollbar"
+                          cm-not-content="true"
+                          tabindex="-1"
+                        >
+                          <div
+                            style="height: 100%; min-height: 1px;"
+                          />
+                        </div>
+                        <div
+                          class="CodeMirror-scrollbar-filler"
+                          cm-not-content="true"
+                        />
+                        <div
+                          class="CodeMirror-gutter-filler"
+                          cm-not-content="true"
+                        />
+                        <div
+                          class="CodeMirror-scroll"
+                          style="min-height: 10px;"
+                          tabindex="-1"
+                        >
+                          <div
+                            class="CodeMirror-sizer"
+                            style="margin-left: 0px;"
+                          >
+                            <div
+                              style="position: relative;"
+                            >
+                              <div
+                                class="CodeMirror-lines"
+                                role="presentation"
+                              >
+                                <div
+                                  role="presentation"
+                                  style="position: relative; outline: none;"
+                                >
+                                  <div
+                                    class="CodeMirror-measure"
+                                  >
+                                    <pre
+                                      class="CodeMirror-line-like"
+                                    >
+                                      <span>
+                                        xxxxxxxxxx
+                                      </span>
+                                    </pre>
+                                  </div>
+                                  <div
+                                    class="CodeMirror-measure"
+                                  />
+                                  <div
+                                    style="position: relative; z-index: 1;"
+                                  />
+                                  <div
+                                    class="CodeMirror-cursors"
+                                  />
+                                  <div
+                                    class="CodeMirror-code"
+                                    role="presentation"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            style="position: absolute; height: 50px; width: 1px;"
+                          />
+                          <div
+                            class="CodeMirror-gutters"
+                            style="display: none;"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="editor-preview-side editor-preview"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+            <hr />
+          </div>
+        </div>
+        <div
+          class="CardDetail content fullwidth content-blocks"
+        >
+          <div
+            class="octo-content CardDetailContents"
+          >
+            <div
+              class="octo-block"
+            >
+              <div
+                class="octo-block-margin"
+              />
+              <div
+                class="MarkdownEditor octo-editor  "
+              >
+                <div
+                  class="octo-editor-preview octo-placeholder"
+                />
+                <div
+                  class="octo-editor-active Editor"
+                  style="visibility: hidden; position: absolute; top: 0px; left: 0px;"
+                >
+                  <div
+                    id="test-id-wrapper"
+                  >
+                    <textarea
+                      id="test-id"
+                      style="display: none;"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="CardDetailContentsMenu content add-content"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
+            >
+              <button
+                type="button"
+              >
+                <span>
+                  Add content
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
