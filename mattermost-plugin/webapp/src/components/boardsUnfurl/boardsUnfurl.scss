@@ -32,6 +32,10 @@
                 color: #3D3C40;
                 font-weight: 600;
                 font-size: 14px;
+                max-width: 100%;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
             }
 
             .board_title {

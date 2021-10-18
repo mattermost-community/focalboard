@@ -276,7 +276,9 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 			return
 		}
-		blocks = append(blocks, *block)
+		if block != nil {
+			blocks = append(blocks, *block)
+		}
 	default:
 		blocks, err = a.app.GetBlocks(*container, parentID, blockType)
 		if err != nil {
