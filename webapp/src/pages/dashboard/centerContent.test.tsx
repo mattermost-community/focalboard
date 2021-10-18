@@ -47,6 +47,18 @@ describe('pages/dashboard/CenterContent', () => {
         boardCount: 0,
     }
 
+    const workspace4: UserWorkspace = {
+        id: 'workspace_4',
+        title: 'WS 4',
+        boardCount: 3,
+    }
+
+    const workspace5: UserWorkspace = {
+        id: 'workspace_5',
+        title: 'Foo Bar Baz',
+        boardCount: 1,
+    }
+
     test('base case', () => {
         const store = mockStore({
             workspace: {
@@ -65,7 +77,7 @@ describe('pages/dashboard/CenterContent', () => {
         expect(container).toMatchSnapshot()
     })
 
-    test('search filter', () => {
+    test('search filter - search for all workspaces that contain the word workspace', () => {
         const store = mockStore({
             workspace: {
                 userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3),
@@ -103,7 +115,49 @@ describe('pages/dashboard/CenterContent', () => {
         const {container} = render(component)
         const searchInput = container.querySelector('.DashboardPage__search > input')
         expect(searchInput).toBeDefined()
-        userEvent.type(searchInput!, 'Non-existing workspace')
+        userEvent.type(searchInput!, 'Non-existing one')
+        expect(container).toMatchSnapshot()
+    })
+
+    test('search filter - search for workspace with unique name', () => {
+        const store = mockStore({
+            workspace: {
+                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3, workspace4),
+            },
+        })
+
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace1, workspace2, workspace3))))
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <DashboardCenterContent/>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        const searchInput = container.querySelector('.DashboardPage__search > input')
+        expect(searchInput).toBeDefined()
+        userEvent.type(searchInput!, 'WS 4')
+        expect(container).toMatchSnapshot()
+    })
+
+    test('search filter - search for foo baz', () => {
+        const store = mockStore({
+            workspace: {
+                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3, workspace4, workspace5),
+            },
+        })
+
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace1, workspace2, workspace3))))
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <DashboardCenterContent/>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        const searchInput = container.querySelector('.DashboardPage__search > input')
+        expect(searchInput).toBeDefined()
+        userEvent.type(searchInput!, 'foo baz')
         expect(container).toMatchSnapshot()
     })
 
