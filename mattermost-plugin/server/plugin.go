@@ -233,29 +233,33 @@ func defaultLoggingConfig() string {
 	}`
 }
 
-func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mmModel.Post, string) { //nolint
-	return postWithBoardsEmbed(post, p.API.GetConfig().FeatureFlags.BoardsUnfurl)
+func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mmModel.Post, string) {
+	return postWithBoardsEmbed(post, p.API.GetConfig().FeatureFlags.BoardsUnfurl), ""
 }
 
-func (p *Plugin) MessageWillBeUpdated(c *plugin.Context, newPost, oldPost *mmModel.Post) (*mmModel.Post, string) { //nolint
-	return postWithBoardsEmbed(newPost, p.API.GetConfig().FeatureFlags.BoardsUnfurl)
+func (p *Plugin) MessageWillBeUpdated(_ *plugin.Context, newPost, _ *mmModel.Post) (*mmModel.Post, string) {
+	return postWithBoardsEmbed(newPost, p.API.GetConfig().FeatureFlags.BoardsUnfurl), ""
 }
 
-func postWithBoardsEmbed(post *mmModel.Post, showBoardsUnfurl bool) (*mmModel.Post, string) {
+func postWithBoardsEmbed(post *mmModel.Post, showBoardsUnfurl bool) *mmModel.Post {
+	if _, ok := post.GetProps()["boards"]; ok {
+		post.AddProp("boards", nil)
+	}
+
 	if !showBoardsUnfurl {
-		return post, ""
+		return post
 	}
 
 	firstLink := getFirstLink(post.Message)
 
 	if firstLink == "" {
-		return post, ""
+		return post
 	}
 
 	u, err := url.Parse(firstLink)
 
 	if err != nil {
-		return post, ""
+		return post
 	}
 
 	// Trim away the first / because otherwise after we split the string, the first element in the array is a empty element
@@ -267,7 +271,7 @@ func postWithBoardsEmbed(post *mmModel.Post, showBoardsUnfurl bool) (*mmModel.Po
 	queryParams := u.Query()
 
 	if len(pathSplit) == 0 {
-		return post, ""
+		return post
 	}
 
 	// If the first parameter in the path is boards,
@@ -305,7 +309,8 @@ func postWithBoardsEmbed(post *mmModel.Post, showBoardsUnfurl bool) (*mmModel.Po
 		post.Metadata.Embeds = []*mmModel.PostEmbed{BoardsPostEmbed}
 		post.AddProp("boards", string(b))
 	}
-	return post, ""
+
+	return post
 }
 
 func getFirstLink(str string) string {
