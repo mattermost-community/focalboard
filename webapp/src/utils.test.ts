@@ -4,6 +4,9 @@
 import {createIntl} from 'react-intl'
 
 import {Utils, IDType} from './utils'
+import {IAppWindow} from './types'
+
+declare let window: IAppWindow
 
 describe('utils', () => {
     describe('assureProtocol', () => {
@@ -44,11 +47,10 @@ describe('utils', () => {
         })
 
         test('should not allow XSS on links href on the desktop app', () => {
-            const windowAsAny = window as any
-            windowAsAny.openInNewBrowser = () => null
+            window.openInNewBrowser = () => null
             const expectedHtml = '<p><a target="_blank" rel="noreferrer" href="%22xss-attack=%22true%22other=%22whatever" title="" onclick="event.stopPropagation(); openInNewBrowser && openInNewBrowser(event.target.href);"></a></p>'
             expect(Utils.htmlFromMarkdown('[]("xss-attack="true"other="whatever)')).toBe(expectedHtml)
-            windowAsAny.openInNewBrowser = null
+            window.openInNewBrowser = null
         })
     })
 
@@ -62,8 +64,7 @@ describe('utils', () => {
         })
 
         test('buildURL, base no slash', () => {
-            const windowAsAny = window as any
-            windowAsAny.baseURL = 'base'
+            window.baseURL = 'base'
 
             expect(Utils.buildURL('test', true)).toBe('http://localhost/base/test')
             expect(Utils.buildURL('/test', true)).toBe('http://localhost/base/test')
@@ -73,8 +74,7 @@ describe('utils', () => {
         })
 
         test('buildUrl, base with slash', () => {
-            const windowAsAny = window as any
-            windowAsAny.baseURL = '/base/'
+            window.baseURL = '/base/'
 
             expect(Utils.buildURL('test', true)).toBe('http://localhost/base/test')
             expect(Utils.buildURL('/test', true)).toBe('http://localhost/base/test')
