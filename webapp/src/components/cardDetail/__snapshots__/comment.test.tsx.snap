@@ -16,9 +16,14 @@ exports[`components/cardDetail/comment return comment 1`] = `
         class="comment-username"
       />
       <div
-        class="comment-date"
+        class="octo-tooltip tooltip-top"
+        data-tooltip="October 01, 2020, 12:00 AM"
       >
-        October 01, 2020, 12:00 AM
+        <div
+          class="comment-date"
+        >
+          a day ago
+        </div>
       </div>
       <div
         aria-label="menuwrapper"
@@ -121,9 +126,14 @@ exports[`components/cardDetail/comment return comment and delete comment 1`] = `
         class="comment-username"
       />
       <div
-        class="comment-date"
+        class="octo-tooltip tooltip-top"
+        data-tooltip="October 01, 2020, 12:00 AM"
       >
-        October 01, 2020, 12:00 AM
+        <div
+          class="comment-date"
+        >
+          a day ago
+        </div>
       </div>
       <div
         aria-label="menuwrapper"
@@ -226,9 +236,14 @@ exports[`components/cardDetail/comment return comment readonly 1`] = `
         class="comment-username"
       />
       <div
-        class="comment-date"
+        class="octo-tooltip tooltip-top"
+        data-tooltip="October 01, 2020, 12:00 AM"
       >
-        October 01, 2020, 12:00 AM
+        <div
+          class="comment-date"
+        >
+          a day ago
+        </div>
       </div>
     </div>
     <div

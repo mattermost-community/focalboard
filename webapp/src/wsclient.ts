@@ -33,7 +33,7 @@ export const ACTION_UPDATE_CLIENT_CONFIG = 'UPDATE_CLIENT_CONFIG'
 // The Mattermost websocket client interface
 export interface MMWebSocketClient {
     conn: WebSocket | null;
-    sendMessage(action: string, data: any, responseCallback?: () => void): void
+    sendMessage(action: string, data: any, responseCallback?: () => void): void /* eslint-disable-line @typescript-eslint/no-explicit-any */
     setReconnectCallback(callback: () => void): void
     setErrorCallback(callback: (event: Event) => void): void
     setCloseCallback(callback: (connectFailCount: number) => void): void
