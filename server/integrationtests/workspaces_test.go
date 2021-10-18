@@ -1,9 +1,10 @@
 package integrationtests
 
 import (
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 
 	"github.com/mattermost/focalboard/server/utils"
 
