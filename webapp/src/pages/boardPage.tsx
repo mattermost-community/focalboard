@@ -64,6 +64,18 @@ const BoardPage = (props: Props): JSX.Element => {
     useEffect(() => {
     }, [])
 
+    console.log(`boardID: ${match.params.boardId}, viewID: ${match.params.viewId}, workspaceID: ${match.params.workspaceId}, workspaceID: ${workspaceId}, viewID: ${match.params.cardId}`)
+
+    useEffect(() => {
+        if (match.params.workspaceId || !workspaceId) {
+            return
+        }
+
+        const newPath = Utils.buildOriginalPath(workspaceId, match.params.boardId, match.params.viewId, match.params.cardId)
+        console.log('newPath: ' + newPath)
+        history.push(`/workspace/${newPath}`)
+    }, [workspaceId, match.params.boardId, match.params.viewId, match.params.cardId])
+
     useEffect(() => {
         // Backward compatibility: This can be removed in the future, this is for
         // transform the old query params into routes
