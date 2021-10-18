@@ -36,7 +36,7 @@ exports[`components/cardDetail/cardDetailContents should match snapshot 1`] = `
               class="EasyMDEContainer"
             >
               <div
-                class="CodeMirror cm-s-easymde CodeMirror-wrap CodeMirror-focused"
+                class="CodeMirror cm-s-easymde CodeMirror-wrap"
               >
                 <div
                   style="overflow: hidden; position: relative; width: 3px; height: 0px;"
