@@ -88,7 +88,7 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
             return null
         }
         fetchData()
-    }, [])
+    }, [originalPath])
 
     if (!card || !board) {
         return <></>

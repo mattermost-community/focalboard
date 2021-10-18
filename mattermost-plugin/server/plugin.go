@@ -234,7 +234,15 @@ func defaultLoggingConfig() string {
 }
 
 func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mmModel.Post, string) { //nolint
-	if !p.API.GetConfig().FeatureFlags.BoardsUnfurl {
+	return postWithBoardsEmbed(post, p.API.GetConfig().FeatureFlags.BoardsUnfurl)
+}
+
+func (p *Plugin) MessageWillBeUpdated(c *plugin.Context, newPost, oldPost *mmModel.Post) (*mmModel.Post, string) { //nolint
+	return postWithBoardsEmbed(newPost, p.API.GetConfig().FeatureFlags.BoardsUnfurl)
+}
+
+func postWithBoardsEmbed(post *mmModel.Post, showBoardsUnfurl bool) (*mmModel.Post, string) {
+	if !showBoardsUnfurl {
 		return post, ""
 	}
 
@@ -289,6 +297,11 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 			Type: mmModel.PostEmbedBoards,
 			Data: string(b),
 		}
+
+		if post.Metadata == nil {
+			post.Metadata = &mmModel.PostMetadata{}
+		}
+
 		post.Metadata.Embeds = []*mmModel.PostEmbed{BoardsPostEmbed}
 		post.AddProp("boards", string(b))
 	}
