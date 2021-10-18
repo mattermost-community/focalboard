@@ -246,11 +246,11 @@ describe('src/components/gallery/GalleryCard', () => {
                     />
                 </ReduxProvider>,
             ))
-            const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
             await act(async () => {
+                const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
                 userEvent.click(buttonElement)
-                expect(container).toMatchSnapshot()
             })
+            expect(container).toMatchSnapshot()
         })
     })
 
@@ -259,12 +259,12 @@ describe('src/components/gallery/GalleryCard', () => {
             const contentImage2 = TestBlockFactory.createImage(card)
             contentImage2.id = 'contentId-image2'
             contentImage2.fields.fileId = 'test2.jpg'
-
             card.fields.contentOrder = [contentImage.id, contentImage2.id]
             const state = {
                 contents: {
                     contents: {
-                        [contentImage.id]: [contentImage, contentImage2],
+                        [contentImage.id]: [contentImage],
+                        [contentImage2.id]: [contentImage2],
                     },
                 },
                 cards: {
@@ -278,7 +278,7 @@ describe('src/components/gallery/GalleryCard', () => {
             }
             store = mockStateStore([], state)
         })
-        test('should match snapshot', async () => {
+        test('should match snapshot with only first image', async () => {
             const {container} = render(wrapDNDIntl(
                 <ReduxProvider store={store}>
                     <GalleryCard
@@ -294,11 +294,11 @@ describe('src/components/gallery/GalleryCard', () => {
                     />
                 </ReduxProvider>,
             ))
-            const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
             await act(async () => {
+                const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
                 userEvent.click(buttonElement)
-                expect(container).toMatchSnapshot()
             })
+            expect(container).toMatchSnapshot()
         })
     })
     describe('with a comment content', () => {
