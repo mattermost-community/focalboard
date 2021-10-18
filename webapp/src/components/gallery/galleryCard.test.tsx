@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {render, screen} from '@testing-library/react'
+import {act, render, screen} from '@testing-library/react'
 
 import {Provider as ReduxProvider} from 'react-redux'
 
@@ -20,14 +20,19 @@ import mutator from '../../mutator'
 
 import {Utils} from '../../utils'
 
+import octoClient from '../../octoClient'
+
 import GalleryCard from './galleryCard'
 
 jest.mock('../../mutator')
 jest.mock('../../utils')
+jest.mock('../../octoClient')
 
-describe('src/components/gallery/Gallery', () => {
+describe('src/components/gallery/GalleryCard', () => {
     const mockedMutator = mocked(mutator, true)
     const mockedUtils = mocked(Utils, true)
+    const mockedOcto = mocked(octoClient, true)
+    mockedOcto.getFileAsDataUrl.mockResolvedValue('test.jpg')
 
     const board = TestBlockFactory.createBoard()
     board.id = 'boardId'
@@ -225,7 +230,7 @@ describe('src/components/gallery/Gallery', () => {
             }
             store = mockStateStore([], state)
         })
-        test('should match snapshot', () => {
+        test('should match snapshot', async () => {
             const {container} = render(wrapDNDIntl(
                 <ReduxProvider store={store}>
                     <GalleryCard
@@ -242,8 +247,10 @@ describe('src/components/gallery/Gallery', () => {
                 </ReduxProvider>,
             ))
             const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
-            userEvent.click(buttonElement)
-            expect(container).toMatchSnapshot()
+            await act(async () => {
+                userEvent.click(buttonElement)
+                expect(container).toMatchSnapshot()
+            })
         })
     })
 
@@ -271,7 +278,7 @@ describe('src/components/gallery/Gallery', () => {
             }
             store = mockStateStore([], state)
         })
-        test('should match snapshot', () => {
+        test('should match snapshot', async () => {
             const {container} = render(wrapDNDIntl(
                 <ReduxProvider store={store}>
                     <GalleryCard
@@ -288,8 +295,10 @@ describe('src/components/gallery/Gallery', () => {
                 </ReduxProvider>,
             ))
             const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
-            userEvent.click(buttonElement)
-            expect(container).toMatchSnapshot()
+            await act(async () => {
+                userEvent.click(buttonElement)
+                expect(container).toMatchSnapshot()
+            })
         })
     })
     describe('with a comment content', () => {
