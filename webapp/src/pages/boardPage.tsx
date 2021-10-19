@@ -54,8 +54,6 @@ const BoardPage = (props: Props): JSX.Element => {
 
     // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {
-        console.log('match.params.workspaceId: ' + match.params.workspaceId)
-        console.log('UserSettings.lastWorkspaceId: ' + UserSettings.lastWorkspaceId)
         workspaceId = match.params.workspaceId || workspaceId
         UserSettings.lastWorkspaceId = workspaceId
         octoClient.workspaceId = workspaceId

@@ -85,8 +85,6 @@ const App = React.memo((): JSX.Element => {
     const me = useAppSelector<IUser|null>(getMe)
     const dispatch = useAppDispatch()
 
-    console.log(window.location.href)
-
     // this is a temporary solution while we're using legacy routes
     // for shared boards as a way to disable websockets, and should be
     // removed when anonymous plugin routes are implemented. This
