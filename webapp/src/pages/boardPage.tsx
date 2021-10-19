@@ -70,7 +70,7 @@ const BoardPage = (props: Props): JSX.Element => {
         // 2. the workspace ID is unavailable.
         // This also ensures once the workspace id is
         // set in the URL, we don't update the history anymore.
-        if (props.readonly || match.params.workspaceId || !workspaceId) {
+        if (props.readonly || match.params.workspaceId || !workspaceId || workspaceId === '0') {
             return
         }
 
