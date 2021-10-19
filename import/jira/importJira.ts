@@ -17,7 +17,6 @@ import TurndownService from 'turndown'
 (global.window as any) = {}
 
 const optionColors = [
-    // 'propColorDefault',
     'propColorGray',
     'propColorBrown',
     'propColorOrange',
