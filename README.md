@@ -23,7 +23,7 @@ It helps define, organize, track and manage work across individuals and teams. F
 
 The same MIT-licensed binary powers both desktop and server editions.
 
-## Try out Focalboard
+# Try out Focalboard
 
 **Focalboard Personal Desktop (Windows, Mac or Linux Desktop)**
 
@@ -39,7 +39,7 @@ You can download and run the compiled **Focalboard Personal Server** by followin
 
 Download the latest server release from [GitHub releases](https://github.com/mattermost/focalboard/releases)
 
-## Building the server
+# Building the server
 
 Please refer to the [Developer's Tips & Tricks](https://www.focalboard.com/contribute/getting-started/dev-tips/) for more detailed steps. Here's a summary:
 
@@ -53,7 +53,7 @@ make prebuild
 make
 ```
 
-## Running and testing the server
+# Running and testing the server
 
 To start the server, run `./bin/focalboard-server`
 
@@ -61,7 +61,7 @@ Server settings are in config.json.
 
 Open a browser to [http://localhost:8000](http://localhost:8000) to start.
 
-## Building and running standalone desktop apps
+# Building and running standalone desktop apps
 
 You can build standalone apps that package the server to run locally against SQLite:
 
@@ -84,7 +84,7 @@ You can build standalone apps that package the server to run locally against SQL
 
 Cross-compilation currently isn't fully supported, so please build on the appropriate platform. Refer to the GitHub Actions workflows (build-mac.yml, build-win.yml, build-ubuntu.yml) for the detailed list of steps on each platform.
 
-## Unit tests
+# Unit tests
 
 Before checking-in commits, run: `make ci`, which is similar to the ci.yml workflow and includes:
 * Server unit tests: `make server-test`
@@ -92,16 +92,16 @@ Before checking-in commits, run: `make ci`, which is similar to the ci.yml workf
 * Webapp unit tests: `cd webapp; npm run test`
 * Webapp UI tests: `cd webapp; npm run cypress:ci`
 
-## Stay informed on progress
+# Stay informed on progress
 
 * **Changelog**: See [CHANGELOG.md](CHANGELOG.md) for the latest updates
 * **Developer Discussion**: Join the [Developer Discussion](https://github.com/mattermost/focalboard/discussions) board
 * **Chat**: Join the [Focalboard community channel](https://community.mattermost.com/core/channels/focalboard)
 
-## Share your feedback
+# Share your feedback
 
 File bugs, suggest features, join our forum, learn more [here](https://github.com/mattermost/focalboard/wiki/Share-your-feedback)!
 
-## Contributing
+# Contributing
 
 Contribute code, bug reports, and ideas to the future of the Focalboard project. We welcome your input! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to get involved.
