@@ -12,8 +12,8 @@ import LabelOption from './labelOption'
 import './menu.scss'
 
 type Props = {
-    children: React.ReactNode
-    position?: 'top'|'bottom'|'left'|'right'
+    children: React.ReactNode;
+    position?: 'top' | 'bottom' | 'left' | 'right';
 }
 
 export default class Menu extends React.PureComponent<Props> {
@@ -24,13 +24,50 @@ export default class Menu extends React.PureComponent<Props> {
     static Text = TextOption
     static Label = LabelOption
 
+    public state = {
+        hoveringIdx: -1,
+    }
+
     public render(): JSX.Element {
         const {position, children} = this.props
         return (
             <div className={'Menu noselect ' + (position || 'bottom')}>
                 <div className='menu-contents'>
                     <div className='menu-options'>
-                        {children}
+                        {React.Children.map(children, (child, i) => {
+                            if (child !== null) {
+                                if (React.isValidElement(child)) {
+                                    const castedChild = child as React.ReactElement
+
+                                    return (
+                                        <div
+                                            onMouseEnter={() =>
+                                                this.setState({
+                                                    hoveringIdx: i,
+                                                })
+                                            }
+                                        >
+                                            {castedChild.type === React.Fragment ? (
+
+                                                // the isHovering prop cannot be set on React.Fragment
+                                                <castedChild.type
+                                                    {...castedChild.props}
+                                                />
+                                            ) : (
+                                                <castedChild.type
+                                                    {...castedChild.props}
+                                                    isHovering={
+                                                        i ===
+                                                        this.state.hoveringIdx
+                                                    }
+                                                />
+                                            )}
+                                        </div>
+                                    )
+                                }
+                            }
+                            return child
+                        })}
                     </div>
 
                     <div className='menu-spacer hideOnWidescreen'/>

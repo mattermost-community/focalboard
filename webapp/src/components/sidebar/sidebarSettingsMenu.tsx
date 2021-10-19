@@ -95,7 +95,6 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
                         id='lang'
                         name={intl.formatMessage({id: 'Sidebar.set-language', defaultMessage: 'Set language'})}
                         position='top'
-                        closeOnLeave={true}
                     >
                         {
                             Constants.languages.map((language) => (
@@ -113,7 +112,6 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
                         id='theme'
                         name={intl.formatMessage({id: 'Sidebar.set-theme', defaultMessage: 'Set theme'})}
                         position='top'
-                        closeOnLeave={true}
                     >
                         {
                             themes.map((theme) =>

@@ -34,7 +34,7 @@
 
         color: rgb(var(--center-channel-color-rgb));
 
-        > .menu-option {
+        * > .menu-option {
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -47,6 +47,10 @@
             cursor: pointer;
 
             &:hover {
+                background: rgba(var(--button-bg-rgb), 0.08);
+            }
+
+            &-active {
                 background: rgba(var(--button-bg-rgb), 0.08);
             }
 
@@ -80,7 +84,7 @@
             }
         }
 
-        > .menu-option.bold-menu-text {
+        * > .menu-option.bold-menu-text {
             font-weight: bold;
         }
     }
