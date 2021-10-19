@@ -29,79 +29,87 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
         <div
           class="menu-options"
         >
-          <div
-            aria-label="Status"
-            class="MenuOption TextOption menu-option"
-            role="button"
-          >
+          <div>
             <div
-              class="noicon"
-            />
-            <div
-              class="menu-name"
+              aria-label="Status"
+              class="MenuOption TextOption menu-option"
+              role="button"
             >
-              Status
-            </div>
-            <div
-              class="noicon"
-            />
-          </div>
-          <div
-            aria-label="Property 1"
-            class="MenuOption TextOption menu-option"
-            role="button"
-          >
-            <div
-              class="noicon"
-            />
-            <div
-              class="menu-name"
-            >
-              Property 1
-            </div>
-            <svg
-              class="CheckIcon Icon"
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polyline
-                points="20,60 40,80 80,40"
+              <div
+                class="noicon"
               />
-            </svg>
-          </div>
-          <div
-            aria-label="Property 2"
-            class="MenuOption TextOption menu-option"
-            role="button"
-          >
-            <div
-              class="noicon"
-            />
-            <div
-              class="menu-name"
-            >
-              Property 2
+              <div
+                class="menu-name"
+              >
+                Status
+              </div>
+              <div
+                class="noicon"
+              />
             </div>
-            <div
-              class="noicon"
-            />
           </div>
-          <div
-            aria-label="Property 3"
-            class="MenuOption TextOption menu-option"
-            role="button"
-          >
+          <div>
             <div
-              class="noicon"
-            />
-            <div
-              class="menu-name"
+              aria-label="Property 1"
+              class="MenuOption TextOption menu-option"
+              role="button"
             >
-              Property 3
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Property 1
+              </div>
+              <svg
+                class="CheckIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="20,60 40,80 80,40"
+                />
+              </svg>
             </div>
+          </div>
+          <div>
             <div
-              class="noicon"
-            />
+              aria-label="Property 2"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Property 2
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+          </div>
+          <div>
+            <div
+              aria-label="Property 3"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Property 3
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
           </div>
         </div>
         <div
@@ -187,99 +195,109 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu and ung
         <div
           class="menu-options"
         >
-          <div
-            aria-label="Ungroup"
-            class="MenuOption TextOption menu-option"
-            role="button"
-          >
+          <div>
             <div
-              class="noicon"
-            />
-            <div
-              class="menu-name"
+              aria-label="Ungroup"
+              class="MenuOption TextOption menu-option"
+              role="button"
             >
-              Ungroup
-            </div>
-            <div
-              class="noicon"
-            />
-          </div>
-          <div
-            class="MenuOption MenuSeparator menu-separator"
-          />
-          <div
-            aria-label="Status"
-            class="MenuOption TextOption menu-option"
-            role="button"
-          >
-            <div
-              class="noicon"
-            />
-            <div
-              class="menu-name"
-            >
-              Status
-            </div>
-            <div
-              class="noicon"
-            />
-          </div>
-          <div
-            aria-label="Property 1"
-            class="MenuOption TextOption menu-option"
-            role="button"
-          >
-            <div
-              class="noicon"
-            />
-            <div
-              class="menu-name"
-            >
-              Property 1
-            </div>
-            <svg
-              class="CheckIcon Icon"
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polyline
-                points="20,60 40,80 80,40"
+              <div
+                class="noicon"
               />
-            </svg>
-          </div>
-          <div
-            aria-label="Property 2"
-            class="MenuOption TextOption menu-option"
-            role="button"
-          >
-            <div
-              class="noicon"
-            />
-            <div
-              class="menu-name"
-            >
-              Property 2
+              <div
+                class="menu-name"
+              >
+                Ungroup
+              </div>
+              <div
+                class="noicon"
+              />
             </div>
             <div
-              class="noicon"
+              class="MenuOption MenuSeparator menu-separator"
             />
           </div>
-          <div
-            aria-label="Property 3"
-            class="MenuOption TextOption menu-option"
-            role="button"
-          >
+          <div>
             <div
-              class="noicon"
-            />
-            <div
-              class="menu-name"
+              aria-label="Status"
+              class="MenuOption TextOption menu-option"
+              role="button"
             >
-              Property 3
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Status
+              </div>
+              <div
+                class="noicon"
+              />
             </div>
+          </div>
+          <div>
             <div
-              class="noicon"
-            />
+              aria-label="Property 1"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Property 1
+              </div>
+              <svg
+                class="CheckIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="20,60 40,80 80,40"
+                />
+              </svg>
+            </div>
+          </div>
+          <div>
+            <div
+              aria-label="Property 2"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Property 2
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+          </div>
+          <div>
+            <div
+              aria-label="Property 3"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Property 3
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
           </div>
         </div>
         <div

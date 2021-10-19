@@ -24,23 +24,25 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
         <div
           class="menu-options"
         >
-          <div
-            class="MenuOption SwitchOption menu-option"
-          >
+          <div>
             <div
-              class="noicon"
-            />
-            <div
-              class="menu-name"
-            >
-              Status
-            </div>
-            <div
-              class="Switch on"
+              class="MenuOption SwitchOption menu-option"
             >
               <div
-                class="octo-switch-inner"
+                class="noicon"
               />
+              <div
+                class="menu-name"
+              >
+                Status
+              </div>
+              <div
+                class="Switch on"
+              >
+                <div
+                  class="octo-switch-inner"
+                />
+              </div>
             </div>
           </div>
         </div>

@@ -31,61 +31,65 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
           <div
             class="menu-options"
           >
-            <div
-              aria-label="Empty card"
-              class="MenuOption TextOption menu-option bold-menu-text"
-              role="button"
-            >
-              <svg
-                class="CardIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect
-                  height="40"
-                  rx="3"
-                  ry="3"
-                  width="60"
-                  x="20"
-                  y="30"
-                />
-              </svg>
+            <div>
               <div
-                class="menu-name"
-              >
-                Empty card
-              </div>
-              <div
-                aria-label="menuwrapper"
-                class="MenuWrapper"
+                aria-label="Empty card"
+                class="MenuOption TextOption menu-option bold-menu-text"
                 role="button"
               >
-                <button
-                  class="Button IconButton"
-                  type="button"
+                <svg
+                  class="CardIcon Icon"
+                  viewBox="0 0 100 100"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  <rect
+                    height="40"
+                    rx="3"
+                    ry="3"
+                    width="60"
+                    x="20"
+                    y="30"
                   />
-                </button>
+                </svg>
+                <div
+                  class="menu-name"
+                >
+                  Empty card
+                </div>
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper"
+                  role="button"
+                >
+                  <button
+                    class="Button IconButton"
+                    role="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
-            <div
-              aria-label="New template"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-plus AddIcon"
-              />
+            <div>
               <div
-                class="menu-name"
+                aria-label="New template"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                New template
+                <i
+                  class="CompassIcon icon-plus AddIcon"
+                />
+                <div
+                  class="menu-name"
+                >
+                  New template
+                </div>
+                <div
+                  class="noicon"
+                />
               </div>
-              <div
-                class="noicon"
-              />
             </div>
           </div>
           <div
@@ -150,35 +154,13 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
           <div
             class="menu-options"
           >
-            <div
-              aria-label="Empty card"
-              class="MenuOption TextOption menu-option bold-menu-text"
-              role="button"
-            >
-              <svg
-                class="CardIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect
-                  height="40"
-                  rx="3"
-                  ry="3"
-                  width="60"
-                  x="20"
-                  y="30"
-                />
-              </svg>
+            <div>
               <div
-                class="menu-name"
-              >
-                Empty card
-              </div>
-              <div
-                aria-label="menuwrapper"
-                class="MenuWrapper"
+                aria-label="Empty card"
+                class="MenuOption TextOption menu-option bold-menu-text"
                 role="button"
               >
+<<<<<<< HEAD
                 <button
                   class="Button IconButton"
                   type="button"
@@ -187,24 +169,61 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
                     class="CompassIcon icon-dots-horizontal OptionsIcon"
                   />
                 </button>
+=======
+                <svg
+                  class="CardIcon Icon"
+                  viewBox="0 0 100 100"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    height="40"
+                    rx="3"
+                    ry="3"
+                    width="60"
+                    x="20"
+                    y="30"
+                  />
+                </svg>
+                <div
+                  class="menu-name"
+                >
+                  Empty card
+                </div>
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper"
+                  role="button"
+                >
+                  <div
+                    class="Button IconButton"
+                    role="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </div>
+                </div>
+>>>>>>> 4fa2517b (update snapshots)
               </div>
             </div>
-            <div
-              aria-label="New template"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-plus AddIcon"
-              />
+            <div>
               <div
-                class="menu-name"
+                aria-label="New template"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                New template
+                <i
+                  class="CompassIcon icon-plus AddIcon"
+                />
+                <div
+                  class="menu-name"
+                >
+                  New template
+                </div>
+                <div
+                  class="noicon"
+                />
               </div>
-              <div
-                class="noicon"
-              />
             </div>
           </div>
           <div
@@ -269,35 +288,13 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
           <div
             class="menu-options"
           >
-            <div
-              aria-label="Empty card"
-              class="MenuOption TextOption menu-option bold-menu-text"
-              role="button"
-            >
-              <svg
-                class="CardIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect
-                  height="40"
-                  rx="3"
-                  ry="3"
-                  width="60"
-                  x="20"
-                  y="30"
-                />
-              </svg>
+            <div>
               <div
-                class="menu-name"
-              >
-                Empty card
-              </div>
-              <div
-                aria-label="menuwrapper"
-                class="MenuWrapper"
+                aria-label="Empty card"
+                class="MenuOption TextOption menu-option bold-menu-text"
                 role="button"
               >
+<<<<<<< HEAD
                 <button
                   class="Button IconButton"
                   type="button"
@@ -306,24 +303,61 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
                     class="CompassIcon icon-dots-horizontal OptionsIcon"
                   />
                 </button>
+=======
+                <svg
+                  class="CardIcon Icon"
+                  viewBox="0 0 100 100"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    height="40"
+                    rx="3"
+                    ry="3"
+                    width="60"
+                    x="20"
+                    y="30"
+                  />
+                </svg>
+                <div
+                  class="menu-name"
+                >
+                  Empty card
+                </div>
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper"
+                  role="button"
+                >
+                  <div
+                    class="Button IconButton"
+                    role="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </div>
+                </div>
+>>>>>>> 4fa2517b (update snapshots)
               </div>
             </div>
-            <div
-              aria-label="New template"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-plus AddIcon"
-              />
+            <div>
               <div
-                class="menu-name"
+                aria-label="New template"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                New template
+                <i
+                  class="CompassIcon icon-plus AddIcon"
+                />
+                <div
+                  class="menu-name"
+                >
+                  New template
+                </div>
+                <div
+                  class="noicon"
+                />
               </div>
-              <div
-                class="noicon"
-              />
             </div>
           </div>
           <div

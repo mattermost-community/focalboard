@@ -92,28 +92,30 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and Set Te
           <div
             class="menu-options"
           >
-            <div
-              aria-label="Set as default"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <svg
-                class="CheckIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
+            <div>
+              <div
+                aria-label="Set as default"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                <polyline
-                  points="20,60 40,80 80,40"
+                <svg
+                  class="CheckIcon Icon"
+                  viewBox="0 0 100 100"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <polyline
+                    points="20,60 40,80 80,40"
+                  />
+                </svg>
+                <div
+                  class="menu-name"
+                >
+                  Set as default
+                </div>
+                <div
+                  class="noicon"
                 />
-              </svg>
-              <div
-                class="menu-name"
-              >
-                Set as default
               </div>
-              <div
-                class="noicon"
-              />
             </div>
           </div>
           <div
