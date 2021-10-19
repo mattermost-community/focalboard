@@ -37,12 +37,6 @@ describe('components/cardDialog', () => {
     card.createdBy = 'user-id-1'
 
     const state = {
-
-        /*     users: {
-        workspaceUsers: {
-            'user-id-1': {username: 'username_1'} as IUser,
-        },
-    }, */
         comments: {
             comments: {},
         },
