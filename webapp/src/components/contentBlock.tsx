@@ -149,6 +149,7 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
                 <ContentElement
                     block={block}
                     readonly={readonly}
+                    cords={cords}
                 />
             </div>
             <div

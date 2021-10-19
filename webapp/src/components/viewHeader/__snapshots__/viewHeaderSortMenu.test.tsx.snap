@@ -8,7 +8,7 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
     role="button"
   >
     <button
-      class="Button active   "
+      class="Button active"
       type="button"
     >
       <span>
@@ -194,7 +194,7 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu and do Name s
     role="button"
   >
     <button
-      class="Button active   "
+      class="Button active"
       type="button"
     >
       <span>
@@ -213,7 +213,7 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu and do manual
     role="button"
   >
     <button
-      class="Button active   "
+      class="Button active"
       type="button"
     >
       <span>
@@ -232,7 +232,7 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu and do revert
     role="button"
   >
     <button
-      class="Button active   "
+      class="Button active"
       type="button"
     >
       <span>

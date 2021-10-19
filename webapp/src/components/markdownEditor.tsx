@@ -33,7 +33,6 @@ const MarkdownEditor = (props: Props): JSX. Element => {
         autoDownloadFontAwesome: true,
         toolbar: false,
         status: false,
-        autofocus: true,
         spellChecker: true,
         nativeSpellcheck: true,
         minHeight: '10px',

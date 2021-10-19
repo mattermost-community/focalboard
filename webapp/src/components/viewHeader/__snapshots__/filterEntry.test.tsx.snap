@@ -11,7 +11,7 @@ exports[`components/viewHeader/filterEntry return filterEntry 1`] = `
       role="button"
     >
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>
@@ -129,7 +129,7 @@ exports[`components/viewHeader/filterEntry return filterEntry 1`] = `
       role="button"
     >
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>
@@ -141,7 +141,7 @@ exports[`components/viewHeader/filterEntry return filterEntry 1`] = `
       class="octo-spacer"
     />
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
@@ -163,7 +163,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on delet
       role="button"
     >
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>
@@ -177,7 +177,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on delet
       role="button"
     >
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>
@@ -293,7 +293,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on delet
       class="octo-spacer"
     />
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
@@ -315,7 +315,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on doesn
       role="button"
     >
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>
@@ -329,7 +329,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on doesn
       role="button"
     >
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>
@@ -445,7 +445,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on doesn
       class="octo-spacer"
     />
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
@@ -467,7 +467,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on inclu
       role="button"
     >
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>
@@ -481,7 +481,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on inclu
       role="button"
     >
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>
@@ -597,7 +597,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on inclu
       class="octo-spacer"
     />
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
@@ -619,7 +619,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is em
       role="button"
     >
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>
@@ -633,7 +633,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is em
       role="button"
     >
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>
@@ -749,7 +749,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is em
       class="octo-spacer"
     />
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
@@ -771,7 +771,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is no
       role="button"
     >
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>
@@ -785,7 +785,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is no
       role="button"
     >
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>
@@ -901,7 +901,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is no
       class="octo-spacer"
     />
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
@@ -923,7 +923,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on statu
       role="button"
     >
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>
@@ -1041,7 +1041,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on statu
       role="button"
     >
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>
@@ -1053,7 +1053,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on statu
       class="octo-spacer"
     />
     <button
-      class="Button    "
+      class="Button"
       type="button"
     >
       <span>
