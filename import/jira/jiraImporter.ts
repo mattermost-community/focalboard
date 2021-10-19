@@ -30,7 +30,7 @@ let optionColorIndex = 0
 
 var turndownService = new TurndownService()
 
-async function run(inputFile: string, outputFile: string) {
+async function run(inputFile: string, outputFile: string): Promise<number> {
     console.log(`input: ${inputFile}`)
     console.log(`output: ${outputFile}`)
 
@@ -77,6 +77,8 @@ async function run(inputFile: string, outputFile: string) {
     const outputData = ArchiveUtils.buildBlockArchive(blocks)
     fs.writeFileSync(outputFile, outputData)
     console.log(`Exported ${blocks.length} block(s) to ${outputFile}`)
+
+    return blocks.length
 }
 
 function convert(items: any[]) {
