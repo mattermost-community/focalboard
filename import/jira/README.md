@@ -11,7 +11,7 @@ This node app converts a Jira xml export into a Focalboard archive. To use:
 
 ## Import scope and known limitations
 
-Currently, the script imports each item as a card into a single board. Not that Jira XML export is limited to 1000 issues at a time.
+Currently, the script imports each item as a card into a single board. Note that Jira XML export is limited to 1000 issues at a time.
 
 Users are imported as Select properties, with the name of the user.
 
