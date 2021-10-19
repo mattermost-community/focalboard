@@ -54,6 +54,8 @@ const BoardPage = (props: Props): JSX.Element => {
 
     // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {
+        console.log('match.params.workspaceId: ' + match.params.workspaceId)
+        console.log('UserSettings.lastWorkspaceId: ' + UserSettings.lastWorkspaceId)
         workspaceId = match.params.workspaceId || workspaceId
         UserSettings.lastWorkspaceId = workspaceId
         octoClient.workspaceId = workspaceId
@@ -64,15 +66,20 @@ const BoardPage = (props: Props): JSX.Element => {
     useEffect(() => {
     }, [])
 
-    console.log(`boardID: ${match.params.boardId}, viewID: ${match.params.viewId}, workspaceID: ${match.params.workspaceId}, workspaceID: ${workspaceId}, viewID: ${match.params.cardId}`)
-
     useEffect(() => {
-        if (match.params.workspaceId || !workspaceId) {
+        // don't do anything if-
+        // 1. the URL already has a workspace ID, or
+        // 2. the workspace ID is unavailable.
+        // This also ensures once the workspace id is
+        // set in the URL, we don't update the history anymore.
+        if (props.readonly || match.params.workspaceId || !workspaceId) {
             return
         }
 
-        const newPath = Utils.buildOriginalPath(workspaceId, match.params.boardId, match.params.viewId, match.params.cardId)
-        console.log('newPath: ' + newPath)
+        // we can pick workspace ID from board if it's not available anywhere,
+        const workspaceIDToUse = workspaceId || board.workspaceId
+
+        const newPath = Utils.buildOriginalPath(workspaceIDToUse, match.params.boardId, match.params.viewId, match.params.cardId)
         history.push(`/workspace/${newPath}`)
     }, [workspaceId, match.params.boardId, match.params.viewId, match.params.cardId])
 
@@ -260,7 +267,7 @@ const BoardPage = (props: Props): JSX.Element => {
     }
 
     return (
-        <div className='BoardPage'>
+        <div className='BoardPage harshil'>
             {websocketClosed &&
                 <div className='WSConnection error'>
                     <a
