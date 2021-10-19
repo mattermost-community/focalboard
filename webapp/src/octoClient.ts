@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Block, BlockPatch} from './blocks/block'
+import {Block, BlockPatch, createPatchesFromBlocks} from './blocks/block'
 import {ISharing} from './blocks/sharing'
 import {IWorkspace} from './blocks/workspace'
 import {OctoUtils} from './octoUtils'
@@ -239,12 +239,8 @@ class OctoClient {
         return fixedBlocks
     }
 
-    async updateBlock(block: Block): Promise<Response> {
-        return this.insertBlocks([block])
-    }
-
     async patchBlock(blockId: string, blockPatch: BlockPatch): Promise<Response> {
-        Utils.log(`patchBlocks: ${blockId} block`)
+        Utils.log(`patchBlock: ${blockId} block`)
         const body = JSON.stringify(blockPatch)
         return fetch(this.getBaseURL() + this.workspacePath() + '/blocks/' + blockId, {
             method: 'PATCH',
@@ -253,10 +249,18 @@ class OctoClient {
         })
     }
 
-    async updateBlocks(blocks: Block[]): Promise<Response> {
-        return this.insertBlocks(blocks)
-    }
-
+    // ToDo: update it with newBlocks and oldBlocks
+    // async patchBlocks(blocks: Block[]): Promise<Response[]> {
+    //     Utils.log(`patchingBlocks: ${blocks.map(b => b.id).join(", ")}`)
+    //
+    //     return Promise.all(
+    //         blocks.map((block) => {
+    //             const [ updatePatch ] = createPatchesFromBlocks(block, {} as BlockPatch)
+    //             return this.patchBlock(block.id, updatePatch)
+    //         })
+    //     )
+    // }
+    //
     async deleteBlock(blockId: string): Promise<Response> {
         Utils.log(`deleteBlock: ${blockId}`)
         return fetch(this.getBaseURL() + this.workspacePath() + `/blocks/${encodeURIComponent(blockId)}`, {

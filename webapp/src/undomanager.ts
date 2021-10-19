@@ -57,14 +57,15 @@ class UndoManager {
     }
 
     async perform(
-        redo: () => Promise<void>,
-        undo: () => Promise<void>,
+        redo: () => Promise<any>,
+        undo: (res?: any) => Promise<void>,
         description?: string,
         groupId?: string,
         isDiscardable = false,
-    ): Promise<UndoManager> {
-        await redo()
-        return this.registerUndo({undo, redo}, description, groupId, isDiscardable)
+    ): Promise<any> {
+        const res = await redo()
+        this.registerUndo({undo: () => undo(res), redo}, description, groupId, isDiscardable)
+        return res
     }
 
     registerUndo(

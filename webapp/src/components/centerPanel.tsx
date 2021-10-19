@@ -6,6 +6,7 @@ import {injectIntl, IntlShape} from 'react-intl'
 import {connect} from 'react-redux'
 import Hotkeys from 'react-hot-keys'
 
+import {Block} from '../blocks/block'
 import {BlockIcons} from '../blockIcons'
 import {Card, createCard} from '../blocks/card'
 import {Board, IPropertyTemplate, IPropertyOption, BoardGroup} from '../blocks/board'
@@ -248,10 +249,11 @@ class CenterPanel extends React.Component<Props, State> {
             card.fields.icon = BlockIcons.shared.randomIcon()
         }
         mutator.performAsUndoGroup(async () => {
-            await mutator.insertBlock(
+            const newCard = await mutator.insertBlock(
                 card,
                 'add card',
-                async () => {
+                async (block: Block) => {
+                    const card = createCard(block)
                     if (show) {
                         this.props.addCard(card)
                         this.props.updateView({...activeView, fields: {...activeView.fields, cardOrder: [...activeView.fields.cardOrder, card.id]}})
@@ -262,11 +264,15 @@ class CenterPanel extends React.Component<Props, State> {
                         setTimeout(() => this.setState({cardIdToFocusOnRender: ''}), 100)
                     }
                 },
-                async () => {
+                async (block: Block) => {
                     this.showCard(undefined)
                 },
             )
-            await mutator.changeViewCardOrder(activeView, [...activeView.fields.cardOrder, card.id], 'add-card')
+            console.log("------------------------------")
+            console.log(`Got a new Card ID: ${newCard.id}`)
+            console.log("------------------------------")
+
+            await mutator.changeViewCardOrder(activeView, [...activeView.fields.cardOrder, newCard.id], 'add-card')
         })
     }
 
