@@ -58,6 +58,28 @@ function count(cards: readonly Card[], property: IPropertyTemplate): string {
     return String(cards.length)
 }
 
+function countEmpty(cards: readonly Card[], property: IPropertyTemplate): string {
+    return String(cards.length - cardsWithValue(cards, property).length)
+}
+
+function countNotEmpty(cards: readonly Card[], property: IPropertyTemplate): string {
+    return String(cardsWithValue(cards, property).length)
+}
+
+function percentEmpty(cards: readonly Card[], property: IPropertyTemplate): string {
+    if (cards.length === 0) {
+        return ''
+    }
+    return String((((cards.length - cardsWithValue(cards, property).length) / cards.length) * 100).toFixed(0)) + '%'
+}
+
+function percentNotEmpty(cards: readonly Card[], property: IPropertyTemplate): string {
+    if (cards.length === 0) {
+        return ''
+    }
+    return String(((cardsWithValue(cards, property).length / cards.length) * 100).toFixed(0)) + '%'
+}
+
 function countValueHelper(cards: readonly Card[], property: IPropertyTemplate): number {
     let values = 0
 
@@ -265,7 +287,7 @@ function getTimestampsFromPropertyValue(value: number | string | string[]): numb
     return []
 }
 
-function dateRange(cards: readonly Card[], property: IPropertyTemplate): string {
+function dateRange(cards: readonly Card[], property: IPropertyTemplate, intl: IntlShape): string {
     const resultEarliest = earliestEpoch(cards, property)
     if (resultEarliest === Number.POSITIVE_INFINITY) {
         return ''
@@ -274,11 +296,15 @@ function dateRange(cards: readonly Card[], property: IPropertyTemplate): string 
     if (resultLatest === Number.NEGATIVE_INFINITY) {
         return ''
     }
-    return moment.duration(resultLatest - resultEarliest, 'milliseconds').humanize()
+    return moment.duration(resultLatest - resultEarliest, 'milliseconds').locale(intl.locale.toLowerCase()).humanize()
 }
 
 const Calculations: Record<string, (cards: readonly Card[], property: IPropertyTemplate, intl: IntlShape) => string> = {
     count,
+    countEmpty,
+    countNotEmpty,
+    percentEmpty,
+    percentNotEmpty,
     countValue,
     countCardWithPropValueNotNull,
     countUniqueValue,

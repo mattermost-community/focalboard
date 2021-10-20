@@ -60,14 +60,14 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
                 class="MenuWrapper"
                 role="button"
               >
-                <div
+                <button
                   class="Button IconButton"
-                  role="button"
+                  type="button"
                 >
                   <i
                     class="CompassIcon icon-dots-horizontal OptionsIcon"
                   />
-                </div>
+                </button>
               </div>
             </div>
             <div
@@ -179,14 +179,14 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
                 class="MenuWrapper"
                 role="button"
               >
-                <div
+                <button
                   class="Button IconButton"
-                  role="button"
+                  type="button"
                 >
                   <i
                     class="CompassIcon icon-dots-horizontal OptionsIcon"
                   />
-                </div>
+                </button>
               </div>
             </div>
             <div
@@ -298,14 +298,14 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
                 class="MenuWrapper"
                 role="button"
               >
-                <div
+                <button
                   class="Button IconButton"
-                  role="button"
+                  type="button"
                 >
                   <i
                     class="CompassIcon icon-dots-horizontal OptionsIcon"
                   />
-                </div>
+                </button>
               </div>
             </div>
             <div

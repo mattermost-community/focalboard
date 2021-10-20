@@ -17,7 +17,7 @@ import PropertyMenu from '../../widgets/propertyMenu'
 
 import Calculations from '../calculations/calculations'
 import PropertyValueElement from '../propertyValueElement'
-import {ConfirmationDialogBox,ConfirmationDialogBoxProps} from '../confirmationDialogBox'
+import {ConfirmationDialogBox, ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import {sendFlashMessage} from '../flashMessages'
 import {Utils} from '../../utils'
 import {DeleteExpression} from 'typescript'
