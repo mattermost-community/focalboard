@@ -60,4 +60,4 @@ export const ConfirmationDialogBox = (props: Props) => {
     )
 }
 
-export {ConfirmationDialogBoxProps};
+export {ConfirmationDialogBoxProps}
