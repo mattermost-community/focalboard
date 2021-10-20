@@ -1,6 +1,11 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+<<<<<<< HEAD
 import React, {useState, useRef, useEffect} from 'react'
+=======
+import React from 'react'
+import debounce from 'lodash/debounce'
+>>>>>>> 04fc4e8b (Refactor input into TextInputOption component)
 import {useIntl, IntlShape} from 'react-intl'
 
 import {PropertyType} from '../blocks/board'
@@ -91,41 +96,17 @@ export const PropertyTypes = (props: TypesProps): JSX.Element => {
 
 const PropertyMenu = React.memo((props: Props) => {
     const intl = useIntl()
-    const nameTextbox = useRef<HTMLInputElement>(null)
-    const [name, setName] = useState(props.propertyName)
 
     const deleteText = intl.formatMessage({
         id: 'PropertyMenu.Delete',
         defaultMessage: 'Delete',
     })
 
-    useEffect(() => {
-        nameTextbox.current?.focus()
-        nameTextbox.current?.setSelectionRange(0, name.length)
-    }, [])
-
     return (
         <Menu>
-            <input
-                ref={nameTextbox}
-                type='text'
-                className='PropertyMenu menu-textbox menu-option'
-                onClick={(e) => e.stopPropagation()}
-                onChange={(e) => {
-                    setName(e.target.value)
-                }}
-                value={name}
-                onBlur={() => props.onTypeAndNameChanged(props.propertyType, name)}
-                onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === 'Escape') {
-                        props.onTypeAndNameChanged(props.propertyType, name)
-                        e.stopPropagation()
-                        if (e.key === 'Enter') {
-                            e.target.dispatchEvent(new Event('menuItemClicked'))
-                        }
-                    }
-                }}
-                spellCheck={true}
+            <Menu.TextInput
+                initialValue={props.propertyName}
+                onValueChanged={(n) => props.onTypeAndNameChanged(props.propertyType, n)}
             />
             <Menu.SubMenu
                 id='type'

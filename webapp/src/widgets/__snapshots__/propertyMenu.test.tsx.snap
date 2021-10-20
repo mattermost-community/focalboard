@@ -13,7 +13,7 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
       >
         <div>
           <input
-            class="PropertyMenu menu-textbox"
+            class="PropertyMenu menu-textbox menu-option"
             spellcheck="true"
             type="text"
             value="test-property"

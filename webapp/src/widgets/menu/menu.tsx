@@ -10,6 +10,7 @@ import SubMenuOption from './subMenuOption'
 import LabelOption from './labelOption'
 
 import './menu.scss'
+import textInputOption from './textInputOption'
 
 type Props = {
     children: React.ReactNode;
@@ -22,6 +23,7 @@ export default class Menu extends React.PureComponent<Props> {
     static Switch = SwitchOption
     static Separator = SeparatorOption
     static Text = TextOption
+    static TextInput = textInputOption
     static Label = LabelOption
 
     public state = {
