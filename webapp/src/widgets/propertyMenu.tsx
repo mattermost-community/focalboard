@@ -109,7 +109,7 @@ const PropertyMenu = React.memo((props: Props) => {
             <input
                 ref={nameTextbox}
                 type='text'
-                className='PropertyMenu menu-textbox'
+                className='PropertyMenu menu-textbox menu-option'
                 onClick={(e) => e.stopPropagation()}
                 onChange={(e) => {
                     setName(e.target.value)

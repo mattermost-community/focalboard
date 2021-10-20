@@ -47,20 +47,13 @@ export default class Menu extends React.PureComponent<Props> {
                                                 })
                                             }
                                         >
-                                            {castedChild.type === React.Fragment ? (
-
-                                                // the isHovering prop cannot be set on React.Fragment
+                                            {castedChild.type === SubMenuOption ? (
                                                 <castedChild.type
                                                     {...castedChild.props}
+                                                    isHovering={i === this.state.hoveringIdx}
                                                 />
                                             ) : (
-                                                <castedChild.type
-                                                    {...castedChild.props}
-                                                    isHovering={
-                                                        i ===
-                                                        this.state.hoveringIdx
-                                                    }
-                                                />
+                                                <castedChild.type {...castedChild.props}/>
                                             )}
                                         </div>
                                     )
