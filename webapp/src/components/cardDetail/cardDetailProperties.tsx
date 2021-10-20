@@ -35,10 +35,7 @@ const CardDetailProperties = React.memo((props: Props) => {
     const intl = useIntl()
     const {board, card, cards, views, activeView, contents, comments} = props
 
-    const [confirmationDialogBox, setConfirmationDialogBox] = useState<ConfirmationDialogBoxProps>({heading: '', 
-                                                                                                    onConfirm: ()=>{},
-                                                                                                    onClose: ()=>{}   
-                                                                                                });
+    const [confirmationDialogBox, setConfirmationDialogBox] = useState<ConfirmationDialogBoxProps>({heading: '', onConfirm: () => {}, onClose: () => {}})
     const [showConfirmationDialog, setShowConfirmationDialog] = useState<boolean>(false)
 
     return (
@@ -59,33 +56,33 @@ const CardDetailProperties = React.memo((props: Props) => {
                                     propertyName={propertyTemplate.name}
                                     propertyType={propertyTemplate.type}
                                     onTypeAndNameChanged={(newType: PropertyType, newName: string) => {
-                                        let oldType = propertyTemplate.type
-                                        // do nothing if no change
-                                        if (oldType === newType && propertyTemplate.name === newName) 
-                                            return
+                                        const oldType = propertyTemplate.type
 
-                                        let affectsNumOfCards:string = Calculations.countCardWithPropValueNotNull(cards,propertyTemplate,intl);
-                                        
-                                        // if no card has this value set delete the property directly without warning 
-                                        if(affectsNumOfCards==="0"){
-                                            console.log('llllll')
-                                            mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType, newName)
-                                            console.log('hahalold')
+                                        // do nothing if no change
+                                        if (oldType === newType && propertyTemplate.name === newName) {
                                             return
                                         }
-                                        
+
+                                        const affectsNumOfCards:string = Calculations.countCardWithPropValueNotNull(cards, propertyTemplate, intl)
+
+                                        // if no card has this value set delete the property directly without warning
+                                        if (affectsNumOfCards === '0') {
+                                            mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType, newName)
+                                            return
+                                        }
+
                                         let subTextString = intl.formatMessage({
                                             id: 'CardDetailProperty.property-name-change-subtext',
                                             defaultMessage: 'type from "{oldPropType}" to "{newPropType}"',
-                                        },{oldPropType: oldType, newPropType: newType})
-                                        
-                                        if(propertyTemplate.name !== newName){
+                                        }, {oldPropType: oldType, newPropType: newType})
+
+                                        if (propertyTemplate.name !== newName) {
                                             subTextString = intl.formatMessage({
                                                 id: 'CardDetailProperty.property-type-change-subtext',
                                                 defaultMessage: 'name to "{newPropName}"',
-                                            },{newPropName: newName})    
+                                            }, {newPropName: newName})
                                         }
-                                        
+
                                         setConfirmationDialogBox({
                                             heading: intl.formatMessage({id: 'CardDetailProperty.confirm-property-type-change', defaultMessage: 'Confirm Property Type Change!'}),
                                             subText: intl.formatMessage({
@@ -99,18 +96,16 @@ const CardDetailProperties = React.memo((props: Props) => {
                                             }),
 
                                             confirmButtonText: intl.formatMessage({id: 'CardDetailProperty.property-change-action-button', defaultMessage: 'Change Property'}),
-                                            onConfirm:() => {
-                                                    mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType, newName)
-                                                    setShowConfirmationDialog(false)
-                                                    sendFlashMessage({content: intl.formatMessage({id: 'CardDetailProperty.property-changed', defaultMessage: 'Changed property successfully!'}), severity: 'high'})
-                                                },
-                                            onClose: () => setShowConfirmationDialog(false)
+                                            onConfirm: () => {
+                                                mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType, newName)
+                                                setShowConfirmationDialog(false)
+                                                sendFlashMessage({content: intl.formatMessage({id: 'CardDetailProperty.property-changed', defaultMessage: 'Changed property successfully!'}), severity: 'high'})
+                                            },
+                                            onClose: () => setShowConfirmationDialog(false),
                                         })
-                                        
+
                                         setShowConfirmationDialog(true)
-                                             
-                                       }
-                                    }
+                                    }}
                                     onDelete={(id: string) => {
                                         // set ConfirmationDialogBox Props
                                         setConfirmationDialogBox({
@@ -122,20 +117,17 @@ const CardDetailProperties = React.memo((props: Props) => {
                                             {propertyName: propertyTemplate.name}),
                                             confirmButtonText: intl.formatMessage({id: 'CardDetailProperty.delete-action-button', defaultMessage: 'Delete'}),
                                             onConfirm: () => {
-                                                let deletingPropName = propertyTemplate.name
-                                            
-                                                mutator.deleteProperty(board, views, cards,id)
+                                                const deletingPropName = propertyTemplate.name
+                                                mutator.deleteProperty(board, views, cards, id)
                                                 setShowConfirmationDialog(false)
                                                 sendFlashMessage({content: intl.formatMessage({id: 'CardDetailProperty.property-deleted', defaultMessage: 'Deleted {propertyName} Successfully!'}, {propertyName: deletingPropName}), severity: 'high'})
                                             },
 
-                                            onClose: () => setShowConfirmationDialog(false)
+                                            onClose: () => setShowConfirmationDialog(false),
                                         })
-                                        
+
                                         setShowConfirmationDialog(true)
-                                        
-                                       }
-                                    }
+                                    }}
                                 />
                             </MenuWrapper>
                         }
