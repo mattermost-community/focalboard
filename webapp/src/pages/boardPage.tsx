@@ -265,7 +265,7 @@ const BoardPage = (props: Props): JSX.Element => {
     }
 
     return (
-        <div className='BoardPage harshil'>
+        <div className='BoardPage'>
             {websocketClosed &&
                 <div className='WSConnection error'>
                     <a
