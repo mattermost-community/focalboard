@@ -9,29 +9,33 @@ import Button from '../widgets/buttons/button'
 import Dialog from './dialog'
 import './confirmationDialogBox.scss'
 
+type ConfirmationDialogBoxProps = {
+    heading: string
+    subText?: string
+    confirmButtonText?: string
+    onConfirm: () => void
+    onClose: () => void
+}
+
 type Props = {
-    propertyId: string;
-    onClose: () => void;
-    onConfirm: () => void;
-    heading: string;
-    subText?: string;
+    dialogBox: ConfirmationDialogBoxProps
 }
 
 export const ConfirmationDialogBox = (props: Props) => {
     return (
         <Dialog
             className='confirmation-dialog-box'
-            onClose={props.onClose}
+            onClose={props.dialogBox.onClose}
         >
             <div className='box-area'>
-                <h3 className='heading'>{props.heading}</h3>
-                <p className='sub-text'>{props.subText}</p>
+                <h3 className='heading'>{props.dialogBox.heading}</h3>
+                <p className='sub-text'>{props.dialogBox.subText}</p>
 
                 <div className='action-buttons'>
                     <Button
                         title='Cancel'
                         active={true}
-                        onClick={props.onClose}
+                        onClick={props.dialogBox.onClose}
                     >
                         <FormattedMessage
                             id='ConfirmationDialog.cancel-action'
@@ -42,15 +46,18 @@ export const ConfirmationDialogBox = (props: Props) => {
                         title='Delete'
                         submit={true}
                         emphasis='danger'
-                        onClick={props.onConfirm}
+                        onClick={props.dialogBox.onConfirm}
                     >
-                        <FormattedMessage
-                            id='ConfirmationDialog.delete-action'
-                            defaultMessage='Delete'
+                     {props.dialogBox.confirmButtonText || <FormattedMessage
+                            id='ConfirmationDialog.confirm-action'
+                            defaultMessage='Confirm'
                         />
+                    }
                     </Button>
                 </div>
             </div>
         </Dialog>
     )
 }
+
+export {ConfirmationDialogBoxProps};
