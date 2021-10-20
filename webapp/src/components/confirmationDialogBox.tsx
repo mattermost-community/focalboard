@@ -48,11 +48,12 @@ export const ConfirmationDialogBox = (props: Props) => {
                         emphasis='danger'
                         onClick={props.dialogBox.onConfirm}
                     >
-                     {props.dialogBox.confirmButtonText || <FormattedMessage
-                                                                id='ConfirmationDialog.confirm-action'
-                                                                defaultMessage='Confirm'
-                                                            />
-                    }
+                        { props.dialogBox.confirmButtonText ||
+                        <FormattedMessage
+                            id='ConfirmationDialog.confirm-action'
+                            defaultMessage='Confirm'
+                        />
+                        }
                     </Button>
                 </div>
             </div>

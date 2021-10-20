@@ -49,8 +49,8 @@ function cardsWithValue(cards: readonly Card[], property: IPropertyTemplate): Ca
 }
 
 // return count of card which have this property value as not null \\ undefined \\ ''
-function countCardWithPropValueNotNull(cards: readonly Card[], property: IPropertyTemplate): string{
-    return cardsWithValue(cards,property).length.toString();
+function countCardWithPropValueNotNull(cards: readonly Card[], property: IPropertyTemplate): string {
+    return cardsWithValue(cards, property).length.toString()
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
