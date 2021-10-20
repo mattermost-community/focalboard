@@ -48,6 +48,11 @@ function cardsWithValue(cards: readonly Card[], property: IPropertyTemplate): Ca
         filter((card) => Boolean(getCardProperty(card, property)))
 }
 
+// return count of card which have this property value as not null \\ undefined \\ ''
+function countCardWithPropValueNotNull(cards: readonly Card[], property: IPropertyTemplate): string{
+    return cardsWithValue(cards,property).length.toString();
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function count(cards: readonly Card[], property: IPropertyTemplate): string {
     return String(cards.length)
@@ -275,6 +280,7 @@ function dateRange(cards: readonly Card[], property: IPropertyTemplate): string 
 const Calculations: Record<string, (cards: readonly Card[], property: IPropertyTemplate, intl: IntlShape) => string> = {
     count,
     countValue,
+    countCardWithPropValueNotNull,
     countUniqueValue,
     countChecked,
     countUnchecked,

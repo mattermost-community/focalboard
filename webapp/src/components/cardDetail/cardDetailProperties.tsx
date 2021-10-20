@@ -15,11 +15,13 @@ import Button from '../../widgets/buttons/button'
 import MenuWrapper from '../../widgets/menuWrapper'
 import PropertyMenu from '../../widgets/propertyMenu'
 
+import Calculations from '../calculations/calculations'
 import PropertyValueElement from '../propertyValueElement'
 import {ConfirmationDialogBox,ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import {sendFlashMessage} from '../flashMessages'
 import {Utils} from '../../utils'
 import {DeleteExpression} from 'typescript'
+import {isUndefined} from 'lodash'
 
 type Props = {
     board: Board
@@ -37,9 +39,9 @@ const CardDetailProperties = React.memo((props: Props) => {
     const {board, card, cards, views, activeView, contents, comments} = props
 
     const [confirmationDialogBox, setConfirmationDialogBox] = useState<ConfirmationDialogBoxProps>({heading: '', 
-                                                                                            onConfirm: ()=>{},
-                                                                              onClose: ()=>{}
-                                                                                        });
+                                                                                                    onConfirm: ()=>{},
+                                                                                                    onClose: ()=>{}   
+                                                                                                });
     const [showConfirmationDialog, setShowConfirmationDialog] = useState<boolean>(false)
 
     return (
@@ -78,18 +80,20 @@ const CardDetailProperties = React.memo((props: Props) => {
                                             },{newPropName: newName})    
                                         }
 
+                                        let affectsNumOfCards = Calculations.countCardWithPropValueNotNull(cards,propertyTemplate,intl);
+
                                         setConfirmationDialogBox({
                                             heading: intl.formatMessage({id: 'CardDetailProperty.confirm-property-type-change', defaultMessage: 'Confirm Property Type Change!'}),
-                                            subText: subTextString = intl.formatMessage({
+                                            subText: intl.formatMessage({
                                                 id: 'CardDetailProperty.confirm-property-name-change-subtext',
                                                 defaultMessage: 'Are you sure you want to change property "{propertyName}" {customText}? This will affect value(s) across {numOfCards} card(s) in this board, and can result in data loss.',
                                             },
                                             {
                                                 propertyName: propertyTemplate.name,
                                                 customText: subTextString,
-                                                numOfCards: board.fields.cardProperties.length,
-                                            })
-,
+                                                numOfCards: affectsNumOfCards,
+                                            }),
+
                                             confirmButtonText: intl.formatMessage({id: 'CardDetailProperty.property-change-action-button', defaultMessage: 'Change Property'}),
                                             onConfirm: () => {
                                                 try{
