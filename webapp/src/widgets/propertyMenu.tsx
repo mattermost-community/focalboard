@@ -1,11 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-<<<<<<< HEAD
-import React, {useState, useRef, useEffect} from 'react'
-=======
 import React from 'react'
-import debounce from 'lodash/debounce'
->>>>>>> 04fc4e8b (Refactor input into TextInputOption component)
 import {useIntl, IntlShape} from 'react-intl'
 
 import {PropertyType} from '../blocks/board'
