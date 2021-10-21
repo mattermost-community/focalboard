@@ -357,5 +357,5 @@ func returnBoardsParams(pathArray []string) (workspaceID, boardID, viewID, cardI
 		viewID = pathArray[index+6]
 		cardID = pathArray[index+7]
 	}
-	return
+	return workspaceID, boardID, viewID, cardID
 }
