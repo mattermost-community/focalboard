@@ -45,7 +45,6 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
     const {workspaceID, cardID, boardID, readToken, originalPath} = focalboardInformation
     const baseURL = window.location.origin
 
-
     if (!workspaceID || !cardID || !boardID) {
         return <></>
     }

@@ -13,7 +13,6 @@
       cursor: pointer;
     }
 
-    
     .header {
         display: flex;
         align-items: center;
@@ -45,7 +44,6 @@
             }
         }
     }
-
 
     .body {
         border: 1px solid rgba(61, 60, 64, 0.16);
@@ -127,10 +125,7 @@
                         background-color: var(--prop-red);
                     }
                 }
-               
             }
         }
-
     }
-
 }
