@@ -190,7 +190,7 @@ function ValueSelector(props: Props): JSX.Element {
             onBlur={props.onBlur}
             onCreateOption={props.onCreate}
             autoFocus={true}
-            value={props.value}
+            value={props.value || null}
             closeMenuOnSelect={true}
             placeholder={props.emptyValue}
             hideSelectedOptions={false}

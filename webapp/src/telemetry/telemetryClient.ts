@@ -12,8 +12,10 @@ export const TelemetryActions = {
     CreateBoardViaTemplate: 'createBoardViaTemplate',
     CreateBoardView: 'createBoardView',
     EditCardProperty: 'editCardProperty',
+    ShareBoard: 'shareBoard',
     ViewBoard: 'viewBoard',
     ViewCard: 'viewCard',
+    ViewSharedBoard: 'viewSharedBoard',
 }
 
 class TelemetryClient {
