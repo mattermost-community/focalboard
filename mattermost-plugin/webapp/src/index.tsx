@@ -154,6 +154,7 @@ export default class Plugin {
                 MainApp,
                 HeaderComponent,
                 () => null,
+                true,
                 xyz,
             )
         } else {
