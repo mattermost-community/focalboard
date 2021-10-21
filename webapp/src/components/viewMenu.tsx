@@ -12,11 +12,14 @@ import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry
 import {IDType, Utils} from '../utils'
 import AddIcon from '../widgets/icons/add'
 import BoardIcon from '../widgets/icons/board'
+import CalendarIcon from '../widgets/icons/calendar'
 import DeleteIcon from '../widgets/icons/delete'
 import DuplicateIcon from '../widgets/icons/duplicate'
 import GalleryIcon from '../widgets/icons/gallery'
 import TableIcon from '../widgets/icons/table'
 import Menu from '../widgets/menu'
+import {useAppSelector} from '../store/hooks'
+import {getClientConfig} from '../store/clientConfig'
 
 type Props = {
     board: Board,
@@ -29,6 +32,7 @@ type Props = {
 const ViewMenu = React.memo((props: Props) => {
     const history = useHistory()
     const match = useRouteMatch()
+    const clientConfig = useAppSelector(getClientConfig)
 
     const showView = useCallback((viewId) => {
         let newPath = generatePath(match.path, {...match.params, viewId: viewId || ''})
@@ -167,6 +171,34 @@ const ViewMenu = React.memo((props: Props) => {
             })
     }, [props.board, props.activeView, props.intl, showView])
 
+    const handleAddViewCalendar = useCallback(() => {
+        const {board, activeView, intl} = props
+
+        Utils.log('addview-gallery')
+        const view = createBoardView()
+        view.title = intl.formatMessage({id: 'View.NewCalendarTitle', defaultMessage: 'Calendar View'})
+        view.fields.viewType = 'calendar'
+        view.parentId = board.id
+        view.rootId = board.rootId
+        view.fields.visiblePropertyIds = [Constants.titleColumnId]
+
+        const oldViewId = activeView.id
+
+        mutator.insertBlock(
+            view,
+            'add view',
+            async () => {
+                // This delay is needed because WSClient has a default 100 ms notification delay before updates
+                setTimeout(() => {
+                    Utils.log(`showView: ${view.id}`)
+                    showView(view.id)
+                }, 120)
+            },
+            async () => {
+                showView(oldViewId)
+            })
+    }, [props.board, props.activeView, props.intl, showView])
+
     const {views, intl} = props
 
     const duplicateViewText = intl.formatMessage({
@@ -254,6 +286,14 @@ const ViewMenu = React.memo((props: Props) => {
                         icon={<GalleryIcon/>}
                         onClick={handleAddViewGallery}
                     />
+                    {/* {clientConfig.featureFlags.CalendarView && */}
+                    <Menu.Text
+                        id='calendar'
+                        name='Calendar'
+                        icon={<CalendarIcon/>}
+                        onClick={handleAddViewCalendar}
+                    />
+                    {/* } */}
                 </Menu.SubMenu>
             }
         </Menu>

@@ -1,0 +1,184 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/calendar/toolbar return toolbar 1`] = `
+<div>
+  <div
+    class="rbc-toolbar"
+  >
+    <span
+      class="rbc-toolbar-label"
+    >
+      September 2021
+    </span>
+    <span
+      class="rbc-btn-group"
+    >
+      <button
+        class="rbc-btn-view"
+        type="button"
+      >
+        week
+      </button>
+      <button
+        class="rbc-btn-view rbc-active"
+        type="button"
+      >
+        month
+      </button>
+    </span>
+    <span
+      class="rbc-btn-group"
+    >
+      <button
+        type="button"
+      >
+        &lt;
+      </button>
+      <button
+        type="button"
+      >
+        today
+      </button>
+      <button
+        type="button"
+      >
+        &gt;
+      </button>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`components/calendar/toolbar return toolbar, no views 1`] = `
+<div>
+  <div
+    class="rbc-toolbar"
+  >
+    <span
+      class="rbc-toolbar-label"
+    >
+      September 2021
+    </span>
+    <span
+      class="rbc-btn-group"
+    />
+    <span
+      class="rbc-btn-group"
+    >
+      <button
+        type="button"
+      >
+        &lt;
+      </button>
+      <button
+        type="button"
+      >
+        today
+      </button>
+      <button
+        type="button"
+      >
+        &gt;
+      </button>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`components/calendar/toolbar toolbar test navigate 1`] = `
+<div>
+  <div
+    class="rbc-toolbar"
+  >
+    <span
+      class="rbc-toolbar-label"
+    >
+      September 2021
+    </span>
+    <span
+      class="rbc-btn-group"
+    >
+      <button
+        class="rbc-btn-view"
+        type="button"
+      >
+        week
+      </button>
+      <button
+        class="rbc-btn-view rbc-active"
+        type="button"
+      >
+        month
+      </button>
+    </span>
+    <span
+      class="rbc-btn-group"
+    >
+      <button
+        type="button"
+      >
+        &lt;
+      </button>
+      <button
+        type="button"
+      >
+        today
+      </button>
+      <button
+        type="button"
+      >
+        &gt;
+      </button>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`components/calendar/toolbar toolbar test view 1`] = `
+<div>
+  <div
+    class="rbc-toolbar"
+  >
+    <span
+      class="rbc-toolbar-label"
+    >
+      September 2021
+    </span>
+    <span
+      class="rbc-btn-group"
+    >
+      <button
+        class="rbc-btn-view"
+        type="button"
+      >
+        week
+      </button>
+      <button
+        class="rbc-btn-view rbc-active"
+        type="button"
+      >
+        month
+      </button>
+    </span>
+    <span
+      class="rbc-btn-group"
+    >
+      <button
+        type="button"
+      >
+        &lt;
+      </button>
+      <button
+        type="button"
+      >
+        today
+      </button>
+      <button
+        type="button"
+      >
+        &gt;
+      </button>
+    </span>
+  </div>
+</div>
+`;

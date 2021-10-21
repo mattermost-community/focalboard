@@ -33,6 +33,23 @@ export type DateProperty = {
     timeZone?: string
 }
 
+export function createDatePropertyFromString(initialValue: string) : DateProperty {
+    let dateProperty: DateProperty = {}
+    if (initialValue) {
+        const singleDate = new Date(Number(initialValue))
+        if (singleDate && DateUtils.isDate(singleDate)) {
+            dateProperty.from = singleDate.getTime()
+        } else {
+            try {
+                dateProperty = JSON.parse(initialValue)
+            } catch {
+                //Don't do anything, return empty dateProperty
+            }
+        }
+    }
+    return dateProperty
+}
+
 const loadedLocales: Record<string, any> = {}
 
 function DateRange(props: Props): JSX.Element {
@@ -46,23 +63,6 @@ function DateRange(props: Props): JSX.Element {
             displayDate = Utils.displayDate(date, intl)
         }
         return displayDate
-    }
-
-    const createDatePropertyFromString = (initialValue: string) => {
-        let dateProperty: DateProperty = {}
-        if (initialValue) {
-            const singleDate = new Date(Number(initialValue))
-            if (singleDate && DateUtils.isDate(singleDate)) {
-                dateProperty.from = singleDate.getTime()
-            } else {
-                try {
-                    dateProperty = JSON.parse(initialValue)
-                } catch {
-                    //Don't do anything, return empty dateProperty
-                }
-            }
-        }
-        return dateProperty
     }
 
     const [dateProperty, setDateProperty] = useState<DateProperty>(createDatePropertyFromString(value as string))

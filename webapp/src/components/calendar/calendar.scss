@@ -1,0 +1,42 @@
+.rbc-overlay {
+    z-index: 10;
+}
+
+.CalendarContainer {
+    height:100%;
+    margin-right: 80px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    overflow: auto;
+
+    .DragAndDropCalendar {
+        min-height: 600px;
+        min-width: 800px;
+        
+        .rbc-toolbar {
+            .rbc-toolbar-label {
+                padding-left: 0px;
+                text-align: left;
+            }
+
+            .rbc-btn-group {
+                button {
+                    border: none
+                }
+
+                .rbc-btn-view {
+                    background: rgba(var(--button-bg-rgb), 0.08);
+                    border-radius: 4px;
+                    color: rgb(var(--button-bg-rgb));
+                    margin: 2px;
+                    font-weight: 600;
+                    &.rbc-active{
+                        background-color: rgb(var(--button-bg-rgb));
+                        color: rgb(var(--button-color-rgb));
+                        font-weight: normal
+                    }
+                }
+            }
+        }
+    }
+}

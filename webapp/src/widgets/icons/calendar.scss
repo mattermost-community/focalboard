@@ -1,0 +1,6 @@
+@use './standardIcon.scss';
+
+.CalendarIcon {
+    @extend %standard-icon;
+    stroke-width: 8px;
+}

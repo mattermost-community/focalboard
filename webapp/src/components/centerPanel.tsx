@@ -27,7 +27,11 @@ import TopBar from './topBar'
 import ViewHeader from './viewHeader/viewHeader'
 import ViewTitle from './viewTitle'
 import Kanban from './kanban/kanban'
+
 import Table from './table/table'
+
+import CalendarView from './calendar/calendar'
+
 import Gallery from './gallery/gallery'
 
 type Props = {
@@ -36,6 +40,7 @@ type Props = {
     activeView: BoardView
     views: BoardView[]
     groupByProperty?: IPropertyTemplate
+    dateDisplayProperty?: IPropertyTemplate
     intl: IntlShape
     readonly: boolean
     addCard: (card: Card) => void
@@ -147,6 +152,7 @@ class CenterPanel extends React.Component<Props, State> {
                         cards={this.props.cards}
                         views={this.props.views}
                         groupByProperty={this.props.groupByProperty}
+                        dateDisplayProperty={this.props.dateDisplayProperty}
                         addCard={() => this.addCard('', true)}
                         addCardFromTemplate={this.addCardFromTemplate}
                         addCardTemplate={this.addCardTemplate}
@@ -170,7 +176,6 @@ class CenterPanel extends React.Component<Props, State> {
                     addCard={this.addCard}
                     showCard={this.showCard}
                 />}
-
                 {activeView.fields.viewType === 'table' &&
                     <Table
                         board={this.props.board}
@@ -186,6 +191,19 @@ class CenterPanel extends React.Component<Props, State> {
                         addCard={this.addCard}
                         onCardClicked={this.cardClicked}
                     />}
+                {activeView.fields.viewType === 'calendar' &&
+
+                    // <CalendarFullView
+                    //     boardTree={boardTree}
+                    // />}
+                    <CalendarView
+                        board={this.props.board}
+                        activeView={this.props.activeView}
+                        cards={this.props.cards}
+                        dateDisplayProperty={this.props.dateDisplayProperty}
+                        showCard={this.showCard}
+                        addCard={() => this.addCard('', true)}
+                    />}
 
                 {activeView.fields.viewType === 'gallery' &&
                     <Gallery
@@ -197,7 +215,6 @@ class CenterPanel extends React.Component<Props, State> {
                         selectedCardIds={this.state.selectedCardIds}
                         addCard={(show) => this.addCard('', show)}
                     />}
-
             </div>
         )
     }
