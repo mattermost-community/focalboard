@@ -14,7 +14,7 @@ import {TouchBackend} from 'react-dnd-touch-backend'
 
 import {createBrowserHistory} from 'history'
 
-import TelemetryClient, {TelemetryActions, TelemetryCategory} from './telemetry/telemetryClient'
+import TelemetryClient from './telemetry/telemetryClient'
 
 import {IAppWindow} from './types'
 import {getMessages} from './i18n'
@@ -179,13 +179,9 @@ const App = React.memo((): JSX.Element => {
                                 <Route path='/change_password'>
                                     <ChangePasswordPage/>
                                 </Route>
-                                <Route
-                                    path='/shared/:boardId?/:viewId?/:cardId?'
-                                    render={({match: {params: {boardId}}}) => {
-                                        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewSharedBoard, {board: boardId})
-                                        return <BoardPage readonly={true}/>
-                                    }}
-                                />
+                                <Route path='/shared/:boardId?/:viewId?/:cardId?'>
+                                    <BoardPage readonly={true}/>
+                                </Route>
                                 <Route
                                     path='/board/:boardId?/:viewId?/:cardId?'
                                     render={({match: {params: {boardId, viewId, cardId}}}) => {
@@ -205,13 +201,9 @@ const App = React.memo((): JSX.Element => {
                                         return null
                                     }}
                                 />
-                                <Route
-                                    path='/workspace/:workspaceId/shared/:boardId?/:viewId?/:cardId?'
-                                    render={({match: {params: {boardId}}}) => {
-                                        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewSharedBoard, {board: boardId})
-                                        return <BoardPage readonly={true}/>
-                                    }}
-                                />
+                                <Route path='/workspace/:workspaceId/shared/:boardId?/:viewId?/:cardId?'>
+                                    <BoardPage readonly={true}/>
+                                </Route>
                                 <Route
                                     path='/workspace/:workspaceId/:boardId?/:viewId?/:cardId?'
                                     render={({match: {params: {workspaceId, boardId, viewId, cardId}}}) => {
