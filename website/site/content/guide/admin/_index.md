@@ -30,7 +30,7 @@ Personal server settings are stored in `config.json` and are read when the serve
 
 By default, personal server exposes admin APIs on a local Unix socket at `/var/tmp/focalboard_local.socket`. This is configurable using the `enableLocalMode` and `localModeSocketLocation` settings in `config.json`.
 
-To reset a user's password, you can use the following `reset-password.sh` script:
+To reset a user's password, first enable `localModeSocketLocation` in config.json, and restart the server if necessary. You can then use the following `reset-password.sh` script:
 
 ```
 #!/bin/bash
