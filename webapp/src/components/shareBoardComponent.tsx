@@ -14,6 +14,8 @@ import {sendFlashMessage} from '../components/flashMessages'
 import Button from '../widgets/buttons/button'
 import Switch from '../widgets/switch'
 
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
+
 import Modal from './modal'
 import './shareBoardComponent.scss'
 
@@ -47,6 +49,7 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
         const newSharing: ISharing = sharing || createSharingInfo()
         newSharing.id = props.boardId
         newSharing.enabled = isOn
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoard, {board: props.boardId, enabled: isOn})
         await client.setSharing(newSharing)
         await loadData()
     }
