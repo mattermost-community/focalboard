@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 interface UndoCommand {
     checkpoint: number
-    undo: () => Promise<void>
+    undo: (value?: any) => Promise<void>
     redo: () => Promise<void>
     description?: string
     groupId?: string
@@ -75,7 +75,7 @@ class UndoManager {
 
     registerUndo(
         command: {
-            undo: () => Promise<void>,
+            undo: (value?: any) => Promise<void>,
             redo: () => Promise<void>
         },
         description?: string,
