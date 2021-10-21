@@ -103,6 +103,10 @@ const HeaderComponent = () => {
     )
 }
 
+export const xyz = (teamID: string) => {
+    console.log(`switching to team ID: ${teamID}`)
+}
+
 export default class Plugin {
     channelHeaderButtonId?: string
     registry?: PluginRegistry
@@ -142,7 +146,16 @@ export default class Plugin {
                 window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`, '_blank', 'noopener')
             }
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Boards')
-            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/welcome', MainApp, HeaderComponent)
+            this.registry.registerProduct(
+                '/boards',
+                'product-boards',
+                'Boards',
+                '/boards/welcome',
+                MainApp,
+                HeaderComponent,
+                () => null,
+                xyz,
+            )
         } else {
             windowAny.frontendBaseURL = subpath + '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
