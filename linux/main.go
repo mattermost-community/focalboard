@@ -37,19 +37,19 @@ func getFreePort() (int, error) {
 func runServer(port int) (*server.Server, error) {
 	logger, _ := mlog.NewLogger()
 
-	ex, _ := os.Executable()
-	ex_dir, _ := filepath.EvalSymlinks(filepath.Dir(ex))
+	executable, _ := os.Executable()
+	executableDir, _ := filepath.EvalSymlinks(filepath.Dir(executable))
 
 	config := &config.Configuration{
 		ServerRoot:              fmt.Sprintf("http://localhost:%d", port),
 		Port:                    port,
 		DBType:                  "sqlite3",
-		DBConfigString:          path.Join(ex_dir, "focalboard.db"),
+		DBConfigString:          path.Join(executableDir, "focalboard.db"),
 		UseSSL:                  false,
 		SecureCookie:            true,
-		WebPath:                 path.Join(ex_dir, "pack"),
+		WebPath:                 path.Join(executableDir, "pack"),
 		FilesDriver:             "local",
-		FilesPath:               path.Join(ex_dir, "focalboard_files"),
+		FilesPath:               path.Join(executableDir, "focalboard_files"),
 		Telemetry:               true,
 		WebhookUpdate:           []string{},
 		SessionExpireTime:       259200000000,
