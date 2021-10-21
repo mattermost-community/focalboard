@@ -6,6 +6,7 @@ interface UndoCommand {
     redo: () => Promise<void>
     description?: string
     groupId?: string
+    value?: any
 }
 
 //
@@ -50,7 +51,11 @@ class UndoManager {
         }
         this.isExecuting = true
 
-        await command[action]()
+        if (action === 'redo') {
+            command.value = await command[action]()
+        } else {
+            await command[action](command.value)
+        }
 
         this.isExecuting = false
         return this
@@ -58,14 +63,14 @@ class UndoManager {
 
     async perform(
         redo: () => Promise<any>,
-        undo: (res?: any) => Promise<void>,
+        undo: (value?: any) => Promise<void>,
         description?: string,
         groupId?: string,
         isDiscardable = false,
     ): Promise<any> {
-        const res = await redo()
-        this.registerUndo({undo: () => undo(res), redo}, description, groupId, isDiscardable)
-        return res
+        const value = await redo()
+        this.registerUndo({undo, redo}, description, groupId, value, isDiscardable)
+        return value
     }
 
     registerUndo(
@@ -75,6 +80,7 @@ class UndoManager {
         },
         description?: string,
         groupId?: string,
+        value?: any,
         isDiscardable = false,
     ): UndoManager {
         if (this.isExecuting) {
@@ -98,6 +104,7 @@ class UndoManager {
             redo: command.redo,
             description,
             groupId,
+            value,
         }
         this.commands.push(internalCommand)
 
