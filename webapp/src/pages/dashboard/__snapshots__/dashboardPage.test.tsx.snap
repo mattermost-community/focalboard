@@ -70,9 +70,9 @@ exports[`pages/dashboard/DashboardPage base case 1`] = `
         <div
           class="sidebarSwitcher"
         >
-          <div
+          <button
             class="Button IconButton"
-            role="button"
+            type="button"
           >
             <svg
               class="HideSidebarIcon Icon"
@@ -86,7 +86,7 @@ exports[`pages/dashboard/DashboardPage base case 1`] = `
                 points="50,20 20,50, 50,80"
               />
             </svg>
-          </div>
+          </button>
         </div>
       </div>
       <div
