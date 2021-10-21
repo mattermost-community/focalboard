@@ -86,6 +86,7 @@ test('Basic undo/redo response dependant', async () => {
     await undoManager.redo()
     expect(undoManager.canUndo).toBe(true)
     expect(undoManager.canRedo).toBe(false)
+    expect(blocks).not.toHaveProperty('1')
     expect(blocks).toHaveProperty('2')
     expect(blocks[2].id).toEqual(2)
 
