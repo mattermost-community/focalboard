@@ -317,12 +317,7 @@ func getFirstLink(str string) string {
 	return firstLink
 }
 
-func returnBoardsParams(pathArray []string) (string, string, string, string) {
-	workspaceID := ""
-	boardID := ""
-	viewID := ""
-	cardID := ""
-
+func returnBoardsParams(pathArray []string) (workspaceID, boardID, viewID, cardID string) {
 	// The reason we are doing this search for the first instance of boards or plugins is to take into account URL subpaths
 	index := -1
 	for i := 0; i < len(pathArray); i++ {
@@ -362,6 +357,5 @@ func returnBoardsParams(pathArray []string) (string, string, string, string) {
 		viewID = pathArray[index+6]
 		cardID = pathArray[index+7]
 	}
-
-	return workspaceID, boardID, viewID, cardID
+	return
 }
