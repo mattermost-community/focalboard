@@ -8,16 +8,16 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
     <div
       class="toolbar hideOnWidescreen"
     >
-      <div
+      <button
         aria-label="Close"
         class="Button IconButton"
-        role="button"
         title="Close"
+        type="button"
       >
         <i
           class="CompassIcon icon-close CloseIcon"
         />
-      </div>
+      </button>
     </div>
     <div
       class="FilterComponent"
@@ -191,16 +191,16 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
     <div
       class="toolbar hideOnWidescreen"
     >
-      <div
+      <button
         aria-label="Close"
         class="Button IconButton"
-        role="button"
         title="Close"
+        type="button"
       >
         <i
           class="CompassIcon icon-close CloseIcon"
         />
-      </div>
+      </button>
     </div>
     <div
       class="FilterComponent"
@@ -374,16 +374,16 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
     <div
       class="toolbar hideOnWidescreen"
     >
-      <div
+      <button
         aria-label="Close"
         class="Button IconButton"
-        role="button"
         title="Close"
+        type="button"
       >
         <i
           class="CompassIcon icon-close CloseIcon"
         />
-      </div>
+      </button>
     </div>
     <div
       class="FilterComponent"
@@ -557,16 +557,16 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
     <div
       class="toolbar hideOnWidescreen"
     >
-      <div
+      <button
         aria-label="Close"
         class="Button IconButton"
-        role="button"
         title="Close"
+        type="button"
       >
         <i
           class="CompassIcon icon-close CloseIcon"
         />
-      </div>
+      </button>
     </div>
     <div
       class="FilterComponent"
