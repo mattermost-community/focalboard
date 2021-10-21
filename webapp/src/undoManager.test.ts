@@ -47,6 +47,41 @@ test('Basic undo/redo', async () => {
     expect(undoManager.redoDescription).toBe(undefined)
 })
 
+test('Basic undo/redo response dependant', async () => {
+    expect(undoManager.canUndo).toBe(false)
+    expect(undoManager.canRedo).toBe(false)
+    expect(undoManager.currentCheckpoint).toBe(0)
+
+    const blocks: Record<string,any> = {}
+
+    const newBlock = await undoManager.perform(
+        async () => {
+            const block = {id: 1, title: "Sample"}
+            blocks[block.id] = block
+            return block
+        },
+        async (block: Record<string,any>) => {
+            delete blocks[block.id]
+        },
+        'test',
+    )
+
+    // should insert the block and return the new block for its use
+    expect(undoManager.canUndo).toBe(true)
+    expect(undoManager.canRedo).toBe(false)
+    expect(blocks).toHaveProperty("1")
+    expect(blocks[1]).toEqual(newBlock)
+
+    // should correctly remove the block based on the info gathered in
+    // the redo function
+    await undoManager.undo()
+    expect(undoManager.canUndo).toBe(false)
+    expect(undoManager.canRedo).toBe(true)
+    expect(blocks).not.toHaveProperty("1")
+
+    await undoManager.clear()
+})
+
 test('Grouped undo/redo', async () => {
     expect(undoManager.canUndo).toBe(false)
     expect(undoManager.canRedo).toBe(false)
