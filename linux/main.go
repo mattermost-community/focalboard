@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 	"os/exec"
+	"path"
+	"path/filepath"
 	"runtime"
 
 	"github.com/google/uuid"
@@ -34,16 +37,19 @@ func getFreePort() (int, error) {
 func runServer(port int) (*server.Server, error) {
 	logger, _ := mlog.NewLogger()
 
+	ex, _ := os.Executable()
+	ex_dir, _ := filepath.EvalSymlinks(filepath.Dir(ex))
+
 	config := &config.Configuration{
 		ServerRoot:              fmt.Sprintf("http://localhost:%d", port),
 		Port:                    port,
 		DBType:                  "sqlite3",
-		DBConfigString:          "./focalboard.db",
+		DBConfigString:          path.Join(ex_dir, "focalboard.db"),
 		UseSSL:                  false,
 		SecureCookie:            true,
-		WebPath:                 "./pack",
+		WebPath:                 path.Join(ex_dir, "pack"),
 		FilesDriver:             "local",
-		FilesPath:               "./focalboard_files",
+		FilesPath:               path.Join(ex_dir, "focalboard_files"),
 		Telemetry:               true,
 		WebhookUpdate:           []string{},
 		SessionExpireTime:       259200000000,
