@@ -46,6 +46,7 @@ describe('pages/welcome', () => {
     })
 
     test('Welcome Page does not render explore page the second time we visit it', () => {
+        history.replace = jest.fn()
         UserSettings.welcomePageViewed = 'true'
         render(wrapIntl(
             <Router history={history}>
