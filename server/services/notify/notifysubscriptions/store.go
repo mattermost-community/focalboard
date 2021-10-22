@@ -14,6 +14,8 @@ type Store interface {
 	GetSubTree2FromHistory(c store.Container, blockID string, opts model.BlockQueryOptions) ([]model.Block, error)
 	GetBoardAndCard(c store.Container, block *model.Block) (board *model.Block, card *model.Block, err error)
 
+	GetUserByID(userID string) (*model.User, error)
+
 	GetSubscribersForBlock(c store.Container, blockID string) ([]*model.Subscriber, error)
 	GetSubscribersCountForBlock(c store.Container, blockID string) (int, error)
 	UpsertNotificationHint(hint *model.NotificationHint) (*model.NotificationHint, error)

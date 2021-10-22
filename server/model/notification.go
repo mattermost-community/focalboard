@@ -16,6 +16,10 @@ type NotificationHint struct {
 	// required: true
 	WorkspaceID string `json:"workspace_id"`
 
+	// UserID is the id of the user who made the block change
+	UserID   string `json:"user_id"`
+	Username string `json:"-"`
+
 	// CreatedAt is the timestamp this notification hint was created
 	// required: true
 	CreateAt int64 `json:"create_at"`
@@ -38,6 +42,9 @@ func (s *NotificationHint) IsValid() error {
 	if s.BlockType == "" {
 		return ErrInvalidNotificationHint{"missing block type"}
 	}
+	if s.UserID == "" {
+		return ErrInvalidNotificationHint{"missing user id"}
+	}
 	return nil
 }
 
@@ -46,6 +53,7 @@ func (s *NotificationHint) Copy() *NotificationHint {
 		BlockType:   s.BlockType,
 		BlockID:     s.BlockID,
 		WorkspaceID: s.WorkspaceID,
+		UserID:      s.UserID,
 		CreateAt:    s.CreateAt,
 		NotifyAt:    s.NotifyAt,
 	}

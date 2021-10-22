@@ -63,7 +63,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 	if err != nil {
 		merr.Append(fmt.Errorf("cannot fetch subscribers for board %s: %w", evt.Board.ID, err))
 	}
-	if err = b.notifySubscribers(subs, evt.Board); err != nil {
+	if err = b.notifySubscribers(subs, evt.Board, evt.UserID); err != nil {
 		merr.Append(fmt.Errorf("cannot notify board subscribers for board %s: %w", evt.Board.ID, err))
 	}
 
@@ -72,7 +72,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 	if err != nil {
 		merr.Append(fmt.Errorf("cannot fetch subscribers for card %s: %w", evt.Card.ID, err))
 	}
-	if err = b.notifySubscribers(subs, evt.Card); err != nil {
+	if err = b.notifySubscribers(subs, evt.Card, evt.UserID); err != nil {
 		merr.Append(fmt.Errorf("cannot notify card subscribers for card %s: %w", evt.Card.ID, err))
 	}
 
@@ -82,7 +82,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 		if err != nil {
 			merr.Append(fmt.Errorf("cannot fetch subscribers for block %s: %w", evt.BlockChanged.ID, err))
 		}
-		if err := b.notifySubscribers(subs, evt.BlockChanged); err != nil {
+		if err := b.notifySubscribers(subs, evt.BlockChanged, evt.UserID); err != nil {
 			merr.Append(fmt.Errorf("cannot notify block subscribers for block %s: %w", evt.BlockChanged.ID, err))
 		}
 	}
@@ -90,7 +90,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 }
 
 // notifySubscribers triggers a change notification for subscribers by writing a notification hint to the database.
-func (b *Backend) notifySubscribers(subs []*model.Subscriber, block *model.Block) error {
+func (b *Backend) notifySubscribers(subs []*model.Subscriber, block *model.Block, userID string) error {
 	if len(subs) == 0 {
 		return nil
 	}
@@ -99,6 +99,7 @@ func (b *Backend) notifySubscribers(subs []*model.Subscriber, block *model.Block
 		BlockType:   block.Type,
 		BlockID:     block.ID,
 		WorkspaceID: block.WorkspaceID,
+		UserID:      userID,
 	}
 
 	_, err := b.store.UpsertNotificationHint(hint)

@@ -6,5 +6,5 @@ package notifysubscriptions
 // Delivery provides an interface for delivering subscription notifications to other systems, such as
 // channels server via plugin API.
 type Delivery interface {
-	Deliver(subscriberID string, subscriberType string, diffs []Diff) error
+	Deliver(subscriberID string, subscriberType string, markdown []string) error
 }
