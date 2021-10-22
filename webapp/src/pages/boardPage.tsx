@@ -79,7 +79,7 @@ const BoardPage = (props: Props): JSX.Element => {
         const workspaceIDToUse = workspaceId || board.workspaceId
 
         const newPath = Utils.buildOriginalPath(workspaceIDToUse, match.params.boardId, match.params.viewId, match.params.cardId)
-        history.push(`/workspace/${newPath}`)
+        history.replace(`/workspace/${newPath}`)
     }, [workspaceId, match.params.boardId, match.params.viewId, match.params.cardId])
 
     useEffect(() => {
