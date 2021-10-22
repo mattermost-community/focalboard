@@ -630,7 +630,7 @@ func _000014_subscriptions_tableDownSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000014_subscriptions_table.down.sql", size: 79, mode: os.FileMode(436), modTime: time.Unix(1633632554, 0)}
+	info := bindataFileInfo{name: "000014_subscriptions_table.down.sql", size: 79, mode: os.FileMode(436), modTime: time.Unix(1634321264, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -650,7 +650,7 @@ func _000014_subscriptions_tableUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000014_subscriptions_table.up.sql", size: 617, mode: os.FileMode(436), modTime: time.Unix(1634057659, 0)}
+	info := bindataFileInfo{name: "000014_subscriptions_table.up.sql", size: 617, mode: os.FileMode(436), modTime: time.Unix(1634321264, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }

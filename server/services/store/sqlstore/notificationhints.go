@@ -56,9 +56,9 @@ func (s *SQLStore) notificationHintFromRows(rows *sql.Rows) ([]*model.Notificati
 	return hints, nil
 }
 
-// UpsertNotificationHint creates or updates a notification hint. When updating the `notify_at` is set
-// to the current time plus `notificationFreq`.
-func (s *SQLStore) UpsertNotificationHint(hint *model.NotificationHint, notificationFreq time.Duration) (*model.NotificationHint, error) {
+// upsertNotificationHint creates or updates a notification hint. When updating the `notify_at` is set
+// to the current time plus `notifyFreq`.
+func (s *SQLStore) upsertNotificationHint(db sq.BaseRunner, hint *model.NotificationHint, notifyFreq time.Duration) (*model.NotificationHint, error) {
 	if err := hint.IsValid(); err != nil {
 		return nil, err
 	}
@@ -73,7 +73,7 @@ func (s *SQLStore) UpsertNotificationHint(hint *model.NotificationHint, notifica
 	}
 
 	now := model.GetMillis()
-	notifyAt := utils.GetMillisForTime(time.Now().Add(notificationFreq))
+	notifyAt := utils.GetMillisForTime(time.Now().Add(notifyFreq))
 
 	if hintRet == nil {
 		// insert
@@ -81,7 +81,7 @@ func (s *SQLStore) UpsertNotificationHint(hint *model.NotificationHint, notifica
 		hintRet.CreateAt = now
 		hintRet.NotifyAt = notifyAt
 
-		query := s.getQueryBuilder().Insert(s.tablePrefix + "notification_hints").
+		query := s.getQueryBuilder(db).Insert(s.tablePrefix + "notification_hints").
 			Columns(notificationHintFields()...).
 			Values(valuesForNotificationHint(hintRet)...)
 		_, err = query.Exec()
@@ -89,7 +89,7 @@ func (s *SQLStore) UpsertNotificationHint(hint *model.NotificationHint, notifica
 		// update
 		hintRet.NotifyAt = notifyAt
 
-		query := s.getQueryBuilder().Update(s.tablePrefix+"notification_hints").
+		query := s.getQueryBuilder(db).Update(s.tablePrefix+"notification_hints").
 			Set("notify_at", now).
 			Where(sq.Eq{"block_id": hintRet.BlockID}).
 			Where(sq.Eq{"workspace_id": hintRet.WorkspaceID})
@@ -107,9 +107,9 @@ func (s *SQLStore) UpsertNotificationHint(hint *model.NotificationHint, notifica
 	return hintRet, nil
 }
 
-// DeleteNotificationHint deletes the notification hint for the specified block.
-func (s *SQLStore) DeleteNotificationHint(c store.Container, blockID string) error {
-	query := s.getQueryBuilder().
+// deleteNotificationHint deletes the notification hint for the specified block.
+func (s *SQLStore) deleteNotificationHint(db sq.BaseRunner, c store.Container, blockID string) error {
+	query := s.getQueryBuilder(db).
 		Delete(s.tablePrefix + "notification_hints").
 		Where(sq.Eq{"block_id": blockID}).
 		Where(sq.Eq{"workspace_id": c.WorkspaceID})
@@ -131,9 +131,9 @@ func (s *SQLStore) DeleteNotificationHint(c store.Container, blockID string) err
 	return nil
 }
 
-// GetNotificationHint fetches the notification hint for the specified block.
-func (s *SQLStore) GetNotificationHint(c store.Container, blockID string) (*model.NotificationHint, error) {
-	query := s.getQueryBuilder().
+// getNotificationHint fetches the notification hint for the specified block.
+func (s *SQLStore) getNotificationHint(db sq.BaseRunner, c store.Container, blockID string) (*model.NotificationHint, error) {
+	query := s.getQueryBuilder(db).
 		Select(notificationHintFields()...).
 		From(s.tablePrefix + "notification_hints").
 		Where(sq.Eq{"block_id": blockID}).
@@ -165,10 +165,10 @@ func (s *SQLStore) GetNotificationHint(c store.Container, blockID string) (*mode
 	return hint[0], nil
 }
 
-// GetNextNotificationHint fetches the next scheduled notification hint. If remove is true
+// getNextNotificationHint fetches the next scheduled notification hint. If remove is true
 // then the hint is removed from the database as well, as if popping from a stack.
-func (s *SQLStore) GetNextNotificationHint(remove bool) (*model.NotificationHint, error) {
-	selectQuery := s.getQueryBuilder().
+func (s *SQLStore) getNextNotificationHint(db sq.BaseRunner, remove bool) (*model.NotificationHint, error) {
+	selectQuery := s.getQueryBuilder(db).
 		Select(notificationHintFields()...).
 		From(s.tablePrefix + "notification_hints").
 		OrderBy("notify_at").
@@ -197,7 +197,7 @@ func (s *SQLStore) GetNextNotificationHint(remove bool) (*model.NotificationHint
 	hint := hints[0]
 
 	if remove {
-		deleteQuery := s.getQueryBuilder().
+		deleteQuery := s.getQueryBuilder(db).
 			Delete(s.tablePrefix + "notification_hints").
 			Where(sq.Eq{"block_id": hint.BlockID})
 

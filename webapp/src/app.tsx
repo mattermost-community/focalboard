@@ -16,6 +16,7 @@ import {createBrowserHistory} from 'history'
 
 import TelemetryClient from './telemetry/telemetryClient'
 
+import {IAppWindow} from './types'
 import {getMessages} from './i18n'
 import {FlashMessages} from './components/flashMessages'
 import BoardPage from './pages/boardPage'
@@ -36,6 +37,8 @@ import {fetchClientConfig} from './store/clientConfig'
 import {IUser} from './user'
 import {UserSettings} from './userSettings'
 
+declare let window: IAppWindow
+
 export const history = createBrowserHistory({basename: Utils.getFrontendBaseURL()})
 
 const UUID_REGEX = new RegExp(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/)
@@ -47,30 +50,30 @@ if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
         }
 
         const pathName = event.data.message?.pathName
-        if (!pathName || !pathName.startsWith((window as any).frontendBaseURL)) {
+        if (!pathName || !pathName.startsWith(window.frontendBaseURL)) {
             return
         }
 
         Utils.log(`Navigating Boards to ${pathName}`)
-        history.replace(pathName.replace((window as any).frontendBaseURL, ''))
+        history.replace(pathName.replace(window.frontendBaseURL, ''))
     })
 }
 
-const browserHistory = {
+const browserHistory: typeof history = {
     ...history,
-    push: (path: string, ...args: any[]) => {
+    push: (path: string, state?: unknown) => {
         if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
             window.postMessage(
                 {
                     type: 'browser-history-push',
                     message: {
-                        path: `${(window as any).frontendBaseURL}${path}`,
+                        path: `${window.frontendBaseURL}${path}`,
                     },
                 },
                 window.location.origin,
             )
         } else {
-            history.push(path, ...args)
+            history.push(path, state)
         }
     },
 }
@@ -97,7 +100,9 @@ const App = React.memo((): JSX.Element => {
 
     if (Utils.isFocalboardPlugin()) {
         useEffect(() => {
-            history.replace(window.location.pathname.replace((window as any).frontendBaseURL, ''))
+            if (window.frontendBaseURL) {
+                history.replace(window.location.pathname.replace(window.frontendBaseURL, ''))
+            }
         }, [])
     }
 
@@ -124,28 +129,6 @@ const App = React.memo((): JSX.Element => {
 
     const continueToWelcomeScreen = () => {
         return Utils.isFocalboardPlugin() && loggedIn === true && !UserSettings.welcomePageViewed
-    }
-
-    const buildOriginalPath = (workspaceId = '', boardId = '', viewId = '', cardId = '') => {
-        let originalPath = ''
-
-        if (workspaceId) {
-            originalPath += `${workspaceId}/`
-        }
-
-        if (boardId) {
-            originalPath += `${boardId}/`
-        }
-
-        if (viewId) {
-            originalPath += `${viewId}/`
-        }
-
-        if (cardId) {
-            originalPath += `${cardId}/`
-        }
-
-        return originalPath
     }
 
     return (
@@ -185,7 +168,7 @@ const App = React.memo((): JSX.Element => {
                                         }
 
                                         if (continueToWelcomeScreen()) {
-                                            const originalPath = `/board/${buildOriginalPath('', boardId, viewId, cardId)}`
+                                            const originalPath = `/board/${Utils.buildOriginalPath('', boardId, viewId, cardId)}`
                                             return <Redirect to={`/welcome?r=${originalPath}`}/>
                                         }
 
@@ -202,7 +185,7 @@ const App = React.memo((): JSX.Element => {
                                 <Route
                                     path='/workspace/:workspaceId/:boardId?/:viewId?/:cardId?'
                                     render={({match: {params: {workspaceId, boardId, viewId, cardId}}}) => {
-                                        const originalPath = `/workspace/${buildOriginalPath(workspaceId, boardId, viewId, cardId)}`
+                                        const originalPath = `/workspace/${Utils.buildOriginalPath(workspaceId, boardId, viewId, cardId)}`
                                         if (loggedIn === false) {
                                             let redirectUrl = '/' + Utils.buildURL(originalPath)
                                             if (redirectUrl.indexOf('//') === 0) {
@@ -248,7 +231,7 @@ const App = React.memo((): JSX.Element => {
                                         }
 
                                         if (continueToWelcomeScreen()) {
-                                            const originalPath = `/${buildOriginalPath('', boardId, viewId, cardId)}`
+                                            const originalPath = `/${Utils.buildOriginalPath('', boardId, viewId, cardId)}`
                                             const queryString = boardIdIsValidUUIDV4 ? `r=${originalPath}` : ''
                                             return <Redirect to={`/welcome?${queryString}`}/>
                                         }

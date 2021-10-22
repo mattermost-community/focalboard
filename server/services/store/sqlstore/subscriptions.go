@@ -62,9 +62,9 @@ func (s *SQLStore) subscriptionsFromRows(rows *sql.Rows) ([]*model.Subscription,
 	return subscriptions, nil
 }
 
-// CreateSubscription creates a new subscription, or returns an existing subscription
+// createSubscription creates a new subscription, or returns an existing subscription
 // for the block & subscriber.
-func (s *SQLStore) CreateSubscription(sub *model.Subscription) (*model.Subscription, error) {
+func (s *SQLStore) createSubscription(db sq.BaseRunner, sub *model.Subscription) (*model.Subscription, error) {
 	if err := sub.IsValid(); err != nil {
 		return nil, err
 	}
@@ -85,7 +85,7 @@ func (s *SQLStore) CreateSubscription(sub *model.Subscription) (*model.Subscript
 	subAdd.CreateAt = now
 	subAdd.DeleteAt = 0
 
-	query := s.getQueryBuilder().
+	query := s.getQueryBuilder(db).
 		Insert(s.tablePrefix + "subscriptions").
 		Columns(subscriptionFields()...).
 		Values(valuesForSubscription(&subAdd)...)
@@ -102,11 +102,11 @@ func (s *SQLStore) CreateSubscription(sub *model.Subscription) (*model.Subscript
 	return &subAdd, nil
 }
 
-// DeleteSubscription soft deletes the subscription for a specific block and subscriber.
-func (s *SQLStore) DeleteSubscription(c store.Container, blockID string, subscriberID string) error {
+// deleteSubscription soft deletes the subscription for a specific block and subscriber.
+func (s *SQLStore) deleteSubscription(db sq.BaseRunner, c store.Container, blockID string, subscriberID string) error {
 	now := model.GetMillis()
 
-	query := s.getQueryBuilder().
+	query := s.getQueryBuilder(db).
 		Update(s.tablePrefix+"subscriptions").
 		Set("delete_at", now).
 		Where(sq.Eq{"block_id": blockID}).
@@ -130,9 +130,9 @@ func (s *SQLStore) DeleteSubscription(c store.Container, blockID string, subscri
 	return nil
 }
 
-// GetSubscription fetches the subscription for a specific block and subscriber.
-func (s *SQLStore) GetSubscription(c store.Container, blockID string, subscriberID string) (*model.Subscription, error) {
-	query := s.getQueryBuilder().
+// getSubscription fetches the subscription for a specific block and subscriber.
+func (s *SQLStore) getSubscription(db sq.BaseRunner, c store.Container, blockID string, subscriberID string) (*model.Subscription, error) {
+	query := s.getQueryBuilder(db).
 		Select(subscriptionFields()...).
 		From(s.tablePrefix + "subscriptions").
 		Where(sq.Eq{"block_id": blockID}).
@@ -168,9 +168,9 @@ func (s *SQLStore) GetSubscription(c store.Container, blockID string, subscriber
 	return subscriptions[0], nil
 }
 
-// GetSubscriptions fetches all subscriptions for a specific subscriber.
-func (s *SQLStore) GetSubscriptions(subscriberID string) ([]*model.Subscription, error) {
-	query := s.getQueryBuilder().
+// getSubscriptions fetches all subscriptions for a specific subscriber.
+func (s *SQLStore) getSubscriptions(db sq.BaseRunner, subscriberID string) ([]*model.Subscription, error) {
+	query := s.getQueryBuilder(db).
 		Select(subscriptionFields()...).
 		From(s.tablePrefix + "subscriptions").
 		Where(sq.Eq{"subscriber_id": subscriberID}).
@@ -189,9 +189,9 @@ func (s *SQLStore) GetSubscriptions(subscriberID string) ([]*model.Subscription,
 	return s.subscriptionsFromRows(rows)
 }
 
-// GetSubscribersForBlock fetches all subscribers for a block.
-func (s *SQLStore) GetSubscribersForBlock(c store.Container, blockID string) ([]*model.Subscriber, error) {
-	query := s.getQueryBuilder().
+// getSubscribersForBlock fetches all subscribers for a block.
+func (s *SQLStore) getSubscribersForBlock(db sq.BaseRunner, c store.Container, blockID string) ([]*model.Subscriber, error) {
+	query := s.getQueryBuilder(db).
 		Select(
 			"subscriber_type",
 			"subscriber_id",
@@ -228,9 +228,9 @@ func (s *SQLStore) GetSubscribersForBlock(c store.Container, blockID string) ([]
 	return subscribers, nil
 }
 
-// GetSubscribersCountForBlock returns a count of all subscribers for a block.
-func (s *SQLStore) GetSubscribersCountForBlock(c store.Container, blockID string) (int, error) {
-	query := s.getQueryBuilder().
+// getSubscribersCountForBlock returns a count of all subscribers for a block.
+func (s *SQLStore) getSubscribersCountForBlock(db sq.BaseRunner, c store.Container, blockID string) (int, error) {
+	query := s.getQueryBuilder(db).
 		Select("count(subscriber_id)").
 		From(s.tablePrefix + "subscriptions").
 		Where(sq.Eq{"block_id": blockID}).
