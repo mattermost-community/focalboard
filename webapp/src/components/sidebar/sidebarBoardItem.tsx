@@ -162,7 +162,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                 </MenuWrapper>
             </button>
             {!collapsed && boardViews.length === 0 &&
-                <button className='octo-sidebar-item subitem no-views'>
+                <div className='octo-sidebar-item subitem no-views'>
                     <FormattedMessage
                         id='Sidebar.no-views-in-board'
                         defaultMessage='No pages inside'
