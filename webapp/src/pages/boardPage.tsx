@@ -87,9 +87,9 @@ const BoardPage = (props: Props) => {
         // we can pick workspace ID from board if it's not available anywhere,
         const workspaceIDToUse = workspaceId || board.workspaceId
 
-        const newPath = Utils.buildOriginalPath(workspaceIDToUse, match.params.boardId, match.params.viewId, match.params.cardId)
+        const newPath = Utils.buildOriginalPath(workspaceIDToUse, match.params.boardId, match.params.viewId)
         history.replace(`/workspace/${newPath}`)
-    }, [workspaceId, match.params.boardId, match.params.viewId, match.params.cardId])
+    }, [workspaceId, match.params.boardId, match.params.viewId])
 
     useEffect(() => {
         const boardId = match.params.boardId
