@@ -585,6 +585,28 @@ class Utils {
     static generateClassName(conditions: Record<string, boolean>): string {
         return Object.entries(conditions).map(([className, condition]) => (condition ? className : '')).filter((className) => className !== '').join(' ')
     }
+
+    static buildOriginalPath(workspaceId = '', boardId = '', viewId = '', cardId = ''): string {
+        let originalPath = ''
+
+        if (workspaceId) {
+            originalPath += `${workspaceId}/`
+        }
+
+        if (boardId) {
+            originalPath += `${boardId}/`
+        }
+
+        if (viewId) {
+            originalPath += `${viewId}/`
+        }
+
+        if (cardId) {
+            originalPath += `${cardId}/`
+        }
+
+        return originalPath
+    }
 }
 
 export {Utils, IDType}
