@@ -11,9 +11,9 @@ exports[`should match snapshot on read only 1`] = `
       class="octo-table-cell"
       style="width: 100px;"
     >
-      <div
+      <button
         class="Button IconButton readonly"
-        role="button"
+        type="button"
       >
         <svg
           class="DisclosureTriangleIcon Icon"
@@ -24,7 +24,7 @@ exports[`should match snapshot on read only 1`] = `
             points="37,35 37,65 63,50"
           />
         </svg>
-      </div>
+      </button>
       <span
         class="Label propColorBrown "
       >
@@ -61,9 +61,9 @@ exports[`should match snapshot with Group 1`] = `
       class="octo-table-cell"
       style="width: 100px;"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <svg
           class="DisclosureTriangleIcon Icon"
@@ -74,7 +74,7 @@ exports[`should match snapshot with Group 1`] = `
             points="37,35 37,65 63,50"
           />
         </svg>
-      </div>
+      </button>
       <span
         class="Label propColorBrown "
       >
@@ -100,23 +100,23 @@ exports[`should match snapshot with Group 1`] = `
       class="MenuWrapper"
       role="button"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <i
           class="CompassIcon icon-dots-horizontal OptionsIcon"
         />
-      </div>
+      </button>
     </div>
-    <div
+    <button
       class="Button IconButton"
-      role="button"
+      type="button"
     >
       <i
         class="CompassIcon icon-plus AddIcon"
       />
-    </div>
+    </button>
   </div>
 </div>
 `;
@@ -132,9 +132,9 @@ exports[`should match snapshot, add new 1`] = `
       class="octo-table-cell"
       style="width: 100px;"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <svg
           class="DisclosureTriangleIcon Icon"
@@ -145,7 +145,7 @@ exports[`should match snapshot, add new 1`] = `
             points="37,35 37,65 63,50"
           />
         </svg>
-      </div>
+      </button>
       <span
         class="Label propColorBrown "
       >
@@ -171,23 +171,23 @@ exports[`should match snapshot, add new 1`] = `
       class="MenuWrapper"
       role="button"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <i
           class="CompassIcon icon-dots-horizontal OptionsIcon"
         />
-      </div>
+      </button>
     </div>
-    <div
+    <button
       class="Button IconButton"
-      role="button"
+      type="button"
     >
       <i
         class="CompassIcon icon-plus AddIcon"
       />
-    </div>
+    </button>
   </div>
 </div>
 `;
@@ -203,9 +203,9 @@ exports[`should match snapshot, edit title 1`] = `
       class="octo-table-cell"
       style="width: 100px;"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <svg
           class="DisclosureTriangleIcon Icon"
@@ -216,7 +216,7 @@ exports[`should match snapshot, edit title 1`] = `
             points="37,35 37,65 63,50"
           />
         </svg>
-      </div>
+      </button>
       <span
         class="Label propColorBrown "
       >
@@ -242,23 +242,23 @@ exports[`should match snapshot, edit title 1`] = `
       class="MenuWrapper"
       role="button"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <i
           class="CompassIcon icon-dots-horizontal OptionsIcon"
         />
-      </div>
+      </button>
     </div>
-    <div
+    <button
       class="Button IconButton"
-      role="button"
+      type="button"
     >
       <i
         class="CompassIcon icon-plus AddIcon"
       />
-    </div>
+    </button>
   </div>
 </div>
 `;
@@ -274,9 +274,9 @@ exports[`should match snapshot, hide group 1`] = `
       class="octo-table-cell"
       style="width: 100px;"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <svg
           class="DisclosureTriangleIcon Icon"
@@ -287,7 +287,7 @@ exports[`should match snapshot, hide group 1`] = `
             points="37,35 37,65 63,50"
           />
         </svg>
-      </div>
+      </button>
       <span
         class="Label propColorBrown "
       >
@@ -313,23 +313,23 @@ exports[`should match snapshot, hide group 1`] = `
       class="MenuWrapper"
       role="button"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <i
           class="CompassIcon icon-dots-horizontal OptionsIcon"
         />
-      </div>
+      </button>
     </div>
-    <div
+    <button
       class="Button IconButton"
-      role="button"
+      type="button"
     >
       <i
         class="CompassIcon icon-plus AddIcon"
       />
-    </div>
+    </button>
   </div>
 </div>
 `;
@@ -345,9 +345,9 @@ exports[`should match snapshot, no groups 1`] = `
       class="octo-table-cell"
       style="width: 100px;"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <svg
           class="DisclosureTriangleIcon Icon"
@@ -358,7 +358,7 @@ exports[`should match snapshot, no groups 1`] = `
             points="37,35 37,65 63,50"
           />
         </svg>
-      </div>
+      </button>
       <span
         class="Label empty "
         title="Items with an empty Property 1 property will go here. This column cannot be removed."
@@ -380,23 +380,23 @@ exports[`should match snapshot, no groups 1`] = `
       class="MenuWrapper"
       role="button"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <i
           class="CompassIcon icon-dots-horizontal OptionsIcon"
         />
-      </div>
+      </button>
     </div>
-    <div
+    <button
       class="Button IconButton"
-      role="button"
+      type="button"
     >
       <i
         class="CompassIcon icon-plus AddIcon"
       />
-    </div>
+    </button>
   </div>
 </div>
 `;

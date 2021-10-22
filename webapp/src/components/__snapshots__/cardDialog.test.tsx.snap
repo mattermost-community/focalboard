@@ -14,16 +14,16 @@ exports[`components/cardDialog return a cardDialog readonly 1`] = `
         <div
           class="toolbar"
         >
-          <div
+          <button
             aria-label="Close dialog"
             class="Button IconButton IconButton--large"
-            role="button"
             title="Close dialog"
+            type="button"
           >
             <i
               class="CompassIcon icon-close CloseIcon"
             />
-          </div>
+          </button>
           <div
             class="octo-spacer"
           />
@@ -32,14 +32,14 @@ exports[`components/cardDialog return a cardDialog readonly 1`] = `
             class="MenuWrapper"
             role="button"
           >
-            <div
+            <button
               class="Button IconButton IconButton--large"
-              role="button"
+              type="button"
             >
               <i
                 class="CompassIcon icon-dots-horizontal OptionsIcon"
               />
-            </div>
+            </button>
           </div>
         </div>
         <div
@@ -420,16 +420,16 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
         <div
           class="toolbar"
         >
-          <div
+          <button
             aria-label="Close dialog"
             class="Button IconButton IconButton--large"
-            role="button"
             title="Close dialog"
+            type="button"
           >
             <i
               class="CompassIcon icon-close CloseIcon"
             />
-          </div>
+          </button>
           <div
             class="octo-spacer"
           />
@@ -438,14 +438,14 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
             class="MenuWrapper"
             role="button"
           >
-            <div
+            <button
               class="Button IconButton IconButton--large"
-              role="button"
+              type="button"
             >
               <i
                 class="CompassIcon icon-dots-horizontal OptionsIcon"
               />
-            </div>
+            </button>
             <div
               class="Menu noselect left"
             >
@@ -919,16 +919,16 @@ exports[`components/cardDialog should match snapshot 1`] = `
         <div
           class="toolbar"
         >
-          <div
+          <button
             aria-label="Close dialog"
             class="Button IconButton IconButton--large"
-            role="button"
             title="Close dialog"
+            type="button"
           >
             <i
               class="CompassIcon icon-close CloseIcon"
             />
-          </div>
+          </button>
           <div
             class="octo-spacer"
           />
@@ -937,14 +937,14 @@ exports[`components/cardDialog should match snapshot 1`] = `
             class="MenuWrapper"
             role="button"
           >
-            <div
+            <button
               class="Button IconButton IconButton--large"
-              role="button"
+              type="button"
             >
               <i
                 class="CompassIcon icon-dots-horizontal OptionsIcon"
               />
-            </div>
+            </button>
           </div>
         </div>
         <div

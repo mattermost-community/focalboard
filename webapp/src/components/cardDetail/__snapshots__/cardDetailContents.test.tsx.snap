@@ -168,14 +168,14 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
               class="MenuWrapper"
               role="button"
             >
-              <div
+              <button
                 class="Button IconButton"
-                role="button"
+                type="button"
               >
                 <i
                   class="CompassIcon icon-dots-horizontal OptionsIcon"
                 />
-              </div>
+              </button>
             </div>
             <div
               class="dnd-handle"
@@ -232,14 +232,14 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
                 class="MenuWrapper"
                 role="button"
               >
-                <div
+                <button
                   class="Button IconButton"
-                  role="button"
+                  type="button"
                 >
                   <i
                     class="CompassIcon icon-dots-horizontal OptionsIcon"
                   />
-                </div>
+                </button>
               </div>
               <div
                 class="dnd-handle"
@@ -287,14 +287,14 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
                 class="MenuWrapper"
                 role="button"
               >
-                <div
+                <button
                   class="Button IconButton"
-                  role="button"
+                  type="button"
                 >
                   <i
                     class="CompassIcon icon-dots-horizontal OptionsIcon"
                   />
-                </div>
+                </button>
               </div>
               <div
                 class="dnd-handle"
@@ -357,14 +357,14 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
               class="MenuWrapper"
               role="button"
             >
-              <div
+              <button
                 class="Button IconButton"
-                role="button"
+                type="button"
               >
                 <i
                   class="CompassIcon icon-dots-horizontal OptionsIcon"
                 />
-              </div>
+              </button>
             </div>
             <div
               class="dnd-handle"
@@ -417,14 +417,14 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
               class="MenuWrapper"
               role="button"
             >
-              <div
+              <button
                 class="Button IconButton"
-                role="button"
+                type="button"
               >
                 <i
                   class="CompassIcon icon-dots-horizontal OptionsIcon"
                 />
-              </div>
+              </button>
             </div>
             <div
               class="dnd-handle"
@@ -490,14 +490,14 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
               class="MenuWrapper"
               role="button"
             >
-              <div
+              <button
                 class="Button IconButton"
-                role="button"
+                type="button"
               >
                 <i
                   class="CompassIcon icon-dots-horizontal OptionsIcon"
                 />
-              </div>
+              </button>
             </div>
             <div
               class="dnd-handle"
@@ -550,14 +550,14 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
               class="MenuWrapper"
               role="button"
             >
-              <div
+              <button
                 class="Button IconButton"
-                role="button"
+                type="button"
               >
                 <i
                   class="CompassIcon icon-dots-horizontal OptionsIcon"
                 />
-              </div>
+              </button>
             </div>
             <div
               class="dnd-handle"
@@ -773,14 +773,14 @@ exports[`components/cardDetail/cardDetailContents should match snapshot with con
               class="MenuWrapper"
               role="button"
             >
-              <div
+              <button
                 class="Button IconButton"
-                role="button"
+                type="button"
               >
                 <i
                   class="CompassIcon icon-dots-horizontal OptionsIcon"
                 />
-              </div>
+              </button>
             </div>
             <div
               class="dnd-handle"
@@ -846,14 +846,14 @@ exports[`components/cardDetail/cardDetailContents should match snapshot with con
               class="MenuWrapper"
               role="button"
             >
-              <div
+              <button
                 class="Button IconButton"
-                role="button"
+                type="button"
               >
                 <i
                   class="CompassIcon icon-dots-horizontal OptionsIcon"
                 />
-              </div>
+              </button>
             </div>
             <div
               class="dnd-handle"
@@ -910,14 +910,14 @@ exports[`components/cardDetail/cardDetailContents should match snapshot with con
                 class="MenuWrapper"
                 role="button"
               >
-                <div
+                <button
                   class="Button IconButton"
-                  role="button"
+                  type="button"
                 >
                   <i
                     class="CompassIcon icon-dots-horizontal OptionsIcon"
                   />
-                </div>
+                </button>
               </div>
               <div
                 class="dnd-handle"
@@ -965,14 +965,14 @@ exports[`components/cardDetail/cardDetailContents should match snapshot with con
                 class="MenuWrapper"
                 role="button"
               >
-                <div
+                <button
                   class="Button IconButton"
-                  role="button"
+                  type="button"
                 >
                   <i
                     class="CompassIcon icon-dots-horizontal OptionsIcon"
                   />
-                </div>
+                </button>
               </div>
               <div
                 class="dnd-handle"

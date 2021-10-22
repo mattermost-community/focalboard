@@ -131,28 +131,6 @@ const App = React.memo((): JSX.Element => {
         return Utils.isFocalboardPlugin() && loggedIn === true && !UserSettings.welcomePageViewed
     }
 
-    const buildOriginalPath = (workspaceId = '', boardId = '', viewId = '', cardId = '') => {
-        let originalPath = ''
-
-        if (workspaceId) {
-            originalPath += `${workspaceId}/`
-        }
-
-        if (boardId) {
-            originalPath += `${boardId}/`
-        }
-
-        if (viewId) {
-            originalPath += `${viewId}/`
-        }
-
-        if (cardId) {
-            originalPath += `${cardId}/`
-        }
-
-        return originalPath
-    }
-
     return (
         <IntlProvider
             locale={language.split(/[_]/)[0]}
@@ -190,7 +168,7 @@ const App = React.memo((): JSX.Element => {
                                         }
 
                                         if (continueToWelcomeScreen()) {
-                                            const originalPath = `/board/${buildOriginalPath('', boardId, viewId, cardId)}`
+                                            const originalPath = `/board/${Utils.buildOriginalPath('', boardId, viewId, cardId)}`
                                             return <Redirect to={`/welcome?r=${originalPath}`}/>
                                         }
 
@@ -207,7 +185,7 @@ const App = React.memo((): JSX.Element => {
                                 <Route
                                     path='/workspace/:workspaceId/:boardId?/:viewId?/:cardId?'
                                     render={({match: {params: {workspaceId, boardId, viewId, cardId}}}) => {
-                                        const originalPath = `/workspace/${buildOriginalPath(workspaceId, boardId, viewId, cardId)}`
+                                        const originalPath = `/workspace/${Utils.buildOriginalPath(workspaceId, boardId, viewId, cardId)}`
                                         if (loggedIn === false) {
                                             let redirectUrl = '/' + Utils.buildURL(originalPath)
                                             if (redirectUrl.indexOf('//') === 0) {
@@ -253,7 +231,7 @@ const App = React.memo((): JSX.Element => {
                                         }
 
                                         if (continueToWelcomeScreen()) {
-                                            const originalPath = `/${buildOriginalPath('', boardId, viewId, cardId)}`
+                                            const originalPath = `/${Utils.buildOriginalPath('', boardId, viewId, cardId)}`
                                             const queryString = boardIdIsValidUUIDV4 ? `r=${originalPath}` : ''
                                             return <Redirect to={`/welcome?${queryString}`}/>
                                         }
