@@ -286,14 +286,14 @@ const ViewMenu = React.memo((props: Props) => {
                         icon={<GalleryIcon/>}
                         onClick={handleAddViewGallery}
                     />
-                    {/* {clientConfig.featureFlags.CalendarView && */}
+                    {clientConfig.featureFlags.CalendarView &&
                     <Menu.Text
                         id='calendar'
                         name='Calendar'
                         icon={<CalendarIcon/>}
                         onClick={handleAddViewCalendar}
                     />
-                    {/* } */}
+                    }
                 </Menu.SubMenu>
             }
         </Menu>
