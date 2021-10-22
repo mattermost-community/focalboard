@@ -36,6 +36,8 @@ import {fetchClientConfig} from './store/clientConfig'
 
 import {IUser} from './user'
 import {UserSettings} from './userSettings'
+import {getCurrentBoard} from './store/boards'
+import store from './store'
 
 declare let window: IAppWindow
 
@@ -78,7 +80,7 @@ const browserHistory: typeof history = {
     },
 }
 
-const App = React.memo((): JSX.Element => {
+export const App = React.memo((): JSX.Element => {
     const language = useAppSelector<string>(getLanguage)
     const loggedIn = useAppSelector<boolean|null>(getLoggedIn)
     const globalError = useAppSelector<string>(getGlobalError)
@@ -273,5 +275,3 @@ const App = React.memo((): JSX.Element => {
         </IntlProvider>
     )
 })
-
-export default App

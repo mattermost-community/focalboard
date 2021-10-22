@@ -32,13 +32,16 @@ import IconButton from '../widgets/buttons/iconButton'
 import CloseIcon from '../widgets/icons/close'
 
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
+import store from '../store'
 type Props = {
     readonly?: boolean
 }
 
 const websocketTimeoutForBanner = 5000
 
-const BoardPage = (props: Props): JSX.Element => {
+export let getCurrentTeam: null | (() => string) = null
+
+export const BoardPage = (props: Props): JSX.Element => {
     const intl = useIntl()
     const board = useAppSelector(getCurrentBoard)
     const activeView = useAppSelector(getCurrentView)
@@ -52,6 +55,14 @@ const BoardPage = (props: Props): JSX.Element => {
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
 
     let workspaceId = match.params.workspaceId || UserSettings.lastWorkspaceId || '0'
+
+    getCurrentTeam = () => {
+        // const location = history.location.pathname
+        const currentBoard = store.getState().boards.boards[store.getState().boards.current]
+        console.log(`currentBoard: ${Boolean(currentBoard)}`)
+        console.log(`currentBoard.id: ${currentBoard && currentBoard.id}`)
+        return currentBoard && currentBoard.id === '7faaca03-ffe0-41d4-8dc6-ab9c71255081' ? 'yf8xcjpoibbbbjjp14mabajrfh' : 'reg8pkwg6byrzeke65dm15yxzr'
+    }
 
     // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {
@@ -294,5 +305,3 @@ const BoardPage = (props: Props): JSX.Element => {
         </div>
     )
 }
-
-export default BoardPage

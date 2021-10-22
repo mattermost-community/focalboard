@@ -13,7 +13,9 @@ windowAny.baseURL = '/plugins/focalboard'
 windowAny.frontendBaseURL = '/boards'
 windowAny.isFocalboardPlugin = true
 
-import App from '../../../webapp/src/app'
+import {getCurrentTeam} from '../../../webapp/src/pages/boardPage'
+
+import {App} from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
@@ -146,6 +148,8 @@ export default class Plugin {
                 window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`, '_blank', 'noopener')
             }
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Boards')
+
+            // registerProduct(baseURL, switcherIcon, switcherText, switcherLinkURL, mainComponent, headerCentreComponent = () => null, headerRightComponent = () => null,showTeamSidebar, teamSwitchCallback, getCurrentTeam) {
             this.registry.registerProduct(
                 '/boards',
                 'product-boards',
@@ -156,6 +160,9 @@ export default class Plugin {
                 () => null,
                 true,
                 xyz,
+                () => {
+                    return getCurrentTeam
+                },
             )
         } else {
             windowAny.frontendBaseURL = subpath + '/plug/focalboard'
