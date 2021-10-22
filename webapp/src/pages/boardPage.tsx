@@ -31,6 +31,7 @@ import {UserSettings} from '../userSettings'
 import IconButton from '../widgets/buttons/iconButton'
 import CloseIcon from '../widgets/icons/close'
 
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 type Props = {
     readonly?: boolean
 }
@@ -168,6 +169,7 @@ const BoardPage = (props: Props): JSX.Element => {
         if (props.readonly) {
             loadAction = initialReadOnlyLoad
             token = token || queryString.get('r') || ''
+            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewSharedBoard, {board: board.id})
         }
 
         dispatch(loadAction(match.params.boardId))
