@@ -17,14 +17,14 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       class="MenuWrapper"
       role="button"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <i
           class="CompassIcon icon-chevron-down DropdownIcon"
         />
-      </div>
+      </button>
     </div>
     <div
       class="octo-spacer"
@@ -104,14 +104,14 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
         class="MenuWrapper"
         role="button"
       >
-        <div
+        <button
           class="Button IconButton"
-          role="button"
+          type="button"
         >
           <i
             class="CompassIcon icon-dots-horizontal OptionsIcon"
           />
-        </div>
+        </button>
       </div>
     </div>
     <div
@@ -158,14 +158,14 @@ exports[`components/viewHeader/viewHeader return viewHeader readonly 1`] = `
       class="MenuWrapper"
       role="button"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <i
           class="CompassIcon icon-chevron-down DropdownIcon"
         />
-      </div>
+      </button>
     </div>
     <div
       class="octo-spacer"
