@@ -1,0 +1,569 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/contentBlock return commentBlock and click on menuwrapper 1`] = `
+<div>
+  <div
+    class="rowContents"
+  >
+    <div
+      class="ContentBlock octo-block"
+    >
+      <div
+        class="octo-block-margin"
+      >
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="Button IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+          <div
+            class="Menu noselect bottom"
+          >
+            <div
+              class="menu-contents"
+            >
+              <div
+                class="menu-options"
+              >
+                <div
+                  aria-label="Move up"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
+                >
+                  <svg
+                    class="SortUpIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polyline
+                      points="50,20 50,80"
+                    />
+                    <polyline
+                      points="30,40 50,20 70,40"
+                    />
+                  </svg>
+                  <div
+                    class="menu-name"
+                  >
+                    Move up
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  aria-label="Move down"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
+                >
+                  <svg
+                    class="SortDownIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polyline
+                      points="50,20 50,80"
+                    />
+                    <polyline
+                      points="30,60 50,80 70,60"
+                    />
+                  </svg>
+                  <div
+                    class="menu-name"
+                  >
+                    Move down
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="MenuOption SubMenuOption menu-option"
+                  id="insertAbove"
+                >
+                  <i
+                    class="CompassIcon icon-plus AddIcon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Insert above
+                  </div>
+                  <svg
+                    class="SubmenuTriangleIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polygon
+                      points="50,35 75,50 50,65"
+                    />
+                  </svg>
+                </div>
+                <div
+                  aria-label="Delete"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
+                >
+                  <svg
+                    class="DeleteIcon Icon"
+                    viewBox="0 0 448 512"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M268 416h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12zM432 80h-82.41l-34-56.7A48 48 0 0 0 274.41 0H173.59a48 48 0 0 0-41.16 23.3L98.41 80H16A16 16 0 0 0 0 96v16a16 16 0 0 0 16 16h16v336a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128h16a16 16 0 0 0 16-16V96a16 16 0 0 0-16-16zM171.84 50.91A6 6 0 0 1 177 48h94a6 6 0 0 1 5.15 2.91L293.61 80H154.39zM368 464H80V128h288zm-212-48h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12z"
+                    />
+                  </svg>
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+              </div>
+              <div
+                class="menu-spacer hideOnWidescreen"
+              />
+              <div
+                class="menu-options hideOnWidescreen"
+              >
+                <div
+                  aria-label="Cancel"
+                  class="MenuOption TextOption menu-option menu-cancel"
+                  role="button"
+                >
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Cancel
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="dnd-handle"
+          draggable="true"
+        >
+          <svg
+            class="GripIcon Icon"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0V0z"
+              fill="none"
+            />
+            <path
+              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+            />
+          </svg>
+        </div>
+      </div>
+      <div
+        class="addToRow "
+        style="flex: 0 0 auto; height: 100%;"
+      />
+    </div>
+    <div
+      class="addToRow "
+    />
+  </div>
+</div>
+`;
+
+exports[`components/contentBlock should match snapshot with commentBlock 1`] = `
+<div>
+  <div
+    class="rowContents"
+  >
+    <div
+      class="ContentBlock octo-block"
+    >
+      <div
+        class="octo-block-margin"
+      >
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="Button IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+        <div
+          class="dnd-handle"
+          draggable="true"
+        >
+          <svg
+            class="GripIcon Icon"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0V0z"
+              fill="none"
+            />
+            <path
+              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+            />
+          </svg>
+        </div>
+      </div>
+      <div
+        class="addToRow "
+        style="flex: 0 0 auto; height: 100%;"
+      />
+    </div>
+    <div
+      class="addToRow "
+    />
+  </div>
+</div>
+`;
+
+exports[`components/contentBlock should match snapshot with commentBlock readonly 1`] = `
+<div>
+  <div
+    class="rowContents"
+  >
+    <div
+      class="ContentBlock octo-block"
+    >
+      <div
+        class="octo-block-margin"
+      />
+      <div
+        class="addToRow "
+        style="flex: 0 0 auto; height: 100%;"
+      />
+    </div>
+    <div
+      class="addToRow "
+    />
+  </div>
+</div>
+`;
+
+exports[`components/contentBlock should match snapshot with dividerBlock 1`] = `
+<div>
+  <div
+    class="rowContents"
+  >
+    <div
+      class="ContentBlock octo-block"
+    >
+      <div
+        class="octo-block-margin"
+      >
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="Button IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+        <div
+          class="dnd-handle"
+          draggable="true"
+        >
+          <svg
+            class="GripIcon Icon"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0V0z"
+              fill="none"
+            />
+            <path
+              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+            />
+          </svg>
+        </div>
+      </div>
+      <div
+        class="addToRow "
+        style="flex: 0 0 auto; height: 100%;"
+      />
+      <div
+        class="DividerElement"
+      />
+    </div>
+    <div
+      class="addToRow "
+    />
+  </div>
+</div>
+`;
+
+exports[`components/contentBlock should match snapshot with imageBlock 1`] = `
+<div>
+  <div
+    class="rowContents"
+  >
+    <div
+      class="ContentBlock octo-block"
+    >
+      <div
+        class="octo-block-margin"
+      >
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="Button IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+        <div
+          class="dnd-handle"
+          draggable="true"
+        >
+          <svg
+            class="GripIcon Icon"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0V0z"
+              fill="none"
+            />
+            <path
+              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+            />
+          </svg>
+        </div>
+      </div>
+      <div
+        class="addToRow "
+        style="flex: 0 0 auto; height: 100%;"
+      />
+      <img
+        alt=""
+        class="ImageElement"
+        src="test.jpg"
+      />
+    </div>
+    <div
+      class="addToRow "
+    />
+  </div>
+</div>
+`;
+
+exports[`components/contentBlock should match snapshot with textBlock 1`] = `
+<div>
+  <div
+    class="rowContents"
+  >
+    <div
+      class="ContentBlock octo-block"
+    >
+      <div
+        class="octo-block-margin"
+      >
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="Button IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+        <div
+          class="dnd-handle"
+          draggable="true"
+        >
+          <svg
+            class="GripIcon Icon"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0V0z"
+              fill="none"
+            />
+            <path
+              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+            />
+          </svg>
+        </div>
+      </div>
+      <div
+        class="addToRow "
+        style="flex: 0 0 auto; height: 100%;"
+      />
+      <div
+        class="MarkdownEditor octo-editor  "
+      >
+        <div
+          class="octo-editor-preview"
+        />
+        <div
+          class="octo-editor-active Editor"
+          style="visibility: hidden; position: absolute; top: 0px; left: 0px;"
+        >
+          <div
+            id="test-id-wrapper"
+          >
+            <textarea
+              id="test-id"
+              style="display: none;"
+            />
+            <div
+              class="EasyMDEContainer"
+            >
+              <div
+                class="CodeMirror cm-s-easymde CodeMirror-wrap"
+              >
+                <div
+                  style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 0px;"
+                >
+                  <textarea
+                    autocapitalize="off"
+                    autocorrect="off"
+                    spellcheck="false"
+                    style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"
+                    tabindex="0"
+                  />
+                </div>
+                <div
+                  class="CodeMirror-vscrollbar"
+                  cm-not-content="true"
+                  tabindex="-1"
+                >
+                  <div
+                    style="min-width: 1px;"
+                  />
+                </div>
+                <div
+                  class="CodeMirror-hscrollbar"
+                  cm-not-content="true"
+                  tabindex="-1"
+                >
+                  <div
+                    style="height: 100%; min-height: 1px;"
+                  />
+                </div>
+                <div
+                  class="CodeMirror-scrollbar-filler"
+                  cm-not-content="true"
+                />
+                <div
+                  class="CodeMirror-gutter-filler"
+                  cm-not-content="true"
+                />
+                <div
+                  class="CodeMirror-scroll"
+                  style="min-height: 10px;"
+                  tabindex="-1"
+                >
+                  <div
+                    class="CodeMirror-sizer"
+                    style="margin-left: 0px;"
+                  >
+                    <div
+                      style="position: relative;"
+                    >
+                      <div
+                        class="CodeMirror-lines"
+                        role="presentation"
+                      >
+                        <div
+                          role="presentation"
+                          style="position: relative; outline: none;"
+                        >
+                          <div
+                            class="CodeMirror-measure"
+                          >
+                            <pre
+                              class="CodeMirror-line-like"
+                            >
+                              <span>
+                                xxxxxxxxxx
+                              </span>
+                            </pre>
+                          </div>
+                          <div
+                            class="CodeMirror-measure"
+                          />
+                          <div
+                            style="position: relative; z-index: 1;"
+                          />
+                          <div
+                            class="CodeMirror-cursors"
+                          />
+                          <div
+                            class="CodeMirror-code"
+                            role="presentation"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style="position: absolute; height: 50px; width: 1px;"
+                  />
+                  <div
+                    class="CodeMirror-gutters"
+                    style="display: none;"
+                  />
+                </div>
+              </div>
+              <div
+                class="editor-preview-side editor-preview"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="addToRow "
+    />
+  </div>
+</div>
+`;
