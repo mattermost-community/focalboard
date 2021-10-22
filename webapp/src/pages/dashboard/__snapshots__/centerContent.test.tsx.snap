@@ -14,6 +14,18 @@ exports[`pages/dashboard/CenterContent base case 1`] = `
         Dashboard
       </h1>
       <div
+        class="DashboardPage__showEmpty"
+      >
+        Show empty
+        <div
+          class="Switch on"
+        >
+          <div
+            class="octo-switch-inner"
+          />
+        </div>
+      </div>
+      <div
         class="DashboardPage__search"
       >
         <i
@@ -98,6 +110,18 @@ exports[`pages/dashboard/CenterContent search filter - search non-existing works
         Dashboard
       </h1>
       <div
+        class="DashboardPage__showEmpty"
+      >
+        Show empty
+        <div
+          class="Switch on"
+        >
+          <div
+            class="octo-switch-inner"
+          />
+        </div>
+      </div>
+      <div
         class="DashboardPage__search"
       >
         <i
@@ -177,6 +201,18 @@ exports[`pages/dashboard/CenterContent search filter 1`] = `
       >
         Dashboard
       </h1>
+      <div
+        class="DashboardPage__showEmpty"
+      >
+        Show empty
+        <div
+          class="Switch on"
+        >
+          <div
+            class="octo-switch-inner"
+          />
+        </div>
+      </div>
       <div
         class="DashboardPage__search"
       >

@@ -4,6 +4,20 @@ import {IUser} from '../user'
 
 import {TelemetryHandler} from './telemetry'
 
+export const TelemetryCategory = 'boards'
+
+export const TelemetryActions = {
+    ClickChannelHeader: 'clickChannelHeader',
+    CreateBoard: 'createBoard',
+    CreateBoardViaTemplate: 'createBoardViaTemplate',
+    CreateBoardView: 'createBoardView',
+    EditCardProperty: 'editCardProperty',
+    ShareBoard: 'shareBoard',
+    ViewBoard: 'viewBoard',
+    ViewCard: 'viewCard',
+    ViewSharedBoard: 'viewSharedBoard',
+}
+
 class TelemetryClient {
     public telemetryHandler?: TelemetryHandler
     public user?: IUser
@@ -16,7 +30,7 @@ class TelemetryClient {
         this.user = user
     }
 
-    trackEvent(category: string, event: string, props?: any): void {
+    trackEvent(category: string, event: string, props?: unknown): void {
         if (this.telemetryHandler) {
             const userId = this.user?.id
             this.telemetryHandler.trackEvent(userId || '', '', category, event, props)

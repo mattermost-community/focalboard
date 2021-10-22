@@ -4,25 +4,14 @@
 import React from 'react'
 import {render} from '@testing-library/react'
 import '@testing-library/jest-dom'
-import {IntlProvider} from 'react-intl'
+import userEvent from '@testing-library/user-event'
 
+import {wrapDNDIntl} from '../testUtils'
 import 'isomorphic-fetch'
-import {DndProvider} from 'react-dnd'
-import {HTML5Backend} from 'react-dnd-html5-backend'
-
 import {IPropertyTemplate, IPropertyOption} from '../blocks/board'
-
 import {TestBlockFactory} from '../test/testBlockFactory'
 
 import PropertyValueElement from './propertyValueElement'
-
-const wrapProviders = (children: any) => {
-    return (
-        <DndProvider backend={HTML5Backend}>
-            <IntlProvider locale='en'>{children}</IntlProvider>
-        </DndProvider>
-    )
-}
 
 describe('components/propertyValueElement', () => {
     const board = TestBlockFactory.createBoard()
@@ -31,7 +20,7 @@ describe('components/propertyValueElement', () => {
 
     test('should match snapshot, select', async () => {
         const propertyTemplate = board.fields.cardProperties.find((p) => p.id === 'property1')
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <PropertyValueElement
                 board={board}
                 readOnly={false}
@@ -39,7 +28,7 @@ describe('components/propertyValueElement', () => {
                 contents={[]}
                 comments={[comments]}
                 propertyTemplate={propertyTemplate || board.fields.cardProperties[0]}
-                emptyDisplayValue={'empty'}
+                showEmptyPlaceholder={true}
             />,
         )
 
@@ -49,7 +38,7 @@ describe('components/propertyValueElement', () => {
 
     test('should match snapshot, select, read-only', async () => {
         const propertyTemplate = board.fields.cardProperties.find((p) => p.id === 'property1')
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <PropertyValueElement
                 board={board}
                 readOnly={true}
@@ -57,7 +46,7 @@ describe('components/propertyValueElement', () => {
                 contents={[]}
                 comments={[comments]}
                 propertyTemplate={propertyTemplate || board.fields.cardProperties[0]}
-                emptyDisplayValue={'empty'}
+                showEmptyPlaceholder={true}
             />,
         )
 
@@ -83,7 +72,7 @@ describe('components/propertyValueElement', () => {
             options,
         }
         card.fields.properties.multiSelect = ['ms1', 'ms2']
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <PropertyValueElement
                 board={board}
                 readOnly={false}
@@ -91,7 +80,7 @@ describe('components/propertyValueElement', () => {
                 contents={[]}
                 comments={[comments]}
                 propertyTemplate={propertyTemplate}
-                emptyDisplayValue={'empty'}
+                showEmptyPlaceholder={true}
             />,
         )
 
@@ -108,7 +97,7 @@ describe('components/propertyValueElement', () => {
         }
         card.fields.properties.property_url = ['http://localhost']
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <PropertyValueElement
                 board={board}
                 readOnly={false}
@@ -116,7 +105,7 @@ describe('components/propertyValueElement', () => {
                 contents={[]}
                 comments={[comments]}
                 propertyTemplate={propertyTemplate}
-                emptyDisplayValue={'empty'}
+                showEmptyPlaceholder={true}
             />,
         )
 
@@ -133,7 +122,7 @@ describe('components/propertyValueElement', () => {
         }
         card.fields.properties.property_url = ['http://localhost']
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <PropertyValueElement
                 board={board}
                 readOnly={false}
@@ -141,7 +130,7 @@ describe('components/propertyValueElement', () => {
                 contents={[]}
                 comments={[comments]}
                 propertyTemplate={propertyTemplate}
-                emptyDisplayValue={'empty'}
+                showEmptyPlaceholder={true}
             />,
         )
 
@@ -158,7 +147,7 @@ describe('components/propertyValueElement', () => {
         }
         card.fields.properties.person = ['value1', 'value2']
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <PropertyValueElement
                 board={board}
                 readOnly={false}
@@ -166,7 +155,7 @@ describe('components/propertyValueElement', () => {
                 contents={[]}
                 comments={[comments]}
                 propertyTemplate={propertyTemplate}
-                emptyDisplayValue={'empty'}
+                showEmptyPlaceholder={true}
             />,
         )
 
@@ -183,7 +172,7 @@ describe('components/propertyValueElement', () => {
         }
         card.fields.properties.date = ['invalid date']
 
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <PropertyValueElement
                 board={board}
                 readOnly={false}
@@ -191,10 +180,66 @@ describe('components/propertyValueElement', () => {
                 contents={[]}
                 comments={[comments]}
                 propertyTemplate={propertyTemplate}
-                emptyDisplayValue={'empty'}
+                showEmptyPlaceholder={true}
             />,
         )
         const {container} = render(component)
+        expect(container).toMatchSnapshot()
+    })
+
+    test('URL fields should allow cancel', () => {
+        const propertyTemplate: IPropertyTemplate = {
+            id: 'property_url',
+            name: 'Property URL',
+            type: 'url',
+            options: [],
+        }
+
+        const component = wrapDNDIntl(
+            <PropertyValueElement
+                board={board}
+                readOnly={false}
+                card={card}
+                contents={[]}
+                comments={[comments]}
+                propertyTemplate={propertyTemplate}
+                showEmptyPlaceholder={true}
+            />,
+        )
+
+        const {container} = render(component)
+        const editElement = container.querySelector('.Editable')
+        expect(editElement).toBeDefined()
+
+        userEvent.type(editElement!, 'http://test{esc}')
+        expect(container).toMatchSnapshot()
+    })
+
+    test('Generic fields should allow cancel', () => {
+        const propertyTemplate: IPropertyTemplate = {
+            id: 'text',
+            name: 'Generic Text',
+            type: 'text',
+            options: [],
+        }
+
+        const component = wrapDNDIntl(
+            <PropertyValueElement
+                board={board}
+                readOnly={false}
+                card={card}
+                contents={[]}
+                comments={[comments]}
+                propertyTemplate={propertyTemplate}
+                showEmptyPlaceholder={true}
+            />,
+        )
+
+        const {container} = render(component)
+        const editElement = container.querySelector('.Editable')
+        expect(editElement).toBeDefined()
+
+        userEvent.type(editElement!, 'http://test{esc}')
         expect(container).toMatchSnapshot()
     })
 })

@@ -1,8 +1,12 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
+import {useCallback} from 'react'
+
 import {ContentBlock} from '../../blocks/contentBlock'
 import {Utils} from '../../utils'
+
+import {useCardDetailContext} from '../cardDetail/cardDetailContext'
 
 import {contentRegistry} from './contentRegistry'
 
@@ -16,10 +20,12 @@ import './checkboxElement'
 type Props = {
     block: ContentBlock
     readonly: boolean
+    cords: {x: number, y?: number, z?: number}
 }
 
 export default function ContentElement(props: Props): JSX.Element|null {
-    const {block, readonly} = props
+    const {block, readonly, cords} = props
+    const cardDetail = useCardDetailContext()
 
     const handler = contentRegistry.getHandler(block.type)
     if (!handler) {
@@ -27,5 +33,15 @@ export default function ContentElement(props: Props): JSX.Element|null {
         return null
     }
 
-    return handler.createComponent(block, readonly)
+    const addElement = useCallback(() => {
+        const index = cords.x + 1
+        cardDetail.addBlock(handler, index, true)
+    }, [cardDetail, cords, handler])
+
+    const deleteElement = useCallback(() => {
+        const index = cords.x
+        cardDetail.deleteBlock(block, index)
+    }, [block, cords, cardDetail])
+
+    return handler.createComponent(block, readonly, addElement, deleteElement)
 }

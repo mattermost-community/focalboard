@@ -87,7 +87,7 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
                         onClick={() => props.onDeleteOption(option)}
                     />
                     <Menu.Separator/>
-                    {Object.entries(Constants.menuColors).map(([key, color]: any) => (
+                    {Object.entries(Constants.menuColors).map(([key, color]: [string, string]) => (
                         <Menu.Color
                             key={key}
                             id={key}
@@ -124,6 +124,10 @@ const valueSelectorStyle = {
         position: 'static',
         top: 'unset',
         transform: 'unset',
+    }),
+    placeholder: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        color: 'rgba(var(--center-channel-color-rgb), 0.4)',
     }),
     multiValue: (provided: CSSObject): CSSObject => ({
         ...provided,
@@ -186,7 +190,7 @@ function ValueSelector(props: Props): JSX.Element {
             onBlur={props.onBlur}
             onCreateOption={props.onCreate}
             autoFocus={true}
-            value={props.value}
+            value={props.value || null}
             closeMenuOnSelect={true}
             placeholder={props.emptyValue}
             hideSelectedOptions={false}

@@ -10,7 +10,7 @@ import {ContentBlock} from '../blocks/contentBlock'
 import {CommentBlock} from '../blocks/commentBlock'
 import mutator from '../mutator'
 import {OctoUtils} from '../octoUtils'
-import {Utils} from '../utils'
+import {Utils, IDType} from '../utils'
 import Editable from '../widgets/editable'
 import Switch from '../widgets/switch'
 
@@ -31,17 +31,18 @@ type Props = {
     contents: Array<ContentBlock|ContentBlock[]>
     comments: CommentBlock[]
     propertyTemplate: IPropertyTemplate
-    emptyDisplayValue: string
+    showEmptyPlaceholder: boolean
 }
 
 const PropertyValueElement = (props:Props): JSX.Element => {
     const [value, setValue] = useState(props.card.fields.properties[props.propertyTemplate.id] || '')
     const [serverValue, setServerValue] = useState(props.card.fields.properties[props.propertyTemplate.id] || '')
 
-    const {card, propertyTemplate, readOnly, emptyDisplayValue, board, contents, comments} = props
+    const {card, propertyTemplate, readOnly, showEmptyPlaceholder, board, contents, comments} = props
     const intl = useIntl()
     const propertyValue = card.fields.properties[propertyTemplate.id]
     const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate, intl)
+    const emptyDisplayValue = showEmptyPlaceholder ? intl.formatMessage({id: 'PropertyValueElement.empty', defaultMessage: 'Empty'}) : ''
     const finalDisplayValue = displayValue || emptyDisplayValue
 
     const editableFields: Array<PropertyType> = ['text', 'number', 'email', 'url', 'phone']
@@ -109,7 +110,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 onCreate={
                     async (newValue, currentValues) => {
                         const option: IPropertyOption = {
-                            id: Utils.createGuid(),
+                            id: Utils.createGuid(IDType.BlockID),
                             value: newValue,
                             color: 'propColorDefault',
                         }
@@ -133,7 +134,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 onCreate={
                     async (newValue) => {
                         const option: IPropertyOption = {
-                            id: Utils.createGuid(),
+                            id: Utils.createGuid(IDType.BlockID),
                             value: newValue,
                             color: 'propColorDefault',
                         }
@@ -169,6 +170,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             <DateRange
                 className='octo-propertyvalue'
                 value={value.toString()}
+                showEmptyPlaceholder={showEmptyPlaceholder}
                 onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
             />
         )
@@ -177,9 +179,10 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             <URLProperty
                 value={value.toString()}
                 readonly={readOnly}
+                placeholder={emptyDisplayValue}
                 onChange={setValue}
                 onSave={saveTextProperty}
-                onCancel={() => setValue(propertyValue)}
+                onCancel={() => setValue(propertyValue || '')}
                 validator={(newValue) => validateProp(propertyTemplate.type, newValue)}
             />
         )
@@ -228,11 +231,12 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             return (
                 <Editable
                     className='octo-propertyvalue'
-                    placeholderText=''
+                    placeholderText={emptyDisplayValue}
                     value={value.toString()}
+                    autoExpand={true}
                     onChange={setValue}
                     onSave={saveTextProperty}
-                    onCancel={() => setValue(propertyValue)}
+                    onCancel={() => setValue(propertyValue || '')}
                     validator={(newValue) => validateProp(propertyTemplate.type, newValue)}
                     spellCheck={propertyTemplate.type === 'text'}
                 />

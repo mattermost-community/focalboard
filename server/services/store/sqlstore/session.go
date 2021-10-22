@@ -2,10 +2,10 @@ package sqlstore
 
 import (
 	"encoding/json"
-	"time"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/utils"
 )
 
 // GetActiveUserCount returns the number of users with active sessions within N seconds ago.
@@ -13,7 +13,7 @@ func (s *SQLStore) getActiveUserCount(db sq.BaseRunner, updatedSecondsAgo int64)
 	query := s.getQueryBuilder(db).
 		Select("count(distinct user_id)").
 		From(s.tablePrefix + "sessions").
-		Where(sq.Gt{"update_at": time.Now().Unix() - updatedSecondsAgo})
+		Where(sq.Gt{"update_at": utils.GetMillis() - utils.SecondsToMillis(updatedSecondsAgo)})
 
 	row := query.QueryRow()
 
@@ -26,12 +26,12 @@ func (s *SQLStore) getActiveUserCount(db sq.BaseRunner, updatedSecondsAgo int64)
 	return count, nil
 }
 
-func (s *SQLStore) getSession(db sq.BaseRunner, token string, expireTime int64) (*model.Session, error) {
+func (s *SQLStore) getSession(db sq.BaseRunner, token string, expireTimeSeconds int64) (*model.Session, error) {
 	query := s.getQueryBuilder(db).
 		Select("id", "token", "user_id", "auth_service", "props").
 		From(s.tablePrefix + "sessions").
 		Where(sq.Eq{"token": token}).
-		Where(sq.Gt{"update_at": time.Now().Unix() - expireTime})
+		Where(sq.Gt{"update_at": utils.GetMillis() - utils.SecondsToMillis(expireTimeSeconds)})
 
 	row := query.QueryRow()
 	session := model.Session{}
@@ -51,7 +51,7 @@ func (s *SQLStore) getSession(db sq.BaseRunner, token string, expireTime int64) 
 }
 
 func (s *SQLStore) createSession(db sq.BaseRunner, session *model.Session) error {
-	now := time.Now().Unix()
+	now := utils.GetMillis()
 
 	propsBytes, err := json.Marshal(session.Props)
 	if err != nil {
@@ -67,7 +67,7 @@ func (s *SQLStore) createSession(db sq.BaseRunner, session *model.Session) error
 }
 
 func (s *SQLStore) refreshSession(db sq.BaseRunner, session *model.Session) error {
-	now := time.Now().Unix()
+	now := utils.GetMillis()
 
 	query := s.getQueryBuilder(db).Update(s.tablePrefix+"sessions").
 		Where(sq.Eq{"token": session.Token}).
@@ -78,7 +78,7 @@ func (s *SQLStore) refreshSession(db sq.BaseRunner, session *model.Session) erro
 }
 
 func (s *SQLStore) updateSession(db sq.BaseRunner, session *model.Session) error {
-	now := time.Now().Unix()
+	now := utils.GetMillis()
 
 	propsBytes, err := json.Marshal(session.Props)
 	if err != nil {
@@ -102,9 +102,9 @@ func (s *SQLStore) deleteSession(db sq.BaseRunner, sessionID string) error {
 	return err
 }
 
-func (s *SQLStore) cleanUpSessions(db sq.BaseRunner, expireTime int64) error {
+func (s *SQLStore) cleanUpSessions(db sq.BaseRunner, expireTimeSeconds int64) error {
 	query := s.getQueryBuilder(db).Delete(s.tablePrefix + "sessions").
-		Where(sq.Lt{"update_at": time.Now().Unix() - expireTime})
+		Where(sq.Lt{"update_at": utils.GetMillis() - utils.SecondsToMillis(expireTimeSeconds)})
 
 	_, err := query.Exec()
 	return err

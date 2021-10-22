@@ -392,7 +392,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 
-	err = a.app.InsertBlocks(*container, blocks, session.UserID)
+	err = a.app.InsertBlocks(*container, blocks, session.UserID, true)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -483,7 +483,7 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 
 	if session.UserID == SingleUser {
-		now := time.Now().Unix()
+		now := utils.GetMillis()
 		user = &model.User{
 			ID:       SingleUser,
 			Username: SingleUser,
@@ -898,7 +898,7 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
-	err = a.app.InsertBlocks(*container, blocks, session.UserID)
+	err = a.app.InsertBlocks(*container, blocks, session.UserID, false)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -1170,7 +1170,7 @@ func (a *API) handlePostWorkspaceRegenerateSignupToken(w http.ResponseWriter, r 
 	auditRec := a.makeAuditRecord(r, "regenerateSignupToken", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 
-	workspace.SignupToken = utils.CreateGUID()
+	workspace.SignupToken = utils.NewID(utils.IDTypeToken)
 
 	err = a.app.UpsertWorkspaceSignupToken(*workspace)
 	if err != nil {

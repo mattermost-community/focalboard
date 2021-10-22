@@ -32,8 +32,12 @@ export const ACTION_UPDATE_CLIENT_CONFIG = 'UPDATE_CLIENT_CONFIG'
 
 // The Mattermost websocket client interface
 export interface MMWebSocketClient {
-    sendMessage(action: string, data: any, responseCallback?: () => void): void
-    connectionId: string
+    conn: WebSocket | null;
+    sendMessage(action: string, data: any, responseCallback?: () => void): void /* eslint-disable-line @typescript-eslint/no-explicit-any */
+    setFirstConnectCallback(callback: () => void): void
+    setReconnectCallback(callback: () => void): void
+    setErrorCallback(callback: (event: Event) => void): void
+    setCloseCallback(callback: (connectFailCount: number) => void): void
 }
 
 type OnChangeHandler = (client: WSClient, blocks: Block[]) => void
@@ -53,12 +57,11 @@ class WSClient {
     onChange: OnChangeHandler[] = []
     onError: OnErrorHandler[] = []
     onConfigChange: OnConfigChangeHandler[] = []
-    private mmWSMaxRetries = 100
-    private mmWSRetryDelay = 300
     private notificationDelay = 100
     private reopenDelay = 3000
     private updatedBlocks: Block[] = []
     private updateTimeout?: NodeJS.Timeout
+    private errorPollId?: NodeJS.Timeout
 
     private logged = false
 
@@ -157,29 +160,62 @@ class WSClient {
 
     open(): void {
         if (this.client !== null) {
-            // WSClient needs to ensure that the Mattermost client has
-            // correctly stablished the connection before opening
-            let retries = 0
-            const setPluginOpen = () => {
-                if (this.client?.connectionId !== '') {
-                    for (const handler of this.onStateChange) {
-                        handler(this, 'open')
-                    }
-                    this.state = 'open'
-                    Utils.log('WSClient in plugin mode, reusing Mattermost WS connection')
-                    return
-                }
+            // configure the Mattermost websocket client callbacks
+            const onConnect = () => {
+                Utils.log('WSClient in plugin mode, reusing Mattermost WS connection')
 
-                retries++
-                if (retries <= this.mmWSMaxRetries) {
-                    Utils.log('WSClient Mattermost Websocket not ready, retrying')
-                    setTimeout(setPluginOpen, this.mmWSRetryDelay)
-                } else {
-                    Utils.logError('WSClient error on open: Mattermost Websocket client is not ready')
+                for (const handler of this.onStateChange) {
+                    handler(this, 'open')
+                }
+                this.state = 'open'
+            }
+
+            const onReconnect = () => {
+                Utils.logWarn('WSClient reconnected')
+
+                onConnect()
+                for (const handler of this.onReconnect) {
+                    handler(this)
                 }
             }
 
-            setPluginOpen()
+            const onClose = (connectFailCount: number) => {
+                Utils.logError(`WSClient has been closed, connect fail count: ${connectFailCount}`)
+
+                for (const handler of this.onStateChange) {
+                    handler(this, 'close')
+                }
+                this.state = 'close'
+
+                // there is no way to react to a reconnection with the
+                // reliable websockets schema, so we poll the raw
+                // websockets client for its state directly until it
+                // reconnects
+                if (!this.errorPollId) {
+                    this.errorPollId = setInterval(() => {
+                        Utils.logWarn(`Polling websockets connection for state: ${this.client?.conn?.readyState}`)
+                        if (this.client?.conn?.readyState === 1) {
+                            onReconnect()
+                            clearInterval(this.errorPollId!)
+                            this.errorPollId = undefined
+                        }
+                    }, 500)
+                }
+            }
+
+            const onError = (event: Event) => {
+                Utils.logError(`WSClient websocket onerror. data: ${JSON.stringify(event)}`)
+
+                for (const handler of this.onError) {
+                    handler(this, event)
+                }
+            }
+
+            this.client.setFirstConnectCallback(onConnect)
+            this.client.setErrorCallback(onError)
+            this.client.setCloseCallback(onClose)
+            this.client.setReconnectCallback(onReconnect)
+
             return
         }
 

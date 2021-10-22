@@ -1,10 +1,12 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useRef, useMemo} from 'react'
-import SimpleMDE from 'react-simplemde-editor'
+import SimpleMdeReact from 'react-simplemde-editor'
+import {Editor} from 'codemirror'
+import SimpleMDE from 'easymde'
 import 'easymde/dist/easymde.min.css'
 
-import {Utils} from '../utils'
+import {Utils, IDType} from '../utils'
 import './markdownEditor.scss'
 
 type Props = {
@@ -23,15 +25,14 @@ type Props = {
 const MarkdownEditor = (props: Props): JSX. Element => {
     const {placeholderText, onFocus, onBlur, onChange, text, id} = props
     const [isEditing, setIsEditing] = useState(false)
-    const [uniqueId] = useState(id || Utils.createGuid())
+    const [uniqueId] = useState(id || Utils.createGuid(IDType.None))
 
     const [active, setActive] = useState(false)
-    const [editorInstance, setEditorInstance] = useState<any>()
+    const [editorInstance, setEditorInstance] = useState<SimpleMDE>()
     const editorOptions = useMemo(() => ({
         autoDownloadFontAwesome: true,
         toolbar: false,
         status: false,
-        autofocus: true,
         spellChecker: true,
         nativeSpellcheck: true,
         minHeight: '10px',
@@ -71,13 +72,13 @@ const MarkdownEditor = (props: Props): JSX. Element => {
     stateAndPropsRef.current = stateAndPropsValue
 
     const editorEvents = useMemo(() => ({
-        change: (instance: any) => {
+        change: (instance: Editor) => {
             if (stateAndPropsRef.current.isEditing) {
                 const newText = instance.getValue()
                 stateAndPropsRef.current.onChange?.(newText)
             }
         },
-        blur: (instance: any) => {
+        blur: (instance: Editor) => {
             const newText = instance.getValue()
             const oldText = text || ''
             if (newText !== oldText && stateAndPropsRef.current.onChange) {
@@ -137,7 +138,7 @@ const MarkdownEditor = (props: Props): JSX. Element => {
                 }
             }}
         >
-            <SimpleMDE
+            <SimpleMdeReact
                 id={uniqueId}
                 getMdeInstance={setEditorInstance}
                 value={text}

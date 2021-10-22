@@ -1,6 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/content/CheckboxElement should match snapshot 1`] = `
+exports[`components/content/checkboxElement should change title 1`] = `
+<div>
+  <div
+    class="CheckboxElement"
+  >
+    <input
+      id="checkbox-test-id"
+      type="checkbox"
+      value="off"
+    />
+    <input
+      class="Editable undefined"
+      placeholder="Edit text..."
+      spellcheck="true"
+      title="new title"
+      type="text"
+      value="new title"
+    />
+  </div>
+</div>
+`;
+
+exports[`components/content/checkboxElement should match snapshot 1`] = `
 <div>
   <div
     class="CheckboxElement"
@@ -21,30 +43,7 @@ exports[`components/content/CheckboxElement should match snapshot 1`] = `
 </div>
 `;
 
-exports[`components/content/CheckboxElement should match snapshot on change title 1`] = `
-<div>
-  <div
-    class="CheckboxElement"
-  >
-    <input
-      id="checkbox-test-id"
-      type="checkbox"
-      value="off"
-    />
-    <input
-      class="Editable undefined"
-      placeholder="Edit text..."
-      spellcheck="true"
-      title="test-title"
-      value="test-title"
-    >
-      changed name
-    </input>
-  </div>
-</div>
-`;
-
-exports[`components/content/CheckboxElement should match snapshot on read only 1`] = `
+exports[`components/content/checkboxElement should match snapshot when read only 1`] = `
 <div>
   <div
     class="CheckboxElement"
@@ -67,7 +66,7 @@ exports[`components/content/CheckboxElement should match snapshot on read only 1
 </div>
 `;
 
-exports[`components/content/CheckboxElement should match snapshot on toggle 1`] = `
+exports[`components/content/checkboxElement should toggle value 1`] = `
 <div>
   <div
     class="CheckboxElement"

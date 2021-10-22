@@ -1,6 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Utils} from '../utils'
+import {Utils, IDType} from '../utils'
+
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../telemetry/telemetryClient'
 
 import {Block, createBlock} from './block'
 import {Card} from './card'
@@ -27,6 +29,7 @@ type BoardFields = {
     showDescription?: boolean
     isTemplate?: boolean
     cardProperties: IPropertyTemplate[]
+    columnCalculations: Record<string, string>
 }
 
 type Board = Block & {
@@ -38,7 +41,7 @@ function createBoard(block?: Block): Board {
     const selectProperties = cardProperties.find((o) => o.type === 'select')
     if (!selectProperties) {
         const property: IPropertyTemplate = {
-            id: Utils.createGuid(),
+            id: Utils.createGuid(IDType.BlockID),
             name: 'Status',
             type: 'select',
             options: [],
@@ -57,6 +60,7 @@ function createBoard(block?: Block): Board {
             }
         })
     }
+    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {isTemplate: block?.fields.isTemplate || false})
 
     return {
         ...createBlock(block),

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
@@ -19,7 +18,7 @@ var (
 )
 
 func (s *SQLStore) upsertWorkspaceSignupToken(db sq.BaseRunner, workspace model.Workspace) error {
-	now := time.Now().Unix()
+	now := utils.GetMillis()
 
 	query := s.getQueryBuilder(db).
 		Insert(s.tablePrefix+"workspaces").
@@ -50,8 +49,8 @@ func (s *SQLStore) upsertWorkspaceSignupToken(db sq.BaseRunner, workspace model.
 }
 
 func (s *SQLStore) upsertWorkspaceSettings(db sq.BaseRunner, workspace model.Workspace) error {
-	now := time.Now().Unix()
-	signupToken := utils.CreateGUID()
+	now := utils.GetMillis()
+	signupToken := utils.NewID(utils.IDTypeToken)
 
 	settingsJSON, err := json.Marshal(workspace.Settings)
 	if err != nil {

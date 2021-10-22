@@ -3,7 +3,10 @@
 
 import {createIntl} from 'react-intl'
 
-import {Utils} from './utils'
+import {Utils, IDType} from './utils'
+import {IAppWindow} from './types'
+
+declare let window: IAppWindow
 
 describe('utils', () => {
     describe('assureProtocol', () => {
@@ -23,17 +26,31 @@ describe('utils', () => {
         })
     })
 
+    describe('createGuid', () => {
+        test('should create 27 char random id for workspace', () => {
+            expect(Utils.createGuid(IDType.Workspace)).toMatch(/^w[ybndrfg8ejkmcpqxot1uwisza345h769]{26}$/)
+        })
+        test('should create 27 char random id for board', () => {
+            expect(Utils.createGuid(IDType.Board)).toMatch(/^b[ybndrfg8ejkmcpqxot1uwisza345h769]{26}$/)
+        })
+        test('should create 27 char random id for card', () => {
+            expect(Utils.createGuid(IDType.Card)).toMatch(/^c[ybndrfg8ejkmcpqxot1uwisza345h769]{26}$/)
+        })
+        test('should create 27 char random id', () => {
+            expect(Utils.createGuid(IDType.None)).toMatch(/^7[ybndrfg8ejkmcpqxot1uwisza345h769]{26}$/)
+        })
+    })
+
     describe('htmlFromMarkdown', () => {
         test('should not allow XSS on links href on the webapp', () => {
             expect(Utils.htmlFromMarkdown('[]("xss-attack="true"other="whatever)')).toBe('<p><a target="_blank" rel="noreferrer" href="%22xss-attack=%22true%22other=%22whatever" title="" onclick="event.stopPropagation();"></a></p>')
         })
 
         test('should not allow XSS on links href on the desktop app', () => {
-            const windowAsAny = window as any
-            windowAsAny.openInNewBrowser = () => null
+            window.openInNewBrowser = () => null
             const expectedHtml = '<p><a target="_blank" rel="noreferrer" href="%22xss-attack=%22true%22other=%22whatever" title="" onclick="event.stopPropagation(); openInNewBrowser && openInNewBrowser(event.target.href);"></a></p>'
             expect(Utils.htmlFromMarkdown('[]("xss-attack="true"other="whatever)')).toBe(expectedHtml)
-            windowAsAny.openInNewBrowser = null
+            window.openInNewBrowser = null
         })
     })
 
@@ -47,8 +64,7 @@ describe('utils', () => {
         })
 
         test('buildURL, base no slash', () => {
-            const windowAsAny = window as any
-            windowAsAny.baseURL = 'base'
+            window.baseURL = 'base'
 
             expect(Utils.buildURL('test', true)).toBe('http://localhost/base/test')
             expect(Utils.buildURL('/test', true)).toBe('http://localhost/base/test')
@@ -58,8 +74,7 @@ describe('utils', () => {
         })
 
         test('buildUrl, base with slash', () => {
-            const windowAsAny = window as any
-            windowAsAny.baseURL = '/base/'
+            window.baseURL = '/base/'
 
             expect(Utils.buildURL('test', true)).toBe('http://localhost/base/test')
             expect(Utils.buildURL('/test', true)).toBe('http://localhost/base/test')

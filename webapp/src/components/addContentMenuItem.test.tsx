@@ -1,11 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {ReactElement} from 'react'
+import React, {ReactElement, ReactNode} from 'react'
 import {render, screen, waitFor} from '@testing-library/react'
 
 import '@testing-library/jest-dom'
-import {IntlProvider} from 'react-intl'
 
 import {mocked} from 'ts-jest/utils'
 
@@ -15,18 +14,25 @@ import mutator from '../mutator'
 
 import {TestBlockFactory} from '../test/testBlockFactory'
 
+import {wrapIntl} from '../testUtils'
+
 import AddContentMenuItem from './addContentMenuItem'
 
 import './content/textElement'
 import './content/imageElement'
 import './content/dividerElement'
 import './content/checkboxElement'
+import {CardDetailProvider} from './cardDetail/cardDetailContext'
 
-const wrapIntl = (children: ReactElement) => (
-    <IntlProvider locale='en'>{children}</IntlProvider>
-)
 const board = TestBlockFactory.createBoard()
 const card = TestBlockFactory.createCard(board)
+const wrap = (child: ReactNode): ReactElement => (
+    wrapIntl(
+        <CardDetailProvider card={card} >
+            {child}
+        </CardDetailProvider>,
+    )
+)
 
 jest.mock('../mutator')
 const mockedMutator = mocked(mutator, true)
@@ -37,7 +43,7 @@ describe('components/addContentMenuItem', () => {
     })
     test('return an image menu item', () => {
         const {container} = render(
-            wrapIntl(
+            wrap(
                 <AddContentMenuItem
                     type={'image'}
                     card={card}
@@ -50,7 +56,7 @@ describe('components/addContentMenuItem', () => {
 
     test('return a text menu item', async () => {
         const {container} = render(
-            wrapIntl(
+            wrap(
                 <AddContentMenuItem
                     type={'text'}
                     card={card}
@@ -66,7 +72,7 @@ describe('components/addContentMenuItem', () => {
 
     test('return a checkbox menu item', async () => {
         const {container} = render(
-            wrapIntl(
+            wrap(
                 <AddContentMenuItem
                     type={'checkbox'}
                     card={card}
@@ -82,7 +88,7 @@ describe('components/addContentMenuItem', () => {
 
     test('return a divider menu item', async () => {
         const {container} = render(
-            wrapIntl(
+            wrap(
                 <AddContentMenuItem
                     type={'divider'}
                     card={card}
@@ -98,7 +104,7 @@ describe('components/addContentMenuItem', () => {
 
     test('return an error and empty element from unknow type', () => {
         const {container} = render(
-            wrapIntl(
+            wrap(
                 <AddContentMenuItem
                     type={'unknown'}
                     card={card}

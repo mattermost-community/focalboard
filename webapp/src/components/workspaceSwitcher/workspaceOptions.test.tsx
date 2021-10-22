@@ -1,23 +1,14 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-
 import configureStore from 'redux-mock-store'
-
-import {IntlProvider} from 'react-intl'
 import {Provider as ReduxProvider} from 'react-redux'
-
 import {render} from '@testing-library/react'
 
 import {UserWorkspace} from '../../user'
+import {wrapIntl} from '../../testUtils'
 
 import WorkspaceOptions from './workspaceOptions'
-
-const wrapProviders = (children: any) => {
-    return (
-        <IntlProvider locale='en'>{children}</IntlProvider>
-    )
-}
 
 describe('components/workspaceSwitcher/WorkspaceOptions', () => {
     const mockStore = configureStore([])
@@ -47,7 +38,7 @@ describe('components/workspaceSwitcher/WorkspaceOptions', () => {
             },
         })
 
-        const component = wrapProviders(
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <WorkspaceOptions
                     onChange={() => {
@@ -68,7 +59,7 @@ describe('components/workspaceSwitcher/WorkspaceOptions', () => {
             },
         })
 
-        const component = wrapProviders(
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <WorkspaceOptions
                     onChange={() => {

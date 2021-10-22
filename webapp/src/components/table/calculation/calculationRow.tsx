@@ -14,12 +14,15 @@ import {BoardView} from '../../../blocks/boardView'
 import {Card} from '../../../blocks/card'
 import {Options} from '../../calculations/options'
 
+import {TableCalculationOptions} from './tableCalculationOptions'
+
 type Props = {
     board: Board
     cards: Card[]
     activeView: BoardView
     resizingColumn: string
     offset: number
+    readonly: boolean
 }
 
 const CalculationRow = (props: Props): JSX.Element => {
@@ -46,7 +49,7 @@ const CalculationRow = (props: Props): JSX.Element => {
     return (
         <div
             className={'CalculationRow octo-table-row'}
-            onMouseEnter={() => setHovered(true)}
+            onMouseEnter={() => setHovered(!props.readonly)}
             onMouseLeave={() => setHovered(false)}
         >
             {
@@ -59,9 +62,9 @@ const CalculationRow = (props: Props): JSX.Element => {
                         <Calculation
                             key={template.id}
                             style={style}
-                            class='octo-table-cell'
+                            class={`octo-table-cell ${props.readonly ? 'disabled' : ''}`}
                             value={value}
-                            menuOpen={Boolean(showOptions.get(template.id))}
+                            menuOpen={Boolean(props.readonly ? false : showOptions.get(template.id))}
                             onMenuClose={() => toggleOptions(template.id, false)}
                             onMenuOpen={() => toggleOptions(template.id, true)}
                             onChange={(v: string) => {
@@ -75,6 +78,7 @@ const CalculationRow = (props: Props): JSX.Element => {
                             cards={props.cards}
                             property={template}
                             hovered={hovered}
+                            optionsComponent={TableCalculationOptions}
                         />
                     )
                 })
