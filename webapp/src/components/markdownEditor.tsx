@@ -111,7 +111,7 @@ const MarkdownEditor = (props: Props): JSX. Element => {
             style={{display: isEditing ? 'none' : undefined}}
             dangerouslySetInnerHTML={{__html: html}}
             onClick={() => {
-                if (!props.readonly && !isEditing) {
+                if (!props.readonly && !isEditing && text) {
                     showEditor()
                 }
             }}
