@@ -84,7 +84,7 @@ const CardDetailProperties = React.memo((props: Props) => {
                 setShowConfirmationDialog(false)
                 try {
                     await mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType, newName)
-                } catch(err:any) {
+                } catch (err:any) {
                     Utils.logError(`Error Changing Property And Name:${propertyTemplate.name}: ${err?.toString()}`)
                 }
                 sendFlashMessage({content: intl.formatMessage({id: 'CardDetailProperty.property-changed', defaultMessage: 'Changed property successfully!'}), severity: 'high'})

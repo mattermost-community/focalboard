@@ -1,0 +1,143 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back confirmation-dialog-box"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <button
+            aria-label="Close dialog"
+            class="Button IconButton IconButton--large"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+          <div
+            class="octo-spacer"
+          />
+        </div>
+        <div
+          class="box-area"
+        >
+          <h3
+            class="heading"
+          >
+            test-heading
+          </h3>
+          <p
+            class="sub-text"
+          >
+            test-sub-text
+          </p>
+          <div
+            class="action-buttons"
+          >
+            <button
+              class="Button active"
+              title="Cancel"
+              type="button"
+            >
+              <span>
+                Cancel
+              </span>
+            </button>
+            <button
+              class="Button emphasis--danger"
+              title="test-btn-text"
+              type="submit"
+            >
+              <span>
+                test-btn-text
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Text should match snapshot 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back confirmation-dialog-box"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <button
+            aria-label="Close dialog"
+            class="Button IconButton IconButton--large"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+          <div
+            class="octo-spacer"
+          />
+        </div>
+        <div
+          class="box-area"
+        >
+          <h3
+            class="heading"
+          >
+            test-heading
+          </h3>
+          <p
+            class="sub-text"
+          >
+            test-sub-text
+          </p>
+          <div
+            class="action-buttons"
+          >
+            <button
+              class="Button active"
+              id="cancel-button"
+              title="Cancel"
+              type="button"
+            >
+              <span>
+                Cancel
+              </span>
+            </button>
+            <button
+              class="Button emphasis--danger"
+              id="confirm-button"
+              title="test-btn-text"
+              type="submit"
+            >
+              <span>
+                test-btn-text
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

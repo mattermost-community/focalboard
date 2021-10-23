@@ -5,14 +5,14 @@ import userEvent from '@testing-library/user-event'
 import 'isomorphic-fetch'
 
 import React from 'react'
+
 import {IPropertyTemplate} from '../../blocks/board'
 import {FetchMock} from '../../test/fetchMock'
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import {wrapIntl} from '../../testUtils'
+
 import CardDetailProperties from './cardDetailProperties'
-
-
 
 global.fetch = FetchMock.fn
 
