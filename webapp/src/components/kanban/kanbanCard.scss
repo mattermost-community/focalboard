@@ -5,6 +5,9 @@
     flex-direction: column;
     align-items: flex-start;
     overflow-wrap: anywhere;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     border-radius: 3px;
     margin-bottom: 10px;

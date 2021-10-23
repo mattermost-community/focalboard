@@ -8,8 +8,6 @@ import {IPropertyOption, IPropertyTemplate} from '../../../blocks/board'
 import Label from '../../../widgets/label'
 import ValueSelector from '../../../widgets/valueSelector'
 
-import './select.scss'
-
 type Props = {
     emptyValue: string
     propertyValue: string
