@@ -60,6 +60,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
 
     const card = TestBlockFactory.createCard(board)
     card.fields.properties.property_id_1 = 'property_value_id_1'
+    card.fields.properties.property_id_2 = 'property_value_id_2'
 
     const cardTemplate = TestBlockFactory.createCard(board)
     cardTemplate.fields.isTemplate = true

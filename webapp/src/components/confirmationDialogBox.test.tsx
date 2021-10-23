@@ -81,15 +81,11 @@ describe('/components/confirmationDialogBox', () => {
     })
 
     it('cancel button click runs onClose function', () => {
-        let result
-        await act(async () => {
-            result = render(wrapDNDIntl(
-                <ConfirmationDialogBox
-                    dialogBox={dialogProps}
-                />,
-            ),
-            )
-        })
+        const result = render(wrapDNDIntl(
+            <ConfirmationDialogBox
+                dialogBox={dialogProps}
+            />,
+        ))
 
         userEvent.click(result.getByTitle('Cancel'))
         expect(dialogProps.onClose).toBeCalledTimes(1)
