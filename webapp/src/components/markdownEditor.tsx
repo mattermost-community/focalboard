@@ -110,8 +110,9 @@ const MarkdownEditor = (props: Props): JSX. Element => {
             className={text ? 'octo-editor-preview' : 'octo-editor-preview octo-placeholder'}
             style={{display: isEditing ? 'none' : undefined}}
             dangerouslySetInnerHTML={{__html: html}}
-            onClick={() => {
-                if (!props.readonly && !isEditing && text) {
+            onClick={(e) => {
+                e.stopPropagation()
+                if (!props.readonly && !isEditing) {
                     showEditor()
                 }
             }}
