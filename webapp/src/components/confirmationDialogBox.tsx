@@ -43,7 +43,7 @@ export const ConfirmationDialogBox = (props: Props) => {
                         />
                     </Button>
                     <Button
-                        title='Delete'
+                        title={props.dialogBox.confirmButtonText || 'Confirm'}
                         submit={true}
                         emphasis='danger'
                         onClick={props.dialogBox.onConfirm}
