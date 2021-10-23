@@ -116,7 +116,6 @@ exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Tex
           >
             <button
               class="Button active"
-              id="cancel-button"
               title="Cancel"
               type="button"
             >
@@ -126,7 +125,6 @@ exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Tex
             </button>
             <button
               class="Button emphasis--danger"
-              id="confirm-button"
               title="test-btn-text"
               type="submit"
             >
