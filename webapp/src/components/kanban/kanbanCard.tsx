@@ -57,23 +57,32 @@ const KanbanCard = React.memo((props: Props) => {
             style={{opacity: isDragging ? 0.5 : 1}}
             onClick={props.onClick}
         >
-            {!props.readonly &&
+            {!props.readonly && (
                 <MenuWrapper
                     className='optionsMenu'
                     stopPropagationOnToggle={true}
+                    onMouseBlur={false}
                 >
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu position='left'>
                         <Menu.Text
                             icon={<DeleteIcon/>}
                             id='delete'
-                            name={intl.formatMessage({id: 'KanbanCard.delete', defaultMessage: 'Delete'})}
-                            onClick={() => mutator.deleteBlock(card, 'delete card')}
+                            name={intl.formatMessage({
+                                id: 'KanbanCard.delete',
+                                defaultMessage: 'Delete',
+                            })}
+                            onClick={() =>
+                                mutator.deleteBlock(card, 'delete card')
+                            }
                         />
                         <Menu.Text
                             icon={<DuplicateIcon/>}
                             id='duplicate'
-                            name={intl.formatMessage({id: 'KanbanCard.duplicate', defaultMessage: 'Duplicate'})}
+                            name={intl.formatMessage({
+                                id: 'KanbanCard.duplicate',
+                                defaultMessage: 'Duplicate',
+                            })}
                             onClick={() => {
                                 mutator.duplicateCard(
                                     card.id,
@@ -91,7 +100,10 @@ const KanbanCard = React.memo((props: Props) => {
                         <Menu.Text
                             icon={<LinkIcon/>}
                             id='copy'
-                            name={intl.formatMessage({id: 'KanbanCard.copyLink', defaultMessage: 'Copy link'})}
+                            name={intl.formatMessage({
+                                id: 'KanbanCard.copyLink',
+                                defaultMessage: 'Copy link',
+                            })}
                             onClick={() => {
                                 let cardLink = window.location.href
 
@@ -100,16 +112,30 @@ const KanbanCard = React.memo((props: Props) => {
                                 }
 
                                 Utils.copyTextToClipboard(cardLink)
-                                sendFlashMessage({content: intl.formatMessage({id: 'KanbanCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
+                                sendFlashMessage({
+                                    content: intl.formatMessage({
+                                        id: 'KanbanCard.copiedLink',
+                                        defaultMessage: 'Copied!',
+                                    }),
+                                    severity: 'high',
+                                })
                             }}
                         />
                     </Menu>
                 </MenuWrapper>
-            }
+            )}
 
             <div className='octo-icontitle'>
-                { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
-                <div key='__title'>{card.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}</div>
+                {card.fields.icon ? (
+                    <div className='octo-icon'>{card.fields.icon}</div>
+                ) : undefined}
+                <div key='__title'>
+                    {card.title ||
+                        intl.formatMessage({
+                            id: 'KanbanCard.untitled',
+                            defaultMessage: 'Untitled',
+                        })}
+                </div>
             </div>
             {visiblePropertyTemplates.map((template) => (
                 <Tooltip

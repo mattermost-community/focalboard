@@ -10,6 +10,7 @@ type Props = {
     stopPropagationOnToggle?: boolean;
     className?: string
     disabled?: boolean
+    onMouseBlur?: boolean
 }
 
 const MenuWrapper = React.memo((props: Props) => {
@@ -25,6 +26,9 @@ const MenuWrapper = React.memo((props: Props) => {
     }
 
     const closeOnBlur = (e: Event) => {
+        if (props.onMouseBlur === false) {
+            return
+        }
         if (e.target && node.current?.contains(e.target as Node)) {
             return
         }
@@ -59,17 +63,29 @@ const MenuWrapper = React.memo((props: Props) => {
         }
         setOpen(!open)
     }
-
-    useEffect(() => {
-        document.addEventListener('menuItemClicked', close, true)
-        document.addEventListener('click', closeOnBlur, true)
-        document.addEventListener('keyup', keyboardClose, true)
-        return () => {
-            document.removeEventListener('menuItemClicked', close, true)
-            document.removeEventListener('click', closeOnBlur, true)
-            document.removeEventListener('keyup', keyboardClose, true)
-        }
-    }, [])
+    if (props.onMouseBlur === false) {
+        useEffect(() => {
+            document.addEventListener('menuItemClicked', close, true)
+            document.addEventListener('click', closeOnBlur, false)
+            document.addEventListener('keyup', keyboardClose, true)
+            return () => {
+                document.removeEventListener('menuItemClicked', close, true)
+                document.removeEventListener('click', closeOnBlur, false)
+                document.removeEventListener('keyup', keyboardClose, true)
+            }
+        }, [])
+    } else {
+        useEffect(() => {
+            document.addEventListener('menuItemClicked', close, true)
+            document.addEventListener('click', closeOnBlur, true)
+            document.addEventListener('keyup', keyboardClose, true)
+            return () => {
+                document.removeEventListener('menuItemClicked', close, true)
+                document.removeEventListener('click', closeOnBlur, true)
+                document.removeEventListener('keyup', keyboardClose, true)
+            }
+        }, [])
+    }
 
     const {children} = props
     let className = 'MenuWrapper'
