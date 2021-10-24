@@ -4,6 +4,9 @@ const tsTransformer = require('@formatjs/ts-transformer');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+const {DefinePlugin} = require('webpack');
+const {GitRevisionPlugin} = require('git-revision-webpack-plugin');
+const gitRevisionPlugin = new GitRevisionPlugin();
 
 const outpath = path.resolve(__dirname, 'pack');
 
@@ -107,6 +110,10 @@ function makeCommonConfig() {
                 filename: 'index.html',
                 publicPath: '{{.BaseURL}}/',
                 hash: true,
+            }),
+            new DefinePlugin({
+                COMMITHASH: JSON.stringify(gitRevisionPlugin.commithash()),
+                LASTCOMMITDATETIME: JSON.stringify(gitRevisionPlugin.lastcommitdatetime()),
             }),
         ],
         entry: ['./src/main.tsx', './src/userSettings.ts'],

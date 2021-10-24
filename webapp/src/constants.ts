@@ -1,6 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
+declare let COMMITHASH: string
+declare let LASTCOMMITDATETIME: string
+
 class Constants {
     static readonly menuColors: {[key: string]: string} = {
         propColorDefault: 'Default',
@@ -20,6 +23,8 @@ class Constants {
     static readonly titleColumnId = '__title'
 
     static readonly versionString = '0.10.0'
+    static readonly versionCommitHash = COMMITHASH
+    static readonly versionCommitDate = LASTCOMMITDATETIME
 
     static readonly languages = [
         {
