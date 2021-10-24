@@ -161,6 +161,11 @@ func New(params Params) (*Server, error) {
 	}
 	webServer.AddRoutes(focalboardAPI)
 
+	// Add testing routes if testing API is enabled
+	if params.Cfg.EnableTestingAPI {
+		focalboardAPI.RegisterTestingRoutes(webServer.Router())
+	}
+
 	settings, err := params.DBStore.GetSystemSettings()
 	if err != nil {
 		return nil, err

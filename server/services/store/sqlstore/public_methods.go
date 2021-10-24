@@ -57,6 +57,27 @@ func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy str
 
 }
 
+func (s *SQLStore) DeleteAllBlocks(c store.Container) error {
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return txErr
+	}
+	err := s.deleteAllBlocks(tx, c)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "DeleteBlock"))
+		}
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
 func (s *SQLStore) DeleteSession(sessionID string) error {
 	return s.deleteSession(s.db, sessionID)
 
@@ -165,6 +186,10 @@ func (s *SQLStore) GetUserWorkspaces(userID string) ([]model.UserWorkspace, erro
 func (s *SQLStore) GetUsersByWorkspace(workspaceID string) ([]*model.User, error) {
 	return s.getUsersByWorkspace(s.db, workspaceID)
 
+}
+
+func (s *SQLStore) DeleteAllUsers() error {
+	return s.deleteAllUsers()
 }
 
 func (s *SQLStore) GetWorkspace(ID string) (*model.Workspace, error) {

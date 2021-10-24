@@ -106,6 +106,10 @@ func (a *API) RegisterAdminRoutes(r *mux.Router) {
 	r.HandleFunc("/api/v1/admin/users/{username}/password", a.adminRequired(a.handleAdminSetPassword)).Methods("POST")
 }
 
+func (a *API) RegisterTestingRoutes(r *mux.Router) {
+	r.HandleFunc("/test/reset", a.handleReset).Methods("POST")
+}
+
 func (a *API) requireCSRFToken(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if !a.checkCSRFToken(r) {
@@ -1495,4 +1499,17 @@ func (a *API) handleGetUserWorkspaces(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jsonBytesResponse(w, http.StatusOK, data)
+}
+
+func (a *API) handleReset(w http.ResponseWriter, r *http.Request) {
+	// Always use root workspace
+	container := store.Container{
+		WorkspaceID: "0",
+	}
+
+	if err := a.app.Reset(container); err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+	}
+
+	jsonStringResponse(w, http.StatusOK, "{}")
 }
