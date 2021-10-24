@@ -185,6 +185,10 @@ const ViewMenu = React.memo((props: Props) => {
         id: 'View.Table',
         defaultMessage: 'Table',
     })
+    const galleryText = intl.formatMessage({
+        id: 'View.Gallery',
+        defaultMessage: 'Gallery',
+    })
 
     const iconForViewType = (viewType: IViewType) => {
         switch (viewType) {
@@ -242,7 +246,7 @@ const ViewMenu = React.memo((props: Props) => {
                     />
                     <Menu.Text
                         id='gallery'
-                        name='Gallery'
+                        name={galleryText}
                         icon={<GalleryIcon/>}
                         onClick={handleAddViewGallery}
                     />
