@@ -4,23 +4,13 @@
 import React from 'react'
 import {render} from '@testing-library/react'
 import '@testing-library/jest-dom'
-import {IntlProvider} from 'react-intl'
 
 import 'isomorphic-fetch'
-import {DndProvider} from 'react-dnd'
-import {HTML5Backend} from 'react-dnd-html5-backend'
+import {wrapDNDIntl} from '../../testUtils'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import TableHeader from './tableHeader'
-
-const wrapProviders = (children: any) => {
-    return (
-        <DndProvider backend={HTML5Backend}>
-            <IntlProvider locale='en'>{children}</IntlProvider>
-        </DndProvider>
-    )
-}
 
 describe('components/table/TableHeaderMenu', () => {
     const board = TestBlockFactory.createBoard()
@@ -31,7 +21,7 @@ describe('components/table/TableHeaderMenu', () => {
 
     test('should match snapshot, title column', async () => {
         const onAutoSizeColumn = jest.fn()
-        const component = wrapProviders(
+        const component = wrapDNDIntl(
             <TableHeader
                 readonly={false}
                 sorted={'none'}

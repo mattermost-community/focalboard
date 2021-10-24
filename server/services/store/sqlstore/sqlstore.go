@@ -20,12 +20,13 @@ type SQLStore struct {
 	dbType           string
 	tablePrefix      string
 	connectionString string
+	isPlugin         bool
 	logger           *mlog.Logger
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType, connectionString, tablePrefix string, logger *mlog.Logger, db *sql.DB) (*SQLStore, error) {
-	logger.Info("connectDatabase", mlog.String("dbType", dbType), mlog.String("connStr", connectionString))
+func New(dbType, connectionString, tablePrefix string, logger *mlog.Logger, db *sql.DB, isPlugin bool) (*SQLStore, error) {
+	logger.Info("connectDatabase", mlog.String("dbType", dbType))
 	store := &SQLStore{
 		// TODO: add replica DB support too.
 		db:               db,
@@ -33,6 +34,7 @@ func New(dbType, connectionString, tablePrefix string, logger *mlog.Logger, db *
 		tablePrefix:      tablePrefix,
 		connectionString: connectionString,
 		logger:           logger,
+		isPlugin:         isPlugin,
 	}
 
 	err := store.Migrate()
@@ -64,13 +66,13 @@ func (s *SQLStore) DBHandle() *sql.DB {
 	return s.db
 }
 
-func (s *SQLStore) getQueryBuilder() sq.StatementBuilderType {
+func (s *SQLStore) getQueryBuilder(db sq.BaseRunner) sq.StatementBuilderType {
 	builder := sq.StatementBuilder
 	if s.dbType == postgresDBType || s.dbType == sqliteDBType {
 		builder = builder.PlaceholderFormat(sq.Dollar)
 	}
 
-	return builder.RunWith(s.db)
+	return builder.RunWith(db)
 }
 
 func (s *SQLStore) escapeField(fieldName string) string { //nolint:unparam

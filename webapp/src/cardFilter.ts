@@ -59,10 +59,10 @@ class CardFilter {
             return (filter.values.find((cValue) => (Array.isArray(value) ? value.includes(cValue) : cValue === value)) === undefined)
         }
         case 'isEmpty': {
-            return value?.length <= 0
+            return (value || '').length <= 0
         }
         case 'isNotEmpty': {
-            return value?.length > 0
+            return (value || '').length > 0
         }
         default: {
             Utils.assertFailure(`Invalid filter condition ${filter.condition}`)
@@ -118,20 +118,6 @@ class CardFilter {
             return {id: filterClause.propertyId, value: filterClause.values[0]}
         }
         case 'notIncludes': {
-            if (filterClause.values.length < 1) {
-                return {id: filterClause.propertyId}
-            }
-            if (template.type === 'select') {
-                const option = template.options.find((o) => !filterClause.values.includes(o.id))
-                if (option) {
-                    return {id: filterClause.propertyId, value: option.id}
-                }
-
-                // No other options exist
-                return {id: filterClause.propertyId}
-            }
-
-            // TODO: Handle non-select types
             return {id: filterClause.propertyId}
         }
         case 'isEmpty': {

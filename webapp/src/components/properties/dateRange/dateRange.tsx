@@ -22,10 +22,11 @@ import {Utils} from '../../../utils'
 type Props = {
     className: string
     value: string
+    showEmptyPlaceholder?: boolean
     onChange: (value: string) => void
 }
 
-type DateProperty = {
+export type DateProperty = {
     from?: number
     to?: number
     includeTime?: boolean
@@ -35,7 +36,7 @@ type DateProperty = {
 const loadedLocales: Record<string, any> = {}
 
 function DateRange(props: Props): JSX.Element {
-    const {className, value, onChange} = props
+    const {className, value, showEmptyPlaceholder, onChange} = props
     const intl = useIntl()
     const timeZoneOffset = new Date().getTimezoneOffset() * 60 * 1000
 
@@ -151,12 +152,16 @@ function DateRange(props: Props): JSX.Element {
         setShowDialog(false)
     }
 
+    let buttonText = displayValue
+    if (!buttonText && showEmptyPlaceholder) {
+        buttonText = intl.formatMessage({id: 'DateRange.empty', defaultMessage: 'Empty'})
+    }
     return (
-        <div className={'DateRange '}>
+        <div className={`DateRange ${displayValue ? '' : 'empty'} ` + className}>
             <Button
                 onClick={() => setShowDialog(true)}
             >
-                {displayValue || <span title={intl.formatMessage({id: 'DateRange.empty', defaultMessage: 'Empty'})}/>}
+                {buttonText}
             </Button>
 
             {showDialog &&
@@ -229,10 +234,12 @@ function DateRange(props: Props): JSX.Element {
                             <DayPicker
                                 onDayClick={handleDayClick}
                                 initialMonth={dateFrom || new Date()}
-                                showOutsideDays={true}
+                                showOutsideDays={false}
                                 locale={locale}
                                 localeUtils={MomentLocaleUtils}
                                 todayButton={intl.formatMessage({id: 'DateRange.today', defaultMessage: 'Today'})}
+                                onTodayButtonClick={handleDayClick}
+                                month={dateFrom}
                                 selectedDays={[dateFrom, dateTo ? {from: dateFrom, to: dateTo} : {from: dateFrom, to: dateFrom}]}
                                 modifiers={dateTo ? {start: dateFrom, end: dateTo} : {start: dateFrom, end: dateFrom}}
                             />

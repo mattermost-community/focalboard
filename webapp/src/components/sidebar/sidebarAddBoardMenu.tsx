@@ -24,7 +24,7 @@ type Props = {
     activeBoardId?: string
 }
 
-const addBoardClicked = async (showBoard: (id: string) => void, intl: IntlShape, activeBoardId?: string) => {
+export const addBoardClicked = async (showBoard: (id: string) => void, intl: IntlShape, activeBoardId?: string) => {
     const oldBoardId = activeBoardId
 
     const board = createBoard()
@@ -50,10 +50,11 @@ const addBoardClicked = async (showBoard: (id: string) => void, intl: IntlShape,
     )
 }
 
-const addBoardTemplateClicked = async (showBoard: (id: string) => void, intl: IntlShape, activeBoardId?: string) => {
+export const addBoardTemplateClicked = async (showBoard: (id: string) => void, intl: IntlShape, activeBoardId?: string) => {
     const boardTemplate = createBoard()
     boardTemplate.rootId = boardTemplate.id
     boardTemplate.fields.isTemplate = true
+    boardTemplate.title = intl.formatMessage({id: 'View.NewTemplateTitle', defaultMessage: 'Untitled Template'})
 
     const view = createBoardView()
     view.fields.viewType = 'board'
@@ -106,7 +107,7 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
                 <div className='menu-entry'>
                     <FormattedMessage
                         id='Sidebar.add-board'
-                        defaultMessage='+ Add Board'
+                        defaultMessage='+ Add board'
                     />
                 </div>
                 <Menu position='top'>

@@ -4,13 +4,13 @@
 import React from 'react'
 import {render} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-
-import '@testing-library/jest-dom'
 import {IntlProvider} from 'react-intl'
 
-import DateRange from '../dateRange/dateRange'
+import '@testing-library/jest-dom'
 
-const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
+import {wrapIntl} from '../../../testUtils'
+
+import DateRange from '../dateRange/dateRange'
 
 // create Dates for specific days for this year.
 const June15 = new Date(Date.UTC(new Date().getFullYear(), 5, 15, 12))
@@ -60,6 +60,7 @@ describe('components/properties/dateRange', () => {
             <DateRange
                 className='octo-propertyvalue'
                 value={''}
+                showEmptyPlaceholder={true}
                 onChange={callback}
             />,
         )
@@ -68,7 +69,7 @@ describe('components/properties/dateRange', () => {
         const fifteenth = Date.UTC(date.getFullYear(), date.getMonth(), 15, 12)
 
         const {getByText, getByTitle} = render(component)
-        const dayDisplay = getByTitle('Empty')
+        const dayDisplay = getByText('Empty')
         userEvent.click(dayDisplay)
 
         const day = getByText('15')
@@ -86,13 +87,14 @@ describe('components/properties/dateRange', () => {
             <DateRange
                 className='octo-propertyvalue'
                 value={''}
+                showEmptyPlaceholder={true}
                 onChange={callback}
             />,
         )
 
         // open modal
         const {getByText, getByTitle} = render(component)
-        const dayDisplay = getByTitle('Empty')
+        const dayDisplay = getByText('Empty')
         userEvent.click(dayDisplay)
 
         // select start date
@@ -241,5 +243,36 @@ describe('components/properties/dateRange', () => {
         // const retVal = {from: '2021-06-15', to: '2021-06-20'}
         const retVal = '{"from":' + June15.getTime().toString() + ',"to":' + June20.getTime().toString() + '}'
         expect(callback).toHaveBeenCalledWith(retVal)
+    })
+
+    test('handles `Today` button click event', () => {
+        const callback = jest.fn()
+        const component = wrapIntl(
+            <DateRange
+                className='octo-propertyvalue'
+                value={''}
+                showEmptyPlaceholder={true}
+                onChange={callback}
+            />,
+        )
+
+        // To see if 'Today' button correctly selects today's date,
+        // we can check it against `new Date()`.
+        // About `Date()`
+        // > "When called as a function, returns a string representation of the current date and time"
+        const date = new Date()
+        const today = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+
+        const {getByText, getByTitle} = render(component)
+        const dayDisplay = getByText('Empty')
+        userEvent.click(dayDisplay)
+
+        const day = getByText('Today')
+        const modal = getByTitle('Close').children[0]
+        userEvent.click(day)
+        userEvent.click(modal)
+
+        const rObject = {from: today}
+        expect(callback).toHaveBeenCalledWith(JSON.stringify(rObject))
     })
 })

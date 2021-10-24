@@ -16,7 +16,7 @@ func (a *App) GetRootWorkspace() (*model.Workspace, error) {
 	if workspace == nil {
 		workspace = &model.Workspace{
 			ID:          workspaceID,
-			SignupToken: utils.CreateGUID(),
+			SignupToken: utils.NewID(utils.IDTypeToken),
 		}
 		err := a.store.UpsertWorkspaceSignupToken(*workspace)
 		if err != nil {
@@ -60,4 +60,8 @@ func (a *App) UpsertWorkspaceSignupToken(workspace model.Workspace) error {
 
 func (a *App) GetWorkspaceCount() (int64, error) {
 	return a.store.GetWorkspaceCount()
+}
+
+func (a *App) GetUserWorkspaces(userID string) ([]model.UserWorkspace, error) {
+	return a.store.GetUserWorkspaces(userID)
 }

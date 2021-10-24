@@ -390,6 +390,21 @@ func (mr *MockStoreMockRecorder) GetUserByUsername(arg0 interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByUsername", reflect.TypeOf((*MockStore)(nil).GetUserByUsername), arg0)
 }
 
+// GetUserWorkspaces mocks base method.
+func (m *MockStore) GetUserWorkspaces(arg0 string) ([]model.UserWorkspace, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserWorkspaces", arg0)
+	ret0, _ := ret[0].([]model.UserWorkspace)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserWorkspaces indicates an expected call of GetUserWorkspaces.
+func (mr *MockStoreMockRecorder) GetUserWorkspaces(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserWorkspaces", reflect.TypeOf((*MockStore)(nil).GetUserWorkspaces), arg0)
+}
+
 // GetUsersByWorkspace mocks base method.
 func (m *MockStore) GetUsersByWorkspace(arg0 string) ([]*model.User, error) {
 	m.ctrl.T.Helper()

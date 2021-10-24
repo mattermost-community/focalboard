@@ -9,7 +9,7 @@ $tooltop-vertical-offset: 2px;
     position: absolute;
     content: attr(data-tooltip);
     padding: 2px 4px;
-    line-height: 1px;
+    line-height: 1.2;
     font-size: 1em;
     text-align: center;
     color: rgb(255, 255, 255);
@@ -87,7 +87,6 @@ $tooltop-vertical-offset: 2px;
     }
     // Left tooltip body style
     &.tooltip-left:hover::after {
-        left: undefined;
         top: 50%;
         right: calc(100% + 2px);
         transform: translate(-#{$tooltop-vertical-offset}, -50%);

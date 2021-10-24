@@ -4,11 +4,10 @@
 import React from 'react'
 import {fireEvent, render} from '@testing-library/react'
 import '@testing-library/jest-dom'
-import {IntlProvider} from 'react-intl'
+
+import {wrapIntl} from '../testUtils'
 
 import PropertyMenu from './propertyMenu'
-
-const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
 
 describe('widgets/PropertyMenu', () => {
     beforeEach(() => {

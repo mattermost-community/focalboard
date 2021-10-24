@@ -1,11 +1,18 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../telemetry/telemetryClient'
+
 import {Block, createBlock} from './block'
 import {FilterGroup, createFilterGroup} from './filterGroup'
 
 type IViewType = 'board' | 'table' | 'gallery' // | 'calendar' | 'list'
 type ISortOption = { propertyId: '__title' | string, reversed: boolean }
+
+type KanbanCalculationFields = {
+    calculation: string
+    propertyId: string
+}
 
 type BoardViewFields = {
     viewType: IViewType
@@ -19,6 +26,8 @@ type BoardViewFields = {
     cardOrder: string[]
     columnWidths: Record<string, number>
     columnCalculations: Record<string, string>
+    kanbanCalculations: Record<string, KanbanCalculationFields>
+    defaultTemplateId: string
 }
 
 type BoardView = Block & {
@@ -26,6 +35,7 @@ type BoardView = Block & {
 }
 
 function createBoardView(block?: Block): BoardView {
+    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardView, {viewType: block?.fields.viewType || 'board'})
     return {
         ...createBlock(block),
         type: 'view',
@@ -41,6 +51,8 @@ function createBoardView(block?: Block): BoardView {
             cardOrder: block?.fields.cardOrder?.slice() || [],
             columnWidths: {...(block?.fields.columnWidths || {})},
             columnCalculations: {...(block?.fields.columnCalculations) || {}},
+            kanbanCalculations: {...(block?.fields.kanbanCalculations) || {}},
+            defaultTemplateId: block?.fields.defaultTemplateId || '',
         },
     }
 }
@@ -52,4 +64,4 @@ function sortBoardViewsAlphabetically(views: BoardView[]): BoardView[] {
     }).sort((v1, v2) => v1.title.localeCompare(v2.title)).map((v) => v.view)
 }
 
-export {BoardView, IViewType, ISortOption, sortBoardViewsAlphabetically, createBoardView}
+export {BoardView, IViewType, ISortOption, sortBoardViewsAlphabetically, createBoardView, KanbanCalculationFields}

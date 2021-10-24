@@ -19,6 +19,8 @@ import {updateView} from '../store/views'
 
 import './centerPanel.scss'
 
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
+
 import CardDialog from './cardDialog'
 import RootPortal from './rootPortal'
 import TopBar from './topBar'
@@ -41,6 +43,7 @@ type Props = {
     addTemplate: (template: Card) => void
     shownCardId?: string
     showCard: (cardId?: string) => void
+    showShared: boolean
 }
 
 type State = {
@@ -80,6 +83,10 @@ class CenterPanel extends React.Component<Props, State> {
         }
     }
 
+    componentDidMount(): void {
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {viewType: this.props.activeView.fields.viewType})
+    }
+
     constructor(props: Props) {
         super(props)
         this.state = {
@@ -90,6 +97,10 @@ class CenterPanel extends React.Component<Props, State> {
 
     shouldComponentUpdate(): boolean {
         return true
+    }
+
+    componentDidUpdate(): void {
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {viewType: this.props.activeView.fields.viewType})
     }
 
     render(): JSX.Element {
@@ -141,6 +152,7 @@ class CenterPanel extends React.Component<Props, State> {
                         addCardTemplate={this.addCardTemplate}
                         editCardTemplate={this.editCardTemplate}
                         readonly={this.props.readonly}
+                        showShared={this.props.showShared}
                     />
                 </div>
 

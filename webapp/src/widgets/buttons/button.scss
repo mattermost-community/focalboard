@@ -1,4 +1,5 @@
 .Button {
+    font-family: 'Open Sans', sans-serif;
     display: flex;
     flex: 0 0 auto;
     align-items: center;
@@ -12,9 +13,26 @@
     border: 0;
     transition: background 100ms ease-out 0s;
     color: inherit;
+    height: 32px;
+    padding: 0 10px;
 
     &:hover {
-        background-color: rgba(var(--center-channel-color-rgb), 0.1);
+        background-color: rgba(var(--center-channel-color-rgb), 0.08);
+    }
+
+    .Icon {
+        align-items: center;
+        display: flex;
+        height: 14px;
+        justify-content: center;
+        margin-right: 0;
+        width: 14px;
+    }
+
+    .Icon--right {
+        height: 14px;
+        margin-left: 4px;
+        width: 14px;
     }
 
     &.filled {
@@ -40,8 +58,19 @@
         }
     }
 
+    &.emphasis--danger {
+        color: rgb(var(--button-danger-color-rgb));
+        background-color: rgb(var(--button-danger-bg-rgb));
+
+        &:hover {
+            background-color: rgb(var(--button-danger-bg-rgb), 0.8);
+        }
+
+    }
+
     &.active {
-        color: rgb(var(--link-color));
+        background: rgba(var(--button-bg-rgb), 0.08);
+        color: rgb(var(--button-bg-rgb));
         font-weight: 600;
     }
 
@@ -52,9 +81,17 @@
         height: 32px;
     }
 
-    .Icon {
-        width: 14px;
-        height: 14px;
-        margin-right: 0;
+    &.size--large {
+        font-size: 16px;
+        font-weight: 600;
+        height: 48px;
+        padding: 0 24px;
+
+        .Icon--right {
+            font-size: 24px;
+            height: 20px;
+            margin-left: 10px;
+            width: 20px;
+        }
     }
 }

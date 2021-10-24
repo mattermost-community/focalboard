@@ -7,11 +7,13 @@ import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {ContentBlock} from '../../blocks/contentBlock'
 import mutator from '../../mutator'
+import {Utils} from '../../utils'
 
 import IconButton from '../../widgets/buttons/iconButton'
 import DeleteIcon from '../../widgets/icons/delete'
 import DuplicateIcon from '../../widgets/icons/duplicate'
 import OptionsIcon from '../../widgets/icons/options'
+import LinkIcon from '../../widgets/icons/Link'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {useSortable} from '../../hooks/sortable'
@@ -19,12 +21,14 @@ import {useSortable} from '../../hooks/sortable'
 import ImageElement from '../content/imageElement'
 import ContentElement from '../content/contentElement'
 import PropertyValueElement from '../propertyValueElement'
+import {sendFlashMessage} from '../flashMessages'
 import Tooltip from '../../widgets/tooltip'
 import {useAppSelector} from '../../store/hooks'
 import {getCardContents} from '../../store/contents'
 import {getCardComments} from '../../store/comments'
 
 import './galleryCard.scss'
+import {CardDetailProvider} from '../cardDetail/cardDetailContext'
 
 type Props = {
     board: Board
@@ -93,6 +97,21 @@ const GalleryCard = React.memo((props: Props) => {
                                 mutator.duplicateCard(card.id)
                             }}
                         />
+                        <Menu.Text
+                            icon={<LinkIcon/>}
+                            id='copy'
+                            name={intl.formatMessage({id: 'GalleryCard.copyLink', defaultMessage: 'Copy link'})}
+                            onClick={() => {
+                                let cardLink = window.location.href
+
+                                if (!cardLink.includes(card.id)) {
+                                    cardLink += `/${card.id}`
+                                }
+
+                                Utils.copyTextToClipboard(cardLink)
+                                sendFlashMessage({content: intl.formatMessage({id: 'GalleryCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
+                            }}
+                        />
                     </Menu>
                 </MenuWrapper>
             }
@@ -102,27 +121,31 @@ const GalleryCard = React.memo((props: Props) => {
                     <ImageElement block={image}/>
                 </div>}
             {!image &&
-                <div className='gallery-item'>
-                    {contents.map((block) => {
-                        if (Array.isArray(block)) {
-                            return block.map((b) => (
-                                <ContentElement
-                                    key={b.id}
-                                    block={b}
-                                    readonly={true}
-                                />
-                            ))
-                        }
+                <CardDetailProvider card={card}>
+                    <div className='gallery-item'>
+                        {contents.map((block) => {
+                            if (Array.isArray(block)) {
+                                return block.map((b) => (
+                                    <ContentElement
+                                        key={b.id}
+                                        block={b}
+                                        readonly={true}
+                                        cords={{x: 0}}
+                                    />
+                                ))
+                            }
 
-                        return (
-                            <ContentElement
-                                key={block.id}
-                                block={block}
-                                readonly={true}
-                            />
-                        )
-                    })}
-                </div>}
+                            return (
+                                <ContentElement
+                                    key={block.id}
+                                    block={block}
+                                    readonly={true}
+                                    cords={{x: 0}}
+                                />
+                            )
+                        })}
+                    </div>
+                </CardDetailProvider>}
             {props.visibleTitle &&
                 <div className='gallery-title'>
                     { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
@@ -149,7 +172,7 @@ const GalleryCard = React.memo((props: Props) => {
                                 readOnly={true}
                                 card={card}
                                 propertyTemplate={template}
-                                emptyDisplayValue=''
+                                showEmptyPlaceholder={false}
                             />
                         </Tooltip>
                     ))}

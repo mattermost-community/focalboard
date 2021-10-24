@@ -14,12 +14,15 @@ import {BoardView} from '../../../blocks/boardView'
 import {Card} from '../../../blocks/card'
 import {Options} from '../../calculations/options'
 
+import {TableCalculationOptions} from './tableCalculationOptions'
+
 type Props = {
     board: Board
     cards: Card[]
     activeView: BoardView
     resizingColumn: string
     offset: number
+    readonly: boolean
 }
 
 const CalculationRow = (props: Props): JSX.Element => {
@@ -42,13 +45,12 @@ const CalculationRow = (props: Props): JSX.Element => {
     const selectedCalculations = props.board.fields.columnCalculations || []
 
     const [hovered, setHovered] = useState(false)
-    const toggleHover = () => setHovered(!hovered)
 
     return (
         <div
             className={'CalculationRow octo-table-row'}
-            onMouseEnter={toggleHover}
-            onMouseLeave={toggleHover}
+            onMouseEnter={() => setHovered(!props.readonly)}
+            onMouseLeave={() => setHovered(false)}
         >
             {
                 templates.map((template) => {
@@ -60,9 +62,9 @@ const CalculationRow = (props: Props): JSX.Element => {
                         <Calculation
                             key={template.id}
                             style={style}
-                            class='octo-table-cell'
+                            class={`octo-table-cell ${props.readonly ? 'disabled' : ''}`}
                             value={value}
-                            menuOpen={Boolean(showOptions.get(template.id))}
+                            menuOpen={Boolean(props.readonly ? false : showOptions.get(template.id))}
                             onMenuClose={() => toggleOptions(template.id, false)}
                             onMenuOpen={() => toggleOptions(template.id, true)}
                             onChange={(v: string) => {
@@ -71,11 +73,12 @@ const CalculationRow = (props: Props): JSX.Element => {
                                 const newBoard = createBoard(props.board)
                                 newBoard.fields.columnCalculations = calculations
                                 mutator.updateBlock(newBoard, props.board, 'update_calculation')
-                                toggleHover()
+                                setHovered(false)
                             }}
                             cards={props.cards}
                             property={template}
                             hovered={hovered}
+                            optionsComponent={TableCalculationOptions}
                         />
                     )
                 })

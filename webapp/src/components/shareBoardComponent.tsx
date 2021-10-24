@@ -8,11 +8,13 @@ import {ISharing} from '../blocks/sharing'
 
 import client from '../octoClient'
 
-import {Utils} from '../utils'
+import {Utils, IDType} from '../utils'
 import {sendFlashMessage} from '../components/flashMessages'
 
 import Button from '../widgets/buttons/button'
 import Switch from '../widgets/switch'
+
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 
 import Modal from './modal'
 import './shareBoardComponent.scss'
@@ -38,7 +40,7 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
         const newSharing: ISharing = {
             id: props.boardId,
             enabled: true,
-            token: Utils.createGuid(),
+            token: Utils.createGuid(IDType.Token),
         }
         return newSharing
     }
@@ -47,6 +49,7 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
         const newSharing: ISharing = sharing || createSharingInfo()
         newSharing.id = props.boardId
         newSharing.enabled = isOn
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoard, {board: props.boardId, enabled: isOn})
         await client.setSharing(newSharing)
         await loadData()
     }
@@ -56,7 +59,7 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
         const accept = window.confirm(intl.formatMessage({id: 'ShareBoard.confirmRegenerateToken', defaultMessage: 'This will invalidate previously shared links. Continue?'}))
         if (accept) {
             const newSharing: ISharing = sharing || createSharingInfo()
-            newSharing.token = Utils.createGuid()
+            newSharing.token = Utils.createGuid(IDType.Token)
             await client.setSharing(newSharing)
             await loadData()
 
@@ -100,12 +103,12 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
                         {isSharing &&
                             <FormattedMessage
                                 id='ShareBoard.unshare'
-                                defaultMessage='Anyone with the link can view this board and all cards in it'
+                                defaultMessage='Anyone with the link can view this board and all cards in it.'
                             />}
                         {!isSharing &&
                             <FormattedMessage
                                 id='ShareBoard.share'
-                                defaultMessage='Publish to web and share this board to anyone'
+                                defaultMessage='Publish and share this board with anyone who has the link'
                             />}
                     </div>
                     <Switch

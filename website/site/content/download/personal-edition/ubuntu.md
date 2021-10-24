@@ -5,7 +5,7 @@ subsection: Personal Edition
 weight: 2
 ---
 
-Focalboard Personal Server allows your team to work together on shared project boards.
+Focalboard Personal Server is a standalone server for development and personal use. For team use, check out [Mattermost Boards](../../mattermost/), which supports private boards, team communication, and more.
 
 Follow these steps it up on an Ubuntu server. To upgrade an existing installation, see [the upgrade guide](../ubuntu-upgrade).
 
@@ -17,10 +17,10 @@ Popular hosted options include:
 
 ## Install Focalboard
 
-Download the Ubuntu archive package from the appropriate [release in GitHub](https://github.com/mattermost/focalboard/releases). E.g. this is the link for v0.7.0 (which may no longer be the latest one):
+Download the Ubuntu archive package from the appropriate [release in GitHub](https://github.com/mattermost/focalboard/releases). E.g. this is the link for v0.9.2 (which may no longer be the latest one):
 
 ```
-wget https://github.com/mattermost/focalboard/releases/download/v0.7.0/focalboard-server-linux-amd64.tar.gz
+wget https://github.com/mattermost/focalboard/releases/download/v0.9.2/focalboard-server-linux-amd64.tar.gz
 tar -xvzf focalboard-server-linux-amd64.tar.gz
 sudo mv focalboard /opt
 ```
@@ -194,6 +194,15 @@ nano /opt/focalboard/config.json
 ```
 
 Change the dbconfig setting to use the MySQL database you created:
+
+When MySQL is being used, using collation is recommended over using charset.
+
+Using a variant of `utf8mb4` collation is required. For example, `utf8mb4_general_ci`
+is used by default when no collation is specified.
+
+If you're using Focalboard as a Mattermost Plugin prior to version 0.9 with MySQL,
+please ensure the collations of focalboard tables (tables with the prefix `focalboard_`)
+is the same as the collation of mattermost tables.
 
 ```
 "dbtype": "mysql",

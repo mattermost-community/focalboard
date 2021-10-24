@@ -3,6 +3,7 @@
 package main
 
 import (
+	"encoding/json"
 	"strings"
 
 	"github.com/mattermost/mattermost-server/v6/model"
@@ -19,8 +20,8 @@ const manifestStr = `
   "support_url": "https://github.com/mattermost/focalboard/issues",
   "release_notes_url": "https://github.com/mattermost/focalboard/releases",
   "icon_path": "assets/starter-template-icon.svg",
-  "version": "0.9.0",
-  "min_server_version": "5.38.0",
+  "version": "0.10.0",
+  "min_server_version": "6.0.0",
   "server": {
     "executables": {
       "darwin-amd64": "server/dist/plugin-darwin-amd64",
@@ -33,13 +34,22 @@ const manifestStr = `
     "bundle_path": "webapp/dist/main.js"
   },
   "settings_schema": {
-    "header": "For additional setup steps, please [see here](https://focalboard.com/fwlink/plugin-setup.html)",
+    "header": "",
     "footer": "",
-    "settings": []
+    "settings": [
+      {
+        "key": "EnablePublicSharedBoards",
+        "display_name": "Enable Publicly-Shared Boards:",
+        "type": "bool",
+        "help_text": "This allows board editors to share boards that can be accessed by anyone with the link.",
+        "placeholder": "",
+        "default": false
+      }
+    ]
   }
 }
 `
 
 func init() {
-	manifest = model.ManifestFromJson(strings.NewReader(manifestStr))
+	_ = json.NewDecoder(strings.NewReader(manifestStr)).Decode(&manifest)
 }

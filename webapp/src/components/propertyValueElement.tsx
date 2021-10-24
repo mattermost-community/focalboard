@@ -10,24 +10,19 @@ import {ContentBlock} from '../blocks/contentBlock'
 import {CommentBlock} from '../blocks/commentBlock'
 import mutator from '../mutator'
 import {OctoUtils} from '../octoUtils'
-import {Utils} from '../utils'
+import {Utils, IDType} from '../utils'
 import Editable from '../widgets/editable'
-import ValueSelector from '../widgets/valueSelector'
-
-import Label from '../widgets/label'
-
 import Switch from '../widgets/switch'
-import IconButton from '../widgets/buttons/iconButton'
-import CloseIcon from '../widgets/icons/close'
 
 import UserProperty from './properties/user/user'
-import MultiSelectProperty from './properties/multiSelect'
+import MultiSelectProperty from './properties/multiSelect/multiSelect'
 import URLProperty from './properties/link/link'
 import LastModifiedBy from './properties/lastModifiedBy/lastModifiedBy'
 import LastModifiedAt from './properties/lastModifiedAt/lastModifiedAt'
 import CreatedAt from './properties/createdAt/createdAt'
 import CreatedBy from './properties/createdBy/createdBy'
 import DateRange from './properties/dateRange/dateRange'
+import SelectProperty from './properties/select/select'
 
 type Props = {
     board: Board
@@ -36,19 +31,19 @@ type Props = {
     contents: Array<ContentBlock|ContentBlock[]>
     comments: CommentBlock[]
     propertyTemplate: IPropertyTemplate
-    emptyDisplayValue: string
+    showEmptyPlaceholder: boolean
 }
 
 const PropertyValueElement = (props:Props): JSX.Element => {
     const [value, setValue] = useState(props.card.fields.properties[props.propertyTemplate.id] || '')
     const [serverValue, setServerValue] = useState(props.card.fields.properties[props.propertyTemplate.id] || '')
 
-    const {card, propertyTemplate, readOnly, emptyDisplayValue, board, contents, comments} = props
+    const {card, propertyTemplate, readOnly, showEmptyPlaceholder, board, contents, comments} = props
     const intl = useIntl()
     const propertyValue = card.fields.properties[propertyTemplate.id]
     const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate, intl)
+    const emptyDisplayValue = showEmptyPlaceholder ? intl.formatMessage({id: 'PropertyValueElement.empty', defaultMessage: 'Empty'}) : ''
     const finalDisplayValue = displayValue || emptyDisplayValue
-    const [open, setOpen] = useState(false)
 
     const editableFields: Array<PropertyType> = ['text', 'number', 'email', 'url', 'phone']
 
@@ -115,7 +110,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 onCreate={
                     async (newValue, currentValues) => {
                         const option: IPropertyOption = {
-                            id: Utils.createGuid(),
+                            id: Utils.createGuid(IDType.BlockID),
                             value: newValue,
                             color: 'propColorDefault',
                         }
@@ -130,38 +125,23 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     }
 
     if (propertyTemplate.type === 'select') {
-        let propertyColorCssClassName = ''
-        const cardPropertyValue = propertyTemplate.options.find((o) => o.id === propertyValue)
-        if (cardPropertyValue) {
-            propertyColorCssClassName = cardPropertyValue.color
-        }
-
-        if (readOnly || !board || !open) {
-            return (
-                <div
-                    className='octo-propertyvalue'
-                    tabIndex={0}
-                    onClick={() => setOpen(true)}
-                >
-                    <Label color={displayValue ? propertyColorCssClassName : 'empty'}>
-                        <span className='Label-text'>{finalDisplayValue}</span>
-                        {displayValue && !props.readOnly &&
-                            <IconButton
-                                onClick={onDeleteValue}
-                                onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
-                                icon={<CloseIcon/>}
-                                title='Clear'
-                                className='margin-left delete-value'
-                            />}
-                    </Label>
-                </div>
-            )
-        }
         return (
-            <ValueSelector
+            <SelectProperty
+                isEditable={!readOnly && Boolean(board)}
                 emptyValue={emptyDisplayValue}
-                options={propertyTemplate.options}
-                value={propertyTemplate.options.find((p) => p.id === propertyValue)}
+                propertyValue={propertyValue as string}
+                propertyTemplate={propertyTemplate}
+                onCreate={
+                    async (newValue) => {
+                        const option: IPropertyOption = {
+                            id: Utils.createGuid(IDType.BlockID),
+                            value: newValue,
+                            color: 'propColorDefault',
+                        }
+                        await mutator.insertPropertyOption(board, propertyTemplate, option, 'add property option')
+                        mutator.changePropertyValue(card, propertyTemplate.id, option.id)
+                    }
+                }
                 onChange={(newValue) => {
                     mutator.changePropertyValue(card, propertyTemplate.id, newValue)
                 }}
@@ -171,24 +151,13 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 onDeleteOption={(option: IPropertyOption): void => {
                     mutator.deletePropertyOption(board, propertyTemplate, option)
                 }}
-                onCreate={
-                    async (newValue) => {
-                        const option: IPropertyOption = {
-                            id: Utils.createGuid(),
-                            value: newValue,
-                            color: 'propColorDefault',
-                        }
-                        await mutator.insertPropertyOption(board, propertyTemplate, option, 'add property option')
-                        mutator.changePropertyValue(card, propertyTemplate.id, option.id)
-                    }
-                }
                 onDeleteValue={onDeleteValue}
             />
         )
     } else if (propertyTemplate.type === 'person') {
         return (
             <UserProperty
-                value={propertyValue as string}
+                value={propertyValue?.toString()}
                 readonly={readOnly}
                 onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
             />
@@ -200,18 +169,20 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         return (
             <DateRange
                 className='octo-propertyvalue'
-                value={value as string}
+                value={value.toString()}
+                showEmptyPlaceholder={showEmptyPlaceholder}
                 onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
             />
         )
     } else if (propertyTemplate.type === 'url') {
         return (
             <URLProperty
-                value={value as string}
+                value={value.toString()}
                 readonly={readOnly}
+                placeholder={emptyDisplayValue}
                 onChange={setValue}
                 onSave={saveTextProperty}
-                onCancel={() => setValue(propertyValue)}
+                onCancel={() => setValue(propertyValue || '')}
                 validator={(newValue) => validateProp(propertyTemplate.type, newValue)}
             />
         )
@@ -260,11 +231,12 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             return (
                 <Editable
                     className='octo-propertyvalue'
-                    placeholderText=''
-                    value={value as string}
+                    placeholderText={emptyDisplayValue}
+                    value={value.toString()}
+                    autoExpand={true}
                     onChange={setValue}
                     onSave={saveTextProperty}
-                    onCancel={() => setValue(propertyValue)}
+                    onCancel={() => setValue(propertyValue || '')}
                     validator={(newValue) => validateProp(propertyTemplate.type, newValue)}
                     spellCheck={propertyTemplate.type === 'text'}
                 />

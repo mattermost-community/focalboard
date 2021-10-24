@@ -2,9 +2,9 @@
 // See LICENSE.txt for license information.
 const exec = require('child_process').exec;
 
-const webpack = require('webpack');
-
 const path = require('path');
+
+const webpack = require('webpack');
 
 const tsTransformer = require('@formatjs/ts-transformer');
 
@@ -24,7 +24,7 @@ if (NPM_TARGET === 'debug' || NPM_TARGET === 'debug:watch') {
     );
 }
 
-if (NPM_TARGET === 'build:watch' || NPM_TARGET === 'debug:watch') {
+if (NPM_TARGET === 'build:watch' || NPM_TARGET === 'debug:watch' || NPM_TARGET === 'live-watch') {
     plugins.push({
         apply: (compiler) => {
             compiler.hooks.watchRun.tap('WatchStartPlugin', () => {
@@ -32,7 +32,11 @@ if (NPM_TARGET === 'build:watch' || NPM_TARGET === 'debug:watch') {
                 console.log('Change detected. Rebuilding webapp.');
             });
             compiler.hooks.afterEmit.tap('AfterEmitPlugin', () => {
-                exec('cd .. && make deploy-from-watch', (err, stdout, stderr) => {
+                let command = 'cd .. && make deploy-from-watch';
+                if (NPM_TARGET === 'live-watch') {
+                    command = 'cd .. && make deploy-to-mattermost-directory';
+                }
+                exec(command, (err, stdout, stderr) => {
                     if (stdout) {
                         process.stdout.write(stdout);
                     }
@@ -113,7 +117,7 @@ module.exports = {
                         loader: 'file-loader',
                         options: {
                             name: '[name].[ext]',
-                            outputPath: path.join(__dirname, '/dist'),
+                            outputPath: 'static',
                             publicPath: '/plugins/focalboard/static/',
                         },
                     },
@@ -143,3 +147,11 @@ module.exports = {
     mode,
     plugins,
 };
+
+const env = {};
+env.RUDDER_KEY = JSON.stringify(process.env.RUDDER_KEY || ''); //eslint-disable-line no-process-env
+env.RUDDER_DATAPLANE_URL = JSON.stringify(process.env.RUDDER_DATAPLANE_URL || ''); //eslint-disable-line no-process-env
+
+module.exports.plugins.push(new webpack.DefinePlugin({
+    'process.env': env,
+}));
