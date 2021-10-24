@@ -84,7 +84,7 @@ exports[`components/addContentMenuItem return a text menu item 1`] = `
 </div>
 `;
 
-exports[`components/addContentMenuItem return an error and empty element from unknow type 1`] = `<div />`;
+exports[`components/addContentMenuItem return an error and empty element from unknown type 1`] = `<div />`;
 
 exports[`components/addContentMenuItem return an image menu item 1`] = `
 <div>
