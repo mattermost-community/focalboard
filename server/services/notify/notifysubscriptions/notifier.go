@@ -160,7 +160,12 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 		return err
 	}
 
-	markdown, err := Diffs2Markdown(diffs)
+	opts := MarkdownOpts{
+		Language: "en", // TODO: use correct language with i18n available on server
+		MakeLink: nil,  // TODO:
+	}
+
+	markdown, err := Diffs2Markdown(diffs, opts)
 	if err != nil {
 		return err
 	}
