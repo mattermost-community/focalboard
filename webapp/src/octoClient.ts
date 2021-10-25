@@ -214,6 +214,15 @@ class OctoClient {
         return this.getBlocksWithPath(path)
     }
 
+    async getBlocksWithBlockID(blockID: string, workspaceID?: string, optionalReadToken?: string): Promise<Block[]> {
+        let path = this.workspacePath(workspaceID) + `/blocks?block_id=${blockID}`
+        const readToken = optionalReadToken || Utils.getReadToken()
+        if (readToken) {
+            path += `&read_token=${readToken}`
+        }
+        return this.getBlocksWithPath(path)
+    }
+
     async getAllBlocks(): Promise<Block[]> {
         const path = this.workspacePath() + '/blocks?all=true'
         return this.getBlocksWithPath(path)
@@ -235,27 +244,6 @@ class OctoClient {
 
         // Hydrate is important, as it ensures that each block is complete to the current model
         const fixedBlocks = OctoUtils.hydrateBlocks(blocks)
-
-        // !TODO: Remove this fixup code
-        for (const block of fixedBlocks) {
-            if (!block.fields) {
-                block.fields = {}
-            }
-
-            if (block.type === 'image') {
-                if (!block.fields.fileId && block.fields.url) {
-                    // Convert deprecated url to fileId
-                    try {
-                        const url = new URL(block.fields.url)
-                        const path = url.pathname
-                        const fileId = path.substring(path.lastIndexOf('/') + 1)
-                        block.fields.fileId = fileId
-                    } catch {
-                        Utils.logError(`Failed to get fileId from url: ${block.fields.url}`)
-                    }
-                }
-            }
-        }
 
         return fixedBlocks
     }
@@ -386,7 +374,6 @@ class OctoClient {
                 Utils.log(`uploadFile response: ${text}`)
                 const json = JSON.parse(text)
 
-                // const json = await this.getJson(response)
                 return json.fileId
             } catch (e) {
                 Utils.logError(`uploadFile json ERROR: ${e}`)

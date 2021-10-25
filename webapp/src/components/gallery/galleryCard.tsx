@@ -28,6 +28,7 @@ import {getCardContents} from '../../store/contents'
 import {getCardComments} from '../../store/comments'
 
 import './galleryCard.scss'
+import {CardDetailProvider} from '../cardDetail/cardDetailContext'
 
 type Props = {
     board: Board
@@ -120,27 +121,31 @@ const GalleryCard = React.memo((props: Props) => {
                     <ImageElement block={image}/>
                 </div>}
             {!image &&
-                <div className='gallery-item'>
-                    {contents.map((block) => {
-                        if (Array.isArray(block)) {
-                            return block.map((b) => (
-                                <ContentElement
-                                    key={b.id}
-                                    block={b}
-                                    readonly={true}
-                                />
-                            ))
-                        }
+                <CardDetailProvider card={card}>
+                    <div className='gallery-item'>
+                        {contents.map((block) => {
+                            if (Array.isArray(block)) {
+                                return block.map((b) => (
+                                    <ContentElement
+                                        key={b.id}
+                                        block={b}
+                                        readonly={true}
+                                        cords={{x: 0}}
+                                    />
+                                ))
+                            }
 
-                        return (
-                            <ContentElement
-                                key={block.id}
-                                block={block}
-                                readonly={true}
-                            />
-                        )
-                    })}
-                </div>}
+                            return (
+                                <ContentElement
+                                    key={block.id}
+                                    block={block}
+                                    readonly={true}
+                                    cords={{x: 0}}
+                                />
+                            )
+                        })}
+                    </div>
+                </CardDetailProvider>}
             {props.visibleTitle &&
                 <div className='gallery-title'>
                     { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }

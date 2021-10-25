@@ -17,7 +17,7 @@ exports[`components/cardDetail/CardDetailProperties should match snapshot 1`] = 
           class="octo-propertyname"
         >
           <button
-            class="Button    "
+            class="Button"
             type="button"
           >
             <span>
@@ -46,7 +46,7 @@ exports[`components/cardDetail/CardDetailProperties should match snapshot 1`] = 
       class="octo-propertyname add-property"
     >
       <button
-        class="Button    "
+        class="Button"
         type="button"
       >
         <span>

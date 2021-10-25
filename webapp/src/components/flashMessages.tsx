@@ -26,14 +26,20 @@ export const FlashMessages = React.memo((props: Props) => {
     const [timeoutId, setTimeoutId] = useState<ReturnType<typeof setTimeout>|null>(null)
 
     useEffect(() => {
+        let isSubscribed = true
         emitter.on('message', (newMessage: FlashMessage) => {
-            if (timeoutId) {
-                clearTimeout(timeoutId)
-                setTimeoutId(null)
+            if (isSubscribed) {
+                if (timeoutId) {
+                    clearTimeout(timeoutId)
+                    setTimeoutId(null)
+                }
+                setTimeoutId(setTimeout(handleFadeOut, props.milliseconds - 200))
+                setMessage(newMessage)
             }
-            setTimeoutId(setTimeout(handleFadeOut, props.milliseconds - 200))
-            setMessage(newMessage)
         })
+        return () => {
+            isSubscribed = false
+        }
     }, [])
 
     const handleFadeOut = (): void => {
