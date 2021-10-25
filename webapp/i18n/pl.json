@@ -58,7 +58,7 @@
   "GalleryCard.copyLink": "Kopiuj odnośnik",
   "GalleryCard.delete": "Usuń",
   "GalleryCard.duplicate": "Duplikuj",
-  "General.BoardCount": "{liczba, l. mnoga, jedna {# Tablica} inne {# Tablice}}",
+  "General.BoardCount": "{count, plural, one {# Tablica} other {# Tablice}}",
   "GroupBy.ungroup": "Rozgrupuj",
   "KanbanCard.copiedLink": "Skopiowane!",
   "KanbanCard.copyLink": "Kopiuj odnośnik",
