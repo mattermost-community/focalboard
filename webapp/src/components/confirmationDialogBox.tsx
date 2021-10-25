@@ -21,7 +21,7 @@ type Props = {
     dialogBox: ConfirmationDialogBoxProps
 }
 
-export const ConfirmationDialogBox = (props: Props) => {
+const ConfirmationDialogBox = (props: Props) => {
     return (
         <Dialog
             className='confirmation-dialog-box'
@@ -61,4 +61,5 @@ export const ConfirmationDialogBox = (props: Props) => {
     )
 }
 
+export default ConfirmationDialogBox
 export {ConfirmationDialogBoxProps}

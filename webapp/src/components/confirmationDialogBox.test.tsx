@@ -7,7 +7,7 @@ import React from 'react'
 
 import {wrapDNDIntl} from '../testUtils'
 
-import {ConfirmationDialogBox} from './confirmationDialogBox'
+import ConfirmationDialogBox from './confirmationDialogBox'
 
 describe('/components/confirmationDialogBox', () => {
     const dialogPropsWithCnfrmBtnText = {
