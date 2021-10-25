@@ -27,7 +27,7 @@ const ConfirmationDialogBox = (props: Props) => {
             className='confirmation-dialog-box'
             onClose={props.dialogBox.onClose}
         >
-            <div className='box-area'>
+            <div className='box-area' title='Confirmation Dialog Box'>
                 <h3 className='heading'>{props.dialogBox.heading}</h3>
                 <p className='sub-text'>{props.dialogBox.subText}</p>
 
