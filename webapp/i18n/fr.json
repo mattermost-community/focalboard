@@ -16,6 +16,7 @@
   "CardDetail.new-comment-placeholder": "Ajouter un commentaire...",
   "CardDetailProperty.confirm-delete": "Confirmer la suppression de la propriété",
   "CardDetailProperty.confirm-delete-subtext": "Êtes-vous sûr de vouloir supprimer la propriété « {propertyName} » ? La suppression retirera la propriété de toutes les cartes dans ce tableau.",
+  "CardDetailProperty.property-deleted": "{propertyName} supprimé avec succès !",
   "CardDialog.copiedLink": "Copié !",
   "CardDialog.copyLink": "Copier le lien",
   "CardDialog.editing-template": "Vous éditez un modèle.",
