@@ -46,7 +46,6 @@
   "Dialog.closeDialog": "Zamknij okno dialogowe",
   "EditableDayPicker.today": "Dzisiaj",
   "EmptyCenterPanel.no-content": "Dodaj lub wybierz tablicę z paska bocznego, aby rozpocząć.",
-  "EmptyCenterPanel.workspace": "To jest przestrzeń robocza dla:",
   "Error.websocket-closed": "Połączenie websocket zamknięte, połączenie przerwane. Jeśli problem się powtarza, sprawdź konfigurację serwera lub serwera proxy.",
   "Filter.includes": "zawiera",
   "Filter.is-empty": "jest pusty",
