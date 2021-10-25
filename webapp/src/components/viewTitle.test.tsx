@@ -135,7 +135,7 @@ describe('components/viewTitle', () => {
                 <ReduxProvider store={store}>
                     <ViewTitle
                         board={board}
-                        readonly={true}
+                        readonly={false}
                     />
                 </ReduxProvider>,
             ))
@@ -153,7 +153,7 @@ describe('components/viewTitle', () => {
                 <ReduxProvider store={store}>
                     <ViewTitle
                         board={board}
-                        readonly={true}
+                        readonly={false}
                     />
                 </ReduxProvider>,
             ))
