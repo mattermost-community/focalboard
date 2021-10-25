@@ -20,8 +20,8 @@ func (unf UserNotFoundError) Error() string {
 	return fmt.Sprintf("user not found (%s)", unf.id)
 }
 
-func (s *SQLStore) GetRegisteredUserCount() (int, error) {
-	query := s.getQueryBuilder().
+func (s *SQLStore) getRegisteredUserCount(db sq.BaseRunner) (int, error) {
+	query := s.getQueryBuilder(db).
 		Select("count(*)").
 		From(s.tablePrefix + "users").
 		Where(sq.Eq{"delete_at": 0})
@@ -36,8 +36,8 @@ func (s *SQLStore) GetRegisteredUserCount() (int, error) {
 	return count, nil
 }
 
-func (s *SQLStore) getUserByCondition(condition sq.Eq) (*model.User, error) {
-	users, err := s.getUsersByCondition(condition)
+func (s *SQLStore) getUserByCondition(db sq.BaseRunner, condition sq.Eq) (*model.User, error) {
+	users, err := s.getUsersByCondition(db, condition)
 	if err != nil {
 		return nil, err
 	}
@@ -49,8 +49,8 @@ func (s *SQLStore) getUserByCondition(condition sq.Eq) (*model.User, error) {
 	return users[0], nil
 }
 
-func (s *SQLStore) getUsersByCondition(condition sq.Eq) ([]*model.User, error) {
-	query := s.getQueryBuilder().
+func (s *SQLStore) getUsersByCondition(db sq.BaseRunner, condition sq.Eq) ([]*model.User, error) {
+	query := s.getQueryBuilder(db).
 		Select(
 			"id",
 			"username",
@@ -86,19 +86,19 @@ func (s *SQLStore) getUsersByCondition(condition sq.Eq) ([]*model.User, error) {
 	return users, nil
 }
 
-func (s *SQLStore) GetUserByID(userID string) (*model.User, error) {
-	return s.getUserByCondition(sq.Eq{"id": userID})
+func (s *SQLStore) getUserByID(db sq.BaseRunner, userID string) (*model.User, error) {
+	return s.getUserByCondition(db, sq.Eq{"id": userID})
 }
 
-func (s *SQLStore) GetUserByEmail(email string) (*model.User, error) {
-	return s.getUserByCondition(sq.Eq{"email": email})
+func (s *SQLStore) getUserByEmail(db sq.BaseRunner, email string) (*model.User, error) {
+	return s.getUserByCondition(db, sq.Eq{"email": email})
 }
 
-func (s *SQLStore) GetUserByUsername(username string) (*model.User, error) {
-	return s.getUserByCondition(sq.Eq{"username": username})
+func (s *SQLStore) getUserByUsername(db sq.BaseRunner, username string) (*model.User, error) {
+	return s.getUserByCondition(db, sq.Eq{"username": username})
 }
 
-func (s *SQLStore) CreateUser(user *model.User) error {
+func (s *SQLStore) createUser(db sq.BaseRunner, user *model.User) error {
 	now := utils.GetMillis()
 
 	propsBytes, err := json.Marshal(user.Props)
@@ -106,7 +106,7 @@ func (s *SQLStore) CreateUser(user *model.User) error {
 		return err
 	}
 
-	query := s.getQueryBuilder().Insert(s.tablePrefix+"users").
+	query := s.getQueryBuilder(db).Insert(s.tablePrefix+"users").
 		Columns("id", "username", "email", "password", "mfa_secret", "auth_service", "auth_data", "props", "create_at", "update_at", "delete_at").
 		Values(user.ID, user.Username, user.Email, user.Password, user.MfaSecret, user.AuthService, user.AuthData, propsBytes, now, now, 0)
 
@@ -114,7 +114,7 @@ func (s *SQLStore) CreateUser(user *model.User) error {
 	return err
 }
 
-func (s *SQLStore) UpdateUser(user *model.User) error {
+func (s *SQLStore) updateUser(db sq.BaseRunner, user *model.User) error {
 	now := utils.GetMillis()
 
 	propsBytes, err := json.Marshal(user.Props)
@@ -122,7 +122,7 @@ func (s *SQLStore) UpdateUser(user *model.User) error {
 		return err
 	}
 
-	query := s.getQueryBuilder().Update(s.tablePrefix+"users").
+	query := s.getQueryBuilder(db).Update(s.tablePrefix+"users").
 		Set("username", user.Username).
 		Set("email", user.Email).
 		Set("props", propsBytes).
@@ -146,10 +146,10 @@ func (s *SQLStore) UpdateUser(user *model.User) error {
 	return nil
 }
 
-func (s *SQLStore) UpdateUserPassword(username, password string) error {
+func (s *SQLStore) updateUserPassword(db sq.BaseRunner, username, password string) error {
 	now := utils.GetMillis()
 
-	query := s.getQueryBuilder().Update(s.tablePrefix+"users").
+	query := s.getQueryBuilder(db).Update(s.tablePrefix+"users").
 		Set("password", password).
 		Set("update_at", now).
 		Where(sq.Eq{"username": username})
@@ -171,10 +171,10 @@ func (s *SQLStore) UpdateUserPassword(username, password string) error {
 	return nil
 }
 
-func (s *SQLStore) UpdateUserPasswordByID(userID, password string) error {
+func (s *SQLStore) updateUserPasswordByID(db sq.BaseRunner, userID, password string) error {
 	now := utils.GetMillis()
 
-	query := s.getQueryBuilder().Update(s.tablePrefix+"users").
+	query := s.getQueryBuilder(db).Update(s.tablePrefix+"users").
 		Set("password", password).
 		Set("update_at", now).
 		Where(sq.Eq{"id": userID})
@@ -196,8 +196,8 @@ func (s *SQLStore) UpdateUserPasswordByID(userID, password string) error {
 	return nil
 }
 
-func (s *SQLStore) GetUsersByWorkspace(workspaceID string) ([]*model.User, error) {
-	return s.getUsersByCondition(nil)
+func (s *SQLStore) getUsersByWorkspace(db sq.BaseRunner, _ string) ([]*model.User, error) {
+	return s.getUsersByCondition(db, nil)
 }
 
 func (s *SQLStore) usersFromRows(rows *sql.Rows) ([]*model.User, error) {
