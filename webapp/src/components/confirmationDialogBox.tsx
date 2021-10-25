@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useCallback} from 'react'
+import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import Button from '../widgets/buttons/button'
@@ -21,14 +21,11 @@ type Props = {
     dialogBox: ConfirmationDialogBoxProps
 }
 
-export const ConfirmationDialogBox = React.memo((props: Props) => {
-    const handleOnClose = useCallback(props.dialogBox.onClose, [])
-    const handleOnConfirm = useCallback(props.dialogBox.onConfirm, [])
-
+export const ConfirmationDialogBox = (props: Props) => {
     return (
         <Dialog
             className='confirmation-dialog-box'
-            onClose={handleOnClose}
+            onClose={props.dialogBox.onClose}
         >
             <div className='box-area'>
                 <h3 className='heading'>{props.dialogBox.heading}</h3>
@@ -38,7 +35,7 @@ export const ConfirmationDialogBox = React.memo((props: Props) => {
                     <Button
                         title='Cancel'
                         active={true}
-                        onClick={handleOnClose}
+                        onClick={props.dialogBox.onClose}
                     >
                         <FormattedMessage
                             id='ConfirmationDialog.cancel-action'
@@ -49,7 +46,7 @@ export const ConfirmationDialogBox = React.memo((props: Props) => {
                         title={props.dialogBox.confirmButtonText || 'Confirm'}
                         submit={true}
                         emphasis='danger'
-                        onClick={handleOnConfirm}
+                        onClick={props.dialogBox.onConfirm}
                     >
                         { props.dialogBox.confirmButtonText ||
                         <FormattedMessage
@@ -62,6 +59,6 @@ export const ConfirmationDialogBox = React.memo((props: Props) => {
             </div>
         </Dialog>
     )
-})
+}
 
 export {ConfirmationDialogBoxProps}
