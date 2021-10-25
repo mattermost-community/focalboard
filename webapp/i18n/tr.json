@@ -46,6 +46,7 @@
   "Dialog.closeDialog": "Pencereyi kapat",
   "EditableDayPicker.today": "Bugün",
   "EmptyCenterPanel.no-content": "Başlamak için yan çubukta bir pano ekleyin ya da seçin.",
+  "EmptyCenterPanel.plugin.choose-a-template": "Bir şablon seç",
   "Error.websocket-closed": "Websoket bağlantısı kesildi. Bu sorun sürerse, sunucu ya da web vekil sunucu yapılandırmanızı denetleyin.",
   "Filter.includes": "şunu içeren",
   "Filter.is-empty": "boş olan",
