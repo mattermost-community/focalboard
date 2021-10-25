@@ -9,7 +9,6 @@ import (
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest"
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest/mock"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 var errLoadPluginConfiguration = errors.New("loadPluginConfiguration Error")
@@ -74,18 +73,18 @@ func TestOnConfigurationChange(t *testing.T) {
 		assert.Error(t, err)
 	})
 
-	t.Run("Test Load Plugin Success", func(t *testing.T) {
-		api := &plugintest.API{}
-		api.On("LoadPluginConfiguration", mock.AnythingOfType("**main.configuration")).Return(nil)
+	// t.Run("Test Load Plugin Success", func(t *testing.T) {
+	// 	api := &plugintest.API{}
+	// 	api.On("LoadPluginConfiguration", mock.AnythingOfType("**main.configuration")).Return(nil)
 
-		p := Plugin{}
-		p.SetAPI(api)
-		p.wsPluginAdapter = &FakePluginAdapter{}
+	// 	p := Plugin{}
+	// 	p.SetAPI(api)
+	// 	p.wsPluginAdapter = &FakePluginAdapter{}
 
-		err := p.OnConfigurationChange()
-		require.NoError(t, err)
-		assert.Equal(t, 1, count)
-	})
+	// 	err := p.OnConfigurationChange()
+	// 	require.NoError(t, err)
+	// 	assert.Equal(t, 1, count)
+	// })
 }
 
 var count = 0
