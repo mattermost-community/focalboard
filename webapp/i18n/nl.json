@@ -46,7 +46,6 @@
   "Dialog.closeDialog": "Dialoogvenster sluiten",
   "EditableDayPicker.today": "Vandaag",
   "EmptyCenterPanel.no-content": "Voeg een bord toe of selecteer een bord in de zijbalk om te beginnen.",
-  "EmptyCenterPanel.workspace": "Dit is de werkruimte voor:",
   "Error.websocket-closed": "Websocketverbinding gesloten, verbinding onderbroken. Als dit aanhoudt, controleer dan jouw server of web proxy configuratie.",
   "Filter.includes": "bevat",
   "Filter.is-empty": "is leeg",

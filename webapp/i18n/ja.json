@@ -46,7 +46,6 @@
   "Dialog.closeDialog": "ダイアログを閉じる",
   "EditableDayPicker.today": "今日",
   "EmptyCenterPanel.no-content": "開始するにはサイドバーからボードを追加または選択してください。",
-  "EmptyCenterPanel.workspace": "このワークスペースの目的:",
   "Error.websocket-closed": "ウェブソケット接続が閉じられ、接続が中断されました。この問題が解決しない場合は、サーバーまたはウェブプロキシの設定を確認してください。",
   "Filter.includes": "を含む",
   "Filter.is-empty": "が空である",

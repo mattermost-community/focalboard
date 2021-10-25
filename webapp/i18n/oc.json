@@ -46,7 +46,6 @@
   "Dialog.closeDialog": "Tampar la fenèstra de dialòg",
   "EditableDayPicker.today": "Uèi",
   "EmptyCenterPanel.no-content": "Ajustatz o seleccionatz un tablèu a la barra laterala per començar.",
-  "EmptyCenterPanel.workspace": "Aquò es l’espaci de trabalh per :",
   "Error.websocket-closed": "Connexion al websocket tampada, connexion interrompuda. S’aquò ten de se produire, verificatz la configuracion del servidor o del servidor mandatari.",
   "Filter.includes": "inclutz",
   "Filter.is-empty": "es void",

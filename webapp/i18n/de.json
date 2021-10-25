@@ -46,7 +46,6 @@
   "Dialog.closeDialog": "Dialog schließen",
   "EditableDayPicker.today": "Heute",
   "EmptyCenterPanel.no-content": "Erstelle oder wähle ein Board in der Seitenleiste aus um zu starten.",
-  "EmptyCenterPanel.workspace": "Das ist der Arbeitsbereich für:",
   "Error.websocket-closed": "Websocket-Verbindung geschlossen, Verbindung unterbrochen. Wenn dieses Problem weiterhin besteht, überprüfen Sie bitte die Konfiguration Ihres Servers oder Web-Proxys.",
   "Filter.includes": "beinhaltet",
   "Filter.is-empty": "ist leer",
