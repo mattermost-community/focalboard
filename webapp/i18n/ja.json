@@ -10,7 +10,7 @@
   "BoardPage.syncFailed": "ボードが削除されたか、アクセスが取り消されました。",
   "CardDetail.add-content": "内容を追加する",
   "CardDetail.add-icon": "アイコンを追加する",
-  "CardDetail.add-property": "+ プロパティを追加する",
+  "CardDetail.add-property": "+ プロパティを追加",
   "CardDetail.addCardText": "カードテキストを追加する",
   "CardDetail.moveContent": "カード内容の移動",
   "CardDetail.new-comment-placeholder": "コメントを追加する...",
