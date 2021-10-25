@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
 import mutator from '../mutator'
@@ -16,6 +16,8 @@ import {useAppSelector} from '../store/hooks'
 import {getCard} from '../store/cards'
 import {getCardContents} from '../store/contents'
 import {getCardComments} from '../store/comments'
+
+import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../components/confirmationDialogBox'
 
 import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
@@ -39,6 +41,9 @@ const CardDialog = (props: Props): JSX.Element => {
     const comments = useAppSelector(getCardComments(props.cardId))
     const intl = useIntl()
 
+    const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
+    const [confirmDialogProps, setConfirmDialogProps] = useState<ConfirmationDialogBoxProps>({heading: '', onConfirm: () => {}, onClose: () => {}})
+
     const makeTemplateClicked = async () => {
         if (!card) {
             Utils.assertFailure('card')
@@ -57,6 +62,26 @@ const CardDialog = (props: Props): JSX.Element => {
             },
         )
     }
+    const handleDeleteCard = async () => {
+        if (!card) {
+            Utils.assertFailure()
+            return
+        }
+        await mutator.deleteBlock(card, 'delete card')
+        props.onClose()
+    }
+
+    const handleDeleteButtonOnClick = () => {
+        setShowConfirmationDialogBox(true)
+        setConfirmDialogProps({
+            heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),
+            confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
+            onConfirm: handleDeleteCard,
+            onClose: () => {
+                setShowConfirmationDialogBox(false)
+            },
+        })
+    }
 
     const menu = (
         <Menu position='left'>
@@ -64,14 +89,7 @@ const CardDialog = (props: Props): JSX.Element => {
                 id='delete'
                 icon={<DeleteIcon/>}
                 name='Delete'
-                onClick={async () => {
-                    if (!card) {
-                        Utils.assertFailure()
-                        return
-                    }
-                    await mutator.deleteBlock(card, 'delete card')
-                    props.onClose()
-                }}
+                onClick={handleDeleteButtonOnClick}
             />
             <Menu.Text
                 icon={<LinkIcon/>}
@@ -98,11 +116,12 @@ const CardDialog = (props: Props): JSX.Element => {
         </Menu>
     )
     return (
-        <Dialog
-            onClose={props.onClose}
-            toolsMenu={!props.readonly && menu}
-        >
-            {card && card.fields.isTemplate &&
+        <>
+            <Dialog
+                onClose={props.onClose}
+                toolsMenu={!props.readonly && menu}
+            >
+                {card && card.fields.isTemplate &&
                 <div className='banner'>
                     <FormattedMessage
                         id='CardDialog.editing-template'
@@ -110,7 +129,7 @@ const CardDialog = (props: Props): JSX.Element => {
                     />
                 </div>}
 
-            {card &&
+                {card &&
                 <CardDetail
                     board={board}
                     activeView={activeView}
@@ -122,14 +141,17 @@ const CardDialog = (props: Props): JSX.Element => {
                     readonly={props.readonly}
                 />}
 
-            {!card &&
+                {!card &&
                 <div className='banner error'>
                     <FormattedMessage
                         id='CardDialog.nocard'
                         defaultMessage="This card doesn't exist or is inaccessible."
                     />
                 </div>}
-        </Dialog>
+            </Dialog>
+
+            {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
+        </>
     )
 }
 
