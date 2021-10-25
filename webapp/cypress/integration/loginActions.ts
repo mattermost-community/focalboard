@@ -5,7 +5,10 @@ describe('Login actions', () => {
     const username = 'username'
     const email = 'username@gmail.com'
     const password = 'password'
-    const newPassword = 'new_password'
+
+    beforeEach(() => {
+        cy.apiResetServer()
+    })
 
     const workspaceIsAvailable = () => {
         cy.location('pathname').should('eq', '/')
@@ -36,6 +39,7 @@ describe('Login actions', () => {
     })
 
     it('Can log in user', () => {
+        cy.apiRegisterUser({username, email, password})
         cy.visit('/login')
         cy.get('#login-username').type(username)
         cy.get('#login-password').type(password)
@@ -44,7 +48,9 @@ describe('Login actions', () => {
     })
 
     it('Can change password', () => {
-        cy.login({username, password})
+        const newPassword = 'new_password'
+        cy.apiRegisterUser({username, email, password})
+        cy.apiLoginUser({username, password})
         cy.visit('/')
         cy.get('.Sidebar .SidebarUserMenu').click()
         cy.get('.Menu .MenuOption .menu-name').contains('Change password').click()
@@ -55,10 +61,14 @@ describe('Login actions', () => {
         cy.get('button').contains('Change password').click()
         cy.get('.succeeded').click()
         workspaceIsAvailable()
+        cy.apiLoginUser({username, password: newPassword})
+        cy.visit('/')
+        workspaceIsAvailable()
     })
 
     it('Can log out user', () => {
-        cy.login({username, password: newPassword})
+        cy.apiRegisterUser({username, email, password})
+        cy.apiLoginUser({username, password})
         cy.visit('/')
         cy.get('.Sidebar .SidebarUserMenu').click()
         cy.get('.Menu .MenuOption .menu-name').contains('Log out').click()
