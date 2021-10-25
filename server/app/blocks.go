@@ -20,6 +20,10 @@ func (a *App) GetBlocks(c store.Container, parentID string, blockType string) ([
 	return a.store.GetBlocksWithParent(c, parentID)
 }
 
+func (a *App) GetBlockWithID(c store.Container, blockID string) (*model.Block, error) {
+	return a.store.GetBlock(c, blockID)
+}
+
 func (a *App) GetBlocksWithRootID(c store.Container, rootID string) ([]model.Block, error) {
 	return a.store.GetBlocksWithRootID(c, rootID)
 }
@@ -101,6 +105,7 @@ func (a *App) GetSubTree(c store.Container, blockID string, levels int) ([]model
 	if levels >= 3 {
 		return a.store.GetSubTree3(c, blockID)
 	}
+
 	return a.store.GetSubTree2(c, blockID)
 }
 

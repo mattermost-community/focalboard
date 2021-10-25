@@ -52,7 +52,7 @@ exports[`components/sidebarSidebar sidebar in dashboard page 1`] = `
                     <div
                       class="version"
                     >
-                      v0.9.1
+                      v0.10.0
                     </div>
                   </div>
                 </div>

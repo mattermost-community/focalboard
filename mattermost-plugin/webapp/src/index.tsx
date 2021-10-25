@@ -13,6 +13,8 @@ windowAny.baseURL = '/plugins/focalboard'
 windowAny.frontendBaseURL = '/boards'
 windowAny.isFocalboardPlugin = true
 
+import {ClientConfig} from 'mattermost-redux/types/config'
+
 import {getCurrentTeam} from '../../../webapp/src/pages/boardPage'
 
 import {App} from '../../../webapp/src/app'
@@ -28,6 +30,7 @@ import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
 
+import BoardsUnfurl from './components/boardsUnfurl/boardsUnfurl'
 import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK, ACTION_UPDATE_CLIENT_CONFIG} from './../../../webapp/src/wsclient'
 
 import manifest from './manifest'
@@ -164,6 +167,10 @@ export default class Plugin {
                     return getCurrentTeam
                 },
             )
+
+            if (mmStore.getState().entities.general.config?.['FeatureFlagBoardsUnfurl' as keyof Partial<ClientConfig>] === 'true') {
+                this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
+            }
         } else {
             windowAny.frontendBaseURL = subpath + '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
