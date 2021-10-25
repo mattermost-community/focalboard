@@ -61,7 +61,6 @@ const FilterComponent = React.memo((props: Props): JSX.Element => {
 
     const {board, activeView} = props
 
-    // TODO: Handle FilterGroups (compound filter statements)
     const filters: FilterClause[] = activeView.fields.filter?.filters.filter((o) => !isAFilterGroupInstance(o)) as FilterClause[] || []
 
     return (
