@@ -1,20 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/emptyCenterPanel Empty Center Panel Instantiated 1`] = `
-<div>
-  <div
-    class="EmptyCenterPanel"
-  >
-    <div
-      class="Hint"
-    >
-      Add or select a board from the sidebar to get started.
-    </div>
-  </div>
-</div>
-`;
-
-exports[`components/emptyCenterPanel Empty Center Panel Instantiated with isFocalboardPlugin = True 1`] = `
+exports[`components/emptyCenterPanel a focalboard Plugin should match snapshot 1`] = `
 <div>
   <div
     class="EmptyCenterPanel"
@@ -25,7 +11,7 @@ exports[`components/emptyCenterPanel Empty Center Panel Instantiated with isFoca
       <span
         class="title"
       >
-        Create a Board in 
+        Create a Board in Workspace 1
       </span>
       <span
         class="description"
@@ -33,7 +19,9 @@ exports[`components/emptyCenterPanel Empty Center Panel Instantiated with isFoca
         Add a board to the sidebar using any of the templates defined below or start from scratch.
         <br />
          Members of "
-        <b />
+        <b>
+          Workspace 1
+        </b>
         " will have access to boards created here.
       </span>
       <span
@@ -48,12 +36,12 @@ exports[`components/emptyCenterPanel Empty Center Panel Instantiated with isFoca
           class="button "
         >
           <span>
-            ICONNNN
+            🚴🏻‍♂️
           </span>
           <span
             class="button-title"
           >
-            Templates1
+            Template 1
           </span>
           <div
             aria-label="menuwrapper"
@@ -74,12 +62,12 @@ exports[`components/emptyCenterPanel Empty Center Panel Instantiated with isFoca
           class="button "
         >
           <span>
-            ICONNNN
+            🚴🏻‍♂️
           </span>
           <span
             class="button-title"
           >
-            GlobalTemplates1
+            Template Global
           </span>
         </div>
         <div
@@ -140,6 +128,20 @@ exports[`components/emptyCenterPanel Empty Center Panel Instantiated with isFoca
         </span>
       </div>
       You can change the channel using the switcher in the sidebar.
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/emptyCenterPanel not a focalboard Plugin should match snapshot 1`] = `
+<div>
+  <div
+    class="EmptyCenterPanel"
+  >
+    <div
+      class="Hint"
+    >
+      Add or select a board from the sidebar to get started.
     </div>
   </div>
 </div>
