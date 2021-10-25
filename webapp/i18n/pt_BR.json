@@ -13,6 +13,7 @@
   "CardDetail.addCardText": "adicionar texto ao card",
   "CardDetail.moveContent": "mover conteúdo do card",
   "CardDetail.new-comment-placeholder": "Adicionar um comentário...",
+  "CardDetailProperty.confirm-delete-subtext": "Tem certeza que quer deletar a propriedade \"{propertyName}\"? Deletando-a excluirá a propriedade de todos os cards nessa board.",
   "CardDialog.editing-template": "Você está editando um template",
   "CardDialog.nocard": "Esse card não existe ou não está acessível",
   "Comment.delete": "Deletar",
