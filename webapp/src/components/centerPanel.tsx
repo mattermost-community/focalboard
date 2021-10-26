@@ -253,18 +253,17 @@ class CenterPanel extends React.Component<Props, State> {
                 card,
                 'add card',
                 async (block: Block) => {
-                    const card = createCard(block)
                     if (show) {
-                        this.props.addCard(card)
-                        this.props.updateView({...activeView, fields: {...activeView.fields, cardOrder: [...activeView.fields.cardOrder, card.id]}})
-                        this.showCard(card.id)
+                        this.props.addCard(createCard(block))
+                        this.props.updateView({...activeView, fields: {...activeView.fields, cardOrder: [...activeView.fields.cardOrder, block.id]}})
+                        this.showCard(block.id)
                     } else {
                         // Focus on this card's title inline on next render
                         this.setState({cardIdToFocusOnRender: card.id})
                         setTimeout(() => this.setState({cardIdToFocusOnRender: ''}), 100)
                     }
                 },
-                async (block: Block) => {
+                async () => {
                     this.showCard(undefined)
                 },
             )

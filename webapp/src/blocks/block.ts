@@ -100,7 +100,7 @@ function createPatchesFromBlocks(newBlock: Block, oldBlock: Block): BlockPatch[]
             ...oldBlock as BlockPatch,
             updatedFields: oldUpdatedFields,
             deletedFields: newDeletedFields,
-        }
+        },
     ]
 }
 

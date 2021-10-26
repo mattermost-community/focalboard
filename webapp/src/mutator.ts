@@ -50,7 +50,7 @@ class Mutator {
     }
 
     async updateBlock(newBlock: Block, oldBlock: Block, description: string): Promise<void> {
-        const [ updatePatch, undoPatch ] = createPatchesFromBlocks(newBlock, oldBlock)
+        const [updatePatch, undoPatch] = createPatchesFromBlocks(newBlock, oldBlock)
         await undoManager.perform(
             async () => {
                 await octoClient.patchBlock(newBlock.id, updatePatch)
@@ -72,20 +72,20 @@ class Mutator {
         const undoPatches = [] as BlockPatch[]
 
         newBlocks.forEach((newBlock, i) => {
-            const [ updatePatch, undoPatch ] = createPatchesFromBlocks(newBlock, oldBlocks[i])
+            const [updatePatch, undoPatch] = createPatchesFromBlocks(newBlock, oldBlocks[i])
             updatePatches.push(updatePatch)
             undoPatches.push(undoPatch)
         })
 
-        return await undoManager.perform(
+        return undoManager.perform(
             async () => {
                 await Promise.all(
-                    updatePatches.map((patch, i) => octoClient.patchBlock(newBlocks[i].id, patch))
+                    updatePatches.map((patch, i) => octoClient.patchBlock(newBlocks[i].id, patch)),
                 )
             },
             async () => {
                 await Promise.all(
-                    undoPatches.map((patch, i) => octoClient.patchBlock(newBlocks[i].id, patch))
+                    undoPatches.map((patch, i) => octoClient.patchBlock(newBlocks[i].id, patch)),
                 )
             },
             description,
@@ -93,8 +93,9 @@ class Mutator {
         )
     }
 
+    //eslint-disable-next-line no-shadow
     async insertBlock(block: Block, description = 'add', afterRedo?: (block: Block) => Promise<void>, beforeUndo?: (block: Block) => Promise<void>): Promise<Block> {
-        return await undoManager.perform(
+        return undoManager.perform(
             async () => {
                 const res = await octoClient.insertBlock(block)
                 const jsonres = await res.json()
@@ -111,8 +112,9 @@ class Mutator {
         )
     }
 
+    //eslint-disable-next-line no-shadow
     async insertBlocks(blocks: Block[], description = 'add', afterRedo?: (blocks: Block[]) => Promise<void>, beforeUndo?: () => Promise<void>) {
-        return await undoManager.perform(
+        return undoManager.perform(
             async () => {
                 const res = await octoClient.insertBlocks(blocks)
                 const newBlocks = (await res.json()) as Block[]

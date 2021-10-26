@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Block, BlockPatch, createPatchesFromBlocks} from './blocks/block'
+import {Block, BlockPatch} from './blocks/block'
 import {ISharing} from './blocks/sharing'
 import {IWorkspace} from './blocks/workspace'
 import {OctoUtils} from './octoUtils'
