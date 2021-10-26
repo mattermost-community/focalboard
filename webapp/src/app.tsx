@@ -19,7 +19,7 @@ import TelemetryClient from './telemetry/telemetryClient'
 import {IAppWindow} from './types'
 import {getMessages} from './i18n'
 import {FlashMessages} from './components/flashMessages'
-import BoardPage from './pages/boardPage'
+import {BoardPage} from './pages/boardPage'
 import ChangePasswordPage from './pages/changePasswordPage'
 import DashboardPage from './pages/dashboard/dashboardPage'
 import WelcomePage from './pages/welcome/welcomePage'
@@ -36,8 +36,6 @@ import {fetchClientConfig} from './store/clientConfig'
 
 import {IUser} from './user'
 import {UserSettings} from './userSettings'
-import {getCurrentBoard} from './store/boards'
-import store from './store'
 
 declare let window: IAppWindow
 
