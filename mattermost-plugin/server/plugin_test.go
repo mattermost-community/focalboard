@@ -81,9 +81,9 @@ func TestSetConfiguration(t *testing.T) {
 
 	t.Run("test boards feature flags", func(t *testing.T) {
 		featureFlags := &model.FeatureFlags{
-			TestFeature:     "test",
-			TestBoolFeature: boolTrue,
-			// BoardsFeatureFlags: "hello_world-myTest",
+			TestFeature:        "test",
+			TestBoolFeature:    boolTrue,
+			BoardsFeatureFlags: "hello_world-myTest",
 		}
 
 		mmConfig := baseConfig
@@ -93,8 +93,8 @@ func TestSetConfiguration(t *testing.T) {
 		assert.Equal(t, "true", config.FeatureFlags["TestBoolFeature"])
 		assert.Equal(t, "test", config.FeatureFlags["TestFeature"])
 
-		// assert.Equal(t, "true", config.FeatureFlags["hello_world"])
-		// assert.Equal(t, "true", config.FeatureFlags["myTest"])
+		assert.Equal(t, "true", config.FeatureFlags["hello_world"])
+		assert.Equal(t, "true", config.FeatureFlags["myTest"])
 
 	})
 }
