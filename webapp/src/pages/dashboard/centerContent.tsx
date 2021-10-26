@@ -34,8 +34,9 @@ const DashboardCenterContent = (): JSX.Element => {
         initializeUserWorkspaces()
     }, [])
 
+    const searchPattern = new RegExp(searchFilter.split(' ').join('|'), 'g')
     const userWorkspaces = rawWorkspaces.
-        filter((workspace) => (workspace.boardCount > 0 || showEmptyWorkspaces) && (new RegExp(searchFilter.split(' ').join('|'), 'g').test(workspace.title.toLowerCase()) || workspace.boardCount.toString().includes(searchFilter))).
+        filter((workspace) => (workspace.boardCount > 0 || showEmptyWorkspaces) && (searchPattern.test(workspace.title.toLowerCase()) || workspace.boardCount.toString().includes(searchFilter))).
         sort((a, b) => {
             if ((a.boardCount === 0 && b.boardCount === 0) || (a.boardCount !== 0 && b.boardCount !== 0)) {
                 return a.title.localeCompare(b.title)
