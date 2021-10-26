@@ -433,11 +433,12 @@ func initTelemetry(opts telemetryOptions) *telemetry.Service {
 	})
 	telemetryService.RegisterTracker("config", func() (telemetry.Tracker, error) {
 		return map[string]interface{}{
-			"serverRoot":  opts.cfg.ServerRoot == config.DefaultServerRoot,
-			"port":        opts.cfg.Port == config.DefaultPort,
-			"useSSL":      opts.cfg.UseSSL,
-			"dbType":      opts.cfg.DBType,
-			"single_user": opts.singleUser,
+			"serverRoot":                 opts.cfg.ServerRoot == config.DefaultServerRoot,
+			"port":                       opts.cfg.Port == config.DefaultPort,
+			"useSSL":                     opts.cfg.UseSSL,
+			"dbType":                     opts.cfg.DBType,
+			"single_user":                opts.singleUser,
+			"allow_public_shared_boards": opts.cfg.EnablePublicSharedBoards,
 		}, nil
 	})
 	telemetryService.RegisterTracker("activity", func() (telemetry.Tracker, error) {

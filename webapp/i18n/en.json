@@ -42,6 +42,8 @@
   "Calculations.Options.range.label": "Range",
   "Calculations.Options.sum.displayName": "Sum",
   "Calculations.Options.sum.label": "Sum",
+  "BoardsUnfurl.Remainder": "+{remainder} more",
+  "BoardsUnfurl.Updated": "Updated {time}",
   "CardDetail.add-content": "Add content",
   "CardDetail.add-icon": "Add icon",
   "CardDetail.add-property": "+ Add a property",
