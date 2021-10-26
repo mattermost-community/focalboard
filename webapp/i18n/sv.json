@@ -46,7 +46,6 @@
   "Dialog.closeDialog": "Stäng dialog",
   "EditableDayPicker.today": "Idag",
   "EmptyCenterPanel.no-content": "Lägg till eller välj en tavla från sidofältet för att börja.",
-  "EmptyCenterPanel.workspace": "Det här är arbetsytan för:",
   "Error.websocket-closed": "Websocketanslutningen stängdes då anslutningen avbröts. Om detta fortgår, kontrollera din server eller webproxykonfiguration.",
   "Filter.includes": "inkluderar",
   "Filter.is-empty": "är blankt",

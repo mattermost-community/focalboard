@@ -26,6 +26,8 @@
 // migrations_files/000012_match_column_collation.up.sql
 // migrations_files/000013_millisecond_timestamps.down.sql
 // migrations_files/000013_millisecond_timestamps.up.sql
+// migrations_files/000014_add_not_null_constraint.down.sql
+// migrations_files/000014_add_not_null_constraint.up.sql
 // migrations_files/000014_subscriptions_table.down.sql
 // migrations_files/000014_subscriptions_table.up.sql
 // DO NOT EDIT!
@@ -615,6 +617,46 @@ func _000013_millisecond_timestampsUpSql() (*asset, error) {
 	return a, nil
 }
 
+var __000014_add_not_null_constraintDownSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xaa\xae\xce\x4c\x53\xd0\xcb\xad\x2c\x2e\xcc\xa9\xad\xe5\x72\xf4\x09\x71\x0d\x52\x08\x71\x74\xf2\x71\x55\xa8\xae\xd6\x2b\x28\x4a\x4d\xcb\xac\xa8\xad\x4d\xca\xc9\x4f\xce\x2e\x56\xf0\xf5\x77\xf1\x74\x8b\x54\x48\x2e\x4a\x4d\x2c\x49\x4d\x89\x4f\xaa\x54\x28\x4b\x2c\x4a\xce\x48\x2c\xd2\x30\x36\xd3\xb4\x26\x4e\x73\x6e\x7e\x4a\x66\x5a\x26\x16\xdd\xd5\xd5\xa9\x79\x29\xb5\xb5\x5c\x5c\x10\x17\x15\xe4\x17\x97\xa4\x17\xa5\x16\x13\x74\x14\x44\xd6\xd9\xdf\x27\xd4\xd7\x0f\xd9\x69\x2e\x41\xfe\x01\x0a\x7e\xfe\x21\x0a\x7e\xa1\x3e\x3e\x84\x1c\x87\x62\x08\xb2\x13\xd1\x4c\x81\x39\x12\x10\x00\x00\xff\xff\xf8\x47\xa8\x96\x36\x01\x00\x00")
+
+func _000014_add_not_null_constraintDownSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__000014_add_not_null_constraintDownSql,
+		"000014_add_not_null_constraint.down.sql",
+	)
+}
+
+func _000014_add_not_null_constraintDownSql() (*asset, error) {
+	bytes, err := _000014_add_not_null_constraintDownSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "000014_add_not_null_constraint.down.sql", size: 310, mode: os.FileMode(436), modTime: time.Unix(1635256817, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var __000014_add_not_null_constraintUpSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\xce\x3f\x6b\x83\x40\x18\xc7\xf1\xdd\x57\xf1\x6c\xb6\x8b\x4b\xa1\x4b\xe9\x60\xab\x05\xe1\xd4\x12\xcf\x21\x53\xf0\xcf\x63\x3c\xa2\xd1\xdc\x1d\x49\xe4\xb8\xf7\x9e\x21\x31\x9c\x60\x12\xe7\x1f\x7c\x7f\x9f\xf4\xdf\x73\xa9\x0f\x4a\x39\x3d\xc7\x8a\x9d\xb5\xce\x9b\xae\xd8\x09\x48\x7c\x0a\x05\xc7\x4c\x62\xb9\xc9\x07\xf8\x06\x5b\x0c\x42\x62\x6b\xc3\xa9\x46\x8e\xe6\x16\x24\x10\xa5\x84\x7c\x59\x4f\x63\x6d\x57\xb2\x8a\x3d\xa8\x99\xe3\x3d\x67\x29\xc5\x2a\x70\xda\x41\x1c\x1a\xad\x2d\x97\x50\x7f\x05\xd4\xfd\x21\x73\x17\x61\xec\x05\x7f\x6b\x93\x75\xcc\x78\x51\x67\xfc\xed\xe3\xf3\x1d\xa2\x98\xde\xa2\x8b\x2a\x26\x67\x3e\xa3\x14\xee\x4b\xad\x47\x63\xdf\x09\xb9\xe5\x28\x5e\x32\xaf\xeb\x6f\x4c\xd2\x30\x32\xb1\x02\xe5\x62\xe4\xa4\x61\x52\xa7\x91\x91\x78\x09\x00\x00\xff\xff\x17\x78\x4b\x75\xe3\x01\x00\x00")
+
+func _000014_add_not_null_constraintUpSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__000014_add_not_null_constraintUpSql,
+		"000014_add_not_null_constraint.up.sql",
+	)
+}
+
+func _000014_add_not_null_constraintUpSql() (*asset, error) {
+	bytes, err := _000014_add_not_null_constraintUpSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "000014_add_not_null_constraint.up.sql", size: 483, mode: os.FileMode(436), modTime: time.Unix(1635256817, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 var __000014_subscriptions_tableDownSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\x09\xf2\x0f\x50\x08\x71\x74\xf2\x71\x55\xa8\xae\xd6\x2b\x28\x4a\x4d\xcb\xac\xa8\xad\x2d\x2e\x4d\x2a\x4e\x2e\xca\x2c\x28\xc9\xcc\xcf\x2b\xb6\xe6\xc2\xae\x28\x2f\xbf\x24\x33\x2d\x33\x39\x11\xa4\x28\x3e\x23\x33\xaf\xa4\xd8\x9a\x0b\x10\x00\x00\xff\xff\x8c\x8f\xec\x6f\x4f\x00\x00\x00")
 
 func _000014_subscriptions_tableDownSqlBytes() ([]byte, error) {
@@ -733,6 +775,8 @@ var _bindata = map[string]func() (*asset, error){
 	"000012_match_column_collation.up.sql": _000012_match_column_collationUpSql,
 	"000013_millisecond_timestamps.down.sql": _000013_millisecond_timestampsDownSql,
 	"000013_millisecond_timestamps.up.sql": _000013_millisecond_timestampsUpSql,
+	"000014_add_not_null_constraint.down.sql": _000014_add_not_null_constraintDownSql,
+	"000014_add_not_null_constraint.up.sql": _000014_add_not_null_constraintUpSql,
 	"000014_subscriptions_table.down.sql": _000014_subscriptions_tableDownSql,
 	"000014_subscriptions_table.up.sql": _000014_subscriptions_tableUpSql,
 }
@@ -803,6 +847,8 @@ var _bintree = &bintree{nil, map[string]*bintree{
 	"000012_match_column_collation.up.sql": &bintree{_000012_match_column_collationUpSql, map[string]*bintree{}},
 	"000013_millisecond_timestamps.down.sql": &bintree{_000013_millisecond_timestampsDownSql, map[string]*bintree{}},
 	"000013_millisecond_timestamps.up.sql": &bintree{_000013_millisecond_timestampsUpSql, map[string]*bintree{}},
+	"000014_add_not_null_constraint.down.sql": &bintree{_000014_add_not_null_constraintDownSql, map[string]*bintree{}},
+	"000014_add_not_null_constraint.up.sql": &bintree{_000014_add_not_null_constraintUpSql, map[string]*bintree{}},
 	"000014_subscriptions_table.down.sql": &bintree{_000014_subscriptions_tableDownSql, map[string]*bintree{}},
 	"000014_subscriptions_table.up.sql": &bintree{_000014_subscriptions_tableUpSql, map[string]*bintree{}},
 }}
