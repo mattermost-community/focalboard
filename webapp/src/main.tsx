@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom'
 import {Provider as ReduxProvider} from 'react-redux'
 import {store as emojiMartStore} from 'emoji-mart'
 
-import {App} from './app'
+import App from './app'
 import {initThemes} from './theme'
 import {importNativeAppSettings} from './nativeApp'
 import {UserSettings} from './userSettings'

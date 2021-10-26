@@ -38,7 +38,7 @@ type Props = {
 
 const websocketTimeoutForBanner = 5000
 
-export const BoardPage = (props: Props): JSX.Element => {
+const BoardPage = (props: Props): JSX.Element => {
     const intl = useIntl()
     const board = useAppSelector(getCurrentBoard)
     const activeView = useAppSelector(getCurrentView)
@@ -311,3 +311,5 @@ export const BoardPage = (props: Props): JSX.Element => {
         </div>
     )
 }
+
+export default BoardPage

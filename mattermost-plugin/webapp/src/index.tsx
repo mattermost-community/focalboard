@@ -16,7 +16,7 @@ windowAny.setTeam = undefined
 
 import {ClientConfig} from 'mattermost-redux/types/config'
 
-import {App} from '../../../webapp/src/app'
+import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
@@ -155,8 +155,6 @@ export default class Plugin {
                 window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`, '_blank', 'noopener')
             }
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Boards')
-
-            // registerProduct(baseURL, switcherIcon, switcherText, switcherLinkURL, mainComponent, headerCentreComponent = () => null, headerRightComponent = () => null,showTeamSidebar, teamSwitchCallback, getCurrentTeam) {
             this.registry.registerProduct(
                 '/boards',
                 'product-boards',

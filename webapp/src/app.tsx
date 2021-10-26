@@ -19,7 +19,7 @@ import TelemetryClient from './telemetry/telemetryClient'
 import {IAppWindow} from './types'
 import {getMessages} from './i18n'
 import {FlashMessages} from './components/flashMessages'
-import {BoardPage} from './pages/boardPage'
+import BoardPage from './pages/boardPage'
 import ChangePasswordPage from './pages/changePasswordPage'
 import DashboardPage from './pages/dashboard/dashboardPage'
 import WelcomePage from './pages/welcome/welcomePage'
@@ -78,7 +78,7 @@ const browserHistory: typeof history = {
     },
 }
 
-export const App = React.memo((): JSX.Element => {
+const App = React.memo((): JSX.Element => {
     const language = useAppSelector<string>(getLanguage)
     const loggedIn = useAppSelector<boolean|null>(getLoggedIn)
     const globalError = useAppSelector<string>(getGlobalError)
@@ -251,3 +251,5 @@ export const App = React.memo((): JSX.Element => {
         </IntlProvider>
     )
 })
+
+export default App
