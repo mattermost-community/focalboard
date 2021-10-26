@@ -25,7 +25,11 @@ beforeEach(() => {
 
 describe('/components/viewMenu', () => {
     const board = TestBlockFactory.createBoard()
-    const activeView = TestBlockFactory.createBoardView(board)
+    const boardView = TestBlockFactory.createBoardView(board)
+    const tableView = TestBlockFactory.createTableView(board)
+    const activeView = boardView
+    const views = [boardView, tableView]
+
     const card = TestBlockFactory.createCard(board)
     activeView.fields.viewType = 'table'
     activeView.fields.groupById = undefined
@@ -65,7 +69,7 @@ describe('/components/viewMenu', () => {
                     <ViewMenu
                         board={board}
                         activeView={activeView}
-                        views={[activeView]}
+                        views={views}
                         readonly={false}
                     />
                 </Router>
@@ -86,7 +90,7 @@ describe('/components/viewMenu', () => {
                     <ViewMenu
                         board={board}
                         activeView={activeView}
-                        views={[activeView]}
+                        views={views}
                         readonly={true}
                     />
                 </Router>
