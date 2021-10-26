@@ -184,14 +184,14 @@ func (c *Client) PatchBlock(blockID string, blockPatch *model.BlockPatch) (bool,
 	return true, BuildResponse(r)
 }
 
-func (c *Client) InsertBlocks(blocks []model.Block) (bool, *Response) {
+func (c *Client) InsertBlocks(blocks []model.Block) ([]model.Block, *Response) {
 	r, err := c.DoAPIPost(c.GetBlocksRoute(), toJSON(blocks))
 	if err != nil {
-		return false, BuildErrorResponse(r, err)
+		return nil, BuildErrorResponse(r, err)
 	}
 	defer closeBody(r)
 
-	return true, BuildResponse(r)
+	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
 func (c *Client) DeleteBlock(blockID string) (bool, *Response) {
