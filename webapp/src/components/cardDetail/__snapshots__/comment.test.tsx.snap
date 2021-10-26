@@ -30,14 +30,14 @@ exports[`components/cardDetail/comment return comment 1`] = `
         class="MenuWrapper"
         role="button"
       >
-        <div
+        <button
           class="Button IconButton"
-          role="button"
+          type="button"
         >
           <i
             class="CompassIcon icon-dots-horizontal OptionsIcon"
           />
-        </div>
+        </button>
         <div
           class="Menu noselect left"
         >
@@ -140,14 +140,14 @@ exports[`components/cardDetail/comment return comment and delete comment 1`] = `
         class="MenuWrapper"
         role="button"
       >
-        <div
+        <button
           class="Button IconButton"
-          role="button"
+          type="button"
         >
           <i
             class="CompassIcon icon-dots-horizontal OptionsIcon"
           />
-        </div>
+        </button>
         <div
           class="Menu noselect left"
         >

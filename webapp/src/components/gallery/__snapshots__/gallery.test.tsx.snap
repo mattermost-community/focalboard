@@ -15,14 +15,14 @@ exports[`src/components/gallery/Gallery return Gallery and click new 1`] = `
         class="MenuWrapper optionsMenu"
         role="button"
       >
-        <div
+        <button
           class="Button IconButton"
-          role="button"
+          type="button"
         >
           <i
             class="CompassIcon icon-dots-horizontal OptionsIcon"
           />
-        </div>
+        </button>
       </div>
       <div
         class="gallery-item"
@@ -38,14 +38,14 @@ exports[`src/components/gallery/Gallery return Gallery and click new 1`] = `
         class="MenuWrapper optionsMenu"
         role="button"
       >
-        <div
+        <button
           class="Button IconButton"
-          role="button"
+          type="button"
         >
           <i
             class="CompassIcon icon-dots-horizontal OptionsIcon"
           />
-        </div>
+        </button>
       </div>
       <div
         class="gallery-item"
@@ -102,14 +102,14 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
         class="MenuWrapper optionsMenu"
         role="button"
       >
-        <div
+        <button
           class="Button IconButton"
-          role="button"
+          type="button"
         >
           <i
             class="CompassIcon icon-dots-horizontal OptionsIcon"
           />
-        </div>
+        </button>
         <div
           class="Menu noselect left"
         >
@@ -224,14 +224,14 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
         class="MenuWrapper optionsMenu"
         role="button"
       >
-        <div
+        <button
           class="Button IconButton"
-          role="button"
+          type="button"
         >
           <i
             class="CompassIcon icon-dots-horizontal OptionsIcon"
           />
-        </div>
+        </button>
       </div>
       <div
         class="gallery-item"

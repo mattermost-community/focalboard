@@ -57,7 +57,7 @@ func (s *SQLStore) importInitialTemplates() error {
 
 // isInitializationNeeded returns true if the blocks table is empty.
 func (s *SQLStore) isInitializationNeeded() (bool, error) {
-	query := s.getQueryBuilder().
+	query := s.getQueryBuilder(s.db).
 		Select("count(*)").
 		From(s.tablePrefix + "blocks").
 		Where(sq.Eq{"COALESCE(workspace_id, '0')": "0"})

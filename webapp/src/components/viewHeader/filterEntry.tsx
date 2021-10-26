@@ -30,7 +30,7 @@ const FilterEntry = React.memo((props: Props): JSX.Element => {
     const intl = useIntl()
 
     const template = board.fields.cardProperties.find((o: IPropertyTemplate) => o.id === filter.propertyId)
-    const propertyName = template ? template.name : '(unknown)'		// TODO: Handle error
+    const propertyName = template ? template.name : '(unknown)'
     const key = `${filter.propertyId}-${filter.condition}-${filter.values.join(',')}`
     return (
         <div
