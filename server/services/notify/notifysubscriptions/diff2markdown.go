@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	// board notifications
+	// board notifications.
 	defAddBoardNotify = "{{.Username}} has added the board {{.NewBlock | makeLink}}"
 
 	defDeleteBoardNotify = "{{.Username}} has deleted the board {{.NewBlock | makeLink}}"
@@ -26,7 +26,7 @@ const (
 	defModifyBoardDescriptionNotify = "{{.Username}} has updated the description for the board {{.Board | makeLink}}\n" +
 		"```Description:\n~~{{.OldBlock | getBoardDescription }}~~\n{{.NewBlock | getBoardDescription}}```"
 
-	// card notifications
+	// card notifications.
 	defAddCardNotify = "{{.Username}} has added the card {{.NewBlock | makeLink}}"
 
 	defAddCardTitleNotify = "{{.Username}} has added a title for card {{.OldBlock | makeLink}}\n" +
@@ -41,7 +41,7 @@ const (
 )
 
 var (
-	// templateCache is a map of text templateCache keyed by languange code
+	// templateCache is a map of text templateCache keyed by languange code.
 	templateCache    = make(map[string]*template.Template)
 	templateCacheMux sync.Mutex
 )
@@ -66,16 +66,16 @@ func getTemplate(name string, opts MarkdownOpts, def string) (*template.Template
 		t.Funcs(myFuncs)
 
 		s := def // TODO: lookup i18n string when supported on server
-		t, err := t.Parse(s)
+		t2, err := t.Parse(s)
 		if err != nil {
 			return nil, fmt.Errorf("cannot parse markdown template '%s' for notifications: %w", key, err)
 		}
-		templateCache[key] = t
+		templateCache[key] = t2
 	}
 	return t, nil
 }
 
-// execTemplate executes the named template cooresponding to the template name and langauge specified.
+// execTemplate executes the named template corresponding to the template name and language specified.
 func execTemplate(w io.Writer, name string, opts MarkdownOpts, def string, data interface{}) error {
 	t, err := getTemplate(name, opts, def)
 	if err != nil {
@@ -196,8 +196,10 @@ func cardDiff2Markdown(w io.Writer, cardDiff *Diff, opts MarkdownOpts) error {
 	// comment add/delete
 
 	// description changes
+
+	return fmt.Errorf("not implemented yet")
 }
 
 func blockDiff2Markdown(w io.Writer, diff *Diff, opts MarkdownOpts) error {
-
+	return fmt.Errorf("not implemented yet")
 }

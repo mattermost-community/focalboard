@@ -236,8 +236,9 @@ func (n *notifier) generateDiffsForBoard(c store.Container, board *model.Block, 
 
 	var diffs []*Diff
 	for _, b := range blocks {
-		if b.Type == "card" {
-			cardDiffs, err := n.generateDiffsForCard(c, board, &b, hint)
+		block := b
+		if block.Type == "card" {
+			cardDiffs, err := n.generateDiffsForCard(c, board, &block, hint)
 			if err != nil {
 				return nil, err
 			}
@@ -265,8 +266,8 @@ func (n *notifier) generateDiffsForCard(c store.Container, board *model.Block, c
 		return nil, fmt.Errorf("could not get subtree for card %s: %w", card.ID, err)
 	}
 
-	for _, b := range blocks {
-		blockDiff, err := n.generateDiffForBlock(c, board, card, &b, hint)
+	for i := range blocks {
+		blockDiff, err := n.generateDiffForBlock(c, board, card, &blocks[i], hint)
 		if err != nil {
 			return nil, fmt.Errorf("could not get subtree for card %s: %w", card.ID, err)
 		}
@@ -275,7 +276,7 @@ func (n *notifier) generateDiffsForCard(c store.Container, board *model.Block, c
 	return cardDiff, nil
 }
 
-func (n *notifier) generateDiffForBlock(c store.Container, board *model.Block, card *model.Block, block *model.Block, hint *model.NotificationHint) (*Diff, error) {
+func (n *notifier) generateDiffForBlock(c store.Container, board, card, block *model.Block, hint *model.NotificationHint) (*Diff, error) {
 	// find the oldest block in blocks_history that is newer than the hint.NotifyAt.
 	opts := model.BlockQueryOptions{
 		UseBlocksHistory: true,

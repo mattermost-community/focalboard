@@ -19,7 +19,7 @@ type Diff struct {
 }
 
 type PropDiff struct {
-	Id       string
+	ID       string
 	OldName  string
 	NewName  string
 	OldValue string
