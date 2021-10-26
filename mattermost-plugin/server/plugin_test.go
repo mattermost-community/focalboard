@@ -29,7 +29,6 @@ func TestServeHTTP(t *testing.T) {
 }
 
 func TestSetConfiguration(t *testing.T) {
-
 	plugin := Plugin{}
 	boolTrue := true
 	stringRef := ""
@@ -40,7 +39,7 @@ func TestSetConfiguration(t *testing.T) {
 	}
 	driverName := "testDriver"
 	dataSource := "testDirectory"
-	baseSqlSettings := &model.SqlSettings{
+	baseSQLSettings := &model.SqlSettings{
 		DriverName: &driverName,
 		DataSource: &dataSource,
 	}
@@ -54,7 +53,7 @@ func TestSetConfiguration(t *testing.T) {
 	baseConfig := &model.Config{
 		FeatureFlags:   baseFeatureFlags,
 		PluginSettings: *basePluginSettings,
-		SqlSettings:    *baseSqlSettings,
+		SqlSettings:    *baseSQLSettings,
 		FileSettings:   *baseFileSettings,
 	}
 
@@ -95,6 +94,5 @@ func TestSetConfiguration(t *testing.T) {
 
 		assert.Equal(t, "true", config.FeatureFlags["hello_world"])
 		assert.Equal(t, "true", config.FeatureFlags["myTest"])
-
 	})
 }

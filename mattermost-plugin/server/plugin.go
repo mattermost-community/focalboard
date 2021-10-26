@@ -124,7 +124,6 @@ func (p *Plugin) OnActivate() error {
 }
 
 func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, serverID string) *config.Configuration {
-
 	filesS3Config := config.AmazonS3Config{}
 	if mmconfig.FileSettings.AmazonS3AccessKeyId != nil {
 		filesS3Config.AccessKeyID = *mmconfig.FileSettings.AmazonS3AccessKeyId
@@ -174,7 +173,6 @@ func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, ser
 			for _, flag := range strings.Split(value, "-") {
 				featureFlags[flag] = "true"
 			}
-
 		} else {
 			featureFlags[key] = value
 		}
