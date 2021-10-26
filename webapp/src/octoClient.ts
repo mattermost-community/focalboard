@@ -249,18 +249,6 @@ class OctoClient {
         })
     }
 
-    // ToDo: update it with newBlocks and oldBlocks
-    // async patchBlocks(blocks: Block[]): Promise<Response[]> {
-    //     Utils.log(`patchingBlocks: ${blocks.map(b => b.id).join(", ")}`)
-    //
-    //     return Promise.all(
-    //         blocks.map((block) => {
-    //             const [ updatePatch ] = createPatchesFromBlocks(block, {} as BlockPatch)
-    //             return this.patchBlock(block.id, updatePatch)
-    //         })
-    //     )
-    // }
-    //
     async deleteBlock(blockId: string): Promise<Response> {
         Utils.log(`deleteBlock: ${blockId}`)
         return fetch(this.getBaseURL() + this.workspacePath() + `/blocks/${encodeURIComponent(blockId)}`, {

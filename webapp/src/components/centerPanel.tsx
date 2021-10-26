@@ -268,10 +268,6 @@ class CenterPanel extends React.Component<Props, State> {
                     this.showCard(undefined)
                 },
             )
-            console.log("------------------------------")
-            console.log(`Got a new Card ID: ${newCard.id}`)
-            console.log("------------------------------")
-
             await mutator.changeViewCardOrder(activeView, [...activeView.fields.cardOrder, newCard.id], 'add-card')
         })
     }
