@@ -7,7 +7,7 @@ func (a *App) Reset(c store.Container) error {
 		return err
 	}
 
-	if err := a.store.DeleteAllBlocks(c); err != nil {
+	if err := a.store.DeleteAllBlocksPermanently(c); err != nil {
 		return err
 	}
 

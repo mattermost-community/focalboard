@@ -36,15 +36,15 @@ func (s *SQLStore) CreateUser(user *model.User) error {
 
 }
 
-func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy string) error {
+func (s *SQLStore) DeleteAllBlocksPermanently(c store.Container) error {
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return txErr
 	}
-	err := s.deleteBlock(tx, c, blockID, modifiedBy)
+	err := s.deleteAllBlocksPermanently(tx, c)
 	if err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
-			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "DeleteBlock"))
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "DeleteAllBlocksPermanently"))
 		}
 		return err
 	}
@@ -57,12 +57,17 @@ func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy str
 
 }
 
-func (s *SQLStore) DeleteAllBlocks(c store.Container) error {
+func (s *SQLStore) DeleteAllUsers() error {
+	return s.deleteAllUsers(s.db)
+
+}
+
+func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy string) error {
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return txErr
 	}
-	err := s.deleteAllBlocks(tx, c)
+	err := s.deleteBlock(tx, c, blockID, modifiedBy)
 	if err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
 			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "DeleteBlock"))
@@ -186,10 +191,6 @@ func (s *SQLStore) GetUserWorkspaces(userID string) ([]model.UserWorkspace, erro
 func (s *SQLStore) GetUsersByWorkspace(workspaceID string) ([]*model.User, error) {
 	return s.getUsersByWorkspace(s.db, workspaceID)
 
-}
-
-func (s *SQLStore) DeleteAllUsers() error {
-	return s.deleteAllUsers()
 }
 
 func (s *SQLStore) GetWorkspace(ID string) (*model.Workspace, error) {

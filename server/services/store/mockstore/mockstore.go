@@ -77,6 +77,34 @@ func (mr *MockStoreMockRecorder) CreateUser(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockStore)(nil).CreateUser), arg0)
 }
 
+// DeleteAllBlocksPermanently mocks base method.
+func (m *MockStore) DeleteAllBlocksPermanently(arg0 store.Container) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteAllBlocksPermanently", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteAllBlocksPermanently indicates an expected call of DeleteAllBlocksPermanently.
+func (mr *MockStoreMockRecorder) DeleteAllBlocksPermanently(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAllBlocksPermanently", reflect.TypeOf((*MockStore)(nil).DeleteAllBlocksPermanently), arg0)
+}
+
+// DeleteAllUsers mocks base method.
+func (m *MockStore) DeleteAllUsers() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteAllUsers")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteAllUsers indicates an expected call of DeleteAllUsers.
+func (mr *MockStoreMockRecorder) DeleteAllUsers() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAllUsers", reflect.TypeOf((*MockStore)(nil).DeleteAllUsers))
+}
+
 // DeleteBlock mocks base method.
 func (m *MockStore) DeleteBlock(arg0 store.Container, arg1, arg2 string) error {
 	m.ctrl.T.Helper()

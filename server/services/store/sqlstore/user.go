@@ -235,8 +235,8 @@ func (s *SQLStore) usersFromRows(rows *sql.Rows) ([]*model.User, error) {
 	return users, nil
 }
 
-func (s *SQLStore) deleteAllUsers() error {
-	query := s.getQueryBuilder(s.db).Delete(s.tablePrefix + "users")
+func (s *SQLStore) deleteAllUsers(db sq.BaseRunner) error {
+	query := s.getQueryBuilder(db).Delete(s.tablePrefix + "users")
 	_, err := query.Exec()
 	return err
 }
