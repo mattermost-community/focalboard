@@ -156,6 +156,7 @@ func boardDiff2Markdown(w io.Writer, boardDiff *Diff, opts MarkdownOpts) error {
 	}
 
 	// property schema changes
+
 	// TODO
 	return nil
 }

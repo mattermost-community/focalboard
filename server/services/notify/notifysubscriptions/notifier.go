@@ -155,14 +155,15 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 		return nil
 	}
 
-	diffs, err := n.generateDiffs(c, hint)
+	dg := newDiffGenerator(c, n.store)
+	diffs, err := dg.generateDiffs(c, hint)
 	if err != nil {
 		return err
 	}
 
 	opts := MarkdownOpts{
-		Language: "en", // TODO: use correct language with i18n available on server
-		MakeLink: nil,  // TODO:
+		Language: "en", // TODO: use correct language with i18n available on server.
+		MakeLink: nil,  // TODO: provide func to make URL links to blocks.
 	}
 
 	markdown, err := Diffs2Markdown(diffs, opts)
@@ -183,126 +184,4 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 		}
 	}
 	return merr.ErrorOrNil()
-}
-
-func (n *notifier) generateDiffs(c store.Container, hint *model.NotificationHint) ([]*Diff, error) {
-	block, err := n.store.GetBlock(c, hint.BlockID)
-	if err != nil {
-		return nil, fmt.Errorf("could not get block for notification: %w", err)
-	}
-
-	board, card, err := n.store.GetBoardAndCard(c, block)
-	if err != nil {
-		return nil, fmt.Errorf("could not get block's board & card for notification: %w", err)
-	}
-
-	user, err := n.store.GetUserByID(hint.UserID)
-	if err != nil {
-		return nil, fmt.Errorf("could not lookup user %s: %w", hint.UserID, err)
-	}
-	hint.Username = user.Username
-
-	// TODO: parse board's property definitions here so it only happens once.
-
-	switch block.Type {
-	case "board":
-		return n.generateDiffsForBoard(c, block, hint)
-	case "card":
-		diff, err := n.generateDiffsForCard(c, board, block, hint)
-		if err != nil {
-			return nil, err
-		}
-		return []*Diff{diff}, nil
-	default:
-		diff, err := n.generateDiffForBlock(c, board, card, block, hint)
-		if err != nil {
-			return nil, err
-		}
-		return []*Diff{diff}, nil
-	}
-}
-
-func (n *notifier) generateDiffsForBoard(c store.Container, board *model.Block, hint *model.NotificationHint) ([]*Diff, error) {
-	opts := model.BlockQueryOptions{
-		UseBlocksHistory: true,
-		InsertAfterAt:    hint.NotifyAt,
-		OrderByInsertAt:  true,
-	}
-
-	blocks, err := n.store.GetSubTree2FromHistory(c, board.ID, opts)
-	if err != nil {
-		return nil, fmt.Errorf("could not get subtree for board %s: %w", board.ID, err)
-	}
-
-	var diffs []*Diff
-	for _, b := range blocks {
-		block := b
-		if block.Type == "card" {
-			cardDiffs, err := n.generateDiffsForCard(c, board, &block, hint)
-			if err != nil {
-				return nil, err
-			}
-			diffs = append(diffs, cardDiffs)
-		}
-	}
-
-	return nil, fmt.Errorf("not implemented yet")
-}
-
-func (n *notifier) generateDiffsForCard(c store.Container, board *model.Block, card *model.Block, hint *model.NotificationHint) (*Diff, error) {
-	cardDiff, err := n.generateDiffForBlock(c, board, card, card, hint)
-	if err != nil {
-		return nil, fmt.Errorf("could not generate diff for card %s: %w", card.ID, err)
-	}
-
-	// walk child blocks
-	opts := model.BlockQueryOptions{
-		UseBlocksHistory: true,
-		InsertAfterAt:    hint.NotifyAt,
-		OrderByInsertAt:  true,
-	}
-	blocks, err := n.store.GetSubTree2FromHistory(c, card.ID, opts)
-	if err != nil {
-		return nil, fmt.Errorf("could not get subtree for card %s: %w", card.ID, err)
-	}
-
-	for i := range blocks {
-		blockDiff, err := n.generateDiffForBlock(c, board, card, &blocks[i], hint)
-		if err != nil {
-			return nil, fmt.Errorf("could not get subtree for card %s: %w", card.ID, err)
-		}
-		cardDiff.Diffs = append(cardDiff.Diffs, blockDiff)
-	}
-	return cardDiff, nil
-}
-
-func (n *notifier) generateDiffForBlock(c store.Container, board, card, block *model.Block, hint *model.NotificationHint) (*Diff, error) {
-	// find the oldest block in blocks_history that is newer than the hint.NotifyAt.
-	opts := model.BlockQueryOptions{
-		UseBlocksHistory: true,
-		InsertAfterAt:    hint.NotifyAt,
-		OrderByInsertAt:  true,
-	}
-	history, err := n.store.GetBlockHistory(c, block.ID, opts)
-	if err != nil {
-		return nil, fmt.Errorf("could not get block history for block %s: %w", block.ID, err)
-	}
-
-	if len(history) < 2 {
-		// this block didn't change
-		return nil, nil
-	}
-
-	oldBlock := history[0]
-	newBlock := history[len(history)-1]
-
-	diff := &Diff{
-		Board:     board,
-		Card:      card,
-		Username:  hint.Username,
-		BlockType: block.Type,
-		OldBlock:  &oldBlock,
-		NewBlock:  &newBlock,
-	}
-	return diff, nil
 }
