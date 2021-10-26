@@ -87,8 +87,20 @@ func logInfo(logger *mlog.Logger) {
 }
 
 func main() {
-	// config.json file
-	config, err := config.ReadConfigFile()
+	// Command line args
+	pMonitorPid := flag.Int("monitorpid", -1, "a process ID")
+	pPort := flag.Int("port", 0, "the port number")
+	pSingleUser := flag.Bool("single-user", false, "single user mode")
+	pDBType := flag.String("dbtype", "", "Database type")
+	pDBConfig := flag.String("dbconfig", "", "Database config")
+	pConfigFilePath := flag.String(
+		"config",
+		"",
+		"Location of the JSON config file",
+	)
+	flag.Parse()
+
+	config, err := config.ReadConfigFile(*pConfigFilePath)
 	if err != nil {
 		log.Fatal("Unable to read the config file: ", err)
 		return
@@ -113,14 +125,6 @@ func main() {
 	}
 
 	logInfo(logger)
-
-	// Command line args
-	pMonitorPid := flag.Int("monitorpid", -1, "a process ID")
-	pPort := flag.Int("port", config.Port, "the port number")
-	pSingleUser := flag.Bool("single-user", false, "single user mode")
-	pDBType := flag.String("dbtype", "", "Database type")
-	pDBConfig := flag.String("dbconfig", "", "Database config")
-	flag.Parse()
 
 	singleUser := false
 	if pSingleUser != nil {
@@ -193,13 +197,14 @@ func main() {
 
 // StartServer starts the server
 //export StartServer
-func StartServer(webPath *C.char, filesPath *C.char, port int, singleUserToken, dbConfigString *C.char) {
+func StartServer(webPath *C.char, filesPath *C.char, port int, singleUserToken, dbConfigString, configFilePath *C.char) {
 	startServer(
 		C.GoString(webPath),
 		C.GoString(filesPath),
 		port,
 		C.GoString(singleUserToken),
 		C.GoString(dbConfigString),
+		C.GoString(configFilePath),
 	)
 }
 
@@ -209,14 +214,14 @@ func StopServer() {
 	stopServer()
 }
 
-func startServer(webPath string, filesPath string, port int, singleUserToken, dbConfigString string) {
+func startServer(webPath string, filesPath string, port int, singleUserToken, dbConfigString, configFilePath string) {
 	if pServer != nil {
 		stopServer()
 		pServer = nil
 	}
 
 	// config.json file
-	config, err := config.ReadConfigFile()
+	config, err := config.ReadConfigFile(configFilePath)
 	if err != nil {
 		log.Fatal("Unable to read the config file: ", err)
 		return
