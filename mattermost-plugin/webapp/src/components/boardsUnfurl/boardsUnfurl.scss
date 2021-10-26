@@ -1,10 +1,10 @@
 .FocalboardUnfurl {
     display: block;
     padding: 16px;
-    border: 1px solid rgba(61, 60, 64, 0.24) !important;
+    border: 1px solid rgba(var(--center-channel-color-rgb), 0.24) !important;
     border-radius: 4px;
     box-sizing: border-box;
-    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.08);
+    box-shadow: 0px 2px 3px var(--elevation-1);
     width: 425px;
     text-decoration: none !important;
     color: inherit !important; 
@@ -28,7 +28,7 @@
             overflow: hidden;
 
             .card_title {
-                color: #3D3C40;
+                color: var(--center-channel-color);
                 font-weight: 600;
                 font-size: 14px;
                 max-width: 100%;
@@ -38,7 +38,7 @@
             }
 
             .board_title {
-                color: rgba(61, 60, 64, 0.56);
+                color: rgba(var(--center-channel-color-rgb), 0.56);
                 font-size: 12px;
                 line-height: 16px;
             }
@@ -46,7 +46,7 @@
     }
 
     .body {
-        border: 1px solid rgba(61, 60, 64, 0.16);
+        border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
         border-radius: 4px;
         margin-top: 16px;
         height: 145px;
@@ -71,7 +71,7 @@
                 white-space: nowrap;
 
                 .remainder {
-                    color: rgba(61, 60, 64, 0.48);
+                    color: rgba(var(--sys-center-channel-color-rgb), 0.48);
                     font-weight: bold;
                     font-size: 14px;
                 }
@@ -83,6 +83,7 @@
                     overflow: hidden;
                     text-overflow: ellipsis;
                     overflow-wrap: normal;
+
 
                     &.propColorDefault {
                         background-color: var(--prop-default);
