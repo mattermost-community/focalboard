@@ -1,11 +1,14 @@
 .FocalboardUnfurl {
-    display: block;
+    display: table;
+    width: 100%;
+    max-width: 425px;
+    margin: 0;
+    table-layout: fixed;
     padding: 16px;
     border: 1px solid rgba(var(--center-channel-color-rgb), 0.24) !important;
     border-radius: 4px;
     box-sizing: border-box;
     box-shadow: 0px 2px 3px var(--elevation-1);
-    width: 425px;
     text-decoration: none !important;
     color: inherit !important; 
 

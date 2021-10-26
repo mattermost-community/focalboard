@@ -126,7 +126,7 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
                 propertiesToDisplay.push({optionName: correspondingOption.name, optionValue: optionSelected.value, optionValueColour: optionSelected.color})
             }
         }
-        remainder = propertyKeyArray.length - propertiesToDisplay.length
+        remainder = board.fields.cardProperties.length - propertiesToDisplay.length
         html = Utils.htmlFromMarkdown(content?.title || '')
     }
 
