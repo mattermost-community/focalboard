@@ -1,0 +1,715 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/components/viewMenu should match snapshot 1`] = `
+Object {
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <div
+        class="Menu noselect bottom"
+      >
+        <div
+          class="menu-contents"
+        >
+          <div
+            class="menu-options"
+          >
+            <div
+              aria-label="view title"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <svg
+                class="TableIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  height="80"
+                  rx="5"
+                  ry="5"
+                  width="80"
+                  x="10"
+                  y="10"
+                />
+                <polyline
+                  points="37,10 37,90"
+                />
+                <polyline
+                  points="10,37 90,37"
+                />
+                <polyline
+                  points="10,63 90,63"
+                />
+              </svg>
+              <div
+                class="menu-name"
+              >
+                view title
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+            <div
+              aria-label="view title"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <svg
+                class="TableIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  height="80"
+                  rx="5"
+                  ry="5"
+                  width="80"
+                  x="10"
+                  y="10"
+                />
+                <polyline
+                  points="37,10 37,90"
+                />
+                <polyline
+                  points="10,37 90,37"
+                />
+                <polyline
+                  points="10,63 90,63"
+                />
+              </svg>
+              <div
+                class="menu-name"
+              >
+                view title
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+            <div
+              class="MenuOption MenuSeparator menu-separator"
+            />
+            <div
+              aria-label="Duplicate view"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <svg
+                class="DuplicateIcon Icon"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M464 0H144c-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h320c26.51 0 48-21.49 48-48v-48h48c26.51 0 48-21.49 48-48V48c0-26.51-21.49-48-48-48zM362 464H54a6 6 0 0 1-6-6V150a6 6 0 0 1 6-6h42v224c0 26.51 21.49 48 48 48h224v42a6 6 0 0 1-6 6zm96-96H150a6 6 0 0 1-6-6V54a6 6 0 0 1 6-6h308a6 6 0 0 1 6 6v308a6 6 0 0 1-6 6z"
+                />
+              </svg>
+              <div
+                class="menu-name"
+              >
+                Duplicate view
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+            <div
+              aria-label="Delete view"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <svg
+                class="DeleteIcon Icon"
+                viewBox="0 0 448 512"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M268 416h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12zM432 80h-82.41l-34-56.7A48 48 0 0 0 274.41 0H173.59a48 48 0 0 0-41.16 23.3L98.41 80H16A16 16 0 0 0 0 96v16a16 16 0 0 0 16 16h16v336a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128h16a16 16 0 0 0 16-16V96a16 16 0 0 0-16-16zM171.84 50.91A6 6 0 0 1 177 48h94a6 6 0 0 1 5.15 2.91L293.61 80H154.39zM368 464H80V128h288zm-212-48h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12z"
+                />
+              </svg>
+              <div
+                class="menu-name"
+              >
+                Delete view
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+            <div
+              class="MenuOption SubMenuOption menu-option"
+              id="__addView"
+            >
+              <i
+                class="CompassIcon icon-plus AddIcon"
+              />
+              <div
+                class="menu-name"
+              >
+                Add view
+              </div>
+              <svg
+                class="SubmenuTriangleIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="50,35 75,50 50,65"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            class="menu-spacer hideOnWidescreen"
+          />
+          <div
+            class="menu-options hideOnWidescreen"
+          >
+            <div
+              aria-label="Cancel"
+              class="MenuOption TextOption menu-option menu-cancel"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>,
+  "container": <div>
+    <div
+      class="Menu noselect bottom"
+    >
+      <div
+        class="menu-contents"
+      >
+        <div
+          class="menu-options"
+        >
+          <div
+            aria-label="view title"
+            class="MenuOption TextOption menu-option"
+            role="button"
+          >
+            <svg
+              class="TableIcon Icon"
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="80"
+                rx="5"
+                ry="5"
+                width="80"
+                x="10"
+                y="10"
+              />
+              <polyline
+                points="37,10 37,90"
+              />
+              <polyline
+                points="10,37 90,37"
+              />
+              <polyline
+                points="10,63 90,63"
+              />
+            </svg>
+            <div
+              class="menu-name"
+            >
+              view title
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+          <div
+            aria-label="view title"
+            class="MenuOption TextOption menu-option"
+            role="button"
+          >
+            <svg
+              class="TableIcon Icon"
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="80"
+                rx="5"
+                ry="5"
+                width="80"
+                x="10"
+                y="10"
+              />
+              <polyline
+                points="37,10 37,90"
+              />
+              <polyline
+                points="10,37 90,37"
+              />
+              <polyline
+                points="10,63 90,63"
+              />
+            </svg>
+            <div
+              class="menu-name"
+            >
+              view title
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+          <div
+            class="MenuOption MenuSeparator menu-separator"
+          />
+          <div
+            aria-label="Duplicate view"
+            class="MenuOption TextOption menu-option"
+            role="button"
+          >
+            <svg
+              class="DuplicateIcon Icon"
+              viewBox="0 0 512 512"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M464 0H144c-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h320c26.51 0 48-21.49 48-48v-48h48c26.51 0 48-21.49 48-48V48c0-26.51-21.49-48-48-48zM362 464H54a6 6 0 0 1-6-6V150a6 6 0 0 1 6-6h42v224c0 26.51 21.49 48 48 48h224v42a6 6 0 0 1-6 6zm96-96H150a6 6 0 0 1-6-6V54a6 6 0 0 1 6-6h308a6 6 0 0 1 6 6v308a6 6 0 0 1-6 6z"
+              />
+            </svg>
+            <div
+              class="menu-name"
+            >
+              Duplicate view
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+          <div
+            aria-label="Delete view"
+            class="MenuOption TextOption menu-option"
+            role="button"
+          >
+            <svg
+              class="DeleteIcon Icon"
+              viewBox="0 0 448 512"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M268 416h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12zM432 80h-82.41l-34-56.7A48 48 0 0 0 274.41 0H173.59a48 48 0 0 0-41.16 23.3L98.41 80H16A16 16 0 0 0 0 96v16a16 16 0 0 0 16 16h16v336a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128h16a16 16 0 0 0 16-16V96a16 16 0 0 0-16-16zM171.84 50.91A6 6 0 0 1 177 48h94a6 6 0 0 1 5.15 2.91L293.61 80H154.39zM368 464H80V128h288zm-212-48h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12z"
+              />
+            </svg>
+            <div
+              class="menu-name"
+            >
+              Delete view
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+          <div
+            class="MenuOption SubMenuOption menu-option"
+            id="__addView"
+          >
+            <i
+              class="CompassIcon icon-plus AddIcon"
+            />
+            <div
+              class="menu-name"
+            >
+              Add view
+            </div>
+            <svg
+              class="SubmenuTriangleIcon Icon"
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polygon
+                points="50,35 75,50 50,65"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="menu-spacer hideOnWidescreen"
+        />
+        <div
+          class="menu-options hideOnWidescreen"
+        >
+          <div
+            aria-label="Cancel"
+            class="MenuOption TextOption menu-option menu-cancel"
+            role="button"
+          >
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Cancel
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
+`;
+
+exports[`/components/viewMenu should match snapshot, read only 1`] = `
+Object {
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <div
+        class="Menu noselect bottom"
+      >
+        <div
+          class="menu-contents"
+        >
+          <div
+            class="menu-options"
+          >
+            <div
+              aria-label="view title"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <svg
+                class="TableIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  height="80"
+                  rx="5"
+                  ry="5"
+                  width="80"
+                  x="10"
+                  y="10"
+                />
+                <polyline
+                  points="37,10 37,90"
+                />
+                <polyline
+                  points="10,37 90,37"
+                />
+                <polyline
+                  points="10,63 90,63"
+                />
+              </svg>
+              <div
+                class="menu-name"
+              >
+                view title
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+            <div
+              aria-label="view title"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <svg
+                class="TableIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  height="80"
+                  rx="5"
+                  ry="5"
+                  width="80"
+                  x="10"
+                  y="10"
+                />
+                <polyline
+                  points="37,10 37,90"
+                />
+                <polyline
+                  points="10,37 90,37"
+                />
+                <polyline
+                  points="10,63 90,63"
+                />
+              </svg>
+              <div
+                class="menu-name"
+              >
+                view title
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+            <div
+              class="MenuOption MenuSeparator menu-separator"
+            />
+          </div>
+          <div
+            class="menu-spacer hideOnWidescreen"
+          />
+          <div
+            class="menu-options hideOnWidescreen"
+          >
+            <div
+              aria-label="Cancel"
+              class="MenuOption TextOption menu-option menu-cancel"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>,
+  "container": <div>
+    <div
+      class="Menu noselect bottom"
+    >
+      <div
+        class="menu-contents"
+      >
+        <div
+          class="menu-options"
+        >
+          <div
+            aria-label="view title"
+            class="MenuOption TextOption menu-option"
+            role="button"
+          >
+            <svg
+              class="TableIcon Icon"
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="80"
+                rx="5"
+                ry="5"
+                width="80"
+                x="10"
+                y="10"
+              />
+              <polyline
+                points="37,10 37,90"
+              />
+              <polyline
+                points="10,37 90,37"
+              />
+              <polyline
+                points="10,63 90,63"
+              />
+            </svg>
+            <div
+              class="menu-name"
+            >
+              view title
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+          <div
+            aria-label="view title"
+            class="MenuOption TextOption menu-option"
+            role="button"
+          >
+            <svg
+              class="TableIcon Icon"
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="80"
+                rx="5"
+                ry="5"
+                width="80"
+                x="10"
+                y="10"
+              />
+              <polyline
+                points="37,10 37,90"
+              />
+              <polyline
+                points="10,37 90,37"
+              />
+              <polyline
+                points="10,63 90,63"
+              />
+            </svg>
+            <div
+              class="menu-name"
+            >
+              view title
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+          <div
+            class="MenuOption MenuSeparator menu-separator"
+          />
+        </div>
+        <div
+          class="menu-spacer hideOnWidescreen"
+        />
+        <div
+          class="menu-options hideOnWidescreen"
+        >
+          <div
+            aria-label="Cancel"
+            class="MenuOption TextOption menu-option menu-cancel"
+            role="button"
+          >
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Cancel
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
+`;

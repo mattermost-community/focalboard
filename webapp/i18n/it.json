@@ -43,7 +43,6 @@
   "Dialog.closeDialog": "Chiudi finestra di dialogo",
   "EditableDayPicker.today": "Oggi",
   "EmptyCenterPanel.no-content": "Aggiungi o seleziona un contenitore dalla colonna laterale per iniziare.",
-  "EmptyCenterPanel.workspace": "Questa è l'area di lavoro per:",
   "Error.websocket-closed": "Connessione interrotta col Websocket. Se il problema persiste, controlla la configurazione del tuo server o del proxy web",
   "Filter.includes": "include",
   "Filter.is-empty": "è vuoto",
