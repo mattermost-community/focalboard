@@ -34,10 +34,10 @@ export const ACTION_UPDATE_CLIENT_CONFIG = 'UPDATE_CLIENT_CONFIG'
 export interface MMWebSocketClient {
     conn: WebSocket | null;
     sendMessage(action: string, data: any, responseCallback?: () => void): void /* eslint-disable-line @typescript-eslint/no-explicit-any */
+    setFirstConnectCallback(callback: () => void): void
     setReconnectCallback(callback: () => void): void
     setErrorCallback(callback: (event: Event) => void): void
     setCloseCallback(callback: (connectFailCount: number) => void): void
-    connectionId: string
 }
 
 type OnChangeHandler = (client: WSClient, blocks: Block[]) => void
@@ -57,8 +57,6 @@ class WSClient {
     onChange: OnChangeHandler[] = []
     onError: OnErrorHandler[] = []
     onConfigChange: OnConfigChangeHandler[] = []
-    private mmWSMaxRetries = 100
-    private mmWSRetryDelay = 300
     private notificationDelay = 100
     private reopenDelay = 3000
     private updatedBlocks: Block[] = []
@@ -163,10 +161,19 @@ class WSClient {
     open(): void {
         if (this.client !== null) {
             // configure the Mattermost websocket client callbacks
+            const onConnect = () => {
+                Utils.log('WSClient in plugin mode, reusing Mattermost WS connection')
+
+                for (const handler of this.onStateChange) {
+                    handler(this, 'open')
+                }
+                this.state = 'open'
+            }
+
             const onReconnect = () => {
                 Utils.logWarn('WSClient reconnected')
 
-                this.open()
+                onConnect()
                 for (const handler of this.onReconnect) {
                     handler(this)
                 }
@@ -204,34 +211,11 @@ class WSClient {
                 }
             }
 
+            this.client.setFirstConnectCallback(onConnect)
             this.client.setErrorCallback(onError)
             this.client.setCloseCallback(onClose)
             this.client.setReconnectCallback(onReconnect)
 
-            // WSClient needs to ensure that the Mattermost client has
-            // correctly stablished the connection before opening
-            let retries = 0
-            const setPluginOpen = () => {
-                if (this.client?.connectionId !== '') {
-                    Utils.log('WSClient in plugin mode, reusing Mattermost WS connection')
-
-                    for (const handler of this.onStateChange) {
-                        handler(this, 'open')
-                    }
-                    this.state = 'open'
-                    return
-                }
-
-                retries++
-                if (retries <= this.mmWSMaxRetries) {
-                    Utils.log('WSClient Mattermost Websocket not ready, retrying')
-                    setTimeout(setPluginOpen, this.mmWSRetryDelay)
-                } else {
-                    Utils.logError('WSClient error on open: Mattermost Websocket client is not ready')
-                }
-            }
-
-            setPluginOpen()
             return
         }
 
