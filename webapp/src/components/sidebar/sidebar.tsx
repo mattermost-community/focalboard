@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 
 import {useIntl} from 'react-intl'
 
@@ -32,6 +32,31 @@ type Props = {
     isDashboard?: boolean
 }
 
+function getWindowDimensions() {
+    const {innerWidth: width, innerHeight: height} = window
+    return {
+        width,
+        height,
+    }
+}
+
+// function useWindowDimensions() {
+//     const [windowDimensions, setWindowDimensions] = useState(
+//         getWindowDimensions(),
+//     )
+
+//     useEffect(() => {
+//         function handleResize() {
+//             setWindowDimensions(getWindowDimensions())
+//         }
+
+//         window.addEventListener('resize', handleResize)
+//         return () => window.removeEventListener('resize', handleResize)
+//     }, [])
+
+//     return windowDimensions
+// }
+
 const Sidebar = React.memo((props: Props) => {
     const [isHidden, setHidden] = useState(false)
     const boards = useAppSelector(getSortedBoards)
@@ -40,6 +65,29 @@ const Sidebar = React.memo((props: Props) => {
 
     useEffect(() => {
         loadTheme()
+    }, [])
+
+    const [windowDimensions, setWindowDimensions] = useState(
+        getWindowDimensions(),
+    )
+
+    useEffect(() => {
+        function handleResize() {
+            setWindowDimensions(getWindowDimensions())
+        }
+
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
+
+    // if (useWindowDimensions().width < 768) {
+    //     setHidden(true)
+    // }
+
+    useEffect(() => {
+        if (windowDimensions.width < 768) {
+            setHidden(true)
+        }
     }, [])
 
     const workspace = useAppSelector(getCurrentWorkspace)
