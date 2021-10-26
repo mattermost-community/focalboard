@@ -59,7 +59,7 @@ func StructToMap(v interface{}) (m map[string]interface{}) {
 // GenerateBlockIDs generates new IDs for all the blocks of the list,
 // keeping consistent any references that other blocks would made to
 // the original IDs, so a tree of blocks can get new IDs and maintain
-// its shape
+// its shape.
 func GenerateBlockIDs(blocks []model.Block) []model.Block {
 	blockIDs := map[string]bool{}
 	referenceIDs := map[string]bool{}
@@ -77,8 +77,8 @@ func GenerateBlockIDs(blocks []model.Block) []model.Block {
 	}
 
 	newIDs := map[string]string{}
-	for id, _ := range blockIDs {
-		for referenceID, _ := range referenceIDs {
+	for id := range blockIDs {
+		for referenceID := range referenceIDs {
 			if id == referenceID {
 				newIDs[id] = NewID(IDTypeBlock)
 				continue

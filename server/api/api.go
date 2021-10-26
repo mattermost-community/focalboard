@@ -338,10 +338,10 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	// responses:
 	//   '200':
 	//     description: success
-    //     schema:
-    //       items:
-    //         $ref: '#/definitions/Block'
-    //       type: array
+	//     schema:
+	//       items:
+	//         $ref: '#/definitions/Block'
+	//       type: array
 	//   default:
 	//     description: internal error
 	//     schema:
