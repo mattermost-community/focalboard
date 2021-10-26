@@ -170,6 +170,7 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
                                     key={property.optionValue}
                                     className={`property ${property.optionValueColour}`}
                                     title={`${property.optionName}`}
+                                    style={{maxWidth: `${(1 / propertiesToDisplay.length) * 100}%`}}
                                 >
                                     {property.optionValue}
                                 </div>
