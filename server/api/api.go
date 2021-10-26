@@ -314,7 +314,9 @@ func stampModificationMetadata(r *http.Request, blocks []model.Block, auditRec *
 func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	// swagger:operation POST /api/v1/workspaces/{workspaceID}/blocks updateBlocks
 	//
-	// Insert or update blocks
+	// Insert blocks. The specified IDs will only be used to link
+	// blocks with existing ones, the rest will be replaced by server
+	// generated IDs
 	//
 	// ---
 	// produces:
