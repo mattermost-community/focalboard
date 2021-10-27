@@ -61,9 +61,7 @@ const Sidebar = React.memo((props: Props) => {
     }, [])
 
     useEffect(() => {
-        if (windowDimensions.width < 768) {
-            setHidden(true)
-        }
+        hideSidebar()
     }, [windowDimensions])
 
     const workspace = useAppSelector(getCurrentWorkspace)
