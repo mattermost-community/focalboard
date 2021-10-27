@@ -22,6 +22,8 @@ type Props = {
     onAccept?: (text: string) => void
 }
 
+const linkTagName = 'a'
+
 const MarkdownEditor = (props: Props): JSX. Element => {
     const {placeholderText, onFocus, onBlur, onChange, text, id} = props
     const [isEditing, setIsEditing] = useState(false)
@@ -110,7 +112,12 @@ const MarkdownEditor = (props: Props): JSX. Element => {
             className={text ? 'octo-editor-preview' : 'octo-editor-preview octo-placeholder'}
             style={{display: isEditing ? 'none' : undefined}}
             dangerouslySetInnerHTML={{__html: html}}
-            onClick={() => {
+            onClick={(e) => {
+                if ((e.target as Element).tagName.toLowerCase() === linkTagName) {
+                    e.stopPropagation()
+                    return
+                }
+
                 if (!props.readonly && !isEditing) {
                     showEditor()
                 }
