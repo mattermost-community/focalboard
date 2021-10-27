@@ -287,13 +287,19 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
             <div
               class="octo-propertyname add-property"
             >
-              <button
-                type="button"
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
-                <span>
-                  + Add a property
-                </span>
-              </button>
+                <button
+                  type="button"
+                >
+                  <span>
+                    + Add a property
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
           <hr />
@@ -693,13 +699,19 @@ exports[`components/cardDialog should match snapshot 1`] = `
             <div
               class="octo-propertyname add-property"
             >
-              <button
-                type="button"
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
-                <span>
-                  + Add a property
-                </span>
-              </button>
+                <button
+                  type="button"
+                >
+                  <span>
+                    + Add a property
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
           <hr />
