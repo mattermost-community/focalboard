@@ -98,35 +98,47 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
     let html = ''
     const propertiesToDisplay: Array<Record<string, string>> = []
     if (card && board) {
-        const propertyKeyArray = Object.keys(card.fields.properties)
-        const propertyValueArray = Object.values(card.fields.properties)
-        const options = board.fields.cardProperties
+        // Checkboxes need to be accounted for if they are off or on, if they are on they show up in the card properties so we don't want to count it twice
+        // Therefore we keep track how many checkboxes there are and subtract it at the end
+        let totalNumberOfCheckBoxes = 0
 
         // We will just display the first 3 or less select/multi-select properties and do a +n for remainder if any remainder
-        if (propertyKeyArray.length > 0) {
-            for (let i = 0; i < propertyKeyArray.length && propertiesToDisplay.length < 3; i++) {
-                const keyToLookUp = propertyKeyArray[i]
-                const correspondingOption = options.find((option) => option.id === keyToLookUp)
+        for (let i = 0; i < board.fields.cardProperties.length; i++) {
+            const optionInBoard = board.fields.cardProperties[i]
 
-                if (!correspondingOption) {
-                    continue
+            // Since these are always set and not included in the card properties
+            if (['createdTime', 'createdBy', 'updatedTime', 'updatedBy', 'checkbox'].includes(optionInBoard.type)) {
+                if (optionInBoard.type === 'checkbox') {
+                    totalNumberOfCheckBoxes += 1
                 }
-
-                let valueToLookUp = propertyValueArray[i]
-                if (Array.isArray(valueToLookUp)) {
-                    valueToLookUp = valueToLookUp[0]
-                }
-
-                const optionSelected = correspondingOption.options.find((option) => option.id === valueToLookUp)
-
-                if (!optionSelected) {
-                    continue
-                }
-
-                propertiesToDisplay.push({optionName: correspondingOption.name, optionValue: optionSelected.value, optionValueColour: optionSelected.color})
+                remainder += 1
+                continue
             }
+
+            if (propertiesToDisplay.length === 3) {
+                continue
+            }
+
+            let valueToLookUp = card.fields.properties[optionInBoard.id]
+
+            // Check to see if this property is set in the Card
+            if (!valueToLookUp) {
+                continue
+            }
+
+            if (Array.isArray(valueToLookUp)) {
+                valueToLookUp = valueToLookUp[0]
+            }
+
+            const optionSelected = optionInBoard.options.find((option) => option.id === valueToLookUp)
+
+            if (!optionSelected) {
+                continue
+            }
+
+            propertiesToDisplay.push({optionName: optionInBoard.name, optionValue: optionSelected.value, optionValueColour: optionSelected.color})
         }
-        remainder = board.fields.cardProperties.length - propertiesToDisplay.length
+        remainder += (Object.keys(card.fields.properties).length - propertiesToDisplay.length - totalNumberOfCheckBoxes)
         html = Utils.htmlFromMarkdown(content?.title || '')
     }
 
