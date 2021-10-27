@@ -5,16 +5,17 @@ import {injectIntl, IntlShape} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board, IPropertyTemplate} from '../blocks/board'
-import {IViewType, BoardView, createBoardView} from '../blocks/boardView'
+import {BoardView, createBoardView, IViewType} from '../blocks/boardView'
 import {Constants} from '../constants'
 import mutator from '../mutator'
-import {Utils, IDType} from '../utils'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
+import {IDType, Utils} from '../utils'
 import AddIcon from '../widgets/icons/add'
 import BoardIcon from '../widgets/icons/board'
 import DeleteIcon from '../widgets/icons/delete'
 import DuplicateIcon from '../widgets/icons/duplicate'
-import TableIcon from '../widgets/icons/table'
 import GalleryIcon from '../widgets/icons/gallery'
+import TableIcon from '../widgets/icons/table'
 import Menu from '../widgets/menu'
 
 type Props = {
@@ -40,6 +41,7 @@ const ViewMenu = React.memo((props: Props) => {
     const handleDuplicateView = useCallback(() => {
         const {activeView} = props
         Utils.log('duplicateView')
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateBoardView, {board: props.board.id, view: activeView.id})
         const currentViewId = activeView.id
         const newView = createBoardView(activeView)
         newView.title = `${activeView.title} copy`
@@ -62,6 +64,7 @@ const ViewMenu = React.memo((props: Props) => {
     const handleDeleteView = useCallback(() => {
         const {activeView, views} = props
         Utils.log('deleteView')
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoardView, {board: props.board.id, view: activeView.id})
         const view = activeView
         const nextView = views.find((o) => o !== view)
         mutator.deleteBlock(view, 'delete view')
@@ -83,6 +86,7 @@ const ViewMenu = React.memo((props: Props) => {
     const handleAddViewBoard = useCallback(() => {
         const {board, activeView, intl} = props
         Utils.log('addview-board')
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardView, {board: props.board.id, view: activeView.id})
         const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
         view.fields.viewType = 'board'
