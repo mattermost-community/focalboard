@@ -42,6 +42,7 @@ function getWindowDimensions() {
 
 const Sidebar = React.memo((props: Props) => {
     const [isHidden, setHidden] = useState(false)
+    const [userHidden, setUserHidden] = useState(false)
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
     const boards = useAppSelector(getSortedBoards)
     const views = useAppSelector(getSortedViews)
@@ -70,10 +71,12 @@ const Sidebar = React.memo((props: Props) => {
     }
 
     const hideSidebar = () => {
-        if (windowDimensions.width < 768) {
-            setHidden(true)
-        } else {
-            setHidden(false)
+        if (!userHidden) {
+            if (windowDimensions.width < 768) {
+                setHidden(true)
+            } else {
+                setHidden(false)
+            }
         }
     }
 
@@ -84,13 +87,19 @@ const Sidebar = React.memo((props: Props) => {
                     <div className='hamburger-icon'>
                         <IconButton
                             icon={<HamburgerIcon/>}
-                            onClick={() => setHidden(false)}
+                            onClick={() => {
+                                setUserHidden(false)
+                                setHidden(false)
+                            }}
                         />
                     </div>
                     <div className='show-icon'>
                         <IconButton
                             icon={<ShowSidebarIcon/>}
-                            onClick={() => setHidden(false)}
+                            onClick={() => {
+                                setUserHidden(false)
+                                setHidden(false)
+                            }}
                         />
                     </div>
                 </div>
@@ -109,7 +118,10 @@ const Sidebar = React.memo((props: Props) => {
                     <div className='octo-spacer'/>
                     <div className='sidebarSwitcher'>
                         <IconButton
-                            onClick={() => setHidden(true)}
+                            onClick={() => {
+                                setUserHidden(true)
+                                setHidden(true)
+                            }}
                             icon={<HideSidebarIcon/>}
                         />
                     </div>
@@ -122,7 +134,10 @@ const Sidebar = React.memo((props: Props) => {
                         <div className='octo-spacer'/>
                         <div className='sidebarSwitcher'>
                             <IconButton
-                                onClick={() => setHidden(true)}
+                                onClick={() => {
+                                    setUserHidden(true)
+                                    setHidden(true)
+                                }}
                                 icon={<HideSidebarIcon/>}
                             />
                         </div>
