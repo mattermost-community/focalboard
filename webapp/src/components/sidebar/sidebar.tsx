@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import {useIntl} from 'react-intl'
 
@@ -40,25 +40,9 @@ function getWindowDimensions() {
     }
 }
 
-// function useWindowDimensions() {
-//     const [windowDimensions, setWindowDimensions] = useState(
-//         getWindowDimensions(),
-//     )
-
-//     useEffect(() => {
-//         function handleResize() {
-//             setWindowDimensions(getWindowDimensions())
-//         }
-
-//         window.addEventListener('resize', handleResize)
-//         return () => window.removeEventListener('resize', handleResize)
-//     }, [])
-
-//     return windowDimensions
-// }
-
 const Sidebar = React.memo((props: Props) => {
     const [isHidden, setHidden] = useState(false)
+    const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
     const boards = useAppSelector(getSortedBoards)
     const views = useAppSelector(getSortedViews)
     const intl = useIntl()
@@ -66,10 +50,6 @@ const Sidebar = React.memo((props: Props) => {
     useEffect(() => {
         loadTheme()
     }, [])
-
-    const [windowDimensions, setWindowDimensions] = useState(
-        getWindowDimensions(),
-    )
 
     useEffect(() => {
         function handleResize() {
@@ -80,19 +60,21 @@ const Sidebar = React.memo((props: Props) => {
         return () => window.removeEventListener('resize', handleResize)
     }, [])
 
-    // if (useWindowDimensions().width < 768) {
-    //     setHidden(true)
-    // }
-
     useEffect(() => {
         if (windowDimensions.width < 768) {
             setHidden(true)
         }
-    }, [])
+    }, [windowDimensions])
 
     const workspace = useAppSelector(getCurrentWorkspace)
     if (!boards) {
         return <div/>
+    }
+
+    const hideSidebar = () => {
+        if (windowDimensions.width < 768) {
+            setHidden(true)
+        }
     }
 
     if (isHidden) {
@@ -177,6 +159,7 @@ const Sidebar = React.memo((props: Props) => {
                             const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id)?.id : undefined
                             return (
                                 <SidebarBoardItem
+                                    hideSidebar={hideSidebar}
                                     key={board.id}
                                     views={views}
                                     board={board}
