@@ -72,6 +72,8 @@ const Sidebar = React.memo((props: Props) => {
     const hideSidebar = () => {
         if (windowDimensions.width < 768) {
             setHidden(true)
+        } else {
+            setHidden(false)
         }
     }
 
