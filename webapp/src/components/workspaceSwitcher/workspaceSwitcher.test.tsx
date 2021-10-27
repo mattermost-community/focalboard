@@ -120,8 +120,8 @@ describe('components/workspaceSwitcher/WorkspaceSwitcher', () => {
         const switcher = container.querySelector('.WorkspaceSwitcher')
         expect(switcher).toBeDefined()
         expect(switcher).not.toBeNull()
-        userEvent.click(switcher as Element)
 
+        userEvent.click(switcher as Element)
         const workspace2Option = container.querySelector('.WorkspaceOptions__menu-list > div:nth-child(3)')
         expect(workspace2Option).toBeDefined()
         expect(workspace2Option).not.toBeNull()
@@ -129,6 +129,7 @@ describe('components/workspaceSwitcher/WorkspaceSwitcher', () => {
         expect(history.push).toBeCalledWith('/workspace/workspace_2')
         expect(UserSettings.lastWorkspaceId).toBe('workspace_2')
 
+        userEvent.click(switcher as Element)
         const workspace3Option = container.querySelector('.WorkspaceOptions__menu-list > div:nth-child(4)')
         expect(workspace3Option).toBeDefined()
         expect(workspace3Option).not.toBeNull()
@@ -136,6 +137,7 @@ describe('components/workspaceSwitcher/WorkspaceSwitcher', () => {
         expect(history.push).toBeCalledWith('/workspace/workspace_3')
         expect(UserSettings.lastWorkspaceId).toBe('workspace_3')
 
+        userEvent.click(switcher as Element)
         const dashboardOption = container.querySelector('.WorkspaceOptions__menu-list > div:nth-child(1)')
         expect(dashboardOption).toBeDefined()
         expect(dashboardOption).not.toBeNull()
