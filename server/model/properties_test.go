@@ -15,7 +15,7 @@ import (
 func Test_parsePropertySchema(t *testing.T) {
 	board := &Block{
 		ID:          utils.NewID(utils.IDTypeBoard),
-		Type:        "board",
+		Type:        TypeBoard,
 		Title:       "Test Board",
 		WorkspaceID: utils.NewID(utils.IDTypeWorkspace),
 	}

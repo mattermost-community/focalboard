@@ -101,9 +101,9 @@ func Diffs2Markdown(diffs []*Diff, opts MarkdownOpts) ([]string, error) {
 	for _, d := range diffs {
 		buf := &bytes.Buffer{}
 		switch d.BlockType {
-		case "board":
+		case model.TypeBoard:
 			err = boardDiff2Markdown(buf, d, opts)
-		case "card":
+		case model.TypeCard:
 			err = cardDiff2Markdown(buf, d, opts)
 		default:
 			err = blockDiff2Markdown(buf, d, opts)

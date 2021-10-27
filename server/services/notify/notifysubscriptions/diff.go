@@ -109,7 +109,7 @@ func (dg *diffGenerator) generateDiffsForBoard(board *model.Block, schema model.
 	var diffs []*Diff
 	for _, b := range blocks {
 		block := b
-		if block.Type == "card" {
+		if block.Type == model.TypeCard {
 			cardDiffs, err := dg.generateDiffsForCard(board, &block, schema, hint)
 			if err != nil {
 				return nil, err

@@ -35,7 +35,7 @@ type PropSchema map[string]PropDef
 // The result is provided as a map for quick lookup, and the original order is
 // preserved via the `Index` field.
 func ParsePropertySchema(board *Block) (PropSchema, error) {
-	if board == nil || board.Type != "board" {
+	if board == nil || board.Type != TypeBoard {
 		return nil, ErrInvalidBoardBlock
 	}
 

@@ -542,11 +542,11 @@ func (s *SQLStore) getBoardAndCard(db sq.BaseRunner, c store.Container, block *m
 	iter := block
 	for {
 		count++
-		if board == nil && iter.Type == "board" {
+		if board == nil && iter.Type == model.TypeBoard {
 			board = iter
 		}
 
-		if card == nil && iter.Type == "card" {
+		if card == nil && iter.Type == model.TypeCard {
 			card = iter
 		}
 
