@@ -52,8 +52,8 @@ describe('Login actions', () => {
         cy.apiRegisterUser({username, email, password})
         cy.apiLoginUser({username, password})
         cy.visit('/')
-        cy.get('.Sidebar .SidebarUserMenu').click()
-        cy.get('.Menu .MenuOption .menu-name').contains('Change password').click()
+        cy.get('.SidebarUserMenu').click()
+        cy.get('.menu-name').contains('Change password').click()
         cy.location('pathname').should('eq', '/change_password')
         cy.get('.ChangePasswordPage').contains('Change Password')
         cy.get('#login-oldpassword').type(password)
@@ -70,8 +70,50 @@ describe('Login actions', () => {
         cy.apiRegisterUser({username, email, password})
         cy.apiLoginUser({username, password})
         cy.visit('/')
-        cy.get('.Sidebar .SidebarUserMenu').click()
-        cy.get('.Menu .MenuOption .menu-name').contains('Log out').click()
+
+        cy.log('Select Log out from menu')
+        cy.get('.SidebarUserMenu').click()
+        cy.get('.menu-name').contains('Log out').click()
         cy.location('pathname').should('eq', '/login')
+
+        cy.log('User should not be logged in automatically')
+        cy.visit('/')
+        cy.location('pathname').should('eq', '/login')
+    })
+
+    it('Can\'t register second user without invite link', () => {
+        cy.apiRegisterTestUser()
+        cy.visit('/register')
+        cy.get('#login-email').type(email)
+        cy.get('#login-username').type(username)
+        cy.get('#login-password').type(password)
+        cy.get('button').contains('Register').click()
+        cy.get('.error').contains('Invalid registration link').should('exist')
+    })
+
+    it('Can register second user using invite link', () => {
+        cy.apiRegisterTestUser()
+        cy.apiLoginTestUser()
+        cy.visit('/')
+
+        cy.log('Copy invite link')
+        cy.get('.Sidebar .SidebarUserMenu').click()
+        cy.get('.menu-name').contains('Invite users').click()
+        cy.get('.Button').contains('Copy link').click()
+        cy.get('.Button').contains('Copied').should('exist')
+
+        cy.get('a.shareUrl').invoke('attr', 'href').then((inviteLink) => {
+            cy.log('Log out existing user')
+            cy.get('.Sidebar .SidebarUserMenu').click()
+            cy.get('.menu-name').contains('Log out').click()
+
+            cy.log('Register new user')
+            cy.visit(inviteLink as string)
+            cy.get('#login-email').type(email)
+            cy.get('#login-username').type(username)
+            cy.get('#login-password').type(password)
+            cy.get('button').contains('Register').click()
+            workspaceIsAvailable()
+        })
     })
 })
