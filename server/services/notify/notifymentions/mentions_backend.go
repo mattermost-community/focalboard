@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/wiggin77/merror"
 
@@ -77,7 +78,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 		return nil
 	}
 
-	if evt.BlockChanged.Type != "text" && evt.BlockChanged.Type != "comment" {
+	if evt.BlockChanged.Type != model.TypeText && evt.BlockChanged.Type != model.TypeComment {
 		return nil
 	}
 

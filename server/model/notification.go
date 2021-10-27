@@ -6,7 +6,7 @@ package model
 type NotificationHint struct {
 	// BlockType is the block type of the entity (e.g. board, card) that was updated
 	// required: true
-	BlockType string `json:"block_type"`
+	BlockType BlockType `json:"block_type"`
 
 	// BlockID is id of the entity that was updated
 	// required: true

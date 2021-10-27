@@ -10,7 +10,7 @@ import (
 type Subscription struct {
 	// BlockType is the block type of the entity (e.g. board, card) subscribed to
 	// required: true
-	BlockType string `json:"block_type"`
+	BlockType BlockType `json:"block_type"`
 
 	// BlockID is id of the entity being subscribed to
 	// required: true

@@ -16,7 +16,7 @@ type Diff struct {
 	Card     *model.Block
 	Username string
 
-	BlockType string
+	BlockType model.BlockType
 	OldBlock  *model.Block
 	NewBlock  *model.Block
 
@@ -77,9 +77,9 @@ func (dg *diffGenerator) generateDiffs(c store.Container, hint *model.Notificati
 	}
 
 	switch block.Type {
-	case "board":
+	case model.TypeBoard:
 		return dg.generateDiffsForBoard(block, schema, hint)
-	case "card":
+	case model.TypeCard:
 		diff, err := dg.generateDiffsForCard(board, block, schema, hint)
 		if err != nil {
 			return nil, err

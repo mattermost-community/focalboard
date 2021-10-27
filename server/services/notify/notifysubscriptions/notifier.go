@@ -24,7 +24,7 @@ const (
 var (
 	// defNotificationFreq provides default frequency for change notifications
 	// for various block types.
-	defNotificationFreq = map[string]time.Duration{
+	defNotificationFreq = map[model.BlockType]time.Duration{
 		"board": time.Hour * 24,
 		"card":  time.Minute * 1,
 	}
@@ -32,7 +32,7 @@ var (
 	errEnqueueNotifyHintTimeout = errors.New("enqueue notify hint timed out")
 )
 
-func getBlockUpdateFreq(blockType string) time.Duration {
+func getBlockUpdateFreq(blockType model.BlockType) time.Duration {
 	freq, ok := defNotificationFreq[blockType]
 	if !ok {
 		freq = defBlockNotificationFreq
