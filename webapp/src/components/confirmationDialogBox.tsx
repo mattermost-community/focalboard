@@ -22,8 +22,8 @@ type Props = {
 }
 
 export const ConfirmationDialogBox = (props: Props) => {
-    const handleOnClose = useCallback(props.dialogBox.onClose,[])
-    const handleOnConfirm = useCallback(props.dialogBox.onConfirm,[])
+    const handleOnClose = useCallback(props.dialogBox.onClose, [])
+    const handleOnConfirm = useCallback(props.dialogBox.onConfirm, [])
 
     return (
         <Dialog
