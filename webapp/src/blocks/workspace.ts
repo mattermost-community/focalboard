@@ -4,7 +4,7 @@ interface IWorkspace {
     readonly id: string,
     readonly title: string,
     readonly signupToken: string,
-    readonly settings: Readonly<Record<string, any>>
+    readonly settings: Readonly<Record<string, unknown>>
     readonly modifiedBy?: string,
     readonly updateAt?: number,
 }
