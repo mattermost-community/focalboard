@@ -144,7 +144,7 @@ export default class Plugin {
                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelHeader, {workspaceID: currentChannel})
                 window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`, '_blank', 'noopener')
             }
-            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Boards')
+            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, 'Boards', 'Boards')
             this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/welcome', MainApp, HeaderComponent)
 
             if (mmStore.getState().entities.general.config?.['FeatureFlagBoardsUnfurl' as keyof Partial<ClientConfig>] === 'true') {
@@ -155,7 +155,7 @@ export default class Plugin {
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
                 window.open(`${window.location.origin}/plug/focalboard/workspace/${currentChannel}`)
-            }, '', 'Boards')
+            }, 'Boards', 'Boards')
             this.registry.registerCustomRoute('/', MainApp)
         }
 

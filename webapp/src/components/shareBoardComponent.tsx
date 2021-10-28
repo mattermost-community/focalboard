@@ -49,7 +49,7 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
         const newSharing: ISharing = sharing || createSharingInfo()
         newSharing.id = props.boardId
         newSharing.enabled = isOn
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoard, {board: props.boardId, enabled: isOn})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoard, {board: props.boardId, shareBoardEnabled: isOn})
         await client.setSharing(newSharing)
         await loadData()
     }
