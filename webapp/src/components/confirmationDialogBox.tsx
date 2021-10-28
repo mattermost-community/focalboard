@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React from 'react'
+import React, {useCallback} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import Button from '../widgets/buttons/button'
@@ -21,11 +21,14 @@ type Props = {
     dialogBox: ConfirmationDialogBoxProps
 }
 
-const ConfirmationDialogBox = (props: Props) => {
+export const ConfirmationDialogBox = (props: Props) => {
+    const handleOnClose = useCallback(props.dialogBox.onClose, [])
+    const handleOnConfirm = useCallback(props.dialogBox.onConfirm, [])
+
     return (
         <Dialog
             className='confirmation-dialog-box'
-            onClose={props.dialogBox.onClose}
+            onClose={handleOnClose}
         >
             <div
                 className='box-area'
@@ -38,7 +41,7 @@ const ConfirmationDialogBox = (props: Props) => {
                     <Button
                         title='Cancel'
                         active={true}
-                        onClick={props.dialogBox.onClose}
+                        onClick={handleOnClose}
                     >
                         <FormattedMessage
                             id='ConfirmationDialog.cancel-action'
@@ -49,7 +52,7 @@ const ConfirmationDialogBox = (props: Props) => {
                         title={props.dialogBox.confirmButtonText || 'Confirm'}
                         submit={true}
                         emphasis='danger'
-                        onClick={props.dialogBox.onConfirm}
+                        onClick={handleOnConfirm}
                     >
                         { props.dialogBox.confirmButtonText ||
                         <FormattedMessage

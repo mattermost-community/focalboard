@@ -1,21 +1,22 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+// import {fireEvent, render} from '@testing-library/react'
+// import userEvent from '@testing-library/user-event'
+// import 'isomorphic-fetch'
 
-import {render, screen, fireEvent, act} from '@testing-library/react'
+import React from 'react'
+import {render, screen, act, fireEvent} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {mocked} from 'ts-jest/utils'
 
 import {createIntl} from 'react-intl'
 
+import {IPropertyTemplate, PropertyType} from '../../blocks/board'
+import {FetchMock} from '../../test/fetchMock'
 import {wrapIntl} from '../../testUtils'
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import mutator from '../../mutator'
 import {propertyTypesList, typeDisplayName} from '../../widgets/propertyMenu'
-
-import {IPropertyTemplate, PropertyType} from '../../blocks/board'
-
-import {FetchMock} from '../../test/fetchMock'
 
 import CardDetailProperties from './cardDetailProperties'
 
@@ -68,6 +69,8 @@ describe('components/cardDetail/CardDetailProperties', () => {
     const cardTemplate = TestBlockFactory.createCard(board)
     cardTemplate.fields.isTemplate = true
 
+    const cards = [card]
+
     function renderComponent() {
         const component = wrapIntl((
             <CardDetailProperties
@@ -77,7 +80,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
                 contents={[]}
                 comments={[]}
                 activeView={view}
-                views={[view]}
+                views={views}
                 readonly={false}
             />
         ))
@@ -86,53 +89,33 @@ describe('components/cardDetail/CardDetailProperties', () => {
         return result
     }
 
-    const cards = [card]
-
-    const cardDetailProps = {
-        board,
-        card,
-        cards,
-        contents: [],
-        comments: [],
-        activeView: view,
-        views,
-        readonly: false,
-    }
-
     it('should match snapshot', async () => {
-        const {container} = render(
-            wrapIntl(
-                <CardDetailProperties {...cardDetailProps}/>,
-            ),
-        )
+        const {container} = renderComponent()
         expect(container).toMatchSnapshot()
     })
 
     it('should rename existing select property', async () => {
-        render(
-            wrapIntl(
-                <CardDetailProperties {...cardDetailProps}/>,
-            ),
-        )
+        const result = renderComponent()
 
         const menuElement = screen.getByRole('button', {name: 'Owner'})
         userEvent.click(menuElement)
 
         const newName = 'Owner - Renamed'
-        const propertyNameInput = screen.getByRole('textbox')
-        userEvent.type(propertyNameInput, `${newName}{enter}`)
+        const propertyNameInput = screen.getAllByRole('textbox')
+        userEvent.type(propertyNameInput[0], `${newName}{enter}`)
 
         const propertyTemplate = board.fields.cardProperties[0]
+
+        const confirmButton = result.getByTitle('Change Property')
+        expect(confirmButton).toBeDefined()
+
+        userEvent.click(confirmButton!)
         expect(mockedMutator.changePropertyTypeAndName).toHaveBeenCalledTimes(1)
         expect(mockedMutator.changePropertyTypeAndName).toHaveBeenCalledWith(board, cards, propertyTemplate, 'select', newName)
     })
 
     it('should show confirmation dialog when deleting existing select property', () => {
-        render(
-            wrapIntl(
-                <CardDetailProperties {...cardDetailProps}/>,
-            ),
-        )
+        renderComponent()
 
         const menuElement = screen.getByRole('button', {name: 'Owner'})
         userEvent.click(menuElement)
@@ -146,11 +129,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
 
     it('should show property types menu', () => {
         const intl = createIntl({locale: 'en'})
-        const {container} = render(
-            wrapIntl(
-                <CardDetailProperties {...cardDetailProps}/>,
-            ),
-        )
+        const {container} = renderComponent()
 
         const menuElement = screen.getByRole('button', {name: /add a property/i})
         userEvent.click(menuElement)
@@ -190,11 +169,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
     })
 
     it('should add new number property', async () => {
-        render(
-            wrapIntl(
-                <CardDetailProperties {...cardDetailProps}/>,
-            ),
-        )
+        const result = renderComponent()
 
         const menuElement = screen.getByRole('button', {name: /add a property/i})
         userEvent.click(menuElement)
@@ -204,7 +179,13 @@ describe('components/cardDetail/CardDetailProperties', () => {
             userEvent.click(numberType)
         })
 
+        const confirmButton = result.getByTitle('Change Property')
+        expect(confirmButton).toBeDefined()
+
+        userEvent.click(confirmButton!)
+        
         expect(mockedMutator.insertPropertyTemplate).toHaveBeenCalledTimes(1)
+
         const args = mockedMutator.insertPropertyTemplate.mock.calls[0]
         const template = args[3]
         expect(template).toBeTruthy()
