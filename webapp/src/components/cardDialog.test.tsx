@@ -160,7 +160,7 @@ describe('components/cardDialog', () => {
         const buttonDelete = screen.getByRole('button', {name: 'Delete'})
         userEvent.click(buttonDelete)
 
-        const confirmDialog = screen.getByTitle("Confirmation Dialog Box")
+        const confirmDialog = screen.getByTitle('Confirmation Dialog Box')
         expect(confirmDialog).toBeDefined()
 
         const confirmButton = screen.getByTitle('Delete')
@@ -168,14 +168,15 @@ describe('components/cardDialog', () => {
 
         //click delete button
         userEvent.click(confirmButton!)
+
         // should be called once on confirming delete
         expect(mockedMutator.deleteBlock).toBeCalledTimes(1)
     })
-    
-    test('return cardDialog menu content and cancel delete confirmation do nothing', async() => {
+
+    test('return cardDialog menu content and cancel delete confirmation do nothing', async () => {
         let container
         await act(async () => {
-            const result=render(wrapDNDIntl(
+            const result = render(wrapDNDIntl(
                 <ReduxProvider store={store}>
                     <CardDialog
                         board={board}
@@ -197,7 +198,7 @@ describe('components/cardDialog', () => {
         const buttonDelete = screen.getByRole('button', {name: 'Delete'})
         userEvent.click(buttonDelete)
 
-        const confirmDialog = screen.getByTitle("Confirmation Dialog Box")
+        const confirmDialog = screen.getByTitle('Confirmation Dialog Box')
         expect(confirmDialog).toBeDefined()
 
         const cancelButton = screen.getByTitle('Cancel')
@@ -205,6 +206,7 @@ describe('components/cardDialog', () => {
 
         //click delete button
         userEvent.click(cancelButton!)
+
         // should do nothing  on cancel delete dialog
         expect(container).toMatchSnapshot()
     })
