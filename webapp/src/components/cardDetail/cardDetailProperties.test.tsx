@@ -184,7 +184,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
         expect(confirmButton).toBeDefined()
 
         userEvent.click(confirmButton!)
-        
+
         expect(mockedMutator.insertPropertyTemplate).toHaveBeenCalledTimes(1)
 
         const args = mockedMutator.insertPropertyTemplate.mock.calls[0]
