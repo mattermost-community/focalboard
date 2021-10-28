@@ -72,6 +72,14 @@ const CardDialog = (props: Props): JSX.Element => {
     }
 
     const handleDeleteButtonOnClick = () => {
+        // use may be renaming a card title 
+        // and accidently delete the card
+        // so adding des
+        if (card?.title === '' && card?.fields.contentOrder.length===0) {
+            handleDeleteCard()
+            return
+        }
+
         setShowConfirmationDialogBox(true)
         setConfirmDialogProps({
             heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),

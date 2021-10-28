@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
 
 import {Board, IPropertyTemplate} from '../../blocks/board'
@@ -23,6 +23,7 @@ import {getCardComments} from '../../store/comments'
 import './kanbanCard.scss'
 import PropertyValueElement from '../propertyValueElement'
 import Tooltip from '../../widgets/tooltip'
+import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 
 type Props = {
     card: Card
@@ -49,85 +50,121 @@ const KanbanCard = React.memo((props: Props) => {
     const contents = useAppSelector(getCardContents(card.id))
     const comments = useAppSelector(getCardComments(card.id))
 
+    const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
+    const [confirmDialogProps, setConfirmDialogProps] = useState<ConfirmationDialogBoxProps>({heading: '', onConfirm: () => {}, onClose: () => {}})
+
+    const handleDeleteCard = async () => {
+        if (!card) {
+            Utils.assertFailure()
+            return
+        }
+        await mutator.deleteBlock(card, 'delete card')
+    }
+
+    const handleDeleteButtonOnClick = () => {
+        // use may be renaming a card title 
+        // and accidently delete the card
+        // so adding des
+        if (card?.title === '' && card?.fields.contentOrder.length===0) {
+            handleDeleteCard()
+            return
+        }
+
+        setShowConfirmationDialogBox(true)
+        setConfirmDialogProps({
+            heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),
+            confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
+            onConfirm: handleDeleteCard,
+            onClose: () => {
+                setShowConfirmationDialogBox(false)
+            },
+        })
+    }
+
     return (
-        <div
-            ref={props.readonly ? () => null : cardRef}
-            className={className}
-            draggable={!props.readonly}
-            style={{opacity: isDragging ? 0.5 : 1}}
-            onClick={props.onClick}
-        >
-            {!props.readonly &&
-                <MenuWrapper
-                    className='optionsMenu'
-                    stopPropagationOnToggle={true}
-                >
-                    <IconButton icon={<OptionsIcon/>}/>
-                    <Menu position='left'>
-                        <Menu.Text
-                            icon={<DeleteIcon/>}
-                            id='delete'
-                            name={intl.formatMessage({id: 'KanbanCard.delete', defaultMessage: 'Delete'})}
-                            onClick={() => mutator.deleteBlock(card, 'delete card')}
-                        />
-                        <Menu.Text
-                            icon={<DuplicateIcon/>}
-                            id='duplicate'
-                            name={intl.formatMessage({id: 'KanbanCard.duplicate', defaultMessage: 'Duplicate'})}
-                            onClick={() => {
-                                mutator.duplicateCard(
-                                    card.id,
-                                    'duplicate card',
-                                    false,
-                                    async (newCardId) => {
-                                        props.showCard(newCardId)
-                                    },
-                                    async () => {
-                                        props.showCard(undefined)
-                                    },
-                                )
-                            }}
-                        />
-                        <Menu.Text
-                            icon={<LinkIcon/>}
-                            id='copy'
-                            name={intl.formatMessage({id: 'KanbanCard.copyLink', defaultMessage: 'Copy link'})}
-                            onClick={() => {
-                                let cardLink = window.location.href
+        <>
+            <div
+                ref={props.readonly ? () => null : cardRef}
+                className={className}
+                draggable={!props.readonly}
+                style={{opacity: isDragging ? 0.5 : 1}}
+                onClick={props.onClick}
+            >
+                {!props.readonly &&
+                    <MenuWrapper
+                        className='optionsMenu'
+                        stopPropagationOnToggle={true}
+                    >
+                        <IconButton icon={<OptionsIcon/>}/>
+                        <Menu position='left'>
+                            <Menu.Text
+                                icon={<DeleteIcon/>}
+                                id='delete'
+                                name={intl.formatMessage({id: 'KanbanCard.delete', defaultMessage: 'Delete'})}
+                                onClick={handleDeleteButtonOnClick}
+                            />
+                            <Menu.Text
+                                icon={<DuplicateIcon/>}
+                                id='duplicate'
+                                name={intl.formatMessage({id: 'KanbanCard.duplicate', defaultMessage: 'Duplicate'})}
+                                onClick={() => {
+                                    mutator.duplicateCard(
+                                        card.id,
+                                        'duplicate card',
+                                        false,
+                                        async (newCardId) => {
+                                            props.showCard(newCardId)
+                                        },
+                                        async () => {
+                                            props.showCard(undefined)
+                                        },
+                                    )
+                                }}
+                            />
+                            <Menu.Text
+                                icon={<LinkIcon/>}
+                                id='copy'
+                                name={intl.formatMessage({id: 'KanbanCard.copyLink', defaultMessage: 'Copy link'})}
+                                onClick={() => {
+                                    let cardLink = window.location.href
 
-                                if (!cardLink.includes(card.id)) {
-                                    cardLink += `/${card.id}`
-                                }
+                                    if (!cardLink.includes(card.id)) {
+                                        cardLink += `/${card.id}`
+                                    }
 
-                                Utils.copyTextToClipboard(cardLink)
-                                sendFlashMessage({content: intl.formatMessage({id: 'KanbanCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
-                            }}
+                                    Utils.copyTextToClipboard(cardLink)
+                                    sendFlashMessage({content: intl.formatMessage({id: 'KanbanCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
+                                }}
+                            />
+                        </Menu>
+                    </MenuWrapper>
+                }
+
+                <div className='octo-icontitle'>
+                    { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
+                    <div key='__title'>{card.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}</div>
+                </div>
+                {visiblePropertyTemplates.map((template) => (
+                    <Tooltip
+                        key={template.id}
+                        title={template.name}
+                    >
+                        <PropertyValueElement
+                            board={board}
+                            readOnly={true}
+                            card={card}
+                            contents={contents}
+                            comments={comments}
+                            propertyTemplate={template}
+                            showEmptyPlaceholder={false}
                         />
-                    </Menu>
-                </MenuWrapper>
-            }
-
-            <div className='octo-icontitle'>
-                { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
-                <div key='__title'>{card.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}</div>
+                    </Tooltip>
+                ))}
             </div>
-            {visiblePropertyTemplates.map((template) => (
-                <Tooltip
-                    key={template.id}
-                    title={template.name}
-                >
-                    <PropertyValueElement
-                        board={board}
-                        readOnly={true}
-                        card={card}
-                        contents={contents}
-                        comments={comments}
-                        propertyTemplate={template}
-                        showEmptyPlaceholder={false}
-                    />
-                </Tooltip>
-            ))}
-        </div>
+
+            {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
+
+        </>
     )
 })
 
