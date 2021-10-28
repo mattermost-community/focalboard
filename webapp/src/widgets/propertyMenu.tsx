@@ -1,7 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useRef, useEffect} from 'react'
-import debounce from 'lodash/debounce'
 import {useIntl, IntlShape} from 'react-intl'
 
 import {PropertyType} from '../blocks/board'
@@ -17,7 +16,7 @@ type Props = {
     onDelete: (id: string) => void
 }
 
-function typeDisplayName(intl: IntlShape, type: PropertyType): string {
+export function typeDisplayName(intl: IntlShape, type: PropertyType): string {
     switch (type) {
     case 'text': return intl.formatMessage({id: 'PropertyType.Text', defaultMessage: 'Text'})
     case 'number': return intl.formatMessage({id: 'PropertyType.Number', defaultMessage: 'Number'})
@@ -44,6 +43,52 @@ function typeMenuTitle(intl: IntlShape, type: PropertyType): string {
     return `${intl.formatMessage({id: 'PropertyMenu.typeTitle', defaultMessage: 'Type'})}: ${typeDisplayName(intl, type)}`
 }
 
+export const propertyTypesList: PropertyType[] = [
+    'text',
+    'number',
+    'email',
+    'phone',
+    'url',
+    'select',
+    'multiSelect',
+    'date',
+    'person',
+    'checkbox',
+    'createdTime',
+    'createdBy',
+    'updatedTime',
+    'updatedBy',
+]
+
+type TypesProps = {
+    label: string
+    onTypeSelected: (type: PropertyType) => void
+}
+
+export const PropertyTypes = (props: TypesProps): JSX.Element => {
+    const intl = useIntl()
+    return (
+        <>
+            <Menu.Label>
+                <b>{props.label}</b>
+            </Menu.Label>
+
+            <Menu.Separator/>
+
+            {
+                propertyTypesList.map((type) => (
+                    <Menu.Text
+                        key={type}
+                        id={type}
+                        name={typeDisplayName(intl, type)}
+                        onClick={() => props.onTypeSelected(type)}
+                    />
+                ))
+            }
+        </>
+    )
+}
+
 const PropertyMenu = React.memo((props: Props) => {
     const intl = useIntl()
     const nameTextbox = useRef<HTMLInputElement>(null)
@@ -54,29 +99,10 @@ const PropertyMenu = React.memo((props: Props) => {
         defaultMessage: 'Delete',
     })
 
-    const debouncedOnTypeAndNameChanged = (newType: PropertyType) => debounce(() => props.onTypeAndNameChanged(newType, name), 150)
-
     useEffect(() => {
         nameTextbox.current?.focus()
         nameTextbox.current?.setSelectionRange(0, name.length)
     }, [])
-
-    const propertyTypes = [
-        {type: 'text'},
-        {type: 'number'},
-        {type: 'email'},
-        {type: 'phone'},
-        {type: 'url'},
-        {type: 'select'},
-        {type: 'multiSelect'},
-        {type: 'date'},
-        {type: 'person'},
-        {type: 'checkbox'},
-        {type: 'createdTime'},
-        {type: 'createdBy'},
-        {type: 'updatedTime'},
-        {type: 'updatedBy'},
-    ]
 
     return (
         <Menu>
@@ -85,13 +111,18 @@ const PropertyMenu = React.memo((props: Props) => {
                 type='text'
                 className='PropertyMenu menu-textbox'
                 onClick={(e) => e.stopPropagation()}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                    setName(e.target.value)
+                }}
                 value={name}
                 onBlur={() => props.onTypeAndNameChanged(props.propertyType, name)}
                 onKeyDown={(e) => {
-                    if (e.keyCode === 13 || e.keyCode === 27) {
+                    if (e.key === 'Enter' || e.key === 'Escape') {
                         props.onTypeAndNameChanged(props.propertyType, name)
                         e.stopPropagation()
+                        if (e.key === 'Enter') {
+                            e.target.dispatchEvent(new Event('menuItemClicked'))
+                        }
                     }
                 }}
                 spellCheck={true}
@@ -100,24 +131,10 @@ const PropertyMenu = React.memo((props: Props) => {
                 id='type'
                 name={typeMenuTitle(intl, props.propertyType)}
             >
-                <Menu.Label>
-                    <b>
-                        {intl.formatMessage({id: 'PropertyMenu.changeType', defaultMessage: 'Change property type'})}
-                    </b>
-                </Menu.Label>
-
-                <Menu.Separator/>
-
-                {
-                    propertyTypes.map((propertyType) => (
-                        <Menu.Text
-                            key={propertyType.type}
-                            id={propertyType.type}
-                            name={typeDisplayName(intl, propertyType.type as PropertyType)}
-                            onClick={() => debouncedOnTypeAndNameChanged(propertyType.type as PropertyType)()}
-                        />
-                    ))
-                }
+                <PropertyTypes
+                    label={intl.formatMessage({id: 'PropertyMenu.changeType', defaultMessage: 'Change property type'})}
+                    onTypeSelected={(type: PropertyType) => props.onTypeAndNameChanged(type, name)}
+                />
             </Menu.SubMenu>
             <Menu.Text
                 id='delete'
