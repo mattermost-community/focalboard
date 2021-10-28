@@ -39,7 +39,6 @@
   "Dialog.closeDialog": "关闭对话框",
   "EditableDayPicker.today": "今天",
   "EmptyCenterPanel.no-content": "从侧栏中添加或选择一个版面，即可开始使用。",
-  "EmptyCenterPanel.workspace": "此工作空间为：",
   "Error.websocket-closed": "Websocket 连接关闭，连接中断。如果这种情况仍然存在，请检查您的服务器或网页代理配置。",
   "Filter.includes": "含有",
   "Filter.is-empty": "为空",

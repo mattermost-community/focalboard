@@ -3,11 +3,16 @@
 import React, {useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import mutator from '../mutator'
-import {Utils} from '../utils'
-import {BoardView} from '../blocks/boardView'
 import {Board} from '../blocks/board'
+import {BoardView} from '../blocks/boardView'
 import {Card} from '../blocks/card'
+import mutator from '../mutator'
+import {getCard} from '../store/cards'
+import {getCardComments} from '../store/comments'
+import {getCardContents} from '../store/contents'
+import {useAppSelector} from '../store/hooks'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
+import {Utils} from '../utils'
 import DeleteIcon from '../widgets/icons/delete'
 import LinkIcon from '../widgets/icons/Link'
 import Menu from '../widgets/menu'
@@ -50,6 +55,7 @@ const CardDialog = (props: Props): JSX.Element => {
             return
         }
 
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.AddTemplateFromCard, {board: props.board.id, view: activeView.id, card: card.id})
         await mutator.duplicateCard(
             props.cardId,
             intl.formatMessage({id: 'Mutator.new-template-from-card', defaultMessage: 'new template from card'}),
@@ -67,6 +73,7 @@ const CardDialog = (props: Props): JSX.Element => {
             Utils.assertFailure()
             return
         }
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteCard, {board: props.board.id, view: props.activeView.id, card: card.id})
         await mutator.deleteBlock(card, 'delete card')
         props.onClose()
     }

@@ -5,25 +5,26 @@ import {useIntl} from 'react-intl'
 
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
+import {useSortable} from '../../hooks/sortable'
 import mutator from '../../mutator'
+import {getCardComments} from '../../store/comments'
+import {getCardContents} from '../../store/contents'
+import {useAppSelector} from '../../store/hooks'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
+import {Utils} from '../../utils'
 import IconButton from '../../widgets/buttons/iconButton'
 import DeleteIcon from '../../widgets/icons/delete'
 import DuplicateIcon from '../../widgets/icons/duplicate'
-import OptionsIcon from '../../widgets/icons/options'
 import LinkIcon from '../../widgets/icons/Link'
+import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
-import {useSortable} from '../../hooks/sortable'
-import {Utils} from '../../utils'
-import {sendFlashMessage} from '../flashMessages'
-import {useAppSelector} from '../../store/hooks'
-import {getCardContents} from '../../store/contents'
-import {getCardComments} from '../../store/comments'
-
-import './kanbanCard.scss'
-import PropertyValueElement from '../propertyValueElement'
 import Tooltip from '../../widgets/tooltip'
+import {sendFlashMessage} from '../flashMessages'
+import PropertyValueElement from '../propertyValueElement'
+
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
+import './kanbanCard.scss'
 
 type Props = {
     card: Card
@@ -58,6 +59,7 @@ const KanbanCard = React.memo((props: Props) => {
             Utils.assertFailure()
             return
         }
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteCard, {board: props.board.id, card: card.id})
         await mutator.deleteBlock(card, 'delete card')
     }
 
@@ -83,62 +85,63 @@ const KanbanCard = React.memo((props: Props) => {
 
     return (
         <>
-            <div
-                ref={props.readonly ? () => null : cardRef}
-                className={className}
-                draggable={!props.readonly}
-                style={{opacity: isDragging ? 0.5 : 1}}
-                onClick={props.onClick}
-            >
-                {!props.readonly &&
-                    <MenuWrapper
-                        className='optionsMenu'
-                        stopPropagationOnToggle={true}
-                    >
-                        <IconButton icon={<OptionsIcon/>}/>
-                        <Menu position='left'>
-                            <Menu.Text
-                                icon={<DeleteIcon/>}
-                                id='delete'
-                                name={intl.formatMessage({id: 'KanbanCard.delete', defaultMessage: 'Delete'})}
-                                onClick={handleDeleteButtonOnClick}
-                            />
-                            <Menu.Text
-                                icon={<DuplicateIcon/>}
-                                id='duplicate'
-                                name={intl.formatMessage({id: 'KanbanCard.duplicate', defaultMessage: 'Duplicate'})}
-                                onClick={() => {
-                                    mutator.duplicateCard(
-                                        card.id,
-                                        'duplicate card',
-                                        false,
-                                        async (newCardId) => {
-                                            props.showCard(newCardId)
-                                        },
-                                        async () => {
-                                            props.showCard(undefined)
-                                        },
-                                    )
-                                }}
-                            />
-                            <Menu.Text
-                                icon={<LinkIcon/>}
-                                id='copy'
-                                name={intl.formatMessage({id: 'KanbanCard.copyLink', defaultMessage: 'Copy link'})}
-                                onClick={() => {
-                                    let cardLink = window.location.href
+        <div
+            ref={props.readonly ? () => null : cardRef}
+            className={className}
+            draggable={!props.readonly}
+            style={{opacity: isDragging ? 0.5 : 1}}
+            onClick={props.onClick}
+        >
+            {!props.readonly &&
+                <MenuWrapper
+                    className='optionsMenu'
+                    stopPropagationOnToggle={true}
+                >
+                    <IconButton icon={<OptionsIcon/>}/>
+                    <Menu position='left'>
+                        <Menu.Text
+                            icon={<DeleteIcon/>}
+                            id='delete'
+                            name={intl.formatMessage({id: 'KanbanCard.delete', defaultMessage: 'Delete'})}
+                            onClick={() => mutator.deleteBlock(card, 'delete card')}
+                        />
+                        <Menu.Text
+                            icon={<DuplicateIcon/>}
+                            id='duplicate'
+                            name={intl.formatMessage({id: 'KanbanCard.duplicate', defaultMessage: 'Duplicate'})}
+                            onClick={() => {
+                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: props.board.id, card: card.id})
+                                mutator.duplicateCard(
+                                    card.id,
+                                    'duplicate card',
+                                    false,
+                                    async (newCardId) => {
+                                        props.showCard(newCardId)
+                                    },
+                                    async () => {
+                                        props.showCard(undefined)
+                                    },
+                                )
+                            }}
+                        />
+                        <Menu.Text
+                            icon={<LinkIcon/>}
+                            id='copy'
+                            name={intl.formatMessage({id: 'KanbanCard.copyLink', defaultMessage: 'Copy link'})}
+                            onClick={() => {
+                                let cardLink = window.location.href
 
-                                    if (!cardLink.includes(card.id)) {
-                                        cardLink += `/${card.id}`
-                                    }
+                                if (!cardLink.includes(card.id)) {
+                                    cardLink += `/${card.id}`
+                                }
 
-                                    Utils.copyTextToClipboard(cardLink)
-                                    sendFlashMessage({content: intl.formatMessage({id: 'KanbanCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
-                                }}
-                            />
-                        </Menu>
-                    </MenuWrapper>
-                }
+                                Utils.copyTextToClipboard(cardLink)
+                                sendFlashMessage({content: intl.formatMessage({id: 'KanbanCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
+                            }}
+                        />
+                    </Menu>
+                </MenuWrapper>
+            }
 
                 <div className='octo-icontitle'>
                     { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }

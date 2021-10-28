@@ -116,7 +116,8 @@ namespace Focalboard {
             byte[] filesPathBytes = Encoding.UTF8.GetBytes(filesPath);
             byte[] sessionTokenBytes = Encoding.UTF8.GetBytes(sessionToken);
             byte[] dbPathBytes = Encoding.UTF8.GetBytes(dbPath);
-            GoFunctions.StartServer(webFolderBytes, filesPathBytes, port, sessionTokenBytes, dbPathBytes);
+            byte[] configFilePathBytes = Encoding.UTF8.GetBytes("");
+            GoFunctions.StartServer(webFolderBytes, filesPathBytes, port, sessionTokenBytes, dbPathBytes, configFilePathBytes);
 
             Debug.WriteLine("Server started");
         }
@@ -148,7 +149,7 @@ namespace Focalboard {
 
     static class GoFunctions {
         [DllImport(@"focalboard-server.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
-        public static extern void StartServer(byte[] webPath, byte[] filesPath, int port, byte[] singleUserToken, byte[] dbConfigString);
+        public static extern void StartServer(byte[] webPath, byte[] filesPath, int port, byte[] singleUserToken, byte[] dbConfigString, byte[] configFilePath);
 
         [DllImport(@"focalboard-server.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
         public static extern void StopServer();
