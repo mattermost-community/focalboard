@@ -1,8 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../telemetry/telemetryClient'
-
 import {Block, createBlock} from './block'
 import {FilterGroup, createFilterGroup} from './filterGroup'
 
@@ -35,7 +33,6 @@ type BoardView = Block & {
 }
 
 function createBoardView(block?: Block): BoardView {
-    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardView, {viewType: block?.fields.viewType || 'board'})
     return {
         ...createBlock(block),
         type: 'view',

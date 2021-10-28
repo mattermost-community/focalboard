@@ -1,10 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+import React, {useEffect, useState} from 'react'
+import {FormattedMessage, useIntl} from 'react-intl'
 
-import React, {useState} from 'react'
-import {useIntl, FormattedMessage} from 'react-intl'
-
-import {Board, PropertyType, IPropertyTemplate} from '../../blocks/board'
+import {Board, IPropertyTemplate, PropertyType} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {BoardView} from '../../blocks/boardView'
 import {ContentBlock} from '../../blocks/contentBlock'
@@ -13,13 +12,14 @@ import {CommentBlock} from '../../blocks/commentBlock'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import MenuWrapper from '../../widgets/menuWrapper'
-import PropertyMenu from '../../widgets/propertyMenu'
+import PropertyMenu, {PropertyTypes, typeDisplayName} from '../../widgets/propertyMenu'
 
 import Calculations from '../calculations/calculations'
 import PropertyValueElement from '../propertyValueElement'
 import {ConfirmationDialogBox, ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import {sendFlashMessage} from '../flashMessages'
-import {Utils} from '../../utils'
+import Menu from '../../widgets/menu'
+import {IDType, Utils} from '../../utils'
 
 type Props = {
     board: Board
@@ -33,8 +33,16 @@ type Props = {
 }
 
 const CardDetailProperties = React.memo((props: Props) => {
-    const intl = useIntl()
     const {board, card, cards, views, activeView, contents, comments} = props
+    const [newTemplateId, setNewTemplateId] = useState('')
+    const intl = useIntl()
+
+    useEffect(() => {
+        const newProperty = board.fields.cardProperties.find((property) => property.id === newTemplateId)
+        if (newProperty) {
+            setNewTemplateId('')
+        }
+    }, [newTemplateId, board.fields.cardProperties])
 
     const [confirmationDialogBox, setConfirmationDialogBox] = useState<ConfirmationDialogBoxProps>({heading: '', onConfirm: () => {}, onClose: () => {}})
     const [showConfirmationDialog, setShowConfirmationDialog] = useState<boolean>(false)
@@ -135,7 +143,7 @@ const CardDetailProperties = React.memo((props: Props) => {
                     >
                         {props.readonly && <div className='octo-propertyname'>{propertyTemplate.name}</div>}
                         {!props.readonly &&
-                            <MenuWrapper>
+                            <MenuWrapper isOpen={propertyTemplate.id === newTemplateId}>
                                 <div className='octo-propertyname'><Button>{propertyTemplate.name}</Button></div>
                                 <PropertyMenu
                                     propertyId={propertyTemplate.id}
@@ -167,17 +175,29 @@ const CardDetailProperties = React.memo((props: Props) => {
 
             {!props.readonly &&
                 <div className='octo-propertyname add-property'>
-                    <Button
-                        onClick={async () => {
-                            // TODO: Show UI
-                            await mutator.insertPropertyTemplate(board, activeView)
-                        }}
-                    >
-                        <FormattedMessage
-                            id='CardDetail.add-property'
-                            defaultMessage='+ Add a property'
-                        />
-                    </Button>
+                    <MenuWrapper>
+                        <Button>
+                            <FormattedMessage
+                                id='CardDetail.add-property'
+                                defaultMessage='+ Add a property'
+                            />
+                        </Button>
+                        <Menu>
+                            <PropertyTypes
+                                label={intl.formatMessage({id: 'PropertyMenu.selectType', defaultMessage: 'Select property type'})}
+                                onTypeSelected={async (type) => {
+                                    const template: IPropertyTemplate = {
+                                        id: Utils.createGuid(IDType.BlockID),
+                                        name: typeDisplayName(intl, type),
+                                        type,
+                                        options: [],
+                                    }
+                                    const templateId = await mutator.insertPropertyTemplate(board, activeView, -1, template)
+                                    setNewTemplateId(templateId)
+                                }}
+                            />
+                        </Menu>
+                    </MenuWrapper>
                 </div>
             }
         </div>

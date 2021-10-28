@@ -57,7 +57,7 @@ make
 
 To start the server, run `./bin/focalboard-server`
 
-Server settings are in config.json.
+Server settings are in config.json (or the path specified with --config).
 
 Open a browser to [http://localhost:8000](http://localhost:8000) to start.
 
